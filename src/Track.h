@@ -269,8 +269,7 @@ class AUDACITY_DLL_API Track /* not final */
       final override;
 
    // Delegates the handling to the related TCP cell
-   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
-      { return GetTrackControl(); }
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
 
  public:
 
@@ -284,11 +283,13 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
-   std::shared_ptr<TrackPanelCell> GetTrackControl();
+   std::shared_ptr<TrackControls> GetTrackControl();
+   std::shared_ptr<const TrackControls> GetTrackControl() const;
 
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
-   std::shared_ptr<TrackPanelCell> GetVRulerControl();
+   std::shared_ptr<TrackVRulerControls> GetVRulerControl();
+   std::shared_ptr<const TrackVRulerControls> GetVRulerControl() const;
 
    // Return another, associated TrackPanelCell object that implements the
    // click and drag to resize
@@ -737,11 +738,11 @@ public:
    bool IsSelectedLeader() const;
 
 protected:
-   std::shared_ptr<Track> FindTrack() override;
+   std::shared_ptr<Track> DoFindTrack() override;
 
    // These are called to create controls on demand:
-   virtual std::shared_ptr<TrackControls> GetControls() = 0;
-   virtual std::shared_ptr<TrackVRulerControls> GetVRulerControls() = 0;
+   virtual std::shared_ptr<TrackControls> DoGetControls() = 0;
+   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    // These hold the controls:
    std::shared_ptr<TrackControls> mpControls;

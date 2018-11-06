@@ -91,7 +91,7 @@ std::vector<UIHandlePtr> BackgroundCell::HitTest
    return results;
 }
 
-std::shared_ptr<Track> BackgroundCell::FindTrack()
+std::shared_ptr<Track> BackgroundCell::DoFindTrack()
 {
    return {};
 }

@@ -78,20 +78,35 @@ std::vector<UIHandlePtr> Track::HitTest
    return results;
 }
 
-std::shared_ptr<TrackPanelCell> Track::GetTrackControl()
+std::shared_ptr<TrackPanelCell> Track::ContextMenuDelegate()
+{
+   return FindTrack()->GetTrackControl();
+}
+
+std::shared_ptr<TrackControls> Track::GetTrackControl()
 {
    if (!mpControls)
       // create on demand
-      mpControls = GetControls();
+      mpControls = DoGetControls();
    return mpControls;
 }
 
-std::shared_ptr<TrackPanelCell> Track::GetVRulerControl()
+std::shared_ptr<const TrackControls> Track::GetTrackControl() const
+{
+   return const_cast< Track* >( this )->GetTrackControl();
+}
+
+std::shared_ptr<TrackVRulerControls> Track::GetVRulerControl()
 {
    if (!mpVRulerContols)
       // create on demand
-      mpVRulerContols = GetVRulerControls();
+      mpVRulerContols = DoGetVRulerControls();
    return mpVRulerContols;
+}
+
+std::shared_ptr<const TrackVRulerControls> Track::GetVRulerControl() const
+{
+   return const_cast< Track* >( this )->GetVRulerControl();
 }
 
 #include "../../TrackPanelResizeHandle.h"

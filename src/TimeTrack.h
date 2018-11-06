@@ -160,8 +160,8 @@ class TimeTrack final : public Track {
    friend class TrackFactory;
 
 protected:
-   std::shared_ptr<TrackControls> GetControls() override;
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
+   std::shared_ptr<TrackControls> DoGetControls() override;
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 

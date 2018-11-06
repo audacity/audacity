@@ -30,12 +30,12 @@ std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackControls> TimeTrack::GetControls()
+std::shared_ptr<TrackControls> TimeTrack::DoGetControls()
 {
    return std::make_shared<TimeTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> TimeTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> TimeTrack::DoGetVRulerControls()
 {
    return std::make_shared<TimeTrackVRulerControls>( SharedPointer() );
 }

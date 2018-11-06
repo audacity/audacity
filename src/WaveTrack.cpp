@@ -480,7 +480,7 @@ void WaveTrack::DoSetMinimized(bool isMinimized){
    if( bHalfWave )
    {
       // Show half wave on collapse, full on restore.
-      std::shared_ptr<TrackVRulerControls> pTvc = GetVRulerControls();
+      std::shared_ptr<TrackVRulerControls> pTvc = GetVRulerControl();
 
       // An awkward workaround for a function that lives 'in the wrong place'.
       // We use magic numbers, 0 and 1, to tell it to zoom reset or zoom half-wave.

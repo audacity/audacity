@@ -270,8 +270,8 @@ class AUDACITY_DLL_API NoteTrack final
    std::weak_ptr<StretchHandle> mStretchHandle;
 
 protected:
-   std::shared_ptr<TrackControls> GetControls() override;
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
+   std::shared_ptr<TrackControls> DoGetControls() override;
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 #endif // USE_MIDI

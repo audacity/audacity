@@ -30,8 +30,6 @@ public:
 
    virtual ~TrackControls() = 0;
 
-   std::shared_ptr<Track> FindTrack() override;
-
    // This is passed to the InitMenu() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:
    struct InitMenuData
@@ -43,6 +41,8 @@ public:
    };
 
 protected:
+   std::shared_ptr<Track> DoFindTrack() override;
+
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
    virtual std::vector<UIHandlePtr> HitTest

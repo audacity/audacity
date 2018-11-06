@@ -36,7 +36,7 @@ protected:
       (const TrackPanelMouseState &state,
        const AudacityProject *) override;
 
-   std::shared_ptr<Track> FindTrack() override;
+   std::shared_ptr<Track> DoFindTrack() override;
 
 private:
    AudacityProject *mpProject;

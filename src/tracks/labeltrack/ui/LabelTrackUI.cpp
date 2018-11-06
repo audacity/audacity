@@ -42,12 +42,12 @@ std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackControls> LabelTrack::GetControls()
+std::shared_ptr<TrackControls> LabelTrack::DoGetControls()
 {
    return std::make_shared<LabelTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> LabelTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> LabelTrack::DoGetVRulerControls()
 {
    return std::make_shared<LabelTrackVRulerControls>( SharedPointer() );
 }

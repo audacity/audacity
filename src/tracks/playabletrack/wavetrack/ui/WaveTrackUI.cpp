@@ -101,12 +101,12 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackControls> WaveTrack::GetControls()
+std::shared_ptr<TrackControls> WaveTrack::DoGetControls()
 {
    return std::make_shared<WaveTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> WaveTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> WaveTrack::DoGetVRulerControls()
 {
    return std::make_shared<WaveTrackVRulerControls>( SharedPointer() );
 }

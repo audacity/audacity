@@ -86,6 +86,9 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolsToolBar.h"
 
+#include "tracks/ui/TrackControls.h" // for inheritance relation
+#include "tracks/ui/TrackVRulerControls.h" // for inheritance relation
+
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
 
@@ -2016,7 +2019,7 @@ struct EmptyCell final : CommonTrackPanelCell {
    std::vector< UIHandlePtr > HitTest(
       const TrackPanelMouseState &, const AudacityProject *) override
    { return {}; }
-   virtual std::shared_ptr< Track > FindTrack() override { return {}; }
+   virtual std::shared_ptr< Track > DoFindTrack() override { return {}; }
    static std::shared_ptr<EmptyCell> Instance()
    {
       static auto instance = std::make_shared< EmptyCell >();

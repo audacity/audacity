@@ -27,7 +27,7 @@ TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
-std::shared_ptr<Track> TrackVRulerControls::FindTrack()
+std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 {
    return mwTrack.lock();
 }

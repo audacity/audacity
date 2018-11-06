@@ -35,7 +35,7 @@ TrackControls::~TrackControls()
 {
 }
 
-std::shared_ptr<Track> TrackControls::FindTrack()
+std::shared_ptr<Track> TrackControls::DoFindTrack()
 {
    return mwTrack.lock();
 }
