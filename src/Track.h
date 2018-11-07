@@ -37,6 +37,7 @@ class PlayableTrack;
 class LabelTrack;
 class TimeTrack;
 class TrackControls;
+class TrackView;
 class TrackVRulerControls;
 class TrackPanelResizerCell;
 class WaveTrack;
@@ -284,6 +285,11 @@ class AUDACITY_DLL_API Track /* not final */
       = 0;
 
    mutable wxSize vrulerSize;
+
+   // Return another, associated TrackPanelCell object that implements
+   // click and drag and keystrokes in the track contents.
+   std::shared_ptr<TrackView> GetTrackView();
+   std::shared_ptr<const TrackView> GetTrackView() const;
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
@@ -752,10 +758,12 @@ protected:
    std::shared_ptr<Track> DoFindTrack() override;
 
    // These are called to create controls on demand:
+   virtual std::shared_ptr<TrackView> DoGetView() = 0;
    virtual std::shared_ptr<TrackControls> DoGetControls() = 0;
    virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    // These hold the controls:
+   std::shared_ptr<TrackView> mpView;
    std::shared_ptr<TrackControls> mpControls;
    std::shared_ptr<TrackVRulerControls> mpVRulerContols;
    std::shared_ptr<TrackPanelResizerCell> mpResizer;

@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "LabelTrackView.h"
 #include "../../../LabelTrack.h"
 
 #include "LabelTrackControls.h"
@@ -17,6 +18,10 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 #include "../../../TrackPanelMouseEvent.h"
+
+LabelTrackView::~LabelTrackView()
+{
+}
 
 std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
@@ -37,6 +42,11 @@ std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
       results.push_back(result);
 
    return results;
+}
+
+std::shared_ptr<TrackView> LabelTrack::DoGetView()
+{
+   return std::make_shared<LabelTrackView>( SharedPointer() );
 }
 
 std::shared_ptr<TrackControls> LabelTrack::DoGetControls()

@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "TimeTrackView.h"
 #include "../../../TimeTrack.h"
 
 #include "TimeTrackControls.h"
@@ -17,6 +18,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 
 #include "../../ui/EnvelopeHandle.h"
+
+TimeTrackView::~TimeTrackView()
+{
+}
 
 std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
@@ -28,6 +33,11 @@ std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
    if (result)
       results.push_back(result);
    return results;
+}
+
+std::shared_ptr<TrackView> TimeTrack::DoGetView()
+{
+   return std::make_shared<TimeTrackView>( SharedPointer() );
 }
 
 std::shared_ptr<TrackControls> TimeTrack::DoGetControls()

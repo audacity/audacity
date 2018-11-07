@@ -9,6 +9,8 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../../../Audacity.h" // for USE_* macros
+#include "NoteTrackView.h"
+
 #ifdef USE_MIDI
 #include "../../../../NoteTrack.h"
 
@@ -21,6 +23,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
+
+NoteTrackView::~NoteTrackView()
+{
+}
 
 std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
 (const TrackPanelMouseState &WXUNUSED(state),
@@ -39,6 +45,11 @@ std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
 #endif
 
    return results;
+}
+
+std::shared_ptr<TrackView> NoteTrack::DoGetView()
+{
+   return std::make_shared<NoteTrackView>( SharedPointer() );
 }
 
 std::shared_ptr<TrackControls> NoteTrack::DoGetControls()

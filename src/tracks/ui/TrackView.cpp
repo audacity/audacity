@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "TrackView.h"
 #include "../../Track.h"
 
 #include "../../TrackPanelMouseEvent.h"
@@ -18,6 +19,27 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelResizerCell.h"
 #include "BackgroundCell.h"
 #include "../../ProjectSettings.h"
+
+TrackView::~TrackView()
+{
+}
+
+TrackView &TrackView::Get( Track &track )
+{
+   return *track.GetTrackView();
+}
+
+const TrackView &TrackView::Get( const Track &track )
+{
+   return *track.GetTrackView();
+}
+
+std::vector<UIHandlePtr> TrackView::HitTest
+(const TrackPanelMouseState &st,
+ const AudacityProject *pProject)
+{
+   return {};
+}
 
 std::vector<UIHandlePtr> Track::HitTest
 (const TrackPanelMouseState &st,
@@ -76,6 +98,24 @@ std::vector<UIHandlePtr> Track::HitTest
 std::shared_ptr<TrackPanelCell> Track::ContextMenuDelegate()
 {
    return TrackControls::Get( *this ).shared_from_this();
+}
+
+std::shared_ptr<TrackPanelCell> TrackView::ContextMenuDelegate()
+{
+   return TrackControls::Get( *FindTrack() ).shared_from_this();
+}
+
+std::shared_ptr<TrackView> Track::GetTrackView()
+{
+   if (!mpView)
+      // create on demand
+      mpView = DoGetView();
+   return mpView;
+}
+
+std::shared_ptr<const TrackView> Track::GetTrackView() const
+{
+   return const_cast<Track*>(this)->GetTrackView();
 }
 
 std::shared_ptr<TrackPanelCell> Track::GetTrackControls()

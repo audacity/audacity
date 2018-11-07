@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "WaveTrackView.h"
 #include "../../../../WaveTrack.h"
 
 #include "WaveTrackControls.h"
@@ -22,6 +23,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../../ProjectSettings.h"
+
+WaveTrackView::~WaveTrackView()
+{
+}
 
 std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
@@ -99,6 +104,11 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
    }
 
    return results;
+}
+
+std::shared_ptr<TrackView> WaveTrack::DoGetView()
+{
+   return std::make_shared<WaveTrackView>( SharedPointer() );
 }
 
 std::shared_ptr<TrackControls> WaveTrack::DoGetControls()
