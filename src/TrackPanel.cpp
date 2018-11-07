@@ -1769,7 +1769,7 @@ void TrackPanel::DrawSash(
    rec.width -= labelw - rec.x;
    rec.x = labelw;
 
-   dc->DrawRectangle( wxRect{ rec }.Inflate( 0, -kBorderThickness ) );
+   dc->DrawRectangle( wxRect( rec ).Inflate( 0, -kBorderThickness ) );
 
    // These lines stroke over what is otherwise "border" of each channel
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
