@@ -2274,7 +2274,7 @@ void LabelTrack::Unselect()
    mSelIndex = -1;
 }
 
-bool LabelTrack::IsSelected() const
+bool LabelTrack::HasSelection() const
 {
    return (mSelIndex >= 0 && mSelIndex < (int)mLabels.size());
 }

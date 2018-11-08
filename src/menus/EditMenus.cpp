@@ -38,7 +38,7 @@ bool DoPasteText(AudacityProject &project)
    for (auto pLabelTrack : tracks->Any<LabelTrack>())
    {
       // Does this track have an active label?
-      if (pLabelTrack->IsSelected()) {
+      if (pLabelTrack->HasSelection()) {
 
          // Yes, so try pasting into it
          if (pLabelTrack->PasteSelectedText(selectedRegion.t0(),

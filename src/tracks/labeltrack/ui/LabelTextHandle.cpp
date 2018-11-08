@@ -82,7 +82,7 @@ UIHandle::Result LabelTextHandle::Click
 
    mSelectedRegion = viewInfo.selectedRegion;
    pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
-   wxASSERT(pLT->IsSelected());
+   wxASSERT(pLT->HasSelection());
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label

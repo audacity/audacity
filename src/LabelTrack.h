@@ -229,7 +229,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void Unselect();
 
-   bool IsSelected() const;
+   // Whether any label box is selected -- not, whether the track is selected.
+   bool HasSelection() const;
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
