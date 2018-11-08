@@ -37,6 +37,8 @@ public:
    bool Apply(const CommandContext & context) override;
 
 public:
+   // zero-based index of the desired label, within the concatenation of the
+   // arrays of labels of all label tracks
    int mLabelIndex;
    wxString mText;
    double mT0;

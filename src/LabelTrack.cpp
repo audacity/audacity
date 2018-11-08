@@ -148,6 +148,15 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    ResetFlags();
 }
 
+void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )
+{
+   if( iLabel >= mLabels.size() ) {
+      wxASSERT( false );
+      mLabels.resize( iLabel + 1 );
+   }
+   mLabels[ iLabel ] = newLabel;
+}
+
 LabelTrack::~LabelTrack()
 {
 }
@@ -935,6 +944,14 @@ void LabelTrack::Draw
                    xPos-1, labelStruct.y + mFontHeight/2 - 1);
       currentPen.SetWidth(1);
    }
+}
+
+void LabelTrack::SetSelectedIndex( int index )
+{
+   if ( index >= 0 && index < mLabels.size() )
+      mSelIndex = index;
+   else
+      mSelIndex = -1;
 }
 
 /// uses GetTextExtent to find the character position
