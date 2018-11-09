@@ -87,8 +87,7 @@ UIHandle::Result LabelTextHandle::Click
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    mSelectedRegion = viewInfo.selectedRegion;
-   LabelTrackView::Get( *pLT )
-      .HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
+   HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label
@@ -125,9 +124,8 @@ UIHandle::Result LabelTextHandle::Drag
 
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
-   auto pView = pLT ? &LabelTrackView::Get( *pLT ) : nullptr;
    if(pLT)
-      pView->HandleTextDragRelease(event);
+      HandleTextDragRelease(event);
 
    // locate the initial mouse position
    if (event.LeftIsDown()) {
@@ -135,6 +133,7 @@ UIHandle::Result LabelTextHandle::Drag
          mLabelTrackStartXPos = event.m_x;
          mLabelTrackStartYPos = event.m_y;
 
+         auto pView = pLT ? &LabelTrackView::Get( *pLT ) : nullptr;
          if (pLT &&
             (pView->GetSelectedIndex() != -1) &&
              LabelTrackView::OverTextBox(
@@ -175,7 +174,7 @@ UIHandle::Result LabelTextHandle::Release
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if (pLT)
-      LabelTrackView::Get( *pLT ).HandleTextDragRelease(event);
+      HandleTextDragRelease(event);
 
    // handle mouse left button up
    if (event.LeftUp())

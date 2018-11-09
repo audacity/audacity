@@ -279,7 +279,6 @@ void LabelTrackView::ResetFlags()
 {
    mInitialCursorPos = 1;
    mCurrentCursorPos = 1;
-   mRightDragging = false;
    mDrawCursor = false;
 }
 
@@ -288,7 +287,6 @@ void LabelTrackView::RestoreFlags( const Flags& flags )
    mInitialCursorPos = flags.mInitialCursorPos;
    mCurrentCursorPos = flags.mCurrentCursorPos;
    mSelIndex = flags.mSelIndex;
-   mRightDragging = flags.mRightDragging;
    mDrawCursor = flags.mDrawCursor;
 }
 
@@ -1663,8 +1661,13 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
    return false;
 }
 
-void LabelTrackView::HandleTextDragRelease(const wxMouseEvent & evt)
+void LabelTextHandle::HandleTextDragRelease(const wxMouseEvent & evt)
 {
+   auto pTrack = mpLT.lock();
+   if (!pTrack)
+      return;
+   auto &view = LabelTrackView::Get( *pTrack );
+
    if(evt.LeftUp())
    {
 #if 0
@@ -1690,19 +1693,20 @@ void LabelTrackView::HandleTextDragRelease(const wxMouseEvent & evt)
    {
       if (!mRightDragging)
          // Update drag end
-         SetCurrentCursorPosition(FindCursorPosition(evt.m_x));
+         view.SetCurrentCursorPosition(
+            view.FindCursorPosition( evt.m_x ) );
 
       return;
    }
 
    if (evt.RightUp()) {
-      const auto pTrack = FindLabelTrack();
-      if (HasSelection() &&
-         OverTextBox(
-            pTrack->GetLabel(mSelIndex), evt.m_x, evt.m_y)) {
+      const auto selIndex = view.GetSelectedIndex();
+      if ( selIndex != -1 &&
+         LabelTrackView::OverTextBox(
+            pTrack->GetLabel( selIndex ), evt.m_x, evt.m_y ) ) {
          // popup menu for editing
          // TODO: handle context menus via CellularPanel?
-         ShowContextMenu();
+         view.ShowContextMenu();
       }
    }
 
@@ -1767,47 +1771,50 @@ void LabelGlyphHandle::HandleGlyphClick
    }
 }
 
-void LabelTrackView::HandleTextClick(const wxMouseEvent & evt,
+void LabelTextHandle::HandleTextClick(const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
+   auto pTrack = mpLT.lock();
+   if (!pTrack)
+      return;
+
+   auto &view = LabelTrackView::Get( *pTrack );
    static_cast<void>(r);//compiler food.
    static_cast<void>(zoomInfo);//compiler food.
    if (evt.ButtonDown())
    {
-
-      const auto pTrack = FindLabelTrack();
-      mSelIndex = OverATextBox( *pTrack, evt.m_x, evt.m_y );
-      if (mSelIndex != -1) {
+      const auto selIndex = LabelTrackView::OverATextBox( *pTrack, evt.m_x, evt.m_y );
+      view.SetSelectedIndex( selIndex );
+      if ( selIndex != -1 ) {
          const auto &mLabels = pTrack->GetLabels();
-         const auto &labelStruct = mLabels[mSelIndex];
+         const auto &labelStruct = mLabels[ selIndex ];
          *newSel = labelStruct.selectedRegion;
 
          if (evt.LeftDown()) {
             // Find the NEW drag end
-            auto position = FindCursorPosition(evt.m_x);
+            auto position = view.FindCursorPosition( evt.m_x );
 
             // Anchor shift-drag at the farther end of the previous highlight
             // that is farther from the click, on Mac, for consistency with
             // its text editors, but on the others, re-use the previous
             // anchor.
+            auto initial = view.GetInitialCursorPosition();
             if (evt.ShiftDown()) {
 #ifdef __WXMAC__
                // Set the drag anchor at the end of the previous selection
                // that is farther from the NEW drag end
-               if (abs(position - mCurrentCursorPos) >
-                   abs(position - mInitialCursorPos))
-                  mInitialCursorPos = mCurrentCursorPos;
+               const auto current = view.GetCurrentCursorPosition();
+               if ( abs( position - current ) > abs( position - initial ) )
+                  initial = current;
 #else
-               // mInitialCursorPos remains as before
+               // initial position remains as before
 #endif
             }
             else
-               mInitialCursorPos = position;
+               initial = position;
 
-            mCurrentCursorPos = position;
-            
-            mDrawCursor = true;
+            view.SetTextHighlight( initial, position );
             mRightDragging = false;
          }
          else
@@ -1820,8 +1827,8 @@ void LabelTrackView::HandleTextClick(const wxMouseEvent & evt,
             // Check for a click outside of the selected label's text box; in this
             // case PasteSelectedText() will start a NEW label at the click
             // location
-            if (!OverTextBox(&labelStruct, evt.m_x, evt.m_y))
-               mSelIndex = -1;
+            if (!LabelTrackView::OverTextBox(&labelStruct, evt.m_x, evt.m_y))
+               view.SetSelectedIndex( -1 );
             double t = zoomInfo.PositionToTime(evt.m_x, r.x);
             *newSel = SelectedRegion(t, t);
          }
@@ -1831,7 +1838,7 @@ void LabelTrackView::HandleTextClick(const wxMouseEvent & evt,
       if (evt.MiddleDown()) {
          // Paste text, making a NEW label if none is selected.
          wxTheClipboard->UsePrimarySelection(true);
-         PasteSelectedText(newSel->t0(), newSel->t1());
+         view.PasteSelectedText(newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
       }
 #endif

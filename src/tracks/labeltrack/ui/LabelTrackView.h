@@ -118,7 +118,7 @@ private:
 
    struct Flags {
       int mInitialCursorPos, mCurrentCursorPos, mSelIndex;
-      bool mRightDragging, mDrawCursor;
+      bool mDrawCursor;
    };
 
    void ResetFlags();
@@ -126,7 +126,7 @@ private:
    {
       return {
          mInitialCursorPos, mCurrentCursorPos, mSelIndex,
-         mRightDragging, mDrawCursor
+         mDrawCursor
       };
    }
    void RestoreFlags( const Flags& flags );
@@ -138,11 +138,6 @@ public:
 
 private:
    static bool IsTextClipSupported();
-   
-   void HandleTextClick
-      (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
-   void HandleTextDragRelease(const wxMouseEvent & evt);
 
 public:
    void AddedLabel( const wxString &title, int pos );
@@ -160,7 +155,10 @@ public:
 private:
    void CalcHighlightXs(int *x1, int *x2) const;
 
+public:
    void ShowContextMenu();
+
+private:
    void OnContextMenu(wxCommandEvent & evt);
 
    mutable int mSelIndex{-1};  /// Keeps track of the currently selected label
@@ -176,7 +174,6 @@ private:
    int mCurrentCursorPos;                      /// current cursor position
    int mInitialCursorPos;                      /// initial cursor position
 
-   bool mRightDragging;                        /// flag to tell if it's a valid dragging
    bool mDrawCursor;                           /// flag to tell if drawing the
                                                   /// cursor or not
    int mRestoreFocus{-2};                          /// Restore focus to this track
@@ -217,7 +214,6 @@ public:
    static wxFont msFont;
 
    friend LabelDefaultClickHandle;
-   friend LabelTextHandle;
 };
 
 #endif
