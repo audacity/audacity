@@ -1681,20 +1681,6 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
             // Actually this might be right or middle down
             mRightDragging = true;
 
-         // reset the highlight indicator
-         wxRect highlightedRect;
-         {
-            int xpos1, xpos2;
-            CalcHighlightXs(&xpos1, &xpos2);
-
-            wxASSERT(mFontHeight >= 0); // should have been set up while drawing
-            // the rectangle of highlighted area
-            highlightedRect = {
-               xpos1, labelStruct.y - mFontHeight / 2,
-               (int)(xpos2 - xpos1 + 0.5), mFontHeight
-            };
-         }
-
          // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
          if (evt.MiddleDown()) {
