@@ -192,8 +192,13 @@ private:
    static void DrawHighlight(
       wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
 
-   int FindCurrentCursorPosition(int xPos);
-   void SetCurrentCursorPosition(int xPos);
+public:
+   /// convert pixel coordinate to character position in text box
+   int FindCursorPosition(wxCoord xPos);
+   int GetCurrentCursorPosition() const { return mCurrentCursorPos; }
+   void SetCurrentCursorPosition(int pos);
+   int GetInitialCursorPosition() const { return mInitialCursorPos; }
+   void SetTextHighlight( int initialPosition, int currentPosition );
 
    static void calculateFontHeight(wxDC & dc);
    bool HasSelection() const;

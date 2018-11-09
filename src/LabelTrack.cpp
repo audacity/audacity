@@ -983,7 +983,7 @@ void LabelTrackView::SetSelectedIndex( int index )
 
 /// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-int LabelTrackView::FindCurrentCursorPosition(int xPos)
+int LabelTrackView::FindCursorPosition(wxCoord xPos)
 {
    int result = -1;
    wxMemoryDC dc;
@@ -1032,10 +1032,17 @@ int LabelTrackView::FindCurrentCursorPosition(int xPos)
    return result;
 }
 
-/// Set the cursor position according to x position of mouse
-void LabelTrackView::SetCurrentCursorPosition(int xPos)
+void LabelTrackView::SetCurrentCursorPosition(int pos)
 {
-   mCurrentCursorPos = FindCurrentCursorPosition(xPos);
+   mCurrentCursorPos = pos;
+}
+
+void LabelTrackView::SetTextHighlight(
+   int initialPosition, int currentPosition )
+{
+   mInitialCursorPos = initialPosition;
+   mCurrentCursorPos = currentPosition;
+   mDrawCursor = true;
 }
 
 void LabelTrackView::calculateFontHeight(wxDC & dc)
@@ -1683,7 +1690,7 @@ void LabelTrackView::HandleTextDragRelease(const wxMouseEvent & evt)
    {
       if (!mRightDragging)
          // Update drag end
-         SetCurrentCursorPosition(evt.m_x);
+         SetCurrentCursorPosition(FindCursorPosition(evt.m_x));
 
       return;
    }
@@ -1778,7 +1785,7 @@ void LabelTrackView::HandleTextClick(const wxMouseEvent & evt,
 
          if (evt.LeftDown()) {
             // Find the NEW drag end
-            auto position = FindCurrentCursorPosition(evt.m_x);
+            auto position = FindCursorPosition(evt.m_x);
 
             // Anchor shift-drag at the farther end of the previous highlight
             // that is farther from the click, on Mac, for consistency with
