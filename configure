@@ -19208,6 +19208,10 @@ if test x$enable_universal_binary = xyes; then
    esac
 fi
 
+if ($CXX --version | grep 'clang version' > /dev/null); then
+    LDFLAGS="${LDFLAGS} -latomic"
+fi
+
 if test x$enable_sse = xyes; then
 
    if test "${ax_cv_cxx_compiler_vendor}" = "gnu"; then

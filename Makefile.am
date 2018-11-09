@@ -16,6 +16,7 @@ nobase_dist_pkgdata_DATA = \
    include/audacity/ModuleInterface.h \
    include/audacity/PluginInterface.h \
    include/audacity/Types.h \
+   nyquist/aud-do-support.lsp \
    nyquist/dspprims.lsp \
    nyquist/envelopes.lsp \
    nyquist/equalizer.lsp \
