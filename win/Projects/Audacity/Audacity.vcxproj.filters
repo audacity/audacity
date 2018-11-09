@@ -2354,6 +2354,9 @@
     <CustomBuild Include="..\..\..\nyquist\test.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\aud-do-support.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny">
