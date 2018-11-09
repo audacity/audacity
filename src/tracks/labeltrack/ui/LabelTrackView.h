@@ -110,9 +110,10 @@ public:
    bool CopySelectedText();
    bool PasteSelectedText(double sel0, double sel1);
 
-private:
-   void OverGlyph(LabelTrackHit &hit, int x, int y) const;
+   static void OverGlyph(
+      const LabelTrack &track, LabelTrackHit &hit, int x, int y );
 
+private:
    static wxBitmap & GetGlyph( int i);
 
    struct Flags {
@@ -130,9 +131,12 @@ private:
    }
    void RestoreFlags( const Flags& flags );
 
-   int OverATextBox(int xx, int yy) const;
-   bool OverTextBox(const LabelStruct *pLabel, int x, int y) const;
+public:
+   static int OverATextBox( const LabelTrack &track, int xx, int yy );
 
+   static bool OverTextBox( const LabelStruct *pLabel, int x, int y );
+
+private:
    static bool IsTextClipSupported();
    
    void HandleGlyphClick

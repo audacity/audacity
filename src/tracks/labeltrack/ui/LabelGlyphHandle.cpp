@@ -103,7 +103,7 @@ UIHandlePtr LabelGlyphHandle::HitTest
    // LabelGlyphHandle can be copyable:
    auto pHit = std::make_shared<LabelTrackHit>( pLT );
 
-   LabelTrackView::Get( *pLT ).OverGlyph(*pHit, state.m_x, state.m_y);
+   LabelTrackView::OverGlyph(*pLT, *pHit, state.m_x, state.m_y);
 
    // IF edge!=0 THEN we've set the cursor and we're done.
    // signal this by setting the tip.

@@ -55,8 +55,8 @@ UIHandlePtr LabelTextHandle::HitTest
    // If Control is down, let the select handle be hit instead
    int labelNum;
    if (!state.ControlDown() &&
-       (labelNum = LabelTrackView::Get( *pLT ).
-          OverATextBox(state.m_x, state.m_y) ) >= 0) {
+       (labelNum =
+          LabelTrackView::OverATextBox(*pLT, state.m_x, state.m_y) ) >= 0) {
       auto result = std::make_shared<LabelTextHandle>( pLT, labelNum );
       result = AssignUIHandlePtr(holder, result);
       return result;
@@ -137,7 +137,7 @@ UIHandle::Result LabelTextHandle::Drag
 
          if (pLT &&
             (pView->GetSelectedIndex() != -1) &&
-             pView->OverTextBox(
+             LabelTrackView::OverTextBox(
                pLT->GetLabel(pView->GetSelectedIndex()),
                mLabelTrackStartXPos,
                mLabelTrackStartYPos))

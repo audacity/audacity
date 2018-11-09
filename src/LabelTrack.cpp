@@ -1248,7 +1248,8 @@ Track::Holder LabelTrack::Clone() const
 /// TODO: Investigate what happens with large
 /// numbers of labels, might need a binary search
 /// rather than a linear one.
-void LabelTrackView::OverGlyph(LabelTrackHit &hit, int x, int y) const
+void LabelTrackView::OverGlyph(
+   const LabelTrack &track, LabelTrackHit &hit, int x, int y)
 {
    //Determine the NEW selection.
    int result=0;
@@ -1260,7 +1261,7 @@ void LabelTrackView::OverGlyph(LabelTrackHit &hit, int x, int y) const
    hit.mMouseOverLabelRight = -1;
    hit.mEdge = 0;
 
-   const auto pTrack = FindLabelTrack();
+   const auto pTrack = &track;
    const auto &mLabels = pTrack->GetLabels();
    { int i = -1; for (const auto &labelStruct : mLabels) { ++i;
       //over left or right selection bound
@@ -1304,13 +1305,13 @@ void LabelTrackView::OverGlyph(LabelTrackHit &hit, int x, int y) const
    hit.mEdge = result;
 }
 
-int LabelTrackView::OverATextBox(int xx, int yy) const
+int LabelTrackView::OverATextBox( const LabelTrack &track, int xx, int yy )
 {
-   const auto pTrack = FindLabelTrack();
+   const auto pTrack = &track;
    const auto &mLabels = pTrack->GetLabels();
    for (int nn = (int)mLabels.size(); nn--;) {
       const auto &labelStruct = mLabels[nn];
-      if (OverTextBox(&labelStruct, xx, yy))
+      if ( OverTextBox( &labelStruct, xx, yy ) )
          return nn;
    }
 
@@ -1318,7 +1319,7 @@ int LabelTrackView::OverATextBox(int xx, int yy) const
 }
 
 // return true if the mouse is over text box, false otherwise
-bool LabelTrackView::OverTextBox(const LabelStruct *pLabel, int x, int y) const
+bool LabelTrackView::OverTextBox(const LabelStruct *pLabel, int x, int y)
 {
    if( (pLabel->xText-(mIconWidth/2) < x) &&
             (x<pLabel->xText+pLabel->width+(mIconWidth/2)) &&
@@ -1689,7 +1690,8 @@ void LabelTrackView::HandleTextDragRelease(const wxMouseEvent & evt)
    if (evt.RightUp()) {
       const auto pTrack = FindLabelTrack();
       if (HasSelection() &&
-         OverTextBox(pTrack->GetLabel(mSelIndex), evt.m_x, evt.m_y)) {
+         OverTextBox(
+            pTrack->GetLabel(mSelIndex), evt.m_x, evt.m_y)) {
          // popup menu for editing
          // TODO: handle context menus via CellularPanel?
          ShowContextMenu();
@@ -1707,7 +1709,8 @@ void LabelTrackView::HandleGlyphClick
    if (evt.ButtonDown())
    {
       //OverGlyph sets mMouseOverLabel to be the chosen label.
-      OverGlyph(hit, evt.m_x, evt.m_y);
+      const auto pTrack = FindLabelTrack();
+      OverGlyph(*pTrack, hit, evt.m_x, evt.m_y);
       hit.mIsAdjustingLabel = evt.Button(wxMOUSE_BTN_LEFT) &&
          ( hit.mEdge & 3 ) != 0;
 
@@ -1730,7 +1733,6 @@ void LabelTrackView::HandleGlyphClick
 
          // Dragging of three label edges at the same time is not supported (yet).
 
-         const auto pTrack = FindLabelTrack();
          const auto &mLabels = pTrack->GetLabels();
          if( ( hit.mMouseOverLabelRight >= 0 ) &&
              ( hit.mMouseOverLabelLeft >= 0 )
@@ -1766,9 +1768,9 @@ void LabelTrackView::HandleTextClick(const wxMouseEvent & evt,
    if (evt.ButtonDown())
    {
 
-      mSelIndex = OverATextBox(evt.m_x, evt.m_y);
+      const auto pTrack = FindLabelTrack();
+      mSelIndex = OverATextBox( *pTrack, evt.m_x, evt.m_y );
       if (mSelIndex != -1) {
-         const auto pTrack = FindLabelTrack();
          const auto &mLabels = pTrack->GetLabels();
          const auto &labelStruct = mLabels[mSelIndex];
          *newSel = labelStruct.selectedRegion;
