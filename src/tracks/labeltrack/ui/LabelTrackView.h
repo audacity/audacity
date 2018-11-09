@@ -139,16 +139,8 @@ public:
 private:
    static bool IsTextClipSupported();
    
-   void HandleGlyphClick
-      (LabelTrackHit &hit,
-       const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
    void HandleTextClick
       (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
-   bool HandleGlyphDragRelease
-      (LabelTrackHit &hit,
-       const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
    void HandleTextDragRelease(const wxMouseEvent & evt);
 
@@ -168,16 +160,10 @@ public:
 private:
    void CalcHighlightXs(int *x1, int *x2) const;
 
-   void MayAdjustLabel
-      ( LabelTrackHit &hit,
-        int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
-   void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
-
    void ShowContextMenu();
    void OnContextMenu(wxCommandEvent & evt);
 
    mutable int mSelIndex{-1};  /// Keeps track of the currently selected label
-   int mxMouseDisplacement;    /// Displacement of mouse cursor from the centre being dragged.
    
    static int mIconHeight;
    static int mIconWidth;
@@ -226,7 +212,6 @@ private:
    static wxFont msFont;
 
    friend LabelDefaultClickHandle;
-   friend LabelGlyphHandle;
    friend LabelTextHandle;
 };
 

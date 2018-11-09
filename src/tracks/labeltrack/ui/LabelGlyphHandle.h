@@ -16,6 +16,8 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 class LabelTrack;
 class LabelTrackEvent;
+class SelectedRegion;
+class ZoomInfo;
 
 /// mEdge:
 /// 0 if not over a glyph,
@@ -87,8 +89,25 @@ public:
       (const LabelGlyphHandle &oldState, const LabelGlyphHandle &newState);
 
 private:
+   void HandleGlyphClick
+      (LabelTrackHit &hit,
+       const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
+   bool HandleGlyphDragRelease
+      (LabelTrackHit &hit,
+       const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
+
+   void MayAdjustLabel
+      ( LabelTrackHit &hit,
+        int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
+   void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
+
    std::shared_ptr<LabelTrack> mpLT {};
    wxRect mRect {};
+
+   /// Displacement of mouse cursor from the centre being dragged.
+   int mxMouseDisplacement;
 };
 
 #endif
