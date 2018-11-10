@@ -17,6 +17,7 @@
 #include "../../Audacity.h"
 
 #if USE_AUDIO_UNITS
+#include "AudioUnitEffect.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -41,7 +42,6 @@
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
 
-#include "AudioUnitEffect.h"
 #include "../../Internat.h"
 
 struct CFReleaser

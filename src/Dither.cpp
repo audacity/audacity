@@ -35,6 +35,8 @@ and get deterministic behaviour.
 *//*******************************************************************/
 
 
+#include "Dither.h"
+
 // Erik de Castro Lopo's header file that
 // makes sure that we have lrint and lrintf
 // (Note: this file should be included first)
@@ -48,8 +50,6 @@ and get deterministic behaviour.
 //#include <assert.h>
 
 #include <wx/defs.h>
-
-#include "Dither.h"
 
 //////////////////////////////////////////////////////////////////////////
 

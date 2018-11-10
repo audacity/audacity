@@ -15,6 +15,7 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/dialog.h>
+#include <wx/dragimag.h>
 #include <wx/panel.h>
 #include <wx/hashmap.h>
 #include <wx/timer.h>
@@ -24,8 +25,6 @@
 #include "wxPanelWrapper.h"
 
 #include <unordered_map>
-
-class wxDragImage;
 
 class AButton;
 

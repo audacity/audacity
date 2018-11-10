@@ -14,7 +14,6 @@
 #include "../../Audacity.h"
 
 #if defined(USE_VAMP)
-
 #include "VampEffect.h"
 
 #include <vamp-hostsdk/Plugin.h>

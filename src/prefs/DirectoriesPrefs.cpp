@@ -16,6 +16,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "DirectoriesPrefs.h"
 
 #include <math.h>
 
@@ -36,7 +37,6 @@
 #include "../Internat.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
-#include "DirectoriesPrefs.h"
 
 enum {
    TempDirID = 1000,

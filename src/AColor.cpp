@@ -18,6 +18,7 @@ It is also a place to document colour usage policy in Audacity
 *//********************************************************************/
 
 #include "Audacity.h"
+#include "AColor.h"
 
 #include "Experimental.h"
 
@@ -28,7 +29,6 @@ It is also a place to document colour usage policy in Audacity
 #include <wx/settings.h>
 #include <wx/utils.h>
 
-#include "AColor.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
 

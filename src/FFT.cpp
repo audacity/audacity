@@ -40,10 +40,10 @@
 */
 
 #include "Audacity.h"
+#include "FFT.h"
 
 #include "Internat.h"
 
-#include "FFT.h"
 #include "MemoryX.h"
 #include "SampleFormat.h"
 

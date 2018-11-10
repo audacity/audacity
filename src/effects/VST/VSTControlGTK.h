@@ -17,9 +17,7 @@
 #include <gdk/gdkx.h>
 #undef Region
 
-#include <wx/control.h>
-
-#include "aeffectx.h"
+#include "VSTControl.h"
 
 class VSTControl final : public VSTControlBase
 {

@@ -21,10 +21,9 @@ around to NEW positions.
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "HtmlWindow.h"
 
 #include <wx/defs.h>
-
-#include "HtmlWindow.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for HtmlWindow

@@ -24,6 +24,7 @@ other settings.
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "MidiIOPrefs.h"
 
 #include "../Experimental.h"
 
@@ -42,8 +43,6 @@ other settings.
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
-
-#include "MidiIOPrefs.h"
 
 enum {
    HostID = 10000,

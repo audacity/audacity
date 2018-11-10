@@ -9,6 +9,8 @@
 
 **********************************************************************/
 
+#include "Lyrics.h"
+
 #include <math.h>
 
 #include <wx/defs.h>
@@ -16,7 +18,6 @@
 #include <wx/mimetype.h>
 
 #include "AudioIO.h"
-#include "Lyrics.h"
 #include "Internat.h"
 #include "Project.h" // for GetActiveProject
 #include "LabelTrack.h"

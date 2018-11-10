@@ -39,12 +39,11 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "NoiseRemoval.h"
 
 #include "../Experimental.h"
 
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
-
-#include "NoiseRemoval.h"
 
 #include "../WaveTrack.h"
 #include "../Prefs.h"

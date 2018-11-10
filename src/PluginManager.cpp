@@ -19,6 +19,7 @@ for shared and private configs - which need to move out.
 *****************************************************************************/
 
 #include "Audacity.h"
+#include "PluginManager.h"
 
 #include "Experimental.h"
 
@@ -53,8 +54,6 @@ for shared and private configs - which need to move out.
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 #endif
-
-#include "PluginManager.h"
 
 #include <unordered_map>
 

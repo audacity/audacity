@@ -20,6 +20,7 @@ code out of ModuleManager.
 *//*******************************************************************/
 
 #include "ScriptCommandRelay.h"
+
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"

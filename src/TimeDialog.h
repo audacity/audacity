@@ -15,6 +15,7 @@
 #include <wx/event.h>
 #include <wx/string.h>
 
+#include "widgets/NumericTextCtrl.h" // for NumericFormatSymbol
 #include "widgets/wxPanelWrapper.h"
 #include "Internat.h"
 

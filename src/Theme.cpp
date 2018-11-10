@@ -60,6 +60,7 @@ can't be.
 *//*****************************************************************/
 
 #include "Audacity.h"
+#include "Theme.h"
 
 #include "Experimental.h"
 
@@ -74,7 +75,6 @@ can't be.
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "ImageManipulation.h"
-#include "Theme.h"
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"

@@ -14,10 +14,9 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Fade.h"
 
 #include <wx/intl.h>
-
-#include "Fade.h"
 
 EffectFade::EffectFade(bool fadeIn)
 {

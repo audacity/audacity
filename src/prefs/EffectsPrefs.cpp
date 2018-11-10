@@ -18,6 +18,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "EffectsPrefs.h"
 
 #include "../Experimental.h"
 
@@ -28,8 +29,6 @@
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-
-#include "EffectsPrefs.h"
 
 #include "../Internat.h"
 

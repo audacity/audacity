@@ -18,6 +18,7 @@
 #include "../Audacity.h" // for USE_SOUNDTOUCH
 
 #if USE_SOUNDTOUCH
+#include "ChangeTempo.h"
 
 #if USE_SBSMS
 #include "../../../lib-src/header-substitutes/sbsms.h"
@@ -32,8 +33,6 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
-
-#include "ChangeTempo.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h
 // and configunix.h, so get rid of them before including,

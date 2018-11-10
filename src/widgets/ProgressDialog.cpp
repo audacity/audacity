@@ -27,6 +27,7 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "ProgressDialog.h"
 
 #include "../MemoryX.h"
 #include <algorithm>
@@ -48,7 +49,6 @@
 #include <wx/stopwatch.h>
 #include <wx/window.h>
 
-#include "ProgressDialog.h"
 #include "ErrorDialog.h"
 #include "../Prefs.h"
 #include "../Internat.h"

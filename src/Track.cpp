@@ -21,11 +21,12 @@ and TimeTrack.
 
 *//*******************************************************************/
 
+#include "Track.h"
+
 #include "Experimental.h"
 
 #include <algorithm>
 #include <numeric>
-#include "Track.h"
 
 #include <float.h>
 #include <wx/file.h>

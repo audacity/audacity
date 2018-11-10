@@ -16,6 +16,7 @@ It handles initialization and termination by subclassing wxApp.
 *//*******************************************************************/
 
 #include "Audacity.h" // This should always be included first
+#include "AudacityApp.h"
 
 #include "Experimental.h"
 
@@ -25,7 +26,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <vld.h>
 #endif
 
-#include "AudacityApp.h"
 #include "TranslatableStringArray.h"
 
 #include <wx/defs.h>

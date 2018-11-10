@@ -20,6 +20,7 @@ function.
 
 
 #include "../Audacity.h"   // keep ffmpeg before wx because they interact
+#include "ExportFFmpeg.h"
 
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
@@ -44,7 +45,6 @@ function.
 #include "../widgets/ErrorDialog.h"
 
 #include "Export.h"
-#include "ExportFFmpeg.h"
 
 #include "ExportFFmpegDialogs.h"
 

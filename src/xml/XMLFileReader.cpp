@@ -13,13 +13,14 @@
 
 *//*******************************************************************/
 
+#include "XMLFileReader.h"
+
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
 
 #include <string.h>
 
-#include "XMLFileReader.h"
 #include "../Internat.h"
 
 XMLFileReader::XMLFileReader()

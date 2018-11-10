@@ -51,6 +51,7 @@ preferences.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "Shuttle.h"
 
 #include <wx/defs.h>
 #include <wx/checkbox.h>
@@ -67,7 +68,6 @@ preferences.
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 
 //#include "Project.h"
-#include "Shuttle.h"
 #include "WrappedType.h"
 //#include "effects/Effect.h"
 

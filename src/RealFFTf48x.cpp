@@ -55,6 +55,7 @@
 */
 
 #include "Audacity.h"
+#include "RealFFTf48x.h"
 
 #include "Experimental.h"
 
@@ -72,7 +73,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "RealFFTf.h"
-#include "RealFFTf48x.h"
 #ifdef __WXMSW__
 #pragma warning(disable:4305)
 #else

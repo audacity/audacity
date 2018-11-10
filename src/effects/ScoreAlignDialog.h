@@ -9,6 +9,10 @@
 #ifndef __AUDACITY_SCORE_ALIGN_DIALOG__
 #define __AUDACITY_SCORE_ALIGN_DIALOG__
 
+#include "../Experimental.h"
+
+#ifdef EXPERIMENTAL_SCOREALIGN
+
 #include <wx/dialog.h>
 #include <wx/slider.h>
 #include <wx/checkbox.h>
@@ -125,5 +129,7 @@ private:
    DECLARE_EVENT_TABLE()
 
 };
+
+#endif
 
 #endif

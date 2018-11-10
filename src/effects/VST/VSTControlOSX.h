@@ -17,9 +17,7 @@
 
 #include <wx/osx/private.h>
 
-#include <wx/control.h>
-
-#include "aeffectx.h"
+#include "VSTControl.h"
 
 class VSTControlImpl final : public wxWidgetCocoaImpl
 {

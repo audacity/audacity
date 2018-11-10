@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Grid.h"
 
 #include <wx/defs.h>
 #include <wx/choice.h>
@@ -23,7 +24,6 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
-#include "Grid.h"
 #include "NumericTextCtrl.h"
 #include "../SelectedRegion.h"
 #include "../Internat.h"

@@ -15,6 +15,7 @@ class wxCheckBox;
 
 #include "../../MemoryX.h"
 #include <wx/dialog.h>
+#include <wx/dynlib.h>
 
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"

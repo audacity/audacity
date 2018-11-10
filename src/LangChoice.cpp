@@ -16,6 +16,7 @@ of languages for Audacity.
 
 
 #include "Audacity.h"
+#include "LangChoice.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -24,7 +25,6 @@ of languages for Audacity.
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
-#include "LangChoice.h"
 #include "Languages.h"
 #include "ShuttleGui.h"
 #include "widgets/wxPanelWrapper.h"

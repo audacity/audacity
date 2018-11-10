@@ -16,13 +16,13 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ImportExportPrefs.h"
 
 #include <wx/defs.h>
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "ImportExportPrefs.h"
 #include "../Internat.h"
 
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)

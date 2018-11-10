@@ -61,11 +61,11 @@ is time to refresh some aspect of the screen.
 *//*****************************************************************/
 
 #include "Audacity.h"
+#include "TrackPanel.h"
 
 #include "Experimental.h"
 
 #include "AdornedRulerPanel.h"
-#include "TrackPanel.h"
 #include "Project.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"

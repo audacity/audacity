@@ -21,6 +21,7 @@ UndoManager
 
 
 #include "Audacity.h"
+#include "UndoManager.h"
 
 #include <wx/hashset.h>
 
@@ -34,7 +35,6 @@ UndoManager
 #include "Diags.h"
 #include "Tags.h"
 
-#include "UndoManager.h"
 
 #include <unordered_set>
 

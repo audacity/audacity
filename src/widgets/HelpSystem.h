@@ -16,6 +16,7 @@
 
 #include <wx/defs.h>
 #include <wx/window.h>
+#include "wxPanelWrapper.h"
 
 class AudacityProject;
 

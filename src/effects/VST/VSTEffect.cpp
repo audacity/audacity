@@ -25,15 +25,14 @@
 // *******************************************************************
 
 #include "../../Audacity.h"
+#include "VSTEffect.h"
 
 #if 0
 #if defined(BUILDING_AUDACITY)
 #include "../../PlatformCompatibility.h"
 
 // Make the main function private
-#define MODULEMAIN_SCOPE static
 #else
-#define MODULEMAIN_SCOPE
 #define USE_VST 1
 #endif
 #endif
@@ -99,9 +98,18 @@
 
 #include "audacity/ConfigInterface.h"
 
-#include "VSTEffect.h"
 #include "../../MemoryX.h"
 #include <cstring>
+
+// Put this inclusion last.  On Linux it makes some unfortunate pollution of
+// preprocessor macro name space that interferes with other headers.
+#if defined(__WXOSX__)
+#include "VSTControlOSX.h"
+#elif defined(__WXMSW__)
+#include "VSTControlMSW.h"
+#elif defined(__WXGTK__)
+#include "VSTControlGTK.h"
+#endif
 
 static float reinterpretAsFloat(uint32_t x)
 {

@@ -27,6 +27,8 @@ with changes in the SpectralSelectionBar.
 
 
 #include "../Audacity.h"
+#include "SpectralSelectionBar.h"
+#include "SpectralSelectionBarListener.h"
 
 #include "../Experimental.h"
 
@@ -49,9 +51,6 @@ with changes in the SpectralSelectionBar.
 #include <wx/window.h>
 #endif
 #include <wx/statline.h>
-
-#include "SpectralSelectionBarListener.h"
-#include "SpectralSelectionBar.h"
 
 #include "../Prefs.h"
 #include "../AllThemeResources.h"

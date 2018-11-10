@@ -19,6 +19,7 @@ i.e. an alternative to the usual interface, for Audacity.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "ModuleManager.h"
 
 #include "Experimental.h"
 
@@ -43,7 +44,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "./prefs/ModulePrefs.h"
 #endif
 
-#include "ModuleManager.h"
 #include "widgets/MultiDialog.h"
 
 #include "widgets/ErrorDialog.h"

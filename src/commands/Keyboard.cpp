@@ -10,7 +10,6 @@
 **********************************************************************/
 
 #include "../Audacity.h"
-
 #include "Keyboard.h"
 
 NormalizedKeyString::NormalizedKeyString(const wxString & key)

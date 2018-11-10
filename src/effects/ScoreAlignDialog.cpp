@@ -17,6 +17,7 @@ It \TODO: description
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ScoreAlignDialog.h"
 
 #include "../Experimental.h"
 
@@ -51,7 +52,6 @@ It \TODO: description
 #include "audioreader.h"
 #include "scorealign.h"
 #include "scorealign-glue.h"
-#include "ScoreAlignDialog.h"
 
 static std::unique_ptr<ScoreAlignDialog> gScoreAlignDialog{};
 

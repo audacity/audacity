@@ -20,8 +20,8 @@
 
 
 #include "../Audacity.h"
-
 #include "SimpleMono.h"
+
 #include "../WaveTrack.h"
 
 #include <math.h>

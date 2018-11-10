@@ -22,9 +22,8 @@
 **********************************************************************/
 
 #include "../../Audacity.h"
+#include "AUControl.h"
 
-#include <AudioUnit/AudioUnit.h>
-#include <AudioUnit/AudioComponent.h>
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioUnit/AUCocoaUIView.h>
 #include <CoreAudioKit/CoreAudioKit.h>
@@ -33,7 +32,6 @@
 #include <AudioUnit/AudioUnitCarbonView.h>
 #endif
 
-#include "AUControl.h"
 #include "../../MemoryX.h"
 
 @interface AUView : NSView

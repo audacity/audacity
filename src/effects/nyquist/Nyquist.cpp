@@ -25,6 +25,7 @@ effects from this one class.
 *//*******************************************************************/
 
 #include "../../Audacity.h"
+#include "Nyquist.h"
 
 #include "../../Experimental.h"
 
@@ -68,8 +69,6 @@ effects from this one class.
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "../lib-src/FileDialog/FileDialog.h"
-
-#include "Nyquist.h"
 
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist

@@ -13,9 +13,10 @@
 
 *//*******************************************************************/
 
+#include "Spectrum.h"
+
 #include <math.h>
 
-#include "Spectrum.h"
 #include "FFT.h"
 
 #include "SampleFormat.h"

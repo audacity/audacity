@@ -8,12 +8,12 @@
 
 **********************************************************************/
 
+#include "Matrix.h"
+
 #include <stdlib.h>
 #include <math.h>
 
 #include <wx/defs.h>
-
-#include "Matrix.h"
 
 Vector::Vector()
 {

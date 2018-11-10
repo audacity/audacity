@@ -7,6 +7,10 @@
 ******************************************************************/
 
 #include "Audacity.h"
+#include "DeviceManager.h"
+
+// For compilers that support precompilation, includes "wx/wx.h".
+#include <wx/wxprec.h>
 
 #include "Experimental.h"
 
@@ -18,9 +22,6 @@
 #ifdef USE_PORTMIXER
 #include "portmixer.h"
 #endif
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
 #include <wx/choice.h>
@@ -37,7 +38,6 @@
 #include "AudioIO.h"
 
 #include "DeviceChange.h"
-#include "DeviceManager.h"
 #include "toolbars/DeviceToolBar.h"
 
 DeviceManager DeviceManager::dm;

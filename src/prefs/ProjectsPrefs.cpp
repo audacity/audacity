@@ -17,6 +17,7 @@ handling.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ProjectsPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
@@ -24,7 +25,6 @@ handling.
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "ProjectsPrefs.h"
 #include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////

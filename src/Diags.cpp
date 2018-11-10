@@ -29,6 +29,7 @@ count down so that we track how many times the event happens.
 
 
 #include "Audacity.h"
+#include "Diags.h"
 
 #include <wx/defs.h>
 #include <wx/hash.h>
@@ -36,7 +37,6 @@ count down so that we track how many times the event happens.
 #include <wx/log.h>
 
 #include <wx/stopwatch.h>
-#include "Diags.h"
 
 static wxStopWatch MasterWatch;
 static bool bStopWatchStarted = false;

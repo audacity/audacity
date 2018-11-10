@@ -26,6 +26,7 @@ hold information about one contributor to Audacity.
 
 
 #include "Audacity.h"
+#include "AboutDialog.h"
 
 #include "Experimental.h"
 
@@ -37,7 +38,6 @@ hold information about one contributor to Audacity.
 #include <wx/statbmp.h>
 #include <wx/intl.h>
 
-#include "AboutDialog.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "ShuttleGui.h"

@@ -51,6 +51,7 @@
 
 
 #include "Audacity.h"
+#include "Prefs.h"
 
 #include <wx/defs.h>
 #include <wx/app.h>
@@ -64,7 +65,6 @@
 #include "FileNames.h"
 #include "Languages.h"
 
-#include "Prefs.h"
 #include "widgets/ErrorDialog.h"
 #include "Internat.h"
 

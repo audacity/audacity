@@ -15,6 +15,8 @@ enum {
    FFT_FastMathBR24
 };
 
+struct FFTParam;
+
 /* wrapper funcitons. If passed -1 function choice will be made locally */
 void RealFFTf1x(fft_type *, FFTParam*, int functionType=-1);
 void InverseRealFFTf1x(fft_type *, FFTParam*, int functionType=-1);

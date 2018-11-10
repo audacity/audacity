@@ -22,6 +22,7 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "ToolDock.h"
 
 #include <wx/tokenzr.h>
 
@@ -39,7 +40,6 @@
 #endif  /*  */
 
 #include "ToolManager.h"
-#include "ToolDock.h"
 
 #include <algorithm>
 

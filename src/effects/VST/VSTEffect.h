@@ -18,7 +18,9 @@
 
 #include "../../SampleFormat.h"
 #include "../../widgets/NumericTextCtrl.h"
+#include "../../xml/XMLTagHandler.h"
 
+class VSTControl;
 #include "VSTControl.h"
 
 #define VSTCMDKEY wxT("-checkvst")
@@ -56,6 +58,13 @@ class wxDynamicLibrary;
 
 #if defined(__WXMAC__)
 struct __CFBundle;
+typedef struct __CFBundle *CFBundleRef;
+#if __LP64__
+typedef int CFBundleRefNum;
+#else
+typedef signed short                    SInt16;
+typedef SInt16 CFBundleRefNum;
+#endif
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

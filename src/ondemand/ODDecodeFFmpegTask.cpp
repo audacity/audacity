@@ -10,6 +10,7 @@
 ******************************************************************/
 
 #include "../Audacity.h"   // needed before FFmpeg.h
+#include "ODDecodeFFmpegTask.h"
 
 #include "../Experimental.h"
 
@@ -31,7 +32,6 @@
 
 
 extern FFmpegLibs *FFmpegLibsInst();
-#include "ODDecodeFFmpegTask.h"
 
 
 #define ODFFMPEG_SEEKING_TEST_UNKNOWN 0

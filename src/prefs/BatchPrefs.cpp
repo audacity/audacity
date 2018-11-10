@@ -15,12 +15,12 @@ setting used in debugging batch (aka macros) processing.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "BatchPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 
-#include "BatchPrefs.h"
 #include "../Languages.h"
 #include "../Prefs.h"
 #include "../Project.h"

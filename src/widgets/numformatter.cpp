@@ -16,6 +16,7 @@
 // ----------------------------------------------------------------------------
 
 #include "../Audacity.h"
+#include "numformatter.h"
 
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
@@ -30,7 +31,6 @@
 #endif
 
 
-#include "numformatter.h"
 #include "../Internat.h"
 #include <wx/intl.h>
 

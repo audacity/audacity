@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../../../WaveTrack.h"
+
 #include "WaveTrackControls.h"
 #include "WaveTrackVRulerControls.h"
 

@@ -11,6 +11,7 @@
 
 #include "../Experimental.h"
 
+class wxTextCtrl;
 class ShuttleGui;
 
 #ifdef EXPERIMENTAL_MIDI_OUT

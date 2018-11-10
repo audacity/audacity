@@ -23,6 +23,7 @@ other settings.
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "DevicePrefs.h"
 
 #include <wx/defs.h>
 
@@ -37,8 +38,6 @@ other settings.
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../DeviceManager.h"
-
-#include "DevicePrefs.h"
 
 enum {
    HostID = 10000,

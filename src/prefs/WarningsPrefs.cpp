@@ -18,12 +18,12 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "WarningsPrefs.h"
 
 #include <wx/defs.h>
 
 #include "../ShuttleGui.h"
 
-#include "WarningsPrefs.h"
 #include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////

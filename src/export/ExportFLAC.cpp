@@ -21,8 +21,8 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Audacity.h"
 
 #ifdef USE_LIBFLAC
-
 #include "ExportFLAC.h"
+
 #include "Export.h"
 
 #include <wx/progdlg.h>

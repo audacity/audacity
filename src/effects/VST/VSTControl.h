@@ -54,12 +54,4 @@ protected:
    VSTEffectLink *mLink;
 };
 
-#if defined(__WXOSX__)
-#include "VSTControlOSX.h"
-#elif defined(__WXMSW__)
-#include "VSTControlMSW.h"
-#elif defined(__WXGTK__)
-#include "VSTControlGTK.h"
-#endif
-
 #endif

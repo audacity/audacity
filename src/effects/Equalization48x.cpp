@@ -14,6 +14,7 @@
 *//****************************************************************/
 
 #include "../Audacity.h"
+#include "Equalization48x.h"
 
 #include "../Experimental.h"
 
@@ -36,7 +37,6 @@
 
 #include <math.h>
 
-#include "Equalization48x.h"
 #include "../RealFFTf.h"
 #include "../RealFFTf48x.h"
 

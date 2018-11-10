@@ -29,13 +29,13 @@ Provides:
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "ThemePrefs.h"
 
 #include <wx/wxprec.h>
 #include "../Prefs.h"
 #include "../Theme.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "ThemePrefs.h"
 #include "../AColor.h"
 
 enum eThemePrefsIds {

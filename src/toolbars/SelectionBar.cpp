@@ -27,6 +27,8 @@ with changes in the SelectionBar.
 
 
 #include "../Audacity.h"
+#include "SelectionBar.h"
+#include "SelectionBarListener.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -44,9 +46,6 @@ with changes in the SelectionBar.
 #endif
 #include <wx/statline.h>
 
-
-#include "SelectionBarListener.h"
-#include "SelectionBar.h"
 
 #include "../widgets/AButton.h"
 #include "../AudioIO.h"

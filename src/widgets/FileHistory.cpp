@@ -14,12 +14,12 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "FileHistory.h"
 
 #include <wx/defs.h>
 #include <wx/fileconf.h>
 #include <wx/menu.h>
 
-#include "FileHistory.h"
 #include "../Internat.h"
 
 FileHistory::FileHistory(size_t maxfiles, wxWindowID base)

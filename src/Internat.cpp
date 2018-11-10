@@ -20,6 +20,8 @@ and on Mac OS X for the filesystem.
 
 *//*******************************************************************/
 
+#include "Internat.h"
+
 #include "Experimental.h"
 
 #include <wx/log.h>
@@ -31,7 +33,6 @@ and on Mac OS X for the filesystem.
 
 #include "FileNames.h"
 #include "widgets/ErrorDialog.h"
-#include "Internat.h"
 #include "../include/audacity/ComponentInterface.h"
 
 // in order for the static member variables to exist, they must appear here

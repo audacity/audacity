@@ -14,10 +14,10 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "../Audacity.h"
 
 #if USE_SBSMS
+#include "SBSMSEffect.h"
 
 #include <math.h>
 
-#include "SBSMSEffect.h"
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
 #include "../Project.h"

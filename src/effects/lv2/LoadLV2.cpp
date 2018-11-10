@@ -17,6 +17,7 @@ Functions that find and load all LV2 plugins on the system.
 #include "../../Audacity.h"
 
 #if defined(USE_LV2)
+#include "LoadLV2.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -40,8 +41,6 @@ Functions that find and load all LV2 plugins on the system.
 #include "lv2/lv2plug.in/ns/ext/port-props/port-props.h"
 #include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"
 #include "lv2/lv2plug.in/ns/ext/presets/presets.h"
-
-#include "LoadLV2.h"
 
 #include <unordered_map>
 

@@ -81,6 +81,7 @@ CommandManager.  It holds the callback for one command.
 
 #include "../AudacityHeaders.h"
 #include "CommandManager.h"
+
 #include "CommandManagerWindowClasses.h"
 #include "CommandContext.h"
 

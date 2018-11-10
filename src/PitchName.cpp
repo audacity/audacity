@@ -18,11 +18,11 @@
 
 
 #include "Audacity.h"
+#include "PitchName.h"
 
 #include <math.h>
 #include <stdio.h>
 
-#include "PitchName.h"
 #include "Internat.h"
 
 

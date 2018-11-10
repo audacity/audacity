@@ -11,12 +11,12 @@
 #include "../../Audacity.h"
 
 #if defined(USE_VAMP)
+#include "LoadVamp.h"
 
 #include <wx/filename.h>
 
 #include "../EffectManager.h"
 #include "VampEffect.h"
-#include "LoadVamp.h"
 
 #include <iostream>
 #include <map>

@@ -25,10 +25,11 @@ Licensed under the GNU General Public License v2 or later
 
 #include "../Audacity.h"	// needed before GStreamer.h
 
+#if defined(USE_GSTREAMER)
+#include "ImportGStreamer.h"
+
 #include <wx/window.h>
 #include <wx/log.h>
-
-#if defined(USE_GSTREAMER)
 
 #include "../MemoryX.h"
 
@@ -54,7 +55,6 @@ Licensed under the GNU General Public License v2 or later
 #include "../WaveTrack.h"
 #include "Import.h"
 #include "ImportPlugin.h"
-#include "ImportGStreamer.h"
 
 extern "C"
 {

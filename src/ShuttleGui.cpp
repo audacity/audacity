@@ -94,12 +94,12 @@ for registering for changes.
 
 
 #include "Audacity.h"
+#include "ShuttleGui.h"
 
 #include "Experimental.h"
 
 #include "Prefs.h"
 #include "Shuttle.h"
-#include "ShuttleGui.h"
 
 #include "MemoryX.h"
 #include <wx/wx.h>

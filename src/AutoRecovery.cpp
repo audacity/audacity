@@ -20,7 +20,6 @@ text or binary format to a file.
 
 #include "Audacity.h"
 #include "AutoRecovery.h"
-
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
 #include "Project.h"

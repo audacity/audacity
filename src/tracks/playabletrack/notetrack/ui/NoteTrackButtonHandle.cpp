@@ -11,7 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 
 #ifdef USE_MIDI
-
 #include "NoteTrackButtonHandle.h"
 
 #include "../../../../HitTestResult.h"

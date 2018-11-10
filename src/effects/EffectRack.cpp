@@ -12,6 +12,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "EffectRack.h"
 
 #include "../Experimental.h"
 
@@ -36,7 +37,6 @@
 #include <wx/tglbtn.h>
 
 #include "EffectManager.h"
-#include "EffectRack.h"
 #include "../commands/CommandContext.h"
 #include "../Menus.h"
 #include "../Prefs.h"

@@ -25,6 +25,7 @@ in which buttons can be placed.
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "ToolBar.h"
 
 #include "../Experimental.h"
 
@@ -42,7 +43,6 @@ in which buttons can be placed.
 #include <wx/window.h>
 #endif  /*  */
 
-#include "ToolBar.h"
 #include "ToolDock.h"
 
 #include "../AllThemeResources.h"

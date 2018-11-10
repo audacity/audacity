@@ -15,13 +15,13 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "../Audacity.h"
 
 #if USE_SOUNDTOUCH
+#include "SoundTouchEffect.h"
 
 #include <math.h>
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
-#include "SoundTouchEffect.h"
 #include "TimeWarper.h"
 #include "../NoteTrack.h"
 

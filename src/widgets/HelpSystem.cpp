@@ -11,6 +11,7 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "HelpSystem.h"
 
 #include "../Experimental.h"
 
@@ -36,7 +37,6 @@
 #include "../Prefs.h"
 
 #include "ErrorDialog.h"
-#include "HelpSystem.h"
 
 #ifdef USE_ALPHA_MANUAL
 const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");

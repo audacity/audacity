@@ -15,10 +15,9 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Invert.h"
 
 #include <wx/intl.h>
-
-#include "Invert.h"
 
 EffectInvert::EffectInvert()
 {

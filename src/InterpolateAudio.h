@@ -26,6 +26,7 @@
 #define __AUDACITY_INTERPOLATE_AUDIO__
 
 #include "Audacity.h"
+#include <cstddef>
 
 // See top of file for a description of the algorithm.  Interpolates
 // the samples from buffer[firstBad] through buffer[firstBad+numBad-1],

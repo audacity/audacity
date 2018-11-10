@@ -25,6 +25,7 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "ToolManager.h"
 
 #include "../Experimental.h"
 
@@ -51,7 +52,6 @@
 
 #include "../AudacityApp.h"
 
-#include "ToolManager.h"
 #include "ControlToolBar.h"
 #include "DeviceToolBar.h"
 #include "EditToolBar.h"

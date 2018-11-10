@@ -26,10 +26,10 @@
 *//**********************************************************************/
 
 #include "Audacity.h"
+#include "WrappedType.h"
 
 #include <wx/wxprec.h>
 #include "Internat.h"
-#include "WrappedType.h"
 
 /// @return true iff the wrapped type is a string.
 bool WrappedType::IsString()

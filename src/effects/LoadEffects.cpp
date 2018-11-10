@@ -12,12 +12,12 @@
 *****************************************************************************/
 
 #include "../Audacity.h"
+#include "LoadEffects.h"
 
 #include "../Experimental.h"
 
 #include "../Prefs.h"
 
-#include "LoadEffects.h"
 #include "../MemoryX.h"
 
 #include "EffectManager.h"

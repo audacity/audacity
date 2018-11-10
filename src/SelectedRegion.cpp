@@ -8,10 +8,12 @@ Paul Licameli
 
 *******************************************************************/
 
+#include "SelectedRegion.h"
+
 #include "Experimental.h"
 
 #include "Internat.h"
-#include "SelectedRegion.h"
+
 #include "xml/XMLWriter.h"
 
 const wxChar *SelectedRegion::sDefaultT0Name = wxT("selStart");

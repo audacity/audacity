@@ -22,6 +22,7 @@ the audio, rather than actually finding the clicks.
 
 
 #include "../Audacity.h"
+#include "Repair.h"
 
 #include <math.h>
 
@@ -30,8 +31,6 @@ the audio, rather than actually finding the clicks.
 #include "../InterpolateAudio.h"
 #include "../WaveTrack.h"
 #include "../widgets/ErrorDialog.h"
-
-#include "Repair.h"
 
 EffectRepair::EffectRepair()
 {

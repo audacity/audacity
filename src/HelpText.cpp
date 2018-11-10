@@ -13,13 +13,12 @@
 *//********************************************************************/
 
 #include "Audacity.h"
+#include "HelpText.h"
 
 #include "Experimental.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
-
-#include "HelpText.h"
 
 #include "FileNames.h"
 #include "AboutDialog.h"

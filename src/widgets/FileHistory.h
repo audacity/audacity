@@ -24,6 +24,8 @@
 #include "audacity/Types.h"
 #include "../MemoryX.h"
 
+class wxConfigBase;
+
 class AUDACITY_DLL_API FileHistory
 {
  public:

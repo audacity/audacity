@@ -21,6 +21,7 @@
 
 
 #include "../Audacity.h"
+#include "Repeat.h"
 
 
 #include <math.h>
@@ -33,8 +34,6 @@
 #include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
-
-#include "Repeat.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

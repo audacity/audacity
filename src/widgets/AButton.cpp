@@ -22,8 +22,8 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
-
 #include "AButton.h"
+
 #include "../AColor.h"
 
 #include <wx/app.h>

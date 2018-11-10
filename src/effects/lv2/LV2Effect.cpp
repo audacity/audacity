@@ -12,6 +12,7 @@
 #include "../../Audacity.h"
 
 #if defined(USE_LV2)
+#include "LV2Effect.h"
 
 #include <cmath>
 
@@ -31,7 +32,6 @@
 #include <wx/scrolwin.h>
 
 #include "LoadLV2.h"
-#include "LV2Effect.h"
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"

@@ -21,6 +21,7 @@ messaging from a command back to its invoker.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "CommandContext.h"
 
 #include "Command.h"
 #include <map>
@@ -36,8 +37,6 @@ messaging from a command back to its invoker.
 #include "CommandTargets.h"
 #include "CommandDirectory.h"
 
-//#include "CommandContext.h"
-#include "CommandContext.h"
 #include "../Project.h"
 
 CommandContext::CommandContext(

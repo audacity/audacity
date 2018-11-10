@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "ResponseQueue.h"
+
 #include <queue>
 #include <string>
 #include <wx/thread.h>

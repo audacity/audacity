@@ -26,6 +26,7 @@
 #include <wx/control.h>
 
 #include <AudioUnit/AudioComponent.h>
+#include <AudioUnit/AudioUnit.h>
 
 class AUControlImpl final : public wxWidgetCocoaImpl
 {

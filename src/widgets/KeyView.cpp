@@ -12,6 +12,7 @@
 *//*********************************************************************/
 
 #include "../Audacity.h"
+#include "KeyView.h"
 
 #include <wx/defs.h>
 #include <wx/settings.h>
@@ -21,7 +22,6 @@
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
 #include "../commands/Keyboard.h"
-#include "KeyView.h"
 
 #include <wx/dc.h>
 #include "../Internat.h"

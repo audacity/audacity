@@ -16,7 +16,6 @@
 #include "../Audacity.h" // for USE_SBSMS
 
 #if USE_SBSMS
-
 #include "TimeScale.h"
 
 #include <math.h>

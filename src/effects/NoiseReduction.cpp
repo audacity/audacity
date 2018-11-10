@@ -37,10 +37,10 @@
 */
 
 #include "../Audacity.h"
+#include "NoiseReduction.h"
 
 #include "../Experimental.h"
 
-#include "NoiseReduction.h"
 #include "EffectManager.h"
 
 #include "../ShuttleGui.h"

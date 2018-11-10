@@ -16,13 +16,13 @@ with names like mnod-script-pipe that add NEW features.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ModulePrefs.h"
 
 #include <wx/defs.h>
 #include <wx/filename.h>
 
 #include "../ShuttleGui.h"
 
-#include "ModulePrefs.h"
 #include "../Prefs.h"
 #include "../Internat.h"
 

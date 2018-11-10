@@ -21,6 +21,7 @@ most commonly asked questions about Audacity.
 
 
 #include "Audacity.h"
+#include "SplashDialog.h"
 
 #include "Experimental.h"
 
@@ -33,7 +34,6 @@ most commonly asked questions about Audacity.
 #include <wx/intl.h>
 #include <wx/image.h>
 
-#include "SplashDialog.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "ShuttleGui.h"

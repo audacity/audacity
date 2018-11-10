@@ -20,6 +20,7 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "ErrorDialog.h"
 
 #include <wx/button.h>
 #include <wx/icon.h>
@@ -41,8 +42,6 @@
 #include "../Project.h"
 #include "../Prefs.h"
 #include "HelpSystem.h"
-
-#include "ErrorDialog.h"
 
 // special case for alias missing dialog because we keep track of if it exists.
 class AliasedFileMissingDialog final : public ErrorDialog

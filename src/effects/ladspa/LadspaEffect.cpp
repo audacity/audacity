@@ -23,6 +23,7 @@ effects from this one class.
 
 
 #include "../../Audacity.h"
+#include "LadspaEffect.h"       // This class's header file
 
 #include "ladspa.h"
 
@@ -33,7 +34,6 @@ effects from this one class.
 #include <wx/checkbox.h>
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
-#include <wx/dynlib.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/menu.h>
@@ -47,7 +47,6 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
-#include "LadspaEffect.h"       // This class's header file
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"

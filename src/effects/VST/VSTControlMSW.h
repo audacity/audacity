@@ -13,9 +13,7 @@
 
 #include <Windows.h>
 
-#include <wx/control.h>
-
-#include "aeffectx.h"
+#include "VSTControl.h"
 
 class VSTControl final : public VSTControlBase
 {

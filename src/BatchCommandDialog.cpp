@@ -19,7 +19,9 @@ selected command.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "BatchCommandDialog.h"
 
+//
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -36,7 +38,6 @@ selected command.
 
 
 #include "Project.h"
-#include "BatchCommandDialog.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "BatchCommands.h"

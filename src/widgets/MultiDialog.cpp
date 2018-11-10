@@ -19,10 +19,9 @@ for each problem encountered, since there can be many orphans.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "MultiDialog.h"
 
 #include "../Project.h"
-
-#include "MultiDialog.h"
 
 #include <wx/app.h>
 #include <wx/button.h>
@@ -190,3 +189,7 @@ int ShowMultiDialog(const wxString &message,
    return dlog.ShowModal();
 }
 
+wxString DefaultMultiDialogMessage()
+{
+   return _("Please select an action");
+}

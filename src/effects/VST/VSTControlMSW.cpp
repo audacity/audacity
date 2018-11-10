@@ -8,10 +8,10 @@
 
 **********************************************************************/
 
+#include "VSTControlMSW.h"
+
 #include <wx/dynlib.h>
 #include <wx/sizer.h>
-
-#include "VSTControl.h"
 
 VSTControl::VSTControl()
 :  VSTControlBase()

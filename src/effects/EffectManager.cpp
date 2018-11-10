@@ -19,6 +19,7 @@ effects.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "EffectManager.h"
 
 #include "../Experimental.h"
 
@@ -32,7 +33,6 @@ effects.
 #include "EffectRack.h"
 #endif
 
-#include "EffectManager.h"
 #include "../Shuttle.h"
 #include "../commands/Command.h"
 #include "../commands/CommandContext.h"

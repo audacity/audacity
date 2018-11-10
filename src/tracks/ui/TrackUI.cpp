@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../Track.h"
+
 #include "../../TrackPanelMouseEvent.h"
 #include "TrackControls.h"
 #include "TrackVRulerControls.h"

@@ -18,8 +18,8 @@
 #include "../Audacity.h"
 
 #ifdef USE_LIBVORBIS
-
 #include "ExportOGG.h"
+
 #include "Export.h"
 
 #include <wx/log.h>

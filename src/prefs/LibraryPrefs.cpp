@@ -17,6 +17,7 @@ MP3 and FFmpeg encoding libraries.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "LibraryPrefs.h"
 
 #include "../Experimental.h"
 
@@ -30,7 +31,6 @@ MP3 and FFmpeg encoding libraries.
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ErrorDialog.h"
 
-#include "LibraryPrefs.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

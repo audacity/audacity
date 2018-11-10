@@ -63,6 +63,8 @@ ExpandingToolBar.
 
 *//*******************************************************************/
 
+#include "ExpandingToolBar.h"
+
 #include "../Experimental.h"
 
 #include "../Theme.h"
@@ -77,10 +79,8 @@ ExpandingToolBar.
 #include <wx/wx.h>
 #include <wx/dcmemory.h>
 #include <wx/log.h>
-#include <wx/dragimag.h>
 #include <wx/dialog.h>
 
-#include "ExpandingToolBar.h"
 #include "AButton.h"
 #include "../AllThemeResources.h"
 

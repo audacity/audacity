@@ -10,11 +10,11 @@
 **********************************************************************/
 
 #include "Audacity.h"
+#include "MixerBoard.h"
 
 #include "Experimental.h"
 
 #include "Menus.h"
-#include "MixerBoard.h"
 
 #include <cfloat>
 #include <math.h>

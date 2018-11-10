@@ -21,6 +21,7 @@ used throughout Audacity into this one place.
 *//********************************************************************/
 
 #include "Audacity.h"
+#include "FileNames.h"
 
 #include "Experimental.h"
 
@@ -31,7 +32,6 @@ used throughout Audacity into this one place.
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include "Prefs.h"
-#include "FileNames.h"
 #include "Internat.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"

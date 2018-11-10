@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "TimeDialog.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -22,7 +23,6 @@
 
 #include "widgets/NumericTextCtrl.h"
 #include "ShuttleGui.h"
-#include "TimeDialog.h"
 
 BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)
