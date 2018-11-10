@@ -86,11 +86,11 @@ void DoMixAndRender
          if (pNewRight)
             msg.Printf(
                _("Mixed and rendered %d tracks into one new stereo track"),
-               selectedCount);
+               (int)selectedCount);
          else
             msg.Printf(
                _("Mixed and rendered %d tracks into one new mono track"),
-               selectedCount);
+               (int)selectedCount);
          project.PushState(msg, _("Mix and Render"));
       }
 
