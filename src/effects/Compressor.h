@@ -12,13 +12,13 @@
 #define __AUDACITY_EFFECT_COMPRESSOR__
 
 #include <wx/bitmap.h>
-#include <wx/checkbox.h>
 #include <wx/gdicmn.h>
 #include "../widgets/wxPanelWrapper.h"
 
 #include "TwoPassSimpleMono.h"
 #include "../SampleFormat.h"
 
+class wxCheckBox;
 class wxSlider;
 class wxStaticText;
 class EffectCompressorPanel;

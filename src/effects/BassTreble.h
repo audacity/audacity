@@ -12,11 +12,10 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include <wx/checkbox.h>
-
 #include "Effect.h"
 
 class wxSlider;
+class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 

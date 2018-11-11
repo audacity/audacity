@@ -25,7 +25,6 @@
 #include "BatchCommands.h"
 
 class wxWindow;
-class wxCheckBox;
 class wxTextCtrl;
 class wxRadioButton;
 class wxListCtrl;

@@ -26,6 +26,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/defs.h>
 #include <wx/dir.h>

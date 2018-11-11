@@ -23,6 +23,7 @@
 
 #include <math.h>
 
+#include <wx/checkbox.h>
 #include <wx/intl.h>
 #include <wx/stattext.h>
 #include <wx/valgen.h>

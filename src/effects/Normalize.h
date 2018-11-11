@@ -15,11 +15,10 @@
 
 #include "../Experimental.h"
 
-#include <wx/checkbox.h>
-
 #include "Effect.h"
 #include "Biquad.h"
 
+class wxCheckBox;
 class wxStaticText;
 class wxTextCtrl;
 class ShuttleGui;

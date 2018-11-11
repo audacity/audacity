@@ -17,7 +17,6 @@ Paul Licameli
 #include "../widgets/NumericTextCtrl.h"
 
 class wxBitmap;
-class wxCheckBox;
 class wxChoice;
 class wxComboBox;
 class wxCommandEvent;

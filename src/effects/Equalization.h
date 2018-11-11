@@ -24,7 +24,6 @@
 #include <wx/listctrl.h>
 #include <wx/bitmap.h>
 #include <wx/radiobut.h>
-#include <wx/checkbox.h>
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -52,6 +51,7 @@ const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
 class wxBoxSizer;
 class wxButton;
+class wxCheckBox;
 class wxChoice;
 class wxSizer;
 class wxSizerItem;

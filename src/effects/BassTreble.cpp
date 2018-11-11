@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>

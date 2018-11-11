@@ -17,7 +17,6 @@ class wxArrayString;
 
 #include "../../MemoryX.h"
 #include <vector>
-#include <wx/checkbox.h>
 #include <wx/dialog.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"

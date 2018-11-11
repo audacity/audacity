@@ -16,7 +16,6 @@
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
 #include <wx/panel.h>
-#include <wx/checkbox.h>
 #include <wx/dialog.h>
 #include <wx/gdicmn.h>
 #include <wx/pen.h>
@@ -31,6 +30,7 @@ class wxSlider;
 class wxStatusBar;
 class wxTextCtrl;
 class wxButton;
+class wxCheckBox;
 class wxChoice;
 
 class AudacityProject;

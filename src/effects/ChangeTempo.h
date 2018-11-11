@@ -19,12 +19,12 @@
 
 #if USE_SBSMS
 #include "SBSMSEffect.h"
-#include <wx/checkbox.h>
 #endif
 
 #include "SoundTouchEffect.h"
 
 class wxSlider;
+class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 

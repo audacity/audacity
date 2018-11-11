@@ -23,7 +23,6 @@ the pitch without changing the tempo.
 
 #if USE_SBSMS
 #include "SBSMSEffect.h"
-#include <wx/checkbox.h>
 #endif
 
 #include <wx/spinctrl.h>
@@ -32,6 +31,7 @@ the pitch without changing the tempo.
 
 class wxSlider;
 class wxChoice;
+class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 

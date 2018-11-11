@@ -27,7 +27,6 @@
 #define SIZER_COLS 7
 
 class wxBitmap;
-class wxCheckBox;
 class wxChoice;
 class wxComboBox;
 class wxCommandEvent;

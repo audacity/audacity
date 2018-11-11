@@ -49,6 +49,7 @@ and in the spectrogram spectral selection.
 
 #include <wx/brush.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/font.h>
 #include <wx/image.h>

@@ -33,6 +33,7 @@
 #define M_PI_2 1.57079632679489661923132169163975 
 #endif
 
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/valgen.h>

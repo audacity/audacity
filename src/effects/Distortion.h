@@ -11,14 +11,13 @@
 #ifndef __AUDACITY_EFFECT_DISTORTION__
 #define __AUDACITY_EFFECT_DISTORTION__
 
-#include <wx/checkbox.h>
-
 #include <queue>
 
 #include "Effect.h"
 
 class wxSlider;
 class wxStaticText;
+class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 

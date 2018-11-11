@@ -15,8 +15,6 @@
 
 #if defined(USE_VAMP)
 
-#include <wx/checkbox.h>
-
 #include <vamp-hostsdk/PluginLoader.h>
 
 #include "../../SampleFormat.h"
@@ -25,6 +23,7 @@
 class wxStaticText;
 class wxSlider;
 class wxChoice;
+class wxCheckBox;
 class wxTextCtrl;
 class LabelTrack;
 

@@ -28,6 +28,7 @@ LRN
 class wxArrayStringEx;
 
 class wxArrayString;
+class wxCheckBox;
 class wxStaticText;
 class wxTextCtrl;
 

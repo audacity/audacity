@@ -19,7 +19,6 @@ class wxStaticBitmap;
 class wxBitmap;
 class ShuttleGui;
 class AudacityProject;
-class wxCheckbox;
 class HtmlWindow;
 
 class SplashDialog final : public wxDialogWrapper {

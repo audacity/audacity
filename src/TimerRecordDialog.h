@@ -21,9 +21,9 @@
 #include <wx/datectrl.h>
 #include <wx/calctrl.h>
 #include <wx/timer.h>
-#include <wx/checkbox.h>
 #include "export/Export.h"
 
+class wxCheckBox;
 class wxTimerEvent;
 
 class NumericTextCtrl;
