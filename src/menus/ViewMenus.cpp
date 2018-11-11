@@ -247,6 +247,18 @@ void OnZoomFitV(const CommandContext &context)
    project.ModifyState(true);
 }
 
+void OnAdvancedVZoom(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto commandManager = project.GetCommandManager();
+
+   bool checked = !gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L);
+   gPrefs->Write(wxT("/GUI/VerticalZooming"), checked);
+   gPrefs->Flush();
+   commandManager->Check(wxT("AdvancedVZoom"), checked);
+   MenuCreator::RebuildAllMenuBars();
+}
+
 void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
@@ -381,9 +393,9 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   
+
    static const auto checkOff = Options{}.CheckState( false );
-   
+
    return Menu( _("&View"),
       Menu( _("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
@@ -395,7 +407,11 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
          Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
             TimeSelectedFlag, wxT("Ctrl+E") ),
          Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
-            TracksExistFlag, wxT("Shift+Z") )
+            TracksExistFlag, wxT("Shift+Z") ),
+         Separator(),
+         Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
+            FN(OnAdvancedVZoom), AlwaysEnabledFlag,
+            Options{}.CheckState( gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L) ) )
       ),
 
       Menu( _("T&rack Size"),
