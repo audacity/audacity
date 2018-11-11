@@ -19,6 +19,8 @@
 #include "../Audacity.h" // for rint from configwin.h
 #include "Normalize.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 
 #include <wx/intl.h>

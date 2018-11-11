@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_KEY_CONFIG_PREFS__
 #define __AUDACITY_KEY_CONFIG_PREFS__
 
-#include "../Experimental.h"
-
 class CommandManager;
 class ShuttleGui;
 

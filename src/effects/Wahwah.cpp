@@ -21,6 +21,8 @@
 #include "../Audacity.h"
 #include "Wahwah.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 
 #include <wx/intl.h>
@@ -28,8 +30,6 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "../Experimental.h"
 
 enum
 {

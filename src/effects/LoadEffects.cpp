@@ -13,6 +13,8 @@
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include "../Prefs.h"
 
 #include "LoadEffects.h"
@@ -60,8 +62,6 @@
 #include "ChangePitch.h"
 #include "ChangeTempo.h"
 #endif
-
-#include "../Experimental.h"
 
 //
 // Include the SoundTouch effects, if requested

@@ -146,8 +146,6 @@ extern "C" {
 }
 #endif
 
-#include "Experimental.h"
-
 /* rather earlier than normal, but pulls in config*.h and other program stuff
  * we need for the next bit */
 #include <wx/string.h>

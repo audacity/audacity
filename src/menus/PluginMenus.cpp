@@ -1,8 +1,9 @@
+#include "../Experimental.h"
+
 #include "../AudacityApp.h"
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
-#include "../Experimental.h"
 #include "../FreqWindow.h"
 #include "../Menus.h"
 #include "../PluginManager.h"

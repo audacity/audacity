@@ -29,7 +29,6 @@ around to NEW positions.
 #include <wx/window.h>
 
 #include "Grabber.h"
-#include "../Experimental.h"
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"

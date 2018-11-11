@@ -20,6 +20,8 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
@@ -44,7 +46,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "ModuleManager.h"
 #include "widgets/MultiDialog.h"
 
-#include "Experimental.h"
 #include "widgets/ErrorDialog.h"
 
 #define initFnName      "ExtensionModuleInit"

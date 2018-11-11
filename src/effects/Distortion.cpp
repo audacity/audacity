@@ -19,6 +19,8 @@
 #include "../Audacity.h"
 #include "Distortion.h"
 
+#include "../Experimental.h"
+
 #include <cmath>
 #include <algorithm>
 #define _USE_MATH_DEFINES

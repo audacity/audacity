@@ -21,6 +21,8 @@
 
 #include "WaveClip.h"
 
+#include "Experimental.h"
+
 #include <math.h>
 #include "MemoryX.h"
 #include <functional>
@@ -42,8 +44,6 @@
 #include "prefs/SpectrogramSettings.h"
 
 #include <wx/listimpl.cpp>
-
-#include "Experimental.h"
 
 #ifdef _OPENMP
 #include <omp.h>

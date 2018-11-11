@@ -25,6 +25,8 @@
 #include "../Audacity.h"
 #include "ImportFLAC.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -43,8 +45,6 @@
 
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
-
-#include "../Experimental.h"
 
 #define FLAC_HEADER "fLaC"
 

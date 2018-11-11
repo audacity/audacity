@@ -20,6 +20,8 @@ and on Mac OS X for the filesystem.
 
 *//*******************************************************************/
 
+#include "Experimental.h"
+
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
@@ -27,7 +29,6 @@ and on Mac OS X for the filesystem.
 #include <locale.h>
 #include <math.h> // for pow()
 
-#include "Experimental.h"
 #include "FileNames.h"
 #include "widgets/ErrorDialog.h"
 #include "Internat.h"

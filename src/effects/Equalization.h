@@ -9,13 +9,13 @@
 
 ***********************************************************************/
 
+#include "../Experimental.h"
+
 #ifndef __AUDACITY_EFFECT_EQUALIZATION__
 #define __AUDACITY_EFFECT_EQUALIZATION__
 #define NUMBER_OF_BANDS 31
 #define NUM_PTS 180
 #define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
-
-#include "../Experimental.h"
 
 #include <wx/button.h>
 #include <wx/panel.h>

@@ -17,6 +17,8 @@
 #include "Audacity.h"
 #include "audacity/Types.h"
 
+#include "Experimental.h"
+
 #include "MemoryX.h"
 #include <wx/app.h>
 #include <wx/cmdline.h>
@@ -31,7 +33,6 @@
 
 #include "widgets/FileHistory.h"
 #include "ondemand/ODTaskThread.h"
-#include "Experimental.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>

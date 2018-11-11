@@ -19,6 +19,8 @@
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <wx/choice.h>
 #include <wx/defs.h>
 
@@ -29,7 +31,6 @@
 
 #include "EffectsPrefs.h"
 
-#include "../Experimental.h"
 #include "../Internat.h"
 
 EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)

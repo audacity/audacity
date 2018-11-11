@@ -16,6 +16,8 @@ Paul Licameli
 #include "../Audacity.h"
 #include "SpectrogramSettings.h"
 
+#include "../Experimental.h"
+
 #include "../NumberScale.h"
 #include "../TranslatableStringArray.h"
 
@@ -27,7 +29,6 @@ Paul Licameli
 
 #include <cmath>
 
-#include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
 #include "../Internat.h"
 

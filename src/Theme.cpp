@@ -61,6 +61,8 @@ can't be.
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/wxprec.h>
 #include <wx/image.h>
 #include <wx/file.h>
@@ -73,7 +75,6 @@ can't be.
 #include "toolbars/ToolManager.h"
 #include "ImageManipulation.h"
 #include "Theme.h"
-#include "Experimental.h"
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"

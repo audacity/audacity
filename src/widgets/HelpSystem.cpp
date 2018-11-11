@@ -12,6 +12,8 @@
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <wx/button.h>
 #include <wx/icon.h>
 #include <wx/dialog.h>

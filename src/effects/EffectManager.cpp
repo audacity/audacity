@@ -20,11 +20,12 @@ effects.
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <algorithm>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
 
-#include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)

@@ -11,12 +11,13 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
+#include "../../Experimental.h"
+
 #include "../../MemoryX.h"
 #include <vector>
 #include <wx/event.h>
 #include <wx/longlong.h>
 
-#include "../../Experimental.h"
 #include "../../widgets/Overlay.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"

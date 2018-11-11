@@ -18,6 +18,8 @@ MP3 and FFmpeg encoding libraries.
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/button.h>
 
@@ -29,8 +31,6 @@ MP3 and FFmpeg encoding libraries.
 #include "../widgets/ErrorDialog.h"
 
 #include "LibraryPrefs.h"
-
-#include "../Experimental.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

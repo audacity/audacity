@@ -55,6 +55,8 @@
 #include "../Audacity.h"
 #include "Equalization.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 #include <vector>
 
@@ -79,7 +81,6 @@
 #include <wx/tooltip.h>
 #include <wx/utils.h>
 
-#include "../Experimental.h"
 #include "../AColor.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

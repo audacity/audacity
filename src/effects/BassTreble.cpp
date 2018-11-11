@@ -17,6 +17,8 @@
 #include "../Audacity.h"
 #include "BassTreble.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 #include <algorithm>
 

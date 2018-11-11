@@ -10,7 +10,6 @@
 #ifndef __AUDACITY_MENUS__
 #define __AUDACITY_MENUS__
 
-#include "Experimental.h"
 #include "audacity/Types.h"
 
 #include <wx/arrstr.h>

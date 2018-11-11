@@ -19,6 +19,8 @@ It is also a place to document colour usage policy in Audacity
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/window.h>
 #include <wx/colour.h>
 #include <wx/dc.h>
@@ -28,7 +30,6 @@ It is also a place to document colour usage policy in Audacity
 
 #include "AColor.h"
 #include "Theme.h"
-#include "Experimental.h"
 #include "AllThemeResources.h"
 
 void DCUnchanger::operator () (wxDC *pDC) const

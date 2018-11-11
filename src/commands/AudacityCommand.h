@@ -30,7 +30,6 @@ class wxChoice;
 class wxListBox;
 class wxWindow;
 
-#include "../Experimental.h"
 #include "../SampleFormat.h"
 #include "../SelectedRegion.h"
 #include "../Internat.h"

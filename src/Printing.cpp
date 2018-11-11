@@ -30,8 +30,6 @@
 #include "widgets/Ruler.h"
 #include "widgets/ErrorDialog.h"
 
-#include "Experimental.h"
-
 #include "TrackPanelDrawingContext.h"
 #include "Internat.h"
 

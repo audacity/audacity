@@ -11,6 +11,8 @@
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include "Menus.h"
 #include "MixerBoard.h"
 
@@ -22,7 +24,6 @@
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 
 #include "Theme.h"
-#include "Experimental.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"

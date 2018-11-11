@@ -26,6 +26,8 @@ in which buttons can be placed.
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -42,7 +44,6 @@ in which buttons can be placed.
 
 #include "ToolBar.h"
 #include "ToolDock.h"
-#include "../Experimental.h"
 
 #include "../AllThemeResources.h"
 #include "../AColor.h"

@@ -16,14 +16,14 @@
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include "MemoryX.h"
 #include <wx/event.h>
 #include <wx/log.h>
 #include <wx/frame.h>
 #include <wx/textctrl.h>
 #include <wx/string.h>
-
-#include "Experimental.h"
 
 class AudacityLogger final : public wxEvtHandler, public wxLog {
  public:

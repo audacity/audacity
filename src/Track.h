@@ -13,6 +13,8 @@
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include "MemoryX.h"
 #include <vector>
 #include <list>
@@ -22,7 +24,6 @@
 #include <wx/longlong.h>
 #include <wx/string.h>
 
-#include "Experimental.h"
 #include "SampleFormat.h"
 #include "tracks/ui/CommonTrackPanelCell.h"
 #include "xml/XMLTagHandler.h"

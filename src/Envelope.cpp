@@ -27,7 +27,9 @@ a draggable point type.
 *//*******************************************************************/
 
 #include "Envelope.h"
+
 #include "Experimental.h"
+
 #include "ViewInfo.h"
 
 #include <math.h>

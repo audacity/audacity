@@ -57,6 +57,7 @@ array of Ruler::Label.
 #include "../Audacity.h"
 #include "Ruler.h"
 
+#include "../Experimental.h"
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"

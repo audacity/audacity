@@ -63,6 +63,8 @@ ExpandingToolBar.
 
 *//*******************************************************************/
 
+#include "../Experimental.h"
+
 #include "../Theme.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -81,7 +83,6 @@ ExpandingToolBar.
 #include "ExpandingToolBar.h"
 #include "AButton.h"
 #include "../AllThemeResources.h"
-#include "../Experimental.h"
 
 const int kToggleButtonHeight = 8;
 const int kTimerInterval = 50; // every 50 ms -> ~20 updates per second

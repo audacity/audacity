@@ -19,9 +19,9 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "RecordingPrefs.h"
 
 #include "../Experimental.h"
-#include "RecordingPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
@@ -32,7 +32,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Experimental.h"
 #include "../Internat.h"
 
 #include "../widgets/Warning.h"

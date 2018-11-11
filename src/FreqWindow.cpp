@@ -79,8 +79,6 @@ and in the spectrogram spectral selection.
 
 #include "WaveTrack.h"
 
-#include "Experimental.h"
-
 #include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"

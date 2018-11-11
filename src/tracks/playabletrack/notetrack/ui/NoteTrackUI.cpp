@@ -9,10 +9,11 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../../../Audacity.h"
-
 #ifdef USE_MIDI
-
 #include "../../../../NoteTrack.h"
+
+#include "../../../../Experimental.h"
+
 #include "NoteTrackControls.h"
 #include "NoteTrackVRulerControls.h"
 

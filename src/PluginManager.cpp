@@ -20,6 +20,8 @@ for shared and private configs - which need to move out.
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <algorithm>
 
 #include <wx/defs.h>
@@ -53,8 +55,6 @@ for shared and private configs - which need to move out.
 #endif
 
 #include "PluginManager.h"
-
-#include "Experimental.h"
 
 #include <unordered_map>
 

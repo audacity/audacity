@@ -23,6 +23,8 @@ Licensed under the GNU General Public License v2 or later
 #include "../Audacity.h"    // needed before FFmpeg.h
 #include "ImportFFmpeg.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -33,7 +35,6 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
-#include "../Experimental.h"
 #include "../MemoryX.h"
 
 

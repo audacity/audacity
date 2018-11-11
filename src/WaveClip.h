@@ -20,7 +20,6 @@
 #include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"
 
-#include "Experimental.h"
 #include "RealFFTf.h"
 
 #include <wx/gdicmn.h>

@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackVZoomHandle.h"
 
 #include "../../../../Experimental.h"
+
 #include "WaveTrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"

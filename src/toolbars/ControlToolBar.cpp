@@ -34,10 +34,11 @@
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <algorithm>
 #include <cfloat>
 
-#include "../Experimental.h"
 #include "ControlToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

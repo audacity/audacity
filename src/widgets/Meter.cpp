@@ -41,6 +41,8 @@
 #include "../Audacity.h"
 #include "Meter.h"
 
+#include "../Experimental.h"
+
 #include <algorithm>
 #include <wx/app.h>
 #include <wx/defs.h>
@@ -70,7 +72,6 @@
 
 #include "../Theme.h"
 #include "../AllThemeResources.h"
-#include "../Experimental.h"
 #include "../widgets/valnum.h"
 
 static const long MIN_REFRESH_RATE = 1;

@@ -28,6 +28,9 @@ Track classes.
 
 
 #include "WaveTrack.h"
+
+#include "Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/debug.h>
@@ -57,8 +60,6 @@ Track classes.
 #include "prefs/WaveformPrefs.h"
 
 #include "InconsistencyException.h"
-
-#include "Experimental.h"
 
 #include "TrackPanel.h" // for TrackInfo
 // Assumptions in objects separation were wrong.  We need to activate

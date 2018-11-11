@@ -21,12 +21,13 @@
 #include "Audacity.h"
 #include "AdornedRulerPanel.h"
 
+#include "Experimental.h"
+
 #include <wx/tooltip.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "Experimental.h"
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"

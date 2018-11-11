@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_SLIDER__
 #define __AUDACITY_SLIDER__
 
-#include "../Experimental.h"
-
 #include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/window.h>

@@ -41,6 +41,8 @@ audio tracks.
 #include "Audacity.h"
 #include "TrackArtist.h"
 
+#include "Experimental.h"
+
 #include "float_cast.h"
 
 #include <math.h>
@@ -84,7 +86,6 @@ audio tracks.
 #include "widgets/Ruler.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
-#include "Experimental.h"
 #include "TrackPanelDrawingContext.h"
 
 

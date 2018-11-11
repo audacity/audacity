@@ -1,6 +1,7 @@
+#include "../Experimental.h"
+
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
-#include "../Experimental.h"
 #include "../FreqWindow.h"
 #include "../Menus.h" // for PrefsListener
 #include "../Prefs.h"

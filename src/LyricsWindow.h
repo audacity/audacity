@@ -9,8 +9,6 @@
 
 **********************************************************************/
 
-#include "Experimental.h"
-
 #ifndef __AUDACITY_LYRICS_WINDOW__
 #define __AUDACITY_LYRICS_WINDOW__
 

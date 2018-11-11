@@ -22,6 +22,8 @@ most commonly asked questions about Audacity.
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
 #include <wx/button.h>

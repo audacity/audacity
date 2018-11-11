@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackSelectHandle.h"
 
 #include "TrackControls.h"
-#include "../../Experimental.h"
 #include "../../HitTestResult.h"
 #include "../../Menus.h"
 #include "../../Project.h"

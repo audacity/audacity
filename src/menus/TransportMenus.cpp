@@ -1,7 +1,8 @@
+#include "../Experimental.h"
+
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../DeviceManager.h"
-#include "../Experimental.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Prefs.h"

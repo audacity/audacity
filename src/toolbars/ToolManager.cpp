@@ -26,6 +26,8 @@
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -72,8 +74,6 @@
 #include "../widgets/ASlider.h"
 #include "../widgets/Meter.h"
 #include "../widgets/Grabber.h"
-
-#include "../Experimental.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolFrame

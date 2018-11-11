@@ -77,6 +77,8 @@ CommandManager.  It holds the callback for one command.
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include "../AudacityHeaders.h"
 #include "CommandManager.h"
 #include "CommandManagerWindowClasses.h"
@@ -122,8 +124,6 @@ CommandManager.  It holds the callback for one command.
 #elif defined(__WXGTK__)
 #include <gtk/gtk.h>
 #endif
-
-#include "../Experimental.h"
 
 NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
 {

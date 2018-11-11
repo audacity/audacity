@@ -20,6 +20,8 @@
 #include "../Audacity.h"
 #include "GUIPrefs.h"
 
+#include "../Experimental.h"
+
 #include <wx/defs.h>
 
 #include "../AudacityApp.h"
@@ -29,8 +31,6 @@
 #include "../ShuttleGui.h"
 
 #include "GUISettings.h"
-
-#include "../Experimental.h"
 
 #include "ThemePrefs.h"
 #include "../AColor.h"

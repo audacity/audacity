@@ -17,6 +17,8 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "Audacity.h" // This should always be included first
 
+#include "Experimental.h"
+
 #if 0
 // This may be used to debug memory leaks.
 // See: Visual Leak Dectector @ http://vld.codeplex.com/
@@ -103,8 +105,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "ModuleManager.h"
 
 #include "import/Import.h"
-
-#include "Experimental.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>

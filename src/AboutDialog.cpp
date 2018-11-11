@@ -27,6 +27,8 @@ hold information about one contributor to Audacity.
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
 #include <wx/button.h>

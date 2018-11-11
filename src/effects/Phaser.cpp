@@ -22,6 +22,8 @@
 #include "../Audacity.h"
 #include "Phaser.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 
 #include <wx/intl.h>
@@ -29,8 +31,6 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "../Experimental.h"
 
 enum
 {

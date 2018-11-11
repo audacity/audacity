@@ -14,9 +14,9 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "DtmfGen.h"
 
 #include "../Experimental.h"
-#include "DtmfGen.h"
 
 #include <wx/intl.h>
 #include <wx/valgen.h>

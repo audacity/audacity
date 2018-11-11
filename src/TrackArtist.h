@@ -18,10 +18,11 @@
 #ifndef __AUDACITY_TRACKARTIST__
 #define __AUDACITY_TRACKARTIST__
 
+#include "Experimental.h"
+
 #include "MemoryX.h"
 #include <wx/brush.h>
 #include <wx/pen.h>
-#include "Experimental.h"
 #include "audacity/Types.h"
 
 class wxRect;

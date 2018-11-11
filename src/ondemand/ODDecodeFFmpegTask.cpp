@@ -11,14 +11,14 @@
 
 #include "../Audacity.h"   // needed before FFmpeg.h
 
+#include "../Experimental.h"
+
 #include <wx/wxprec.h>
 // For compilers that support precompilation, includes "wx/wx.h".
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
 #endif
-
-#include "../Experimental.h"
 
 #ifdef USE_FFMPEG
 #ifdef EXPERIMENTAL_OD_FFMPEG

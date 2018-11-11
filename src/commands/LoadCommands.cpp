@@ -22,7 +22,6 @@ modelled on BuiltinEffectsModule
 
 #include "../effects/EffectManager.h"
 #include "Demo.h"
-#include "../Experimental.h"
 #include "../commands/MessageCommand.h"
 #include "../commands/ScreenshotCommand.h"
 #include "../commands/CompareAudioCommand.h"

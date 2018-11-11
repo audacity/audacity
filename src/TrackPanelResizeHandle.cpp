@@ -11,8 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "Audacity.h"
 #include "TrackPanelResizeHandle.h"
 
-#include "Experimental.h"
-
 #include "MemoryX.h"
 
 #include <wx/cursor.h>

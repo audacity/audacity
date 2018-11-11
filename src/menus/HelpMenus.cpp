@@ -1,9 +1,10 @@
+#include "../Experimental.h"
+
 #include "../AboutDialog.h"
 #include "../AudacityApp.h"
 #include "../AudacityLogger.h"
 #include "../AudioIO.h"
 #include "../Dependencies.h"
-#include "../Experimental.h"
 #include "../FileNames.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"

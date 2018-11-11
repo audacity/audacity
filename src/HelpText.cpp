@@ -14,6 +14,8 @@
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/string.h>
 #include <wx/intl.h>
 

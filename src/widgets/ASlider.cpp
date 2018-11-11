@@ -31,6 +31,8 @@ or ASlider.
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 
 #include <wx/defs.h>
@@ -53,7 +55,6 @@ or ASlider.
 #include <wx/popupwin.h>
 #include <wx/window.h>
 
-#include "../Experimental.h"
 #include "ASlider.h"
 #include "Ruler.h"
 

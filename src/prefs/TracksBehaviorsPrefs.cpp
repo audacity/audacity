@@ -17,9 +17,10 @@
 #include "../Audacity.h"
 #include "TracksBehaviorsPrefs.h"
 
+#include "../Experimental.h"
+
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Experimental.h"
 #include "../Internat.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)

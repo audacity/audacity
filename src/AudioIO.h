@@ -15,8 +15,9 @@
 
 #include "Audacity.h"
 
-#include "portaudio.h"
 #include "Experimental.h"
+
+#include "portaudio.h"
 
 #include "MemoryX.h"
 #include <atomic>

@@ -34,6 +34,8 @@
 #include "../Audacity.h"
 #include "EditToolBar.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -57,7 +59,6 @@
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 
-#include "../Experimental.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 

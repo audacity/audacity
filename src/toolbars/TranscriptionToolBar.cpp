@@ -17,6 +17,8 @@
 #include "../Audacity.h"
 #include "TranscriptionToolBar.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -33,7 +35,6 @@
 #include "ControlToolBar.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
-#include "../Experimental.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../TimeTrack.h"

@@ -26,6 +26,8 @@ effects from this one class.
 
 #include "../../Audacity.h"
 
+#include "../../Experimental.h"
+
 #include <algorithm>
 #include <cmath>
 
@@ -78,8 +80,6 @@ effects from this one class.
 #include <ostream>
 #include <sstream>
 #include <float.h>
-
-#include "../../Experimental.h"
 
 int NyquistEffect::mReentryCount = 0;
 

@@ -20,6 +20,8 @@
 #include "../Audacity.h"
 #include "TracksPrefs.h"
 
+#include "../Experimental.h"
+
 //#include <algorithm>
 //#include <wx/defs.h>
 
@@ -27,7 +29,6 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
-#include "../Experimental.h"
 #include "../Internat.h"
 
 int TracksPrefs::iPreferencePinned = -1;

@@ -1,6 +1,7 @@
+#include "../Experimental.h"
+
 #include "../AudacityApp.h"
 #include "../BatchCommands.h"
-#include "../Experimental.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"

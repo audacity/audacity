@@ -138,7 +138,6 @@
 // Paul Licameli (PRL) 29 Nov 2014
 // #define EXPERIMENTAL_IMPROVED_SEEKING
 
-#ifdef USE_MIDI
 // RBD, 1 Sep 2008
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
@@ -149,12 +148,9 @@
 // b) Crashes with Sync-Lock (Bug 1719)
 // c) Needs UI design review.
 //#define EXPERIMENTAL_MIDI_STRETCHING
-#endif
 
 // USE_MIDI must be defined in order for EXPERIMENTAL_SCOREALIGN to work
-#ifdef USE_MIDI
 //#define EXPERIMENTAL_SCOREALIGN
-#endif
 
 //If you want any of these files, ask JKC.  They are not
 //yet checked in to Audacity SVN as of 12-Feb-2010

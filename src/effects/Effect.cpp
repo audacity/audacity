@@ -24,6 +24,8 @@ greater use in future.
 #include "../Audacity.h"
 #include "Effect.h"
 
+#include "../Experimental.h"
+
 #include <algorithm>
 
 #include <wx/defs.h>
@@ -69,7 +71,6 @@ greater use in future.
 #include <Cocoa/Cocoa.h>
 #endif
 
-#include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
 #include <unordered_map>

@@ -12,7 +12,6 @@
 #define __AUDACITY_RULER__
 
 #include "wxPanelWrapper.h"
-#include "../Experimental.h"
 
 #include <wx/colour.h>
 #include <wx/gdicmn.h>

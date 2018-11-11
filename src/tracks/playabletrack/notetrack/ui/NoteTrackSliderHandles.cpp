@@ -11,6 +11,8 @@
 #include "../../../../Audacity.h"
 #include "NoteTrackSliderHandles.h"
 
+#include "../../../../Experimental.h"
+
 #ifdef EXPERIMENTAL_MIDI_OUT
 
 #include "../../../../HitTestResult.h"

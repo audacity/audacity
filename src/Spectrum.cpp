@@ -18,7 +18,6 @@
 #include "Spectrum.h"
 #include "FFT.h"
 
-#include "Experimental.h"
 #include "SampleFormat.h"
 
 bool ComputeSpectrum(const float * data, size_t width,

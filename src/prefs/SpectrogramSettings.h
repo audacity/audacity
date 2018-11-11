@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
 #include "../Experimental.h"
+
 #include "../SampleFormat.h"
 #include "../RealFFTf.h"
 

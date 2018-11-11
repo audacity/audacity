@@ -13,6 +13,8 @@
 #ifndef __AUDACITY_EFFECT_NORMALIZE__
 #define __AUDACITY_EFFECT_NORMALIZE__
 
+#include "Experimental.h"
+
 #include <wx/checkbox.h>
 #include <wx/event.h>
 #include <wx/stattext.h>

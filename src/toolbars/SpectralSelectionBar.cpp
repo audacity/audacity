@@ -28,6 +28,8 @@ with changes in the SpectralSelectionBar.
 
 #include "../Audacity.h"
 
+#include "../Experimental.h"
+
 #include <algorithm>
 #include "../MemoryX.h"
 
@@ -56,7 +58,6 @@ with changes in the SpectralSelectionBar.
 #include "../SelectedRegion.h"
 #include "../widgets/NumericTextCtrl.h"
 
-#include "../Experimental.h"
 #include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY

@@ -21,7 +21,6 @@
 #include <wx/event.h>
 #include <wx/font.h>
 #include <wx/window.h>
-#include "Experimental.h"
 
 class ViewInfo;
 class AudacityProject;

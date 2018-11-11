@@ -41,8 +41,6 @@
 #include "../tracks/ui/Scrubbing.h"
 #include "../commands/CommandContext.h"
 
-#include "../Experimental.h"
-
 IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 
 //const int BUTTON_WIDTH = 27;

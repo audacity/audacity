@@ -8,6 +8,8 @@
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include "portaudio.h"
 #ifdef __WXMSW__
 #include "pa_win_wasapi.h"
@@ -37,8 +39,6 @@
 #include "DeviceChange.h"
 #include "DeviceManager.h"
 #include "toolbars/DeviceToolBar.h"
-
-#include "Experimental.h"
 
 DeviceManager DeviceManager::dm;
 

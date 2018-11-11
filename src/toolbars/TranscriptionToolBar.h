@@ -13,8 +13,9 @@
 #ifndef __AUDACITY_TRANSCRIPTION_TOOLBAR__
 #define __AUDACITY_TRANSCRIPTION_TOOLBAR__
 
-#include "ToolBar.h"
 #include "../Experimental.h"
+
+#include "ToolBar.h"
 
 #include "../MemoryX.h"
 #include <wx/brush.h>

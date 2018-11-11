@@ -28,6 +28,8 @@
 #include "Audacity.h"
 #include "Menus.h"
 
+#include "Experimental.h"
+
 #include "AdornedRulerPanel.h"
 #include "AudacityApp.h"
 #include "AudioIO.h"

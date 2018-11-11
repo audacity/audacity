@@ -12,6 +12,7 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 #define __AUDACITY_EFFECT_EQUALIZATION48X__
 
 #include "../Experimental.h"
+
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
 #include "../MemoryX.h"

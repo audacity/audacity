@@ -17,6 +17,8 @@
 #include "../Audacity.h"
 #include "PrefsDialog.h"
 
+#include "../Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -32,7 +34,6 @@
 #include <wx/treebook.h>
 
 #include "../AudioIO.h"
-#include "../Experimental.h"
 #include "../Project.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"

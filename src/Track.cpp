@@ -21,6 +21,8 @@ and TimeTrack.
 
 *//*******************************************************************/
 
+#include "Experimental.h"
+
 #include <algorithm>
 #include <numeric>
 #include "Track.h"
@@ -37,7 +39,6 @@ and TimeTrack.
 #include "Project.h"
 #include "DirManager.h"
 
-#include "Experimental.h"
 #include "InconsistencyException.h"
 
 #include "TrackPanel.h" // for TrackInfo

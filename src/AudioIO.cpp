@@ -414,9 +414,10 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "AudioIO.h"
 
 #include "Experimental.h"
-#include "AudioIO.h"
+
 #include "float_cast.h"
 #include "DeviceManager.h"
 

@@ -11,12 +11,12 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
+#include "Experimental.h"
+
 #include "MemoryX.h"
 #include <vector>
 
 #include <wx/timer.h>
-
-#include "Experimental.h"
 
 #include "HitTestResult.h"
 

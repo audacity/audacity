@@ -17,6 +17,8 @@
 #include "../Audacity.h"
 #include "SpectrumPrefs.h"
 
+#include "../Experimental.h"
+
 #include <wx/choice.h>
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -31,7 +33,6 @@
 
 #include <algorithm>
 
-#include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)

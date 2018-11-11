@@ -51,6 +51,8 @@ scroll information.  It also has some status flags.
 #include "Audacity.h"
 #include "Project.h"
 
+#include "Experimental.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <wx/wxprec.h>
@@ -126,7 +128,6 @@ scroll information.  It also has some status flags.
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
 #include "PlatformCompatibility.h"
-#include "Experimental.h"
 #include "effects/EffectManager.h"
 #include "export/Export.h"
 #include "FileNames.h"

@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Scrubbing.h"
 
 #include "../../Experimental.h"
+
 #include <functional>
 
 #include "../../AdornedRulerPanel.h"

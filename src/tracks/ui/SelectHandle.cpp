@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "SelectHandle.h"
 
+#include "../../Experimental.h"
+
 #include "Scrubbing.h"
 #include "TrackControls.h"
 
@@ -37,8 +39,6 @@ Paul Licameli split from TrackPanel.cpp
 
 // Only for definition of SonifyBeginModifyState:
 //#include "../../NoteTrack.h"
-
-#include "../../Experimental.h"
 
 enum {
    //This constant determines the size of the horizontal region (in pixels) around
