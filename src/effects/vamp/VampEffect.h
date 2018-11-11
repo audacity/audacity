@@ -17,7 +17,6 @@
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/textctrl.h>
 
 #include <vamp-hostsdk/PluginLoader.h>
 
@@ -26,6 +25,7 @@
 
 class wxStaticText;
 class wxSlider;
+class wxTextCtrl;
 class LabelTrack;
 
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")

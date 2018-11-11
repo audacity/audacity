@@ -16,11 +16,10 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include <wx/textctrl.h>
-
 #include "Effect.h"
 
 class wxSlider;
+class wxTextCtrl;
 class ShuttleGui;
 
 #define NUM_STAGES 24

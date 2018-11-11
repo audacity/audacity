@@ -16,12 +16,12 @@
 #include "../Experimental.h"
 
 #include <wx/checkbox.h>
-#include <wx/textctrl.h>
 
 #include "Effect.h"
 #include "Biquad.h"
 
 class wxStaticText;
+class wxTextCtrl;
 class ShuttleGui;
 
 #define NORMALIZE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Normalize") }

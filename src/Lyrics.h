@@ -15,7 +15,7 @@
 #include "Audacity.h"
 
 #include <vector>
-#include <wx/textctrl.h>
+#include <wx/textctrl.h> // to inherit
 #include "commands/CommandManagerWindowClasses.h"
 #include "widgets/wxPanelWrapper.h"
 

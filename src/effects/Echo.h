@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_EFFECT_ECHO__
 #define __AUDACITY_EFFECT_ECHO__
 
-#include <wx/textctrl.h>
-
 #include "Effect.h"
 #include "../SampleFormat.h"
 

@@ -16,13 +16,13 @@
 #define __AUDACITY_EFFECT_AMPLIFY__
 
 #include <wx/checkbox.h>
-#include <wx/textctrl.h>
 
 #include "Effect.h"
 
 #define AMPLIFY_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Amplify") }
 
 class wxSlider;
+class wxTextCtrl;
 class ShuttleGui;
 
 class EffectAmplify final : public Effect

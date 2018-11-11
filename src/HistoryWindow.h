@@ -15,10 +15,10 @@
 #include <wx/frame.h>
 #include <wx/listctrl.h>
 #include <wx/spinctrl.h>
-#include <wx/textctrl.h>
 
 #include "widgets/wxPanelWrapper.h"
 
+class wxTextCtrl;
 class AudacityProject;
 class ShuttleGui;
 class UndoManager;

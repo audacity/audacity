@@ -13,11 +13,11 @@
 
 #include <wx/bitmap.h>
 #include <wx/gdicmn.h>
-#include <wx/textctrl.h>
 
 #include "Effect.h"
 #include "../widgets/wxPanelWrapper.h"
 
+class wxTextCtrl;
 class EffectAutoDuckPanel;
 class ShuttleGui;
 

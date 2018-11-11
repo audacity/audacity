@@ -19,7 +19,6 @@ class wxArrayString;
 #include <vector>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
-#include <wx/textctrl.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/data-access/data-access.h"
@@ -39,6 +38,7 @@ class wxArrayString;
 #include <unordered_map>
 
 class wxSlider;
+class wxTextCtrl;
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates

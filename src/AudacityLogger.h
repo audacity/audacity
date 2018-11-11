@@ -21,7 +21,8 @@
 #include "MemoryX.h"
 #include <wx/log.h>
 #include <wx/frame.h>
-#include <wx/textctrl.h>
+
+class wxTextCtrl;
 
 class AudacityLogger final : public wxEvtHandler, public wxLog {
  public:

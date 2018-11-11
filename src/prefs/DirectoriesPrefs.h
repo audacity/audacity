@@ -11,13 +11,12 @@
 #ifndef __AUDACITY_DIRECTORIES_PREFS__
 #define __AUDACITY_DIRECTORIES_PREFS__
 
-#include <wx/textctrl.h>
-
 #include "PrefsPanel.h"
 
 class ShuttleGui;
 
 class wxStaticText;
+class wxTextCtrl;
 
 class DirectoriesPrefs final : public PrefsPanel
 {

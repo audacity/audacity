@@ -20,6 +20,7 @@
 
 class wxSlider;
 class wxStaticText;
+class wxTextCtrl;
 class ShuttleGui;
 
 #define DTMFTONES_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("DTMF Tones") }

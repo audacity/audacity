@@ -12,12 +12,12 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include <wx/textctrl.h>
 #include <wx/checkbox.h>
 
 #include "Effect.h"
 
 class wxSlider;
+class wxTextCtrl;
 class ShuttleGui;
 
 #define BASSTREBLE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Bass and Treble") }

@@ -13,10 +13,10 @@
 #define __AUDACITY_RECORDING_PREFS__
 
 #include <wx/defs.h>
-#include <wx/textctrl.h>
 
 #include "PrefsPanel.h"
 
+class wxTextCtrl;
 class ShuttleGui;
 
 class RecordingPrefs final : public PrefsPanel

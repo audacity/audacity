@@ -18,7 +18,6 @@
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/textbuf.h>
-#include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 
 #include "../Effect.h"
@@ -26,6 +25,7 @@
 #include "nyx.h"
 
 class wxArrayString;
+class wxTextCtrl;
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in

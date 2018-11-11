@@ -20,7 +20,6 @@ class ShuttleGui;
 #include <wx/listctrl.h>
 #include <wx/radiobut.h>
 #include <wx/srchctrl.h>
-#include <wx/textctrl.h>
 #include <wx/timer.h>
 
 #include "../widgets/KeyView.h"
@@ -28,6 +27,7 @@ class ShuttleGui;
 #include "PrefsPanel.h"
 
 class wxStaticText;
+class wxTextCtrl;
 struct NormalizedKeyString;
 
 class KeyConfigPrefs final : public PrefsPanel

@@ -29,6 +29,7 @@ class wxArrayStringEx;
 
 class wxArrayString;
 class wxStaticText;
+class wxTextCtrl;
 
 /// Identifiers for pre-set export types.
 enum FFmpegExposedFormat

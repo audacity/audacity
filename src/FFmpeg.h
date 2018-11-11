@@ -156,7 +156,6 @@ extern "C" {
 #include "widgets/LinkingHtmlWindow.h"
 #include "ShuttleGui.h"
 #include "Prefs.h"
-#include <wx/textctrl.h>
 
 #include "audacity/Types.h"
 
