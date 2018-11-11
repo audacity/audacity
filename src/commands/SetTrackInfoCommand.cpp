@@ -294,6 +294,8 @@ bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   kScaleTypeStrings, nScaleTypes );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  kColourStrings, nColours );
    S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    kZoomTypeStrings, nZoomTypes );
+   S.OptionalN( bHasVZoomTop       ).Define(     mVZoomTop,       wxT("VZoomHigh"),  1.0,  -2.0,  2.0 );
+   S.OptionalN( bHasVZoomBottom    ).Define(     mVZoomBottom,    wxT("VZoomLow"),   -1.0, -2.0,  2.0 );
 
    S.OptionalN( bHasUseSpecPrefs   ).Define(     bUseSpecPrefs,   wxT("SpecPrefs"),  false );
    S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
@@ -318,6 +320,8 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType, &displays );
       S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,   &scales );
       S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,       &vzooms );
+      S.Optional( bHasVZoomTop    ).TieTextBox(         _("VZoom Top:"),     mVZoomTop );
+      S.Optional( bHasVZoomBottom ).TieTextBox(         _("VZoom Bottom:"),  mVZoomBottom );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxEXPAND);
@@ -335,11 +339,13 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
    static_cast<void>(context);
    auto wt = dynamic_cast<WaveTrack *>(t);
    //auto pt = dynamic_cast<PlayableTrack *>(t);
+   static const double ZOOMLIMIT = 0.001f;
 
    // You can get some intriguing effects by setting R and L channels to 
    // different values.
    if( wt && bHasColour )
       wt->SetWaveColorIndex( mColour );
+
    if( t && bHasHeight )
       t->SetHeight( mHeight );
 
@@ -364,13 +370,41 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       }
    }
 
+   if ( wt && (bHasVZoomTop || bHasVZoomBottom) && !bHasVZoom){
+      float vzmin, vzmax;
+      wt->GetDisplayBounds(&vzmin, &vzmax);
+
+      if ( !bHasVZoomTop ){
+         mVZoomTop = vzmax;
+      }
+      if ( !bHasVZoomBottom ){
+         mVZoomBottom = vzmin;
+      }
+
+      // Can't use std::clamp until C++17
+      mVZoomTop = std::max(-2.0, std::min(mVZoomTop, 2.0));
+      mVZoomBottom = std::max(-2.0, std::min(mVZoomBottom, 2.0));
+
+      if (mVZoomBottom > mVZoomTop){
+         std::swap(mVZoomTop, mVZoomBottom);
+      }
+      if ( mVZoomTop - mVZoomBottom < ZOOMLIMIT ){
+         double c = (mVZoomBottom + mVZoomTop) / 2;
+         mVZoomBottom = c - ZOOMLIMIT / 2.0;
+         mVZoomTop = c + ZOOMLIMIT / 2.0;
+      }
+      wt->SetDisplayBounds(mVZoomBottom, mVZoomTop);
+   }
+
    if( wt && bHasUseSpecPrefs   ){
       wt->UseSpectralPrefs( bUseSpecPrefs );
    }
-   if( wt && bHasSpectralSelect )
+   if( wt && bHasSpectralSelect ){
       wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
-   if( wt && bHasGrayScale )
+   }
+   if( wt && bHasGrayScale ){
       wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
+   }
 
    return true;
 }
