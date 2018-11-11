@@ -16,7 +16,6 @@
 #ifndef __AUDACITY_TIMERRECORD_DIALOG__
 #define __AUDACITY_TIMERRECORD_DIALOG__
 
-#include <wx/dialog.h>
 #include <wx/textctrl.h> // to inherit
 #include <wx/datectrl.h>
 #include <wx/calctrl.h>

@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_EXPORT_MULTIPLE__
 #define __AUDACITY_EXPORT_MULTIPLE__
 
-#include <wx/dialog.h>
-
 #include "Export.h"
 #include "../Tags.h"       // we need to know about the Tags class for metadata
 #include "../wxFileNameWrapper.h" // member variable below

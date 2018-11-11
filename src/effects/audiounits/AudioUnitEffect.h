@@ -16,7 +16,6 @@
 
 #include "../../MemoryX.h"
 #include <vector>
-#include <wx/dialog.h>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnit.h>

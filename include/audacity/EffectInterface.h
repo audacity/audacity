@@ -47,8 +47,6 @@
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectAutomationParameters.h" // for command automation
 
-#include <wx/dialog.h>
-
 typedef enum EffectType : int
 {
    EffectTypeNone,
@@ -99,6 +97,7 @@ public:
    virtual bool SupportsAutomation() = 0;
 };
 
+class wxDialog;
 class EffectUIHostInterface;
 class EffectUIClientInterface;
 

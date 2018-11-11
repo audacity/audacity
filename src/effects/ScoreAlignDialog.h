@@ -13,8 +13,6 @@
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 
-#include <wx/dialog.h>
-
 #if 1
 
 #include "ScoreAlignParams.h"

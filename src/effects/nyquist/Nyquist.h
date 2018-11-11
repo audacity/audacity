@@ -12,7 +12,6 @@
 #define __AUDACITY_EFFECT_NYQUIST__
 
 #include <wx/datetime.h>
-#include <wx/dialog.h>
 #include <wx/textbuf.h>
 
 #include "../Effect.h"

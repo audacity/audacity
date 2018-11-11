@@ -15,7 +15,6 @@
 #include "../Experimental.h"
 
 #include <vector>
-#include <wx/dialog.h>
 #include <wx/listbox.h>
 
 #include "audacity/EffectInterface.h"

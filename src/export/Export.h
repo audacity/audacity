@@ -13,7 +13,6 @@
 
 #include "../MemoryX.h"
 #include <vector>
-#include <wx/dialog.h>
 #include "../Tags.h"
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h"

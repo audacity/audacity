@@ -12,7 +12,6 @@
 #define __AUDACITY_SPLASH_DLG__
 
 #include "MemoryX.h"
-#include <wx/dialog.h>
 #include "widgets/wxPanelWrapper.h"
 
 class wxBitmap;

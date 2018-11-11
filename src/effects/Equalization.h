@@ -19,7 +19,6 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/panel.h>
-#include <wx/dialog.h>
 #include <wx/radiobut.h>
 
 #if wxUSE_ACCESSIBILITY

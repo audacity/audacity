@@ -11,7 +11,7 @@
 
 #include "../MemoryX.h"
 #include <wx/panel.h>
-#include <wx/dialog.h>
+#include <wx/dialog.h> // to inherit
 
 #include "../Internat.h"
 
