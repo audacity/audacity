@@ -41,6 +41,7 @@
 
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/timer.h>

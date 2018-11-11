@@ -22,6 +22,8 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "Internat.h"
 
+class wxCheckBox;
+
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav
 // project and set IS_FFMPEG_PROJECT depending on it.
 #define IS_FFMPEG_PROJECT 1
@@ -155,7 +157,6 @@ extern "C" {
 #include "widgets/LinkingHtmlWindow.h"
 #include "ShuttleGui.h"
 #include "Prefs.h"
-#include <wx/checkbox.h>
 #include <wx/textctrl.h>
 
 #include "audacity/Types.h"
@@ -188,53 +189,11 @@ class FFmpegNotFoundDialog final : public wxDialogWrapper
 {
 public:
 
-   FFmpegNotFoundDialog(wxWindow *parent)
-      :  wxDialogWrapper(parent, wxID_ANY, wxString(_("FFmpeg not found")))
-   {
-      SetName(GetTitle());
-      ShuttleGui S(this, eIsCreating);
-      PopulateOrExchange(S);
-   }
+   FFmpegNotFoundDialog(wxWindow *parent);
 
-   void PopulateOrExchange(ShuttleGui & S)
-   {
-      wxString text;
+   void PopulateOrExchange(ShuttleGui & S);
 
-      S.SetBorder(10);
-      S.StartVerticalLay(true);
-      {
-         S.AddFixedText(_(
-"Audacity attempted to use FFmpeg to import an audio file,\n\
-but the libraries were not found.\n\n\
-To use FFmpeg import, go to Preferences > Libraries\n\
-to download or locate the FFmpeg libraries."
-         ));
-
-         int dontShowDlg = 0;
-         gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
-         mDontShow = S.AddCheckBox(_("Do not show this warning again"),dontShowDlg ? wxT("true") : wxT("false"));
-
-         S.AddStandardButtons(eOkButton);
-      }
-      S.EndVerticalLay();
-
-      Layout();
-      Fit();
-      SetMinSize(GetSize());
-      Center();
-
-      return;
-   }
-
-   void OnOk(wxCommandEvent & WXUNUSED(event))
-   {
-      if (mDontShow->GetValue())
-      {
-         gPrefs->Write(wxT("/FFmpeg/NotFoundDontShow"),1);
-         gPrefs->Flush();
-      }
-      this->EndModal(0);
-   }
+   void OnOk(wxCommandEvent & WXUNUSED(event));
 
 private:
 

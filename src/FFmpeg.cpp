@@ -25,6 +25,7 @@ License: GPL v2.  See License.txt.
 #include "widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 
+#include <wx/checkbox.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
 
@@ -560,6 +561,54 @@ END_EVENT_TABLE()
 //----------------------------------------------------------------------------
 // FFmpegNotFoundDialog
 //----------------------------------------------------------------------------
+
+FFmpegNotFoundDialog::FFmpegNotFoundDialog(wxWindow *parent)
+   :  wxDialogWrapper(parent, wxID_ANY, wxString(_("FFmpeg not found")))
+{
+   SetName(GetTitle());
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+}
+
+void FFmpegNotFoundDialog::PopulateOrExchange(ShuttleGui & S)
+{
+   wxString text;
+
+   S.SetBorder(10);
+   S.StartVerticalLay(true);
+   {
+      S.AddFixedText(_(
+"Audacity attempted to use FFmpeg to import an audio file,\n\
+but the libraries were not found.\n\n\
+To use FFmpeg import, go to Preferences > Libraries\n\
+to download or locate the FFmpeg libraries."
+      ));
+
+      int dontShowDlg = 0;
+      gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
+      mDontShow = S.AddCheckBox(_("Do not show this warning again"),dontShowDlg ? wxT("true") : wxT("false"));
+
+      S.AddStandardButtons(eOkButton);
+   }
+   S.EndVerticalLay();
+
+   Layout();
+   Fit();
+   SetMinSize(GetSize());
+   Center();
+
+   return;
+}
+
+void FFmpegNotFoundDialog::OnOk(wxCommandEvent & WXUNUSED(event))
+{
+   if (mDontShow->GetValue())
+   {
+      gPrefs->Write(wxT("/FFmpeg/NotFoundDontShow"),1);
+      gPrefs->Flush();
+   }
+   this->EndModal(0);
+}
 
 BEGIN_EVENT_TABLE(FFmpegNotFoundDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, FFmpegNotFoundDialog::OnOk)
