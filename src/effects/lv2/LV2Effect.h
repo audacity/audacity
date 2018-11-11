@@ -19,7 +19,6 @@ class wxArrayString;
 #include <vector>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
-#include <wx/stattext.h>
 #include <wx/textctrl.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"

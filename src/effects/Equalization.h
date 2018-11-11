@@ -23,7 +23,6 @@
 #include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
-#include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
@@ -56,6 +55,7 @@ const int kEqOptionCurve   =1<<1;
 const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
 class wxSlider;
+class wxStaticText;
 class Envelope;
 class EnvelopeEditor;
 class EqualizationPanel;

@@ -23,6 +23,7 @@ class wxButton;
 class wxCheckBox;
 class wxChoice;
 class wxRadioButton;
+class wxStaticText;
 class wxTextCtrl;
 
 class AudacityProject;

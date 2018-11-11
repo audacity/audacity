@@ -47,6 +47,7 @@ AliasedFile s.
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/stattext.h>
 
 #include "BlockFile.h"
 #include "DirManager.h"

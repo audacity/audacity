@@ -22,6 +22,7 @@
 #include <wx/slider.h>
 #include <wx/valgen.h>
 #include <wx/valtext.h>
+#include <wx/stattext.h>
 
 #include "../Prefs.h"
 #include "../Shuttle.h"

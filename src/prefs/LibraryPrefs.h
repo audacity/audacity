@@ -15,11 +15,11 @@
 
 #include <wx/defs.h>
 
-#include <wx/stattext.h>
 #include <wx/window.h>
 
 #include "PrefsPanel.h"
 
+class wxStaticText;
 class ShuttleGui;
 
 class LibraryPrefs final : public PrefsPanel

@@ -25,10 +25,11 @@
 #include <wx/defs.h>
 #include <wx/evtloop.h>
 #include <wx/gauge.h>
-#include <wx/stattext.h>
 #include <wx/utils.h>
 
 #include "wxPanelWrapper.h"
+
+class wxStaticText;
 
 enum class ProgressResult : unsigned
 {

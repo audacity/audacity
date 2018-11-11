@@ -41,6 +41,7 @@ effects from this one class.
 #include <wx/log.h>
 #include <wx/slider.h>
 #include <wx/sstream.h>
+#include <wx/stattext.h>
 #include <wx/textdlg.h>
 #include <wx/txtstrm.h>
 #include <wx/valgen.h>

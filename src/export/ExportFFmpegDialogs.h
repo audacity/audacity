@@ -28,6 +28,7 @@ LRN
 class wxArrayStringEx;
 
 class wxArrayString;
+class wxStaticText;
 
 /// Identifiers for pre-set export types.
 enum FFmpegExposedFormat

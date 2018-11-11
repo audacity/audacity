@@ -24,7 +24,6 @@
 #include <wx/font.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/utils.h>

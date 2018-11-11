@@ -109,6 +109,7 @@ for registering for changes.
 #include <wx/notebook.h>
 #include <wx/treectrl.h>
 #include <wx/spinctrl.h>
+#include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
 #include "../include/audacity/ComponentInterface.h"
 #include "Internat.h"

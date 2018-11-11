@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_EFFECT_REPEAT__
 #define __AUDACITY_EFFECT_REPEAT__
 
-#include <wx/stattext.h>
 #include <wx/textctrl.h>
 
 #include "Effect.h"
@@ -19,6 +18,8 @@
 class ShuttleGui;
 
 #define REPEAT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Repeat") }
+
+class wxStaticText;
 
 class EffectRepeat final : public Effect
 {

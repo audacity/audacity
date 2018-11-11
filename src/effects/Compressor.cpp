@@ -34,6 +34,7 @@
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
 #include <wx/slider.h>
+#include <wx/stattext.h>
 
 #include "../AColor.h"
 #include "../Prefs.h"

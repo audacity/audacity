@@ -23,6 +23,7 @@ MP3 and FFmpeg encoding libraries.
 
 #include <wx/defs.h>
 #include <wx/button.h>
+#include <wx/stattext.h>
 
 #include "../FFmpeg.h"
 #include "../ShuttleGui.h"

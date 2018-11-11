@@ -25,10 +25,11 @@
 #include <wx/image.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
 #include <wx/timer.h>
 
 #include "EffectManager.h"
+
+class wxStaticText;
 
 class EffectRack final : public wxFrame
 {

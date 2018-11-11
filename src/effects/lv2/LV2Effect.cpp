@@ -28,6 +28,7 @@
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>
+#include <wx/stattext.h>
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 #include <wx/scrolwin.h>

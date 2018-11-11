@@ -45,6 +45,7 @@ a graph for EffectScienFilter.
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/slider.h>
+#include <wx/stattext.h>
 #include <wx/utils.h>
 #include <wx/valgen.h>
 

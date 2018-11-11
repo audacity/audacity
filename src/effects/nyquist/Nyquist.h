@@ -17,7 +17,6 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
 #include <wx/textbuf.h>
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>

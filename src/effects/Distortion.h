@@ -19,6 +19,7 @@
 #include "Effect.h"
 
 class wxSlider;
+class wxStaticText;
 class ShuttleGui;
 
 #define DISTORTION_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Distortion") }

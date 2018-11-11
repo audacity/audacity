@@ -18,7 +18,6 @@ Vaughan Johnson (Preview)
 #include <wx/bitmap.h>
 #include <wx/choice.h>
 #include <wx/panel.h>
-#include <wx/stattext.h>
 #include <wx/window.h>
 
 #include "Biquad.h"
@@ -26,6 +25,7 @@ Vaughan Johnson (Preview)
 #include "Effect.h"
 
 class wxSlider;
+class wxStaticText;
 class wxTextCtrl;
 class RulerPanel;
 class ShuttleGui;

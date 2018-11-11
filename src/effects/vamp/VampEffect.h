@@ -17,7 +17,6 @@
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/stattext.h>
 #include <wx/textctrl.h>
 
 #include <vamp-hostsdk/PluginLoader.h>
@@ -25,6 +24,7 @@
 #include "../../SampleFormat.h"
 #include "../Effect.h"
 
+class wxStaticText;
 class wxSlider;
 class LabelTrack;
 

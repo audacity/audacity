@@ -57,6 +57,7 @@ class wxButton;
 class wxSizer;
 class wxString;
 class wxSlider;
+class wxStaticText;
 
 void CloseScoreAlignDialog();
 

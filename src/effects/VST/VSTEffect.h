@@ -22,6 +22,7 @@
 
 class wxSizerItem;
 class wxSlider;
+class wxStaticText;
 
 class VSTControl;
 #include "VSTControl.h"

@@ -30,6 +30,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/filedlg.h>
 #include <wx/menu.h>
 #include <wx/button.h>
+#include <wx/stattext.h>
 
 #include "../Prefs.h"
 #include "../Project.h"
