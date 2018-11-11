@@ -19,7 +19,6 @@
 #include <wx/dialog.h>
 #include <wx/event.h>
 #include <wx/listbox.h>
-#include <wx/string.h>
 
 #include "audacity/EffectInterface.h"
 #include "Effect.h"

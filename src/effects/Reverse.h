@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_EFFECT_REVERSE__
 #define __AUDACITY_EFFECT_REVERSE__
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
 #define REVERSE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Reverse") }

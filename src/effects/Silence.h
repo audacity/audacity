@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_EFFECT_SILENCE__
 #define __AUDACITY_EFFECT_SILENCE__
 
-#include <wx/string.h>
-
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Generator.h"

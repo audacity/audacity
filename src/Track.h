@@ -22,7 +22,6 @@
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
-#include <wx/string.h>
 
 #include "SampleFormat.h"
 #include "tracks/ui/CommonTrackPanelCell.h"

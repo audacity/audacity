@@ -13,7 +13,6 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/string.h>
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"

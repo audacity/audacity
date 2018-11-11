@@ -16,7 +16,6 @@
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/slider.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 
 #include "../widgets/NumericTextCtrl.h"

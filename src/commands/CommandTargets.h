@@ -57,7 +57,6 @@ and sends it to that message target.
 
 #include "../MemoryX.h"
 #include <vector>
-#include <wx/string.h>
 #include <wx/statusbr.h>
 //#include "../src/Project.h"
 #include "../widgets/ProgressDialog.h"

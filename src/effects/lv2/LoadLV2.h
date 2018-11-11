@@ -14,7 +14,6 @@
 
 #include "../../MemoryX.h"
 #include <wx/hashmap.h>
-#include <wx/string.h>
 
 #include <lilv/lilv.h>
 

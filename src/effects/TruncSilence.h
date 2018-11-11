@@ -20,7 +20,6 @@
 #include <wx/arrstr.h>
 #include <wx/event.h>
 #include <wx/list.h>
-#include <wx/string.h>
 
 #include "Effect.h"
 

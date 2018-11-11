@@ -20,7 +20,6 @@
 #include <wx/brush.h>
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
-#include <wx/string.h>
 #include <wx/timer.h>
 
 #include "../SampleFormat.h"

@@ -13,7 +13,6 @@
 
 #include <wx/defs.h>
 #include <wx/fileconf.h>
-#include <wx/string.h>
 
 #include "MemoryX.h"
 #include <map>

@@ -13,7 +13,6 @@
 
 #include "MemoryX.h"
 #include <wx/list.h>
-#include <wx/string.h>
 #include <wx/filename.h>
 #include <wx/hashmap.h>
 #include <wx/utils.h>

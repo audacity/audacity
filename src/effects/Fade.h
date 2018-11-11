@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_EFFECT_FADE__
 #define __AUDACITY_EFFECT_FADE__
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
 #define FADEIN_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Fade In") }

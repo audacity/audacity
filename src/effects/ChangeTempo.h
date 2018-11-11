@@ -24,7 +24,6 @@
 
 #include <wx/event.h>
 #include <wx/slider.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 
 #include "SoundTouchEffect.h"

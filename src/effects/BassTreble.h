@@ -15,7 +15,6 @@
 #include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
 

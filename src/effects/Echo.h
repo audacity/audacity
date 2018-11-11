@@ -13,7 +13,6 @@
 #define __AUDACITY_EFFECT_ECHO__
 
 #include <wx/event.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 
 #include "Effect.h"

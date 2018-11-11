@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_LANG_CHOICE__
 #define __AUDACITY_LANG_CHOICE__
 
-#include <wx/string.h>
+class wxString;
 
 wxString ChooseLanguage(wxWindow *parent);
 

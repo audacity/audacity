@@ -13,8 +13,6 @@
 #define __AUDACITY_MACROS_WINDOW__
 
 #include <wx/defs.h>
-#include <wx/string.h>
-
 
 #ifdef __WXMSW__
     #include  <wx/ownerdrw.h>

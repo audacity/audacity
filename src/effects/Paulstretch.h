@@ -10,8 +10,6 @@
 #ifndef __AUDACITY_EFFECT_PAULSTRETCH__
 #define __AUDACITY_EFFECT_PAULSTRETCH__
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
 class ShuttleGui;

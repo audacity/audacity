@@ -22,7 +22,6 @@ Vaughan Johnson (Preview)
 #include <wx/panel.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
-#include <wx/string.h>
 #include <wx/window.h>
 
 #include "Biquad.h"

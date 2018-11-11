@@ -20,7 +20,6 @@ class ShuttleGui;
 #include <wx/listctrl.h>
 #include <wx/radiobut.h>
 #include <wx/srchctrl.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 

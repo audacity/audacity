@@ -12,7 +12,6 @@
 #define __AUDACITY_EXPORT_MULTIPLE__
 
 #include <wx/dialog.h>
-#include <wx/string.h>
 #include <wx/listctrl.h>
 #include <wx/simplebook.h>
 

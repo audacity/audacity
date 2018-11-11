@@ -52,7 +52,6 @@
 #include "MemoryX.h"
 #include <vector>
 #include <wx/event.h>
-#include <wx/string.h>
 #include "ondemand/ODTaskThread.h"
 #include "SelectedRegion.h"
 

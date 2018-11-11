@@ -17,7 +17,6 @@
 #define __COMMANDMISC__
 
 #include <map>
-#include <wx/string.h>
 #include <wx/variant.h>
 #include "Validators.h"
 class OldStyleCommandType;

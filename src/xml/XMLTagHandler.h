@@ -20,7 +20,6 @@
 
 #include "../Audacity.h" // for USE_* macros
 
-#include <wx/string.h>
 #include <stdio.h>
 
 #include "audacity/Types.h"

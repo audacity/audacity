@@ -16,8 +16,6 @@ class wxString;
 
 class LabelTrack;
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
 #define FINDCLIPPING_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Find Clipping") }

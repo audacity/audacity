@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_EFFECT_REPAIR__
 #define __AUDACITY_EFFECT_REPAIR__
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
 #define REPAIR_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Repair") }

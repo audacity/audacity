@@ -43,7 +43,6 @@
 #define __AUDACITY_TYPES_H__
 
 #include <algorithm>
-#include <wx/string.h>
 #include <wx/arrstr.h>
 #include <type_traits>
 #include <vector>

@@ -16,7 +16,6 @@
 #include "Experimental.h"
 
 #include <utility>
-#include <wx/string.h>
 #include "Track.h"
 #include "effects/TimeWarper.h"
 

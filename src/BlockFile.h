@@ -13,7 +13,6 @@
 #define __AUDACITY_BLOCKFILE__
 
 #include "MemoryX.h"
-#include <wx/string.h>
 #include <wx/ffile.h>
 #include <wx/filename.h>
 

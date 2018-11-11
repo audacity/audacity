@@ -14,7 +14,6 @@
 #define __AUDACITY_EFFECT_TONEGEN__
 
 #include <wx/arrstr.h>
-#include <wx/string.h>
 
 #include "../widgets/NumericTextCtrl.h"
 

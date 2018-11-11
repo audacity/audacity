@@ -38,7 +38,6 @@
 #include <utility>
 #include <wx/hashmap.h>
 #include <wx/notebook.h>
-#include <wx/string.h>
 
 #include "widgets/wxPanelWrapper.h"
 

@@ -15,7 +15,6 @@
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/grid.h>
-#include <wx/string.h>
 
 #include "Internat.h"
 #include "widgets/Grid.h"

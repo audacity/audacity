@@ -25,7 +25,6 @@
 #include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/stattext.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 
 #include "../Internat.h"

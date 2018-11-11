@@ -21,7 +21,6 @@
 #define __AUDACITY_MIX__
 
 #include "MemoryX.h"
-#include <wx/string.h>
 #include "SampleFormat.h"
 #include <vector>
 

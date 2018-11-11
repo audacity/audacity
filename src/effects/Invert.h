@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_EFFECT_INVERT__
 #define __AUDACITY_EFFECT_INVERT__
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
 #define INVERT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Invert") }

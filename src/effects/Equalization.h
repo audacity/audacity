@@ -26,7 +26,6 @@
 #include <wx/stattext.h>
 #include <wx/slider.h>
 #include <wx/sizer.h>
-#include <wx/string.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>

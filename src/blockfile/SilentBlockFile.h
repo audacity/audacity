@@ -14,7 +14,6 @@
 #ifndef __AUDACITY_SILENT_BLOCKFILE__
 #define __AUDACITY_SILENT_BLOCKFILE__
 
-#include <wx/string.h>
 #include <wx/filename.h>
 
 #include "../BlockFile.h"

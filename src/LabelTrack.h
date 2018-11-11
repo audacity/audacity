@@ -20,7 +20,6 @@
 #include <wx/event.h>
 #include <wx/font.h>
 #include <wx/pen.h>
-#include <wx/string.h>
 #include <wx/clipbrd.h>
 
 

@@ -13,7 +13,6 @@
 #define __AUDACITY_BATCH_COMMANDS_DIALOG__
 
 #include <wx/defs.h>
-#include <wx/string.h>
 
 #include "export/Export.h"
 

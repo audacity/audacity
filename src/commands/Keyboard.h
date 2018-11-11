@@ -14,7 +14,6 @@
 
 #include <wx/defs.h>
 #include <wx/event.h>
-#include <wx/string.h>
 
 struct NormalizedKeyString : private wxString
 {

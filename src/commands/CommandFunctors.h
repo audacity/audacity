@@ -9,7 +9,6 @@
 #ifndef __AUDACITY_COMMAND_FUNCTORS__
 #define __AUDACITY_COMMAND_FUNCTORS__
 
-#include <wx/string.h>
 #include <wx/event.h>
 #include "../MemoryX.h"
 #include "Command.h"

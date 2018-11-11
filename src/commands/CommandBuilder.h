@@ -17,7 +17,6 @@
 #define __COMMANDBUILDER__
 
 #include "../MemoryX.h"
-#include <wx/string.h>
 
 class OldStyleCommand;
 using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;

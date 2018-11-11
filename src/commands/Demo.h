@@ -12,7 +12,6 @@
 #define __AUDACITY_DEMO_COMMAND__
 
 #include <wx/event.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 
 #include "AudacityCommand.h"

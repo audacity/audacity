@@ -16,7 +16,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/arrstr.h>
-#include <wx/string.h>
 #include <wx/vlbox.h>
 
 #include "../commands/Keyboard.h"

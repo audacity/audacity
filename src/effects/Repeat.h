@@ -12,7 +12,6 @@
 #define __AUDACITY_EFFECT_REPEAT__
 
 #include <wx/event.h>
-#include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 

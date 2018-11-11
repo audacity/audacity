@@ -11,7 +11,6 @@ Paul Licameli
 #ifndef __AUDACITY_HIT_TEST_RESULT__
 #define __AUDACITY_HIT_TEST_RESULT__
 
-#include <wx/string.h>
 #include "MemoryX.h"
 
 class wxCursor;

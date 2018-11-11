@@ -49,7 +49,6 @@ using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 #endif
 
 #include <wx/event.h>
-#include <wx/string.h>
 #include <wx/thread.h>
 
 #include "SampleFormat.h"

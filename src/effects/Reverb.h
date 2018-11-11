@@ -16,7 +16,6 @@
 #include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
-#include <wx/string.h>
 
 #include "Effect.h"
 

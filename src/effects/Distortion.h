@@ -12,7 +12,6 @@
 #define __AUDACITY_EFFECT_DISTORTION__
 
 #include <wx/arrstr.h>
-#include <wx/string.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>

@@ -15,7 +15,6 @@
 
 #include <wx/list.h>
 #include <wx/arrstr.h>
-#include <wx/string.h>
 
 #include "audacity/Types.h"
 

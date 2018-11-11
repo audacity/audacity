@@ -16,7 +16,6 @@
 
 #include "MemoryX.h"
 #include <wx/intl.h>
-#include <wx/string.h>
 
 #include "SampleFormat.h"
 

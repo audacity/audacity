@@ -23,7 +23,6 @@
 #include <wx/log.h>
 #include <wx/frame.h>
 #include <wx/textctrl.h>
-#include <wx/string.h>
 
 class AudacityLogger final : public wxEvtHandler, public wxLog {
  public:

@@ -17,7 +17,6 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/string.h>
 #include "widgets/NumericTextCtrl.h"
 #include "Internat.h"
 

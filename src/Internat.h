@@ -14,7 +14,6 @@
 
 #include "Audacity.h"
 
-#include <wx/string.h>
 #include <wx/longlong.h>
 
 #include <algorithm>

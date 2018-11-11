@@ -16,7 +16,6 @@
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/slider.h>
-#include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/window.h>
 #include "../widgets/wxPanelWrapper.h"

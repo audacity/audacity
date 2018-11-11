@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_COMMAND_CONTEXT__
 #define __AUDACITY_COMMAND_CONTEXT__
 
-#include <wx/string.h>
 #include <wx/event.h>
 #include "audacity/Types.h"
 #include "../MemoryX.h"

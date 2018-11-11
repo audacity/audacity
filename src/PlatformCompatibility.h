@@ -20,7 +20,6 @@
 #ifndef __AUDACITY_COMPATIBILITY__
 #define __AUDACITY_COMPATIBILITY__
 
-#include <wx/string.h>
 #include "audacity/Types.h"
 
 class PlatformCompatibility
