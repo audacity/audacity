@@ -251,7 +251,6 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
    context.StartArray();
    for (auto trk : projTracks->Leaders())
    {
-
       TrackPanel *panel = context.GetProject()->GetTrackPanel();
       Track * fTrack = panel->GetFocusedTrack();
 
@@ -259,10 +258,12 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddItem( trk->GetName(), "name" );
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
-      //JKC: Possibly add these two later...
-      //context.AddItem( trk->GetKind(), "kind" );
+      //JKC: Possibly add later...
       //context.AddItem( trk->GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
+         float vzmin, vzmax;
+         t->GetDisplayBounds(&vzmin, &vzmax);
+         context.AddItem( "wave", "kind" );
          context.AddItem( t->GetStartTime(), "start" );
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
@@ -270,7 +271,21 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( TrackList::Channels(t).size(), "channels");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
-      } );
+         context.AddItem( vzmin, "VZoomMin");
+         context.AddItem( vzmax, "VZoomMax");
+      },
+#if defined(USE_MIDI)
+      [&](const NoteTrack *) {
+         context.AddItem( "note", "kind" );
+      },
+#endif
+      [&](const LabelTrack *) {
+         context.AddItem( "label", "kind" );
+      },
+      [&](const TimeTrack *) {
+         context.AddItem( "time", "kind" );
+      }
+      );
       context.EndStruct();
    }
    context.EndArray();
