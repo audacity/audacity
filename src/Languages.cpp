@@ -70,7 +70,7 @@ static bool TranslationExists(const FilePaths &audacityPathList, wxString code)
 
 #ifdef __WXMAC__
 #include <CoreFoundation/CFLocale.h>
-#include "wx/osx/core/cfstring.h"
+#include <wx/osx/core/cfstring.h>
 #endif
 
 wxString GetSystemLanguageCode()

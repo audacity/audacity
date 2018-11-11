@@ -31,11 +31,11 @@ flicker-free use.
 
 #include "../Audacity.h"
 
-#include "wx/defs.h"
-#include "wx/dc.h"
-#include "wx/event.h"
-#include "wx/gdicmn.h"
-#include "wx/window.h"
+#include <wx/defs.h>
+#include <wx/dc.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/window.h>
 #include <wx/statbmp.h>
 
 ////////////////////////////////////////////////////////////
