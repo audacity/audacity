@@ -15,11 +15,11 @@
 
 #if USE_SBSMS
 
-#include <wx/slider.h>
 #include <wx/textctrl.h>
 
 #include "SBSMSEffect.h"
 
+class wxSlider;
 class ShuttleGui;
 
 // two strings here

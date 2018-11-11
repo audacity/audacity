@@ -13,11 +13,11 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include <wx/checkbox.h>
-#include <wx/slider.h>
 #include <wx/spinctrl.h>
 
 #include "Effect.h"
 
+class wxSlider;
 class ShuttleGui;
 
 #define REVERB_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Reverb") }

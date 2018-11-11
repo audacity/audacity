@@ -14,7 +14,6 @@
 #ifdef EXPERIMENTAL_SCOREALIGN
 
 #include <wx/dialog.h>
-#include <wx/slider.h>
 #include <wx/checkbox.h>
 
 #if 1
@@ -57,6 +56,7 @@ extern int scorealign(
 class wxButton;
 class wxSizer;
 class wxString;
+class wxSlider;
 
 void CloseScoreAlignDialog();
 

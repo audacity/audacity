@@ -37,6 +37,7 @@
 #include <wx/intl.h>
 #include <wx/valgen.h>
 #include <wx/log.h>
+#include <wx/slider.h>
 
 #include "../Prefs.h"
 #include "../Shuttle.h"

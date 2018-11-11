@@ -23,10 +23,10 @@
 #include "../MemoryX.h"
 #include "../SampleFormat.h"
 #include <wx/dialog.h>
-#include <wx/slider.h>
 
 class wxButton;
 class wxSizer;
+class wxSlider;
 class wxString;
 
 class Envelope;

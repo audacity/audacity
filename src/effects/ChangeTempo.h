@@ -22,11 +22,11 @@
 #include <wx/checkbox.h>
 #endif
 
-#include <wx/slider.h>
 #include <wx/textctrl.h>
 
 #include "SoundTouchEffect.h"
 
+class wxSlider;
 class ShuttleGui;
 
 #define CHANGETEMPO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Change Tempo") }

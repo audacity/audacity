@@ -16,11 +16,11 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include <wx/slider.h>
 #include <wx/textctrl.h>
 
 #include "Effect.h"
 
+class wxSlider;
 class ShuttleGui;
 
 #define WAHWAH_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Wahwah") }

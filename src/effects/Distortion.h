@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_EFFECT_DISTORTION__
 #define __AUDACITY_EFFECT_DISTORTION__
 
-#include <wx/slider.h>
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
 
@@ -19,6 +18,7 @@
 
 #include "Effect.h"
 
+class wxSlider;
 class ShuttleGui;
 
 #define DISTORTION_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Distortion") }

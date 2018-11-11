@@ -19,6 +19,7 @@
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/slider.h>
 
 #include "../LabelTrack.h"
 #include "../Prefs.h"

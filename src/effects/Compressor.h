@@ -14,7 +14,6 @@
 #include <wx/bitmap.h>
 #include <wx/checkbox.h>
 #include <wx/gdicmn.h>
-#include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/window.h>
 #include "../widgets/wxPanelWrapper.h"
@@ -22,6 +21,7 @@
 #include "TwoPassSimpleMono.h"
 #include "../SampleFormat.h"
 
+class wxSlider;
 class EffectCompressorPanel;
 class ShuttleGui;
 

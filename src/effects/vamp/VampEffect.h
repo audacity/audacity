@@ -17,7 +17,6 @@
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
@@ -26,6 +25,7 @@
 #include "../../SampleFormat.h"
 #include "../Effect.h"
 
+class wxSlider;
 class LabelTrack;
 
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")

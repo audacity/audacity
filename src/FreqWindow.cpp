@@ -57,6 +57,7 @@ and in the spectrogram spectral selection.
 #include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
+#include <wx/slider.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>

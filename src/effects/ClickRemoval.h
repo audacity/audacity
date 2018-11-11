@@ -16,11 +16,11 @@
 #ifndef __AUDACITY_EFFECT_CLICK_REMOVAL__
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
-#include <wx/slider.h>
 #include <wx/textctrl.h>
 
 #include "Effect.h"
 
+class wxSlider;
 class Envelope;
 class ShuttleGui;
 

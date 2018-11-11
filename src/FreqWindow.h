@@ -24,7 +24,6 @@
 #include <wx/font.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
-#include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
@@ -32,6 +31,7 @@
 #include "SampleFormat.h"
 #include "widgets/wxPanelWrapper.h"
 
+class wxSlider;
 class wxStatusBar;
 class wxButton;
 class wxChoice;

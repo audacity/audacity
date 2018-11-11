@@ -30,6 +30,7 @@
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/slider.h>
 #include <wx/valgen.h>
 
 #include "../Prefs.h"

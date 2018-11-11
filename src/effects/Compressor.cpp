@@ -33,6 +33,7 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
+#include <wx/slider.h>
 
 #include "../AColor.h"
 #include "../Prefs.h"

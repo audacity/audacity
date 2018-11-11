@@ -28,6 +28,7 @@ the pitch without changing the tempo.
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/slider.h>
 #include <wx/valtext.h>
 
 #include "../PitchName.h"

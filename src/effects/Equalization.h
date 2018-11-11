@@ -24,7 +24,6 @@
 #include <wx/intl.h>
 #include <wx/listctrl.h>
 #include <wx/stattext.h>
-#include <wx/slider.h>
 #include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
@@ -53,6 +52,7 @@ const int kEqOptionCurve   =1<<1;
 // The legacy version offers both Graphic and curve on the same UI.
 const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
+class wxSlider;
 class Envelope;
 class EnvelopeEditor;
 class EqualizationPanel;

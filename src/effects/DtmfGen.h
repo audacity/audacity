@@ -14,13 +14,13 @@
 #ifndef __AUDACITY_EFFECT_DTMF__
 #define __AUDACITY_EFFECT_DTMF__
 
-#include <wx/slider.h>
 #include <wx/stattext.h>
 
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
 
+class wxSlider;
 class ShuttleGui;
 
 #define DTMFTONES_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("DTMF Tones") }
