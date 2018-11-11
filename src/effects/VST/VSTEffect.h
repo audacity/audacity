@@ -12,8 +12,6 @@
 
 #if USE_VST
 
-#include <wx/wx.h>
-
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
@@ -21,6 +19,9 @@
 #include "../../SampleFormat.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../xml/XMLTagHandler.h"
+
+class wxSizerItem;
+class wxSlider;
 
 class VSTControl;
 #include "VSTControl.h"

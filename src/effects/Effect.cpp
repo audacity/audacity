@@ -28,9 +28,12 @@ greater use in future.
 
 #include <algorithm>
 
+#include <wx/checkbox.h>
+#include <wx/dcmemory.h>
 #include <wx/defs.h>
 #include <wx/hashmap.h>
 #include <wx/menu.h>
+#include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/stockitem.h>
 #include <wx/string.h>

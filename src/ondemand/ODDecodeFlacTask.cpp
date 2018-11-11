@@ -15,6 +15,7 @@
 #include <wx/utils.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
+#include <wx/wx.h>
 
 #ifdef USE_LIBID3TAG
 extern "C" {

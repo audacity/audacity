@@ -25,7 +25,6 @@ tasks associated with a WaveTrack.
 #include "../MemoryX.h"
 #include <vector>
 #include "ODTaskThread.h"
-#include <wx/wx.h>
 class Track;
 class WaveTrack;
 class ODTask;

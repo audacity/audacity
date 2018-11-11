@@ -28,7 +28,6 @@ in a background thread.
 
 #include "../MemoryX.h"
 #include <vector>
-#include <wx/wx.h>
 class AudacityProject;
 class Track;
 class WaveTrack;
