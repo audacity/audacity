@@ -13,6 +13,7 @@
 #define __AUDACITY_ERRORDIALOG__
 
 #include "../Audacity.h"
+
 #include <wx/defs.h>
 #include <wx/msgdlg.h>
 #include <wx/window.h>

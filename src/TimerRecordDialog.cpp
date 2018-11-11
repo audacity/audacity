@@ -20,6 +20,7 @@
 
 #include "Audacity.h"
 #include "TimerRecordDialog.h"
+
 #include "FileNames.h"
 
 #include <wx/defs.h>

@@ -16,6 +16,7 @@ information.
 
 
 #include "Audacity.h"
+
 #include "MemoryX.h"
 #include <wx/arrstr.h>
 #include <wx/intl.h>

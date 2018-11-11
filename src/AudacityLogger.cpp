@@ -16,6 +16,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 
 #include "Audacity.h" // This should always be included first
 #include "AudacityLogger.h"
+
 #include "FileNames.h"
 #include "ShuttleGui.h"
 

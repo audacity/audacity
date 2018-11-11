@@ -10,6 +10,7 @@
 
 #include "../Audacity.h"
 #include "SilentBlockFile.h"
+
 #include "../FileFormats.h"
 
 SilentBlockFile::SilentBlockFile(size_t sampleLen):

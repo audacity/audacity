@@ -24,6 +24,7 @@ Licensed under the GNU General Public License v2 or later
 *//*******************************************************************/
 
 #include "../Audacity.h"	// needed before GStreamer.h
+
 #include <wx/window.h>
 #include <wx/log.h>
 

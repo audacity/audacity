@@ -18,13 +18,14 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
+#include "Audacity.h"
+
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
 #include <wx/string.h>
 #include <wx/filename.h>
 
-#include "Audacity.h"
 #include "AudacityApp.h"
 #include "FileNames.h"
 #include "Internat.h"

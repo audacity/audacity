@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_FILE_NAMES__
 #define __AUDACITY_FILE_NAMES__
 
-#include <wx/string.h>
 #include "Audacity.h"
 
 #include "audacity/Types.h"

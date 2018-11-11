@@ -1,4 +1,5 @@
 #include "../Audacity.h"
+
 #include "../commands/CommandManager.h"
 
 // This file collects a few things specific to Mac and requiring some

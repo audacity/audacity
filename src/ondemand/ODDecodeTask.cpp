@@ -18,6 +18,7 @@ updating the ODDecodeBlockFile and the GUI of the newly available data.
 
 #include "../Audacity.h"
 #include "ODDecodeTask.h"
+
 #include "../blockfile/ODDecodeBlockFile.h"
 #include "../Sequence.h"
 #include "../WaveTrack.h"

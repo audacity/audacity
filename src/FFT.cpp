@@ -40,6 +40,7 @@
 */
 
 #include "Audacity.h"
+
 #include "Internat.h"
 
 #include "FFT.h"

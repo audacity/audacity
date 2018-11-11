@@ -22,9 +22,10 @@ channel.  This collection of functions fills that gap.
 *//*********************************************************************/
 
 
+#include "Audacity.h"
+
 #include <wx/image.h>
 
-#include "Audacity.h"
 #include "ImageManipulation.h"
 #include "AllThemeResources.h"
 #include "Theme.h"

@@ -16,6 +16,8 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
+#include "Audacity.h"
+
 #include "MemoryX.h"
 
 #include "Internat.h"
@@ -144,7 +146,6 @@ extern "C" {
 }
 #endif
 
-#include "Audacity.h"
 #include "Experimental.h"
 
 /* rather earlier than normal, but pulls in config*.h and other program stuff

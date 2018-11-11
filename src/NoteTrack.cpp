@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 #include "NoteTrack.h"
+
 #include "Experimental.h"
 
 #include <wx/dc.h>

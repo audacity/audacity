@@ -19,6 +19,7 @@ small calculations of rectangles.
 
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
+
 #include "CommandTargets.h"
 #include "../Project.h"
 #include <wx/toplevel.h>

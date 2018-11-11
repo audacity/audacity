@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../Audacity.h"
+
 #include "../../HitTestResult.h"
 #include "TrackVRulerControls.h"
 

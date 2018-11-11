@@ -18,6 +18,7 @@ tasks associated with a WaveTrack.
 
 #include "../Audacity.h"
 #include "ODWaveTrackTaskQueue.h"
+
 #include "ODTask.h"
 #include "ODManager.h"
 #include "../WaveTrack.h"

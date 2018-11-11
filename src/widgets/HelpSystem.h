@@ -13,6 +13,7 @@
 #define __AUDACITY_HELPSYSTEM__
 
 #include "../Audacity.h"
+
 #include <wx/defs.h>
 #include <wx/window.h>
 

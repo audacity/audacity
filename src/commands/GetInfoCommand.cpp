@@ -22,6 +22,7 @@ This class now lists
 
 #include "../Audacity.h"
 #include "GetInfoCommand.h"
+
 #include "../Project.h"
 #include "CommandManager.h"
 #include "../effects/EffectManager.h"

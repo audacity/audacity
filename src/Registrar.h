@@ -21,6 +21,7 @@ responsible for calling the appropriate callback functions.
 #define __AUDACITY_REGISTRAR__
 
 #include "Audacity.h"
+
 #include "MemoryX.h"
 
 class LoadableModule;

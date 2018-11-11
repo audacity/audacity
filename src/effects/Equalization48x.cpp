@@ -14,6 +14,7 @@
 *//****************************************************************/
 
 #include "../Audacity.h"
+
 #include "../Experimental.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "../MemoryX.h"

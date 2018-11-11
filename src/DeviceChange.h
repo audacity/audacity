@@ -12,6 +12,7 @@
 #define __AUDACITY_DEVICECHANGE_H__
 
 #include "Audacity.h"
+
 #include "Experimental.h"
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)

@@ -8,6 +8,7 @@
 
 #include "../Audacity.h"
 #include "OverlayPanel.h"
+
 #include "Overlay.h"
 #include "../AColor.h"
 #include <algorithm>

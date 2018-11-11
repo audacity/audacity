@@ -77,6 +77,7 @@ classes derived from it.
 
 #include "../Audacity.h"
 #include "Command.h"
+
 #include <map>
 #include <wx/string.h>
 #include <wx/variant.h>

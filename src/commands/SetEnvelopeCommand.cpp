@@ -18,6 +18,7 @@
 
 #include "../Audacity.h"
 #include "SetEnvelopeCommand.h"
+
 #include "../Project.h"
 #include "../Track.h"
 #include "../TrackPanel.h"

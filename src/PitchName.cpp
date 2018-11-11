@@ -17,10 +17,11 @@
 *//*******************************************************************/
 
 
+#include "Audacity.h"
+
 #include <math.h>
 #include <stdio.h>
 
-#include "Audacity.h"
 #include "PitchName.h"
 #include "Internat.h"
 

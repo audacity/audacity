@@ -8,6 +8,7 @@
 
 #include "Audacity.h"
 #include "InconsistencyException.h"
+
 #include "Internat.h"
 
 InconsistencyException::~InconsistencyException()

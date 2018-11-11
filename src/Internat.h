@@ -12,13 +12,14 @@
 #ifndef __AUDACITY_INTERNAT__
 #define __AUDACITY_INTERNAT__
 
+#include "Audacity.h"
+
 #include <wx/string.h>
 #include <wx/longlong.h>
 
 #include <algorithm>
 
 #ifndef IN_RC
-#include "Audacity.h"
 #include "audacity/Types.h"
 
 class wxArrayString;

@@ -20,6 +20,7 @@ threshold of difference in two selected tracks
 
 #include "../Audacity.h"
 #include "CompareAudioCommand.h"
+
 #include "../MemoryX.h"
 #include "../Project.h"
 #include "../WaveTrack.h"

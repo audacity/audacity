@@ -29,6 +29,7 @@ count down so that we track how many times the event happens.
 
 
 #include "Audacity.h"
+
 #include <wx/defs.h>
 #include <wx/hash.h>
 #include <wx/intl.h>

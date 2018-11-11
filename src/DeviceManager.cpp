@@ -6,6 +6,8 @@
 
 ******************************************************************/
 
+#include "Audacity.h"
+
 #include "portaudio.h"
 #ifdef __WXMSW__
 #include "pa_win_wasapi.h"
@@ -15,7 +17,6 @@
 #include "portmixer.h"
 #endif
 
-#include "Audacity.h"
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 

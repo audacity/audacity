@@ -17,6 +17,7 @@ It \TODO: description
 *//*******************************************************************/
 
 #include "../Audacity.h"
+
 #include "../Experimental.h"
 
 #ifdef EXPERIMENTAL_SCOREALIGN

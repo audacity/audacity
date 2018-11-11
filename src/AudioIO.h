@@ -13,8 +13,9 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-#include "portaudio.h"
 #include "Audacity.h"
+
+#include "portaudio.h"
 #include "Experimental.h"
 
 #include "MemoryX.h"

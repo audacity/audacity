@@ -12,6 +12,7 @@
 #define __AUDACITY_WARNING__
 
 #include "../Audacity.h"
+
 #include <wx/defs.h>
 #include <wx/window.h>
 

@@ -26,6 +26,7 @@
 #define __AUDACITY_SELECTEDREGION__
 
 #include "Audacity.h"
+
 #include "Experimental.h"
 
 #include <wx/defs.h>

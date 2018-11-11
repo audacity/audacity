@@ -14,6 +14,7 @@ LRN
 #if defined(USE_FFMPEG)
 
 #include "../Audacity.h"   // keep ffmpeg before wx because they interact
+
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
 #include <wx/hashmap.h>

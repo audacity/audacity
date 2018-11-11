@@ -13,6 +13,7 @@
 #define __AUDACITY_WAVECLIP__
 
 #include "Audacity.h"
+
 #include "MemoryX.h"
 #include "SampleFormat.h"
 #include "widgets/ProgressDialog.h"

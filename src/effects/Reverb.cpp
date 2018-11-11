@@ -20,7 +20,6 @@
 #include <wx/arrstr.h>
 #include <wx/intl.h>
 
-#include "../Audacity.h"
 #include "../Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

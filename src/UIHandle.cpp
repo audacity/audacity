@@ -10,6 +10,7 @@ Paul Licameli
 
 #include "Audacity.h"
 #include "UIHandle.h"
+
 #include "RefreshCode.h"
 
 UIHandle::~UIHandle()

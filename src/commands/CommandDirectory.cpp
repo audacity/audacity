@@ -16,6 +16,7 @@ functions to look up a command by name.
 
 #include "../Audacity.h"
 #include "CommandDirectory.h"
+
 #include "CommandMisc.h"
 
 #include "HelpCommand.h"

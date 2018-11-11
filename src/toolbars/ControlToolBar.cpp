@@ -32,10 +32,11 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+
 #include <algorithm>
 #include <cfloat>
 
-#include "../Audacity.h"
 #include "../Experimental.h"
 #include "ControlToolBar.h"
 

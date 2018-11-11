@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "BatchEvalCommand.h"
+
 #include "CommandContext.h"
 
 ComponentInterfaceSymbol BatchEvalCommandType::BuildName()

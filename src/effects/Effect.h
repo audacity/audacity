@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT__
 
 #include "../Audacity.h"
+
 #include "../MemoryX.h"
 #include <set>
 

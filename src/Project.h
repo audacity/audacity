@@ -19,6 +19,7 @@
 #define __AUDACITY_PROJECT__
 
 #include "Audacity.h"
+
 #include "Experimental.h"
 
 #include "Track.h"

@@ -17,7 +17,6 @@ the ability to not see similar warnings again for this session.
 
 
 #include "../Audacity.h"
-
 #include "Warning.h"
 
 #include "../Prefs.h"

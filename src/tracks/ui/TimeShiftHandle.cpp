@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "TimeShiftHandle.h"
+
 #include "../../Experimental.h"
 
 #include "TrackControls.h"

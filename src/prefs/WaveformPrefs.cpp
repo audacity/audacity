@@ -15,6 +15,7 @@ Paul Licameli
 
 #include "../Audacity.h"
 #include "WaveformPrefs.h"
+
 #include "GUIPrefs.h"
 #include "GUISettings.h"
 

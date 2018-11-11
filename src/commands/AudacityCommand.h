@@ -12,6 +12,7 @@
 #define __AUDACITY_COMMAND__
 
 #include "../Audacity.h"
+
 #include "../MemoryX.h"
 #include <set>
 

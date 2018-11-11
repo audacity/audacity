@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "ImportQT.h"
+
 #include "ImportPlugin.h"
 #include "../widgets/ErrorDialog.h"
 

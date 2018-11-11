@@ -56,6 +56,7 @@ but little else.
 #define __AUDACITY_IMPORTER__
 
 #include "../Audacity.h"
+
 #include "audacity/Types.h"
 #include "../Internat.h"
 #include <wx/filename.h>

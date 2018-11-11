@@ -16,8 +16,9 @@
 #ifndef __APPCOMMANDEVENT__
 #define __APPCOMMANDEVENT__
 
-#include <wx/event.h>
 #include "../Audacity.h"
+
+#include <wx/event.h>
 #include "../MemoryX.h"
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, wxEVT_APP_COMMAND_RECEIVED, -1);

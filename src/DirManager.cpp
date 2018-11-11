@@ -63,6 +63,7 @@
 
 #include "Audacity.h"
 #include "DirManager.h"
+
 #include "MemoryX.h"
 
 #include <time.h> // to use time() for srand()

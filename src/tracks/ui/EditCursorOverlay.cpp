@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "EditCursorOverlay.h"
+
 #include "../../Experimental.h"
 
 #include "../../AColor.h"

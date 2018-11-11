@@ -13,10 +13,10 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
-
-#include "../Audacity.h"
 
 #include <wx/mimetype.h>
 #include <wx/filename.h>

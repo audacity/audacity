@@ -22,6 +22,7 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+
 #include <wx/tokenzr.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".

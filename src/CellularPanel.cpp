@@ -29,6 +29,7 @@
 
 #include "Audacity.h"
 #include "CellularPanel.h"
+
 #include "Project.h"
 #include "UIHandle.h"
 #include "TrackPanelCell.h"

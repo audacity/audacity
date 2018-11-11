@@ -23,6 +23,7 @@ system by constructing BatchCommandEval objects.
 
 #include "../Audacity.h"
 #include "CommandBuilder.h"
+
 #include "CommandDirectory.h"
 #include "../Shuttle.h"
 #include "BatchEvalCommand.h"

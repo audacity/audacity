@@ -30,6 +30,7 @@ explicitly code all three.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+
 #include <wx/string.h>
 #include <float.h>
 

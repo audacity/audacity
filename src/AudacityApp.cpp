@@ -15,13 +15,14 @@ It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
 
+#include "Audacity.h" // This should always be included first
+
 #if 0
 // This may be used to debug memory leaks.
 // See: Visual Leak Dectector @ http://vld.codeplex.com/
 #include <vld.h>
 #endif
 
-#include "Audacity.h" // This should always be included first
 #include "AudacityApp.h"
 #include "TranslatableStringArray.h"
 

@@ -30,6 +30,7 @@
 #define __AUDACITY_TAGS__
 
 #include "Audacity.h"
+
 #include "widgets/Grid.h"
 #include "xml/XMLTagHandler.h"
 

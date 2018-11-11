@@ -22,6 +22,7 @@
 **********************************************************************/
 
 #include "../../Audacity.h"
+
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioComponent.h>
 #include <AudioUnit/AudioUnitProperties.h>

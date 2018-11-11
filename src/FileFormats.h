@@ -11,11 +11,12 @@
 #ifndef __AUDACITY_FILE_FORMATS__
 #define __AUDACITY_FILE_FORMATS__
 
+#include "Audacity.h"
+
 #include <wx/list.h>
 #include <wx/arrstr.h>
 #include <wx/string.h>
 
-#include "Audacity.h"
 #include "audacity/Types.h"
 
 #include "sndfile.h"

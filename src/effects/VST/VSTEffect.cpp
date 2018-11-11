@@ -28,7 +28,6 @@
 
 #if 0
 #if defined(BUILDING_AUDACITY)
-#include "../../Audacity.h"
 #include "../../PlatformCompatibility.h"
 
 // Make the main function private

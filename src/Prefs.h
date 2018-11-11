@@ -30,6 +30,7 @@
 #define __AUDACITY_PREFS__
 
 #include "Audacity.h"
+
 #include "../include/audacity/ComponentInterface.h"
 
 #include <wx/config.h>

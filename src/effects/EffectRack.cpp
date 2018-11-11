@@ -12,6 +12,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+
 #include "../Experimental.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)

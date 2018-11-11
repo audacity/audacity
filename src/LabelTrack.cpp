@@ -30,6 +30,7 @@ for drawing different aspects of the label and its text box.
 
 #include "Audacity.h"
 #include "LabelTrack.h"
+
 #include "Experimental.h"
 #include "TrackPanel.h"
 

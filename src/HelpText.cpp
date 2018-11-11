@@ -12,11 +12,13 @@
 \brief Given a key, returns some html.
 *//********************************************************************/
 
+#include "Audacity.h"
+
 #include <wx/string.h>
 #include <wx/intl.h>
 
-#include "Audacity.h"
 #include "HelpText.h"
+
 #include "FileNames.h"
 #include "AboutDialog.h"
 #include "AllThemeResources.h"

@@ -33,6 +33,7 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+
 #include "../Experimental.h"
 #include "MousePrefs.h"
 
