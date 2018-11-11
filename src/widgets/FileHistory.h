@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <wx/defs.h>
 #include <wx/choice.h>
-#include <wx/event.h>
 #include <wx/grid.h>
 #include <wx/window.h>
 #include <wx/weakref.h>

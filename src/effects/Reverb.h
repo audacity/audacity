@@ -13,7 +13,6 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include <wx/checkbox.h>
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 

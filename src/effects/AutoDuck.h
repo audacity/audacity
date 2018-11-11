@@ -12,7 +12,6 @@
 #define __AUDACITY_EFFECT_AUTODUCK__
 
 #include <wx/bitmap.h>
-#include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/textctrl.h>
 #include <wx/window.h>

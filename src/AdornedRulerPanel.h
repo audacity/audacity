@@ -18,7 +18,6 @@
 #include <wx/bitmap.h>
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
-#include <wx/event.h>
 #include <wx/font.h>
 #include <wx/window.h>
 

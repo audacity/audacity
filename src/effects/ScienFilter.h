@@ -17,7 +17,6 @@ Vaughan Johnson (Preview)
 
 #include <wx/bitmap.h>
 #include <wx/choice.h>
-#include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>

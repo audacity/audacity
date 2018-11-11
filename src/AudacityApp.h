@@ -23,7 +23,6 @@
 #include <wx/app.h>
 #include <wx/cmdline.h>
 #include <wx/dir.h>
-#include <wx/event.h>
 #include <wx/docview.h>
 #include <wx/intl.h>
 #include <wx/snglinst.h>

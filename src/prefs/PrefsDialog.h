@@ -14,7 +14,6 @@
 
 #include <vector>
 #include <wx/button.h>
-#include <wx/event.h>
 #include <wx/dialog.h>
 #include <wx/treebook.h>
 #include <wx/window.h>

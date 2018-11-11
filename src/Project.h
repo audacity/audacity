@@ -35,7 +35,6 @@
 
 #include <memory>
 #include <wx/defs.h>
-#include <wx/event.h>
 #include <wx/log.h>
 #include <wx/dragimag.h>
 #include <wx/generic/dragimgg.h>

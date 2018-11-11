@@ -24,7 +24,6 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/tglbtn.h>
-#include <wx/event.h> // for idle event.
 
 class wxCheckBox;
 class wxChoice;

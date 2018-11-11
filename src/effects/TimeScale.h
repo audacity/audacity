@@ -15,7 +15,6 @@
 
 #if USE_SBSMS
 
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 

@@ -13,7 +13,9 @@
 #define __AUDACITY_KEYBOARD__
 
 #include <wx/defs.h>
-#include <wx/event.h>
+#include <wx/string.h> // to inherit
+
+class wxKeyEvent;
 
 struct NormalizedKeyString : private wxString
 {

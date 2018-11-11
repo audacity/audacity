@@ -12,7 +12,7 @@
 #define __AUDACITY_VIEWINFO__
 
 #include <vector>
-#include <wx/event.h>
+#include <wx/event.h> // inherit wxEvtHandler
 #include "SelectedRegion.h"
 #include "MemoryX.h"
 

@@ -14,7 +14,6 @@
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
 #include <wx/choice.h>
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 

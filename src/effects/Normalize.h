@@ -16,7 +16,6 @@
 #include "../Experimental.h"
 
 #include <wx/checkbox.h>
-#include <wx/event.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 

@@ -22,7 +22,6 @@
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
-#include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>

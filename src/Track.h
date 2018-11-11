@@ -19,7 +19,6 @@
 #include <vector>
 #include <list>
 #include <functional>
-#include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
 

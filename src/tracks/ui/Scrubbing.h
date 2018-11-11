@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../MemoryX.h"
 #include <vector>
-#include <wx/event.h>
 #include <wx/longlong.h>
 
 #include "../../widgets/Overlay.h"

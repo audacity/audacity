@@ -93,7 +93,6 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <wx/event.h>
 #include "../../widgets/PopupMenuTable.h"
 
 class MenuButtonHandle final : public ButtonHandle

@@ -17,7 +17,6 @@
 #include "Track.h"
 
 #include <wx/brush.h>
-#include <wx/event.h>
 #include <wx/font.h>
 #include <wx/pen.h>
 #include <wx/clipbrd.h>

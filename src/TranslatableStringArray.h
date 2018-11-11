@@ -12,7 +12,6 @@ Paul Licameli
 #define __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 
 #include <wx/app.h>
-#include <wx/event.h>
 
 class wxArrayStringEx;
 

@@ -12,7 +12,6 @@
 #define __AUDACITY_TimeDialog__
 
 #include <wx/defs.h>
-#include <wx/event.h>
 
 #include "widgets/NumericTextCtrl.h" // for NumericFormatSymbol
 #include "widgets/wxPanelWrapper.h"

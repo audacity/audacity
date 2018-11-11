@@ -16,7 +16,6 @@
 #define __AUDACITY_EFFECT_AMPLIFY__
 
 #include <wx/checkbox.h>
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 

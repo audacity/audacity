@@ -27,7 +27,6 @@ the pitch without changing the tempo.
 #endif
 
 #include <wx/choice.h>
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>

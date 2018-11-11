@@ -16,7 +16,6 @@
 #ifndef __AUDACITY_EFFECT_CLICK_REMOVAL__
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 

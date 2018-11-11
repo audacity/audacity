@@ -19,7 +19,6 @@
 #include "Experimental.h"
 
 #include "MemoryX.h"
-#include <wx/event.h>
 #include <wx/log.h>
 #include <wx/frame.h>
 #include <wx/textctrl.h>

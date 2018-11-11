@@ -48,7 +48,7 @@ using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 #include "../lib-src/portmixer/include/portmixer.h"
 #endif
 
-#include <wx/event.h>
+#include <wx/event.h> // to declare custom event types
 #include <wx/thread.h>
 
 #include "SampleFormat.h"

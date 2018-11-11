@@ -12,6 +12,8 @@
 #include "../Audacity.h"
 #include "Keyboard.h"
 
+#include <wx/event.h>
+
 NormalizedKeyString::NormalizedKeyString(const wxString & key)
 {
 #if defined(__WXMAC__)

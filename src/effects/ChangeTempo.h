@@ -22,7 +22,6 @@
 #include <wx/checkbox.h>
 #endif
 
-#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 

@@ -13,7 +13,6 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/event.h>
 #include <wx/grid.h>
 
 #include "Internat.h"
