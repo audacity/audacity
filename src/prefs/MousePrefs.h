@@ -12,7 +12,6 @@
 #include <wx/defs.h>
 
 #include <wx/listctrl.h>
-#include <wx/window.h>
 
 #include "PrefsPanel.h"
 

@@ -16,7 +16,6 @@
 
 #include <wx/defs.h>
 #include <wx/msgdlg.h>
-#include <wx/window.h>
 #include "LinkingHtmlWindow.h"
 #include "wxPanelWrapper.h"
 

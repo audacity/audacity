@@ -19,7 +19,6 @@
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 #include <wx/font.h>
-#include <wx/window.h>
 
 class ViewInfo;
 class AudacityProject;

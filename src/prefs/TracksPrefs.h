@@ -15,8 +15,6 @@
 
 //#include <wx/defs.h>
 
-//#include <wx/window.h>
-
 #include <vector>
 #include "PrefsPanel.h"
 #include "../WaveTrack.h"

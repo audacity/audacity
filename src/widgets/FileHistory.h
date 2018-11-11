@@ -16,7 +16,6 @@
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/grid.h>
-#include <wx/window.h>
 #include <wx/weakref.h>
 
 #include "audacity/Types.h"

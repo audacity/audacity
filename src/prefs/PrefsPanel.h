@@ -33,7 +33,6 @@ PrefsPanel.
 #ifndef __AUDACITY_PREFS_PANEL__
 #define __AUDACITY_PREFS_PANEL__
 
-#include <wx/window.h>
 #include "../widgets/wxPanelWrapper.h"
 
 /* A few constants for an attempt at semi-uniformity */

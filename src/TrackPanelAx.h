@@ -12,7 +12,6 @@
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
 #include <memory>
-#include <wx/window.h>
 #include <wx/panel.h>
 
 #include <wx/setup.h> // for wxUSE_* macros

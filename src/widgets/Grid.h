@@ -17,7 +17,6 @@
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/grid.h>
-#include <wx/window.h>
 #include "NumericTextCtrl.h"
 #include "../Internat.h"
 

@@ -14,7 +14,6 @@
 #include <wx/bitmap.h>
 #include <wx/gdicmn.h>
 #include <wx/textctrl.h>
-#include <wx/window.h>
 
 #include "Effect.h"
 #include "../widgets/wxPanelWrapper.h"

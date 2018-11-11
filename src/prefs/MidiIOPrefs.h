@@ -22,7 +22,6 @@ class ShuttleGui;
 #include <wx/defs.h>
 
 #include <wx/choice.h>
-#include <wx/window.h>
 
 #include "PrefsPanel.h"
 

@@ -23,7 +23,6 @@
 #endif
 
 #include <wx/image.h>
-#include <wx/window.h>
 
 #include "ImageRoll.h"
 

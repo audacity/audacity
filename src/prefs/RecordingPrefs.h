@@ -15,8 +15,6 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
-#include <wx/window.h>
-
 #include "PrefsPanel.h"
 
 class ShuttleGui;

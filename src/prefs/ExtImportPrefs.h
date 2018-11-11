@@ -13,7 +13,6 @@
 
 #include <wx/defs.h>
 #include <wx/dnd.h>
-#include <wx/window.h>
 #include "../widgets/Grid.h"
 
 #include "PrefsPanel.h"

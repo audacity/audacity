@@ -34,7 +34,6 @@ flicker-free use.
 #include <wx/defs.h>
 #include <wx/dc.h>
 #include <wx/gdicmn.h>
-#include <wx/window.h>
 #include <wx/statbmp.h>
 
 ////////////////////////////////////////////////////////////

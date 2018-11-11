@@ -15,8 +15,8 @@
 #define __AUDACITY_MULTIDIALOG__
 
 #include <wx/defs.h>
-#include <wx/window.h>
 
+#include <wx/chartype.h>
 class wxString;
 
 const wxString &DefaultMultiDialogMessage();
