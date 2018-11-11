@@ -19,7 +19,6 @@
 #include <vector>
 #include <list>
 #include <functional>
-#include <wx/gdicmn.h>
 #include <wx/longlong.h>
 
 #include "SampleFormat.h"

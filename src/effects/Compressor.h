@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_EFFECT_COMPRESSOR__
 #define __AUDACITY_EFFECT_COMPRESSOR__
 
-#include <wx/gdicmn.h>
 #include "../widgets/wxPanelWrapper.h"
 
 #include "TwoPassSimpleMono.h"

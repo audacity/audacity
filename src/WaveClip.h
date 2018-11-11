@@ -22,7 +22,6 @@
 
 #include "RealFFTf.h"
 
-#include <wx/gdicmn.h>
 #include <wx/longlong.h>
 
 #include <vector>

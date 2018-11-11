@@ -18,7 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseEvent;
 class wxMouseState;
-#include <wx/gdicmn.h>
 
 class Envelope;
 class EnvelopeEditor;

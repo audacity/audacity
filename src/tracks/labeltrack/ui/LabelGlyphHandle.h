@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_LABEL_GLYPH_HANDLE__
 
 #include "LabelDefaultClickHandle.h"
-#include <wx/gdicmn.h>
 #include "../../../MemoryX.h"
 
 class wxMouseState;

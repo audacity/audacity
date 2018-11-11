@@ -16,7 +16,6 @@
 #include "widgets/ProgressDialog.h"
 
 #include <vector>
-#include <wx/gdicmn.h>
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"

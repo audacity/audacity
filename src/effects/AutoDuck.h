@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_EFFECT_AUTODUCK__
 #define __AUDACITY_EFFECT_AUTODUCK__
 
-#include <wx/gdicmn.h>
-
 #include "Effect.h"
 #include "../widgets/wxPanelWrapper.h"
 

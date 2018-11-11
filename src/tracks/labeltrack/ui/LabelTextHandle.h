@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelDefaultClickHandle.h"
 #include "../../../MemoryX.h"
 #include "../../../SelectedRegion.h"
-#include <wx/gdicmn.h>
 
 class wxMouseState;
 class LabelTrack;

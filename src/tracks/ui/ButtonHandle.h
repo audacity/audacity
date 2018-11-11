@@ -16,7 +16,6 @@ Paul Licameli
 
 class wxMouseEvent;
 class wxMouseState;
-#include <wx/gdicmn.h>
 
 class Track;
 

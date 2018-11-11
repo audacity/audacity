@@ -16,7 +16,6 @@ class NoteTrack;
 
 #include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
-#include <wx/gdicmn.h>
 
 class NoteTrackVZoomHandle : public UIHandle
 {

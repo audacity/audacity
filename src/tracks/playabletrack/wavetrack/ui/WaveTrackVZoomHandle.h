@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class WaveTrack;
-#include <wx/gdicmn.h>
 #include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
 
