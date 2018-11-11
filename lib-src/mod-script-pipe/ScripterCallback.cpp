@@ -154,7 +154,11 @@ size_t currentPosition;
 // The response lines can be retrieved by calling DoSrvMore repeatedly.
 int DoSrv(char *pIn)
 {
-   wxString Str1(pIn, wxConvISO8859_1);
+   // Interpret string as unicode.
+   // wxWidgets (now) uses unicode internally.
+   // Scripts must send unicode strings (if going beyond 7-bit ASCII).
+   // Important for filenames in commands.
+   wxString Str1(pIn, wxConvUTF8); 
    Str1.Replace( wxT("\r"), wxT(""));
    Str1.Replace( wxT("\n"), wxT(""));
    Str2 = wxEmptyString;
