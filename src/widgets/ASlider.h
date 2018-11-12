@@ -26,6 +26,7 @@
 #include "WindowAccessible.h"
 #endif
 
+class wxArrayString;
 class wxBitmap;
 class wxCursor;
 class wxImage;

@@ -43,6 +43,8 @@
 #define __AUDACITY_COMPONENT_INTERFACE_H__
 
 #include "audacity/Types.h"
+#include <wx/string.h> // member variables
+
 extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
 
 /**************************************************************************//**

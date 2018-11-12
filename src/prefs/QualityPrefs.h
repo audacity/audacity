@@ -15,7 +15,6 @@
 #include <vector>
 #include <wx/defs.h>
 
-#include <wx/arrstr.h>
 #include <wx/choice.h>
 #include <wx/textctrl.h>
 

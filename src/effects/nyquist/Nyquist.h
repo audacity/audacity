@@ -27,6 +27,8 @@
 
 #include "nyx.h"
 
+class wxArrayString;
+
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).

@@ -15,7 +15,6 @@ Vaughan Johnson (Preview)
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/arrstr.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
 #include <wx/event.h>

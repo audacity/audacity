@@ -12,8 +12,9 @@
 
 #include "audacity/Types.h"
 
-#include <wx/arrstr.h>
+#include <wx/string.h> // member variable
 
+class wxArrayString;
 class AudacityProject;
 class CommandContext;
 class CommandManager;

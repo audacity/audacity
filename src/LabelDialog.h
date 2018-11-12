@@ -20,6 +20,7 @@
 #include "widgets/Grid.h"
 #include "widgets/wxPanelWrapper.h"
 
+class wxArrayString;
 class TrackFactory;
 class TrackList;
 class RowData;

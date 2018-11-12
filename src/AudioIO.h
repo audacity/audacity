@@ -53,6 +53,7 @@ using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #include "SampleFormat.h"
 
+class wxArrayString;
 class AudioIO;
 class RingBuffer;
 class Mixer;

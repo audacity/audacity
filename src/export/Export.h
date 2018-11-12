@@ -20,6 +20,7 @@
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h"
 
+class wxArrayString;
 class FileDialogWrapper;
 class wxFileCtrlEvent;
 class wxMemoryDC;

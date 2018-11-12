@@ -15,7 +15,6 @@
 
 //#include <wx/defs.h>
 
-//#include <wx/arrstr.h>
 //#include <wx/window.h>
 
 #include <vector>

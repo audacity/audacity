@@ -15,12 +15,12 @@
 #include "ImportForwards.h"
 #include "audacity/Types.h"
 #include <vector>
-#include <wx/arrstr.h>
 #include <wx/listbox.h>
 #include <wx/tokenzr.h>
 
 #include "../widgets/wxPanelWrapper.h"
 
+class wxArrayString;
 class Tags;
 class TrackFactory;
 class Track;

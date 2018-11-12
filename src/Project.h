@@ -47,6 +47,7 @@
 
 const int AudacityProjectTimerID = 5200;
 
+class wxArrayString;
 class wxWindow;
 class wxDialog;
 class wxBoxSizer;

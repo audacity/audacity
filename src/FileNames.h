@@ -13,11 +13,11 @@
 
 #include "Audacity.h"
 
+#include <wx/string.h> // function return value
 #include "audacity/Types.h"
 
 class wxFileName;
 class wxFileNameWrapper;
-class wxArrayString;
 
 // Uh, this is really a namespace rather than a class,
 // since all the functions are static.

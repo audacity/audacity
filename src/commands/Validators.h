@@ -43,6 +43,8 @@ a certain criterion. This is a base validator which allows anything.
 #ifndef __VALIDATORS__
 #define __VALIDATORS__
 
+class wxArrayString;
+
 #include "../MemoryX.h"
 
 class Validator /* not final */

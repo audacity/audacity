@@ -22,6 +22,8 @@
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
 
+class wxArrayString;
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // PluginDescriptor

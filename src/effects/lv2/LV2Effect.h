@@ -13,6 +13,8 @@
 
 #if USE_LV2
 
+class wxArrayString;
+
 #include "../../MemoryX.h"
 #include <vector>
 #include <wx/checkbox.h>

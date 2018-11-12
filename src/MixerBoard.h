@@ -27,6 +27,7 @@
 #include "widgets/wxPanelWrapper.h"
 #include "commands/CommandManagerWindowClasses.h"
 
+class wxArrayString;
 struct TrackListEvent;
 
 // containment hierarchy:

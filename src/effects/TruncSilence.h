@@ -17,7 +17,6 @@
 #ifndef __AUDACITY_EFFECT_TRUNC_SILENCE__
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
-#include <wx/arrstr.h>
 #include <wx/event.h>
 #include <wx/list.h>
 

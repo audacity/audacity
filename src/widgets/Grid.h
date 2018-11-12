@@ -30,6 +30,7 @@ class GridAx;
 
 #endif
 
+class wxArrayString;
 class NumericTextCtrl;
 
 /**********************************************************************//**

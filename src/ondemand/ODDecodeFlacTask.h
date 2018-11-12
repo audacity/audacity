@@ -34,6 +34,7 @@ robust enough to allow all the user changes such as copy/paste, DELETE, and so o
 
 #include "FLAC++/decoder.h"
 
+class wxArrayString;
 class ODDecodeBlockFile;
 class WaveTrack;
 class ODFileDecoder;

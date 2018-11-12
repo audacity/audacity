@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
-#include <wx/arrstr.h>
-
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"

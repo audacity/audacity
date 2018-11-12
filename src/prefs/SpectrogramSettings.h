@@ -21,7 +21,6 @@ Paul Licameli
 struct FFTParam;
 class NumberScale;
 class SpectrumPrefs;
-class wxArrayString;
 class wxArrayStringEx;
 
 class SpectrogramSettings

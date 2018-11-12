@@ -43,6 +43,7 @@
 
 #include <unordered_map>
 
+class wxArrayString;
 class wxButton;
 class wxChoice;
 class wxComboBox;

@@ -20,6 +20,7 @@
 #include "PrefsPanel.h"
 
 
+class wxArrayString;
 class ShuttleGui;
 
 enum {

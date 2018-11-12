@@ -43,9 +43,11 @@
 #define __AUDACITY_TYPES_H__
 
 #include <algorithm>
-#include <wx/arrstr.h>
 #include <type_traits>
 #include <vector>
+#include <wx/debug.h> // for wxASSERT
+
+class wxString;
 
 // ----------------------------------------------------------------------------
 // TODO:  I'd imagine this header may be replaced by other public headers. But,

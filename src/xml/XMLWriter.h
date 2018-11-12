@@ -11,7 +11,6 @@
 #define __AUDACITY_XML_XML_FILE_WRITER__
 
 #include <vector>
-#include <wx/arrstr.h>
 #include <wx/ffile.h>
 
 #include "../FileException.h"

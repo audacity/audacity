@@ -20,6 +20,7 @@
 
 #include "audacity/ModuleInterface.h"
 
+class wxArrayString;
 class CommandHandler;
 
 wxWindow *  MakeHijackPanel();

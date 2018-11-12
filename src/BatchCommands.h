@@ -16,6 +16,7 @@
 
 #include "export/Export.h"
 
+class wxArrayString;
 class Effect;
 class CommandContext;
 class AudacityProject;

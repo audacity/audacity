@@ -41,6 +41,7 @@ class wxWindow;
 
 #include "../Track.h"
 
+class wxArrayString;
 class ShuttleGui;
 class AudacityCommand;
 

@@ -14,7 +14,6 @@
 #include "Audacity.h" // for __UNIX__
 
 #include <wx/list.h>
-#include <wx/arrstr.h>
 
 #include "audacity/Types.h"
 
