@@ -394,6 +394,8 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          mVZoomTop = c + ZOOMLIMIT / 2.0;
       }
       wt->SetDisplayBounds(mVZoomBottom, mVZoomTop);
+      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
+      tp->UpdateVRulers();
    }
 
    if( wt && bHasUseSpecPrefs   ){
