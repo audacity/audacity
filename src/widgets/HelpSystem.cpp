@@ -514,22 +514,20 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
    gPrefs->Write( Str, 0);
    gPrefs->Flush();
 
-   AudacityProject & project = *GetActiveProject();
-
-   if( &project == nullptr)
-      (void)0;// Compiler food.
-   // Sadly SnapTo has to be handled specially, as it is not part of the standard
-   // preference dialogs.
-   else if( Str == "/SnapTo" )
-   {
-      project.SetSnapTo( 0 );
-   }
-   else
-   {
-      // This is overkill (aka slow), as all preferences are reloaded and all 
-      // toolbars recreated.
-      // Overkill probably doesn't matter, as this command is infrequently used.
-      EditActions::DoReloadPreferences( project );
+   if ( auto pProject = GetActiveProject() ) {
+      // Sadly SnapTo has to be handled specially, as it is not part of the standard
+      // preference dialogs.
+      if( Str == "/SnapTo" )
+      {
+         pProject->SetSnapTo( 0 );
+      }
+      else
+      {
+         // This is overkill (aka slow), as all preferences are reloaded and all 
+         // toolbars recreated.
+         // Overkill probably doesn't matter, as this command is infrequently used.
+         EditActions::DoReloadPreferences( *pProject );
+      }
    }
    
    // Change the label after doing the fix, as the fix may take a second or two.
