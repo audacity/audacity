@@ -2114,7 +2114,7 @@ void EffectEqualization::UpdateCurves()
    bool selectedCurveExists = false;
    for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
-      if (mCurveName == mCurve)
+      if (mCurveName == mCurves[ i ].Name)
          selectedCurveExists = true;
       mCurve->Append(mCurves[ i ].Name);
    }
