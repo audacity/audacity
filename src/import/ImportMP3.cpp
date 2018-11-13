@@ -77,6 +77,12 @@ void GetMP3ImportPlugin(ImportPluginList &importPluginList,
 #include <wx/timer.h>
 #include <wx/intl.h>
 
+#include "../WaveTrack.h"
+
+// PRL:  include these last,
+// and correct some preprocessor namespace pollution from wxWidgets that
+// caused a warning about duplicate definition
+#undef SIZEOF_LONG
 extern "C" {
 #include "mad.h"
 
@@ -84,8 +90,6 @@ extern "C" {
 #include <id3tag.h>
 #endif
 }
-
-#include "../WaveTrack.h"
 
 #define INPUT_BUFFER_SIZE 65535
 #define PROGRESS_SCALING_FACTOR 100000
