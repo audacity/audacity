@@ -32,7 +32,7 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #include "../ondemand/ODTaskThread.h"
 #include "../DirManager.h"
 #include "../ondemand/ODDecodeTask.h"
-#include <wx/atomic.h>
+#include <wx/atomic.h> // member variable
 
 /// An AliasBlockFile that references uncompressed data in an existing file
 class ODDecodeBlockFile final : public SimpleBlockFile

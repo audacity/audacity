@@ -9,7 +9,7 @@
 #ifndef __NYQUIST_EFFECT_WORKBENCH__
 #define __NYQUIST_EFFECT_WORKBENCH__
 
-#include <wx/fdrepdlg.h> // wxFindReplaceData member variable below
+#include <wx/fdrepdlg.h> // wxFindReplaceData member variable
 #include <wx/string.h>
 
 #include <iostream>

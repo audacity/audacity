@@ -16,7 +16,7 @@
 
 #include <list>
 #include "MemoryX.h"
-#include "wxFileNameWrapper.h" // member variable below
+#include "wxFileNameWrapper.h" // member variable
 
 class AudacityProject;
 

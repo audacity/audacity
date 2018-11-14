@@ -15,7 +15,7 @@
 #define __AUDACITY_MIXER_BOARD__
 
 #include <wx/frame.h> // to inherit
-#include <wx/scrolwin.h>
+#include <wx/scrolwin.h> // to inherit
 
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"

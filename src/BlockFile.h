@@ -19,7 +19,7 @@
 
 #include "SampleFormat.h"
 
-#include "wxFileNameWrapper.h" // member variable below
+#include "wxFileNameWrapper.h" // member variable
 
 #include "ondemand/ODTaskThread.h"
 

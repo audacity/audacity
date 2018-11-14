@@ -17,7 +17,7 @@
 #define __AUDACITY_TIMERRECORD_DIALOG__
 
 #include <wx/textctrl.h> // to inherit
-#include <wx/timer.h>
+#include <wx/timer.h> // member variable
 #include "export/Export.h"
 
 class wxCheckBox;

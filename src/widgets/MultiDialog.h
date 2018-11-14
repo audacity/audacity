@@ -16,7 +16,7 @@
 
 #include <wx/defs.h>
 
-#include <wx/chartype.h>
+#include <wx/chartype.h> // for typedef wxChar
 class wxString;
 
 const wxString &DefaultMultiDialogMessage();

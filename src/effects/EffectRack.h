@@ -20,7 +20,7 @@
 
 #include <wx/defs.h>
 #include <wx/frame.h> // to inherit
-#include <wx/timer.h>
+#include <wx/timer.h> // member variable
 
 #include "EffectManager.h"
 

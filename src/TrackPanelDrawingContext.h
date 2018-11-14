@@ -17,7 +17,7 @@ class UIHandle;
 using UIHandlePtr = std::shared_ptr<UIHandle>;
 class wxDC;
 
-#include <wx/mousestate.h>
+#include <wx/mousestate.h> // member variable
 
 struct TrackPanelDrawingContext {
    wxDC &dc;

@@ -23,8 +23,8 @@
 #include <atomic>
 #include <utility>
 #include <vector>
-#include <wx/atomic.h>
-#include <wx/weakref.h>
+#include <wx/atomic.h> // member variable
+#include <wx/weakref.h> // member variable
 
 #ifdef USE_MIDI
 

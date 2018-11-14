@@ -15,8 +15,8 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/dragimag.h> // use macros and typedefs in this header
-#include <wx/timer.h>
-#include <wx/minifram.h>
+#include <wx/timer.h> // member variable
+#include <wx/minifram.h> // to inherit
 
 #include "ImageRoll.h"
 #include "wxPanelWrapper.h"

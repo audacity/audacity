@@ -105,7 +105,7 @@ public:
    }
 };
 
-#include <wx/dirdlg.h>
+#include <wx/dirdlg.h> // to inherit
 
 class AUDACITY_DLL_API wxDirDialogWrapper : public wxTabTraversalWrapper<wxDirDialog>
 {

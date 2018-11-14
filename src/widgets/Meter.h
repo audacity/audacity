@@ -19,7 +19,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/brush.h> // member variable
 #include <wx/defs.h>
-#include <wx/timer.h>
+#include <wx/timer.h> // member variable
 
 #include "../SampleFormat.h"
 #include "Ruler.h"

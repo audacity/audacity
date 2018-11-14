@@ -18,7 +18,7 @@
 #if wxUSE_VALIDATORS
 
 #include <wx/textctrl.h> // complete type needed in template function
-#include <wx/validate.h>
+#include <wx/validate.h> // to inherit
 
 #include <limits>
 

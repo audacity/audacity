@@ -15,7 +15,7 @@
 #include "../Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/msgdlg.h>
+#include <wx/msgdlg.h> // to inherit
 #include "LinkingHtmlWindow.h"
 #include "wxPanelWrapper.h"
 
@@ -99,7 +99,7 @@ inline int AudacityMessageBox(const wxString& message,
 }
 
 
-#include <wx/textdlg.h>
+#include <wx/textdlg.h> // to inherit
 
 /**************************************************************************//**
 \class AudacityTextEntryDialog

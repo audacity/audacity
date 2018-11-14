@@ -16,7 +16,7 @@
 #include "../MemoryX.h"
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
-#include <wx/timer.h>
+#include <wx/timer.h> // member variable
 #include "widgets/wxPanelWrapper.h"
 
 #if wxUSE_ACCESSIBILITY

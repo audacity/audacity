@@ -12,7 +12,7 @@
 #define __AUDACITY_EXT_IMPORT_PREFS__
 
 #include <wx/defs.h>
-#include <wx/dnd.h>
+#include <wx/dnd.h> // to inherit wxDropTarget
 #include "../widgets/Grid.h"
 
 #include "PrefsPanel.h"

@@ -14,7 +14,7 @@
 #include <vector>
 #include <algorithm>
 #include <wx/defs.h>
-#include <wx/weakref.h>
+#include <wx/weakref.h> // member variable
 
 #include "audacity/Types.h"
 #include "../MemoryX.h"

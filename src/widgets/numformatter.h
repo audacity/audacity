@@ -15,7 +15,7 @@
 #define _WIDGETS_NUMFORMATTER_H_
 
 #include <cstddef> // for size_t
-#include <wx/chartype.h>
+#include <wx/chartype.h> // for typedef wxChar
 #include <wx/longlong.h>
 
 class wxString;

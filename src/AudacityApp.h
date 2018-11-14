@@ -21,14 +21,14 @@
 
 #include "MemoryX.h"
 #include <wx/app.h> // to inherit
-#include <wx/dir.h>
-#include <wx/timer.h>
+#include <wx/dir.h> // for wxDIR_FILES
+#include <wx/timer.h> // member variable
 
 #include "widgets/FileHistory.h"
 #include "ondemand/ODTaskThread.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h>
+#include <wx/debugrpt.h> // for wxDebugReport::Context
 #endif
 
 class wxSingleInstanceChecker;
