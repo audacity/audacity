@@ -35,6 +35,7 @@
 #include <wx/filectrl.h>
 #include <wx/filename.h>
 #include <wx/progdlg.h>
+#include <wx/simplebook.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>

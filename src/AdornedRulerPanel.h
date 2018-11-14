@@ -16,7 +16,6 @@
 
 #include "MemoryX.h"
 #include <wx/bitmap.h>
-#include <wx/dc.h>
 #include <wx/dcmemory.h>
 
 class ViewInfo;

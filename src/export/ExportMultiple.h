@@ -13,7 +13,6 @@
 
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
-#include <wx/simplebook.h>
 
 #include "Export.h"
 #include "../Tags.h"       // we need to know about the Tags class for metadata
@@ -23,6 +22,7 @@ class wxButton;
 class wxCheckBox;
 class wxChoice;
 class wxRadioButton;
+class wxSimplebook;
 class wxStaticText;
 class wxTextCtrl;
 

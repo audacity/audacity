@@ -20,7 +20,6 @@
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
-#include <wx/tglbtn.h>
 
 class wxListBox;
 class wxWindow;

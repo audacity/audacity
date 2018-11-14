@@ -22,7 +22,6 @@
 #include "Internat.h"
 
 class wxRect;
-class wxDC;
 class wxMouseEvent;
 class wxTextFile;
 

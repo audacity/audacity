@@ -57,11 +57,12 @@ and sends it to that message target.
 
 #include "../MemoryX.h"
 #include <vector>
-#include <wx/statusbr.h>
 //#include "../src/Project.h"
 #include "../widgets/ProgressDialog.h"
 #include "../commands/ResponseQueue.h"
 #include "../widgets/ErrorDialog.h"
+
+class wxStatusBar;
 
 /// Interface for objects that can receive command progress information
 class CommandProgressTarget /* not final */

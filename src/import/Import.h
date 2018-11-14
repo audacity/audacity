@@ -16,7 +16,7 @@
 #include "audacity/Types.h"
 #include <vector>
 #include <wx/listbox.h>
-#include <wx/tokenzr.h>
+#include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
 #include "../widgets/wxPanelWrapper.h"
 

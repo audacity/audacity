@@ -18,7 +18,6 @@
 #include <algorithm>
 
 class wxRect;
-class wxDC;
 class Envelope;
 class Ruler;
 class ZoomInfo;

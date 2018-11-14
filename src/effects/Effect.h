@@ -22,7 +22,6 @@
 #include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/intl.h>
-#include <wx/tglbtn.h>
 
 class wxButton;
 class wxCheckBox;

@@ -13,7 +13,6 @@
 #define __AUDACITY_IMAGE_ROLL__
 
 #include <vector>
-#include <wx/dc.h>
 #include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/version.h>

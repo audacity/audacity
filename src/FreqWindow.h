@@ -21,13 +21,12 @@
 #include <wx/pen.h>
 #include <wx/font.h> // member variable
 #include <wx/scrolbar.h>
-#include <wx/statusbr.h>
+#include <wx/statusbr.h> // to inherit
 #include <wx/utils.h>
 #include "SampleFormat.h"
 #include "widgets/wxPanelWrapper.h"
 
 class wxSlider;
-class wxStatusBar;
 class wxTextCtrl;
 class wxButton;
 class wxCheckBox;

@@ -45,6 +45,7 @@ effects from this one class.
 #include <wx/sstream.h>
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
+#include <wx/tokenzr.h>
 #include <wx/txtstrm.h>
 #include <wx/valgen.h>
 #include <wx/wfstream.h>

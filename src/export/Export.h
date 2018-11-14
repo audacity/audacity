@@ -14,7 +14,6 @@
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/dialog.h>
-#include <wx/simplebook.h>
 #include "../Tags.h"
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h"
@@ -24,6 +23,7 @@ class wxFileName;
 class FileDialogWrapper;
 class wxFileCtrlEvent;
 class wxMemoryDC;
+class wxSimplebook;
 class wxStaticText;
 class AudacityProject;
 class DirManager;

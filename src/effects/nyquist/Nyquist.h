@@ -15,7 +15,6 @@
 #include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/textbuf.h>
-#include <wx/tokenzr.h>
 
 #include "../Effect.h"
 

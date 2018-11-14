@@ -32,7 +32,6 @@ flicker-free use.
 #include "../Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/dc.h>
 #include <wx/gdicmn.h>
 #include <wx/statbmp.h>
 
