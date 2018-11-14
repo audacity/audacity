@@ -18,7 +18,6 @@
 #include <vector>
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
-#include <wx/thread.h>
 
 #include "WaveTrackLocation.h"
 

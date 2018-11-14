@@ -25,6 +25,7 @@
 class wxArrayString;
 class wxColour;
 class wxFont;
+class wxPen;
 
 // JKC: will probably change name from 'teBmps' to 'tIndexBmp';
 typedef int teBmps; /// The index of a bitmap resource in Theme Resources.

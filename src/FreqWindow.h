@@ -17,7 +17,6 @@
 #include <wx/panel.h>
 #include <wx/dialog.h>
 #include <wx/gdicmn.h>
-#include <wx/pen.h>
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit
 #include <wx/utils.h>

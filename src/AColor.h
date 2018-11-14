@@ -16,7 +16,7 @@
 
 #include "MemoryX.h"
 #include <wx/brush.h>
-#include <wx/pen.h>
+#include <wx/pen.h> // member variable
 
 class wxDC;
 class wxRect;

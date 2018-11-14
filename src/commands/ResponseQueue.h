@@ -36,7 +36,7 @@ force the script thread to wait until a response is available.
 
 #include <queue>
 #include <string>
-#include <wx/thread.h>
+#include <wx/thread.h> // member variable
 #include <wx/string.h> // member variable
 
 class wxMutex;

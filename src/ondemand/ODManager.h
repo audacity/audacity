@@ -22,7 +22,6 @@ number of threads.
 #include <vector>
 #include "ODTaskThread.h"
 #include <wx/event.h> // for DECLARE_EXPORTED_EVENT_TYPE
-#include <wx/thread.h>
 
 #ifdef __WXMAC__
 // On Mac OS X, it's better not to use the wxThread class.

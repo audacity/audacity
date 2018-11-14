@@ -23,7 +23,7 @@
 
 #include "MemoryX.h"
 #include <wx/brush.h>
-#include <wx/pen.h>
+#include <wx/pen.h> // member variables
 #include "audacity/Types.h"
 
 class wxRect;

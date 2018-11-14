@@ -24,7 +24,7 @@
 
 #include "../Audacity.h"	// contains the set-up of AUDACITY_DLL_API
 
-#include <wx/thread.h>
+#include <wx/thread.h> // to inherit
 
 #include "../MemoryX.h"
 
