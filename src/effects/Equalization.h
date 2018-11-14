@@ -18,7 +18,6 @@
 #define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
 
 #include <wx/setup.h> // for wxUSE_* macros
-#include <wx/panel.h>
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

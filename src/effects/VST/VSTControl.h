@@ -12,7 +12,6 @@
 #define AUDACITY_VSTCONTROL_H
 
 #include <wx/control.h>
-#include <wx/panel.h>
 
 #include "aeffectx.h"
 

@@ -15,8 +15,6 @@ Vaughan Johnson (Preview)
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/panel.h>
-
 #include "Biquad.h"
 
 #include "Effect.h"

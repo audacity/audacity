@@ -20,12 +20,12 @@
 
 #include <wx/defs.h>
 #include <wx/frame.h> // to inherit
-#include <wx/panel.h>
 #include <wx/timer.h>
 
 #include "EffectManager.h"
 
 class wxFlexGridSizer;
+class wxPanel;
 class wxStaticText;
 
 class EffectRack final : public wxFrame

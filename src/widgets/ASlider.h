@@ -16,7 +16,6 @@
 #include "../MemoryX.h"
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
-#include <wx/panel.h>
 #include <wx/timer.h>
 #include "widgets/wxPanelWrapper.h"
 

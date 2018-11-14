@@ -12,13 +12,15 @@
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
 #include <memory>
-#include <wx/panel.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
+
+#include <wx/string.h> // member variable
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 #endif
+
 
 class Track;
 class TrackPanel;

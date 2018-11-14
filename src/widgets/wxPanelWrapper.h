@@ -10,7 +10,7 @@
 #define __AUDACITY_WXPANEL_WRAPPER__
 
 #include "../MemoryX.h"
-#include <wx/panel.h>
+#include <wx/panel.h> // to inherit
 #include <wx/dialog.h> // to inherit
 
 #include "../Internat.h"
