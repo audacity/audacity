@@ -359,7 +359,8 @@ extern void SetIfCreated( wxStaticText *&Var, wxStaticText * Val );
 class GuiWaveTrack;
 class AttachableScrollBar;
 class ViewInfo;
-#include <wx/scrolbar.h>  // to get wxSB_HORIZONTAL
+
+#include <wx/defs.h>  // to get wxSB_HORIZONTAL
 
 // CreateStdButtonSizer defs...should probably move to widgets subdir
 enum

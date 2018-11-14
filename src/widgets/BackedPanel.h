@@ -10,7 +10,7 @@
 #define __AUDACITY_BACKED_PANEL__
 
 #include "../MemoryX.h"
-#include <wx/dcmemory.h>
+#include <wx/dcmemory.h> // member variable
 #include "wxPanelWrapper.h"
 
 

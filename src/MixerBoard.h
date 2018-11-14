@@ -18,7 +18,6 @@
 #include <wx/hashmap.h>
 #include <wx/image.h>
 #include <wx/scrolwin.h>
-#include <wx/statbmp.h>
 
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"

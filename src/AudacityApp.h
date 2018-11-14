@@ -20,7 +20,7 @@
 #include "Experimental.h"
 
 #include "MemoryX.h"
-#include <wx/app.h>
+#include <wx/app.h> // to inherit
 #include <wx/cmdline.h>
 #include <wx/dir.h>
 #include <wx/docview.h>

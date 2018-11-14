@@ -26,6 +26,7 @@ License: GPL v2.  See License.txt.
 #include "widgets/ErrorDialog.h"
 
 #include <wx/checkbox.h>
+#include <wx/dynlib.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
 

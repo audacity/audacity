@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include <wx/dynlib.h>
-
 #include "MemoryX.h"
 #include <map>
 #include <vector>
@@ -21,6 +19,7 @@
 #include "audacity/ModuleInterface.h"
 
 class wxArrayString;
+class wxDynamicLibrary;
 class CommandHandler;
 
 wxWindow *  MakeHijackPanel();

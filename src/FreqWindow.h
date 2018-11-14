@@ -14,18 +14,18 @@
 #include "MemoryX.h"
 #include <vector>
 #include <wx/brush.h>
-#include <wx/dcmemory.h>
 #include <wx/panel.h>
 #include <wx/dialog.h>
 #include <wx/gdicmn.h>
 #include <wx/pen.h>
 #include <wx/font.h> // member variable
-#include <wx/scrolbar.h>
 #include <wx/statusbr.h> // to inherit
 #include <wx/utils.h>
 #include "SampleFormat.h"
 #include "widgets/wxPanelWrapper.h"
 
+class wxMemoryDC;
+class wxScrollBar;
 class wxSlider;
 class wxTextCtrl;
 class wxButton;

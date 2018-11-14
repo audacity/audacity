@@ -17,7 +17,6 @@
 #ifndef __COMMAND__
 #define __COMMAND__
 
-#include <wx/app.h>
 #include "../MemoryX.h"
 
 #include "CommandMisc.h"

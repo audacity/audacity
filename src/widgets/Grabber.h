@@ -33,7 +33,7 @@ flicker-free use.
 
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
-#include <wx/statbmp.h>
+#include <wx/statbmp.h> // to inherit
 
 ////////////////////////////////////////////////////////////
 /// Grabber Class

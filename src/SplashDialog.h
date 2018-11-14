@@ -15,7 +15,6 @@
 #include <wx/dialog.h>
 #include "widgets/wxPanelWrapper.h"
 
-class wxStaticBitmap;
 class wxBitmap;
 class ShuttleGui;
 class AudacityProject;

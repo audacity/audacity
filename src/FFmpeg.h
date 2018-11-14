@@ -150,7 +150,6 @@ extern "C" {
 
 /* rather earlier than normal, but pulls in config*.h and other program stuff
  * we need for the next bit */
-#include <wx/dynlib.h>
 #include <wx/log.h>      // for wxLogNull
 #include <wx/utils.h>
 #include "widgets/LinkingHtmlWindow.h"
@@ -158,6 +157,8 @@ extern "C" {
 #include "Prefs.h"
 
 #include "audacity/Types.h"
+
+class wxDynamicLibrary;
 
 // if you needed them, any other audacity header files would go here
 

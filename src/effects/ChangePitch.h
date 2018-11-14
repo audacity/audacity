@@ -25,14 +25,13 @@ the pitch without changing the tempo.
 #include "SBSMSEffect.h"
 #endif
 
-#include <wx/spinctrl.h>
-
 #include "SoundTouchEffect.h"
 
 class wxSlider;
 class wxChoice;
 class wxCheckBox;
 class wxTextCtrl;
+class wxSpinCtrl;
 class ShuttleGui;
 
 #define CHANGEPITCH_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Change Pitch") }

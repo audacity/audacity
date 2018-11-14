@@ -13,13 +13,14 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/statbmp.h>
 #include <wx/bitmap.h>
 #include "widgets/wxPanelWrapper.h"
 
 extern const wxString VerCheckArgs();
 extern const wxString VerCheckUrl();
 extern const wxString VerCheckHtml();
+
+class wxStaticBitmap;
 
 class ShuttleGui;
 

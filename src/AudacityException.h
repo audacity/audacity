@@ -17,7 +17,7 @@
  **********************************************************************/
 
 #include "MemoryX.h"
-#include <wx/app.h>
+#include <wx/app.h> // used in inline function template
 #include <exception>
 
 #include "Internat.h"

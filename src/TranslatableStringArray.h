@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 #define __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 
-#include <wx/app.h>
+#include <wx/app.h> // used in inline function template
 
 class wxArrayStringEx;
 

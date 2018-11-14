@@ -60,6 +60,7 @@
 #include <wx/listctrl.h>
 #include <wx/notebook.h>
 #include <wx/radiobut.h>
+#include <wx/scrolbar.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/string.h>

@@ -17,7 +17,7 @@
 #ifndef __AUDACITY_ATTACHABLE_SCROLL_BAR__
 #define __AUDACITY_ATTACHABLE_SCROLL_BAR__
 
-#include <wx/scrolbar.h>
+#include <wx/scrolbar.h> // to inherit
 
 class ViewInfo;
 
