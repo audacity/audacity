@@ -29,7 +29,6 @@
 #include "commands/CommandManagerWindowClasses.h"
 
 
-class wxMenu;
 class wxRect;
 
 class LabelTrack;

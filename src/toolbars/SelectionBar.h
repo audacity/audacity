@@ -30,7 +30,6 @@ class wxChoice;
 class wxComboBox;
 class wxCommandEvent;
 class wxDC;
-class wxRadioButton;
 class wxSizeEvent;
 class wxStaticText;
 

@@ -34,6 +34,7 @@ greater use in future.
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/defs.h>
+#include <wx/listbox.h>
 #include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>

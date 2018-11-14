@@ -18,6 +18,11 @@
 #include "BatchProcessDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
+
+#ifdef __WXMSW__
+    #include  <wx/ownerdrw.h>
+#endif
+
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>

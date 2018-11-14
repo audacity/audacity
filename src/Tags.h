@@ -45,7 +45,6 @@
 class wxArrayString;
 class wxComboBox;
 class wxGridCellChoiceEditor;
-class wxRadioButton;
 class wxTextCtrl;
 
 class Grid;

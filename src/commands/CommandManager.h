@@ -32,6 +32,8 @@
 class wxMenu;
 class wxMenuBar;
 class wxArrayString;
+class wxMenu;
+class wxMenuBar;
 class TranslatedInternalString;
 using CommandParameter = CommandID;
 

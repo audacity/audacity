@@ -20,7 +20,6 @@
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 
-class wxListBox;
 class wxWindow;
 
 #include "../SampleFormat.h"

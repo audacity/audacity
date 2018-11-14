@@ -21,7 +21,7 @@ tables, and automatically attaches and detaches the event handlers.
 class wxCommandEvent;
 class wxString;
 #include <vector>
-#include <wx/menu.h>
+#include <wx/menu.h> // to inherit wxMenu
 #include "../MemoryX.h"
 
 #include "../TranslatableStringArray.h"

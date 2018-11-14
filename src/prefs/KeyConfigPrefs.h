@@ -17,7 +17,6 @@ class ShuttleGui;
 
 #include <wx/defs.h>
 #include <wx/imaglist.h>
-#include <wx/radiobut.h>
 #include <wx/srchctrl.h>
 #include <wx/timer.h>
 
@@ -25,6 +24,7 @@ class ShuttleGui;
 
 #include "PrefsPanel.h"
 
+class wxRadioButton;
 class wxStaticText;
 class wxTextCtrl;
 struct NormalizedKeyString;

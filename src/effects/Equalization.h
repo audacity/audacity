@@ -19,7 +19,6 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/panel.h>
-#include <wx/radiobut.h>
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -52,6 +51,7 @@ class wxCheckBox;
 class wxChoice;
 class wxListCtrl;
 class wxListEvent;
+class wxRadioButton;
 class wxSizer;
 class wxSizerItem;
 class wxSlider;

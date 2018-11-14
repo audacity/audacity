@@ -21,6 +21,10 @@ selected command.
 #include "Audacity.h"
 #include "BatchCommandDialog.h"
 
+#ifdef __WXMSW__
+    #include  <wx/ownerdrw.h>
+#endif
+
 //
 #include <wx/defs.h>
 #include <wx/checkbox.h>
