@@ -15,13 +15,13 @@ Vaughan Johnson (Preview)
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/bitmap.h>
 #include <wx/panel.h>
 
 #include "Biquad.h"
 
 #include "Effect.h"
 
+class wxBitmap;
 class wxChoice;
 class wxSlider;
 class wxStaticText;

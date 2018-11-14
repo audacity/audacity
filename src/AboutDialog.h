@@ -13,7 +13,6 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/bitmap.h>
 #include "widgets/wxPanelWrapper.h"
 
 extern const wxString VerCheckArgs();

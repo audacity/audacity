@@ -16,7 +16,6 @@
 #include "SelectedRegion.h"
 #include "Track.h"
 
-#include <wx/brush.h>
 #include <wx/clipbrd.h>
 
 

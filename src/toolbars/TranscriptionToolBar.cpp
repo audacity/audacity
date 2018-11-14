@@ -107,8 +107,6 @@ void TranscriptionToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
 
-   mBackgroundBrush.SetColour(wxColour(204, 204, 204));
-
    mBackgroundHeight = 0;
    mBackgroundWidth = 0;
 

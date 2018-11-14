@@ -17,11 +17,11 @@
 #include "Audacity.h"
 
 #include <vector>
-#include <wx/bitmap.h>
 #include <wx/defs.h>
 #include <wx/window.h> // to inherit
 
 class wxArrayString;
+class wxBitmap;
 class wxColour;
 class wxFont;
 class wxImage;

@@ -20,8 +20,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/panel.h>
 #include <wx/dialog.h>
-#include <wx/intl.h>
-#include <wx/bitmap.h>
 #include <wx/radiobut.h>
 
 #if wxUSE_ACCESSIBILITY
@@ -48,6 +46,7 @@ const int kEqOptionCurve   =1<<1;
 // The legacy version offers both Graphic and curve on the same UI.
 const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
+class wxBitmap;
 class wxBoxSizer;
 class wxButton;
 class wxCheckBox;

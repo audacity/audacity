@@ -12,7 +12,6 @@
 #define __AUDACITY_TIMETRACK__
 
 #include "Track.h"
-#include <wx/brush.h>
 
 #include <algorithm>
 

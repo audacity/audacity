@@ -19,7 +19,6 @@
 #include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/dynarray.h>
-#include <wx/intl.h>
 
 class wxListBox;
 class wxWindow;

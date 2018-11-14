@@ -41,7 +41,6 @@ class wxMemoryDC;
 #include <wx/generic/dragimgg.h>
 
 #include <wx/frame.h> // to inherit
-#include <wx/intl.h>
 
 #include "import/ImportRaw.h" // defines TrackHolders
 

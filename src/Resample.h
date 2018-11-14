@@ -15,7 +15,6 @@
 #include "Audacity.h"
 
 #include "MemoryX.h"
-#include <wx/intl.h>
 
 #include "SampleFormat.h"
 

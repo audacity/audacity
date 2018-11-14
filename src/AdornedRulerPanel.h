@@ -15,7 +15,6 @@
 #include "widgets/Ruler.h"
 
 #include "MemoryX.h"
-#include <wx/bitmap.h>
 
 class ViewInfo;
 class AudacityProject;

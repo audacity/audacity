@@ -13,7 +13,6 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/brush.h>
 #include <wx/panel.h>
 #include <wx/dialog.h>
 #include <wx/gdicmn.h>

@@ -22,7 +22,6 @@
 #include "ToolDock.h"
 #include "ToolBar.h"
 
-class wxBitmap;
 class wxCommandEvent;
 class wxFrame;
 class wxMouseEvent;
