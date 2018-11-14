@@ -13,13 +13,13 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/grid.h>
 
 #include "Internat.h"
 #include "widgets/Grid.h"
 #include "widgets/wxPanelWrapper.h"
 
 class wxArrayString;
+class wxGridEvent;
 class TrackFactory;
 class TrackList;
 class RowData;

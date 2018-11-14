@@ -10,9 +10,9 @@
 
 #include "MemoryX.h"
 #include <wx/defs.h>
-#include <wx/colour.h>
 #include "Theme.h"
 
+class wxColour;
 class wxImage;
 
 // This looks at the first pixel in the image, and shifts

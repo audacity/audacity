@@ -17,7 +17,6 @@
 #define NUM_PTS 180
 #define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
 
-#include <wx/button.h>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/panel.h>
 #include <wx/dialog.h>
@@ -52,6 +51,7 @@ const int kEqOptionCurve   =1<<1;
 const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
 class wxBoxSizer;
+class wxButton;
 class wxChoice;
 class wxSizer;
 class wxSizerItem;

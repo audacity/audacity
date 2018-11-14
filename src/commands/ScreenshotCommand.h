@@ -16,7 +16,8 @@
 #include "Command.h"
 #include "../commands/AudacityCommand.h"
 
-#include <wx/colour.h>
+#include <wx/colour.h> // member variable
+
 class wxWindow;
 class wxTopLevelWindow;
 class wxCommandEvent;

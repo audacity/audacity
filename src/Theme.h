@@ -18,13 +18,13 @@
 
 #include <vector>
 #include <wx/bitmap.h>
-#include <wx/colour.h>
 #include <wx/defs.h>
-#include <wx/font.h>
 #include <wx/image.h>
 #include <wx/window.h> // to inherit
 
 class wxArrayString;
+class wxColour;
+class wxFont;
 
 // JKC: will probably change name from 'teBmps' to 'tIndexBmp';
 typedef int teBmps; /// The index of a bitmap resource in Theme Resources.

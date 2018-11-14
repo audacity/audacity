@@ -14,13 +14,13 @@
 #include <vector>
 #include <algorithm>
 #include <wx/defs.h>
-#include <wx/grid.h>
 #include <wx/weakref.h>
 
 #include "audacity/Types.h"
 #include "../MemoryX.h"
 
 class wxConfigBase;
+class wxMenu;
 
 class AUDACITY_DLL_API FileHistory
 {

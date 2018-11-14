@@ -13,7 +13,6 @@
 #define __AUDACITY_BLOCKFILE__
 
 #include "MemoryX.h"
-#include <wx/ffile.h>
 
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"

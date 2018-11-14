@@ -20,7 +20,7 @@
 #include <wx/dialog.h>
 #include <wx/gdicmn.h>
 #include <wx/pen.h>
-#include <wx/font.h>
+#include <wx/font.h> // member variable
 #include <wx/scrolbar.h>
 #include <wx/statusbr.h>
 #include <wx/utils.h>

@@ -18,7 +18,6 @@
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
-#include <wx/bmpbuttn.h>
 #include <wx/defs.h>
 #include <wx/frame.h> // to inherit
 #include <wx/image.h>

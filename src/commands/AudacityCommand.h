@@ -17,7 +17,6 @@
 #include <set>
 
 #include "../MemoryX.h"
-#include <wx/bmpbuttn.h>
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>

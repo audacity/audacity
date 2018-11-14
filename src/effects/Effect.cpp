@@ -28,6 +28,7 @@ greater use in future.
 
 #include <algorithm>
 
+#include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/dcmemory.h>

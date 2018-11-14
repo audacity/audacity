@@ -31,7 +31,6 @@ class wxImage;
 class wxSize;
 class wxPoint;
 class wxTextCtrl;
-class wxButton;
 
 class Ruler;
 class TipPanel;

@@ -18,7 +18,6 @@
 
 #include <vector>
 #include "MemoryX.h"
-#include <wx/grid.h>
 
 #include "WrappedType.h"
 

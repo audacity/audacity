@@ -15,7 +15,6 @@
 #define __AUDACITY_MIXER_BOARD__
 
 #include <wx/frame.h> // to inherit
-#include <wx/bmpbuttn.h>
 #include <wx/hashmap.h>
 #include <wx/image.h>
 #include <wx/scrolwin.h>
@@ -27,6 +26,7 @@
 #include "commands/CommandManagerWindowClasses.h"
 
 class wxArrayString;
+class wxBitmapButton;
 struct TrackListEvent;
 
 // containment hierarchy:

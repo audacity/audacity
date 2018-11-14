@@ -44,7 +44,6 @@
 #include <unordered_map>
 
 class wxArrayString;
-class wxButton;
 class wxComboBox;
 class wxGridCellChoiceEditor;
 class wxRadioButton;
