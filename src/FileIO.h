@@ -13,7 +13,10 @@
 
 #include "MemoryX.h"
 #include <wx/object.h>
-#include <wx/wfstream.h>
+
+class wxInputStream;
+class wxOutputStream;
+class wxFFileOutputStream;
 
 class FileIO
 {

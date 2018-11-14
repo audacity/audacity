@@ -14,8 +14,6 @@
 
 #include <wx/defs.h>
 
-#include  <wx/checklst.h>
-
 #include "BatchCommands.h"
 
 class wxWindow;

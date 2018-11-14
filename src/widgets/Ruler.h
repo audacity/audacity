@@ -15,7 +15,6 @@
 
 #include <wx/colour.h> // member variable
 #include <wx/pen.h> // member variable
-#include <wx/types.h>
 
 class wxArrayString;
 class wxDC;

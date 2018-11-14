@@ -47,6 +47,8 @@ class wxArrayString;
 
 #include "../MemoryX.h"
 
+#include <wx/variant.h> // member variable
+
 class Validator /* not final */
 {
 private:
