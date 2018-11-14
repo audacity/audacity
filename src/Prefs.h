@@ -34,7 +34,6 @@
 #include "../include/audacity/ComponentInterface.h"
 
 #include <wx/config.h>
-#include <wx/fileconf.h>
 #include <wx/convauto.h>
 
 void InitPreferences();

@@ -35,6 +35,7 @@ in which buttons can be placed.
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
 #include <wx/image.h>

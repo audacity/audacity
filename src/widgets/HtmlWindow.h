@@ -27,7 +27,7 @@ around to NEW positions.
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
-#include <wx/html/htmlwin.h>
+#include <wx/html/htmlwin.h> // to inherit
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

@@ -99,6 +99,8 @@ is time to refresh some aspect of the screen.
 #include "widgets/ASlider.h"
 #include <algorithm>
 
+#include <wx/dcclient.h>
+
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 /**

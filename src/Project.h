@@ -36,16 +36,15 @@
 #include <memory>
 #include <wx/defs.h>
 #include <wx/log.h>
-#include <wx/dragimag.h>
 #include <wx/generic/dragimgg.h>
 #include <wx/frame.h> // to inherit
 #include <wx/intl.h>
-#include <wx/dcclient.h>
 
 #include "import/ImportRaw.h" // defines TrackHolders
 
 const int AudacityProjectTimerID = 5200;
 
+class wxMemoryDC;
 class wxArrayString;
 class wxWindow;
 class wxDialog;

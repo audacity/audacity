@@ -46,7 +46,7 @@
 #include <locale.h>
 
 #include <wx/cmdline.h>
-#include <wx/fileconf.h>
+#include <wx/fileconf.h> // to inherit
 #include <wx/intl.h>
 #include <algorithm>
 

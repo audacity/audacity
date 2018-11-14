@@ -14,7 +14,6 @@
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
 
-#include <wx/debug.h>
 #include <wx/mstream.h>
 
 #include <unordered_map>

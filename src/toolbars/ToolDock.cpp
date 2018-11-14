@@ -30,6 +30,7 @@
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>

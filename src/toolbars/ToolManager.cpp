@@ -34,6 +34,7 @@
 
 #ifndef WX_PRECOMP
 #include <wx/app.h>
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/frame.h>

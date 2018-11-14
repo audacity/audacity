@@ -42,6 +42,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/app.h>
 #include <wx/dc.h>
+#include <wx/dcclient.h>
 #include <wx/menu.h>
 
 // Yet another experimental scrub would drag the track under a

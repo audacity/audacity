@@ -13,6 +13,7 @@
 
 #include <math.h>
 
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/dcmemory.h>
 #include <wx/mimetype.h>

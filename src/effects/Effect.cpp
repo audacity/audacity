@@ -31,6 +31,7 @@ greater use in future.
 #include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
+#include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/defs.h>
 #include <wx/menu.h>

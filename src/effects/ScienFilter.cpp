@@ -42,6 +42,7 @@ a graph for EffectScienFilter.
 
 #include <wx/brush.h>
 #include <wx/choice.h>
+#include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
 #include <wx/settings.h>

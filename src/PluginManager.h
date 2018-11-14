@@ -12,7 +12,6 @@
 #define __AUDACITY_PLUGINMANAGER_H__
 
 #include <wx/defs.h>
-#include <wx/fileconf.h>
 
 #include "MemoryX.h"
 #include <map>

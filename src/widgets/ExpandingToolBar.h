@@ -15,7 +15,7 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/dialog.h>
-#include <wx/dragimag.h>
+#include <wx/dragimag.h> // use macros and typedefs in this header
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/minifram.h>
