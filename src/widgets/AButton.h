@@ -21,9 +21,9 @@
 #include "WindowAccessible.h"
 #endif
 
-#include <wx/image.h>
-
 #include "ImageRoll.h"
+
+class wxImage;
 
 class AButton final : public wxWindow {
    friend class AButtonAx;

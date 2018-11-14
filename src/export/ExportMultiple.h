@@ -12,7 +12,6 @@
 #define __AUDACITY_EXPORT_MULTIPLE__
 
 #include <wx/dialog.h>
-#include <wx/listctrl.h>
 
 #include "Export.h"
 #include "../Tags.h"       // we need to know about the Tags class for metadata
@@ -21,6 +20,7 @@
 class wxButton;
 class wxCheckBox;
 class wxChoice;
+class wxListEvent;
 class wxRadioButton;
 class wxSimplebook;
 class wxStaticText;

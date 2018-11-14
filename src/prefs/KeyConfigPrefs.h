@@ -17,7 +17,6 @@ class ShuttleGui;
 
 #include <wx/defs.h>
 #include <wx/imaglist.h>
-#include <wx/listctrl.h>
 #include <wx/radiobut.h>
 #include <wx/srchctrl.h>
 #include <wx/timer.h>

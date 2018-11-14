@@ -19,7 +19,6 @@
 #include <wx/gdicmn.h>
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit
-#include <wx/utils.h>
 #include "SampleFormat.h"
 #include "widgets/wxPanelWrapper.h"
 

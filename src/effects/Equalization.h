@@ -21,7 +21,6 @@
 #include <wx/panel.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
-#include <wx/listctrl.h>
 #include <wx/bitmap.h>
 #include <wx/radiobut.h>
 
@@ -53,6 +52,8 @@ class wxBoxSizer;
 class wxButton;
 class wxCheckBox;
 class wxChoice;
+class wxListCtrl;
+class wxListEvent;
 class wxSizer;
 class wxSizerItem;
 class wxSlider;

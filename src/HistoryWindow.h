@@ -11,11 +11,11 @@
 #ifndef __AUDACITY_HISTORY_WINDOW__
 #define __AUDACITY_HISTORY_WINDOW__
 
-#include <wx/listctrl.h>
-
 #include "widgets/wxPanelWrapper.h"
 
 class wxButton;
+class wxListCtrl;
+class wxListEvent;
 class wxSpinCtrl;
 class wxTextCtrl;
 class AudacityProject;

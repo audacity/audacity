@@ -29,6 +29,7 @@ License: GPL v2.  See License.txt.
 #include <wx/dynlib.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
+#include <wx/log.h>
 
 #if !defined(USE_FFMPEG)
 /// FFmpeg support may or may not be compiled in,

@@ -15,7 +15,6 @@
 #define __AUDACITY_MIXER_BOARD__
 
 #include <wx/frame.h> // to inherit
-#include <wx/image.h>
 #include <wx/scrolwin.h>
 
 #include "widgets/ASlider.h"
@@ -24,6 +23,7 @@
 
 class wxArrayString;
 class wxBitmapButton;
+class wxImage;
 class wxMemoryDC;
 class AButton;
 struct TrackListEvent;

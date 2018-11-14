@@ -20,7 +20,6 @@
 
 #include <wx/defs.h>
 #include <wx/frame.h> // to inherit
-#include <wx/image.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
 

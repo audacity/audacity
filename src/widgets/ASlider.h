@@ -27,7 +27,6 @@
 class wxArrayString;
 class wxBitmap;
 class wxCursor;
-class wxImage;
 class wxSize;
 class wxPoint;
 class wxTextCtrl;

@@ -12,7 +12,6 @@
 #define _DIRMANAGER_
 
 #include "MemoryX.h"
-#include <wx/utils.h>
 
 #include "audacity/Types.h"
 #include "xml/XMLTagHandler.h"

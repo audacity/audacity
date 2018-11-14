@@ -19,7 +19,7 @@
 #include "Experimental.h"
 
 #include "MemoryX.h"
-#include <wx/log.h>
+#include <wx/log.h> // to inherit
 #include <wx/event.h> // to inherit wxEvtHandler
 
 class wxFrame;

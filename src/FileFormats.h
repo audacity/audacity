@@ -17,6 +17,8 @@
 
 #include "sndfile.h"
 
+class wxString;
+
 //
 // enumerating headers
 //

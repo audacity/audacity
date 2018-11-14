@@ -15,7 +15,6 @@
 #include <vector>
 #include "ToolBar.h"
 
-class wxImage;
 class wxSize;
 class wxPoint;
 class wxChoice;

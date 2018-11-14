@@ -11,10 +11,9 @@
 
 #include <wx/defs.h>
 
-#include <wx/listctrl.h>
-
 #include "PrefsPanel.h"
 
+class wxListCtrl;
 class ShuttleGui;
 
 class MousePrefs final : public PrefsPanel

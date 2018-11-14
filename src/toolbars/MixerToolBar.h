@@ -14,7 +14,6 @@
 #include "../MemoryX.h"
 #include "ToolBar.h"
 
-class wxImage;
 class wxSize;
 class wxPoint;
 

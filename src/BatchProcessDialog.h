@@ -18,7 +18,6 @@
     #include  <wx/ownerdrw.h>
 #endif
 
-//#include  "wx/log.h"
 #include  <wx/menuitem.h>
 #include  <wx/checklst.h>
 
