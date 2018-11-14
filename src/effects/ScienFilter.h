@@ -16,13 +16,13 @@ Vaughan Johnson (Preview)
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/bitmap.h>
-#include <wx/choice.h>
 #include <wx/panel.h>
 
 #include "Biquad.h"
 
 #include "Effect.h"
 
+class wxChoice;
 class wxSlider;
 class wxStaticText;
 class wxTextCtrl;

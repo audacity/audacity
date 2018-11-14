@@ -25,7 +25,6 @@
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/bitmap.h>
-#include <wx/choice.h>
 #include <wx/radiobut.h>
 #include <wx/checkbox.h>
 
@@ -54,6 +53,7 @@ const int kEqOptionCurve   =1<<1;
 // The legacy version offers both Graphic and curve on the same UI.
 const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
+class wxChoice;
 class wxSlider;
 class wxStaticText;
 class Envelope;

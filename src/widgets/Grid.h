@@ -15,7 +15,6 @@
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
-#include <wx/choice.h>
 #include <wx/grid.h>
 #include "NumericTextCtrl.h"
 #include "../Internat.h"
@@ -29,6 +28,7 @@ class GridAx;
 #endif
 
 class wxArrayString;
+class wxChoice;
 class NumericTextCtrl;
 
 /**********************************************************************//**

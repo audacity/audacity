@@ -24,7 +24,6 @@
 #include <wx/tglbtn.h>
 
 class wxCheckBox;
-class wxChoice;
 class wxListBox;
 class wxWindow;
 

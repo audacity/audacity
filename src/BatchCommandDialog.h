@@ -27,7 +27,6 @@
 
 class wxWindow;
 class wxCheckBox;
-class wxChoice;
 class wxTextCtrl;
 class wxRadioButton;
 class wxListCtrl;

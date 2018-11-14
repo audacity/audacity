@@ -67,6 +67,7 @@ effects from this one class.
 #include "../../widgets/valnum.h"
 #include "../../widgets/ErrorDialog.h"
 #include "../../Prefs.h"
+#include "../../wxFileNameWrapper.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
 

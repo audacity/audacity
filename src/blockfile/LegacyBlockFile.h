@@ -11,9 +11,9 @@
 #ifndef __AUDACITY_LEGACY_BLOCKFILE__
 #define __AUDACITY_LEGACY_BLOCKFILE__
 
-#include <wx/filename.h>
-
 #include "../BlockFile.h"
+
+class wxFileName;
 
 void ComputeLegacySummaryInfo(const wxFileName &fileName,
                               size_t summaryLen,

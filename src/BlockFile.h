@@ -14,14 +14,13 @@
 
 #include "MemoryX.h"
 #include <wx/ffile.h>
-#include <wx/filename.h>
 
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
 
 #include "SampleFormat.h"
 
-#include "wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h" // member variable below
 
 #include "ondemand/ODTaskThread.h"
 

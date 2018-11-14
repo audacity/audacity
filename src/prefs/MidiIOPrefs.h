@@ -11,6 +11,7 @@
 
 #include "../Experimental.h"
 
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 
@@ -20,8 +21,6 @@ class ShuttleGui;
 #define __AUDACITY_MIDI_IO_PREFS__
 
 #include <wx/defs.h>
-
-#include <wx/choice.h>
 
 #include "PrefsPanel.h"
 

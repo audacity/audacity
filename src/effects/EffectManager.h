@@ -15,7 +15,6 @@
 #include "../Experimental.h"
 
 #include <vector>
-#include <wx/choice.h>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
 

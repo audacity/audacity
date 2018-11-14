@@ -25,6 +25,7 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
+#include <wx/choice.h>
 #include <wx/defs.h>
 #include <wx/dir.h>
 #include <wx/datetime.h>

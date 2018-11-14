@@ -29,6 +29,7 @@ greater use in future.
 #include <algorithm>
 
 #include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/dcmemory.h>
 #include <wx/defs.h>
 #include <wx/hashmap.h>

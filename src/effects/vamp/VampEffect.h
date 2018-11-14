@@ -16,7 +16,6 @@
 #if defined(USE_VAMP)
 
 #include <wx/checkbox.h>
-#include <wx/choice.h>
 
 #include <vamp-hostsdk/PluginLoader.h>
 
@@ -25,6 +24,7 @@
 
 class wxStaticText;
 class wxSlider;
+class wxChoice;
 class wxTextCtrl;
 class LabelTrack;
 

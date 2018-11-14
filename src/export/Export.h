@@ -14,13 +14,13 @@
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/dialog.h>
-#include <wx/filename.h>
 #include <wx/simplebook.h>
 #include "../Tags.h"
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h"
 
 class wxArrayString;
+class wxFileName;
 class FileDialogWrapper;
 class wxFileCtrlEvent;
 class wxMemoryDC;

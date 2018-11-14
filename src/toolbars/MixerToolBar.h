@@ -17,7 +17,6 @@
 class wxImage;
 class wxSize;
 class wxPoint;
-class wxChoice;
 class wxStaticBitmap;
 
 class ASlider;

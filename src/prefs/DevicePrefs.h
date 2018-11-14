@@ -14,10 +14,9 @@
 
 #include <wx/defs.h>
 
-#include <wx/choice.h>
-
 #include "PrefsPanel.h"
 
+class wxChoice;
 class ShuttleGui;
 class wxArrayStringEx;
 

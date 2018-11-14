@@ -27,6 +27,7 @@ the pitch without changing the tempo.
 #include <float.h>
 #include <math.h>
 
+#include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/valtext.h>

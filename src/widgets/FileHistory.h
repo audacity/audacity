@@ -14,7 +14,6 @@
 #include <vector>
 #include <algorithm>
 #include <wx/defs.h>
-#include <wx/choice.h>
 #include <wx/grid.h>
 #include <wx/weakref.h>
 

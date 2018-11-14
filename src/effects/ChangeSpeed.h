@@ -13,13 +13,12 @@
 #ifndef __AUDACITY_EFFECT_CHANGESPEED__
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
-#include <wx/choice.h>
-
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
 
 class wxSlider;
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 

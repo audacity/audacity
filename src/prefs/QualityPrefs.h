@@ -15,10 +15,9 @@
 #include <vector>
 #include <wx/defs.h>
 
-#include <wx/choice.h>
-
 #include "PrefsPanel.h"
 
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 enum sampleFormat : unsigned;

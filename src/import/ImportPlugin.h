@@ -59,7 +59,6 @@ but little else.
 
 #include "audacity/Types.h"
 #include "../Internat.h"
-#include <wx/filename.h>
 #include "../MemoryX.h"
 
 #include "../widgets/ProgressDialog.h"

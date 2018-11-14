@@ -14,7 +14,6 @@
 #include <wx/button.h>
 #include <wx/datetime.h>
 #include <wx/dialog.h>
-#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/textbuf.h>
@@ -25,6 +24,7 @@
 #include "nyx.h"
 
 class wxArrayString;
+class wxFileName;
 class wxTextCtrl;
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")

@@ -17,7 +17,7 @@
 
 #include "Export.h"
 #include "../Tags.h"       // we need to know about the Tags class for metadata
-#include "../wxFileNameWrapper.h"
+#include "../wxFileNameWrapper.h" // member variable below
 
 class wxButton;
 class wxCheckBox;

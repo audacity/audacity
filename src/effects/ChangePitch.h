@@ -26,12 +26,12 @@ the pitch without changing the tempo.
 #include <wx/checkbox.h>
 #endif
 
-#include <wx/choice.h>
 #include <wx/spinctrl.h>
 
 #include "SoundTouchEffect.h"
 
 class wxSlider;
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 
