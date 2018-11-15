@@ -9467,6 +9467,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
 				PRODUCT_NAME = mad;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
@@ -9919,6 +9920,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
 				PRODUCT_NAME = mad;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
