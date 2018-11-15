@@ -9297,6 +9297,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
@@ -9748,6 +9749,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
