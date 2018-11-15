@@ -159,8 +159,8 @@ void FileDialog::Create(
 {
     FileDialogBase::Create(parent, message, defaultDir, defaultFileName, wildCard, style, pos, sz, name);
 
-    m_sheetDelegate = [[ModalDialogDelegate alloc] init];
-    [(ModalDialogDelegate*)m_sheetDelegate setImplementation: this];
+//    m_sheetDelegate = [[ModalDialogDelegate alloc] init];
+//    [(ModalDialogDelegate*)m_sheetDelegate setImplementation: this];
 }
 
 FileDialog::~FileDialog()
@@ -316,7 +316,7 @@ void FileDialog::ShowWindowModal()
         
         NSWindow* nativeParent = parentWindow->GetWXWindow();
         [sPanel beginSheetForDirectory:dir.AsNSString() file:file.AsNSString()
-            modalForWindow: nativeParent modalDelegate: m_sheetDelegate
+            modalForWindow: nativeParent modalDelegate: nil // m_sheetDelegate
             didEndSelector: @selector(sheetDidEnd:returnCode:contextInfo:)
             contextInfo: nil];
     }
@@ -336,7 +336,7 @@ void FileDialog::ShowWindowModal()
         NSWindow* nativeParent = parentWindow->GetWXWindow();
         [oPanel beginSheetForDirectory:dir.AsNSString() file:file.AsNSString()
             types: types modalForWindow: nativeParent
-            modalDelegate: m_sheetDelegate
+            modalDelegate: nil // m_sheetDelegate
             didEndSelector: @selector(sheetDidEnd:returnCode:contextInfo:)
             contextInfo: nil];
     }
