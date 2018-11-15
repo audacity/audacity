@@ -192,10 +192,10 @@ int twolame_init_params(twolame_options * glopts)
         glopts->samplerate_out = glopts->samplerate_in;
     }
     // If the MPEG version has not been set, then choose automatically
-    if (glopts->version == -1) {
+    if ((int)glopts->version == -1) {
         // Get the MPEG version for the chosen samplerate
         glopts->version = twolame_get_version_for_samplerate(glopts->samplerate_out);
-        if (glopts->version < 0) {
+        if ((int)glopts->version < 0) {
             fprintf(stderr, "twolame_init_params(): invalid samplerate: %i\n",
                     glopts->samplerate_out);
             return -1;

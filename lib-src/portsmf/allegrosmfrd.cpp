@@ -74,7 +74,7 @@ protected:
     void Mf_chanprefix(int chan);
     void Mf_portprefix(int port);
     void Mf_eot();
-    void Mf_error(char *);
+    void Mf_error(const char *);
     void Mf_header(int,int,int);
     void Mf_on(int,int,int);
     void Mf_off(int,int,int);
@@ -169,7 +169,7 @@ void Alg_midifile_reader::Mf_eot()
 }
 
 
-void Alg_midifile_reader::Mf_error(char *msg)
+void Alg_midifile_reader::Mf_error(const char *msg)
 {
     fprintf(stdout, "Midifile reader error: %s\n", msg);
 }
@@ -353,7 +353,7 @@ void Alg_midifile_reader::Mf_seqnum(int n)
 }
 
 
-static char *fpsstr[4] = {"24", "25", "29.97", "30"};
+static const char *fpsstr[4] = {"24", "25", "29.97", "30"};
 
 void Alg_midifile_reader::Mf_smpte(int hours, int mins, int secs,
                                    int frames, int subframes)

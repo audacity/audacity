@@ -351,7 +351,7 @@ int v1_attachstr(struct id3_tag *tag, char const *id,
     goto fail;
 
   if (text)
-    id3_latin1_decode(text, ucs4);
+    id3_latin1_decode((id3_latin1_t const *)text, ucs4);
   else
     id3_ucs4_putnumber(ucs4, number);
 

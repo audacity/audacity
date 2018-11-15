@@ -63,7 +63,7 @@ ima_oki_adpcm_init (IMA_OKI_ADPCM * state, IMA_OKI_ADPCM_TYPE type)
 	else
 	{	state->max_step_index = ARRAY_LEN (oki_steps) - 1 ;
 		state->steps = oki_steps ;
-		state->mask = (~0) << 4 ;
+		state->mask = (~0u) << 4 ;
 		} ;
 
 } /* ima_oki_adpcm_init */
