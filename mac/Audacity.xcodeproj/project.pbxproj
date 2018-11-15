@@ -8614,7 +8614,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = debug;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -8941,7 +8941,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = release;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};

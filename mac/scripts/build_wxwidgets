@@ -33,9 +33,11 @@ function bld
    shift
 
    arch_option="--enable-macosx-arch=${1}"
+   prefix_option="--prefix=/usr/local/${1}"
    shift
 
-   ../configure ${arch_option} \
+   ../configure ${prefix_option} \
+                ${arch_option} \
                 --with-expat=builtin \
                 --with-zlib=builtin \
                 --with-regex=builtin \
@@ -58,7 +60,7 @@ function inst
    popd
 }
 
-for architecture in 'i386'; do {
+for architecture in 'i386' 'x86_64'; do {
    std=''
    stdlib='-stdlib=libstdc++'
    if [ ${max} -gt 1060 ]
