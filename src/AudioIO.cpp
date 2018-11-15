@@ -890,7 +890,7 @@ class AudioThread {
    }
    static void *callback(void *p) {
       AudioThread *th = (AudioThread *)p;
-      return (void *)th->Entry();
+      return reinterpret_cast<void *>( th->Entry() );
    }
    void Run() {
       pthread_create(&mThread, NULL, callback, this);
