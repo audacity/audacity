@@ -173,12 +173,20 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
 #endif
    }
 
-   if (!mView && !mHIView)
+   if (!mView
+#if !defined(_LP64)
+       && !mHIView
+#endif
+       )
    {
       CreateGeneric();
    }
 
-   if (!mView && !mHIView)
+   if (!mView
+#if !defined(_LP64)
+       && !mHIView
+#endif
+       )
    {
       return false;
    }
@@ -186,10 +194,12 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
    // wxWidgets takes ownership so safenew
    SetPeer(safenew AUControlImpl(this, mAUView));
 
+#if !defined(_LP64)
    if (mHIView)
    {
       CreateCarbonOverlay();
    }
+#endif
 
    // Must get the size again since SetPeer() could cause it to change
    SetInitialSize(GetMinSize());
