@@ -57,7 +57,6 @@ class wxStaticText;
 class wxTreeCtrl;
 class wxTextCtrl;
 class wxSlider;
-class wxTreeListCtrl;
 class wxNotebook;
 typedef wxWindow wxNotebookPage;  // so far, any window can be a page
 class wxButton;

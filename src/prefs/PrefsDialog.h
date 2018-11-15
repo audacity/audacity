@@ -13,10 +13,11 @@
 #define __AUDACITY_PREFS_DIALOG__
 
 #include <vector>
-#include <wx/treebook.h>
 #include "../widgets/wxPanelWrapper.h"
 #include "../Internat.h"
 
+class wxTreebook;
+class wxTreeEvent;
 class PrefsPanel;
 class PrefsPanelFactory;
 class ShuttleGui;

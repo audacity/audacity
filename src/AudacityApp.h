@@ -24,7 +24,6 @@
 #include <wx/dir.h>
 #include <wx/docview.h>
 #include <wx/snglinst.h>
-#include <wx/socket.h>
 #include <wx/timer.h>
 
 #include "widgets/FileHistory.h"
@@ -33,6 +32,9 @@
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>
 #endif
+
+class wxSocketEvent;
+class wxSocketServer;
 
 class IPCServ;
 class Importer;
