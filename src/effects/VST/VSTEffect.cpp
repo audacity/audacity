@@ -1114,12 +1114,12 @@ void VSTEffect::BundleDeleter::operator() (void* p) const
       CFRelease(static_cast<CFBundleRef>(p));
 }
 
-void VSTEffect::ResourceDeleter::operator() (void *p) const
+void VSTEffect::ResourceHandle::reset()
 {
-   if (mpHandle) {
-      int resource = (int)p;
-      CFBundleCloseBundleResourceMap(mpHandle->get(), resource);
-   }
+   if (mpHandle)
+      CFBundleCloseBundleResourceMap(mpHandle, mNum);
+   mpHandle = nullptr;
+   mNum = 0;
 }
 #endif
 
@@ -2061,10 +2061,8 @@ bool VSTEffect::Load()
    mBundleRef = std::move(bundleRef);
 
    // Open the resource map ... some plugins (like GRM Tools) need this.
-   mResource = ResourceHandle {
-      reinterpret_cast<char*>(
-         CFBundleOpenBundleResourceMap(mBundleRef.get())),
-      ResourceDeleter{&mBundleRef}
+   mResource = ResourceHandle{
+      mBundleRef.get(), CFBundleOpenBundleResourceMap(mBundleRef.get())
    };
 
 #elif defined(__WXMSW__)
@@ -2267,7 +2265,7 @@ void VSTEffect::Unload()
    if (mModule)
    {
 #if defined(__WXMAC__)
-      mResource = ResourceHandle{};
+      mResource.reset();
       mBundleRef.reset();
 #endif
 

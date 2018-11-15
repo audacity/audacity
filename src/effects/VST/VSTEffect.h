@@ -302,15 +302,27 @@ private:
 
    BundleHandle mBundleRef;
 
-   struct ResourceDeleter {
-      const BundleHandle *mpHandle;
-      ResourceDeleter(const BundleHandle *pHandle = nullptr)
-         : mpHandle(pHandle) {}
-      void operator() (void*) const;
+   struct ResourceHandle {
+      ResourceHandle(
+         CFBundleRef pHandle = nullptr, CFBundleRefNum num = 0)
+      : mpHandle{ pHandle }, mNum{ num }
+      {}
+      ResourceHandle& operator=( ResourceHandle &&other )
+      {
+         if (this != &other) {
+            mpHandle = other.mpHandle;
+            mNum = other.mNum;
+            other.mpHandle = nullptr;
+            other.mNum = 0;
+         }
+         return *this;
+      }
+      ~ResourceHandle() { reset(); }
+      void reset();
+
+      CFBundleRef mpHandle{};
+      CFBundleRefNum mNum{};
    };
-   using ResourceHandle = std::unique_ptr<
-      char, ResourceDeleter
-   >;
    ResourceHandle mResource;
 #endif
 
