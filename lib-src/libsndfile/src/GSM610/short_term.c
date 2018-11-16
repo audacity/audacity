@@ -47,7 +47,7 @@ static void Decoding_of_the_coded_Log_Area_Ratios (
 #undef	STEP
 #define	STEP( B, MIC, INVA )	\
 		temp1    = GSM_ADD( *LARc++, MIC ) << 10;	\
-		temp1    = GSM_SUB( temp1, B << 1 );		\
+		temp1    = GSM_SUB( temp1, B * 2 );		\
 		temp1    = GSM_MULT_R( INVA, temp1 );		\
 		*LARpp++ = GSM_ADD( temp1, temp1 );
 

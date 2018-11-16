@@ -209,7 +209,7 @@ void errprint(LVAL expr)
 }
 
 /* errputstr - print a string to *error-output* */
-void errputstr(const const char *str)
+void errputstr(const char *str)
 {
     xlputstr(getvalue(s_stderr),str);
 }
