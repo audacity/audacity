@@ -16,8 +16,6 @@
 #include "SelectedRegion.h"
 #include "Track.h"
 
-#include <wx/clipbrd.h>
-
 
 class wxFont;
 class wxKeyEvent;

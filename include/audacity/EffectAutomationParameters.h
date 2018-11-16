@@ -45,7 +45,7 @@
 
 #include <locale.h>
 
-#include <wx/cmdline.h>
+#include <wx/cmdline.h> // for wxCmdLineParser::ConvertStringToArgs
 #include <wx/fileconf.h> // to inherit
 #include <algorithm>
 

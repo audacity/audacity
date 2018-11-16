@@ -18,11 +18,11 @@
 
 #include <wx/textctrl.h> // to inherit
 #include <wx/datectrl.h>
-#include <wx/calctrl.h>
 #include <wx/timer.h>
 #include "export/Export.h"
 
 class wxCheckBox;
+class wxDateEvent;
 class wxTimerEvent;
 
 class NumericTextCtrl;
