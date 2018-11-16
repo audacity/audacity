@@ -36,7 +36,6 @@
 
 #include "MemoryX.h"
 #include <utility>
-#include <wx/notebook.h>
 
 #include "widgets/wxPanelWrapper.h"
 

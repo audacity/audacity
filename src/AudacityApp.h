@@ -22,7 +22,6 @@
 #include "MemoryX.h"
 #include <wx/app.h> // to inherit
 #include <wx/dir.h>
-#include <wx/snglinst.h>
 #include <wx/timer.h>
 
 #include "widgets/FileHistory.h"
@@ -32,6 +31,7 @@
 #include <wx/debugrpt.h>
 #endif
 
+class wxSingleInstanceChecker;
 class wxSocketEvent;
 class wxSocketServer;
 
