@@ -22,7 +22,6 @@
 #include "MemoryX.h"
 #include <wx/app.h> // to inherit
 #include <wx/dir.h>
-#include <wx/docview.h>
 #include <wx/snglinst.h>
 #include <wx/timer.h>
 

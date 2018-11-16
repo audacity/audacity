@@ -17,12 +17,12 @@
 #define __AUDACITY_TIMERRECORD_DIALOG__
 
 #include <wx/textctrl.h> // to inherit
-#include <wx/datectrl.h>
 #include <wx/timer.h>
 #include "export/Export.h"
 
 class wxCheckBox;
 class wxDateEvent;
+class wxDatePickerCtrl;
 class wxTimerEvent;
 
 class NumericTextCtrl;
