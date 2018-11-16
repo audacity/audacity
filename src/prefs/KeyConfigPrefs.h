@@ -16,7 +16,6 @@ class CommandManager;
 class ShuttleGui;
 
 #include <wx/defs.h>
-#include <wx/imaglist.h>
 #include <wx/srchctrl.h>
 #include <wx/timer.h>
 

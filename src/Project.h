@@ -35,11 +35,6 @@
 
 #include <memory>
 #include <wx/defs.h>
-
-// dragimgg.h uses this incomplete type without declaring it on some OSs !
-class wxMemoryDC;
-#include <wx/generic/dragimgg.h>
-
 #include <wx/frame.h> // to inherit
 
 #include "import/ImportRaw.h" // defines TrackHolders
@@ -53,6 +48,7 @@ class wxDialog;
 class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;
+class wxTimer;
 class wxTimerEvent;
 
 class AudacityProject;

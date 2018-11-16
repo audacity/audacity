@@ -69,6 +69,7 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/event.h>
+#include <wx/listctrl.h>
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/choice.h>

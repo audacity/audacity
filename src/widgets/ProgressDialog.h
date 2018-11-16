@@ -24,10 +24,10 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/evtloop.h>
-#include <wx/gauge.h>
 
 #include "wxPanelWrapper.h"
 
+class wxGauge;
 class wxStaticText;
 
 enum class ProgressResult : unsigned

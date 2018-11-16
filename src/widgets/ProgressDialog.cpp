@@ -40,6 +40,7 @@
 #include <wx/dialog.h>
 #include <wx/event.h>
 #include <wx/evtloop.h>
+#include <wx/gauge.h>
 #include <wx/frame.h>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>

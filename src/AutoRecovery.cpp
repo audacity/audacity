@@ -28,6 +28,7 @@ text or binary format to a file.
 
 #include <wx/wxprec.h>
 #include <wx/filefn.h>
+#include <wx/listctrl.h>
 #include <wx/dir.h>
 #include <wx/dialog.h>
 #include <wx/app.h>
