@@ -1102,9 +1102,9 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
    {
       // Non-selected lines get a thin bottom border
       dc.SetPen(wxColour(240, 240, 240));
-      dc.DrawLine(r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetBottom());
+      AColor::Line(dc, r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetBottom());
       if (mViewType == ViewByTree )
-         dc.DrawLine(r2.GetLeft(), r2.GetBottom(), r2.GetRight(), r2.GetBottom());
+         AColor::Line(dc, r2.GetLeft(), r2.GetBottom(), r2.GetRight(), r2.GetBottom());
    }
 }
 

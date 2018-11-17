@@ -523,13 +523,13 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                {
                   // 2 pixel spacing between the LEDs
                   if( (i%7)<2 ){
-                     dc.DrawLine( i+r.x, r.y, i+r.x, r.y+r.height );
+                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
                   } else {
                      // The LEDs have triangular ends.  
                      // This code shapes the ends.
                      int j = abs( (i%7)-4);
-                     dc.DrawLine( i+r.x, r.y, i+r.x, r.y+j +1);
-                     dc.DrawLine( i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
+                     AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
                   }
                }
             }

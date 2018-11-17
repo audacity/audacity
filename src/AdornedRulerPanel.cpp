@@ -1913,9 +1913,9 @@ void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 
    // Black stroke at bottom
    dc->SetPen( *wxBLACK_PEN );
-   dc->DrawLine( mOuter.x,
+   AColor::Line( *dc, mOuter.x,
                 mOuter.y + mOuter.height - 1,
-                mOuter.x + mOuter.width,
+                mOuter.x + mOuter.width - 1	,
                 mOuter.y + mOuter.height - 1 );
 }
 

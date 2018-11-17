@@ -715,7 +715,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       points[5].x = clientWidth - 10;
       points[5].y = DUCK_AMOUNT_START;
 
-      dc.DrawLines(6, points);
+      AColor::Lines(dc, 6, points);
 
       dc.SetPen(wxPen(*wxBLACK, 1, wxPENSTYLE_DOT));
 

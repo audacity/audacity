@@ -63,7 +63,14 @@ class AColor {
    static void ReInit();
 
    static void Arrow(wxDC & dc, wxCoord x, wxCoord y, int width, bool down = true);
+
+   // Draw a line, INCLUSIVE of both endpoints
+   // (unlike what wxDC::DrawLine() documentation specifies)
    static void Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
+
+   // Draw lines, INCLUSIVE of all endpoints
+   static void Lines(wxDC &dc, size_t nPoints, const wxPoint points[]);
+
    static void DrawFocus(wxDC & dc, wxRect & r);
    static void Bevel(wxDC & dc, bool up, const wxRect & r);
    static void Bevel2

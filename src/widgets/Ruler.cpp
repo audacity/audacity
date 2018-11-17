@@ -58,6 +58,7 @@ array of Ruler::Label.
 #include "Ruler.h"
 
 
+#include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../NumberScale.h"
 #include "../Theme.h"
@@ -1307,19 +1308,19 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
    {
       if (mOrientation == wxHORIZONTAL) {
          if (mFlip)
-            mDC->DrawLine(mLeft, mTop, mRight+1, mTop);
+            AColor::Line(*mDC, mLeft, mTop, mRight, mTop);
          else
-            mDC->DrawLine(mLeft, mBottom, mRight+1, mBottom);
+            AColor::Line(*mDC, mLeft, mBottom, mRight, mBottom);
       }
       else {
          if (mFlip)
-            mDC->DrawLine(mLeft, mTop, mLeft, mBottom+1);
+            AColor::Line(*mDC, mLeft, mTop, mLeft, mBottom);
          else
          {
             // These calculations appear to be wrong, and to never have been used (so not tested) prior to MixerBoard.
-            //    mDC->DrawLine(mRect.x-mRect.width, mTop, mRect.x-mRect.width, mBottom+1);
+            //    AColor::Line(*mDC, mRect.x-mRect.width, mTop, mRect.x-mRect.width, mBottom);
             const int nLineX = mRight - 1;
-            mDC->DrawLine(nLineX, mTop, nLineX, mBottom+1);
+            AColor::Line(*mDC, nLineX, mTop, nLineX, mBottom);
          }
       }
    }
@@ -1341,18 +1342,18 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
       {
          if (mOrientation == wxHORIZONTAL) {
             if (mFlip)
-               mDC->DrawLine(mLeft + pos, mTop,
+               AColor::Line(*mDC, mLeft + pos, mTop,
                              mLeft + pos, mTop + 4);
             else
-               mDC->DrawLine(mLeft + pos, mBottom - 4,
+               AColor::Line(*mDC, mLeft + pos, mBottom - 4,
                              mLeft + pos, mBottom);
          }
          else {
             if (mFlip)
-               mDC->DrawLine(mLeft, mTop + pos,
+               AColor::Line(*mDC, mLeft, mTop + pos,
                              mLeft + 4, mTop + pos);
             else
-               mDC->DrawLine(mRight - 4, mTop + pos,
+               AColor::Line(*mDC, mRight - 4, mTop + pos,
                              mRight, mTop + pos);
          }
       }
@@ -1369,19 +1370,19 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
             if (mOrientation == wxHORIZONTAL)
             {
                if (mFlip)
-                  mDC->DrawLine(mLeft + pos, mTop,
+                  AColor::Line(*mDC, mLeft + pos, mTop,
                                 mLeft + pos, mTop + 2);
                else
-                  mDC->DrawLine(mLeft + pos, mBottom - 2,
+                  AColor::Line(*mDC, mLeft + pos, mBottom - 2,
                                 mLeft + pos, mBottom);
             }
             else
             {
                if (mFlip)
-                  mDC->DrawLine(mLeft, mTop + pos,
+                  AColor::Line(*mDC, mLeft, mTop + pos,
                                 mLeft + 2, mTop + pos);
                else
-                  mDC->DrawLine(mRight - 2, mTop + pos,
+                  AColor::Line(*mDC, mRight - 2, mTop + pos,
                                 mRight, mTop + pos);
             }
          }
@@ -1401,19 +1402,19 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
             if (mOrientation == wxHORIZONTAL)
             {
                if (mFlip)
-                  mDC->DrawLine(mLeft + pos, mTop,
+                  AColor::Line(*mDC, mLeft + pos, mTop,
                                 mLeft + pos, mTop + 2);
                else
-                  mDC->DrawLine(mLeft + pos, mBottom - 2,
+                  AColor::Line(*mDC, mLeft + pos, mBottom - 2,
                                 mLeft + pos, mBottom);
             }
             else
             {
                if (mFlip)
-                  mDC->DrawLine(mLeft, mTop + pos,
+                  AColor::Line(*mDC, mLeft, mTop + pos,
                                 mLeft + 2, mTop + pos);
                else
-                  mDC->DrawLine(mRight - 2, mTop + pos,
+                  AColor::Line(*mDC, mRight - 2, mTop + pos,
                                 mRight, mTop + pos);
             }
          }
@@ -1442,11 +1443,11 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
          gridPos = mMinorLabels[i].pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != mGridLineLength))
-               mDC->DrawLine(gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength+yOffset);
+               AColor::Line(*mDC, gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength-1+yOffset);
          }
          else {
             if((gridPos != 0) && (gridPos != mGridLineLength))
-               mDC->DrawLine(xOffset, gridPos+yOffset, mGridLineLength+xOffset, gridPos+yOffset);
+               AColor::Line(*mDC, xOffset, gridPos+yOffset, mGridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
    }
@@ -1458,11 +1459,11 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
          gridPos = mMajorLabels[i].pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != mGridLineLength))
-               mDC->DrawLine(gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength+yOffset);
+               AColor::Line(*mDC, gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength-1+yOffset);
          }
          else {
             if((gridPos != 0) && (gridPos != mGridLineLength))
-               mDC->DrawLine(xOffset, gridPos+yOffset, mGridLineLength+xOffset, gridPos+yOffset);
+               AColor::Line(*mDC, xOffset, gridPos+yOffset, mGridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
 
@@ -1472,11 +1473,11 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
          mDC->SetPen(*wxBLACK_PEN);
          if(mOrientation == wxHORIZONTAL) {
             if(zeroPosition != mGridLineLength)
-               mDC->DrawLine(zeroPosition+xOffset, yOffset, zeroPosition+xOffset, mGridLineLength+yOffset);
+               AColor::Line(*mDC, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, mGridLineLength-1+yOffset);
          }
          else {
             if(zeroPosition != mGridLineLength)
-               mDC->DrawLine(xOffset, zeroPosition+yOffset, mGridLineLength+xOffset, zeroPosition+yOffset);
+               AColor::Line(*mDC, xOffset, zeroPosition+yOffset, mGridLineLength-1+xOffset, zeroPosition+yOffset);
          }
       }
    }
