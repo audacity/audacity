@@ -9318,7 +9318,7 @@
 					"-headerpad_max_install_names",
 				);
 				SDKROOT = macosx10.7;
-				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
+				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				WARNING_CFLAGS = "";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
@@ -9769,7 +9769,7 @@
 					"-headerpad_max_install_names",
 				);
 				SDKROOT = macosx10.7;
-				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
+				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				WARNING_CFLAGS = "";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
