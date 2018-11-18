@@ -14,7 +14,7 @@
 #define FLAC__ALIGN_MALLOC_DATA 1
 
 /* define if building for ia32/i386 */
-#define FLAC__CPU_IA32 1
+/* #undef FLAC__CPU_IA32 */
 
 /* define if building for PowerPC */
 /* #undef FLAC__CPU_PPC */
@@ -26,7 +26,7 @@
 /* #undef FLAC__CPU_SPARC */
 
 /* define if building for x86_64 */
-/* #undef FLAC__CPU_X86_64 */
+#define FLAC__CPU_X86_64 1
 
 /* define if you have docbook-to-man or docbook2man */
 /* #undef FLAC__HAS_DOCBOOK_TO_MAN */
@@ -168,7 +168,7 @@
 #define SIZEOF_OFF_T 8
 
 /* The size of `void*', as computed by sizeof. */
-#define SIZEOF_VOIDP 4
+#define SIZEOF_VOIDP 8
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1

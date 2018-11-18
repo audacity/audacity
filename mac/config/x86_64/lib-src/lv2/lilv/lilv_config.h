@@ -8,8 +8,8 @@
 #define HAVE_SORD 1
 #define HAVE_SRATOM 1
 #define LILV_NEW_LV2 1
-/* #undef HAVE_FLOCK */
-/* #undef HAVE_FILENO */
+#define HAVE_FLOCK 1
+#define HAVE_FILENO 1
 /* #undef HAVE_CLOCK_GETTIME */
 #define LILV_VERSION "0.20.0"
 #define LILV_PATH_SEP ":"

@@ -182,9 +182,6 @@
    */
 #define LT_OBJDIR ".libs/"
 
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-/* #undef NO_MINUS_C_MINUS_O */
-
 /* Set to 1 if compiling for MacOSX */
 #define OS_IS_MACOSX 1
 
@@ -289,12 +286,3 @@
 
 /* Set to 1 to use C99 printf/snprintf in MinGW. */
 /* #undef __USE_MINGW_ANSI_STDIO */
-#undef CPU_IS_BIG_ENDIAN
-#undef CPU_IS_LITTLE_ENDIAN
-#if defined(__BIG_ENDIAN__)
-#define CPU_IS_BIG_ENDIAN 1
-#define CPU_IS_LITTLE_ENDIAN 0
-#else
-#define CPU_IS_BIG_ENDIAN 0
-#define CPU_IS_LITTLE_ENDIAN 1
-#endif

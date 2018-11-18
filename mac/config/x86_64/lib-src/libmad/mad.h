@@ -24,7 +24,7 @@
 extern "C" {
 # endif
 
-# define FPM_INTEL
+# define FPM_DEFAULT
 
 
 
