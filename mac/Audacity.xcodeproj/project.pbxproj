@@ -8614,7 +8614,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = debug;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -8941,7 +8941,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = release;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -9291,6 +9291,912 @@
 			};
 			name = Release;
 		};
+		5EC18AA0219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
+				CONFIG_DEBUG = yes;
+				CONFIG_FLAGS = "";
+				CONFIG_STATIC = no;
+				CONFIG_UNICODE = yes;
+				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
+				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
+				FFMPEG_PREFIX = /usr/local;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
+				INFOPLIST_PREPROCESS = YES;
+				KEEP_PRIVATE_EXTERNS = YES;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
+				SDKROOT = macosx10.7;
+				SSE_CPPFLAGS = "";
+				TOPLEVEL = ..;
+				WARNING_CFLAGS = "";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
+				WX_CXXFLAGS = "$(WX_CFLAGS)";
+				WX_FLAVOR = debug;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_PREFIX = "/usr/local/$(ARCHS)";
+				WX_VER = 3.1;
+				ZERO_LINK = NO;
+			};
+			name = Debug64;
+		};
+		5EC18AA1219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreAudioKit,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
+				PRODUCT_NAME = Audacity;
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Debug64;
+		};
+		5EC18AA2219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Header;
+			};
+			name = Debug64;
+		};
+		5EC18AA3219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				PRODUCT_NAME = expat;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = Debug64;
+		};
+		5EC18AA4219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					FLAC__NO_ASM,
+					"FLaC__INLINE=__inline__",
+					NDEBUG,
+				);
+				PRODUCT_NAME = FLAC;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AA5219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					NDEBUG,
+					"FLaC__INLINE=__inline__",
+				);
+				PRODUCT_NAME = "FLAC++";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
+			};
+			name = Debug64;
+		};
+		5EC18AA6219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
+			};
+			name = Debug64;
+		};
+		5EC18AA7219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
+				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
+			};
+			name = Debug64;
+		};
+		5EC18AA8219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CMTSTUFF,
+					EXT,
+				);
+				PRODUCT_NAME = nyquist;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+			};
+			name = Debug64;
+		};
+		5EC18AA9219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DARWIN,
+					USE_MEMORY_H,
+				);
+				PRODUCT_NAME = vorbis;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AAA219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AAB219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
+			};
+			name = Debug64;
+		};
+		5EC18AAC219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
+			};
+			name = Debug64;
+		};
+		5EC18AAD219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
+				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AAE219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
+					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
+				);
+				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AAF219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+					"$(WX_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB0219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_SCRIPT_PIPE,
+					CC_HASVISIBILITY,
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-script-pipe";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB1219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"STDC_HEADERS=1",
+					"HAVE_SYS_TYPES_H=1",
+					"HAVE_SYS_STAT_H=1",
+					"HAVE_STDLIB_H=1",
+					"HAVE_STRING_H=1",
+					"HAVE_MEMORY_H=1",
+					"HAVE_STRINGS_H=1",
+					"HAVE_INTTYPES_H=1",
+					"HAVE_STDINT_H=1",
+					"HAVE_UNISTD_H=1",
+					"HAVE_DLFCN_H=1",
+					"WORDS_BIGENDIAN=1",
+					"SIZEOF_SHORT=2",
+					"SIZEOF_INT=4",
+					"SIZEOF_LONG=4",
+					"HAVE_NANOSLEEP=1",
+					"PA_USE_COREAUDIO=1",
+				);
+				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB2219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB3219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
+				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB4219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB5219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB6219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB7219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB8219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
+				PREBINDING = NO;
+				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB9219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
+				CONFIG_DEBUG = no;
+				CONFIG_FLAGS = "";
+				CONFIG_STATIC = no;
+				CONFIG_UNICODE = yes;
+				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
+				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
+				FFMPEG_PREFIX = /usr/local;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
+				INFOPLIST_PREPROCESS = YES;
+				KEEP_PRIVATE_EXTERNS = YES;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
+				SDKROOT = macosx10.7;
+				SSE_CPPFLAGS = "";
+				TOPLEVEL = ..;
+				WARNING_CFLAGS = "";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
+				WX_CXXFLAGS = "$(WX_CFLAGS)";
+				WX_FLAVOR = release;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_PREFIX = "/usr/local/$(ARCHS)";
+				WX_VER = 3.1;
+				ZERO_LINK = NO;
+			};
+			name = Release64;
+		};
+		5EC18ABA219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Release\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreAudioKit,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
+				PRODUCT_NAME = Audacity;
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Release64;
+		};
+		5EC18ABB219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Header;
+			};
+			name = Release64;
+		};
+		5EC18ABC219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				PRODUCT_NAME = expat;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = Release64;
+		};
+		5EC18ABD219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					FLAC__NO_ASM,
+					"FLaC__INLINE=__inline__",
+					NDEBUG,
+				);
+				PRODUCT_NAME = FLAC;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18ABE219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					NDEBUG,
+					"FLaC__INLINE=__inline__",
+				);
+				PRODUCT_NAME = "FLAC++";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
+			};
+			name = Release64;
+		};
+		5EC18ABF219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
+			};
+			name = Release64;
+		};
+		5EC18AC0219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
+				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
+			};
+			name = Release64;
+		};
+		5EC18AC1219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CMTSTUFF,
+					EXT,
+				);
+				PRODUCT_NAME = nyquist;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+			};
+			name = Release64;
+		};
+		5EC18AC2219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DARWIN,
+					USE_MEMORY_H,
+				);
+				PRODUCT_NAME = vorbis;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18AC3219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18AC4219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
+			};
+			name = Release64;
+		};
+		5EC18AC5219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
+			};
+			name = Release64;
+		};
+		5EC18AC6219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
+				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC7219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
+					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
+				);
+				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC8219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+					"$(WX_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC9219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_SCRIPT_PIPE,
+					CC_HASVISIBILITY,
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-script-pipe";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACA219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"STDC_HEADERS=1",
+					"HAVE_SYS_TYPES_H=1",
+					"HAVE_SYS_STAT_H=1",
+					"HAVE_STDLIB_H=1",
+					"HAVE_STRING_H=1",
+					"HAVE_MEMORY_H=1",
+					"HAVE_STRINGS_H=1",
+					"HAVE_INTTYPES_H=1",
+					"HAVE_STDINT_H=1",
+					"HAVE_UNISTD_H=1",
+					"HAVE_DLFCN_H=1",
+					"WORDS_BIGENDIAN=1",
+					"SIZEOF_SHORT=2",
+					"SIZEOF_INT=4",
+					"SIZEOF_LONG=4",
+					"HAVE_NANOSLEEP=1",
+					"PA_USE_COREAUDIO=1",
+				);
+				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACB219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACC219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
+				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACD219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACE219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
+			};
+			name = Release64;
+		};
+		5EC18ACF219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
+			};
+			name = Release64;
+		};
+		5EC18AD0219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AD1219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
+				PREBINDING = NO;
+				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Release64;
+		};
 		ED152132163C227C00451B5F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -9418,7 +10324,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CD0DEA74F100671EA4 /* Debug */,
+				5EC18AB4219B5AFD000EFBF9 /* Debug64 */,
 				288052E20DEA74FD00671EA4 /* Release */,
+				5EC18ACD219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9427,7 +10335,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D10DEA74F100671EA4 /* Debug */,
+				5EC18AA6219B5AFD000EFBF9 /* Debug64 */,
 				288052E60DEA74FD00671EA4 /* Release */,
+				5EC18ABF219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9436,7 +10346,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D20DEA74F100671EA4 /* Debug */,
+				5EC18AA7219B5AFD000EFBF9 /* Debug64 */,
 				288052E70DEA74FD00671EA4 /* Release */,
+				5EC18AC0219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9445,7 +10357,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D50DEA74F100671EA4 /* Debug */,
+				5EC18AAA219B5AFD000EFBF9 /* Debug64 */,
 				288052EA0DEA74FD00671EA4 /* Release */,
+				5EC18AC3219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9454,7 +10368,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D70DEA74F100671EA4 /* Debug */,
+				5EC18AAB219B5AFD000EFBF9 /* Debug64 */,
 				288052EC0DEA74FD00671EA4 /* Release */,
+				5EC18AC4219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9463,7 +10379,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DB0DEA74F100671EA4 /* Debug */,
+				5EC18AB5219B5AFD000EFBF9 /* Debug64 */,
 				288052F00DEA74FD00671EA4 /* Release */,
+				5EC18ACE219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9472,7 +10390,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DA0DEA74F100671EA4 /* Debug */,
+				5EC18AB3219B5AFD000EFBF9 /* Debug64 */,
 				288052EF0DEA74FD00671EA4 /* Release */,
+				5EC18ACC219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9481,7 +10401,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D40DEA74F100671EA4 /* Debug */,
+				5EC18AA9219B5AFD000EFBF9 /* Debug64 */,
 				288052E90DEA74FD00671EA4 /* Release */,
+				5EC18AC2219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9490,7 +10412,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D30DEA74F100671EA4 /* Debug */,
+				5EC18AA8219B5AFD000EFBF9 /* Debug64 */,
 				288052E80DEA74FD00671EA4 /* Release */,
+				5EC18AC1219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9499,7 +10423,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CF0DEA74F100671EA4 /* Debug */,
+				5EC18AA4219B5AFD000EFBF9 /* Debug64 */,
 				288052E40DEA74FD00671EA4 /* Release */,
+				5EC18ABD219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9508,7 +10434,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D00DEA74F100671EA4 /* Debug */,
+				5EC18AA5219B5AFD000EFBF9 /* Debug64 */,
 				288052E50DEA74FD00671EA4 /* Release */,
+				5EC18ABE219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9517,7 +10445,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CA0DEA74F100671EA4 /* Debug */,
+				5EC18AA0219B5AFD000EFBF9 /* Debug64 */,
 				288052DF0DEA74FD00671EA4 /* Release */,
+				5EC18AB9219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9526,7 +10456,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CB0DEA74F100671EA4 /* Debug */,
+				5EC18AA1219B5AFD000EFBF9 /* Debug64 */,
 				288052E00DEA74FD00671EA4 /* Release */,
+				5EC18ABA219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9535,7 +10467,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2800FE090FF322D5005CA9E5 /* Debug */,
+				5EC18AB2219B5AFD000EFBF9 /* Debug64 */,
 				2800FE0B0FF322D5005CA9E5 /* Release */,
+				5EC18ACB219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9544,7 +10478,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DC0DEA74F100671EA4 /* Debug */,
+				5EC18AB6219B5AFD000EFBF9 /* Debug64 */,
 				288052F10DEA74FD00671EA4 /* Release */,
+				5EC18ACF219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9553,7 +10489,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D80DEA74F100671EA4 /* Debug */,
+				5EC18AAD219B5AFD000EFBF9 /* Debug64 */,
 				288052ED0DEA74FD00671EA4 /* Release */,
+				5EC18AC6219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9562,7 +10500,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				286229AD181CE4B600E1AD1A /* Debug */,
+				5EC18AAE219B5AFD000EFBF9 /* Debug64 */,
 				286229AF181CE4B600E1AD1A /* Release */,
+				5EC18AC7219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9571,7 +10511,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DE0DEA74F100671EA4 /* Debug */,
+				5EC18AB0219B5AFD000EFBF9 /* Debug64 */,
 				288052F30DEA74FD00671EA4 /* Release */,
+				5EC18AC9219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9580,7 +10522,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28D489261B5F052C00A2E4DF /* Debug */,
+				5EC18AA2219B5AFD000EFBF9 /* Debug64 */,
 				28D489271B5F052C00A2E4DF /* Release */,
+				5EC18ABB219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9589,7 +10533,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28E237050E515D1D00281398 /* Debug */,
+				5EC18AB7219B5AFD000EFBF9 /* Debug64 */,
 				28E237070E515D1D00281398 /* Release */,
+				5EC18AD0219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9598,7 +10544,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D90DEA74F100671EA4 /* Debug */,
+				5EC18AB1219B5AFD000EFBF9 /* Debug64 */,
 				288052EE0DEA74FD00671EA4 /* Release */,
+				5EC18ACA219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9607,7 +10555,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28FADDEC1833C3C500BA4141 /* Debug */,
+				5EC18AA3219B5AFD000EFBF9 /* Debug64 */,
 				28FADDEE1833C3C500BA4141 /* Release */,
+				5EC18ABC219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9616,7 +10566,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED152132163C227C00451B5F /* Debug */,
+				5EC18AAC219B5AFD000EFBF9 /* Debug64 */,
 				ED152134163C227C00451B5F /* Release */,
+				5EC18AC5219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9625,7 +10577,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED2706F60EF9C3C6007D4FFD /* Debug */,
+				5EC18AB8219B5AFD000EFBF9 /* Debug64 */,
 				ED2706F80EF9C3C6007D4FFD /* Release */,
+				5EC18AD1219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9634,7 +10588,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDBFAD10177E5399004CC1C1 /* Debug */,
+				5EC18AAF219B5AFD000EFBF9 /* Debug64 */,
 				EDBFAD12177E5399004CC1C1 /* Release */,
+				5EC18AC8219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
