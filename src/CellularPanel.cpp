@@ -1043,6 +1043,21 @@ wxRect CellularPanel::FindRect( const TrackPanelCell &cell )
    return result;
 }
 
+wxRect CellularPanel::FindRect(
+   const std::function< bool( TrackPanelNode& ) > &pred)
+{
+   wxRect result;
+
+   struct Stop{};
+   try { VisitPreorder( [&]( const wxRect &rect, TrackPanelNode &visited ) {
+      if ( pred( visited ) )
+         result = rect, throw Stop{};
+   } ); }
+   catch ( const Stop& ) {}
+
+   return result;
+}
+
 UIHandlePtr CellularPanel::Target()
 {
    auto &state = *mState;
