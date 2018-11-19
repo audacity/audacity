@@ -1165,12 +1165,10 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_DELETION, TrackListEvent);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
+   , public std::enable_shared_from_this<TrackList>
 {
    // privatize this, make you use Swap instead:
    using ListOfTracks::swap;
-
-   // Create an empty TrackList
-   TrackList();
 
    // Disallow copy
    TrackList(const TrackList &that) = delete;
@@ -1183,6 +1181,10 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    void clear() = delete;
 
  public:
+   // Create an empty TrackList
+   // Don't call directly -- use Create() instead
+   TrackList();
+
    // Create an empty TrackList
    static std::shared_ptr<TrackList> Create();
 
@@ -1556,8 +1558,6 @@ private:
    void ResizingEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
-
-   std::weak_ptr<TrackList> mSelf;
 
    // Nondecreasing during the session.
    // Nonpersistent.

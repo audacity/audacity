@@ -573,9 +573,7 @@ TrackList::TrackList()
 // Factory function
 std::shared_ptr<TrackList> TrackList::Create()
 {
-   std::shared_ptr<TrackList> result{ safenew TrackList{} };
-   result->mSelf = result;
-   return result;
+   return std::make_shared<TrackList>();
 }
 
 TrackList &TrackList::operator= (TrackList &&that)
@@ -600,8 +598,10 @@ void TrackList::Swap(TrackList &that)
          (*it)->SetOwner(bSelf, {it, &b});
    };
 
-   SwapLOTs( *this, mSelf, that, that.mSelf );
-   SwapLOTs( this->mPendingUpdates, mSelf, that.mPendingUpdates, that.mSelf );
+   const auto self = shared_from_this();
+   const auto otherSelf = that.shared_from_this();
+   SwapLOTs( *this, self, that, otherSelf );
+   SwapLOTs( this->mPendingUpdates, self, that.mPendingUpdates, otherSelf );
    mUpdaters.swap(that.mUpdaters);
 }
 
@@ -709,7 +709,7 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
       ListOfTracks::value_type track = *iter.first;
       erase(iter.first);
       Track *pTrack = track.get();
-      pTrack->SetOwner(mSelf,
+      pTrack->SetOwner(shared_from_this(),
          { insert(ListOfTracks::end(), track), this });
    }
    auto n = getBegin();
@@ -733,7 +733,7 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
    Track *pTrack = t.get();
    push_front(ListOfTracks::value_type(t));
    auto n = getBegin();
-   pTrack->SetOwner(mSelf, n);
+   pTrack->SetOwner(shared_from_this(), n);
    pTrack->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    AdditionEvent(n);
@@ -746,7 +746,7 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 
    auto n = getPrev( getEnd() );
 
-   t->SetOwner(mSelf, n);
+   t->SetOwner(shared_from_this(), n);
    t->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    AdditionEvent(n);
@@ -817,7 +817,7 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
 
       Track *pTrack = with.get();
       *node.first = with;
-      pTrack->SetOwner(mSelf, node);
+      pTrack->SetOwner(shared_from_this(), node);
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
@@ -991,7 +991,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
          pTrack = pointer.get(),
          // Insert before s, and reassign s to point at the new node before
          // old s; which is why we saved pointers in backwards order
-         pTrack->SetOwner(mSelf,
+         pTrack->SetOwner(shared_from_this(),
             s = { insert(s.first, pointer), this } );
    };
    // This does not invalidate s2 even when it equals s1:
@@ -1208,7 +1208,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
       mPendingUpdates.push_back( pTrack );
       auto n = mPendingUpdates.end();
       --n;
-      pTrack->SetOwner(mSelf, {n, &mPendingUpdates});
+      pTrack->SetOwner(shared_from_this(), {n, &mPendingUpdates});
    }
 
    return pTrack;
@@ -1312,7 +1312,7 @@ bool TrackList::ApplyPendingTracks()
          auto iter = ListOfTracks::begin();
          std::advance( iter, pendingTrack->GetIndex() );
          iter = ListOfTracks::insert( iter, pendingTrack );
-         pendingTrack->SetOwner( mSelf, {iter, this} );
+         pendingTrack->SetOwner( shared_from_this(), {iter, this} );
          pendingTrack->SetId( TrackId{ ++sCounter } );
          if (!inserted) {
             first = iter;
