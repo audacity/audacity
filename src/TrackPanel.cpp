@@ -2171,41 +2171,16 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 // The given track is assumed to be the first channel
 wxRect TrackPanel::FindTrackRect( const Track * target )
 {
-   if (!target) {
+   auto leader = *GetTracks()->FindLeader( target );
+   if (!leader) {
       return { 0, 0, 0, 0 };
    }
 
-   // PRL:  I think the following very old comment misused the term "race
-   // condition" for a bug that happened with only a single thread.  I think the
-   // real problem referred to, was that this function could be reached, via
-   // TrackPanelAx callbacks, during low-level operations while the TrackList
-   // was not in a consistent state.
-   // Now the problem is fixed by delaying the handling of events generated
-   // by TrackList.  And besides that, we use Channels() instead of looking
-   // directly at the links.
-
-   // Old comment:
-   // The check for a null linked track is necessary because there's
-   // a possible race condition between the time the 2 linked tracks
-   // are added and when wxAccessible methods are called.  This is
-   // most evident when using Jaws.
-   auto height = TrackList::Channels( target ).sum( &Track::GetHeight );
-
-   wxRect rect{
-      0,
-      target->GetY() - mViewInfo->vpos,
-      GetSize().GetWidth(),
-      height
-   };
-
-
-   rect.x += kLeftMargin;
-   rect.width -= (kLeftMargin + kRightMargin);
-
-   rect.y += kTopMargin;
-   rect.height -= (kTopMargin + kBottomMargin);
-
-   return rect;
+   return CellularPanel::FindRect( [&] ( TrackPanelNode &node ) {
+      if (auto pGroup = dynamic_cast<const LabeledChannelGroup*>( &node ))
+         return pGroup->mpTrack.get() == leader;
+      return false;
+   } );
 }
 
 int TrackPanel::GetVRulerWidth() const
