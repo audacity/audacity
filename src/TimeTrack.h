@@ -118,7 +118,9 @@ class TimeTrack final : public Track {
    void Init(const TimeTrack &orig);
 
    using Holder = std::unique_ptr<TimeTrack>;
-   Track::Holder Duplicate() const override;
+
+private:
+   Track::Holder Clone() const override;
 
    friend class TrackFactory;
 

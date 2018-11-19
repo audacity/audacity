@@ -115,6 +115,16 @@ void Track::Merge(const Track &orig)
    mSelected = orig.mSelected;
 }
 
+Track::Holder Track::Duplicate() const
+{
+   // invoke "virtual constructor" to copy track object proper:
+   auto result = Clone();
+
+   // other steps to be added here
+
+   return result;
+}
+
 Track::~Track()
 {
 }

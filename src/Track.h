@@ -370,7 +370,8 @@ private:
    void Init(const Track &orig);
 
    using Holder = std::shared_ptr<Track>;
-   virtual Holder Duplicate() const = 0;
+   // public nonvirtual duplication function that invokes Clone():
+   virtual Holder Duplicate() const;
 
    // Called when this track is merged to stereo with another, and should
    // take on some paramaters of its partner.
@@ -431,6 +432,10 @@ public:
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
 private:
+   // Subclass responsibility implements only a part of Duplicate(), copying
+   // the track data proper (not associated data such as for groups and views):
+   virtual Holder Clone() const = 0;
+
    virtual TrackKind GetKind() const { return TrackKind::None; }
 
    template<typename T>

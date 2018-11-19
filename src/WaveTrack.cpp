@@ -401,7 +401,7 @@ int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
       (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }
 
-Track::Holder WaveTrack::Duplicate() const
+Track::Holder WaveTrack::Clone() const
 {
    return std::make_shared<WaveTrack>( *this );
 }

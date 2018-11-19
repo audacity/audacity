@@ -156,8 +156,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    double GetEndTime() const override;
 
    using Holder = std::shared_ptr<LabelTrack>;
-   Track::Holder Duplicate() const override;
+   
+private:
+   Track::Holder Clone() const override;
 
+public:
    void SetSelected(bool s) override;
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;

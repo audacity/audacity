@@ -67,7 +67,7 @@ class StretchHandle;
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
- public:
+public:
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
@@ -77,8 +77,11 @@ class AUDACITY_DLL_API NoteTrack final
       override;
 
    using Holder = std::shared_ptr<NoteTrack>;
-   Track::Holder Duplicate() const override;
+   
+private:
+   Track::Holder Clone() const override;
 
+public:
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
