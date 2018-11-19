@@ -989,7 +989,7 @@ void MixerBoard::UpdateTrackClusters()
 
    for (auto pPlayableTrack: mTracks->Leaders<PlayableTrack>()) {
       // TODO: more-than-two-channels
-      auto spTrack = Track::Pointer<PlayableTrack>( pPlayableTrack );
+      auto spTrack = pPlayableTrack->SharedPointer<PlayableTrack>();
       if (nClusterIndex < nClusterCount)
       {
          // Already showing it.

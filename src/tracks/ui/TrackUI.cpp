@@ -53,7 +53,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // Sliding applies in more than one track type.
    if ( !isMultiTool && currentTool == slideTool ) {
       result = TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, Pointer(this), false);
+         mTimeShiftHandle, SharedPointer(), false);
       if (result)
          results.push_back(result);
    }
@@ -70,7 +70,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // Finally, default of all is adjustment of the selection box.
    if ( isMultiTool || currentTool == selectTool ) {
       result = SelectHandle::HitTest(
-         mSelectHandle, st, pProject, Pointer(this));
+         mSelectHandle, st, pProject, SharedPointer());
       if (result)
          results.push_back(result);
    }
@@ -99,6 +99,6 @@ std::shared_ptr<TrackPanelCell> Track::GetResizer()
 {
    if (!mpResizer)
       // create on demand
-      mpResizer = std::make_shared<TrackPanelResizerCell>( Pointer( this ) );
+      mpResizer = std::make_shared<TrackPanelResizerCell>( SharedPointer() );
    return mpResizer;
 }

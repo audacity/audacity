@@ -37,7 +37,7 @@ void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
 
    for (auto lt : tracks->Any<LabelTrack>())
       pairs.push_back( std::make_pair(
-         Track::Pointer<LabelTrack>( lt ), lt->SaveFlags() ) );
+         lt->SharedPointer<LabelTrack>(), lt->SaveFlags() ) );
 }
 
 void LabelDefaultClickHandle::RestoreState( AudacityProject *pProject )

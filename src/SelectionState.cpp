@@ -42,7 +42,7 @@ void SelectionState::SelectTrack(
       channel->SetSelected(selected);
 
    if (updateLastPicked)
-      mLastPickedTrack = Track::Pointer( &track );
+      mLastPickedTrack = track.SharedPointer();
 
 //The older code below avoids an anchor on an unselected track.
 
@@ -92,11 +92,11 @@ void SelectionState::ChangeSelectionOnShiftClick
 
       // If our track is at or after the first, extend from the first.
       if( pFirst && track.GetIndex() >= pFirst->GetIndex() )
-         pExtendFrom = Track::Pointer( pFirst );
+         pExtendFrom = pFirst->SharedPointer();
 
       // Our track was earlier than the first.  Extend from the last.
       if( !pExtendFrom )
-         pExtendFrom = Track::Pointer( *trackRange.rbegin() );
+         pExtendFrom = (*trackRange.rbegin())->SharedPointer();
    }
 
    SelectNone( tracks );

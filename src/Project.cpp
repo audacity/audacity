@@ -4198,7 +4198,7 @@ AudacityProject::AddImportedTracks(const FilePath &fileName,
       auto nChannels = group.size();
       for (auto &uNewTrack : group) {
          auto newTrack = mTracks->Add(std::move(uNewTrack));
-         results.push_back(Track::Pointer(newTrack));
+         results.push_back(newTrack->SharedPointer());
       }
       mTracks->GroupChannels(*first, nChannels);
    }
@@ -4337,7 +4337,7 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
    if (pTrackArray) {
       for (const auto &newTrack : newSharedTracks) {
          newTrack->TypeSwitch( [&](WaveTrack *wt) {
-            pTrackArray->push_back( Track::Pointer< WaveTrack >( wt ) );
+            pTrackArray->push_back( wt->SharedPointer< WaveTrack >() );
          });
       }
    }

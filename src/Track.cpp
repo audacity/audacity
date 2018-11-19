@@ -105,7 +105,7 @@ void Track::SetSelected(bool s)
       mSelected = s;
       auto pList = mList.lock();
       if (pList)
-         pList->SelectionEvent( Pointer( this ) );
+         pList->SelectionEvent( SharedPointer() );
    }
 }
 
@@ -351,7 +351,7 @@ void Track::Notify( int code )
 {
    auto pList = mList.lock();
    if (pList)
-      pList->DataEvent( Pointer(this), code );
+      pList->DataEvent( SharedPointer(), code );
 }
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
@@ -374,7 +374,7 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
 
 std::shared_ptr<Track> Track::FindTrack()
 {
-   return Pointer( this );
+   return SharedPointer();
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
@@ -1162,7 +1162,8 @@ namespace {
       if ( ! includeMuted )
          subRange = subRange - &Type::GetMute;
       return transform_range<Array>( subRange.begin(), subRange.end(),
-          []( Type *t ){ return Track::Pointer<Type>( t ); } );
+         []( Type *t ){ return t->template SharedPointer<Type>(); }
+      );
    }
 }
 
@@ -1375,7 +1376,7 @@ std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
       if (it != end)
          return *it;
    }
-   return Pointer( this );
+   return SharedPointer();
 }
 
 std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
@@ -1395,7 +1396,7 @@ std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
             return *it2;
       }
    }
-   return Pointer( this );
+   return SharedPointer();
 }
 
 bool TrackList::HasPendingTracks() const

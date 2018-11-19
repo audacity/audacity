@@ -85,7 +85,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    WaveTrackConstArray waveArray;
 
    for(auto wt : trackRange) {
-      waveArray.push_back( Track::Pointer< const WaveTrack >( wt ) );
+      waveArray.push_back( wt->SharedPointer< const WaveTrack >() );
       tstart = wt->GetStartTime();
       tend = wt->GetEndTime();
       if (tend > mixEndTime)

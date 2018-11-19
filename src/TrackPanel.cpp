@@ -2054,10 +2054,10 @@ struct ChannelGroup final : TrackPanelGroup {
       for ( auto channel : channels ) {
          refinement.emplace_back( yy,
             std::make_shared< VRulerAndChannel >(
-               Track::Pointer( channel ), mLeftOffset ) );
+               channel->SharedPointer(), mLeftOffset ) );
          if ( channel != pLast ) {
             const auto substitute =
-               Track::Pointer( channel )->SubstitutePendingChangedTrack();
+               channel->SubstitutePendingChangedTrack();
             yy += substitute->GetHeight();
             refinement.emplace_back(
                yy - kSeparatorThickness, channel->GetResizer() );
@@ -2120,12 +2120,12 @@ struct Subgroup final : TrackPanelGroup {
          wxCoord height = 0;
          for ( auto channel : TrackList::Channels( leader ) ) {
             auto substitute =
-               Track::Pointer( channel )->SubstitutePendingChangedTrack();
+               channel->SubstitutePendingChangedTrack();
             height += substitute->GetHeight();
          }
          refinement.emplace_back( yy,
             std::make_shared< ResizingChannelGroup >(
-               Track::Pointer( leader ), mPanel.GetLeftOffset() )
+               leader->SharedPointer(), mPanel.GetLeftOffset() )
          );
          yy += height;
       }
@@ -2241,7 +2241,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
    // Make sure we always have the first linked track of a stereo track
    t = *GetTracks()->FindLeader(t);
 
-   auto cell = mAx->SetFocus( Track::Pointer( t ) ).get();
+   auto cell = mAx->SetFocus( t->SharedPointer() ).get();
 
    if (cell) {
       AudacityProject::CaptureKeyboard(this);

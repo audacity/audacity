@@ -939,7 +939,7 @@ WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(
          }
          channelCounts.push_back(nChannels);
          for ( auto channel : channels ) {
-            candidates.push_back(Track::Pointer<WaveTrack>(channel));
+            candidates.push_back(channel->SharedPointer<WaveTrack>());
             if(candidates.size() == recordingChannels)
                // Done!
                return candidates;

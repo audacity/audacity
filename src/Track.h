@@ -190,6 +190,7 @@ private:
 
 class AUDACITY_DLL_API Track /* not final */
    : public CommonTrackPanelCell, public XMLTagHandler
+   , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
    friend class TrackList;
 
@@ -227,31 +228,29 @@ class AUDACITY_DLL_API Track /* not final */
    void SetId( TrackId id ) { mId = id; }
  public:
 
-   // Given a bare pointer, find a shared_ptr.  But this is not possible for
-   // a track not owned by any project, so the result can be null.
+   // Given a bare pointer, find a shared_ptr.  Undefined results if the track
+   // is not yet managed by a shared_ptr.  Undefined results if the track is
+   // not really of the subclass.  (That is, trusts the caller and uses static
+   // not dynamic casting.)
    template<typename Subclass = Track>
-   inline static std::shared_ptr<Subclass> Pointer( Track *t )
+   inline std::shared_ptr<Subclass> SharedPointer()
    {
-      if (t) {
-         auto pList = t->mList.lock();
-         if (pList)
-            return std::static_pointer_cast<Subclass>(*t->mNode.first);
-      }
-      return {};
+      // shared_from_this is injected into class scope by base class
+      // std::enable_shared_from_this<Track>
+      if (!this) return {};
+      return std::static_pointer_cast<Subclass>( shared_from_this() );
    }
 
    template<typename Subclass = const Track>
-   inline static std::shared_ptr<Subclass> Pointer( const Track *t )
+   inline auto SharedPointer() const -> typename
+      std::enable_if<
+         std::is_const<Subclass>::value, std::shared_ptr<Subclass>
+      >::type
    {
-      if (t) {
-         auto pList = t->mList.lock();
-         if (pList) {
-            std::shared_ptr<const Track> p{ *t->mNode.first };
-            // Let you change the type, but not cast away the const
-            return std::static_pointer_cast<Subclass>(p);
-         }
-      }
-      return {};
+      // shared_from_this is injected into class scope by base class
+      // std::enable_shared_from_this<Track>
+      if (!this) return {};
+      return std::static_pointer_cast<Subclass>( shared_from_this() );
    }
 
    // Find anything registered with TrackList::RegisterPendingChangedTrack and
