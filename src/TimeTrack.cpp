@@ -33,9 +33,9 @@
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
-std::unique_ptr<TimeTrack> TrackFactory::NewTimeTrack()
+std::shared_ptr<TimeTrack> TrackFactory::NewTimeTrack()
 {
-   return std::make_unique<TimeTrack>(mDirManager, mZoomInfo);
+   return std::make_shared<TimeTrack>(mDirManager, mZoomInfo);
 }
 
 TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const ZoomInfo *zoomInfo):
@@ -108,8 +108,7 @@ Track::Holder TimeTrack::Cut( double t0, double t1 )
 
 Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
 {
-   auto result = std::make_unique<TimeTrack>( *this, &t0, &t1 );
-   return Track::Holder{ std::move( result ) };
+   return std::make_shared<TimeTrack>( *this, &t0, &t1 );
 }
 
 void TimeTrack::Clear(double t0, double t1)
@@ -143,7 +142,7 @@ void TimeTrack::InsertSilence(double t, double len)
 
 Track::Holder TimeTrack::Duplicate() const
 {
-   return std::make_unique<TimeTrack>(*this);
+   return std::make_shared<TimeTrack>(*this);
 }
 
 bool TimeTrack::GetInterpolateLog() const

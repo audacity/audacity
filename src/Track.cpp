@@ -728,35 +728,10 @@ Track *TrackList::FindById( TrackId id )
    return it->get();
 }
 
-template<typename TrackKind>
-Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
+Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
 {
-   Track *pTrack;
-   push_back(ListOfTracks::value_type(pTrack = t.release()));
-
-   auto n = getPrev( getEnd() );
-
-   pTrack->SetOwner(mSelf, n);
-   pTrack->SetId( TrackId{ ++sCounter } );
-   RecalcPositions(n);
-   AdditionEvent(n);
-   return back().get();
-}
-
-// Make instantiations for the linker to find
-template Track *TrackList::Add<TimeTrack>(std::unique_ptr<TimeTrack> &&);
-#if defined(USE_MIDI)
-template Track *TrackList::Add<NoteTrack>(std::unique_ptr<NoteTrack> &&);
-#endif
-template Track *TrackList::Add<WaveTrack>(std::unique_ptr<WaveTrack> &&);
-template Track *TrackList::Add<LabelTrack>(std::unique_ptr<LabelTrack> &&);
-template Track *TrackList::Add<Track>(std::unique_ptr<Track> &&);
-
-template<typename TrackKind>
-Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
-{
-   Track *pTrack;
-   push_front(ListOfTracks::value_type(pTrack = t.release()));
+   Track *pTrack = t.get();
+   push_front(ListOfTracks::value_type(t));
    auto n = getBegin();
    pTrack->SetOwner(mSelf, n);
    pTrack->SetId( TrackId{ ++sCounter } );
@@ -765,11 +740,7 @@ Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
    return front().get();
 }
 
-// Make instantiations for the linker to find
-template Track *TrackList::AddToHead<TimeTrack>(std::unique_ptr<TimeTrack> &&);
-
-template<typename TrackKind>
-Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
+Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 {
    push_back(t);
 
@@ -781,10 +752,6 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
    AdditionEvent(n);
    return back().get();
 }
-
-// Make instantiations for the linker to find
-template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
-template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
 
 void TrackList::GroupChannels(
    Track &track, size_t groupSize, bool resetChannels )
@@ -1234,8 +1201,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
 {
    std::shared_ptr<Track> pTrack;
    if (src)
-      // convert from unique_ptr to shared_ptr
-      pTrack.reset( src->Duplicate().release() );
+      pTrack = src->Duplicate();
 
    if (pTrack) {
       mUpdaters.push_back( updater );

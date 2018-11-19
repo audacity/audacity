@@ -1419,7 +1419,7 @@ bool NyquistEffect::ProcessOne()
       return false;
    }
 
-   std::unique_ptr<WaveTrack> outputTrack[2];
+   std::shared_ptr<WaveTrack> outputTrack[2];
 
    double rate = mCurTrack[0]->GetRate();
    for (int i = 0; i < outChannels; i++) {

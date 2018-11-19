@@ -99,7 +99,7 @@ int LabelTrack::mFontHeight=-1;
 
 LabelTrack::Holder TrackFactory::NewLabelTrack()
 {
-   return std::make_unique<LabelTrack>(mDirManager);
+   return std::make_shared<LabelTrack>(mDirManager);
 }
 
 LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
@@ -1142,7 +1142,7 @@ double LabelTrack::GetEndTime() const
 
 Track::Holder LabelTrack::Duplicate() const
 {
-   return std::make_unique<LabelTrack>( *this );
+   return std::make_shared<LabelTrack>( *this );
 }
 
 void LabelTrack::SetSelected(bool s)
@@ -2489,7 +2489,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
-   auto tmp = std::make_unique<LabelTrack>(GetDirManager());
+   auto tmp = std::make_shared<LabelTrack>(GetDirManager());
    const auto lt = static_cast<LabelTrack*>(tmp.get());
 
    for (auto &labelStruct: mLabels) {
@@ -2534,8 +2534,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   // This std::move is needed to "upcast" the pointer type
-   return std::move(tmp);
+   return tmp;
 }
 
 

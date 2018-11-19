@@ -104,7 +104,7 @@ SONFNS(AutoSave)
 
 NoteTrack::Holder TrackFactory::NewNoteTrack()
 {
-   return std::make_unique<NoteTrack>(mDirManager);
+   return std::make_shared<NoteTrack>(mDirManager);
 }
 
 NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
@@ -155,7 +155,7 @@ Alg_seq &NoteTrack::GetSeq() const
 
 Track::Holder NoteTrack::Duplicate() const
 {
-   auto duplicate = std::make_unique<NoteTrack>(mDirManager);
+   auto duplicate = std::make_shared<NoteTrack>(mDirManager);
    duplicate->Init(*this);
    // The duplicate begins life in serialized state.  Often the duplicate is
    // pushed on the Undo stack.  Then we want to un-serialize it (or a further
@@ -190,8 +190,7 @@ Track::Holder NoteTrack::Duplicate() const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
-   // This std::move is needed to "upcast" the pointer type
-   return std::move(duplicate);
+   return duplicate;
 }
 
 
@@ -463,7 +462,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
       //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
    //);
 
-   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
+   auto newTrack = std::make_shared<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -480,8 +479,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote, mDirManager,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   // This std::move is needed to "upcast" the pointer type
-   return std::move(newTrack);
+   return newTrack;
 }
 
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
@@ -491,7 +489,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 
    double len = t1-t0;
 
-   auto newTrack = std::make_unique<NoteTrack>(mDirManager);
+   auto newTrack = std::make_shared<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
@@ -504,8 +502,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mDirManager, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   // This std::move is needed to "upcast" the pointer type
-   return std::move(newTrack);
+   return newTrack;
 }
 
 bool NoteTrack::Trim(double t0, double t1)

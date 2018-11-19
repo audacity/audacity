@@ -75,7 +75,7 @@ class AUDACITY_DLL_API NoteTrack final
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
-   using Holder = std::unique_ptr<NoteTrack>;
+   using Holder = std::shared_ptr<NoteTrack>;
    Track::Holder Duplicate() const override;
 
    double GetOffset() const override;

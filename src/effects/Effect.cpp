@@ -1207,7 +1207,7 @@ bool Effect::DoEffect(wxWindow *parent,
    // We don't yet know the effect type for code in the Nyquist Prompt, so
    // assume it requires a track and handle errors when the effect runs.
    if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) && (mNumTracks == 0)) {
-      newTrack = static_cast<WaveTrack*>(mTracks->Add(mFactory->NewWaveTrack()));
+      newTrack = mTracks->Add(mFactory->NewWaveTrack());
       newTrack->SetSelected(true);
    }
 
@@ -1553,7 +1553,7 @@ bool Effect::ProcessTrack(int count,
 
    auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
 
-   std::unique_ptr<WaveTrack> genLeft, genRight;
+   std::shared_ptr<WaveTrack> genLeft, genRight;
 
    decltype(len) genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
@@ -2073,11 +2073,11 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
    }
 }
 
-Track *Effect::AddToOutputTracks(std::unique_ptr<Track> &&t)
+Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
    mIMap.push_back(NULL);
    mOMap.push_back(t.get());
-   return mOutputTracks->Add(std::move(t));
+   return mOutputTracks->Add(t);
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)

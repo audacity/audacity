@@ -1168,9 +1168,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
          Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
-            std::shared_ptr<WaveTrack> newTrack{
-               p->GetTrackFactory()->NewWaveTrack().release()
-            };
+            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
             if (!first)
                first = newTrack.get();
 

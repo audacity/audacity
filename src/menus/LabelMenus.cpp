@@ -41,10 +41,8 @@ int DoAddLabel(
    auto lt = * iter.Filter< LabelTrack >();
 
    // If none found, start a NEW label track and use it
-   if (!lt) {
-      lt = static_cast<LabelTrack*>
-         (tracks->Add(trackFactory->NewLabelTrack()));
-   }
+   if (!lt)
+      lt = tracks->Add(trackFactory->NewLabelTrack());
 
 // LLL: Commented as it seemed a little forceful to remove users
 //      selection when adding the label.  This does not happen if
@@ -158,7 +156,7 @@ void EditByLabel(
    }
 }
 
-using EditDestFunction = std::unique_ptr<Track> (WaveTrack::*)(double, double);
+using EditDestFunction = std::shared_ptr<Track> (WaveTrack::*)(double, double);
 
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels

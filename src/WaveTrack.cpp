@@ -70,15 +70,13 @@ using std::max;
 
 WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
-   return std::unique_ptr<WaveTrack>
-   { static_cast<WaveTrack*>(orig.Duplicate().release()) };
+   return std::static_pointer_cast<WaveTrack>( orig.Duplicate() );
 }
 
 
 WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
-   return std::unique_ptr<WaveTrack>
-   { safenew WaveTrack(mDirManager, format, rate) };
+   return std::make_shared<WaveTrack> ( mDirManager, format, rate );
 }
 
 WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
@@ -395,7 +393,7 @@ int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
 
 Track::Holder WaveTrack::Duplicate() const
 {
-   return Track::Holder{ safenew WaveTrack{ *this } };
+   return std::make_shared<WaveTrack>( *this );
 }
 
 double WaveTrack::GetRate() const
@@ -629,9 +627,8 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   WaveTrack *newTrack;
-   Track::Holder result
-   { newTrack = safenew WaveTrack{ mDirManager } };
+   auto result = std::make_shared<WaveTrack>( mDirManager );
+   WaveTrack *newTrack = result.get();
 
    newTrack->Init(*this);
 

@@ -367,7 +367,7 @@ private:
 
    void Init(const Track &orig);
 
-   using Holder = std::unique_ptr<Track>;
+   using Holder = std::shared_ptr<Track>;
    virtual Holder Duplicate() const = 0;
 
    // Called when this track is merged to stereo with another, and should
@@ -1330,6 +1330,9 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    }
 
 private:
+   Track *DoAddToHead(const std::shared_ptr<Track> &t);
+   Track *DoAdd(const std::shared_ptr<Track> &t);
+
    template< typename TrackType, typename InTrackType >
       static TrackIterRange< TrackType >
          Channels_( TrackIter< InTrackType > iter1 )
@@ -1369,15 +1372,12 @@ public:
 
    /// Add a Track, giving it a fresh id
    template<typename TrackKind>
-   Track *Add(std::unique_ptr<TrackKind> &&t);
+      TrackKind *AddToHead( const std::shared_ptr< TrackKind > &t )
+         { return static_cast< TrackKind* >( DoAddToHead( t ) ); }
 
-   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
-   Track *AddToHead(std::unique_ptr<TrackKind> &&t);
-
-   /// Add a Track, giving it a fresh id
-   template<typename TrackKind>
-   Track *Add(std::shared_ptr<TrackKind> &&t);
+      TrackKind *Add( const std::shared_ptr< TrackKind > &t )
+         { return static_cast< TrackKind* >( DoAdd( t ) ); }
 
    /** \brief Define a group of channels starting at the given track
    *
@@ -1632,13 +1632,13 @@ class AUDACITY_DLL_API TrackFactory
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
    // LabelTrack.cpp, and TimeTrack.cpp respectively
-   std::unique_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
-   std::unique_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
+   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
+   std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
-   std::unique_ptr<LabelTrack> NewLabelTrack();
-   std::unique_ptr<TimeTrack> NewTimeTrack();
+   std::shared_ptr<LabelTrack> NewLabelTrack();
+   std::shared_ptr<TimeTrack> NewTimeTrack();
 #if defined(USE_MIDI)
-   std::unique_ptr<NoteTrack> NewNoteTrack();
+   std::shared_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
 
