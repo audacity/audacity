@@ -341,10 +341,9 @@ public:
 
    void MakeParentRedrawScrollbars();
 
-   // If label, rectangle includes track control panel only.
-   // If !label, rectangle includes all of that, and the vertical ruler, and
-   // the proper track area.
-   wxRect FindTrackRect( const Track * target, bool label );
+   // Rectangle includes track control panel, and the vertical ruler, and
+   // the proper track area of all channels, and the separators between them.
+   wxRect FindTrackRect( const Track * target );
 
 protected:
    void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after

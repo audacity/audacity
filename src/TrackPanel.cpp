@@ -275,7 +275,8 @@ TrackPanel::~TrackPanel()
 
 LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
 {
-   auto rect = FindTrackRect( wt, true );
+   auto pControls = wt->GetTrackControl();
+   auto rect = FindRect( *pControls );
    wxRect sliderRect;
    TrackInfo::GetGainRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::GainSlider(sliderRect, wt, false, this);
@@ -283,7 +284,8 @@ LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
 
 LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
 {
-   auto rect = FindTrackRect( wt, true );
+   auto pControls = wt->GetTrackControl();
+   auto rect = FindRect( *pControls );
    wxRect sliderRect;
    TrackInfo::GetPanRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::PanSlider(sliderRect, wt, false, this);
@@ -292,7 +294,8 @@ LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
 #ifdef EXPERIMENTAL_MIDI_OUT
 LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
 {
-   auto rect = FindTrackRect( nt, true );
+   auto pControls = nt->GetTrackControl();
+   auto rect = FindRect( *pControls );
    wxRect sliderRect;
    TrackInfo::GetVelocityRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::VelocitySlider(sliderRect, nt, false, this);
@@ -2166,7 +2169,7 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 // This finds the rectangle of a given track (including all channels),
 // either that of the label 'adornment' or the track itself
 // The given track is assumed to be the first channel
-wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
+wxRect TrackPanel::FindTrackRect( const Track * target )
 {
    if (!target) {
       return { 0, 0, 0, 0 };
@@ -2197,10 +2200,7 @@ wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
 
 
    rect.x += kLeftMargin;
-   if (label)
-      rect.width = GetVRulerOffset() - kLeftMargin;
-   else
-      rect.width -= (kLeftMargin + kRightMargin);
+   rect.width -= (kLeftMargin + kRightMargin);
 
    rect.y += kTopMargin;
    rect.height -= (kTopMargin + kBottomMargin);

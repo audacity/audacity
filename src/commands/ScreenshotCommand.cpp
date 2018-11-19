@@ -746,7 +746,7 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       // This rectangle omits the focus ring about the track, and
       // also within that, a narrow black border with a "shadow" below and
       // to the right
-      wxRect rect = panel.FindTrackRect( &t, false );
+      wxRect rect = panel.FindTrackRect( &t );
 
       // Enlarge horizontally.
       // PRL:  perhaps it's one pixel too much each side, including some gray

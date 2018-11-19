@@ -306,7 +306,7 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
          return wxACC_FAIL;
       }
 
-      rect = mTrackPanel->FindTrackRect( t.get(), false );
+      rect = mTrackPanel->FindTrackRect( t.get() );
       // Inflate the screen reader's rectangle so it overpaints Audacity's own
       // yellow focus rectangle.
 #ifdef __WXMAC__
