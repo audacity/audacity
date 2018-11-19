@@ -188,8 +188,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       return;
    }
    else {
-      uLeft = std::move(mixLeft),
-         uRight = std::move(mixRight);
+      uLeft = mixLeft, uRight = mixRight;
 #if 0
    int elapsedMS = wxGetElapsedTime();
    double elapsedTime = elapsedMS * 0.001;

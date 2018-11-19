@@ -1391,7 +1391,8 @@ public:
 
    /// Replace first track with second track, give back a holder
    /// Give the replacement the same id as the replaced
-   ListOfTracks::value_type Replace(Track * t, ListOfTracks::value_type &&with);
+   ListOfTracks::value_type Replace(
+      Track * t, const ListOfTracks::value_type &with);
 
    /// Remove this Track or all children of this TrackList.
    /// Return an iterator to what followed the removed track.

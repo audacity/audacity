@@ -2087,7 +2087,7 @@ Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &
    mpTrack = pTrack.get();
    if (!name.empty())
       pTrack->SetName(name);
-   pEffect->mTracks->Add(std::move(pTrack));
+   pEffect->mTracks->Add( pTrack );
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
@@ -2134,7 +2134,7 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    // So it's okay that we cast it back to const
    mpOrigTrack =
       pEffect->mTracks->Replace(const_cast<LabelTrack*>(pOrigTrack),
-         std::move(newTrack) );
+         newTrack );
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
@@ -2156,7 +2156,7 @@ Effect::ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
       // not committed -- DELETE the label track
       // mpOrigTrack came from mTracks which we own but expose as const to subclasses
       // So it's okay that we cast it back to const
-      mpEffect->mTracks->Replace(mpTrack, std::move(mpOrigTrack));
+      mpEffect->mTracks->Replace(mpTrack, mpOrigTrack);
    }
 }
 
@@ -2195,7 +2195,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    size_t i = 0;
 
    for (; iterOut != iterEnd; ++i) {
-      ListOfTracks::value_type o = std::move(*iterOut);
+      ListOfTracks::value_type o = *iterOut;
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
       while (i < cnt && mOMap[i] != o.get()) {
@@ -2216,19 +2216,18 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       if (t == NULL)
       {
          // This track is a NEW addition to output tracks; add it to mTracks
-         mTracks->Add(std::move(o));
+         mTracks->Add( o );
       }
       else
       {
          // Replace mTracks entry with the NEW track
-         auto newTrack = o.get();
-         mTracks->Replace(t, std::move(o));
+         mTracks->Replace(t, o);
 
          // If the track is a wave track,
          // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
-            ODManager::Instance()->ReplaceWaveTrack( t, newTrack );
+            ODManager::Instance()->ReplaceWaveTrack( t, o.get() );
          }
       }
    }
@@ -2544,12 +2543,12 @@ void Effect::Preview(bool dryOnly)
       mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
-      auto pLeft = mTracks->Add(std::move(mixLeft));
+      auto pLeft = mTracks->Add( mixLeft );
       Track *pRight{};
       if (mixRight) {
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->SetSelected(true);
-         pRight = mTracks->Add(std::move(mixRight));
+         pRight = mTracks->Add( mixRight );
       }
       mTracks->GroupChannels(*pLeft, pRight ? 2 : 1);
    }
@@ -2559,7 +2558,7 @@ void Effect::Preview(bool dryOnly)
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
             static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
-            mTracks->Add(std::move(dest));
+            mTracks->Add( dest );
          }
       }
    }

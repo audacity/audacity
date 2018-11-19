@@ -4197,7 +4197,7 @@ AudacityProject::AddImportedTracks(const FilePath &fileName,
       auto first = group.begin()->get();
       auto nChannels = group.size();
       for (auto &uNewTrack : group) {
-         auto newTrack = mTracks->Add(std::move(uNewTrack));
+         auto newTrack = mTracks->Add( uNewTrack );
          results.push_back(newTrack->SharedPointer());
       }
       mTracks->GroupChannels(*first, nChannels);
@@ -5226,7 +5226,7 @@ void AudacityProject::OnAudioIOStopRecording()
          // Make a track with labels for recording errors
          auto uTrack = GetTrackFactory()->NewLabelTrack();
          auto pTrack = uTrack.get();
-         GetTracks()->Add( std::move(uTrack) );
+         GetTracks()->Add( uTrack );
          /* i18n-hint:  A name given to a track, appearing as its menu button.
           The translation should be short or else it will not display well.
           At most, about 11 Latin characters.

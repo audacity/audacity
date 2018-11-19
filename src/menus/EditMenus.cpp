@@ -20,11 +20,11 @@
 // private helper classes and functions
 namespace {
 void FinishCopy
-   (const Track *n, Track::Holder &&dest, TrackList &list)
+   (const Track *n, const Track::Holder &dest, TrackList &list)
 {
    Track::FinishCopy( n, dest.get() );
    if (dest)
-      list.Add(std::move(dest));
+      list.Add( dest );
 }
 
 // Handle text paste (into active label), if any. Return true if did paste.
@@ -124,7 +124,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
          pNewTrack->SetSelected(true);
          if (uNewTrack)
-            FinishCopy(pClip, std::move(uNewTrack), *tracks);
+            FinishCopy(pClip, uNewTrack, *tracks);
          else
             Track::FinishCopy(pClip, pNewTrack);
       }
@@ -303,13 +303,13 @@ void OnCut(const CommandContext &context)
          // Since portsmf has a built-in cut operator, we use that instead
          auto dest = n->Cut(selectedRegion.t0(),
                 selectedRegion.t1());
-         FinishCopy(n, std::move(dest), newClipboard);
+         FinishCopy(n, dest, newClipboard);
       },
 #endif
       [&](Track *n) {
          auto dest = n->Copy(selectedRegion.t0(),
                  selectedRegion.t1());
-         FinishCopy(n, std::move(dest), newClipboard);
+         FinishCopy(n, dest, newClipboard);
       }
    );
 
@@ -405,7 +405,7 @@ void OnCopy(const CommandContext &context)
    for (auto n : tracks->Selected()) {
       auto dest = n->Copy(selectedRegion.t0(),
               selectedRegion.t1());
-      FinishCopy(n, std::move(dest), newClipboard);
+      FinishCopy(n, dest, newClipboard);
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
@@ -702,7 +702,7 @@ void OnDuplicate(const CommandContext &context)
               selectedRegion.t1(), false);
       dest->Init(*n);
       dest->SetOffset(wxMax(selectedRegion.t0(), n->GetOffset()));
-      tracks->Add(std::move(dest));
+      tracks->Add( dest );
 
       // This break is really needed, else we loop infinitely
       if (n == last)
@@ -733,7 +733,7 @@ void OnSplitCut(const CommandContext &context)
             selectedRegion.t0(),
             selectedRegion.t1());
          if (dest)
-            FinishCopy(n, std::move(dest), newClipboard);
+            FinishCopy(n, dest, newClipboard);
       },
       [&](Track *n) {
          dest = n->Copy(selectedRegion.t0(),
@@ -741,7 +741,7 @@ void OnSplitCut(const CommandContext &context)
          n->Silence(selectedRegion.t0(),
                     selectedRegion.t1());
          if (dest)
-            FinishCopy(n, std::move(dest), newClipboard);
+            FinishCopy(n, dest, newClipboard);
       }
    );
 
@@ -926,7 +926,7 @@ void OnSplitNew(const CommandContext &context)
             dest = wt->SplitCut(newt0, newt1);
             if (dest) {
                dest->SetOffset(wxMax(newt0, offset));
-               FinishCopy(wt, std::move(dest), *tracks);
+               FinishCopy(wt, dest, *tracks);
             }
          }
 #if 0
@@ -938,7 +938,7 @@ void OnSplitNew(const CommandContext &context)
                    viewInfo.selectedRegion.t1());
             if (dest) {
                dest->SetOffset(wxMax(0, n->GetOffset()));
-               FinishCopy(n, std::move(dest), *tracks);
+               FinishCopy(n, dest, *tracks);
             }
          }
 #endif

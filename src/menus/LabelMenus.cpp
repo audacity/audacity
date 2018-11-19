@@ -201,7 +201,7 @@ void EditClipboardByLabel(
          {
             Track::FinishCopy( wt, dest.get() );
             if( !merged )
-               merged = std::move(dest);
+               merged = dest;
             else
             {
                // Paste to the beginning; unless this is the first region,
@@ -227,7 +227,7 @@ void EditClipboardByLabel(
                      regions.at(i + 1).start - region.end);
       }
       if( merged )
-         newClipboard.Add( std::move(merged) );
+         newClipboard.Add( merged );
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.

@@ -59,10 +59,10 @@ void DoMixAndRender
 
       // Add NEW tracks
 
-      auto pNewLeft = tracks->Add(std::move(uNewLeft));
+      auto pNewLeft = tracks->Add( uNewLeft );
       decltype(pNewLeft) pNewRight{};
       if (uNewRight)
-         pNewRight = tracks->Add(std::move(uNewRight));
+         pNewRight = tracks->Add( uNewRight );
 
       // Do this only after adding tracks to the list
       tracks->GroupChannels(*pNewLeft, pNewRight ? 2 : 1);
@@ -1188,7 +1188,7 @@ void OnScoreAlign(const CommandContext &context)
    }
 
    if (result == SA_SUCCESS) {
-      tracks->Replace(nt, std::move(holder));
+      tracks->Replace(nt, holder);
       project.RedrawProject();
       AudacityMessageBox(wxString::Format(
          _("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."),

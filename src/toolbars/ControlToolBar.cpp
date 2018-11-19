@@ -1339,7 +1339,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
 
             auto newTrack = track1->Duplicate();
             newTrack->Clear(cutStart, cutEnd);
-            cutPreviewTracks->Add(std::move(newTrack));
+            cutPreviewTracks->Add( newTrack );
          }
          // use NOTHROW-GUARANTEE:
          mCutPreviewTracks = cutPreviewTracks;

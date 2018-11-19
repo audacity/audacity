@@ -706,11 +706,11 @@ auto TrackList::FindLeader( Track *pTrack )
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
 {
    for (const auto iter : permutation) {
-      ListOfTracks::value_type track = std::move(*iter.first);
+      ListOfTracks::value_type track = *iter.first;
       erase(iter.first);
       Track *pTrack = track.get();
       pTrack->SetOwner(mSelf,
-                       { insert(ListOfTracks::end(), std::move(track)), this });
+         { insert(ListOfTracks::end(), track), this });
    }
    auto n = getBegin();
    RecalcPositions(n);
@@ -805,7 +805,7 @@ void TrackList::GroupChannels(
    THROW_INCONSISTENCY_EXCEPTION;
 }
 
-auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
+auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
    ListOfTracks::value_type
 {
    ListOfTracks::value_type holder;
@@ -813,10 +813,10 @@ auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      holder = std::move(*node.first);
+      holder = *node.first;
 
       Track *pTrack = with.get();
-      *node.first = std::move(with);
+      *node.first = with;
       pTrack->SetOwner(mSelf, node);
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
@@ -835,7 +835,7 @@ TrackNodePointer TrackList::Remove(Track *t)
       t->SetOwner({}, {});
 
       if ( !isNull( node ) ) {
-         ListOfTracks::value_type holder = std::move( *node.first );
+         ListOfTracks::value_type holder = *node.first;
 
          result = getNext( node );
          erase(node.first);
@@ -973,7 +973,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       saved.resize( nn );
       // Save them in backwards order
       while( nn-- )
-         saved[nn] = std::move( *s.first ), s.first = erase(s.first);
+         saved[nn] = *s.first, s.first = erase(s.first);
    };
 
    doSave( saved1, s1 );
@@ -992,7 +992,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
          // Insert before s, and reassign s to point at the new node before
          // old s; which is why we saved pointers in backwards order
          pTrack->SetOwner(mSelf,
-                          s = { insert(s.first, std::move(pointer)), this } );
+            s = { insert(s.first, pointer), this } );
    };
    // This does not invalidate s2 even when it equals s1:
    doInsert( saved2, s1 );
@@ -1216,8 +1216,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
 
 void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
 {
-   auto copy = pTrack;
-   Add<Track>( std::move( copy ) );
+   Add<Track>( pTrack );
    pTrack->SetId( TrackId{} );
 }
 
@@ -1290,7 +1289,7 @@ bool TrackList::ApplyPendingTracks()
       if (pendingTrack) {
          auto src = FindById( pendingTrack->GetId() );
          if (src)
-            this->Replace(src, std::move(pendingTrack)), result = true;
+            this->Replace(src, pendingTrack), result = true;
          else
             // Perhaps a track marked for pending changes got deleted by
             // some other action.  Recreate it so we don't lose the
@@ -1302,7 +1301,7 @@ bool TrackList::ApplyPendingTracks()
    // If there are tracks to reinstate, append them to the list.
    for (auto &pendingTrack : reinstated)
       if (pendingTrack)
-         this->Add(std::move(pendingTrack)), result = true;
+         this->Add( pendingTrack ), result = true;
 
    // Put the pending added tracks back into the list, preserving their
    // positions.
