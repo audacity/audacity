@@ -29,6 +29,7 @@
 #include <wx/intl.h>
 
 #include "Track.h"
+#include "TrackPanel.h"
 #include "Internat.h"
 
 TrackPanelAx::TrackPanelAx( wxWindow *window )

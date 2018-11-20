@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
+#include <memory>
 #include <wx/window.h>
 #include <wx/panel.h>
 
@@ -19,8 +20,8 @@
 #include "widgets/WindowAccessible.h"
 #endif
 
-#include "Track.h"
-#include "TrackPanel.h"
+class Track;
+class TrackPanel;
 
 class TrackPanelAx final
 #if wxUSE_ACCESSIBILITY
