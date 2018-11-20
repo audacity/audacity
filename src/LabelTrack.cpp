@@ -2390,8 +2390,8 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             return true;
 
          const wxString strValue = value;
-         if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
-            mName = strValue;
+         if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+            ;
          else if (!wxStrcmp(attr, wxT("numlabels")) &&
                      XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
          {
@@ -2403,15 +2403,6 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mLabels.clear();
             mLabels.reserve(nValue);
          }
-         else if (!wxStrcmp(attr, wxT("height")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            SetHeight(nValue);
-         else if (!wxStrcmp(attr, wxT("minimized")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            SetMinimized(nValue != 0);
-         else if (!wxStrcmp(attr, wxT("isSelected")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            this->SetSelected(nValue != 0);
       }
 
       return true;
@@ -2434,11 +2425,8 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    int len = mLabels.size();
 
    xmlFile.StartTag(wxT("labeltrack"));
-   xmlFile.WriteAttr(wxT("name"), mName);
+   this->Track::WriteCommonXMLAttributes( xmlFile );
    xmlFile.WriteAttr(wxT("numlabels"), len);
-   xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
-   xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
-   xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
 
    for (auto &labelStruct: mLabels) {
       xmlFile.StartTag(wxT("label"));

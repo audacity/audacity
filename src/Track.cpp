@@ -1279,6 +1279,46 @@ std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
    return SharedPointer();
 }
 
+// Serialize, not with tags of its own, but as attributes within a tag.
+void Track::WriteCommonXMLAttributes(
+   XMLWriter &xmlFile, bool includeNameAndSelected) const
+{
+   if (includeNameAndSelected) {
+      xmlFile.WriteAttr(wxT("name"), GetName());
+      xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
+   }
+   xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
+   xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
+}
+
+// Return true iff the attribute is recognized.
+bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
+{
+   long nValue = -1;
+   wxString strValue( value );
+   if (!wxStrcmp(attr, wxT("name")) &&
+      XMLValueChecker::IsGoodString(strValue)) {
+      SetName( strValue );
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("height")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      SetHeight(nValue);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("minimized")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      SetMinimized(nValue != 0);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("isSelected")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      this->SetSelected(nValue != 0);
+      return true;
+   }
+   return false;
+}
+
 bool TrackList::HasPendingTracks() const
 {
    if ( !mPendingUpdates.empty() )

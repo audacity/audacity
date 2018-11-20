@@ -873,8 +873,8 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxString strValue = value;
          long nValue;
          double dblValue;
-         if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
-            mName = strValue;
+         if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+            ;
          else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
          {}
          else if (!wxStrcmp(attr, wxT("offset")) &&
@@ -888,15 +888,6 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                  return false;
              mVisibleChannels = nValue;
          }
-         else if (!wxStrcmp(attr, wxT("height")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mHeight = nValue;
-         else if (!wxStrcmp(attr, wxT("minimized")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mMinimized = (nValue != 0);
-         else if (!wxStrcmp(attr, wxT("isSelected")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            this->SetSelected(nValue != 0);
 #ifdef EXPERIMENTAL_MIDI_OUT
          else if (!wxStrcmp(attr, wxT("velocity")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
@@ -939,13 +930,10 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    }
    saveme->GetSeq().write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
-   xmlFile.WriteAttr(wxT("name"), saveme->mName);
+   saveme->Track::WriteCommonXMLAttributes( xmlFile );
    this->NoteTrackBase::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("offset"), saveme->GetOffset());
    xmlFile.WriteAttr(wxT("visiblechannels"), saveme->mVisibleChannels);
-   xmlFile.WriteAttr(wxT("height"), saveme->GetActualHeight());
-   xmlFile.WriteAttr(wxT("minimized"), saveme->GetMinimized());
-   xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    xmlFile.WriteAttr(wxT("velocity"), (double) saveme->mVelocity);

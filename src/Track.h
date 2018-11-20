@@ -741,6 +741,13 @@ public:
    bool IsLeader() const;
    bool IsSelectedLeader() const;
 
+   // Serialize, not with tags of its own, but as attributes within a tag.
+   void WriteCommonXMLAttributes(
+      XMLWriter &xmlFile, bool includeNameAndSelected = true) const;
+
+   // Return true iff the attribute is recognized.
+   bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
+
 protected:
    std::shared_ptr<Track> DoFindTrack() override;
 

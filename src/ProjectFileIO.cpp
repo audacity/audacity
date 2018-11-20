@@ -498,8 +498,7 @@ void ProjectFileIO::WriteXML(
             xmlFile.WriteAttr(wxT("offset"), offset, 8);
             xmlFile.WriteAttr(wxT("mute"), pWaveTrack->GetMute());
             xmlFile.WriteAttr(wxT("solo"), pWaveTrack->GetSolo());
-            xmlFile.WriteAttr(wxT("height"), pWaveTrack->GetActualHeight());
-            xmlFile.WriteAttr(wxT("minimized"), pWaveTrack->GetMinimized());
+            pWaveTrack->Track::WriteCommonXMLAttributes( xmlFile, false );
 
             // Don't store "rate" tag because the importer can figure that out.
             //    xmlFile.WriteAttr(wxT("rate"), pWaveTrack->GetRate());

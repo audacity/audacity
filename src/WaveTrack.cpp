@@ -1717,15 +1717,8 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
          else if (this->PlayableTrack::HandleXMLAttribute(attr, value))
          {}
-         else if (!wxStrcmp(attr, wxT("height")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            SetHeight(nValue);
-         else if (!wxStrcmp(attr, wxT("minimized")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mMinimized = (nValue != 0);
-         else if (!wxStrcmp(attr, wxT("isSelected")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            this->SetSelected(nValue != 0);
+         else if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+            ;
          else if (!wxStrcmp(attr, wxT("gain")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
                   Internat::CompatibleToDouble(strValue, &dblValue))
@@ -1735,8 +1728,6 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                   Internat::CompatibleToDouble(strValue, &dblValue) &&
                   (dblValue >= -1.0) && (dblValue <= 1.0))
             mPan = dblValue;
-         else if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
-            mName = strValue;
          else if (!wxStrcmp(attr, wxT("channel")))
          {
             if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) ||
@@ -1813,13 +1804,10 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    {
       xmlFile.WriteAttr(wxT("autosaveid"), mAutoSaveIdent);
    }
-   xmlFile.WriteAttr(wxT("name"), mName);
+   this->Track::WriteCommonXMLAttributes( xmlFile );
    xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), mLinked);
    this->PlayableTrack::WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
-   xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
-   xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("gain"), (double)mGain);
    xmlFile.WriteAttr(wxT("pan"), (double)mPan);
