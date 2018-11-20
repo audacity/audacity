@@ -350,10 +350,12 @@ bool LabelDialog::Show(bool show)
 {
    bool ret = wxDialogWrapper::Show(show);
 
+   mGrid->SetFocus();   // Required (at least on Linux).
+
    // Set initial row
    // (This will not work until the grid is actually displayed)
    if (show && mInitialRow != -1) {
-      mGrid->SetGridCursor(mInitialRow, Col_Label);
+      mGrid->GoToCell(mInitialRow, Col_Label);
    }
 
    return ret;
