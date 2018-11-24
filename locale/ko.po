@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-10-10 15:25+0100\n"
-"PO-Revision-Date: 2018-05-25 00:24+0000\n"
+"PO-Revision-Date: 2018-11-16 14:44+0900\n"
 "Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
 "ko/)\n"
@@ -19,6 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.2\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -3404,13 +3405,13 @@ msgstr "효과 랙 보이기"
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/Menus.cpp
+#, fuzzy
 msgid "Tra&nsport"
-msgstr ""
+msgstr "구동"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pl&aying"
-msgstr "재생 중"
+msgstr "재생"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp
@@ -6951,7 +6952,7 @@ msgstr "독주"
 #: src/TrackPanelAx.cpp
 #, fuzzy
 msgid " Selected"
-msgstr "선택됨:"
+msgstr "선택됨"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -9907,6 +9908,7 @@ msgstr "노멀라이즈"
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
+"Paulstretch는 극단적인 시간 스트레치 또는 \"정지 상태\"일 때만 사용됩니다."
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -10392,7 +10394,7 @@ msgstr "최종 피치 변경"
 
 #: src/effects/TimeScale.h
 msgid "Sliding Stretch"
-msgstr ""
+msgstr "슬라이딩 스트레치 (템포 서서히 변경)"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -15509,9 +15511,8 @@ msgid "Scrub &Ruler"
 msgstr "문지르기 눈금자(&R)"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Playing at Speed"
-msgstr "재생 속도"
+msgstr "설정한 속도로 재생"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Seek"
@@ -15574,8 +15575,9 @@ msgstr "오디오 선택은 클릭 후 드래그하세요"
 
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
+#, fuzzy
 msgid "(snapping)"
-msgstr "(달라붙기)"
+msgstr "스냅핑"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
@@ -15624,8 +15626,9 @@ msgid "Move Track to &Bottom"
 msgstr "트랙을 맨 아래로(&B)"
 
 #: src/tracks/ui/TrackControls.cpp
+#, fuzzy
 msgid "Set Track Name"
-msgstr ""
+msgstr "트랙 이름 설정"
 
 #: src/tracks/ui/TrackControls.cpp
 #, c-format
@@ -16617,7 +16620,7 @@ msgstr "선택이 너무 짧습니다.~%2개 이상의 샘플이어야 합니다
 
 #: plug-ins/adjustable-fade.ny
 msgid "Adjustable Fade"
-msgstr "조정 가능한 페이드"
+msgstr "페이드 조정"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
@@ -16654,7 +16657,7 @@ msgstr "원본의 %"
 
 #: plug-ins/adjustable-fade.ny
 msgid "dB Gain"
-msgstr "dB 게인"
+msgstr "Gain 데시벨"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start (or end)"
@@ -16666,7 +16669,7 @@ msgstr "끝 (또는 시작)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr ""
+msgstr "프리셋 (컨트롤 무효화)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "None Selected"
@@ -16784,9 +16787,8 @@ msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr "복원된 피크를 고려하도록 진폭을 줄이기 (dB)"
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy
 msgid "Crossfade Clips"
-msgstr "트랙 크로스페이드"
+msgstr "클리핑 크로스페이드"
 
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
 msgid "Crossfading..."
@@ -16871,11 +16873,11 @@ msgstr "Rectangular (직사각형)"
 
 #: plug-ins/delay.ny
 msgid "Bouncing Ball"
-msgstr ""
+msgstr "에코 점점 느리게"
 
 #: plug-ins/delay.ny
 msgid "Reverse Bouncing Ball"
-msgstr ""
+msgstr "에코 점점 빠르게"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
@@ -17013,9 +17015,8 @@ msgid "Begin numbering from"
 msgstr ""
 
 #: plug-ins/highpass.ny
-#, fuzzy
 msgid "High-Pass Filter"
-msgstr "클래식 필터"
+msgstr "하이패스 필터 (저주파수 잡음 줄이기)"
 
 #: plug-ins/highpass.ny
 #, fuzzy
@@ -17033,7 +17034,7 @@ msgstr "주파수(Hz)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
-msgstr ""
+msgstr "롤오프 (옥타브 당 데시벨)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "6 dB"
@@ -17076,9 +17077,8 @@ msgid "Limiter"
 msgstr "리미터"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limiting..."
-msgstr "필터링..."
+msgstr "리미터 적용중..."
 
 #: plug-ins/limiter.ny
 msgid "Type"
@@ -17096,12 +17096,10 @@ msgstr "dB 한계"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Soft Clip"
-msgstr "클립 설정"
+msgstr "소프트 클리핑"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Hard Clip"
 msgstr "하드 클리핑"
 
@@ -17109,32 +17107,29 @@ msgstr "하드 클리핑"
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
-msgstr ""
+msgstr "입력 게인 모노/왼쪽 채널"
 
 #: plug-ins/limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
-msgstr ""
+msgstr "입력 게인 오른쪽 채널"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limit to (dB)"
-msgstr "레벨 (dB)(&V):"
+msgstr "레벨 제한 (dB)(&V):"
 
 #: plug-ins/limiter.ny
 msgid "Hold (ms)"
-msgstr ""
+msgstr "홀딩"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Apply Make-up Gain"
-msgstr "메이크업 게인"
+msgstr "메이크업 게인 적용"
 
 #: plug-ins/lowpass.ny
-#, fuzzy
 msgid "Low-Pass Filter"
-msgstr "클래식 필터"
+msgstr "로우패스 필터 (고주파수 잡음 제거)"
 
 #: plug-ins/lowpass.ny
 #, fuzzy
@@ -17142,9 +17137,8 @@ msgid "Performing Low-Pass Filter..."
 msgstr "%d 편집 항목 수행 중...\n"
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Notch Filter"
-msgstr "필터 길이"
+msgstr "노치 필터 (주파수 특유의 잡음 제거)"
 
 #: plug-ins/notch.ny
 #, fuzzy
@@ -17158,7 +17152,7 @@ msgstr "스티브 달튼"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
-msgstr ""
+msgstr "Q인자 (잘라낼 노치의 폭)"
 
 #: plug-ins/notch.ny
 #, fuzzy, lisp-format
@@ -17725,36 +17719,31 @@ msgstr "장르 파일을 열 수 없습니다."
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
-msgstr ""
+msgstr "트레몰로 (선택 영역 볼륨 조절)"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Applying Tremolo..."
-msgstr "페이드 적용 중..."
+msgstr "트레몰로 적용중..."
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Waveform type"
 msgstr "파형"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Inverse Sawtooth"
 msgstr "톱니 모양"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Starting phase (degrees)"
-msgstr "LFO 시작 위상, 도 단위"
+msgstr "시작 단계 (도)"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Wet level (percent)"
-msgstr "Wet 레벨"
+msgstr "습도 (%)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
-msgstr ""
+msgstr "보컬 제거 및 격리"
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
@@ -17766,57 +17755,48 @@ msgid "Robert Haenggi"
 msgstr ""
 
 #: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove Vocals"
-msgstr "특수 제거(&E)"
+msgstr "보컬 제거(&E)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Vocals"
-msgstr "분리(&I)"
+msgstr "보컬 분리(&I)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Vocals and Invert"
-msgstr "분리(&I)"
+msgstr "보컬 분리 및 반전(&I)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center"
-msgstr "잘라내기 선을 제거했습니다"
+msgstr "공통 오디오 제거"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Center"
-msgstr "분리(&I)"
+msgstr "공통 오디오 분리(&I)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Center and Invert"
-msgstr "분리(&I)"
+msgstr "공통 오디오 분리 및 반전(&I)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center Classic: Mono"
-msgstr "잘라내기 선을 제거했습니다"
+msgstr "공통 오디오 제거 및 모노 반환"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Analyze"
 msgstr "분석(&A)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Strength"
-msgstr "늘이기"
+msgstr "분리 정도"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
-msgstr ""
+msgstr "최소 주파수"
 
 #: plug-ins/vocalrediso.ny
 msgid "High Cut for Vocals (Hz)"
-msgstr ""
+msgstr "최대 주파수"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -17891,52 +17871,44 @@ msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Vocal Remover"
-msgstr "트랙 제거"
+msgstr "보컬 제거"
 
 #: plug-ins/vocalremover.ny
 msgid "Removing center-panned audio..."
-msgstr ""
+msgstr "중앙으로 팬 된 오디오 제거"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove vocals or view Help"
-msgstr "특수 제거(&E)"
+msgstr "보컬 제거 또는 도움말"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "View Help"
 msgstr "도움말"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Removal choice"
-msgstr "제거"
+msgstr "제거 방법"
 
 #: plug-ins/vocalremover.ny
 msgid "Simple (Entire Spectrum)"
-msgstr ""
+msgstr "단순 제거 (전체 스펙트럼)"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove Frequency Band"
-msgstr "중심 주파수"
+msgstr "주파수 대역 제거"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Retain Frequency Band"
-msgstr "선형 주파수 눈금"
+msgstr "주파수 대역 유지"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Frequency band from (Hz)"
-msgstr "주파수(Hz)"
+msgstr "주파수 대역 하한 (Hz)"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Frequency band to (Hz)"
-msgstr "주파수(Hz)"
+msgstr "주파수 대역 상한 (Hz)"
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18013,14 +17985,12 @@ msgid "Output choice"
 msgstr "출력 선택"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Both Channels"
-msgstr "%d 채널"
+msgstr "양쪽 채널"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Right Only"
-msgstr "오른쪽 채널"
+msgstr "오른쪽 채널만"
 
 #: plug-ins/vocoder.ny
 msgid "Number of vocoder bands"
