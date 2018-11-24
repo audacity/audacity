@@ -669,7 +669,8 @@ public:
     Alg_track(Alg_event_list_ref event_list, Alg_time_map_ptr map, 
               bool units_are_seconds);
     virtual ~Alg_track() { // note: do not call set_time_map(NULL)!
-        if (time_map) time_map->dereference(); time_map = NULL; }
+        if (time_map) { time_map->dereference(); time_map = NULL; }
+    }
 
     // Returns a buffer containing a serialization of the
     // file.  It will be an ASCII representation unless text is true.
