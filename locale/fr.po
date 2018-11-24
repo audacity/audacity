@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-11-24 19:10+0100\n"
+"PO-Revision-Date: 2018-11-24 19:15+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -16557,7 +16557,7 @@ msgstr "Rien à faire"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr "Aucun problèms facile et rapide à corriger n'ont été trouvé"
+msgstr "Aucun problème facile et rapide à corriger n'ont été trouvé"
 
 # trebmuh to check (accélérateur)
 #: src/widgets/HelpSystem.cpp
