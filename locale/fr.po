@@ -16557,7 +16557,7 @@ msgstr "Rien à faire"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr "Aucun problème facile et rapide à corriger n'ont été trouvé"
+msgstr "Aucun problème facile et rapide à corriger n'a été trouvé"
 
 # trebmuh to check (accélérateur)
 #: src/widgets/HelpSystem.cpp
