@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-10-10 15:25+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2018-10-16 19:21+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German\n"
@@ -42,10 +42,11 @@ msgid "Please choose an existing file."
 msgstr "Bitte wählen Sie eine existierende Datei."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -231,7 +232,8 @@ msgid "No matches found"
 msgstr "Keine Übereinstimmungen gefunden"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+#, fuzzy
+msgid "Code has been modified. Are you sure?"
 msgstr "Code wurde geändert. Sind Sie sicher?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -283,7 +285,7 @@ msgstr "Kopieren"
 msgid "Copy to clipboard"
 msgstr "In Zwischenablage kopieren"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Ausschneiden"
@@ -292,7 +294,7 @@ msgstr "Ausschneiden"
 msgid "Cut to clipboard"
 msgstr "Zur Zwischenablage ausschneiden"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Einfügen"
@@ -310,7 +312,7 @@ msgstr "Löschen"
 msgid "Clear selection"
 msgstr "Auswahl löschen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Alles auswählen"
 
@@ -716,6 +718,120 @@ msgstr "Einstellungen-Ordner: "
 msgid "GPL License"
 msgstr "GPL-Lizenz"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Zeitleistenaktionen während Aufnahme deaktiviert"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Klicken und Ziehen zum anpassen, Doppelklicken um zurückzusetzen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Record/Play head"
+msgstr "Aufnahme-/Wiedergabekopf"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr "Zeitleiste"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Seek"
+msgstr "Klicken oder ziehen um Suche zu beginnen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "Klicken oder ziehen um Schrubben zu beginnen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr "Zum Schrubben klicken & bewegen. Zum Suchen klicken & ziehen."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr "Zum Suchen bewegen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr "Zum Schrubben bewegen"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release to stop seeking."
+msgstr "Zum Suchen ziehen.  Aufhören um die Suche zu beenden."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr "Zum Suchen ziehen.  Aufhören und bewegen zum Schrubben."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr "Zum Schrubben bewegen. Zum Suchen ziehen."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "Schnelle Wiedergabe deaktiviert"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr "Schnelle Wiedergabe aktiviert"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to unpin"
+msgstr "Klicken zum abpinnen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to pin"
+msgstr "Klicken zum anpinnen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr "Schnelle Wiedergabe deaktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr "Schnelle Wiedergabe aktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable dragging selection"
+msgstr "Auswahl verschieben deaktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable dragging selection"
+msgstr "Auswahl verschieben aktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr "Zeitleisten-Tooltips deaktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr "Zeitleisten-Tooltips aktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr "Während Wiedergabe nicht scrollen"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr "Anzeige während Wiedergabe aktualisieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr "Wiedergabebereich sperren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr "Wiedergabebereich entsperren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr "Schrubregler deaktivieren"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr "Schrubregler aktivieren"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -788,12 +904,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity startet …"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Neu"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Öffnen …"
 
@@ -801,7 +917,7 @@ msgstr "&Öffnen …"
 msgid "Open &Recent..."
 msgstr "Zuletzt ge&öffnete Dateien …"
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&Über Audacity …"
 
@@ -809,7 +925,7 @@ msgstr "&Über Audacity …"
 msgid "&Preferences..."
 msgstr "&Einstellungen …"
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Datei"
 
@@ -951,8 +1067,8 @@ msgstr "&Speichern …"
 msgid "Cl&ear"
 msgstr "&Löschen"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "Schlie&ßen"
 
@@ -1786,7 +1902,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Abhängigkeiten prüfen"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Fortschritt"
@@ -1808,12 +1925,12 @@ msgid "Cleaning up temporary files"
 msgstr "Temporäre Dateien werden aufgeräumt"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Projektdaten werden gespeichert"
-
-#: src/DirManager.cpp
 msgid "Cleaning up after failed save"
 msgstr "Aufräumen nach fehlgeschlagenem Speichern"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Projektdaten werden gespeichert"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2386,9 +2503,9 @@ msgstr ""
 "Abtastrate haben."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "Es wurde zu viel Audio ausgewählt.  Nur die ersten %.1f Sekunden werden "
@@ -2434,8 +2551,8 @@ msgstr "Spektrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Spektraldaten exportieren als:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Couldn't write to file: %s"
 msgstr "In Datei konnte nicht geschrieben werden: %s"
@@ -2743,7 +2860,8 @@ msgid "Track"
 msgstr "Spur"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Textmarke"
 
@@ -2775,15 +2893,15 @@ msgstr "Neu …"
 msgid "Press F2 or double click to edit cell contents."
 msgstr "F2 drücken oder Doppelklicken um Zelleninhalt zu bearbeiten."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
 msgstr "Textdatei mit Textmarken auswählen"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Textdateien (*.txt)|*.txt|Alle Dateien|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, c-format
 msgid "Could not open file: %s"
 msgstr "Datei konnte nicht geöffnet werden: %s"
@@ -2792,7 +2910,7 @@ msgstr "Datei konnte nicht geöffnet werden: %s"
 msgid "No labels to export."
 msgstr "Keine Textmarken zu exportieren."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Textmarken exportieren als:"
 
@@ -2820,22 +2938,22 @@ msgstr "Textmarke geändert"
 msgid "Label Edit"
 msgstr "Textmarke bearbeiten"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Textmarke hinzugefügt"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "&Ausschneiden"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Kopieren"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Einfügen"
 
@@ -2851,6 +2969,20 @@ msgstr "Gelöschte Textmarke"
 msgid "One or more saved labels could not be read."
 msgstr ""
 "Eine oder mehrere gespeicherte Textmarken konnten nicht gelesen werden."
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Bearbeitete Textmarken"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+msgid "Name:"
+msgstr "Name:"
+
+#: src/LabelTrack.cpp
+msgid "New label"
+msgstr "Neue Textmarke"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2896,2324 +3028,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity-Karaoke%s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "Unkategorisiert"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "Projekt &speichern"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "Projekt speichern &unter …"
-
-#: src/Menus.cpp
-msgid "Save Lossless Copy of Project..."
-msgstr "Verlustfreie Kopie des Projektes speichern..."
-
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "Komprimierte Kopie des Projektes &speichern …"
-
-#: src/Menus.cpp
-msgid "&Export"
-msgstr "&Exportieren"
-
-#: src/Menus.cpp
-msgid "Export as MP&3"
-msgstr "Als MP&3 exportieren"
-
-#: src/Menus.cpp
-msgid "Export as &WAV"
-msgstr "Als &WAV exportieren"
-
-#: src/Menus.cpp
-msgid "Export as &OGG"
-msgstr "Als &OGG exportieren"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "Audio &exportieren …"
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "Ausgewähltes Audio expo&rtieren …"
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "&Textmarken exportieren …"
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Mehrere ex&portieren …"
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "MI&DI exportieren …"
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&Importieren"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&Audio …"
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Textmarken …"
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI …"
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&Rohdaten …"
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Seite ein&richten …"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&Drucken …"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "&Beenden"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "&Bearbeiten"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Rückgängig"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "&Wiederherstellen"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Löschen"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "Dupli&zieren"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "Spezial-&Entfernen"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "A&usschneiden und trennen"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "L&öschen und trennen"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "Audi&o zu Stille"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "&Audio zuschneiden"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "Clip&grenzen"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "&Trennen"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "In neue T&onspur verschieben und trennen"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "&Verbinden"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "&Bei Stille abtrennen"
-
-#: src/Menus.cpp
-msgid "&Labels"
-msgstr "&Textmarken"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "Te&xtmarken bearbeiten …"
-
-#: src/Menus.cpp
-msgid "Add Label at &Selection"
-msgstr "Textmarke bei &Auswahl hinzufügen"
-
-#: src/Menus.cpp
-msgid "Add Label at &Playback Position"
-msgstr "Textmarke bei &Wiedergabeposition hinzufügen"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "Te&xt in neue Textmarke einfügen"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "&Tippen um eine Textmarke zu erstellen (an/aus)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "Audio mit Textmar&ke"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Cut"
-msgstr "Textmarke Ausschneiden"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&Ausschneiden"
-
-#: src/Menus.cpp
-msgid "Label Delete"
-msgstr "Textmarke Löschen"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-msgid "Label Split Cut"
-msgstr "Textmarke Trennen Ausschneiden"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "A&usschneiden und trennen"
-
-#: src/Menus.cpp
-msgid "Label Split Delete"
-msgstr "Textmarke Trennen Löschen"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "&Trennen und löschen"
-
-#: src/Menus.cpp
-msgid "Label Silence"
-msgstr "Textmarke Stille"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "&Audio zu Stille"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Copy"
-msgstr "Textmarke Kopieren"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "Ko&pieren"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Split"
-msgstr "Textmarke Trennen"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "&Trennen"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Join"
-msgstr "Textmarke Verbinden"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "Me&tadaten …"
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "Ein&stellungen …"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "Ausw&ählen"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&Alles"
-
-#: src/Menus.cpp
-msgid "Select None"
-msgstr "Nichts auswählen"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Nichts"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "&Spuren"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "&In allen Spuren"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr "Sync-gesperrt auswählen"
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr "In allen &sync-gesperrten Spuren"
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr "&Bereich"
-
-#: src/Menus.cpp
-msgid "Set Selection Left at Play Position"
-msgstr "Linke Auswahl setzen zu Wiedergabeposition"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "&Links von der Wiedergabeposition"
-
-#: src/Menus.cpp
-msgid "Set Selection Right at Play Position"
-msgstr "Rechte Auswahl setzen zu Wiedergabeposition"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "&Rechts von der Wiedergabeposition"
-
-#: src/Menus.cpp
-msgid "Select Track Start to Cursor"
-msgstr "Spuranfang bis Cursor auswählen"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "&Spuranfang bis Cursor"
-
-#: src/Menus.cpp
-msgid "Select Cursor to Track End"
-msgstr "Cursor bis Spurende auswählen"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "Cursor bis Spur&ende"
-
-#: src/Menus.cpp
-msgid "Select Track Start to End"
-msgstr "Spuranfang bis -ende auswählen"
-
-#: src/Menus.cpp
-msgid "Track Start to En&d"
-msgstr "Spuranfang bis -en&de"
-
-#: src/Menus.cpp
-msgid "S&tore Selection"
-msgstr "A&uswahl merken"
-
-#: src/Menus.cpp
-msgid "Retrieve Selectio&n"
-msgstr "Auswahl abrufe&n"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "&Spektral"
-
-#: src/Menus.cpp
-msgid "To&ggle Spectral Selection"
-msgstr "&Spektralauswahl umschalten"
-
-#: src/Menus.cpp
-msgid "Next &Higher Peak Frequency"
-msgstr "Nächste &höhere Spitzenfrequenz"
-
-#: src/Menus.cpp
-msgid "Next &Lower Peak Frequency"
-msgstr "Nächste &niedrigere Spitzenfrequenz"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "&Vorherige Clipgrenze bis Cursor"
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Cursor bis n&ächste Clipgrenze"
-
-#: src/Menus.cpp
-msgid "Select Previous Clip"
-msgstr "Vorherigen Clip auswählen"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr "Vorheri&ger Clip"
-
-#: src/Menus.cpp
-msgid "Select Next Clip"
-msgstr "Nächsten Clip auswählen"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr "Nächst&er Clip"
-
-#: src/Menus.cpp
-msgid "Select Cursor to Stored"
-msgstr "Cursor bis Gespeichert auswählen"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr "Cursor bis gespeicherte &Cursorposition"
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr "Cursorpos&ition merken"
-
-#: src/Menus.cpp
-msgid "Select Zero Crossing"
-msgstr "Nulldurchgang auswählen"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr "Bei Null&durchgängen"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Ansicht"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "&Zoom"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "Hera&n zoomen"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "&Normal zoomen"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "Her&aus zoomen"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "Auf Auswahl &zoomen"
-
-#: src/Menus.cpp
-msgid "Zoom &Toggle"
-msgstr "Zoom-&Schalter"
-
-#: src/Menus.cpp
-msgid "T&rack Size"
-msgstr "Spu&rgröße"
-
-#: src/Menus.cpp
-msgid "&Fit to Width"
-msgstr "&An Breite anpassen"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr "An &Höhe anpassen"
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "Alle Spuren &zuklappen"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "Zugeklappte Spuren au&fklappen"
-
-#: src/Menus.cpp
-msgid "Sk&ip to"
-msgstr "Spr&ingen zu"
-
-#: src/Menus.cpp
-msgid "Skip to Selection Start"
-msgstr "An Auswahlanfang springen"
-
-#: src/Menus.cpp
-msgid "Selection Sta&rt"
-msgstr "Auswahlan&fang"
-
-#: src/Menus.cpp
-msgid "Skip to Selection End"
-msgstr "An Auswahlende springen"
-
-#: src/Menus.cpp
-msgid "Selection En&d"
-msgstr "Auswahlen&de"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&Verlauf …"
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "&Karaoke …"
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "&Mixer ..."
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "&Werkzeugleisten"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Reset Toolb&ars"
-msgstr "&Werkzeugleisten zurücksetzen"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "&Transport-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "&Werkzeuge-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "&Aufnahme-Aussteuerungsanzeige-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "&Wiedergabe-Aussteuerungsanzeige-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "&Mixer-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "&Bearbeitungs-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Wiedergabe-mit-&Geschwindigkeit-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "Schru&b-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "&Gerät-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "&Auswahl-Werkzeugleiste"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "&Spektralauswahl-Werkzeugleiste"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr "&Extra-Menüs (an/aus)"
-
-#: src/Menus.cpp
-msgid "&Show Clipping (on/off)"
-msgstr "&Übersteuerungen anzeigen (an/aus)"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Effektablage anzeigen"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-msgid "Tra&nsport"
-msgstr "Tra&nsport"
-
-#: src/Menus.cpp
-msgid "Pl&aying"
-msgstr "Wiederg&abe"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "Wiederg&abe/Stopp"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "Wiedergabe/Stopp und Cursor fe&stlegen"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "&Endloswiedergabe"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&Pause"
-
-#: src/Menus.cpp
-msgid "&Recording"
-msgstr "Auf&nahme"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&Aufnahme"
-
-#: src/Menus.cpp
-msgid "&Append Record"
-msgstr "Aufnahme anh&ängen"
-
-#: src/Menus.cpp
-msgid "Record &New Track"
-msgstr "&Neue Spur aufzeichnen"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&Zeitgesteuerte Aufnahme …"
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr "\"Punch and Rol&l\" Aufnahme"
-
-#: src/Menus.cpp
-msgid "&Cursor to"
-msgstr "&Cursor nach"
-
-#: src/Menus.cpp
-msgid "Cursor to Selection Start"
-msgstr "Cursor zu Auswahlanfang"
-
-#: src/Menus.cpp
-msgid "Selection Star&t"
-msgstr "Auswahlan&fang"
-
-#: src/Menus.cpp
-msgid "Cursor to Selection End"
-msgstr "Cursor zu Auswahlende"
-
-#: src/Menus.cpp
-msgid "Cursor to Track Start"
-msgstr "Cursor zu Spuranfang"
-
-#: src/Menus.cpp
-msgid "Track &Start"
-msgstr "Spur&anfang"
-
-#: src/Menus.cpp
-msgid "Cursor to Track End"
-msgstr "Cursor zu Spurende"
-
-#: src/Menus.cpp
-msgid "Track &End"
-msgstr "Spur&ende"
-
-#: src/Menus.cpp
-msgid "Cursor to Prev Clip Boundary"
-msgstr "Cursor zu nächster Clipgrenze"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr "&Vorherige Clipgrenze"
-
-#: src/Menus.cpp
-msgid "Cursor to Next Clip Boundary"
-msgstr "Cursor zu vorheriger Clipgrenze"
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr "N&ächste Clipgrenze"
-
-#: src/Menus.cpp
-msgid "Cursor to Project Start"
-msgstr "Cursor zu Projektanfang"
-
-#: src/Menus.cpp
-msgid "&Project Start"
-msgstr "&Projektanfang"
-
-#: src/Menus.cpp
-msgid "Cursor to Project End"
-msgstr "Cursor zu Projektende"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr "Projekte&nde"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "Wiedergabe-&Bereich"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&Sperren"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&Entsperren"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "Audiogeräte &erneut suchen"
-
-#: src/Menus.cpp
-msgid "Transport &Options"
-msgstr "Transport-&Optionen"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "Geräuschaktivierungsstufe …"
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Geräusch&aktivierte Aufnahme (ein/aus)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Aufnahme-/Wiedergabekopf angepinnt (an/aus)"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "&Overdub (an/aus)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "So&ftware durchschleifen (an/aus)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "A&utomatische Aufnahmeeinpegelung (ein/aus)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "&Neu hinzufügen"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "&Monospur"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&Stereospur"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&Textspur"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "&Zeitspur"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr "Mi&x"
-
-#: src/Menus.cpp
-msgid "Mix Stereo Down to &Mono"
-msgstr "Stereo zu &Mono heruntermischen"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "Misc&hen und rendern"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "In ne&ue Spur mischen und rendern"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "&Abtastrate …"
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "Spuren ent&fernen"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute"
-msgstr "St&umm/Laut"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "Alle Spuren &stummstellen"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "Alle Spuren wieder &laut stellen"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr "&Panorama"
-
-#: src/Menus.cpp
-msgid "Pan Left"
-msgstr "Links schwenken"
-
-#: src/Menus.cpp
-msgid "&Left"
-msgstr "&Links"
-
-#: src/Menus.cpp
-msgid "Pan Right"
-msgstr "Rechts schwenken"
-
-#: src/Menus.cpp
-msgid "&Right"
-msgstr "&Rechts"
-
-#: src/Menus.cpp
-msgid "Pan Center"
-msgstr "Mittig schwenken"
-
-#: src/Menus.cpp
-msgid "&Center"
-msgstr "&Mitte"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "&Ende an Ende ausrichten"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "&Zusammen ausrichten"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "Start auf &Null"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Start auf &Cursor/Auswahlanfang"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "Start auf Auswahl&ende"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Ende auf Cu&rsor/Auswahlanfang"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "Ende auf Auswahlen&de"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "Spuren aus&richten"
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "Auswahl &mit Spuren verschieben (an/aus)"
-
-#: src/Menus.cpp
-msgid "Move Sele&ction and Tracks"
-msgstr "Auswahl und Sp&uren verschieben"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "MIDI mit Audio synchronisieren"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "Spuren s&ortieren"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Nach Zeit sortieren"
-
-#: src/Menus.cpp
-msgid "By &Start Time"
-msgstr "Nach &Startzeit"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Nach Name sortieren"
-
-#: src/Menus.cpp
-msgid "By &Name"
-msgstr "Nach &Name"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "S&puren synchron halten (an/aus)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "Er&zeugen"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Erweiterungen hinzufügen / entfernen …"
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "&Effekt"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "%s wiederholen"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "Letzten Effekt wiederholen"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "Anal&yse"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "Kontrast …"
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Spektrum zeichnen ..."
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "&Werkzeuge"
-
-#: src/Menus.cpp
-msgid "&Macros..."
-msgstr "&Makros …"
-
-#: src/Menus.cpp
-msgid "&Apply Macro"
-msgstr "Makro &anwenden"
-
-#: src/Menus.cpp
-msgid "&Palette..."
-msgstr "&Palette ..."
-
-#: src/Menus.cpp
-msgid "&Screenshot..."
-msgstr "&Screenshot ..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Benchmark starten …"
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "Aufnahmefehler simulieren"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "Vorgelagerte Aussetzer erkennen"
-
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "&Fenster"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "&Minimieren"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "Alle nach vorne &bringen"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr "Ext&ra"
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "&Transport"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "Wiederg&abe"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr "Sto&ppen"
-
-#: src/Menus.cpp
-msgid "Play &One Second"
-msgstr "Eine Sekunde wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play to &Selection"
-msgstr "Bis zur Au&swahl wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play &Before Selection Start"
-msgstr "&Vor Auswahlanfang wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play Af&ter Selection Start"
-msgstr "Nach dem Auswahl&anfang wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play Be&fore Selection End"
-msgstr "Vor Auswahl&ende wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play Aft&er Selection End"
-msgstr "Nach dem Auswahl&ende wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play Before a&nd After Selection Start"
-msgstr "Vor u&nd nach Auswahlanfang wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play Before an&d After Selection End"
-msgstr "Vor un&d nach Auswahlende wiedergeben"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr "Schnitt-Vorscha&u wiedergeben"
-
-#: src/Menus.cpp
-msgid "&Selection Tool"
-msgstr "Au&swahlwerkzeug"
-
-#: src/Menus.cpp
-msgid "&Envelope Tool"
-msgstr "H&üllkurvenwerkzeug"
-
-#: src/Menus.cpp
-msgid "&Draw Tool"
-msgstr "&Zeichenwerkzeug"
-
-#: src/Menus.cpp
-msgid "&Zoom Tool"
-msgstr "&Zoomwerkzeug"
-
-#: src/Menus.cpp
-msgid "&Time Shift Tool"
-msgstr "&Zeitverschiebewerkzeug"
-
-#: src/Menus.cpp
-msgid "&Multi Tool"
-msgstr "&Multifunktionswerkzeug"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr "&Vorheriges Werkzeug"
-
-#: src/Menus.cpp
-msgid "&Next Tool"
-msgstr "&Nächstes Werkzeug"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr "Mi&xer"
-
-#: src/Menus.cpp
-msgid "Ad&just Playback Volume..."
-msgstr "Wiedergabe&lautstärke einstellen …"
-
-#: src/Menus.cpp
-msgid "&Increase Playback Volume"
-msgstr "W&iedergabelautstärke erhöhen"
-
-#: src/Menus.cpp
-msgid "&Decrease Playback Volume"
-msgstr "Wiedergabelautstär&ke reduzieren"
-
-#: src/Menus.cpp
-msgid "Adj&ust Recording Volume..."
-msgstr "Aufnahmela&utstärke einstellen …"
-
-#: src/Menus.cpp
-msgid "I&ncrease Recording Volume"
-msgstr "Auf&nahmelautstärke erhöhen"
-
-#: src/Menus.cpp
-msgid "D&ecrease Recording Volume"
-msgstr "Aufnahmelautstärke v&erringern"
-
-#: src/Menus.cpp
-msgid "&Delete Key"
-msgstr "&Löschtaste"
-
-#: src/Menus.cpp
-msgid "Delete Key&2"
-msgstr "Löschtaste&2"
-
-#: src/Menus.cpp
-msgid "&Play-at-Speed"
-msgstr "Wiedergabe mit &Geschwindigkeit"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Normale Wiederg&abe-mit-Geschwindigkeit"
-
-#: src/Menus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "End&loswiedergabe mit Geschwindigkeit"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Schnitt-Vorschau mit Geschwindig&keit wiedergeben"
-
-#: src/Menus.cpp
-msgid "Ad&just Playback Speed..."
-msgstr "Wiedergabe&geschwindigkeit einstellen …"
-
-#: src/Menus.cpp
-msgid "&Increase Playback Speed"
-msgstr "W&iedergabegeschwindigkeit erhöhen"
-
-#: src/Menus.cpp
-msgid "&Decrease Playback Speed"
-msgstr "Wiedergabegeschwindigkeit &reduzieren"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr "Zu &vorheriger Textmarke bewegen"
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr "Zu &nächster Textmarke bewegen"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "&Suche"
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr "Kleiner Sprung nach &links während Wiedergabe"
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr "Kleiner Sprung nach &rechts während Wiedergabe"
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr "Großer Sprung nach lin&ks während Wiedergabe"
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr "Großer Sprung nach re&chts während Wiedergabe"
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr "Ge&rät"
-
-#: src/Menus.cpp
-msgid "Change &Recording Device..."
-msgstr "Aufnahmege&rät ändern …"
-
-#: src/Menus.cpp
-msgid "Change &Playback Device..."
-msgstr "Wiedergabegerät &ändern …"
-
-#: src/Menus.cpp
-msgid "Change Audio &Host..."
-msgstr "Audiohost &ändern …"
-
-#: src/Menus.cpp
-msgid "Change Recording Cha&nnels..."
-msgstr "Aufnahmeka&näle ändern …"
-
-#: src/Menus.cpp
-msgid "&Selection"
-msgstr "Au&swahl"
-
-#: src/Menus.cpp
-msgid "Snap-To &Off"
-msgstr "Einrasten &aus"
-
-#: src/Menus.cpp
-msgid "Snap-To &Nearest"
-msgstr "Einrasten an &Nächstem"
-
-#: src/Menus.cpp
-msgid "Snap-To &Prior"
-msgstr "Einrasten an &Vorherigem"
-
-#: src/Menus.cpp
-msgid "Selection to &Start"
-msgstr "Auswahl auf &Anfang"
-
-#: src/Menus.cpp
-msgid "Selection to En&d"
-msgstr "Auswahl auf En&de"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Left"
-msgstr "Auswahl &links erweitern"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Right"
-msgstr "Auswahl &rechts erweitern"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "L&inke Auswahl setzen (oder erweitern)"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Re&chte Auswahl setzen (oder erweitern)"
-
-#: src/Menus.cpp
-msgid "Selection Contract L&eft"
-msgstr "Auswahl links v&erringern"
-
-#: src/Menus.cpp
-msgid "Selection Contract R&ight"
-msgstr "Auswahl rechts verr&ingern"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr "Rückwärts durch aktive Fenster bewegen"
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr "Vorwärts durch aktive Fenster bewegen"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr "F&okus"
-
-#: src/Menus.cpp
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Rückwärts &bewegen von Werkzeugleisten zu Spuren"
-
-#: src/Menus.cpp
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "V&orwärts bewegen von Werkzeugleisten zu Spuren"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Previous Track"
-msgstr "Fokus zur v&orherigen Spur bewegen"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Next Track"
-msgstr "Fokus zur &nächsten Spur bewegen"
-
-#: src/Menus.cpp
-msgid "Move Focus to &First Track"
-msgstr "&Fokus auf die erste Spur bewegen"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Last Track"
-msgstr "Fokus auf die &letzte Spur bewegen"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr "Fokus zur vo&rherigen Spur bewegen und auswählen"
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr "Fokus zur n&ächsten Spur bewegen und auswählen"
-
-#: src/Menus.cpp
-msgid "&Toggle Focused Track"
-msgstr "&Fokussierte Spur umschalten"
-
-#: src/Menus.cpp
-msgid "Toggle Focuse&d Track"
-msgstr "Fokussierte Spur umschalten"
-
-#: src/Menus.cpp
-msgid "&Cursor"
-msgstr "&Cursor"
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr "Cursor nach &links"
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr "Cursor nach &rechts"
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr "Curs&or kurz nach links springen"
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr "Cursor kurz nach rech&ts springen"
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr "Cursor weit nach l&inks springen"
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr "Cursor weit nach re&chts springen"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr "L&inks abschneiden"
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr "Rec&hts abschneiden"
-
-#: src/Menus.cpp
-msgid "&Track"
-msgstr "&Spur"
-
-#: src/Menus.cpp
-msgid "Change P&an on Focused Track..."
-msgstr "P&anorama der fokussierten Spur ändern ..."
-
-#: src/Menus.cpp
-msgid "Pan &Left on Focused Track"
-msgstr "Panorama der fokussierten Spur nach &links schieben"
-
-#: src/Menus.cpp
-msgid "Pan &Right on Focused Track"
-msgstr "Panorama der fokussierten Spur nach &rechts schieben"
-
-#: src/Menus.cpp
-msgid "Change Gai&n on Focused Track..."
-msgstr "Verstärku&ng der fokussierten Spur ändern ..."
-
-#: src/Menus.cpp
-msgid "&Increase Gain on Focused Track"
-msgstr "Verstärkung der fokussierten Spur erh&öhen"
-
-#: src/Menus.cpp
-msgid "&Decrease Gain on Focused Track"
-msgstr "Verstärkung der fokussierten Spur verr&ingern"
-
-#: src/Menus.cpp
-msgid "Op&en Menu on Focused Track..."
-msgstr "M&enü für fokussierte Spur öffnen ..."
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute Focused Track"
-msgstr "Fokussierte Spur st&umm/laut"
-
-#: src/Menus.cpp
-msgid "&Solo/Unsolo Focused Track"
-msgstr "Fokussierte Spur &alleine/nicht alleine"
-
-#: src/Menus.cpp
-msgid "&Close Focused Track"
-msgstr "Fokussierte Spur s&chließen"
-
-#: src/Menus.cpp
-msgid "Move Focused Track U&p"
-msgstr "Fokussierte Spur nach o&ben schieben"
-
-#: src/Menus.cpp
-msgid "Move Focused Track Do&wn"
-msgstr "Fokussierte Spur nach un&ten schieben"
-
-#: src/Menus.cpp
-msgid "Move Focused Track to T&op"
-msgstr "Fokussierte Spur nach ganz &oben schieben"
-
-#: src/Menus.cpp
-msgid "Move Focused Track to &Bottom"
-msgstr "Fokussierte Spur nach ganz &unten schieben"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr "&Skriptfähiges I"
-
-#: src/Menus.cpp
-msgid "Select Time..."
-msgstr "Zeit wählen ..."
-
-#: src/Menus.cpp
-msgid "Select Frequencies..."
-msgstr "Frequenzen wählen ..."
-
-#: src/Menus.cpp
-msgid "Select Tracks..."
-msgstr "Spuren wählen ..."
-
-#: src/Menus.cpp
-msgid "Set Track Status..."
-msgstr "Spurstatus einstellen ..."
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr "Spuraudio einstellen ..."
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr "Spurvisualisierung einstellen ..."
-
-#: src/Menus.cpp
-msgid "Get Preference..."
-msgstr "Einstellung erhalten …"
-
-#: src/Menus.cpp
-msgid "Set Preference..."
-msgstr "Einstellung setzen …"
-
-#: src/Menus.cpp
-msgid "Set Clip..."
-msgstr "Clip setzen …"
-
-#: src/Menus.cpp
-msgid "Set Envelope..."
-msgstr "Hüllkurve setzen …"
-
-#: src/Menus.cpp
-msgid "Set Label..."
-msgstr "Textmarke setzen …"
-
-#: src/Menus.cpp
-msgid "Set Project..."
-msgstr "Projekt setzen …"
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr "Skriptf&ähiges II"
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Wählen..."
-
-#: src/Menus.cpp
-msgid "Set Track..."
-msgstr "Spur setzen …"
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr "Info erhalten …"
-
-#: src/Menus.cpp
-msgid "Message..."
-msgstr "Nachricht …"
-
-#: src/Menus.cpp
-msgid "Help..."
-msgstr "Hilfe …"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Import …"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Exportieren …"
-
-#: src/Menus.cpp
-msgid "Open Project..."
-msgstr "Projekt öffnen …"
-
-#: src/Menus.cpp
-msgid "Save Project..."
-msgstr "Projekt speichern …"
-
-#: src/Menus.cpp
-msgid "Move Mouse..."
-msgstr "Maus bewegen …"
-
-#: src/Menus.cpp
-msgid "Compare Audio..."
-msgstr "Audio vergleichen …"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-msgid "Screenshot (short format)..."
-msgstr "Screenshot (Schnellformat) …"
-
-#: src/Menus.cpp
-msgid "&Full Screen (on/off)"
-msgstr "&Vollbild (an/aus)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-msgid "Minimize All Projects"
-msgstr "Alle Projekte minimieren"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Hilfe"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "&Loslegen"
-
-#: src/Menus.cpp
-msgid "Audacity &Manual"
-msgstr "Audacity-&Handbuch"
-
-#: src/Menus.cpp
-msgid "&Quick Help..."
-msgstr "&Schnellhilfe …"
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr "&Handbuch …"
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "&Diagnose"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "&Audio-Geräteinfo …"
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "&MIDI-Geräteinfo …"
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "&Protokoll anzeigen …"
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Unterstützungsdaten erzeugen ..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Abhängigkeiten &überprüfen …"
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "Auf Aktualisierungen &prüfen …"
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "Unbekannt"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "Erweiterung %d bis %d"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Zuletzt geöffnete Dateien öffnen"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "Zuletzt geö&ffnete Dateien"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&Rückgängig %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Rückgängig"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&Wiederholen %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Spuren nach Zeit sortiert"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "Spuren nach Name sortiert"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "keine Textspur"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "keine Textspur bei oder unter der ausgewählten Spur"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "keine Textmarken in Textspur"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr "Clips nach rechts zeitverschoben"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr "Clips nach links zeitverschoben"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Zeitverschiebung"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr "Clip nicht verschoben"
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "Linke Auswahlgrenze einstellen"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "Position"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "Rechte Auswahlgrenze einstellen"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Spur mit aktivem Ton kann nicht gelöscht werden"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Top"
-msgstr "'%s' nach oben geschoben"
-
-#: src/Menus.cpp
-msgid "Move Track to Top"
-msgstr "Spur nach oben schieben"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "'%s' nach unten geschoben"
-
-#: src/Menus.cpp
-msgid "Move Track to Bottom"
-msgstr "Spur nach unten schieben"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Up"
-msgstr "'%s' hoch geschoben"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Down"
-msgstr "'%s' runter geschoben"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-msgid "Move Track Up"
-msgstr "Spur hoch schieben"
-
-#: src/Menus.cpp
-msgid "Move Track Down"
-msgstr "Spur runter schieben"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "Textmarken.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Es gibt keine Textspuren zu exportieren."
-
-#: src/Menus.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Bitte nur eine Notizspur gleichzeitig auswählen."
-
-#: src/Menus.cpp
-msgid "Please select a Note Track."
-msgstr "Bitte eine Notizspur auswählen."
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI exportieren als:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI-Datei (*.mid)|*.mid|Allegro-Datei (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Sie haben einen Dateinamen mit unbekannter Dateiendung ausgewählt.\n"
-"Wollen Sie fortfahren?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "MIDI exportieren"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "Ausgewähltes Audio exportieren"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Nichts zum Rückgängig machen"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Nichts zum Wiederholen"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Ausschneiden und in Zwischenablage"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Trennen-Ausschneiden und in Zwischenablage"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Trennen Ausschneiden"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "Es ist nicht möglich, einen Spurtyp in einen anderen zu kopieren."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Stereoton-Dateien können nicht in eine Monospur kopiert werden."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Aus der Zwischenablage eingefügt"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Text aus der Zwischenablage eingefügt"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "Text in neue Textmarke einfügen"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr ""
-"Ausgewählte Audiospuren von %.2f Sekunden auf %.2f Sekunden zuschneiden"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "Audio zuschneiden"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Getrennt und gelöscht: %.2f Sekunden bei t=%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Trennen Löschen"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "%.2f Sekunden bei t=%.2f abgetrennt"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "Abtrennen"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "%.2f Sekunden bei t=%.2f verbunden"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Verbinden"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Ausgewählte Spuren in Stille verwandelt für %.2f Sekunden bei %.2f"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Stille"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Dupliziert"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Duplizieren"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Markierte Audiobereiche wurden in Zwischenablage ausgeschnitten"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "Markiertes Audio ausschneiden"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr ""
-"Markierte Audiobereiche wurden getrennt und in die Zwischenablage "
-"ausgeschnitten"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Markiertes Audio trennen und ausschneiden"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Markierte Audiobereiche wurden in die Zwischenablage kopiert"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "Markiertes Audio kopieren"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "Markierte Audiobereiche gelöscht"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "Markiertes Audio löschen"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "Markierte Audiobereiche wurden getrennt und gelöscht"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "Markierte Audiobereiche trennen und löschen"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "Markierte Audiobereiche wurden stumm geschaltet"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "Markiertes Audio stumm schalten"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "Markiertes Audio wurde getrennt (Punkte oder Bereiche)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "Markiertes Audio trennen"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "Markiertes Audio wurde verbunden (Punkte oder Bereiche)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "Markiertes Audio verbinden"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "Markierte Audiobereiche wurden abgetrennt"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "Markierte Audiobereiche abtrennen"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Trennen"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Trennen zu neuer Spur"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Trennen Neu"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr "dummyStringOnSelectClip"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] "%d von %d Clip %s"
-msgstr[1] "%d von %d Clips %s"
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr "%s, %s"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Textmarken aus „%s“ importiert"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Textmarken importieren"
-
-#: src/Menus.cpp
-msgid "Select a MIDI file"
-msgstr "Eine MIDI-Datei wählen"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI- und Allegro-Dateien (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI-"
-"Dateien (*.mid;*.midi)|*.mid;*.midi|Allegro-Dateien (*.gro)|*.gro|Alle "
-"Dateien|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "MIDI aus „%s“ importiert"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "MIDI importieren"
-
-#: src/Menus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Beliebige unkomprimierte Audiodatei wählen"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "Alle Dateien|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Tag-Metadaten bearbeiten"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "Tag-Metadaten"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "Sämtliches Audio in Spur „%s“ gerendert"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Rendern"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d Spuren in eine neue Stereospur gemischt und gerendert"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d Spuren in eine neue Monospur gemischt und gerendert"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "Mischen und rendern"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Spur %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s left"
-msgstr "%s links"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s right"
-msgstr "%s rechts"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr "dummyStringClipBoundaryMessage"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] "%s %d von %d Clip %s"
-msgstr[1] "%s %d von %d Clips %s"
-
-#: src/Menus.cpp
-msgid "start"
-msgstr "Start"
-
-#: src/Menus.cpp
-msgid "end"
-msgstr "Ende"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr "dummyStringClipBoundaryMessageLong"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] "%s %d und %s %d von %d Clip %s"
-msgstr[1] "%s %d und %s %d von %d Clips %s"
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-msgid "Aligned/Moved start to zero"
-msgstr "Beginn auf Null ausgerichtet/verschoben"
-
-#: src/Menus.cpp
-msgid "Aligned start to zero"
-msgstr "Beginn auf Null ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Align/Move Start"
-msgstr "Beginn ausrichten/verschieben"
-
-#: src/Menus.cpp
-msgid "Align Start"
-msgstr "Start ausrichten"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Beginn auf Cursor/Auswahlbeginn ausgerichtet/verschoben"
-
-#: src/Menus.cpp
-msgid "Aligned start to cursor/selection start"
-msgstr "Beginn auf Cursor/Auswahlbeginn ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to selection end"
-msgstr "Beginn auf Cursor/Auswahlende ausgerichtet/verschoben"
-
-#: src/Menus.cpp
-msgid "Aligned start to selection end"
-msgstr "Beginn auf Cursor/Auswahlende ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Ende auf Cursor/Auswahlbeginn ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Aligned end to cursor/selection start"
-msgstr "Ende auf Cursor/Auswahlbeginn ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Align/Move End"
-msgstr "Ende ausrichten/verschieben"
-
-#: src/Menus.cpp
-msgid "Align End"
-msgstr "Ende ausrichten"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to selection end"
-msgstr "Ende auf Auswahlende ausgerichtet/verschoben"
-
-#: src/Menus.cpp
-msgid "Aligned end to selection end"
-msgstr "Ende auf Auswahlende ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to end"
-msgstr "Ende auf Ende ausgerichtet/verschoben"
-
-#: src/Menus.cpp
-msgid "Aligned end to end"
-msgstr "Ende auf Ende ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Align/Move End to End"
-msgstr "Ende auf Ende ausrichten/verschieben"
-
-#: src/Menus.cpp
-msgid "Align End to End"
-msgstr "Ende auf Ende ausrichten"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved together"
-msgstr "Zusammen ausgerichtet/verschoben"
-
-#: src/Menus.cpp
-msgid "Aligned together"
-msgstr "Zusammen ausgerichtet"
-
-#: src/Menus.cpp
-msgid "Align/Move Together"
-msgstr "Zusammen ausrichten/verschieben"
-
-#: src/Menus.cpp
-msgid "Align Together"
-msgstr "Zusammen ausrichten"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "MIDI- und Audiospuren werden synchronisiert"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Ausrichten vollständig: MIDI von %.2f bis %.2f Sek., Audio von %.2f bis %.2f "
-"Sek."
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "MIDI mit Audio synchronisieren"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Ausrichten fehlgeschlagen: Eingabe zu kurz: MIDI von %.2f bis %.2f Sek., "
-"Audio von %.2f bis %.2f Sek."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "Interner Fehler wurde vom Ausrichtvorgang gemeldet."
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Neue Audiospur erstellt"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Neue Spur"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Neue Stereo-Audiospur erstellt"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Neue Textspur erstellt"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Diese Audacity-Version unterstützt nur eine Zeitspur pro Projektfenster."
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Neue Zeitspur erstellt"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-"Zeitgesteuerte Aufnahme kann nicht bei mehr als einem geöffneten Projekt "
-"verwendet werden.\n"
-"\n"
-"Bitte schließen Sie alle weiteren Projekte und versuchen Sie es erneut."
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "Zeitgesteuerte Aufnahme"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-"Zeitgesteuerte Aufnahme kann nicht verwendet werden, solange Sie "
-"ungesicherte Änderungen haben.\n"
-"\n"
-"Bitte speichern oder schließen Sie dieses Projekt und versuchen Sie es "
-"erneut."
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-msgid "Name:"
-msgstr "Name:"
-
-#: src/Menus.cpp
-msgid "New label"
-msgstr "Neue Textmarke"
-
-#: src/Menus.cpp
-msgid "Please select in a mono track."
-msgstr "Bitte in einer Monospur auswählen."
-
-#: src/Menus.cpp
-msgid "Please select in a stereo track."
-msgstr "Bitte in einer Stereospur auswählen."
-
-#: src/Menus.cpp
-#, c-format
-msgid "Please select at least %d channels."
-msgstr "Bitte wählen Sie mindestens % d-Kanäle aus."
-
-#: src/Menus.cpp
-msgid "Please select a time within a clip."
-msgstr "Bitte wählen Sie eine Zeit innerhalb eines Clip aus."
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Bearbeitete Textmarken"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Audiospur(en) entfernt"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "Spur entfernen"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "Audio-Geräteinfo"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "&Speichern"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "Geräteinfo speichern"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "Geräteinformation kann nicht gespeichert werden"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr "MIDI-Geräteinfo"
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr "MIDI-Geräteinfo speichern"
-
-#: src/Menus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "MIDI-Geräteinformation kann nicht gespeichert werden"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-msgid "Panned audio track(s)"
-msgstr "Geschwenkte Audiospur(en)"
-
-#: src/Menus.cpp
-msgid "Pan Track"
-msgstr "Spur schwenken"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Bereich jenseits des Projektendes\n"
-"kann nicht gesperrt werden."
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Abtastratenkonvertierung"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Neue Abtastrate (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "Der eingegebene Wert ist ungültig"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "Ändere Abtastrate für Spur %d"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Abtastrate konvertiert für Audiospur(en)"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "Abtastratenkonvertierung für eine Spur"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&Wiederherstellen"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Mischen"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Mischen und rendern"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5221,7 +3059,7 @@ msgstr "Spuren werden gemischt und gerendert"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Verstärkung"
@@ -5238,7 +3076,7 @@ msgid "Musical Instrument"
 msgstr "Musikinstrument"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Panorama"
@@ -5293,9 +3131,8 @@ msgid "Module Unsuitable"
 msgstr "Modul unpassend"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+#, fuzzy, c-format
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "Das Modul %s enthält keinen Versionsstring. Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
@@ -5310,9 +3147,9 @@ msgstr ""
 "Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "Das Modul %s ist für Audacity Version %s. Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
@@ -5479,6 +3316,11 @@ msgstr ""
 msgid "Show:"
 msgstr "Anzeigen:"
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Alles"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Alle anzeigen"
@@ -5575,7 +3417,8 @@ msgid "Plug-in already exists"
 msgstr "Erweiterung existiert bereits"
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+#, fuzzy
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "Erweiterungsdatei wird verwendet.  Konnte nicht überschrieben werden."
 
 #: src/PluginManager.cpp
@@ -5867,9 +3710,9 @@ msgid "Error Saving Project"
 msgstr "Fehler beim Speichern des Projekts"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "Projekt konnte nicht gespeichert werden. Der Pfad wurde nicht gefunden.\n"
@@ -6019,15 +3862,6 @@ msgstr "Neues Projekt erstellt"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Gelöscht: %.2f Sekunden bei t=%.2f"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Löschen"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Speicherplatz verbleibend für Aufnahme %s"
 
@@ -6100,23 +3934,6 @@ msgstr "Audio aufgezeichnet"
 #: src/Project.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Aufnahme"
-
-#: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Eingestellte Verstärkung"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Eingestelltes Panorama"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "Spur „%s“ entfernt"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "Spur entfernen"
 
 #: src/Project.cpp
 msgid "Less than 1 minute"
@@ -6407,7 +4224,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Warnung - Überlange Blockdatei wird abgeschnitten"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Hilfe"
 
@@ -6668,11 +4485,11 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Einige benötigte Dateien in:\n"
 "  %s\n"
@@ -6879,6 +4696,10 @@ msgstr ""
 "\n"
 "'%s' wurde abgerochen weil die Aufnahme angehalten wurde."
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "Zeitgesteuerte Aufnahme"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6928,6 +4749,10 @@ msgstr "&Automatisches Speichern aktivieren?"
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "Projekt speichern unter:"
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "Wählen..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -6982,9 +4807,19 @@ msgstr "Stop geplant um:"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Zeitgesteuerte Aufnahme - Warten auf Beginn"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "Aufnahme beginnt in:"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -7030,6 +4865,13 @@ msgstr "Stereo, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "Spur-Ansicht"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Spur %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7602,7 +5444,7 @@ msgstr "Weiß"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Aus"
 
@@ -7806,6 +5648,11 @@ msgid "Sets various values for a label."
 msgstr "Setzt verschiedene Werte für eine Textmarke."
 
 #: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Rate:"
+msgstr "&Rate"
+
+#: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
 msgstr "Größe anpassen:"
 
@@ -7898,6 +5745,16 @@ msgstr "Maßstab:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "VZoom:"
 msgstr "VZoom:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "VZoom:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "nach unten"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -8467,6 +6324,10 @@ msgstr "Zurücks&etzen"
 msgid "&Difference:"
 msgstr "&Differenz:"
 
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Hilfe"
+
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 #, c-format
@@ -9019,6 +6880,14 @@ msgstr "Standards"
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "Werkseinstellungen"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "Import …"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "Exportieren …"
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -10020,7 +7889,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Warte auf Berechnung von Wellenform..."
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+#, fuzzy
+msgid "(Maximum 0dB)"
 msgstr ".  Maximal 0dB."
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10493,6 +8363,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr "Erzeugt Audio mit Null-Amplitude"
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Stille"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr "Konvertiert Stereospuren zu Mono"
@@ -10837,8 +8711,8 @@ msgid "Error Saving Effect Presets"
 msgstr "Fehler beim Speichern der Effekt-Voreinstellungen"
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+#, fuzzy, c-format
+msgid "This parameter file was saved from %s. Continue?"
 msgstr "Diese Parameter-Datei wurde gespeichert von %s.  Fortfahren?"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -10939,7 +8813,8 @@ msgstr ""
 "Schnittstelle zu benutzen."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+#, fuzzy
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr " Wählen Sie „Einfach“ für eine einfache Text-Schnittstelle. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -11165,7 +9040,13 @@ msgid "plug-in"
 msgstr "Erweiterung"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist gab diesen Wert zurück:"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Nyquist gab diesen Wert zurück:"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11262,6 +9143,10 @@ msgstr "Alte Syntax (Version 3) ben&utzen."
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "&Laden"
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Speichern"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11376,6 +9261,10 @@ msgstr "Keine formatspezifischen Optionen"
 msgid "Export Audio"
 msgstr "Audio exportieren"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Tag-Metadaten bearbeiten"
+
 #: src/export/Export.cpp
 msgid "Exported Tags"
 msgstr "Exportierte Tags"
@@ -11440,8 +9329,8 @@ msgstr ""
 "anderen Dateinamen oder Ordner."
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "Eine Datei mit dem Namen „%s“ gibt es bereits.  Ersetzen?"
 
 #: src/export/Export.cpp
@@ -11661,20 +9550,25 @@ msgstr "Exportiere Audio als %s"
 msgid "Invalid sample rate"
 msgstr "Ungültige Abtastrate"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Abtastratenkonvertierung"
+
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Die Projekt-Abtastrate (%d) wird von dem aktuellen Ausgabe-Dateiformat\n"
 "nicht unterstützt.  "
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "Die Kombination aus Projekt-Abtastrate (%d) und Bitrate\n"
 "(%d kbit/s) wird von dem aktuellen Ausgabe-Dateiformat nicht unterstützt.  "
@@ -12469,19 +10363,19 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "MP3-Encoder meldet Fehler %ld"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Die Projekt-Abtastrate (%d) wird nicht vom\n"
 "MP3-Dateiformat unterstützt.  "
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "Diese Kombination aus Projekt-Abtastrate (%d) und -Bitrate (%d kbit/s) wird\n"
 "nicht vom MP3-Dateiformat unterstützt.  "
@@ -12903,6 +10797,11 @@ msgstr ""
 "Versuchen Sie FFmpeg zu installieren. Bei unkomprimierten Dateien können Sie "
 "auch „Datei“ > „Importieren“ > „Rohdaten …“ versuchen."
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13065,9 +10964,10 @@ msgstr ""
 "\n"
 
 #: src/import/ImportPCM.cpp
+#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13200,9 +11100,2309 @@ msgstr "Zu importierende Menge:"
 msgid "Sample rate:"
 msgstr "Abtastrate:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&Importieren"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr "Schlechte Datengröße"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s left"
+msgstr "%s links"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s right"
+msgstr "%s rechts"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr "dummyStringClipBoundaryMessage"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] "%s %d von %d Clip %s"
+msgstr[1] "%s %d von %d Clips %s"
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr "Start"
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr "Ende"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr "dummyStringClipBoundaryMessageLong"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] "%s %d und %s %d von %d Clip %s"
+msgstr[1] "%s %d und %s %d von %d Clips %s"
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr "dummyStringOnSelectClip"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] "%d von %d Clip %s"
+msgstr[1] "%d von %d Clips %s"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr "Clips nach rechts zeitverschoben"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr "Clips nach links zeitverschoben"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Zeitverschiebung"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr "Clip nicht verschoben"
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "Clip&grenzen"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr "&Vorherige Clipgrenze bis Cursor"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr "Cursor bis n&ächste Clipgrenze"
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr "Vorheri&ger Clip"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip"
+msgstr "Vorherigen Clip auswählen"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr "Nächst&er Clip"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Next Clip"
+msgstr "Nächsten Clip auswählen"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr "&Vorherige Clipgrenze"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Cursor zu nächster Clipgrenze"
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr "N&ächste Clipgrenze"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Next Clip Boundary"
+msgstr "Cursor zu vorheriger Clipgrenze"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr "L&inks abschneiden"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr "Rec&hts abschneiden"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Text aus der Zwischenablage eingefügt"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Aus der Zwischenablage eingefügt"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Nichts zum Rückgängig machen"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Nichts zum Wiederholen"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Ausschneiden und in Zwischenablage"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "Gelöscht: %.2f Sekunden bei t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Löschen"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "Es ist nicht möglich, einen Spurtyp in einen anderen zu kopieren."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "Stereoton-Dateien können nicht in eine Monospur kopiert werden."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Dupliziert"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Duplizieren"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Trennen-Ausschneiden und in Zwischenablage"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Trennen Ausschneiden"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "Getrennt und gelöscht: %.2f Sekunden bei t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Trennen Löschen"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Ausgewählte Spuren in Stille verwandelt für %.2f Sekunden bei %.2f"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr ""
+"Ausgewählte Audiospuren von %.2f Sekunden auf %.2f Sekunden zuschneiden"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "Audio zuschneiden"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Trennen"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Trennen zu neuer Spur"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Trennen Neu"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "%.2f Sekunden bei t=%.2f verbunden"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Verbinden"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "%.2f Sekunden bei t=%.2f abgetrennt"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "Abtrennen"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "Tag-Metadaten"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "&Bearbeiten"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Löschen"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "Dupli&zieren"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "Spezial-&Entfernen"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "A&usschneiden und trennen"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "L&öschen und trennen"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "Audi&o zu Stille"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "&Audio zuschneiden"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "&Trennen"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "In neue T&onspur verschieben und trennen"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "&Verbinden"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "&Bei Stille abtrennen"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "Me&tadaten …"
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "Ein&stellungen …"
+
+#: src/menus/EditMenus.cpp
+msgid "&Delete Key"
+msgstr "&Löschtaste"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete Key&2"
+msgstr "Löschtaste&2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr "Ext&ra"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr "Mi&xer"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ad&just Playback Volume..."
+msgstr "Wiedergabe&lautstärke einstellen …"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Increase Playback Volume"
+msgstr "W&iedergabelautstärke erhöhen"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Decrease Playback Volume"
+msgstr "Wiedergabelautstär&ke reduzieren"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Adj&ust Recording Volume..."
+msgstr "Aufnahmela&utstärke einstellen …"
+
+#: src/menus/ExtraMenus.cpp
+msgid "I&ncrease Recording Volume"
+msgstr "Auf&nahmelautstärke erhöhen"
+
+#: src/menus/ExtraMenus.cpp
+msgid "D&ecrease Recording Volume"
+msgstr "Aufnahmelautstärke v&erringern"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr "Ge&rät"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change &Recording Device..."
+msgstr "Aufnahmege&rät ändern …"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change &Playback Device..."
+msgstr "Wiedergabegerät &ändern …"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change Audio &Host..."
+msgstr "Audiohost &ändern …"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change Recording Cha&nnels..."
+msgstr "Aufnahmeka&näle ändern …"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Full Screen (on/off)"
+msgstr "&Vollbild (an/aus)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "MIDI aus „%s“ importiert"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "MIDI importieren"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "Ausgewähltes Audio exportieren"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "Textmarken.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Es gibt keine Textspuren zu exportieren."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Bitte nur eine Notizspur gleichzeitig auswählen."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select a Note Track."
+msgstr "Bitte eine Notizspur auswählen."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI exportieren als:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI-Datei (*.mid)|*.mid|Allegro-Datei (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Sie haben einen Dateinamen mit unbekannter Dateiendung ausgewählt.\n"
+"Wollen Sie fortfahren?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "MIDI exportieren"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Textmarken aus „%s“ importiert"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Textmarken importieren"
+
+#: src/menus/FileMenus.cpp
+msgid "Select a MIDI file"
+msgstr "Eine MIDI-Datei wählen"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI- und Allegro-Dateien (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI-"
+"Dateien (*.mid;*.midi)|*.mid;*.midi|Allegro-Dateien (*.gro)|*.gro|Alle "
+"Dateien|*"
+
+#: src/menus/FileMenus.cpp
+msgid "Select any uncompressed audio file"
+msgstr "Beliebige unkomprimierte Audiodatei wählen"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "Alle Dateien|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Voreinstellung speichern …"
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Zuletzt geöffnete Dateien öffnen"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "Zuletzt geö&ffnete Dateien"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "Projekt &speichern"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "Projekt speichern &unter …"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Lossless Copy of Project..."
+msgstr "Verlustfreie Kopie des Projektes speichern..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "Komprimierte Kopie des Projektes &speichern …"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export"
+msgstr "&Exportieren"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as MP&3"
+msgstr "Als MP&3 exportieren"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &WAV"
+msgstr "Als &WAV exportieren"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &OGG"
+msgstr "Als &OGG exportieren"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "Audio &exportieren …"
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Ausgewähltes Audio expo&rtieren …"
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "&Textmarken exportieren …"
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Mehrere ex&portieren …"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "MI&DI exportieren …"
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&Audio …"
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Textmarken …"
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI …"
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&Rohdaten …"
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "Seite ein&richten …"
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&Drucken …"
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "&Beenden"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "Audio-Geräteinfo"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save Device Info"
+msgstr "Geräteinfo speichern"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save device info"
+msgstr "Geräteinformation kann nicht gespeichert werden"
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr "MIDI-Geräteinfo"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save MIDI Device Info"
+msgstr "MIDI-Geräteinfo speichern"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save MIDI device info"
+msgstr "MIDI-Geräteinformation kann nicht gespeichert werden"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&Schnellhilfe …"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr "&Loslegen"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Manual"
+msgstr "Audacity-&Handbuch"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Quick Help..."
+msgstr "&Schnellhilfe …"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr "&Handbuch …"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr "&Diagnose"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "&Audio-Geräteinfo …"
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr "&MIDI-Geräteinfo …"
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "&Protokoll anzeigen …"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Unterstützungsdaten erzeugen ..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "Abhängigkeiten &überprüfen …"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "Auf Aktualisierungen &prüfen …"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "Text in neue Textmarke einfügen"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Markierte Audiobereiche wurden in Zwischenablage ausgeschnitten"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "Markiertes Audio ausschneiden"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "Markierte Audiobereiche gelöscht"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "Markiertes Audio löschen"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr ""
+"Markierte Audiobereiche wurden getrennt und in die Zwischenablage "
+"ausgeschnitten"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "Markiertes Audio trennen und ausschneiden"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "Markierte Audiobereiche wurden getrennt und gelöscht"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "Markierte Audiobereiche trennen und löschen"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "Markierte Audiobereiche wurden stumm geschaltet"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "Markiertes Audio stumm schalten"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Markierte Audiobereiche wurden in die Zwischenablage kopiert"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "Markiertes Audio kopieren"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "Markiertes Audio wurde getrennt (Punkte oder Bereiche)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "Markiertes Audio trennen"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "Markiertes Audio wurde verbunden (Punkte oder Bereiche)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "Markiertes Audio verbinden"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "Markierte Audiobereiche wurden abgetrennt"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "Markierte Audiobereiche abtrennen"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Labels"
+msgstr "&Textmarken"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "Te&xtmarken bearbeiten …"
+
+#: src/menus/LabelMenus.cpp
+msgid "Add Label at &Selection"
+msgstr "Textmarke bei &Auswahl hinzufügen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Add Label at &Playback Position"
+msgstr "Textmarke bei &Wiedergabeposition hinzufügen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "Te&xt in neue Textmarke einfügen"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "&Tippen um eine Textmarke zu erstellen (an/aus)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "Audio mit Textmar&ke"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&Ausschneiden"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Cut"
+msgstr "Textmarke Ausschneiden"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Delete"
+msgstr "Textmarke Löschen"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "A&usschneiden und trennen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Cut"
+msgstr "Textmarke Trennen Ausschneiden"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "&Trennen und löschen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Delete"
+msgstr "Textmarke Trennen Löschen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "&Audio zu Stille"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Silence"
+msgstr "Textmarke Stille"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "Ko&pieren"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Copy"
+msgstr "Textmarke Kopieren"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "&Trennen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split"
+msgstr "Textmarke Trennen"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Join"
+msgstr "Textmarke Verbinden"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr "Rückwärts durch aktive Fenster bewegen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr "Vorwärts durch aktive Fenster bewegen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr "F&okus"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "Rückwärts &bewegen von Werkzeugleisten zu Spuren"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "V&orwärts bewegen von Werkzeugleisten zu Spuren"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Previous Track"
+msgstr "Fokus zur v&orherigen Spur bewegen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Next Track"
+msgstr "Fokus zur &nächsten Spur bewegen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &First Track"
+msgstr "&Fokus auf die erste Spur bewegen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Last Track"
+msgstr "Fokus auf die &letzte Spur bewegen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr "Fokus zur vo&rherigen Spur bewegen und auswählen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr "Fokus zur n&ächsten Spur bewegen und auswählen"
+
+#: src/menus/NavigationMenus.cpp
+msgid "&Toggle Focused Track"
+msgstr "&Fokussierte Spur umschalten"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Toggle Focuse&d Track"
+msgstr "Fokussierte Spur umschalten"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "Unkategorisiert"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "%s wiederholen"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "Erweiterung %d bis %d"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "Er&zeugen"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "Erweiterungen hinzufügen / entfernen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "Letzten Effekt wiederholen"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "&Effekt"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "Anal&yse"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "Kontrast …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Spektrum zeichnen ..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+msgid "T&ools"
+msgstr "&Werkzeuge"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Macros..."
+msgstr "&Makros …"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Apply Macro"
+msgstr "Makro &anwenden"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&Palette ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Screenshot..."
+msgstr "&Screenshot ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Benchmark starten …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Simulate Recording Errors"
+msgstr "Aufnahmefehler simulieren"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Vorgelagerte Aussetzer erkennen"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "&Skriptfähiges I"
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Time..."
+msgstr "Zeit wählen ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Frequencies..."
+msgstr "Frequenzen wählen ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Tracks..."
+msgstr "Spuren wählen ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Status..."
+msgstr "Spurstatus einstellen ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr "Spuraudio einstellen ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr "Spurvisualisierung einstellen ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Preference..."
+msgstr "Einstellung erhalten …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Preference..."
+msgstr "Einstellung setzen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Clip..."
+msgstr "Clip setzen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Envelope..."
+msgstr "Hüllkurve setzen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Label..."
+msgstr "Textmarke setzen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Project..."
+msgstr "Projekt setzen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr "Skriptf&ähiges II"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track..."
+msgstr "Spur setzen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr "Info erhalten …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Message..."
+msgstr "Nachricht …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Help..."
+msgstr "Hilfe …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Open Project..."
+msgstr "Projekt öffnen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Save Project..."
+msgstr "Projekt speichern …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Move Mouse..."
+msgstr "Maus bewegen …"
+
+#: src/menus/PluginMenus.cpp
+msgid "Compare Audio..."
+msgstr "Audio vergleichen …"
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+msgid "Screenshot (short format)..."
+msgstr "Screenshot (Schnellformat) …"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "Linke Auswahlgrenze einstellen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "Position"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "Rechte Auswahlgrenze einstellen"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "Ausw&ählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Nichts"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select None"
+msgstr "Nichts auswählen"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "&Spuren"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "&In allen Spuren"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr "In allen &sync-gesperrten Spuren"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr "Sync-gesperrt auswählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr "&Bereich"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "&Links von der Wiedergabeposition"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Selection Left at Play Position"
+msgstr "Linke Auswahl setzen zu Wiedergabeposition"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "&Rechts von der Wiedergabeposition"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Selection Right at Play Position"
+msgstr "Rechte Auswahl setzen zu Wiedergabeposition"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "&Spuranfang bis Cursor"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Track Start to Cursor"
+msgstr "Spuranfang bis Cursor auswählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "Cursor bis Spur&ende"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Cursor to Track End"
+msgstr "Cursor bis Spurende auswählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track Start to En&d"
+msgstr "Spuranfang bis -en&de"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Track Start to End"
+msgstr "Spuranfang bis -ende auswählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&tore Selection"
+msgstr "A&uswahl merken"
+
+#: src/menus/SelectMenus.cpp
+msgid "Retrieve Selectio&n"
+msgstr "Auswahl abrufe&n"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "&Spektral"
+
+#: src/menus/SelectMenus.cpp
+msgid "To&ggle Spectral Selection"
+msgstr "&Spektralauswahl umschalten"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Higher Peak Frequency"
+msgstr "Nächste &höhere Spitzenfrequenz"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Lower Peak Frequency"
+msgstr "Nächste &niedrigere Spitzenfrequenz"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr "Cursor bis gespeicherte &Cursorposition"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Cursor to Stored"
+msgstr "Cursor bis Gespeichert auswählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr "Cursorpos&ition merken"
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr "Bei Null&durchgängen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Zero Crossing"
+msgstr "Nulldurchgang auswählen"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Selection"
+msgstr "Au&swahl"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Off"
+msgstr "Einrasten &aus"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Nearest"
+msgstr "Einrasten an &Nächstem"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Prior"
+msgstr "Einrasten an &Vorherigem"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to &Start"
+msgstr "Auswahl auf &Anfang"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to En&d"
+msgstr "Auswahl auf En&de"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Left"
+msgstr "Auswahl &links erweitern"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Right"
+msgstr "Auswahl &rechts erweitern"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "L&inke Auswahl setzen (oder erweitern)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Re&chte Auswahl setzen (oder erweitern)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract L&eft"
+msgstr "Auswahl links v&erringern"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract R&ight"
+msgstr "Auswahl rechts verr&ingern"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor to"
+msgstr "&Cursor nach"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Star&t"
+msgstr "Auswahlan&fang"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Selection Start"
+msgstr "Cursor zu Auswahlanfang"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+msgid "Selection En&d"
+msgstr "Auswahlen&de"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Selection End"
+msgstr "Cursor zu Auswahlende"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start"
+msgstr "Spur&anfang"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track Start"
+msgstr "Cursor zu Spuranfang"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &End"
+msgstr "Spur&ende"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track End"
+msgstr "Cursor zu Spurende"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Project Start"
+msgstr "&Projektanfang"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Project Start"
+msgstr "Cursor zu Projektanfang"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr "Projekte&nde"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Project End"
+msgstr "Cursor zu Projektende"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor"
+msgstr "&Cursor"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr "Cursor nach &links"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr "Cursor nach &rechts"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr "Curs&or kurz nach links springen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr "Cursor kurz nach rech&ts springen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr "Cursor weit nach l&inks springen"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr "Cursor weit nach re&chts springen"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "&Suche"
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr "Kleiner Sprung nach &links während Wiedergabe"
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr "Kleiner Sprung nach &rechts während Wiedergabe"
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr "Großer Sprung nach lin&ks während Wiedergabe"
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr "Großer Sprung nach re&chts während Wiedergabe"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "&Werkzeugleisten"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+msgid "Reset Toolb&ars"
+msgstr "&Werkzeugleisten zurücksetzen"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "&Transport-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "&Werkzeuge-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "&Aufnahme-Aussteuerungsanzeige-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "&Wiedergabe-Aussteuerungsanzeige-Werkzeugleiste"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "&Mixer-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "&Bearbeitungs-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Wiedergabe-mit-&Geschwindigkeit-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "Schru&b-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "&Gerät-Werkzeugleiste"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "&Auswahl-Werkzeugleiste"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "&Spektralauswahl-Werkzeugleiste"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Tool"
+msgstr "Au&swahlwerkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Envelope Tool"
+msgstr "H&üllkurvenwerkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Draw Tool"
+msgstr "&Zeichenwerkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Zoom Tool"
+msgstr "&Zoomwerkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Time Shift Tool"
+msgstr "&Zeitverschiebewerkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Multi Tool"
+msgstr "&Multifunktionswerkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr "&Vorheriges Werkzeug"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Next Tool"
+msgstr "&Nächstes Werkzeug"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "Sämtliches Audio in Spur „%s“ gerendert"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Rendern"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "%d Spuren in eine neue Stereospur gemischt und gerendert"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "%d Spuren in eine neue Monospur gemischt und gerendert"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+msgid "Panned audio track(s)"
+msgstr "Geschwenkte Audiospur(en)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Track"
+msgstr "Spur schwenken"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to zero"
+msgstr "Beginn auf Null ausgerichtet/verschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to zero"
+msgstr "Beginn auf Null ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Start"
+msgstr "Beginn ausrichten/verschieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Start"
+msgstr "Start ausrichten"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "Beginn auf Cursor/Auswahlbeginn ausgerichtet/verschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to cursor/selection start"
+msgstr "Beginn auf Cursor/Auswahlbeginn ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to selection end"
+msgstr "Beginn auf Cursor/Auswahlende ausgerichtet/verschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to selection end"
+msgstr "Beginn auf Cursor/Auswahlende ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Ende auf Cursor/Auswahlbeginn ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to cursor/selection start"
+msgstr "Ende auf Cursor/Auswahlbeginn ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End"
+msgstr "Ende ausrichten/verschieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End"
+msgstr "Ende ausrichten"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to selection end"
+msgstr "Ende auf Auswahlende ausgerichtet/verschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to selection end"
+msgstr "Ende auf Auswahlende ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to end"
+msgstr "Ende auf Ende ausgerichtet/verschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to end"
+msgstr "Ende auf Ende ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End to End"
+msgstr "Ende auf Ende ausrichten/verschieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End to End"
+msgstr "Ende auf Ende ausrichten"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved together"
+msgstr "Zusammen ausgerichtet/verschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned together"
+msgstr "Zusammen ausgerichtet"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Together"
+msgstr "Zusammen ausrichten/verschieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Together"
+msgstr "Zusammen ausrichten"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "MIDI mit Audio synchronisieren"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "MIDI- und Audiospuren werden synchronisiert"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Eingestellte Verstärkung"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Eingestelltes Panorama"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Audiospur(en) entfernt"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "Spur entfernen"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "Spur „%s“ entfernt"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "Spur entfernen"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Top"
+msgstr "'%s' nach oben geschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Top"
+msgstr "Spur nach oben schieben"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "'%s' nach unten geschoben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Bottom"
+msgstr "Spur nach unten schieben"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Up"
+msgstr "'%s' hoch geschoben"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Down"
+msgstr "'%s' runter geschoben"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Up"
+msgstr "Spur hoch schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Down"
+msgstr "Spur runter schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Neue Audiospur erstellt"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Neue Spur"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Neue Stereo-Audiospur erstellt"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Neue Textspur erstellt"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Diese Audacity-Version unterstützt nur eine Zeitspur pro Projektfenster."
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Neue Zeitspur erstellt"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Neue Abtastrate (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "Der eingegebene Wert ist ungültig"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "Ändere Abtastrate für Spur %d"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Abtastrate konvertiert für Audiospur(en)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "Abtastratenkonvertierung für eine Spur"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Bitte eine Audiospur auswählen."
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Ausrichten vollständig: MIDI von %.2f bis %.2f Sek., Audio von %.2f bis %.2f "
+"Sek."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "MIDI mit Audio synchronisieren"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Ausrichten fehlgeschlagen: Eingabe zu kurz: MIDI von %.2f bis %.2f Sek., "
+"Audio von %.2f bis %.2f Sek."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "Interner Fehler wurde vom Ausrichtvorgang gemeldet."
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Spuren nach Zeit sortiert"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "Nach Zeit sortieren"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "Spuren nach Name sortiert"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "Nach Name sortieren"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Spur mit aktivem Ton kann nicht gelöscht werden"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "&Neu hinzufügen"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "&Monospur"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&Stereospur"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&Textspur"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "&Zeitspur"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr "Mi&x"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix Stereo Down to &Mono"
+msgstr "Stereo zu &Mono heruntermischen"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "Misc&hen und rendern"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "In ne&ue Spur mischen und rendern"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "&Abtastrate …"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "Spuren ent&fernen"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "St&umm/Laut"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "Alle Spuren &stummstellen"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "Alle Spuren wieder &laut stellen"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "&Panorama"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "&Links"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Left"
+msgstr "Links schwenken"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "&Rechts"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Right"
+msgstr "Rechts schwenken"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "&Mitte"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Center"
+msgstr "Mittig schwenken"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "Spuren aus&richten"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "&Ende an Ende ausrichten"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "&Zusammen ausrichten"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Start auf &Null"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Start auf &Cursor/Auswahlanfang"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Start auf Auswahl&ende"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Ende auf Cu&rsor/Auswahlanfang"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Ende auf Auswahlen&de"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "Auswahl &mit Spuren verschieben (an/aus)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "Auswahl und Sp&uren verschieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "Spuren s&ortieren"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Start Time"
+msgstr "Nach &Startzeit"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Name"
+msgstr "Nach &Name"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "S&puren synchron halten (an/aus)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Track"
+msgstr "&Spur"
+
+#: src/menus/TrackMenus.cpp
+msgid "Change P&an on Focused Track..."
+msgstr "P&anorama der fokussierten Spur ändern ..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan &Left on Focused Track"
+msgstr "Panorama der fokussierten Spur nach &links schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan &Right on Focused Track"
+msgstr "Panorama der fokussierten Spur nach &rechts schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Change Gai&n on Focused Track..."
+msgstr "Verstärku&ng der fokussierten Spur ändern ..."
+
+#: src/menus/TrackMenus.cpp
+msgid "&Increase Gain on Focused Track"
+msgstr "Verstärkung der fokussierten Spur erh&öhen"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Decrease Gain on Focused Track"
+msgstr "Verstärkung der fokussierten Spur verr&ingern"
+
+#: src/menus/TrackMenus.cpp
+msgid "Op&en Menu on Focused Track..."
+msgstr "M&enü für fokussierte Spur öffnen ..."
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute Focused Track"
+msgstr "Fokussierte Spur st&umm/laut"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Solo/Unsolo Focused Track"
+msgstr "Fokussierte Spur &alleine/nicht alleine"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Close Focused Track"
+msgstr "Fokussierte Spur s&chließen"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track U&p"
+msgstr "Fokussierte Spur nach o&ben schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track Do&wn"
+msgstr "Fokussierte Spur nach un&ten schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track to T&op"
+msgstr "Fokussierte Spur nach ganz &oben schieben"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track to &Bottom"
+msgstr "Fokussierte Spur nach ganz &unten schieben"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "keine Textspur"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "keine Textspur bei oder unter der ausgewählten Spur"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "keine Textmarken in Textspur"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Bereich jenseits des Projektendes\n"
+"kann nicht gesperrt werden."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+"Zeitgesteuerte Aufnahme kann nicht bei mehr als einem geöffneten Projekt "
+"verwendet werden.\n"
+"\n"
+"Bitte schließen Sie alle weiteren Projekte und versuchen Sie es erneut."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+"Zeitgesteuerte Aufnahme kann nicht verwendet werden, solange Sie "
+"ungesicherte Änderungen haben.\n"
+"\n"
+"Bitte speichern oder schließen Sie dieses Projekt und versuchen Sie es "
+"erneut."
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select in a mono track."
+msgstr "Bitte in einer Monospur auswählen."
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select in a stereo track."
+msgstr "Bitte in einer Stereospur auswählen."
+
+#: src/menus/TransportMenus.cpp
+#, c-format
+msgid "Please select at least %d channels."
+msgstr "Bitte wählen Sie mindestens % d-Kanäle aus."
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select a time within a clip."
+msgstr "Bitte wählen Sie eine Zeit innerhalb eines Clip aus."
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+msgid "Tra&nsport"
+msgstr "Tra&nsport"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pl&aying"
+msgstr "Wiederg&abe"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "Wiederg&abe/Stopp"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "Wiedergabe/Stopp und Cursor fe&stlegen"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "&Endloswiedergabe"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&Pause"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Recording"
+msgstr "Auf&nahme"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&Aufnahme"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Append Record"
+msgstr "Aufnahme anh&ängen"
+
+#: src/menus/TransportMenus.cpp
+msgid "Record &New Track"
+msgstr "&Neue Spur aufzeichnen"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&Zeitgesteuerte Aufnahme …"
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr "\"Punch and Rol&l\" Aufnahme"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "Wiedergabe-&Bereich"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&Sperren"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&Entsperren"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "Audiogeräte &erneut suchen"
+
+#: src/menus/TransportMenus.cpp
+msgid "Transport &Options"
+msgstr "Transport-&Optionen"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "Geräuschaktivierungsstufe …"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "Geräusch&aktivierte Aufnahme (ein/aus)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "Aufnahme-/Wiedergabekopf angepinnt (an/aus)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "&Overdub (an/aus)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "So&ftware durchschleifen (an/aus)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "A&utomatische Aufnahmeeinpegelung (ein/aus)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "&Transport"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "Wiederg&abe"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr "Sto&ppen"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &One Second"
+msgstr "Eine Sekunde wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play to &Selection"
+msgstr "Bis zur Au&swahl wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &Before Selection Start"
+msgstr "&Vor Auswahlanfang wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Af&ter Selection Start"
+msgstr "Nach dem Auswahl&anfang wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Be&fore Selection End"
+msgstr "Vor Auswahl&ende wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Aft&er Selection End"
+msgstr "Nach dem Auswahl&ende wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before a&nd After Selection Start"
+msgstr "Vor u&nd nach Auswahlanfang wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before an&d After Selection End"
+msgstr "Vor un&d nach Auswahlende wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr "Schnitt-Vorscha&u wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Play-at-Speed"
+msgstr "Wiedergabe mit &Geschwindigkeit"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Normale Wiederg&abe-mit-Geschwindigkeit"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play-at-Speed"
+msgstr "End&loswiedergabe mit Geschwindigkeit"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Schnitt-Vorschau mit Geschwindig&keit wiedergeben"
+
+#: src/menus/TransportMenus.cpp
+msgid "Ad&just Playback Speed..."
+msgstr "Wiedergabe&geschwindigkeit einstellen …"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Increase Playback Speed"
+msgstr "W&iedergabegeschwindigkeit erhöhen"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Decrease Playback Speed"
+msgstr "Wiedergabegeschwindigkeit &reduzieren"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr "Zu &vorheriger Textmarke bewegen"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr "Zu &nächster Textmarke bewegen"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Ansicht"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "&Zoom"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "Hera&n zoomen"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "&Normal zoomen"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "Her&aus zoomen"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "Auf Auswahl &zoomen"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Toggle"
+msgstr "Zoom-&Schalter"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Erweitertes &vertikales Zoomen"
+
+#: src/menus/ViewMenus.cpp
+msgid "T&rack Size"
+msgstr "Spu&rgröße"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Fit to Width"
+msgstr "&An Breite anpassen"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr "An &Höhe anpassen"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "Alle Spuren &zuklappen"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "Zugeklappte Spuren au&fklappen"
+
+#: src/menus/ViewMenus.cpp
+msgid "Sk&ip to"
+msgstr "Spr&ingen zu"
+
+#: src/menus/ViewMenus.cpp
+msgid "Selection Sta&rt"
+msgstr "Auswahlan&fang"
+
+#: src/menus/ViewMenus.cpp
+msgid "Skip to Selection Start"
+msgstr "An Auswahlanfang springen"
+
+#: src/menus/ViewMenus.cpp
+msgid "Skip to Selection End"
+msgstr "An Auswahlende springen"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&Verlauf …"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "&Karaoke …"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "&Mixer ..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr "&Extra-Menüs (an/aus)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Show Clipping (on/off)"
+msgstr "&Übersteuerungen anzeigen (an/aus)"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Effektablage anzeigen"
+
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "&Fenster"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "&Minimieren"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "Alle nach vorne &bringen"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+msgid "Minimize All Projects"
+msgstr "Alle Projekte minimieren"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13213,8 +13413,8 @@ msgid "Decoding Waveform"
 msgstr "Wellenform dekodieren"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+#, fuzzy, c-format
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% erledigt. Klicken um Fokus der Aufgabe zu ändern."
 
 #: src/prefs/BatchPrefs.cpp
@@ -13796,7 +13996,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -13806,7 +14006,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "Die Tastenkombination „%s“ ist bereits zugeordnet:\n"
 "\n"
@@ -14190,6 +14390,10 @@ msgstr "L&anges Intervall:"
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
 msgstr "Variable &Geschwindigkeit bei Wiedergabe"
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
+msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -14641,9 +14845,10 @@ msgstr ""
 "die Bilddatei auch andere Symbole anzeigt.)"
 
 #: src/prefs/ThemePrefs.cpp
+#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "Diese Entwicklungs-Version von Audacity enthält den zusätzlichen Knopf "
@@ -15209,8 +15414,8 @@ msgstr "%s - gesteuert"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
 msgstr "Auswahl %s.  %s wird sich nicht ändern."
 
 #: src/toolbars/SpectralSelectionBar.cpp
@@ -15983,6 +16188,49 @@ msgstr "Rückwärts"
 msgid "Help on the Internet"
 msgstr "Hilfe im Internet"
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "Möchten Sie die Änderungen speichern?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Mischen"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "QuickTime-Dateien"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Nichts zum Rückgängig machen"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "Fokussierte Spur s&chließen"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "Kann Projektdatei nicht öffnen"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Aufnahmebeginn:"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr "Menü"
@@ -16441,118 +16689,6 @@ msgstr "Möchten Sie wirklich schließen?"
 msgid "Confirm Close"
 msgstr "Schließen bestätigen"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Zeitleistenaktionen während Aufnahme deaktiviert"
-
-#: src/widgets/Ruler.cpp
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Klicken und Ziehen zum anpassen, Doppelklicken um zurückzusetzen"
-
-#: src/widgets/Ruler.cpp
-msgid "Record/Play head"
-msgstr "Aufnahme-/Wiedergabekopf"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr "Zeitleiste"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Seek"
-msgstr "Klicken oder ziehen um Suche zu beginnen"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "Klicken oder ziehen um Schrubben zu beginnen"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Zum Schrubben klicken & bewegen. Zum Suchen klicken & ziehen."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr "Zum Suchen bewegen"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr "Zum Schrubben bewegen"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr "Zum Suchen ziehen.  Aufhören um die Suche zu beenden."
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr "Zum Suchen ziehen.  Aufhören und bewegen zum Schrubben."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr "Zum Schrubben bewegen. Zum Suchen ziehen."
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "Schnelle Wiedergabe deaktiviert"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr "Schnelle Wiedergabe aktiviert"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to unpin"
-msgstr "Klicken zum abpinnen"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to pin"
-msgstr "Klicken zum anpinnen"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr "Schnelle Wiedergabe deaktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr "Schnelle Wiedergabe aktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable dragging selection"
-msgstr "Auswahl verschieben deaktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable dragging selection"
-msgstr "Auswahl verschieben aktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr "Zeitleisten-Tooltips deaktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr "Zeitleisten-Tooltips aktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr "Während Wiedergabe nicht scrollen"
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr "Anzeige während Wiedergabe aktualisieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr "Wiedergabebereich sperren"
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr "Wiedergabebereich entsperren"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr "Schrubregler deaktivieren"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr "Schrubregler aktivieren"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Warnung nicht mehr anzeigen"
@@ -16953,6 +17089,11 @@ msgstr "S-Kurve Aus"
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
+msgid "Error~%~%"
+msgstr "Fehler~%~%"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "~aProzentwerte dürfen nicht Negativ sein."
 
@@ -16966,16 +17107,11 @@ msgstr "~aProzentwerte dürfen nicht größer als 1000 % sein."
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
 "~adB-Werte dürfen nicht größer als +100 dB sein.~%~%~\n"
 "                                 Hinweis: 6 dB verdoppeln die Amplitude.~%~\n"
 "                                 \t-6 dB halbieren die Amplitude."
-
-#: plug-ins/adjustable-fade.ny
-#, lisp-format
-msgid "Error~%~%"
-msgstr "Fehler~%~%"
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -17140,36 +17276,6 @@ msgstr "Echoanzahl"
 msgid "Allow duration to change"
 msgstr "Änderung der Dauer erlauben"
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Echoanzahl '~a' außerhalb des gültigen Bereichs von 1 bis 50.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-"Tonhöhenänderung '~a' außerhalb des gültigen Bereichs von -12 bis +12 "
-"Halbtönen.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-"Verzögerungszeit '~a' außerhalb des gültigen Bereichs von 0 bis 10 Sekunden."
-"~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-"Verzögerungspegel '~a' außerhalb des gültigen Bereichs von -30 bis +6 dB.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Error.~%~a"
-msgstr "Fehler.~%~a"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "Textmarken in regelmäßigen Intervallen"
@@ -17178,9 +17284,16 @@ msgstr "Textmarken in regelmäßigen Intervallen"
 msgid "Adding equally-spaced labels to the label track..."
 msgstr "Füge Textmarken mit gleichen Abstand der Textmarkenspur hinzu..."
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr "'Anzahl an Textmarken' ODER 'Textmarkenintervall' verwenden"
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Trenne Dateien anhand von:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Textmarkenintervall"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -17197,6 +17310,11 @@ msgstr "Anzahl an Textmarken"
 #: plug-ins/equalabel.ny
 msgid "Label interval (seconds)"
 msgstr "Textmarkenintervall (Sekunden)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
+msgstr "Länge (Sekunden)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -17241,6 +17359,48 @@ msgstr "3 (nach Textmarke)"
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
 msgstr "Nummerierung beginnen bei"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "&Latenzkompensation:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "&Details"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "Warnungen"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Bereich s&peichern"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Bearbeitete Textmarken"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy, lisp-format
+msgid "~aRegion length = ~a seconds."
+msgstr "Von Länge in Sekunden"
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
@@ -18284,6 +18444,40 @@ msgstr "Frequenz der Radarnadeln (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Fehler.~%Stereospur erforderlich."
 
+#~ msgid ""
+#~ "~adB values cannot be more than +100 dB.~%~%~\n"
+#~ "                                 Hint: 6 dB doubles the amplitude~%~\n"
+#~ "                                 t-6 dB halves the amplitude."
+#~ msgstr ""
+#~ "~adB-Werte dürfen nicht größer als +100 dB sein.~%~%~\n"
+#~ "                                 Hinweis: 6 dB verdoppeln die Amplitude."
+#~ "~%~\n"
+#~ "                                 \t-6 dB halbieren die Amplitude."
+
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "Echoanzahl '~a' außerhalb des gültigen Bereichs von 1 bis 50.~%~a"
+
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr ""
+#~ "Tonhöhenänderung '~a' außerhalb des gültigen Bereichs von -12 bis +12 "
+#~ "Halbtönen.~%~a"
+
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr ""
+#~ "Verzögerungszeit '~a' außerhalb des gültigen Bereichs von 0 bis 10 "
+#~ "Sekunden.~%~a"
+
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr ""
+#~ "Verzögerungspegel '~a' außerhalb des gültigen Bereichs von -30 bis +6 dB."
+#~ "~%~a"
+
+#~ msgid "Error.~%~a"
+#~ msgstr "Fehler.~%~a"
+
+#~ msgid "Use 'Number of labels' OR 'Label interval'"
+#~ msgstr "'Anzahl an Textmarken' ODER 'Textmarkenintervall' verwenden"
+
 #~ msgid "Left"
 #~ msgstr "Links"
 
@@ -18300,16 +18494,6 @@ msgstr "Fehler.~%Stereospur erforderlich."
 #~ "audacityteam.org/man/playing_and_recording.html#midi|MIDI-Dateien]] und "
 #~ "Liedern von [[http://manual.audacityteam.org/man/"
 #~ "faq_opening_and_saving_files.html#fromcd|Audio-CDs]] lesen."
-
-#~ msgid ""
-#~ "~adB values cannot be more than +100 dB.~%~%~\n"
-#~ "                                 Hint: 6 dB doubles the amplitude~%~\n"
-#~ "                                 \t-6 dB halves the amplitude."
-#~ msgstr ""
-#~ "~adB-Werte dürfen nicht größer als +100 dB sein.~%~%~\n"
-#~ "                                 Hinweis: 6 dB verdoppeln die Amplitude.~"
-#~ "%~\n"
-#~ "                                 \t-6 dB halbieren die Amplitude."
 
 #~ msgid ""
 #~ "Audacity is a free program written by a worldwide team of [[http://www."
@@ -19098,9 +19282,6 @@ msgstr "Fehler.~%Stereospur erforderlich."
 
 #~ msgid "to Top"
 #~ msgstr "nach oben"
-
-#~ msgid "to Bottom"
-#~ msgstr "nach unten"
 
 #~ msgid "Down"
 #~ msgstr "Runter"
@@ -19946,9 +20127,6 @@ msgstr "Fehler.~%Stereospur erforderlich."
 #~ msgid "Unpinned Record/Play head"
 #~ msgstr "Aufnahme-/Wiedergabekopf nicht angeheftet"
 
-#~ msgid "Re&gion Save"
-#~ msgstr "Bereich s&peichern"
-
 #~ msgid "Regio&n Restore"
 #~ msgstr "Bereich &wiederherstellen"
 
@@ -20028,9 +20206,6 @@ msgstr "Fehler.~%Stereospur erforderlich."
 #~ msgid "R&ight Channel"
 #~ msgstr "R&echter Kanal"
 
-#~ msgid "&Rate"
-#~ msgstr "&Rate"
-
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "Die Spur senkrecht ziehen, um die Reihenfolge der Spuren zu ändern."
 
@@ -20058,9 +20233,6 @@ msgstr "Fehler.~%Stereospur erforderlich."
 
 #~ msgid "To beats per minute"
 #~ msgstr "Bis Anschlägen pro Minute"
-
-#~ msgid "From length in seconds"
-#~ msgstr "Von Länge in Sekunden"
 
 #~ msgid ""
 #~ "Start time after end time!\n"

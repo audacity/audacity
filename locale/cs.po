@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-10-10 15:25+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2017-11-25 12:58+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -30,10 +30,11 @@ msgid "Please choose an existing file."
 msgstr "Vyberte, prosím, stávající soubor."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -219,7 +220,8 @@ msgid "No matches found"
 msgstr "Nenalezeny žádné shody"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+#, fuzzy
+msgid "Code has been modified. Are you sure?"
 msgstr "Kód byl upraven. Jste si jistý?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -271,7 +273,7 @@ msgstr "Kopírovat"
 msgid "Copy to clipboard"
 msgstr "Kopírovat do schránky"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Vyjmout"
@@ -280,7 +282,7 @@ msgstr "Vyjmout"
 msgid "Cut to clipboard"
 msgstr "Vyjmout a vložit do schránky"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Vložit"
@@ -298,7 +300,7 @@ msgstr "Vyprázdnit"
 msgid "Clear selection"
 msgstr "Vyčistit výběr"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Vybrat vše"
 
@@ -708,6 +710,122 @@ msgstr "Složka s nastavením:"
 msgid "GPL License"
 msgstr "Licence GPL"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Činnosti časové osy během nahrávání zakázány"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Klepněte a táhněte pro přizpůsobení stereo stop."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "Odšpendlená hlava nahrávání/přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr "Časová osa"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Seek"
+msgstr "Klepněte nebo táhněte pro započetí hledání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "Klepněte nebo táhněte pro započetí převíjení"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr "Klepněte a přesuňte pro převíjení. Klepněte a táhněte pro hledání."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr "Přesunout pro hledání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr "Přesunout pro převíjení"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release to stop seeking."
+msgstr "Táhněte pro hledání. Uvolněte pro zastavení hledání."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr "Táhněte pro hledání. Uvolněte a přesuňte pro převíjení."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr "Přesuňte pro převíjení. Táhněte pro hledání."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "Rychlé přehrávání zakázáno"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr "Rychlé přehrávání povoleno"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to unpin"
+msgstr "Klepněte pro odšpendlení"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to pin"
+msgstr "Klepněte pro přišpendlení"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr "Zakázat rychlé přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr "Povolit rychlé přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable dragging selection"
+msgstr "Zakázat tažení výběru"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable dragging selection"
+msgstr "Povolit tažení výběru"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr "Zakázat nástrojové rady k časové ose"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr "Povolit nástrojové rady k časové ose"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr "Neposunovat pohled při přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr "Aktualizovat zobrazení při přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr "Zamknout oblast přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr "Odemknout oblast přehrávání"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr "Zakázat pravítko pro převíjení"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr "Povolit pravítko pro převíjení"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -779,12 +897,12 @@ msgid "Audacity is starting up..."
 msgstr "Spouští se Audacity..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Nový"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Otevřít..."
 
@@ -792,7 +910,7 @@ msgstr "&Otevřít..."
 msgid "Open &Recent..."
 msgstr "Otevřít &Nedávné..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&O programu Audacity..."
 
@@ -800,7 +918,7 @@ msgstr "&O programu Audacity..."
 msgid "&Preferences..."
 msgstr "&Nastavení..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Soubor"
 
@@ -939,8 +1057,8 @@ msgstr "&Uložit..."
 msgid "Cl&ear"
 msgstr "Sm&azat"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Zavřít"
 
@@ -1794,7 +1912,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Zkontrolovat závislost"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Postup"
@@ -1816,12 +1935,12 @@ msgid "Cleaning up temporary files"
 msgstr "Uklízení dočasných souborů"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Ukládání datových souborů projektu"
-
-#: src/DirManager.cpp
 msgid "Cleaning up after failed save"
 msgstr "Uklízení po nezdařeném uložení"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Ukládání datových souborů projektu"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2384,9 +2503,9 @@ msgstr ""
 "vzorkovací kmitočet."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "Bylo vybráno příliš zvuku.  Jen první %.1f sekundy zvuku budou analyzovány."
@@ -2431,8 +2550,8 @@ msgstr "spektrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Uložit spektrální data jako:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Nelze zapisovat do souboru:"
@@ -2740,7 +2859,8 @@ msgid "Track"
 msgstr "Stopa"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Štítek"
 
@@ -2772,15 +2892,15 @@ msgstr "Nový..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "Stisknutím tlačítka F2 nebo dvojklepnutím upravit obsah buněk."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
 msgstr "Vybrat textový soubor obsahující štítky"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Textové soubory (*.txt)|*.txt|Všechny soubory|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "Nelze otevřít soubor: \"%s\""
@@ -2789,7 +2909,7 @@ msgstr "Nelze otevřít soubor: \"%s\""
 msgid "No labels to export."
 msgstr "Žádné štítky k uložení."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Uložit štítky jako:"
 
@@ -2817,22 +2937,22 @@ msgstr "Změněný štítek"
 msgid "Label Edit"
 msgstr "Upravit štítek"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Štítek přidán"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "Vyj&mout"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Kopírovat"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Vložit"
 
@@ -2847,6 +2967,22 @@ msgstr "Smazaný štítek"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr "Jeden nebo více uložených štítků se nepodařilo přečíst."
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Upravené štítky"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Název"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Štítek přidán"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2890,2474 +3026,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity Karaoke%s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "Bez kategorie"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Uložit projekt"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "Uložit jako projekt &Audacity..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "&Uložit zkomprimovanou kopii projektu..."
-
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "&Uložit zkomprimovanou kopii projektu..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export"
-msgstr "Uložit jako"
-
-#: src/Menus.cpp
-msgid "Export as MP&3"
-msgstr "Uložit jako MP&3"
-
-#: src/Menus.cpp
-msgid "Export as &WAV"
-msgstr "Uložit jako &WAV"
-
-#: src/Menus.cpp
-msgid "Export as &OGG"
-msgstr "Uložit jako &OGG"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "&Uložit zvuk v jiném formátu..."
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "Ul&ožit vybraný zvuk v jiném formátu..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "Uložit š&títky jako..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Uložit &více souborů jako..."
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "Uložit jako &MIDI..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&Nahrát"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&Zvuk..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Štítky..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&Původní data..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Nastavení strá&nky..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&Tisk..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "&Ukončit"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "Úp&ravy"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Zpět"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "Z&novu"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Smazat"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "Kopí&rovat"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "O&dstranit zvláštní"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "&Rozdělit a vyjmout"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "Rozdělit a s&mazat"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "&Výběr přeměnit na ticho"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "&Oříznout zvuk"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "Up&ravit hranice klipu"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "Roz&dělit záznam"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "Přesunout do no&vé zvukové stopy"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "&Spojit klipy"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "Rozděli&t při tichu"
-
-#: src/Menus.cpp
-msgid "&Labels"
-msgstr "Š&títky"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "&Upravit štítky"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "Přidat štítek do &výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "Přidat štítek v &poloze přehrávání"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "Vložit te&xt do nového štítku"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "&Psát pro vytvoření štítku (zapnout/vypnout)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "Š&títky označený zvuk"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Upravit štítek"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&Střih"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "Rozdělit a smazat"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "Rozdělit a vyjmout"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "Roz&dělit a vyjmout klip"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "Rozdělit a smazat"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "Rozdělit a smazat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "Ticho"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "Vý&běr přeměnit na ticho"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "Štítek"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "Kopí&rovat"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "Upravit štítek"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "Rozděli&t"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "Upravit štítek"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "&Popisná data"
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "&Nastavení..."
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "&Vybrat"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&Všechno"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "Výběr"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Nic"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "S&topy"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "Ve všech &stopách"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Sync-Locked"
-msgstr "Výběr ticha"
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr "Ve všech &synchronizovaných-zamknutých stopách"
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr "&Oblast"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "Nastavit bod výběru a přehrát"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "&Vlevo od ukazatele po polohu přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "Nastavit bod výběru a přehrát"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "&Vpravo od ukazatele po polohu přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "Začátek &stopy až po ukazatel"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "Začátek &stopy až po ukazatel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "Ukazatel až po &konec stopy"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "Ukazatel až po &konec stopy"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "Vybrat po konec"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "Začátek &stopy až po ukazatel"
-
-#: src/Menus.cpp
-msgid "S&tore Selection"
-msgstr "&Uložit výběr"
-
-#: src/Menus.cpp
-msgid "Retrieve Selectio&n"
-msgstr "Získat vý&běr"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "&Spektrum"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "&Přepnout výběr spektra"
-
-#: src/Menus.cpp
-msgid "Next &Higher Peak Frequency"
-msgstr "Další &vyšší vrcholový kmitočet"
-
-#: src/Menus.cpp
-msgid "Next &Lower Peak Frequency"
-msgstr "Další &nižší vrcholový kmitočet"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "Hranici &předchozího klipu na ukazatel"
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Ukazatel na hranici &dalšího klipu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "Př&edchozí klip"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr "Př&edchozí klip"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "D&alší klip"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr "D&alší klip"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "Výběr po začátek"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr "Ukazatel na uloženou polohu &ukazatele"
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr "Uložit &polohu ukazatele"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "Na &nulové přechody"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr "Na &nulové přechody"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Pohled"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "&Zvětšení"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "Přiblíži&t"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "&Normální zvětšení"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "Oddáli&t"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "&Přiblížit výběr"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Zoom &Toggle"
-msgstr "Nástroj lupa"
-
-#: src/Menus.cpp
-msgid "T&rack Size"
-msgstr "Velikost &stopy"
-
-#: src/Menus.cpp
-msgid "&Fit to Width"
-msgstr "&Přizpůsobit šířce"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr "Přizpůsobit &výšce"
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "&Sbalit všechny stopy"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "R&ozbalit sbalené stopy"
-
-#: src/Menus.cpp
-msgid "Sk&ip to"
-msgstr "Přes&kočit na konec"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "Na začá&tek výběru"
-
-#: src/Menus.cpp
-msgid "Selection Sta&rt"
-msgstr "&Začátek výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "Na ko&nec výběru"
-
-#: src/Menus.cpp
-msgid "Selection En&d"
-msgstr "&Konec výběru"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&Historie"
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "&Karaoke..."
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "&Směšovač..."
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "&Nástrojové panely"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Reset Toolb&ars"
-msgstr "&Obnovit panely nástrojů"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "Panel &pohybu"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "Panel &nástrojů"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "Měřicí panel hladiny &nahrávání"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "Měřicí panel hladiny &přehrávání"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Panel směš&ování"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "Panel ú&prav"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Přehrát nastavenou rychlostí"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "Nástrojový panel pro posouvání"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "Panel &zařízení"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "Panel &výběru"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "Panel výběru &spektra"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr "&Další nabídky (zapnout/vypnout)"
-
-#: src/Menus.cpp
-msgid "&Show Clipping (on/off)"
-msgstr "&Zobrazit přebuzení (clipping)"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Ukázat přihrádku s efekty"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "Pohyb"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "Přehrává se"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "Pře&hrát/Zastavit"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "Přehrát/Zastavit a &nastavit ukazatel"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "Přehrávat ve &smyčce"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&Pozastavit"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Nahrávání"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&Nahrávání"
-
-#: src/Menus.cpp
-msgid "&Append Record"
-msgstr "Připo&jit nahrávání"
-
-#: src/Menus.cpp
-msgid "Record &New Track"
-msgstr "Nahrát &nové stopy"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&Časovač záznamu..."
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Cursor to"
-msgstr "&Ukazatel na"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "Jít na začá&tek výběru"
-
-#: src/Menus.cpp
-msgid "Selection Star&t"
-msgstr "Začá&tek výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "Jít na ko&nec výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "Ukazatel až po &konec stopy"
-
-#: src/Menus.cpp
-msgid "Track &Start"
-msgstr "Na &začátek stopy"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "Ukazatel až po &konec stopy"
-
-#: src/Menus.cpp
-msgid "Track &End"
-msgstr "Na &konec stopy"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Prev Clip Boundary"
-msgstr "Ukazatel na hranici &dalšího klipu"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr "Hranice &předchozího klipu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Next Clip Boundary"
-msgstr "Ukazatel na hranici &dalšího klipu"
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr "Hranice &dalšího klipu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "Začátek &projektu"
-
-#: src/Menus.cpp
-msgid "&Project Start"
-msgstr "Začátek &projektu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "Ukazatel až po &konec stopy"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr "K&onec projektu"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "Přehrá&t oblast"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&Zamknout"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&Odemknout"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "Pro&hledat zvuková zařízení znovu"
-
-#: src/Menus.cpp
-msgid "Transport &Options"
-msgstr "Volby pro pře&hrávání"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "Ú&roveň aktivace zvukem..."
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Zvukem &aktivované nahrávání (zapnuto/vypnuto)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Přišpendlená &hlava přehrávání/nahrávání (zapnuto/vypnuto)"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "Při nahrávání hrají &jiné stopy (zapnout/vypnout)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "Nahrávku současně &přehrávat (zapnuto/vypnuto)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "A&utomatické přizpůsobení úrovně nahrávání zvuku (zapnuto/vypnuto)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "Přidat &novou stopu"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "&Mono stopa"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&Stereo stopa"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&Popisová stopa"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "&Časová stopa"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr "S&míchat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "Smíchat stereo na &monofonní stopy"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "S&pojit stopy"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "Spojit a vykreslit do &nové stopy"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "Převzo&rkovat..."
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "Odstra&nit stopy"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute"
-msgstr "Z&tlumit/Zrušit ztlumení"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "&Ztlumit všechny stopy"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "Znovu za&pnout zvuk u všech stop"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr "&Vyvážení"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "Levý"
-
-#: src/Menus.cpp
-msgid "&Left"
-msgstr "&Vlevo"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "Pravý"
-
-#: src/Menus.cpp
-msgid "&Right"
-msgstr "Vp&ravo"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "Střed"
-
-#: src/Menus.cpp
-msgid "&Center"
-msgstr "&Na střed"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "&Zarovnat konec s koncem"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "Zarovnat k &sobě"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "Začátek na &nule"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Začátek na začátku &ukazatele/výběru"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "Začátek na &konci výběru"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Konec na začátku uk&azatele/výběru"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "Konec na &konci výběru"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "Za&rovnat stopy"
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "Po&sunout výběr se stopami (zapnuto/vypnuto)"
-
-#: src/Menus.cpp
-msgid "Move Sele&ction and Tracks"
-msgstr "Posunout vý&běr a stopy"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "Synchronizovat MIDI se zvukem"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "&Třídit stopy"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Seřadit podle času"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "Podle času &začátku"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Seřadit podle názvu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "Podle &názvu"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Synchronizovat-&zamknout stopy (zapnout/vypnout)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&Vytvoření"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Přidat/Odstranit přídavné moduly..."
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "Efe&kty"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Zopakovat %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "Zopakovat naposledy použitý efekt"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "R&ozbor"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "Kontrast..."
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Kreslit spektrum..."
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "Nástr&oje"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&Štítky..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "&Použít"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "&Smazat..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Nástroje pro snímek obrazovky..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Spustit srovnávací zkoušku..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Simulate Recording Errors"
-msgstr "Uložit časované nahrávání jako"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detect Upstream Dropouts"
-msgstr "Vyberte proud(y) k nahrání"
-
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "&Okno"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "&Zmenšit"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "&Přenést vše do popředí"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "Po&hyb"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "Pře&hrát"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr "&Zastavit"
-
-#: src/Menus.cpp
-msgid "Play &One Second"
-msgstr "Hrát &jednu sekundu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "Přehrát do &výběru"
-
-#: src/Menus.cpp
-msgid "Play &Before Selection Start"
-msgstr "Přehrát př&ed začátkem výběru"
-
-#: src/Menus.cpp
-msgid "Play Af&ter Selection Start"
-msgstr "Přehrát p&o začátku výběru"
-
-#: src/Menus.cpp
-msgid "Play Be&fore Selection End"
-msgstr "Přehrát pře&d koncem výběru"
-
-#: src/Menus.cpp
-msgid "Play Aft&er Selection End"
-msgstr "Přehrát &po konci výběru"
-
-#: src/Menus.cpp
-msgid "Play Before a&nd After Selection Start"
-msgstr "Přehrát před &a po začátku výběru"
-
-#: src/Menus.cpp
-msgid "Play Before an&d After Selection End"
-msgstr "Přehrát před a po &konci výběru"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr "Přehrát v&ystřiženou ukázku"
-
-#: src/Menus.cpp
-msgid "&Selection Tool"
-msgstr "Nástroj pro &výběr"
-
-#: src/Menus.cpp
-msgid "&Envelope Tool"
-msgstr "Nástroj pro &obalovou křivku"
-
-#: src/Menus.cpp
-msgid "&Draw Tool"
-msgstr "Nástroj pro &kreslení"
-
-#: src/Menus.cpp
-msgid "&Zoom Tool"
-msgstr "Nástroj &lupa"
-
-#: src/Menus.cpp
-msgid "&Time Shift Tool"
-msgstr "Nástroj pro č&asový posun"
-
-#: src/Menus.cpp
-msgid "&Multi Tool"
-msgstr "&Vícenástrojový režim"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr "&Předešlý nástroj"
-
-#: src/Menus.cpp
-msgid "&Next Tool"
-msgstr "&Další nástroj"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr "S&měšovač"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Přizpůs&obit hlasitost přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "&Zvýšit hlasitost přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "&Snížit hlasitost přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "&Přizpůsobit hlasitost nahrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Z&výšit hlasitost nahrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "S&nížit hlasitost nahrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "Klávesa pro mazání &Delete 2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "Klávesa pro mazání Delete &2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Přehrát nastavenou rychlostí"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Pře&hrát nastavenou rychlostí"
-
-#: src/Menus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "Přehrát ve s&myčce nastavenou rychlostí"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Přehrát &vystřiženou ukázku nastavenou rychlostí"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "&Nastavit rychlost přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Z&rychlit přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "&Zpomalit přehrávání"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr "Přesunout se k &předchozímu štítku"
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr "Přesunout se k &dalšímu štítku"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "&Hledat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Left During Playback"
-msgstr "Malé skoky do&leva během přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Right During Playback"
-msgstr "Malé skoky do&prava během přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Le&ft During Playback"
-msgstr "Velké skoky &doleva během přehrávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Rig&ht During Playback"
-msgstr "Velké skoky d&oprava během přehrávání"
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr "Zaříz&ení"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Změnit na&hrávací zařízení"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Změnit &přehrávací zařízení"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Změnit zvukovou &architekturu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Změnit nahrávací &kanály"
-
-#: src/Menus.cpp
-msgid "&Selection"
-msgstr "&Výběr"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "&Vypnout přichytávání"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "Přichytávat k &nejbližšímu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "Přichytávat k &předchozímu"
-
-#: src/Menus.cpp
-msgid "Selection to &Start"
-msgstr "Výběr po &začátek"
-
-#: src/Menus.cpp
-msgid "Selection to En&d"
-msgstr "Výběr po &konec"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Left"
-msgstr "Rozšířit výběr do&leva"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Right"
-msgstr "Rozšířit výběr do&prava"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "Nastavit (nebo posunout) l&evou hranici výběru"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Nastavit  (nebo posunout) prav&ou hranici výběru"
-
-#: src/Menus.cpp
-msgid "Selection Contract L&eft"
-msgstr "Zmenšit výběr &zleva"
-
-#: src/Menus.cpp
-msgid "Selection Contract R&ight"
-msgstr "Zmenšit výběr zpra&va"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Backward Through Active Windows"
-msgstr "Posunout zpět skrz činná okna"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Forward Through Active Windows"
-msgstr "Posunout vpřed skrz činná okna"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr "&Zaměření"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Posunout &zpět od panelů nástrojů ke stopám"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Posunout &vpřed od panelů nástrojů ke stopám"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Previous Track"
-msgstr "Přesunout zaměření na pře&dchozí stopu"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Next Track"
-msgstr "Přesunout zaměření na &další stopu"
-
-#: src/Menus.cpp
-msgid "Move Focus to &First Track"
-msgstr "Přesunout zaměření na prv&ní stopu"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Last Track"
-msgstr "Přesunout zaměření na pos&lední stopu"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr "Přesunout zaměření na př&edchozí stopu a vybrat"
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr "Přesunout zaměření na d&alší skladbu a vybrat"
-
-#: src/Menus.cpp
-msgid "&Toggle Focused Track"
-msgstr "&Přepínat mezi vybranými stopami"
-
-#: src/Menus.cpp
-msgid "Toggle Focuse&d Track"
-msgstr "Přepínat mezi v&ybranými stopami"
-
-#: src/Menus.cpp
-msgid "&Cursor"
-msgstr "&Ukazatel"
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr "Přemístit ukazatel v&levo"
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr "Přemístit ukazatel v&pravo"
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr "&Krátký skok ukazatelem doleva"
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr "K&rátký skok ukazatelem doprava"
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr "Dlouhý &skok ukazatelem doleva"
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr "Dlouhý sk&ok ukazatelem doprava"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr "&Levá hrana klipu"
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr "&Pravá hrana klipu"
-
-#: src/Menus.cpp
-msgid "&Track"
-msgstr "&Stopa"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "Změnit pano&rama ve vybrané stopě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "Posunout panorama ve vybrané stopě do&leva"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "Posunout panorama ve vybrané stopě do&prava"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "Změnit &hlasitost ve vybrané stopě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "Z&většit hlasitost ve vybrané stopě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "Z&menšit hlasitost ve vybrané stopě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "&Otevřít nabídku k vybrané stopě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "Z&tlumit/Zrušit ztlumení vybrané stopy"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "Zapnout nebo vypnout &sólo pro vybranou stopu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "&Zavřít vybranou stopu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "Přesunout zaměřenou stopu na&horu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "Přesunout zaměřenou stopu &dolů"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "Přesunout zaměřenou stopu úplně &nahoru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "Přesunout zaměřenou stopu úplně do&lů"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Scriptables I"
-msgstr "Skript"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Vybrat..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Kmitočty"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Vybrat..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "Na &začátek stopy"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "Nastavení..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "Nastavení..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "D&alší klip"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Obálka"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&Upravit štítky"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Uložit jako projekt &Audacity..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Vybrat..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "&Třídit stopy"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Info..."
-msgstr "&Stáhnout další křivky..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "Zpráva"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "Nápověda"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Zavést..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Vyvést..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "Otevřít &Nedávné..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Uložit jako projekt &Audacity..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "&Stáhnout další křivky..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Kompresor..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&Nástroje pro snímek obrazovky..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Full Screen (on/off)"
-msgstr "Zobrazení na &celou obrazovku (zapnout/vypnout)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "Zmenšit všechny projekty"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Nápověda"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "P&rvní kroky"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Audacity"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&Rychlá nápověda"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Manual..."
-msgstr "&Příručka"
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "Diagnos&tika"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "Informace o zvuko&vém zařízení..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "Informace o zařízení &MIDI..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "Zobrazit &zápis..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Vytvořit data podpory..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Zkontrolova&t závislosti..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "&Zkontrolovat aktualizace..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "Neznámý"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "Přídavný modul %d až %d"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Otevřít poslední"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "Poslední &soubory"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&Zpět %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Zpět"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&Znovu %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Stopy jsou seřazeny podle času"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "Stopy jsou seřazeny podle názvu"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "žádná popisová stopa"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "žádná popisová stopa na nebo pod zaměřenou stopou"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "žádné štítky v popisové stopě"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr "Časově posunuté klipy doprava"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr "Časově posunuté klipy doleva"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Časový posun"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr "Klip nebyl přesunut"
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "Nastavit levou hranici výběru"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "Poloha"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "Nastavit pravou hranici výběru"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Stopu s aktivním zvukem nelze smazat"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "Přesunuto '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "Přesunout stopu úplně na&horu"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "Přesunout stopu úplně d&olů"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "Přesunout stopu úplně d&olů"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "Přesunuto '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "Přesunuto '%s' %s"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "Přesunout stopu nahor&u"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "Přesunout stopu &dolů"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "štítky.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Nejsou žádné popisové stopy k uložení."
-
-#: src/Menus.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Vyberte, prosím, najednou jen jednu stopu s notami."
-
-#: src/Menus.cpp
-msgid "Please select a Note Track."
-msgstr "Vyberte, prosím, stopu s notami."
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "Uložit MIDI jako:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI soubor (*.mid)|*.mid|Allegro soubor (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Vybrali jste název souboru s nerozpoznanou příponou.\n"
-"Chcete pokračovat?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "Uložit jako MIDI"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "Uložit vybraný zvuk v jiném formátu..."
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Žádný krok k obnovení Zpět"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Nic k opakování"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Vyjmout a vložit do schránky"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Vyjmout a rozdělit a zkopírovat do schránky"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Rozdělit a vyjmout"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "Vkládání jednoho typu stopy do jiné není povoleno."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Kopírování stereo zvuku do mono stopy není dovoleno."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Vložit ze schránky"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Vložený text ze schránky"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "Vložit text do nového štítku"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Oříznout vybrané zvukové stopy od %.2f sekund %.2f sekund"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "Oříznout zvuk"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Rozděleno a smazáno %.2f sekund v t=%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Rozdělit a smazat"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "Odděleno %.2f sekund na t=%.2f"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "Oddělit"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Spojeno %.2f sekund na t=%.2f"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Spojit"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Ztlumeny zvolené stopy na %.2f sekund od %.2f"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Ticho"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Zdvojeno"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Zdvojit"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Vyjmout a zkopírovat štítky označené oblasti zvuku do schránky"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "Vyjmout štítky označený zvuk"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr ""
-"Rozdělit a vyjmout štítky označené oblasti zvuku a zkopírovat do schránky"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Rozdělit a vyjmout štítky označený zvuk"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Štítky označené oblasti zvuku jsou překopírovány do schránky"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "Kopírovat štítky označený zvuk"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "Smazané štítky označené oblasti zvuku"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "Smazat štítky označené oblasti zvuku"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "Rozdělit smazané štítky označené oblasti zvuku"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "Rozdělit a smazat štítky označené oblasti zvuku"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "Na ticho přeměněné štítky označené oblasti zvuku"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "Přeměnit štítky označené oblasti zvuku na ticho"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "Rozdělit štítky označené oblasti zvuku (body nebo oblasti)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "Rozdělit štítky označený zvuk"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "Spojené štítky označené oblasti zvuku (body nebo oblasti)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "Spojit štítky označený zvuk"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "Oddělené štítky označené oblasti zvuku"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "Oddělit štítky označený zvuk"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Rozdělit"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Kopírovat do nové stopy"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Přesunout do nové zvukové stopy"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Nahrané štítky z '%s'"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Nahrát štítky"
-
-#: src/Menus.cpp
-msgid "Select a MIDI file"
-msgstr "Vybrat MIDI soubor"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI a soubory Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Soubory MIDI "
-"(*.mid;*.midi)|*.mid;*.midi|Soubory Allegro (*.gro)|*.gro|Všechny soubory|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Nahrané MIDI z '%s'"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "Nahrát MIDI"
-
-#: src/Menus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Vybrat nekomprimovaný zvukový soubor"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "Všechny soubory|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Upravit štítky popisných dat"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "Štítky popisných dat"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "Veškerý zvuk ve stopě '%s' spojen"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Spojit"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d stopy smíchány (spojeny) do jedné nové stereo stopy"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d stopy smíchány (spojeny) do jedné nové mono stopy"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "Smíchat (spojit) stopy"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Stopa %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s left"
-msgstr "vlevo"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s right"
-msgstr "vpravo"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: src/Menus.cpp
-msgid "start"
-msgstr "Začátek"
-
-#: src/Menus.cpp
-msgid "end"
-msgstr "Konec"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to zero"
-msgstr "Zarovnáno/Přesunuto %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to zero"
-msgstr "Začátek na nule"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Start"
-msgstr "Zarovnat %s/Přesunout"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Start"
-msgstr "Počáteční rozkmit"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Začátek na začátku ukazatele/výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to cursor/selection start"
-msgstr "Začátek na začátku ukazatele/výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to selection end"
-msgstr "Začátek na konci výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to selection end"
-msgstr "Začátek na konci výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Konec na začátku ukazatele/výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to cursor/selection start"
-msgstr "Konec na začátku ukazatele/výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End"
-msgstr "Zarovnat %s/Přesunout"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End"
-msgstr "Zarovnat %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to selection end"
-msgstr "Zarovnán konec s koncem výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to selection end"
-msgstr "Zarovnán konec s koncem výběru"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to end"
-msgstr "Zarovnáno/Přesunuto %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to end"
-msgstr "&Zarovnat konec s koncem"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End to End"
-msgstr "&Zarovnat konec s koncem"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End to End"
-msgstr "&Zarovnat konec s koncem"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved together"
-msgstr "Zarovnáno/Přesunuto %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned together"
-msgstr "Zarovnat k &sobě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Together"
-msgstr "Zarovnat k &sobě"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Together"
-msgstr "Zarovnat k &sobě"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "Synchronizace MIDI a zvukových stop"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Zarovnání dokončeno: MIDI od %.2f do %.2f sek., Zvuk od %.2f do %.2f sek."
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "Synchronizovat MIDI se zvukem"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Zarovnání se nezdařilo: Vstup je příliš krátký: MIDI od %.2f do %.2f sek., "
-"Zvuk od %.2f do %.2f sek."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "Vnitřní chyba nahlášena procesem zarovnávání."
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Vytvořit novou zvukovou stopu"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Nová stopa"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Vytvořit novou zvukovou stereo stopu"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Vytvořena nová popisová stopa"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Tato verze Audacity umožňuje pouze jednorázovou stopu pro každé okno "
-"projektu."
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Vytvořena nová časová stopa"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-"Časované nahrávání nelze použít s více než jedním otevřeným projektem.\n"
-"\n"
-"Zavřete, prosím, všechny dodatečné projekty a zkuste to znovu."
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "Časované nahrávání"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-"Časované nahrávání nelze použít, když máte neuložené změny.\n"
-"\n"
-"Uložte nebo zavřete, prosím, tento projekt a zkuste to znovu."
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "Název"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "Štítek přidán"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "Vyberte, prosím, zvukovou stopu."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "Vyberte, prosím, zvukovou stopu."
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "Vyberte, prosím, zvukovou stopu."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "Vyberte, prosím, stopu s notami."
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Upravené štítky"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Odstraněná zvuková stopa(y)"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "Odstranit stopu"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "Informace o zvukovém zařízení"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "&Uložit"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "Uložit informace o zařízení"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "Nelze uložit informace o zařízení"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr "Informace o zařízení MIDI"
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr "Uložit informace o zařízení MIDI"
-
-#: src/Menus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "Nelze uložit informace o zařízení MIDI"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "Převzorkovaná zvuková stopa(y)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "Stopa"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Nelze uzamknout oblast za koncem\n"
-"projektu."
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Převzorkovat"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Nový vzorkovací kmitočet (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "Vložená hodnota je neplatná"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "Převzorkování stopy %d"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Převzorkovaná zvuková stopa(y)"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "Převzorkovat stopu"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "Z&novu"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Smíchat"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Smíchat (spojit) stopy"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5365,7 +3057,7 @@ msgstr "Spojit (smíchat) stopy"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Zesílení"
@@ -5382,7 +3074,7 @@ msgid "Musical Instrument"
 msgstr "Hudební nástroj"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Vyvážení"
@@ -5437,9 +3129,8 @@ msgid "Module Unsuitable"
 msgstr "Modul nevyhovuje"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+#, fuzzy, c-format
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "Modul %s  neposkytuje řetězec verze. Nebude nahrán."
 
 #: src/ModuleManager.cpp
@@ -5454,9 +3145,9 @@ msgstr ""
 "Nebude nahrán."
 
 #: src/ModuleManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "Modul %s je porovnán s verzí Audacity %s. Nebude nahrán."
 
 #: src/ModuleManager.cpp
@@ -5628,6 +3319,11 @@ msgstr ""
 msgid "Show:"
 msgstr "Ukázat:"
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Všechno"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Ukázat vše"
@@ -5722,7 +3418,7 @@ msgid "Plug-in already exists"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -6018,9 +3714,9 @@ msgid "Error Saving Project"
 msgstr "Chyba při ukládání projektu"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "Projekt se nepodařilo uložit. Cesta nenalezena. Pokuste\n"
@@ -6169,15 +3865,6 @@ msgstr "Nový projekt vytvořen"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Vymazáno %.2f sekund v t=%.2f"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Smazat"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Místo na disku zbývající pro nahrávání: %s"
 
@@ -6244,23 +3931,6 @@ msgstr "Nahraný zvuk"
 #: src/Project.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Nahrávat"
-
-#: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Nastavená hlasitost"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Nastavené vyvážení (panorama)"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "Odstraněná stopa '%s.'"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "Odstranit stopu"
 
 #: src/Project.cpp
 msgid "Less than 1 minute"
@@ -6553,7 +4223,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Varování - zkracuje se příliš dlouhý blokový soubor"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Nápověda"
 
@@ -6813,11 +4483,11 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Některé požadované soubory v:\n"
 "  %s\n"
@@ -7026,6 +4696,10 @@ msgstr ""
 "\n"
 "'%s' bylo zrušeno, protože nahrávání bylo zastaveno."
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "Časované nahrávání"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7075,6 +4749,10 @@ msgstr "Povolit &automatické ukládání?"
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "Uložit projekt jako..."
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "Vybrat..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -7134,9 +4812,19 @@ msgstr ""
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Časované nahrávání Audacity - Čeká se na začátek"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "Nahrávání začne v:"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7184,6 +4872,13 @@ msgstr "Stereo, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "Pohled se stopou"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Stopa %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7809,7 +5504,7 @@ msgstr "Bílý"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Žádný"
 
@@ -8048,6 +5743,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "&Výše"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "Zbytek"
 
@@ -8154,6 +5854,16 @@ msgstr "Měřítko"
 #, fuzzy
 msgid "VZoom:"
 msgstr "Zvětšení"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "Zvětšení"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "Úplně dolů"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8733,6 +6443,10 @@ msgstr "&Nastavit znovu"
 msgid "&Difference:"
 msgstr "&Rozdíl:"
 
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Nápověda"
+
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 #, c-format
@@ -9287,6 +7001,14 @@ msgstr "Výchozí"
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "Tovární přednastavení"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "Zavést..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "Vyvést..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -10277,7 +7999,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Čeká se na dokončení výpočtu průběhové křivky..."
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+#, fuzzy
+msgid "(Maximum 0dB)"
 msgstr ".  Maximum 0dB."
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10751,6 +8474,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr "Vytvoří zvuk s nulovým rozkmitem"
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Ticho"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr "Převede stereofonní stopu na monofonní"
@@ -11085,8 +8812,8 @@ msgid "Error Saving Effect Presets"
 msgstr "Chyba při ukládání přednastavení efektu"
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+#, fuzzy, c-format
+msgid "This parameter file was saved from %s. Continue?"
 msgstr "Tento parametrický soubor byl uložen %s. Chcete pokračovat?"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11186,7 +8913,8 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr "Vyberte Obecné, aby se použilo grafické rozhraní poskytované systémem."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+#, fuzzy
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr "Vyberte Základní, aby se použilo základní pouze textové rozhraní."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -11412,7 +9140,13 @@ msgid "plug-in"
 msgstr "přídavný modul"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist vrátil hodnotu:"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Nyquist vrátil hodnotu:"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11507,6 +9241,10 @@ msgstr "&Použít zastaralou skladbu (verze 3)"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "&Nahrát"
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Uložit"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11620,6 +9358,10 @@ msgstr "Žádné volby podle typu souboru"
 msgid "Export Audio"
 msgstr "Uložit zvuk v jiném formátu"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Upravit štítky popisných dat"
+
 #: src/export/Export.cpp
 msgid "Exported Tags"
 msgstr "Značky uložené v jiném formátu"
@@ -11684,8 +9426,8 @@ msgstr ""
 "souboru nebo složku."
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "Soubor s názvem \"%s\" už existuje. Nahradit?"
 
 #: src/export/Export.cpp
@@ -11908,20 +9650,25 @@ msgstr "Vybraná zvuková data se ukládají jako %s"
 msgid "Invalid sample rate"
 msgstr "Neplatný vzorkovací kmitočet"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Převzorkovat"
+
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Vzorkovací kmitočet projektu (%d) není podporován nynější výstupním formátem "
 "souboru."
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "Vzorkovací kmitočet projektu (%d) a datový tok (%d kb/s) není podporován "
 "nynější výstupním formátem souboru."
@@ -12718,19 +10465,19 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "Kodér MP3 vrátil chybu %ld"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Vzorkovací kmitočet projektu (%d) není podporován souborovým\n"
 "formátem MP3."
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "Vzorkovací kmitočet projektu (%d) a datový tok (%d kb/s) není podporován\n"
 "souborovým formátem MP3."
@@ -13152,6 +10899,11 @@ msgstr ""
 "Zkuste nainstalovat FFmpeg. Pro nekomprimované soubory vyzkoušejte i Soubor "
 "→ Nahrát → Nezpracovaná data."
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13311,7 +11063,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13447,10 +11199,2456 @@ msgstr "Množství dat k nahrání:"
 msgid "Sample rate:"
 msgstr "Vzorkovací kmitočet:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&Nahrát"
+
 #: src/import/RawAudioGuess.cpp
 #, fuzzy
 msgid "Bad data size"
 msgstr "Nahrát popisná data jako:"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s left"
+msgstr "vlevo"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s right"
+msgstr "vpravo"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr "Začátek"
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr "Konec"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr "Časově posunuté klipy doprava"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr "Časově posunuté klipy doleva"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Časový posun"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr "Klip nebyl přesunut"
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "Up&ravit hranice klipu"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr "Hranici &předchozího klipu na ukazatel"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr "Ukazatel na hranici &dalšího klipu"
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr "Př&edchozí klip"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "Př&edchozí klip"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr "D&alší klip"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "D&alší klip"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr "Hranice &předchozího klipu"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Ukazatel na hranici &dalšího klipu"
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr "Hranice &dalšího klipu"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "Ukazatel na hranici &dalšího klipu"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr "&Levá hrana klipu"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr "&Pravá hrana klipu"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Vložený text ze schránky"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Vložit ze schránky"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Žádný krok k obnovení Zpět"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Nic k opakování"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Vyjmout a vložit do schránky"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "Vymazáno %.2f sekund v t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Smazat"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "Vkládání jednoho typu stopy do jiné není povoleno."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "Kopírování stereo zvuku do mono stopy není dovoleno."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Zdvojeno"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Zdvojit"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Vyjmout a rozdělit a zkopírovat do schránky"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Rozdělit a vyjmout"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "Rozděleno a smazáno %.2f sekund v t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Rozdělit a smazat"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Ztlumeny zvolené stopy na %.2f sekund od %.2f"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "Oříznout vybrané zvukové stopy od %.2f sekund %.2f sekund"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "Oříznout zvuk"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Rozdělit"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Kopírovat do nové stopy"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Přesunout do nové zvukové stopy"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "Spojeno %.2f sekund na t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Spojit"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "Odděleno %.2f sekund na t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "Oddělit"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "Štítky popisných dat"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "Úp&ravy"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Smazat"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "Kopí&rovat"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "O&dstranit zvláštní"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "&Rozdělit a vyjmout"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "Rozdělit a s&mazat"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "&Výběr přeměnit na ticho"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "&Oříznout zvuk"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "Roz&dělit záznam"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "Přesunout do no&vé zvukové stopy"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "&Spojit klipy"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "Rozděli&t při tichu"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "&Popisná data"
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "&Nastavení..."
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "Klávesa pro mazání &Delete 2"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "Klávesa pro mazání Delete &2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr "S&měšovač"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Přizpůs&obit hlasitost přehrávání"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "&Zvýšit hlasitost přehrávání"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "&Snížit hlasitost přehrávání"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "&Přizpůsobit hlasitost nahrávání"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Z&výšit hlasitost nahrávání"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "S&nížit hlasitost nahrávání"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr "Zaříz&ení"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Změnit na&hrávací zařízení"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Změnit &přehrávací zařízení"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Změnit zvukovou &architekturu"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Změnit nahrávací &kanály"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
+msgstr "Zobrazení na &celou obrazovku (zapnout/vypnout)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Nahrané MIDI z '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "Nahrát MIDI"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "Uložit vybraný zvuk v jiném formátu..."
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "štítky.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Nejsou žádné popisové stopy k uložení."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Vyberte, prosím, najednou jen jednu stopu s notami."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select a Note Track."
+msgstr "Vyberte, prosím, stopu s notami."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "Uložit MIDI jako:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI soubor (*.mid)|*.mid|Allegro soubor (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Vybrali jste název souboru s nerozpoznanou příponou.\n"
+"Chcete pokračovat?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "Uložit jako MIDI"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Nahrané štítky z '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Nahrát štítky"
+
+#: src/menus/FileMenus.cpp
+msgid "Select a MIDI file"
+msgstr "Vybrat MIDI soubor"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI a soubory Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Soubory MIDI "
+"(*.mid;*.midi)|*.mid;*.midi|Soubory Allegro (*.gro)|*.gro|Všechny soubory|*"
+
+#: src/menus/FileMenus.cpp
+msgid "Select any uncompressed audio file"
+msgstr "Vybrat nekomprimovaný zvukový soubor"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "Všechny soubory|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Uložit přednastavení..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Otevřít poslední"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "Poslední &soubory"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Uložit projekt"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "Uložit jako projekt &Audacity..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "&Uložit zkomprimovanou kopii projektu..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "&Uložit zkomprimovanou kopii projektu..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export"
+msgstr "Uložit jako"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as MP&3"
+msgstr "Uložit jako MP&3"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &WAV"
+msgstr "Uložit jako &WAV"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &OGG"
+msgstr "Uložit jako &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "&Uložit zvuk v jiném formátu..."
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Ul&ožit vybraný zvuk v jiném formátu..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "Uložit š&títky jako..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Uložit &více souborů jako..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "Uložit jako &MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&Zvuk..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Štítky..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&Původní data..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "Nastavení strá&nky..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&Tisk..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "&Ukončit"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "Informace o zvukovém zařízení"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save Device Info"
+msgstr "Uložit informace o zařízení"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save device info"
+msgstr "Nelze uložit informace o zařízení"
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr "Informace o zařízení MIDI"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save MIDI Device Info"
+msgstr "Uložit informace o zařízení MIDI"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save MIDI device info"
+msgstr "Nelze uložit informace o zařízení MIDI"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&Rychlá nápověda"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr "P&rvní kroky"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Rychlá nápověda"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "&Příručka"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr "Diagnos&tika"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "Informace o zvuko&vém zařízení..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr "Informace o zařízení &MIDI..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "Zobrazit &zápis..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Vytvořit data podpory..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "Zkontrolova&t závislosti..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "&Zkontrolovat aktualizace..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "Vložit text do nového štítku"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Vyjmout a zkopírovat štítky označené oblasti zvuku do schránky"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "Vyjmout štítky označený zvuk"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "Smazané štítky označené oblasti zvuku"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "Smazat štítky označené oblasti zvuku"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr ""
+"Rozdělit a vyjmout štítky označené oblasti zvuku a zkopírovat do schránky"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "Rozdělit a vyjmout štítky označený zvuk"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "Rozdělit smazané štítky označené oblasti zvuku"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "Rozdělit a smazat štítky označené oblasti zvuku"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "Na ticho přeměněné štítky označené oblasti zvuku"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "Přeměnit štítky označené oblasti zvuku na ticho"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Štítky označené oblasti zvuku jsou překopírovány do schránky"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "Kopírovat štítky označený zvuk"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "Rozdělit štítky označené oblasti zvuku (body nebo oblasti)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "Rozdělit štítky označený zvuk"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "Spojené štítky označené oblasti zvuku (body nebo oblasti)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "Spojit štítky označený zvuk"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "Oddělené štítky označené oblasti zvuku"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "Oddělit štítky označený zvuk"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Labels"
+msgstr "Š&títky"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "&Upravit štítky"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "Přidat štítek do &výběru"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "Přidat štítek v &poloze přehrávání"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "Vložit te&xt do nového štítku"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "&Psát pro vytvoření štítku (zapnout/vypnout)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "Š&títky označený zvuk"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&Střih"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Upravit štítek"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Rozdělit a smazat"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "Roz&dělit a vyjmout klip"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Rozdělit a vyjmout"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "Rozdělit a smazat"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Rozdělit a smazat"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "Vý&běr přeměnit na ticho"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Ticho"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "Kopí&rovat"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Štítek"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "Rozděli&t"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Upravit štítek"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Upravit štítek"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Backward Through Active Windows"
+msgstr "Posunout zpět skrz činná okna"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Forward Through Active Windows"
+msgstr "Posunout vpřed skrz činná okna"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr "&Zaměření"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "Posunout &zpět od panelů nástrojů ke stopám"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Posunout &vpřed od panelů nástrojů ke stopám"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Previous Track"
+msgstr "Přesunout zaměření na pře&dchozí stopu"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Next Track"
+msgstr "Přesunout zaměření na &další stopu"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &First Track"
+msgstr "Přesunout zaměření na prv&ní stopu"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Last Track"
+msgstr "Přesunout zaměření na pos&lední stopu"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr "Přesunout zaměření na př&edchozí stopu a vybrat"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr "Přesunout zaměření na d&alší skladbu a vybrat"
+
+#: src/menus/NavigationMenus.cpp
+msgid "&Toggle Focused Track"
+msgstr "&Přepínat mezi vybranými stopami"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Toggle Focuse&d Track"
+msgstr "Přepínat mezi v&ybranými stopami"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "Bez kategorie"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Neznámý"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Zopakovat %s"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "Přídavný modul %d až %d"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Vytvoření"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "Přidat/Odstranit přídavné moduly..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "Zopakovat naposledy použitý efekt"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "Efe&kty"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "R&ozbor"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "Kontrast..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Kreslit spektrum..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+msgid "T&ools"
+msgstr "Nástr&oje"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Štítky..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "&Použít"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&Smazat..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Nástroje pro snímek obrazovky..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Spustit srovnávací zkoušku..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "Uložit časované nahrávání jako"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Detect Upstream Dropouts"
+msgstr "Vyberte proud(y) k nahrání"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Skript"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Vybrat..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Kmitočty"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Vybrat..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "Na &začátek stopy"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "Nastavení..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "Nastavení..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "D&alší klip"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Obálka"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Upravit štítky"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Uložit jako projekt &Audacity..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "&Třídit stopy"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "&Stáhnout další křivky..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "Zpráva"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Nápověda"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Otevřít &Nedávné..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Uložit jako projekt &Audacity..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "&Stáhnout další křivky..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Kompresor..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Nástroje pro snímek obrazovky..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "Nastavit levou hranici výběru"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "Poloha"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "Nastavit pravou hranici výběru"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "&Vybrat"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Nic"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Výběr"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "S&topy"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "Ve všech &stopách"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr "Ve všech &synchronizovaných-zamknutých stopách"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Sync-Locked"
+msgstr "Výběr ticha"
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr "&Oblast"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "&Vlevo od ukazatele po polohu přehrávání"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Nastavit bod výběru a přehrát"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "&Vpravo od ukazatele po polohu přehrávání"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "Nastavit bod výběru a přehrát"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "Začátek &stopy až po ukazatel"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "Začátek &stopy až po ukazatel"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "Ukazatel až po &konec stopy"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "Ukazatel až po &konec stopy"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "Začátek &stopy až po ukazatel"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Vybrat po konec"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&tore Selection"
+msgstr "&Uložit výběr"
+
+#: src/menus/SelectMenus.cpp
+msgid "Retrieve Selectio&n"
+msgstr "Získat vý&běr"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "&Spektrum"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "&Přepnout výběr spektra"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Higher Peak Frequency"
+msgstr "Další &vyšší vrcholový kmitočet"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Lower Peak Frequency"
+msgstr "Další &nižší vrcholový kmitočet"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr "Ukazatel na uloženou polohu &ukazatele"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Výběr po začátek"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr "Uložit &polohu ukazatele"
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr "Na &nulové přechody"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "Na &nulové přechody"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Selection"
+msgstr "&Výběr"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "&Vypnout přichytávání"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "Přichytávat k &nejbližšímu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "Přichytávat k &předchozímu"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to &Start"
+msgstr "Výběr po &začátek"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to En&d"
+msgstr "Výběr po &konec"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Left"
+msgstr "Rozšířit výběr do&leva"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Right"
+msgstr "Rozšířit výběr do&prava"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "Nastavit (nebo posunout) l&evou hranici výběru"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Nastavit  (nebo posunout) prav&ou hranici výběru"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract L&eft"
+msgstr "Zmenšit výběr &zleva"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract R&ight"
+msgstr "Zmenšit výběr zpra&va"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor to"
+msgstr "&Ukazatel na"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Star&t"
+msgstr "Začá&tek výběru"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "Jít na začá&tek výběru"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+msgid "Selection En&d"
+msgstr "&Konec výběru"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "Jít na ko&nec výběru"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start"
+msgstr "Na &začátek stopy"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "Ukazatel až po &konec stopy"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &End"
+msgstr "Na &konec stopy"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "Ukazatel až po &konec stopy"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Project Start"
+msgstr "Začátek &projektu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "Začátek &projektu"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr "K&onec projektu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "Ukazatel až po &konec stopy"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor"
+msgstr "&Ukazatel"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr "Přemístit ukazatel v&levo"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr "Přemístit ukazatel v&pravo"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr "&Krátký skok ukazatelem doleva"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr "K&rátký skok ukazatelem doprava"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr "Dlouhý &skok ukazatelem doleva"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr "Dlouhý sk&ok ukazatelem doprava"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "&Hledat"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Left During Playback"
+msgstr "Malé skoky do&leva během přehrávání"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Right During Playback"
+msgstr "Malé skoky do&prava během přehrávání"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
+msgstr "Velké skoky &doleva během přehrávání"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
+msgstr "Velké skoky d&oprava během přehrávání"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "&Nástrojové panely"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+msgid "Reset Toolb&ars"
+msgstr "&Obnovit panely nástrojů"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "Panel &pohybu"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "Panel &nástrojů"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "Měřicí panel hladiny &nahrávání"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "Měřicí panel hladiny &přehrávání"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "Panel směš&ování"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "Panel ú&prav"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Přehrát nastavenou rychlostí"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "Nástrojový panel pro posouvání"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "Panel &zařízení"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "Panel &výběru"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "Panel výběru &spektra"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Tool"
+msgstr "Nástroj pro &výběr"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Envelope Tool"
+msgstr "Nástroj pro &obalovou křivku"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Draw Tool"
+msgstr "Nástroj pro &kreslení"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Zoom Tool"
+msgstr "Nástroj &lupa"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Time Shift Tool"
+msgstr "Nástroj pro č&asový posun"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Multi Tool"
+msgstr "&Vícenástrojový režim"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr "&Předešlý nástroj"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Next Tool"
+msgstr "&Další nástroj"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "Veškerý zvuk ve stopě '%s' spojen"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Spojit"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "%d stopy smíchány (spojeny) do jedné nové stereo stopy"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "%d stopy smíchány (spojeny) do jedné nové mono stopy"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Převzorkovaná zvuková stopa(y)"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Stopa"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to zero"
+msgstr "Zarovnáno/Přesunuto %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to zero"
+msgstr "Začátek na nule"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "Zarovnat %s/Přesunout"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "Počáteční rozkmit"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "Začátek na začátku ukazatele/výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to cursor/selection start"
+msgstr "Začátek na začátku ukazatele/výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
+msgstr "Začátek na konci výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to selection end"
+msgstr "Začátek na konci výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Konec na začátku ukazatele/výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "Konec na začátku ukazatele/výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End"
+msgstr "Zarovnat %s/Přesunout"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End"
+msgstr "Zarovnat %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to selection end"
+msgstr "Zarovnán konec s koncem výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to selection end"
+msgstr "Zarovnán konec s koncem výběru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "Zarovnáno/Přesunuto %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "&Zarovnat konec s koncem"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "&Zarovnat konec s koncem"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "&Zarovnat konec s koncem"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "Zarovnáno/Přesunuto %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "Zarovnat k &sobě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "Zarovnat k &sobě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "Zarovnat k &sobě"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "Synchronizovat MIDI se zvukem"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "Synchronizace MIDI a zvukových stop"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Nastavená hlasitost"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Nastavené vyvážení (panorama)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Odstraněná zvuková stopa(y)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "Odstranit stopu"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "Odstraněná stopa '%s.'"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "Odstranit stopu"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "Přesunuto '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "Přesunout stopu úplně na&horu"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "Přesunout stopu úplně d&olů"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "Přesunout stopu úplně d&olů"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "Přesunuto '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "Přesunuto '%s' %s"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "Přesunout stopu nahor&u"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "Přesunout stopu &dolů"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Vytvořit novou zvukovou stopu"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Nová stopa"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Vytvořit novou zvukovou stereo stopu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Vytvořena nová popisová stopa"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Tato verze Audacity umožňuje pouze jednorázovou stopu pro každé okno "
+"projektu."
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Vytvořena nová časová stopa"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Nový vzorkovací kmitočet (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "Vložená hodnota je neplatná"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "Převzorkování stopy %d"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Převzorkovaná zvuková stopa(y)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "Převzorkovat stopu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Vyberte, prosím, zvukovou stopu."
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Zarovnání dokončeno: MIDI od %.2f do %.2f sek., Zvuk od %.2f do %.2f sek."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "Synchronizovat MIDI se zvukem"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Zarovnání se nezdařilo: Vstup je příliš krátký: MIDI od %.2f do %.2f sek., "
+"Zvuk od %.2f do %.2f sek."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "Vnitřní chyba nahlášena procesem zarovnávání."
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Stopy jsou seřazeny podle času"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "Seřadit podle času"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "Stopy jsou seřazeny podle názvu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "Seřadit podle názvu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Stopu s aktivním zvukem nelze smazat"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "Přidat &novou stopu"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "&Mono stopa"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&Stereo stopa"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&Popisová stopa"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "&Časová stopa"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr "S&míchat"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "Smíchat stereo na &monofonní stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "S&pojit stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "Spojit a vykreslit do &nové stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "Převzo&rkovat..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "Odstra&nit stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "Z&tlumit/Zrušit ztlumení"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "&Ztlumit všechny stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "Znovu za&pnout zvuk u všech stop"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "&Vyvážení"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "&Vlevo"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Levý"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "Vp&ravo"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Pravý"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "&Na střed"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Střed"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "Za&rovnat stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "&Zarovnat konec s koncem"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "Zarovnat k &sobě"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Začátek na &nule"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Začátek na začátku &ukazatele/výběru"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Začátek na &konci výběru"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Konec na začátku uk&azatele/výběru"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Konec na &konci výběru"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "Po&sunout výběr se stopami (zapnuto/vypnuto)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "Posunout vý&běr a stopy"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "&Třídit stopy"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "Podle času &začátku"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "Podle &názvu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "Synchronizovat-&zamknout stopy (zapnout/vypnout)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Track"
+msgstr "&Stopa"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "Změnit pano&rama ve vybrané stopě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "Posunout panorama ve vybrané stopě do&leva"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "Posunout panorama ve vybrané stopě do&prava"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "Změnit &hlasitost ve vybrané stopě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "Z&většit hlasitost ve vybrané stopě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "Z&menšit hlasitost ve vybrané stopě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "&Otevřít nabídku k vybrané stopě"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "Z&tlumit/Zrušit ztlumení vybrané stopy"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "Zapnout nebo vypnout &sólo pro vybranou stopu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "&Zavřít vybranou stopu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "Přesunout zaměřenou stopu na&horu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "Přesunout zaměřenou stopu &dolů"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "Přesunout zaměřenou stopu úplně &nahoru"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "Přesunout zaměřenou stopu úplně do&lů"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "žádná popisová stopa"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "žádná popisová stopa na nebo pod zaměřenou stopou"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "žádné štítky v popisové stopě"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Nelze uzamknout oblast za koncem\n"
+"projektu."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+"Časované nahrávání nelze použít s více než jedním otevřeným projektem.\n"
+"\n"
+"Zavřete, prosím, všechny dodatečné projekty a zkuste to znovu."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+"Časované nahrávání nelze použít, když máte neuložené změny.\n"
+"\n"
+"Uložte nebo zavřete, prosím, tento projekt a zkuste to znovu."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Vyberte, prosím, zvukovou stopu."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Vyberte, prosím, zvukovou stopu."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Vyberte, prosím, zvukovou stopu."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Vyberte, prosím, stopu s notami."
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Pohyb"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Přehrává se"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "Pře&hrát/Zastavit"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "Přehrát/Zastavit a &nastavit ukazatel"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "Přehrávat ve &smyčce"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&Pozastavit"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Nahrávání"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&Nahrávání"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Append Record"
+msgstr "Připo&jit nahrávání"
+
+#: src/menus/TransportMenus.cpp
+msgid "Record &New Track"
+msgstr "Nahrát &nové stopy"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&Časovač záznamu..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "Přehrá&t oblast"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&Zamknout"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&Odemknout"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "Pro&hledat zvuková zařízení znovu"
+
+#: src/menus/TransportMenus.cpp
+msgid "Transport &Options"
+msgstr "Volby pro pře&hrávání"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "Ú&roveň aktivace zvukem..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "Zvukem &aktivované nahrávání (zapnuto/vypnuto)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "Přišpendlená &hlava přehrávání/nahrávání (zapnuto/vypnuto)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "Při nahrávání hrají &jiné stopy (zapnout/vypnout)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "Nahrávku současně &přehrávat (zapnuto/vypnuto)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "A&utomatické přizpůsobení úrovně nahrávání zvuku (zapnuto/vypnuto)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "Po&hyb"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "Pře&hrát"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr "&Zastavit"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &One Second"
+msgstr "Hrát &jednu sekundu"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "Přehrát do &výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &Before Selection Start"
+msgstr "Přehrát př&ed začátkem výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Af&ter Selection Start"
+msgstr "Přehrát p&o začátku výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Be&fore Selection End"
+msgstr "Přehrát pře&d koncem výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Aft&er Selection End"
+msgstr "Přehrát &po konci výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before a&nd After Selection Start"
+msgstr "Přehrát před &a po začátku výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before an&d After Selection End"
+msgstr "Přehrát před a po &konci výběru"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr "Přehrát v&ystřiženou ukázku"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Přehrát nastavenou rychlostí"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Pře&hrát nastavenou rychlostí"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play-at-Speed"
+msgstr "Přehrát ve s&myčce nastavenou rychlostí"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Přehrát &vystřiženou ukázku nastavenou rychlostí"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "&Nastavit rychlost přehrávání"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Z&rychlit přehrávání"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "&Zpomalit přehrávání"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr "Přesunout se k &předchozímu štítku"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr "Přesunout se k &dalšímu štítku"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Pohled"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "&Zvětšení"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "Přiblíži&t"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "&Normální zvětšení"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "Oddáli&t"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "&Přiblížit výběr"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Zoom &Toggle"
+msgstr "Nástroj lupa"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Pokročilá nastavení"
+
+#: src/menus/ViewMenus.cpp
+msgid "T&rack Size"
+msgstr "Velikost &stopy"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Fit to Width"
+msgstr "&Přizpůsobit šířce"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr "Přizpůsobit &výšce"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "&Sbalit všechny stopy"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "R&ozbalit sbalené stopy"
+
+#: src/menus/ViewMenus.cpp
+msgid "Sk&ip to"
+msgstr "Přes&kočit na konec"
+
+#: src/menus/ViewMenus.cpp
+msgid "Selection Sta&rt"
+msgstr "&Začátek výběru"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "Na začá&tek výběru"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "Na ko&nec výběru"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&Historie"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "&Karaoke..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "&Směšovač..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr "&Další nabídky (zapnout/vypnout)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Show Clipping (on/off)"
+msgstr "&Zobrazit přebuzení (clipping)"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Ukázat přihrádku s efekty"
+
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "&Okno"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "&Zmenšit"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "&Přenést vše do popředí"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "Zmenšit všechny projekty"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13461,8 +13659,8 @@ msgid "Decoding Waveform"
 msgstr "Dekóduje se křivka"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+#, fuzzy, c-format
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% hotovo. Klepněte pro změnu zaměření."
 
 #: src/prefs/BatchPrefs.cpp
@@ -14043,7 +14241,7 @@ msgid "%s - %s"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -14053,7 +14251,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "Klávesová zkratka '%s' je již přiřazena k:\n"
 "\n"
@@ -14434,6 +14632,10 @@ msgstr "Velké skoky (Ctrl+šipka):"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
@@ -14894,9 +15096,10 @@ msgstr ""
 "soubor s obrázkem ukazuje jiné symboly.)"
 
 #: src/prefs/ThemePrefs.cpp
+#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "Toto je ladicí verze Audacity s dalším tlačítkem \"Output Sourcery\". Toto "
@@ -15481,8 +15684,8 @@ msgstr "%s - hnaný"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
 msgstr "Výběr %s.  %s se nezmění."
 
 #: src/toolbars/SpectralSelectionBar.cpp
@@ -16265,6 +16468,49 @@ msgstr "Vzad"
 msgid "Help on the Internet"
 msgstr "Pomoc na internetu"
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "Chcete uložit změny?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Smíchat"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "Soubory QuickTime"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Žádný krok k obnovení Zpět"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "&Zavřít vybranou stopu"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "Nelze otevřít soubor s projektem"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Začátek nahrávání:\n"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr "Nabídka"
@@ -16722,120 +16968,6 @@ msgstr "Opravdu chcete zavřít?"
 msgid "Confirm Close"
 msgstr "Potvrdit zavření"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Činnosti časové osy během nahrávání zakázány"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Klepněte a táhněte pro přizpůsobení stereo stop."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "Odšpendlená hlava nahrávání/přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr "Časová osa"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Seek"
-msgstr "Klepněte nebo táhněte pro započetí hledání"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "Klepněte nebo táhněte pro započetí převíjení"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Klepněte a přesuňte pro převíjení. Klepněte a táhněte pro hledání."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr "Přesunout pro hledání"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr "Přesunout pro převíjení"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr "Táhněte pro hledání. Uvolněte pro zastavení hledání."
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr "Táhněte pro hledání. Uvolněte a přesuňte pro převíjení."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr "Přesuňte pro převíjení. Táhněte pro hledání."
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "Rychlé přehrávání zakázáno"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr "Rychlé přehrávání povoleno"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to unpin"
-msgstr "Klepněte pro odšpendlení"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to pin"
-msgstr "Klepněte pro přišpendlení"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr "Zakázat rychlé přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr "Povolit rychlé přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable dragging selection"
-msgstr "Zakázat tažení výběru"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable dragging selection"
-msgstr "Povolit tažení výběru"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr "Zakázat nástrojové rady k časové ose"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr "Povolit nástrojové rady k časové ose"
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr "Neposunovat pohled při přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr "Aktualizovat zobrazení při přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr "Zamknout oblast přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr "Odemknout oblast přehrávání"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr "Zakázat pravítko pro převíjení"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr "Povolit pravítko pro převíjení"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Nezobrazovat toto varování znovu"
@@ -17253,6 +17385,11 @@ msgstr "Křivka existuje"
 
 #: plug-ins/adjustable-fade.ny
 #, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Chyba"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "Hodnota zvýšení kmitočtu nemůže být záporná"
 
@@ -17266,13 +17403,8 @@ msgstr "Hodnota zvýšení kmitočtu nemůže být záporná"
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "Chyba"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17465,31 +17597,6 @@ msgstr "Počet opakování"
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Počet úprav má být v rozsahu 1  - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "Počet úprav má být v rozsahu 1  - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "Počet úprav má být v rozsahu 1  - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "Počet úprav má být v rozsahu 1  - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "Chyba"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17498,9 +17605,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Vytvořit soubory na základě:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Upravit štítek"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17520,6 +17634,11 @@ msgstr "Počet úprav:"
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "Délka (sekundy)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "Délka (sekundy)"
 
 #: plug-ins/equalabel.ny
@@ -17566,6 +17685,48 @@ msgstr ""
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
 msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "Vyrovnávání prodlevy"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "Oddělit"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "Varování"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Spojit štítky"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Spojit štítky"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy, lisp-format
+msgid "~aRegion length = ~a seconds."
+msgstr "Z délky v sekundách"
 
 #: plug-ins/highpass.ny
 #, fuzzy
@@ -18608,6 +18769,26 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "Počet úprav má být v rozsahu 1  - 10000."
+
+#, fuzzy
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr "Počet úprav má být v rozsahu 1  - 10000."
+
+#, fuzzy
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr "Počet úprav má být v rozsahu 1  - 10000."
+
+#, fuzzy
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr "Počet úprav má být v rozsahu 1  - 10000."
+
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "Chyba"
+
+#, fuzzy
 #~ msgid "Left"
 #~ msgstr "&Vlevo"
 
@@ -18824,9 +19005,6 @@ msgstr ""
 
 #~ msgid "to Top"
 #~ msgstr "Úplně nahoru"
-
-#~ msgid "to Bottom"
-#~ msgstr "Úplně dolů"
 
 #~ msgid "Down"
 #~ msgstr "Dolů"
@@ -19527,9 +19705,6 @@ msgstr ""
 #~ msgid "R&ight Channel"
 #~ msgstr "&Pravý kanál"
 
-#~ msgid "&Rate"
-#~ msgstr "&Výše"
-
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "Táhněte stopu svisle pro změnu pořadí stop."
 
@@ -19555,9 +19730,6 @@ msgstr ""
 
 #~ msgid "Length (seconds):"
 #~ msgstr "Délka (sekundy):"
-
-#~ msgid "From length in seconds"
-#~ msgstr "Z délky v sekundách"
 
 #~ msgid "No wave tracks exist."
 #~ msgstr "Neexistují žádné stopy."
@@ -20861,9 +21033,6 @@ msgstr ""
 
 #~ msgid "Silence Labels"
 #~ msgstr "Štítky s tichem"
-
-#~ msgid "Join Labels"
-#~ msgstr "Spojit štítky"
 
 #~ msgid "Bass Boost"
 #~ msgstr "Zdůraznění basů"

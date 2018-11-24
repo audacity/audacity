@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-10-10 15:25+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2016-11-28 10:08+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
@@ -36,10 +36,11 @@ msgid "Please choose an existing file."
 msgstr "Válasszon egy létező fájlt."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -227,7 +228,8 @@ msgid "No matches found"
 msgstr "Nincs találat"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+#, fuzzy
+msgid "Code has been modified. Are you sure?"
 msgstr "A kód megváltozott. Biztos benne?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -279,7 +281,7 @@ msgstr "Másolás"
 msgid "Copy to clipboard"
 msgstr "Másolás a vágólapra"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Kivágás"
@@ -288,7 +290,7 @@ msgstr "Kivágás"
 msgid "Cut to clipboard"
 msgstr "Kivágás a vágólapra"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Beillesztés"
@@ -306,7 +308,7 @@ msgstr "Törlés"
 msgid "Clear selection"
 msgstr "Kijelölés törlése"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Összes kijelölése"
 
@@ -721,6 +723,127 @@ msgstr "Beállítások mappa: "
 msgid "GPL License"
 msgstr "GPL licenc"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Az idősávműveletek le vannak tiltva felvétel közben"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Kattintás és húzás a sztereó sávok relatív méretének változtatásához."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "Nem rögzített felvevő- vagy lejátszófej"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr "Idővonal"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Seek"
+msgstr "Kattintás vagy húzás a tekerés elkezdéséhez"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "Kattintás vagy húzás a változó sebességű lejátszás elkezdéséhez"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr ""
+"Kattintás és mozgatás a változó sebességű lejátszáshoz. Kattintás és húzás a "
+"tekeréshez."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr "Mozgatás a tekeréshez"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr "Mozgatás a változó sebességű lejátszáshoz"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release to stop seeking."
+msgstr "Húzás a tekeréshez. Elengedés a tekerés leállításához."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr ""
+"Húzás a tekeréshez. Elengedés és mozgatás a változó sebességű lejátszáshoz."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr "Mozgatás a változó sebességű lejátszáshoz. Húzás a tekeréshez."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "Gyors lejátszás letiltva"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr "Gyors lejátszás engedélyezve"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to unpin"
+msgstr "Kattintás a megfigyeléshez"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to pin"
+msgstr "Kattintás az indításhoz"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr "Gyors lejátszás letiltása"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr "Gyors lejátszás engedélyezése"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable dragging selection"
+msgstr "Kijelölés húzásának letiltása"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable dragging selection"
+msgstr "Kijelölés húzásának engedélyezése"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr "Idővonal buboréksúgók letiltása"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr "Idővonal buboréksúgók engedélyezése"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr "Ne görgessen lejátszás közben"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr "Kijelző frissítése lejátszás közben"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr "Lejátszási terület zárolása"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr "Lejátszási terület feloldása"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr "Változó sebességű lejátszás vonalzó letiltása"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr "Változó sebességű lejátszás vonalzó engedélyezése"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -793,12 +916,12 @@ msgid "Audacity is starting up..."
 msgstr "Az Audacity indulása folyamatban…"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "Ú&j"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Megnyitás…"
 
@@ -806,7 +929,7 @@ msgstr "&Megnyitás…"
 msgid "Open &Recent..."
 msgstr "&Legutóbbi megnyitása…"
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&Audacity névjegye…"
 
@@ -814,7 +937,7 @@ msgstr "&Audacity névjegye…"
 msgid "&Preferences..."
 msgstr "&Beállítások…"
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Fájl"
 
@@ -954,8 +1077,8 @@ msgstr "&Mentés…"
 msgid "Cl&ear"
 msgstr "Tör&lés"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Bezárás"
 
@@ -1816,7 +1939,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Függőség-ellenőrzés"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Folyamat"
@@ -1839,13 +1963,13 @@ msgid "Cleaning up temporary files"
 msgstr "Átmeneti fájlok törlése"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Projekt adatfájlok mentése"
-
-#: src/DirManager.cpp
 #, fuzzy
 msgid "Cleaning up after failed save"
 msgstr "Átmeneti fájlok törlése"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Projekt adatfájlok mentése"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2421,9 +2545,9 @@ msgstr ""
 "gyakorisággal kell rendelkeznie."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "Túl sok hangot jelölt ki. Csak a hang első %.1f másodperce lesz elemezve."
@@ -2468,8 +2592,8 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Spektrális adatok exportálása másként:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Nem sikerült írni a fájlba: "
@@ -2776,7 +2900,8 @@ msgid "Track"
 msgstr "Sáv"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Címke"
 
@@ -2810,16 +2935,16 @@ msgstr ""
 "Nyomja meg az F2 billentyűt vagy kattintson duplán a cellatartalom "
 "szerkesztéséhez."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Select a text file containing labels"
 msgstr "Címkéket tartalmazó szövegfájl kiválasztása…"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Szövegfájlok (*.txt)|*.txt|Minden fájl|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "Nem sikerült megnyitni a fájlt: „%s”"
@@ -2828,7 +2953,7 @@ msgstr "Nem sikerült megnyitni a fájlt: „%s”"
 msgid "No labels to export."
 msgstr "Nincsenek exportálandó címkék."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Címkék exportálása másként:"
 
@@ -2856,22 +2981,22 @@ msgstr "Címke módosítva"
 msgid "Label Edit"
 msgstr "Címkeszerkesztés"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Címke hozzáadva"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "&Kivágás"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Másolás"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Beillesztés"
 
@@ -2886,6 +3011,22 @@ msgstr "Törölt címke"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Címkék szerkesztve"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Név"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Címke hozzáadva"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2931,2576 +3072,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity Karaoke%s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "Kategorizálatlan"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Projekt mentése"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "P&rojekt mentése másként…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "A projekt tömörített másolatának me&ntése…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Save Compressed Copy of Project..."
-msgstr "A projekt tömörített másolatának me&ntése…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export"
-msgstr "Exportálás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as MP&3"
-msgstr "Exportált címkék"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &WAV"
-msgstr "Címkék exportálása másként:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &OGG"
-msgstr "Exportált címkék"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "&Hang exportálása…"
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "Kijelölt hang &exportálása…"
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "&Címkék exportálása…"
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Több e&xportálása…"
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "MI&DI exportálása…"
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&Importálás"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&Hang…"
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Címkék…"
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI…"
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&Nyers adatok…"
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "&Oldalbeállítás…"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&Nyomtatás…"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "&Kilépés"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "S&zerkesztés"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Visszavonás"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "Új&ra"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Törlés"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "K&ettőzés"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "&Speciális eltávolítása"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "&Szétvágó kivágás"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "S&zétvágó törlés"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "&Hang átalakítása csenddé"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "H&ang levágása"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "Határ&ok levágása"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "&Felosztás"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "Új fel&osztott"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "&Egyesítés"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "&Leválasztás csendeknél"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Labels"
-msgstr "Címkék"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "Címkék szerkesz&tése…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "&Címke hozzáadása a kijelölésnél"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "Címke hozzáa&dása a lejátszás pozíciójánál"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "S&zöveg beszúrása új címkébe"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "&Gépelés egy címke létrehozásához (be/ki)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "&Címkézett hang"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Címkeszerkesztés"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "K&ivágás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "Szétvágó törlés"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "Kivágás és szétválasztás"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "&Szétvágó kivágás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "Szétvágó törlés"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "S&zétvágó törlés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "Csend"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "&Hang átalakítása csenddé"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "Címke"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "&Másolás"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "Címkeszerkesztés"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "&Felosztás"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "Címkeszerkesztés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Me&tadata..."
-msgstr "Me&taadatcímkék szerkesztése…"
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "&Beállítások…"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "K&ijelölés"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&Minden"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "Kijelölés"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Semmi"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "Sá&vok"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "Minden &sávban"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "In All &Sync-Locked Tracks"
-msgstr "M&inden szinkronsávban"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "R&egion"
-msgstr "Terület lejátszás&a"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "Lejátszás pozíciójától &balra"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "Lejátszás pozíciójától &balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "Lejátszás pozíciójától j&obbra"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "Lejátszás pozíciójától j&obbra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "Sáv &kezdetétől a kurzorig"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "Sáv &kezdetétől a kurzorig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "Kurzortól a sáv &végéig"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "Kurzortól a sáv &végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "Kijelölés a végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "Sáv &kezdetétől a kurzorig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&tore Selection"
-msgstr "N&agyítás a kijelölésre"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Retrieve Selectio&n"
-msgstr "Spektrális kijelölés"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "Sp&ektrális"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Spektrális &kijelölés átváltása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "Következő magasabb csúcsfrekvencia"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "Következő alacsonyabb csúcsfrekvencia"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "Előző eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Previo&us Clip"
-msgstr "Előző eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "Következő eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "N&ext Clip"
-msgstr "Következő eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "Kijelölés a kezdetéig"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr "Kurzortól a tárolt &kurzorpozícióig"
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr "K&urzorpozíció eltárolása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "&Nulla átmenet keresése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "At &Zero Crossings"
-msgstr "&Nulla átmenet keresése"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Nézet"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "&Nagyítás"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "&Nagyítás"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "N&ormál méret"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "&Kicsinyítés"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "N&agyítás a kijelölésre"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Zoom &Toggle"
-msgstr "Nagyítás eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&rack Size"
-msgstr "Szám címe"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Fit to Width"
-msgstr "A&blakhoz igazítás"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "Minden sáv össze&csukása"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "Összecsukott sávok &kinyitása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sk&ip to"
-msgstr "Kihagyás a végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "a &kijelölés elejére"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Sta&rt"
-msgstr "Kijelölés kezdete:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "a k&ijelölés végére"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection En&d"
-msgstr "Kijelölés vége"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "Elő&zmények…"
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "Ka&raoke…"
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "Keverőp&ult…"
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "E&szköztárak"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Reset Toolb&ars"
-msgstr "Eszköztár&ak visszaállítása"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "Á&tvitel eszköztár"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "Es&zközök eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "&Felvételmérő eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "&Lejátszásmérő eszköz"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Ke&verő eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "&Szerkesztés eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Lejátszás adott sebességgel"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "&Változó sebességű lejátszás eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "&Eszköz eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "K&ijelölés eszköztár"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "Spe&ktrális kijelölés eszköztár"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Extra Menus (on/off)"
-msgstr "&Rákeverés (be/ki)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Show Clipping (on/off)"
-msgstr "&Levágás megjelenítése"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Hatások tár megjelenítése"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "Átvitel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "Lejátszás"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "&Lejátszás/leállítás"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "Lejátszás/leállítás és &kurzor beállítása"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "Vég&telenített lejátszás"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&Szünet"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Felvétel"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&Felvétel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Append Record"
-msgstr "Felvétel hozzáfűzése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Record &New Track"
-msgstr "Sávok &eltávolítása"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&Időzített felvétel…"
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor to"
-msgstr "Kurzor balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "Ugrás a kijelölés &elejéhez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Star&t"
-msgstr "Kijelölés kezdete:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "Ugrás a kijelölés &végéhez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "Kurzortól a sáv &végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &Start"
-msgstr "a &sáv elejére"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "Kurzortól a sáv &végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &End"
-msgstr "a sá&v végére"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Prev Clip Boundary"
-msgstr "Határ&ok levágása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pre&vious Clip Boundary"
-msgstr "Határ&ok levágása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Next Clip Boundary"
-msgstr "Határ&ok levágása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ne&xt Clip Boundary"
-msgstr "Határ&ok levágása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "Projektek"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Project Start"
-msgstr "Projektek"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "Kurzortól a sáv &végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Project E&nd"
-msgstr "Projektek"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "Terület lejátszás&a"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&Zárolás"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&Feloldás"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "Ha&ngeszközök újralekérdezése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Transport &Options"
-msgstr "Átírás"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "H&ang aktiválási szint…"
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "&Hangvezérelt felvétel (be/ki)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Rögzített felvevő- vagy lejátszófej"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "&Rákeverés (be/ki)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "S&zoftveres átjátszás (be/ki)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "Auto&matikus felvételiszint-szabályozás (be/ki)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "Új &hozzáadása"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "&Monósáv"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&Sztereósáv"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&Címkesáv"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "&Idősáv"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "Sztereó felosztása mo&nóra"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "&Keverés és megjelenítés"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "Keverés és megje&lenítés új sávba"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "Újra&mintavételezés…"
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "Sávok &eltávolítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute"
-msgstr "A kiválasztott sáv némítása/visszahangosítása"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "Minden sáv el&némítása"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "Minden sáv &visszahangosítása"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "Bal"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Left"
-msgstr "Bal"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "Jobb"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Right"
-msgstr "Jobb"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "Közép"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Center"
-msgstr "Közép"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "&Vége igazítása a végéhez"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "&Egymáshoz igazítás"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "Kezdettől &nulláig"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Kezdettől a &kurzorig/kijelölés kezdetéig"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "Kez&dettől a kijelölés végéig"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Végétől a k&urzorig/kijelölés kezdetéig"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "Végétől a k&ijelölés végéig"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "Sáv&ok igazítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "Hatás áthelyezése lefelé a tárban"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Sele&ction and Tracks"
-msgstr "Hatás áthelyezése lefelé a tárban"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "MIDI szinkronizálása a hanggal"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "Sávok &rendezése"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Rendezés idő szerint"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "&kezdési idő szerint"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Rendezés név szerint"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "&név szerint"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Sávok s&zinkronban tartása (be/ki)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&Előállítás"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Bővítmények hozzáadása / eltávolítása…"
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "&Hatás"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Ismétlés: %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "Utolsó hatás ismétlése"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "Ele&mzés"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "Kontraszt…"
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Spektrum ábrázolása…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&ools"
-msgstr "Eszközök"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&Címkék…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "&Alkalmaz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "&Törlés…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Képernyőkép eszközök…"
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Teljesítményteszt futtatása…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Simulate Recording Errors"
-msgstr "Időzített felvétel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detect Upstream Dropouts"
-msgstr "Az importálandó adatfolyamok kiválasztása"
-
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "&Ablak"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "&Minimalizálás"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "Az összes &előtérbe hozása"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "Á&tvitel"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&ay"
-msgstr "&Lejátszás/leállítás"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &One Second"
-msgstr "Lejátszás egy másodpercet"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "Lejátszás a kijelölésig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &Before Selection Start"
-msgstr "Lejátszás a kijelölés kezdete előtt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Af&ter Selection Start"
-msgstr "Lejátszás a kijelölés kezdete után"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Be&fore Selection End"
-msgstr "Lejátszás a kijelölés vége előtt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Aft&er Selection End"
-msgstr "Lejátszás a kijelölés vége után"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before a&nd After Selection Start"
-msgstr "Lejátszás a kijelölés eleje előtt és után"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before an&d After Selection End"
-msgstr "Lejátszás a kijelölés vége előtt és után"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview"
-msgstr "Kivágás előnézetének lejátszása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection Tool"
-msgstr "Kijelölés eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Envelope Tool"
-msgstr "Burkológörbe eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Draw Tool"
-msgstr "Rajzeszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "Nagyítás eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Time Shift Tool"
-msgstr "Időeltolódás eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Multi Tool"
-msgstr "Többfunkciós eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Previous Tool"
-msgstr "Előző eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Next Tool"
-msgstr "Következő eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mi&xer"
-msgstr "Ke&verő eszköztár"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Lejátszás hangerejének igazítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "Lejátszás hangerejének növelése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "Lejátszás hangerejének csökkentése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Felvételi hangerő igazítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Felvételi hangerő növelése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Felvételi hangerő csökkentése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "Törlésgomb"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "Törlésgomb2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Lejátszás adott sebességgel"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Lejátszás adott sebességgel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Loop Play-at-Speed"
-msgstr "Vég nélküli lejátszás az eredeti sebességgel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Kivágás előnézetének lejátszása az eredeti sebességgel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Lejátszási sebesség igazítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Lejátszási sebesség növelése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "Lejátszási sebesség csökkentése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Previous Label"
-msgstr "Áthelyezés az előző címkéhez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Next Label"
-msgstr "Áthelyezés a következő címkéhez"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "&Tekerés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Left During Playback"
-msgstr "Kis tekerés balra a lejátszás alatt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Right During Playback"
-msgstr "Kis tekerés jobbra a lejátszás alatt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Le&ft During Playback"
-msgstr "Nagy tekerés balra a lejátszás alatt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Rig&ht During Playback"
-msgstr "Nagy tekerés jobbra a lejátszás alatt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "De&vice"
-msgstr "E&szköz:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Felvevőeszköz változtatása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Lejátszóeszköz változtatása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Hangkiszolgáló változtatása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Felvételi csatornák változtatása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection"
-msgstr "Kijelölés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "Illesztés kikapcsolása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "Illesztés a legközelebbihez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "Illesztés az előzőhöz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to &Start"
-msgstr "Kijelölés a kezdetéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to En&d"
-msgstr "Kijelölés a végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Left"
-msgstr "Kijelölés bővítése balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Right"
-msgstr "Kijelölés bővítése jobbra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "Balra kijelölés beállítása (vagy kiterjesztése)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Jobbra kijelölés beállítása (vagy kiterjesztése)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract L&eft"
-msgstr "Kijelölés összehúzása balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract R&ight"
-msgstr "Kijelölés összehúzása jobbra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Backward Through Active Windows"
-msgstr "Visszafelé mozgatás az aktív ablakokon keresztül"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Forward Through Active Windows"
-msgstr "Előre mozgatás az aktív ablakokon keresztül"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Visszafelé mozgatás az eszköztárakból a sávokba"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Előre mozgatás az eszköztárakból a sávokba"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Previous Track"
-msgstr "Fókusz áthelyezése az előző sávra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Next Track"
-msgstr "Fókusz áthelyezése a következő sávra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &First Track"
-msgstr "Fókusz áthelyezése az első sávra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Last Track"
-msgstr "Fókusz áthelyezése az utolsó sávra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to P&revious and Select"
-msgstr "Fókusz áthelyezése az előzőre és kijelölés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to N&ext and Select"
-msgstr "Fókusz áthelyezése a következőre és kijelölés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Toggle Focused Track"
-msgstr "Kiválasztott sáv be- és kikapcsolása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Toggle Focuse&d Track"
-msgstr "Kiválasztott sáv be- és kikapcsolása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor"
-msgstr "Kurzor balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Left"
-msgstr "Kurzor balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Right"
-msgstr "Kurzor jobbra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Sh&ort Jump Left"
-msgstr "Rövid kurzorugrás balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Shor&t Jump Right"
-msgstr "Rövid kurzorugrás jobbra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long J&ump Left"
-msgstr "Hosszú kurzorugrás balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long Ju&mp Right"
-msgstr "Hosszú kurzorugrás jobbra"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Clip Rig&ht"
-msgstr "Levágás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Track"
-msgstr "Sá&vok"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "A kiválasztott sáv görgetésének beállítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "A kiválasztott sáv görgetése balra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "A kiválasztott sáv görgetése jobbra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "Kiválasztott sáv hangerejének módosítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "A kiválasztott sáv hangerejének növelése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "A kiválasztott sáv hangerejének csökkentése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "A kiválasztott sáv menüjének megnyitása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "A kiválasztott sáv némítása/visszahangosítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "A kiválasztott sáv szólóra/nem szólóra állítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "A kiválasztott sáv bezárása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "Kiválasztott sáv mozgatása fel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "Kiválasztott sáv mozgatása le"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "Kiválasztott sáv mozgatása a tetejére"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "Kiválasztott sáv mozgatása az aljára"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Scriptables I"
-msgstr "Parancsfájl"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Kiválasztás…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Frekvenciák"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Kiválasztás…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "a &sáv elejére"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "&Beállítások…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "&Beállítások…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "Következő eszköz"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Burkológörbe"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "Címkék szerkesz&tése…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "P&rojekt mentése másként…"
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Kiválasztás…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "Sávok &rendezése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Info..."
-msgstr "&Több beszerzése…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "Újra&mintavételezés…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "Súgó"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Importálás…"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Exportálás…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "&Legutóbbi megnyitása…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "P&rojekt mentése másként…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "&Több beszerzése…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "&Hang exportálása…"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&Képernyőkép eszközök…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Full Screen (on/off)"
-msgstr "Teljes képernyő be/ki"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "Minden projekt minimalizálása"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Súgó"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Getting Started"
-msgstr "Kijelölés kezdete:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Audacity"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&Gyors súgó"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Manual..."
-msgstr "&Kézikönyv"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Diagnostics"
-msgstr "öndiagnosztika futtatása"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "&Hangeszköz információk…"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&MIDI Device Info..."
-msgstr "&Hangeszköz információk…"
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "&Napló megjelenítése…"
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Támogatási adatok előállítása…"
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "&Függőségek ellenőrzése…"
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "&Frissítések keresése…"
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "Ismeretlen"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "Bővítmény: %d -> %d"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Legutóbbi megnyitása"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "Leg&utóbbi fájlok"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "%s &visszavonása"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Visszavonás"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "%s &ismétlése"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Idő szerint rendezett sávok"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "Név szerint rendezett sávok"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "nincs címkesáv"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "nincs címkesáv a kiválasztott sávnál vagy alatta"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "nincsenek címkék a címkesávban"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Time shifted clips to the left"
-msgstr "Sávok/klipek időben eltolva %s %.02f másodperccel"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Időeltolás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "clip not moved"
-msgstr "A parancsfájl nem lett elmentve."
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "Kijelölés baloldali határának beállítása"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "Pozíció"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "Kijelölés jobboldali határának beállítása"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Aktív hanggal rendelkező sáv nem törölhető"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "„%s” %s áthelyezve"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "Sáv mozgatása a &tetejére"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "Sáv mozgatása az &aljára"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "Sáv mozgatása az &aljára"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "„%s” %s áthelyezve"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "„%s” %s áthelyezve"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "Sáv mozgatása &fel"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "Sáv mozgatása &le"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "címkék.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Nincsenek címkesávok az exportáláshoz."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Egyszerre csak egy sávot mérhet."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Válasszon egy hangsávot."
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI exportálása másként:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI fájl (*.mid)|*.mid|Allegro fájl (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Egy felismerhetetlen fájlkiterjesztéssel rendelkező fájlnevet jelölt ki.\n"
-"Szeretné folytatni?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "MIDI exportálása"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "Kijelölt hang exportlása"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Nincs mit visszavonni"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Nincs mit ismételni"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Kivágás a vágólapra"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Szétvágó kivágás a vágólapra"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Kivágás és szétválasztás"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "Az egyik típusú sáv beillesztése egy másikba nem engedélyezett."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Sztereó hang másolása egy monó sávba nem engedélyezett."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Beillesztve a vágólapról"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Szöveg beillesztve a vágólapról"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "Szöveg beillesztése új címkébe"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "A kijelölt hangsávok levágása %.2f másodperctől %.2f másodpercig"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "Hang levágása"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Szétvágva törölve %.2f másodperc itt: t=%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Szétvágó törlés"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "Leválasztva %.2f másodperc itt: t=%.2f"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "Leválasztás"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Egyesítve %.2f másodperc itt: t=%.2f"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Egyesítés"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Kijelölt sávok csenddé alakítva %.2f másodpercnél itt: %.2f"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Csend"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Kettőzött"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Kettőzés"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Címkézett hangterületek kivágása a vágólapra"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "Címkézett hang kivágása"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Címkézett hangterületek szétvágó kivágása a vágólapra"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Címkézett hang szétvágó kivágása"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Címkézett hangterületek átmásolva a vágólapra"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "Címkézett hang másolása"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "Címkézett hangterületek törölve"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "Címkézett hang törlése"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "Címkézett hangterületek szétvágva törölve"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "Címkézett hang szétvágó törlése"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "Címkézett hangterületek elnémítva"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "Címkézett hang némítása"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "Címkézett hang szétvágva (pontok vagy területek)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "Címkézett hang szétvágása"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "Címkézett hang egyesítve (pontok vagy területek)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "Címkézett hang egyesítése"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "Címkézett hangterületek leválasztva"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "Címkézett hang leválasztása"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Szétvágás"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Szétvágás új sávra"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Új szétvágása"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Címkék importálva innen: „%s”"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Címkék importálása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Válasszon egy MIDI fájlt…"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI és Allegro fájlok (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI fájlok "
-"(*.mid;*.midi)|*.mid;*.midi|Allegro fájlok (*.gro)|*.gro|Minden fájl|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "MIDI importálva innen: „%s”"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "MIDI importálása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "Válasszon bármilyen tömörítetlen hangfájlt…"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "Minden fájl|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Metaadatcímkék szerkesztése"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "Metaadatcímkék"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "Minden hang megjelenítése a(z) „%s” sávból"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Megjelenítés"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d sáv keverve és megjelenítve egy új sztereósávba"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d sáv keverve és megjelenítve egy új monósávba"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "Keverés és megjelenítés"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "%d. sáv"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s left"
-msgstr "balra"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s right"
-msgstr "jobbra"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "start"
-msgstr "Kezdés"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "end"
-msgstr "Befejezés"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to zero"
-msgstr "%s igazítva/áthelyezve"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to zero"
-msgstr "kezdettől nulláig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Start"
-msgstr "%s igazítása/áthelyezése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Start"
-msgstr "Induló amplitúdó"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "kezdettől a kurzor/kijelölés kezdetéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to cursor/selection start"
-msgstr "kezdettől a kurzor/kijelölés kezdetéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to selection end"
-msgstr "kezdettől a kijelölés végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to selection end"
-msgstr "kezdettől a kijelölés végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "végétől a kurzor/kijelölés kezdetéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to cursor/selection start"
-msgstr "végétől a kurzor/kijelölés kezdetéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End"
-msgstr "%s igazítása/áthelyezése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End"
-msgstr "%s igazítása"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to selection end"
-msgstr "végétől a kijelölés végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to selection end"
-msgstr "végétől a kijelölés végéig"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to end"
-msgstr "%s igazítva/áthelyezve"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to end"
-msgstr "&Vége igazítása a végéhez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End to End"
-msgstr "&Vége igazítása a végéhez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End to End"
-msgstr "&Vége igazítása a végéhez"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved together"
-msgstr "%s igazítva/áthelyezve"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned together"
-msgstr "&Egymáshoz igazítás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Together"
-msgstr "&Egymáshoz igazítás"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Together"
-msgstr "&Egymáshoz igazítás"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "MIDI- és hangsávok szinkronizálása"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Az igazítás befejeződött: MIDI %.2f másodperctől %.2f másodpercig, hang %.2f "
-"másodperctől %.2f másodpercig."
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "MIDI szinkronizálása a hanggal"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Igazítási hiba: a bemenet túl rövid: MIDI %.2f másodperctől %.2f "
-"másodpercig, hang %.2f másodperctől %.2f másodpercig."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "Az igazítási folyamat belső hibát jelentett."
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Új hangsáv létrehozva"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Új sáv"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Új sztereó hangsáv létrehozva"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Új címkesáv létrehozva"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Az Audacity ezen verziója projektablakonként csak egyetlen idősávot "
-"engedélyez."
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Új idősáv létrehozva"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-"Az időzített felvétel nem használható egynél több nyitott projekttel.\n"
-"\n"
-"Zárja be a további projekteket, és próbálja újra."
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "Időzített felvétel"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-"Az időzített felvétel nem használható, mivel mentetlen változtatásai "
-"vannak.\n"
-"\n"
-"Mentse el vagy zárja be ezt a projektet, és próbálja újra."
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "Név"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "Címke hozzáadva"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "Válasszon egy hangsávot."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "Válasszon egy hangsávot."
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "Válasszon egy hangsávot."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "Válasszon egy hangsávot."
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Címkék szerkesztve"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Hangsáv(ok) eltávolítva"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "Sáv eltávolítása"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "Hangeszköz-információk"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "&Mentés"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "Eszközinformációk mentése"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "Nem lehet elmenteni az eszközinformációkat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "MIDI Device Info"
-msgstr "MIDI-eszközök"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save MIDI Device Info"
-msgstr "Eszközinformációk mentése"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "Nem lehet elmenteni az eszközinformációkat"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "Hangsáv(ok) újramintavételezve"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "Sáv"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Nem zárolható terület\n"
-"a projekt végén túl"
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Újramintavételezés"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Új mintavételezési gyakoriság (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "A megadott érték érvénytelen"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "A(z) %d. sáv újramintavételezése"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Hangsáv(ok) újramintavételezve"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "Sáv újramintavételezése"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "Új&ra"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Keverés"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Keverés és megjelenítés"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5508,7 +3103,7 @@ msgstr "Sávok keverése és megjelenítése"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Hangerő"
@@ -5525,7 +3120,7 @@ msgid "Musical Instrument"
 msgstr "Zeneeszköz"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Görgetés"
@@ -5580,9 +3175,8 @@ msgid "Module Unsuitable"
 msgstr "Alkalmatlan modul"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+#, fuzzy, c-format
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "A(z) %s modul nem tartalmaz verziószöveget. Nem kerül betöltésre."
 
 #: src/ModuleManager.cpp
@@ -5597,9 +3191,9 @@ msgstr ""
 "Nem kerül betöltésre."
 
 #: src/ModuleManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
 "A(z) %s modul az Audacity %s verziójával egyezik. Nem kerül betöltésre."
 
@@ -5772,6 +3366,11 @@ msgstr ""
 msgid "Show:"
 msgstr "Megjelenítés:"
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Minden"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Összes megjelenítése"
@@ -5866,7 +3465,7 @@ msgid "Plug-in already exists"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -6163,9 +3762,9 @@ msgid "Error Saving Project"
 msgstr "Hiba a projekt mentésekor"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "Nem sikerült a projekt mentése. Az útvonal nem található.\n"
@@ -6311,15 +3910,6 @@ msgid "Created new project"
 msgstr "Új projekt létrehozva"
 
 #: src/Project.cpp
-#, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "%.2f másodperc törölve t=%.2f helyen"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Törlés"
-
-#: src/Project.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "%s felvételéhez maradt lemezterület"
@@ -6387,23 +3977,6 @@ msgstr "Hang felvéve"
 #: src/Project.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Felvétel"
-
-#: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Erősítés beállítva"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Görgetés beállítva"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "„%s” sáv eltávolítva"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "Sáveltávolítás"
 
 #: src/Project.cpp
 msgid "Less than 1 minute"
@@ -6701,7 +4274,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Figyelmeztetés - Túl hosszú blokkfájlok csonkítása"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Súgó"
 
@@ -6957,11 +4530,11 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Néhány szükséges fájl itt:\n"
 "  %s\n"
@@ -7146,6 +4719,10 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "Időzített felvétel"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7195,6 +4772,10 @@ msgstr "Engedélyezi az &automatikus mentést?"
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "Projekt mentése másként…"
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "Kiválasztás…"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -7254,9 +4835,19 @@ msgstr ""
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity időzített felvétel - Várakozás a kezdésre"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "A felvétel ekkor fog kezdődni:"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7304,6 +4895,13 @@ msgstr "Sztereó, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "Sávnézet"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "%d. sáv"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7927,7 +5525,7 @@ msgstr "Fehér"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Nincs"
 
@@ -8166,6 +5764,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "Bitsebesség:"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "Csökken&tés"
 
@@ -8271,6 +5874,16 @@ msgstr "Méretezés"
 #, fuzzy
 msgid "VZoom:"
 msgstr "Nagyítás"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "Nagyítás"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "aljára"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8852,6 +6465,10 @@ msgstr "&Visszaállítás"
 msgid "&Difference:"
 msgstr "&Különbség:"
 
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Súgó"
+
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 #, c-format
@@ -9407,6 +7024,14 @@ msgstr "Alapbeállítások"
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "Gyári beállítások"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "Importálás…"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "Exportálás…"
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -10407,7 +8032,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+#, fuzzy
+msgid "(Maximum 0dB)"
 msgstr ".  Legfeljebb 0dB."
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10880,6 +8506,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr "Nulla amplitúdójú hangot állít elő"
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Csend"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr "Sztereósávokat alakít át monóvá"
@@ -11221,8 +8851,8 @@ msgid "Error Saving Effect Presets"
 msgstr "Hiba a VST-előbeállítások mentésekor"
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+#, fuzzy, c-format
+msgid "This parameter file was saved from %s. Continue?"
 msgstr "Ez a paraméterfájl innen lett elmentve: %s. Folytatja?"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11324,7 +8954,8 @@ msgstr ""
 "felület használatához."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+#, fuzzy
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr " Válassza az „Alap” lehetőséget egy alap, csak szöveges felülethez. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -11552,7 +9183,13 @@ msgid "plug-in"
 msgstr "Nyquist bővítmények"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "A Nyquist visszatérési értéke:"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "A Nyquist visszatérési értéke:"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11650,6 +9287,10 @@ msgstr "Örö&költ (3-as verziójú) szintaxis használata."
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "&Betöltés"
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Mentés"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11763,6 +9404,10 @@ msgstr "Nincsenek formátumspecifikus beállítások"
 msgid "Export Audio"
 msgstr "Hang exportálása"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Metaadatcímkék szerkesztése"
+
 #: src/export/Export.cpp
 msgid "Exported Tags"
 msgstr "Exportált címkék"
@@ -11827,8 +9472,8 @@ msgstr ""
 "fájlnevet vagy mappát."
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "Már létezik „%s” nevű fájl. Lecseréli?"
 
 #: src/export/Export.cpp
@@ -12050,20 +9695,25 @@ msgstr "A kijelölt hang exportálása mint %s"
 msgid "Invalid sample rate"
 msgstr "Érvénytelen mintavételezési gyakoriság"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Újramintavételezés"
+
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 "A projekt mintavételezési gyakoriságát (%d) a jelenlegi kimeneti\n"
 "fájlformátum nem támogatja.  "
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "A projekt mintavételezési gyakoriság (%d) és bitsebesség (%d kbits)\n"
 "kombinációját a jelenlegi kimeneti fájlformátum nem támogatja.  "
@@ -12865,19 +10515,19 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "%ld hiba érkezett az MP3-kódolótól"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "A projekt mintavételezési gyakoriságát (%d) az MP3\n"
 "fájlformátum nem támogatja.  "
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "A projekt mintavételezési gyakoriság (%d) és bitsebesség (%d kbps)\n"
 "kombinációját az MP3 fájlformátum nem támogatja.  "
@@ -13292,6 +10942,11 @@ msgstr ""
 "Próbálja meg telepíteni az FFmpeg programot. Tömörítetlen fájloknál próbálja "
 "meg ezt is: Fájl > Importálás > Nyers adatok."
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13453,7 +11108,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13590,10 +11245,2557 @@ msgstr "Importálandó mennyiség:"
 msgid "Sample rate:"
 msgstr "Mintavételezési gyakoriság:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&Importálás"
+
 #: src/import/RawAudioGuess.cpp
 #, fuzzy
 msgid "Bad data size"
 msgstr "Metaadatok betöltése másként:"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s left"
+msgstr "balra"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s right"
+msgstr "jobbra"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "start"
+msgstr "Kezdés"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "end"
+msgstr "Befejezés"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Time shifted clips to the left"
+msgstr "Sávok/klipek időben eltolva %s %.02f másodperccel"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Időeltolás"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "clip not moved"
+msgstr "A parancsfájl nem lett elmentve."
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "Határ&ok levágása"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Previo&us Clip"
+msgstr "Előző eszköz"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "Előző eszköz"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "N&ext Clip"
+msgstr "Következő eszköz"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "Következő eszköz"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Pre&vious Clip Boundary"
+msgstr "Határ&ok levágása"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Határ&ok levágása"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Ne&xt Clip Boundary"
+msgstr "Határ&ok levágása"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "Határ&ok levágása"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Clip Rig&ht"
+msgstr "Levágás"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Szöveg beillesztve a vágólapról"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Beillesztve a vágólapról"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Nincs mit visszavonni"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Nincs mit ismételni"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Kivágás a vágólapra"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "%.2f másodperc törölve t=%.2f helyen"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Törlés"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "Az egyik típusú sáv beillesztése egy másikba nem engedélyezett."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "Sztereó hang másolása egy monó sávba nem engedélyezett."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Kettőzött"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Kettőzés"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Szétvágó kivágás a vágólapra"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Kivágás és szétválasztás"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "Szétvágva törölve %.2f másodperc itt: t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Szétvágó törlés"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Kijelölt sávok csenddé alakítva %.2f másodpercnél itt: %.2f"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "A kijelölt hangsávok levágása %.2f másodperctől %.2f másodpercig"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "Hang levágása"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Szétvágás"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Szétvágás új sávra"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Új szétvágása"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "Egyesítve %.2f másodperc itt: t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Egyesítés"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "Leválasztva %.2f másodperc itt: t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "Leválasztás"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "Metaadatcímkék"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "S&zerkesztés"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Törlés"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "K&ettőzés"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "&Speciális eltávolítása"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "&Szétvágó kivágás"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "S&zétvágó törlés"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "&Hang átalakítása csenddé"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "H&ang levágása"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "&Felosztás"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "Új fel&osztott"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "&Egyesítés"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "&Leválasztás csendeknél"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "Me&taadatcímkék szerkesztése…"
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "&Beállítások…"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "Törlésgomb"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "Törlésgomb2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Mi&xer"
+msgstr "Ke&verő eszköztár"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Lejátszás hangerejének igazítása"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "Lejátszás hangerejének növelése"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "Lejátszás hangerejének csökkentése"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Felvételi hangerő igazítása"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Felvételi hangerő növelése"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Felvételi hangerő csökkentése"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "De&vice"
+msgstr "E&szköz:"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Felvevőeszköz változtatása"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Lejátszóeszköz változtatása"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Hangkiszolgáló változtatása"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Felvételi csatornák változtatása"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
+msgstr "Teljes képernyő be/ki"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "MIDI importálva innen: „%s”"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "MIDI importálása"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "Kijelölt hang exportlása"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "címkék.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Nincsenek címkesávok az exportáláshoz."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Egyszerre csak egy sávot mérhet."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Válasszon egy hangsávot."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI exportálása másként:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI fájl (*.mid)|*.mid|Allegro fájl (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Egy felismerhetetlen fájlkiterjesztéssel rendelkező fájlnevet jelölt ki.\n"
+"Szeretné folytatni?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "MIDI exportálása"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Címkék importálva innen: „%s”"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Címkék importálása"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Válasszon egy MIDI fájlt…"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI és Allegro fájlok (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI fájlok "
+"(*.mid;*.midi)|*.mid;*.midi|Allegro fájlok (*.gro)|*.gro|Minden fájl|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select any uncompressed audio file"
+msgstr "Válasszon bármilyen tömörítetlen hangfájlt…"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "Minden fájl|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Előbeállítás mentése…"
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Legutóbbi megnyitása"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "Leg&utóbbi fájlok"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Projekt mentése"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "P&rojekt mentése másként…"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "A projekt tömörített másolatának me&ntése…"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Save Compressed Copy of Project..."
+msgstr "A projekt tömörített másolatának me&ntése…"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export"
+msgstr "Exportálás"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as MP&3"
+msgstr "Exportált címkék"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &WAV"
+msgstr "Címkék exportálása másként:"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &OGG"
+msgstr "Exportált címkék"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "&Hang exportálása…"
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Kijelölt hang &exportálása…"
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "&Címkék exportálása…"
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Több e&xportálása…"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "MI&DI exportálása…"
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&Hang…"
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Címkék…"
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI…"
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&Nyers adatok…"
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "&Oldalbeállítás…"
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&Nyomtatás…"
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "&Kilépés"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "Hangeszköz-információk"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save Device Info"
+msgstr "Eszközinformációk mentése"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save device info"
+msgstr "Nem lehet elmenteni az eszközinformációkat"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "MIDI Device Info"
+msgstr "MIDI-eszközök"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Save MIDI Device Info"
+msgstr "Eszközinformációk mentése"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Unable to save MIDI device info"
+msgstr "Nem lehet elmenteni az eszközinformációkat"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&Gyors súgó"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Getting Started"
+msgstr "Kijelölés kezdete:"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Gyors súgó"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "&Kézikönyv"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Diagnostics"
+msgstr "öndiagnosztika futtatása"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "&Hangeszköz információk…"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&MIDI Device Info..."
+msgstr "&Hangeszköz információk…"
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "&Napló megjelenítése…"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Támogatási adatok előállítása…"
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "&Függőségek ellenőrzése…"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "&Frissítések keresése…"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "Szöveg beillesztése új címkébe"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Címkézett hangterületek kivágása a vágólapra"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "Címkézett hang kivágása"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "Címkézett hangterületek törölve"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "Címkézett hang törlése"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Címkézett hangterületek szétvágó kivágása a vágólapra"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "Címkézett hang szétvágó kivágása"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "Címkézett hangterületek szétvágva törölve"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "Címkézett hang szétvágó törlése"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "Címkézett hangterületek elnémítva"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "Címkézett hang némítása"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Címkézett hangterületek átmásolva a vágólapra"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "Címkézett hang másolása"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "Címkézett hang szétvágva (pontok vagy területek)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "Címkézett hang szétvágása"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "Címkézett hang egyesítve (pontok vagy területek)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "Címkézett hang egyesítése"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "Címkézett hangterületek leválasztva"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "Címkézett hang leválasztása"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Labels"
+msgstr "Címkék"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "Címkék szerkesz&tése…"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "&Címke hozzáadása a kijelölésnél"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "Címke hozzáa&dása a lejátszás pozíciójánál"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "S&zöveg beszúrása új címkébe"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "&Gépelés egy címke létrehozásához (be/ki)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "&Címkézett hang"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "K&ivágás"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Címkeszerkesztés"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Szétvágó törlés"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "&Szétvágó kivágás"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Kivágás és szétválasztás"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "S&zétvágó törlés"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Szétvágó törlés"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "&Hang átalakítása csenddé"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Csend"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "&Másolás"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Címke"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "&Felosztás"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Címkeszerkesztés"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Címkeszerkesztés"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Backward Through Active Windows"
+msgstr "Visszafelé mozgatás az aktív ablakokon keresztül"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Forward Through Active Windows"
+msgstr "Előre mozgatás az aktív ablakokon keresztül"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "Visszafelé mozgatás az eszköztárakból a sávokba"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Előre mozgatás az eszköztárakból a sávokba"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Previous Track"
+msgstr "Fókusz áthelyezése az előző sávra"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Next Track"
+msgstr "Fókusz áthelyezése a következő sávra"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &First Track"
+msgstr "Fókusz áthelyezése az első sávra"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Last Track"
+msgstr "Fókusz áthelyezése az utolsó sávra"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to P&revious and Select"
+msgstr "Fókusz áthelyezése az előzőre és kijelölés"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to N&ext and Select"
+msgstr "Fókusz áthelyezése a következőre és kijelölés"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "&Toggle Focused Track"
+msgstr "Kiválasztott sáv be- és kikapcsolása"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Toggle Focuse&d Track"
+msgstr "Kiválasztott sáv be- és kikapcsolása"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "Kategorizálatlan"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Ismeretlen"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Ismétlés: %s"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "Bővítmény: %d -> %d"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Előállítás"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "Bővítmények hozzáadása / eltávolítása…"
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "Utolsó hatás ismétlése"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "&Hatás"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "Ele&mzés"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "Kontraszt…"
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Spektrum ábrázolása…"
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "T&ools"
+msgstr "Eszközök"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Címkék…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "&Alkalmaz"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&Törlés…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Képernyőkép eszközök…"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Teljesítményteszt futtatása…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "Időzített felvétel"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Detect Upstream Dropouts"
+msgstr "Az importálandó adatfolyamok kiválasztása"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Parancsfájl"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Kiválasztás…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Frekvenciák"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Kiválasztás…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "a &sáv elejére"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "&Beállítások…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "&Beállítások…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "Következő eszköz"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Burkológörbe"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "Címkék szerkesz&tése…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "P&rojekt mentése másként…"
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "Sávok &rendezése"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "&Több beszerzése…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "Újra&mintavételezés…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Súgó"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "&Legutóbbi megnyitása…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "P&rojekt mentése másként…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "&Több beszerzése…"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "&Hang exportálása…"
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Képernyőkép eszközök…"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "Kijelölés baloldali határának beállítása"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "Pozíció"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "Kijelölés jobboldali határának beállítása"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "K&ijelölés"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Semmi"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Kijelölés"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "Sá&vok"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "Minden &sávban"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "In All &Sync-Locked Tracks"
+msgstr "M&inden szinkronsávban"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "R&egion"
+msgstr "Terület lejátszás&a"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "Lejátszás pozíciójától &balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Lejátszás pozíciójától &balra"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "Lejátszás pozíciójától j&obbra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "Lejátszás pozíciójától j&obbra"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "Sáv &kezdetétől a kurzorig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "Sáv &kezdetétől a kurzorig"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "Kurzortól a sáv &végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "Kurzortól a sáv &végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "Sáv &kezdetétől a kurzorig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Kijelölés a végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&tore Selection"
+msgstr "N&agyítás a kijelölésre"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Retrieve Selectio&n"
+msgstr "Spektrális kijelölés"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "Sp&ektrális"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Spektrális &kijelölés átváltása"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "Következő magasabb csúcsfrekvencia"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "Következő alacsonyabb csúcsfrekvencia"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr "Kurzortól a tárolt &kurzorpozícióig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Kijelölés a kezdetéig"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr "K&urzorpozíció eltárolása"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "At &Zero Crossings"
+msgstr "&Nulla átmenet keresése"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "&Nulla átmenet keresése"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Selection"
+msgstr "Kijelölés"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "Illesztés kikapcsolása"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "Illesztés a legközelebbihez"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "Illesztés az előzőhöz"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to &Start"
+msgstr "Kijelölés a kezdetéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to En&d"
+msgstr "Kijelölés a végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Left"
+msgstr "Kijelölés bővítése balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Right"
+msgstr "Kijelölés bővítése jobbra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "Balra kijelölés beállítása (vagy kiterjesztése)"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Jobbra kijelölés beállítása (vagy kiterjesztése)"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract L&eft"
+msgstr "Kijelölés összehúzása balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract R&ight"
+msgstr "Kijelölés összehúzása jobbra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor to"
+msgstr "Kurzor balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Star&t"
+msgstr "Kijelölés kezdete:"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "Ugrás a kijelölés &elejéhez"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection En&d"
+msgstr "Kijelölés vége"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "Ugrás a kijelölés &végéhez"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &Start"
+msgstr "a &sáv elejére"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "Kurzortól a sáv &végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &End"
+msgstr "a sá&v végére"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "Kurzortól a sáv &végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Project Start"
+msgstr "Projektek"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "Projektek"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Project E&nd"
+msgstr "Projektek"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "Kurzortól a sáv &végéig"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor"
+msgstr "Kurzor balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Left"
+msgstr "Kurzor balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Right"
+msgstr "Kurzor jobbra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Sh&ort Jump Left"
+msgstr "Rövid kurzorugrás balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Shor&t Jump Right"
+msgstr "Rövid kurzorugrás jobbra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long J&ump Left"
+msgstr "Hosszú kurzorugrás balra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long Ju&mp Right"
+msgstr "Hosszú kurzorugrás jobbra"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "&Tekerés"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Left During Playback"
+msgstr "Kis tekerés balra a lejátszás alatt"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Right During Playback"
+msgstr "Kis tekerés jobbra a lejátszás alatt"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
+msgstr "Nagy tekerés balra a lejátszás alatt"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
+msgstr "Nagy tekerés jobbra a lejátszás alatt"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "E&szköztárak"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Reset Toolb&ars"
+msgstr "Eszköztár&ak visszaállítása"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "Á&tvitel eszköztár"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "Es&zközök eszköztár"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "&Felvételmérő eszköztár"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "&Lejátszásmérő eszköz"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "Ke&verő eszköztár"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "&Szerkesztés eszköztár"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Lejátszás adott sebességgel"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "&Változó sebességű lejátszás eszköztár"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "&Eszköz eszköztár"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "K&ijelölés eszköztár"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "Spe&ktrális kijelölés eszköztár"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Selection Tool"
+msgstr "Kijelölés eszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Envelope Tool"
+msgstr "Burkológörbe eszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Draw Tool"
+msgstr "Rajzeszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Zoom Tool"
+msgstr "Nagyítás eszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Time Shift Tool"
+msgstr "Időeltolódás eszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Multi Tool"
+msgstr "Többfunkciós eszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Previous Tool"
+msgstr "Előző eszköz"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Next Tool"
+msgstr "Következő eszköz"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "Minden hang megjelenítése a(z) „%s” sávból"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Megjelenítés"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "%d sáv keverve és megjelenítve egy új sztereósávba"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "%d sáv keverve és megjelenítve egy új monósávba"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Hangsáv(ok) újramintavételezve"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Sáv"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to zero"
+msgstr "%s igazítva/áthelyezve"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to zero"
+msgstr "kezdettől nulláig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "%s igazítása/áthelyezése"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "Induló amplitúdó"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "kezdettől a kurzor/kijelölés kezdetéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to cursor/selection start"
+msgstr "kezdettől a kurzor/kijelölés kezdetéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
+msgstr "kezdettől a kijelölés végéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to selection end"
+msgstr "kezdettől a kijelölés végéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "végétől a kurzor/kijelölés kezdetéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "végétől a kurzor/kijelölés kezdetéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End"
+msgstr "%s igazítása/áthelyezése"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End"
+msgstr "%s igazítása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to selection end"
+msgstr "végétől a kijelölés végéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to selection end"
+msgstr "végétől a kijelölés végéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "%s igazítva/áthelyezve"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "&Vége igazítása a végéhez"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "&Vége igazítása a végéhez"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "&Vége igazítása a végéhez"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "%s igazítva/áthelyezve"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "&Egymáshoz igazítás"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "&Egymáshoz igazítás"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "&Egymáshoz igazítás"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "MIDI szinkronizálása a hanggal"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "MIDI- és hangsávok szinkronizálása"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Erősítés beállítva"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Görgetés beállítva"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Hangsáv(ok) eltávolítva"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "Sáv eltávolítása"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "„%s” sáv eltávolítva"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "Sáveltávolítás"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "„%s” %s áthelyezve"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "Sáv mozgatása a &tetejére"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "Sáv mozgatása az &aljára"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "Sáv mozgatása az &aljára"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "„%s” %s áthelyezve"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "„%s” %s áthelyezve"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "Sáv mozgatása &fel"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "Sáv mozgatása &le"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Új hangsáv létrehozva"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Új sáv"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Új sztereó hangsáv létrehozva"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Új címkesáv létrehozva"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Az Audacity ezen verziója projektablakonként csak egyetlen idősávot "
+"engedélyez."
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Új idősáv létrehozva"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Új mintavételezési gyakoriság (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "A megadott érték érvénytelen"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "A(z) %d. sáv újramintavételezése"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Hangsáv(ok) újramintavételezve"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "Sáv újramintavételezése"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Válasszon egy hangsávot."
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Az igazítás befejeződött: MIDI %.2f másodperctől %.2f másodpercig, hang %.2f "
+"másodperctől %.2f másodpercig."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "MIDI szinkronizálása a hanggal"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Igazítási hiba: a bemenet túl rövid: MIDI %.2f másodperctől %.2f "
+"másodpercig, hang %.2f másodperctől %.2f másodpercig."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "Az igazítási folyamat belső hibát jelentett."
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Idő szerint rendezett sávok"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "Rendezés idő szerint"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "Név szerint rendezett sávok"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "Rendezés név szerint"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Aktív hanggal rendelkező sáv nem törölhető"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "Új &hozzáadása"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "&Monósáv"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&Sztereósáv"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&Címkesáv"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "&Idősáv"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "Sztereó felosztása mo&nóra"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "&Keverés és megjelenítés"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "Keverés és megje&lenítés új sávba"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "Újra&mintavételezés…"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "Sávok &eltávolítása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute"
+msgstr "A kiválasztott sáv némítása/visszahangosítása"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "Minden sáv el&némítása"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "Minden sáv &visszahangosítása"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Left"
+msgstr "Bal"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Bal"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Right"
+msgstr "Jobb"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Jobb"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Center"
+msgstr "Közép"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Közép"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "Sáv&ok igazítása"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "&Vége igazítása a végéhez"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "&Egymáshoz igazítás"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Kezdettől &nulláig"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Kezdettől a &kurzorig/kijelölés kezdetéig"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Kez&dettől a kijelölés végéig"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Végétől a k&urzorig/kijelölés kezdetéig"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Végétől a k&ijelölés végéig"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "Hatás áthelyezése lefelé a tárban"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Sele&ction and Tracks"
+msgstr "Hatás áthelyezése lefelé a tárban"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "Sávok &rendezése"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "&kezdési idő szerint"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "&név szerint"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "Sávok s&zinkronban tartása (be/ki)"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Track"
+msgstr "Sá&vok"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "A kiválasztott sáv görgetésének beállítása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "A kiválasztott sáv görgetése balra"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "A kiválasztott sáv görgetése jobbra"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "Kiválasztott sáv hangerejének módosítása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "A kiválasztott sáv hangerejének növelése"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "A kiválasztott sáv hangerejének csökkentése"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "A kiválasztott sáv menüjének megnyitása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "A kiválasztott sáv némítása/visszahangosítása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "A kiválasztott sáv szólóra/nem szólóra állítása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "A kiválasztott sáv bezárása"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "Kiválasztott sáv mozgatása fel"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "Kiválasztott sáv mozgatása le"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "Kiválasztott sáv mozgatása a tetejére"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "Kiválasztott sáv mozgatása az aljára"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "nincs címkesáv"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "nincs címkesáv a kiválasztott sávnál vagy alatta"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "nincsenek címkék a címkesávban"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Nem zárolható terület\n"
+"a projekt végén túl"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+"Az időzített felvétel nem használható egynél több nyitott projekttel.\n"
+"\n"
+"Zárja be a további projekteket, és próbálja újra."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+"Az időzített felvétel nem használható, mivel mentetlen változtatásai "
+"vannak.\n"
+"\n"
+"Mentse el vagy zárja be ezt a projektet, és próbálja újra."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Válasszon egy hangsávot."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Válasszon egy hangsávot."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Válasszon egy hangsávot."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Válasszon egy hangsávot."
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Átvitel"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Lejátszás"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "&Lejátszás/leállítás"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "Lejátszás/leállítás és &kurzor beállítása"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "Vég&telenített lejátszás"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&Szünet"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Felvétel"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&Felvétel"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Append Record"
+msgstr "Felvétel hozzáfűzése"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Record &New Track"
+msgstr "Sávok &eltávolítása"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&Időzített felvétel…"
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "Terület lejátszás&a"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&Zárolás"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&Feloldás"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "Ha&ngeszközök újralekérdezése"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Transport &Options"
+msgstr "Átírás"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "H&ang aktiválási szint…"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "&Hangvezérelt felvétel (be/ki)"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "Rögzített felvevő- vagy lejátszófej"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "&Rákeverés (be/ki)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "S&zoftveres átjátszás (be/ki)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "Auto&matikus felvételiszint-szabályozás (be/ki)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "Á&tvitel"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&ay"
+msgstr "&Lejátszás/leállítás"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &One Second"
+msgstr "Lejátszás egy másodpercet"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "Lejátszás a kijelölésig"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &Before Selection Start"
+msgstr "Lejátszás a kijelölés kezdete előtt"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Af&ter Selection Start"
+msgstr "Lejátszás a kijelölés kezdete után"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Be&fore Selection End"
+msgstr "Lejátszás a kijelölés vége előtt"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Aft&er Selection End"
+msgstr "Lejátszás a kijelölés vége után"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before a&nd After Selection Start"
+msgstr "Lejátszás a kijelölés eleje előtt és után"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before an&d After Selection End"
+msgstr "Lejátszás a kijelölés vége előtt és után"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview"
+msgstr "Kivágás előnézetének lejátszása"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Lejátszás adott sebességgel"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Lejátszás adott sebességgel"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Loop Play-at-Speed"
+msgstr "Vég nélküli lejátszás az eredeti sebességgel"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Kivágás előnézetének lejátszása az eredeti sebességgel"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Lejátszási sebesség igazítása"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Lejátszási sebesség növelése"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "Lejátszási sebesség csökkentése"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Previous Label"
+msgstr "Áthelyezés az előző címkéhez"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Next Label"
+msgstr "Áthelyezés a következő címkéhez"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Nézet"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "&Nagyítás"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "&Nagyítás"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "N&ormál méret"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "&Kicsinyítés"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "N&agyítás a kijelölésre"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Zoom &Toggle"
+msgstr "Nagyítás eszköz"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Speciális beállítások"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "T&rack Size"
+msgstr "Szám címe"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Fit to Width"
+msgstr "A&blakhoz igazítás"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "Minden sáv össze&csukása"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "Összecsukott sávok &kinyitása"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Sk&ip to"
+msgstr "Kihagyás a végéig"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection Sta&rt"
+msgstr "Kijelölés kezdete:"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "a &kijelölés elejére"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "a k&ijelölés végére"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "Elő&zmények…"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "Ka&raoke…"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "Keverőp&ult…"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Extra Menus (on/off)"
+msgstr "&Rákeverés (be/ki)"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Show Clipping (on/off)"
+msgstr "&Levágás megjelenítése"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Hatások tár megjelenítése"
+
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "&Ablak"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "&Minimalizálás"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "Az összes &előtérbe hozása"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "Minden projekt minimalizálása"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13604,8 +13806,8 @@ msgid "Decoding Waveform"
 msgstr "Hullámforma visszafejtése"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+#, fuzzy, c-format
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% kész. Kattintson a feladat fókuszpontjának változtatásához."
 
 #: src/prefs/BatchPrefs.cpp
@@ -14200,7 +14402,7 @@ msgid "%s - %s"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -14210,7 +14412,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "A(z) „%s” gyorsbillentyű már hozzá van rendelve ehhez:\n"
 "\n"
@@ -14597,6 +14799,10 @@ msgstr "&Hosszú szakasz:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
@@ -15072,7 +15278,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "Az Audacity programot egy további „Kimenet forráskódoló” gombbal "
@@ -15668,9 +15874,9 @@ msgstr ""
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
-msgstr ""
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
+msgstr "Válasszon egy MIDI fájlt…"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -16462,6 +16668,49 @@ msgstr "Vissza"
 msgid "Help on the Internet"
 msgstr "Sugó az interneten"
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "Szeretné menteni a változtatásokat?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Keverés"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "QuickTime fájlok"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Nincs mit visszavonni"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "A kiválasztott sáv bezárása"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "A projektfájl nem nyitható meg"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Felvétel kezdete:\n"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr "Menü"
@@ -16921,125 +17170,6 @@ msgstr "Biztosan be szeretné zárni?"
 msgid "Confirm Close"
 msgstr "Bezárás megerősítése"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Az idősávműveletek le vannak tiltva felvétel közben"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Kattintás és húzás a sztereó sávok relatív méretének változtatásához."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "Nem rögzített felvevő- vagy lejátszófej"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr "Idővonal"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Seek"
-msgstr "Kattintás vagy húzás a tekerés elkezdéséhez"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "Kattintás vagy húzás a változó sebességű lejátszás elkezdéséhez"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-"Kattintás és mozgatás a változó sebességű lejátszáshoz. Kattintás és húzás a "
-"tekeréshez."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr "Mozgatás a tekeréshez"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr "Mozgatás a változó sebességű lejátszáshoz"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr "Húzás a tekeréshez. Elengedés a tekerés leállításához."
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr ""
-"Húzás a tekeréshez. Elengedés és mozgatás a változó sebességű lejátszáshoz."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr "Mozgatás a változó sebességű lejátszáshoz. Húzás a tekeréshez."
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "Gyors lejátszás letiltva"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr "Gyors lejátszás engedélyezve"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to unpin"
-msgstr "Kattintás a megfigyeléshez"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to pin"
-msgstr "Kattintás az indításhoz"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr "Gyors lejátszás letiltása"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr "Gyors lejátszás engedélyezése"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable dragging selection"
-msgstr "Kijelölés húzásának letiltása"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable dragging selection"
-msgstr "Kijelölés húzásának engedélyezése"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr "Idővonal buboréksúgók letiltása"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr "Idővonal buboréksúgók engedélyezése"
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr "Ne görgessen lejátszás közben"
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr "Kijelző frissítése lejátszás közben"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr "Lejátszási terület zárolása"
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr "Lejátszási terület feloldása"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr "Változó sebességű lejátszás vonalzó letiltása"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr "Változó sebességű lejátszás vonalzó engedélyezése"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Ne jelenjen meg többet ez a figyelmeztetés"
@@ -17455,6 +17585,11 @@ msgstr "A görbe létezik"
 
 #: plug-ins/adjustable-fade.ny
 #, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Hiba"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "A frekvencianövelés nem lehet negatív"
 
@@ -17468,13 +17603,8 @@ msgstr "A frekvencianövelés nem lehet negatív"
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "Hiba"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17663,31 +17793,6 @@ msgstr "Ismétlések száma"
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "Hiba"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17696,9 +17801,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Fájlok felosztása ez alapján:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Címkeszerkesztés"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17718,6 +17830,11 @@ msgstr "Ismétlések száma"
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "Hossz (másodperc)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "Hossz (másodperc)"
 
 #: plug-ins/equalabel.ny
@@ -17763,6 +17880,48 @@ msgstr ""
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "Késleltetési kompenzáció"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "Leválasztás"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "Figyelmeztetések"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Terü&let mentése"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Címkék szerkesztve"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~aRegion length = ~a seconds."
 msgstr ""
 
 #: plug-ins/highpass.ny
@@ -18799,6 +18958,26 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
+
+#, fuzzy
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
+
+#, fuzzy
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
+
+#, fuzzy
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr "A hangjegyek legnagyobb számának az 1…128 tartományban kell lennie"
+
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "Hiba"
+
+#, fuzzy
 #~ msgid "Left"
 #~ msgstr "Bal"
 
@@ -18992,9 +19171,6 @@ msgstr ""
 
 #~ msgid "to Top"
 #~ msgstr "tetejére"
-
-#~ msgid "to Bottom"
-#~ msgstr "aljára"
 
 #~ msgid "Down"
 #~ msgstr "Le"
@@ -19588,9 +19764,6 @@ msgstr ""
 
 #~ msgid "Selection "
 #~ msgstr "Kijelölés "
-
-#~ msgid "Re&gion Save"
-#~ msgstr "Terü&let mentése"
 
 #~ msgid "Regio&n Restore"
 #~ msgstr "Terület &helyreállítása"

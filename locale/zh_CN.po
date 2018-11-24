@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-10-10 15:25+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2018-09-02 13:27+0900\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
@@ -38,10 +38,11 @@ msgid "Please choose an existing file."
 msgstr "请选择一个已存在的文件。"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -225,7 +226,8 @@ msgid "No matches found"
 msgstr "未找到匹配项"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+#, fuzzy
+msgid "Code has been modified. Are you sure?"
 msgstr "代码已被修改。您确定吗？"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -277,7 +279,7 @@ msgstr "复制"
 msgid "Copy to clipboard"
 msgstr "复制到剪贴板"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "剪切"
@@ -286,7 +288,7 @@ msgstr "剪切"
 msgid "Cut to clipboard"
 msgstr "剪切到剪贴板"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "粘贴"
@@ -304,7 +306,7 @@ msgstr "清除"
 msgid "Clear selection"
 msgstr "清除所选"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "全选"
 
@@ -707,6 +709,120 @@ msgstr "设置路径："
 msgid "GPL License"
 msgstr "GPL 许可证"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "录制时时间线操作已禁用"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "单击并拖动以调整，双击以重置"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Record/Play head"
+msgstr "录制/播放头"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr "时间线"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Seek"
+msgstr "单击并拖动以定位播放"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "点击并拖动以跟随播放"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr "点击并移动以跟随播放。点击并拖动以定位播放。"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr "移动以定位播放"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr "移动以跟随播放"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release to stop seeking."
+msgstr "拖动以定位播放。释放以停止定位播放。"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr "拖动以定位播放。释放并移动以跟随播放。"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr "移动以跟随播放。拖动以定位播放。"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "快速播放已禁用"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr "快速播放已启用"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to unpin"
+msgstr "点击取消固定"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to pin"
+msgstr "点击固定"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr "禁用快速播放"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr "启用快速播放"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable dragging selection"
+msgstr "禁用拖拽选区"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable dragging selection"
+msgstr "启用拖拽选区"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr "禁用时间线工具提示"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr "启用时间线工具提示"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr "播放时不要翻页"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr "播放时更新显示"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr "锁定播放区域"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr "解锁播放区域"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr "禁用跟随播放标尺"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr "启用跟随播放标尺"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -777,12 +893,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity 正在启动..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "新建(&N)"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "打开(&O)..."
 
@@ -790,7 +906,7 @@ msgstr "打开(&O)..."
 msgid "Open &Recent..."
 msgstr "打开最近使用的(&R)..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "关于Audacity(&A)..."
 
@@ -798,7 +914,7 @@ msgstr "关于Audacity(&A)..."
 msgid "&Preferences..."
 msgstr "偏好设置(&P)..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "文件(&F)"
 
@@ -934,8 +1050,8 @@ msgstr "保存(&S)..."
 msgid "Cl&ear"
 msgstr "清除(&E)"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "关闭(&C)"
 
@@ -1750,7 +1866,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "依赖性检查"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "进度"
@@ -1772,12 +1889,12 @@ msgid "Cleaning up temporary files"
 msgstr "正在清理临时文件"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "正在保存项目数据文件"
-
-#: src/DirManager.cpp
 msgid "Cleaning up after failed save"
 msgstr "正在进行保存失败后的清理"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "正在保存项目数据文件"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2321,9 +2438,9 @@ msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "为了进行频谱分析，所有选定的轨道必须具有相同的采样率。"
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr "选择的音频过多。只有开始 %.1f 秒的音频会被分析。"
 
@@ -2367,8 +2484,8 @@ msgstr "频谱图.txt"
 msgid "Export Spectral Data As:"
 msgstr "将频谱数据导出为："
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Couldn't write to file: %s"
 msgstr "无法写入文件：%s"
@@ -2661,7 +2778,8 @@ msgid "Track"
 msgstr "音轨"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "标签"
 
@@ -2693,15 +2811,15 @@ msgstr "新建..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "按 F2 或双击来编辑单元格内容。"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
 msgstr "选择一个包含标签的文本文件"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "文本文件 (*.txt)|*.txt|所有文件|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, c-format
 msgid "Could not open file: %s"
 msgstr "无法打开文件： %s"
@@ -2710,7 +2828,7 @@ msgstr "无法打开文件： %s"
 msgid "No labels to export."
 msgstr "没有标签可导出。"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "将标签导出为："
 
@@ -2738,22 +2856,22 @@ msgstr "已修改的标签"
 msgid "Label Edit"
 msgstr "标签编辑"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "已添加标签"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "剪切(&T)"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "复制(&C)"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "粘贴(&P)"
 
@@ -2768,6 +2886,20 @@ msgstr "已删除标签"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr "一个或更多的标签无法读取。"
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "编辑标签"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+msgid "Name:"
+msgstr "名称："
+
+#: src/LabelTrack.cpp
+msgid "New label"
+msgstr "新标签"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2811,2304 +2943,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity 卡拉OK%s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "未分类"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "保存项目(&S)"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "项目另存为(&A)..."
-
-#: src/Menus.cpp
-msgid "Save Lossless Copy of Project..."
-msgstr "保存项目的无损副本(&S)..."
-
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "保存项目的压缩副本(&S)..."
-
-#: src/Menus.cpp
-msgid "&Export"
-msgstr "导出(&E)"
-
-#: src/Menus.cpp
-msgid "Export as MP&3"
-msgstr "导出为 MP&3"
-
-#: src/Menus.cpp
-msgid "Export as &WAV"
-msgstr "导出为 &WAV"
-
-#: src/Menus.cpp
-msgid "Export as &OGG"
-msgstr "导出为 &OGG"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "导出音频(&E)..."
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "导出选择的音频(&R)..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "导出标签(&L)..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "导出多个文件(&M)..."
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "导出 MI&DI..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "导入(&I)"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "音频(&A)..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "标签(&L)..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "MIDI(&M)..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "原始数据(&R)..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "页面设置(&G)..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "打印(&P)..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "退出(&X)"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "编辑(&E)"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "撤消(&U)"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "重做(&R)"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "删除(&D)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "创建副本(&A)"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "特殊移除(&E)"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "分离并剪切(&I)"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "分离并删除(&E)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "置为静音(&O)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "修剪音频(&M)"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "片段边界(&O)"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "分离(&L)"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "分离并新建(&W)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "连接(&J)"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "静音处分离(&H)"
-
-#: src/Menus.cpp
-msgid "&Labels"
-msgstr "标签(&L)"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "编辑标签(&E)"
-
-#: src/Menus.cpp
-msgid "Add Label at &Selection"
-msgstr "为选区添加标签(&S)"
-
-#: src/Menus.cpp
-msgid "Add Label at &Playback Position"
-msgstr "在播放位置添加标签(&P)"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "粘贴文本至新标签(&X)"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "键入以创建标签（开/关）(&T)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "已标签音频(&B)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Cut"
-msgstr "标签剪切"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "剪切(&C)"
-
-#: src/Menus.cpp
-msgid "Label Delete"
-msgstr "标签删除"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-msgid "Label Split Cut"
-msgstr "分离并剪切标签"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "分离并剪切(&S)"
-
-#: src/Menus.cpp
-msgid "Label Split Delete"
-msgstr "分离并删除标签"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "分离并删除(&L)"
-
-#: src/Menus.cpp
-msgid "Label Silence"
-msgstr "标签静音"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "置为静音(&A)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Copy"
-msgstr "标签复制"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "复制(&P)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Split"
-msgstr "标签分离"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "分离(&T)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Join"
-msgstr "标签合并"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "编辑元数据(&T)..."
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "偏好设置(&F)..."
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "选择(&S)"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "全部(&A)"
-
-#: src/Menus.cpp
-msgid "Select None"
-msgstr "空置选择"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "全不(&N)"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "轨道(&T)"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "所有轨道(&T)"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr "选择同步锁定"
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr "所有同步锁定轨道(&S)"
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr "范围(&E)"
-
-#: src/Menus.cpp
-msgid "Set Selection Left at Play Position"
-msgstr "设置选区于播放位置左端"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "在播放位置左端(&L)"
-
-#: src/Menus.cpp
-msgid "Set Selection Right at Play Position"
-msgstr "设置选区于播放位置右端"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "在播放位置右端(&R)"
-
-#: src/Menus.cpp
-msgid "Select Track Start to Cursor"
-msgstr "选择轨道起点至光标位置"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "音轨起点到光标位置(&S)"
-
-#: src/Menus.cpp
-msgid "Select Cursor to Track End"
-msgstr "选择光标位置到轨道终点"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "光标位置到音轨终点(&E)"
-
-#: src/Menus.cpp
-msgid "Select Track Start to End"
-msgstr "选择轨道起点至终点"
-
-#: src/Menus.cpp
-msgid "Track Start to En&d"
-msgstr "轨道起点至终点(&D)"
-
-#: src/Menus.cpp
-msgid "S&tore Selection"
-msgstr "储存选区(&S)"
-
-#: src/Menus.cpp
-msgid "Retrieve Selectio&n"
-msgstr "恢复选区(&N)"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "频谱(&P)"
-
-#: src/Menus.cpp
-msgid "To&ggle Spectral Selection"
-msgstr "开关频谱选区(&G)"
-
-#: src/Menus.cpp
-msgid "Next &Higher Peak Frequency"
-msgstr "下一个更高的峰值频率(&H)"
-
-#: src/Menus.cpp
-msgid "Next &Lower Peak Frequency"
-msgstr "下一个更低的峰值频率(&L)"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "上一个片段边界到光标位置"
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "光标位置到下一个片段边界"
-
-#: src/Menus.cpp
-msgid "Select Previous Clip"
-msgstr "选择上一个片段"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr "上一个片段(&U)"
-
-#: src/Menus.cpp
-msgid "Select Next Clip"
-msgstr "选择下一个片段"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr "下一个片段(&E)"
-
-#: src/Menus.cpp
-msgid "Select Cursor to Stored"
-msgstr "选择光标位置至储存位置"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr "恢复光标至储存位置(&C)"
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr "存储光标位置(&I)"
-
-#: src/Menus.cpp
-msgid "Select Zero Crossing"
-msgstr "选择过零点"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr "寻找过零点(&Z)"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "视图(&V)"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "缩放(&Z)"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "放大(&I)"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "缩放到正常大小(&N)"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "缩小(&O)"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "缩放至选区大小(&Z)"
-
-#: src/Menus.cpp
-msgid "Zoom &Toggle"
-msgstr "缩放开关(&T)"
-
-#: src/Menus.cpp
-msgid "T&rack Size"
-msgstr "轨道大小(&R)"
-
-#: src/Menus.cpp
-msgid "&Fit to Width"
-msgstr "适应宽度(&F)"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr "贴合高度(&H)"
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "叠起所有轨道(&C)"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "展开所有轨道(&X)"
-
-#: src/Menus.cpp
-msgid "Sk&ip to"
-msgstr "跳至(&I)"
-
-#: src/Menus.cpp
-msgid "Skip to Selection Start"
-msgstr "跳至选区起点"
-
-#: src/Menus.cpp
-msgid "Selection Sta&rt"
-msgstr "选区起点(&R)"
-
-#: src/Menus.cpp
-msgid "Skip to Selection End"
-msgstr "跳至选区终点"
-
-#: src/Menus.cpp
-msgid "Selection En&d"
-msgstr "选区终点(&D)"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "历史记录(&H)..."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "卡拉O&K..."
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "混音板(&M)..."
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "工具栏(&T)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Reset Toolb&ars"
-msgstr "重置工具栏(&A)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "播录工具栏(&T)"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "工具工具栏(&O)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "录音仪表栏(&R)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "播放仪表栏(&P)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "混音器工具栏(&X)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "编辑工具栏(&E)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "指定速度播放工具栏(&Y)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "跟随播放工具栏(&B)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "设备工具栏(&D)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "选择工具栏(&S)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "频谱选择工具栏(&C)"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr "原带配音（开/关）(&E)"
-
-#: src/Menus.cpp
-msgid "&Show Clipping (on/off)"
-msgstr "显示截幅失真/过载(&S)"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "显示效果栏"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-msgid "Tra&nsport"
-msgstr "播录(&N)"
-
-#: src/Menus.cpp
-msgid "Pl&aying"
-msgstr "正在播放(&A)"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "播放/停止(&A)"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "播放/停止并设置光标位置(&S)"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "重复播放(&L)"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "暂停(&P)"
-
-#: src/Menus.cpp
-msgid "&Recording"
-msgstr "录制(&R)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "录制(&R)"
-
-#: src/Menus.cpp
-msgid "&Append Record"
-msgstr "追加录音(&A)"
-
-#: src/Menus.cpp
-msgid "Record &New Track"
-msgstr "录制新轨道(&N)"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "定时录音(&T)..."
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr "插卷录制(&L)"
-
-#: src/Menus.cpp
-msgid "&Cursor to"
-msgstr "光标位置到(&C)"
-
-#: src/Menus.cpp
-msgid "Cursor to Selection Start"
-msgstr "光标位置至选区起点"
-
-#: src/Menus.cpp
-msgid "Selection Star&t"
-msgstr "选区起点(&T)"
-
-#: src/Menus.cpp
-msgid "Cursor to Selection End"
-msgstr "光标位置至选区终点"
-
-#: src/Menus.cpp
-msgid "Cursor to Track Start"
-msgstr "光标位置到轨道起点"
-
-#: src/Menus.cpp
-msgid "Track &Start"
-msgstr "到音轨起点(&S)"
-
-#: src/Menus.cpp
-msgid "Cursor to Track End"
-msgstr "光标位置到轨道终点"
-
-#: src/Menus.cpp
-msgid "Track &End"
-msgstr "到音轨终点(&E)"
-
-#: src/Menus.cpp
-msgid "Cursor to Prev Clip Boundary"
-msgstr "光标位置到上一个片段边界"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr "上一个片段边界(&V)"
-
-#: src/Menus.cpp
-msgid "Cursor to Next Clip Boundary"
-msgstr "光标位置到下一个片段边界"
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr "下一个片段边界(&X)"
-
-#: src/Menus.cpp
-msgid "Cursor to Project Start"
-msgstr "光标位置到项目起点"
-
-#: src/Menus.cpp
-msgid "&Project Start"
-msgstr "项目起点(&P)"
-
-#: src/Menus.cpp
-msgid "Cursor to Project End"
-msgstr "光标位置到项目终点"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr "项目终点(&N)"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "播放选区(&Y)"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "锁住(&L)"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "解锁(&U)"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "重新扫描音频设备(&E)"
-
-#: src/Menus.cpp
-msgid "Transport &Options"
-msgstr "播录选项"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "声控激活电平…(&V)"
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "声控录音（开/关）(&C)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "固定播放/录音头（开/关）"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "原带配音（开/关）(&O)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "软件同步监听（开/关）(&F)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "录制电平自动调节（开/关） (&U)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "增加新轨道(&N)"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "单声道轨(&M)"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "立体声轨(&S)"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "标签轨(&L)"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "时间轨(&T)"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr "混音(&X)"
-
-#: src/Menus.cpp
-msgid "Mix Stereo Down to &Mono"
-msgstr "混合立体声至单声道(&M)"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "混音并渲染(&X)"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "混音并渲染到新轨道(&W)"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "重采样(&R)"
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "删除轨道(&V)"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute"
-msgstr "静音/取消静音"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "所有轨道静音(&M)"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "取消所有音轨的静音(&U)"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr "左右声道平衡(&P)"
-
-#: src/Menus.cpp
-msgid "Pan Left"
-msgstr "左平衡"
-
-#: src/Menus.cpp
-msgid "&Left"
-msgstr "左(&L)"
-
-#: src/Menus.cpp
-msgid "Pan Right"
-msgstr "右平衡"
-
-#: src/Menus.cpp
-msgid "&Right"
-msgstr "右(&R)"
-
-#: src/Menus.cpp
-msgid "Pan Center"
-msgstr "中央平衡"
-
-#: src/Menus.cpp
-msgid "&Center"
-msgstr "中央(&C)"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "两端对齐(&A)"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "整体对齐(&T)"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "从零点开始(&Z)"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "从光标位置/选区起点开始(&C)"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "从选区终点开始(&E)"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "从光标位置/选区终点结束(&R)"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "从选区终点结束(&D)"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "对齐轨道(&A)"
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "和轨道移动选区（开/关）(&M)"
-
-#: src/Menus.cpp
-msgid "Move Sele&ction and Tracks"
-msgstr "移动选区和轨道(&C)"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "MIDI与音频同步"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "排序音轨(&O)"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "按照时间排序"
-
-#: src/Menus.cpp
-msgid "By &Start Time"
-msgstr "按开始时间(&S)"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "按照名称排序"
-
-#: src/Menus.cpp
-msgid "By &Name"
-msgstr "按名称(&N)"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "同步锁定轨道（开/关）(&L)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "生成(&G)"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "添加/删除插件..."
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "效果(&C)"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "重复 %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "重复上次使用的效果"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "分析(&A)"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "对照..."
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "频谱分析..."
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "工具(&O)"
-
-#: src/Menus.cpp
-msgid "&Macros..."
-msgstr "宏(&M)..."
-
-#: src/Menus.cpp
-msgid "&Apply Macro"
-msgstr "应用宏(&A)"
-
-#: src/Menus.cpp
-msgid "&Palette..."
-msgstr "调色板(&P)..."
-
-#: src/Menus.cpp
-msgid "&Screenshot..."
-msgstr "截取屏幕(&S)..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "运行性能测试(&R)..."
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "模拟录音错误"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "侦测上流丢失"
-
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "窗口(&W)"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "最小化(&M)"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "全部前置(&B)"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr "额外(&R)"
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "播录(&R)"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "播放(&A)"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr "停止(&P)"
-
-#: src/Menus.cpp
-msgid "Play &One Second"
-msgstr "播放1秒(&O)"
-
-#: src/Menus.cpp
-msgid "Play to &Selection"
-msgstr "播放至选区(&S)"
-
-#: src/Menus.cpp
-msgid "Play &Before Selection Start"
-msgstr "播放至选区起点前(&B)"
-
-#: src/Menus.cpp
-msgid "Play Af&ter Selection Start"
-msgstr "从选区起点后播放(&T)"
-
-#: src/Menus.cpp
-msgid "Play Be&fore Selection End"
-msgstr "播放至选区终点前(&F)"
-
-#: src/Menus.cpp
-msgid "Play Aft&er Selection End"
-msgstr "从选区终点后播放(&E)"
-
-#: src/Menus.cpp
-msgid "Play Before a&nd After Selection Start"
-msgstr "播放选区起点前后(&N)"
-
-#: src/Menus.cpp
-msgid "Play Before an&d After Selection End"
-msgstr "播放选区终点前后(&D)"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr "播放剪切预览(&U)"
-
-#: src/Menus.cpp
-msgid "&Selection Tool"
-msgstr "选择工具(&S)"
-
-#: src/Menus.cpp
-msgid "&Envelope Tool"
-msgstr "包络工具(&E)"
-
-#: src/Menus.cpp
-msgid "&Draw Tool"
-msgstr "绘制工具(&D)"
-
-#: src/Menus.cpp
-msgid "&Zoom Tool"
-msgstr "缩放工具(&Z)"
-
-#: src/Menus.cpp
-msgid "&Time Shift Tool"
-msgstr "时间移动工具(&T)"
-
-#: src/Menus.cpp
-msgid "&Multi Tool"
-msgstr "多功能工具(&M)"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr "上一个工具(&P)"
-
-#: src/Menus.cpp
-msgid "&Next Tool"
-msgstr "下一个工具(&N)"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr "混音器工具栏(&X)"
-
-#: src/Menus.cpp
-msgid "Ad&just Playback Volume..."
-msgstr "调整播放音量(&J)"
-
-#: src/Menus.cpp
-msgid "&Increase Playback Volume"
-msgstr "增加播放音量(&I)"
-
-#: src/Menus.cpp
-msgid "&Decrease Playback Volume"
-msgstr "减少播放音量(&D)"
-
-#: src/Menus.cpp
-msgid "Adj&ust Recording Volume..."
-msgstr "调整录制音量(&U)"
-
-#: src/Menus.cpp
-msgid "I&ncrease Recording Volume"
-msgstr "增加录制音量(&N)"
-
-#: src/Menus.cpp
-msgid "D&ecrease Recording Volume"
-msgstr "减小录制音量(&E)"
-
-#: src/Menus.cpp
-msgid "&Delete Key"
-msgstr "删除键(&D)"
-
-#: src/Menus.cpp
-msgid "Delete Key&2"
-msgstr "删除键 &2"
-
-#: src/Menus.cpp
-msgid "&Play-at-Speed"
-msgstr "以指定速度播放(&P)"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-msgid "Normal Pl&ay-at-Speed"
-msgstr "正常以指定速度播放(&A)"
-
-#: src/Menus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "以指定速度循环播放(&L)"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr "以指定速度播放剪切预览(&U)"
-
-#: src/Menus.cpp
-msgid "Ad&just Playback Speed..."
-msgstr "调整播放速度(&J)"
-
-#: src/Menus.cpp
-msgid "&Increase Playback Speed"
-msgstr "增加播放速度(&I)"
-
-#: src/Menus.cpp
-msgid "&Decrease Playback Speed"
-msgstr "减少播放速度(&D)"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr "移动到上一个标签(&P)"
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr "移动到下一个标签(&N)"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "定位播放(&K)"
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr "播放时稍向左定位(&L)"
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr "播放时稍向右定位(&R)"
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr "播放时向左定位(&F)"
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr "播放时稍右定位(&H)"
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr "设备(&V)"
-
-#: src/Menus.cpp
-msgid "Change &Recording Device..."
-msgstr "改变录制设备(&R)"
-
-#: src/Menus.cpp
-msgid "Change &Playback Device..."
-msgstr "改变播放设备(&P)"
-
-#: src/Menus.cpp
-msgid "Change Audio &Host..."
-msgstr "改变音频主机(&H)"
-
-#: src/Menus.cpp
-msgid "Change Recording Cha&nnels..."
-msgstr "改变录制声道数(&N)"
-
-#: src/Menus.cpp
-msgid "&Selection"
-msgstr "选区(&S)"
-
-#: src/Menus.cpp
-msgid "Snap-To &Off"
-msgstr "关闭吸附(&O)"
-
-#: src/Menus.cpp
-msgid "Snap-To &Nearest"
-msgstr "吸附到最近的(&N)"
-
-#: src/Menus.cpp
-msgid "Snap-To &Prior"
-msgstr "吸附到更主要的(&P)"
-
-#: src/Menus.cpp
-msgid "Selection to &Start"
-msgstr "选择至起点(&S)"
-
-#: src/Menus.cpp
-msgid "Selection to En&d"
-msgstr "选择至终点(&D)"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Left"
-msgstr "选区向左扩展(&L)"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Right"
-msgstr "选区向右扩展(&R)"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "设置或扩展选区左端(&F)"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "设置或扩展选区右端(&H)"
-
-#: src/Menus.cpp
-msgid "Selection Contract L&eft"
-msgstr "选区向左收缩(&E)"
-
-#: src/Menus.cpp
-msgid "Selection Contract R&ight"
-msgstr "选区向右收缩(&I)"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr "切换到上个活动窗口"
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr "切换到下个活动窗口"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr "聚焦(&O)"
-
-#: src/Menus.cpp
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "从工具栏到轨道后移(&B)"
-
-#: src/Menus.cpp
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "从轨道到工具栏前移(&O)"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Previous Track"
-msgstr "移动焦点到上一轨"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Next Track"
-msgstr "移动焦点到下一轨"
-
-#: src/Menus.cpp
-msgid "Move Focus to &First Track"
-msgstr "将焦点移到第一个音轨"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Last Track"
-msgstr "将焦点移到最后一个音轨"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr "移动焦点到上一轨并选中"
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr "移动焦点到下一轨并选中"
-
-#: src/Menus.cpp
-msgid "&Toggle Focused Track"
-msgstr "选择/取消 轨道(&T)"
-
-#: src/Menus.cpp
-msgid "Toggle Focuse&d Track"
-msgstr "选择/取消 轨道(&D)"
-
-#: src/Menus.cpp
-msgid "&Cursor"
-msgstr "光标位置(&C)"
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr "光标左移(&L)"
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr "光标右移(&R)"
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr "光标小左跳(&O)"
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr "光标小右跳(&T)"
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr "光标大左跳(&U)"
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr "光标大右跳(&M)"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr "片段左移(&E)"
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr "片段右移(&H)"
-
-#: src/Menus.cpp
-msgid "&Track"
-msgstr "轨道(&T)"
-
-#: src/Menus.cpp
-msgid "Change P&an on Focused Track..."
-msgstr "改变选中音轨的左右声道平衡(&A)"
-
-#: src/Menus.cpp
-msgid "Pan &Left on Focused Track"
-msgstr "选中音轨的左右声道平衡左移(&L)"
-
-#: src/Menus.cpp
-msgid "Pan &Right on Focused Track"
-msgstr "选中音轨的左右声道平衡右移(&R)"
-
-#: src/Menus.cpp
-msgid "Change Gai&n on Focused Track..."
-msgstr "改变选中音轨的声强加强(&N)"
-
-#: src/Menus.cpp
-msgid "&Increase Gain on Focused Track"
-msgstr "增加选中音轨的声强加强(&I)"
-
-#: src/Menus.cpp
-msgid "&Decrease Gain on Focused Track"
-msgstr "减少选中音轨的声强加强(&D)"
-
-#: src/Menus.cpp
-msgid "Op&en Menu on Focused Track..."
-msgstr "打开选中音轨上的菜单(&E)"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute Focused Track"
-msgstr "静音/取消 选中音轨(&U)"
-
-#: src/Menus.cpp
-msgid "&Solo/Unsolo Focused Track"
-msgstr "独奏/取消 选中音轨(&S)"
-
-#: src/Menus.cpp
-msgid "&Close Focused Track"
-msgstr "关闭选中音轨(&C)"
-
-#: src/Menus.cpp
-msgid "Move Focused Track U&p"
-msgstr "上移焦点(&P)"
-
-#: src/Menus.cpp
-msgid "Move Focused Track Do&wn"
-msgstr "下移焦点(&W)"
-
-#: src/Menus.cpp
-msgid "Move Focused Track to T&op"
-msgstr "将焦点移到轨道顶部(&O)"
-
-#: src/Menus.cpp
-msgid "Move Focused Track to &Bottom"
-msgstr "将焦点移到轨道底部(&B)"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr "脚本 I (&S)"
-
-#: src/Menus.cpp
-msgid "Select Time..."
-msgstr "选择时间..."
-
-#: src/Menus.cpp
-msgid "Select Frequencies..."
-msgstr "选择频率..."
-
-#: src/Menus.cpp
-msgid "Select Tracks..."
-msgstr "选择轨道..."
-
-#: src/Menus.cpp
-msgid "Set Track Status..."
-msgstr "设置轨道状态..."
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr "设置轨道音频..."
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr "设置轨道视觉效果..."
-
-#: src/Menus.cpp
-msgid "Get Preference..."
-msgstr "获取偏好..."
-
-#: src/Menus.cpp
-msgid "Set Preference..."
-msgstr "设置偏好..."
-
-#: src/Menus.cpp
-msgid "Set Clip..."
-msgstr "设置片段..."
-
-#: src/Menus.cpp
-msgid "Set Envelope..."
-msgstr "设置包络..."
-
-#: src/Menus.cpp
-msgid "Set Label..."
-msgstr "设置标签..."
-
-#: src/Menus.cpp
-msgid "Set Project..."
-msgstr "设置项目..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr "脚本 II (&B)"
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "选择..."
-
-#: src/Menus.cpp
-msgid "Set Track..."
-msgstr "设置轨道..."
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr "获取更多信息..."
-
-#: src/Menus.cpp
-msgid "Message..."
-msgstr "消息..."
-
-#: src/Menus.cpp
-msgid "Help..."
-msgstr "帮助..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "导入..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "导出..."
-
-#: src/Menus.cpp
-msgid "Open Project..."
-msgstr "打开项目..."
-
-#: src/Menus.cpp
-msgid "Save Project..."
-msgstr "保存项目..."
-
-#: src/Menus.cpp
-msgid "Move Mouse..."
-msgstr "移动鼠标..."
-
-#: src/Menus.cpp
-msgid "Compare Audio..."
-msgstr "比较音频..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-msgid "Screenshot (short format)..."
-msgstr "截屏工具（简式）..."
-
-#: src/Menus.cpp
-msgid "&Full Screen (on/off)"
-msgstr "全屏幕开关(&F)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-msgid "Minimize All Projects"
-msgstr "最小化所有项目"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "帮助(&H)"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "入门(&G)"
-
-#: src/Menus.cpp
-msgid "Audacity &Manual"
-msgstr "Audacity 手册(&M)"
-
-#: src/Menus.cpp
-msgid "&Quick Help..."
-msgstr "快速帮助(&Q)..."
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr "使用手册(&M)..."
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "诊断(&D)"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "音频设备信息(&D)..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "MIDI 设备信息(&D)..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "显示日志(&L)..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "生成支持数据(&G)..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "检查依赖(&K)..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "检查更新(&C)..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "未知"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "插件 %d 到 %d"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "打开最近访问的文件"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "最近的文件(&F)"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "撤消 %s(&U)"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "撤消(&U)"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "重做 %s(&R)"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "按时间排序的轨道"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "按名字排序的轨道"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "无标签轨"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "无标签轨在选中轨道上下"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "标签轨中无标签"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr "时间移动片段到右侧"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr "时间移动片段到左侧"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "时间-移动(Time-Shift)"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr "片段未移动"
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "设置选区左边界"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "位置"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "设置选区右边界"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "不能删除活动音频轨道"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Top"
-msgstr "已移动“%s”至顶部"
-
-#: src/Menus.cpp
-msgid "Move Track to Top"
-msgstr "移动轨道至顶部"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "已移动“%s”至底部"
-
-#: src/Menus.cpp
-msgid "Move Track to Bottom"
-msgstr "移动轨道至底部"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Up"
-msgstr "已向上移动“%s”"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Down"
-msgstr "已向下移动“%s”"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-msgid "Move Track Up"
-msgstr "轨道上移"
-
-#: src/Menus.cpp
-msgid "Move Track Down"
-msgstr "轨道下移"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "标签.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "没有标签轨，无法导出。"
-
-#: src/Menus.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "请每次只选择一个音符轨。"
-
-#: src/Menus.cpp
-msgid "Please select a Note Track."
-msgstr "请选择一个音符轨。"
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "导出MIDI为："
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI文件(*.mid)|*.mid|Allegro文件(*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"您选择了一个未知扩展名的文件\n"
-"您想继续吗？"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "导出MIDI"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "导出选择的音频"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "没有可撤消的操作"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "没有可重做的操作"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "剪切到剪贴板"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "分离并剪切到剪贴板"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "分离并剪切"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "不允许从一类轨道粘贴到另一类。"
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "不允许复制立体声音频到单声轨道。"
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "从剪贴板粘贴"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "从剪贴板粘贴文字"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "粘贴文本至新标签"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "修剪选择的音频音轨从 %.2f 秒到 %.2f 秒"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "修剪音频"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "分离并删除 %.2f 秒 (在 t=%.2f)"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "分离并删除"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "分离%.2f 秒，于 t=%.2f"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "分离"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "已连接 %.2f 秒 (位置 t=%.2f)"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "连接"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "使选定轨道静音%.2f 秒，(在 %.2f )"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "静音"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "已副本的"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "创建副本"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "将标签的音频区域剪切到剪贴板"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "剪切标签的音频"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "分离并剪切已标签的音频到剪贴板"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "分离并剪切已标签的音频"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "将标签的音频区域复制到剪贴板"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "复制标签的音频"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "已经删除标签的音频区域"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "删除标签的音频"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "分离并删除已标签的音频选区"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "分离并删除已标签的音频"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "静音标签的音频选区"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "静音标签的音频"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "分离标签的音频(点或者选区)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "分离标签的音频"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "合并标签的音频(点或者选区)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "合并标签的音频"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "分离标签的音频选区"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "分离标签的音频"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "分离"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "分离到新轨道"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "分离并新建"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr "dummyStringOnSelectClip"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] "%2$d 个片段中的 %1$d 个 %3$s"
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr "%s，%s"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "从“%s”导入的标签"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "导入标签"
-
-#: src/Menus.cpp
-msgid "Select a MIDI file"
-msgstr "选择一个 MIDI 文件"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI 及 Allegro 文件 (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI 文件 (*."
-"mid;*.midi)|*.mid;*.midi|Allegro 文件 (*.gro)|*.gro|所有文件|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "从“%s”中导入的 MIDI"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "导入MIDI"
-
-#: src/Menus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "选择任一未压缩音频文件"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "所有文件|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "编辑元数据标签"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "元数据标签"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "已渲染轨道 \"%s\" 的所有音频"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "渲染"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "已经将 %d 个轨道混音并渲染至一个新的立体声轨"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "已经将 %d 个轨道混音并渲染至一个新的单声道轨"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "混音并渲染(&M)"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "轨道 %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s left"
-msgstr "%s 左"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s right"
-msgstr "%s 右"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr "dummyStringClipBoundaryMessage"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] "%1$s %3$d 个片段中的 %2$d 个 %4$s"
-
-#: src/Menus.cpp
-msgid "start"
-msgstr "起点"
-
-#: src/Menus.cpp
-msgid "end"
-msgstr "终点"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr "dummyStringClipBoundaryMessageLong"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] "%5$d 个片段中的 %1$s %2$d 个和 %3$s %4$d 个 %6$s"
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-msgid "Aligned/Moved start to zero"
-msgstr "已对齐或移动起点至零"
-
-#: src/Menus.cpp
-msgid "Aligned start to zero"
-msgstr "已对齐起点至零"
-
-#: src/Menus.cpp
-msgid "Align/Move Start"
-msgstr "对齐或移动起点"
-
-#: src/Menus.cpp
-msgid "Align Start"
-msgstr "对齐起点"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "已对齐或移动起点至光标处或选区起点"
-
-#: src/Menus.cpp
-msgid "Aligned start to cursor/selection start"
-msgstr "已对齐起点至光标处或选区起点"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to selection end"
-msgstr "已对齐或移动起点至选区终点"
-
-#: src/Menus.cpp
-msgid "Aligned start to selection end"
-msgstr "已对齐起点至选区终点"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "已对齐或移动终点至光标处或选区起点"
-
-#: src/Menus.cpp
-msgid "Aligned end to cursor/selection start"
-msgstr "已对齐终点至光标处或选区起点"
-
-#: src/Menus.cpp
-msgid "Align/Move End"
-msgstr "对齐或移动终点"
-
-#: src/Menus.cpp
-msgid "Align End"
-msgstr "对齐终点"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to selection end"
-msgstr "已对齐或移动终点至选区终点"
-
-#: src/Menus.cpp
-msgid "Aligned end to selection end"
-msgstr "已对齐终点至选区终点"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to end"
-msgstr "已对齐或移动终点至终点"
-
-#: src/Menus.cpp
-msgid "Aligned end to end"
-msgstr "已对齐终点至终点"
-
-#: src/Menus.cpp
-msgid "Align/Move End to End"
-msgstr "对齐或移动终点至终点"
-
-#: src/Menus.cpp
-msgid "Align End to End"
-msgstr "对齐终点至终点"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved together"
-msgstr "已整体对齐或移动"
-
-#: src/Menus.cpp
-msgid "Aligned together"
-msgstr "已整体对齐"
-
-#: src/Menus.cpp
-msgid "Align/Move Together"
-msgstr "已整体对齐或移动"
-
-#: src/Menus.cpp
-msgid "Align Together"
-msgstr "整体对齐"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "MIDI与音轨同步"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr "对齐完成：MIDI 从 %.2f 至 %.2f 秒，音频 从 %.2f 至 %.2f 秒。"
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "MIDI与音频同步"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"对齐出错：输入太短 - MIDI 从 %.2f 至 %.2f 秒，音频 从 %.2f 至 %.2f 秒。"
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "校准(alignment)进程报告了内部错误。"
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "新建音轨"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "新轨道"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "新建立体声轨"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "新建标签轨"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr "此版本的Audacity只允许每个项目窗口拥有一条时间轨。"
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "新建时间轨"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr "定时录音不能与多个打开的项目一起使用。请关闭任何其他项目，然后重试。"
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "定时录音"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr "在保存更改时，无法使用定时录音。请保存或关闭此项目，然后重试。"
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-msgid "Name:"
-msgstr "名称："
-
-#: src/Menus.cpp
-msgid "New label"
-msgstr "新标签"
-
-#: src/Menus.cpp
-msgid "Please select in a mono track."
-msgstr "请选择一个单声道音轨。"
-
-#: src/Menus.cpp
-msgid "Please select in a stereo track."
-msgstr "请选择一个双声道音轨。"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Please select at least %d channels."
-msgstr "请选择至少 %d 个声道。"
-
-#: src/Menus.cpp
-msgid "Please select a time within a clip."
-msgstr "请选择在片段内的时间。"
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "编辑标签"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "删除音轨"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "删除轨道"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "音频设备信息"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "保存(&S)"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "保存设备信息"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "无法保存设备信息"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr "MIDI 设备信息"
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr "保存 MIDI 设备信息"
-
-#: src/Menus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "无法保存 MIDI 设备信息"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-msgid "Panned audio track(s)"
-msgstr "已平衡音轨声道"
-
-#: src/Menus.cpp
-msgid "Pan Track"
-msgstr "声道平衡音轨"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"不能锁定超出项目\n"
-"终点的区域。"
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "重采样"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "新采样率(Hz)："
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "输入的值无效"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "重采样轨道 %d"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "重采样音轨"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "重采样轨道"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "重做(&R)"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "混音"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "混音并渲染(&M)"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5116,7 +2974,7 @@ msgstr "混音并渲染轨道"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "音量增强"
@@ -5133,7 +2991,7 @@ msgid "Musical Instrument"
 msgstr "乐器"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "左右声道平衡"
@@ -5188,9 +3046,8 @@ msgid "Module Unsuitable"
 msgstr "模块不合适"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+#, fuzzy, c-format
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "模块 %s 未包含版本信息，将不会被加载。"
 
 #: src/ModuleManager.cpp
@@ -5205,9 +3062,9 @@ msgstr ""
 "将不会被加载。"
 
 #: src/ModuleManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "模块 %s 匹配 Audacity 版本 %s，将不会被加载。"
 
 #: src/ModuleManager.cpp
@@ -5372,6 +3229,11 @@ msgstr "选中效果器，点击启用或者禁用按钮，然后点确定。"
 msgid "Show:"
 msgstr "显示："
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "全部(&A)"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "显示所有"
@@ -5468,7 +3330,8 @@ msgid "Plug-in already exists"
 msgstr "插件文件已存在"
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+#, fuzzy
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "插件文件正在被使用。覆盖失败"
 
 #: src/PluginManager.cpp
@@ -5753,9 +3616,9 @@ msgid "Error Saving Project"
 msgstr "保存项目错误"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "无法保存项目。找不到路径。请在保存项目前\n"
@@ -5889,15 +3752,6 @@ msgstr "新建项目"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "删除 %.2f 秒 (在 t=%.2f)"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "删除"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "磁盘空间还够录制：%s"
 
@@ -5967,23 +3821,6 @@ msgstr "录制的音频"
 #: src/Project.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "录制"
-
-#: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "调整过的音量增强"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "已调整的左右平衡"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "已删除音轨“%s”。"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "删除轨道"
 
 #: src/Project.cpp
 msgid "Less than 1 minute"
@@ -6271,7 +4108,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "警告 - 截断过长的块文件"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "帮助"
 
@@ -6529,11 +4366,11 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "一些需要的文件：\n"
 " %s\n"
@@ -6737,6 +4574,10 @@ msgstr ""
 "\n"
 "\"%s\" 因为录制停止而取消。"
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "定时录音"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6786,6 +4627,10 @@ msgstr "启用自动保存(&A)？"
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "项目另存为："
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "选择..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -6840,9 +4685,19 @@ msgstr "计划停止于："
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity定时录音 － 等待开始"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "录制将开始于："
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -6888,6 +4743,13 @@ msgstr "立体声，999999 Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "轨道视图"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "轨道 %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7454,7 +5316,7 @@ msgstr "白噪音"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "无"
 
@@ -7658,6 +5520,11 @@ msgid "Sets various values for a label."
 msgstr "设置标签的各个值。"
 
 #: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Rate:"
+msgstr "采样率(&R)"
+
+#: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
 msgstr "缩放："
 
@@ -7750,6 +5617,16 @@ msgstr "缩放："
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "VZoom:"
 msgstr "V 缩放："
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "V 缩放："
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "到底端"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -8310,6 +6187,10 @@ msgstr "重置(&E)"
 msgid "&Difference:"
 msgstr "差别：(&D)"
 
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "帮助(&H)"
+
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 #, c-format
@@ -8859,6 +6740,14 @@ msgstr "默认"
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "出厂预设"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "导入..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "导出..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -9839,7 +7728,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "正在等待波形图计算完毕..."
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+#, fuzzy
+msgid "(Maximum 0dB)"
 msgstr ". 最大 0分贝。"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10304,6 +8194,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr "创建没有任何振幅的音频"
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "静音"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr "将立体声轨转换为单声道"
@@ -10628,8 +8522,8 @@ msgid "Error Saving Effect Presets"
 msgstr "保存 VST 预设错误"
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+#, fuzzy, c-format
+msgid "This parameter file was saved from %s. Continue?"
 msgstr "此参数文件由%s保存。继续吗？"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -10723,7 +8617,8 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr " 选择 \"常规\" 使用系统提供的通用接口。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+#, fuzzy
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr " 选择 \"基本\" 是基本的纯文本的界面. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -10939,7 +8834,13 @@ msgid "plug-in"
 msgstr "插件"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist 返回的值："
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Nyquist 返回的值："
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11032,6 +8933,10 @@ msgstr "使用遗留(版本3)语法(&U)"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "加载(&L)"
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "保存(&S)"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11144,6 +9049,10 @@ msgstr "无格式指定选项"
 msgid "Export Audio"
 msgstr "导出音频"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "编辑元数据标签"
+
 #: src/export/Export.cpp
 msgid "Exported Tags"
 msgstr "导出标签"
@@ -11204,8 +9113,8 @@ msgstr ""
 "               如果您还想导出，请选择另一个文件名或目录。"
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "一个名叫\"%s\"的文件已经存在，替换吗？"
 
 #: src/export/Export.cpp
@@ -11419,18 +9328,23 @@ msgstr "正以 %s 导出音频"
 msgid "Invalid sample rate"
 msgstr "无效的采样率"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "重采样"
+
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr "此项目的采样率（%d）不被当前的输出文件格式支持。"
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "此项目的采样率（%d）和比特率（%d kbps）的组合\n"
 "不被当前的输出文件格式支持。"
@@ -12213,19 +10127,19 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "错误，MP3 编码器返回 %ld"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "项目的采样率（%d）不被MP3\n"
 "文件格式支持。"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "项目的采样率（%d）和比特率（%d kbps）的组合\n"
 "不被MP3文件格式支持。"
@@ -12630,6 +10544,11 @@ msgstr ""
 "Audacity无法识别文件“%s”的类型。\n"
 "如果它未被压缩，请尝从 文件 > 导入 > 原始数据 将其导入。"
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr "%s，%s"
+
 # 这里我保留前人翻译的“读取”对译“understood”因为用“理解”可能会有点奇怪？ - mkpoli 2017-11-25
 #: src/import/Import.cpp
 #, c-format
@@ -12788,9 +10707,10 @@ msgid ""
 msgstr "您当前的偏好设置为直接读取。\n"
 
 #: src/import/ImportPCM.cpp
+#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -12920,9 +10840,2289 @@ msgstr "总计要导入："
 msgid "Sample rate:"
 msgstr "采样率："
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "导入(&I)"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr "不良数据大小"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s left"
+msgstr "%s 左"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s right"
+msgstr "%s 右"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr "dummyStringClipBoundaryMessage"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] "%1$s %3$d 个片段中的 %2$d 个 %4$s"
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr "起点"
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr "终点"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr "dummyStringClipBoundaryMessageLong"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] "%5$d 个片段中的 %1$s %2$d 个和 %3$s %4$d 个 %6$s"
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr "dummyStringOnSelectClip"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] "%2$d 个片段中的 %1$d 个 %3$s"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr "时间移动片段到右侧"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr "时间移动片段到左侧"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "时间-移动(Time-Shift)"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr "片段未移动"
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "片段边界(&O)"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr "上一个片段边界到光标位置"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr "光标位置到下一个片段边界"
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr "上一个片段(&U)"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip"
+msgstr "选择上一个片段"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr "下一个片段(&E)"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Next Clip"
+msgstr "选择下一个片段"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr "上一个片段边界(&V)"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Prev Clip Boundary"
+msgstr "光标位置到上一个片段边界"
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr "下一个片段边界(&X)"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Next Clip Boundary"
+msgstr "光标位置到下一个片段边界"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr "片段左移(&E)"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr "片段右移(&H)"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "从剪贴板粘贴文字"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "从剪贴板粘贴"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "没有可撤消的操作"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "没有可重做的操作"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "剪切到剪贴板"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "删除 %.2f 秒 (在 t=%.2f)"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "删除"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "不允许从一类轨道粘贴到另一类。"
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "不允许复制立体声音频到单声轨道。"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "已副本的"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "创建副本"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "分离并剪切到剪贴板"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "分离并剪切"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "分离并删除 %.2f 秒 (在 t=%.2f)"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "分离并删除"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "使选定轨道静音%.2f 秒，(在 %.2f )"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "修剪选择的音频音轨从 %.2f 秒到 %.2f 秒"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "修剪音频"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "分离"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "分离到新轨道"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "分离并新建"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "已连接 %.2f 秒 (位置 t=%.2f)"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "连接"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "分离%.2f 秒，于 t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "分离"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "元数据标签"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "编辑(&E)"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "删除(&D)"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "创建副本(&A)"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "特殊移除(&E)"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "分离并剪切(&I)"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "分离并删除(&E)"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "置为静音(&O)"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "修剪音频(&M)"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "分离(&L)"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "分离并新建(&W)"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "连接(&J)"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "静音处分离(&H)"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "编辑元数据(&T)..."
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "偏好设置(&F)..."
+
+#: src/menus/EditMenus.cpp
+msgid "&Delete Key"
+msgstr "删除键(&D)"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete Key&2"
+msgstr "删除键 &2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr "额外(&R)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr "混音器工具栏(&X)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ad&just Playback Volume..."
+msgstr "调整播放音量(&J)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Increase Playback Volume"
+msgstr "增加播放音量(&I)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Decrease Playback Volume"
+msgstr "减少播放音量(&D)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Adj&ust Recording Volume..."
+msgstr "调整录制音量(&U)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "I&ncrease Recording Volume"
+msgstr "增加录制音量(&N)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "D&ecrease Recording Volume"
+msgstr "减小录制音量(&E)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr "设备(&V)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change &Recording Device..."
+msgstr "改变录制设备(&R)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change &Playback Device..."
+msgstr "改变播放设备(&P)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change Audio &Host..."
+msgstr "改变音频主机(&H)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change Recording Cha&nnels..."
+msgstr "改变录制声道数(&N)"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Full Screen (on/off)"
+msgstr "全屏幕开关(&F)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "从“%s”中导入的 MIDI"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "导入MIDI"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "导出选择的音频"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "标签.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "没有标签轨，无法导出。"
+
+#: src/menus/FileMenus.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "请每次只选择一个音符轨。"
+
+#: src/menus/FileMenus.cpp
+msgid "Please select a Note Track."
+msgstr "请选择一个音符轨。"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "导出MIDI为："
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI文件(*.mid)|*.mid|Allegro文件(*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"您选择了一个未知扩展名的文件\n"
+"您想继续吗？"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "导出MIDI"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "从“%s”导入的标签"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "导入标签"
+
+#: src/menus/FileMenus.cpp
+msgid "Select a MIDI file"
+msgstr "选择一个 MIDI 文件"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI 及 Allegro 文件 (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI 文件 (*."
+"mid;*.midi)|*.mid;*.midi|Allegro 文件 (*.gro)|*.gro|所有文件|*"
+
+#: src/menus/FileMenus.cpp
+msgid "Select any uncompressed audio file"
+msgstr "选择任一未压缩音频文件"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "所有文件|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "保存预设..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "打开最近访问的文件"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "最近的文件(&F)"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "保存项目(&S)"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "项目另存为(&A)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Save Lossless Copy of Project..."
+msgstr "保存项目的无损副本(&S)..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "保存项目的压缩副本(&S)..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Export"
+msgstr "导出(&E)"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as MP&3"
+msgstr "导出为 MP&3"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &WAV"
+msgstr "导出为 &WAV"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &OGG"
+msgstr "导出为 &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "导出音频(&E)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "导出选择的音频(&R)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "导出标签(&L)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "导出多个文件(&M)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "导出 MI&DI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "音频(&A)..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "标签(&L)..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "MIDI(&M)..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "原始数据(&R)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "页面设置(&G)..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "打印(&P)..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "退出(&X)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "音频设备信息"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save Device Info"
+msgstr "保存设备信息"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save device info"
+msgstr "无法保存设备信息"
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr "MIDI 设备信息"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save MIDI Device Info"
+msgstr "保存 MIDI 设备信息"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save MIDI device info"
+msgstr "无法保存 MIDI 设备信息"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "快速帮助(&Q)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr "入门(&G)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Manual"
+msgstr "Audacity 手册(&M)"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Quick Help..."
+msgstr "快速帮助(&Q)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr "使用手册(&M)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr "诊断(&D)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "音频设备信息(&D)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr "MIDI 设备信息(&D)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "显示日志(&L)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "生成支持数据(&G)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "检查依赖(&K)..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "检查更新(&C)..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "粘贴文本至新标签"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "将标签的音频区域剪切到剪贴板"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "剪切标签的音频"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "已经删除标签的音频区域"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "删除标签的音频"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "分离并剪切已标签的音频到剪贴板"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "分离并剪切已标签的音频"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "分离并删除已标签的音频选区"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "分离并删除已标签的音频"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "静音标签的音频选区"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "静音标签的音频"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "将标签的音频区域复制到剪贴板"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "复制标签的音频"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "分离标签的音频(点或者选区)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "分离标签的音频"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "合并标签的音频(点或者选区)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "合并标签的音频"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "分离标签的音频选区"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "分离标签的音频"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Labels"
+msgstr "标签(&L)"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "编辑标签(&E)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Add Label at &Selection"
+msgstr "为选区添加标签(&S)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Add Label at &Playback Position"
+msgstr "在播放位置添加标签(&P)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "粘贴文本至新标签(&X)"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "键入以创建标签（开/关）(&T)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "已标签音频(&B)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "剪切(&C)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Cut"
+msgstr "标签剪切"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Delete"
+msgstr "标签删除"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "分离并剪切(&S)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Cut"
+msgstr "分离并剪切标签"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "分离并删除(&L)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Delete"
+msgstr "分离并删除标签"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "置为静音(&A)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Silence"
+msgstr "标签静音"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "复制(&P)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Copy"
+msgstr "标签复制"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "分离(&T)"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split"
+msgstr "标签分离"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Join"
+msgstr "标签合并"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr "切换到上个活动窗口"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr "切换到下个活动窗口"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr "聚焦(&O)"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "从工具栏到轨道后移(&B)"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "从轨道到工具栏前移(&O)"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Previous Track"
+msgstr "移动焦点到上一轨"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Next Track"
+msgstr "移动焦点到下一轨"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &First Track"
+msgstr "将焦点移到第一个音轨"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Last Track"
+msgstr "将焦点移到最后一个音轨"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr "移动焦点到上一轨并选中"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr "移动焦点到下一轨并选中"
+
+#: src/menus/NavigationMenus.cpp
+msgid "&Toggle Focused Track"
+msgstr "选择/取消 轨道(&T)"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Toggle Focuse&d Track"
+msgstr "选择/取消 轨道(&D)"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "未分类"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "未知"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "重复 %s"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "插件 %d 到 %d"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "生成(&G)"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "添加/删除插件..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "重复上次使用的效果"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "效果(&C)"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "分析(&A)"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "对照..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "频谱分析..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+msgid "T&ools"
+msgstr "工具(&O)"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Macros..."
+msgstr "宏(&M)..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Apply Macro"
+msgstr "应用宏(&A)"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "调色板(&P)..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Screenshot..."
+msgstr "截取屏幕(&S)..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "运行性能测试(&R)..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Simulate Recording Errors"
+msgstr "模拟录音错误"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "侦测上流丢失"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "脚本 I (&S)"
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Time..."
+msgstr "选择时间..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Frequencies..."
+msgstr "选择频率..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Tracks..."
+msgstr "选择轨道..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Status..."
+msgstr "设置轨道状态..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr "设置轨道音频..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr "设置轨道视觉效果..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Preference..."
+msgstr "获取偏好..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Preference..."
+msgstr "设置偏好..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Clip..."
+msgstr "设置片段..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Envelope..."
+msgstr "设置包络..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Label..."
+msgstr "设置标签..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Project..."
+msgstr "设置项目..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr "脚本 II (&B)"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track..."
+msgstr "设置轨道..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr "获取更多信息..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Message..."
+msgstr "消息..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Help..."
+msgstr "帮助..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Open Project..."
+msgstr "打开项目..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Save Project..."
+msgstr "保存项目..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Move Mouse..."
+msgstr "移动鼠标..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Compare Audio..."
+msgstr "比较音频..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+msgid "Screenshot (short format)..."
+msgstr "截屏工具（简式）..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "设置选区左边界"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "位置"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "设置选区右边界"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "选择(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "全不(&N)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select None"
+msgstr "空置选择"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "轨道(&T)"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "所有轨道(&T)"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr "所有同步锁定轨道(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr "选择同步锁定"
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr "范围(&E)"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "在播放位置左端(&L)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Selection Left at Play Position"
+msgstr "设置选区于播放位置左端"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "在播放位置右端(&R)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Selection Right at Play Position"
+msgstr "设置选区于播放位置右端"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "音轨起点到光标位置(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Track Start to Cursor"
+msgstr "选择轨道起点至光标位置"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "光标位置到音轨终点(&E)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Cursor to Track End"
+msgstr "选择光标位置到轨道终点"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track Start to En&d"
+msgstr "轨道起点至终点(&D)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Track Start to End"
+msgstr "选择轨道起点至终点"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&tore Selection"
+msgstr "储存选区(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Retrieve Selectio&n"
+msgstr "恢复选区(&N)"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "频谱(&P)"
+
+#: src/menus/SelectMenus.cpp
+msgid "To&ggle Spectral Selection"
+msgstr "开关频谱选区(&G)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Higher Peak Frequency"
+msgstr "下一个更高的峰值频率(&H)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Lower Peak Frequency"
+msgstr "下一个更低的峰值频率(&L)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr "恢复光标至储存位置(&C)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Cursor to Stored"
+msgstr "选择光标位置至储存位置"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr "存储光标位置(&I)"
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr "寻找过零点(&Z)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Zero Crossing"
+msgstr "选择过零点"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Selection"
+msgstr "选区(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Off"
+msgstr "关闭吸附(&O)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Nearest"
+msgstr "吸附到最近的(&N)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Prior"
+msgstr "吸附到更主要的(&P)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to &Start"
+msgstr "选择至起点(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to En&d"
+msgstr "选择至终点(&D)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Left"
+msgstr "选区向左扩展(&L)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Right"
+msgstr "选区向右扩展(&R)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "设置或扩展选区左端(&F)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "设置或扩展选区右端(&H)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract L&eft"
+msgstr "选区向左收缩(&E)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract R&ight"
+msgstr "选区向右收缩(&I)"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor to"
+msgstr "光标位置到(&C)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Star&t"
+msgstr "选区起点(&T)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Selection Start"
+msgstr "光标位置至选区起点"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+msgid "Selection En&d"
+msgstr "选区终点(&D)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Selection End"
+msgstr "光标位置至选区终点"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start"
+msgstr "到音轨起点(&S)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track Start"
+msgstr "光标位置到轨道起点"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &End"
+msgstr "到音轨终点(&E)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track End"
+msgstr "光标位置到轨道终点"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Project Start"
+msgstr "项目起点(&P)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Project Start"
+msgstr "光标位置到项目起点"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr "项目终点(&N)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Project End"
+msgstr "光标位置到项目终点"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor"
+msgstr "光标位置(&C)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr "光标左移(&L)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr "光标右移(&R)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr "光标小左跳(&O)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr "光标小右跳(&T)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr "光标大左跳(&U)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr "光标大右跳(&M)"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "定位播放(&K)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr "播放时稍向左定位(&L)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr "播放时稍向右定位(&R)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr "播放时向左定位(&F)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr "播放时稍右定位(&H)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "工具栏(&T)"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+msgid "Reset Toolb&ars"
+msgstr "重置工具栏(&A)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "播录工具栏(&T)"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "工具工具栏(&O)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "录音仪表栏(&R)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "播放仪表栏(&P)"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "混音器工具栏(&X)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "编辑工具栏(&E)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "指定速度播放工具栏(&Y)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "跟随播放工具栏(&B)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "设备工具栏(&D)"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "选择工具栏(&S)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "频谱选择工具栏(&C)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Tool"
+msgstr "选择工具(&S)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Envelope Tool"
+msgstr "包络工具(&E)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Draw Tool"
+msgstr "绘制工具(&D)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Zoom Tool"
+msgstr "缩放工具(&Z)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Time Shift Tool"
+msgstr "时间移动工具(&T)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Multi Tool"
+msgstr "多功能工具(&M)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr "上一个工具(&P)"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Next Tool"
+msgstr "下一个工具(&N)"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "已渲染轨道 \"%s\" 的所有音频"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "渲染"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "已经将 %d 个轨道混音并渲染至一个新的立体声轨"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "已经将 %d 个轨道混音并渲染至一个新的单声道轨"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+msgid "Panned audio track(s)"
+msgstr "已平衡音轨声道"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Track"
+msgstr "声道平衡音轨"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to zero"
+msgstr "已对齐或移动起点至零"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to zero"
+msgstr "已对齐起点至零"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Start"
+msgstr "对齐或移动起点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Start"
+msgstr "对齐起点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "已对齐或移动起点至光标处或选区起点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to cursor/selection start"
+msgstr "已对齐起点至光标处或选区起点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to selection end"
+msgstr "已对齐或移动起点至选区终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to selection end"
+msgstr "已对齐起点至选区终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "已对齐或移动终点至光标处或选区起点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to cursor/selection start"
+msgstr "已对齐终点至光标处或选区起点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End"
+msgstr "对齐或移动终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End"
+msgstr "对齐终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to selection end"
+msgstr "已对齐或移动终点至选区终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to selection end"
+msgstr "已对齐终点至选区终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to end"
+msgstr "已对齐或移动终点至终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to end"
+msgstr "已对齐终点至终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End to End"
+msgstr "对齐或移动终点至终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End to End"
+msgstr "对齐终点至终点"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved together"
+msgstr "已整体对齐或移动"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned together"
+msgstr "已整体对齐"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Together"
+msgstr "已整体对齐或移动"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Together"
+msgstr "整体对齐"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "MIDI与音频同步"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "MIDI与音轨同步"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "调整过的音量增强"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "已调整的左右平衡"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "删除音轨"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "删除轨道"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "已删除音轨“%s”。"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "删除轨道"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Top"
+msgstr "已移动“%s”至顶部"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Top"
+msgstr "移动轨道至顶部"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "已移动“%s”至底部"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Bottom"
+msgstr "移动轨道至底部"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Up"
+msgstr "已向上移动“%s”"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Down"
+msgstr "已向下移动“%s”"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Up"
+msgstr "轨道上移"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Down"
+msgstr "轨道下移"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "新建音轨"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "新轨道"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "新建立体声轨"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "新建标签轨"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr "此版本的Audacity只允许每个项目窗口拥有一条时间轨。"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "新建时间轨"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "新采样率(Hz)："
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "输入的值无效"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "重采样轨道 %d"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "重采样音轨"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "重采样轨道"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "请选择一个音轨。"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr "对齐完成：MIDI 从 %.2f 至 %.2f 秒，音频 从 %.2f 至 %.2f 秒。"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "MIDI与音频同步"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"对齐出错：输入太短 - MIDI 从 %.2f 至 %.2f 秒，音频 从 %.2f 至 %.2f 秒。"
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "校准(alignment)进程报告了内部错误。"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "按时间排序的轨道"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "按照时间排序"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "按名字排序的轨道"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "按照名称排序"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "不能删除活动音频轨道"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "增加新轨道(&N)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "单声道轨(&M)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "立体声轨(&S)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "标签轨(&L)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "时间轨(&T)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr "混音(&X)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix Stereo Down to &Mono"
+msgstr "混合立体声至单声道(&M)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "混音并渲染(&X)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "混音并渲染到新轨道(&W)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "重采样(&R)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "删除轨道(&V)"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "静音/取消静音"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "所有轨道静音(&M)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "取消所有音轨的静音(&U)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "左右声道平衡(&P)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "左(&L)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Left"
+msgstr "左平衡"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "右(&R)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Right"
+msgstr "右平衡"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "中央(&C)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Center"
+msgstr "中央平衡"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "对齐轨道(&A)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "两端对齐(&A)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "整体对齐(&T)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "从零点开始(&Z)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "从光标位置/选区起点开始(&C)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "从选区终点开始(&E)"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "从光标位置/选区终点结束(&R)"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "从选区终点结束(&D)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "和轨道移动选区（开/关）(&M)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "移动选区和轨道(&C)"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "排序音轨(&O)"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Start Time"
+msgstr "按开始时间(&S)"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Name"
+msgstr "按名称(&N)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "同步锁定轨道（开/关）(&L)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Track"
+msgstr "轨道(&T)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Change P&an on Focused Track..."
+msgstr "改变选中音轨的左右声道平衡(&A)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan &Left on Focused Track"
+msgstr "选中音轨的左右声道平衡左移(&L)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan &Right on Focused Track"
+msgstr "选中音轨的左右声道平衡右移(&R)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Change Gai&n on Focused Track..."
+msgstr "改变选中音轨的声强加强(&N)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Increase Gain on Focused Track"
+msgstr "增加选中音轨的声强加强(&I)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Decrease Gain on Focused Track"
+msgstr "减少选中音轨的声强加强(&D)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Op&en Menu on Focused Track..."
+msgstr "打开选中音轨上的菜单(&E)"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute Focused Track"
+msgstr "静音/取消 选中音轨(&U)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Solo/Unsolo Focused Track"
+msgstr "独奏/取消 选中音轨(&S)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Close Focused Track"
+msgstr "关闭选中音轨(&C)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track U&p"
+msgstr "上移焦点(&P)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track Do&wn"
+msgstr "下移焦点(&W)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track to T&op"
+msgstr "将焦点移到轨道顶部(&O)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track to &Bottom"
+msgstr "将焦点移到轨道底部(&B)"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "无标签轨"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "无标签轨在选中轨道上下"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "标签轨中无标签"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"不能锁定超出项目\n"
+"终点的区域。"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr "定时录音不能与多个打开的项目一起使用。请关闭任何其他项目，然后重试。"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr "在保存更改时，无法使用定时录音。请保存或关闭此项目，然后重试。"
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select in a mono track."
+msgstr "请选择一个单声道音轨。"
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select in a stereo track."
+msgstr "请选择一个双声道音轨。"
+
+#: src/menus/TransportMenus.cpp
+#, c-format
+msgid "Please select at least %d channels."
+msgstr "请选择至少 %d 个声道。"
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select a time within a clip."
+msgstr "请选择在片段内的时间。"
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+msgid "Tra&nsport"
+msgstr "播录(&N)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pl&aying"
+msgstr "正在播放(&A)"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "播放/停止(&A)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "播放/停止并设置光标位置(&S)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "重复播放(&L)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "暂停(&P)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Recording"
+msgstr "录制(&R)"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "录制(&R)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Append Record"
+msgstr "追加录音(&A)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Record &New Track"
+msgstr "录制新轨道(&N)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "定时录音(&T)..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr "插卷录制(&L)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "播放选区(&Y)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "锁住(&L)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "解锁(&U)"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "重新扫描音频设备(&E)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Transport &Options"
+msgstr "播录选项"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "声控激活电平…(&V)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "声控录音（开/关）(&C)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "固定播放/录音头（开/关）"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "原带配音（开/关）(&O)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "软件同步监听（开/关）(&F)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "录制电平自动调节（开/关） (&U)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "播录(&R)"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "播放(&A)"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr "停止(&P)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &One Second"
+msgstr "播放1秒(&O)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play to &Selection"
+msgstr "播放至选区(&S)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &Before Selection Start"
+msgstr "播放至选区起点前(&B)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Af&ter Selection Start"
+msgstr "从选区起点后播放(&T)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Be&fore Selection End"
+msgstr "播放至选区终点前(&F)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Aft&er Selection End"
+msgstr "从选区终点后播放(&E)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before a&nd After Selection Start"
+msgstr "播放选区起点前后(&N)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before an&d After Selection End"
+msgstr "播放选区终点前后(&D)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr "播放剪切预览(&U)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Play-at-Speed"
+msgstr "以指定速度播放(&P)"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+msgid "Normal Pl&ay-at-Speed"
+msgstr "正常以指定速度播放(&A)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play-at-Speed"
+msgstr "以指定速度循环播放(&L)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr "以指定速度播放剪切预览(&U)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Ad&just Playback Speed..."
+msgstr "调整播放速度(&J)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Increase Playback Speed"
+msgstr "增加播放速度(&I)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Decrease Playback Speed"
+msgstr "减少播放速度(&D)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr "移动到上一个标签(&P)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr "移动到下一个标签(&N)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "视图(&V)"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "缩放(&Z)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "放大(&I)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "缩放到正常大小(&N)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "缩小(&O)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "缩放至选区大小(&Z)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Toggle"
+msgstr "缩放开关(&T)"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "高级垂直缩放(&V)"
+
+#: src/menus/ViewMenus.cpp
+msgid "T&rack Size"
+msgstr "轨道大小(&R)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Fit to Width"
+msgstr "适应宽度(&F)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr "贴合高度(&H)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "叠起所有轨道(&C)"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "展开所有轨道(&X)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Sk&ip to"
+msgstr "跳至(&I)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Selection Sta&rt"
+msgstr "选区起点(&R)"
+
+#: src/menus/ViewMenus.cpp
+msgid "Skip to Selection Start"
+msgstr "跳至选区起点"
+
+#: src/menus/ViewMenus.cpp
+msgid "Skip to Selection End"
+msgstr "跳至选区终点"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "历史记录(&H)..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "卡拉O&K..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "混音板(&M)..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr "原带配音（开/关）(&E)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Show Clipping (on/off)"
+msgstr "显示截幅失真/过载(&S)"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "显示效果栏"
+
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "窗口(&W)"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "最小化(&M)"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "全部前置(&B)"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+msgid "Minimize All Projects"
+msgstr "最小化所有项目"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -12933,8 +13133,8 @@ msgid "Decoding Waveform"
 msgstr "解码波形中"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+#, fuzzy, c-format
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%%完成。点击改变任务焦点。"
 
 #: src/prefs/BatchPrefs.cpp
@@ -13506,7 +13706,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -13516,7 +13716,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "键盘快捷键“%s”已被应用到：\n"
 "\n"
@@ -13893,6 +14093,10 @@ msgstr "长时间段(&N)："
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
 msgstr "变速播放(&V)"
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
+msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -14341,9 +14545,10 @@ msgstr ""
 "标，但修改它们仍然是没有作用。)"
 
 #: src/prefs/ThemePrefs.cpp
+#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "这是一个 Audacity 的调试版本，编译时启用了“Output Sourcery”按钮，\n"
@@ -14904,8 +15109,8 @@ msgstr "%s - 驱动"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
 msgstr "选区 %s。 %s 不将改变。"
 
 #: src/toolbars/SpectralSelectionBar.cpp
@@ -15668,6 +15873,49 @@ msgstr "后退"
 msgid "Help on the Internet"
 msgstr "互联网上的帮助"
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "您想保存改变吗？"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "混音"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "QuickTime文件"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "没有可撤消的操作"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "关闭选中音轨(&C)"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "不能打开项目文件"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "开始录制："
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr "菜单"
@@ -16125,118 +16373,6 @@ msgstr "您确实要关闭?"
 msgid "Confirm Close"
 msgstr "确认关闭"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "录制时时间线操作已禁用"
-
-#: src/widgets/Ruler.cpp
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "单击并拖动以调整，双击以重置"
-
-#: src/widgets/Ruler.cpp
-msgid "Record/Play head"
-msgstr "录制/播放头"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr "时间线"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Seek"
-msgstr "单击并拖动以定位播放"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "点击并拖动以跟随播放"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "点击并移动以跟随播放。点击并拖动以定位播放。"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr "移动以定位播放"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr "移动以跟随播放"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr "拖动以定位播放。释放以停止定位播放。"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr "拖动以定位播放。释放并移动以跟随播放。"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr "移动以跟随播放。拖动以定位播放。"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "快速播放已禁用"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr "快速播放已启用"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to unpin"
-msgstr "点击取消固定"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to pin"
-msgstr "点击固定"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr "禁用快速播放"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr "启用快速播放"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable dragging selection"
-msgstr "禁用拖拽选区"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable dragging selection"
-msgstr "启用拖拽选区"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr "禁用时间线工具提示"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr "启用时间线工具提示"
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr "播放时不要翻页"
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr "播放时更新显示"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr "锁定播放区域"
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr "解锁播放区域"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr "禁用跟随播放标尺"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr "启用跟随播放标尺"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "下次不再显示此警告"
@@ -16629,6 +16765,11 @@ msgstr "S-曲线出"
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
+msgid "Error~%~%"
+msgstr "错误~%~%"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "~a频率值不能为负"
 
@@ -16638,20 +16779,15 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~a百分比值不能超过 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, lisp-format
+#, fuzzy, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
 "~adB 值不能大于 +100 dB.~%~%~\n"
 "                                 提示：每 6 dB 使振幅翻倍~%~\n"
 "                                 每 t-6 dB 使振幅减半。"
-
-#: plug-ins/adjustable-fade.ny
-#, lisp-format
-msgid "Error~%~%"
-msgstr "错误~%~%"
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -16814,31 +16950,6 @@ msgstr "回响次数"
 msgid "Allow duration to change"
 msgstr "允许持续时长变更"
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "回响次数 ~a 不在 1 到 50 的有效范围之内。~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "音高改变“~a”在有效范围 -12 到 +12 半音之外。~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "延迟时间“~a”在有效范围 0 到 10 秒之外。~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "延迟水平“~a”在有效范围 -30 到 +6  dB 之外。~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Error.~%~a"
-msgstr "错误。~%~a"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "常规间隔标签"
@@ -16847,9 +16958,16 @@ msgstr "常规间隔标签"
 msgid "Adding equally-spaced labels to the label track..."
 msgstr "正在添加等距标签至标签轨..."
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr "使用“标签数量”或“标签间隔”"
+#, fuzzy
+msgid "Create labels based on"
+msgstr "分割文件，基于："
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "标签间隔"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -16866,6 +16984,11 @@ msgstr "标签数量"
 #: plug-ins/equalabel.ny
 msgid "Label interval (seconds)"
 msgstr "标签间隔（秒）"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
+msgstr "长度（秒）"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -16910,6 +17033,48 @@ msgstr "3（标签后）"
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
 msgstr "开始数字从"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "延迟补偿（&L）："
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "细节(&D)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "警告"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "保存选区(&G)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "编辑标签"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy, lisp-format
+msgid "~aRegion length = ~a seconds."
+msgstr "从长度 (秒)"
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
@@ -17935,6 +18100,24 @@ msgstr "脉冲列频率（Hz）"
 msgid "Error.~%Stereo track required."
 msgstr "错误.~%需要立体声轨"
 
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "回响次数 ~a 不在 1 到 50 的有效范围之内。~%~a"
+
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr "音高改变“~a”在有效范围 -12 到 +12 半音之外。~%~a"
+
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr "延迟时间“~a”在有效范围 0 到 10 秒之外。~%~a"
+
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr "延迟水平“~a”在有效范围 -30 到 +6  dB 之外。~%~a"
+
+#~ msgid "Error.~%~a"
+#~ msgstr "错误。~%~a"
+
+#~ msgid "Use 'Number of labels' OR 'Label interval'"
+#~ msgstr "使用“标签数量”或“标签间隔”"
+
 #~ msgid "Left"
 #~ msgstr "左"
 
@@ -18320,9 +18503,6 @@ msgstr "错误.~%需要立体声轨"
 
 #~ msgid "to Top"
 #~ msgstr "到顶端"
-
-#~ msgid "to Bottom"
-#~ msgstr "到底端"
 
 #~ msgid "Down"
 #~ msgstr "向下"
@@ -18933,9 +19113,6 @@ msgstr "错误.~%需要立体声轨"
 #~ msgid "Selection "
 #~ msgstr "选区"
 
-#~ msgid "Re&gion Save"
-#~ msgstr "保存选区(&G)"
-
 #~ msgid "Regio&n Restore"
 #~ msgstr "恢复选区(&N)"
 
@@ -19012,9 +19189,6 @@ msgstr "错误.~%需要立体声轨"
 #~ msgid "R&ight Channel"
 #~ msgstr "右通道(&I)"
 
-#~ msgid "&Rate"
-#~ msgstr "采样率(&R)"
-
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "垂直拖动轨道以改变它们的顺序"
 
@@ -19037,9 +19211,6 @@ msgstr "错误.~%需要立体声轨"
 
 #~ msgid "From beats per minute"
 #~ msgstr "从每分钟的拍数"
-
-#~ msgid "From length in seconds"
-#~ msgstr "从长度 (秒)"
 
 #~ msgid "No wave tracks exist."
 #~ msgstr "无波形轨道存在。"

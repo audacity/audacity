@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AUDACITY.PO\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-10-10 15:25+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2009-01-16 03:10-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team:  <en@li.org>\n"
@@ -34,10 +34,11 @@ msgid "Please choose an existing file."
 msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -237,7 +238,7 @@ msgid "No matches found"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+msgid "Code has been modified. Are you sure?"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -298,7 +299,7 @@ msgstr "კოპირება"
 msgid "Copy to clipboard"
 msgstr "გაცვლის ბუფერში დამატება"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "ამოჭრა"
@@ -308,7 +309,7 @@ msgstr "ამოჭრა"
 msgid "Cut to clipboard"
 msgstr "გაცვლის ბუფერში დამატება"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "ჩასმა"
@@ -329,7 +330,7 @@ msgstr "&გაწმენდა"
 msgid "Clear selection"
 msgstr "სიჩუმის მონიშვნა"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 #, fuzzy
 msgid "Select All"
 msgstr "მონიშვნა"
@@ -746,6 +747,134 @@ msgstr "პარამეტრების საქაღალდე:"
 msgid "GPL License"
 msgstr "GPL ლიცენზია:"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "სტერეო ტრეკების რელატიური ზომის მოსარგებად დააწკაპუნეთ და გადაათრიეთ."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "ჩაწერის დასასრული"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Timeline"
+msgstr "დროის შემცვლელი"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Seek"
+msgstr "დააწკაპუნეთ და გადაათრიეთ  სემპლების რედაქტირებისთვის"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Scrub"
+msgstr "ტრეკის ზომის შესაცვლელად დაუწკაპუნეთ და გადაათრიეთ."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release to stop seeking."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Quick-Play disabled"
+msgstr "(გაუქმებულია)"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to unpin"
+msgstr "მონიტორინგის შეჩერება"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to pin"
+msgstr "საწყისზე გადასვლა"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable dragging selection"
+msgstr "სიჩუმის მონიშვნა"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable dragging selection"
+msgstr "მარცხენა და მარჯვენა მონიშვნის კიდეების გადათრევის გააქტიურება"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Do not scroll while playing"
+msgstr "&ეკრანის განახლება დაკვრისას"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Update display while playing"
+msgstr "&ეკრანის განახლება დაკვრისას"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Lock Play Region"
+msgstr "არეს და&კვრა"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Unlock Play Region"
+msgstr "არეს და&კვრა"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable Scrub Ruler"
+msgstr "მთვლელის გაუქმება"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable Scrub Ruler"
+msgstr "მთვლელის გააქტიურება"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -809,12 +938,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity კვლავ გაშვებულია"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&ახალი"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&გახსნა..."
 
@@ -822,7 +951,7 @@ msgstr "&გახსნა..."
 msgid "Open &Recent..."
 msgstr ""
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "Audacity-ის &შესახებ..."
 
@@ -830,7 +959,7 @@ msgstr "Audacity-ის &შესახებ..."
 msgid "&Preferences..."
 msgstr "&პარამეტრები..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&ფაილი"
 
@@ -975,8 +1104,8 @@ msgstr "&შენახვა..."
 msgid "Cl&ear"
 msgstr ""
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&დახურვა"
 
@@ -1809,7 +1938,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "დამოკიდებულების შემოწმება"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "მიმდინარეობა"
@@ -1830,13 +1960,13 @@ msgid "Cleaning up temporary files"
 msgstr "დროებითი ფაილების გაწმენდა"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "პროექტის მონაცემთა ფაილების შენახვა "
-
-#: src/DirManager.cpp
 #, fuzzy
 msgid "Cleaning up after failed save"
 msgstr "დროებითი ფაილების გაწმენდა"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "პროექტის მონაცემთა ფაილების შენახვა "
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2353,9 +2483,9 @@ msgstr ""
 "კოეფიციენტი."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "ზედმეტი აუდიო იყო მონიშნული. მხოლოდ პირველი %.1f წამის ანალიზი მოხდება."
@@ -2400,8 +2530,8 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "სპექტრული მონაცემების ექსპორტი როგორც:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr "შეუძლებელია ფაილზე ჩაწერა:"
@@ -2677,7 +2807,8 @@ msgid "Track"
 msgstr "ტრეკი"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "იარლიყი"
 
@@ -2711,17 +2842,17 @@ msgstr "ახალი..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "დააჭირეთ F2 ან დაუწკაპუნეთ უჯრედების შიგთავსის  რედაქტირებისთვის"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Select a text file containing labels"
 msgstr "მონიშნეთ იარლიყების შემცველი ტექსტური ფაილი..."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "ტექსტური (*.txt)|*.txt|ყველა ფაილი(*.*)|*.*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "შეუძლებელია ფაილის გახსნა: \"%s\""
@@ -2730,7 +2861,7 @@ msgstr "შეუძლებელია ფაილის გახსნა:
 msgid "No labels to export."
 msgstr "საექსპორტო იარლიყები არ მოიძებნა."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "იარლიყის ექსპორტი, როგორც:"
 
@@ -2758,22 +2889,22 @@ msgstr "შეცვლილი იარლიყი"
 msgid "Label Edit"
 msgstr "იარლიყის რედაქტირება"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "დამატებული იარლიყი"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "ამ&ოჭრა"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&კპირება"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&ჩასმა"
 
@@ -2790,6 +2921,22 @@ msgstr "იარლიყების წაშლა"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "რედაქტირებული იარლიყები"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "სახელი"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "დამატებული იარლიყი"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2833,2609 +2980,31 @@ msgid "Audacity Karaoke%s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&პროექტის შენახვა"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "პროექტის შენახვა, &როგორც..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "პროექტის კომპრესირებული ასლის შენახვა..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Save Compressed Copy of Project..."
-msgstr "პროექტის კომპრესირებული ასლის შენახვა..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export"
-msgstr "ექსპორტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as MP&3"
-msgstr "ექსპორტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &WAV"
-msgstr "იარლიყის ექსპორტი, როგორც:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &OGG"
-msgstr "ექსპორტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export Audio..."
-msgstr "&ექსპორტი..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Expo&rt Selected Audio..."
-msgstr "ექსპორტის ამორჩევა..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "იარლიყების ექსპორტი..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "მრავალჯერადი ექსპორტი..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "MIDI ექსპორტი..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&იმპორტი"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&აუდიო..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&იარლიყები..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&დაუმუშავებელი მონაცემები..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "გვერ&დის მომართვა..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&ამობეჭდვა..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "&გამოსვლა"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "&რედაქტირება"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&უკუსვლა"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "&გამეორება"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&წაშლა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "დუბ&ლირება"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr ""
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "დაყ&ოფის ამოჭრა"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "დაყოფის  წაშლა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "აუდ&იოს დაჩუმება"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tri&m Audio"
-msgstr "დაჭრ&რა"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr ""
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "დაყოფა"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "ა&ხლის დაყოფა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "&შეერთება"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "სიჩუმეებთან მი&ერთება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Labels"
-msgstr "იარლიყების მიხედვით"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Edit Labels..."
-msgstr "&იარლიყების რედაქტირება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "იარლიყის დამატება მონიშვნისას"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "იარლიყის დამატება &დაკვრის პოზიციისას"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "La&beled Audio"
-msgstr "და&ხარისხებული არეები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "იარლიყის რედაქტირება"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&ამოჭრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "დაყოფა წაშლა"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "დაყოფის ამოჭრა"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "&დაყოფის ამოჭრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "დაყოფა წაშლა"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "და&ყოფის წაშლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "დაჩუმება"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "იარლიყი"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "კო&პირება"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "იარლიყის რედაქტირება"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "დაყოფა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "იარლიყის რედაქტირება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Me&tadata..."
-msgstr "მეტამონაცემების რედაქტირება"
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "პარა&მეტრები..."
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "&Sამორჩევა"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&All"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&არცერთი"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "&ტრეკები"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Sync-Locked"
-msgstr "მონიშვნა - სიჩუმე"
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "R&egion"
-msgstr "არეს და&კვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "მონიშვნის წერილისა და დაკვრის მომართა"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "დაკვრის პოზიციისას &მარცხენა Position"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "მონიშვნის წერილისა და დაკვრის მომართა"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "დაკვრის პოზიციისას &მარჯვენა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "ტრეკის &საწყისი კურსორთან"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "ტრეკის &საწყისი კურსორთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "კურსორი ტრეკის &დასასრულთან"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "კურსორი ტრეკის &დასასრულთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "დასარულზე მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "ტრეკის &საწყისი კურსორთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&tore Selection"
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Retrieve Selectio&n"
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&pectral"
-msgstr "სპექტრი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "სიხშირე (Hz)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "ლინეარული სიხშირე"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "წინა ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Previo&us Clip"
-msgstr "წინა ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "შემდეგი ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "N&ext Clip"
-msgstr "შემდეგი ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "დასაწყისზე მონიშვნა"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "ნულოვანი ჯვარედინების მოძებნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "At &Zero Crossings"
-msgstr "ნულოვანი ჯვარედინების მოძებნა"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&ნახვა"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom"
-msgstr "გადიდება"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "შემცირება"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "&ნორმალურ ზომაზეl"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "გადიდება"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "მონიშვნამდე &გადიდება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Zoom &Toggle"
-msgstr "გადიდების ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&rack Size"
-msgstr "ტრეკის სახელი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Fit to Width"
-msgstr "ფანჯარაზე მორგება"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "ყველა ტრეკის &მოშლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "E&xpand Collapsed Tracks"
-msgstr "ყველა ტრეკის გ&აშლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sk&ip to"
-msgstr "ბოლოში გადასვლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Sta&rt"
-msgstr "მონიშვნის დაწყება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection En&d"
-msgstr "მონიშვნის დასასრული"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&ისტორია..."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "&ხელსაწყოთა ზოლები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Reset Toolb&ars"
-msgstr "ხელსაწყოთა ზოლის ნაგულისხმევ პარამეტრებამდე დაყვანა"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "ხ&ელსაწყოთა ზოლი"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording Meter Toolbar"
-msgstr "რეკორდის გამზომავი"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Playback Meter Toolbar"
-msgstr "მთვლელის დაკვრა"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "მიქსერის ხელსაწყოთა ზოლი"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "ხელსაწყოთა ზოლის &რედაქტირება"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "დაკვრა სიჩქარით"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b Toolbar"
-msgstr "&ხელსაწყოთა ზოლები"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "&მოწყობილობათა ზოლი"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "&მონიშვნის ზოლი"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Spe&ctral Selection Toolbar"
-msgstr "&მონიშვნის ზოლი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Extra Menus (on/off)"
-msgstr "აუდიოს გადაწერა (ჩართვა/გამორთვა)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Show Clipping (on/off)"
-msgstr "მიმაგრების &ჩვენება"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "&გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "დაკვრა"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play/Stop and &Set Cursor"
-msgstr "დაკვრა/გაჩერებისა და მომართვის კურსორი"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&შეყოვნება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "ჩაწერა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&ჩაწერა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Append Record"
-msgstr "ჩაწერის დამატება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Record &New Track"
-msgstr "ტრეკების წაშლ&ა"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&ტაიმერის ჩაწერა..."
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor to"
-msgstr "კურსორი მარცხნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Star&t"
-msgstr "მონიშვნის დაწყება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "კურსორი ტრეკის &დასასრულთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &Start"
-msgstr "ტრეკის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "კურსორი ტრეკის &დასასრულთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &End"
-msgstr "ტრეკის დასასრულამდე"
-
-#: src/Menus.cpp
-msgid "Cursor to Prev Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Next Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "პროექტის კოეფიციენტი (Hz):"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Project Start"
-msgstr "პროექტის კოეფიციენტი (Hz):"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "კურსორი ტრეკის &დასასრულთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Project E&nd"
-msgstr "პროექტის დამოკიდებულებანი"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "არეს და&კვრა"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&ჩაკეტვა"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&მოხსნა"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Transport &Options"
-msgstr "ტრანსკრიპცია"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sound Activation Le&vel..."
-msgstr "ხმის გააქტიურების დონე..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "ხმა-გააქტიურებული ჩაწერა (ჩართვა/გამორთვა)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Overdub (on/off)"
-msgstr "აუდიოს გადაწერა (ჩართვა/გამორთვა)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "So&ftware Playthrough (on/off)"
-msgstr "პროგრამული დაკვრა (ჩათვლა/გამორთვა)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "ხმა-გააქტიურებული ჩაწერა (ჩართვა/გამორთვა)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "&ახლის დამატება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "ტრეკის გადაადგილება"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&სტერეო ტრეკი"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&იარლიყის ტრეკი"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "&დროის ტრეკი"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "სტეროდან მონოზე გააქტიურება"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "&შერევა და რენდერინგი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix and Render to Ne&w Track"
-msgstr "ახალ ტრეკზე შერევა და რენდერინგი"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "&რესემპლირება..."
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "ტრეკების წაშლ&ა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute"
-msgstr "ფოკუსირებული ტრეკის დადუმება/ხმის აწევა"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "ყველა ტრეკის &ჩაჩუმება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Unmute All Tracks"
-msgstr "ყველა ტრეკის &ხმის აწევა"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "მარცენა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Left"
-msgstr "მარცენა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "მარჯვენა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Right"
-msgstr "მარჯვენა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "ცენტრში"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Center"
-msgstr "ცენტრში"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Align End to End"
-msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align &Together"
-msgstr "ტრეკების ერთმანეთზე სწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to &Zero"
-msgstr "საწყისი დრო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to &Cursor/Selection Start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to Selection &End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to Cu&rsor/Selection Start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to Selection En&d"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "ტრეკების &გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "სხვა ტრეკზე გადატანილი სანიშნი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Sele&ction and Tracks"
-msgstr "სხვა ტრეკზე გადატანილი სანიშნი"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "MIDI-ის სინქრონიზაცია აუდიოსთან"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&ort Tracks"
-msgstr "ტრეკების &დახარისხება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sort by Time"
-msgstr "დროის მიხედვით დახარისხება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "&საწყისი დროით"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sort by Name"
-msgstr "სახელის მიხედვით დახარისხება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "&სახელით"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&გენერაცია"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "ეფ&ექტი"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "გამეორება %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "&ანალიზი"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "აგების სპექტრი..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&ools"
-msgstr "ხელსაწყოები"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&იარლიყები..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "%s-ის გააქტიურება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "&შენახვა..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "Benchmark-ის &გაშვება..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Simulate Recording Errors"
-msgstr "ჩაწერა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detect Upstream Dropouts"
-msgstr "ნაკადების მონიშვნა იმპორტირებისთვის"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Window"
-msgstr "ფანჯარა"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr ""
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "&გადატანა"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr ""
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &One Second"
-msgstr "ერთი წამი დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "მონიშვნაზე დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &Before Selection Start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Af&ter Selection Start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Be&fore Selection End"
-msgstr "მონიშვნაზე დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Aft&er Selection End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before a&nd After Selection Start"
-msgstr "მონიშვნის დასაწყისი&თ დასასრულის გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before an&d After Selection End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview"
-msgstr "ამოჭრილი ესკიზის დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection Tool"
-msgstr "მონიშვნის ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Envelope Tool"
-msgstr "კონვერტის ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Draw Tool"
-msgstr "დახატვის ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "გადიდების ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Time Shift Tool"
-msgstr "დროის ცვლის ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Multi Tool"
-msgstr "მრავალჯერადი ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Previous Tool"
-msgstr "წინა ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Next Tool"
-msgstr "შემდეგი ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mi&xer"
-msgstr "მიქსერის ხელსაწყოთა ზოლი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "ჩაწერის დასასრული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "ჩაწერის დასასრული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "ჩაწერის დასასრული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "გასაღების წაშლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "გასაღების წაშლა2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "დაკვრა სიჩქარით"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "დაკვრა სიჩქარით"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Loop Play-at-Speed"
-msgstr "დაკვრა სიჩქარით"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview-at-Speed"
-msgstr "ამოჭრილი ესკიზის დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "დაკვრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Previous Label"
-msgstr "ფოკუსის წინა ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Next Label"
-msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "De&vice"
-msgstr "მოწყობილობა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Pitch შეცვლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Pitch შეცვლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "აუდიოს ქეშირება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Pitch შეცვლა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection"
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "გადაღების გამორთვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "გადაღების ჩართვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "გადაღება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to &Start"
-msgstr "დასაწყისზე მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to En&d"
-msgstr "დასარულზე მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Left"
-msgstr "მონიშვნის გაფართოება მარცხნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Right"
-msgstr "მონიშვნის გაფართოება მარჯვნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "მარცხენა მონიშვნის მომართვა (ან გაფართოება)  "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "მარჯვენამონიშვნის მომართვა (ან გაფართოება)  "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract L&eft"
-msgstr "კონტრასტის მარცხნივ მონიშნვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract R&ight"
-msgstr "კონტრასტის მარჯვნივ მონიშნვა"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Previous Track"
-msgstr "ფოკუსის წინა ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Next Track"
-msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &First Track"
-msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Last Track"
-msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to P&revious and Select"
-msgstr "ფოკუსის წინა ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to N&ext and Select"
-msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Toggle Focused Track"
-msgstr "ფოკუსირებული ტრეკის ჩართვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Toggle Focuse&d Track"
-msgstr "ფოკუსირებული ტრეკის ჩართვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor"
-msgstr "კურსორი მარცხნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Left"
-msgstr "კურსორი მარცხნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Right"
-msgstr "კურსორი მარჯვნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Sh&ort Jump Left"
-msgstr "კურსორის მოკლე გადასვლა მარცხნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Shor&t Jump Right"
-msgstr "კურსორის მოკლე გადასვლა მარჯვნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long J&ump Left"
-msgstr "კურსორის გრძელი გადასვლა მარცხნივ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long Ju&mp Right"
-msgstr "კურსორის გრძელი გადასვლა მარჯვნივ"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Clip Rig&ht"
-msgstr "კლინინგი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Track"
-msgstr "&ტრეკები"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "არეს შეცვლა ფოკუსირებულ ტრეკზე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "ფოკუსირებულ ტრეკზე მარცხნივ მოტრიალება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "ფოკუსირებულ ტრეკზე მარჯვნივ მოტრიალება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "gain -ის შეცვლა ფოკუსირებულ ტრეკზე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "gain-ის აწევა ფოკუსირებულ ტრეკზე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "gain-ის დაწევა ფოკუსირებულ ტრეკზე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "მენიუს გახსნა ფოკუსირებულ ტრეკზე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "ფოკუსირებული ტრეკის დადუმება/ხმის აწევა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "სოლო/არასოლო ფოკუსირებული ტრეკი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "ფოკუსირებული ტრეკის დახურვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "ფოკუსირებული ტრეკის დახურვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "ფოკუსირებული ტრეკის დახურვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "ფოკუსირებული ტრეკის დახურვა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "ტრეკის ჩამოტანა"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "სიხშირე (Hz)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "ტრეკის დასაწყისამდე"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "პარამეტრები..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "პარამეტრები..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "შემდეგი ხელსაწყო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "კონვერტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&იარლიყების რედაქტირება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "პროექტის შენახვა, &როგორც..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Select..."
-msgstr "მონიშვნა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "ტრეკების &დახარისხება"
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "&რესემპლირება..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "დახმარება"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Import..."
-msgstr "&იმპორტი..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Export..."
-msgstr "&ექსპორტი..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "პროექტის შენახვა, &როგორც..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "პროექტის შენახვა, &როგორც..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "არჩევა..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "კომპრესორი"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Full Screen (on/off)"
-msgstr "აუდიოს გადაწერა (ჩართვა/გამორთვა)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "ყველა ტრეკის &ნორმალიზაცია პროექტში"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&დახმარება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Getting Started"
-msgstr "მონიშვნის დაწყება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Audacity %s ხელსაწყოთა ზოლი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&დახმარება"
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Diagnostics"
-msgstr "\t-ტესტი (დიაგნოსტიკის გაშვება)"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "&ჩანაწერის ჩვენება ..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "დამოკიდებულებების &შემოწმება..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Check for Updates..."
-msgstr "დამოკიდებულებების &შემოწმება..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Plug-in %d to %d"
-msgstr "მოდულები %i-დან  %i-მდე"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "უკანასკნელის გახსნა"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "უკანასკნელი  &ფაილები"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "%s &დაბრუნება"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&უკუსვლა"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&გამეორება %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "დროის მიხედვით დახარისხებული ტრეკები"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "სახელის მიხედვით დახარისხებული ტრეკები"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no label track"
-msgstr "შექმნილია ახალი იარლიყის ტრეკი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no label track at or below focused track"
-msgstr "ფოკუსირებულ ტრეკზე მარცხნივ მოტრიალება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no labels in label track"
-msgstr "შექმნილია ახალი იარლიყის ტრეკი"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Time shifted clips to the left"
-msgstr "დრო შენაცვლებული ტრეკები/კლიპები  %s %.02f  წამი"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "დრო-ცვლა"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "აქტიური აუდიოს მქონე ტრეკის წაშლა შეუძლებელია"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "გადაადგილებული '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "ტრეკის ატანა"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "ტრეკის ჩამოტანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "ტრეკის ჩამოტანა"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "გადაადგილებული '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "გადაადგილებული '%s' %s"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "ტრეკის ატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "ტრეკის ჩამოტანა"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "labels.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "ესპორტისთვის ლებელის ტრეკები არ მოიძებნა."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI ექსპორტი როგორც:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI ფაილი (*.mid)|*.mid|Allegro ფაილი (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"თქვენ მონიშნული გაქვთ ფაილის სახელი ფაილის უცნობი გაფართოებით.\n"
-"გავაგრძელო?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "MIDI-ის ექსპორტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export Selected Audio"
-msgstr "მონიშნული აუდიოს ექსპორტი როგორც %s"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "დასაბრუნებელი მოქმედება არ არსებობს"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "გასამეორებელი მოქმედება არ არსებობს"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "გაცვლის ბუფერში დამატება"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "დაყოფა-ამოჭრა და გაცვლის ბუფერში შენახვა"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "დაყოფის ამოჭრა"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "ერთი ტიპის ტრეკის მეორეში ჩასმა დაუშვებელია."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "სტერეო აუდიოდან მონო ტრეკზე კოპირება დაუშვებელია."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "გაცვლის ბუფერიდან ჩასმული"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "გაცვლის ბუფერიდან ჩასმული ტექსტი"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "დაჩუმებული მონუშნული ტრეკები %.2f-ისთვის.2f წამი %.2f"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Trim Audio"
-msgstr "აუდიოს ჩაწერა"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "დაყოფილი-წაშლილი %.2f წამი =%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "დაყოფა წაშლა"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "შეერთება %.2f წამები t=%.2f"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "შეერთება"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "დაჩუმებული მონუშნული ტრეკები %.2f-ისთვის.2f წამი %.2f"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "დაჩუმება"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "დუბლირებული"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "დუბლიკაცია"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cut labeled audio regions to clipboard"
-msgstr "იარლიყდადებული არეების ამოჭრა და გაცვლის ბუფერში გადატანა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cut Labeled Audio"
-msgstr "იარლიყების ამოჭრა"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "იარლიყდადებული არეების დაყოფადაჭრა და გაცვლის ბუფერში გადატანა"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Cut Labeled Audio"
-msgstr "იარლიყების დაყოფა დაჭრა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Copied labeled audio regions to clipboard"
-msgstr "გაცვლის ბუფერში გადატანილი იარლიყდადებული არეები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Copy Labeled Audio"
-msgstr "იარლიყების კოპირება"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Deleted labeled audio regions"
-msgstr "წაშლილი იარლიყდადებული არეები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Labeled Audio"
-msgstr "წაშლილი იარლიყდადებული არეები"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Deleted labeled audio regions"
-msgstr "დაყოფილი და წაშლილი იარლიყდადებული არეები"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Delete Labeled Audio"
-msgstr "იარლიყების დაყოფა და წაშლა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Silenced labeled audio regions"
-msgstr "დაჩუმებული იარლყიდადებული არეები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Silence Labeled Audio"
-msgstr "დაჩუმებული იარლყიდადებული არეები"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split labeled audio (points or regions)"
-msgstr "იარლიყდადებული არეების დაყოფა"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Labeled Audio"
-msgstr "იარლიყდადებული არეების დაყოფა"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Joined labeled audio (points or regions)"
-msgstr "შეერთებული იარლიყდადებული არეები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Join Labeled Audio"
-msgstr "შეერთებული იარლიყდადებული არეები"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detached labeled audio regions"
-msgstr "წაშლილი იარლიყდადებული არეები"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detach Labeled Audio"
-msgstr "წაშლილი იარლიყდადებული არეები"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "დაყოფა"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "ახალ ტრეკზე დაყოფა"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "ახლის დაყოფა"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr " '%s'-დან იარლიყების იმპორტი"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "იარლიყების იმპორტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "MIDI ფაილის ამორჩევა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI და Allegro ფაილები(*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "იმპორტირებული MIDI '%s'-დან"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "MIDI იმპორტი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "ნებისმიერი არაკომპრესირებული ფაილის არჩევა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "All files|*"
-msgstr "ყველა ფაილი(*)|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-#, fuzzy
-msgid "Edit Metadata Tags"
-msgstr "მეტამონაცემების ჭდეების რედაქტირება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Metadata Tags"
-msgstr "მეტამონაცემების ჭდეების რედაქტირება"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "ყველა აუდიოს რენდერი  '%s' ტრეკში"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "რენდერი"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d ტრეკების ერთ ახალ სტერეო ტრეკში არევა და რენდერი "
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d ტრეკების ერთ ახალ მონო ტრეკში არევა და რენდერი "
-
-#: src/Menus.cpp src/Mix.cpp
-#, fuzzy
-msgid "Mix and Render"
-msgstr "&არევა და რენდერი"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "ტრეკი %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s left"
-msgstr "მარცხნივ"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s right"
-msgstr "მარჯვენა"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "start"
-msgstr "დაწყება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "end"
-msgstr "დასასრული"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to zero"
-msgstr "გა&სწორება და კურსორის გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to zero"
-msgstr "საწყისი დრო"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Start"
-msgstr "გახსწორებული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Start"
-msgstr "მონიშვნის დაწყება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to cursor/selection start"
-msgstr "მონიშვნის დასაწყისამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to selection end"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to selection end"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "მონიშვნის დასაწყისით გასწორებული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to cursor/selection start"
-msgstr "მონიშვნის დასაწყისით გასწორებული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End"
-msgstr "გახსწორებული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End"
-msgstr "გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to selection end"
-msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to selection end"
-msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to end"
-msgstr "გა&სწორება და კურსორის გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to end"
-msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End to End"
-msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End to End"
-msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved together"
-msgstr "გა&სწორება და კურსორის გადატანა"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned together"
-msgstr "ტრეკების ერთმანეთზე სწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Together"
-msgstr "ტრეკების ერთმანეთზე სწორება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Together"
-msgstr "ტრეკების ერთმანეთზე სწორება"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "MIDI სინქრონიზაცია აუდიოსთან"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "შექმნილია ახალი აუდიო ტრეკი"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "ახალი ტრეკი"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "ძშექმნილია ახალი სტერეო აუდიო ტრეკი"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "შექმნილია ახალი იარლიყის ტრეკი"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "შექმნილი ახალი დროის ტრეკი"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Timer Recording"
-msgstr "ჩაწერა"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "სახელი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "დამატებული იარლიყი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "რედაქტირებული იარლიყები"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "წაშლილი აუდიო ტრეკ(ბ)ი"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "ტრეკის წაშლა"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr ""
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "&შენახვა..."
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save device info"
-msgstr "შეუძლებელია ჟანრის ფაილის შენახვა."
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "შეუძლებელია ჟანრის ფაილის შენახვა."
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "რესემპლირებული აუდიო ტრეკ(ებ)ი"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "ტრეკი"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "რესემპლირება"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "სემპლის ახალი კოეფიციენტი (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "შეყვანილი მნიშვნელობა არასწორია"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr " %d ტრეკის რესემპლირება"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "რესემპლირებული აუდიო ტრეკ(ებ)ი"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "ტრეკის რესემპლირება"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&გამეორება"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "არევა"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix and Render"
+msgstr "&არევა და რენდერი"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5443,7 +3012,7 @@ msgstr "ტრეკების არევა და რენდერინ
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Gain"
@@ -5460,7 +3029,7 @@ msgid "Musical Instrument"
 msgstr ""
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Pan"
@@ -5514,8 +3083,7 @@ msgstr ""
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5529,7 +3097,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5696,6 +3264,11 @@ msgstr ""
 msgid "Show:"
 msgstr ""
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&All"
+
 #: src/PluginManager.cpp
 #, fuzzy
 msgid "Show all"
@@ -5793,7 +3366,7 @@ msgid "Plug-in already exists"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -6065,7 +3638,7 @@ msgstr ""
 #: src/Project.cpp
 #, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
@@ -6178,15 +3751,6 @@ msgid "Created new project"
 msgstr "ახალი შექმნილი პროექტი"
 
 #: src/Project.cpp
-#, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "წაშლილია %.2f წამი t=%.2f"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "წაშლა"
-
-#: src/Project.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "ჩაწერისთვის დარჩენილი სივრცე %d წუთი."
@@ -6256,23 +3820,6 @@ msgstr "ჩაწერილი აუდიო"
 #: src/Project.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "ჩაწერა"
-
-#: src/Project.cpp
-msgid "Adjusted gain"
-msgstr " მორგებული gain"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "მორგებული Pan"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "წაშლილი ტრეკი '%s.'"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "ტრეკის წაშლა"
 
 #: src/Project.cpp
 msgid "Less than 1 minute"
@@ -6568,7 +4115,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr ""
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "დახმარება"
 
@@ -6832,7 +4379,7 @@ msgstr ""
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "ყველა მოთხოვნილი ფაილები:\n"
 "  %s\n"
@@ -7020,6 +4567,11 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Timer Recording"
+msgstr "ჩაწერა"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7073,6 +4625,11 @@ msgstr ""
 #, fuzzy
 msgid "Save Project As:"
 msgstr "პროექტის შენახვა, &როგორც..."
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select..."
+msgstr "მონიშვნა"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7136,10 +4693,20 @@ msgstr "დასაწყისზე მონიშვნა"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity ტაიმერის ჩაწერა - დაწყების მოლოდინი"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 #, fuzzy
 msgid "Recording will commence in:"
 msgstr "ჩაწერის დასასრული"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7188,6 +4755,13 @@ msgstr ""
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "ტრეკის ხედი"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "ტრეკი %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7801,7 +5375,7 @@ msgstr "თეთრი"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "არცერთიი"
 
@@ -8035,6 +5609,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "კოეფიციენტის მომართვა"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "სახის ზომა"
 
@@ -8139,6 +5718,16 @@ msgstr ""
 #, fuzzy
 msgid "VZoom:"
 msgstr "გადიდება"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "გადიდება"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "გადიდების ხელსაწყო"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8742,6 +6331,10 @@ msgstr "პარამეტრების გარდაქმნა"
 msgid "&Difference:"
 msgstr "განსხვავება:"
 
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&დახმარება"
+
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 #, c-format
@@ -9330,6 +6923,16 @@ msgstr "&ნაგულისხმევი პარამეტრები"
 #, fuzzy
 msgid "Factory Presets"
 msgstr "პარამეტრების იმპორტი"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Import..."
+msgstr "&იმპორტი..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Export..."
+msgstr "&ექსპორტი..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -10347,7 +7950,7 @@ msgid "Waiting for waveform to finish computing..."
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+msgid "(Maximum 0dB)"
 msgstr ""
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10838,6 +8441,10 @@ msgstr ""
 msgid "Creates audio of zero amplitude"
 msgstr ""
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "დაჩუმება"
+
 #: src/effects/StereoToMono.cpp
 #, fuzzy
 msgid "Converts stereo tracks to mono"
@@ -11182,7 +8789,7 @@ msgstr "პარამეტრის ჩატვირთვა"
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+msgid "This parameter file was saved from %s. Continue?"
 msgstr ""
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11284,7 +8891,7 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -11516,7 +9123,13 @@ msgid "plug-in"
 msgstr "Nyquist გამონატანი: "
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist-მა დააბრუნა მნიშვნელობა:"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Nyquist-მა დააბრუნა მნიშვნელობა:"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11605,6 +9218,11 @@ msgstr ""
 #, fuzzy
 msgid "&Load"
 msgstr "&ჩატვირთვა..."
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "&შენახვა..."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11716,6 +9334,11 @@ msgstr ""
 msgid "Export Audio"
 msgstr "ფაილის ექსპორტი"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Edit Metadata Tags"
+msgstr "მეტამონაცემების ჭდეების რედაქტირება"
+
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -11774,8 +9397,8 @@ msgid ""
 msgstr ""
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "ფაილი სახელად  \"%s\"  უკვე არსებობს.  ჩავანაცვლო?"
 
 #: src/export/Export.cpp
@@ -11984,20 +9607,25 @@ msgstr "მონიშნული აუდიოს ექსპორტი 
 msgid "Invalid sample rate"
 msgstr "სემპლის არასწორი კოეფიციენტი"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "რესემპლირება"
+
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 "პროექტის სემპლის კოეფიციენტი (%d) მიმდინარე გამონატანის ფაილის ფორმატით\n"
 "მხარდაჭერილი არ არის"
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "პროექტის სემპლისა (%d) და ბიტური კოეფიციენტის (%d kbps) კომბინაცია "
 "მხარდაჭერილი არ არის\n"
@@ -12795,19 +10423,19 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr " MP3 მაკოდირებლის მიერ დაბრუნებული %ld შეცდომა"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "პროექტის სემპლის კოეფიციენტი (%d) არ არის მხარდაჭერილი არცერთი MP3\n"
 "ფაილის ფორმატით"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "პროექტის სემპლის (%d) და ბიტის (%d kbps)  კოეფიციენტის კომბინაცია არ არის "
 "მხარდაჭერილი არცერთი MP3\n"
@@ -13214,6 +10842,11 @@ msgstr ""
 "ის არაკომპრესირებულია, შეეცადეთ მის იმპორტირებას  \"დაუმუშავებელის იმპორტი\"-"
 "ის საშალებით."
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13370,7 +11003,7 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13495,9 +11128,2583 @@ msgstr "იმპორტირების რაოდენობა:"
 msgid "Sample rate:"
 msgstr "სემპლის კოეფიციენტი"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&იმპორტი"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr ""
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s left"
+msgstr "მარცხნივ"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s right"
+msgstr "მარჯვენა"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "start"
+msgstr "დაწყება"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "end"
+msgstr "დასასრული"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Time shifted clips to the left"
+msgstr "დრო შენაცვლებული ტრეკები/კლიპები  %s %.02f  წამი"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "დრო-ცვლა"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Previo&us Clip"
+msgstr "წინა ხელსაწყო"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "წინა ხელსაწყო"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "N&ext Clip"
+msgstr "შემდეგი ხელსაწყო"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "შემდეგი ხელსაწყო"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Prev Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Next Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Clip Rig&ht"
+msgstr "კლინინგი"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "გაცვლის ბუფერიდან ჩასმული ტექსტი"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "გაცვლის ბუფერიდან ჩასმული"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "დასაბრუნებელი მოქმედება არ არსებობს"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "გასამეორებელი მოქმედება არ არსებობს"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "გაცვლის ბუფერში დამატება"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "წაშლილია %.2f წამი t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "წაშლა"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "ერთი ტიპის ტრეკის მეორეში ჩასმა დაუშვებელია."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "სტერეო აუდიოდან მონო ტრეკზე კოპირება დაუშვებელია."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "დუბლირებული"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "დუბლიკაცია"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "დაყოფა-ამოჭრა და გაცვლის ბუფერში შენახვა"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "დაყოფის ამოჭრა"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "დაყოფილი-წაშლილი %.2f წამი =%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "დაყოფა წაშლა"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "დაჩუმებული მონუშნული ტრეკები %.2f-ისთვის.2f წამი %.2f"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "დაჩუმებული მონუშნული ტრეკები %.2f-ისთვის.2f წამი %.2f"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Trim Audio"
+msgstr "აუდიოს ჩაწერა"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "დაყოფა"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "ახალ ტრეკზე დაყოფა"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "ახლის დაყოფა"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "შეერთება %.2f წამები t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "შეერთება"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Metadata Tags"
+msgstr "მეტამონაცემების ჭდეების რედაქტირება"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "&რედაქტირება"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&წაშლა"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "დუბ&ლირება"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr ""
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "დაყ&ოფის ამოჭრა"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "დაყოფის  წაშლა"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "აუდ&იოს დაჩუმება"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Tri&m Audio"
+msgstr "დაჭრ&რა"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "დაყოფა"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "ა&ხლის დაყოფა"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "&შეერთება"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "სიჩუმეებთან მი&ერთება"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "მეტამონაცემების რედაქტირება"
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "პარა&მეტრები..."
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "გასაღების წაშლა"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "გასაღების წაშლა2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Mi&xer"
+msgstr "მიქსერის ხელსაწყოთა ზოლი"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "დაკვრა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "დაკვრა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "დაკვრა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "ჩაწერის დასასრული"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "ჩაწერის დასასრული"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "ჩაწერის დასასრული"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "De&vice"
+msgstr "მოწყობილობა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Pitch შეცვლა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Pitch შეცვლა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "აუდიოს ქეშირება"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Pitch შეცვლა"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
+msgstr "აუდიოს გადაწერა (ჩართვა/გამორთვა)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "იმპორტირებული MIDI '%s'-დან"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "MIDI იმპორტი"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export Selected Audio"
+msgstr "მონიშნული აუდიოს ექსპორტი როგორც %s"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "labels.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "ესპორტისთვის ლებელის ტრეკები არ მოიძებნა."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI ექსპორტი როგორც:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI ფაილი (*.mid)|*.mid|Allegro ფაილი (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"თქვენ მონიშნული გაქვთ ფაილის სახელი ფაილის უცნობი გაფართოებით.\n"
+"გავაგრძელო?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "MIDI-ის ექსპორტი"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr " '%s'-დან იარლიყების იმპორტი"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "იარლიყების იმპორტი"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "MIDI ფაილის ამორჩევა"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI და Allegro ფაილები(*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select any uncompressed audio file"
+msgstr "ნებისმიერი არაკომპრესირებული ფაილის არჩევა"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "All files|*"
+msgstr "ყველა ფაილი(*)|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "პარამეტრის შენახვა"
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "უკანასკნელის გახსნა"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "უკანასკნელი  &ფაილები"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&პროექტის შენახვა"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "პროექტის შენახვა, &როგორც..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "პროექტის კომპრესირებული ასლის შენახვა..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Save Compressed Copy of Project..."
+msgstr "პროექტის კომპრესირებული ასლის შენახვა..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export"
+msgstr "ექსპორტი"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as MP&3"
+msgstr "ექსპორტი"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &WAV"
+msgstr "იარლიყის ექსპორტი, როგორც:"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &OGG"
+msgstr "ექსპორტი"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export Audio..."
+msgstr "&ექსპორტი..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Expo&rt Selected Audio..."
+msgstr "ექსპორტის ამორჩევა..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "იარლიყების ექსპორტი..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "მრავალჯერადი ექსპორტი..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "MIDI ექსპორტი..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&აუდიო..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&იარლიყები..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&დაუმუშავებელი მონაცემები..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "გვერ&დის მომართვა..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&ამობეჭდვა..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "&გამოსვლა"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Save Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Unable to save device info"
+msgstr "შეუძლებელია ჟანრის ფაილის შენახვა."
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Save MIDI Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Unable to save MIDI device info"
+msgstr "შეუძლებელია ჟანრის ფაილის შენახვა."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&დახმარება"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Getting Started"
+msgstr "მონიშვნის დაწყება"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity %s ხელსაწყოთა ზოლი"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&დახმარება"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Diagnostics"
+msgstr "\t-ტესტი (დიაგნოსტიკის გაშვება)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "&ჩანაწერის ჩვენება ..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "დამოკიდებულებების &შემოწმება..."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Check for Updates..."
+msgstr "დამოკიდებულებების &შემოწმება..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr ""
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard"
+msgstr "იარლიყდადებული არეების ამოჭრა და გაცვლის ბუფერში გადატანა"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Cut Labeled Audio"
+msgstr "იარლიყების ამოჭრა"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Deleted labeled audio regions"
+msgstr "წაშლილი იარლიყდადებული არეები"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Delete Labeled Audio"
+msgstr "წაშლილი იარლიყდადებული არეები"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "იარლიყდადებული არეების დაყოფადაჭრა და გაცვლის ბუფერში გადატანა"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Cut Labeled Audio"
+msgstr "იარლიყების დაყოფა დაჭრა"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Deleted labeled audio regions"
+msgstr "დაყოფილი და წაშლილი იარლიყდადებული არეები"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Delete Labeled Audio"
+msgstr "იარლიყების დაყოფა და წაშლა"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Silenced labeled audio regions"
+msgstr "დაჩუმებული იარლყიდადებული არეები"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Silence Labeled Audio"
+msgstr "დაჩუმებული იარლყიდადებული არეები"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Copied labeled audio regions to clipboard"
+msgstr "გაცვლის ბუფერში გადატანილი იარლიყდადებული არეები"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Copy Labeled Audio"
+msgstr "იარლიყების კოპირება"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split labeled audio (points or regions)"
+msgstr "იარლიყდადებული არეების დაყოფა"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Labeled Audio"
+msgstr "იარლიყდადებული არეების დაყოფა"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Joined labeled audio (points or regions)"
+msgstr "შეერთებული იარლიყდადებული არეები"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Join Labeled Audio"
+msgstr "შეერთებული იარლიყდადებული არეები"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Detached labeled audio regions"
+msgstr "წაშლილი იარლიყდადებული არეები"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Detach Labeled Audio"
+msgstr "წაშლილი იარლიყდადებული არეები"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Labels"
+msgstr "იარლიყების მიხედვით"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Edit Labels..."
+msgstr "&იარლიყების რედაქტირება"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "იარლიყის დამატება მონიშვნისას"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "იარლიყის დამატება &დაკვრის პოზიციისას"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "La&beled Audio"
+msgstr "და&ხარისხებული არეები"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&ამოჭრა"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "იარლიყის რედაქტირება"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "დაყოფა წაშლა"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "&დაყოფის ამოჭრა"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "დაყოფის ამოჭრა"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "და&ყოფის წაშლა"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "დაყოფა წაშლა"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "დაჩუმება"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "კო&პირება"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "იარლიყი"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "დაყოფა"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "იარლიყის რედაქტირება"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "იარლიყის რედაქტირება"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Previous Track"
+msgstr "ფოკუსის წინა ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Next Track"
+msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &First Track"
+msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Last Track"
+msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to P&revious and Select"
+msgstr "ფოკუსის წინა ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to N&ext and Select"
+msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "&Toggle Focused Track"
+msgstr "ფოკუსირებული ტრეკის ჩართვა"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Toggle Focuse&d Track"
+msgstr "ფოკუსირებული ტრეკის ჩართვა"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "გამეორება %s"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy, c-format
+msgid "Plug-in %d to %d"
+msgstr "მოდულები %i-დან  %i-მდე"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&გენერაცია"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "ეფ&ექტი"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "&ანალიზი"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "აგების სპექტრი..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "T&ools"
+msgstr "ხელსაწყოები"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&იარლიყები..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "%s-ის გააქტიურება"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&შენახვა..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "Benchmark-ის &გაშვება..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "ჩაწერა"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Detect Upstream Dropouts"
+msgstr "ნაკადების მონიშვნა იმპორტირებისთვის"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "ცვლადი"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "მონიშვნა"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "სიხშირე (Hz)"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "მონიშვნა"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "ტრეკის დასაწყისამდე"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "პარამეტრები..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "პარამეტრები..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "შემდეგი ხელსაწყო"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "კონვერტი"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&იარლიყების რედაქტირება"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "პროექტის შენახვა, &როგორც..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "ტრეკების &დახარისხება"
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "&რესემპლირება..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "დახმარება"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "პროექტის შენახვა, &როგორც..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "პროექტის შენახვა, &როგორც..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "არჩევა..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "კომპრესორი"
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr ""
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "&Sამორჩევა"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&არცერთი"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "მონიშვნა"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "&ტრეკები"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Sync-Locked"
+msgstr "მონიშვნა - სიჩუმე"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "R&egion"
+msgstr "არეს და&კვრა"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "დაკვრის პოზიციისას &მარცხენა Position"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "მონიშვნის წერილისა და დაკვრის მომართა"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "დაკვრის პოზიციისას &მარჯვენა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "მონიშვნის წერილისა და დაკვრის მომართა"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "ტრეკის &საწყისი კურსორთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "ტრეკის &საწყისი კურსორთან"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "კურსორი ტრეკის &დასასრულთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "კურსორი ტრეკის &დასასრულთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "ტრეკის &საწყისი კურსორთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "დასარულზე მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&tore Selection"
+msgstr "მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Retrieve Selectio&n"
+msgstr "მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&pectral"
+msgstr "სპექტრი"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "სიხშირე (Hz)"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "ლინეარული სიხშირე"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "დასაწყისზე მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "At &Zero Crossings"
+msgstr "ნულოვანი ჯვარედინების მოძებნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "ნულოვანი ჯვარედინების მოძებნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Selection"
+msgstr "მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "გადაღების გამორთვა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "გადაღების ჩართვა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "გადაღება"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to &Start"
+msgstr "დასაწყისზე მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to En&d"
+msgstr "დასარულზე მონიშვნა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Left"
+msgstr "მონიშვნის გაფართოება მარცხნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Right"
+msgstr "მონიშვნის გაფართოება მარჯვნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "მარცხენა მონიშვნის მომართვა (ან გაფართოება)  "
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "მარჯვენამონიშვნის მომართვა (ან გაფართოება)  "
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract L&eft"
+msgstr "კონტრასტის მარცხნივ მონიშნვა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract R&ight"
+msgstr "კონტრასტის მარჯვნივ მონიშნვა"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor to"
+msgstr "კურსორი მარცხნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Star&t"
+msgstr "მონიშვნის დაწყება"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection En&d"
+msgstr "მონიშვნის დასასრული"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &Start"
+msgstr "ტრეკის დასაწყისამდე"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "კურსორი ტრეკის &დასასრულთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &End"
+msgstr "ტრეკის დასასრულამდე"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "კურსორი ტრეკის &დასასრულთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Project Start"
+msgstr "პროექტის კოეფიციენტი (Hz):"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "პროექტის კოეფიციენტი (Hz):"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Project E&nd"
+msgstr "პროექტის დამოკიდებულებანი"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "კურსორი ტრეკის &დასასრულთან"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor"
+msgstr "კურსორი მარცხნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Left"
+msgstr "კურსორი მარცხნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Right"
+msgstr "კურსორი მარჯვნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Sh&ort Jump Left"
+msgstr "კურსორის მოკლე გადასვლა მარცხნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Shor&t Jump Right"
+msgstr "კურსორის მოკლე გადასვლა მარჯვნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long J&ump Left"
+msgstr "კურსორის გრძელი გადასვლა მარცხნივ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long Ju&mp Right"
+msgstr "კურსორის გრძელი გადასვლა მარჯვნივ"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr ""
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "&ხელსაწყოთა ზოლები"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Reset Toolb&ars"
+msgstr "ხელსაწყოთა ზოლის ნაგულისხმევ პარამეტრებამდე დაყვანა"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "ხ&ელსაწყოთა ზოლი"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Recording Meter Toolbar"
+msgstr "რეკორდის გამზომავი"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Playback Meter Toolbar"
+msgstr "მთვლელის დაკვრა"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "მიქსერის ხელსაწყოთა ზოლი"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "ხელსაწყოთა ზოლის &რედაქტირება"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "დაკვრა სიჩქარით"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Scru&b Toolbar"
+msgstr "&ხელსაწყოთა ზოლები"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "&მოწყობილობათა ზოლი"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "&მონიშვნის ზოლი"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Spe&ctral Selection Toolbar"
+msgstr "&მონიშვნის ზოლი"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Selection Tool"
+msgstr "მონიშვნის ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Envelope Tool"
+msgstr "კონვერტის ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Draw Tool"
+msgstr "დახატვის ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Zoom Tool"
+msgstr "გადიდების ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Time Shift Tool"
+msgstr "დროის ცვლის ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Multi Tool"
+msgstr "მრავალჯერადი ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Previous Tool"
+msgstr "წინა ხელსაწყო"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Next Tool"
+msgstr "შემდეგი ხელსაწყო"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "ყველა აუდიოს რენდერი  '%s' ტრეკში"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "რენდერი"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "%d ტრეკების ერთ ახალ სტერეო ტრეკში არევა და რენდერი "
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "%d ტრეკების ერთ ახალ მონო ტრეკში არევა და რენდერი "
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "რესემპლირებული აუდიო ტრეკ(ებ)ი"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "ტრეკი"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to zero"
+msgstr "გა&სწორება და კურსორის გადატანა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to zero"
+msgstr "საწყისი დრო"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "გახსწორებული"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "მონიშვნის დაწყება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to cursor/selection start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to selection end"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "მონიშვნის დასაწყისით გასწორებული"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "მონიშვნის დასაწყისით გასწორებული"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End"
+msgstr "გახსწორებული"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End"
+msgstr "გასწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to selection end"
+msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to selection end"
+msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "გა&სწორება და კურსორის გადატანა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "გა&სწორება და კურსორის გადატანა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "MIDI-ის სინქრონიზაცია აუდიოსთან"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr " მორგებული gain"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "მორგებული Pan"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "წაშლილი აუდიო ტრეკ(ბ)ი"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "ტრეკის წაშლა"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "წაშლილი ტრეკი '%s.'"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "ტრეკის წაშლა"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "გადაადგილებული '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "ტრეკის ატანა"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "ტრეკის ჩამოტანა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "ტრეკის ჩამოტანა"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "გადაადგილებული '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "გადაადგილებული '%s' %s"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "ტრეკის ატანა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "ტრეკის ჩამოტანა"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "შექმნილია ახალი აუდიო ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "ახალი ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "ძშექმნილია ახალი სტერეო აუდიო ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "შექმნილია ახალი იარლიყის ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "შექმნილი ახალი დროის ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "სემპლის ახალი კოეფიციენტი (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "შეყვანილი მნიშვნელობა არასწორია"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr " %d ტრეკის რესემპლირება"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "რესემპლირებული აუდიო ტრეკ(ებ)ი"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "ტრეკის რესემპლირება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "MIDI სინქრონიზაცია აუდიოსთან"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "დროის მიხედვით დახარისხებული ტრეკები"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Sort by Time"
+msgstr "დროის მიხედვით დახარისხება"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "სახელის მიხედვით დახარისხებული ტრეკები"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Sort by Name"
+msgstr "სახელის მიხედვით დახარისხება"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "აქტიური აუდიოს მქონე ტრეკის წაშლა შეუძლებელია"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "&ახლის დამატება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "ტრეკის გადაადგილება"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&სტერეო ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&იარლიყის ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "&დროის ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "სტეროდან მონოზე გააქტიურება"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "&შერევა და რენდერინგი"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix and Render to Ne&w Track"
+msgstr "ახალ ტრეკზე შერევა და რენდერინგი"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "&რესემპლირება..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "ტრეკების წაშლ&ა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute"
+msgstr "ფოკუსირებული ტრეკის დადუმება/ხმის აწევა"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "ყველა ტრეკის &ჩაჩუმება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Unmute All Tracks"
+msgstr "ყველა ტრეკის &ხმის აწევა"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Left"
+msgstr "მარცენა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "მარცენა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Right"
+msgstr "მარჯვენა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "მარჯვენა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Center"
+msgstr "ცენტრში"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "ცენტრში"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "ტრეკების &გასწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Align End to End"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align &Together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Zero"
+msgstr "საწყისი დრო"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Cursor/Selection Start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to Selection &End"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Cu&rsor/Selection Start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Selection En&d"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "სხვა ტრეკზე გადატანილი სანიშნი"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Sele&ction and Tracks"
+msgstr "სხვა ტრეკზე გადატანილი სანიშნი"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "S&ort Tracks"
+msgstr "ტრეკების &დახარისხება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "&საწყისი დროით"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "&სახელით"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Track"
+msgstr "&ტრეკები"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "არეს შეცვლა ფოკუსირებულ ტრეკზე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "ფოკუსირებულ ტრეკზე მარცხნივ მოტრიალება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "ფოკუსირებულ ტრეკზე მარჯვნივ მოტრიალება"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "gain -ის შეცვლა ფოკუსირებულ ტრეკზე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "gain-ის აწევა ფოკუსირებულ ტრეკზე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "gain-ის დაწევა ფოკუსირებულ ტრეკზე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "მენიუს გახსნა ფოკუსირებულ ტრეკზე"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "ფოკუსირებული ტრეკის დადუმება/ხმის აწევა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "სოლო/არასოლო ფოკუსირებული ტრეკი"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "ფოკუსირებული ტრეკის დახურვა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "ფოკუსირებული ტრეკის დახურვა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "ფოკუსირებული ტრეკის დახურვა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "ფოკუსირებული ტრეკის დახურვა"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "ტრეკის ჩამოტანა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no label track"
+msgstr "შექმნილია ახალი იარლიყის ტრეკი"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no label track at or below focused track"
+msgstr "ფოკუსირებულ ტრეკზე მარცხნივ მოტრიალება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no labels in label track"
+msgstr "შექმნილია ახალი იარლიყის ტრეკი"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "&გადატანა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "დაკვრა"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play/Stop and &Set Cursor"
+msgstr "დაკვრა/გაჩერებისა და მომართვის კურსორი"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&შეყოვნება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "ჩაწერა"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&ჩაწერა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Append Record"
+msgstr "ჩაწერის დამატება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Record &New Track"
+msgstr "ტრეკების წაშლ&ა"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&ტაიმერის ჩაწერა..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "არეს და&კვრა"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&ჩაკეტვა"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&მოხსნა"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Transport &Options"
+msgstr "ტრანსკრიპცია"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Sound Activation Le&vel..."
+msgstr "ხმის გააქტიურების დონე..."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "ხმა-გააქტიურებული ჩაწერა (ჩართვა/გამორთვა)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Overdub (on/off)"
+msgstr "აუდიოს გადაწერა (ჩართვა/გამორთვა)"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "So&ftware Playthrough (on/off)"
+msgstr "პროგრამული დაკვრა (ჩათვლა/გამორთვა)"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "ხმა-გააქტიურებული ჩაწერა (ჩართვა/გამორთვა)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "&გადატანა"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr ""
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &One Second"
+msgstr "ერთი წამი დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "მონიშვნაზე დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &Before Selection Start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Af&ter Selection Start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Be&fore Selection End"
+msgstr "მონიშვნაზე დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Aft&er Selection End"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before a&nd After Selection Start"
+msgstr "მონიშვნის დასაწყისი&თ დასასრულის გასწორება"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before an&d After Selection End"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview"
+msgstr "ამოჭრილი ესკიზის დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "დაკვრა სიჩქარით"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "დაკვრა სიჩქარით"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Loop Play-at-Speed"
+msgstr "დაკვრა სიჩქარით"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview-at-Speed"
+msgstr "ამოჭრილი ესკიზის დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "დაკვრა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Previous Label"
+msgstr "ფოკუსის წინა ტრეკზე გადატანა"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Next Label"
+msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&ნახვა"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Zoom"
+msgstr "გადიდება"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "შემცირება"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "&ნორმალურ ზომაზეl"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "გადიდება"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "მონიშვნამდე &გადიდება"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Zoom &Toggle"
+msgstr "გადიდების ხელსაწყო"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "მიქსირების დამატებითი პარამეტრები"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "T&rack Size"
+msgstr "ტრეკის სახელი"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Fit to Width"
+msgstr "ფანჯარაზე მორგება"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "ყველა ტრეკის &მოშლა"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "E&xpand Collapsed Tracks"
+msgstr "ყველა ტრეკის გ&აშლა"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Sk&ip to"
+msgstr "ბოლოში გადასვლა"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection Sta&rt"
+msgstr "მონიშვნის დაწყება"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "მონიშვნის დასასრულამდე"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&ისტორია..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Extra Menus (on/off)"
+msgstr "აუდიოს გადაწერა (ჩართვა/გამორთვა)"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Show Clipping (on/off)"
+msgstr "მიმაგრების &ჩვენება"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr ""
+
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Window"
+msgstr "ფანჯარა"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr ""
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr ""
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "ყველა ტრეკის &ნორმალიზაცია პროექტში"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13508,8 +13715,8 @@ msgid "Decoding Waveform"
 msgstr "Waveform დეკოდირება"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+#, fuzzy, c-format
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 "%s %2.0f%% დასრულებულია. დაუწკაპუნეთ დავალების ფოკუსის წერტილის შესაცვლელად."
 
@@ -14115,7 +14322,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -14496,6 +14703,10 @@ msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
@@ -14985,7 +15196,7 @@ msgstr ""
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 
@@ -15608,9 +15819,9 @@ msgstr ""
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
-msgstr ""
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
+msgstr "MIDI ფაილის ამორჩევა"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -16444,6 +16655,49 @@ msgstr "უაკნ"
 msgid "Help on the Internet"
 msgstr "დახმარება ინტერნეტით"
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "გსურთ ცვლილებების შენახვა?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "არევა"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "QuickTime ფაილები"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "დასაბრუნებელი მოქმედება არ არსებობს"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "ფოკუსირებული ტრეკის დახურვა"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "შეუძლებელია პროექტის ფაილის გახსნა"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "ჩაწერის დაწყება"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
@@ -16926,134 +17180,6 @@ msgstr "დარწმუნებული ხართ, რომ გსუ�
 msgid "Confirm Close"
 msgstr "დადასტურება"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "სტერეო ტრეკების რელატიური ზომის მოსარგებად დააწკაპუნეთ და გადაათრიეთ."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "ჩაწერის დასასრული"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Timeline"
-msgstr "დროის შემცვლელი"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Seek"
-msgstr "დააწკაპუნეთ და გადაათრიეთ  სემპლების რედაქტირებისთვის"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Scrub"
-msgstr "ტრეკის ზომის შესაცვლელად დაუწკაპუნეთ და გადაათრიეთ."
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Quick-Play disabled"
-msgstr "(გაუქმებულია)"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to unpin"
-msgstr "მონიტორინგის შეჩერება"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to pin"
-msgstr "საწყისზე გადასვლა"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable dragging selection"
-msgstr "სიჩუმის მონიშვნა"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable dragging selection"
-msgstr "მარცხენა და მარჯვენა მონიშვნის კიდეების გადათრევის გააქტიურება"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Do not scroll while playing"
-msgstr "&ეკრანის განახლება დაკვრისას"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Update display while playing"
-msgstr "&ეკრანის განახლება დაკვრისას"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Lock Play Region"
-msgstr "არეს და&კვრა"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Unlock Play Region"
-msgstr "არეს და&კვრა"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable Scrub Ruler"
-msgstr "მთვლელის გაუქმება"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable Scrub Ruler"
-msgstr "მთვლელის გააქტიურება"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "მეტჯერ აღარ აჩვენო ეს გაფრთხილება"
@@ -17469,6 +17595,11 @@ msgid "S-Curve Out"
 msgstr "ჩამოწევა"
 
 #: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "შეცდომა"
+
+#: plug-ins/adjustable-fade.ny
 #, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr ""
@@ -17483,13 +17614,8 @@ msgstr ""
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "შეცდომა"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17676,31 +17802,6 @@ msgstr "გასამეორებელი ჯერების ოდე�
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "შეცდომა"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17709,9 +17810,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "ფაილების დაყოფა:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "იარლიყის რედაქტირება"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17731,6 +17839,11 @@ msgstr "გასამეორებელი ჯერების ოდე�
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "სიგრძე (წამებო)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "სიგრძე (წამებო)"
 
 #: plug-ins/equalabel.ny
@@ -17777,6 +17890,47 @@ msgstr ""
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
 msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "კლავიშთა კომბინაცია"
+
+#: plug-ins/equalabel.ny
+msgid "Details"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "გაფრთხილება"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "იარლიყების შეერთება"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "იარლიყების შეერთება"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy, lisp-format
+msgid "~aRegion length = ~a seconds."
+msgstr "შენიშვნის სიგრძე (წამები)"
 
 #: plug-ins/highpass.ny
 #, fuzzy
@@ -18818,6 +18972,10 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "შეცდომა"
+
+#, fuzzy
 #~ msgid "Left"
 #~ msgstr "მარცენა"
 
@@ -19463,10 +19621,6 @@ msgstr ""
 #~ msgstr "მარჯვენა არხი"
 
 #, fuzzy
-#~ msgid "&Rate"
-#~ msgstr "კოეფიციენტის მომართვა"
-
-#, fuzzy
 #~ msgid "&Bass (dB):"
 #~ msgstr "Boost (dB):"
 
@@ -20008,9 +20162,6 @@ msgstr ""
 #~ "ვწუხვართ, მოდულის ეფექტის შესულება შეუძლებელია სტერეო ტრეკებზე, სადაც "
 #~ "ტრეკის ინდივიდუალური არხები არ ემთხვევა."
 
-#~ msgid "Note length (seconds)"
-#~ msgstr "შენიშვნის სიგრძე (წამები)"
-
 #~ msgid "Note velocity"
 #~ msgstr "შენიშვნის სიჩქარე"
 
@@ -20182,9 +20333,6 @@ msgstr ""
 
 #~ msgid "Silence Labels"
 #~ msgstr "იარლიყების დაჩუმება"
-
-#~ msgid "Join Labels"
-#~ msgstr "იარლიყების შეერთება"
 
 #~ msgid "Edit the metadata tags"
 #~ msgstr "მეტამონაცემების ჭდეების რედაქტირება"
