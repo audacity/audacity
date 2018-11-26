@@ -3072,8 +3072,9 @@ void LabelTrack::DoEditLabels
                    lt, index,
                    viewInfo, rate,
                    format, freqFormat);
-
-   dlg.Raise();   // Required on Linux: bug 2011
+#ifdef __WXGTK__
+   dlg.Raise();
+#endif
 
    if (dlg.ShowModal() == wxID_OK) {
       project.PushState(_("Edited labels"), _("Label"));
