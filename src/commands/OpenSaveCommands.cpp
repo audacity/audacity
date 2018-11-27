@@ -63,8 +63,8 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
 
 bool SaveProjectCommand::DefineParams( ShuttleParams & S ){
    S.Define( mFileName, wxT("Filename"),  "name.aup" );
-   S.OptionalN(bHasAddToHistory).Define( mbAddToHistory, wxT("AddToHistory"),  false );
-   S.OptionalN(bHasCompress).Define( mbCompress, wxT("Compress"),  false );
+   S.Define( mbAddToHistory, wxT("AddToHistory"),  false );
+   S.Define( mbCompress, wxT("Compress"),  false );
    return true;
 }
 

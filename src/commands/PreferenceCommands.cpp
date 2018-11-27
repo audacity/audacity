@@ -50,9 +50,9 @@ bool GetPreferenceCommand::Apply(const CommandContext & context)
 }
 
 bool SetPreferenceCommand::DefineParams( ShuttleParams & S ){
-   S.Define(                       mName,    wxT("Name"),    wxT("") );
-   S.Define(                       mValue,   wxT("Value"),   wxT("") );
-   S.OptionalN(bHasReload).Define( mbReload, wxT("Reload"),  false );
+   S.Define(    mName,   wxT("Name"),    wxT("") );
+   S.Define(   mValue,   wxT("Value"),   wxT("") );
+   S.Define( mbReload,   wxT("Reload"),  false );
    return true;
 }
 
