@@ -34,8 +34,7 @@
  name into another alphabet.  */
 #define NYQUISTEFFECTS_FAMILY ( ComponentInterfaceSymbol{ XO("Nyquist") } )
 
-#define NYQUIST_EFFECTS_PROMPT_ID wxT("Nyquist Effects Prompt")
-#define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Prompt")
+#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 enum NyqControlType

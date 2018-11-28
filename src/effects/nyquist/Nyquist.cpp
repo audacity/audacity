@@ -156,19 +156,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    mMaxLen = NYQ_MAX_LEN;
 
-   // Interactive Nyquist (for effects)
-   if (fName == NYQUIST_EFFECTS_PROMPT_ID) {
-      mName = XO("Nyquist Effects Prompt");
-      mType = EffectTypeProcess;
-      mPromptName = mName;
-      mPromptType = mType;
-      mOK = true;
-      mIsPrompt = true;
-      return;
-   }
-
-   // Interactive Nyquist (for general tools)
-   if (fName == NYQUIST_TOOLS_PROMPT_ID) {
+   // Interactive Nyquist
+   if (fName == NYQUIST_PROMPT_ID) {
       mName = XO("Nyquist Prompt");
       mType = EffectTypeTool;
       mIsTool = true;
@@ -204,9 +193,7 @@ NyquistEffect::~NyquistEffect()
 wxString NyquistEffect::GetPath()
 {
    if (mIsPrompt)
-      return (mPromptType == EffectTypeTool) ?
-         NYQUIST_TOOLS_PROMPT_ID :
-         NYQUIST_EFFECTS_PROMPT_ID;
+      return NYQUIST_PROMPT_ID;
 
    return mFileName.GetFullPath();
 }
@@ -214,9 +201,7 @@ wxString NyquistEffect::GetPath()
 ComponentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return (mPromptType == EffectTypeTool) ?
-         XO("Nyquist Prompt") :
-         XO("Nyquist Effects Prompt");
+      return XO("Nyquist Prompt");
 
    return mName;
 }
@@ -1358,12 +1343,11 @@ bool NyquistEffect::ProcessOne()
          mDebugOutput = wxString::Format(_("nyx_error returned from %s.\n"),
                                          mName.IsEmpty()? _("plug-in") : mName) + mDebugOutput;
          mDebug = true;
-         return false;
       }
       else {
          wxLogMessage("Nyquist returned nyx_error:\n%s", mDebugOutput);
       }
-      return true;
+      return false;
    }
 
    if (rval == nyx_string) {
@@ -1477,7 +1461,7 @@ bool NyquistEffect::ProcessOne()
 
       if (mOutputTime <= 0) {
          Effect::MessageBox(_("Nyquist returned nil audio.\n"));
-         return true;
+         return false;
       }
    }
 
@@ -3207,16 +3191,15 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
 LVAL xlc_aud_do(void)
 {
 // Based on string-trim...
-    unsigned char *leftp,*rightp;
+    unsigned char *leftp;
     LVAL src,dst;
 
     /* get the string */
     src = xlgastring();
     xllastarg();
 
-    /* setup the string pointers */
+    /* setup the string pointer */
     leftp = getstring(src);
-    rightp = leftp + getslength(src) - 2;
 
     // Go call my real function here...
     dst = (LVAL)ExecForLisp( (char *)leftp );

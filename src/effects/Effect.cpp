@@ -1202,7 +1202,9 @@ bool Effect::DoEffect(wxWindow *parent,
       ReplaceProcessedTracks( false );
    } );
 
-   if ((GetType() == EffectTypeGenerate) && (mNumTracks == 0) && GetPath() != NYQUIST_EFFECTS_PROMPT_ID) {
+   // We don't yet know the effect type for code in the Nyquist Prompt, so
+   // assume it requires a track and handle errors when the effect runs.
+   if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) && (mNumTracks == 0)) {
       newTrack = static_cast<WaveTrack*>(mTracks->Add(mFactory->NewWaveTrack()));
       newTrack->SetSelected(true);
    }
@@ -1218,8 +1220,8 @@ bool Effect::DoEffect(wxWindow *parent,
       double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
       mDuration = quantMT1 - quantMT0;
       isSelection = true;
+      mT1 = mT0 + mDuration;
    }
-   mT1 = mT0 + mDuration;
 
    mDurationFormat = isSelection
       ? NumericConverter::TimeAndSampleFormat()
