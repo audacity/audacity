@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: Audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-10-14 03:50+0200\n"
+"PO-Revision-Date: 2018-11-29 15:52+0100\n"
 "Last-Translator: Imre Kristoffer Eilertsen <imreeil42@gmail.com>\n"
 "Language-Team: Imre Kristoffer Eilertsen <imreeil42@gmail.com>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Bookmarks: 1429,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -222,7 +222,6 @@ msgid "No matches found"
 msgstr "Ingen treff funnet"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Code has been modified. Are you sure?"
 msgstr "Koden har blitt endret på. Er du sikker?"
 
@@ -749,12 +748,10 @@ msgid "Move to Scrub"
 msgstr "Beveg for å dra"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release to stop seeking."
-msgstr "Dra for å lete. Slip for å stoppe å lete."
+msgstr "Dra for å lete. Slipp for å stoppe å lete."
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release and move to Scrub."
 msgstr "Dra for å lete. Slipp og dra for å gni."
 
@@ -2505,7 +2502,7 @@ msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "For å tegne spektrumet må alle markerte spor være samme datafrekvens."
 
 #: src/FreqWindow.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
@@ -3132,9 +3129,9 @@ msgid "Module Unsuitable"
 msgstr "Modulen er uegnet"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The module %s does not provide a version string. It will not be loaded."
-msgstr "%s-modulen nevner ikke et versjonnummer. Den vil ikke bli lastet inn."
+msgstr "%s-modulen har ikke et versjonstreng. Den vil ikke bli lastet inn."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3148,11 +3145,11 @@ msgstr ""
 "Den vil ikke bli lastet inn."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
-"%s-modulen er ment for Audacity versjon %s. Den vil ikke bli lastet inn."
+"%s-modulen er bundet til Audacity versjon %s. Den vil ikke bli lastet inn."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3419,9 +3416,8 @@ msgid "Plug-in already exists"
 msgstr "Tillegget finnes allerede"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Plug-in file is in use. Failed to overwrite"
-msgstr "Tilleggets fil er i bruk.  Mislyktes i å overskrive"
+msgstr "Tilleggets fil er i bruk. Mislyktes i å overskrive"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -3711,13 +3707,13 @@ msgid "Error Saving Project"
 msgstr "Feil ved lagring av prosjekt"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
-"Kunne ikke lagre prosjektet. Filbanen ble ikke funnet. Prøv å \n"
-"lage direktivet \"%s\" før du lagrer et prosjekt med dette navnet."
+"Kunne ikke lagre prosjektet. Filbanen ble ikke funnet. Prøv å opprette\n"
+"«%s»-mappen før du lagrer et prosjekt med dette navnet."
 
 #: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4480,7 +4476,7 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
@@ -4813,7 +4809,7 @@ msgstr "Opptaket begynner om:"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid "%s in:"
-msgstr ""
+msgstr "%s om:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -5646,9 +5642,8 @@ msgid "Sets various values for a label."
 msgstr "Bestemmer diverse verdier for et merke."
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Rate:"
-msgstr "Sett rate"
+msgstr "Frekvens:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
@@ -5747,14 +5742,12 @@ msgid "VZoom:"
 msgstr "Vzoom:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Top:"
-msgstr "Vzoom:"
+msgstr "VZoom-topp:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Bottom:"
-msgstr "til bunnen"
+msgstr "VZoom-bunn:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -7873,9 +7866,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Venter på at bølgeformen gjør seg ferdig med utregningen ..."
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "(Maximum 0dB)"
-msgstr ". Maksimalt 0dB."
+msgstr "(Maksimalt 0dB)"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
@@ -8679,9 +8671,9 @@ msgid "Error Saving Effect Presets"
 msgstr "Feil ved lagring av effektinnstillinger"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "This parameter file was saved from %s. Continue?"
-msgstr "Denne parameterfila ble lagret fra %s. Fortsett?"
+msgstr "Denne parameterfilen ble lagret fra %s. Vil du fortsette?"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
@@ -8779,9 +8771,8 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr " Velg \"Generisk\" for å bruke systemets generelle grensesnitt."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid " Select \"Basic\" for a basic text-only interface."
-msgstr " Velg \"Grunnleggende\" for et enkelt grensesnitt med kun tekst. "
+msgstr " Velg «Grunnleggende» for et enkelt grensesnitt med kun tekst."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9004,14 +8995,14 @@ msgid "plug-in"
 msgstr "tillegg"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %f"
-msgstr "Nyquist returnerte verdien:"
+msgstr "Nyquist returnerte verdien: %f"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %d"
-msgstr "Nyquist returnerte verdien:"
+msgstr "Nyquist returnerte verdien: %d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -9292,9 +9283,9 @@ msgstr ""
 "filnavn eller mappe."
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "A file named \"%s\" already exists. Replace?"
-msgstr "Det fins allerede en fil kalt «%s». Erstatt?"
+msgstr "Det finnes allerede en fil kalt «%s». Vil du erstatte den?"
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one mono file."
@@ -9513,22 +9504,22 @@ msgid "Resample"
 msgstr "Gi ny datafrekvens"
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr ""
-"Dataraten til prosjektet (%d) støttes ikke av det valgte utdataformatet.  "
+"Datafrekvensen til prosjektet (%d) støttes ikke av det nåværende \n"
+"utdataformatet. "
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"Kombinasjonen av samplingsfrekvensn (%d) og bitraten (%d kbps) i prosjektet "
-"støttes\n"
-"ikke av det valgte utdataformatet.  "
+"Kombinasjonen av samplingsfrekvensen (%d) og bitfrekvensen (%d Kb/s)\n"
+"i prosjektet støttes ikke av det valgte utdataformatet. "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -10324,21 +10315,20 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "Feilkode %ld returnert fra MP3-omkoder"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
-msgstr "Prosjektsamplingsfrekvensn (%d) støttes ikke av MP3-filformatet. "
+msgstr "Prosjektsamplingsfrekvensen (%d) støttes ikke av MP3-filformatet. "
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"Kombinasjonen av samplingsfrekvensn (%d) og bitraten (%d kbps) i prosjektet "
-"støttes\n"
-"ikke av MP3-filformatet. "
+"Kombinasjonen av samplingsfrekvensen (%d) og bitfrekvensen (%d Kb/s) i\n"
+"prosjektet støttes ikke av MP3-filformatet. "
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -10915,7 +10905,6 @@ msgstr ""
 "\n"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately. This is less safe than copying in, because you must retain the "
@@ -10926,7 +10915,7 @@ msgid ""
 "How do you want to import the current file(s)?"
 msgstr ""
 "Å lese filene direkte lar deg spille dem av eller redigere dem nesten "
-"umiddelbart.  Dette er mindre trygt enn å kopiere dem inn, siden du må "
+"umiddelbart. Dette er mindre trygt enn å kopiere dem inn, siden du må "
 "beholde filene med sine opprinnelige navn i sine opprinnelige plasseringer.\n"
 "Hjelp → Diagnotisering → Sjekk avhengigheter vil vise de opprinnelige "
 "navnene og plasseringene til enhver fil som du prøver å innlese direkte.\n"
@@ -11379,9 +11368,8 @@ msgid "Detac&h at Silences"
 msgstr "Adsk&ill ved stillhet"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "&Metadata..."
-msgstr "Me&tadata..."
+msgstr "&Metadata …"
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences..."
@@ -11534,9 +11522,8 @@ msgid "All files|*"
 msgstr "Alle filer|*"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
-msgstr "Lagre forhåndsinnstilling..."
+msgstr "&Farlig tilbakestilling …"
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -11658,9 +11645,8 @@ msgid "Unable to save MIDI device info"
 msgstr "Klarte ikke å lagre MIDI-enhetsinformasjon"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
-msgstr "&Hurtighjelp ..."
+msgstr "&Hurtigfiks ..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
@@ -12008,9 +11994,8 @@ msgid "&Apply Macro"
 msgstr "&Benytt makro"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Palette..."
-msgstr "&Palett ..."
+msgstr "Palett ..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -12030,9 +12015,8 @@ msgstr "Oppdag lydutfall oppstrøms"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Script&ables I"
-msgstr "&Skriptbarheter 1"
+msgstr "Skript&barheter 1"
 
 #: src/menus/PluginMenus.cpp
 msgid "Select Time..."
@@ -12757,9 +12741,8 @@ msgid "Resample Track"
 msgstr "Gi spor ny samplingsfrekvens"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "Vennligst velg et lydspor."
+msgstr "Vennligst velg minst ett lydspor og ett MIDI-spor."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -13278,7 +13261,6 @@ msgid "Zoom &Toggle"
 msgstr "Forstørrings&verktøy"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Advanced &Vertical Zooming"
 msgstr "Avansert &loddrett forstørring"
 
@@ -13379,7 +13361,7 @@ msgid "Decoding Waveform"
 msgstr "Avkoder bølgeform"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% fullført. Klikk for å endre oppgavefokus."
 
@@ -13955,7 +13937,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -14355,7 +14337,7 @@ msgstr "&Avspilling i varierende hastighet"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "&Mikrouttoninger"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -14807,7 +14789,6 @@ msgstr ""
 "blir påvirket foreløpig, selv om bildefilen viser andre ikoner også.)"
 
 #: src/prefs/ThemePrefs.cpp
-#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
 "Sourcery'. This will save a\n"
@@ -15378,9 +15359,9 @@ msgstr "%s - drevet"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selection %s. %s won't change."
-msgstr "Utvalgs%s.  %sn vil ikke bli endret."
+msgstr "Utvalgets %s. %s vil ikke bli endret."
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -16157,47 +16138,40 @@ msgid "Help on the Internet"
 msgstr "Hjelp på nettet"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Do you have these problems?"
-msgstr "Vil du lagre endringene?"
+msgstr "Har du disse problemene?"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Fix"
-msgstr "Miks"
+msgstr "Fiks"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Quick Fixes"
-msgstr "QuickTime-filer"
+msgstr "Hurtigfikser"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Nothing to do"
-msgstr "Ingenting å angre"
+msgstr "Ingenting å gjøre"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "Ingen raske og lett løsbare problemer ble funnet"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Clocks on the Tracks"
-msgstr "&Lukk det fokuserte sporet"
+msgstr "Klokker på sporene"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Can't select precisely"
-msgstr "Kan ikke åpne prosjektfile"
+msgstr "Kan ikke velge presist"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Recording stops and starts"
-msgstr "Opptaksstart:"
+msgstr "Opptaks-stopper og -starter"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Fixed"
-msgstr ""
+msgstr "Fikset"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -17071,7 +17045,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aProsentverdiene kan ikke være mer enn 1 000%."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -17254,14 +17228,12 @@ msgstr "Legger til merker med samme mellomrom i merkesporet …"
 
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Create labels based on"
-msgstr "Del filer basert på:"
+msgstr "Lag merker basert på:"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number & Interval"
-msgstr "Merk intervall"
+msgstr "Nummer og intervall"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -17280,9 +17252,8 @@ msgid "Label interval (seconds)"
 msgstr "Merk intervall (sekunder)"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Length of label region (seconds)"
-msgstr "Lengde (sekund)"
+msgstr "Lengden til merkeområdet (i sekunder)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -17329,46 +17300,41 @@ msgid "Begin numbering from"
 msgstr "Begynn nummerering fra"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Message on completion"
-msgstr "&Latenskompensasjon:"
+msgstr "Melding ved fullføring"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Details"
-msgstr "&Detaljer"
+msgstr "Detaljer"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Warnings only"
-msgstr "Advarsler"
+msgstr "Kun advarsler"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "Advarsel: Overlappende regionsmerker.~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "region labels"
-msgstr "Sammenføy kommentarer"
+msgstr "områdemerker"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "point labels"
-msgstr "Sammenføy kommentarer"
+msgstr "punktmerker"
 
 #. i18n-hint:  Number of labels produced at specified intervals.
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr ""
+msgstr "~a~a ~a i intervaller på ~a sekunder.~%"
 
 #: plug-ins/equalabel.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr "Fra lengde i sekunder"
+msgstr "~aOmrådelengde = ~a sekunder."
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
