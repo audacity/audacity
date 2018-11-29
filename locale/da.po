@@ -5,10 +5,10 @@
 # scootergrisen, 2015-2018.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.3.0\n"
+"Project-Id-Version: audacity 2.3.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-09-03 00:00+0200\n"
+"PO-Revision-Date: 2018-11-28 22:08+0200\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -220,7 +220,6 @@ msgid "No matches found"
 msgstr "Ingen match fundet"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Code has been modified. Are you sure?"
 msgstr "Koden er blevet ændret. Er du sikker?"
 
@@ -741,12 +740,10 @@ msgid "Move to Scrub"
 msgstr "Flyt for at skrubbe"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release to stop seeking."
 msgstr "Træk for at søge. Slip for at stoppe søgning."
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release and move to Scrub."
 msgstr "Træk for at søge. Slip og flyt for at skrubbe."
 
@@ -2469,7 +2466,7 @@ msgstr ""
 "samplingshastighed."
 
 #: src/FreqWindow.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
@@ -2635,7 +2632,7 @@ msgid ""
 " [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
 "manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[file:quick_help.html|Hurtighjælp]] - hvis den ikke er installeret lokalt, "
+" [[file:quick_help.html|Hurtig hjælp]] - hvis den ikke er installeret lokalt, "
 "[[https://manual.audacityteam.org/quick_help.html|vis online]]"
 
 #: src/HelpText.cpp
@@ -3092,7 +3089,7 @@ msgid "Module Unsuitable"
 msgstr "Modulet er ikke egnet"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "Modulet %s har ikke en versionsstreng. Det vil ikke blive indlæst."
 
@@ -3108,7 +3105,7 @@ msgstr ""
 "Det vil ikke blive indlæst."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "Modulet %s svarer til Audacity version %s. Det vil ikke blive indlæst."
@@ -3377,7 +3374,6 @@ msgid "Plug-in already exists"
 msgstr "Pluginet findes allerede"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "Plugin-filen er i brug. Kunne ikke overskrive"
 
@@ -3670,7 +3666,7 @@ msgid "Error Saving Project"
 msgstr "Fejl ved forsøg på at gemme projekt"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
@@ -3818,20 +3814,20 @@ msgstr "Resterende diskplads til optagelse: %s"
 
 #: src/Project.cpp
 msgid "On-demand import and waveform calculation complete."
-msgstr "Ønsket import og beregning af bølgeform fuldendt."
+msgstr "Ønsket import og beregning af bølgeform fuldført."
 
 #: src/Project.cpp
 #, c-format
 msgid ""
 "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f"
 "%% complete."
-msgstr "Import fuldendt. Beregner nu %d bølgeform. I alt %2.0f% % fuldendt."
+msgstr "Import fuldført. Beregner nu %d bølgeform. I alt %2.0f% % fuldført."
 
 #: src/Project.cpp
 #, c-format
 msgid ""
 "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
-msgstr "Import fuldendt. Beregner nu bølgeform. %2.0f% % fuldendt."
+msgstr "Import fuldført. Beregner nu bølgeform. %2.0f% % fuldført."
 
 #: src/Project.cpp
 #, c-format
@@ -4433,7 +4429,7 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
@@ -4735,7 +4731,7 @@ msgstr "Luk systemet"
 
 #: src/TimerRecordDialog.cpp
 msgid "After Recording completes:"
-msgstr "Når optagelse er færdig:"
+msgstr "Når optagelse er fuldført:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Waiting to start recording at:"
@@ -4765,7 +4761,7 @@ msgstr "Optagelsen begynder om:"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid "%s in:"
-msgstr ""
+msgstr "%s i:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -5591,9 +5587,8 @@ msgid "Sets various values for a label."
 msgstr "Sætter diverse værdier for en etiket."
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Rate:"
-msgstr "Bithastighed:"
+msgstr "Hastighed:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
@@ -5690,14 +5685,12 @@ msgid "VZoom:"
 msgstr "VZoom:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Top:"
-msgstr "VZoom:"
+msgstr "VZoom øverst:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Bottom:"
-msgstr "Zoomværktøj"
+msgstr "VZoom nederst:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -6749,7 +6742,8 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "Fejl ved åbning af lydenhed.\n"
-"Prøv at ændre lydværten, afspilningsenheden og projektets samplingshastighed."
+"Prøv at ændre lydværten, afspilningsenheden og projektets "
+"samplingshastighed."
 
 #: src/effects/Effect.cpp
 msgid "Some Command"
@@ -7814,9 +7808,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Venter på at bølgeform bliver færdigudregnet..."
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "(Maximum 0dB)"
-msgstr ".  Maksimum 0 dB."
+msgstr "(maksimum 0 dB)"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
@@ -8116,7 +8109,7 @@ msgstr "Gør den markerede lyd baglæns"
 
 #: src/effects/Reverse.h
 msgid "Reverse"
-msgstr "Omvend"
+msgstr "Baglæns"
 
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
@@ -8625,7 +8618,7 @@ msgid "Error Saving Effect Presets"
 msgstr "Fejl ved forsøg på at gemme effekt-forudindstillinger"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "This parameter file was saved from %s. Continue?"
 msgstr "Denne parameterfil blev gemt fra %s. Fortsæt?"
 
@@ -8726,9 +8719,8 @@ msgstr ""
 " Vælg \"Generisk\" for at bruge systemets supplerende generiske grænseflade."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid " Select \"Basic\" for a basic text-only interface."
-msgstr " Vælg \"Enkel\" for en enkel grænseflade, kun med tekst. "
+msgstr " Vælg \"Enkel\" for en enkel grænseflade, kun med tekst."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -8951,14 +8943,14 @@ msgid "plug-in"
 msgstr "plugin"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %f"
-msgstr "Nyquist returnerede værdien:"
+msgstr "Nyquist returnerede værdien: %f"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %d"
-msgstr "Nyquist returnerede værdien:"
+msgstr "Nyquist returnerede værdien: %d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -9238,7 +9230,7 @@ msgstr ""
 "andet filnavn eller en anden mappe."
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "A file named \"%s\" already exists. Replace?"
 msgstr "En fil med navnet \"%s\" findes allerede. Skal den erstattes?"
 
@@ -9459,22 +9451,22 @@ msgid "Resample"
 msgstr "Ny samplingshastighed"
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr ""
 "Projektets samplingshastighed (%d) understøttes ikke af det\n"
-"nuværende filformat.  "
+"nuværende filformat. "
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
 "Projektets samplingshastighed (%d) og bithastighed (%d kbps) i\n"
-"kombination understøttes ikke af det nuværende output-filformat.  "
+"kombination understøttes ikke af det nuværende output-filformat. "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -10266,22 +10258,22 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "MP3-koderen returnerede fejlen %ld"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
 msgstr ""
 "Projektets samplingshastighed (%d) understøttes ikke\n"
-"af MP3-filformatet.  "
+"af MP3-filformatet. "
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
 "Kombinationen af projektets samplingshastighed (%d) og bithastighed\n"
-"(%d kbps) understøttes ikke af MP3-filformatet.  "
+"(%d kbps) understøttes ikke af MP3-filformatet. "
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -10717,8 +10709,8 @@ msgstr "FFmpeg-kompatible filer"
 msgid ""
 "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"Indeks[%02x] Codec[%s], Sprog[%s], Bithastighed[%s], Kanaler[%d], "
-"Varighed[%d]"
+"Indeks[%02x] Codec[%s], Sprog[%s], Bithastighed[%s], Kanaler[%d], Varighed[%"
+"d]"
 
 #: src/import/ImportFLAC.cpp src/ondemand/ODDecodeFlacTask.cpp
 msgid "FLAC files"
@@ -10857,7 +10849,6 @@ msgstr ""
 "\n"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately. This is less safe than copying in, because you must retain the "
@@ -11312,7 +11303,6 @@ msgid "Detac&h at Silences"
 msgstr "Fra&hæft ved stilhed"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "&Metadata..."
 msgstr "&Metadata..."
 
@@ -11464,9 +11454,8 @@ msgid "All files|*"
 msgstr "Alle filer|*"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
-msgstr "Gem forudindstilling..."
+msgstr "&Farlig nulstilling..."
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -11585,9 +11574,8 @@ msgid "Unable to save MIDI device info"
 msgstr "Kan ikke gemme MIDI-enhedsinfo"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
-msgstr "&Hurtighjælp..."
+msgstr "&Hurtig rettelse..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
@@ -11599,7 +11587,7 @@ msgstr "Audacity-&manual"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
-msgstr "&Hurtighjælp..."
+msgstr "&Hurtig hjælp..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual..."
@@ -11832,7 +11820,7 @@ msgstr "Flyt fremad gennem aktive vinduer"
 
 #: src/menus/NavigationMenus.cpp
 msgid "F&ocus"
-msgstr "&Fokus"
+msgstr "F&okus"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
@@ -11935,9 +11923,8 @@ msgid "&Apply Macro"
 msgstr "&Anvend makro"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Palette..."
-msgstr "&Palet..."
+msgstr "Palet..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -11957,9 +11944,8 @@ msgstr "Find manglende lyd i opstrøm"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Script&ables I"
-msgstr "&Scriptbare I"
+msgstr "Scr&iptbare I"
 
 #: src/menus/PluginMenus.cpp
 msgid "Select Time..."
@@ -12011,7 +11997,7 @@ msgstr "Sæt projekt..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Scripta&bles II"
-msgstr "&Scriptbare II"
+msgstr "Scri&ptbare II"
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track..."
@@ -12681,9 +12667,8 @@ msgid "Resample Track"
 msgstr "Ny samplingshastighed på spor"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "Vælg venligst et lydspor."
+msgstr "Vælg venligst mindst ét lydspor og ét MIDI-spor."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -12691,7 +12676,7 @@ msgid ""
 "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
 "secs."
 msgstr ""
-"Opstilling på linje gennemført: MIDI fra %.2f til %.2f sekunder, lyd fra "
+"Opstilling på linje fuldført: MIDI fra %.2f til %.2f sekunder, lyd fra "
 "%.2f til %.2f sekunder."
 
 #: src/menus/TrackMenus.cpp
@@ -13203,7 +13188,6 @@ msgid "Zoom &Toggle"
 msgstr "&Skift mellem zoom"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Advanced &Vertical Zooming"
 msgstr "Avanceret &lodret zoomning"
 
@@ -13293,16 +13277,16 @@ msgstr "Minimer alle projekter"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
-msgstr "Import afsluttet. Beregner bølgeform"
+msgstr "Import fuldført. Beregner bølgeform"
 
 #: src/ondemand/ODDecodeTask.h
 msgid "Decoding Waveform"
 msgstr "Afkoder bølgeform"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %2.0f%% complete. Click to change task focal point."
-msgstr "%s %2.0f% % komplet. Klik for at ændre brændpunktet."
+msgstr "%s %2.0f%% fuldført. Klik for at ændre opgavens brændpunkt."
 
 #: src/prefs/BatchPrefs.cpp
 msgid "Batch"
@@ -13877,7 +13861,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -13897,7 +13881,7 @@ msgstr ""
 "\n"
 "\t\"%s\"\n"
 "\n"
-"i stedet.  Ellers, klik Annuller."
+"i stedet. Ellers, klik på Annuller."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Export Library"
@@ -14274,7 +14258,7 @@ msgstr "Afspil ved &variabel hastighed"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "&Mikrofades"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -14726,7 +14710,6 @@ msgstr ""
 "rummer andre ikoner)."
 
 #: src/prefs/ThemePrefs.cpp
-#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
 "Sourcery'. This will save a\n"
@@ -14742,8 +14725,7 @@ msgid ""
 "image, but is\n"
 "otherwise the same idea."
 msgstr ""
-"At gemme og indlæse særskilte temafiler sker ved at bruge en separat fil "
-"for\n"
+"At gemme og indlæse særskilte temafiler sker ved at bruge en separat fil for\n"
 "hvert billede men er ellers samme ide."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -15295,7 +15277,7 @@ msgstr "%s - drevet"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selection %s. %s won't change."
 msgstr "Markering %s. %s vil ikke blive ændret."
 
@@ -15590,7 +15572,7 @@ msgstr "Ændrede \"%s\" til %s Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Rate Change"
-msgstr "Ændret rate"
+msgstr "Ændret hastighed"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Set Rate"
@@ -16071,47 +16053,40 @@ msgid "Help on the Internet"
 msgstr "Hjælp på internettet"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Do you have these problems?"
-msgstr "Vil du gemme ændringerne?"
+msgstr "Har du følgende problemer?"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Fix"
-msgstr "Mix"
+msgstr "Ret"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Quick Fixes"
-msgstr "QuickTime-file"
+msgstr "Hurtige rettelser"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Nothing to do"
-msgstr "Intet at fortryde"
+msgstr "Intet at foretage"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "Der blev ikke fundet nogen problemer der hurtigt kan rettes"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Clocks on the Tracks"
-msgstr "&Luk fokuseret spor"
+msgstr "Ure på sporene"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Can't select precisely"
-msgstr "Kan ikke åbne projektfilen"
+msgstr "Kan ikke markere præcist"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Recording stops and starts"
-msgstr "Optagelsens start:"
+msgstr "Optagelsen stopper og begynder"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Fixed"
-msgstr ""
+msgstr "Rettet"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -16983,7 +16958,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aProcentværdier må ikke være større end 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -16991,7 +16966,7 @@ msgid ""
 msgstr ""
 "~adB-værdier må ikke være over +100 dB.~%~%~\n"
 "                                 Tip: 6 dB fordobler amplituden~%~\n"
-"                                 -6 dB halverer amplituden."
+"                                 \t-6 dB halverer amplituden."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -17124,7 +17099,7 @@ msgstr "Hoppebold"
 
 #: plug-ins/delay.ny
 msgid "Reverse Bouncing Ball"
-msgstr "Omvendt hoppende bold"
+msgstr "Baglæns hoppende bold"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
@@ -17168,14 +17143,12 @@ msgstr "Tilføjer etikker med ens mellemrum til etiketsporet..."
 
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Create labels based on"
-msgstr "Opdel filer ud fra:"
+msgstr "Opdel filer ud fra"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number & Interval"
-msgstr "Etiketinterval"
+msgstr "Nummer og interval"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -17194,9 +17167,8 @@ msgid "Label interval (seconds)"
 msgstr "Etiketinterval (sekunder)"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Length of label region (seconds)"
-msgstr "Længde (sekunder)"
+msgstr "Længde på etiketområde (sekunder)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -17243,46 +17215,41 @@ msgid "Begin numbering from"
 msgstr "Begynd nummerering fra"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Message on completion"
-msgstr "Kompensering af &forsinkelse:"
+msgstr "Meddelese ved fuldførelse"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Details"
-msgstr "&Detaljer"
+msgstr "Detaljer"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Warnings only"
-msgstr "Advarsler"
+msgstr "Kun advarsler"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "Advarsel: Overlappende områdeetiketter.~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "region labels"
-msgstr "Ny etiket"
+msgstr "områdeetiketter"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "point labels"
-msgstr "Redigerede etiketter"
+msgstr "punktetiketter"
 
 #. i18n-hint:  Number of labels produced at specified intervals.
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr ""
+msgstr "~a~a ~a ved intervaller af ~a sekunder.~%"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr ""
+msgstr "~aOmrådelængde = ~a sekunder."
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
@@ -18322,31 +18289,3 @@ msgstr "Frekvens af radarnåle (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Fejl.~%Stereospor kræves."
-
-#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-#~ msgstr "Antal ekkoer '~a' uden for gyldigt område 1 til 50.~%~a"
-
-#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-#~ msgstr ""
-#~ "Tonehøjdeskiftet '~a' er uden for gyldigt område -12 til +12 halvtoner."
-#~ "~%~a"
-
-#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-#~ msgstr ""
-#~ "Forsinkelsestiden '~a' er uden for gyldigt område 0 til 10 sekunder.~%~a"
-
-#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-#~ msgstr ""
-#~ "Forsinkelsesniveauet '~a' er uden for gyldigt område -30 til +6 dB.~%~a"
-
-#~ msgid "Error.~%~a"
-#~ msgstr "Fejl.~%~a"
-
-#~ msgid "Use 'Number of labels' OR 'Label interval'"
-#~ msgstr "Brug 'Antal etiketter' ELLER 'Etiketinterval'"
-
-#~ msgid "Left"
-#~ msgstr "Venstre"
-
-#~ msgid "Right"
-#~ msgstr "Højre"
