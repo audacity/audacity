@@ -220,7 +220,7 @@ msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
 "Внешний модуль Audacity, который обеспечивает простую среду IDE для "
-написания эффектов."
+"написания эффектов."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -1881,9 +1881,9 @@ msgstr ""
 "Ваш проект в настоящее время независим; он не зависит от внешних "
 "aудиофайлов. \n"
 "\n"
-"Если вы переведёте проект в состояние с внешними зависимостями, "
-"он больше не будет автономным. Если вы затем сохраните его без "
-"копирование файлов, вы можете потерять данные."
+"Если вы переведёте проект в состояние с внешними зависимостями, он больше не "
+"будет автономным. Если вы затем сохраните его без копирование файлов, вы "
+"можете потерять данные."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2128,10 +2128,6 @@ msgstr "Внимание - отсутствуют файлы блока ауди
 msgid ""
 "   Project check replaced missing audio data block file(s) with silence."
 msgstr ""
-
-#: src/DirManager.cpp
-msgid "   Project check replaced missing audio data block file(s) with silence."
-msgstr ""
 "   Проверка проекта заполнила недостающие файлы блока аудиоданных тишиной."
 
 #: src/DirManager.cpp
@@ -2139,8 +2135,8 @@ msgid ""
 "   Project check ignored orphan block file(s). They will be deleted when "
 "project is saved."
 msgstr ""
-"   Проверка проекта игнорирует недостающие файлы блока. При сохранении проекта "
-"они будут удалены."
+"   Проверка проекта игнорирует недостающие файлы блока. При сохранении "
+"проекта они будут удалены."
 
 #: src/DirManager.cpp
 #, c-format
@@ -2682,9 +2678,10 @@ msgid ""
 "library]] to your computer."
 msgstr ""
 "Audacity может импортировать незащищённые файлы во многие другие форматы "
-"(M4A и WMA, сжатые WAV файлы с портативных рекордеров и аудио из видеофайлов) "
-"если вы загрузите и установите опционно  на компьютер [[https://manual.audacityteam."
-"org/man/faq_opening_and_saving_files.html#foreign| FFmpeg-библиотеку]]."
+"(M4A и WMA, сжатые WAV файлы с портативных рекордеров и аудио из "
+"видеофайлов), если вы загрузите и установите опционно  на компьютер [[https://"
+"manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| "
+"FFmpeg-библиотеку]]."
 
 #: src/HelpText.cpp
 msgid ""
@@ -3211,12 +3208,12 @@ msgstr "G♯"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯"
-msgstr ""
+msgstr "A♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -3241,7 +3238,7 @@ msgstr "G♭"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♭"
-msgstr ""
+msgstr "A♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -3294,10 +3291,6 @@ msgstr "$Всё"
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Показать все"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "Ме&таданные..."
 
 #. i18n-hint: Radio button to show just the currently disabled effects
 #: src/PluginManager.cpp
@@ -3729,7 +3722,6 @@ msgid "%sSave Lossless Copy of Project \"%s\" As..."
 msgstr "%sСохранить без потерь копию проекта '%s' как..."
 
 #: src/Project.cpp
-#, c-format
 msgid ""
 "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -3844,7 +3836,7 @@ msgid ""
 "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f"
 "%% complete."
 msgstr ""
-"Импорт завершён. Вычисление волноформы %d по требованию. Всего завершено "
+"Импорт завершён. Расчёт волноформы %d по требованию. Всего завершено "
 "%2.0f%%."
 
 #: src/Project.cpp
@@ -3852,8 +3844,8 @@ msgstr ""
 msgid ""
 "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr ""
-"Импорт завершён.  Вычисление волноформы по требованию. Всего завершено %2.0f%"
-"%."
+"Импорт завершён. Расчёт волноформы по требованию. Всего завершено %2.0f%%."
+
 
 #: src/Project.cpp
 #, c-format
@@ -4918,7 +4910,6 @@ msgid "Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"
 msgstr "Смена направления  -- означает: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
-#, c-format
 msgid "Calibration Complete"
 msgstr "Калибровка завершена"
 
@@ -6300,7 +6291,7 @@ msgstr "RMS = %s."
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%s dB"
-msgstr "%d Гц (%s) = %d дБ"
+msgstr "%s dB"
 
 #: src/effects/Contrast.cpp
 #, c-format
@@ -8452,7 +8443,7 @@ msgstr "Сжать до:"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
@@ -9049,7 +9040,9 @@ msgstr "Не найдены допустимые сопоставления в �
 msgid ""
 "Mismatched quotes in\n"
 "%s"
-msgstr "%s - %s"
+msgstr ""
+"Несоответствие кавычек в\n"
+"%s"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -9545,10 +9538,7 @@ msgstr "Пресет '%s' не существует."
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Replace preset '%s'?"
-msgstr ""
-"Настройка уже существует.\n"
-"\n"
-"Перезаписать?"
+msgstr "Заменить пресет '%s'?"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "LC"
@@ -10205,24 +10195,24 @@ msgid ""
 "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "All Files|*"
 msgstr ""
-"Только lame_enc.dll|lame_enc.dll|Динамически связанные библиотеки (*.dll)"
-"|*.dll| Все файлы|*"
+"Только lame_enc.dll|lame_enc.dll|Динамически связанные библиотеки (*.dll)|*."
+"dll|Все файлы|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
 "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|"
 "All Files (*)|*"
 msgstr ""
-"Только libmp3lame.dylib|libmp3lame.dylib|Динамические библиотеки (*.dylib)"
-"|*.dylib| Все файлы (*)|*"
+"Только libmp3lame.dylib|libmp3lame.dylib|Динамические библиотеки (*.dylib)|*."
+"dylib|Все файлы (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
 "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|"
 "Extended Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr ""
-"Только libmp3lame.so.0|libmp3lame.so.0|Первичные файлы общих объектов (*.so)
-|*.so|" Расширенные библиотеки (*.so*)|*.so*|Все файлы (*)|*"
+"Только libmp3lame.so.0|libmp3lame.so.0|Первичные файлы общих объектов (*.so)|"
+"*.so|Расширенные библиотеки (*.so*)|*.so*|Все файлы (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 Files"
@@ -11062,7 +11052,7 @@ msgstr "конец"
 #.
 #: src/menus/ClipMenus.cpp
 msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
+msgstr "dummyStringClipBoundaryMessageLong"
 
 #: src/menus/ClipMenus.cpp
 #, c-format
@@ -14275,6 +14265,7 @@ msgstr "Иг&ра с переменной скоростью"
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
 msgstr "&Микро-фейды"
+
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
 msgstr "Скраб всегда &откреплён"
@@ -15421,7 +15412,7 @@ msgid "Right-click for menu."
 msgstr "Правый-клик для меню."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cppp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset\tShift-Right-Click"
 msgstr "Сбросить масштаб\tShift-правый клик"
 
@@ -16045,11 +16036,11 @@ msgstr "Пусто"
 
 #: src/widgets/HelpSystem.cpp
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #: src/widgets/HelpSystem.cpp
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Forwards"
@@ -16970,11 +16961,11 @@ msgstr "~aЗначение процентов не может быть боле�
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
 "~aЗначения в дБ не могут быть более +100 дБ.~%~%~\n"
 "                                 Прим.: 6 дБ - двойная амплитуда~%~\n"
-"                                 t-6 дБ - половина амплитуды."
+"                                 \t-6 дБ - половина амплитуды."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -17308,8 +17299,8 @@ msgid ""
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
-"Ошибка:~%~%Частота (~a Гц)слишком высока для частоты дискретизации трека.~%~"
-"%~\n"
+"Ошибка:~%~%Частота (~a Гц)слишком высока для частоты дискретизации трека."
+"~%~%~\n"
 "                   Частота дискретизации трека ~a Гц~%~\n"
 "                   Частота должна быть менее ~a Гц."
 
@@ -17401,8 +17392,8 @@ msgid ""
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Ошибка:~%~%частота (~a Гц) слишком высока для частоты дискретизации трека.~%~"
-"%~\n"
+"Ошибка:~%~%частота (~a Гц) слишком высока для частоты дискретизации трека."
+"~%~%~\n"
 "                 Частота дискретизации трека ~a Гц.~%~\n"
 "                 Частота должна быть менее ~a Гц."
 
