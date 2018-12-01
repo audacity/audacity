@@ -7,13 +7,13 @@
 # Chao YU <isaac.yc@gmail.com>, 2011
 # wwj402 <wwj402@gmail.com>, 2013,2015
 # zhangmin <zm1990s@gmail.com>, 2014-2016
-# mkpoli <snowwolf1001@gmail.com>, 2017
+# mkpoli <snowwolf1001@gmail.com>, 2017-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-09-02 13:27+0900\n"
+"PO-Revision-Date: 2018-12-01 08:55+0900\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
 "zh/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -226,7 +226,6 @@ msgid "No matches found"
 msgstr "未找到匹配项"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Code has been modified. Are you sure?"
 msgstr "代码已被修改。您确定吗？"
 
@@ -746,12 +745,10 @@ msgid "Move to Scrub"
 msgstr "移动以跟随播放"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release to stop seeking."
 msgstr "拖动以定位播放。释放以停止定位播放。"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release and move to Scrub."
 msgstr "拖动以定位播放。释放并移动以跟随播放。"
 
@@ -2438,7 +2435,7 @@ msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "为了进行频谱分析，所有选定的轨道必须具有相同的采样率。"
 
 #: src/FreqWindow.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
@@ -3046,7 +3043,7 @@ msgid "Module Unsuitable"
 msgstr "模块不合适"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "模块 %s 未包含版本信息，将不会被加载。"
 
@@ -3062,7 +3059,7 @@ msgstr ""
 "将不会被加载。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "模块 %s 匹配 Audacity 版本 %s，将不会被加载。"
@@ -3330,7 +3327,6 @@ msgid "Plug-in already exists"
 msgstr "插件文件已存在"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "插件文件正在被使用。覆盖失败"
 
@@ -3616,13 +3612,13 @@ msgid "Error Saving Project"
 msgstr "保存项目错误"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
-"无法保存项目。找不到路径。请在保存项目前\n"
-"尝试创建\"%s\"目录。"
+"无法保存项目。找不到路径。请在\n"
+"以此名称保存项目前尝试创建\"%s\"目录。"
 
 #: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4366,13 +4362,13 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
 "were already present. Overwrite?"
 msgstr ""
-"一些需要的文件：\n"
+"一些需要的文件在：\n"
 " %s\n"
 "已经存在了。覆盖吗？"
 
@@ -4697,7 +4693,7 @@ msgstr "录制将开始于："
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid "%s in:"
-msgstr ""
+msgstr "“%s”前仍有："
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -5520,9 +5516,8 @@ msgid "Sets various values for a label."
 msgstr "设置标签的各个值。"
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Rate:"
-msgstr "采样率(&R)"
+msgstr "率："
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
@@ -5619,14 +5614,12 @@ msgid "VZoom:"
 msgstr "V 缩放："
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Top:"
-msgstr "V 缩放："
+msgstr "V 缩放顶："
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Bottom:"
-msgstr "到底端"
+msgstr "V 缩放底："
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -7728,9 +7721,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "正在等待波形图计算完毕..."
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "(Maximum 0dB)"
-msgstr ". 最大 0分贝。"
+msgstr "（最大 0 分贝）"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
@@ -8522,7 +8514,7 @@ msgid "Error Saving Effect Presets"
 msgstr "保存 VST 预设错误"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "This parameter file was saved from %s. Continue?"
 msgstr "此参数文件由%s保存。继续吗？"
 
@@ -8617,9 +8609,8 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr " 选择 \"常规\" 使用系统提供的通用接口。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid " Select \"Basic\" for a basic text-only interface."
-msgstr " 选择 \"基本\" 是基本的纯文本的界面. "
+msgstr " 选择 \"基本\" 以使用基本的纯文本界面. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -8834,14 +8825,14 @@ msgid "plug-in"
 msgstr "插件"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %f"
-msgstr "Nyquist 返回的值："
+msgstr "Nyquist 返回的值：%f"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %d"
-msgstr "Nyquist 返回的值："
+msgstr "Nyquist 返回的值：%d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -9113,9 +9104,9 @@ msgstr ""
 "               如果您还想导出，请选择另一个文件名或目录。"
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "A file named \"%s\" already exists. Replace?"
-msgstr "一个名叫\"%s\"的文件已经存在，替换吗？"
+msgstr "一个名叫\"%s\"的文件已经存在。替换吗？"
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one mono file."
@@ -9334,14 +9325,14 @@ msgid "Resample"
 msgstr "重采样"
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr "此项目的采样率（%d）不被当前的输出文件格式支持。"
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
@@ -10127,22 +10118,22 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "错误，MP3 编码器返回 %ld"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
 msgstr ""
-"项目的采样率（%d）不被MP3\n"
+"项目的采样率（%d）不被 MP3\n"
 "文件格式支持。"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
 "项目的采样率（%d）和比特率（%d kbps）的组合\n"
-"不被MP3文件格式支持。"
+"不被 MP3 文件格式支持。"
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -10707,7 +10698,6 @@ msgid ""
 msgstr "您当前的偏好设置为直接读取。\n"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately. This is less safe than copying in, because you must retain the "
@@ -11156,9 +11146,8 @@ msgid "Detac&h at Silences"
 msgstr "静音处分离(&H)"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "&Metadata..."
-msgstr "编辑元数据(&T)..."
+msgstr "元数据(&M)..."
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences..."
@@ -11308,9 +11297,8 @@ msgid "All files|*"
 msgstr "所有文件|*"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
-msgstr "保存预设..."
+msgstr "危险重置(&D).."
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -11429,9 +11417,8 @@ msgid "Unable to save MIDI device info"
 msgstr "无法保存 MIDI 设备信息"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
-msgstr "快速帮助(&Q)..."
+msgstr "快速修复(&Q)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
@@ -11779,9 +11766,8 @@ msgid "&Apply Macro"
 msgstr "应用宏(&A)"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Palette..."
-msgstr "调色板(&P)..."
+msgstr "调色板..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -11801,9 +11787,8 @@ msgstr "侦测上流丢失"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Script&ables I"
-msgstr "脚本 I (&S)"
+msgstr "脚本 I (&A)"
 
 #: src/menus/PluginMenus.cpp
 msgid "Select Time..."
@@ -12524,9 +12509,8 @@ msgid "Resample Track"
 msgstr "重采样轨道"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "请选择一个音轨。"
+msgstr "请选择至少一个音轨和一个音符轨。"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -13036,7 +13020,6 @@ msgid "Zoom &Toggle"
 msgstr "缩放开关(&T)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Advanced &Vertical Zooming"
 msgstr "高级垂直缩放(&V)"
 
@@ -13133,7 +13116,7 @@ msgid "Decoding Waveform"
 msgstr "解码波形中"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%%完成。点击改变任务焦点。"
 
@@ -13706,7 +13689,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -14096,7 +14079,7 @@ msgstr "变速播放(&V)"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "微渐变"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -14545,14 +14528,13 @@ msgstr ""
 "标，但修改它们仍然是没有作用。)"
 
 #: src/prefs/ThemePrefs.cpp
-#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
 "Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
-"这是一个 Audacity 的调试版本，编译时启用了“Output Sourcery”按钮，\n"
-"这将会把图像缓存储存成 C 版本，以便作为默认加入到源码中编译。"
+"这是一个 Audacity 的调试版本，编译时启用了“Output Sourcery”按钮。\n"
+"这将会把图像缓存储存成默认可编译的 C 版本。"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -15109,7 +15091,7 @@ msgstr "%s - 驱动"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selection %s. %s won't change."
 msgstr "选区 %s。 %s 不将改变。"
 
@@ -15874,47 +15856,40 @@ msgid "Help on the Internet"
 msgstr "互联网上的帮助"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Do you have these problems?"
-msgstr "您想保存改变吗？"
+msgstr "您是否遇到这些问题？"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Fix"
-msgstr "混音"
+msgstr "修复"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Quick Fixes"
-msgstr "QuickTime文件"
+msgstr "快速修复"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Nothing to do"
-msgstr "没有可撤消的操作"
+msgstr "待机"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "未发现可简单解决的问题"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Clocks on the Tracks"
-msgstr "关闭选中音轨(&C)"
+msgstr "轨道时钟"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Can't select precisely"
-msgstr "不能打开项目文件"
+msgstr "无法精确选择"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Recording stops and starts"
-msgstr "开始录制："
+msgstr "录制停止和开始"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Fixed"
-msgstr ""
+msgstr "已解决"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -16779,7 +16754,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~a百分比值不能超过 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -16787,7 +16762,7 @@ msgid ""
 msgstr ""
 "~adB 值不能大于 +100 dB.~%~%~\n"
 "                                 提示：每 6 dB 使振幅翻倍~%~\n"
-"                                 每 t-6 dB 使振幅减半。"
+"                                 每 -6 dB 使振幅减半。"
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -16960,14 +16935,12 @@ msgstr "正在添加等距标签至标签轨..."
 
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Create labels based on"
-msgstr "分割文件，基于："
+msgstr "创建标签基于"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number & Interval"
-msgstr "标签间隔"
+msgstr "数字和间隔"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -16986,9 +16959,8 @@ msgid "Label interval (seconds)"
 msgstr "标签间隔（秒）"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Length of label region (seconds)"
-msgstr "长度（秒）"
+msgstr "标签区域长度（秒）"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -17035,46 +17007,41 @@ msgid "Begin numbering from"
 msgstr "开始数字从"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Message on completion"
-msgstr "延迟补偿（&L）："
+msgstr "完成消息"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Details"
-msgstr "细节(&D)"
+msgstr "细节"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Warnings only"
-msgstr "警告"
+msgstr "仅警告"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "警告：重叠的区域标签。~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "region labels"
-msgstr "保存选区(&G)"
+msgstr "区域标签"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "point labels"
-msgstr "编辑标签"
+msgstr "点标签"
 
 #. i18n-hint:  Number of labels produced at specified intervals.
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr ""
+msgstr "将~a~a ~a以 ~a 秒的间隔生成。~%"
 
 #: plug-ins/equalabel.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr "从长度 (秒)"
+msgstr "~a区域长度为 ~a 秒。"
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
