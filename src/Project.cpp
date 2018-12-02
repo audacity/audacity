@@ -962,6 +962,7 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_CLOSE(AudacityProject::OnCloseWindow)
    EVT_SIZE(AudacityProject::OnSize)
    EVT_SHOW(AudacityProject::OnShow)
+   EVT_ICONIZE(AudacityProject::OnIconize)
    EVT_MOVE(AudacityProject::OnMove)
    EVT_ACTIVATE(AudacityProject::OnActivate)
    EVT_COMMAND_SCROLL_LINEUP(HSBarID, AudacityProject::OnScrollLeftButton)
@@ -2202,14 +2203,25 @@ void AudacityProject::OnIconize(wxIconizeEvent &event)
 
    unsigned int i;
 
+   // VisibileProjectCount seems to be just a counter for debugging.
+   // It's not used outside this function.
    for(i=0;i<gAudacityProjects.size();i++){
       if(gAudacityProjects[i]){
          if( !gAudacityProjects[i]->mIconized )
             VisibleProjectCount++;
       }
    }
-
    event.Skip();
+
+   // This step is to fix part of Bug 2040, where the BackingPanel
+   // size was not restored after we leave Iconized state.
+
+   // Queue up a resize event using OnShow so that we 
+   // refresh the track panel.  But skip this, if we're iconized.
+   if( mIconized )
+      return;
+   wxShowEvent Evt;
+   OnShow( Evt );
 }
 
 void AudacityProject::OnMove(wxMoveEvent & event)

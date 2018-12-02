@@ -47,13 +47,13 @@ wxDC &BackedPanel::GetBackingDCForRepaint()
 
 void BackedPanel::ResizeBacking()
 {
-   // Delete the backing bitmap
    if (mBacking)
       mBackingDC.SelectObject(wxNullBitmap);
 
    wxSize sz = GetClientSize();
    mBacking = std::make_unique<wxBitmap>();
-   mBacking->Create(sz.x, sz.y,24); //, *dc);
+   // Bug 2040 - Avoid 0 x 0 bitmap when minimized.
+   mBacking->Create(std::max(sz.x,1), std::max(sz.y,1),24); //, *dc);
    mBackingDC.SelectObject(*mBacking);
 }
 
@@ -64,14 +64,15 @@ void BackedPanel::RepairBitmap(wxDC &dc, wxCoord x, wxCoord y, wxCoord width, wx
 
 void BackedPanel::DisplayBitmap(wxDC &dc)
 {
-   RepairBitmap(dc, 0, 0, mBacking->GetWidth(), mBacking->GetHeight());
+   if( mBacking ) 
+      RepairBitmap(dc, 0, 0, mBacking->GetWidth(), mBacking->GetHeight());
 }
 
-void BackedPanel::OnSize(wxSizeEvent & /* event */)
+void BackedPanel::OnSize(wxSizeEvent & event)
 {
    // Tell OnPaint() to recreate the backing bitmap
    mResizeBacking = true;
-
+   event.Skip();
    // Refresh the entire area.  Really only need to refresh when
    // expanding...is it worth the trouble?
    Refresh();
