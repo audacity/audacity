@@ -508,7 +508,7 @@ void WaveTrack::SetWaveColorIndex(int colorIndex)
 
 void WaveTrack::ConvertToSampleFormat(sampleFormat format)
 // WEAK-GUARANTEE
-// might complete on only some tracks
+// might complete on only some clips
 {
    for (const auto &clip : mClips)
       clip->ConvertToSampleFormat(format);

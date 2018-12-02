@@ -38,7 +38,7 @@ public:
    virtual ~TrackPanelNode() = 0;
 };
 
-// A node of the TrackPanel that contins other nodes.
+// A node of the TrackPanel that contains other nodes.
 class AUDACITY_DLL_API TrackPanelGroup /* not final */ : public TrackPanelNode
 {
 public:
