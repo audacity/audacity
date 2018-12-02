@@ -2159,6 +2159,7 @@ void LabelTrack::ShowContextMenu()
 {
    wxWindow *parent = wxWindow::FindFocus();
 
+   if( parent )
    {
       wxMenu menu;
       menu.Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
