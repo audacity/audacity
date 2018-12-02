@@ -3997,8 +3997,10 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       // all of our block files over.
       pSetter.create( *mDirManager, projPath, projName, true );
 
-      if (!pSetter->Ok())
+      if (!pSetter->Ok()){
+         success = false;
          return false;
+      }
    }
 
    // Commit the writing of the .aup only now, after we know that the _data
