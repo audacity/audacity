@@ -401,21 +401,15 @@ CommandFlag MenuManager::GetUpdateFlags
    // static variable, used to remember flags for next time.
    static auto lastFlags = flags;
 
-   if (auto focus = wxWindow::FindFocus()) {
+   // if (auto focus = wxWindow::FindFocus()) {
+   if (wxWindow * focus = &project) {
       while (focus && focus->GetParent())
          focus = focus->GetParent();
       if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
          flags |= NotMinimizedFlag;
    }
 
-   // quick 'short-circuit' return.
-   if ( checkActive && !project.IsActive() ){
-      // short cirucit return should preserve flags that have not been calculated.
-      flags = (lastFlags & ~NotMinimizedFlag) | flags;
-      lastFlags = flags;
-      return flags;
-   }
-
+   // These flags are cheap to calculate.
    if (!gAudioIO->IsAudioTokenActive(project.GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
    else
@@ -425,6 +419,17 @@ CommandFlag MenuManager::GetUpdateFlags
       flags |= PausedFlag;
    else
       flags |= NotPausedFlag;
+
+   // quick 'short-circuit' return.
+   if ( checkActive && !project.IsActive() ){
+      const auto checkedFlags = 
+         NotMinimizedFlag | AudioIONotBusyFlag | AudioIOBusyFlag |
+         PausedFlag | NotPausedFlag;
+      // short cirucit return should preserve flags that have not been calculated.
+      flags = (lastFlags & ~checkedFlags) | flags;
+      lastFlags = flags;
+      return flags;
+   }
 
    auto &viewInfo = project.GetViewInfo();
    const auto &selectedRegion = viewInfo.selectedRegion;
