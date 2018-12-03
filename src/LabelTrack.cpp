@@ -2159,6 +2159,10 @@ void LabelTrack::ShowContextMenu()
 {
    wxWindow *parent = wxWindow::FindFocus();
 
+   // Bug 2044.  parent can be nullptr after a context switch.
+   if( !parent )
+      parent = GetActiveProject();
+
    if( parent )
    {
       wxMenu menu;
