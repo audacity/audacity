@@ -35,6 +35,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
 #include "SampleTrackCache.h"
+#include "WaveTrackLocation.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -882,8 +883,10 @@ void SpectrumView::Draw(
       // If both channels are visible, we will duplicate this effort, but that
       // matters little.
       for( auto channel:
-          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
-         channel->UpdateLocationsCache();
+          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) ) {
+         auto &locationsCache = WaveTrackLocations::Get( *channel );
+         locationsCache.Update( *channel );
+      }
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());

@@ -56,7 +56,7 @@ namespace
    {
       const double tolerance = 0.5 / track->GetRate();
       int ii = 0;
-      for (const auto loc: track->GetCachedLocations()) {
+      for (const auto loc: WaveTrackLocations::Get(*track).Get()) {
          if (loc.typ == WaveTrackLocation::locationMergePoint &&
              fabs(time - loc.pos) < tolerance)
             return ii;
@@ -70,7 +70,7 @@ namespace
        const wxRect &rect, const wxMouseState &state,
        WaveTrackLocation *pmLocation)
    {
-      for (auto loc: track->GetCachedLocations())
+      for (auto loc: WaveTrackLocations::Get(*track).Get())
       {
          const double x = viewInfo.TimeToPosition(loc.pos);
          if (x >= 0 && x < rect.width)
@@ -173,8 +173,8 @@ UIHandle::Result CutlineHandle::Click
             // Don't assume correspondence of merge points across channels!
             int idx = FindMergeLine(channel, pos);
             if (idx >= 0) {
-               WaveTrack::Location location =
-                  channel->GetCachedLocations()[idx];
+               auto location =
+                  WaveTrackLocations::Get(*channel).Get()[idx];
                channel->MergeClips(
                   location.clipidx1, location.clipidx2);
             }

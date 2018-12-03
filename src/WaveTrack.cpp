@@ -165,7 +165,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    mRate = orig.mRate;
    DoSetGain(orig.GetGain());
    DoSetPan(orig.GetPan());
-   mDisplayLocationsCache.clear();
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
@@ -2348,78 +2347,6 @@ void WaveTrack::SplitAt(double t)
          return;
       }
    }
-}
-
-void WaveTrack::UpdateLocationsCache() const
-{
-   auto clips = SortedClipArray();
-
-   mDisplayLocationsCache.clear();
-
-   // Count number of display locations
-   int num = 0;
-   {
-      const WaveClip *prev = nullptr;
-      for (const auto clip : clips)
-      {
-         //enough for estimation
-         num += clip->NumCutLines();
-
-         if (prev && fabs(prev->GetPlayEndTime() -
-                          clip->GetPlayStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
-            ++num;
-         prev = clip;
-      }
-   }
-
-   if (num == 0)
-      return;
-
-   // Alloc necessary number of display locations
-   mDisplayLocationsCache.reserve(num);
-
-   // Add all display locations to cache
-   int curpos = 0;
-
-   const WaveClip *previousClip = nullptr;
-   for (const auto clip: clips)
-   {
-      for (const auto &cc : clip->GetCutLines())
-      {
-         auto cutlinePosition = clip->GetSequenceStartTime() + cc->GetSequenceStartTime();
-         if (clip->WithinPlayRegion(cutlinePosition))
-         {
-             // Add cut line expander point
-             mDisplayLocationsCache.push_back(WaveTrackLocation{
-                cutlinePosition,
-                WaveTrackLocation::locationCutLine
-             });
-         }
-         // If cutline is skipped, we still need to count it
-         // so that curpos match num at the end
-         curpos++;
-      }
-
-      if (previousClip)
-      {
-         if (fabs(previousClip->GetPlayEndTime() - clip->GetPlayStartTime())
-                                          < WAVETRACK_MERGE_POINT_TOLERANCE)
-         {
-            // Add merge point
-            mDisplayLocationsCache.push_back(WaveTrackLocation{
-               previousClip->GetPlayEndTime(),
-               WaveTrackLocation::locationMergePoint,
-               GetClipIndex(previousClip),
-               GetClipIndex(clip)
-            });
-            curpos++;
-         }
-      }
-
-      previousClip = clip;
-   }
-
-   wxASSERT(curpos == num);
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
