@@ -710,7 +710,7 @@ void Mixer::Restart()
    MakeResamplers();
 }
 
-void Mixer::Reposition(double t)
+void Mixer::Reposition(double t, bool bSkipping)
 {
    mTime = t;
    const bool backwards = (mT1 < mT0);
@@ -729,7 +729,8 @@ void Mixer::Reposition(double t)
    // constant rate resampling if you try to reuse the resampler after it has
    // flushed.  Should that be considered a bug in sox?  This works around it.
    // (See also bug 1887, and the same work around in Mixer::Restart().)
-   MakeResamplers();
+   if( bSkipping )
+      MakeResamplers();
 }
 
 void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)

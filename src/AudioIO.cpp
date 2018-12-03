@@ -5543,7 +5543,8 @@ PaStreamCallbackResult AudioIoCallback::CallbackDoSeek()
    // Reset mixer positions and flush buffers for all tracks
    for (size_t i = 0; i < numPlaybackTracks; i++)
    {
-      mPlaybackMixers[i]->Reposition( time );
+      const bool skipping = true;
+      mPlaybackMixers[i]->Reposition( time, skipping );
       const auto toDiscard =
          mPlaybackBuffers[i]->AvailForGet();
       const auto discarded =
