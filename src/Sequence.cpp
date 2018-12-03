@@ -1254,21 +1254,23 @@ struct MinMaxSumsq
 
 }
 
-bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
-                              size_t len, const sampleCount *where) const
+bool GetWaveDisplay(const Sequence &sequence,
+   float *min, float *max, float *rms, int* bl,
+   size_t len, const sampleCount *where)
 {
    wxASSERT(len > 0);
    const auto s0 = std::max(sampleCount(0), where[0]);
-   if (s0 >= mNumSamples)
+   const auto numSamples = sequence.GetNumSamples();
+   if (s0 >= numSamples)
       // None of the samples asked for are in range. Abandon.
       return false;
 
    // In case where[len - 1] == where[len], raise the limit by one,
    // so we load at least one pixel for column len - 1
    // ... unless the mNumSamples ceiling applies, and then there are other defenses
-   const auto s1 =
-      std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
-   Floats temp{ mMaxSamples };
+   const auto s1 = std::clamp(where[len], 1 + where[len - 1], numSamples);
+   const auto maxSamples = sequence.GetMaxBlockSize();
+   Floats temp{ maxSamples };
 
    decltype(len) pixel = 0;
 
@@ -1280,8 +1282,9 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    decltype(whereNow) whereNext = 0;
    // Loop over block files, opening and reading and closing each
    // not more than once
-   unsigned nBlocks = mBlock.size();
-   const unsigned int block0 = FindBlock(s0);
+   const auto &blocks = sequence.GetBlockArray();
+   unsigned nBlocks = blocks.size();
+   const unsigned int block0 = sequence.FindBlock(s0);
    for (unsigned int b = block0; b < nBlocks; ++b) {
       if (b > block0)
          srcX = nextSrcX;
@@ -1290,7 +1293,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
 
       // Find the range of sample values for this block that
       // are in the display.
-      const SeqBlock &seqBlock = mBlock[b];
+      const SeqBlock &seqBlock = blocks[b];
       const auto start = seqBlock.start;
       nextSrcX = std::min(s1, start + seqBlock.sb->GetSampleCount());
 
@@ -1340,7 +1343,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          std::max(sampleCount(0), (srcX - start) / divisor).as_size_t();
       const size_t inclusiveEndPosition =
          // nextSrcX - 1 and start are in the same block
-         std::min((sampleCount(mMaxSamples) / divisor) - 1,
+         std::min((sampleCount(maxSamples) / divisor) - 1,
                   (nextSrcX - 1 - start) / divisor).as_size_t();
       const auto num = 1 + inclusiveEndPosition - startPosition;
       if (num <= 0) {
@@ -1361,7 +1364,8 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       case 1:
          // Read samples
          // no-throw for display operations!
-         Read((samplePtr)temp.get(), floatSample, seqBlock, startPosition, num, false);
+         sequence.Read(
+            (samplePtr)temp.get(), floatSample, seqBlock, startPosition, num, false);
          break;
       case 256:
          // Read triples

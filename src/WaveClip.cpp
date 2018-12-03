@@ -489,7 +489,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       // Done with append buffer, now fetch the rest of the cache miss
       // from the sequence
       if (p1 > p0) {
-         if (!sequence->GetWaveDisplay(&min[p0],
+         if (!::GetWaveDisplay(*sequence, &min[p0],
                                         &max[p0],
                                         &rms[p0],
                                         &bl[p0],
