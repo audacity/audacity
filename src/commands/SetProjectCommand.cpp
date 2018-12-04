@@ -34,7 +34,7 @@ SetProjectCommand::SetProjectCommand()
 
 bool SetProjectCommand::DefineParams( ShuttleParams & S ){ 
    S.OptionalN( bHasName        ).Define(     mName,        wxT("Name"),       _("Project") );
-   S.OptionalY( bHasRate        ).Define(     mRate,        wxT("Rate"),       44100.0, 1.0, 1000000.0);
+   S.OptionalN( bHasRate        ).Define(     mRate,        wxT("Rate"),       44100.0, 1.0, 1000000.0);
    S.OptionalY( bHasSizing      ).Define(     mPosX,        wxT("X"),          10.0, 0.0, 2000.0);
    S.OptionalY( bHasSizing      ).Define(     mPosY,        wxT("Y"),          10.0, 0.0, 2000.0);
    S.OptionalY( bHasSizing      ).Define(     mWidth,       wxT("Width"),      1000.0, 200.0, 4000.0);
@@ -48,7 +48,7 @@ void SetProjectCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       S.Optional( bHasName      ).TieTextBox(         _("Name:"),     mName );
-      S.Optional( bHasName      ).TieTextBox(         _("Rate:"),     mRate );
+      S.Optional( bHasRate      ).TieTextBox(         _("Rate:"),     mRate );
       S.TieCheckBox( _("Resize:"), bHasSizing    );
       S.AddSpace(0,0);
    }
