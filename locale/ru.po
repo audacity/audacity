@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-29 23:54+0500\n"
-"PO-Revision-Date: 2018-11-30 00:42+0500\n"
+"PO-Revision-Date: 2018-12-04 15:16+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -491,7 +491,7 @@ msgid ""
 "tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
-"Если нашли ошибку или есть для нас предложение, напишите на английском на "
+"Если нашли ошибку или есть для нас предложение, напишите по английски на "
 "наш [[https://forum.audacityteam.org/|форум]]. Для справки просмотрите "
 "советы, рекомендации на нашем [[https://wiki.audacityteam.org/|wiki]] "
 "посетите [[https://forum.audacityteam.org/| форум]]."
@@ -2226,7 +2226,7 @@ msgstr "Сохранение записанных аудиоданных на д
 
 #: src/FFT.cpp
 msgid "Rectangular"
-msgstr "Прямоугольник"
+msgstr "Прямоугольное"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
@@ -3286,7 +3286,7 @@ msgstr "Показать:"
 #. i18n-hint: Radio button to show all effects
 #: src/PluginManager.cpp src/menus/SelectMenus.cpp
 msgid "&All"
-msgstr "$Всё"
+msgstr "&Все"
 
 #: src/PluginManager.cpp
 msgid "Show all"
@@ -3845,7 +3845,6 @@ msgid ""
 "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr ""
 "Импорт завершён. Расчёт волноформы по требованию. Всего завершено %2.0f%%."
-
 
 #: src/Project.cpp
 #, c-format
@@ -10304,7 +10303,7 @@ msgid ""
 "You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
-"У Вас только один трек с включенным звуком и нет применимых\n"
+"У Вас только один трек с включённым звуком и нет применимых\n"
 "меток, поэтому экспорт в раздельные аудиофайлы невозможен."
 
 #: src/export/ExportMultiple.cpp
@@ -11314,7 +11313,7 @@ msgid "Detac&h at Silences"
 msgstr "Раз&делить по тишине"
 
 #: src/menus/EditMenus.cpp
-msgid "&Metadata..."
+msgid "Me&tadata..."
 msgstr "Ме&таданные..."
 
 #: src/menus/EditMenus.cpp
@@ -11895,7 +11894,7 @@ msgstr "Плагины %d до %d"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Generate"
-msgstr "&Генерировать"
+msgstr "Си&гнал-генератор"
 
 #: src/menus/PluginMenus.cpp
 msgid "Add / Remove Plug-ins..."
@@ -13020,7 +13019,7 @@ msgstr "&Запись"
 #. i18n-hint: (verb)
 #: src/menus/TransportMenus.cpp
 msgid "&Record"
-msgstr "&Запись"
+msgstr "&Записать"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Append Record"
@@ -13060,11 +13059,11 @@ msgstr "&Опции транспорта"
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound Activation Le&vel..."
-msgstr "Уровень громкости акти&вации..."
+msgstr "Уровень звука акти&вации..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Активируемая з&вуком запись"
+msgstr "Запись акти&вируемая звуком"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pinned Play/Record &Head (on/off)"
@@ -13255,7 +13254,7 @@ msgstr "&Пульт микшера..."
 
 #: src/menus/ViewMenus.cpp
 msgid "&Extra Menus (on/off)"
-msgstr "&Экстра-меню(вкл/выкл)"
+msgstr "&Экстра-меню (вкл/выкл)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -14388,7 +14387,7 @@ msgstr "Детекция потери сигнала"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
-msgstr "Запись с активацией по уровню"
+msgstr "Запись с активацией звуком"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -14588,7 +14587,7 @@ msgstr "Оттенки &серого"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
-msgstr "Алгоритм"
+msgstr "FFT-фильтр"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "A&lgorithm"
@@ -14617,7 +14616,7 @@ msgstr "&Показывать сетку вдоль оси Y"
 #. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
-msgstr "FFT поиск нот"
+msgstr "FFT-поиск нот"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Minimum Amplitude (dB):"
