@@ -22,6 +22,7 @@
 #include "../Project.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

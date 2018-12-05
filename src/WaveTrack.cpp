@@ -31,6 +31,8 @@ Track classes.
 
 #include "Experimental.h"
 
+#include "WaveClip.h"
+
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/debug.h>
@@ -2824,4 +2826,30 @@ void WaveTrackCache::Free()
    mBuffers[1].Free();
    mOverlapBuffer.Free();
    mNValidBuffers = 0;
+}
+
+auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
+{
+   // The unspecified sequence is a post-order, but there is no
+   // promise whether sister nodes are ordered in time.
+   if ( !mStack.empty() ) {
+      auto &pair =  mStack.back();
+      if ( ++pair.first == pair.second ) {
+         mStack.pop_back();
+      }
+      else
+         push( (*pair.first)->GetCutLines() );
+   }
+
+   return *this;
+}
+
+void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
+{
+   auto pClips = &clips;
+   while (!pClips->empty()) {
+      auto first = pClips->begin();
+      mStack.push_back( Pair( first, pClips->end() ) );
+      pClips = &(*first)->GetCutLines();
+   }
 }

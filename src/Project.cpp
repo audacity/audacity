@@ -117,6 +117,7 @@ scroll information.  It also has some status flags.
 #include "Tags.h"
 #include "TimeTrack.h"
 #include "TrackPanel.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "DirManager.h"
 #include "commands/CommandManager.h"

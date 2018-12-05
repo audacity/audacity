@@ -122,10 +122,6 @@ using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
-// Temporary arrays of mere pointers
-using WaveClipPointers = std::vector < WaveClip* >;
-using WaveClipConstPointers = std::vector < const WaveClip* >;
-
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
 class WaveDisplay

@@ -93,6 +93,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../TrackArtist.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"

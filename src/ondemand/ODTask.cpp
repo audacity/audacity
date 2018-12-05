@@ -21,6 +21,7 @@ in a background thread.
 #include "ODTask.h"
 
 #include "ODManager.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
 #include "../UndoManager.h"

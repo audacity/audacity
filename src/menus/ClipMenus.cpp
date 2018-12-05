@@ -1,6 +1,7 @@
 #include "../Project.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"

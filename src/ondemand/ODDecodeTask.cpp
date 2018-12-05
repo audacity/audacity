@@ -21,6 +21,7 @@ updating the ODDecodeBlockFile and the GUI of the newly available data.
 
 #include "../blockfile/ODDecodeBlockFile.h"
 #include "../Sequence.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include <wx/wx.h>
 

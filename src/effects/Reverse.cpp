@@ -22,6 +22,7 @@
 #include <wx/intl.h>
 
 #include "../LabelTrack.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 
 //

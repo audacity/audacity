@@ -37,6 +37,7 @@ of the BlockFile system.
 #include "DirManager.h"
 #include "ShuttleGui.h"
 #include "Project.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "Sequence.h"
 #include "Prefs.h"

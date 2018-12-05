@@ -13,7 +13,6 @@
 
 #include "Track.h"
 #include "SampleFormat.h"
-#include "WaveClip.h"
 #include "widgets/ProgressDialog.h"
 
 #include <vector>
@@ -30,6 +29,18 @@ class TimeWarper;
 class CutlineHandle;
 class SampleHandle;
 class EnvelopeHandle;
+
+class Sequence;
+class WaveClip;
+
+// Array of pointers that assume ownership
+using WaveClipHolder = std::shared_ptr< WaveClip >;
+using WaveClipHolders = std::vector < WaveClipHolder >;
+using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+
+// Temporary arrays of mere pointers
+using WaveClipPointers = std::vector < WaveClip* >;
+using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 //
 // Tolerance for merging wave tracks (in seconds)
@@ -387,21 +398,7 @@ private:
             return mStack.back().first->get();
       }
 
-      AllClipsIterator &operator ++ ()
-      {
-         // The unspecified sequence is a post-order, but there is no
-         // promise whether sister nodes are ordered in time.
-         if ( !mStack.empty() ) {
-            auto &pair =  mStack.back();
-            if ( ++pair.first == pair.second ) {
-               mStack.pop_back();
-            }
-            else
-               push( (*pair.first)->GetCutLines() );
-         }
-
-         return *this;
-      }
+      AllClipsIterator &operator ++ ();
 
       // Define == well enough to serve for loop termination test
       friend bool operator ==
@@ -414,15 +411,7 @@ private:
 
    private:
 
-      void push( WaveClipHolders &clips )
-      {
-         auto pClips = &clips;
-         while (!pClips->empty()) {
-            auto first = pClips->begin();
-            mStack.push_back( Pair( first, pClips->end() ) );
-            pClips = &(*first)->GetCutLines();
-         }
-      }
+      void push( WaveClipHolders &clips );
 
       using Iterator = WaveClipHolders::iterator;
       using Pair = std::pair< Iterator, Iterator >;

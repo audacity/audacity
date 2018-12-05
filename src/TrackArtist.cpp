@@ -72,6 +72,7 @@ audio tracks.
 #include "BlockFile.h"
 #include "Envelope.h"
 #include "NumberScale.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "LabelTrack.h"
 #include "TimeTrack.h"

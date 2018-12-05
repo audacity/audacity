@@ -32,6 +32,7 @@ text or binary format to a file.
 #include <wx/dialog.h>
 #include <wx/app.h>
 
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "widgets/ErrorDialog.h"
 

@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../ViewInfo.h"
+#include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../commands/CommandManager.h"
 #include "../../commands/Keyboard.h"

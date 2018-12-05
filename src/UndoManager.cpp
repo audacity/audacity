@@ -30,6 +30,7 @@ UndoManager
 #include "Internat.h"
 #include "Project.h"
 #include "Sequence.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
