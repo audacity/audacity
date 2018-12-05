@@ -22,10 +22,46 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
+LabelTrackHit::LabelTrackHit( const std::shared_ptr<LabelTrack> &pLT )
+   : mpLT{ pLT }
+{
+   pLT->Bind(
+      EVT_LABELTRACK_PERMUTED, &LabelTrackHit::OnLabelPermuted, this );
+}
+
+LabelTrackHit::~LabelTrackHit()
+{
+   // Must do this because this sink isn't wxEvtHandler
+   mpLT->Unbind(
+      EVT_LABELTRACK_PERMUTED, &LabelTrackHit::OnLabelPermuted, this );
+}
+
+void LabelTrackHit::OnLabelPermuted( LabelTrackEvent &e )
+{
+   e.Skip();
+   if ( e.mpTrack.lock() != mpLT )
+      return;
+
+   auto former = e.mFormerPosition;
+   auto present = e.mPresentPosition;
+
+   auto update = [=]( int &index ){
+      if ( index == former )
+         index = present;
+      else if ( former < index && index <= present )
+         -- index;
+      else if ( former > index && index >= present )
+         ++ index;
+   };
+   
+   update( mMouseOverLabelLeft );
+   update( mMouseOverLabelRight );
+}
+
 LabelGlyphHandle::LabelGlyphHandle
 (const std::shared_ptr<LabelTrack> &pLT,
- const wxRect &rect, const LabelTrackHit &hit)
-   : mHit{ hit }
+ const wxRect &rect, const std::shared_ptr<LabelTrackHit> &pHit)
+   : mpHit{ pHit }
    , mpLT{ pLT }
    , mRect{ rect }
 {
@@ -39,7 +75,7 @@ void LabelGlyphHandle::Enter(bool)
 UIHandle::Result LabelGlyphHandle::NeedChangeHighlight
 (const LabelGlyphHandle &oldState, const LabelGlyphHandle &newState)
 {
-   if (oldState.mHit.mEdge != newState.mHit.mEdge)
+   if (oldState.mpHit->mEdge != newState.mpHit->mEdge)
       // pointer moves between the circle and the chevron
       return RefreshCode::RefreshCell;
    return 0;
@@ -61,14 +97,18 @@ UIHandlePtr LabelGlyphHandle::HitTest
  const wxMouseState &state,
  const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect)
 {
-   LabelTrackHit hit{};
-   pLT->OverGlyph(hit, state.m_x, state.m_y);
+   // Allocate on heap because there are pointers to it when it is bound as
+   // an event sink, therefore it's not copyable; make it shared so
+   // LabelGlyphHandle can be copyable:
+   auto pHit = std::make_shared<LabelTrackHit>( pLT );
+
+   pLT->OverGlyph(*pHit, state.m_x, state.m_y);
 
    // IF edge!=0 THEN we've set the cursor and we're done.
    // signal this by setting the tip.
-   if ( hit.mEdge & 3 )
+   if ( pHit->mEdge & 3 )
    {
-      auto result = std::make_shared<LabelGlyphHandle>( pLT, rect, hit );
+      auto result = std::make_shared<LabelGlyphHandle>( pLT, rect, pHit );
       result = AssignUIHandlePtr(holder, result);
       return result;
    }
@@ -89,9 +129,9 @@ UIHandle::Result LabelGlyphHandle::Click
 
    auto &viewInfo = ViewInfo::Get( *pProject );
    mpLT->HandleGlyphClick
-      (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+      (*mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
-   if (! mHit.mIsAdjustingLabel )
+   if (! mpHit->mIsAdjustingLabel )
    {
       // The positive hit test should have ensured otherwise
       //wxASSERT(false);
@@ -119,7 +159,7 @@ UIHandle::Result LabelGlyphHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    mpLT->HandleGlyphDragRelease
-      (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+      (*mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    // Refresh all so that the change of selection is redrawn in all tracks
    return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
@@ -128,7 +168,7 @@ UIHandle::Result LabelGlyphHandle::Drag
 HitTestPreview LabelGlyphHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *)
 {
-   return HitPreview( (mHit.mEdge & 4 )!=0);
+   return HitPreview( (mpHit->mEdge & 4 )!=0);
 }
 
 UIHandle::Result LabelGlyphHandle::Release
@@ -140,7 +180,7 @@ UIHandle::Result LabelGlyphHandle::Release
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (mpLT->HandleGlyphDragRelease
-          (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
+          (*mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
       ProjectHistory::Get( *pProject ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
