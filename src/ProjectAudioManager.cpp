@@ -114,8 +114,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
             pTrack->AddLabel(
                SelectedRegion{ interval.first,
                   interval.first + interval.second },
-               wxString::Format(wxT("%ld"), counter++),
-               -2 );
+               wxString::Format(wxT("%ld"), counter++));
          ShowWarningDialog(&window, wxT("DropoutDetected"), _("\
 Recorded audio was lost at the labeled locations. Possible causes:\n\
 \n\

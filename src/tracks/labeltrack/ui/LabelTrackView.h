@@ -37,6 +37,11 @@ public:
    bool DoKeyDown(SelectedRegion &sel, wxKeyEvent & event);
    bool DoChar(SelectedRegion &sel, wxKeyEvent & event);
 
+   //This returns the index of the label we just added.
+   int AddLabel(const SelectedRegion &region,
+      const wxString &title = {},
+      int restoreFocus = -1);
+
 private:
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,

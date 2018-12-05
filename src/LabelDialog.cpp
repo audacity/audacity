@@ -420,7 +420,7 @@ bool LabelDialog::TransferDataFromWindow()
          return false;
 
       // Add the label to it
-      lt->AddLabel(rd.selectedRegion, rd.title, -2);
+      lt->AddLabel(rd.selectedRegion, rd.title);
       lt->Unselect();
    }
 
@@ -723,7 +723,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    for (i = 0; i < cnt; i++) {
       RowData &rd = mData[i];
 
-      lt->AddLabel(rd.selectedRegion, rd.title,-2);
+      lt->AddLabel(rd.selectedRegion, rd.title);
    }
 
    // Export them and clean

@@ -12,6 +12,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
 
 // private helper classes and functions
 namespace {
@@ -57,21 +58,21 @@ int DoAddLabel(
 //   SelectNone();
    lt->SetSelected(true);
 
-   int focusTrackNumber;
+   int index;
    if (useDialog) {
-      focusTrackNumber = -2;
+      index = lt->AddLabel(region, title);
    }
    else {
-      focusTrackNumber = -1;
+      int focusTrackNumber = -1;
       if (pFocusedTrack && preserveFocus) {
          // Must remember the track to re-focus after finishing a label edit.
          // do NOT identify it by a pointer, which might dangle!  Identify
          // by position.
          focusTrackNumber = pFocusedTrack->GetIndex();
       }
+      index =
+         LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);
    }
-
-   int index = lt->AddLabel(region, title, focusTrackNumber);
 
    ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
 
@@ -322,7 +323,7 @@ void OnPasteNewLabel(const CommandContext &context)
 
       // Add a NEW label, paste into it
       // Paul L:  copy whatever defines the selected region, not just times
-      lt->AddLabel(selectedRegion);
+      LabelTrackView::Get( *lt ).AddLabel(selectedRegion);
       if (lt->PasteSelectedText(selectedRegion.t0(),
                                 selectedRegion.t1()))
          bPastedSomething = true;
