@@ -334,7 +334,7 @@ private:
 
    bool GetSelected() const { return mSelected; }
 
-   virtual void SetSelected(bool s);
+   void SetSelected(bool s);
 
 public:
 

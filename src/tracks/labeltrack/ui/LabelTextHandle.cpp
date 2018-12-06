@@ -132,9 +132,9 @@ UIHandle::Result LabelTextHandle::Drag
          mLabelTrackStartYPos = event.m_y;
 
          if (pLT &&
-            (pLT->getSelectedIndex() != -1) &&
+            (pLT->GetSelectedIndex() != -1) &&
              pLT->OverTextBox(
-               pLT->GetLabel(pLT->getSelectedIndex()),
+               pLT->GetLabel(pLT->GetSelectedIndex()),
                mLabelTrackStartXPos,
                mLabelTrackStartYPos))
             mLabelTrackStartYPos = -1;

@@ -130,7 +130,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
-   int getSelectedIndex() const { return mSelIndex; }
+   int GetSelectedIndex() const;
 
    double GetOffset() const override;
    double GetStartTime() const override;
@@ -142,8 +142,6 @@ private:
    Track::Holder Clone() const override;
 
 public:
-   void SetSelected(bool s) override;
-
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
@@ -258,7 +256,7 @@ public:
    void ShowContextMenu();
    void OnContextMenu(wxCommandEvent & evt);
 
-   int mSelIndex;              /// Keeps track of the currently selected label
+   mutable int mSelIndex;      /// Keeps track of the currently selected label
    int mxMouseDisplacement;    /// Displacement of mouse cursor from the centre being dragged.
    LabelArray mLabels;
 
