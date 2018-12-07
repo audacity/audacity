@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-NoteTrackUI.cpp
+NoteTrackView.cpp
 
 Paul Licameli split from TrackPanel.cpp
 

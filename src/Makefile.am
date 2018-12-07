@@ -632,7 +632,8 @@ audacity_SOURCES = \
 	tracks/labeltrack/ui/LabelTextHandle.h \
 	tracks/labeltrack/ui/LabelTrackControls.cpp \
 	tracks/labeltrack/ui/LabelTrackControls.h \
-	tracks/labeltrack/ui/LabelTrackUI.cpp \
+	tracks/labeltrack/ui/LabelTrackView.cpp \
+	tracks/labeltrack/ui/LabelTrackView.h \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.cpp \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.cpp \
@@ -641,7 +642,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h \
-	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackView.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackView.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp \
@@ -658,14 +660,16 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackView.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.h \
-	tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp \
 	tracks/timetrack/ui/TimeTrackControls.cpp \
 	tracks/timetrack/ui/TimeTrackControls.h \
-	tracks/timetrack/ui/TimeTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackView.cpp \
+	tracks/timetrack/ui/TimeTrackView.h \
 	tracks/timetrack/ui/TimeTrackVRulerControls.cpp \
 	tracks/timetrack/ui/TimeTrackVRulerControls.h \
 	tracks/ui/BackgroundCell.cpp \
@@ -694,7 +698,8 @@ audacity_SOURCES = \
 	tracks/ui/TrackControls.h \
 	tracks/ui/TrackSelectHandle.cpp \
 	tracks/ui/TrackSelectHandle.h \
-	tracks/ui/TrackUI.cpp \
+	tracks/ui/TrackView.cpp \
+	tracks/ui/TrackView.h \
 	tracks/ui/TrackVRulerControls.cpp \
 	tracks/ui/TrackVRulerControls.h \
 	tracks/ui/ZoomHandle.cpp \

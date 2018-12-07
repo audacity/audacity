@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-TimeTrackUI.cpp
+TimeTrackView.cpp
 
 Paul Licameli split from TrackPanel.cpp
 

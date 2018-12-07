@@ -953,15 +953,6 @@
     <ClCompile Include="..\..\..\src\SelectionState.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackUI.cpp">
-      <Filter>src\tracks\labeltrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackUI.cpp">
-      <Filter>src\tracks\timetrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\ui\TrackUI.cpp">
-      <Filter>src\tracks\ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\UIHandle.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1004,9 +995,6 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackUI.cpp">
-      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackVRulerControls.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
@@ -1014,9 +1002,6 @@
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.cpp">
-      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackUI.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackVRulerControls.cpp">
@@ -1198,6 +1183,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackView.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackView.cpp">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.cpp">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\TrackView.cpp">
+      <Filter>src\tracks\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2331,6 +2331,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\KeyboardCapture.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackView.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackView.h">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.h">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h">
+      <Filter>src\tracks\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
