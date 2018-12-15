@@ -845,7 +845,6 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
                vruler->SetLog(false);
                if(wt->GetSpectrogramSettings().freqLabelType
                   == SpectrogramSettings::fltNotesEqualTemperament)
-<<<<<<< HEAD
                 SetNotesCustomTicks(vruler.get(), wt->GetSpectrogramSettings().ticksTuningFreq);
             }
             break;
