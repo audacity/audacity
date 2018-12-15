@@ -31,7 +31,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "PluginManager.h"
 
 #include "commands/ScriptCommandRelay.h"
-#include <NonGuiThread.h>  // header from libwidgetextra
+#include "NonGuiThread.h"  // header from libwidgetextra
 
 #include "audacity/PluginInterface.h"
 

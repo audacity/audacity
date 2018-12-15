@@ -76,7 +76,8 @@ function buildAction
    if [ ! -e "${swhpath}" ]
    then
       echo "Retrieving plugins"
-      ftp -o '|tar xf -' "${swhdist}"
+      curl -L "${swhdist}" -o swh-plugins-0.4.15.tar.gz
+      tar xf swh-plugins-0.4.15.tar.gz
    fi
 
    # Get to where we need to be

@@ -20,7 +20,7 @@ ODTask requests and internals.
 #include "ODTaskThread.h"
 #include "ODWaveTrackTaskQueue.h"
 #include "../Project.h"
-#include <NonGuiThread.h>
+#include "NonGuiThread.h"
 #include <wx/utils.h>
 #include <wx/wx.h>
 #include <wx/thread.h>
