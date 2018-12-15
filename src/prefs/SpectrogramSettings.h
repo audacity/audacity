@@ -64,7 +64,8 @@ public:
 
       stNumScaleTypes,
    };
-   enum FreqLabelType {
+   typedef int FreqLabelType;
+   enum FreqLabelTypeValues : int {
        fltHertz,
        fltNotesEqualTemperament,
 
