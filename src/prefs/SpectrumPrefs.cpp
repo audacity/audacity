@@ -180,7 +180,6 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.SetStretchyCol( 1 );
       S.StartStatic(_("Scale"),1);
       {
-<<<<<<< HEAD
          S.StartMultiColumn(2,wxEXPAND);
          {
             S.SetStretchyCol( 0 );
@@ -199,31 +198,12 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_FREQLABEL).TieChoice(_("Frequency Labels") + wxString(wxT(":")),
                  mTempSettings.freqLabelType,
                  &mFreqLabelChoices);
+            mTicksTuningFreq = S.Id(ID_TICKSTUNINGFREQ).TieNumericTextBox(_("Tuning Freqency for ticks (Hz):"),
+							mTempSettings.ticksTuningFreq,
+							12);
          }
          S.EndMultiColumn();
-=======
-         S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-            *(int*)&mTempSettings.scaleType,
-            &mScaleChoices);
 
-         mMinFreq =
-            S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
-            mTempSettings.minFreq,
-            12);
-
-         mMaxFreq =
-            S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
-            mTempSettings.maxFreq,
-            12);
-
-         S.Id(ID_FREQLABEL).TieChoice(_("Frequency Labels") + wxString(wxT(":")),
-                 *(int*)&mTempSettings.freqLabelType,
-                 &mFreqLabelChoices);
-
-         mTicksTuningFreq = S.Id(ID_TICKSTUNINGFREQ).TieNumericTextBox(_("Tuning Freqency for ticks (Hz):"),
-            mTempSettings.ticksTuningFreq,
-            12);
->>>>>>> added tuning freqency setting to Spectrogram ruler ticks
       }
       S.EndStatic();
 
