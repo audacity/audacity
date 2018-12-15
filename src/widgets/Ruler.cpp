@@ -771,10 +771,12 @@ void Ruler::TickWithLabel(int pos, const wxString& l, double d, bool major, bool
    mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
 
    // Bug 521.  dB view for waveforms needs a 2-sided scale.
+   /*
    if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
       d = -2*mDbMirrorValue - d;
    l = LabelString(d, major);
-
+	 */
+	
    mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
 
    if (mOrientation == wxHORIZONTAL) {
@@ -1096,6 +1098,8 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
          Tick(0, mMin, true, false);
          Tick(mLength, mMax, true, false);
       }
+		}
+	}
       else {
          // log case
 
