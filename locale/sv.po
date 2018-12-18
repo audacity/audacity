@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.2.2\n"
+"Project-Id-Version: Audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-02-24 22:27+0100\n"
+"PO-Revision-Date: 2018-12-18 20:31+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -223,7 +223,6 @@ msgid "No matches found"
 msgstr "Inga matchningar hittades"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Code has been modified. Are you sure?"
 msgstr "Koden har ändrats. Är du säker?"
 
@@ -380,7 +379,7 @@ msgstr "Gå till nästa S-uttryck"
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
-msgstr "Start"
+msgstr "Början"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Start script"
@@ -444,14 +443,12 @@ msgid "Nyquist plug-ins"
 msgstr "Nyquist-insticksmoduler"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "web developer"
-msgstr "utvecklare"
+msgstr "webbutvecklare"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "graphics"
-msgstr "&Grafisk"
+msgstr "grafik"
 
 #: src/AboutDialog.cpp
 msgid "incorporating"
@@ -468,7 +465,6 @@ msgid "OK"
 msgstr "OK"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid ""
 "Audacity is a free program written by a worldwide team of [[https://www."
 "audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
@@ -477,18 +473,17 @@ msgid ""
 msgstr ""
 "Audacity är ett fritt program skrivet av en världsomfattande grupp [[http://"
 "www.audacityteam.org/about/credits|volontärer]]. Audacity finns [[http://www."
-"audacityteam.org/download|tillgängligt]] för Windows, Mac och GNU/Linux (och "
+"audacityteam.org/download|tillgänglig]] för Windows, Mac och GNU/Linux (och "
 "andra Unix-liknande system)."
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
 "tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
-"Om du hittar en bugg eller har ett förslag till oss, var vänlig skriv på "
+"Om du hittar en bugg eller har ett förslag åt oss, var vänlig skriv på "
 "engelska på vårt [[http://forum.audacityteam.org/|forum]]. För hjälp, läs om "
 "tips och tricks på vår [[http://wiki.audacityteam.org/|wiki]] eller besök "
 "vårt [[http://forum.audacityteam.org/|forum]]."
@@ -542,7 +537,7 @@ msgstr "Bidragsgivare"
 
 #: src/AboutDialog.cpp
 msgid "Website and Graphics"
-msgstr ""
+msgstr "Webbplats och grafik"
 
 #: src/AboutDialog.cpp
 msgid "Translators"
@@ -565,13 +560,12 @@ msgid "Audacity website: "
 msgstr "Audacitys webbplats: "
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
 "&copy; 1999-2018 Audacity Team.<br>"
 msgstr ""
 "<p><br>&nbsp; &nbsp; Programvaran <b>Audacity<sup>&reg;</sup></b> är "
-"upphovsrättsskyddad &copy; 1999-2017 Audacity-teamet.<br>"
+"upphovsrättsskyddad &copy; 1999-2018 Audacity-teamet.<br>"
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -626,7 +620,7 @@ msgstr "MP2-export"
 
 #: src/AboutDialog.cpp
 msgid "Import via QuickTime"
-msgstr "Import via QuickTime"
+msgstr "Importera via QuickTime"
 
 #: src/AboutDialog.cpp
 msgid "FFmpeg Import/Export"
@@ -718,14 +712,12 @@ msgid "Timeline actions disabled during recording"
 msgstr "Tidslinjeåtgärder är inaktiverade under inspelning"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Klicka och dra för att justera relativa storleken för stereospår."
+msgstr "Klicka och dra för att justera, dubbelklicka för att återställa"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Record/Play head"
-msgstr "&Fäst sidhuvudet för inspelning/uppspelning"
+msgstr "Spela in/upp sidhuvud"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
@@ -753,12 +745,10 @@ msgid "Move to Scrub"
 msgstr "Flytta för att använda scrubbing"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release to stop seeking."
 msgstr "Dra för att söka. Släpp för att sluta söka."
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Drag to Seek. Release and move to Scrub."
 msgstr "Dra för att söka. Släpp och flytta för att använda scrubbing."
 
@@ -1117,11 +1107,13 @@ msgid "Error Initializing Midi"
 msgstr "Fel uppstod när MIDI initialiserades"
 
 #: src/AudioIO.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
-msgstr "Fel vid öppnande av ljudenhet."
+msgstr ""
+"Fel uppstod när inspelningsenhet öppnades.\n"
+"Felkod: %s"
 
 #: src/AudioIO.cpp
 msgid "Out of memory!"
@@ -1260,12 +1252,11 @@ msgstr "&Parametrar"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Details"
-msgstr ""
+msgstr "&Detaljer"
 
 #: src/BatchCommandDialog.cpp
-#, fuzzy
 msgid "Choose command"
-msgstr "V&älj kommando"
+msgstr "Välj kommando"
 
 #: src/BatchCommands.cpp
 msgid "No Action"
@@ -1302,42 +1293,36 @@ msgid "Export as WAV"
 msgstr "Exportera som WAV"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "MP3 Conversion"
-msgstr "Realtidskonvertering"
+msgstr "MP3-konvertering"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Fade Ends"
-msgstr "Tona in"
+msgstr "Toningsslut"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Select to Ends"
 msgstr "Markera till slutet"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Special Command"
-msgstr "Välj kommando"
+msgstr "Specialkommando"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Effect"
-msgstr "Effekter"
+msgstr "Effekt"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Menu Command (With Parameters)"
-msgstr "&Ändra parametrar"
+msgstr "Menykommando (med parametrar)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
-msgstr ""
+msgstr "Menukommando (inga parametrar)"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
-msgstr "cleaned"
+msgstr "rensades"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1380,20 +1365,18 @@ msgstr "Ditt batchkommando för %s kändes inte igen."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Applied Macro"
-msgstr "Tillämpade batchkedja"
+msgstr "Tillämpade makro"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Apply Macro"
-msgstr "Tillämpa kedja"
+msgstr "Tillämpa makro"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Applied Macro '%s'"
-msgstr "Tillämpade batchkedjan \"%s\""
+msgstr "Tillämpade makrot  \"%s\""
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1422,54 +1405,47 @@ msgstr "Tillämpa %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
-msgstr ""
+msgstr "Makropalett"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Select Macro"
-msgstr "Välj kurva"
+msgstr "Välj makro"
 
 #. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
 msgid "Macro"
-msgstr ""
+msgstr "Makro"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
-msgstr ""
+msgstr "Tillämpa makro till:"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Project"
-msgstr "Projekt"
+msgstr "&Projekt"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Apply macro to project"
-msgstr "Tillämpa i nuvarande &projekt"
+msgstr "Tillämpa makro i projektet"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Files..."
-msgstr "&Arkiv"
+msgstr "&Filer..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Apply macro to files..."
-msgstr "Tillämpa i &filer..."
+msgstr "Tillämpa makro i filer..."
 
 #. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Expand"
-msgstr "Expandera"
+msgstr "&Expandera"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "No macro selected"
-msgstr "Ingen kedja har valts"
+msgstr "Ingen makro har valts"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
@@ -1502,14 +1478,12 @@ msgid "&Cancel"
 msgstr "&Avbryt"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Manage Macros"
-msgstr "Hantera kurvor"
+msgstr "Hantera makron"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Remo&ve"
-msgstr "Radera"
+msgstr "Ta &bort"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "&Rename..."
@@ -1525,9 +1499,8 @@ msgid "E&xport..."
 msgstr "E&xportera..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Edit Steps"
-msgstr "Redigera etiketter"
+msgstr "Redigera steg"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
@@ -1569,7 +1542,7 @@ msgstr "Standar&dvärden"
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
-msgstr ""
+msgstr "&Krymp"
 
 #. i18n-hint: This is the last item in a list.
 #: src/BatchProcessDialog.cpp
@@ -1586,14 +1559,12 @@ msgid "Do you want to save the changes?"
 msgstr "Vill du spara ändringarna?"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Enter name of new macro"
-msgstr "Skriv in namn på ny kedja"
+msgstr "Skriv in namnet på det nya makrot"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Name of new macro"
-msgstr "Namnet på den nya kedjan"
+msgstr "Namnet på det nya makrot"
 
 #: src/BatchProcessDialog.cpp
 msgid "Name must not be blank"
@@ -1706,12 +1677,12 @@ msgstr "Test %d\n"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Cut (%d, %d) failed.\n"
-msgstr "Utklippning (%d, %d) misslyckades.\n"
+msgstr "Klippa ut (%d, %d) misslyckades.\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Paste: %d\n"
-msgstr "Klistrar in %d\n"
+msgstr "Klistra in: %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1880,9 +1851,8 @@ msgid "MISSING %s"
 msgstr "SAKNAR %s"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "&Copy Names to Clipboard"
-msgstr "Kopiera till urklipp"
+msgstr "&Kopiera namn till urklipp"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2005,7 +1975,7 @@ msgstr "Projektkontrollen hittade felaktiga sekvenstaggar."
 
 #: src/DirManager.cpp
 msgid "Close project immediately with no changes"
-msgstr "Stäng projekt omedelbart utan ändringar"
+msgstr "Stäng projektet omedelbart utan ändringar"
 
 #: src/DirManager.cpp
 msgid ""
@@ -2015,11 +1985,11 @@ msgid ""
 msgstr ""
 "Fortsätt med reparationerna i loggen och leta efter fler fel. Detta kommer "
 "att spara projektet i dess nuvarande tillstånd, om du inte väljer \"Stäng "
-"projekt genast\" vid fortsatta felmeddelanden."
+"projektet omedelbart\" vid fortsatta felmeddelanden."
 
 #: src/DirManager.cpp
 msgid "Warning - Problems Reading Sequence Tags"
-msgstr "Varning - Problem vid läsande av sekvenstaggar"
+msgstr "Varning - Problem med att läsa sekvenstaggar"
 
 #: src/DirManager.cpp
 msgid "Inspecting project file data"
@@ -2070,11 +2040,11 @@ msgstr "Ersätt försvunnet ljud med tystnad (genast och permanent)."
 
 #: src/DirManager.cpp
 msgid "Warning - Missing Aliased File(s)"
-msgstr "Varning - Aliasfil(er) saknas"
+msgstr "Varning - Saknar aliasfil(er)"
 
 #: src/DirManager.cpp
 msgid "   Project check replaced missing aliased file(s) with silence."
-msgstr "   Projektkontrollen ersätter saknade aliasfil(er) med tystnad."
+msgstr "   Projektkontrollen ersatte saknade aliasfil(er) med tystnad."
 
 #: src/DirManager.cpp
 #, c-format
@@ -2099,11 +2069,11 @@ msgstr "Fyll i tystnad som ersättning för saknad data [endast denna session]"
 
 #: src/DirManager.cpp
 msgid "Close project immediately with no further changes"
-msgstr "Stäng projekt omedelbart utan ytterligare ändringar"
+msgstr "Stäng projektet omedelbart utan ytterligare ändringar"
 
 #: src/DirManager.cpp
 msgid "Warning - Missing Alias Summary File(s)"
-msgstr "Varning - Saknar summary fil(er)"
+msgstr "Varning - Saknar aliassammanfattningsfil(er)"
 
 #: src/DirManager.cpp
 msgid "   Project check regenerated missing alias summary file(s)."
@@ -2141,11 +2111,11 @@ msgstr ""
 
 #: src/DirManager.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Ersätt försvunnen data med tystnad (genast och permanent)"
+msgstr "Ersätt försvunnet ljud med tystnad (genast och permanent)"
 
 #: src/DirManager.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
-msgstr "Varning - Saknade ljuddata blockfil(er)"
+msgstr "Varning - Saknar ljuddatablockfil(er)"
 
 #: src/DirManager.cpp
 msgid ""
@@ -2157,7 +2127,7 @@ msgid ""
 "   Project check ignored orphan block file(s). They will be deleted when "
 "project is saved."
 msgstr ""
-"   Projektkontrollen ignorerar föräldralösa blockfil(er). De kommer att "
+"   Projektkontrollen ignorerade föräldralösa blockfil(er). De kommer att "
 "raderas när projektet sparas."
 
 #: src/DirManager.cpp
@@ -2501,17 +2471,17 @@ msgstr ""
 "samplingsfrekvens."
 
 #: src/FreqWindow.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
-"För mycket ljud är valt. Bara de första %.1f sekunderna av ljud blir "
-"analyserade."
+"För mycket ljud har markerats. Bara de första %.1f sekunderna av ljud kommer "
+"analyseras."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
-msgstr "Inte tillräckligt mycket data valt."
+msgstr "Inte tillräckligt mycket data har markerats."
 
 #. i18n-hint: short form of 'seconds'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp
@@ -2547,7 +2517,7 @@ msgstr "spectrum.txt"
 
 #: src/FreqWindow.cpp
 msgid "Export Spectral Data As:"
-msgstr "Exportera spektraldata som:"
+msgstr "Exportera spektrumsdata som:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
@@ -2595,12 +2565,12 @@ msgstr "Inspelning - Ändrar inspelningsnivån"
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
 msgid "Editing and greyed out Menus"
-msgstr "Redigera- och gråa menyer"
+msgstr "Redigeringsrelaterade och inaktiverade menyer"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
 msgid "Exporting an Audio File"
-msgstr "Exportera en ljudfil"
+msgstr "Exporterar en ljudfil"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
@@ -2647,13 +2617,12 @@ msgstr ""
 "som har fullständig dokumentation och support.<br><br>"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "You can help us get Audacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Du kan hjälpa oss att få Audacity redo för utgivning genom att gå med i vår "
-"[[http://www.audacityteam.org/community/|gemenskap]].<hr><br><br>"
+"Du kan hjälpa oss att göra Audacity redo för utgivning genom att gå med i "
+"vår [[http://www.audacityteam.org/community/|gemenskap]].<hr><br><br>"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2664,25 +2633,22 @@ msgid "These are our support methods:"
 msgstr "Dessa är våra sätt att ge support:"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
 "manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 " [[file:quick_help.html|Snabbhjälp]] - om den inte är installerad lokalt, "
-"[[http://manual.audacityteam.org/quick_help.html|se på Internet]]"
+"[[http://manual.audacityteam.org/quick_help.html|se den på Internet]]"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[file:index.html|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
 " [[file:index.html|Manual]] - om den inte är installerad lokalt, [[http://"
-"manual.audacityteam.org/|se på Internet]]"
+"manual.audacityteam.org/|se den på Internet]]"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
@@ -2691,16 +2657,14 @@ msgstr ""
 "Internet."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
 "Mer:</b> Besök vår [[http://wiki.audacityteam.org/index.php|wiki]] för tips, "
-"tricks, extra guider och effektinsticksmoduler)"
+"tricks, extra guider och effektinsticksmoduler."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "Audacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
@@ -2708,14 +2672,13 @@ msgid ""
 "audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
 "library]] to your computer."
 msgstr ""
-"Audacity kan importera oskyddade filer i många format (som M4A och WMA, "
-"komprimerade WAV-filer från portabla inspelningsenheter och ljud från "
+"Audacity kan importera oskyddade filer i många andra format (som M4A och "
+"WMA, komprimerade WAV-filer från portabla inspelningsenheter och ljud från "
 "videofiler) om du laddar ned och installerar det valfria [[http://manual."
 "audacityteam.org/man/faq_opening_and_saving_files.html#foreign|FFmpeg-"
-"biblioteket]] till din dator."
+"biblioteket]] på din dator."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
 "man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
@@ -2742,7 +2705,6 @@ msgstr ""
 "manualen</a>."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
@@ -2750,8 +2712,8 @@ msgid ""
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
 "Manualen verkar inte vara installerad. Var god [[*URL*|se manualen på "
-"nätet]] eller [[http://manual.audacityteam.org/man/unzipping_the_manual."
-"html| ladda ned manualen]].<br><br>För att alltid se manualen på nätet, "
+"Internet]] eller [[http://manual.audacityteam.org/man/unzipping_the_manual."
+"html| ladda ned manualen]].<br><br>För att alltid se manualen på Internet, "
 "ändra \"Manualens plats\" i gränssnittsinställningarna till \"Från Internet"
 "\"."
 
@@ -2777,7 +2739,7 @@ msgstr "&Totalt använt utrymme"
 
 #: src/HistoryWindow.cpp
 msgid "&Undo Levels Available"
-msgstr "Tillgängliga &ångra-nivåer"
+msgstr "Tillgängliga nivåer att &ångra"
 
 #: src/HistoryWindow.cpp
 msgid "&Levels To Discard"
@@ -2942,7 +2904,7 @@ msgstr "Ändrade etikett"
 
 #: src/LabelTrack.cpp src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Label Edit"
-msgstr "Etikettredigering"
+msgstr "Redigera etikett"
 
 #: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
@@ -2982,14 +2944,12 @@ msgstr "Redigerade etiketter"
 #: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
 #: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/ui/TrackControls.cpp
-#, fuzzy
 msgid "Name:"
-msgstr "Namn"
+msgstr "Namn:"
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "New label"
-msgstr "Skapade etikett"
+msgstr "Ny etikett"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -3137,10 +3097,10 @@ msgid "Module Unsuitable"
 msgstr "Opassande modul"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr ""
-"Denna modul %s har ingen versionsinformation. Den kommer inte att läsas in."
+"Modulen %s har ingen versionsinformation. Den kommer inte att läsas in."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3154,7 +3114,7 @@ msgstr ""
 "Den kommer inte att läsas in."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
@@ -3310,9 +3270,8 @@ msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Manage Plug-ins"
-msgstr "Aktivera nya insticksmoduler"
+msgstr "Hantera insticksmoduler"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -3384,38 +3343,38 @@ msgid "&Disable"
 msgstr "&Inaktivera"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Enabling effects or commands:\n"
 "\n"
 "%s"
 msgstr ""
-"Aktiverar effekter:\n"
+"Aktiverar effekter eller kommandon:\n"
 "\n"
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Enabling effect or command:\n"
 "\n"
 "%s"
 msgstr ""
-"Aktiverar effekt:\n"
+"Aktiverar effekt eller kommando:\n"
 "\n"
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
-"Effekten vid %s misslyckades att registreras:\n"
+"Effekten eller kommandot vid %s misslyckades att registreras:\n"
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Overwrite the plug-in file %s?"
 msgstr "Skriv över insticksmodulfilen %s?"
 
@@ -3424,7 +3383,6 @@ msgid "Plug-in already exists"
 msgstr "Insticksmodulen finns redan"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "Insticksmodulfilen används. Misslyckades att skriva över"
 
@@ -3463,9 +3421,9 @@ msgid ""
 "This is a one-time question, after an 'install' where you asked to have the "
 "Preferences reset."
 msgstr ""
-"Återställ inställningar?\n"
+"Återställ inställningarna?\n"
 "\n"
-"Denna fråga ställs en gång, efter en \"install\" där du tillfrågas om "
+"Denna fråga ställs en gång, efter en \"installering\" där du tillfrågas om "
 "återställning av inställningarna."
 
 #: src/Prefs.cpp
@@ -3600,7 +3558,7 @@ msgstr ""
 
 #: src/Project.cpp
 msgid "Warning - Backup File Detected"
-msgstr "Varning - backup-fil hittad"
+msgstr "Varning - Säkerhetskopia hittades"
 
 #: src/Project.cpp
 msgid "Error opening file"
@@ -3695,7 +3653,7 @@ msgstr ""
 
 #: src/Project.cpp
 msgid "Warning - Empty Project"
-msgstr "Varning tomt projekt"
+msgstr "Varning - Tomt projekt"
 
 #: src/Project.cpp
 #, c-format
@@ -3717,13 +3675,13 @@ msgid "Error Saving Project"
 msgstr "Fel uppstod när projektet sparades"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
-"Kan inte spara projekt. Hittade inte sökvägen. Försök skapa \n"
-"mapp \"%s\" innan du sparar projekt med detta namn."
+"Kan inte spara projektet. Hittade inte sökvägen. Försök skapa \n"
+"filkatalogen \"%s\" innan du sparar projektet med detta namn."
 
 #: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -3741,7 +3699,7 @@ msgstr "Importera"
 
 #: src/Project.cpp
 msgid "Error Importing"
-msgstr "Fel vid import"
+msgstr "Fel uppstod under import"
 
 #: src/Project.cpp
 msgid ""
@@ -3754,12 +3712,11 @@ msgstr ""
 "Försök igen med ett annat namn."
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Lossless Copy of Project \"%s\" As..."
-msgstr "%sSpara komprimerade projektet \"%s\" som..."
+msgstr "%sSpara förlustfri kopia av projektet \"%s\" som..."
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -3768,25 +3725,20 @@ msgid ""
 "Lossless copies of project are a good way to backup your project, \n"
 "with no loss of quality, but the projects are large.\n"
 msgstr ""
-"\"Spara komprimerat projekt\" är till för ett Audacity-projekt, inte en "
+"\"Spara förlustfri kopia av projektet\" är för ett Audacity-projekt, inte en "
 "ljudfil.\n"
-"För en ljudfil som kommer att öppnas i andra appar, välj \"Exportera\".\n"
+"För en ljudfil som kommer öppnas i andra program, välj \"Exportera\".\n"
 "\n"
-"Komprimerade projektfiler är ett bra sätt att överföra dina projekt på "
+"Förlustfria projektkopior är bra för att säkerhetskopiera dina projekt på "
 "nätet, \n"
-"men de har lite brist på naturtrogenhet.\n"
-"\n"
-"Att öppna ett komprimerat projekt tar längre tid än vanligt, eftersom det "
-"importerar \n"
-"varje komprimerade spår.\n"
+"utan någon förlust i kvaliteten, men projekten är stora.\n"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Compressed Copy of Project \"%s\" As..."
-msgstr "%sSpara komprimerade projektet \"%s\" som..."
+msgstr "%sSpara komprimerad kopia av projektet \"%s\" som..."
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "'Save Compressed Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -3795,17 +3747,12 @@ msgid ""
 "Compressed project files are a good way to transmit your project online, \n"
 "but they have some loss of fidelity.\n"
 msgstr ""
-"\"Spara komprimerat projekt\" är till för ett Audacity-projekt, inte en "
-"ljudfil.\n"
-"För en ljudfil som kommer att öppnas i andra appar, välj \"Exportera\".\n"
+"\"Spara komprimerad kopia av projektet\" är för ett Audacity-projekt, inte "
+"en ljudfil.\n"
+"För en ljudfil som kommer öppnas i andra program, välj \"Exportera\".\n"
 "\n"
-"Komprimerade projektfiler är ett bra sätt att överföra dina projekt på "
-"nätet, \n"
+"Komprimerade projektfiler är bra för att överföra dina projekt på nätet, \n"
 "men de har lite brist på naturtrogenhet.\n"
-"\n"
-"Att öppna ett komprimerat projekt tar längre tid än vanligt, eftersom det "
-"importerar \n"
-"varje komprimerade spår.\n"
 
 #: src/Project.cpp
 #, c-format
@@ -3821,19 +3768,16 @@ msgstr ""
 "För en ljudfil som kommer att öppnas i andra appar, välj \"Exportera\".\n"
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "Saving a copy must not overwrite an existing saved project.\n"
 "Please try again and select an original name."
 msgstr ""
-"Detta projekt kunde inte sparas då det angivna namnet skulle orsaka att en "
-"annan fil med samma namn skulle skrivas över.\n"
+"Ett befintligt sparat projekt får inte skrivas över när en kopia sparas.\n"
 "Försök igen med ett annat namn."
 
 #: src/Project.cpp
-#, fuzzy
 msgid "Error Saving Copy of Project"
-msgstr "Fel uppstod när projektet sparades"
+msgstr "Fel uppstod när kopia av projektet sparades"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -3847,22 +3791,26 @@ msgid ""
 "\"%s\"\n"
 "will be irreversibly overwritten."
 msgstr ""
+"Vill du skriva över projektet:\n"
+"\"%s\"?\n"
+"\n"
+"Om du väljer \"Ja\" kommer projektet\n"
+"\"%s\"\n"
+"oåterkalleligt skrivas över."
 
 #. i18n-hint: Heading: A warning that a project is about to be overwritten.
 #: src/Project.cpp
-#, fuzzy
 msgid "Overwrite Project Warning"
-msgstr "Skriv över befintliga filer"
+msgstr "Varning om att skriva över projekt"
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "The project will not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Detta projekt kunde inte sparas då det angivna namnet skulle orsaka att en "
-"annan fil med samma namn skulle skrivas över.\n"
+"Projektet kommer inte sparas eftersom det valda projektet är öppet i ett "
+"annat fönster.\n"
 "Försök igen med ett annat namn."
 
 #: src/Project.cpp
@@ -3907,7 +3855,7 @@ msgstr "Kunde inte radera gammal autosparad fil: %s"
 #: src/Project.cpp
 #, c-format
 msgid "Actual Rate: %d"
-msgstr "Nuvarande frekvens: %d"
+msgstr "Faktisk frekvens: %d"
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -4080,9 +4028,8 @@ msgid "All Effects"
 msgstr "Alla effekter"
 
 #: src/Screenshot.cpp
-#, fuzzy
 msgid "All Scriptables"
-msgstr "Alla filer|*"
+msgstr "Alla skript"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
@@ -4095,7 +4042,7 @@ msgstr "Markeringsfält"
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
-msgstr "Spektral markering"
+msgstr "Spektrumsmarkering"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ToolsToolBar.cpp
@@ -4143,7 +4090,7 @@ msgstr "Enhet"
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play-at-Speed"
-msgstr "Spela upp med vald hastighet"
+msgstr "Spela upp efter hastighet"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ScrubbingToolBar.cpp
@@ -4493,7 +4440,7 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
@@ -4501,7 +4448,7 @@ msgid ""
 msgstr ""
 "Vissa nödvändiga filer i:\n"
 "  %s\n"
-"finns redan. Skriv övre?"
+"finns redan. Vill du skriva över?"
 
 #: src/Theme.cpp
 #, c-format
@@ -4553,7 +4500,7 @@ msgstr "Längden är noll. Ingenting kommer att spelas in."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Duration"
-msgstr "Fel i duration"
+msgstr "Fel i längd"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save path is invalid."
@@ -4561,7 +4508,7 @@ msgstr "Sökvägen för automatisk sparning är ogiltig."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Automatic Save"
-msgstr "Fel i automatisk sparning"
+msgstr "Fel uppstod under automatisk sparning"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export path is invalid."
@@ -4569,7 +4516,7 @@ msgstr "Sökvägen för automatisk export är ogiltig."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Automatic Export"
-msgstr "Fel i automatisk export"
+msgstr "Fel uppstod under automatisk export"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -4596,7 +4543,7 @@ msgstr "Hårddiskvarning för timerinspelning"
 
 #: src/TimerRecordDialog.cpp
 msgid "Current Project"
-msgstr "Nuvarande &projekt"
+msgstr "Nuvarande projekt"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording start:"
@@ -4742,7 +4689,7 @@ msgstr "Slutdatum"
 #.
 #: src/TimerRecordDialog.cpp
 msgid "099 days 024 h 060 m 060 s"
-msgstr "099 dagar 024 h 060 m 060 s"
+msgstr "099 dygn 024 h 060 m 060 s"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save"
@@ -4770,7 +4717,7 @@ msgstr "Aktivera automatisk &exportering?"
 
 #: src/TimerRecordDialog.cpp
 msgid "Export Project As:"
-msgstr "Exportera projekt som:"
+msgstr "Exportera projektet som:"
 
 #: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
 #: src/prefs/RecordingPrefs.cpp
@@ -4825,7 +4772,7 @@ msgstr "Inspelningen kommer att börja om:"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid "%s in:"
-msgstr ""
+msgstr "%s i:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -4882,32 +4829,28 @@ msgstr "Spår %d"
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Muted"
-msgstr "Tyst"
+msgstr " Tystade"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Soloed"
-msgstr "Solo"
+msgstr " Solo"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Selected"
-msgstr "Markera"
+msgstr " Markerade"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
 #. The absence of a dash between Sync and Locked is deliberate -
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Sync Locked"
-msgstr " Synkroniseringslås markerades"
+msgstr " Synkroniseringslåst"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
@@ -4927,7 +4870,7 @@ msgstr "Klicka och dra för att justera relativa storleken för stereospår."
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
-msgstr "Klicka och dra för att ändra storlek på spår."
+msgstr "Klicka och dra för att ändra storleken på spåret."
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -4946,12 +4889,12 @@ msgstr "Kalibrera resultat\n"
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "Energi                  -- mean: %1.4f  sd: (%1.4f)\n"
+msgstr "Energi                  -- medel: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "Teckenändringar        -- mean: %1.4f  sd: (%1.4f)\n"
+msgstr "Teckenändringar        -- medel: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
@@ -5003,19 +4946,18 @@ msgid "%s: %s"
 msgstr "%s: %s"
 
 #: src/commands/BatchEvalCommand.cpp
-#, fuzzy
 msgid "Batch Command"
-msgstr "Kommando"
+msgstr "Batchkommando"
 
 #: src/commands/Command.cpp
 #, c-format
 msgid "%s is not a parameter accepted by %s"
-msgstr ""
+msgstr "%s är inte en parameter som accepteras av %s"
 
 #: src/commands/Command.cpp
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
-msgstr ""
+msgstr "Ogiltigt värde parametern \"%s\": Den bör vara %s"
 
 #: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
 #: src/widgets/KeyView.cpp
@@ -5098,7 +5040,7 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
-msgstr ""
+msgstr "\"%s\" kräver att minst ett spår markeras."
 
 #: src/commands/CommandManager.cpp
 #, c-format
@@ -5110,9 +5052,8 @@ msgid "Loading Keyboard Shortcuts"
 msgstr "Läser in kortkommandon"
 
 #: src/commands/CommandTargets.cpp
-#, fuzzy
 msgid "Long Message"
-msgstr "Meddelande"
+msgstr "Långt meddelande"
 
 #: src/commands/CompareAudioCommand.cpp src/effects/AutoDuck.cpp
 #: src/effects/Compressor.cpp src/effects/TruncSilence.cpp
@@ -5120,14 +5061,12 @@ msgid "Threshold:"
 msgstr "Tröskel:"
 
 #: src/commands/CompareAudioCommand.h
-#, fuzzy
 msgid "Compare Audio"
-msgstr "Kopiera ljud med etikett"
+msgstr "Jämför ljud"
 
 #: src/commands/CompareAudioCommand.h
-#, fuzzy
 msgid "Compares a range on two tracks."
-msgstr "Komprimera baserat på toppunkter"
+msgstr "Jämför ett intervall på två spår."
 
 #: src/commands/Demo.cpp src/effects/Echo.cpp
 msgid "Delay time (seconds):"
@@ -5139,96 +5078,84 @@ msgstr "Decay-faktor:"
 
 #: src/commands/Demo.h
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #: src/commands/Demo.h
 msgid "Does the demo action."
-msgstr ""
+msgstr "Utför demoåtgärden."
 
 #: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
 msgid "Panel"
 msgstr "Panel"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Application"
-msgstr "Förstärkning dB"
+msgstr "Program"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Track 0"
-msgstr "Spår"
+msgstr "Spår 0"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Track 1"
-msgstr "Spår"
+msgstr "Spår 1"
 
 #. i18n-hint abbreviates "Identity" or "Identifier"
 #: src/commands/DragCommand.cpp
 msgid "Id:"
-msgstr ""
+msgstr "ID:"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Window Name:"
-msgstr "Fönsterstorlek:"
+msgstr "Fönsternamn:"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "From X:"
-msgstr "Från rpm"
+msgstr "Från X:"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "From Y:"
-msgstr "Från rpm"
+msgstr "Från Y:"
 
 #: src/commands/DragCommand.cpp
 msgid "To X:"
-msgstr ""
+msgstr "Till X:"
 
 #: src/commands/DragCommand.cpp
 msgid "To Y:"
-msgstr ""
+msgstr "Till Y:"
 
 #: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
 msgid "Relative To:"
-msgstr ""
+msgstr "Relativt till:"
 
 #: src/commands/DragCommand.h
-#, fuzzy
 msgid "Drag"
-msgstr "Vänster-Dra"
+msgstr "Dra"
 
 #: src/commands/DragCommand.h
 msgid "Drags mouse from one place to another."
-msgstr ""
+msgstr "Drar musen från en plats till en annan."
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Commands"
-msgstr "Kommando"
+msgstr "Kommandon"
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Menus"
-msgstr "Meny"
+msgstr "Menyer"
 
 #: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Preferences"
-msgstr "Inställningar: "
+msgstr "Inställningar"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Clips"
-msgstr "klipp"
+msgstr "Klipp"
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Envelopes"
-msgstr "Envelopp"
+msgstr "Envelopper"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 #: src/export/ExportMultiple.cpp
@@ -5237,21 +5164,21 @@ msgstr "Etiketter"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
-msgstr ""
+msgstr "Fält"
 
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp
 msgid "JSON"
-msgstr ""
+msgstr "JSON"
 
 #. i18n-hint name of a computer programming language
 #: src/commands/GetInfoCommand.cpp
 msgid "LISP"
-msgstr ""
+msgstr "LISP"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Brief"
-msgstr ""
+msgstr "Kort"
 
 #: src/commands/GetInfoCommand.cpp src/effects/Effect.cpp
 msgid "Type:"
@@ -5263,27 +5190,24 @@ msgid "Format:"
 msgstr "Format:"
 
 #: src/commands/GetInfoCommand.h
-#, fuzzy
 msgid "Get Info"
-msgstr "Information"
+msgstr "Hämta information"
 
 #: src/commands/GetInfoCommand.h
 msgid "Gets information in JSON format."
-msgstr ""
+msgstr "Hämtar information i JSON-format."
 
 #: src/commands/GetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Types:"
-msgstr "Typ:"
+msgstr "Typer:"
 
 #: src/commands/GetTrackInfoCommand.h
-#, fuzzy
 msgid "Get Track Info"
-msgstr "Flytta ned spåret"
+msgstr "Hämta spårinfo"
 
 #: src/commands/GetTrackInfoCommand.h
 msgid "Gets track values as JSON."
-msgstr ""
+msgstr "Hämtar spårvärden som JSON."
 
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
@@ -5291,41 +5215,35 @@ msgstr "Kommando:"
 
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
-msgstr ""
+msgstr "Ger hjälp om ett kommando."
 
 #: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "File Name:"
-msgstr "Filtyp:"
+msgstr "Filnamn:"
 
 #: src/commands/ImportExportCommands.cpp
-#, fuzzy
 msgid "Number of Channels:"
-msgstr "Antal redigeringar:"
+msgstr "Antal kanaler:"
 
 #: src/commands/ImportExportCommands.h
-#, fuzzy
 msgid "Import2"
-msgstr "Importera"
+msgstr "Importera2"
 
 #: src/commands/ImportExportCommands.h
 msgid "Imports from a file."
-msgstr ""
+msgstr "Importerar från en fil."
 
 #: src/commands/ImportExportCommands.h
-#, fuzzy
 msgid "Export2"
-msgstr "Exportera"
+msgstr "Exportera2"
 
 #: src/commands/ImportExportCommands.h
-#, fuzzy
 msgid "Exports to a file."
-msgstr "Exportera flera"
+msgstr "Exporterar till en fil."
 
 #: src/commands/LoadCommands.cpp
-#, fuzzy
 msgid "Builtin Commands"
-msgstr "Välj kommando"
+msgstr "Inbyggda kommandon"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -5335,169 +5253,140 @@ msgid "The Audacity Team"
 msgstr "Audacity-teamet"
 
 #: src/commands/LoadCommands.cpp
-#, fuzzy
 msgid "Provides builtin commands to Audacity"
-msgstr "Tillhandahåller inbyggda effekter i Audacity"
+msgstr "Tillhandahåller inbyggda kommandon i Audacity"
 
 #: src/commands/LoadCommands.cpp
-#, fuzzy
 msgid "Unknown built-in command name"
-msgstr "Okänt namn på inbyggd effekt"
+msgstr "Okänt namn på inbyggt kommando"
 
 #: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
 msgid "Text:"
-msgstr ""
+msgstr "Text:"
 
 #: src/commands/MessageCommand.h
-#, fuzzy
 msgid "Echos a message."
-msgstr "detta hjälpmeddelande"
+msgstr "Upprepar ett meddelande."
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Add to History"
-msgstr "Ångra historia"
+msgstr "Lägg till i historiken"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Add to History:"
-msgstr "Ångra historia"
+msgstr "Lägg till i historik:"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Compress:"
-msgstr "Kompressor"
+msgstr "Komprimera:"
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Open Project2"
-msgstr "Nytt projekt"
+msgstr "Öppna projekt2"
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Opens a project."
-msgstr "Öppnar Audacity-projekt"
+msgstr "Öppnar ett projekt."
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Save Project2"
-msgstr "&Spara projekt"
+msgstr "Spara projekt2"
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Saves a project."
-msgstr "&Spara projekt"
+msgstr "Sparar ett projekt."
 
 #: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Value:"
-msgstr "Värde"
+msgstr "Värde:"
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Reload:"
-msgstr ""
+msgstr "Uppdatera:"
 
 #: src/commands/PreferenceCommands.h
-#, fuzzy
 msgid "Get Preference"
-msgstr "&Använd inställningar"
+msgstr "Hämta inställning"
 
 #: src/commands/PreferenceCommands.h
-#, fuzzy
 msgid "Set Preference"
-msgstr "&Använd inställningar"
+msgstr "Ändra inställning"
 
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
-msgstr ""
+msgstr "Hämtar värdet för en inställning."
 
 #: src/commands/PreferenceCommands.h
-#, fuzzy
 msgid "Sets the value of a single preference."
-msgstr "Ändrar den maximala amplituden för ett eller fler spår"
+msgstr "Ändrar värdet för en enda inställning."
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Window"
-msgstr "&Fönster"
+msgstr "Fönster"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Full Window"
-msgstr "FFT Window"
+msgstr "Helfönster"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Window Plus"
-msgstr "Fönstret och dess omgivning"
+msgstr "Fönstret plus"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Fullscreen"
-msgstr "&Helskärm (på/av)"
+msgstr "Helskärm"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Toolbars"
-msgstr "&Verktygsfält"
+msgstr "Verktygsfält"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 msgid "Effects"
 msgstr "Effekter"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Scriptables"
 msgstr "Skript"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Selectionbar"
 msgstr "Markeringsfält"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Trackpanel"
 msgstr "Spårpanel"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Two Tracks"
-msgstr "Första spåret"
+msgstr "Första två spåren"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Three Tracks"
-msgstr "Första spåret"
+msgstr "Första tre spåren"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Four Tracks"
-msgstr "Första spåret"
+msgstr "Första fyra spåren"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Tracks Plus"
-msgstr "Spårpanel"
+msgstr "Spår plus"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Track Plus"
-msgstr "Första spåret"
+msgstr "Första spåret plus"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "All Tracks"
-msgstr "Långa spår"
+msgstr "Alla spår"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "All Tracks Plus"
-msgstr "Långa spår"
+msgstr "Alla spår plus"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Blue"
-msgstr ""
+msgstr "Blå"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
 msgid "White"
@@ -5510,23 +5399,20 @@ msgid "None"
 msgstr "Inget"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Path:"
-msgstr "Sökväg"
+msgstr "Sökväg:"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Capture What:"
-msgstr "Misslyckades att ta skärmdump!"
+msgstr "Vad som ska fångas:"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Background:"
-msgstr "&Bakgrund:"
+msgstr "Bakgrund:"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Bring To Top:"
-msgstr ""
+msgstr "Flytta längst upp:"
 
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -5534,71 +5420,61 @@ msgid "Error trying to save file: %s"
 msgstr "Fel uppstod när filen sparades: %s"
 
 #: src/commands/ScreenshotCommand.h
-#, fuzzy
 msgid "Screenshot"
-msgstr "&Skärmdumpsverktyg..."
+msgstr "Skärmdump"
 
 #: src/commands/ScreenshotCommand.h
 msgid "Takes screenshots."
-msgstr ""
+msgstr "Tar skärmdumpar."
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Project Start"
-msgstr "&Projektets början"
+msgstr "Projektets början"
 
 #: src/commands/SelectCommand.cpp src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Project"
 msgstr "Projekt"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Project End"
-msgstr "P&rojektets slut"
+msgstr "Projektets slut"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Selection Start"
-msgstr "Markeringens &början"
+msgstr "Markeringens början"
 
 #: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
 msgid "Selection"
 msgstr "Markering"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Selection End"
-msgstr "Markeringens &slut"
+msgstr "Markeringens slut"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Start Time:"
-msgstr "Starttid"
+msgstr "Starttid:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "End Time:"
-msgstr "Sluttid"
+msgstr "Sluttid:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "High:"
-msgstr "Highpass"
+msgstr "Hög:"
 
 #: src/commands/SelectCommand.cpp
 msgid "Low:"
-msgstr ""
+msgstr "Låg:"
 
 #. i18n-hint verb, imperative
 #: src/commands/SelectCommand.cpp
 msgid "Set"
-msgstr "Set"
+msgstr "Ändra"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Add"
-msgstr "&Lägg till"
+msgstr "Lägg till"
 
 #: src/commands/SelectCommand.cpp src/effects/EffectRack.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
@@ -5606,213 +5482,180 @@ msgid "Remove"
 msgstr "Radera"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "First Track:"
-msgstr "Första spåret"
+msgstr "Första spåret:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Track Count:"
-msgstr "Duckingsmängd:"
+msgstr "Antal spår:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Mode:"
-msgstr "Måttlig"
+msgstr "Läge:"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Select Time"
-msgstr "Välj en fil"
+msgstr "Välj tid"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Select Frequencies"
-msgstr "Frekvenser"
+msgstr "Välj frekvenser"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Select Tracks"
-msgstr "S&ortera spår"
+msgstr "Välj spår"
 
 #: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
 msgid "Select"
 msgstr "Markera"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Selects a time range."
-msgstr "Välj en fil"
+msgstr "Välj ett tidsintervall."
 
 #: src/commands/SelectCommand.h
 msgid "Selects a frequency range."
-msgstr ""
+msgstr "Väljer ett frekvensintervall."
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Selects a range of tracks."
-msgstr "Var god välj ett ljudspår."
+msgstr "Väljer ett spårintervall."
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Selects Audio."
-msgstr "Välj ljudvärd"
+msgstr "Väljer ljud."
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 0"
-msgstr "Färger"
+msgstr "Färg 0"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 1"
-msgstr "Färger"
+msgstr "Färg 1"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 2"
-msgstr "Färger"
+msgstr "Färg 2"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 3"
-msgstr "Färger"
+msgstr "Färg 3"
 
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
-msgstr ""
+msgstr "Vid:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Colour:"
-msgstr "Färger"
+msgstr "Färg:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Start:"
-msgstr "Start"
+msgstr "Start:"
 
 #: src/commands/SetClipCommand.h
-#, fuzzy
 msgid "Set Clip"
-msgstr "N&ästa klipp"
+msgstr "Ändra klipp"
 
 #: src/commands/SetClipCommand.h
 msgid "Sets various values for a clip."
-msgstr ""
+msgstr "Ändrar olika värden för ett klipp."
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Time:"
-msgstr "Tid"
+msgstr "Tid:"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Delete:"
-msgstr "Radera"
+msgstr "Radera:"
 
 #: src/commands/SetEnvelopeCommand.h
-#, fuzzy
 msgid "Set Envelope"
-msgstr "Envelopp"
+msgstr "Ändra envelopp"
 
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
-msgstr ""
+msgstr "Ändrar punktpositionen för en envelopp."
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Label Index"
-msgstr "Etikettredigering"
+msgstr "Etikettindex"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "End:"
-msgstr ""
+msgstr "Slut:"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Selected:"
-msgstr "Markera"
+msgstr "Markerad:"
 
 #: src/commands/SetLabelCommand.h
-#, fuzzy
 msgid "Set Label"
-msgstr "&Radera etikett"
+msgstr "Ändra etikett"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
-msgstr ""
+msgstr "Ändrar olika värden för en etikett."
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Rate:"
-msgstr "Bestäm frekvens"
+msgstr "Frekvens:"
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Resize:"
-msgstr "&Resterande"
+msgstr "Ändra storlek:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "X:"
-msgstr ""
+msgstr "X:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Y:"
-msgstr ""
+msgstr "Y:"
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Width:"
-msgstr "Bandbredd:"
+msgstr "Bredd:"
 
 #: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Height:"
-msgstr "Ljust"
+msgstr "Höjd:"
 
 #: src/commands/SetProjectCommand.h
-#, fuzzy
 msgid "Set Project"
-msgstr "&Spara projekt"
+msgstr "Ändra projekt"
 
 #: src/commands/SetProjectCommand.h
 msgid "Sets various values for a project."
-msgstr ""
+msgstr "Ändrar olika värden för ett projekt."
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Track Index:"
-msgstr "Sp&årets slut"
+msgstr "Spårindex:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Channel Index:"
-msgstr "Kanalläge:"
+msgstr "Kanalindex:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Unnamed"
-msgstr "namnlös"
+msgstr "Namnlös"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Selected"
-msgstr "Markera"
+msgstr "Markerad"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Focused"
-msgstr "&Fokus"
+msgstr "Fokuserad"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Gain:"
-msgstr "Förstärkning"
+msgstr "Förstärkning:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
-msgstr ""
+msgstr "Panorera:"
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 msgid "Waveform"
@@ -5829,83 +5672,68 @@ msgid "Linear"
 msgstr "Linjär"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Reset"
-msgstr "&Återställ"
+msgstr "Återställ"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Times 2"
-msgstr "Tid"
+msgstr "Tider 2"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "HalfWave"
 msgstr "Halvvåg"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Display:"
-msgstr "Visning"
+msgstr "Visning:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Scale:"
-msgstr "Skala"
+msgstr "Skala:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom:"
-msgstr "Zoom"
+msgstr "VZoom:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Top:"
-msgstr "Zoom"
+msgstr "VZoom max:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom Bottom:"
-msgstr "längst ned"
+msgstr "VZoom längst ned:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Use Spectral Prefs"
-msgstr "Spectral Processor"
+msgstr "Använd spektruminställningar"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Spectral Select"
-msgstr "Spektral markering"
+msgstr "Spektrumsmarkering"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Gray Scale"
-msgstr "Gr&åskala"
+msgstr "Gråskala"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track"
-msgstr "Nytt spår"
+msgstr "Ändra spår"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track Status"
-msgstr "S&pårets början"
+msgstr "Ändra spårstatus"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track Audio"
-msgstr "Skapa tystnad"
+msgstr "Ändra spårljud"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track Visuals"
-msgstr "S&ortera spår"
+msgstr "Ändra spårets utseende"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
-msgstr ""
+msgstr "Ändrar olika värden för ett spår."
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
@@ -6039,9 +5867,8 @@ msgid "Bass and Treble"
 msgstr "Bas och diskant"
 
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Ändra tonhöjden för ett spår utan att ändra tempot"
+msgstr "Ändrar tonhöjden för ett spår utan att ändra dess tempo"
 
 #: src/effects/ChangePitch.cpp
 msgid "High Quality Pitch Change"
@@ -6126,9 +5953,8 @@ msgid "n/a"
 msgstr "n/a"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Ändra hastigheten för ett spår, ändrar även dess tonhöjd"
+msgstr "Ändrar hastigheten för ett spår, ändrar även dess tonhöjd"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
@@ -6172,9 +5998,8 @@ msgid "Change Speed"
 msgstr "Ändra hastighet"
 
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Ändra tempot för en markering utan att ändra dess tonhöjd"
+msgstr "Ändrar tempot för en markering utan att ändra dess tonhöjd"
 
 #: src/effects/ChangeTempo.cpp
 msgid "High Quality Tempo Change"
@@ -6240,7 +6065,7 @@ msgstr "Max. spikbredd"
 
 #: src/effects/ClickRemoval.h
 msgid "Click Removal"
-msgstr "Ta bort klick"
+msgstr "Klickborttagning"
 
 #: src/effects/Compressor.cpp
 msgid "Compresses the dynamic range of audio"
@@ -6352,7 +6177,7 @@ msgstr "%.1f sek"
 
 #: src/effects/Compressor.h
 msgid "Compressor"
-msgstr "Kompressor"
+msgstr "Komprimerare"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -6770,7 +6595,7 @@ msgstr "Parameterkontroller"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping level"
-msgstr "Klippnivå"
+msgstr "Klippningsnivå"
 
 #: src/effects/Distortion.cpp
 msgid "Drive"
@@ -6778,11 +6603,11 @@ msgstr "Enhet"
 
 #: src/effects/Distortion.cpp
 msgid "Make-up Gain"
-msgstr "Ombrytningförstärkning"
+msgstr "Ombrytningsförstärkning"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping threshold"
-msgstr "Klipptröskel"
+msgstr "Klippningströskel"
 
 #: src/effects/Distortion.cpp
 msgid "Hardness"
@@ -6908,7 +6733,7 @@ msgstr "Begärt värde överskrider minneskapaciteten."
 
 #: src/effects/Echo.h
 msgid "Echo"
-msgstr "Eko"
+msgstr "Upprepning"
 
 #: src/effects/Effect.cpp
 msgid "Built-in"
@@ -6932,9 +6757,8 @@ msgstr ""
 "samplingsfrekvens."
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Some Command"
-msgstr "Välj kommando"
+msgstr "En del kommandon"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -6972,7 +6796,7 @@ msgstr "Hoppa bakåt"
 
 #: src/effects/Effect.cpp
 msgid "Skip &Forward"
-msgstr "Hoppa framåt"
+msgstr "Hoppa &framåt"
 
 #: src/effects/Effect.cpp
 msgid "Skip forward"
@@ -7032,7 +6856,7 @@ msgstr "Version: %s"
 #: src/effects/Effect.cpp
 #, c-format
 msgid "Vendor: %s"
-msgstr "Säljare: %s"
+msgstr "Utgivare: %s"
 
 #: src/effects/Effect.cpp
 #, c-format
@@ -7102,9 +6926,9 @@ msgid "Applied effect: %s"
 msgstr "Tillämpade effekt: %s"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Applied command: %s"
-msgstr "Tillämpade effekt: %s"
+msgstr "Tillämpade kommando: %s"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -7126,7 +6950,7 @@ msgid "Effect failed to initialize"
 msgstr "Effekten misslyckades att initieras"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following command failed:\n"
 "\n"
@@ -7134,16 +6958,15 @@ msgid ""
 "\n"
 "More information may be available in Help->Show Log"
 msgstr ""
-"Misslyckades att försöka initialisera följande effekt:\n"
+"Misslyckades att försöka initialisera följande kommando:\n"
 "\n"
 "%s\n"
 "\n"
-"Mer information finns tillgänglig i Hjälp ->Visa logg"
+"Mer information kan finnas tillgänglig i Hjälp ->Visa logg"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy
 msgid "Command failed to initialize"
-msgstr "Effekten misslyckades att initieras"
+msgstr "Kommandot misslyckades att initieras"
 
 #: src/effects/EffectRack.cpp
 msgid "Effects Rack"
@@ -7225,22 +7048,21 @@ msgstr "Cosinus"
 
 #: src/effects/Equalization.cpp
 msgid "Cubic"
-msgstr "Cubic"
+msgstr "Kubisk"
 
 #: src/effects/Equalization.cpp
 msgid "Adjusts the volume levels of particular frequencies"
 msgstr "Justerar volymnivåerna för vissa frekvenser"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid ""
 "To use this EQ curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
-"För att använda EQ-kurva i en batchkedja, välj ett nytt namn för den.\n"
-"Välj \"Spara/Hantera kurvor...\" - knappen och döp om kurvan till \"namnlös"
-"\" och använd den sedan."
+"För att använda denna EQ-kurva i ett makro, välj ett nytt namn för den.\n"
+"Välj knappen \"Spara/Hantera kurvor...\" och döp om den namnlösa kurvan och "
+"använd den sedan."
 
 #: src/effects/Equalization.cpp
 msgid "EQ Curve needs a different name"
@@ -7346,7 +7168,7 @@ msgstr "S&para/Hantera kurvor..."
 
 #: src/effects/Equalization.cpp
 msgid "Fla&tten"
-msgstr "Pla&tta"
+msgstr "Pla&tta till"
 
 #: src/effects/Equalization.cpp
 msgid "&Invert"
@@ -7402,18 +7224,18 @@ msgid ""
 "Error message says:\n"
 "%s"
 msgstr ""
-"Fel när EQ-kurvor lästes in från fil:\n"
+"Fel uppstod när EQ-kurvor lästes in från fil:\n"
 "%s\n"
 "Felmeddelandet säger:\n"
 "%s"
 
 #: src/effects/Equalization.cpp
 msgid "Error Loading EQ Curves"
-msgstr "Fel när EQ-kurvor lästes in"
+msgstr "Fel uppstod när EQ-kurvor lästes in"
 
 #: src/effects/Equalization.cpp
 msgid "Error Saving Equalization Curves"
-msgstr "Fel vid sparande av Equalizationkurvor"
+msgstr "Fel uppstod när equalizationkurvor sparades"
 
 #: src/effects/Equalization.cpp
 msgid "Requested curve not found, using 'unnamed'"
@@ -7445,7 +7267,7 @@ msgstr "R&adera..."
 
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
-msgstr "&Mer..."
+msgstr "&Hämta mer..."
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -7475,7 +7297,7 @@ msgstr "&Byt namn..."
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "Rename '%s'"
-msgstr "Döp om \"%s\""
+msgstr "Byt namn på \"%s\""
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -7486,9 +7308,9 @@ msgid "Same name"
 msgstr "Samma namn"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Overwrite existing curve '%s'?"
-msgstr "Skriva över den befintliga kurvan \""
+msgstr "Skriv över befintliga kurvan \"%s\"?"
 
 #: src/effects/Equalization.cpp
 msgid "Curve exists"
@@ -7503,18 +7325,18 @@ msgid "Can't delete 'unnamed'"
 msgstr "Kan inte radera \"namnlös\""
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Delete '%s'?"
-msgstr "Radera \""
+msgstr "Radera \"%s\"?"
 
 #: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
 msgstr "Bekräfta radering"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d items?"
-msgstr "Repeterat %d gånger"
+msgstr "Radera %d föremål?"
 
 #: src/effects/Equalization.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -7543,7 +7365,7 @@ msgstr "Kan inte exportera \"namnlös\""
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%d curves exported to %s"
-msgstr "%d kurvor exporterade till %s"
+msgstr "%d kurvor exporterades till %s"
 
 #: src/effects/Equalization.cpp
 msgid "Curves exported"
@@ -7907,9 +7729,9 @@ msgid "Re&move"
 msgstr "Ra&dera"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Sets the peak amplitude or loudness of one or more tracks"
-msgstr "Ändrar den maximala amplituden för ett eller fler spår"
+msgstr ""
+"Ändrar den maximala amplituden eller högljuddheten för ett eller fler spår"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
@@ -7971,24 +7793,20 @@ msgid "Remove DC offset (center on 0.0 vertically)"
 msgstr "Ta bort DC-offset (centrera vid 0.0 vertikalt)"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Normalize peak amplitude to"
 msgstr "Normalisera maxamplitud till"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Normalize loudness to"
-msgstr "Normalisera maxamplitud till"
+msgstr "Normalisera högljuddhet till"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Peak amplitude dB"
-msgstr "Ny maximal amplitud(dB):"
+msgstr "Maximal amplitud i dB"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Use loudness instead of peak amplitude"
-msgstr "Skapar ljud med noll amplitud"
+msgstr "Skapar högljuddhet istället för maximal amplitud"
 
 #: src/effects/Normalize.cpp
 msgid "Normalize stereo channels independently"
@@ -7999,30 +7817,28 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Väntar på vågformen att sluta beräknas..."
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "(Maximum 0dB)"
-msgstr ".  Maximalt 0dB."
+msgstr "(maximalt 0dB)"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
-msgstr ""
+msgstr "Högljuddhets-LUFS"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
-msgstr ""
+msgstr "LUFS"
 
 #: src/effects/Normalize.h
 msgid "Normalize"
 msgstr "Normalisera"
 
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"Använd Paulstretch endast för en extrem \"stasiseffekt\" eller tidsutsträckt "
-"effekt"
+"Paulstretch är endast avsedd för en extrem tidsutsträckt effekt eller "
+"\"stasiseffekt\""
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -8115,7 +7931,7 @@ msgstr "Sta&rtfas för LFO (grad.):"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO start phase in degrees"
-msgstr "LFO start läge i grader"
+msgstr "Startläge för LFO i grader"
 
 #: src/effects/Phaser.cpp
 msgid "Dept&h:"
@@ -8216,11 +8032,11 @@ msgstr "Repetera"
 
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
-msgstr "Vokal I"
+msgstr "Sång I"
 
 #: src/effects/Reverb.cpp
 msgid "Vocal II"
-msgstr "Vokal II"
+msgstr "Sång II"
 
 #: src/effects/Reverb.cpp
 msgid "Bathroom"
@@ -8264,7 +8080,7 @@ msgstr "&Förhandsfördröjning (ms):"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
-msgstr "Rever&berance (%):"
+msgstr "Efter&klang (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Da&mping (%):"
@@ -8296,7 +8112,7 @@ msgstr "&Endast Wet"
 
 #: src/effects/Reverb.cpp src/effects/Reverb.h
 msgid "Reverb"
-msgstr "Reverb"
+msgstr "Efterklang"
 
 #: src/effects/Reverse.cpp
 msgid "Reverses the selected audio"
@@ -8318,16 +8134,16 @@ msgstr "Butterworth"
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type I"
-msgstr "Chebyshev Type I"
+msgstr "Chebyshev, typ I"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type II"
-msgstr "Chebyshev Type II"
+msgstr "Chebyshev, typ II"
 
 #: src/effects/ScienFilter.cpp
 msgid "Lowpass"
-msgstr "Lowpass"
+msgstr "Lågpass"
 
 #: src/effects/ScienFilter.cpp
 msgid "Highpass"
@@ -8366,11 +8182,11 @@ msgstr "&Undertyp:"
 
 #: src/effects/ScienFilter.cpp
 msgid "C&utoff:"
-msgstr "C&utoff:"
+msgstr "A&vskärning:"
 
 #: src/effects/ScienFilter.cpp
 msgid "Cutoff (Hz)"
-msgstr "Cutoff (Hz)"
+msgstr "Avskärning (Hz)"
 
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation:"
@@ -8514,9 +8330,8 @@ msgid "Final Pitch Shift"
 msgstr "Slutgiltig tonhöjdsskiftning"
 
 #: src/effects/TimeScale.h
-#, fuzzy
 msgid "Sliding Stretch"
-msgstr "Sträck"
+msgstr "Glidande utsträckning"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -8792,7 +8607,7 @@ msgstr "Initialisering av VST-insticksmodul misslyckades\n"
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Effect Settings"
-msgstr "Effekt inställningar"
+msgstr "Effektinställningar"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to allocate memory when loading presets file."
@@ -8811,22 +8626,22 @@ msgstr "Kunde inte öppna fil: \"%s\""
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Error writing to file: \"%s\""
-msgstr "Fel vid skrivning till fil: \"%s\""
+msgstr "Fel uppstod under skrivning till fil: \"%s\""
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Error Saving Effect Presets"
 msgstr "Fel uppstod när effektförinställningar sparades"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "This parameter file was saved from %s. Continue?"
-msgstr "Denna parameter-fil sparades från %s. Fortsätta?"
+msgstr "Denna parameterfil sparades från %s. Vill du fortsätta?"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
-msgstr ""
+msgstr "VST"
 
 #: src/effects/Wahwah.cpp
 msgid ""
@@ -8919,10 +8734,8 @@ msgstr ""
 " Välj \"Allmän\" för att använda det allmänna gränssnittet som system har."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid " Select \"Basic\" for a basic text-only interface."
-msgstr ""
-" Välj \"Grundläggande\" för ett grundläggande gränssnitt som består av text. "
+msgstr " Välj \"Grundläggande\" för ett enkelt gränssnitt som består av text."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -8949,7 +8762,6 @@ msgid "Location"
 msgstr "Plats"
 
 #: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
 msgid "AudioUnit"
 msgstr "Ljudenhet"
 
@@ -8984,9 +8796,8 @@ msgid "Effect Output"
 msgstr "Effektutmatning"
 
 #: src/effects/ladspa/LadspaEffect.h
-#, fuzzy
 msgid "LADSPA"
-msgstr "LADSPA-effekter"
+msgstr "LADSPA"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 Effect Settings"
@@ -9029,7 +8840,7 @@ msgstr "&Varaktighet:"
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
-msgstr ""
+msgstr "LV2"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "LV2 Effects"
@@ -9052,9 +8863,8 @@ msgid "Applying Nyquist Effect..."
 msgstr "Verkställer Nyquist effekt..."
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist Effects Prompt"
-msgstr "Nyquist-effekter"
+msgstr "Dialog för Nyquist-effekter"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -9075,7 +8885,7 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"För att använda \"Spektrala effekter\", aktivera \"Spektral markering\"\n"
+"För att använda \"Spektrumseffekter\", aktivera \"Spektrumsmarkering\"\n"
 "i spårets spektrograminställningar och markera\n"
 "frekvensintervallet för effekten att tillämpas på."
 
@@ -9087,9 +8897,8 @@ msgstr ""
 "insticksmodulens sökväg.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Audio selection required."
-msgstr "A&utomarkera, om markera är nödvändigt"
+msgstr "Ljudmarkering är nödvändig."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Error"
@@ -9132,12 +8941,12 @@ msgstr "Bearbetning slutförd."
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr ""
+msgstr "\";type tool\"-effekter kan inte returnera ljud från Nyquist.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr ""
+msgstr "\";type tool\"-effekter kan inte returnera etiketter från Nyquist.\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -9150,14 +8959,14 @@ msgid "plug-in"
 msgstr "insticksmodul"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %f"
-msgstr "Nyquist returnerade värdet:"
+msgstr "Nyquist returnerade värdet: %f"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Nyquist returned the value: %d"
-msgstr "Nyquist returnerade värdet:"
+msgstr "Nyquist returnerade värdet: %d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -9179,7 +8988,8 @@ msgstr "Nyquist returnerade inget ljud.\n"
 msgid ""
 "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
 msgstr ""
-"[Obs: Nyquist returnerade felaktig UTF-8 sträng, nu konverterad som Latin-1]"
+"[Varning: Nyquist returnerade felaktig sträng i UTF-8 som omvandlades hit "
+"som Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -9230,7 +9040,7 @@ msgstr "Kunde inte bestämma språket"
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
-msgstr ""
+msgstr "\"%s\" är inte en giltig filsökväg."
 
 #. i18n-hint: Warning that there is one quotation mark rather than a pair.
 #: src/effects/nyquist/Nyquist.cpp
@@ -9239,6 +9049,8 @@ msgid ""
 "Mismatched quotes in\n"
 "%s"
 msgstr ""
+"Ojämnt antal citationstecken i\n"
+"%s"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -9281,22 +9093,25 @@ msgid "File could not be saved"
 msgstr "Filen kunde inte sparas"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Value range:\n"
 "%s to %s"
-msgstr "Värdet är inte inom intervallet: %s till %s"
+msgstr ""
+"Värdesintervall: \n"
+"%s till %s"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Value Error"
-msgstr "Filfel"
+msgstr "Värdesfel"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Invalid wildcard string in 'path' control.'\n"
 "Using empty string instead."
 msgstr ""
+"Ogiltigt jokerteckensträng i kontrollen \"path\".'\n"
+"Använder tom sträng istället."
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
 #: plug-ins/sample-data-export.ny
@@ -9304,9 +9119,8 @@ msgid "Select a file"
 msgstr "Välj en fil"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Save file as"
-msgstr "Spara filer"
+msgstr "Spara fil som"
 
 #: src/effects/nyquist/Nyquist.cpp src/export/Export.cpp
 #: src/export/ExportMultiple.cpp
@@ -9357,7 +9171,7 @@ msgstr "Program"
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
-msgstr ""
+msgstr "Vamp"
 
 #: src/export/Export.cpp
 msgid "No format specific options"
@@ -9434,23 +9248,17 @@ msgstr ""
 "eller mapp."
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "A file named \"%s\" already exists. Replace?"
 msgstr "En fil med namnet \"%s\" finns redan.  Ersätt?"
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid "Your tracks will be mixed down and exported as one mono file."
-msgstr ""
-"Dina spår kommer att mixas ner till två stereokanaler i den exporterade "
-"filen."
+msgstr "Dina spår kommer att mixas ned och exporteras som en monofil."
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid "Your tracks will be mixed down and exported as one stereo file."
-msgstr ""
-"Dina spår kommer att mixas ner till två stereokanaler i den exporterade "
-"filen."
+msgstr "Dina spår kommer att mixas ned och exporteras som en stereofil."
 
 #: src/export/Export.cpp
 msgid ""
@@ -9627,7 +9435,7 @@ msgstr "FFmpeg : FEL - nAudioFrameSizeOut är för stor."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't encode audio frame."
-msgstr "FFmpeg : ERROR - Kan inte avkoda ljudbildruta."
+msgstr "FFmpeg : FEL - Kan inte avkoda ljudbildruta."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Failed to write audio frame to file."
@@ -9662,7 +9470,7 @@ msgid "Resample"
 msgstr "Återsampla"
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
@@ -9671,13 +9479,14 @@ msgstr ""
 "nuvarande utmatningen.  "
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"Kombinationen av projektets samplingsfrekvens (%d) och bit rate (%d kbps)\n"
-"är inte supportad av det nuvarande filformatet.  "
+"Kombinationen av projektets samplingsfrekvens (%d) och bithastighet (%d "
+"kbps)\n"
+"stöds inte av det nuvarande filformatet för utmatning.  "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -9712,7 +9521,7 @@ msgstr "Öppna anpassade FFmpeg-formatsalterantiv"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
-msgstr "Fel FFmpeg-förinställningar sparades"
+msgstr "Fel uppstod när FFmpeg-förinställningar sparades"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
@@ -9865,7 +9674,7 @@ msgstr "VBL"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Tag:"
-msgstr "Tag:"
+msgstr "Tagg:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9897,10 +9706,10 @@ msgid ""
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
 msgstr ""
-"Overall quality, used differently by different codecs\n"
-"Required for vorbis\n"
-"0 - automatic\n"
-"-1 - off (use bitrate instead)"
+"Övergripande kvalitet, används olika av olika kodekar\n"
+"Nödvändigt för vorbis\n"
+"0 - automatiskt\n"
+"-1 - av (använd bithastighet istället)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Sample Rate:"
@@ -9916,7 +9725,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Cutoff:"
-msgstr "Cutoff:"
+msgstr "Avskärning:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9924,7 +9733,7 @@ msgid ""
 "Optional\n"
 "0 - automatic"
 msgstr ""
-"Ljudcutoff för bandbredd (Hz)\n"
+"Ljudavskärning för bandbredd (Hz)\n"
 "Valfritt\n"
 "0 - automatiskt"
 
@@ -9948,7 +9757,7 @@ msgstr "FLAC-alternativ"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Compression:"
-msgstr "Kompression:"
+msgstr "Komprimering:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9958,11 +9767,11 @@ msgid ""
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
 msgstr ""
-"Compression level\n"
-"Required for FLAC\n"
-"-1 - automatic\n"
-"min - 0 (fast encoding, large output file)\n"
-"max - 10 (slow encoding, small output file)"
+"Komprimeringsnivå\n"
+"Krävs för FLAC\n"
+"-1 - automatisk\n"
+"min - 0 (fast kodning, stor utmatningsfil)\n"
+"max - 10 (långsam kodning, liten utmatningsfil)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Frame:"
@@ -10011,10 +9820,10 @@ msgid ""
 "Log search - slowest, best compression\n"
 "Full search - default"
 msgstr ""
-"Prediction Order Method\n"
-"Estimate - fastest, lower compression\n"
-"Log search - slowest, best compression\n"
-"Full search - default"
+"Metod för förutsägelseordning\n"
+"Uppskattad - snabbast, lägre komprimering\n"
+"Loggsökning - långsammast, bäst komprimering\n"
+"Full sökning - default"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Min. PdO"
@@ -10028,11 +9837,11 @@ msgid ""
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
 msgstr ""
-"Minimal prediction order\n"
-"Optional\n"
-"-1 - default\n"
+"Minimal förutsägelseordning\n"
+"Valfritt\n"
+"-1 - standard\n"
 "min - 0\n"
-"max - 32 (with LPC) or 4 (without LPC)"
+"max - 32 (med LPC) eller 4 (utan LPC)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Max. PdO"
@@ -10046,11 +9855,11 @@ msgid ""
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
 msgstr ""
-"Maximal prediction order\n"
-"Optional\n"
-"-1 - default\n"
+"Maximal förutsägelseordning\n"
+"Valfritt\n"
+"-1 - standard\n"
 "min - 0\n"
-"max - 32 (with LPC) or 4 (without LPC)"
+"max - 32 (med LPC) eller 4 (utan LPC)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Min. PtO"
@@ -10064,9 +9873,9 @@ msgid ""
 "min - 0\n"
 "max - 8"
 msgstr ""
-"Minimal partition order\n"
-"Optional\n"
-"-1 - default\n"
+"Minimal partitionsordning\n"
+"Valfritt\n"
+"-1 - standard\n"
 "min - 0\n"
 "max - 8"
 
@@ -10082,9 +9891,9 @@ msgid ""
 "min - 0\n"
 "max - 8"
 msgstr ""
-"Maximal partition order\n"
-"Optional\n"
-"-1 - default\n"
+"Maximal partitionordning\n"
+"Valfritt\n"
+"-1 - standard\n"
 "min - 0\n"
 "max - 8"
 
@@ -10109,9 +9918,9 @@ msgid ""
 "Optional\n"
 "0 - default"
 msgstr ""
-"Maximum bit rate of the multiplexed stream\n"
-"Optional\n"
-"0 - default"
+"Maximal bitfrekvens för multiplexström\n"
+"Valfritt\n"
+"0 - standard"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
@@ -10156,11 +9965,11 @@ msgstr "Välj xml-fil att exportera förinställningar till"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
-msgstr "Misslyckade att gissa formatet"
+msgstr "Misslyckades att gissa formatet"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to find the codec"
-msgstr "Misslyckade att hitta kodek"
+msgstr "Misslyckades att hitta kodek"
 
 #: src/export/ExportFLAC.cpp
 msgid "0 (fastest)"
@@ -10259,24 +10068,24 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Exporterar ljudet vid %ld kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%d kbps"
-msgstr "%i kbps"
+msgstr "%d kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s kbps (Best Quality)"
-msgstr "(Bäst kvalitet)"
+msgstr "%s kbps (bästa kvalitet)"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s kbps"
-msgstr "%i kbps"
+msgstr "%s kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s kbps (Smaller files)"
-msgstr "(Mindre filer)"
+msgstr "%s kbps (mindre filer)"
 
 #: src/export/ExportMP3.cpp
 msgid "Fast"
@@ -10290,19 +10099,19 @@ msgstr "Standard"
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
-msgstr ""
+msgstr "Galet, 320 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
-msgstr ""
+msgstr "Extremt, 220-260 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
-msgstr ""
+msgstr "Standard, 170-210 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
-msgstr ""
+msgstr "Medel, 145-185 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Bit Rate Mode:"
@@ -10470,7 +10279,7 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "Fel %ld returnerades från MP3-avkodaren"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
@@ -10479,14 +10288,14 @@ msgstr ""
 "filformatet MP3. "
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
 "Kombinationen av projektets samplingsfrekvens (%d) och bithastigheten (%d "
 "kbps)\n"
-"stöds inte av MP3-filformatet.  "
+"stöds inte av filformatet MP3.  "
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -10501,12 +10310,11 @@ msgid "Cannot Export Multiple"
 msgstr "Kan inte exportera flera"
 
 #: src/export/ExportMultiple.cpp
-#, fuzzy
 msgid ""
 "You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
-"Du har bara ett tystat ljudspår och inga användbara\n"
+"Alla ljudspår är tysta och har inga tillämpade\n"
 "etiketter, så du kan inte exportera till separata ljudfiler."
 
 #: src/export/ExportMultiple.cpp
@@ -10659,12 +10467,11 @@ msgstr "AIFF (Apple) 16-bitars PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) signed 16-bit PCM"
-msgstr "WAV (Microsoft) signed 16-bitars PCM"
+msgstr "WAV (Microsoft) signerade 16-bitars PCM"
 
 #: src/export/ExportPCM.cpp
-#, fuzzy
 msgid "WAV (Microsoft) signed 24-bit PCM"
-msgstr "WAV (Microsoft) signed 16-bitars PCM"
+msgstr "WAV (Microsoft) signerade 24-bitars PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) 32-bit float PCM"
@@ -11066,7 +10873,6 @@ msgstr ""
 "\n"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately. This is less safe than copying in, because you must retain the "
@@ -11076,16 +10882,10 @@ msgid ""
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
-"När du importerar okomprimerade ljudfiler kan du antingen kopiera dem in i "
-"projektet eller läsa dem direkt från deras nuvarande placering (utan att "
-"kopiera).\n"
-"\n"
-"Din nuvarande inställning är %s.\n"
-"\n"
-"Att läsa dem direkt gör det möjlighet att spela upp och redigera dem nästan "
-"omedelbart. Detta är mindre säkert än att kopiera in dem, eftersom du måste "
-"låta filerna bibehålla sina originalnamn och originalplatser.\n"
-"Arkiv > Diagnostik > Granska beroenden visar originalnamnen och -platsen för "
+"Att läsa filerna direkt gör det möjligt att spela upp och redigera dem "
+"nästan omedelbart. Detta är mindre säkert än att kopiera in dem, eftersom du "
+"måste låta filerna bibehålla sina originalnamn i sina originalplatser.\n"
+"Hjälp > Diagnostik > Granska beroenden visar originalnamnen och -platsen för "
 "alla filer som du läser direkt.\n"
 "\n"
 "Hur vill du importera följande fil(er)?"
@@ -11305,7 +11105,7 @@ msgstr "Tidsförskjutning"
 
 #: src/menus/ClipMenus.cpp
 msgid "clip not moved"
-msgstr "klippet flyttades inte"
+msgstr "klipp flyttades inte"
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
 msgid "Clip B&oundaries"
@@ -11317,43 +11117,39 @@ msgstr "Föreg&ående klippgräns till markör"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Flytta markör till nä&sta klippgräns"
+msgstr "Från markören till nä&sta klippgräns"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
 msgstr "F&öregående klipp"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip"
-msgstr "F&öregående klipp"
+msgstr "Välj f&öregående klipp"
 
 #: src/menus/ClipMenus.cpp
 msgid "N&ext Clip"
 msgstr "N&ästa klipp"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Next Clip"
-msgstr "N&ästa klipp"
+msgstr "Välj n&ästa klipp"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary"
 msgstr "F&öregående klippgräns"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Cursor to Prev Clip Boundary"
-msgstr "Flytta markör till nä&sta klippgräns"
+msgstr "Från markören till föregående klippgräns"
 
 #: src/menus/ClipMenus.cpp
 msgid "Ne&xt Clip Boundary"
 msgstr "N&ästa klippgräns"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Cursor to Next Clip Boundary"
-msgstr "Flytta markör till nä&sta klippgräns"
+msgstr "Från markören till nästa klippgräns"
 
 #: src/menus/ClipMenus.cpp
 msgid "Clip L&eft"
@@ -11530,7 +11326,6 @@ msgid "Detac&h at Silences"
 msgstr "Avskil&j vid tystnad"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "&Metadata..."
 msgstr "&Metadata..."
 
@@ -11539,79 +11334,66 @@ msgid "Pre&ferences..."
 msgstr "&Inställningar..."
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "&Delete Key"
 msgstr "&Raderingstangent"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Delete Key&2"
 msgstr "Raderingstangent &2"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Ext&ra"
-msgstr ""
+msgstr "Ext&ra"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Mi&xer"
 msgstr "Mi&xer"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Ad&just Playback Volume..."
-msgstr "&Justera uppspelningsvolym"
+msgstr "Justera uppspelnings&volym..."
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "&Increase Playback Volume"
 msgstr "&Öka uppspelningsvolym"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "&Decrease Playback Volume"
 msgstr "&Minska uppspelningsvolym"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Adj&ust Recording Volume..."
-msgstr "J&ustera inspelningsvolym"
+msgstr "J&ustera inspelningsvolym..."
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "I&ncrease Recording Volume"
-msgstr "Ö&ka uppspelningshastighet"
+msgstr "Ö&ka inspelningsvolym"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "D&ecrease Recording Volume"
-msgstr "M&inska uppspelningshastighet"
+msgstr "M&inska inspelningsvolym"
 
 #: src/menus/ExtraMenus.cpp
 msgid "De&vice"
 msgstr "&Enhet"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Change &Recording Device..."
-msgstr "Byt &inspelningsenhet"
+msgstr "Byt &inspelningsenhet..."
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Change &Playback Device..."
-msgstr "Byt &uppspelningsenhet"
+msgstr "Byt &uppspelningsenhet..."
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Change Audio &Host..."
-msgstr "Byt &ljudvärd"
+msgstr "Byt &ljudvärd..."
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Change Recording Cha&nnels..."
-msgstr "Byt inspelnings&kanaler"
+msgstr "Byt inspelnings&kanaler..."
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "&Full Screen (on/off)"
 msgstr "&Helskärm (på/av)"
 
@@ -11695,9 +11477,8 @@ msgid "All files|*"
 msgstr "Alla filer|*"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
-msgstr "Spara förinställning..."
+msgstr "&Farlig återställning..."
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -11718,9 +11499,8 @@ msgid "Save Project &As..."
 msgstr "Spara projekt s&om..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Save Lossless Copy of Project..."
-msgstr "&Spara komprimerad kopia av projektet..."
+msgstr "Spara förlustfri kopia av projektet..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Save Compressed Copy of Project..."
@@ -11817,28 +11597,24 @@ msgid "Unable to save MIDI device info"
 msgstr "Kunde inte spara MIDI-enhetsinfo"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
-msgstr "&Snabbhjälp"
+msgstr "&Snabbåtgärd..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
 msgstr "&Kom igång"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Audacity &Manual"
-msgstr "Audacity"
+msgstr "Audacitys &manual"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Help..."
-msgstr "&Snabbhjälp"
+msgstr "&Snabbhjälp..."
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Manual..."
-msgstr "&Manual"
+msgstr "&Manual..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -11881,7 +11657,7 @@ msgstr "Klipp ut ljudområden med etikett till urklipp"
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Cut Labeled Audio"
-msgstr "Klipp ljud med etikett"
+msgstr "Klipp ut ljud med etikett"
 
 #. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
 #: src/menus/LabelMenus.cpp
@@ -11978,12 +11754,10 @@ msgid "&Edit Labels..."
 msgstr "&Redigera etiketter..."
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Add Label at &Selection"
 msgstr "Lägg till etikett vid &markering"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Add Label at &Playback Position"
 msgstr "Lägg till etikett vid uppspelning&position"
 
@@ -12005,14 +11779,12 @@ msgid "&Cut"
 msgstr "&Klipp ut"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Cut"
-msgstr "Etikettredigering"
+msgstr "Klipp ut etikett"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Delete"
-msgstr "Dela och radera"
+msgstr "Radera etikett"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -12020,27 +11792,24 @@ msgid "&Split Cut"
 msgstr "&Dela och klipp ut"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Split Cut"
-msgstr "Dela och klipp ut"
+msgstr "Dela och klipp ut etikett"
 
 #: src/menus/LabelMenus.cpp
 msgid "Sp&lit Delete"
 msgstr "D&ela och radera"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Split Delete"
-msgstr "Dela och radera"
+msgstr "Dela och radera etikett"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
 msgstr "&Tysta ljud"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Silence"
-msgstr "Tystnad"
+msgstr "Tysta etikett"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -12048,9 +11817,8 @@ msgid "Co&py"
 msgstr "Kop&iera"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Copy"
-msgstr "Etikett"
+msgstr "Kopiera etikett"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -12058,22 +11826,18 @@ msgid "Spli&t"
 msgstr "Del&a"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Split"
-msgstr "Etikettredigering"
+msgstr "Dela etikett"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Join"
-msgstr "Etikettredigering"
+msgstr "Etikettsammanfogning"
 
 #: src/menus/NavigationMenus.cpp
-#, fuzzy
 msgid "Move Backward Through Active Windows"
 msgstr "Flytta bakåt genom aktiva fönster"
 
 #: src/menus/NavigationMenus.cpp
-#, fuzzy
 msgid "Move Forward Through Active Windows"
 msgstr "Flytta framåt genom aktiva fönster"
 
@@ -12082,12 +11846,10 @@ msgid "F&ocus"
 msgstr "&Fokus"
 
 #: src/menus/NavigationMenus.cpp
-#, fuzzy
 msgid "Move &Backward from Toolbars to Tracks"
 msgstr "Flytta b&akåt från verktygsfält till spår"
 
 #: src/menus/NavigationMenus.cpp
-#, fuzzy
 msgid "Move F&orward from Toolbars to Tracks"
 msgstr "Flytta f&ramåt från verktygsfält till spår"
 
@@ -12176,24 +11938,20 @@ msgid "T&ools"
 msgstr "&Verktyg"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "&Macros..."
-msgstr "&Etiketter..."
+msgstr "&Makron..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "&Apply Macro"
-msgstr "&Verkställ"
+msgstr "&Verkställ makron"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Palette..."
-msgstr "R&adera..."
+msgstr "Palett..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "&Screenshot..."
-msgstr "&Skärmdumpsverktyg..."
+msgstr "&Skärmdump..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
@@ -12209,117 +11967,97 @@ msgstr "Upptäck signalfel i uppströmmen"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Script&ables I"
-msgstr "Skript"
+msgstr "&Skript I"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Select Time..."
-msgstr "Bläddra..."
+msgstr "Välj tid..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Select Frequencies..."
-msgstr "Frekvenser"
+msgstr "Välj frekvenser..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Select Tracks..."
-msgstr "Bläddra..."
+msgstr "Välj spår..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Track Status..."
-msgstr "S&pårets början"
+msgstr "Ändra s&pårstatus..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track Audio..."
-msgstr ""
+msgstr "Ändra spårljud..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track Visuals..."
-msgstr ""
+msgstr "Ändra spårets utseende..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get Preference..."
-msgstr "Inställningar..."
+msgstr "Hämta inställning..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Preference..."
-msgstr "Inställningar..."
+msgstr "Ändra inställning..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Clip..."
-msgstr "N&ästa klipp"
+msgstr "Ändra klipp...."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Envelope..."
-msgstr "Envelopp"
+msgstr "Ändra envelopp..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Label..."
-msgstr "&Redigera etiketter..."
+msgstr "Ändra etikett..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Project..."
-msgstr "Spara projekt s&om..."
+msgstr "Ändra projekt..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Scripta&bles II"
-msgstr ""
+msgstr "S&kript II"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Set Track..."
-msgstr "S&ortera spår"
+msgstr "Ändra spår..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get Info..."
-msgstr "&Mer..."
+msgstr "Hämta info..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Message..."
-msgstr "Meddelande"
+msgstr "Meddelande..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Help..."
-msgstr "Hjälp"
+msgstr "Hjälp..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Open Project..."
-msgstr "Öppna senaste..."
+msgstr "Öppna projekt..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Save Project..."
-msgstr "Spara projekt s&om..."
+msgstr "Spara projekt..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Move Mouse..."
-msgstr "&Mer..."
+msgstr "Flytta mus..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Compare Audio..."
-msgstr "Kompressor..."
+msgstr "Jämför ljud..."
 
 #. i18n-hint: Screenshot in the help menu has a much bigger dialog.
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Screenshot (short format)..."
-msgstr "&Skärmdumpsverktyg..."
+msgstr "Skärmdump (kort format)..."
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
@@ -12343,9 +12081,8 @@ msgid "&None"
 msgstr "&Ingenting"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select None"
-msgstr "Markering"
+msgstr "Markera ingenting"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
@@ -12361,7 +12098,7 @@ msgstr "I alla s&ynkroniseringslåsta spår"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
-msgstr ""
+msgstr "Välj synkroniseringslåsta"
 
 #: src/menus/SelectMenus.cpp
 msgid "R&egion"
@@ -12372,25 +12109,22 @@ msgid "&Left at Playback Position"
 msgstr "&Vänster om uppspelningspositionen"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Set Selection Left at Play Position"
-msgstr "Ställ markeringspunkt och Spela"
+msgstr "Ändra markeringen vänster om uppspelningspositionen"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Right at Playback Position"
 msgstr "&Höger om uppspelningspositionen"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Set Selection Right at Play Position"
-msgstr "Ställ markeringspunkt och Spela"
+msgstr "Ändra markeringen höger om uppspelningspositionen"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start to Cursor"
 msgstr "Från spårets &början till markören"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select Track Start to Cursor"
 msgstr "Från spårets &början till markören"
 
@@ -12399,19 +12133,16 @@ msgid "Cursor to Track &End"
 msgstr "Från markören till spårets &slut"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Track End"
 msgstr "Från markören till spårets &slut"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Track Start to En&d"
-msgstr "Från spårets &början till markören"
+msgstr "Spårets &början till slutet"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select Track Start to End"
-msgstr "Markera till slutet"
+msgstr "Markera från spårets början till slutet"
 
 #: src/menus/SelectMenus.cpp
 msgid "S&tore Selection"
@@ -12423,12 +12154,11 @@ msgstr "H&ämta markering"
 
 #: src/menus/SelectMenus.cpp
 msgid "S&pectral"
-msgstr "S&pektral"
+msgstr "S&pektrum"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "To&ggle Spectral Selection"
-msgstr "Slå på/av spektral markering"
+msgstr "Aktivera/inaktivera spektrumsmarkering"
 
 #: src/menus/SelectMenus.cpp
 msgid "Next &Higher Peak Frequency"
@@ -12440,12 +12170,11 @@ msgstr "Nästa &lägre maxfrekvens"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
-msgstr "Flytta &markör till lagrad markörposition"
+msgstr "Från &markören till lagrad markörposition"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Stored"
-msgstr "Markera till början"
+msgstr "Markera från markören till lagrad position"
 
 #: src/menus/SelectMenus.cpp
 msgid "Store Cursor Pos&ition"
@@ -12456,26 +12185,22 @@ msgid "At &Zero Crossings"
 msgstr "Vid &nollkorsningar"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select Zero Crossing"
-msgstr "Vid &nollkorsningar"
+msgstr "Välj nollkorsningar"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Selection"
 msgstr "&Markering"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Snap-To &Off"
 msgstr "Fäst mot &av"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Snap-To &Nearest"
 msgstr "Fäst mot &närmaste"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Snap-To &Prior"
 msgstr "Fäst mot &tidigare"
 
@@ -12520,54 +12245,48 @@ msgid "Selection Star&t"
 msgstr "Markeringens &början"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Selection Start"
-msgstr "Gå till markeringens bör&jan"
+msgstr "Från markören till markeringens början"
 
 #: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
 msgid "Selection En&d"
 msgstr "Markeringens &slut"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Selection End"
-msgstr "Gå till markeringens sl&ut"
+msgstr "Från markören till markeringens slut"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start"
 msgstr "S&pårets början"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Track Start"
-msgstr "Från markören till spårets &slut"
+msgstr "Från markören till spårets slut"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &End"
 msgstr "Sp&årets slut"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Track End"
-msgstr "Från markören till spårets &slut"
+msgstr "Från markören till spårets slut"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Project Start"
 msgstr "&Projektets början"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Project Start"
-msgstr "&Projektets början"
+msgstr "Från markören till projektets början"
 
 #: src/menus/SelectMenus.cpp
 msgid "Project E&nd"
 msgstr "P&rojektets slut"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Project End"
-msgstr "Från markören till spårets &slut"
+msgstr "Från markören till projektets slut"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Cursor"
@@ -12575,49 +12294,45 @@ msgstr "Mark&ör"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor &Left"
-msgstr "Flytta markör åt &vänster"
+msgstr "Flytta markören åt &vänster"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor &Right"
-msgstr "Flytta markör åt &höger"
+msgstr "Flytta markören åt &höger"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Sh&ort Jump Left"
-msgstr "Flytta markör ett &kort hopp åt vänster"
+msgstr "Flytta markören ett &kort hopp åt vänster"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Shor&t Jump Right"
-msgstr "Flytta markör ett k&ort hopp till höger"
+msgstr "Flytta markören ett k&ort hopp till höger"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Long J&ump Left"
-msgstr "Flytta markör ett &långt hopp åt vänster"
+msgstr "Flytta markören ett &långt hopp åt vänster"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Long Ju&mp Right"
-msgstr "Flytta markör ett l&ångt hopp till höger"
+msgstr "Flytta markören ett l&ångt hopp till höger"
 
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "Sö&k"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Short Seek &Left During Playback"
 msgstr "Kort sökning åt &vänster under uppspelning"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Short Seek &Right During Playback"
 msgstr "Kort sökning åt &höger under uppspelning"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Long Seek Le&ft During Playback"
 msgstr "Lång sökning åt v&änster under uppspelning"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Long Seek Rig&ht During Playback"
 msgstr "Lång sökning åt h&öger under uppspelning"
 
@@ -12672,9 +12387,8 @@ msgstr "Verktygsfält för &redigering"
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
 #: src/menus/ToolbarMenus.cpp
-#, fuzzy
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Spela upp med vald hastighet"
+msgstr "Verktygsfält för Spela efter hastighet"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that enables Scrub or Seek playback and Scrub Ruler
@@ -12696,7 +12410,7 @@ msgstr "Verktygsfält för &markering"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Verktygsfält för spektral &markering"
+msgstr "Verktygsfält för spektrums&markering"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Selection Tool"
@@ -12753,14 +12467,12 @@ msgstr "Mixade och renderade %d spår till ett nytt monospår"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Panned audio track(s)"
-msgstr "Återsamplade ljudspår"
+msgstr "Panorerade ljudspår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Pan Track"
-msgstr "Spår"
+msgstr "Panorera spår"
 
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
@@ -12979,9 +12691,8 @@ msgid "Resample Track"
 msgstr "Återsampla spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "Var god välj ett ljudspår."
+msgstr "Var god välj minst ett ljudspår och ett MIDI-spår."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -13053,7 +12764,6 @@ msgid "Mi&x"
 msgstr "Mi&xa"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Mix Stereo Down to &Mono"
 msgstr "&Mixa stereo ned till mono"
 
@@ -13094,27 +12804,24 @@ msgid "&Left"
 msgstr "&Vänster"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Pan Left"
-msgstr "Vänster"
+msgstr "Panorera vänster"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Right"
 msgstr "&Höger"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Pan Right"
-msgstr "Höger"
+msgstr "Panorera höger"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Center"
 msgstr "&Center"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Pan Center"
-msgstr "Centrera"
+msgstr "Centrera panorering"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align Tracks"
@@ -13161,14 +12868,12 @@ msgid "S&ort Tracks"
 msgstr "S&ortera spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "By &Start Time"
-msgstr "efter &starttid"
+msgstr "Efter &starttid"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "By &Name"
-msgstr "efter &namn"
+msgstr "Efter &namn"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync-&Lock Tracks (on/off)"
@@ -13179,72 +12884,58 @@ msgid "&Track"
 msgstr "S&pår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Change P&an on Focused Track..."
-msgstr "Ändra &panorering för aktuellt spår"
+msgstr "Ändra &panorering för aktuellt spår..."
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Pan &Left on Focused Track"
-msgstr "Panorera åt &vänster för aktuellt spår"
+msgstr "Panorera aktuellt spår åt &vänster"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Pan &Right on Focused Track"
-msgstr "Panorera åt &höger för aktuellt spår"
+msgstr "Panorera aktuellt spår åt &höger"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Change Gai&n on Focused Track..."
-msgstr "Ändra &förstärkningen för aktuellt spår"
+msgstr "Ändra &förstärkning för aktuellt spår..."
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "&Increase Gain on Focused Track"
 msgstr "&Öka förstärkningen för aktuellt spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "&Decrease Gain on Focused Track"
 msgstr "&Minska förstärkningen för aktuellt spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Op&en Menu on Focused Track..."
-msgstr "Öppna men&yn för aktuellt spår"
+msgstr "Öppna men&y för aktuellt spår..."
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "M&ute/Unmute Focused Track"
 msgstr "Slå av/på &ljudet för aktuellt spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "&Solo/Unsolo Focused Track"
 msgstr "Aktivera/inaktivera &solo för aktuellt spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "&Close Focused Track"
 msgstr "S&täng aktuellt spår"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Move Focused Track U&p"
 msgstr "Flytta aktuellt spår &uppåt"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Move Focused Track Do&wn"
 msgstr "Flytta aktuellt spår &nedåt"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Move Focused Track to T&op"
 msgstr "Flytta aktuellt spår l&ängst upp"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Move Focused Track to &Bottom"
 msgstr "Flytta aktuellt spår län&gst ned"
 
@@ -13289,36 +12980,31 @@ msgstr ""
 "Var god spara eller stäng detta projekt och försök igen."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a mono track."
-msgstr "Var god välj ett ljudspår."
+msgstr "Var god välj i ett monospår."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a stereo track."
-msgstr "Var god välj ett ljudspår."
+msgstr "Var god välj i ett stereospår."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Please select at least %d channels."
-msgstr "Var god välj ett ljudspår."
+msgstr "Var god välj minst %d kanaler."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select a time within a clip."
-msgstr "Var god välj ett notspår."
+msgstr "Var god välj en tid i ett klipp."
 
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Tra&nsport"
-msgstr "Transport"
+msgstr "&Transport"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Pl&aying"
-msgstr "Spelar upp"
+msgstr "Upps&pelning"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/menus/TransportMenus.cpp
@@ -13338,9 +13024,8 @@ msgid "&Pause"
 msgstr "&Pausa"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Recording"
-msgstr "Inspelning"
+msgstr "&Inspelning"
 
 #. i18n-hint: (verb)
 #: src/menus/TransportMenus.cpp
@@ -13361,7 +13046,7 @@ msgstr "&Timerinspelning..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
-msgstr ""
+msgstr "Punch and Rol&l-inspelning"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pla&y Region"
@@ -13426,7 +13111,6 @@ msgid "Play &One Second"
 msgstr "Spela upp &en sekund"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play to &Selection"
 msgstr "Spela upp till &markering"
 
@@ -13456,39 +13140,34 @@ msgstr "Spela upp innan och efter markeringens &slut"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "Spela upp &klippförhandsvisning"
+msgstr "Spela upp ut&klippt förhandsvisning"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Play-at-Speed"
-msgstr "Spela upp med vald hastighet"
+msgstr "&Spela efter hastighet"
 
 #. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Normal Pl&ay-at-Speed"
-msgstr "&Spela upp med vald hastighet"
+msgstr "&Spela efter hastighet normalt"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Loop Play-at-Speed"
-msgstr "Spela upp s&linga med vald hastighet"
+msgstr "Spela upp s&linga efter hastighet"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Spela upp &klippförhandsvisning med vald hastighet"
+msgstr "Spela upp ut&klippt förhandsvisning efter hastighet"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Ad&just Playback Speed..."
-msgstr "&Justera uppspelningshastighet"
+msgstr "&Justera uppspelningshastighet..."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Increase Playback Speed"
 msgstr "&Öka uppspelningshastighet"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Decrease Playback Speed"
 msgstr "&Minska uppspelningshastighet"
 
@@ -13531,7 +13210,6 @@ msgid "Zoom &Toggle"
 msgstr "Vä&xla zoomning"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Advanced &Vertical Zooming"
 msgstr "Avancerad &vertikal zoom"
 
@@ -13564,14 +13242,12 @@ msgid "Selection Sta&rt"
 msgstr "Ma&rkeringens början"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Skip to Selection Start"
-msgstr "till markeringens börja&n"
+msgstr "Hoppa till markeringens början"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Skip to Selection End"
-msgstr "till markeringens slu&t"
+msgstr "Hoppa till markeringens slut"
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -13618,20 +13294,19 @@ msgstr "&Flytta allting längst fram"
 #. i18n-hint: Shrink all project windows to icons on the Macintosh
 #. tooldock
 #: src/menus/WindowMenus.cpp
-#, fuzzy
 msgid "Minimize All Projects"
 msgstr "Minimera alla projekt"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
-msgstr "Import färdig. Beräknar vågform"
+msgstr "Import har slutförts. Beräknar vågform"
 
 #: src/ondemand/ODDecodeTask.h
 msgid "Decoding Waveform"
 msgstr "Avkodar vågform"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f %% färdigt.  Klicka för att ändra uppgiftens kontaktpunkt."
 
@@ -13663,7 +13338,7 @@ msgstr "&Värd:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
-msgstr "Använder:"
+msgstr "Används:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp
@@ -13701,9 +13376,8 @@ msgid "milliseconds"
 msgstr "millisekunder"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Latency compensation:"
-msgstr "Latenskompensering"
+msgstr "&Latenskompensering:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
@@ -13804,7 +13478,7 @@ msgstr "Uppdatera temporär katalog"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
-msgstr "Aktivera effekter"
+msgstr "Aktiverade effekter"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
@@ -13852,7 +13526,7 @@ msgstr "Kolla efter uppdaterade insticksmoduler när Audacity startas"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Rescan plugins next time Audacity is started"
-msgstr "Sök efter VST-insticksmoduler igen nästa gång Audacity startas"
+msgstr "Sök efter insticksmoduler igen nästa gång Audacity startas"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -13870,7 +13544,7 @@ msgstr "Utökad importering"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
-msgstr "F&örsöker att använda filter i Öppna fil-dialogrutan först"
+msgstr "F&örsöker att använda filter i dialogrutan för att öppna filer först"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rules to choose import filters"
@@ -13910,7 +13584,7 @@ msgstr "&Lägg till ny regel"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "De&lete selected rule"
-msgstr "R&adera vald regel"
+msgstr "R&adera markerad regel"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Unused filters:"
@@ -14025,14 +13699,12 @@ msgid "Meter dB &range:"
 msgstr "Inte&rvall för dB-mätare:"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show 'How to Get &Help' at launch"
-msgstr "\"Hur man får &hjälp\" vid programstart"
+msgstr "Visa \"Hur man får &hjälp\" vid programstart"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show e&xtra menus"
-msgstr "E&xtra menyer"
+msgstr "Visa e&xtra menyer"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show alternative &styling (Mac vs PC)"
@@ -14054,6 +13726,7 @@ msgstr "B&landa systemets och Audacitys tema"
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
+"Använd mestadels vänster-till-höger-utseenden i höger-till-vänster-språk"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -14110,7 +13783,7 @@ msgstr "Tangentbord"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
-msgstr "Inställningar för tangentbordet är inte tillgängliga."
+msgstr "Inställningar för tangentbordet är för tillfället inte tillgängliga."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
@@ -14122,7 +13795,7 @@ msgstr "&Genväg:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Key Bindings"
-msgstr "Tangent"
+msgstr "Kortkommandon"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by:"
@@ -14212,7 +13885,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -14232,7 +13905,7 @@ msgstr ""
 "\n"
 "\t'%s'\n"
 "\n"
-"istället.  Om inte, klicka på Avbryt."
+"istället. Om inte, klicka på Avbryt."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Export Library"
@@ -14248,7 +13921,7 @@ msgstr "MP3-bibliotek:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
-msgstr "&Sök..."
+msgstr "&Hitta..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "LAME MP3 Library:"
@@ -14276,7 +13949,7 @@ msgstr "FFmpeg-bibliotek:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Loca&te..."
-msgstr "&Sök..."
+msgstr "Hi&tta..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
@@ -14313,7 +13986,7 @@ msgstr "Inga MIDI-gränssnitt"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
-msgstr "Latensen för Midi-synthesizer måste var ett heltal"
+msgstr "Latensen för MIDI-synthesizer måste var ett heltal"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
@@ -14399,7 +14072,7 @@ msgstr "Ändra markeringspunkt"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Left-Drag"
-msgstr "Vänster-Dra"
+msgstr "Vänsterdra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Set Selection Range"
@@ -14407,7 +14080,7 @@ msgstr "Ändra markeringsintervall"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Shift-Left-Click"
-msgstr "Shift-Vänsterklick"
+msgstr "Shift-vänsterklick"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Extend Selection Range"
@@ -14415,7 +14088,7 @@ msgstr "Utökat markeringsintervall"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Left-Double-Click"
-msgstr "Vänster-Dubbelklick"
+msgstr "Vänster-dubbelklick"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Select Clip or Entire Track"
@@ -14423,7 +14096,7 @@ msgstr "Markera klipp eller hela spåret"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Wheel-Rotate"
-msgstr "Hjul-Rotera"
+msgstr "Hjulrotering"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change scrub speed"
@@ -14439,7 +14112,7 @@ msgstr "Zooma in på intervall"
 
 #: src/prefs/MousePrefs.cpp
 msgid "same as right-drag"
-msgstr "samma som Höger-dra"
+msgstr "samma som Högerdra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Right-Click"
@@ -14451,15 +14124,15 @@ msgstr "Zooma ut ett steg"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Right-Drag"
-msgstr "Höger-Dra"
+msgstr "Högerdra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "same as left-drag"
-msgstr "samma som Vänster-Dra"
+msgstr "samma som Vänsterdra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Shift-Drag"
-msgstr "Shift-Dra"
+msgstr "Shift-dra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom out on a Range"
@@ -14479,15 +14152,15 @@ msgstr "Flytta klipp upp/ned eller mellan spår"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Shift-Left-Drag"
-msgstr "Shift-Vänster-Dra"
+msgstr "Shift-vänsterdra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Move all clips in track left/right"
-msgstr "Tidsförskjut alla klipp i spåret åt vänster/höger"
+msgstr "Flytta alla klipp i spåret åt vänster/höger"
 
 #: src/prefs/MousePrefs.cpp
 msgid "-Left-Drag"
-msgstr "-Vänster-Dra"
+msgstr "-vänsterdra"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Move clip up/down between tracks"
@@ -14512,7 +14185,7 @@ msgstr "Ändra sampling"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Alt-Left-Click"
-msgstr "Alt-Vänsterklick"
+msgstr "Alt-vänsterklick"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Smooth at Sample"
@@ -14520,7 +14193,7 @@ msgstr "Jämna ut vid sampling"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change Several Samples"
-msgstr "Ändra flera sampllingar"
+msgstr "Ändra flera samplingar"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change ONE Sample only"
@@ -14548,7 +14221,7 @@ msgstr "Rulla spår upp eller ned"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Shift-Wheel-Rotate"
-msgstr "Shift-Hjul-Rotera"
+msgstr "Shift-hjulrotation"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Scroll waveform"
@@ -14556,7 +14229,7 @@ msgstr "Skrolla vågform"
 
 #: src/prefs/MousePrefs.cpp
 msgid "-Wheel-Rotate"
-msgstr "-Hjul-Rotera"
+msgstr "-hjulrotera"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom waveform in or out"
@@ -14564,7 +14237,7 @@ msgstr "Zooma in eller ut vågform"
 
 #: src/prefs/MousePrefs.cpp
 msgid "-Shift-Wheel-Rotate"
-msgstr "-Shift-Hjul-Rotera"
+msgstr "-Shift-hjulrotera"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Vertical Scale Waveform (dB) range"
@@ -14581,15 +14254,15 @@ msgstr "&Längd:"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "Förhandsvisning av klipp"
+msgstr "Förhandsvisning av utklipp"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
-msgstr "&Innan klippområde:"
+msgstr "&Innan utklippt område:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&After cut region:"
-msgstr "&Efter klippområde:"
+msgstr "&Efter utklippt område:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Seek Time when playing"
@@ -14605,15 +14278,15 @@ msgstr "Lå&ng period:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr ""
+msgstr "&Varierande uppspelningshastighet"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "%Mikrotoningar"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "Utför alltid scrubbing på o&fästade"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -14649,14 +14322,12 @@ msgid "As&k"
 msgstr "Frå&ga"
 
 #: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "16-bit"
-msgstr "16-bitars PCM"
+msgstr "16-bitar"
 
 #: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "24-bit"
-msgstr "24-bitars PCM"
+msgstr "24-bitar"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
@@ -14672,7 +14343,7 @@ msgstr "Formad"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
-msgstr "Andra..."
+msgstr "Övrigt..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Sampling"
@@ -14713,23 +14384,20 @@ msgid "Dit&her:"
 msgstr "Gitt&er:"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Play &other tracks while recording (overdub)"
-msgstr "&Andra spår under inspelning (pålägg)"
+msgstr "Spela upp &andra spår under inspelning (pålägg)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
-msgstr ""
+msgstr "Använd &hårdvara för att spela upp andra spår"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "&Software playthrough of input"
 msgstr "&Mjukvaruuppspelning av inmatning"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Record on a new track"
-msgstr "Spela alltid in på ett nytt spår"
+msgstr "Spela in på ett nytt spår"
 
 #. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
@@ -14810,17 +14478,16 @@ msgid "0 means endless"
 msgstr "0 betyder oändligt"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Punch and Roll Recording"
-msgstr "Ljudaktiverad inspelning"
+msgstr "Punch and Roll-inspelning"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr ""
+msgstr "&Ljud innan inspelning:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
-msgstr ""
+msgstr "Cross&fade:"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -14910,12 +14577,10 @@ msgid "S&cale"
 msgstr "S&kala"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "Mi&n Frequency (Hz):"
 msgstr "M&inimal frekvens (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "Ma&x Frequency (Hz):"
 msgstr "Ma&ximal frekvens (Hz):"
 
@@ -14933,7 +14598,7 @@ msgstr "&Intervall (dB)"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
-msgstr ""
+msgstr "&Frekv.förstärkn. (dB/dec):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Gra&yscale"
@@ -14961,7 +14626,7 @@ msgstr "Faktor för &nollor"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
-msgstr "Akti&vera spektral markering"
+msgstr "Akti&vera spektrumsmarkering"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Show a grid along the &Y-axis"
@@ -14978,7 +14643,7 @@ msgstr "Minímal amplitud (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Max. Number of Notes (1..128):"
-msgstr "Maximalt antal noter (1..128):"
+msgstr "Max. antal noter (1..128):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Find Notes"
@@ -14994,7 +14659,7 @@ msgstr "Globala inställningar"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble spectral selection"
-msgstr "Aktivera Markering"
+msgstr "Aktivera spektrumsmarkering"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The maximum frequency must be an integer"
@@ -15069,7 +14734,6 @@ msgstr ""
 "om bildfilen även visar andra ikoner också.)"
 
 #: src/prefs/ThemePrefs.cpp
-#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
 "Sourcery'. This will save a\n"
@@ -15077,7 +14741,7 @@ msgid ""
 msgstr ""
 "Detta är en felsökningsversion av Audacity, med en extra knapp som kallas "
 "\"Output Sourcery\". Den sparar en\n"
-"C-version av bildcachen som kan kompileras i som standard."
+"C-version av bildcachen som kan kompileras som en standard."
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -15135,7 +14799,7 @@ msgstr "A&utomarkera, om markera är nödvändigt"
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable cut &lines"
-msgstr "Aktivera klipplinje&r"
+msgstr "Aktivera utklippningslinje&r"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable &dragging selection edges"
@@ -15143,7 +14807,7 @@ msgstr "Aktivera &dragbara markeringskanter"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
-msgstr "Redigera ett klipp kan &flytta andra klipp"
+msgstr "Redigering av ett klipp kan &flytta andra klipp"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -15155,7 +14819,7 @@ msgstr "Skriv för a&tt skapa en etikett"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
-msgstr ""
+msgstr "Använd dialogruta för den nya etikettens &namn"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
@@ -15179,7 +14843,7 @@ msgstr "Anslut pickar"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Stem plot"
-msgstr "Rita ut hopmixade ljudkällor"
+msgstr "Rita ut ihopmixade ljudkällor"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Fit to Width"
@@ -15202,32 +14866,28 @@ msgid "Seconds"
 msgstr "Sekunder"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "5ths of Seconds"
-msgstr "Sekunder"
+msgstr "Femtedelssekunder"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "10ths of Seconds"
-msgstr "Sekunder"
+msgstr "Tiondelssekunder"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "20ths of Seconds"
-msgstr "Sekunder"
+msgstr "Tjugondelssekunder"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "50ths of Seconds"
-msgstr "Sekunder"
+msgstr "Femtiondelssekunder"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "100ths of Seconds"
-msgstr ""
+msgstr "Hundradelssekunder"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "500ths of Seconds"
-msgstr ""
+msgstr "Femhundradelssekunder"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
@@ -15255,7 +14915,7 @@ msgstr "&Visa ljudspårets namn som överlägg"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
-msgstr ""
+msgstr "Använd &halvvågsvisning vid kollapsad vy"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -15267,7 +14927,7 @@ msgstr "A&utorulla om sidhuvudet inte är fäst"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
-msgstr ""
+msgstr "Fäste sid&huvudets position"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -15320,11 +14980,11 @@ msgstr "&Lite diskutrymme vid programstart eller nytt projekt"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &mono during export"
-msgstr "Ljud mixas ned till &mono vid export"
+msgstr "Mixa ned ljud till &mono vid export"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &stereo during export"
-msgstr "Ljud mixas ned till &stereo vid export"
+msgstr "Mixa ned ljud till &stereo vid export"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down on export (&Custom FFmpeg or external program)"
@@ -15562,7 +15222,7 @@ msgstr "Sluta scrubbing"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
-msgstr "Börja scrubbing"
+msgstr "Starta scrubbing"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -15641,9 +15301,9 @@ msgstr "%s - kontrollerad"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selection %s. %s won't change."
-msgstr "Markering %s.  %s kommer inte att ändras."
+msgstr "Markeringen %s.  %s kommer inte att ändras."
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -15654,14 +15314,12 @@ msgid "Low and High Frequencies"
 msgstr "Låga och höga frekvenser"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
 msgid "Center Frequency"
-msgstr "Centrera frekvens:"
+msgstr "Centrera frekvens"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
 msgid "Bandwidth"
-msgstr "Bandbredd:"
+msgstr "Bandbredd"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -15708,7 +15366,7 @@ msgstr "Slideverktyg"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play at selected speed"
-msgstr "Spela upp med vald hastighet"
+msgstr "Spela upp efter vald hastighet"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Playback Speed"
@@ -15716,7 +15374,7 @@ msgstr "Uppspelningshastighet"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Looped-Play-at-Speed"
-msgstr "Spela upp slinga med vald hastighet"
+msgstr "Spela upp slinga efter hastighet"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -15737,7 +15395,7 @@ msgstr "&Typsnitt..."
 #. i18n-hint: (noun) This is the font for the label track.
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
 msgid "Label Track Font"
-msgstr "Etikettspår font"
+msgstr "Typsnitt för etikettspår"
 
 #. i18n-hint: (noun) The name of the typeface
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
@@ -15774,17 +15432,17 @@ msgstr "Högerklicka för meny."
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset\tShift-Right-Click"
-msgstr "Återställ zoom\tShift-Högerklick"
+msgstr "Återställ zoom\tShift-högerklick"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr "Zooma in\tVänsterklick/Vänster-Dra"
+msgstr "Zooma in\tVänsterklick/Vänsterdra"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Out\tShift-Left-Click"
-msgstr "Zooma ut\tShift-Vänsterklick"
+msgstr "Zooma ut\tShift-vänsterklick"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -15814,11 +15472,11 @@ msgstr "Vänsterklicka för att slå ihop klipp"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merged Clips"
-msgstr "Slog ihop klipp"
+msgstr "Sammanfogade klipp"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merge"
-msgstr "Slå ihop"
+msgstr "Sammanfoga"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Expanded Cut Line"
@@ -15835,7 +15493,7 @@ msgstr "Raderade skärlinjer"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
-msgstr "Klicka och dra för att redigera samples"
+msgstr "Klicka och dra för att redigera samplingar"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid ""
@@ -15978,7 +15636,7 @@ msgstr "Dela stereo till &mono"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Wave Color"
-msgstr "&Vågform"
+msgstr "Färg på &vågform"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -16070,7 +15728,7 @@ msgstr "Återställ zoom"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom to Fit\tShift-Right-Click"
-msgstr "Zooma för att anpassa\tShift-Högerklick"
+msgstr "Zooma för att anpassa\tShift-högerklick"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -16168,7 +15826,6 @@ msgid "Scrub &Ruler"
 msgstr "Scrub&linjal"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Playing at Speed"
 msgstr "Spela efter hastighet"
 
@@ -16204,7 +15861,7 @@ msgstr "Klicka och dra för att flytta den övre markeringsfrekvensen."
 msgid "Click and drag to move center selection frequency to a spectral peak."
 msgstr ""
 "Klicka och dra för att flytta den centrerade markeringsfrekvensen till en "
-"spektralhöjdpunkt."
+"spektrumshöjdpunkt."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -16284,9 +15941,8 @@ msgid "Move Track to &Bottom"
 msgstr "Flytta spåret l&ängst ned"
 
 #: src/tracks/ui/TrackControls.cpp
-#, fuzzy
 msgid "Set Track Name"
-msgstr "Spårnamn"
+msgstr "Ändra spårnamn"
 
 #: src/tracks/ui/TrackControls.cpp
 #, c-format
@@ -16300,7 +15956,7 @@ msgstr "Namnändring"
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Command-Click"
-msgstr "Cmd-klick"
+msgstr "Command-klick"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -16419,51 +16075,44 @@ msgid "Help on the Internet"
 msgstr "Hjälp på Internet"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Do you have these problems?"
-msgstr "Vill du spara ändringarna?"
+msgstr "Får du dessa problem?"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Fix"
-msgstr "Mixa"
+msgstr "Fixa"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Quick Fixes"
-msgstr "QuickTime-filer"
+msgstr "Snabbåtgärder"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Nothing to do"
-msgstr "Det finns inget att ångra"
+msgstr "Det finns inget att göra"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "Inga snabba lättåtgärdade problem hittades"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Clocks on the Tracks"
-msgstr "S&täng aktuellt spår"
+msgstr "Klockor på spåren"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Can't select precisely"
-msgstr "Kan inte öppna projektfil"
+msgstr "Kan inte markera exakt"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Recording stops and starts"
-msgstr "Inspelningens början:"
+msgstr "Inspelningen stoppar och börjar"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Fixed"
-msgstr ""
+msgstr "Fixerad"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
-msgstr "Meny"
+msgstr "(meny)"
 
 #: src/widgets/Meter.cpp
 msgid "Click to Start Monitoring"
@@ -16616,7 +16265,7 @@ msgstr "dd:hh:mm:ss"
 #. * 24 hours in a day in your locale
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 days 024 h 060 m 060 s"
-msgstr "0100 dagar 024 h 060 m 060 s"
+msgstr "0100 dygn 024 h 060 m 060 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and hundredths of a second (1/100 second)
@@ -17005,18 +16654,16 @@ msgid "Could not load file: \"%s\""
 msgstr "Kunde inte läsa in fil: \"%s\""
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Silence Finder"
-msgstr "Skapa tystnad"
+msgstr "Tystnadshittare"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Finding silence..."
-msgstr "Trunkera tystnad..."
+msgstr "Hittar tystnad..."
 
 #: plug-ins/SilenceMarker.ny
 msgid "Alex S. Brown"
-msgstr ""
+msgstr "Alex S. Brown"
 
 #: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -17029,19 +16676,19 @@ msgstr ""
 #: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
 #: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
-msgstr ""
+msgstr "Släppt under villkoren för licensen GNU General Public version 2"
 
 #: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
 msgid "Treat audio below this level as silence [ -dB]"
-msgstr ""
+msgstr "Behandla ljud under denna nivå som tystnad [-dB]"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Minimum duration of silence [seconds]"
-msgstr ""
+msgstr "Minimal längd av tystnad [sekunder]"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Label placement [seconds before silence ends]"
-msgstr ""
+msgstr "Etikettplacering [sekunder innan tystnaden slutar]"
 
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
@@ -17049,36 +16696,36 @@ msgid ""
 "No silences found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
+"Ingen tystnad hittades. Försök att reducera ~%tystnadsnivån och den minimala "
+"tystnadslängden."
 
 #: plug-ins/SoundFinder.ny
-#, fuzzy
 msgid "Sound Finder"
-msgstr "Skapa tystnad"
+msgstr "Ljudhittare"
 
 #: plug-ins/SoundFinder.ny
-#, fuzzy
 msgid "Finding sound..."
-msgstr "Hitta clipping..."
+msgstr "Hittar ljud..."
 
 #: plug-ins/SoundFinder.ny
 msgid "Jeremy R. Brown"
-msgstr ""
+msgstr "Jeremy R. Brown"
 
 #: plug-ins/SoundFinder.ny
 msgid "Minimum duration of silence between sounds [seconds]"
-msgstr ""
+msgstr "Minimal tystnadslängd mellan ljuden [sekunder]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Label starting point [seconds before sound starts]"
-msgstr ""
+msgstr "Etikett för startpunkt [sekunder innan ljudet börjar]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Label ending point [seconds after sound ends]"
-msgstr ""
+msgstr "Etikett för slutpunkt [sekunder innan ljudet slutar]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr ""
+msgstr "Lägg till en etikett i slutet på spåret? [Nej=0, ja=1]"
 
 #: plug-ins/SoundFinder.ny
 #, lisp-format
@@ -17086,32 +16733,32 @@ msgid ""
 "No sounds found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
+"Inget ljud hittades. Försök att reducera ~%tystnadsnivån och den minimala "
+"tystnadslängden."
 
 #: plug-ins/SoundFinder.ny
 msgid "[End]"
-msgstr ""
+msgstr "[Slut]"
 
 #: plug-ins/SpectralEditMulti.ny
-#, fuzzy
 msgid "Spectral edit multi tool"
-msgstr "Spektral markering"
+msgstr "Multiverktyg för spektrumredigering"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Filtering..."
-msgstr "Filter"
+msgstr "Filtrering..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
-msgstr ""
+msgstr "Paul Licameli"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aPlease select frequencies."
-msgstr "Frekvenser"
+msgstr "~aVar god välj frekvenser."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -17120,6 +16767,9 @@ msgid ""
 "                       frequencies are both ~a Hz).~%~\n"
 "                       Please select a frequency range."
 msgstr ""
+"~aBandbredden är noll (de över och undre~%~\n"
+"                       frekvenserna är båda ~a Hz).~%~\n"
+"                       Välj ett frekvensintervall."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -17128,37 +16778,38 @@ msgid ""
 "                      Try increasing the low frequency bound~%~\n"
 "                      or reduce the filter 'Width'."
 msgstr ""
+"~aParametrarna för notchfilter kan inte tillämpas.~%~\n"
+"                      Försök att öka lågfrekvensens gräns~%~\n"
+"                      eller reducera filtret \"Width\"."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%"
-msgstr "Fel"
+msgstr "Fel.~%"
 
 #: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
 msgid "Spectral edit parametric EQ"
-msgstr "Spektral markering"
+msgstr "Redigera parametrisk equalizer för spektrum"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Gain (dB)"
-msgstr "För&stärkning (dB):"
+msgstr "Förstärkning (dB)"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aLow frequency is undefined."
-msgstr ""
+msgstr "~aLåg frekvens är odefinierad."
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aHigh frequency is undefined."
-msgstr ""
+msgstr "~aHög frekvens är odefinierad."
 
 #: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aCenter frequency must be above 0 Hz."
-msgstr "Minimifrekvens måste vara minst 0 Hz"
+msgstr "~aCenterfrekvensen måste vara över 0 Hz."
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -17168,6 +16819,10 @@ msgid ""
 "cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
+"~aFrekvensvalet är för högt för spårets samplingshastigheten.~%~\n"
+"                        För nuvarande spår kan inte inställningen "
+"högfrekvens~%~\n"
+"                        vara större än ~a Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 #, lisp-format
@@ -17176,173 +16831,152 @@ msgid ""
 "                         frequencies are both ~a Hz).~%~\n"
 "                         Please select a frequency range."
 msgstr ""
+"~aBandbredden är noll (de över och undre~%~\n"
+"                         frekvenserna är båda ~a Hz).~%~\n"
+"                         Välj ett frekvensintervall."
 
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Spectral edit shelves"
-msgstr "Spektral markering"
+msgstr "Redigeringshyllor för spektrum"
 
 #: plug-ins/StudioFadeOut.ny
-#, fuzzy
 msgid "Studio Fade Out"
-msgstr "Tona ut"
+msgstr "Studiouttoning"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Applying Fade..."
-msgstr "Tillämpar..."
+msgstr "Tillämpar toning..."
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Steve Daulton"
-msgstr "An&ge som standard"
+msgstr "Steve Daulton"
 
 #: plug-ins/StudioFadeOut.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Markeringen måste vara större än %d samplingar."
+msgstr "Markeringen är för kort.~%Den måste vara större än 2 samplingar."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Adjustable Fade"
-msgstr "Justerade panorering"
+msgstr "Justerade toning"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Fade Type"
-msgstr "&Filtertyp:"
+msgstr "Toningstyp"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Fade Up"
-msgstr "Tona in"
+msgstr "Tona upp"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Fade Down"
-msgstr "Tona in"
+msgstr "Tona ned"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve Up"
-msgstr "Kurvnamn"
+msgstr "S-kurva upp"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve Down"
-msgstr "Flytta ned"
+msgstr "S-kurva ned"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
-msgstr ""
+msgstr "Justering av mittentoning (%)"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Start/End as"
-msgstr "Start-Slut"
+msgstr "Starta/sluta som"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
-msgstr ""
+msgstr "% av originalet"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "dB Gain"
-msgstr "Förstärkning"
+msgstr "dB-förstärkning"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Start (or end)"
-msgstr "Start - Slut"
+msgstr "Början (eller slut)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "End (or start)"
-msgstr ""
+msgstr "Slut (eller början)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr ""
+msgstr "Behändiga förinställningar (överskrider kontroller)"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "None Selected"
-msgstr "Markera"
+msgstr "Ingenting markerat"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Linear In"
-msgstr "Linjär"
+msgstr "Linjärt in"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Linear Out"
-msgstr "Linjär"
+msgstr "Linjärt ut"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential In"
-msgstr ""
+msgstr "Exponentiellt in"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential Out"
-msgstr ""
+msgstr "Exponentiellt ut"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Logarithmic In"
-msgstr "Logaritmisk"
+msgstr "Logaritmiskt in"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Logarithmic Out"
-msgstr "Logaritmisk"
+msgstr "Logaritmiskt ut"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Rounded In"
-msgstr "Tona ut"
+msgstr "Avrundat in"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Rounded Out"
-msgstr "Tona ut"
+msgstr "Avrundat ut"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Cosine In"
-msgstr "Cosinus"
+msgstr "Cosinus in"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Cosine Out"
-msgstr "Cosinus"
+msgstr "Cosinus ut"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve In"
-msgstr "Kurvnamn"
+msgstr "S-kurva in"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve Out"
-msgstr "Kurva finns"
+msgstr "S-kurva finns"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error~%~%"
-msgstr "Fel"
+msgstr "Fel~%~%"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aPercentage values cannot be negative."
-msgstr "Frekvensens värde kan inte vara negativt"
+msgstr "~aProcentvärden kan inte vara negativa."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "Frekvensens värde kan inte vara negativt"
+msgstr "~aProcentvärden kan inte vara större än 1000 %."
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
@@ -17351,375 +16985,336 @@ msgid ""
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
 "                                 \t-6 dB halves the amplitude."
 msgstr ""
+"~adB-värden kan inte vara mer än +100 dB.~%~%~\n"
+"                                 Tips: 6 dB fördubblar amplituden~%~\n"
+"                                 \t-6 dB halverar amplituden."
 
 #: plug-ins/beat.ny
-#, fuzzy
 msgid "Beat Finder"
-msgstr "&Slag"
+msgstr "Slaghittare"
 
 #: plug-ins/beat.ny
-#, fuzzy
 msgid "Finding beats..."
-msgstr "Hitta clipping..."
+msgstr "Hittar slag.."
 
 #: plug-ins/beat.ny
-#, fuzzy
 msgid "Threshold Percentage"
-msgstr "Tröskelkontroller"
+msgstr "Tröskelprocent"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
 msgid "Clip Fix"
-msgstr "Flytta klipp åt h&öger"
+msgstr "Åtgärda klipp"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
 msgid "Reconstructing clips..."
-msgstr "Raderar klick och pops"
+msgstr "Rekonstruerar klipp..."
 
 #: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
-msgstr ""
+msgstr "Benjamin Schwartz och Steve Daulton"
 
 #: plug-ins/clipfix.ny
 msgid ""
 "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
+"Licensiering är bekräftad under villkoren för licensen GNU General Public "
+"version 2"
 
 #: plug-ins/clipfix.ny
 msgid "Threshold of Clipping (%)"
-msgstr ""
+msgstr "Tröskel för klippning (%)"
 
 #: plug-ins/clipfix.ny
 msgid "Reduce amplitude to allow for restored peaks (dB)"
-msgstr ""
+msgstr "Reducera amplituden för att tillåta återställda maxpunkter (dB)"
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy
 msgid "Crossfade Clips"
-msgstr "Notspår"
+msgstr "Kör crossfade på klipp"
 
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Crossfading..."
-msgstr "Notspår"
+msgstr "Crossfading..."
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
-"Ogiltig ljudmarkering.\n"
-"Var god se till att ljudet är markerat."
+msgstr "Fel.~%Ogiltig markering..~%Fler än 2 ljudklipp är markerade."
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr ""
-"Ogiltig ljudmarkering.\n"
-"Var god se till att ljudet är markerat."
+"Fel..~%Ogiltig ljudmarkering..~%Tomt mellanrum i början av markeringen."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
+msgstr "Fel.~%Crossfade på klipp kan endast tillämpas på ett spår."
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Crossfade Tracks"
-msgstr "Notspår"
+msgstr "Kör crossfade på spår"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Fade type"
-msgstr "Filtyp:"
+msgstr "Toningstyp"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Constant Gain"
-msgstr "Konstant"
+msgstr "Konstant förstärkning"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Constant Power 1"
-msgstr "Konstant"
+msgstr "Konstant kraft 1"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Constant Power 2"
-msgstr "Konstant"
+msgstr "Konstant kraft 2"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Custom Curve"
-msgstr "Anpassat"
+msgstr "Anpassad kurva"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Custom curve"
-msgstr "Anpassat"
+msgstr "Anpassad kurva"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Fade direction"
-msgstr "läs direkt"
+msgstr "Toningsriktning"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
-msgstr ""
+msgstr "Alternerande ut/in"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating In / Out"
-msgstr ""
+msgstr "Alternerande in/ut"
 
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
+msgstr "Fel.~%Välj 2 (eller fler) spår att köra crossfade på."
 
 #: plug-ins/delay.ny
 msgid "Delay"
-msgstr "Delay"
+msgstr "Fördröjning"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Applying Delay Effect..."
-msgstr "Verkställer Nyquist effekt..."
+msgstr "Tillämpar fördröjningseffekt..."
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Delay type"
-msgstr "Delay"
+msgstr "Fördröjningstyp"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Regular"
-msgstr "Rekangulär"
+msgstr "Reguljär"
 
 #: plug-ins/delay.ny
 msgid "Bouncing Ball"
-msgstr ""
+msgstr "Studsande boll"
 
 #: plug-ins/delay.ny
 msgid "Reverse Bouncing Ball"
-msgstr ""
+msgstr "Omvänd studsande boll"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
-msgstr ""
+msgstr "Fördröjningsnivå per upprepning (dB)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Delay time (seconds)"
-msgstr "Fördröjningstid (sekunder):"
+msgstr "Fördröjningstid (sekunder)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Pitch change effect"
-msgstr "Förhandsvisa effekt"
+msgstr "Tonhöjdsförändringseffekt"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Pitch/Tempo"
-msgstr "Tonhöjd och tempo"
+msgstr "Tonhöjd/tempo"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Low-quality Pitch Shift"
-msgstr "Slutgiltig tonhöjdsskiftning"
+msgstr "Tonhöjdsskiftning i låg kvalitet"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Pitch change per echo (semitones)"
-msgstr "Förhandsvisa effekt"
+msgstr "Tonhöjdsförändring per upprepning (halvtoner)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Number of echoes"
 msgstr "Antal upprepningar"
 
 #: plug-ins/delay.ny
 msgid "Allow duration to change"
-msgstr ""
+msgstr "Tillåt längden att ändras"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
-msgstr ""
+msgstr "Vanliga intervalletiketter"
 
 #: plug-ins/equalabel.ny
 msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
+msgstr "Lägger till etiketter med likadana mellanrum i etikettspåret..."
 
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Create labels based on"
-msgstr "Dela filer baserat på:"
+msgstr "Skapa etiketter baserat på"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number & Interval"
-msgstr "Etikettredigering"
+msgstr "Nummer&intervall"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number of Labels"
-msgstr "Antal redigeringar:"
+msgstr "Antal etiketter"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Label Interval"
-msgstr "Etikettredigering"
+msgstr "Etikettintervall"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number of labels"
-msgstr "Antal redigeringar:"
+msgstr "Antal etiketter"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Label interval (seconds)"
-msgstr "Längd (sekunder)"
+msgstr "Etikettintervall (sekunder)"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Length of label region (seconds)"
-msgstr "Längd (sekunder)"
+msgstr "Längd på etikettområde (sekunder)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
-msgstr ""
+msgstr "Justera etikettintervall för att passa längd"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Label text"
-msgstr "Etikettredigering"
+msgstr "Etikettext"
 
 #: plug-ins/equalabel.ny
 msgid "Minimum number of digits in label"
-msgstr ""
+msgstr "Minimalt antal siffror i etikett"
 
 #: plug-ins/equalabel.ny
 msgid "None - Text Only"
-msgstr ""
+msgstr "Inget - Endast text"
 
 #: plug-ins/equalabel.ny
 msgid "1 (Before Label)"
-msgstr ""
+msgstr "1 (innan etikett)"
 
 #: plug-ins/equalabel.ny
 msgid "2 (Before Label)"
-msgstr ""
+msgstr "2 (innan etikett)"
 
 #: plug-ins/equalabel.ny
 msgid "3 (Before Label)"
-msgstr ""
+msgstr "3 (innan etikett)"
 
 #: plug-ins/equalabel.ny
 msgid "1 (After Label)"
-msgstr ""
+msgstr "1 (efter etikett)"
 
 #: plug-ins/equalabel.ny
 msgid "2 (After Label)"
-msgstr ""
+msgstr "2 (efter etikett)"
 
 #: plug-ins/equalabel.ny
 msgid "3 (After Label)"
-msgstr ""
+msgstr "3 (efter etikett)"
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
-msgstr ""
+msgstr "Börja numrering från"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Message on completion"
-msgstr "Latenskompensering"
+msgstr "Meddelande vid slutförd"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Details"
-msgstr "Avdela"
+msgstr "Detaljer"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Warnings only"
-msgstr "Varningar"
+msgstr "Endast varningar"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "Varning: Områdesetiketter överlappas.~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "region labels"
-msgstr "Ma&rkering spara"
+msgstr "områdesetiketter"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "point labels"
-msgstr "Redigerade etiketter"
+msgstr "punktetiketter"
 
 #. i18n-hint:  Number of labels produced at specified intervals.
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr ""
+msgstr "~a~a ~a i intervaller på ~a sekunder.~%"
 
 #: plug-ins/equalabel.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr "Från längd i sekunder"
+msgstr "~aOmrådeslängd = ~a sekunder."
 
 #: plug-ins/highpass.ny
-#, fuzzy
 msgid "High-Pass Filter"
-msgstr "Klassiska filter"
+msgstr "Högpassfilter"
 
 #: plug-ins/highpass.ny
-#, fuzzy
 msgid "Performing High-Pass Filter..."
-msgstr "Performing ScienFilter"
+msgstr "Utför högpassfilter..."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
 msgid "Dominic Mazzoni"
-msgstr ""
+msgstr "Dominic Mazzoni"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 #: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
-#, fuzzy
 msgid "Frequency (Hz)"
-msgstr "Frekvens (Hz):"
+msgstr "Frekvens (Hz)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
-msgstr ""
+msgstr "Roll-off (dB per oktav)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "6 dB"
-msgstr ""
+msgstr "6 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "12 dB"
-msgstr ""
+msgstr "12 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "24 dB"
-msgstr ""
+msgstr "24 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "36 dB"
-msgstr ""
+msgstr "36 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "48 dB"
-msgstr ""
+msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
-#, fuzzy
 msgid "Frequency must be at least 0.1 Hz."
-msgstr "Minimifrekvens måste vara minst 0 Hz"
+msgstr "Frekvensen måste vara minst 0.1 Hz."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, lisp-format
@@ -17728,97 +17323,90 @@ msgid ""
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
+"Fel:~%~%Frekvensen (~a Hz) är för hög för spårets samplingshastighet.~%~%~\n"
+"                   Spårets samplingshastighet är ~a Hz~%~\n"
+"                   Frekvensen måste vara mindre än ~a Hz."
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limiter"
-msgstr "db-gräns"
+msgstr "Begränsare"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limiting..."
-msgstr "Normaliserar..."
+msgstr "Begränsar.."
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Type"
-msgstr "Typ:"
+msgstr "Typ"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Soft Limit"
-msgstr "db-gräns"
+msgstr "Mjuk gräns"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Hard Limit"
-msgstr "db-gräns"
+msgstr "Hård gräns"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Soft Clip"
-msgstr "N&ästa klipp"
+msgstr "Mjukt klipp"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Hard Clip"
-msgstr "Hård klippning"
+msgstr "Hårt klipp"
 
 #: plug-ins/limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
+"Inmatningsförstärkning (dB)\n"
+"för mono/vänster kanal"
 
 #: plug-ins/limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
+"Inmatningsförstärkning (dB)\n"
+"för höger kanal"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limit to (dB)"
-msgstr "&Nivå (dB):"
+msgstr "Begränsa till (dB)"
 
 #: plug-ins/limiter.ny
 msgid "Hold (ms)"
-msgstr ""
+msgstr "Håll (ms)"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Apply Make-up Gain"
-msgstr "Ombrytningförstärkning"
+msgstr "Tillämpa ombrytningsförstärkning"
 
 #: plug-ins/lowpass.ny
-#, fuzzy
 msgid "Low-Pass Filter"
-msgstr "Klassiska filter"
+msgstr "Lågpassfilter"
 
 #: plug-ins/lowpass.ny
-#, fuzzy
 msgid "Performing Low-Pass Filter..."
-msgstr "Performing ScienFilter"
+msgstr "Utför lågpassfilter..."
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Notch Filter"
-msgstr "Filterlängd"
+msgstr "Notchfilter"
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Applying Notch Filter..."
-msgstr "Lägger till utjämnare..."
+msgstr "Tillämpar notchfilter..."
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Steve Daulton and Bill Wharrie"
-msgstr "An&ge som standard"
+msgstr "Steve Daulton och Bill Wharrie"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
-msgstr ""
+msgstr "Q (högre värden reducerar bredden)"
 
 #: plug-ins/notch.ny
 #, lisp-format
@@ -17827,259 +17415,234 @@ msgid ""
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
+"Fel:~%~%Frekvensen (~a Hz) är för hög för spårets samplingshastighet.~%~%~\n"
+"                 Spårets samplingshastighet är ~a Hz~%~\n"
+"                 Frekvensen måste vara mindre än ~a Hz."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
-msgstr ""
+msgstr "Gitarrsträng"
 
 #: plug-ins/pluck.ny
-#, fuzzy
 msgid "Generating pluck sound..."
-msgstr "Skapar ton"
+msgstr "Skapar gitarrsträngsljud..."
 
 #: plug-ins/pluck.ny
 msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
+msgstr "MIDI-värden för C-noter: 36, 48, 60 [mitten-C], 72, 84, 96."
 
 #: plug-ins/pluck.ny
 msgid "David R.Sky"
-msgstr ""
+msgstr "David R.Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
-msgstr ""
+msgstr "MIDI-tonhöjd för sträng"
 
 #: plug-ins/pluck.ny
-#, fuzzy
 msgid "Fade-out type"
-msgstr "Filtyp:"
+msgstr "Uttoningstyp"
 
 #: plug-ins/pluck.ny
 msgid "Abrupt"
-msgstr ""
+msgstr "Abrupt"
 
 #: plug-ins/pluck.ny
 msgid "Gradual"
-msgstr ""
+msgstr "Gradvis"
 
 #: plug-ins/pluck.ny
-#, fuzzy
 msgid "Duration (60s max)"
-msgstr "Längd"
+msgstr "Längd (max 60 s)"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Rhythm Track"
-msgstr "Ta bort spår"
+msgstr "Rytmspår"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Generating Rhythm..."
-msgstr "Skapar Chirp"
+msgstr "Skapar rytm..."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
-msgstr ""
+msgstr "Tempo (bpm)"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "30 - 300 beats/minute"
-msgstr "Till slag i minuten"
+msgstr "30 - 300 slag/minut"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Beats per bar"
-msgstr "Slag i minuten"
+msgstr "Slag per takt"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "1 - 20 beats/measure"
-msgstr "Till slag i minuten"
+msgstr "1 - 20 slag/takt"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Swing amount"
 msgstr "Förvrängningsmängd"
 
 #: plug-ins/rhythmtrack.ny
 msgid "+/- 1"
-msgstr ""
+msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
 msgstr ""
+"Ändra \"Antal takter' till noll för att aktivera \"Längd för rytmspår\"."
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Number of bars"
-msgstr "Antal upprepningar"
+msgstr "Antal takter"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 1000 bars"
-msgstr ""
+msgstr "1 - 1000 takter"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Rhythm track duration"
-msgstr "Ta bort spår"
+msgstr "Längd på rytmspår"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Used if 'Number of bars' = 0"
-msgstr "Antal upprepningar"
+msgstr "Används om \"Antal takter\" = 0"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Start time offset"
-msgstr "Startoffset:"
+msgstr "Offset för starttid"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Silence before first beat"
-msgstr "Inkludera ljud innan första etiketten"
+msgstr "Tystnad innan första slaget"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Beat sound"
-msgstr "&Slag"
+msgstr "Slagljud"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
-msgstr ""
+msgstr "Metronomtick"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Ping (short)"
-msgstr ""
+msgstr "Pip (kort)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Ping (long)"
-msgstr ""
+msgstr "Pip (lång)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Cowbell"
-msgstr ""
+msgstr "Kobjällra"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Resonant Noise"
-msgstr "Raderar brus"
+msgstr "Resonansbrus"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Noise Click"
-msgstr "Brusgrund"
+msgstr "Brusklick"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (short)"
-msgstr ""
+msgstr "Droppe (kort)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (long)"
-msgstr ""
+msgstr "Droppe (lång)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of strong beat"
-msgstr ""
+msgstr "MIDI-tonhöjd för starkt slag"
 
 #: plug-ins/rhythmtrack.ny
 msgid "18 - 116"
-msgstr ""
+msgstr "18 - 116"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of weak beat"
-msgstr ""
+msgstr "MIDI-tonhöjd för svagt slag"
 
 #: plug-ins/rhythmtrack.ny
 msgid ""
 "Set either 'Number of bars' or\n"
 "'Rhythm track duration' to greater than zero."
 msgstr ""
+"Ändra antingen \"Antal takter\" eller\n"
+"\"Längd för rytmspår\" till större än noll."
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Risset Drum"
-msgstr "Skapar brus"
+msgstr "Risset-trumma"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Generating Risset Drum..."
-msgstr "Skapar brus"
+msgstr "Skapar Risset-trumma..."
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Steven Jones"
-msgstr "An&ge som standard"
+msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Decay (seconds)"
-msgstr "Fördröjningstid (sekunder):"
+msgstr "Fördröjning (sekunder)"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Center frequency of noise (Hz)"
-msgstr "Centrera frekvens och bredd"
+msgstr "Centrera brusfrekvens (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Width of noise band (Hz)"
-msgstr ""
+msgstr "Bredd för brusband (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amount of noise in mix (percent)"
-msgstr ""
+msgstr "Brusmängd i mix (procent)"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Amplitude (0 - 1)"
-msgstr "Amplitud (0-1):"
+msgstr "Amplitud (0-1)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample Data Export"
-msgstr "Kunde inte exportera"
+msgstr "Exportera samplingsdata"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Analyzing..."
-msgstr "Tillämpar..."
+msgstr "Analyserar..."
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
-msgstr ""
+msgstr "Begränsa utmatning till första"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Measurement scale"
-msgstr "&Mät markering"
+msgstr "Mätningsskala"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Export data to"
-msgstr "Exportera ljud"
+msgstr "Exportera data till"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
-msgstr ""
+msgstr "Index (endast textfiler)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample Count"
-msgstr "Redigera sampling"
+msgstr "Antal samplingar"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Time Indexed"
-msgstr "Etikettredigering"
+msgstr "Indexerad tid"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Include header information"
-msgstr "Versionsinformation"
+msgstr "Inkludera sidhuvudsinformation"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Minimal"
-msgstr "&Minimera"
+msgstr "Minimalt"
 
 #: plug-ins/sample-data-export.ny
 msgid "All"
@@ -18087,67 +17650,66 @@ msgstr "Allt"
 
 #: plug-ins/sample-data-export.ny
 msgid "Optional header text"
-msgstr ""
+msgstr "Valfri sidhuvudstext"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
-msgstr ""
+msgstr "Kanalutseende för stereo"
 
 #. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
 msgid "L-R on Same Line"
-msgstr ""
+msgstr "V-H på samma rad"
 
 #: plug-ins/sample-data-export.ny
 msgid "Alternate Lines"
-msgstr ""
+msgstr "Alternera rader"
 
 #. i18n-hint: L for Left
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "L Channel First"
-msgstr "%d kanaler"
+msgstr "V. kanal först"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Show messages"
-msgstr "detta hjälpmeddelande"
+msgstr "Visa meddelanden"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Errors Only"
-msgstr "Fel: "
+msgstr "Endast fel"
 
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
 msgid "[-inf]"
-msgstr ""
+msgstr "[-oändl]"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Left Channel.~%~%"
-msgstr "Vänster kanal"
+msgstr "Vänster kanal.~%~%"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~%~%Right Channel.~%~%"
-msgstr "Höger kanal"
+msgstr "~%~%Höger kanal.~%~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~aData written to:~%~a"
-msgstr ""
+msgstr "~aData skrevs till:~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
-msgstr ""
+msgstr "Samplingshastighet: ~a Hz.  Samplingsvärden på skalan ~a.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
+"~a   ~a~%~aSamplingshastighet: ~a Hz.~%Bearbetad längd: ~a samplingar ~a "
+"sekunder.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18155,6 +17717,8 @@ msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
+"~a   ~a~%~aSamplingshastighet: ~a Hz. Samplingsvärden på skalan ~a.~%~\n"
+"                     Bearbetad längd: ~a samplingar ~a sekunder.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18165,107 +17729,104 @@ msgid ""
 "Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
+"~a~%Samplingshastighet: ~a Hz. Samplingsvärden på skalan ~a. ~a."
+"~%~aBearbetad längd: ~a ~\n"
+"                  samplingar, ~a sekunder.~%Maximal amplitud: ~a (linjär) ~a "
+"dB.  Unweighted RMS: ~a dB.~%~\n"
+"                  DC-offset: ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a linear, ~a dB."
-msgstr ""
+msgstr "~a linjär, ~a dB."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
-msgstr ""
+msgstr "Vänster: ~a lin, ~a dB | Höger: ~a lin, ~a dB."
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~a samples."
-msgstr "samplingar"
+msgstr "~a samplingar."
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~a seconds."
-msgstr "sekunder"
+msgstr "~a sekunder."
 
 #: plug-ins/sample-data-export.ny
 msgid "Audio data analysis:"
-msgstr ""
+msgstr "Analys av ljuddata:"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
-msgstr ""
+msgstr "<b>Samplingsfrekvens:</b> &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "<b>Maximal amplitud:</b> &nbsp;&nbsp;~a (linjär) &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "<b>RMS</b> (ouppskattad): &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr ""
+msgstr "<b>DC-offset:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "~a linjär, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "Vänster: ~a lin, ~a dB | Höger: ~a linjär, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "sample data"
-msgstr "Redigera sampling"
+msgstr "samplingsdata"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample #"
-msgstr "Samplingar"
+msgstr "Samplingsnr"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (linear)"
-msgstr "Linjär"
+msgstr "Värde (linjärt)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (dB)"
-msgstr "&Volym (dB):"
+msgstr "Värde (dB)"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
-msgstr ""
+msgstr "värdesanalys av ljudsamling"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Left (linear)"
-msgstr "Linjär"
+msgstr "Vänster (linjärt)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Right (linear)"
-msgstr "Linjär"
+msgstr "Höger (linjärt)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Left (dB)"
-msgstr "&Nivå (dB):"
+msgstr "Vänster (dB)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Right (dB)"
-msgstr "Höger, %dHz"
+msgstr "Höger (dB)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18274,83 +17835,79 @@ msgid ""
 "<a href=\"~a\">Audacity</a> by Steve\n"
 "Daulton"
 msgstr ""
+"Producerad med <span>Sample Data Export</span> för\n"
+"<a href=\"~a\">Audacity</a> av Steve\n"
+"Daulton"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "linear"
-msgstr "Linjär"
+msgstr "linjär"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "2 channels (stereo)"
 msgstr "2 kanaler (stereo)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "1 channel (mono)"
 msgstr "1 kanal (mono)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One column per channel.~%"
-msgstr ""
+msgstr "En kolumn per kanal.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One row per channel.~%"
-msgstr ""
+msgstr "En rad per kanal.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left channel then Right channel on same line.~%"
-msgstr ""
+msgstr "Vänster kanal sedan höger kanal på samma rad.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left and right channels on alternate lines.~%"
-msgstr ""
+msgstr "Vänster och höger kanaler på alternerande rader.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left channel first then right channel.~%"
-msgstr ""
+msgstr "Vänster kanal först sedan höger kanal.~%"
 
 #: plug-ins/sample-data-export.ny
 msgid "Unspecified channel order"
-msgstr ""
+msgstr "Ospecificerad kanalordning"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
-msgstr ""
+msgstr "Fel.~%\"~a\" kan inte skrivas."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Sample Data Import"
-msgstr "Kon&vertering av samplingsfrekvens:"
+msgstr "Importera samplingsdata"
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Reading and rendering samples..."
-msgstr "Mixar och renderar spår"
+msgstr "Läser och renderar samplingar..."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Select file"
-msgstr "Välj en fil"
+msgstr "Välj fil"
 
 #: plug-ins/sample-data-import.ny
 msgid "Invalid data handling"
-msgstr ""
+msgstr "Ogiltig datahantering"
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Throw Error"
-msgstr "Fel"
+msgstr "Kasta fel"
 
 #: plug-ins/sample-data-import.ny
 msgid "Read as Zero"
-msgstr ""
+msgstr "Läs som noll"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -18359,6 +17916,9 @@ msgid ""
 "                        '~a' could not be opened.~%~\n"
 "                        Check that file exists."
 msgstr ""
+"Fel~%~\n"
+"                        \"~a\" kunde inte öppnas.~%~\n"
+"                        Kontrollera att filen finns."
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -18367,6 +17927,9 @@ msgid ""
 "              The file must contain only plain ASCII text.~%~\n"
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
+"Fel:~%~\n"
+"              Filen måste endast innehålla vanlig ASCII-text.~%~\n"
+"              (\"~a\" är en ogiltig byte vid bytenummer: ~a)"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -18375,106 +17938,94 @@ msgid ""
 "              Data must be numbers in plain ASCII text.~%~\n"
 "              '~a' is not a numeric value."
 msgstr ""
+"Fel~%~\n"
+"              Data måste vara siffror i vanlig ASCII-text.~%~\n"
+"              \"~a\" är inte ett numeriskt värde."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Unable to open file"
-msgstr "Kunde inte öppna genrefil."
+msgstr "Fel.~%Kan inte öppna fil"
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
-msgstr ""
+msgstr "Tremolo"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Applying Tremolo..."
-msgstr "Lägger till utjämnare..."
+msgstr "Tillämpar tremolo..."
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Waveform type"
-msgstr "Vågform"
+msgstr "Vågformstyp"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Inverse Sawtooth"
-msgstr "Sågtand"
+msgstr "Inverterad sågtand"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Starting phase (degrees)"
-msgstr "LFO start läge i grader"
+msgstr "Startfas (grader)"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Wet level (percent)"
-msgstr "Wet-nivå"
+msgstr "Wet-nivå (procent)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
-msgstr ""
+msgstr "Sångreducering och -isolering"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Applying Action..."
-msgstr "Tillämpar..."
+msgstr "Tillämpar åtgärd..."
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
-msgstr ""
+msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove Vocals"
-msgstr "&Ta bort special"
+msgstr "Ta bort sång"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Vocals"
-msgstr "&Isolera"
+msgstr "Isolera sång"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Vocals and Invert"
-msgstr "&Isolera"
+msgstr "Isolera sång och invertera"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center"
-msgstr "Raderade skärlinjer"
+msgstr "Radera mitten"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Center"
-msgstr "Centrera"
+msgstr "Isolera center"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Center and Invert"
-msgstr "Centrera"
+msgstr "Isolera center och invertera"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center Classic: Mono"
-msgstr "Raderade skärlinjer"
+msgstr "Klassisk borttagning av mitten: Mono"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Analyze"
-msgstr "A&nalysera"
+msgstr "Analysera"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Strength"
-msgstr "Start-Längd"
+msgstr "Styrka"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
-msgstr ""
+msgstr "Lågt klipp för sång (Hz)"
 
 #: plug-ins/vocalrediso.ny
 msgid "High Cut for Vocals (Hz)"
-msgstr ""
+msgstr "Högt klipp för sång (Hz)"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -18488,6 +18039,14 @@ msgid ""
 "Variation of residuals: ~a\n"
 "y equals ~a plus ~a times x~%"
 msgstr ""
+"Medelvärde för x: ~a, y: ~a\n"
+"Kovarians för x y: ~a\n"
+"Medelvarians för x: ~a, y: ~a\n"
+"Standardavvikelse för x: ~a, y: ~a\n"
+"Korrelationskoefficient: ~a\n"
+"Bestämningskoefficient: ~a \n"
+"Slumpfel: ~a\n"
+"y motsvarar ~a plus ~a gånger x~%"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -18495,6 +18054,8 @@ msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
 msgstr ""
+"Panoreringsposition: ~a~%De vänstra och högra kanalerna är korrelerad med "
+"omkring ~a %. Detta betyder:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18502,6 +18063,9 @@ msgid ""
 "   The center can't be removed.\n"
 "      Any remaining difference may be caused by lossy encoding."
 msgstr ""
+" - De två kanalerna är identiska, d.v.s. dual mono.\n"
+"   Mitten kan inte tas bort.\n"
+"      Alla återstående skillnader kan orsakas av avkodningsförluster."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18509,17 +18073,24 @@ msgid ""
 "panned.\n"
 "   Most likely, the center extraction will be poor."
 msgstr ""
+" - De två kanalerna är riktigt relaterade, d.v.s. nästan mono eller extremt "
+"panorerade.\n"
+"   Centerextraheringen kommer förmodligen bli dålig."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr ""
+" - Ett ganska bra värde, åtminstone stereo i genomsnitt och inte för "
+"utspritt."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
 "  However, the center extraction depends also on the used reverb."
 msgstr ""
+" - Ett ideellt värde för stereo.\n"
+"  Men centerextraheringen beror på efterklangen som användes."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18528,6 +18099,10 @@ msgid ""
 "manner.\n"
 "   The center extraction can still be good though."
 msgstr ""
+" - De två kanalerna är nästan inte relaterade.\n"
+"   Antingen har du endast brus eller så har delen bearbetats på ett "
+"obalanserat sätt.\n"
+"   Centerextraheringen kan dock fortfarande vara bra."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18535,6 +18110,9 @@ msgid ""
 "   This can cause strange effects.\n"
 "   Especially when played by only one speaker."
 msgstr ""
+" - Fastän spåret är i stereo är fältet uppenbarligen extra brett.\n"
+"   Detta kan orsaka konstiga effekter.\n"
+"   Speciellt när detta spelas upp med en högtalare."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18543,59 +18121,54 @@ msgid ""
 "   to spread the signal over the physical distance between the speakers.\n"
 " Don't expect good results from a center removal."
 msgstr ""
+" - De två kanalerna är nästan identiska.\n"
+"   Uppenbarligen har en pseudo-stereoeffekt använts\n"
+"   för att sprida ut signalen över det fysiska avståndet mellan högtalarna.\n"
+" Förvänta dig inte ett bra resultat genom att ta bort mitten."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
-msgstr ""
+msgstr "Denna insticksmodul fungerar endast med stereospår."
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Vocal Remover"
-msgstr "Ta bort spår"
+msgstr "Sångborttagning"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Removing center-panned audio..."
-msgstr "Raderar klick och pops"
+msgstr "Tar bort centerpanorerat ljud..."
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove vocals or view Help"
-msgstr "&Ta bort special"
+msgstr "Ta bort sång eller visa hjälp"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "View Help"
-msgstr "Hjälp"
+msgstr "Visa hjälp"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Removal choice"
-msgstr "Raderar brus"
+msgstr "Val av borttagning"
 
 #: plug-ins/vocalremover.ny
 msgid "Simple (Entire Spectrum)"
-msgstr ""
+msgstr "Enkelt (hela spektrumet)"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove Frequency Band"
-msgstr "Centrera frekvens:"
+msgstr "Ta bort frekvensband"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Retain Frequency Band"
-msgstr "Linjär frekvensskala"
+msgstr "Behåll frekvensband"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Frequency band from (Hz)"
-msgstr "Frekvens (Hz):"
+msgstr "Frekvensband från (Hz)"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Frequency band to (Hz)"
-msgstr "Frekvens (Hz):"
+msgstr "Frekvensband till (Hz)"
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18626,6 +18199,31 @@ msgid ""
 "or bass), try 'Retain frequency band'. This only removes\n"
 "frequencies outside the limits, retaining the others."
 msgstr ""
+"Sångborttagningen kräver ett stereospår. Det fungerar bäst med\n"
+"förlustfria filer som WAV eller AIFF, hellre än MP3 eller\n"
+"andra komprimerade format. Det tar bara bort sång eller annat\n"
+"ljud som panoreras till mitten (låter lika högt i vänster\n"
+"och höger). Sång kan mixas på detta sätt. När en kanal\n"
+"inverteras och sedan panorerar nåda till mitten slås allt ljud ut\n"
+"som var ursprungligen mitten-panorerat, vilket gör det ohörbart.\n"
+"Detta kan ta bort vissa delar i ljudet som du vill\n"
+"behålla, som trummorna, vilket oftast också mixas i mitten.\n"
+"Om sången och andra centrerade delar skiljer sig åt i tonhöjd,\n"
+"kan detta lösas genom att ta bort valda frekvenser.~%\n"
+"Sångborttagning har därför tre val för borttagningsmetoder.\n"
+"\"Enkelt\" inverterar hela frekvensspektrumet för en\n"
+"kanal. Detta kan ta bort för mycket musik om andra delar av\n"
+"ljudet är centrerat som sången. Prova i så fall\n"
+"de andra valen. Om sången är på en annan tonhöjd\n"
+"än det andra ljudet (som höga kvinnoröster),\n"
+"prova \"Ta bort frekvensband\". Detta tar bara bort frekvenser\n"
+"mellan en lägre och högre gräns som du kan ange i\n"
+"fälten \"Frekvensband...\". Experimentera genom att ange vad\n"
+"som låter som det viktigaste frekvensintervallet för\n"
+"originalsången. Om de andra alternativen tar bort för mycket\n"
+"ljud inom ett specifikt intervall (som låga trummor\n"
+"eller bas), prova \"Behåll frekvensband\". Detta tar endast bort\n"
+"frekvenser utanför gränserna och behåller det andra."
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18635,6 +18233,10 @@ msgid ""
 "channels, use 'Make Stereo Track' on the Track~%~\n"
 "Drop-Down Menu, then run Vocal Remover again.~%"
 msgstr ""
+"~%Sångborttagning kräver ett odelat stereospår.~%~\n"
+"Om du har ett stereospår som är uppdelat i vänster och~%~\n"
+"höger kanal, använd \"Skapa stereosp&år\" i spårets~%~\n"
+"rullgardinsmeny och kör sedan Sångborttagning igen.~%"
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18645,93 +18247,94 @@ msgid ""
 "              A very narrow stop-band filter may have~%~\n"
 "              unexpected results.~%~%"
 msgstr ""
+"Varning:~%~\n"
+"              Valt bandstoppfilter är~%~\n"
+"              ~a Hz till ~a Hz.~%~\n"
+"              Ett riktigt trångt stoppbandfilter kan få~%~\n"
+"              oväntade resultat.~%~%"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Current settings returned the original audio."
-msgstr "Nyquist returnerade inget ljud.\n"
+msgstr "Nuvarande inställningar returnerade originalljudet."
 
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
-msgstr ""
+msgstr "Vocoder"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Processing Vocoder..."
-msgstr "Bearbetning slutförd."
+msgstr "Bearbetar Vocoder..."
 
 #: plug-ins/vocoder.ny
 msgid "Edgar-RFT"
-msgstr ""
+msgstr "Edgar-RFT"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
-msgstr ""
+msgstr "Avstånd: (1 till 120, standard är 20)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Output choice"
-msgstr "Output enhet"
+msgstr "Val av utmatning"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Both Channels"
-msgstr "%d kanaler"
+msgstr "Båda kanaler"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Right Only"
-msgstr "Höger kanal"
+msgstr "Endast höger"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Number of vocoder bands"
-msgstr "Antal upprepningar"
+msgstr "Antal vocoder-band"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of original audio (percent)"
-msgstr "Frekvens (Hz):"
+msgstr "Amplitud för originalljud (procent)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of white noise (percent)"
-msgstr "Frekvens (Hz):"
+msgstr "Amplitud för vitt brus (procent)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of Radar Needles (percent)"
-msgstr "Frekvens (Hz):"
+msgstr "Amplitud för radarnålar (procent)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Frequency of Radar Needles (Hz)"
-msgstr "Frekvens (Hz):"
+msgstr "Frekvens för radarnålar (Hz)"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
-msgstr ""
+msgstr "Fel.~%Stereospår krävs."
 
-#, fuzzy
 #~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-#~ msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+#~ msgstr ""
+#~ "Antalet upprepningar \"~a\" är utanför det giltiga intervallet 1 till 50.~"
+#~ "%~a"
 
-#, fuzzy
 #~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-#~ msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+#~ msgstr ""
+#~ "Tonhöjdsförändringen \"~a\" är utanför det giltiga intervallet -12 till "
+#~ "+12 halvtoner.~%~a"
 
-#, fuzzy
 #~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-#~ msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+#~ msgstr ""
+#~ "Fördröjningstiden \"~a\" är utanför det giltiga intervallet 0 till 10 "
+#~ "sekunder.~%~a"
 
-#, fuzzy
 #~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-#~ msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+#~ msgstr ""
+#~ "Fördröjningsnivån \"~a\" är utanför det giltiga intervallet -30 to +6 dB.~"
+#~ "%~a"
 
-#, fuzzy
 #~ msgid "Error.~%~a"
-#~ msgstr "Fel"
+#~ msgstr "Fel.~%~a"
+
+#~ msgid "Use 'Number of labels' OR 'Label interval'"
+#~ msgstr "Använd \"Antal etiketter\" ELLER \"Etikettintervall\""
 
 #, fuzzy
 #~ msgid "Left"
