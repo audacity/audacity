@@ -1112,10 +1112,6 @@ template <
 };
 
 
-/** \brief TrackList is a flat linked list of tracks supporting Add,  Remove,
- * Clear, and Contains, plus serialization of the list of tracks.
- */
-
 struct TrackListEvent : public wxCommandEvent
 {
    explicit
@@ -1161,6 +1157,9 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_DELETION, TrackListEvent);
 
+/** \brief TrackList is a flat linked list of tracks supporting Add,  Remove,
+ * Clear, and Contains, plus serialization of the list of tracks.
+ */
 class TrackList final : public wxEvtHandler, public ListOfTracks
    , public std::enable_shared_from_this<TrackList>
 {
