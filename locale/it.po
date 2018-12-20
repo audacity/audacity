@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-10-07 07:32+0200\n"
+"PO-Revision-Date: 2018-12-10 10:10+0100\n"
 "Last-Translator: Carmelo Battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Bookmarks: 1308,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -4791,7 +4791,7 @@ msgstr "La registrazione inizierà in:"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid "%s in:"
-msgstr ""
+msgstr "%s in:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -14352,7 +14352,7 @@ msgstr "Riproduzione a velocità &varie"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "&Micro-dissolvenze"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -16169,7 +16169,7 @@ msgstr "Nulla da annullare"
 
 #: src/widgets/HelpSystem.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "Non sono stati trovati problemi rapidamente e facilmente risolti"
 
 #: src/widgets/HelpSystem.cpp
 #, fuzzy
@@ -16182,13 +16182,12 @@ msgid "Can't select precisely"
 msgstr "Impossibile aprire il file progetto"
 
 #: src/widgets/HelpSystem.cpp
-#, fuzzy
 msgid "Recording stops and starts"
-msgstr "Inizio registrazione:"
+msgstr "Inizio e fine registrazione"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Fixed"
-msgstr ""
+msgstr "Risolto"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -17340,7 +17339,7 @@ msgstr "Avvertimenti"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "Attenzione: Etichette regionali sovrapposte.~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
@@ -17357,7 +17356,7 @@ msgstr "Unisci etichette"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr ""
+msgstr "~a~a ~a a intervalli di ~a secondi.~%"
 
 #: plug-ins/equalabel.ny
 #, fuzzy, lisp-format
@@ -18422,8 +18421,8 @@ msgstr "Errore.~%Richiesta traccia stereo."
 
 #~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
 #~ msgstr ""
-#~ "Livello ritardo '~a' al di fuori dell'intervallo valido da -30 a +6 dB."
-#~ "~%~a"
+#~ "Livello ritardo '~a' al di fuori dell'intervallo valido da -30 a +6 dB.~"
+#~ "%~a"
 
 #~ msgid "Error.~%~a"
 #~ msgstr "Errore.~%~a"
