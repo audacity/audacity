@@ -3752,7 +3752,9 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
             //    xmlFile.WriteAttr(wxT("channel"), t->GetChannel());
             //    xmlFile.WriteAttr(wxT("linked"), t->GetLinked());
 
-            xmlFile.WriteAttr(wxT("offset"), pWaveTrack->GetOffset(), 8);
+            const auto offset =
+               TrackList::Channels( pWaveTrack ).min( &WaveTrack::GetOffset );
+            xmlFile.WriteAttr(wxT("offset"), offset, 8);
             xmlFile.WriteAttr(wxT("mute"), pWaveTrack->GetMute());
             xmlFile.WriteAttr(wxT("solo"), pWaveTrack->GetSolo());
             xmlFile.WriteAttr(wxT("height"), pWaveTrack->GetActualHeight());
@@ -4168,10 +4170,12 @@ bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
          channel->SetSelected(true);
       uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), extension);
       FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
+      const auto startTime = channels.min( &Track::GetStartTime );
+      const auto endTime = channels.max( &Track::GetEndTime );
       bSuccess =
          theExporter.Process(this, channels.size(),
                               fileFormat, uniqueTrackFileName.GetFullPath(), true,
-                              pTrack->GetStartTime(), pTrack->GetEndTime());
+                              startTime, endTime);
 
       if (!bSuccess)
          // If only some exports succeed, the cleanup is not done here
