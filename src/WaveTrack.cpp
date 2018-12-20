@@ -1713,7 +1713,7 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          {}
          else if (!wxStrcmp(attr, wxT("height")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mHeight = nValue;
+            SetHeight(nValue);
          else if (!wxStrcmp(attr, wxT("minimized")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mMinimized = (nValue != 0);
