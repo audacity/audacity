@@ -378,7 +378,7 @@ private:
    // Get access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.
    class AllClipsIterator
-      : public std::iterator< std::forward_iterator_tag, WaveClip* >
+      : public ValueIterator< WaveClip * >
    {
    public:
       // Constructs an "end" iterator

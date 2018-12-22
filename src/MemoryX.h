@@ -431,6 +431,19 @@ ValueRestorer< T > valueRestorer( T& var, const T& newValue )
 { return ValueRestorer< T >{ var, newValue }; }
 
 /**
+  \brief A convenience for defining iterators that return rvalue types, so that
+  they cooperate correctly with stl algorithms and std::reverse_iterator
+ */
+template< typename Value, typename Category = std::forward_iterator_tag >
+using ValueIterator = std::iterator<
+   Category, const Value, ptrdiff_t,
+   // void pointer type so that operator -> is disabled
+   void,
+   // make "reference type" really the same as the value type
+   const Value
+>;
+
+/**
   \brief A convenience for use with range-for
  */
 template <typename Iterator>

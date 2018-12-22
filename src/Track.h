@@ -834,16 +834,7 @@ template < typename TrackType > struct TrackIterRange;
 template <
    typename TrackType // Track or a subclass, maybe const-qualified
 > class TrackIter
-   : public std::iterator<
-      std::bidirectional_iterator_tag,
-      TrackType *const,
-      ptrdiff_t,
-      // pointer is void to disable operator -> in the reverse_iterator...
-      void,
-      // ... because what operator * returns is really a value type,
-      // so you can't take its address
-      TrackType *const
-   >
+   : public ValueIterator< TrackType *, std::bidirectional_iterator_tag >
 {
 public:
    // Type of predicate taking pointer to const TrackType
