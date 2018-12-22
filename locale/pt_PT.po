@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-11-24 10:45+0000\n"
-"PO-Revision-Date: 2018-11-27 01:04+0000\n"
+"PO-Revision-Date: 2018-12-05 22:19+0000\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -728,11 +728,11 @@ msgstr "Prima e arraste para editar as amostras"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
-msgstr "Prima e arraste para ajustar o tamanho da faixa"
+msgstr "Prima ou arraste para iniciar Percorrer"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Clicar & mover para Esfregar. Clicar & arrastar para Procurar."
+msgstr "Clicar & mover para Percorrer. Clicar & arrastar para Procurar."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
@@ -740,7 +740,7 @@ msgstr "Mover para Procurar"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
-msgstr "Mover para Esfregar"
+msgstr "Mover para Percorrer"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
@@ -748,11 +748,11 @@ msgstr "Arrastar para Procurar. Soltar para parar de procurar."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Arrastar para Procurar. Soltar e mover para Esfregar."
+msgstr "Arrastar para Procurar. Soltar e mover para Percorrer."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "Mover para Esfregar. Arrastar para Esfregar."
+msgstr "Mover para Percorrer. Arrastar para Procurar."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
@@ -808,15 +808,15 @@ msgstr "Bloquear Região de Reproduzir"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Unlock Play Region"
-msgstr "Reproduzir Região de Reproduzir"
+msgstr "Desbloquear Região de Reproduzir"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Disable Scrub Ruler"
-msgstr "Desativar Régua de Esfregar"
+msgstr "Desativar Barra de Percorrer."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable Scrub Ruler"
-msgstr "Ativar linhas de esfregar"
+msgstr "Ativar Barra de Percorrer."
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -4137,7 +4137,7 @@ msgstr "Reproduzir-na-Velocidade"
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub"
-msgstr "Esfregar"
+msgstr "Percorrer"
 
 #: src/Screenshot.cpp src/TrackPanel.cpp
 msgid "Track Panel"
@@ -12464,13 +12464,13 @@ msgstr "Barra de Ferramentas &Reproduzir-na-Velocidade"
 #. that enables Scrub or Seek playback and Scrub Ruler
 #: src/menus/ToolbarMenus.cpp
 msgid "Scru&b Toolbar"
-msgstr "&Barras de Friccionar"
+msgstr "&Barra de Percorrer"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages devices
 #: src/menus/ToolbarMenus.cpp
 msgid "&Device Toolbar"
-msgstr "Barra de &Dispositivos"
+msgstr "Barra de &Dispositivo"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
@@ -12500,7 +12500,7 @@ msgstr "Ferramenta &Zoom"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Time Shift Tool"
-msgstr "Ferramenta &Mover"
+msgstr "Ferramenta Mover &Tempo"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Multi Tool"
@@ -14173,7 +14173,7 @@ msgstr "Roda do Rato"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change scrub speed"
-msgstr "Alterar Velocidade de esfregar"
+msgstr "Alterar Velocidade de percorrer"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom in on Point"
@@ -14359,7 +14359,7 @@ msgstr "&Micro-fades"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr "Sempre esfregar &soltos"
+msgstr "Sempre percorrer &soltos"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -15282,11 +15282,11 @@ msgstr "Procurar"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub Ruler"
-msgstr "Régua de Esfregar"
+msgstr "Régua de Percorrer"
 
 #: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
 msgid "Scrubbing"
-msgstr "Esfregando"
+msgstr "Percorrendo"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -15294,11 +15294,11 @@ msgstr "Esfregando"
 #.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Scrubbing"
-msgstr "Parar Esfregar"
+msgstr "Parar Percorrer"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
-msgstr "Iniciar Esfregar"
+msgstr "Iniciar Percorrer"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -15314,11 +15314,11 @@ msgstr "Iniciar Procurar"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Hide Scrub Ruler"
-msgstr "Esconder Régua de Esfregar"
+msgstr "Esconder Régua de Percorrer"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
-msgstr "Mostrar Régua de Esfregar"
+msgstr "Mostrar Régua de Percorrer"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
@@ -15889,7 +15889,7 @@ msgstr "Envelope ajustado."
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
-msgstr "&Esfregar"
+msgstr "&Percorrer"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -15897,7 +15897,7 @@ msgstr "Procurando"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
-msgstr "Régua de &Esfregar"
+msgstr "Régua de &Percorrer"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Playing at Speed"
@@ -15909,11 +15909,11 @@ msgstr "Mover ponteiro do rato para procurar"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Scrub"
-msgstr "Mover ponteiro do rato para Esfregar"
+msgstr "Mover ponteiro do rato para Percorrer"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scru&bbing"
-msgstr "Esf&regando"
+msgstr "Per&correndo"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
