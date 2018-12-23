@@ -30,6 +30,7 @@ src/AdornedRulerPanel.h
 src/AboutDialog.cpp
 src/AboutDialog.h
 src/AllThemeResources.h
+src/AttachedVirtualFunction.h
 src/Audacity.h
 src/AudacityApp.cpp
 src/AudacityApp.h

@@ -1225,6 +1225,9 @@
     <ClInclude Include="..\..\..\src\AllThemeResources.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\AttachedVirtualFunction.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\Audacity.h">
       <Filter>src</Filter>
     </ClInclude>

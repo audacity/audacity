@@ -3364,6 +3364,7 @@
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
 		5EE8984821D68D88006DE939 /* CommandManagerWindowClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandManagerWindowClasses.h; sourceTree = "<group>"; };
+		5EEE942021F397C00038E68E /* AttachedVirtualFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachedVirtualFunction.h; sourceTree = "<group>"; };
 		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
 		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityCommand.cpp; sourceTree = "<group>"; };
@@ -4470,6 +4471,7 @@
 				1790AFCA09883BFD008A330A /* AColor.h */,
 				5E08C7382180D460004079AE /* AdornedRulerPanel.h */,
 				28FB12230A3790DF006F0917 /* AllThemeResources.h */,
+				5EEE942021F397C00038E68E /* AttachedVirtualFunction.h */,
 				1790AFCC09883BFD008A330A /* Audacity.h */,
 				1790AFCF09883BFD008A330A /* AudacityApp.h */,
 				5ECCE7651DE49834009900E9 /* AudacityException.h */,
