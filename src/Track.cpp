@@ -1328,6 +1328,15 @@ bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
    return false;
 }
 
+void Track::AdjustPositions()
+{
+   auto pList = mList.lock();
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
+   }
+}
+
 bool TrackList::HasPendingTracks() const
 {
    if ( !mPendingUpdates.empty() )

@@ -723,6 +723,9 @@ public:
    bool IsLeader() const;
    bool IsSelectedLeader() const;
 
+   // Cause this track and following ones in its TrackList to adjust
+   void AdjustPositions();
+
    // Serialize, not with tags of its own, but as attributes within a tag.
    void WriteCommonXMLAttributes(
       XMLWriter &xmlFile, bool includeNameAndSelected = true) const;
