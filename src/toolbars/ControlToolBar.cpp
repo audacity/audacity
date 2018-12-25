@@ -1165,7 +1165,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                // Pad the recording track with silence, up to the
                // maximum time.
                auto newTrack = TrackFactory::Get( *p ).NewWaveTrack();
-               newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
                newTrack->InsertSilence(0.0, t0 - endTime);
                newTrack->Flush();
                pending->Clear(endTime, t0);
