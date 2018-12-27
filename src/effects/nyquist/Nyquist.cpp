@@ -648,7 +648,6 @@ bool NyquistEffect::Process()
       mProps = wxEmptyString;
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
-      // TODO: Document.
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
       lang = (lang == wxEmptyString)? wxGetApp().InitLang(lang) : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
@@ -1352,7 +1351,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_string) {
       wxString msg = NyquistToWxString(nyx_get_string());
-      if (!msg.IsEmpty())  // Not currently a documented feature, but could be useful as a No-Op.
+      if (!msg.IsEmpty())  // Empty string may be used as a No-Op return value.
          Effect::MessageBox(msg);
 
       // True if not process type.
@@ -2889,7 +2888,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
 
    // Get style flags:
    // Ensure legal combinations so that wxWidgets does not throw an assert error.
-   unsigned char flags = 0;
+   unsigned int flags = 0;
    if (ctrl.highStr != wxEmptyString)
    {
       wxStringTokenizer tokenizer(ctrl.highStr, ",");

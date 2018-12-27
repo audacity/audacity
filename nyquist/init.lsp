@@ -11,7 +11,7 @@
 ;; "_" (UNDERSCORE) - translation function
 ;;
 ;; Third party plug-ins are not translated by gettext in Audacity, but may include a
-;; list of translations named *local*. The format of *locale* must be:
+;; list of translations named *locale*. The format of *locale* must be:
 ;; (LIST (language-list) [(language-list) ...]) 
 ;; Each language-list is an a-list in the form:
 ;; ("cc" ((list "string" "translated-string") [(list "string" "translated-string") ...]))
