@@ -349,7 +349,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	commands/CommandDirectory.h commands/CommandFlag.h \
 	commands/CommandFunctors.h commands/CommandHandler.cpp \
 	commands/CommandHandler.h commands/CommandManager.cpp \
-	commands/CommandManager.h commands/CommandMisc.h \
+	commands/CommandManager.h \
+	commands/CommandManagerWindowClasses.h commands/CommandMisc.h \
 	commands/CommandSignature.cpp commands/CommandSignature.h \
 	commands/CommandTargets.h commands/CommandType.cpp \
 	commands/CommandType.h commands/CompareAudioCommand.cpp \
@@ -1398,7 +1399,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	commands/CommandDirectory.h commands/CommandFlag.h \
 	commands/CommandFunctors.h commands/CommandHandler.cpp \
 	commands/CommandHandler.h commands/CommandManager.cpp \
-	commands/CommandManager.h commands/CommandMisc.h \
+	commands/CommandManager.h \
+	commands/CommandManagerWindowClasses.h commands/CommandMisc.h \
 	commands/CommandSignature.cpp commands/CommandSignature.h \
 	commands/CommandTargets.h commands/CommandType.cpp \
 	commands/CommandType.h commands/CompareAudioCommand.cpp \

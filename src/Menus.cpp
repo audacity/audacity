@@ -32,7 +32,6 @@
 #include "AudacityApp.h"
 #include "AudioIO.h"
 #include "LabelTrack.h"
-#include "LyricsWindow.h"
 #include "ModuleManager.h"
 #ifdef USE_MIDI
 #include "NoteTrack.h"
@@ -372,12 +371,7 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
       if (w == project.GetRulerPanel())
          return RulerHasFocus;
 
-      if (w == project.GetTrackPanel()) {
-         return TrackPanelHasFocus;
-      }
-      // LIE if Lyrics window has focus.
-      // we want to act as if TrackPanel has focus.
-      if (w == project.GetLyricsWindow()) {
+      if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {
          return TrackPanelHasFocus;
       }
       if (w == project.GetToolManager()->GetBotDock()) {

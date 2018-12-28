@@ -1723,6 +1723,9 @@
     <ClInclude Include="..\..\..\src\commands\CommandManager.h">
       <Filter>src\commands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandManagerWindowClasses.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\commands\CommandMisc.h">
       <Filter>src\commands</Filter>
     </ClInclude>

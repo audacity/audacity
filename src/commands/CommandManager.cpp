@@ -78,6 +78,7 @@ CommandManager.  It holds the callback for one command.
 #include "../AudacityHeaders.h"
 #include "../Audacity.h"
 #include "CommandManager.h"
+#include "CommandManagerWindowClasses.h"
 #include "CommandContext.h"
 
 #include <wx/defs.h>
@@ -91,11 +92,6 @@ CommandManager.  It holds the callback for one command.
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
-
-// LyricsPanel and MixerBoard both intercept keys, as if they were the TrackPanel.
-// The mechanism of checking for the type of window here is klunky.
-#include "../Lyrics.h"
-#include "../MixerBoard.h"
 
 #include "Keyboard.h"
 #include "../PluginManager.h"
@@ -127,6 +123,14 @@ CommandManager.  It holds the callback for one command.
 #endif
 
 #include "../Experimental.h"
+
+NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
+{
+}
+
+TopLevelKeystrokeHandlingWindow::~TopLevelKeystrokeHandlingWindow()
+{
+}
 
 // Shared by all projects
 static class CommandManagerEventMonitor final : public wxEventFilter
@@ -1389,7 +1393,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    // Bug 1557.  MixerBoard should count as 'destined for project'
    // MixerBoard IS a TopLevelWindow, and its parent is the project.
    if( pParent && pParent->GetParent() == project){
-      if( dynamic_cast<MixerBoardFrame*>( pParent) != NULL )
+      if( dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ) != NULL )
          validTarget = true;
    }
    validTarget = validTarget && wxEventLoop::GetActive()->IsMain();
@@ -1409,12 +1413,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    if((type == wxEVT_KEY_DOWN) || (type == wxEVT_KEY_UP ))
    {
       wxWindow * pWnd = wxWindow::FindFocus();
-      wxWindow * pTrackPanel = (wxWindow*)GetActiveProject()->GetTrackPanel();
-      bool bIntercept = pWnd !=  pTrackPanel;
-      // Intercept keys from windows that are NOT the Lyrics panel
-      if( bIntercept ){
-         bIntercept = pWnd && ( dynamic_cast<LyricsPanel*>(pWnd) == NULL );
-      }
+      bool bIntercept =
+         pWnd && !dynamic_cast< NonKeystrokeInterceptingWindow * >( pWnd );
+
       //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
       // We allow the keystrokes below to be handled by wxWidgets controls IF we are
       // in some sub window rather than in the TrackPanel itself.

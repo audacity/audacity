@@ -266,6 +266,7 @@ src/commands/CommandHandler.cpp
 src/commands/CommandHandler.h
 src/commands/CommandManager.cpp
 src/commands/CommandManager.h
+src/commands/CommandManagerWindowClasses.h
 src/commands/CommandMisc.h
 src/commands/CommandSignature.cpp
 src/commands/CommandSignature.h

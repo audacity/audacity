@@ -24,6 +24,7 @@
 #include "widgets/AButton.h"
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"
+#include "commands/CommandManagerWindowClasses.h"
 
 struct TrackListEvent;
 
@@ -260,7 +261,9 @@ public:
 };
 
 
-class MixerBoardFrame final : public wxFrame
+class MixerBoardFrame final
+   : public wxFrame
+   , public TopLevelKeystrokeHandlingWindow
 {
 public:
    MixerBoardFrame(AudacityProject* parent);

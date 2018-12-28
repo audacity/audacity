@@ -778,6 +778,7 @@
     <ClInclude Include="..\..\..\src\commands\CommandDirectory.h" />
     <ClInclude Include="..\..\..\src\commands\CommandHandler.h" />
     <ClInclude Include="..\..\..\src\commands\CommandManager.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandManagerWindowClasses.h" />
     <ClInclude Include="..\..\..\src\commands\CommandMisc.h" />
     <ClInclude Include="..\..\..\src\commands\CommandSignature.h" />
     <ClInclude Include="..\..\..\src\commands\CommandTargets.h" />

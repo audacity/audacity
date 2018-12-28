@@ -24,6 +24,8 @@
 #include "Track.h"
 #include "SelectionState.h"
 #include "ViewInfo.h"
+#include "commands/CommandManagerWindowClasses.h"
+
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
 #include "xml/XMLTagHandler.h"

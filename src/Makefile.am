@@ -297,6 +297,7 @@ audacity_SOURCES = \
 	commands/CommandHandler.h \
 	commands/CommandManager.cpp \
 	commands/CommandManager.h \
+	commands/CommandManagerWindowClasses.h \
 	commands/CommandMisc.h \
 	commands/CommandSignature.cpp \
 	commands/CommandSignature.h \

@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <wx/textctrl.h>
+#include "commands/CommandManagerWindowClasses.h"
 #include "widgets/wxPanelWrapper.h"
 
 class AudacityProject;
@@ -71,7 +72,9 @@ private:
 \brief LyricsPanel is a panel that paints the bouncing
 ball and the lyrics text.
 *******************************************************************/
-class LyricsPanel final : public wxPanelWrapper
+class LyricsPanel final
+   : public wxPanelWrapper
+   , public NonKeystrokeInterceptingWindow
 {
    DECLARE_DYNAMIC_CLASS(LyricsPanel)
 

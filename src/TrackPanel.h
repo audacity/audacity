@@ -24,6 +24,8 @@
 
 #include "CellularPanel.h"
 
+#include "commands/CommandManagerWindowClasses.h"
+
 
 class wxMenu;
 class wxRect;
@@ -245,8 +247,10 @@ enum : int {
 };
 #endif
 
-class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
-
+class AUDACITY_DLL_API TrackPanel final
+   : public CellularPanel
+   , public NonKeystrokeInterceptingWindow
+{
  public:
    TrackPanel(wxWindow * parent,
               wxWindowID id,
