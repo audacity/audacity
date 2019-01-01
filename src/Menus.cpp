@@ -104,7 +104,11 @@ namespace MenuTable {
 
 BaseItem::~BaseItem() {}
 
+SharedItem::~SharedItem() {}
+
 ComputedItem::~ComputedItem() {}
+
+SingleItem::~SingleItem() {}
 
 GroupItem::GroupItem( BaseItemPtrs &&items_ )
 : items{ std::move( items_ ) }
@@ -115,6 +119,11 @@ void GroupItem::AppendOne( BaseItemPtr&& ptr )
    items.push_back( std::move( ptr ) );
 }
 GroupItem::~GroupItem() {}
+
+TransparentGroupItem::~TransparentGroupItem() {}
+}
+
+namespace MenuTable {
 
 MenuItem::MenuItem( const TranslatableString &title_, BaseItemPtrs &&items_ )
 : GroupItem{ std::move( items_ ) }, title{ title_ }
@@ -188,6 +197,12 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
    auto &manager = CommandManager::Get( project );
 
    using namespace MenuTable;
+   if (const auto pShared =
+       dynamic_cast<SharedItem*>( pItem )) {
+      auto delegate = pShared->ptr;
+      VisitItem( project, delegate.get() );
+   }
+   else
    if (const auto pComputed =
        dynamic_cast<ComputedItem*>( pItem )) {
       // TODO maybe?  memo-ize the results of the function, but that requires
@@ -235,7 +250,7 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
    }
    else
    if (const auto pGroup =
-       dynamic_cast<GroupItem*>( pItem )) {
+       dynamic_cast<TransparentGroupItem*>( pItem )) {
       // recursion
       VisitItems( project, pGroup->items );
    }
