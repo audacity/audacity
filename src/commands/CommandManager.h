@@ -482,7 +482,7 @@ namespace Registry {
 
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ )
+      GroupItem( const Identifier &internalName, BaseItemPtrs &&items_ )
          : BaseItem{ internalName }, items{ std::move( items_ ) }
       {}
       ~GroupItem() override = 0;
@@ -500,7 +500,7 @@ namespace Registry {
       using GroupItem::GroupItem;
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         InlineGroupItem( const wxString &internalName, Args&&... args )
+         InlineGroupItem( const Identifier &internalName, Args&&... args )
          : GroupItem( internalName )
          { Append( std::forward< Args >( args )... ); }
 
@@ -576,8 +576,19 @@ namespace Registry {
       virtual void Visit( SingleItem &item, const Path &path );
    };
 
-   // Top-down visitation of all items and groups in a tree
-   void Visit( Visitor &visitor, BaseItem *pTopItem );
+   // Top-down visitation of all items and groups in a tree rooted in
+   // pTopItem, as merged with pRegistry.
+   // The merger of the trees is recomputed in each call, not saved.
+   // So neither given tree is modified.
+   // But there may be a side effect on preferences to remember the ordering
+   // imposed on each node of the unordered tree of registered items; each item
+   // seen in the registry for the first time is placed somehere, and that
+   // ordering should be kept the same thereafter in later runs (which may add
+   // yet other previously unknown items).
+   void Visit(
+      Visitor &visitor,
+      BaseItem *pTopItem,
+      GroupItem *pRegistry = nullptr );
 }
 
 struct MenuVisitor : Registry::Visitor
