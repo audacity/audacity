@@ -602,6 +602,25 @@ namespace Registry {
       ~TransparentGroupItem() override {}
    };
 
+   // The /-separated path is relative to the GroupItem supplied to
+   // RegisterItem.
+   // For instance, wxT("Transport/Cursor") to locate an item under a sub-menu
+   // of a main menu
+   struct Placement {
+      wxString path;
+      OrderingHint hint;
+
+      Placement( const wxString &path_, const OrderingHint &hint_ = {} )
+         : path( path_ ), hint( hint_ )
+      {}
+   };
+
+   // registry collects items, before consulting preferences and ordering
+   // hints, and applying the merge procedure to them.
+   // This function puts one more item into the registry.
+   void RegisterItem( GroupItem &registry, const Placement &placement,
+      BaseItemPtr pItem );
+   
    // Define actions to be done in Visit.
    // Default implementations do nothing
    // The supplied path does not include the name of the item
@@ -800,7 +819,8 @@ namespace MenuTable {
    using MenuItems = MenuPart< true >;
    using MenuSection = MenuPart< false >;
 
-   // Following are the functions to use directly in writing table definitions.
+   // The following, and Shared(), are the functions to use directly
+   // in writing table definitions.
 
    // Group items can be constructed two ways.
    // Pointers to subordinate items are moved into the result.
@@ -825,7 +845,7 @@ namespace MenuTable {
       const wxString &internalName, Args&&... args )
          { return std::make_unique< MenuSection >(
             internalName, std::forward<Args>(args)... ); }
-
+   
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu.
    // The name is untranslated.  Try to keep the name stable across Audacity
@@ -913,6 +933,20 @@ namespace MenuTable {
    inline std::unique_ptr<SpecialItem> Special(
       const wxString &name, const SpecialItem::Appender &fn )
          { return std::make_unique<SpecialItem>( name, fn ); }
+
+   // Typically you make a static object of this type in the .cpp file that
+   // also defines the added menu actions.
+   // pItem can be specified by an expression using the inline functions above.
+   struct AttachedItem final
+   {
+      AttachedItem( const Placement &placement, BaseItemPtr pItem );
+
+      AttachedItem( const wxString &path, BaseItemPtr pItem )
+         // Delegating constructor
+         : AttachedItem( Placement{ path }, std::move( pItem ) )
+      {}
+   };
+
 }
 
 #endif

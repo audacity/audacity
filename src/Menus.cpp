@@ -178,6 +178,78 @@ CommandHandlerFinder FinderScope::sFinder =
 
 }
 
+
+namespace Registry {
+
+void RegisterItem( GroupItem &registry, const Placement &placement,
+   BaseItemPtr pItem )
+{
+   // Since registration determines only an unordered tree of menu items,
+   // we can sort children of each node lexicographically for our convenience.
+   BaseItemPtrs *pItems;
+   struct Comparator {
+      bool operator()
+         ( const Identifier &component, const BaseItemPtr& pItem ) const {
+            return component < pItem->name; }
+      bool operator()
+         ( const BaseItemPtr& pItem, const Identifier &component ) const {
+            return pItem->name < component; }
+   };
+   auto find = [&pItems]( const Identifier &component ){ return std::equal_range(
+      pItems->begin(), pItems->end(), component, Comparator() ); };
+
+   auto pNode = &registry;
+   pItems = &pNode->items;
+
+   auto pathComponents = ::wxSplit( placement.path, '/' );
+   auto pComponent = pathComponents.begin(), end = pathComponents.end();
+
+   // Descend the registry hierarchy, while groups matching the path components
+   // can be found
+   auto debugPath = wxString{'/'} + registry.name.GET();
+   while ( pComponent != end ) {
+      const auto &pathComponent = *pComponent;
+
+      // Try to find an item already present that is a group item with the
+      // same name; we don't care which if there is more than one.
+      const auto range = find( pathComponent );
+      const auto iter2 = std::find_if( range.first, range.second,
+         [](const BaseItemPtr &pItem){
+            return dynamic_cast< GroupItem* >( pItem.get() ); } );
+
+      if ( iter2 != range.second ) {
+         // A matching group in the registry, so descend
+         pNode = static_cast< GroupItem* >( iter2->get() );
+         pItems = &pNode->items;
+         debugPath += '/' + pathComponent;
+         ++pComponent;
+      }
+      else
+         // Insert at this level;
+         // If there are no more path components, and a name collision of
+         // the added item with something already in the registry, don't resolve
+         // it yet in this function, but see MergeItems().
+         break;
+   }
+
+   // Create path group items for remaining components
+   while ( pComponent != end ) {
+      auto newNode = std::make_unique<TransparentGroupItem<>>( *pComponent );
+      pNode = newNode.get();
+      pItems->insert( find( newNode->name ).second, std::move( newNode ) );
+      pItems = &pNode->items;
+      ++pComponent;
+   }
+
+   // Remember the hint, to be used later in merging.
+   pItem->orderingHint = placement.hint;
+
+   // Now insert the item.
+   pItems->insert( find( pItem->name ).second, std::move( pItem ) );
+}
+
+}
+
 namespace {
 
 const auto MenuPathStart = wxT("MenuBar");
@@ -301,7 +373,6 @@ void CollectItem( Registry::Visitor &visitor,
 
 using Path = std::vector< Identifier >;
 
-namespace {
    std::unordered_set< wxString > sBadPaths;
    void BadPath(
      const TranslatableString &format, const wxString &key, const Identifier &name )
@@ -339,7 +410,6 @@ XO("Plug-in item at %s conflicts with a previously defined item and was discarde
 XO("Plug-in items at %s specify conflicting placements"),
          key, name);
    }
-}
 
 struct ItemOrdering {
    wxString key;
@@ -761,6 +831,12 @@ static Registry::GroupItem &sRegistry()
    static Registry::TransparentGroupItem<> registry{ MenuPathStart };
    return registry;
 }
+}
+
+MenuTable::AttachedItem::AttachedItem(
+   const Placement &placement, BaseItemPtr pItem )
+{
+   Registry::RegisterItem( sRegistry(), placement, std::move( pItem ) );
 }
 
 // Table of menu factories.
