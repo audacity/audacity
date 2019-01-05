@@ -1012,7 +1012,7 @@ bool SpecCache::CalculateOneSpectrum
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
                   // about 5% slower vs allowing it to race.
-                  #pragma omp atomic update
+                  #pragma omp atomic
 #endif
                   out[ind] += power;
                }
