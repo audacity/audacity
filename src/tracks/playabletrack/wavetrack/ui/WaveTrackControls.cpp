@@ -883,7 +883,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       pTrack->GetName()),
       _("Make Stereo"));
 
-   mpData->result = RefreshCode::RefreshAll;
+   using namespace RefreshCode;
+   mpData->result = RefreshAll | FixScrollbars;
 }
 
 /// Split a stereo track (or more-than-stereo?) into two (or more) tracks...
@@ -918,8 +919,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    for (auto channel : channels)
       // Make tracks the same height
       channel->SetHeight( averageHeight );
-
-   mpData->result = RefreshCode::RefreshAll;
 }
 
 /// Swap the left and right channels of a stero track...
@@ -965,7 +964,8 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
       pTrack->GetName()),
       _("Split"));
 
-   mpData->result = RefreshCode::RefreshAll;
+   using namespace RefreshCode;
+   mpData->result = RefreshAll | FixScrollbars;
 }
 
 /// Split a stereo track into two mono tracks...
@@ -979,7 +979,8 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
       pTrack->GetName()),
       _("Split to Mono"));
 
-   mpData->result = RefreshCode::RefreshAll;
+   using namespace RefreshCode;
+   mpData->result = RefreshAll | FixScrollbars;
 }
 
 //=============================================================================
