@@ -32,7 +32,6 @@
 
 #include <wx/frame.h>
 
-#include "ModuleManager.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
@@ -1046,8 +1045,6 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    CommandManager::Get( project ).PurgeData();
 
    CreateMenusAndCommands(project);
-
-   ModuleManager::Get().Dispatch(MenusRebuilt);
 }
 
 void MenuManager::OnUndoRedo( wxCommandEvent &evt )

@@ -477,26 +477,6 @@ wxMenu * CommandManager::CurrentMenu() const
    return tmpCurrentSubMenu;
 }
 
-void CommandManager::SetCurrentMenu(wxMenu * menu)
-{
-   // uCurrentMenu ought to be null in correct usage
-   wxASSERT(!uCurrentMenu);
-   // Make sure of it anyway
-   uCurrentMenu.reset();
-
-   mCurrentMenu = menu;
-}
-
-void CommandManager::ClearCurrentMenu()
-{
-   // uCurrentMenu ought to be null in correct usage
-   wxASSERT(!uCurrentMenu);
-   // Make sure of it anyway
-   uCurrentMenu.reset();
-
-   mCurrentMenu = nullptr;
-}
-
 
 
 void CommandManager::AddItem(AudacityProject &project,

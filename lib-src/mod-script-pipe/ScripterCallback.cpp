@@ -84,8 +84,7 @@ typedef enum
    AppInitialized,
    AppQuiting,
    ProjectInitialized,
-   ProjectClosing,
-   MenusRebuilt
+   ProjectClosing
 } ModuleDispatchTypes;
 
 
@@ -108,8 +107,7 @@ DLL_API const wxChar * GetVersionString()
 
 extern int DLL_API  ModuleDispatch(ModuleDispatchTypes type);
 // ModuleDispatch
-// is called by Audacity to initialize/terminmate the module,
-// and ask if it has anything for the menus.
+// is called by Audacity to initialize/terminate the module
 // We don't (yet) do anything in this, since we have a special function for the scripter
 // all we need to do is return 1.
 int ModuleDispatch(ModuleDispatchTypes type){
@@ -120,8 +118,7 @@ int ModuleDispatch(ModuleDispatchTypes type){
       case AppQuiting: {
       }
       break;
-      case ProjectInitialized:
-      case MenusRebuilt:  {
+      case ProjectInitialized: {
       }
       break;
       default:

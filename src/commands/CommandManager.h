@@ -133,8 +133,6 @@ class AUDACITY_DLL_API CommandManager final
 
    std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
 
-   // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
-   // or else BeginMenu followed by EndMenu.  Don't mix them.
    wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
@@ -234,11 +232,6 @@ class AUDACITY_DLL_API CommandManager final
    void Enable(const wxString &name, bool enabled);
    void Check(const CommandID &name, bool checked);
    void Modify(const wxString &name, const TranslatableString &newLabel);
-
-   // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
-   // or else BeginMenu followed by EndMenu.  Don't mix them.
-   void SetCurrentMenu(wxMenu * menu);
-   void ClearCurrentMenu();
 
    //
    // Modifying accelerators
