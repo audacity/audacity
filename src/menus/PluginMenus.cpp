@@ -5,7 +5,6 @@
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../CommonCommandFlags.h"
-#include "../FreqWindow.h"
 #include "../Menus.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
@@ -16,7 +15,6 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
-#include "../effects/Contrast.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "../effects/RealtimeEffectManager.h"
@@ -24,26 +22,6 @@
 
 // private helper classes and functions
 namespace {
-
-AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
-      return safenew ContrastDialog(
-         &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
-         wxPoint{ 150, 150 }
-      );
-   }
-};
-
-AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
-      return safenew FrequencyPlotDialog(
-         &window, -1, parent, XO("Frequency Analysis"),
-         wxPoint{ 150, 150 }
-      );
-   }
-};
 
 AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
@@ -456,31 +434,6 @@ void OnManageAnalyzers(const CommandContext &context)
    DoManagePluginsMenu(project, EffectTypeAnalyze);
 }
 
-void OnContrast(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto contrastDialog =
-      &project.AttachedWindows::Get< ContrastDialog >( sContrastDialogKey );
-
-   contrastDialog->CentreOnParent();
-   if( ScreenshotCommand::MayCapture( contrastDialog ) )
-      return;
-   contrastDialog->Show();
-}
-
-void OnPlotSpectrum(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto freqWindow =
-      &project.AttachedWindows::Get< FrequencyPlotDialog >( sFrequencyWindowKey );
-
-   if( ScreenshotCommand::MayCapture( freqWindow ) )
-      return;
-   freqWindow->Show(true);
-   freqWindow->Raise();
-   freqWindow->SetFocus();
-}
-
 void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
@@ -852,11 +805,7 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
 #endif
 
       Section( "Analyzers",
-         Command( wxT("ContrastAnalyser"), XXO("Contrast..."), FN(OnContrast),
-            AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
-            wxT("Ctrl+Shift+T") ),
-         Command( wxT("PlotSpectrum"), XXO("Plot Spectrum..."), FN(OnPlotSpectrum),
-            AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag() ),
+         Items( "Windows" ),
 
          // Delayed evaluation:
          [](AudacityProject&)

@@ -67,11 +67,13 @@ the mouse around.
 
 #include "ShuttleGui.h"
 #include "AColor.h"
+#include "CommonCommandFlags.h"
 #include "FFT.h"
 #include "PitchName.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectWindow.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -1135,5 +1137,57 @@ void FreqPlot::OnPaint(wxPaintEvent & evt)
 void FreqPlot::OnMouseEvent(wxMouseEvent & event)
 {
    freqWindow->PlotMouseEvent(event);
+}
+
+// Remaining code hooks this add-on into the application
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "commands/ScreenshotCommand.h"
+
+namespace {
+
+AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
+      return safenew FrequencyPlotDialog(
+         &window, -1, parent, XO("Frequency Analysis"),
+         wxPoint{ 150, 150 }
+      );
+   }
+};
+
+// Define our extra menu item that invokes that factory
+struct Handler : CommandHandlerObject {
+   void OnPlotSpectrum(const CommandContext &context)
+   {
+      auto &project = context.project;
+      auto freqWindow =
+         &project.AttachedWindows::Get< FrequencyPlotDialog >( sFrequencyWindowKey );
+
+      if( ScreenshotCommand::MayCapture( freqWindow ) )
+         return;
+      freqWindow->Show(true);
+      freqWindow->Raise();
+      freqWindow->SetFocus();
+   }
+};
+
+CommandHandlerObject &findCommandHandler(AudacityProject &) {
+   // Handler is not stateful.  Doesn't need a factory registered with
+   // AudacityProject.
+   static Handler instance;
+   return instance;
+}
+
+// Register that menu item
+
+using namespace MenuTable;
+AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
+   ( FinderScope{ findCommandHandler },
+      Command( wxT("PlotSpectrum"), XXO("Plot Spectrum..."),
+         &Handler::OnPlotSpectrum,
+         AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag() ) )
+};
+
 }
 
