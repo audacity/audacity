@@ -227,9 +227,7 @@ void AddEffectMenuItems(
          auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
-         {
-            name += wxT("...");
-         }
+            name += _("...");
 
          if (groupBy == wxT("groupby:publisher"))
          {
@@ -297,9 +295,7 @@ void AddEffectMenuItems(
          auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
-         {
-            name += wxT("...");
-         }
+            name += _("...");
 
          wxString group;
          if (groupBy == wxT("sortby:publisher:name"))
@@ -587,7 +583,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& PluginActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 // ... buf first some more helper definitions, which use FN
 namespace {
@@ -657,12 +652,13 @@ void AddEffectMenuItemGroup(
             wxString item = plug->GetPath();
             if( plug->GetPluginType() == PluginTypeEffect )
                temp2.push_back( Command( item,
-                  item,
-                  false,
+                  TranslatableString{ item },
                   FN(OnEffect),
                   flags[i],
                   CommandManager::Options{}
-                     .IsEffect().Parameter( plugs[i] ) ) );
+                     .IsEffect()
+                     .AllowInMacros()
+                     .Parameter( plugs[i] ) ) );
 
             i++;
          }
@@ -676,12 +672,13 @@ void AddEffectMenuItemGroup(
             PluginManager::Get().GetPlugin(plugs[i]);
          if( plug->GetPluginType() == PluginTypeEffect )
             pTable->push_back( Command( names[i],
-               names[i],
-               false,
+               TranslatableString{ names[i] },
                FN(OnEffect),
                flags[i],
                CommandManager::Options{}
-                  .IsEffect().Parameter( plugs[i] ) ) );
+                  .IsEffect()
+                  .AllowInMacros()
+                  .Parameter( plugs[i] ) ) );
       }
 
       if (max > 0)
@@ -712,14 +709,17 @@ void AddEffectMenuItemGroup(
 MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 {
    MenuTable::BaseItemPtrs result;
-   auto names = MacroCommands::GetNames();
+   auto names = MacroCommands::GetNames(); // these names come from filenames
    int i;
 
    for (i = 0; i < (int)names.size(); i++) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
       result.push_back( MenuTable::Command( MacroID,
-         names[i], false, FN(OnApplyMacroDirectly),
-         flags ) );
+         TranslatableString{ names[i] }, // file name verbatim
+         FN(OnApplyMacroDirectly),
+         flags,
+         CommandManager::Options{}.AllowInMacros()
+      ) );
    }
 
    return result;
@@ -765,13 +765,12 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
    // the plugin manager...sorry! :-(
 
    const auto &lastEffect = MenuManager::Get(project).mLastEffect;
-   wxString buildMenuLabel;
-   if (!lastEffect.empty()) {
-      buildMenuLabel.Printf(_("Repeat %s"),
-         EffectManager::Get().GetCommandName(lastEffect));
-   }
+   TranslatableString buildMenuLabel;
+   if (!lastEffect.empty())
+      buildMenuLabel = XO("Repeat %s")
+         .Format( EffectManager::Get().GetCommandName(lastEffect) );
    else
-      buildMenuLabel = _("Repeat Last Effect");
+      buildMenuLabel = XO("Repeat Last Effect");
 
    return Menu( _("Effe&ct"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
@@ -781,7 +780,7 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
       Separator(),
 
 #endif
-      Command( wxT("RepeatLastEffect"), buildMenuLabel, false,
+      Command( wxT("RepeatLastEffect"), buildMenuLabel,
          FN(OnRepeatLastEffect),
          AudioIONotBusyFlag | TimeSelectedFlag |
             WaveTracksSelectedFlag | HasLastEffectFlag,
@@ -978,5 +977,4 @@ MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & )
    );
 }
 
-#undef XXO
 #undef FN

@@ -147,7 +147,9 @@ class AUDACITY_DLL_API CommandManager final
       // a very common case
       Options( const wxChar *accel_ ) : accel{ accel_ } {}
       // A two-argument constructor for another common case
-      Options( const wxChar *accel_, const wxString &longName_ )
+      Options(
+         const wxChar *accel_,
+         const TranslatableString &longName_ )
       : accel{ accel_ }, longName{ longName_ } {}
 
       Options &&Accel (const wxChar *value) &&
@@ -158,20 +160,23 @@ class AUDACITY_DLL_API CommandManager final
          { bIsEffect = value; return std::move(*this); }
       Options &&Parameter (const CommandParameter &value) &&
          { parameter = value; return std::move(*this); }
-      Options &&LongName (const wxString &value) &&
+      Options &&LongName (const TranslatableString &value ) &&
          { longName = value; return std::move(*this); }
       Options &&IsGlobal () &&
          { global = true; return std::move(*this); }
       Options &&UseStrictFlags () &&
          { useStrictFlags = true; return std::move(*this); }
+      Options &&AllowInMacros ( int value = 1 ) &&
+         { allowInMacros = value; return std::move(*this); }
 
       const wxChar *accel{ wxT("") };
       int check{ -1 }; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
-      wxString longName{}; // translated
+      TranslatableString longName{};
       bool global{ false };
       bool useStrictFlags{ false };
+      int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
    };
 
    void AddItemList(const CommandID & name,
@@ -182,9 +187,8 @@ class AUDACITY_DLL_API CommandManager final
                     CommandFlag flags,
                     bool bIsEffect = false);
 
-   void AddItem(const CommandID &name,
-                const wxChar *label_in,
-                bool excludeFromMacros,
+   void AddItem(const CommandID & name,
+                const TranslatableString &label_in,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags,
@@ -301,8 +305,7 @@ private:
 
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const CommandID & name,
-                                   const wxString & label,
-                                   bool excludeFromMacros,
+                                   const TranslatableString & label,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
@@ -312,8 +315,7 @@ private:
                                    const Options &options);
    
    void AddGlobalCommand(const CommandID &name,
-                         const wxChar *label,
-                         bool excludeFromMacros,
+                         const TranslatableString &label,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
                          const Options &options = {});
@@ -489,8 +491,7 @@ namespace MenuTable {
 
    struct CommandItem final : BaseItem {
       CommandItem(const CommandID &name_,
-               const wxString &label_in_,
-               bool excludeFromMacros_,
+               const TranslatableString &label_in_,
                CommandHandlerFinder finder_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
@@ -498,8 +499,7 @@ namespace MenuTable {
       ~CommandItem() override;
 
       const CommandID name;
-      const wxString label_in;
-      bool excludeFromMacros;
+      const TranslatableString label_in;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandFlag flags;
@@ -588,12 +588,13 @@ namespace MenuTable {
       { return std::make_unique<SeparatorItem>(); }
 
    inline std::unique_ptr<CommandItem> Command(
-      const CommandID &name, const wxString &label_in, bool excludeFromMacros,
+      const CommandID &name,
+      const TranslatableString &label_in,
       CommandHandlerFinder finder, CommandFunctorPointer callback,
       CommandFlag flags, const CommandManager::Options &options = {})
    {
       return std::make_unique<CommandItem>(
-         name, label_in, excludeFromMacros, finder, callback, flags, options
+         name, label_in, finder, callback, flags, options
       );
    }
 

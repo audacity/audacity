@@ -504,8 +504,7 @@ void CommandManager::ClearCurrentMenu()
 
 
 void CommandManager::AddItem(const CommandID &name,
-                             const wxChar *label_in,
-                             bool excludeFromMacros,
+                             const TranslatableString &label_in,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
@@ -514,7 +513,7 @@ void CommandManager::AddItem(const CommandID &name,
    if (options.global) {
       wxASSERT( flags == AlwaysEnabledFlag );
       AddGlobalCommand(
-         name, label_in, excludeFromMacros, finder, callback, options );
+         name, label_in, finder, callback, options );
       return;
    }
 
@@ -523,7 +522,6 @@ void CommandManager::AddItem(const CommandID &name,
    CommandListEntry *entry =
       NewIdentifier(name,
          label_in,
-         excludeFromMacros,
          CurrentMenu(), finder, callback,
          {}, 0, 0,
          options);
@@ -563,9 +561,7 @@ void CommandManager::AddItemList(const CommandID & name,
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       CommandListEntry *entry =
          NewIdentifier(name,
-            items[i].Translation(),
-            // No means yet to specify excludeFromMacros !
-            false,
+            items[i].Msgid(),
             CurrentMenu(),
             finder,
             callback,
@@ -581,14 +577,13 @@ void CommandManager::AddItemList(const CommandID & name,
 }
 
 void CommandManager::AddGlobalCommand(const CommandID &name,
-                                      const wxChar *label_in,
-                                      bool excludeFromMacros,
+                                      const TranslatableString &label_in,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
                                       const Options &options)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, excludeFromMacros, NULL, finder, callback,
+      NewIdentifier(name, label_in, NULL, finder, callback,
                     {}, 0, 0, options);
 
    entry->enabled = false;
@@ -620,8 +615,7 @@ int CommandManager::NextIdentifier(int ID)
 ///If it does, a workaround may be to keep controls below wxID_LOWEST
 ///and keep menus above wxID_HIGHEST
 CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
-   const wxString & label,
-   bool excludeFromMacros,
+   const TranslatableString & labelIn,
    wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
@@ -630,8 +624,9 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    int count,
    const Options &options)
 {
-   // if empty, new identifier's long label will be same as label, below:
-   const auto &longLabel = options.longName;
+   bool excludeFromMacros =
+      (options.allowInMacros == 0) ||
+      ((options.allowInMacros == -1) && labelIn.MSGID().GET().Contains("..."));
 
    const wxString & accel = options.accel;
    bool bIsEffect = options.bIsEffect;
@@ -641,6 +636,11 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       cookedParameter = nameIn;
    else
       cookedParameter = parameter;
+
+   auto label = labelIn.Translation();
+
+   // if empty, new identifier's long label will be same as label, below:
+   const auto &longLabel = options.longName.Translation();
 
    const bool multi = !nameSuffix.empty();
    auto name = nameIn;

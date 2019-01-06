@@ -1002,7 +1002,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& EditActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
 
@@ -1208,5 +1207,4 @@ RegisteredMenuItemEnabler selectWaveTracks2{{
    selectAll
 }};
 
-#undef XXO
 #undef FN

@@ -560,7 +560,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& LabelEditActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 {
@@ -612,42 +611,42 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
       Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |
             TimeSelectedFlag | IsNotSyncLockedFlag,
-            Options{ wxT("Alt+X"), _("Label Cut") } ),
+            Options{ wxT("Alt+X"), XO("Label Cut") } ),
       Command( wxT("DeleteLabels"), XXO("&Delete"), FN(OnDeleteLabels),
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |
             TimeSelectedFlag | IsNotSyncLockedFlag,
-         Options{ wxT("Alt+K"), _("Label Delete") } ),
+         Options{ wxT("Alt+K"), XO("Label Delete") } ),
 
       Separator(),
 
       /* i18n-hint: (verb) A special way to cut out a piece of audio*/
       Command( wxT("SplitCutLabels"), XXO("&Split Cut"),
          FN(OnSplitCutLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+X"), _("Label Split Cut") } ),
+         Options{ wxT("Alt+Shift+X"), XO("Label Split Cut") } ),
       Command( wxT("SplitDeleteLabels"), XXO("Sp&lit Delete"),
          FN(OnSplitDeleteLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+K"), _("Label Split Delete") } ),
+         Options{ wxT("Alt+Shift+K"), XO("Label Split Delete") } ),
 
       Separator(),
 
       Command( wxT("SilenceLabels"), XXO("Silence &Audio"),
          FN(OnSilenceLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+L"), _("Label Silence") } ),
+         Options{ wxT("Alt+L"), XO("Label Silence") } ),
       /* i18n-hint: (verb)*/
       Command( wxT("CopyLabels"), XXO("Co&py"), FN(OnCopyLabels),
          NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+C"), _("Label Copy") } ),
+         Options{ wxT("Alt+Shift+C"), XO("Label Copy") } ),
 
       Separator(),
 
       /* i18n-hint: (verb)*/
       Command( wxT("SplitLabels"), XXO("Spli&t"), FN(OnSplitLabels),
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag,
-         Options{ wxT("Alt+I"), _("Label Split") } ),
+         Options{ wxT("Alt+I"), XO("Label Split") } ),
       /* i18n-hint: (verb)*/
       Command( wxT("JoinLabels"), XXO("&Join"), FN(OnJoinLabels),
          NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+J"), _("Label Join") } ),
+         Options{ wxT("Alt+J"), XO("Label Join") } ),
       Command( wxT("DisjoinLabels"), XXO("Detac&h at Silences"),
          FN(OnDisjoinLabels), NotBusyLabelsAndWaveFlags,
          wxT("Alt+Shift+J") )
@@ -656,5 +655,4 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
    ); // two menus
 }
 
-#undef XXO
 #undef FN

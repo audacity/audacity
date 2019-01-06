@@ -555,7 +555,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& NavigationActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & )
 {
@@ -603,5 +602,4 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
    );
 }
 
-#undef XXO
 #undef FN
