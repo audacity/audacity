@@ -553,22 +553,23 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& NavigationActions::Handler :: X)
+#define FN(X) (& NavigationActions::Handler :: X)
 
 MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & )
 {
    // Ceci n'est pas un menu
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   return Items(
+
+   return FinderScope( findCommandHandler ).Eval(
+   Items(
       Command( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
          FN(OnPrevWindow), AlwaysEnabledFlag,
          Options{ wxT("Alt+Shift+F6") }.IsGlobal() ),
       Command( wxT("NextWindow"), XXO("Move Forward Through Active Windows"),
          FN(OnNextWindow), AlwaysEnabledFlag,
          Options{ wxT("Alt+F6") }.IsGlobal() )
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
@@ -576,7 +577,8 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
    using namespace MenuTable;
    static const auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
 
-   return Menu( XO("F&ocus"),
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("F&ocus"),
       Command( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
          AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") ),
@@ -599,7 +601,7 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
          FocusedTracksFlags, wxT("Return") ),
       Command( wxT("ToggleAlt"), XXO("Toggle Focuse&d Track"), FN(OnToggle),
          FocusedTracksFlags, wxT("NUMPAD_ENTER") )
-   );
+   ) );
 }
 
 #undef FN

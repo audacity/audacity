@@ -966,8 +966,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& TransportActions::Handler :: X)
+#define FN(X) (& TransportActions::Handler :: X)
 
 MenuTable::BaseItemPtr CursorMenu( AudacityProject& );
 
@@ -981,9 +980,10 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
 
    static const auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
 
+   return FinderScope( findCommandHandler ).Eval(
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
-   return Menu( XO("Tra&nsport"),
+   Menu( XO("Tra&nsport"),
       Menu( XO("Pl&aying"),
          /* i18n-hint: (verb) Start or Stop audio playback*/
          Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
@@ -1085,13 +1085,15 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
             AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff )
 #endif
       )
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( XO("T&ransport"),
+
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("T&ransport"),
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
       Command( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
@@ -1133,13 +1135,15 @@ MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
       Command(wxT("KeyboardScrubForwards"), XXO("Scrub For&wards"),
          FN(OnKeyboardScrubForwards),
          CaptureNotBusyFlag | CanStopAudioStreamFlag, wxT("I\twantKeyup"))
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( XO("&Play-at-Speed"),
+
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("&Play-at-Speed"),
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       Command( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
          FN(OnPlayAtSpeed), CaptureNotBusyFlag ),
@@ -1163,7 +1167,7 @@ MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & )
       Command( wxT("MoveToNextLabel"), XXO("Move to &Next Label"),
          FN(OnMoveToNextLabel),
          CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Right") )
-   );
+   ) );
 }
 
 #undef FN

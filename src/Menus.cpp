@@ -134,10 +134,10 @@ SeparatorItem::~SeparatorItem() {}
 
 CommandItem::CommandItem(const CommandID &name_,
          const TranslatableString &label_in_,
-         CommandHandlerFinder finder_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
-         const CommandManager::Options &options_)
+         const CommandManager::Options &options_,
+         CommandHandlerFinder finder_)
 : name{ name_ }, label_in{ label_in_ }
 , finder{ finder_ }, callback{ callback_ }
 , flags{ flags_ }, options{ options_ }
@@ -146,10 +146,10 @@ CommandItem::~CommandItem() {}
 
 CommandGroupItem::CommandGroupItem(const wxString &name_,
          std::initializer_list< ComponentInterfaceSymbol > items_,
-         CommandHandlerFinder finder_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
-         bool isEffect_)
+         bool isEffect_,
+         CommandHandlerFinder finder_)
 : name{ name_ }, items{ items_ }
 , finder{ finder_ }, callback{ callback_ }
 , flags{ flags_ }, isEffect{ isEffect_ }
@@ -157,6 +157,15 @@ CommandGroupItem::CommandGroupItem(const wxString &name_,
 CommandGroupItem::~CommandGroupItem() {}
 
 SpecialItem::~SpecialItem() {}
+
+CommandHandlerFinder FinderScope::sFinder =
+   [](AudacityProject &project) -> CommandHandlerObject & {
+      // If this default finder function is reached, then FinderScope should
+      // have been used somewhere, or an explicit CommandHandlerFinder passed
+      // to menu item constructors
+      wxASSERT( false );
+      return project;
+   };
 
 }
 

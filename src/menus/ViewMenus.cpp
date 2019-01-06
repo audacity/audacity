@@ -430,8 +430,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ViewActions::Handler :: X)
+#define FN(X) (& ViewActions::Handler :: X)
 
 MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& );
 
@@ -442,7 +441,8 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   return Menu( XO("&View"),
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("&View"),
       Menu( XO("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
             ZoomInAvailableFlag, wxT("Ctrl+1") ),
@@ -547,7 +547,7 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
       Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
          FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
 #endif
-   );
+   ) );
 }
 
 #undef FN

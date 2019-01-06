@@ -995,8 +995,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& EditActions::Handler :: X)
+#define FN(X) (& EditActions::Handler :: X)
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
 
@@ -1052,7 +1051,8 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 #endif
    ;
 
-   return Menu( XO("&Edit"),
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("&Edit"),
       Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
          AudioIONotBusyFlag | UndoAvailableFlag, wxT("Ctrl+Z") ),
 
@@ -1145,7 +1145,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
       Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
          AudioIONotBusyFlag, prefKey )
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
@@ -1154,14 +1154,16 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
    using Options = CommandManager::Options;
    static const auto flags =
       AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
-   return Menu( XO("&Edit"),
+
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect),
          wxT("Backspace") ),
       Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
          (flags | NoAutoSelect),
          wxT("Delete") )
-   );
+   ) );
 }
 
 auto canSelectAll = [](const AudacityProject &project){

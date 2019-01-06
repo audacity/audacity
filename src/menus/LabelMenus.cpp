@@ -559,8 +559,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& LabelEditActions::Handler :: X)
+#define FN(X) (& LabelEditActions::Handler :: X)
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 {
@@ -575,7 +574,9 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    // Returns TWO menus.
    
-   return Items(
+
+   return FinderScope( findCommandHandler ).Eval(
+   Items(
 
    Menu( XO("&Labels"),
       Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
@@ -653,7 +654,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
          wxT("Alt+Shift+J") )
    ) // second menu
 
-   ); // two menus
+   ) ); // two menus
 }
 
 #undef FN

@@ -549,15 +549,15 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& FileActions::Handler :: X)
+#define FN(X) (& FileActions::Handler :: X)
 
 MenuTable::BaseItemPtr FileMenu( AudacityProject& )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return Menu( XO("&File"),
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("&File"),
       /*i18n-hint: "New" is an action (verb) to create a NEW project*/
       Command( wxT("New"), XXO("&New"), FN(OnNew),
          AudioIONotBusyFlag, wxT("Ctrl+N") ),
@@ -698,7 +698,7 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
       /* i18n-hint: (verb) It's item on a menu. */
       Command( wxT("Exit"), XXO("E&xit"), FN(OnExit),
          AlwaysEnabledFlag, wxT("Ctrl+Q") )
-   );
+   ) );
 }
 
 #undef FN

@@ -251,8 +251,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ToolbarActions::Handler :: X)
+#define FN(X) (& ToolbarActions::Handler :: X)
 
 MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
 {
@@ -261,7 +260,8 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   return Menu( XO("&Toolbars"),
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("&Toolbars"),
       /* i18n-hint: (verb)*/
       Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
          FN(OnResetToolBars), AlwaysEnabledFlag ),
@@ -330,13 +330,15 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
          XXO("Spe&ctral Selection Toolbar"),
          FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff )
 #endif
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( XO("T&ools"),
+
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("T&ools"),
       Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
          AlwaysEnabledFlag, wxT("F1") ),
       Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),
@@ -353,7 +355,7 @@ MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
          AlwaysEnabledFlag, wxT("A") ),
       Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
          AlwaysEnabledFlag, wxT("D") )
-   );
+   ) );
 }
 
 #undef FN

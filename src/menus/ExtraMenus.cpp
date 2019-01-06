@@ -134,8 +134,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ExtraActions::Handler :: X)
+#define FN(X) (& ExtraActions::Handler :: X)
 
 // Imported menu item definitions
 
@@ -193,7 +192,9 @@ MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( XO("Mi&xer"),
+
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          FN(OnOutputGain), AlwaysEnabledFlag ),
       Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
@@ -206,13 +207,15 @@ MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
          FN(OnInputGainInc), AlwaysEnabledFlag ),
       Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
          FN(OnInputGainDec), AlwaysEnabledFlag )
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( XO("De&vice"),
+
+   return FinderScope( findCommandHandler ).Eval(
+   Menu( XO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          FN(OnInputDevice),
          AudioIONotBusyFlag, wxT("Shift+I") ),
@@ -224,7 +227,7 @@ MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
       Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
          FN(OnInputChannels),
          AudioIONotBusyFlag, wxT("Shift+N") )
-   );
+   ) );
 }
 
 MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
@@ -241,7 +244,9 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
    ;
 
    // Not a menu.
-   return Items(
+
+   return FinderScope( findCommandHandler ).Eval(
+   Items(
       // Accel key is not bindable.
       Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
          FN(OnFullScreen),
@@ -250,7 +255,7 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
             GetProjectFrame( project ).wxTopLevelWindow::IsFullScreen() ) ),
 
       ExtraWindowItems
-   );
+   ) );
 }
 
 #undef FN
