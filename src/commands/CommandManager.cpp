@@ -568,18 +568,23 @@ void CommandManager::AddItemList(const CommandID & name,
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       auto translated = items[i].Translation();
-      CommandListEntry *entry = NewIdentifier(name,
-                                              translated,
-                                              translated,
-                                              // No means yet to specify !
-                                              false,
-                                              CurrentMenu(),
-                                              finder,
-                                              callback,
-                                              items[i].Internal(),
-                                              i,
-                                              cnt,
-                                              bIsEffect);
+      auto stripped = translated.BeforeFirst(wxT('\t'));
+      auto accel = translated.AfterFirst(wxT('\t'));
+      CommandListEntry *entry =
+         NewIdentifier(name,
+            stripped,
+            stripped,
+            // No means yet to specify hasDialog !
+            false,
+            accel,
+            CurrentMenu(),
+            finder,
+            callback,
+            items[i].Internal(),
+            i,
+            cnt,
+            bIsEffect,
+            {});
       entry->flags = flags;
       CurrentMenu()->Append(entry->id, GetLabel(entry));
       mbSeparatorAllowed = true;
@@ -651,33 +656,6 @@ int CommandManager::NextIdentifier(int ID)
 ///WARNING: Does this conflict with the identifiers set for controls/windows?
 ///If it does, a workaround may be to keep controls below wxID_LOWEST
 ///and keep menus above wxID_HIGHEST
-CommandListEntry *CommandManager::NewIdentifier(const CommandID & name,
-                                                const wxString & label,
-                                                const wxString & longLabel,
-                                                bool hasDialog,
-                                                wxMenu *menu,
-                                                CommandHandlerFinder finder,
-                                                CommandFunctorPointer callback,
-                                                const CommandID &nameSuffix,
-                                                int index,
-                                                int count,
-                                                bool bIsEffect)
-{
-   return NewIdentifier(name,
-                        label.BeforeFirst(wxT('\t')),
-                        longLabel.BeforeFirst(wxT('\t')),
-                        hasDialog,
-                        label.AfterFirst(wxT('\t')),
-                        menu,
-                        finder,
-                        callback,
-                        nameSuffix,
-                        index,
-                        count,
-                        bIsEffect,
-                        {});
-}
-
 CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    const wxString & label,
    const wxString & longLabel,
