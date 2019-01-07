@@ -154,8 +154,8 @@ class AUDACITY_DLL_API CommandManager final
          { accel = value; return std::move(*this); }
       Options &&CheckState (bool value) &&
          { check = value ? 1 : 0; return std::move(*this); }
-      Options &&IsEffect () &&
-         { bIsEffect = true; return std::move(*this); }
+      Options &&IsEffect (bool value = true) &&
+         { bIsEffect = value; return std::move(*this); }
       Options &&Parameter (const CommandParameter &value) &&
          { parameter = value; return std::move(*this); }
       Options &&LongName (const wxString &value) &&
@@ -302,24 +302,21 @@ private:
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const CommandID & name,
                                    const wxString & label,
-                                   const wxString & longLabel,
                                    bool hasDialog,
-                                   const wxString & accel,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
                                    const CommandID &nameSuffix,
                                    int index,
                                    int count,
-                                   bool bIsEffect,
-                                   const CommandParameter &parameter);
+                                   const Options &options);
    
    void AddGlobalCommand(const CommandID &name,
                          const wxChar *label,
                          bool hasDialog,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
-                         const wxChar *accel);
+                         const Options &options = {});
 
    //
    // Executing commands

@@ -514,25 +514,19 @@ void CommandManager::AddItem(const CommandID &name,
    if (options.global) {
       wxASSERT( flags == AlwaysEnabledFlag );
       AddGlobalCommand(
-         name, label_in, hasDialog, finder, callback, options.accel );
+         name, label_in, hasDialog, finder, callback, options );
       return;
    }
 
    wxASSERT( flags != NoFlagsSpecified );
 
-   CommandParameter cookedParameter;
-   const auto &parameter = options.parameter;
-   if( parameter.empty() )
-      cookedParameter = name;
-   else
-      cookedParameter = parameter;
    CommandListEntry *entry =
       NewIdentifier(name,
          label_in,
-         options.longName,
          hasDialog,
-         options.accel, CurrentMenu(), finder, callback,
-         {}, 0, 0, options.bIsEffect, cookedParameter);
+         CurrentMenu(), finder, callback,
+         {}, 0, 0,
+         options);
    entry->useStrictFlags = options.useStrictFlags;
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
@@ -573,18 +567,17 @@ void CommandManager::AddItemList(const CommandID & name,
       CommandListEntry *entry =
          NewIdentifier(name,
             stripped,
-            stripped,
             // No means yet to specify hasDialog !
             false,
-            accel,
             CurrentMenu(),
             finder,
             callback,
             items[i].Internal(),
             i,
             cnt,
-            bIsEffect,
-            {});
+            Options{}
+               .Accel(accel)
+               .IsEffect(bIsEffect));
       entry->flags = flags;
       CurrentMenu()->Append(entry->id, GetLabel(entry));
       mbSeparatorAllowed = true;
@@ -596,11 +589,11 @@ void CommandManager::AddGlobalCommand(const CommandID &name,
                                       bool hasDialog,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
-                                      const wxChar *accel)
+                                      const Options &options)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, label_in, hasDialog, accel, NULL, finder, callback,
-                    {}, 0, 0, false, {});
+      NewIdentifier(name, label_in, hasDialog, NULL, finder, callback,
+                    {}, 0, 0, options);
 
    entry->enabled = false;
    entry->isGlobal = true;
@@ -632,18 +625,27 @@ int CommandManager::NextIdentifier(int ID)
 ///and keep menus above wxID_HIGHEST
 CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    const wxString & label,
-   const wxString & longLabel,
    bool hasDialog,
-   const wxString & accel,
    wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
    const CommandID &nameSuffix,
    int index,
    int count,
-   bool bIsEffect,
-   const CommandParameter &parameter)
+   const Options &options)
 {
+   // if empty, new identifier's long label will be same as label, below:
+   const auto &longLabel = options.longName;
+
+   const wxString & accel = options.accel;
+   bool bIsEffect = options.bIsEffect;
+   CommandID cookedParameter;
+   const auto &parameter = options.parameter;
+   if( parameter == "" )
+      cookedParameter = nameIn;
+   else
+      cookedParameter = parameter;
+
    const bool multi = !nameSuffix.empty();
    auto name = nameIn;
 
@@ -693,7 +695,10 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
       entry->name = name;
       entry->label = label;
+
+      // long label is the same as label unless options specified otherwise:
       entry->longLabel = longLabel.empty() ? label : longLabel;
+
       entry->hasDialog = hasDialog;
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
