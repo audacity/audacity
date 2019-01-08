@@ -14,6 +14,7 @@
 #include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../HelpText.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
@@ -35,7 +36,8 @@ namespace {
 
 void ShowDiagnostics(
    AudacityProject &project, const wxString &info,
-   const TranslatableString &description, const wxString &defaultPath)
+   const TranslatableString &description, const wxString &defaultPath,
+   bool fixedWidth = false)
 {
    auto &window = GetProjectFrame( project );
    wxDialogWrapper dlg( &window, wxID_ANY, description);
@@ -46,11 +48,20 @@ void ShowDiagnostics(
    S.StartVerticalLay();
    {
       text = S.Id(wxID_STATIC)
-         .Style(wxTE_MULTILINE | wxTE_READONLY)
-         .AddTextWindow(info);
+         .Style(wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH)
+         .AddTextWindow("");
+
       S.AddStandardButtons(eOkButton | eCancelButton);
    }
    S.EndVerticalLay();
+
+   if (fixedWidth) {
+      auto style = text->GetDefaultStyle();
+      style.SetFontFamily( wxFONTFAMILY_TELETYPE );
+      text->SetDefaultStyle(style);
+   }
+
+   *text << info;
 
    dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
    dlg.SetSize(350, 450);
@@ -364,6 +375,54 @@ void OnCheckDependencies(const CommandContext &context)
    ::ShowDependencyDialogIfNeeded(&project, false);
 }
 
+void OnMenuTree(const CommandContext &context)
+{
+   auto &project = context.project;
+   
+   using namespace MenuTable;
+   struct MyVisitor : Visitor
+   {
+      enum : unsigned { TAB = 3 };
+      void BeginGroup( GroupItem &item, const Path& ) override
+      {
+         Indent();
+         // using GET for alpha only diagnostic tool
+         info += item.name.GET();
+         Return();
+         indentation = wxString{ ' ', TAB * ++level };
+      }
+
+      void EndGroup( GroupItem &, const Path& ) override
+      {
+         indentation = wxString{ ' ', TAB * --level };
+      }
+
+      void Visit( SingleItem &item, const Path& ) override
+      {
+         static const wxString separatorName{ '=', 20 };
+
+         Indent();
+         info += dynamic_cast<SeparatorItem*>(&item)
+            ? separatorName
+            // using GET for alpha only diagnostic tool
+            : item.name.GET();
+         Return();
+      }
+
+      void Indent() { info += indentation; }
+      void Return() { info += '\n'; }
+
+      unsigned level{};
+      wxString indentation;
+      wxString info;
+   } visitor;
+
+   MenuManager::Visit( visitor, project );
+
+   ShowDiagnostics( project, visitor.info,
+      XO("Menu Tree"), wxT("menutree.txt"), true );
+}
+
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
    ::OpenInDefaultBrowser( VerCheckUrl());
@@ -463,6 +522,14 @@ MenuTable::BaseItemSharedPtr HelpMenu()
          Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
             FN(OnCheckDependencies),
             AudioIONotBusyFlag )
+
+#ifdef IS_ALPHA
+         ,
+         // Menu explorer.  Perhaps this should become a macro command
+         Command( wxT("MenuTree"), XXO("Menu Tree..."),
+            FN(OnMenuTree),
+            AlwaysEnabledFlag )
+#endif
       ),
 
 #ifndef __WXMAC__
