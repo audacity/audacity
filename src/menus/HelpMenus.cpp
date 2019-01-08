@@ -20,6 +20,51 @@
 
 // private helper classes and functions
 namespace {
+
+void ShowDiagnostics(
+   AudacityProject &project, const wxString &info,
+   const wxString &description, const wxString &defaultPath)
+{
+   wxDialogWrapper dlg(&project, wxID_ANY, description);
+   dlg.SetName(dlg.GetTitle());
+   ShuttleGui S(&dlg, eIsCreating);
+
+   wxTextCtrl *text;
+   S.StartVerticalLay();
+   {
+      S.SetStyle(wxTE_MULTILINE | wxTE_READONLY);
+      text = S.Id(wxID_STATIC).AddTextWindow(info);
+      S.AddStandardButtons(eOkButton | eCancelButton);
+   }
+   S.EndVerticalLay();
+
+   dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
+   dlg.SetSize(350, 450);
+
+   if (dlg.ShowModal() == wxID_OK)
+   {
+      const auto fileDialogTitle =
+         wxString::Format( _("Save %s"), description );
+      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+         fileDialogTitle,
+         wxEmptyString,
+         defaultPath,
+         wxT("txt"),
+         wxT("*.txt"),
+         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+         &project);
+      if (!fName.empty())
+      {
+         if (!text->SaveFile(fName))
+         {
+            AudacityMessageBox(
+               wxString::Format( _("Unable to save %s"), description ),
+               fileDialogTitle);
+         }
+      }
+   }
+}
+
 }
 
 namespace HelpActions {
@@ -69,89 +114,18 @@ void OnManual(const CommandContext &context)
 void OnAudioDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
-
    wxString info = gAudioIO->GetDeviceInfo();
-
-   wxDialogWrapper dlg(&project, wxID_ANY, wxString(_("Audio Device Info")));
-   dlg.SetName(dlg.GetTitle());
-   ShuttleGui S(&dlg, eIsCreating);
-
-   wxTextCtrl *text;
-   S.StartVerticalLay();
-   {
-      S.SetStyle(wxTE_MULTILINE | wxTE_READONLY);
-      text = S.Id(wxID_STATIC).AddTextWindow(info);
-      S.AddStandardButtons(eOkButton | eCancelButton);
-   }
-   S.EndVerticalLay();
-
-   dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
-   dlg.SetSize(350, 450);
-
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
-         _("Save Device Info"),
-         wxEmptyString,
-         wxT("deviceinfo.txt"),
-         wxT("txt"),
-         wxT("*.txt"),
-         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-         &project);
-      if (!fName.empty())
-      {
-         if (!text->SaveFile(fName))
-         {
-            AudacityMessageBox(
-               _("Unable to save device info"), _("Save Device Info"));
-         }
-      }
-   }
+   ShowDiagnostics( project, info,
+      _("Audio Device Info"), wxT("deviceinfo.txt") );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 void OnMidiDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
-
    wxString info = gAudioIO->GetMidiDeviceInfo();
-
-   wxDialogWrapper dlg(&project, wxID_ANY, wxString(_("MIDI Device Info")));
-   dlg.SetName(dlg.GetTitle());
-   ShuttleGui S(&dlg, eIsCreating);
-
-   wxTextCtrl *text;
-   S.StartVerticalLay();
-   {
-      S.SetStyle(wxTE_MULTILINE | wxTE_READONLY);
-      text = S.Id(wxID_STATIC).AddTextWindow(info);
-      S.AddStandardButtons(eOkButton | eCancelButton);
-   }
-   S.EndVerticalLay();
-
-   dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
-   dlg.SetSize(350, 450);
-
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
-         _("Save MIDI Device Info"),
-         wxEmptyString,
-         wxT("midideviceinfo.txt"),
-         wxT("txt"),
-         wxT("*.txt"),
-         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-         &project);
-      if (!fName.empty())
-      {
-         if (!text->SaveFile(fName))
-         {
-            AudacityMessageBox(
-               _("Unable to save MIDI device info"),
-               _("Save MIDI Device Info"));
-         }
-      }
-   }
+   ShowDiagnostics( project, info,
+      _("MIDI Device Info"), wxT("midideviceinfo.txt") );
 }
 #endif
 
