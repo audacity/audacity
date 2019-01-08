@@ -35,6 +35,8 @@ enum EffectType : int;
 typedef wxString PluginID;
 typedef wxArrayString PluginIDs;
 
+namespace Registry{ class Visitor; }
+
 class MenuCreator
 {
 public:
@@ -67,6 +69,9 @@ public:
    MenuManager( const MenuManager & ) PROHIBITED;
    MenuManager &operator=( const MenuManager & ) PROHIBITED;
    ~MenuManager();
+
+   static void Visit(
+      Registry::Visitor &visitor, AudacityProject &project );
 
    static void ModifyUndoMenuItems(AudacityProject &project);
    static void ModifyToolbarMenus(AudacityProject &project);
