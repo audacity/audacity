@@ -1032,7 +1032,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
       ),
 
       // Scrubbing sub-menu
-      Scrubber::Get( project ).Menu(),
+      Scrubber::Menu(),
 
       CursorMenu,
 

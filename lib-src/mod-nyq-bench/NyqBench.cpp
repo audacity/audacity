@@ -195,7 +195,7 @@ extern "C"
 
             c->SetCurrentMenu(pMenu);
             c->AddSeparator();
-            c->AddItem(wxT("NyqBench"),
+            c->AddItem( *p, wxT("NyqBench"),
                XO("&Nyquist Workbench..."),
                findme,
                static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),

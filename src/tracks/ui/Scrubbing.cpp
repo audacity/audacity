@@ -1136,7 +1136,8 @@ MenuTable::BaseItemPtr Scrubber::Menu()
           item.flags,
           item.StatusTest
              ? // a checkmark item
-               Options{}.CheckState( (this->*item.StatusTest)() )
+               Options{}.CheckTest( [&item](AudacityProject &project){
+                  return ( Scrubber::Get(project).*(item.StatusTest) )(); } )
              : // not a checkmark item
                Options{}
       ) );

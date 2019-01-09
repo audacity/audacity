@@ -200,7 +200,7 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
    else
    if (const auto pCommand =
        dynamic_cast<CommandItem*>( pItem )) {
-      manager.AddItem(
+      manager.AddItem( project,
          pCommand->name, pCommand->label_in,
          pCommand->finder, pCommand->callback,
          pCommand->flags, pCommand->options

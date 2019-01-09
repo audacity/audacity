@@ -499,7 +499,8 @@ void CommandManager::ClearCurrentMenu()
 
 
 
-void CommandManager::AddItem(const CommandID &name,
+void CommandManager::AddItem(AudacityProject &project,
+                             const CommandID &name,
                              const TranslatableString &label_in,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
@@ -528,16 +529,22 @@ void CommandManager::AddItem(const CommandID &name,
    SetCommandFlags(name, flags);
 
 
-   auto checkmark = options.check;
-   if (checkmark >= 0) {
+   auto &checker = options.checker;
+   if (checker) {
       CurrentMenu()->AppendCheckItem(ID, label);
-      CurrentMenu()->Check(ID, checkmark != 0);
+      CurrentMenu()->Check(ID, checker( project ));
    }
    else {
       CurrentMenu()->Append(ID, label);
    }
 
    mbSeparatorAllowed = true;
+}
+
+auto CommandManager::Options::MakeCheckFn(
+   const wxString key, bool defaultValue ) -> CheckFn
+{
+   return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
 
 ///

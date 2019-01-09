@@ -457,7 +457,7 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
          Separator(),
          Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
             FN(OnAdvancedVZoom), AlwaysEnabledFlag,
-            Options{}.CheckState( gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L) ) )
+            Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
       ),
 
       Menu( XO("T&rack Size"),
@@ -538,10 +538,10 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
 
       Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
          FN(OnShowExtraMenus), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L) ) ),
+         Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
       Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
          FN(OnShowClipping), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowClipping"), 0L) ) )
+         Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
       ,
       Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),

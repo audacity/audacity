@@ -160,12 +160,12 @@ int ModuleDispatch(ModuleDispatchTypes type)
          c->SetCurrentMenu( pMenu );
          c->AddSeparator();
          // We add two new commands into the Analyze menu.
-         c->AddItem( 
+         c->AddItem( *p,
             _T("A New Command"), // internal name
             XO("1st Experimental Command..."), //displayed name
             ident, ModNullFN( OnFuncFirst ),
             AudioIONotBusyFlag );
-         c->AddItem( 
+         c->AddItem( *p,
             _T("Another New Command"),
             XO("2nd Experimental Command"),
             ident, ModNullFN( OnFuncSecond ),

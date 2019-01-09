@@ -842,7 +842,6 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   auto gAudioIO = AudioIO::Get();
 
    return FinderScope( findCommandHandler ).Eval(
    Menu( XO("T&ools"),
@@ -899,12 +898,16 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
          XXO("Simulate Recording Errors"),
          FN(OnSimulateRecordingErrors),
          AudioIONotBusyFlag,
-         Options{}.CheckState( gAudioIO->mSimulateRecordingErrors ) ),
+         Options{}.CheckTest(
+            [](AudacityProject&){
+               return AudioIO::Get()->mSimulateRecordingErrors; } ) ),
       Command( wxT("DetectUpstreamDropouts"),
          XXO("Detect Upstream Dropouts"),
          FN(OnDetectUpstreamDropouts),
          AudioIONotBusyFlag,
-         Options{}.CheckState( gAudioIO->mDetectUpstreamDropouts ) )
+         Options{}.CheckTest(
+            [](AudacityProject&){
+               return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
 #endif
    ) );
 }
