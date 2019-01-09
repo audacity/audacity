@@ -561,6 +561,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& LabelEditActions::Handler :: X)
 
+// Under /MenuBar/Edit
 MenuTable::BaseItemSharedPtr LabelEditMenus()
 {
    using namespace MenuTable;
@@ -576,9 +577,9 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    
    static BaseItemSharedPtr menus{
    FinderScope( findCommandHandler ).Eval(
-   Items(
+   Items( wxEmptyString,
    
-   Menu( XO("&Labels"),
+   Menu( wxT("Labels"), XO("&Labels"),
       Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
                  AudioIONotBusyFlag ),
 
@@ -608,7 +609,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
 
    /////////////////////////////////////////////////////////////////////////////
 
-   Menu( XO("La&beled Audio"),
+   Menu( wxT("Labeled"), XO("La&beled Audio"),
       /* i18n-hint: (verb)*/
       Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |

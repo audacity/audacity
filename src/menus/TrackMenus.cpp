@@ -1276,6 +1276,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& TrackActions::Handler :: X)
 
+// Under /MenuBar
 MenuTable::BaseItemSharedPtr TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
@@ -1284,8 +1285,8 @@ MenuTable::BaseItemSharedPtr TracksMenu()
    
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Tracks"),
-      Menu( XO("Add &New"),
+   Menu( wxT("Tracks"), XO("&Tracks"),
+      Menu( wxT("Add"), XO("Add &New"),
          Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
             AudioIONotBusyFlag, wxT("Ctrl+Shift+N") ),
          Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
@@ -1300,7 +1301,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
 
       Separator(),
 
-      Menu( XO("Mi&x"),
+      Menu( wxT("Mix"), XO("Mi&x"),
          // Delayed evaluation
          // Stereo to Mono is an oddball command that is also subject to control
          // by the plug-in manager, as if an effect.  Decide whether to show or
@@ -1336,14 +1337,14 @@ MenuTable::BaseItemSharedPtr TracksMenu()
 
       Separator(),
 
-      Menu( XO("M&ute/Unmute"),
+      Menu( wxT("Mute"), XO("M&ute/Unmute"),
          Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
             FN(OnMuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+U") ),
          Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
             FN(OnUnmuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+Shift+U") )
       ),
 
-      Menu( XO("&Pan"),
+      Menu( wxT("Pan"), XO("&Pan"),
          // As Pan changes are not saved on Undo stack,
          // pan settings for all tracks
          // in the project could very easily be lost unless we
@@ -1363,7 +1364,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("&Align Tracks"), // XO("Just Move Tracks"),
+      Menu( wxT("Align"), XO("&Align Tracks"), // XO("Just Move Tracks"),
          // Mutual alignment of tracks independent of selection or zero
          CommandGroup(wxT("Align"),
             {
@@ -1391,7 +1392,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
 #if 0
       // TODO: Can these labels be made clearer?
       // Do we need this sub-menu at all?
-      Menu( XO("Move Sele&ction and Tracks"), {
+      Menu( wxT("MoveSelectionAndTracks"), XO("Move Sele&ction and Tracks"), {
          CommandGroup(wxT("AlignMove"), alignLabels,
             FN(OnAlignMoveSel), AudioIONotBusyFlag | TracksSelectedFlag),
       } ),
@@ -1407,7 +1408,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("S&ort Tracks"),
+      Menu( wxT("Sort"), XO("S&ort Tracks"),
          Command( wxT("SortByTime"), XXO("By &Start Time"), FN(OnSortTime),
             TracksExistFlag,
             Options{}.LongName( XO("Sort by Time") ) ),
@@ -1432,12 +1433,13 @@ MenuTable::BaseItemSharedPtr TracksMenu()
    return menu;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraTrackMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Track"),
+   Menu( wxT("Track"), XO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
          FN(OnTrackPan),
          TrackPanelHasFocus | TracksExistFlag, wxT("Shift+P") ),

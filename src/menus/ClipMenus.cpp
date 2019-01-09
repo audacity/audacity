@@ -823,14 +823,15 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& ClipActions::Handler :: X)
 
+// Under /MenuBar/Select
 MenuTable::BaseItemSharedPtr ClipSelectMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   static BaseItemSharedPtr menu{
+   static BaseItemSharedPtr menu {
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("Clip B&oundaries"),
+   Menu( wxT("Clip"), XO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),
@@ -849,6 +850,7 @@ MenuTable::BaseItemSharedPtr ClipSelectMenu()
    return menu;
 }
 
+// Under /MenuBar/Transport/Cursor
 MenuTable::BaseItemSharedPtr ClipCursorItems()
 {
    using namespace MenuTable;
@@ -856,7 +858,7 @@ MenuTable::BaseItemSharedPtr ClipCursorItems()
 
    static BaseItemSharedPtr items{
    FinderScope( findCommandHandler ).Eval(
-   Items(
+   Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          FN(OnCursorPrevClipBoundary),
          WaveTracksExistFlag,
@@ -869,13 +871,14 @@ MenuTable::BaseItemSharedPtr ClipCursorItems()
    return items;
 }
 
+// Under /MenuBar/Optional/Extra/Cursor
 MenuTable::BaseItemSharedPtr ExtraClipCursorItems()
 {
    using namespace MenuTable;
 
    static BaseItemSharedPtr items{
    FinderScope( findCommandHandler ).Eval(
-   Items(
+   Items( wxT("Clip"),
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
          TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") ),
       Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),

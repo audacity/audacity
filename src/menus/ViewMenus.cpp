@@ -434,6 +434,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 MenuTable::BaseItemSharedPtr ToolbarsMenu();
 
+// Under /MenuBar
 MenuTable::BaseItemSharedPtr ViewMenu()
 {
    using namespace MenuTable;
@@ -443,8 +444,8 @@ MenuTable::BaseItemSharedPtr ViewMenu()
 
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&View"),
-      Menu( XO("&Zoom"),
+   Menu( wxT("View"), XO("&View"),
+      Menu( wxT("Zoom"), XO("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
             ZoomInAvailableFlag, wxT("Ctrl+1") ),
          Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
@@ -461,7 +462,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
             Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
       ),
 
-      Menu( XO("T&rack Size"),
+      Menu( wxT("TrackSize"), XO("T&rack Size"),
          Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
             TracksExistFlag, wxT("Ctrl+F") ),
          Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
@@ -472,7 +473,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
             FN(OnExpandAllTracks), TracksExistFlag, wxT("Ctrl+Shift+X") )
       ),
 
-      Menu( XO("Sk&ip to"),
+      Menu( wxT("SkipTo"), XO("Sk&ip to"),
          Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
             FN(OnGoSelStart), TimeSelectedFlag,
             Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),

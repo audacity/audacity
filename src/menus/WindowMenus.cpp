@@ -118,6 +118,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& WindowActions::Handler :: X)
 
+// Under /MenuBar
 MenuTable::BaseItemSharedPtr WindowMenu()
 {
       //////////////////////////////////////////////////////////////////////////
@@ -126,7 +127,7 @@ MenuTable::BaseItemSharedPtr WindowMenu()
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Window"),
+   Menu( wxT("Window"), XO("&Window"),
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) shrink to an icon on the dock */
       Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
@@ -146,12 +147,13 @@ MenuTable::BaseItemSharedPtr WindowMenu()
    return menu;
 }
 
+// Under /MenuBar/Optional/Extra/Misc
 MenuTable::BaseItemSharedPtr ExtraWindowItems()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr items{
    FinderScope( findCommandHandler ).Eval(
-   Items(
+   Items( wxT("MacWindows"),
       /* i18n-hint: Shrink all project windows to icons on the Macintosh
          tooldock */
       Command( wxT("MacMinimizeAll"), XXO("Minimize All Projects"),

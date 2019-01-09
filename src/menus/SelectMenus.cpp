@@ -1030,6 +1030,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 MenuTable::BaseItemSharedPtr ClipSelectMenu();
 
+// Under /MenuBar
 MenuTable::BaseItemSharedPtr SelectMenu()
 {
    using namespace MenuTable;
@@ -1037,7 +1038,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
    /* i18n-hint: (verb) It's an item on a menu. */
-   Menu( XO("&Select"),
+   Menu( wxT("Select"), XO("&Select"),
       Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
          TracksExistFlag,
          Options{ wxT("Ctrl+A"), XO("Select All") } ),
@@ -1047,7 +1048,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("&Tracks"),
+      Menu( wxT("Tracks"), XO("&Tracks"),
          Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
             FN(OnSelectAllTracks),
             TracksExistFlag,
@@ -1064,7 +1065,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("R&egion"),
+      Menu( wxT("Region"), XO("R&egion"),
          Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
             FN(OnSetLeftSelection), TracksExistFlag,
             Options{ wxT("["), XO("Set Selection Left at Play Position") } ),
@@ -1098,7 +1099,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
       //////////////////////////////////////////////////////////////////////////
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      Menu( XO("S&pectral"),
+      Menu( wxT("Spectral"), XO("S&pectral"),
          Command( wxT("ToggleSpectralSelection"),
             XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
             TracksExistFlag, wxT("Q") ),
@@ -1139,12 +1140,13 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    return menu;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Selection"),
+   Menu( wxT("Select"), XO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag ),
       Command( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
@@ -1183,6 +1185,7 @@ MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
 
 MenuTable::BaseItemSharedPtr ClipCursorItems();
 
+// Under /MenuBar/Transport
 MenuTable::BaseItemSharedPtr CursorMenu()
 {
    using namespace MenuTable;
@@ -1196,7 +1199,7 @@ MenuTable::BaseItemSharedPtr CursorMenu()
    // than 'Skip'.
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Cursor to"),
+   Menu( wxT("Cursor"), XO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
          TimeSelectedFlag,
@@ -1230,13 +1233,14 @@ MenuTable::BaseItemSharedPtr CursorMenu()
 
 MenuTable::BaseItemSharedPtr ExtraClipCursorItems();
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraCursorMenu()
 {
    using namespace MenuTable;
 
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Cursor"),
+   Menu( wxT("Cursor"), XO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
          TracksExistFlag | TrackPanelHasFocus,
          wxT("Left\twantKeyup\tallowDup") ),
@@ -1261,12 +1265,13 @@ MenuTable::BaseItemSharedPtr ExtraCursorMenu()
    return menu;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraSeekMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("See&k"),
+   Menu( wxT("Seek"), XO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
          FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") ),
       Command( wxT("SeekRightShort"),

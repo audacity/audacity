@@ -420,12 +420,13 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& HelpActions::Handler :: X)
 
+// Under /MenuBar
 MenuTable::BaseItemSharedPtr HelpMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Help"),
+   Menu( wxT("Help"), XO("&Help"),
       // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
 #ifdef EXPERIMENTAL_DA
       // DA: Has QuickFix menu item.
@@ -444,7 +445,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
 
       Separator(),
 
-      Menu( XO("&Diagnostics"),
+      Menu( wxT("Diagnostics"), XO("&Diagnostics"),
          Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
             FN(OnAudioDeviceInfo),
             AudioIONotBusyFlag ),

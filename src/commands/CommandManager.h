@@ -416,7 +416,13 @@ namespace MenuTable {
    // large.
    struct BaseItem {
       // declare at least one virtual function so dynamic_cast will work
+      explicit
+      BaseItem( const Identifier &internalName )
+         : name{ internalName }
+      {}
       virtual ~BaseItem();
+
+      const Identifier name;
    };
    using BaseItemPtr = std::unique_ptr<BaseItem>;
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
@@ -425,9 +431,11 @@ namespace MenuTable {
 
    // An item that delegates to another held in a shared pointer; this allows
    // static tables of items to be computed once and reused
+   // The name of the delegate is significant for path calculations
    struct SharedItem final : BaseItem {
       explicit SharedItem( const BaseItemSharedPtr &ptr_ )
-         : ptr{ ptr_ }
+         : BaseItem{ wxEmptyString }
+         , ptr{ ptr_ }
       {}
       ~SharedItem() override;
 
@@ -440,6 +448,7 @@ namespace MenuTable {
 
    // An item that computes some other item to substitute for it, each time
    // the ComputedItem is visited
+   // The name of the substitute is significant for path calculations
    struct ComputedItem final : BaseItem {
       // The type of functions that generate descriptions of items.
       // Return type is a shared_ptr to let the function decide whether to
@@ -448,7 +457,8 @@ namespace MenuTable {
       using Factory = std::function< BaseItemSharedPtr( AudacityProject & ) >;
 
       explicit ComputedItem( const Factory &factory_ )
-         : factory{ factory_ }
+         : BaseItem( wxEmptyString )
+         , factory{ factory_ }
       {}
       ~ComputedItem() override;
 
@@ -463,11 +473,13 @@ namespace MenuTable {
 
    // Common abstract base class for items that group other items
    struct GroupItem : BaseItem {
-      // Construction from a previously built-up vector of pointers
-      GroupItem( BaseItemPtrs &&items_ );
+      // Construction from an internal name and a previously built-up
+      // vector of pointers
+      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         GroupItem( Args&&... args )
+         GroupItem( const wxString &internalName, Args&&... args )
+         : BaseItem( internalName )
          { Append( std::forward< Args >( args )... ); }
       ~GroupItem() override = 0;
 
@@ -506,6 +518,7 @@ namespace MenuTable {
    };
 
    // Concrete subclass of GroupItem that adds nothing else
+   // TransparentGroupItem with an empty name is transparent to item path calculations
    struct TransparentGroupItem final : GroupItem
    {
       using GroupItem::GroupItem;
@@ -516,13 +529,15 @@ namespace MenuTable {
 
    // Describes a main menu in the toolbar, or a sub-menu
    struct MenuItem final : GroupItem {
-      // Construction from a previously built-up vector of pointers
-      MenuItem( const TranslatableString &title_, BaseItemPtrs &&items_ );
+      // Construction from an internal name and a previously built-up
+      // vector of pointers
+      MenuItem( const wxString &internalName,
+         const TranslatableString &title_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         MenuItem(
+         MenuItem( const wxString &internalName,
             const TranslatableString &title_, Args&&... args )
-            : GroupItem{ std::forward<Args>(args)... }
+            : GroupItem{ internalName, std::forward<Args>(args)... }
             , title{ title_ }
          {}
       ~MenuItem() override;
@@ -535,12 +550,15 @@ namespace MenuTable {
    struct ConditionalGroupItem final : GroupItem {
       using Condition = std::function< bool() >;
 
-      // Construction from a previously built-up vector of pointers
-      ConditionalGroupItem( Condition condition_, BaseItemPtrs &&items_ );
+      // Construction from an internal name and a previously built-up
+      // vector of pointers
+      ConditionalGroupItem( const wxString &internalName,
+         Condition condition_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         ConditionalGroupItem( Condition condition_, Args&&... args )
-            : GroupItem{ std::forward<Args>(args)... }
+         ConditionalGroupItem( const wxString &internalName,
+            Condition condition_, Args&&... args )
+            : GroupItem{ internalName, std::forward<Args>(args)... }
             , condition{ condition_ }
          {}
       ~ConditionalGroupItem() override;
@@ -551,6 +569,7 @@ namespace MenuTable {
    // Describes a separator between menu items
    struct SeparatorItem final : SingleItem
    {
+      SeparatorItem() : SingleItem{ wxEmptyString } {}
       ~SeparatorItem() override;
    };
 
@@ -608,7 +627,6 @@ namespace MenuTable {
 
       ~CommandItem() override;
 
-      const CommandID name;
       const TranslatableString label_in;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
@@ -643,7 +661,6 @@ namespace MenuTable {
 
       ~CommandGroupItem() override;
 
-      const wxString name;
       const std::vector<ComponentInterfaceSymbol> items;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
@@ -657,8 +674,9 @@ namespace MenuTable {
    {
       using Appender = std::function< void( AudacityProject&, wxMenu& ) >;
 
-      explicit SpecialItem( const Appender &fn_ )
-      : fn{ fn_ }
+      explicit SpecialItem( const wxString &internalName, const Appender &fn_ )
+      : SingleItem{ internalName }
+      , fn{ fn_ }
       {}
       ~SpecialItem() override;
 
@@ -670,47 +688,73 @@ namespace MenuTable {
    // Group items can be constructed two ways.
    // Pointers to subordinate items are moved into the result.
    // Null pointers are permitted, and ignored when building the menu.
-   // Items are spliced into the enclosing menu
+   // Items are spliced into the enclosing menu.
+   // The name is untranslated and may be empty, to make the group transparent
+   // in identification of items by path.  Otherwise try to keep the name
+   // stable across Audacity versions.
    template< typename... Args >
-   inline std::unique_ptr<TransparentGroupItem> Items( Args&&... args )
-         { return std::make_unique<TransparentGroupItem>(
+   inline std::unique_ptr<TransparentGroupItem> Items(
+      const wxString &internalName, Args&&... args )
+         { return std::make_unique<TransparentGroupItem>( internalName,
             std::forward<Args>(args)... ); }
 
    // Menu items can be constructed two ways, as for group items
-   // Items will appear in a main toolbar menu or in a sub-menu
+   // Items will appear in a main toolbar menu or in a sub-menu.
+   // The name is untranslated.  Try to keep the name stable across Audacity
+   // versions.
+   // If the name of a menu is empty, then subordinate items cannot be located
+   // by path.
    template< typename... Args >
    inline std::unique_ptr<MenuItem> Menu(
-      const TranslatableString &title, Args&&... args )
+      const wxString &internalName, const TranslatableString &title, Args&&... args )
          { return std::make_unique<MenuItem>(
-            title, std::forward<Args>(args)... ); }
+            internalName, title, std::forward<Args>(args)... ); }
    inline std::unique_ptr<MenuItem> Menu(
-      const TranslatableString &title, BaseItemPtrs &&items )
-         { return std::make_unique<MenuItem>( title, std::move( items ) ); }
+      const wxString &internalName, const TranslatableString &title, BaseItemPtrs &&items )
+         { return std::make_unique<MenuItem>(
+            internalName, title, std::move( items ) ); }
 
    // Conditional group items can be constructed two ways, as for group items
    // These items register in the CommandManager but are not shown in menus
+   // if the condition evaluates false.
+   // The name is untranslated.  Try to keep the name stable across Audacity
+   // versions.
+   // Name for conditional group must be non-empty.
    template< typename... Args >
-      inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-         ConditionalGroupItem::Condition condition, Args&&... args )
-         { return std::make_unique<ConditionalGroupItem>(
-            condition, std::forward<Args>(args)... ); }
    inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-      ConditionalGroupItem::Condition condition, BaseItemPtrs &&items )
+      const wxString &internalName,
+      ConditionalGroupItem::Condition condition, Args&&... args )
          { return std::make_unique<ConditionalGroupItem>(
-            condition, std::move( items ) ); }
+            internalName, condition, std::forward<Args>(args)... ); }
+   inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
+      const wxString &internalName, ConditionalGroupItem::Condition condition,
+      BaseItemPtrs &&items )
+         { return std::make_unique<ConditionalGroupItem>(
+            internalName, condition, std::move( items ) ); }
 
    // Make either a menu item or just a group, depending on the nonemptiness
-   // of the title
+   // of the title.
+   // The name is untranslated and may be empty, to make the group transparent
+   // in identification of items by path.  Otherwise try to keep the name
+   // stable across Audacity versions.
+   // If the name of a menu is empty, then subordinate items cannot be located
+   // by path.
    template< typename... Args >
    inline BaseItemPtr MenuOrItems(
-      const TranslatableString &title, Args&&... args )
-         {  if ( title.empty() ) return Items( std::forward<Args>(args)... );
-            else return std::make_unique<MenuItem>(
-               title, std::forward<Args>(args)... ); }
+      const wxString &internalName, const TranslatableString &title, Args&&... args )
+         {  if ( title.empty() )
+               return Items( internalName, std::forward<Args>(args)... );
+            else
+               return std::make_unique<MenuItem>(
+                  internalName, title, std::forward<Args>(args)... ); }
    inline BaseItemPtr MenuOrItems(
+      const wxString &internalName,
       const TranslatableString &title, BaseItemPtrs &&items )
-         {  if ( title.empty() ) return Items( std::move( items ) );
-            else return std::make_unique<MenuItem>( title, std::move( items ) ); }
+         {  if ( title.empty() )
+               return Items( internalName, std::move( items ) );
+            else
+               return std::make_unique<MenuItem>(
+                  internalName, title, std::move( items ) ); }
 
    inline std::unique_ptr<SeparatorItem> Separator()
       { return std::make_unique<SeparatorItem>(); }
@@ -742,8 +786,8 @@ namespace MenuTable {
    }
 
    inline std::unique_ptr<SpecialItem> Special(
-      const SpecialItem::Appender &fn )
-         { return std::make_unique<SpecialItem>( fn ); }
+      const wxString &name, const SpecialItem::Appender &fn )
+         { return std::make_unique<SpecialItem>( name, fn ); }
 }
 
 #endif

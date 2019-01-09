@@ -1024,6 +1024,7 @@ const ReservedCommandFlag
       cutCopyOptions()
    };
 
+// Under /MenuBar
 MenuTable::BaseItemSharedPtr EditMenu()
 {
    using namespace MenuTable;
@@ -1053,14 +1054,15 @@ MenuTable::BaseItemSharedPtr EditMenu()
 
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Edit"),
+   Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
          AudioIONotBusyFlag | UndoAvailableFlag, wxT("Ctrl+Z") ),
 
       Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
          AudioIONotBusyFlag | RedoAvailableFlag, redoKey ),
          
-      Special( [](AudacityProject &project, wxMenu&) {
+      Special( wxT("UndoItemsUpdateStep"),
+      [](AudacityProject &project, wxMenu&) {
          // Change names in the CommandManager as a side-effect
          MenuManager::ModifyUndoMenuItems(project);
       }),
@@ -1087,7 +1089,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
 
       Separator(),
 
-      Menu( XO("R&emove Special"),
+      Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
          /* i18n-hint: (verb) Do a special kind of cut*/
          Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
             NotBusyTimeAndTracksFlags,
@@ -1113,7 +1115,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("Clip B&oundaries"),
+      Menu( wxT("Clip"), XO("Clip B&oundaries"),
          /* i18n-hint: (verb) It's an item on a menu. */
          Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
             AudioIONotBusyFlag | WaveTracksSelectedFlag,
@@ -1150,6 +1152,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
    return menu;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraEditMenu()
 {
    using namespace MenuTable;
@@ -1158,7 +1161,7 @@ MenuTable::BaseItemSharedPtr ExtraEditMenu()
       AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Edit"),
+   Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect),
          wxT("Backspace") ),

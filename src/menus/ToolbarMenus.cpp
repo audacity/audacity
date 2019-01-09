@@ -253,6 +253,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& ToolbarActions::Handler :: X)
 
+// Under /MenuBar/View
 MenuTable::BaseItemSharedPtr ToolbarsMenu()
 {
    using namespace MenuTable;
@@ -262,7 +263,7 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
 
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("&Toolbars"),
+   Menu( wxT("Toolbars"), XO("&Toolbars"),
       /* i18n-hint: (verb)*/
       Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
          FN(OnResetToolBars), AlwaysEnabledFlag ),
@@ -335,12 +336,13 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
    return menu;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraToolsMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("T&ools"),
+   Menu( wxT("Tools"), XO("T&ools"),
       Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
          AlwaysEnabledFlag, wxT("F1") ),
       Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),

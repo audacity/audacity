@@ -1135,7 +1135,7 @@ MenuTable::BaseItemSharedPtr Scrubber::Menu()
       [](AudacityProject &project) -> CommandHandlerObject&
          { return Scrubber::Get( project ); }
    ).Eval(
-   MenuTable::Menu(
+   MenuTable::Menu( wxT("Scrubbing"),
       XO("Scru&bbing"),
       []{
          BaseItemPtrs ptrs;

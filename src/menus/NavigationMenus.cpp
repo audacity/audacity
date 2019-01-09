@@ -555,6 +555,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) (& NavigationActions::Handler :: X)
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraGlobalCommands()
 {
    // Ceci n'est pas un menu
@@ -563,7 +564,7 @@ MenuTable::BaseItemSharedPtr ExtraGlobalCommands()
 
    static BaseItemSharedPtr items{
    FinderScope( findCommandHandler ).Eval(
-   Items(
+   Items( wxT("Navigation"),
       Command( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
          FN(OnPrevWindow), AlwaysEnabledFlag,
          Options{ wxT("Alt+Shift+F6") }.IsGlobal() ),
@@ -574,6 +575,7 @@ MenuTable::BaseItemSharedPtr ExtraGlobalCommands()
    return items;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraFocusMenu()
 {
    using namespace MenuTable;
@@ -581,7 +583,7 @@ MenuTable::BaseItemSharedPtr ExtraFocusMenu()
 
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(
-   Menu( XO("F&ocus"),
+   Menu( wxT("Focus"), XO("F&ocus"),
       Command( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
          AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") ),
