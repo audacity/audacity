@@ -48,11 +48,11 @@ struct MenuBarListEntry
 
 struct SubMenuListEntry
 {
-   SubMenuListEntry(const wxString &name_, std::unique_ptr<wxMenu> &&menu_);
-   SubMenuListEntry(SubMenuListEntry &&that);
+   SubMenuListEntry(const TranslatableString &name_, std::unique_ptr<wxMenu> menu_);
+   SubMenuListEntry( SubMenuListEntry&& ) = default;
    ~SubMenuListEntry();
 
-   wxString name;
+   TranslatableString name;
    std::unique_ptr<wxMenu> menu;
 };
 
@@ -64,7 +64,7 @@ struct CommandListEntry
    NormalizedKeyString key;
    NormalizedKeyString defaultKey;
    wxString label;
-   wxString labelPrefix;
+   TranslatableString labelPrefix;
    wxString labelTop;
    wxMenu *menu;
    CommandHandlerFinder finder;
@@ -136,7 +136,7 @@ class AUDACITY_DLL_API CommandManager final
 
    // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
    // or else BeginMenu followed by EndMenu.  Don't mix them.
-   wxMenu *BeginMenu(const wxString & tName);
+   wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
    // For specifying unusual arguments in AddItem
@@ -259,7 +259,7 @@ class AUDACITY_DLL_API CommandManager final
       std::vector<NormalizedKeyString> &default_keys,
       wxArrayString &labels, wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
-      wxArrayString &prefixes,
+      TranslatableStrings &prefixes,
 #endif
       bool includeMultis);
 
@@ -332,9 +332,9 @@ private:
    //
 
    void Enable(CommandListEntry *entry, bool enabled);
-   wxMenu *BeginMainMenu(const wxString & tName);
+   wxMenu *BeginMainMenu(const TranslatableString & tName);
    void EndMainMenu();
-   wxMenu* BeginSubMenu(const wxString & tName);
+   wxMenu* BeginSubMenu(const TranslatableString & tName);
    void EndSubMenu();
 
    //
@@ -374,7 +374,7 @@ private:
 
    bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
 
-   wxString mCurrentMenuName;
+   TranslatableString mCurrentMenuName;
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
 
@@ -456,16 +456,17 @@ namespace MenuTable {
 
    struct MenuItem final : GroupItem {
       // Construction from a previously built-up vector of pointers
-      MenuItem( const wxString &title_, BaseItemPtrs &&items_ );
+      MenuItem( const TranslatableString &title_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         MenuItem( const wxString &title_, Args&&... args )
+         MenuItem(
+            const TranslatableString &title_, Args&&... args )
             : GroupItem{ std::forward<Args>(args)... }
             , title{ title_ }
          {}
       ~MenuItem() override;
 
-      wxString title; // translated
+      TranslatableString title;
    };
 
    struct ConditionalGroupItem final : GroupItem {
@@ -552,11 +553,11 @@ namespace MenuTable {
    // Items will appear in a main toolbar menu or in a sub-menu
    template< typename... Args >
    inline BaseItemPtr Menu(
-      const wxString &title, Args&&... args )
+      const TranslatableString &title, Args&&... args )
          { return std::make_unique<MenuItem>(
             title, std::forward<Args>(args)... ); }
    inline BaseItemPtr Menu(
-      const wxString &title, BaseItemPtrs &&items )
+      const TranslatableString &title, BaseItemPtrs &&items )
          { return std::make_unique<MenuItem>( title, std::move( items ) ); }
 
    // Conditional group items can be constructed two ways, as for group items
@@ -575,12 +576,12 @@ namespace MenuTable {
    // of the title
    template< typename... Args >
    inline BaseItemPtr MenuOrItems(
-      const wxString &title, Args&&... args )
+      const TranslatableString &title, Args&&... args )
          {  if ( title.empty() ) return Items( std::forward<Args>(args)... );
             else return std::make_unique<MenuItem>(
                title, std::forward<Args>(args)... ); }
    inline BaseItemPtr MenuOrItems(
-      const wxString &title, BaseItemPtrs &&items )
+      const TranslatableString &title, BaseItemPtrs &&items )
          {  if ( title.empty() ) return Items( std::move( items ) );
             else return std::make_unique<MenuItem>( title, std::move( items ) ); }
 

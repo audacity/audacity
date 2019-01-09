@@ -576,7 +576,7 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
    using namespace MenuTable;
    static const auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
 
-   return Menu( _("F&ocus"),
+   return Menu( XO("F&ocus"),
       Command( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
          AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") ),

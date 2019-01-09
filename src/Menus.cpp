@@ -116,7 +116,7 @@ void GroupItem::AppendOne( BaseItemPtr&& ptr )
 }
 GroupItem::~GroupItem() {}
 
-MenuItem::MenuItem( const wxString &title_, BaseItemPtrs &&items_ )
+MenuItem::MenuItem( const TranslatableString &title_, BaseItemPtrs &&items_ )
 : GroupItem{ std::move( items_ ) }, title{ title_ }
 {
    wxASSERT( !title.empty() );

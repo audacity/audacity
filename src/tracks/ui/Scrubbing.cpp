@@ -1043,7 +1043,7 @@ MenuTable::BaseItemPtr Scrubber::Menu()
       ) );
    }
 
-   return MenuTable::Menu( _("Scru&bbing"), std::move( ptrs ) );
+   return MenuTable::Menu( XO("Scru&bbing"), std::move( ptrs ) );
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)

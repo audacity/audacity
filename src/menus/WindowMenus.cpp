@@ -125,7 +125,7 @@ MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
       // poor imitation of the Mac Windows Menu
       //////////////////////////////////////////////////////////////////////////
    using namespace MenuTable;
-   return Menu( _("&Window"),
+   return Menu( XO("&Window"),
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) shrink to an icon on the dock */
       Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),

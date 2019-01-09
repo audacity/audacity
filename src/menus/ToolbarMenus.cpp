@@ -252,7 +252,7 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
    
    static const auto checkOff = Options{}.CheckState( false );
 
-   return Menu( _("&Toolbars"),
+   return Menu( XO("&Toolbars"),
       /* i18n-hint: (verb)*/
       Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
          FN(OnResetToolBars), AlwaysEnabledFlag ),
@@ -320,7 +320,7 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
 MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("T&ools"),
+   return Menu( XO("T&ools"),
       Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
          AlwaysEnabledFlag, wxT("F1") ),
       Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),

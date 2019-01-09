@@ -112,7 +112,7 @@ CommandManager.  It holds the callback for one command.
 #define MAX_SUBMENU_LEN 1000
 #endif
 
-#define COMMAND _("Command")
+#define COMMAND XO("Command")
 
 
 NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
@@ -133,14 +133,8 @@ MenuBarListEntry::~MenuBarListEntry()
 }
 
 SubMenuListEntry::SubMenuListEntry(
-   const wxString &name_, std::unique_ptr<wxMenu> &&menu_ )
+   const TranslatableString &name_, std::unique_ptr<wxMenu> menu_ )
    : name(name_), menu( std::move(menu_) )
-{
-}
-
-SubMenuListEntry::SubMenuListEntry(SubMenuListEntry &&that)
-   : name(std::move(that.name))
-   , menu(std::move(that.menu))
 {
 }
 
@@ -371,7 +365,7 @@ void CommandManager::PopMenuBar()
 ///
 /// This starts a NEW menu
 ///
-wxMenu *CommandManager::BeginMenu(const wxString & tName)
+wxMenu *CommandManager::BeginMenu(const TranslatableString & tName)
 {
    if ( mCurrentMenu )
       return BeginSubMenu( tName );
@@ -396,7 +390,7 @@ void CommandManager::EndMenu()
 ///
 /// This starts a NEW menu
 ///
-wxMenu *CommandManager::BeginMainMenu(const wxString & tName)
+wxMenu *CommandManager::BeginMainMenu(const TranslatableString & tName)
 {
    uCurrentMenu = std::make_unique<wxMenu>();
    mCurrentMenu = uCurrentMenu.get();
@@ -414,7 +408,8 @@ void CommandManager::EndMainMenu()
    // added to the menu to allow OSX to rearrange special menu
    // items like Preferences, About, and Quit.
    wxASSERT(uCurrentMenu);
-   CurrentMenuBar()->Append(uCurrentMenu.release(), mCurrentMenuName);
+   CurrentMenuBar()->Append(
+      uCurrentMenu.release(), mCurrentMenuName.Translation());
    mCurrentMenu = nullptr;
    mCurrentMenuName = COMMAND;
 }
@@ -423,7 +418,7 @@ void CommandManager::EndMainMenu()
 ///
 /// This starts a NEW submenu, and names it according to
 /// the function's argument.
-wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
+wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
 {
    mSubMenuList.push_back
       (std::make_unique< SubMenuListEntry > ( tName, std::make_unique<wxMenu>() ));
@@ -445,8 +440,9 @@ void CommandManager::EndSubMenu()
    mSubMenuList.pop_back();
 
    //Add the submenu to the current menu
-   CurrentMenu()->Append
-      (0, tmpSubMenu.name, tmpSubMenu.menu.release(), tmpSubMenu.name);
+   auto name = tmpSubMenu.name.Translation();
+   CurrentMenu()->Append(0, name, tmpSubMenu.menu.release(),
+      name /* help string */ );
    mbSeparatorAllowed = true;
 }
 
@@ -656,7 +652,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    {
       auto entry = std::make_unique<CommandListEntry>();
 
-      wxString labelPrefix;
+      TranslatableString labelPrefix;
       if (!mSubMenuList.empty()) {
          labelPrefix = mSubMenuList.back()->name;
       }
@@ -699,7 +695,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
-      entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName);
+      entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName.Translation());
       entry->menu = menu;
       entry->finder = finder;
       entry->callback = callback;
@@ -1203,7 +1199,7 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
             // PRL:  uh oh, mixing internal string (Str) with user-visible
             // (labelPrefix, which was initialized from a user-visible
             // sub-menu name)
-            Str == entry->labelPrefix )
+            Str == entry->labelPrefix.Translation() )
          {
             return HandleCommandEntry( entry.get(), flags, alwaysEnabled)
                ? CommandSuccess : CommandFailure;
@@ -1292,7 +1288,7 @@ void CommandManager::GetAllCommandData(
    wxArrayString &labels,
    wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
-   wxArrayString &prefixes,
+   TranslatableStrings &prefixes,
 #endif
    bool includeMultis)
 {
@@ -1352,11 +1348,11 @@ wxString CommandManager::GetPrefixedLabelFromName(const CommandID &name)
 #if defined(EXPERIMENTAL_KEY_VIEW)
    wxString prefix;
    if (!entry->labelPrefix.empty()) {
-      prefix = entry->labelPrefix + wxT(" - ");
+      prefix = entry->labelPrefix.Translation() + wxT(" - ");
    }
    return wxMenuItem::GetLabelText(prefix + entry->label);
 #else
-   return wxString(entry->labelPrefix + wxT(" ") + entry->label).Trim(false).Trim(true);
+   return wxString(entry->labelPrefix.Translation() + wxT(" ") + entry->label).Trim(false).Trim(true);
 #endif
 }
 

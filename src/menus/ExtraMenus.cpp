@@ -187,13 +187,13 @@ MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
       []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
    static const auto factory =
       [](AudacityProject &){ return extraItems; };
-   return ConditionalItems( pred, Menu( _("Ext&ra"), factory ) );
+   return ConditionalItems( pred, Menu( XO("Ext&ra"), factory ) );
 }
 
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("Mi&xer"),
+   return Menu( XO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          FN(OnOutputGain), AlwaysEnabledFlag ),
       Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
@@ -212,7 +212,7 @@ MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
 MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("De&vice"),
+   return Menu( XO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          FN(OnInputDevice),
          AudioIONotBusyFlag, wxT("Shift+I") ),

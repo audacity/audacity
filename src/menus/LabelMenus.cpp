@@ -576,7 +576,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
    
    return Items(
 
-   Menu( _("&Labels"),
+   Menu( XO("&Labels"),
       Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
                  AudioIONotBusyFlag ),
 
@@ -606,7 +606,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    /////////////////////////////////////////////////////////////////////////////
 
-   Menu( _("La&beled Audio"),
+   Menu( XO("La&beled Audio"),
       /* i18n-hint: (verb)*/
       Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |
