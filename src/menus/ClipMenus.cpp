@@ -823,12 +823,13 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& ClipActions::Handler :: X)
 
-MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& )
+MenuTable::BaseItemSharedPtr ClipSelectMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return FinderScope( findCommandHandler ).Eval(
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
    Menu( XO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
@@ -844,15 +845,17 @@ MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& )
       Command( wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip),
          WaveTracksExistFlag,
          Options{ wxT("Alt+."), XO("Select Next Clip") } )
-   ) );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ClipCursorItems( AudacityProject & )
+MenuTable::BaseItemSharedPtr ClipCursorItems()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return FinderScope( findCommandHandler ).Eval(
+   static BaseItemSharedPtr items{
+   FinderScope( findCommandHandler ).Eval(
    Items(
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          FN(OnCursorPrevClipBoundary),
@@ -862,20 +865,23 @@ MenuTable::BaseItemPtr ClipCursorItems( AudacityProject & )
          FN(OnCursorNextClipBoundary),
          WaveTracksExistFlag,
          Options{}.LongName( XO("Cursor to Next Clip Boundary") ) )
-   ) );
+   ) ) };
+   return items;
 }
 
-MenuTable::BaseItemPtr ExtraClipCursorItems( AudacityProject & )
+MenuTable::BaseItemSharedPtr ExtraClipCursorItems()
 {
    using namespace MenuTable;
 
-   return FinderScope( findCommandHandler ).Eval(
+   static BaseItemSharedPtr items{
+   FinderScope( findCommandHandler ).Eval(
    Items(
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
          TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") ),
       Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
          TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") )
-   ) );
+   ) ) };
+   return items;
 }
 
 #undef FN

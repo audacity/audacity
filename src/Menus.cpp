@@ -275,45 +275,45 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
 /// changes in configured preferences - for example changes in key-bindings
 /// affect the short-cut key legend that appears beside each command,
 
-MenuTable::BaseItemPtr FileMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr FileMenu();
 
-MenuTable::BaseItemPtr EditMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr EditMenu();
 
-MenuTable::BaseItemPtr SelectMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr SelectMenu();
 
-MenuTable::BaseItemPtr ViewMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr ViewMenu();
 
-MenuTable::BaseItemPtr TransportMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr TransportMenu();
 
-MenuTable::BaseItemPtr TracksMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr TracksMenu();
 
-MenuTable::BaseItemPtr GenerateMenu( AudacityProject& );
-MenuTable::BaseItemPtr EffectMenu( AudacityProject& );
-MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject& );
-MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr GenerateMenu();
+MenuTable::BaseItemSharedPtr EffectMenu();
+MenuTable::BaseItemSharedPtr AnalyzeMenu();
+MenuTable::BaseItemSharedPtr ToolsMenu();
 
-MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr WindowMenu();
 
-MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr ExtraMenu();
 
-MenuTable::BaseItemPtr HelpMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr HelpMenu();
 
 // Table of menu factories.
 // TODO:  devise a registration system instead.
 static const auto menuTree = MenuTable::Items(
-   FileMenu
-   , EditMenu
-   , SelectMenu
-   , ViewMenu
-   , TransportMenu
-   , TracksMenu
-   , GenerateMenu
-   , EffectMenu
-   , AnalyzeMenu
-   , ToolsMenu
-   , WindowMenu
-   , ExtraMenu
-   , HelpMenu
+     FileMenu()
+   , EditMenu()
+   , SelectMenu()
+   , ViewMenu()
+   , TransportMenu()
+   , TracksMenu()
+   , GenerateMenu()
+   , EffectMenu()
+   , AnalyzeMenu()
+   , ToolsMenu()
+   , WindowMenu()
+   , ExtraMenu()
+   , HelpMenu()
 );
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
