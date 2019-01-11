@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_TRACK_PANEL_LISTENER__
 #define __AUDACITY_TRACK_PANEL_LISTENER__
 
-class ToolsToolBar;
-class ControlToolBar;
 enum class UndoPush : unsigned char;
 
 /*

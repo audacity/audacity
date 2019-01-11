@@ -68,8 +68,6 @@ class MeterPanel;
 // toolbar classes
 class ControlToolBar;
 class DeviceToolBar;
-class EditToolBar;
-class MeterToolBar;
 class MixerToolBar;
 class Scrubber;
 class ScrubbingToolBar;
@@ -465,7 +463,6 @@ public:
    ControlToolBar *GetControlToolBar();
 
    DeviceToolBar *GetDeviceToolBar();
-   EditToolBar *GetEditToolBar();
    MixerToolBar *GetMixerToolBar();
    ScrubbingToolBar *GetScrubbingToolBar();
    SelectionBar *GetSelectionBar();
