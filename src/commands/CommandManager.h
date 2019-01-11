@@ -545,29 +545,29 @@ namespace MenuTable {
    // Null pointers are permitted, and ignored when building the menu.
    // Items are spliced into the enclosing menu
    template< typename... Args >
-   inline BaseItemPtr Items( Args&&... args )
+   inline std::unique_ptr<GroupItem> Items( Args&&... args )
          { return std::make_unique<GroupItem>(
             std::forward<Args>(args)... ); }
 
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu
    template< typename... Args >
-   inline BaseItemPtr Menu(
+   inline std::unique_ptr<MenuItem> Menu(
       const TranslatableString &title, Args&&... args )
          { return std::make_unique<MenuItem>(
             title, std::forward<Args>(args)... ); }
-   inline BaseItemPtr Menu(
+   inline std::unique_ptr<MenuItem> Menu(
       const TranslatableString &title, BaseItemPtrs &&items )
          { return std::make_unique<MenuItem>( title, std::move( items ) ); }
 
    // Conditional group items can be constructed two ways, as for group items
    // These items register in the CommandManager but are not shown in menus
    template< typename... Args >
-      inline BaseItemPtr ConditionalItems(
+      inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
          ConditionalGroupItem::Condition condition, Args&&... args )
          { return std::make_unique<ConditionalGroupItem>(
             condition, std::forward<Args>(args)... ); }
-   inline BaseItemPtr ConditionalItems(
+   inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
       ConditionalGroupItem::Condition condition, BaseItemPtrs &&items )
          { return std::make_unique<ConditionalGroupItem>(
             condition, std::move( items ) ); }
