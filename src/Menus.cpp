@@ -100,7 +100,7 @@ void MenuManager::UpdatePrefs()
 }
 
 /// Namespace for structures that go into building a menu
-namespace MenuTable {
+namespace Registry {
 
 BaseItem::~BaseItem() {}
 
