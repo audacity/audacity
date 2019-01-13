@@ -1028,8 +1028,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) (& SelectActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr ClipSelectMenu();
-
 namespace {
 using namespace MenuTable;
 BaseItemSharedPtr SelectMenu()
@@ -1112,14 +1110,8 @@ BaseItemSharedPtr SelectMenu()
             Command( wxT("NextLowerPeakFrequency"),
                XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
                TracksExistFlag() )
-         ),
+         )
    #endif
-
-         //////////////////////////////////////////////////////////////////////////
-
-         ClipSelectMenu()
-
-         //////////////////////////////////////////////////////////////////////////
       ),
 
       Section( "",
@@ -1196,8 +1188,6 @@ AttachedItem sAttachment2{
 };
 }
 
-MenuTable::BaseItemSharedPtr ClipCursorItems();
-
 // Under /MenuBar/Transport
 MenuTable::BaseItemSharedPtr CursorMenu()
 {
@@ -1230,8 +1220,6 @@ MenuTable::BaseItemSharedPtr CursorMenu()
          TracksSelectedFlag(),
          Options{ wxT("K"), XO("Cursor to Track End") } ),
 
-      ClipCursorItems(),
-
       Command( wxT("CursProjectStart"), XXO("&Project Start"),
          FN(OnSkipStart),
          CanStopFlags,
@@ -1242,8 +1230,6 @@ MenuTable::BaseItemSharedPtr CursorMenu()
    ) ) };
    return menu;
 }
-
-MenuTable::BaseItemSharedPtr ExtraClipCursorItems();
 
 namespace {
 BaseItemSharedPtr ExtraCursorMenu()
@@ -1268,9 +1254,7 @@ BaseItemSharedPtr ExtraCursorMenu()
          TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+,") ),
       Command( wxT("CursorLongJumpRight"), XXO("Cursor Long Ju&mp Right"),
          FN(OnCursorLongJumpRight),
-         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+.") ),
-
-      ExtraClipCursorItems()
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+.") )
    ) ) };
    return menu;
 }
