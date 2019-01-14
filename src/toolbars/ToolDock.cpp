@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  ToolBar.cpp
+  ToolDock.cpp
 
   Dominic Mazzoni
   Shane T. Mueller
