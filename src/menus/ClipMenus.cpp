@@ -871,7 +871,7 @@ MenuTable::BaseItemSharedPtr ClipCursorItems()
    return items;
 }
 
-// Under /MenuBar/Optional/Extra/Cursor
+// Under /MenuBar/Optional/Extra/Part2/Cursor
 MenuTable::BaseItemSharedPtr ExtraClipCursorItems()
 {
    using namespace MenuTable;

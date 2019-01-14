@@ -154,10 +154,7 @@ AttachedItem sAttachment1{
    Shared( WindowMenu() )
 };
 
-}
-
-// Under /MenuBar/Optional/Extra/Misc
-MenuTable::BaseItemSharedPtr ExtraWindowItems()
+BaseItemSharedPtr ExtraWindowItems()
 {
    static BaseItemSharedPtr items{
    ( FinderScope{ findCommandHandler },
@@ -171,14 +168,17 @@ MenuTable::BaseItemSharedPtr ExtraWindowItems()
    return items;
 }
 
+AttachedItem sAttachment2{
+   Placement{ wxT("Optional/Extra/Part2/Misc"), OrderingHint::End },
+   Shared( ExtraWindowItems() )
+};
+
+}
+
 #undef FN
 
 #else
 
-// Not WXMAC.  Stub functions.
-MenuTable::BaseItemSharedPtr ExtraWindowItems()
-{
-   return nullptr;
-}
+// Not WXMAC.
 
 #endif

@@ -1103,10 +1103,8 @@ AttachedItem sAttachment1{
    wxT(""),
    Shared( TransportMenu() )
 };
-}
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraTransportMenu()
+BaseItemSharedPtr ExtraTransportMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -1156,8 +1154,12 @@ MenuTable::BaseItemSharedPtr ExtraTransportMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraPlayAtSpeedMenu()
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraTransportMenu() )
+};
+
+BaseItemSharedPtr ExtraPlayAtSpeedMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -1187,6 +1189,13 @@ MenuTable::BaseItemSharedPtr ExtraPlayAtSpeedMenu()
          CaptureNotBusyFlag() | TrackPanelHasFocus(), wxT("Alt+Right") )
    ) ) };
    return menu;
+}
+
+AttachedItem sAttachment3{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraPlayAtSpeedMenu() )
+};
+
 }
 
 #undef FN

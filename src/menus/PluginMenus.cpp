@@ -917,10 +917,8 @@ AttachedItem sAttachment4{
    wxT(""),
    Shared( ToolsMenu() )
 };
-}
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu()
+BaseItemSharedPtr ExtraScriptablesIMenu()
 {
    // These are the more useful to VI user Scriptables.
    static BaseItemSharedPtr menu{
@@ -967,8 +965,12 @@ MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu()
+AttachedItem sAttachment5{
+   wxT("Optional/Extra/Part2"),
+   Shared( ExtraScriptablesIMenu() )
+};
+
+BaseItemSharedPtr ExtraScriptablesIIMenu()
 {
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
@@ -1005,6 +1007,13 @@ MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu()
          AudioIONotBusyFlag() )
    ) ) };
    return menu;
+}
+
+AttachedItem sAttachment6{
+   wxT("Optional/Extra/Part2"),
+   Shared( ExtraScriptablesIIMenu() )
+};
+
 }
 
 #undef FN

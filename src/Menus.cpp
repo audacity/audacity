@@ -976,6 +976,12 @@ void InitializeMenuOrdering()
       {wxT(""), wxT(
 "File,Edit,Select,View,Transport,Tracks,Generate,Effect,Analyze,Tools,Window,Optional,Help"
        )},
+      {wxT("/Optional/Extra/Part1"), wxT(
+"Transport,Tools,Mixer,Edit,PlayAtSpeed,Seek,Device,Select"
+       )},
+      {wxT("/Optional/Extra/Part2"), wxT(
+"Navigation,Focus,Cursor,Track,Scriptables1,Scriptables2"
+       )},
       {wxT("/View/Windows"), wxT("UndoHistory,Karaoke,MixerBoard")},
       {wxT("/Analyze/Analyzers/Windows"), wxT("ContrastAnalyser,PlotSpectrum")},
    };

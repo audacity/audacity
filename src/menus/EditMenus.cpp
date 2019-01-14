@@ -1168,10 +1168,8 @@ AttachedItem sAttachment1{
    wxT(""),
    Shared( EditMenu() )
 };
-}
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraEditMenu()
+BaseItemSharedPtr ExtraEditMenu()
 {
    using Options = CommandManager::Options;
    static const auto flags =
@@ -1227,4 +1225,10 @@ RegisteredMenuItemEnabler selectWaveTracks2{{
    selectAll
 }};
 
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraEditMenu() )
+};
+
+}
 #undef FN

@@ -338,10 +338,10 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraToolsMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr ExtraToolsMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XO("T&ools"),
@@ -363,6 +363,12 @@ MenuTable::BaseItemSharedPtr ExtraToolsMenu()
          AlwaysEnabledFlag, wxT("D") )
    ) ) };
    return menu;
+}
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraToolsMenu() )
+};
 }
 
 #undef FN
