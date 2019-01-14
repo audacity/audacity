@@ -1030,10 +1030,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 MenuTable::BaseItemSharedPtr ClipSelectMenu();
 
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr SelectMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr SelectMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -1144,10 +1144,15 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    return menu;
 }
 
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( SelectMenu() )
+};
+}
+
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Select"), XO("&Selection"),
@@ -1192,7 +1197,6 @@ MenuTable::BaseItemSharedPtr ClipCursorItems();
 // Under /MenuBar/Transport
 MenuTable::BaseItemSharedPtr CursorMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
@@ -1240,8 +1244,6 @@ MenuTable::BaseItemSharedPtr ExtraClipCursorItems();
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraCursorMenu()
 {
-   using namespace MenuTable;
-
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XO("&Cursor"),
@@ -1272,7 +1274,6 @@ MenuTable::BaseItemSharedPtr ExtraCursorMenu()
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraSeekMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Seek"), XO("See&k"),

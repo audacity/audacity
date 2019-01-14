@@ -701,9 +701,10 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 // Menu definitions
 
 // Under /MenuBar
-MenuTable::BaseItemSharedPtr GenerateMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr GenerateMenu()
 {
-   using namespace MenuTable;
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
@@ -737,10 +738,13 @@ static const ReservedCommandFlag
    }
 }; return flag; }  //lll
 
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr EffectMenu()
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( GenerateMenu() )
+};
+
+BaseItemSharedPtr EffectMenu()
 {
-   using namespace MenuTable;
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
@@ -787,10 +791,13 @@ MenuTable::BaseItemSharedPtr EffectMenu()
    return menu;
 }
 
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr AnalyzeMenu()
+AttachedItem sAttachment2{
+   wxT(""),
+   Shared( EffectMenu() )
+};
+
+BaseItemSharedPtr AnalyzeMenu()
 {
-   using namespace MenuTable;
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
@@ -819,10 +826,13 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
    return menu;
 }
 
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr ToolsMenu()
+AttachedItem sAttachment3{
+   wxT(""),
+   Shared( AnalyzeMenu() )
+};
+
+BaseItemSharedPtr ToolsMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
@@ -903,11 +913,15 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
    return menu;
 }
 
+AttachedItem sAttachment4{
+   wxT(""),
+   Shared( ToolsMenu() )
+};
+}
+
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu()
 {
-   using namespace MenuTable;
-
    // These are the more useful to VI user Scriptables.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -956,8 +970,6 @@ MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu()
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu()
 {
-   using namespace MenuTable;
-
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },

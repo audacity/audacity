@@ -151,15 +151,16 @@ MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu();
 MenuTable::BaseItemSharedPtr ExtraWindowItems();
 MenuTable::BaseItemSharedPtr ExtraGlobalCommands();
 MenuTable::BaseItemSharedPtr ExtraFocusMenu();
-MenuTable::BaseItemSharedPtr ExtraMenu();
-MenuTable::BaseItemSharedPtr ExtraMixerMenu();
-MenuTable::BaseItemSharedPtr ExtraDeviceMenu();
-MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject & );
 
-MenuTable::BaseItemSharedPtr ExtraMenu()
+namespace {
+using namespace MenuTable;
+
+BaseItemSharedPtr ExtraMixerMenu();
+BaseItemSharedPtr ExtraDeviceMenu();
+BaseItemPtr ExtraMiscItems( AudacityProject & );
+
+BaseItemSharedPtr ExtraMenu()
 {
-   using namespace MenuTable;
-
    // Table of menu factories.
    // TODO:  devise a registration system instead.
    static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
@@ -196,10 +197,14 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
    return menu;
 }
 
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( ExtraMenu() )
+};
+
 // Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraMixerMenu()
+BaseItemSharedPtr ExtraMixerMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Mixer"), XO("Mi&xer"),
@@ -220,9 +225,8 @@ MenuTable::BaseItemSharedPtr ExtraMixerMenu()
 }
 
 // Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
+BaseItemSharedPtr ExtraDeviceMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Device"), XO("De&vice"),
@@ -242,9 +246,8 @@ MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
 }
 
 // Under /MenuBar/Optional/Extra
-MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
+BaseItemPtr ExtraMiscItems( AudacityProject &project )
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    constexpr auto key =
@@ -267,6 +270,8 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
 
       ExtraWindowItems()
    ) );
+}
+
 }
 
 #undef FN

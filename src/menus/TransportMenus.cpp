@@ -971,9 +971,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 MenuTable::BaseItemSharedPtr CursorMenu();
 
 // Under /MenuBar
-MenuTable::BaseItemSharedPtr TransportMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr TransportMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static const auto checkOff = Options{}.CheckState( false );
@@ -1098,10 +1099,15 @@ MenuTable::BaseItemSharedPtr TransportMenu()
    return menu;
 }
 
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( TransportMenu() )
+};
+}
+
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraTransportMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Transport"), XO("T&ransport"),
@@ -1153,7 +1159,6 @@ MenuTable::BaseItemSharedPtr ExtraTransportMenu()
 // Under /MenuBar/Optional/Extra
 MenuTable::BaseItemSharedPtr ExtraPlayAtSpeedMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("PlayAtSpeed"), XO("&Play-at-Speed"),
