@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_PREFS_DIALOG__
 #define __AUDACITY_PREFS_DIALOG__
 
+#include <functional>
 #include <vector>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../Internat.h"
@@ -19,7 +20,6 @@
 class wxTreebook;
 class wxTreeEvent;
 class PrefsPanel;
-class PrefsPanelFactory;
 class ShuttleGui;
 
 #ifdef __GNUC__
@@ -33,14 +33,16 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.
     struct PrefsNode {
-       PrefsPanelFactory * CONST pFactory;
+       using Factory =
+         std::function< PrefsPanel * (wxWindow *parent, wxWindowID winid) >;
+       Factory factory;
        CONST int nChildren;
        bool expanded;
 
-       PrefsNode(PrefsPanelFactory *pFactory_,
+       PrefsNode(const Factory &factory_,
           int nChildren_ = 0,
           bool expanded_ = true)
-          : pFactory(pFactory_), nChildren(nChildren_), expanded(expanded_)
+          : factory(factory_), nChildren(nChildren_), expanded(expanded_)
        {}
     };
    typedef std::vector<PrefsNode> Factories;

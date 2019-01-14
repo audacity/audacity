@@ -406,8 +406,9 @@ bool TracksPrefs::Commit()
    return true;
 }
 
-PrefsPanel *TracksPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+TracksPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew TracksPrefs(parent, winid);
-}
+};

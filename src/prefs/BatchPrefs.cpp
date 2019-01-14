@@ -95,8 +95,9 @@ BatchPrefs::~BatchPrefs()
 {
 }
 
-PrefsPanel *BatchPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+BatchPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew BatchPrefs(parent, winid);
-}
+};

@@ -114,10 +114,6 @@ class ExtImportPrefs final : public PrefsPanel
 };
 
 
-/// A PrefsPanelFactory that creates one ExtImportPrefs panel.
-class ExtImportPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one ExtImportPrefs panel.
+extern PrefsPanel::Factory ExtImportPrefsFactory;
 #endif

@@ -218,8 +218,9 @@ bool MousePrefs::Commit()
    return true;
 }
 
-PrefsPanel *MousePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+MousePrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew MousePrefs(parent, winid);
-}
+};

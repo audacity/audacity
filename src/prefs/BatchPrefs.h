@@ -39,10 +39,6 @@ private:
 };
 
 
-/// A PrefsPanelFactory that creates one BatchPrefs panel.
-class BatchPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one BatchPrefs panel.
+extern PrefsPanel::Factory BatchPrefsFactory;
 #endif

@@ -822,8 +822,9 @@ void ExtImportPrefsDropTarget::OnLeave()
 {
 }
 
-PrefsPanel *ExtImportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+ExtImportPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ExtImportPrefs(parent, winid);
-}
+};

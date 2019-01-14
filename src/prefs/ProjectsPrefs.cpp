@@ -99,8 +99,9 @@ bool ProjectsPrefs::Commit()
    return true;
 }
 
-PrefsPanel *ProjectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+ProjectsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ProjectsPrefs(parent, winid);
-}
+};

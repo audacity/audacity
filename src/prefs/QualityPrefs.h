@@ -59,10 +59,6 @@ class QualityPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanelFactory that creates one QualityPrefs panel.
-class QualityPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one QualityPrefs panel.
+extern PrefsPanel::Factory QualityPrefsFactory;
 #endif

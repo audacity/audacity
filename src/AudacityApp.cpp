@@ -1829,9 +1829,8 @@ bool AudacityApp::InitTempDir()
       }
 
       // Only want one page of the preferences
-      DirectoriesPrefsFactory directoriesPrefsFactory;
       PrefsDialog::Factories factories;
-      factories.push_back(&directoriesPrefsFactory);
+      factories.push_back(DirectoriesPrefsFactory());
       GlobalPrefsDialog dialog(NULL, factories);
       dialog.ShowModal();
 

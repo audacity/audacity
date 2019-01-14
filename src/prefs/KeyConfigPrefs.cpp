@@ -688,9 +688,13 @@ void KeyConfigPrefs::Cancel()
    return;
 }
 
-PrefsPanel *KeyConfigPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+KeyConfigPrefsFactory( const CommandID &name )
 {
-   wxASSERT(parent); // to justify safenew
-   auto result = safenew KeyConfigPrefs{ parent, winid, mName };
-   return result;
+   return [=](wxWindow *parent, wxWindowID winid)
+   {
+      wxASSERT(parent); // to justify safenew
+      auto result = safenew KeyConfigPrefs{ parent, winid, name };
+      return result;
+   };
 }

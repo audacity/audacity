@@ -37,10 +37,6 @@ class WarningsPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 };
 
-/// A PrefsPanelFactory that creates one WarningPrefs panel.
-class WarningsPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one WarningPrefs panel.
+extern PrefsPanel::Factory WarningsPrefsFactory;
 #endif
