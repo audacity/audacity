@@ -39,8 +39,8 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
          std::function< PrefsPanel * (
             wxWindow *parent, wxWindowID winid, AudacityProject *) >;
        Factory factory;
-       unsigned nChildren;
-       bool expanded;
+       size_t nChildren{ 0 };
+       bool expanded{ false };
 
        PrefsNode(const Factory &factory_,
           unsigned nChildren_ = 0,
