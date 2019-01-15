@@ -997,8 +997,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& EditActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr LabelEditMenus();
-
 static const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
@@ -1140,8 +1138,6 @@ BaseItemSharedPtr EditMenu()
          ),
 
          //////////////////////////////////////////////////////////////////////////
-
-         LabelEditMenus(),
 
          Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
             AudioIONotBusyFlag() )
