@@ -530,11 +530,33 @@ struct PrefsItemVisitor final : Registry::Visitor {
    std::vector<size_t> childCounts;
    std::vector<size_t> indices;
 };
+
+
+const auto PathStart = wxT("Preferences");
+   
 }
+
 
 PrefsDialog::Factories
 &PrefsDialog::DefaultFactories()
 {
+   // Once only, cause initial population of preferences for the ordering
+   // of some preference pages that used to be given in a table but are now
+   // separately registered in several .cpp files; the sequence of registration
+   // depends on unspecified accidents of static initialization order across
+   // compilation units, so we need something specific here to preserve old
+   // default appearance of the preference dialog.
+   // But this needs only to mention some strings -- there is no compilation or
+   // link dependency of this source file on those other implementation files.
+   static Registry::OrderingPreferenceInitializer init{
+      PathStart,
+      {
+         {wxT(""),
+   wxT("Device,Playback,Recording,Quality,GUI,Tracks,ImportExport,Projects,Directories,Warnings,Effects,KeyConfig,Mouse")
+         },
+         {wxT("/Tracks"), wxT("TracksBehaviors,Spectrum")},
+      }
+   };
    static Factories factories;
    static std::once_flag flag;
 
