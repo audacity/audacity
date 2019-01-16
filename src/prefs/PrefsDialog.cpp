@@ -453,39 +453,6 @@ int wxTreebookExt::SetSelection(size_t n)
 }
 
 namespace {
-   struct Entry{
-      unsigned sequenceNumber;
-      PrefsDialog::PrefsNode node;
-      
-      bool operator < ( const Entry &other ) const
-      { return sequenceNumber < other.sequenceNumber; }
-   };
-   using Entries = std::vector< Entry >;
-   namespace Prefs {
-      Entries &Registry()
-      {
-         static Entries result;
-         return result;
-      }
-   }
-}
-
-PrefsPanel::Registration::Registration( unsigned sequenceNumber,
-   const Factory &factory,
-   unsigned nChildren,
-   bool expanded )
-{
-   auto &registry = Prefs::Registry();
-   Entry entry{ sequenceNumber, { factory, nChildren, expanded } };
-   const auto end = registry.end();
-   // Find insertion point:
-   auto iter = std::lower_bound( registry.begin(), end, entry );
-   // There should not be duplicate sequence numbers:
-   wxASSERT( iter == end || entry < *iter );
-   registry.insert( iter, entry );
-}
-
-namespace {
 
 struct PrefsItem final : Registry::ConcreteGroupItem<false> {
    PrefsPanel::Factory factory;
@@ -537,6 +504,22 @@ const auto PathStart = wxT("Preferences");
 }
 
 
+namespace {
+static Registry::GroupItem &sRegistry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
+}
+
+PrefsPanel::Registration::Registration( const wxString &name,
+   const Factory &factory, bool expanded,
+   const Registry::Placement &placement )
+{
+   Registry::RegisterItem( sRegistry(), placement,
+      std::make_unique< PrefsItem >( name, factory, expanded ) );
+}
+
 PrefsDialog::Factories
 &PrefsDialog::DefaultFactories()
 {
@@ -552,18 +535,19 @@ PrefsDialog::Factories
       PathStart,
       {
          {wxT(""),
-   wxT("Device,Playback,Recording,Quality,GUI,Tracks,ImportExport,Projects,Directories,Warnings,Effects,KeyConfig,Mouse")
+       wxT("Device,Playback,Recording,Quality,GUI,Tracks,ImportExport,Directories,Warnings,Effects,KeyConfig,Mouse")
          },
          {wxT("/Tracks"), wxT("TracksBehaviors,Spectrum")},
       }
    };
+
    static Factories factories;
    static std::once_flag flag;
 
    std::call_once( flag, []{
-      for ( const auto &entry : Prefs::Registry() ) {
-         factories.push_back( entry.node );
-      }
+      PrefsItemVisitor visitor{ factories };
+      Registry::TransparentGroupItem<> top{ PathStart };
+      Registry::Visit( visitor, &top, &sRegistry() );
    } );
    return factories;
 }

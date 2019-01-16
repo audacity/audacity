@@ -251,7 +251,7 @@ bool EffectsPrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 170,
+PrefsPanel::Registration sAttachment{ "Effects",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

@@ -300,7 +300,7 @@ DirectoriesPrefsFactory() {
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 150,
+PrefsPanel::Registration sAttachment{ "Directories",
    DirectoriesPrefsFactory() };
 };
 

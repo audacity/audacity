@@ -107,7 +107,7 @@ bool WarningsPrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 160,
+PrefsPanel::Registration sAttachment{ "Warnings",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

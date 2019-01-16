@@ -448,12 +448,11 @@ bool TracksPrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 70,
+PrefsPanel::Registration sAttachment{ "Tracks",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew TracksPrefs(parent, winid);
-   },
-   2
+   }
 };
 }

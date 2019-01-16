@@ -382,7 +382,7 @@ int ShowClippingPrefsID()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 60,
+PrefsPanel::Registration sAttachment{ "GUI",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
