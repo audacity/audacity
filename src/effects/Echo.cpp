@@ -37,6 +37,9 @@
 Param( Delay,  float,   wxT("Delay"),   1.0f, 0.001f,  FLT_MAX, 1.0f );
 Param( Decay,  float,   wxT("Decay"),   0.5f, 0.0f,    FLT_MAX, 1.0f );
 
+const ComponentInterfaceSymbol EffectEcho::Symbol
+{ XO("Echo") };
+
 EffectEcho::EffectEcho()
 {
    delay = DEF_Delay;
@@ -53,7 +56,7 @@ EffectEcho::~EffectEcho()
 
 ComponentInterfaceSymbol EffectEcho::GetSymbol()
 {
-   return ECHO_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectEcho::GetDescription()

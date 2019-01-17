@@ -75,6 +75,9 @@ static const double kSliderWarp = 1.30105;      // warp power takes max from 100
 // EffectChangeTempo
 //
 
+const ComponentInterfaceSymbol EffectChangeTempo::Symbol
+{ XO("Change Tempo") };
+
 BEGIN_EVENT_TABLE(EffectChangeTempo, wxEvtHandler)
     EVT_TEXT(ID_PercentChange, EffectChangeTempo::OnText_PercentChange)
     EVT_SLIDER(ID_PercentChange, EffectChangeTempo::OnSlider_PercentChange)
@@ -110,7 +113,7 @@ EffectChangeTempo::~EffectChangeTempo()
 
 ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
 {
-   return CHANGETEMPO_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectChangeTempo::GetDescription()

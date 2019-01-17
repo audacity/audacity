@@ -58,6 +58,9 @@ BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectLoudness::OnUpdateUI)
 END_EVENT_TABLE()
 
+const ComponentInterfaceSymbol EffectLoudness::Symbol
+{ XO("Loudness Normalization") };
+
 EffectLoudness::EffectLoudness()
 {
    mStereoInd = DEF_StereoInd;
@@ -77,7 +80,7 @@ EffectLoudness::~EffectLoudness()
 
 ComponentInterfaceSymbol EffectLoudness::GetSymbol()
 {
-   return LOUDNESS_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectLoudness::GetDescription()

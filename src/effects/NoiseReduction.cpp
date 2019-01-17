@@ -420,6 +420,9 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
+const ComponentInterfaceSymbol EffectNoiseReduction::Symbol
+{ XO("Noise Reduction") };
+
 EffectNoiseReduction::EffectNoiseReduction()
 : mSettings(std::make_unique<EffectNoiseReduction::Settings>())
 {
@@ -434,7 +437,7 @@ EffectNoiseReduction::~EffectNoiseReduction()
 
 ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol()
 {
-   return NOISEREDUCTION_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectNoiseReduction::GetDescription()

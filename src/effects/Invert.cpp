@@ -19,6 +19,9 @@
 
 #include <wx/intl.h>
 
+const ComponentInterfaceSymbol EffectInvert::Symbol
+{ XO("Invert") };
+
 EffectInvert::EffectInvert()
 {
 }
@@ -31,7 +34,7 @@ EffectInvert::~EffectInvert()
 
 ComponentInterfaceSymbol EffectInvert::GetSymbol()
 {
-   return INVERT_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectInvert::GetDescription()

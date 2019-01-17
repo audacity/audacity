@@ -51,6 +51,9 @@ Param( PitchPercentEnd,    double, wxT("PitchPercentChangeEnd"),   0.0,  -50.0, 
 // EffectTimeScale
 //
 
+const ComponentInterfaceSymbol EffectTimeScale::Symbol
+{ wxT("Sliding Stretch"), XO("Sliding Stretch") };
+
 BEGIN_EVENT_TABLE(EffectTimeScale, wxEvtHandler)
    EVT_TEXT(ID_RatePercentChangeStart, EffectTimeScale::OnText_RatePercentChangeStart)
    EVT_TEXT(ID_RatePercentChangeEnd, EffectTimeScale::OnText_RatePercentChangeEnd)
@@ -87,7 +90,7 @@ EffectTimeScale::~EffectTimeScale()
 
 ComponentInterfaceSymbol EffectTimeScale::GetSymbol()
 {
-   return TIMESCALE_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectTimeScale::GetDescription()

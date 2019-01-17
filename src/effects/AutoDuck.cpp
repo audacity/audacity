@@ -74,6 +74,9 @@ struct AutoDuckRegion
  * Effect implementation
  */
 
+const ComponentInterfaceSymbol EffectAutoDuck::Symbol
+{ XO("Auto Duck") };
+
 BEGIN_EVENT_TABLE(EffectAutoDuck, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectAutoDuck::OnValueChanged)
 END_EVENT_TABLE()
@@ -103,7 +106,7 @@ EffectAutoDuck::~EffectAutoDuck()
 
 ComponentInterfaceSymbol EffectAutoDuck::GetSymbol()
 {
-   return AUTODUCK_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectAutoDuck::GetDescription()

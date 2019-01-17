@@ -40,6 +40,9 @@
 Param( Start,  int,  wxT("Duty Cycle Start"), 3,    1,    INT_MAX, 1   );
 Param( Stop,   int,  wxT("Duty Cycle End"),   3,    1,    INT_MAX, 1   );
 
+const ComponentInterfaceSymbol EffectFindClipping::Symbol
+{ XO("Find Clipping") };
+
 EffectFindClipping::EffectFindClipping()
 {
    mStart = DEF_Start;
@@ -54,7 +57,7 @@ EffectFindClipping::~EffectFindClipping()
 
 ComponentInterfaceSymbol EffectFindClipping::GetSymbol()
 {
-   return FINDCLIPPING_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectFindClipping::GetDescription()

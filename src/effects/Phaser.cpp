@@ -65,6 +65,9 @@ Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 // EffectPhaser
 //
 
+const ComponentInterfaceSymbol EffectPhaser::Symbol
+{ XO("Phaser") };
+
 BEGIN_EVENT_TABLE(EffectPhaser, wxEvtHandler)
     EVT_SLIDER(ID_Stages, EffectPhaser::OnStagesSlider)
     EVT_SLIDER(ID_DryWet, EffectPhaser::OnDryWetSlider)
@@ -103,7 +106,7 @@ EffectPhaser::~EffectPhaser()
 
 ComponentInterfaceSymbol EffectPhaser::GetSymbol()
 {
-   return PHASER_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectPhaser::GetDescription()

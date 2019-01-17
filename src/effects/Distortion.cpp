@@ -146,6 +146,9 @@ TranslatableString defaultLabel(int index)
 // EffectDistortion
 //
 
+const ComponentInterfaceSymbol EffectDistortion::Symbol
+{ XO("Distortion") };
+
 BEGIN_EVENT_TABLE(EffectDistortion, wxEvtHandler)
    EVT_CHOICE(ID_Type, EffectDistortion::OnTypeChoice)
    EVT_CHECKBOX(ID_DCBlock, EffectDistortion::OnDCBlockCheckbox)
@@ -187,7 +190,7 @@ EffectDistortion::~EffectDistortion()
 
 ComponentInterfaceSymbol EffectDistortion::GetSymbol()
 {
-   return DISTORTION_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectDistortion::GetDescription()

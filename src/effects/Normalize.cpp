@@ -43,6 +43,9 @@ Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true,
 Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
 Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
 
+const ComponentInterfaceSymbol EffectNormalize::Symbol
+{ XO("Normalize") };
+
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
    EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
@@ -66,7 +69,7 @@ EffectNormalize::~EffectNormalize()
 
 ComponentInterfaceSymbol EffectNormalize::GetSymbol()
 {
-   return NORMALIZE_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectNormalize::GetDescription()

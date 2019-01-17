@@ -76,6 +76,9 @@
 
 #include "../PlatformCompatibility.h"
 
+const ComponentInterfaceSymbol EffectNoiseRemoval::Symbol
+{ XO("Noise Removal") };
+
 EffectNoiseRemoval::EffectNoiseRemoval()
 {
    mWindowSize = 2048;
@@ -111,7 +114,7 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
 
 ComponentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
 {
-   return XO("Noise Removal");
+   return Symbol;
 }
 
 TranslatableString EffectNoiseRemoval::GetDescription()

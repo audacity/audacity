@@ -18,6 +18,12 @@
 
 #include <wx/intl.h>
 
+const ComponentInterfaceSymbol EffectFadeIn::Symbol
+{ XO("Fade In") };
+
+const ComponentInterfaceSymbol EffectFadeOut::Symbol
+{ XO("Fade Out") };
+
 EffectFade::EffectFade(bool fadeIn)
 {
    mFadeIn = fadeIn;
@@ -32,8 +38,8 @@ EffectFade::~EffectFade()
 ComponentInterfaceSymbol EffectFade::GetSymbol()
 {
    return mFadeIn
-      ? FADEIN_PLUGIN_SYMBOL
-      : FADEOUT_PLUGIN_SYMBOL;
+      ? EffectFadeIn::Symbol
+      : EffectFadeOut::Symbol;
 }
 
 TranslatableString EffectFade::GetDescription()

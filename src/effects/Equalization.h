@@ -22,15 +22,6 @@
 #include "Effect.h"
 #include "../RealFFTf.h"
 
-#define EQUALIZATION_PLUGIN_SYMBOL \
-ComponentInterfaceSymbol{ XO("Equalization") }
-#define GRAPHIC_EQ_PLUGIN_SYMBOL \
-ComponentInterfaceSymbol{ wxT("Graphic EQ"), XO("Graphic EQ") }
-// "Filter Curve EQ" in the user-facing string, but preserve the old
-// internal string
-#define FILTER_CURVE_PLUGIN_SYMBOL \
-ComponentInterfaceSymbol{ wxT("Filter Curve"), XO("Filter Curve EQ") }
-
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;
 const int kEqOptionCurve   =1<<1;
@@ -104,7 +95,10 @@ class EffectEqualization : public Effect,
                            public XMLTagHandler
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectEqualization(int Options = kEqLegacy);
+   
    virtual ~EffectEqualization();
 
    // ComponentInterface implementation
@@ -293,12 +287,16 @@ private:
 class EffectEqualizationCurve final : public EffectEqualization
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectEqualizationCurve() : EffectEqualization( kEqOptionCurve ) {}
 };
 
 class EffectEqualizationGraphic final : public EffectEqualization
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectEqualizationGraphic() : EffectEqualization( kEqOptionGraphic ) {}
 };
 

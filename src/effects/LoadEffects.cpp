@@ -167,7 +167,7 @@ enum
 // Redefine EFFECT() to add the effect's name to an array
 //
 #undef EFFECT
-#define EFFECT(n, i, args) results.push_back((n ## _PLUGIN_SYMBOL).Internal());
+#define EFFECT(n, i, args) results.push_back((i :: Symbol).Internal());
 
 //
 // Create the effect name array

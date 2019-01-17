@@ -13,9 +13,6 @@
 
 #include "Effect.h"
 
-#define FADEIN_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Fade In") }
-#define FADEOUT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Fade Out") }
-
 class EffectFade : public Effect
 {
 public:
@@ -49,6 +46,8 @@ private:
 class EffectFadeIn final : public EffectFade
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectFadeIn() : EffectFade{ true } {}
 };
 
@@ -56,6 +55,8 @@ public:
 class EffectFadeOut final : public EffectFade
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectFadeOut() : EffectFade{ false } {}
 };
 

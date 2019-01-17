@@ -18,9 +18,6 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-#define CHIRP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Chirp") }
-#define TONE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tone") }
-
 class EffectToneGen : public Effect
 {
 public:
@@ -81,6 +78,8 @@ private:
 class EffectChirp final : public EffectToneGen
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectChirp() : EffectToneGen{ true } {}
 };
 
@@ -88,6 +87,8 @@ public:
 class EffectTone final : public EffectToneGen
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectTone() : EffectToneGen{ false } {}
 };
 

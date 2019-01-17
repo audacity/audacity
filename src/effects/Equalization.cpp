@@ -191,6 +191,17 @@ Param( dBMax,        float,   wxT(""),                   30.0,    0.0,     60.0,
 // EffectEqualization
 //----------------------------------------------------------------------------
 
+const ComponentInterfaceSymbol EffectEqualization::Symbol
+{ XO("Equalization") };
+
+// "Filter Curve EQ" in the user-facing string, but preserve the old
+// internal string
+const ComponentInterfaceSymbol EffectEqualizationCurve::Symbol
+{ wxT("Filter Curve"), XO("Filter Curve EQ") };
+
+const ComponentInterfaceSymbol EffectEqualizationGraphic::Symbol
+{ wxT("Graphic EQ"), XO("Graphic EQ") };
+
 BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_SIZE( EffectEqualization::OnSize )
 
@@ -303,10 +314,10 @@ EffectEqualization::~EffectEqualization()
 ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    if( mOptions == kEqOptionGraphic )
-      return GRAPHIC_EQ_PLUGIN_SYMBOL;
+      return EffectEqualizationGraphic::Symbol;
    if( mOptions == kEqOptionCurve )
-      return FILTER_CURVE_PLUGIN_SYMBOL;
-   return EQUALIZATION_PLUGIN_SYMBOL;
+      return EffectEqualizationCurve::Symbol;
+   return EffectEqualization::Symbol;
 }
 
 TranslatableString EffectEqualization::GetDescription()

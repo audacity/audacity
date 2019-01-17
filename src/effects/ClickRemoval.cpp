@@ -53,6 +53,9 @@ enum
 Param( Threshold, int,     wxT("Threshold"),  200,     0,       900,     1  );
 Param( Width,     int,     wxT("Width"),      20,      0,       40,      1  );
 
+const ComponentInterfaceSymbol EffectClickRemoval::Symbol
+{ XO("Click Removal") };
+
 BEGIN_EVENT_TABLE(EffectClickRemoval, wxEvtHandler)
     EVT_SLIDER(ID_Thresh, EffectClickRemoval::OnThreshSlider)
     EVT_SLIDER(ID_Width, EffectClickRemoval::OnWidthSlider)
@@ -79,7 +82,7 @@ EffectClickRemoval::~EffectClickRemoval()
 
 ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
 {
-   return CLICKREMOVAL_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectClickRemoval::GetDescription()

@@ -83,6 +83,9 @@ private:
 // EffectPaulstretch
 //
 
+const ComponentInterfaceSymbol EffectPaulstretch::Symbol
+{ XO("Paulstretch") };
+
 BEGIN_EVENT_TABLE(EffectPaulstretch, wxEvtHandler)
     EVT_TEXT(wxID_ANY, EffectPaulstretch::OnText)
 END_EVENT_TABLE()
@@ -103,7 +106,7 @@ EffectPaulstretch::~EffectPaulstretch()
 
 ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
 {
-   return PAULSTRETCH_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectPaulstretch::GetDescription()

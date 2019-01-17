@@ -82,6 +82,12 @@ Param( Interp,    int,     wxT("Interpolation"), 0,       0,       nInterpolatio
 // EffectToneGen
 //
 
+const ComponentInterfaceSymbol EffectChirp::Symbol
+{ XO("Chirp") };
+
+const ComponentInterfaceSymbol EffectTone::Symbol
+{ XO("Tone") };
+
 BEGIN_EVENT_TABLE(EffectToneGen, wxEvtHandler)
     EVT_TEXT(wxID_ANY, EffectToneGen::OnControlUpdate)
 END_EVENT_TABLE();
@@ -117,8 +123,8 @@ EffectToneGen::~EffectToneGen()
 ComponentInterfaceSymbol EffectToneGen::GetSymbol()
 {
    return mChirp
-      ? CHIRP_PLUGIN_SYMBOL
-      : TONE_PLUGIN_SYMBOL;
+      ? EffectChirp::Symbol
+      : EffectTone::Symbol;
 }
 
 TranslatableString EffectToneGen::GetDescription()

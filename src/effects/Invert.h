@@ -15,11 +15,11 @@
 
 #include "Effect.h"
 
-#define INVERT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Invert") }
-
 class EffectInvert final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectInvert();
    virtual ~EffectInvert();
 

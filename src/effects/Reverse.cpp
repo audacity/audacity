@@ -29,6 +29,9 @@
 // EffectReverse
 //
 
+const ComponentInterfaceSymbol EffectReverse::Symbol
+{ XO("Reverse") };
+
 EffectReverse::EffectReverse()
 {
 }
@@ -41,7 +44,7 @@ EffectReverse::~EffectReverse()
 
 ComponentInterfaceSymbol EffectReverse::GetSymbol()
 {
-   return REVERSE_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectReverse::GetDescription()

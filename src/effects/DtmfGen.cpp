@@ -74,6 +74,9 @@ const static wxChar *kSymbols[] =
 // EffectDtmf
 //
 
+const ComponentInterfaceSymbol EffectDtmf::Symbol
+{ XO("DTMF Tones") };
+
 BEGIN_EVENT_TABLE(EffectDtmf, wxEvtHandler)
     EVT_TEXT(ID_Sequence, EffectDtmf::OnSequence)
     EVT_TEXT(ID_DutyCycle, EffectDtmf::OnAmplitude)
@@ -98,7 +101,7 @@ EffectDtmf::~EffectDtmf()
 
 ComponentInterfaceSymbol EffectDtmf::GetSymbol()
 {
-   return DTMFTONES_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectDtmf::GetDescription()

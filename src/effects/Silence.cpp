@@ -22,6 +22,9 @@
 #include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
+const ComponentInterfaceSymbol EffectSilence::Symbol
+{ XO("Silence") };
+
 EffectSilence::EffectSilence()
 {
    SetLinearEffectFlag(true);
@@ -35,7 +38,7 @@ EffectSilence::~EffectSilence()
 
 ComponentInterfaceSymbol EffectSilence::GetSymbol()
 {
-   return SILENCE_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectSilence::GetDescription()
