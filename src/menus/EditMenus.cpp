@@ -22,8 +22,6 @@
 #include "../commands/ScreenshotCommand.h"
 #include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
-#include "../prefs/SpectrogramSettings.h"
-#include "../prefs/WaveformSettings.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
 

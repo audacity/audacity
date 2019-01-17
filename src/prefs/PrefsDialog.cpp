@@ -62,7 +62,6 @@
 #include "TracksBehaviorsPrefs.h"
 #include "WarningsPrefs.h"
 // #include "WaveformPrefs.h"
-#include "WaveformSettings.h"
 #include "ExtImportPrefs.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -857,9 +856,6 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    wxTheApp->AddPendingEvent(wxCommandEvent{ EVT_PREFS_UPDATE });
 
-   WaveformSettings::defaults().LoadPrefs();
-   SpectrogramSettings::defaults().LoadPrefs();
-
    if( IsModal() )
       EndModal(true);
    else
@@ -949,9 +945,6 @@ wxString PrefsPanel::HelpPageName()
 void DoReloadPreferences( AudacityProject &project )
 {
    {
-      SpectrogramSettings::defaults().LoadPrefs();
-      WaveformSettings::defaults().LoadPrefs();
-
       GlobalPrefsDialog dialog(
          &GetProjectFrame( project ) /* parent */, &project );
       wxCommandEvent Evt;
