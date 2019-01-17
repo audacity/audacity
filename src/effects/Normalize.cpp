@@ -17,6 +17,7 @@
 
 #include "../Audacity.h" // for rint from configwin.h
 #include "Normalize.h"
+#include "LoadEffects.h"
 
 #include "../Experimental.h"
 
@@ -45,6 +46,8 @@ Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true,
 
 const ComponentInterfaceSymbol EffectNormalize::Symbol
 { XO("Normalize") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectNormalize > reg; }
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)

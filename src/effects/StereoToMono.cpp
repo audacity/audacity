@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "StereoToMono.h"
+#include "LoadEffects.h"
 
 #include <wx/intl.h>
 
@@ -23,6 +24,8 @@
 
 const ComponentInterfaceSymbol EffectStereoToMono::Symbol
 { XO("Stereo To Mono") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectStereoToMono > reg; }
 
 EffectStereoToMono::EffectStereoToMono()
 {

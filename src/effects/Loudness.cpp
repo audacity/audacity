@@ -31,6 +31,8 @@
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
 
+#include "LoadEffects.h"
+
 enum kNormalizeTargets
 {
    kLoudness,
@@ -60,6 +62,8 @@ END_EVENT_TABLE()
 
 const ComponentInterfaceSymbol EffectLoudness::Symbol
 { XO("Loudness Normalization") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectLoudness > reg; }
 
 EffectLoudness::EffectLoudness()
 {

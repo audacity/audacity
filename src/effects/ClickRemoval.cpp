@@ -26,6 +26,7 @@
 
 #include "../Audacity.h"
 #include "ClickRemoval.h"
+#include "LoadEffects.h"
 
 #include <math.h>
 
@@ -55,6 +56,8 @@ Param( Width,     int,     wxT("Width"),      20,      0,       40,      1  );
 
 const ComponentInterfaceSymbol EffectClickRemoval::Symbol
 { XO("Click Removal") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectClickRemoval > reg; }
 
 BEGIN_EVENT_TABLE(EffectClickRemoval, wxEvtHandler)
     EVT_SLIDER(ID_Thresh, EffectClickRemoval::OnThreshSlider)

@@ -41,6 +41,7 @@
 
 #include "../Experimental.h"
 
+#include "LoadEffects.h"
 #include "EffectManager.h"
 
 #include "../ShuttleGui.h"
@@ -422,6 +423,8 @@ private:
 
 const ComponentInterfaceSymbol EffectNoiseReduction::Symbol
 { XO("Noise Reduction") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectNoiseReduction > reg; }
 
 EffectNoiseReduction::EffectNoiseReduction()
 : mSettings(std::make_unique<EffectNoiseReduction::Settings>())

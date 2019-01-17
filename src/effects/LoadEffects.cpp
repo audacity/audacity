@@ -60,6 +60,25 @@
 #include "ChangeTempo.h"
 #endif
 
+struct BuiltinEffectsModule::Entry {
+   wxString name;
+   BuiltinEffectsModule::Factory factory;
+   bool excluded;
+
+   using Entries = std::vector< Entry >;
+   static Entries &Registry()
+   {
+      static Entries result;
+      return result;
+   }
+};
+
+void BuiltinEffectsModule::DoRegistration(
+   const ComponentInterfaceSymbol &name, const Factory &factory, bool excluded )
+{
+   Entry::Registry().emplace_back( Entry{ name.Internal(), factory, excluded } );
+}
+
 //
 // Include the SoundTouch effects, if requested
 //

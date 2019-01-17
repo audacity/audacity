@@ -21,6 +21,7 @@
 
 #include "../Audacity.h"
 #include "Echo.h"
+#include "LoadEffects.h"
 
 #include <float.h>
 
@@ -39,6 +40,8 @@ Param( Decay,  float,   wxT("Decay"),   0.5f, 0.0f,    FLT_MAX, 1.0f );
 
 const ComponentInterfaceSymbol EffectEcho::Symbol
 { XO("Echo") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 EffectEcho::EffectEcho()
 {

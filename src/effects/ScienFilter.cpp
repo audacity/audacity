@@ -34,6 +34,7 @@ a graph for EffectScienFilter.
 
 #include "../Audacity.h"
 #include "ScienFilter.h"
+#include "LoadEffects.h"
 
 #include <math.h>
 #include <float.h>
@@ -134,6 +135,11 @@ Param( Stopband,  float,   wxT("StopbandRipple"),   30.0,          0.0,  100.0, 
 
 const ComponentInterfaceSymbol EffectScienFilter::Symbol
 { XO("Classic Filters") };
+
+#ifdef EXPERIMENTAL_SCIENCE_FILTERS
+// true argument means don't automatically enable this effect
+namespace{ BuiltinEffectsModule::Registration< EffectScienFilter > reg( true ); }
+#endif
 
 BEGIN_EVENT_TABLE(EffectScienFilter, wxEvtHandler)
    EVT_SIZE(EffectScienFilter::OnSize)

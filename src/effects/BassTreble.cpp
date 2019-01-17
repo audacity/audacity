@@ -16,6 +16,7 @@
 
 #include "../Audacity.h"
 #include "BassTreble.h"
+#include "LoadEffects.h"
 
 #include "../Experimental.h"
 
@@ -60,6 +61,8 @@ enum kShelfType
 
 const ComponentInterfaceSymbol EffectBassTreble::Symbol
 { XO("Bass and Treble") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectBassTreble > reg; }
 
 BEGIN_EVENT_TABLE(EffectBassTreble, wxEvtHandler)
    EVT_SLIDER(ID_Bass,     EffectBassTreble::OnBassSlider)

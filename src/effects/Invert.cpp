@@ -19,8 +19,12 @@
 
 #include <wx/intl.h>
 
+#include "LoadEffects.h"
+
 const ComponentInterfaceSymbol EffectInvert::Symbol
 { XO("Invert") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectInvert > reg; }
 
 EffectInvert::EffectInvert()
 {

@@ -36,6 +36,8 @@
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
 
+#include "LoadEffects.h"
+
 // Soundtouch defines these as well, which are also in generated configmac.h
 // and configunix.h, so get rid of them before including,
 // to avoid compiler warnings, and be sure to do this
@@ -77,6 +79,8 @@ static const double kSliderWarp = 1.30105;      // warp power takes max from 100
 
 const ComponentInterfaceSymbol EffectChangeTempo::Symbol
 { XO("Change Tempo") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectChangeTempo > reg; }
 
 BEGIN_EVENT_TABLE(EffectChangeTempo, wxEvtHandler)
     EVT_TEXT(ID_PercentChange, EffectChangeTempo::OnText_PercentChange)

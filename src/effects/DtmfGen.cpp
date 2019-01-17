@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "DtmfGen.h"
+#include "LoadEffects.h"
 
 #include "../Experimental.h"
 
@@ -76,6 +77,8 @@ const static wxChar *kSymbols[] =
 
 const ComponentInterfaceSymbol EffectDtmf::Symbol
 { XO("DTMF Tones") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectDtmf > reg; }
 
 BEGIN_EVENT_TABLE(EffectDtmf, wxEvtHandler)
     EVT_TEXT(ID_Sequence, EffectDtmf::OnSequence)

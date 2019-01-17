@@ -20,6 +20,7 @@
 
 #include "../Audacity.h"
 #include "Amplify.h"
+#include "LoadEffects.h"
 
 #include <math.h>
 #include <float.h>
@@ -60,6 +61,8 @@ Param( Clipping,  bool,    wxT("AllowClipping"),    false,    false,  true,    1
 
 const ComponentInterfaceSymbol EffectAmplify::Symbol
 { XO("Amplify") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectAmplify > reg; }
 
 BEGIN_EVENT_TABLE(EffectAmplify, wxEvtHandler)
    EVT_SLIDER(ID_Amp, EffectAmplify::OnAmpSlider)

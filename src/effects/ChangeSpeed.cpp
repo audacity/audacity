@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "ChangeSpeed.h"
+#include "LoadEffects.h"
 
 #include <math.h>
 
@@ -77,6 +78,8 @@ static const double kSliderWarp = 1.30105;      // warp power takes max from 100
 
 const ComponentInterfaceSymbol EffectChangeSpeed::Symbol
 { XO("Change Speed") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectChangeSpeed > reg; }
 
 BEGIN_EVENT_TABLE(EffectChangeSpeed, wxEvtHandler)
     EVT_TEXT(ID_PercentChange, EffectChangeSpeed::OnText_PercentChange)

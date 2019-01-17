@@ -16,6 +16,7 @@
 
 #include "../Audacity.h"
 #include "Reverb.h"
+#include "LoadEffects.h"
 
 #include <wx/arrstr.h>
 #include <wx/checkbox.h>
@@ -91,6 +92,8 @@ struct Reverb_priv_t
 
 const ComponentInterfaceSymbol EffectReverb::Symbol
 { XO("Reverb") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
 
 BEGIN_EVENT_TABLE(EffectReverb, wxEvtHandler)
 

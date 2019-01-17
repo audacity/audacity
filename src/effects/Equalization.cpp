@@ -54,6 +54,7 @@
 
 #include "../Audacity.h"
 #include "Equalization.h"
+#include "LoadEffects.h"
 
 #include "../Experimental.h"
 
@@ -194,13 +195,19 @@ Param( dBMax,        float,   wxT(""),                   30.0,    0.0,     60.0,
 const ComponentInterfaceSymbol EffectEqualization::Symbol
 { XO("Equalization") };
 
+// namespace{ BuiltinEffectsModule::Registration< EffectEqualization > reg; }
+
 // "Filter Curve EQ" in the user-facing string, but preserve the old
 // internal string
 const ComponentInterfaceSymbol EffectEqualizationCurve::Symbol
 { wxT("Filter Curve"), XO("Filter Curve EQ") };
 
+namespace{ BuiltinEffectsModule::Registration< EffectEqualizationCurve > reg2; }
+
 const ComponentInterfaceSymbol EffectEqualizationGraphic::Symbol
 { wxT("Graphic EQ"), XO("Graphic EQ") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectEqualizationGraphic > reg3; }
 
 BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_SIZE( EffectEqualization::OnSize )

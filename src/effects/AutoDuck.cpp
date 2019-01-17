@@ -18,6 +18,7 @@
 
 #include "../Audacity.h"
 #include "AutoDuck.h"
+#include "LoadEffects.h"
 
 #include <math.h>
 #include <float.h>
@@ -76,6 +77,8 @@ struct AutoDuckRegion
 
 const ComponentInterfaceSymbol EffectAutoDuck::Symbol
 { XO("Auto Duck") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectAutoDuck > reg; }
 
 BEGIN_EVENT_TABLE(EffectAutoDuck, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectAutoDuck::OnValueChanged)

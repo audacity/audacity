@@ -17,6 +17,7 @@
 
 #include "../Audacity.h"
 #include "TruncSilence.h"
+#include "LoadEffects.h"
 
 #include <algorithm>
 #include <list>
@@ -121,6 +122,8 @@ const double detectFrac = 0.4;
 
 const ComponentInterfaceSymbol EffectTruncSilence::Symbol
 { XO("Truncate Silence") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectTruncSilence > reg; }
 
 BEGIN_EVENT_TABLE(EffectTruncSilence, wxEvtHandler)
    EVT_CHOICE(wxID_ANY, EffectTruncSilence::OnControlChange)
