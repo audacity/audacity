@@ -408,6 +408,40 @@ private:
 // Define classes and functions that associate parts of the user interface
 // with path names
 namespace Registry {
+   // Items in the registry form an unordered tree, but each may also describe a
+   // desired insertion point among its peers.  The request might not be honored
+   // (as when the other name is not found, or when more than one item requests
+   // the same ordering), but this is not treated as an error.
+   struct OrderingHint
+   {
+      // The default Unspecified hint is just like End, except that in case the
+      // item is delegated to (by a SharedItem, ComputedItem, or nameless
+      // transparent group), the delegating item's hint will be used instead
+      enum Type : int {
+         Before, After,
+         Begin, End,
+         Unspecified // keep this last
+      } type{ Unspecified };
+
+      // name of some other BaseItem; significant only when type is Before or
+      // After:
+      Identifier name;
+
+      OrderingHint() {}
+      OrderingHint( Type type_, const wxString &name_ = {} )
+         : type(type_), name(name_) {}
+
+      bool operator == ( const OrderingHint &other ) const
+      { return name == other.name && type == other.type; }
+
+      bool operator < ( const OrderingHint &other ) const
+      {
+         // This sorts unspecified placements later
+         return std::make_pair( type, name ) <
+            std::make_pair( other.type, other.name );
+      }
+   };
+
    // TODO C++17: maybe use std::variant (discriminated unions) to achieve
    // polymorphism by other means, not needing unique_ptr and dynamic_cast
    // and using less heap.
@@ -423,6 +457,8 @@ namespace Registry {
       virtual ~BaseItem();
 
       const Identifier name;
+
+      OrderingHint orderingHint;
    };
    using BaseItemPtr = std::unique_ptr<BaseItem>;
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
@@ -433,7 +469,8 @@ namespace Registry {
 
    // An item that delegates to another held in a shared pointer; this allows
    // static tables of items to be computed once and reused
-   // The name of the delegate is significant for path calculations
+   // The name of the delegate is significant for path calculations, but the
+   // SharedItem's ordering hint is used if the delegate has none
    struct SharedItem final : BaseItem {
       explicit SharedItem( const BaseItemSharedPtr &ptr_ )
          : BaseItem{ wxEmptyString }
@@ -450,7 +487,8 @@ namespace Registry {
 
    // An item that computes some other item to substitute for it, each time
    // the ComputedItem is visited
-   // The name of the substitute is significant for path calculations
+   // The name of the substitute is significant for path calculations, but the
+   // ComputedItem's ordering hint is used if the substitute has none
    struct ComputedItem final : BaseItem {
       // The type of functions that generate descriptions of items.
       // Return type is a shared_ptr to let the function decide whether to
@@ -556,6 +594,7 @@ namespace Registry {
 
    // Concrete subclass of GroupItem that adds nothing else
    // TransparentGroupItem with an empty name is transparent to item path calculations
+   // and propagates its ordering hint if subordinates don't specify hints
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
