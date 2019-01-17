@@ -440,13 +440,6 @@ void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
    wxString page = GetCurrentPanel()->HelpPageName();
-   // Currently (May2017) Spectrum Settings is the only preferences
-   // we ever display in a dialog on its own without others.
-   // We do so when it is configuring spectrums for a track.
-   // Because this happens, we want to visit a different help page.
-   // So we change the page name in the case of a page on its own.
-   if( !mCategories)
-      page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
    HelpSystem::ShowHelp(this, page, true);
 }
 

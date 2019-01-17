@@ -536,7 +536,14 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 
 wxString SpectrumPrefs::HelpPageName()
 {
-   return "Spectrograms_Preferences";
+   // Currently (May2017) Spectrum Settings is the only preferences
+   // we ever display in a dialog on its own without others.
+   // We do so when it is configuring spectrums for a track.
+   // Because this happens, we want to visit a different help page.
+   // So we change the page name in the case of a page on its own.
+   return mWt
+      ? "Spectrogram_Settings"
+      : "Spectrograms_Preferences";
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
