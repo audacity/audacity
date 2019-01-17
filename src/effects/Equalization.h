@@ -100,11 +100,11 @@ using EQCurveArray = std::vector<EQCurve>;
 class EffectEqualization48x;
 #endif
 
-class EffectEqualization final : public Effect,
+class EffectEqualization : public Effect,
                            public XMLTagHandler
 {
 public:
-   EffectEqualization(int Options);
+   EffectEqualization(int Options = kEqLegacy);
    virtual ~EffectEqualization();
 
    // ComponentInterface implementation
@@ -288,6 +288,18 @@ private:
 
    friend class EqualizationPanel;
    friend class EditCurvesDialog;
+};
+
+class EffectEqualizationCurve final : public EffectEqualization
+{
+public:
+   EffectEqualizationCurve() : EffectEqualization( kEqOptionCurve ) {}
+};
+
+class EffectEqualizationGraphic final : public EffectEqualization
+{
+public:
+   EffectEqualizationGraphic() : EffectEqualization( kEqOptionGraphic ) {}
 };
 
 class EqualizationPanel final : public wxPanelWrapper

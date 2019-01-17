@@ -16,7 +16,7 @@
 #define FADEIN_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Fade In") }
 #define FADEOUT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Fade Out") }
 
-class EffectFade final : public Effect
+class EffectFade : public Effect
 {
 public:
    EffectFade(bool fadeIn = false);
@@ -40,10 +40,23 @@ public:
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
 
 private:
-   // EffectFadeIn implementation
+   // EffectFade implementation
 
    bool mFadeIn;
    sampleCount mSample;
+};
+
+class EffectFadeIn final : public EffectFade
+{
+public:
+   EffectFadeIn() : EffectFade{ true } {}
+};
+
+
+class EffectFadeOut final : public EffectFade
+{
+public:
+   EffectFadeOut() : EffectFade{ false } {}
 };
 
 #endif
