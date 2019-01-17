@@ -9,11 +9,10 @@
 **********************************************************************/
 
 #include "audacity/ModuleInterface.h"
-#include "audacity/EffectInterface.h"
-#include "audacity/PluginInterface.h"
 
-#include "Effect.h"
 #include "../MemoryX.h"
+
+class Effect;
 
 ///////////////////////////////////////////////////////////////////////////////
 //

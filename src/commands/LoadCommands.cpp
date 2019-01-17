@@ -17,6 +17,7 @@ modelled on BuiltinEffectsModule
 #include "LoadCommands.h"
 
 #include "../Prefs.h"
+
 #include "../MemoryX.h"
 
 #include "../effects/EffectManager.h"
