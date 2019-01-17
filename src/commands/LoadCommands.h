@@ -13,6 +13,7 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
 #include "../MemoryX.h"
 
 class AudacityCommand;
@@ -82,5 +83,6 @@ private:
    ModuleManagerInterface *mModMan;
    wxString mPath;
 
-   PluginPaths mNames;
+   using CommandHash = std::unordered_map< wxString, const Entry* > ;
+   CommandHash mCommands;
 };
