@@ -18,12 +18,15 @@
 #include "HelpCommand.h"
 
 #include "../Shuttle.h"
+#include "LoadCommands.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 #include "../effects/EffectManager.h"
 
 const ComponentInterfaceSymbol HelpCommand::Symbol
 { XO("Help") };
+
+namespace{ BuiltinCommandsModule::Registration< HelpCommand > reg; }
 
 bool HelpCommand::DefineParams( ShuttleParams & S ){
    S.Define( mCommandName, wxT("Command"),  "Help" );

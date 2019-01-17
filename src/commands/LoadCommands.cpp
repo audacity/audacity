@@ -35,6 +35,24 @@ modelled on BuiltinEffectsModule
 #include "../commands/SetProjectCommand.h"
 #include "../commands/DragCommand.h"
 
+struct BuiltinCommandsModule::Entry {
+   wxString name;
+   Factory factory;
+
+   using Entries = std::vector< Entry >;
+   static Entries &Registry()
+   {
+      static Entries result;
+      return result;
+   }
+};
+
+void BuiltinCommandsModule::DoRegistration(
+   const ComponentInterfaceSymbol &name, const Factory &factory )
+{
+   Entry::Registry().emplace_back( Entry{ name.Internal(), factory } );
+}
+
 //
 // Define the list of COMMANDs that will be autoregistered and how to instantiate each
 //

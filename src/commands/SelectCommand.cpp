@@ -35,6 +35,7 @@ explicitly code all three.
 #include <wx/string.h>
 #include <float.h>
 
+#include "LoadCommands.h"
 #include "../ProjectSelectionManager.h"
 #include "../TrackPanel.h"
 #include "../Shuttle.h"
@@ -46,6 +47,8 @@ explicitly code all three.
 
 const ComponentInterfaceSymbol SelectTimeCommand::Symbol
 { XO("Select Time") };
+
+namespace{ BuiltinCommandsModule::Registration< SelectTimeCommand > reg; }
 
 // Relative to project and relative to selection cover MOST options, since you can already
 // set a selection to a clip.
@@ -142,6 +145,8 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
 const ComponentInterfaceSymbol SelectFrequenciesCommand::Symbol
 { XO("Select Frequencies") };
 
+namespace{ BuiltinCommandsModule::Registration< SelectFrequenciesCommand > reg2; }
+
 bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
    S.OptionalN( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
@@ -178,6 +183,8 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
 
 const ComponentInterfaceSymbol SelectTracksCommand::Symbol
 { XO("Select Tracks") };
+
+namespace{ BuiltinCommandsModule::Registration< SelectTracksCommand > reg3; }
 
 const int nModes =3;
 static const EnumValueSymbol kModes[nModes] =
@@ -262,3 +269,5 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
 
 const ComponentInterfaceSymbol SelectCommand::Symbol
 { XO("Select") };
+
+namespace{ BuiltinCommandsModule::Registration< SelectCommand > reg4; }

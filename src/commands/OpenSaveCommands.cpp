@@ -17,6 +17,7 @@
 #include "../Audacity.h"
 #include "OpenSaveCommands.h"
 
+#include "LoadCommands.h"
 #include "../Project.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectManager.h"
@@ -28,6 +29,8 @@
 
 const ComponentInterfaceSymbol OpenProjectCommand::Symbol
 { XO("Open Project2") };
+
+namespace{ BuiltinCommandsModule::Registration< OpenProjectCommand > reg; }
 
 bool OpenProjectCommand::DefineParams( ShuttleParams & S ){
    S.Define( mFileName, wxT("Filename"),  "test.aup" );
@@ -70,6 +73,8 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
 
 const ComponentInterfaceSymbol SaveProjectCommand::Symbol
 { XO("Save Project2") };
+
+namespace{ BuiltinCommandsModule::Registration< SaveProjectCommand > reg2; }
 
 bool SaveProjectCommand::DefineParams( ShuttleParams & S ){
    S.Define( mFileName, wxT("Filename"),  "name.aup" );
