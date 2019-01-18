@@ -1625,7 +1625,7 @@ msgstr "La dimensione del blocco deve essere compresa tra 1 e 1024 KB."
 
 #: src/Benchmark.cpp
 msgid "Number of edits should be in the range 1 - 10000."
-msgstr "Il numero di modifiche deve essere compeso tra 1 e 10000."
+msgstr "Il numero di modifiche deve essere compreso tra 1 e 10000."
 
 #: src/Benchmark.cpp
 msgid "Test data size should be in the range 1 - 2000 MB."
@@ -1973,7 +1973,7 @@ msgstr "Attenzione - Problemi nella lettura della sequenza di tag"
 
 #: src/DirManager.cpp
 msgid "Inspecting project file data"
-msgstr "Analizi dei dati del file del progetto"
+msgstr "Analisi dei dati del file del progetto"
 
 #: src/DirManager.cpp
 #, c-format
@@ -3332,7 +3332,7 @@ msgstr "Abilitazione effetto o comando:\n\n%s"
 msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
-msgstr "Non è stato posibile registrare l'effetto/comando in %s:\n%s"
+msgstr "Non è stato possibile registrare l'effetto/comando in %s:\n%s"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -3669,7 +3669,7 @@ msgstr ""
 "'Salva copia senza perdite del progetto' è per un progetto di Audacity, non "
 "per un file audio.\nPer avere un file audio da aprire con altre applicazioni, "
 "usare 'Esporta'.\n\nLe copie di progetti senza perdite sono un buon modo per "
-"eseguire una copia di backup del progetto, \nsenza alcuna perdita di quaità, "
+"eseguire una copia di backup del progetto, \nsenza alcuna perdita di qualità, "
 "tuttavia i progetti sono di grandi dimensioni.\n"
 
 #: src/Project.cpp
@@ -3710,7 +3710,7 @@ msgid ""
 "Please try again and select an original name."
 msgstr ""
 "Salvare una copia non deve sovrascrivere un progetto salvato "
-"esistente.\nRiprivare selezionando un nome originale."
+"esistente.\nRiprovare selezionando un nome originale."
 
 #: src/Project.cpp
 msgid "Error Saving Copy of Project"
@@ -3743,7 +3743,7 @@ msgid ""
 "Please try again and select an original name."
 msgstr ""
 "Il progetto non verrà salvato poiché il progetto selezionato è aperto in "
-"un'altra finestra.\nRiprovare seleziondo un nome originale."
+"un'altra finestra.\nRiprovare selezionando un nome originale."
 
 #: src/Project.cpp
 msgid "Created new project"
@@ -5690,7 +5690,7 @@ msgid ""
 "Auto Duck needs a control track which must be placed below the selected "
 "track(s)."
 msgstr ""
-"La funzione di rduzione automatica del volume necessita di una traccia di "
+"La funzione di riduzione automatica del volume necessita di una traccia di "
 "controllo che deve essere posizionata al di sotto delle tracce selezionate."
 
 #: src/effects/AutoDuck.cpp
@@ -7136,7 +7136,7 @@ msgstr "Errore durante il salvataggio delle curve EQ"
 
 #: src/effects/Equalization.cpp
 msgid "Requested curve not found, using 'unnamed'"
-msgstr "La curva richiesta non è statao trovata, verrà usata 'senza nome'"
+msgstr "La curva richiesta non è stata trovata, verrà usata 'senza nome'"
 
 #: src/effects/Equalization.cpp
 msgid "Curve not found"
@@ -7245,7 +7245,7 @@ msgstr "Selezionare un file per la curva EQ"
 
 #: src/effects/Equalization.cpp
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
-msgstr "File xml (*.xml;*.XML)|*.xml;*.XML"
+msgstr "File XML (*.xml;*.XML)|*.xml;*.XML"
 
 #: src/effects/Equalization.cpp
 msgid "Export EQ curves as..."
@@ -8081,11 +8081,11 @@ msgstr "Frequenza di taglio (Hz)"
 
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation:"
-msgstr "Minima attenuazione s&topband:"
+msgstr "Minima a&ttenuazione elimina-banda:"
 
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr "Minima attenuazione s&topband (dB)"
+msgstr "Minima a&ttenuazione elimina-banda (dB)"
 
 #: src/effects/ScienFilter.h
 msgid "Classic Filters"
@@ -8715,7 +8715,7 @@ msgstr "non funzionare per tutti gli effetti VL2."
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values."
 msgstr ""
-"Gi effetti VL2 possono avere una interfaccia grafica per impostare i valori "
+"Gli effetti VL2 possono avere una interfaccia grafica per impostare i valori "
 "dei parametri."
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -8742,7 +8742,7 @@ msgstr "Effetti VL2"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Audacity"
-msgstr "Forniscead ad Audacity il supporto agli effetti LV2"
+msgstr "Fornisce ad Audacity il supporto agli effetti LV2"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
@@ -9109,7 +9109,7 @@ msgstr ""
 
 #: src/export/Export.cpp
 msgid "Sorry, pathnames longer than 256 characters not supported."
-msgstr "I nomi di persorso più lunghi di 256 caratteri non sono supportati."
+msgstr "I nomi di percorso più lunghi di 256 caratteri non sono supportati."
 
 #: src/export/Export.cpp
 msgid ""
@@ -10442,7 +10442,7 @@ msgstr ""
 "\"%s\" è un file audio criptato. \nQuesti file tipicamente provengono da un "
 "negozio di musica online. \nAudacity non può aprire questo tipo di file a "
 "causa della crittografia. \nCercare di registrare il file in Audacity, o di "
-"masterizzarlo in un CD audio, \nquindi estrare la traccia dal CD in un "
+"masterizzarlo in un CD audio, \nquindi estrarre la traccia dal CD in un "
 "formato audio supportato come WAV o AIFF."
 
 #: src/import/Import.cpp
@@ -15927,7 +15927,7 @@ msgstr "Non sono stati trovati problemi rapidamente e facilmente risolti"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Clocks on the Tracks"
-msgstr "Orogoli sulle tracce"
+msgstr "Orologi sulle tracce"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Can't select precisely"
@@ -16808,7 +16808,7 @@ msgstr "~aI valori percentuali non possono essere negativi."
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
 msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "~aI valori percentuali non possone essere maggiori di 1000 %."
+msgstr "~aI valori percentuali non possono essere maggiori di 1000 %."
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
@@ -16818,7 +16818,7 @@ msgid ""
 "                                 \t-6 dB halves the amplitude."
 msgstr ""
 "~aI valori in dB non possono superare i +100 dB.~%~%~\n                       "
-"          Consiglio: 6 dB raddopia la ampiezza~%~\n                           "
+"          Consiglio: 6 dB raddoppia la ampiezza~%~\n                          "
 "      \t-6 dB dimezza la ampiezza."
 
 #: plug-ins/beat.ny
@@ -17159,7 +17159,7 @@ msgid ""
 msgstr ""
 "Errore:~%~%La frequenza (~a Hz) è troppo alta per la frequenza di "
 "campionamento della traccia.~%~%~\n                   La frequenza di "
-"campoionamento della traccia è di ~a Hz~%~\n                   La frequenza "
+"campionamento della traccia è di ~a Hz~%~\n                   La frequenza "
 "deve essere inferiore a ~a Hz."
 
 #: plug-ins/limiter.ny
