@@ -116,12 +116,6 @@ using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 extern AProjectArray gAudacityProjects;
 
 
-enum class PlayMode : int {
-   normalPlay,
-   oneSecondPlay, // Disables auto-scrolling
-   loopedPlay // Disables auto-scrolling
-};
-
 enum StatusBarField {
    stateStatusBarField = 1,
    mainStatusBarField = 2,
@@ -524,7 +518,6 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
-   PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
 
    // Audio IO callback methods

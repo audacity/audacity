@@ -1587,18 +1587,17 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       else
          options.timeTrack = NULL;
 
-      ControlToolBar::PlayAppearance appearance =
-         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
-         : options.playLooped ? ControlToolBar::PlayAppearance::Looped
-         : ControlToolBar::PlayAppearance::Straight;
+      auto mode =
+         cutPreview ? PlayMode::cutPreviewPlay
+         : options.playLooped ? PlayMode::loopedPlay
+         : PlayMode::normalPlay;
 
       mPlayRegionStart = start;
       mPlayRegionEnd = end;
       Refresh();
 
       ctb->PlayPlayRegion((SelectedRegion(start, end)),
-                          options, PlayMode::normalPlay,
-                          appearance,
+                          options, mode,
                           false,
                           true);
 

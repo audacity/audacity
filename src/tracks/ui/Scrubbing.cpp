@@ -394,13 +394,6 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
                std::max(0.0, MinStutter);
 
-            ControlToolBar::PlayAppearance appearance = 
-            // commented out to fix Bug 1241
-            // mSeeking
-            //   ? ControlToolBar::PlayAppearance::Seek
-            //   : ControlToolBar::PlayAppearance::Scrub;
-                 ControlToolBar::PlayAppearance::Straight;
-//            const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
             static const double maxScrubSpeedBase =
@@ -421,7 +414,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
-                                   PlayMode::normalPlay, appearance, backwards);
+                                   PlayMode::normalPlay, backwards);
             if (mScrubToken <= 0) {
                // Bug1627 (part of it):
                // infinite error spew when trying to start scrub:
@@ -485,8 +478,6 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mOptions.adjustStart = false;
    mOptions.isPlayingAtSpeed = true;
       
-   ControlToolBar::PlayAppearance appearance = ControlToolBar::PlayAppearance::Straight;
-
    const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    static const double maxScrubSpeedBase =
@@ -510,7 +501,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mScrubToken =
       // Reduce time by 'stopTolerance' fudge factor, so that the Play will stop.
       ctb->PlayPlayRegion(SelectedRegion(time0, time1-stopTolerance), options,
-         PlayMode::normalPlay, appearance, backwards);
+         PlayMode::normalPlay, backwards);
 
    if (mScrubToken >= 0) {
       mLastScrubPosition = 0;

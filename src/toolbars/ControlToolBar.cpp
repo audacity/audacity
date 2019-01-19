@@ -537,7 +537,6 @@ bool ControlToolBar::IsRecordDown() const
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    PlayMode mode,
-                                   PlayAppearance appearance, /* = PlayOption::Straight */
                                    bool backwards, /* = false */
                                    bool playWhiteSpace /* = false */)
 // STRONG-GUARANTEE (for state of mCutPreviewTracks)
@@ -563,7 +562,18 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (backwards)
       std::swap(t0, t1);
 
-   SetPlay(true, appearance);
+   {
+      PlayAppearance appearance;
+      switch( mode ) {
+         case PlayMode::cutPreviewPlay:
+            appearance = PlayAppearance::CutPreview; break;
+         case PlayMode::loopedPlay:
+            appearance = PlayAppearance::Looped; break;
+         default:
+            appearance = PlayAppearance::Straight; break;
+      }
+      SetPlay(true, appearance);
+   }
 
    bool success = false;
    auto cleanup = finally( [&] {
@@ -577,7 +587,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (gAudioIO->IsBusy())
       return -1;
 
-   const bool cutpreview = appearance == PlayAppearance::CutPreview;
+   const bool cutpreview = mode == PlayMode::cutPreviewPlay;
    if (cutpreview && t0==t1)
       return -1; /* msmeyer: makes no sense */
 
@@ -589,7 +599,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (!t)
       return -1;  // Should never happen, but...
 
-   p->mLastPlayMode = mode;
+   mLastPlayMode = mode;
 
    bool hasaudio;
    if (useMidi)
@@ -744,14 +754,13 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       options.playLooped = looped;
       if (cutpreview)
          options.timeTrack = NULL;
-      ControlToolBar::PlayAppearance appearance =
-        cutpreview ? ControlToolBar::PlayAppearance::CutPreview
-           : looped ? ControlToolBar::PlayAppearance::Looped
-           : ControlToolBar::PlayAppearance::Straight;
+      auto mode =
+         cutpreview ? PlayMode::cutPreviewPlay
+         : options.playLooped ? PlayMode::loopedPlay
+         : PlayMode::normalPlay;
       PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
                      options,
-                     (looped ? PlayMode::loopedPlay : PlayMode::normalPlay),
-                     appearance);
+                     mode);
    }
 }
 
