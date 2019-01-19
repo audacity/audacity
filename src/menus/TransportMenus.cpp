@@ -601,7 +601,7 @@ void OnPunchAndRoll(const CommandContext &context)
    transportTracks.captureTracks = std::move(tracks);
 
    // Try to start recording
-   AudioIOStartStreamOptions options(project.GetDefaultPlayOptions());
+   auto options = DefaultPlayOptions( project );
    options.preRoll = std::max(0L,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;
@@ -705,7 +705,7 @@ void OnPlayOneSecond(const CommandContext &context)
 
    auto &trackPanel = TrackPanel::Get( project );
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto options = project.GetDefaultPlayOptions();
+   auto options = DefaultPlayOptions( project );
 
    double pos = trackPanel.GetMostRecentXPos();
    controlToolBar.PlayPlayRegion(
@@ -758,7 +758,7 @@ void OnPlayToSelection(const CommandContext &context)
 //   mLastPlayMode = ((t1-t0) > 1.0) ? normalPlay : oneSecondPlay;
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    controlToolBar.PlayPlayRegion(
       SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
@@ -782,7 +782,7 @@ void OnPlayBeforeSelectionStart(const CommandContext &context)
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    controlToolBar.PlayPlayRegion(
       SelectedRegion(t0 - beforeLen, t0), playOptions, PlayMode::oneSecondPlay);
@@ -804,7 +804,7 @@ void OnPlayAfterSelectionStart(const CommandContext &context)
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
       controlToolBar.PlayPlayRegion(
@@ -831,7 +831,7 @@ void OnPlayBeforeSelectionEnd(const CommandContext &context)
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
       controlToolBar.PlayPlayRegion(
@@ -858,7 +858,7 @@ void OnPlayAfterSelectionEnd(const CommandContext &context)
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    controlToolBar.PlayPlayRegion(
       SelectedRegion(t1, t1 + afterLen), playOptions, PlayMode::oneSecondPlay);
@@ -883,7 +883,7 @@ void OnPlayBeforeAndAfterSelectionStart
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
       controlToolBar.PlayPlayRegion(
@@ -914,7 +914,7 @@ void OnPlayBeforeAndAfterSelectionEnd
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
    auto &controlToolBar = ControlToolBar::Get( project );
-   auto playOptions = project.GetDefaultPlayOptions();
+   auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
       controlToolBar.PlayPlayRegion(

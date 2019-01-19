@@ -769,7 +769,7 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       double playRegionStart, playRegionEnd;
       p->GetPlayRegion(&playRegionStart, &playRegionEnd);
 
-      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
+      auto options = DefaultPlayOptions( *p );
       options.playLooped = looped;
       if (cutpreview)
          options.timeTrack = NULL;
@@ -1059,7 +1059,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       }
 
       transportTracks.captureTracks = existingTracks;
-      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
+      auto options = DefaultPlayOptions( *p );
       DoRecord(*p, transportTracks, t0, t1, altAppearance, options);
    }
 }

@@ -185,9 +185,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    virtual void ApplyUpdatedTheme();
 
-   AudioIOStartStreamOptions GetDefaultPlayOptions();
-   AudioIOStartStreamOptions GetSpeedPlayOptions();
-
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
    double GetRate() const { return mRate; }
@@ -643,6 +640,9 @@ public:
 
    DECLARE_EVENT_TABLE()
 };
+
+AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
+AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 #endif
 

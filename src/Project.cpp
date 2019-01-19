@@ -1348,30 +1348,28 @@ void AudacityProject::ApplyUpdatedTheme()
    trackPanel.ApplyUpdatedTheme();
 }
 
-
-AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
+AudioIOStartStreamOptions
+DefaultPlayOptions( AudacityProject &project )
 {
-   auto &project = *this;
-   AudioIOStartStreamOptions options { GetRate() };
+   AudioIOStartStreamOptions options { project.GetRate() };
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
-   options.listener = this;
+   options.listener = &project;
    return options;
 }
 
-AudioIOStartStreamOptions AudacityProject::GetSpeedPlayOptions()
+AudioIOStartStreamOptions
+DefaultSpeedPlayOptions( AudacityProject &project )
 {
-   auto &project = *this;
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
-      GetRate()  //suggested rate
+      project.GetRate()  //suggested rate
    );
    AudioIOStartStreamOptions options{ PlayAtSpeedRate };
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
-   options.listener = this;
+   options.listener = &project;
    return options;
 }
-
 
 void AudacityProject::UpdatePrefsVariables()
 {
