@@ -370,20 +370,39 @@ FilePath FileNames::PathFromAddr(void *addr)
     return name.GetFullPath();
 }
 
-wxFileNameWrapper FileNames::DefaultToDocumentsFolder
-(const wxString &preference)
+wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference)
 {
    wxFileNameWrapper result;
-   result.AssignHomeDir();
 
 #ifdef __WIN32__
-   result.SetPath(gPrefs->Read(
-      preference, result.GetPath(wxPATH_GET_VOLUME) + "\\Documents\\Audacity"));
-   // The path might not exist.
-   // There is no error if the path could not be created.  That's OK.
-   // The dialog that Audacity offers will allow the user to select a valid directory.
-   result.Mkdir(0755, wxPATH_MKDIR_FULL);
+   wxFileName defaultPath( wxStandardPaths::Get().GetDocumentsDir(), "" );
+   defaultPath.AppendDir( wxGetApp().GetAppName() );
+   result.SetPath( gPrefs->Read( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) ) );
+
+   // MJB: Bug 1899 & Bug 2007.  Only create directory if the result is the default path
+   bool bIsDefaultPath =  result == defaultPath;
+   if( !bIsDefaultPath ) 
+   {
+      // IF the prefs directory doesn't exist - (Deleted by our user perhaps?)
+      //    or exists as a file
+      // THEN fallback to using the default directory.
+      bIsDefaultPath = !result.DirExists() || result.FileExists();
+      if( bIsDefaultPath )
+      {
+         result.SetPath( defaultPath.GetPath( wxPATH_GET_VOLUME ) );
+         gPrefs->Write( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) );
+         gPrefs->Flush();
+      }
+   }
+   if ( bIsDefaultPath )
+   {
+      // The default path might not exist since it is a sub-directory of 'Documents'
+      // There is no error if the path could not be created.  That's OK.
+      // The dialog that Audacity offers will allow the user to select a valid directory.
+      result.Mkdir(0755, wxPATH_MKDIR_FULL);
+   }
 #else
+   result.AssignHomeDir();
    result.SetPath(gPrefs->Read( preference, result.GetPath() + "/Documents"));
 #endif
 
