@@ -59,8 +59,8 @@ public:
    // Not required by callbacks, but makes for easier cleanup
    std::unique_ptr<Resampler> resampler;
    std::unique_ptr<SBSMSQuality> quality;
-   std::unique_ptr<WaveTrack> outputLeftTrack;
-   std::unique_ptr<WaveTrack> outputRightTrack;
+   std::shared_ptr<WaveTrack> outputLeftTrack;
+   std::shared_ptr<WaveTrack> outputRightTrack;
 
    std::exception_ptr mpException {};
 };

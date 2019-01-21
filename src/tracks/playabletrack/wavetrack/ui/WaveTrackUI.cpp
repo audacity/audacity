@@ -41,7 +41,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
       result = TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, Pointer(this), false);
+         mTimeShiftHandle, SharedPointer(), false);
       if (result)
          results.push_back(result);
       return results;
@@ -53,7 +53,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
 
       if (NULL != (result = CutlineHandle::HitTest(
          mCutlineHandle, st.state, st.rect,
-         pProject, Pointer<WaveTrack>(this))))
+         pProject, SharedPointer<WaveTrack>())))
          // This overriding test applies in all tools
          results.push_back(result);
       if (bMultiTool) {
@@ -63,16 +63,16 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
          // point, seems arbitrary
          if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
             mEnvelopeHandle, st.state, st.rect,
-            pProject, Pointer<WaveTrack>(this))))
+            pProject, SharedPointer<WaveTrack>())))
             results.push_back(result);
          if (NULL != (result = TimeShiftHandle::HitTest(
-            mTimeShiftHandle, st.state, st.rect, Pointer(this))))
+            mTimeShiftHandle, st.state, st.rect, SharedPointer())))
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
             results.push_back(result);
          if (NULL != (result = SampleHandle::HitTest(
             mSampleHandle, st.state, st.rect,
-            pProject, Pointer<WaveTrack>(this))))
+            pProject, SharedPointer<WaveTrack>())))
             results.push_back(result);
       }
       else {
@@ -87,7 +87,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
             }
             case drawTool:
                result = SampleHandle::HitAnywhere(
-                  mSampleHandle, st.state, Pointer<WaveTrack>(this));
+                  mSampleHandle, st.state, SharedPointer<WaveTrack>());
                break;
             default:
                result = {};
@@ -103,10 +103,10 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
 
 std::shared_ptr<TrackControls> WaveTrack::GetControls()
 {
-   return std::make_shared<WaveTrackControls>( Pointer( this ) );
+   return std::make_shared<WaveTrackControls>( SharedPointer() );
 }
 
 std::shared_ptr<TrackVRulerControls> WaveTrack::GetVRulerControls()
 {
-   return std::make_shared<WaveTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<WaveTrackVRulerControls>( SharedPointer() );
 }

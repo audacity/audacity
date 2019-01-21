@@ -30,12 +30,12 @@ std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
    const wxMouseState &state = st.state;
 
    result = LabelGlyphHandle::HitTest(
-      mGlyphHandle, state, Pointer<LabelTrack>(this), st.rect);
+      mGlyphHandle, state, SharedPointer<LabelTrack>(), st.rect);
    if (result)
       results.push_back(result);
 
    result = LabelTextHandle::HitTest(
-      mTextHandle, state, Pointer<LabelTrack>(this));
+      mTextHandle, state, SharedPointer<LabelTrack>());
    if (result)
       results.push_back(result);
 
@@ -44,10 +44,10 @@ std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
 
 std::shared_ptr<TrackControls> LabelTrack::GetControls()
 {
-   return std::make_shared<LabelTrackControls>( Pointer( this ) );
+   return std::make_shared<LabelTrackControls>( SharedPointer() );
 }
 
 std::shared_ptr<TrackVRulerControls> LabelTrack::GetVRulerControls()
 {
-   return std::make_shared<LabelTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<LabelTrackVRulerControls>( SharedPointer() );
 }

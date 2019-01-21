@@ -23,7 +23,7 @@ class wxWindow;
 
 // Newly constructed WaveTracks that are not yet owned by a TrackList
 // are held in unique_ptr not shared_ptr
-using NewChannelGroup = std::vector< std::unique_ptr<WaveTrack> >;
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 using TrackHolders = std::vector< NewChannelGroup >;
 
 

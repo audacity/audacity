@@ -49,7 +49,8 @@ class WaveTrackCache;
 void MixAndRender(TrackList * tracks, TrackFactory *factory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
-                  std::unique_ptr<WaveTrack> &uLeft, std::unique_ptr<WaveTrack> &uRight);
+                  std::shared_ptr<WaveTrack> &uLeft,
+                  std::shared_ptr<WaveTrack> &uRight);
 
 void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
                 samplePtr src,

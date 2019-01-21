@@ -41,10 +41,8 @@ int DoAddLabel(
    auto lt = * iter.Filter< LabelTrack >();
 
    // If none found, start a NEW label track and use it
-   if (!lt) {
-      lt = static_cast<LabelTrack*>
-         (tracks->Add(trackFactory->NewLabelTrack()));
-   }
+   if (!lt)
+      lt = tracks->Add(trackFactory->NewLabelTrack());
 
 // LLL: Commented as it seemed a little forceful to remove users
 //      selection when adding the label.  This does not happen if
@@ -158,7 +156,7 @@ void EditByLabel(
    }
 }
 
-using EditDestFunction = std::unique_ptr<Track> (WaveTrack::*)(double, double);
+using EditDestFunction = std::shared_ptr<Track> (WaveTrack::*)(double, double);
 
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels
@@ -203,7 +201,7 @@ void EditClipboardByLabel(
          {
             Track::FinishCopy( wt, dest.get() );
             if( !merged )
-               merged = std::move(dest);
+               merged = dest;
             else
             {
                // Paste to the beginning; unless this is the first region,
@@ -229,7 +227,7 @@ void EditClipboardByLabel(
                      regions.at(i + 1).start - region.end);
       }
       if( merged )
-         newClipboard.Add( std::move(merged) );
+         newClipboard.Add( merged );
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.

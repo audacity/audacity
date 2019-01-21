@@ -639,7 +639,7 @@ UIHandle::Result SelectHandle::Click
          case SBBottom:
          case SBTop:
          {
-            mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
+            mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
             mFreqSelPin = value;
             mFreqSelMode =
                (boundary == SBBottom)
@@ -694,7 +694,7 @@ UIHandle::Result SelectHandle::Click
             // Ignore whether we are inside the time selection.
             // Exit center-snapping, start dragging the width.
             mFreqSelMode = FREQ_SEL_PINNED_CENTER;
-            mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
+            mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
             mFreqSelPin = viewInfo.selectedRegion.fc();
             // Do not adjust time boundaries
             mSelStartValid = false;
@@ -736,7 +736,7 @@ UIHandle::Result SelectHandle::Click
                startNewSelection = false;
                // Disable time selection
                mSelStartValid = false;
-               mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
+               mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
                mFreqSelPin = value;
                mFreqSelMode =
                   (boundary == SBWidth) ? FREQ_SEL_PINNED_CENTER :
@@ -1143,7 +1143,7 @@ void SelectHandle::AdjustSelection
       std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
    double origSelend = selend;
 
-   auto pTrack = Track::Pointer( track );
+   auto pTrack = track->SharedPointer();
    if (!pTrack)
       pTrack = pProject->GetTracks()->Lock(mpTrack);
 
@@ -1205,7 +1205,7 @@ void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,
 
    if (isSpectralSelectionTrack(pTrack)) {
       // Spectral selection track is always wave
-      auto shTrack = Track::Pointer<const WaveTrack>( pTrack );
+      auto shTrack = pTrack->SharedPointer<const WaveTrack>();
       mFreqSelTrack = shTrack;
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =
@@ -1304,7 +1304,7 @@ void SelectHandle::HandleCenterFrequencyClick
    if (shiftDown) {
       // Disable time selection
       mSelStartValid = false;
-      mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
+      mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
       mFreqSelPin = value;
       mFreqSelMode = FREQ_SEL_DRAG_CENTER;
    }
@@ -1405,7 +1405,7 @@ void SelectHandle::MoveSnappingFreqSelection
       // A change here would affect what AdjustFreqSelection() does
       // in the prototype version where you switch from moving center to
       // dragging width with a click.  No effect now.
-      mFreqSelTrack = Track::Pointer<const WaveTrack>( wt );
+      mFreqSelTrack = wt->SharedPointer<const WaveTrack>();
 
       // SelectNone();
       // SelectTrack(pTrack, true);

@@ -43,11 +43,11 @@ std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
 
 std::shared_ptr<TrackControls> NoteTrack::GetControls()
 {
-   return std::make_shared<NoteTrackControls>( Pointer( this ) );
+   return std::make_shared<NoteTrackControls>( SharedPointer() );
 }
 
 std::shared_ptr<TrackVRulerControls> NoteTrack::GetVRulerControls()
 {
-   return std::make_shared<NoteTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<NoteTrackVRulerControls>( SharedPointer() );
 }
 #endif

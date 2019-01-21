@@ -105,7 +105,7 @@ void Track::SetSelected(bool s)
       mSelected = s;
       auto pList = mList.lock();
       if (pList)
-         pList->SelectionEvent( Pointer( this ) );
+         pList->SelectionEvent( SharedPointer() );
    }
 }
 
@@ -351,7 +351,7 @@ void Track::Notify( int code )
 {
    auto pList = mList.lock();
    if (pList)
-      pList->DataEvent( Pointer(this), code );
+      pList->DataEvent( SharedPointer(), code );
 }
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
@@ -374,7 +374,7 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
 
 std::shared_ptr<Track> Track::FindTrack()
 {
-   return Pointer( this );
+   return SharedPointer();
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
@@ -573,9 +573,7 @@ TrackList::TrackList()
 // Factory function
 std::shared_ptr<TrackList> TrackList::Create()
 {
-   std::shared_ptr<TrackList> result{ safenew TrackList{} };
-   result->mSelf = result;
-   return result;
+   return std::make_shared<TrackList>();
 }
 
 TrackList &TrackList::operator= (TrackList &&that)
@@ -600,8 +598,10 @@ void TrackList::Swap(TrackList &that)
          (*it)->SetOwner(bSelf, {it, &b});
    };
 
-   SwapLOTs( *this, mSelf, that, that.mSelf );
-   SwapLOTs( this->mPendingUpdates, mSelf, that.mPendingUpdates, that.mSelf );
+   const auto self = shared_from_this();
+   const auto otherSelf = that.shared_from_this();
+   SwapLOTs( *this, self, that, otherSelf );
+   SwapLOTs( this->mPendingUpdates, self, that.mPendingUpdates, otherSelf );
    mUpdaters.swap(that.mUpdaters);
 }
 
@@ -706,11 +706,11 @@ auto TrackList::FindLeader( Track *pTrack )
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
 {
    for (const auto iter : permutation) {
-      ListOfTracks::value_type track = std::move(*iter.first);
+      ListOfTracks::value_type track = *iter.first;
       erase(iter.first);
       Track *pTrack = track.get();
-      pTrack->SetOwner(mSelf,
-                       { insert(ListOfTracks::end(), std::move(track)), this });
+      pTrack->SetOwner(shared_from_this(),
+         { insert(ListOfTracks::end(), track), this });
    }
    auto n = getBegin();
    RecalcPositions(n);
@@ -728,63 +728,30 @@ Track *TrackList::FindById( TrackId id )
    return it->get();
 }
 
-template<typename TrackKind>
-Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
+Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
 {
-   Track *pTrack;
-   push_back(ListOfTracks::value_type(pTrack = t.release()));
-
-   auto n = getPrev( getEnd() );
-
-   pTrack->SetOwner(mSelf, n);
-   pTrack->SetId( TrackId{ ++sCounter } );
-   RecalcPositions(n);
-   AdditionEvent(n);
-   return back().get();
-}
-
-// Make instantiations for the linker to find
-template Track *TrackList::Add<TimeTrack>(std::unique_ptr<TimeTrack> &&);
-#if defined(USE_MIDI)
-template Track *TrackList::Add<NoteTrack>(std::unique_ptr<NoteTrack> &&);
-#endif
-template Track *TrackList::Add<WaveTrack>(std::unique_ptr<WaveTrack> &&);
-template Track *TrackList::Add<LabelTrack>(std::unique_ptr<LabelTrack> &&);
-template Track *TrackList::Add<Track>(std::unique_ptr<Track> &&);
-
-template<typename TrackKind>
-Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
-{
-   Track *pTrack;
-   push_front(ListOfTracks::value_type(pTrack = t.release()));
+   Track *pTrack = t.get();
+   push_front(ListOfTracks::value_type(t));
    auto n = getBegin();
-   pTrack->SetOwner(mSelf, n);
+   pTrack->SetOwner(shared_from_this(), n);
    pTrack->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    AdditionEvent(n);
    return front().get();
 }
 
-// Make instantiations for the linker to find
-template Track *TrackList::AddToHead<TimeTrack>(std::unique_ptr<TimeTrack> &&);
-
-template<typename TrackKind>
-Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
+Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 {
    push_back(t);
 
    auto n = getPrev( getEnd() );
 
-   t->SetOwner(mSelf, n);
+   t->SetOwner(shared_from_this(), n);
    t->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    AdditionEvent(n);
    return back().get();
 }
-
-// Make instantiations for the linker to find
-template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
-template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
 
 void TrackList::GroupChannels(
    Track &track, size_t groupSize, bool resetChannels )
@@ -838,7 +805,7 @@ void TrackList::GroupChannels(
    THROW_INCONSISTENCY_EXCEPTION;
 }
 
-auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
+auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
    ListOfTracks::value_type
 {
    ListOfTracks::value_type holder;
@@ -846,11 +813,11 @@ auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      holder = std::move(*node.first);
+      holder = *node.first;
 
       Track *pTrack = with.get();
-      *node.first = std::move(with);
-      pTrack->SetOwner(mSelf, node);
+      *node.first = with;
+      pTrack->SetOwner(shared_from_this(), node);
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
@@ -868,7 +835,7 @@ TrackNodePointer TrackList::Remove(Track *t)
       t->SetOwner({}, {});
 
       if ( !isNull( node ) ) {
-         ListOfTracks::value_type holder = std::move( *node.first );
+         ListOfTracks::value_type holder = *node.first;
 
          result = getNext( node );
          erase(node.first);
@@ -1006,7 +973,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       saved.resize( nn );
       // Save them in backwards order
       while( nn-- )
-         saved[nn] = std::move( *s.first ), s.first = erase(s.first);
+         saved[nn] = *s.first, s.first = erase(s.first);
    };
 
    doSave( saved1, s1 );
@@ -1024,8 +991,8 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
          pTrack = pointer.get(),
          // Insert before s, and reassign s to point at the new node before
          // old s; which is why we saved pointers in backwards order
-         pTrack->SetOwner(mSelf,
-                          s = { insert(s.first, std::move(pointer)), this } );
+         pTrack->SetOwner(shared_from_this(),
+            s = { insert(s.first, pointer), this } );
    };
    // This does not invalidate s2 even when it equals s1:
    doInsert( saved2, s1 );
@@ -1162,7 +1129,8 @@ namespace {
       if ( ! includeMuted )
          subRange = subRange - &Type::GetMute;
       return transform_range<Array>( subRange.begin(), subRange.end(),
-          []( Type *t ){ return Track::Pointer<Type>( t ); } );
+         []( Type *t ){ return t->template SharedPointer<Type>(); }
+      );
    }
 }
 
@@ -1233,15 +1201,14 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
 {
    std::shared_ptr<Track> pTrack;
    if (src)
-      // convert from unique_ptr to shared_ptr
-      pTrack.reset( src->Duplicate().release() );
+      pTrack = src->Duplicate();
 
    if (pTrack) {
       mUpdaters.push_back( updater );
       mPendingUpdates.push_back( pTrack );
       auto n = mPendingUpdates.end();
       --n;
-      pTrack->SetOwner(mSelf, {n, &mPendingUpdates});
+      pTrack->SetOwner(shared_from_this(), {n, &mPendingUpdates});
    }
 
    return pTrack;
@@ -1249,8 +1216,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
 
 void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
 {
-   auto copy = pTrack;
-   Add<Track>( std::move( copy ) );
+   Add<Track>( pTrack );
    pTrack->SetId( TrackId{} );
 }
 
@@ -1323,7 +1289,7 @@ bool TrackList::ApplyPendingTracks()
       if (pendingTrack) {
          auto src = FindById( pendingTrack->GetId() );
          if (src)
-            this->Replace(src, std::move(pendingTrack)), result = true;
+            this->Replace(src, pendingTrack), result = true;
          else
             // Perhaps a track marked for pending changes got deleted by
             // some other action.  Recreate it so we don't lose the
@@ -1335,7 +1301,7 @@ bool TrackList::ApplyPendingTracks()
    // If there are tracks to reinstate, append them to the list.
    for (auto &pendingTrack : reinstated)
       if (pendingTrack)
-         this->Add(std::move(pendingTrack)), result = true;
+         this->Add( pendingTrack ), result = true;
 
    // Put the pending added tracks back into the list, preserving their
    // positions.
@@ -1346,7 +1312,7 @@ bool TrackList::ApplyPendingTracks()
          auto iter = ListOfTracks::begin();
          std::advance( iter, pendingTrack->GetIndex() );
          iter = ListOfTracks::insert( iter, pendingTrack );
-         pendingTrack->SetOwner( mSelf, {iter, this} );
+         pendingTrack->SetOwner( shared_from_this(), {iter, this} );
          pendingTrack->SetId( TrackId{ ++sCounter } );
          if (!inserted) {
             first = iter;
@@ -1375,7 +1341,7 @@ std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
       if (it != end)
          return *it;
    }
-   return Pointer( this );
+   return SharedPointer();
 }
 
 std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
@@ -1395,7 +1361,7 @@ std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
             return *it2;
       }
    }
-   return Pointer( this );
+   return SharedPointer();
 }
 
 bool TrackList::HasPendingTracks() const

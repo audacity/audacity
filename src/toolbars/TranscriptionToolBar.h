@@ -156,7 +156,7 @@ class TranscriptionToolBar final : public ToolBar {
    int mBackgroundWidth;
    int mBackgroundHeight;
 
-   std::unique_ptr<TimeTrack> mTimeTrack;
+   std::shared_ptr<TimeTrack> mTimeTrack;
 
  public:
 

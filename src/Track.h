@@ -190,6 +190,7 @@ private:
 
 class AUDACITY_DLL_API Track /* not final */
    : public CommonTrackPanelCell, public XMLTagHandler
+   , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
    friend class TrackList;
 
@@ -227,31 +228,29 @@ class AUDACITY_DLL_API Track /* not final */
    void SetId( TrackId id ) { mId = id; }
  public:
 
-   // Given a bare pointer, find a shared_ptr.  But this is not possible for
-   // a track not owned by any project, so the result can be null.
+   // Given a bare pointer, find a shared_ptr.  Undefined results if the track
+   // is not yet managed by a shared_ptr.  Undefined results if the track is
+   // not really of the subclass.  (That is, trusts the caller and uses static
+   // not dynamic casting.)
    template<typename Subclass = Track>
-   inline static std::shared_ptr<Subclass> Pointer( Track *t )
+   inline std::shared_ptr<Subclass> SharedPointer()
    {
-      if (t) {
-         auto pList = t->mList.lock();
-         if (pList)
-            return std::static_pointer_cast<Subclass>(*t->mNode.first);
-      }
-      return {};
+      // shared_from_this is injected into class scope by base class
+      // std::enable_shared_from_this<Track>
+      if (!this) return {};
+      return std::static_pointer_cast<Subclass>( shared_from_this() );
    }
 
    template<typename Subclass = const Track>
-   inline static std::shared_ptr<Subclass> Pointer( const Track *t )
+   inline auto SharedPointer() const -> typename
+      std::enable_if<
+         std::is_const<Subclass>::value, std::shared_ptr<Subclass>
+      >::type
    {
-      if (t) {
-         auto pList = t->mList.lock();
-         if (pList) {
-            std::shared_ptr<const Track> p{ *t->mNode.first };
-            // Let you change the type, but not cast away the const
-            return std::static_pointer_cast<Subclass>(p);
-         }
-      }
-      return {};
+      // shared_from_this is injected into class scope by base class
+      // std::enable_shared_from_this<Track>
+      if (!this) return {};
+      return std::static_pointer_cast<Subclass>( shared_from_this() );
    }
 
    // Find anything registered with TrackList::RegisterPendingChangedTrack and
@@ -368,7 +367,7 @@ private:
 
    void Init(const Track &orig);
 
-   using Holder = std::unique_ptr<Track>;
+   using Holder = std::shared_ptr<Track>;
    virtual Holder Duplicate() const = 0;
 
    // Called when this track is merged to stereo with another, and should
@@ -1166,12 +1165,10 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_DELETION, TrackListEvent);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
+   , public std::enable_shared_from_this<TrackList>
 {
    // privatize this, make you use Swap instead:
    using ListOfTracks::swap;
-
-   // Create an empty TrackList
-   TrackList();
 
    // Disallow copy
    TrackList(const TrackList &that) = delete;
@@ -1184,6 +1181,10 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    void clear() = delete;
 
  public:
+   // Create an empty TrackList
+   // Don't call directly -- use Create() instead
+   TrackList();
+
    // Create an empty TrackList
    static std::shared_ptr<TrackList> Create();
 
@@ -1331,6 +1332,9 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    }
 
 private:
+   Track *DoAddToHead(const std::shared_ptr<Track> &t);
+   Track *DoAdd(const std::shared_ptr<Track> &t);
+
    template< typename TrackType, typename InTrackType >
       static TrackIterRange< TrackType >
          Channels_( TrackIter< InTrackType > iter1 )
@@ -1370,15 +1374,12 @@ public:
 
    /// Add a Track, giving it a fresh id
    template<typename TrackKind>
-   Track *Add(std::unique_ptr<TrackKind> &&t);
+      TrackKind *AddToHead( const std::shared_ptr< TrackKind > &t )
+         { return static_cast< TrackKind* >( DoAddToHead( t ) ); }
 
-   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
-   Track *AddToHead(std::unique_ptr<TrackKind> &&t);
-
-   /// Add a Track, giving it a fresh id
-   template<typename TrackKind>
-   Track *Add(std::shared_ptr<TrackKind> &&t);
+      TrackKind *Add( const std::shared_ptr< TrackKind > &t )
+         { return static_cast< TrackKind* >( DoAdd( t ) ); }
 
    /** \brief Define a group of channels starting at the given track
    *
@@ -1392,7 +1393,8 @@ public:
 
    /// Replace first track with second track, give back a holder
    /// Give the replacement the same id as the replaced
-   ListOfTracks::value_type Replace(Track * t, ListOfTracks::value_type &&with);
+   ListOfTracks::value_type Replace(
+      Track * t, const ListOfTracks::value_type &with);
 
    /// Remove this Track or all children of this TrackList.
    /// Return an iterator to what followed the removed track.
@@ -1557,8 +1559,6 @@ private:
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
 
-   std::weak_ptr<TrackList> mSelf;
-
    // Nondecreasing during the session.
    // Nonpersistent.
    // Used to assign ids to added tracks.
@@ -1633,13 +1633,13 @@ class AUDACITY_DLL_API TrackFactory
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
    // LabelTrack.cpp, and TimeTrack.cpp respectively
-   std::unique_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
-   std::unique_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
+   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
+   std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
-   std::unique_ptr<LabelTrack> NewLabelTrack();
-   std::unique_ptr<TimeTrack> NewTimeTrack();
+   std::shared_ptr<LabelTrack> NewLabelTrack();
+   std::shared_ptr<TimeTrack> NewTimeTrack();
 #if defined(USE_MIDI)
-   std::unique_ptr<NoteTrack> NewNoteTrack();
+   std::shared_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
 

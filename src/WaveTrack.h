@@ -58,13 +58,10 @@ using Regions = std::vector < Region >;
 class Envelope;
 
 class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
-
- private:
+public:
 
    //
    // Constructor / Destructor / Duplicator
-   //
-   // Private since only factories are allowed to construct WaveTracks
    //
 
    WaveTrack(const std::shared_ptr<DirManager> &projDirManager,
@@ -72,14 +69,13 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
              double rate = 0);
    WaveTrack(const WaveTrack &orig);
 
-   void Init(const WaveTrack &orig);
-
-public:
    // overwrite data excluding the sample sequence but including display
    // settings
    void Reinit(const WaveTrack &orig);
 
 private:
+   void Init(const WaveTrack &orig);
+
    Track::Holder Duplicate() const override;
 
    friend class TrackFactory;
@@ -87,7 +83,7 @@ private:
  public:
 
    typedef WaveTrackLocation Location;
-   using Holder = std::unique_ptr<WaveTrack>;
+   using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
 

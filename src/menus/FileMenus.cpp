@@ -117,7 +117,7 @@ AudacityProject *DoImportMIDI(
    if (::ImportMIDI(fileName, newTrack.get())) {
 
       pProject->SelectNone();
-      auto pTrack = tracks->Add(std::move(newTrack));
+      auto pTrack = tracks->Add( newTrack );
       pTrack->SetSelected(true);
 
       pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
@@ -464,7 +464,7 @@ void OnImportLabels(const CommandContext &context)
 
       project.SelectNone();
       newTrack->SetSelected(true);
-      tracks->Add(std::move(newTrack));
+      tracks->Add( newTrack );
 
       project.PushState(wxString::
                 Format(_("Imported labels from '%s'"), fileName),

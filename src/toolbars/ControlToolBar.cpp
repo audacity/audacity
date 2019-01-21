@@ -939,7 +939,7 @@ WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(
          }
          channelCounts.push_back(nChannels);
          for ( auto channel : channels ) {
-            candidates.push_back(Track::Pointer<WaveTrack>(channel));
+            candidates.push_back(channel->SharedPointer<WaveTrack>());
             if(candidates.size() == recordingChannels)
                // Done!
                return candidates;
@@ -1168,9 +1168,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
          Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
-            std::shared_ptr<WaveTrack> newTrack{
-               p->GetTrackFactory()->NewWaveTrack().release()
-            };
+            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
             if (!first)
                first = newTrack.get();
 
@@ -1341,7 +1339,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
 
             auto newTrack = track1->Duplicate();
             newTrack->Clear(cutStart, cutEnd);
-            cutPreviewTracks->Add(std::move(newTrack));
+            cutPreviewTracks->Add( newTrack );
          }
          // use NOTHROW-GUARANTEE:
          mCutPreviewTracks = cutPreviewTracks;

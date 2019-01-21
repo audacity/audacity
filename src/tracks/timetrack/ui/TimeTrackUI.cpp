@@ -23,8 +23,8 @@ std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
  const AudacityProject *pProject, int, bool)
 {
    std::vector<UIHandlePtr> results;
-   auto result = EnvelopeHandle::TimeTrackHitTest
-      ( mEnvelopeHandle, st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
+   auto result = EnvelopeHandle::TimeTrackHitTest(
+      mEnvelopeHandle, st.state, st.rect, pProject, SharedPointer<TimeTrack>() );
    if (result)
       results.push_back(result);
    return results;
@@ -32,10 +32,10 @@ std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
 
 std::shared_ptr<TrackControls> TimeTrack::GetControls()
 {
-   return std::make_shared<TimeTrackControls>( Pointer( this ) );
+   return std::make_shared<TimeTrackControls>( SharedPointer() );
 }
 
 std::shared_ptr<TrackVRulerControls> TimeTrack::GetVRulerControls()
 {
-   return std::make_shared<TimeTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<TimeTrackVRulerControls>( SharedPointer() );
 }

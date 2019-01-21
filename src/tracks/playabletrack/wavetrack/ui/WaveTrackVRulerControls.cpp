@@ -33,7 +33,7 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
    std::vector<UIHandlePtr> results;
 
    if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
-      auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
+      auto pTrack = FindTrack()->SharedPointer<WaveTrack>(  );
       if (pTrack) {
          auto result = std::make_shared<WaveTrackVZoomHandle>(
             pTrack, st.rect, st.state.m_y );
