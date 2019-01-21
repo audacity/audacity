@@ -691,7 +691,7 @@ double DoClipMove
 void DoClipLeftOrRight
 (AudacityProject &project, bool right, bool keyUp )
 {
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    if (keyUp) {
       undoManager.StopConsolidating();

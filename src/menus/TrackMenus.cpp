@@ -905,7 +905,7 @@ void OnResample(const CommandContext &context)
    auto &project = context.project;
    auto projectRate = project.GetRate();
    auto &tracks = TrackList::Get( project );
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    int newRate;
 

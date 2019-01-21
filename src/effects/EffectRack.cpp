@@ -294,7 +294,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    AudacityProject *project = GetActiveProject();
 
    bool success = false;
-   auto state = project->GetUndoManager()->GetCurrentState();
+   auto state = UndoManager::Get( *project ).GetCurrentState();
    auto cleanup = finally( [&] {
       if(!success)
          project->SetStateTo(state);

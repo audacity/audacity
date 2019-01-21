@@ -303,7 +303,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
 {
    wxString desc;
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
    auto &commandManager = *project.GetCommandManager();
    int cur = undoManager.GetCurrentState();
 
@@ -493,7 +493,7 @@ CommandFlag MenuManager::GetUpdateFlags
    if( Clipboard::Get().Duration() > 0 )
       flags |= ClipboardFlag;
 
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    if (undoManager.UnsavedChanges() || !project.IsProjectSaved())
       flags |= UnsavedChangesFlag;

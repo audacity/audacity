@@ -400,7 +400,7 @@ void OnRecord2ndChoice(const CommandContext &context)
 void OnTimerRecord(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    // MY: Due to improvements in how Timer Recording saves and/or exports
    // it is now safer to disable Timer Recording when there is more than

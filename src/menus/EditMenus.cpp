@@ -223,7 +223,7 @@ bool DoEditMetadata
 void DoUndo(AudacityProject &project)
 {
    auto trackPanel = project.GetTrackPanel();
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    if (!project.UndoAvailable()) {
       AudacityMessageBox(_("Nothing to undo"));
@@ -258,7 +258,7 @@ void OnRedo(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    if (!project.RedoAvailable()) {
       AudacityMessageBox(_("Nothing to redo"));

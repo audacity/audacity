@@ -119,10 +119,10 @@ LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
 
    parent->Bind(wxEVT_SHOW, &LyricsPanel::OnShow, this);
 
-   auto undoManager = project->GetUndoManager();
-   undoManager->Bind(EVT_UNDO_PUSHED, &LyricsPanel::UpdateLyrics, this);
-   undoManager->Bind(EVT_UNDO_MODIFIED, &LyricsPanel::UpdateLyrics, this);
-   undoManager->Bind(EVT_UNDO_RESET, &LyricsPanel::UpdateLyrics, this);
+   auto &undoManager = UndoManager::Get( *project );
+   undoManager.Bind(EVT_UNDO_PUSHED, &LyricsPanel::UpdateLyrics, this);
+   undoManager.Bind(EVT_UNDO_MODIFIED, &LyricsPanel::UpdateLyrics, this);
+   undoManager.Bind(EVT_UNDO_RESET, &LyricsPanel::UpdateLyrics, this);
 
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK, &LyricsPanel::OnStartStop, this);
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE, &LyricsPanel::OnStartStop, this);
