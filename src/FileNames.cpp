@@ -370,16 +370,24 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder
 (const wxString &preference)
 {
    wxFileNameWrapper result;
-   result.AssignHomeDir();
 
 #ifdef __WIN32__
-   result.SetPath(gPrefs->Read(
-      preference, result.GetPath(wxPATH_GET_VOLUME) + "\\Documents\\Audacity"));
+#if 0
+   // MJB - BUG - 'Documents' should be localised, and may be diverted outside of 'Home' - 11/01/2019
+   result.SetPath( gPrefs->Read(
+      preference, result.GetPath( wxPATH_GET_VOLUME ) + "\\Documents\\Audacity" ) );
+#else
+   wxFileName defaultPath( wxStandardPaths::Get().GetDocumentsDir(), "" );
+   defaultPath.AppendDir( wxGetApp().GetAppName() );
+   result.SetPath( gPrefs->Read( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) ) );
+#endif
    // The path might not exist.
    // There is no error if the path could not be created.  That's OK.
    // The dialog that Audacity offers will allow the user to select a valid directory.
    result.Mkdir(0755, wxPATH_MKDIR_FULL);
 #else
+    // MJB - Don't know if 'Documents' is a localised name on macOS etc.
+   result.AssignHomeDir();
    result.SetPath(gPrefs->Read( preference, result.GetPath() + "/Documents"));
 #endif
 
