@@ -105,11 +105,6 @@
 // ExportMP3Options
 //----------------------------------------------------------------------------
 
-#define MODE_SET           0
-#define MODE_VBR           1
-#define MODE_ABR           2
-#define MODE_CBR           3
-
 #define CHANNEL_JOINT      0
 #define CHANNEL_STEREO     1
 #define CHANNEL_MONO       2

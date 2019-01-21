@@ -575,9 +575,12 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
    bool rc;
    long prevBitRate = gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), 128);
    gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), bitrate);
+   int prevMode = gPrefs->Read(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
+   gPrefs->Write(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
 
    auto cleanup = finally( [&] {
       gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
+      gPrefs->Write(wxT("/FileFormats/MP3RateMode"), prevMode);
       gPrefs->Flush();
    } );
 
@@ -643,10 +646,18 @@ bool MacroCommands::ApplySpecialCommand(
       // historically this was in use, now ignored if there
       return true;
    } else if (command == wxT("ExportMP3_56k_before")) {
+#if defined(__WXMSW__)
+      filename.Replace(wxT("cleaned\\"), wxT("cleaned\\MasterBefore_"), false);
+#else
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterBefore_"), false);
+#endif
       return WriteMp3File(filename, 56);
    } else if (command == wxT("ExportMP3_56k_after")) {
+#if defined(__WXMSW__)
+      filename.Replace(wxT("cleaned\\"), wxT("cleaned\\MasterAfter_"), false);
+#else
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterAfter_"), false);
+#endif
       return WriteMp3File(filename, 56);
    } else if (command == wxT("ExportMP3")) {
       return WriteMp3File(filename, 0); // 0 bitrate means use default/current

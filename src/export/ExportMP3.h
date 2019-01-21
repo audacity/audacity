@@ -14,6 +14,12 @@
 /* --------------------------------------------------------------------------*/
 
 #include "../MemoryX.h"
+
+#define MODE_SET           0
+#define MODE_VBR           1
+#define MODE_ABR           2
+#define MODE_CBR           3
+
 class ExportPlugin;
 class wxString;
 class wxWindow;
