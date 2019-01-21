@@ -89,6 +89,7 @@
 #include "FileNames.h"
 #include "InconsistencyException.h"
 #include "Prefs.h"
+#include "Project.h"
 #include "widgets/Warning.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
@@ -359,6 +360,32 @@ std::shared_ptr<DirManager> DirManager::Create()
    auto result = std::shared_ptr< DirManager >( safenew DirManager );
    sDirManagers.push_back( result );
    return result;
+}
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) { return DirManager::Create(); }
+};
+
+DirManager &DirManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< DirManager >( key );
+}
+
+const DirManager &DirManager::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+DirManager &DirManager::Reset( AudacityProject &project )
+{
+   auto dirManager = DirManager::Create();
+   project.AttachedObjects::Assign( key, dirManager );
+   return *dirManager;
+}
+
+void DirManager::Destroy( AudacityProject &project )
+{
+   project.AttachedObjects::Assign( key, nullptr );
 }
 
 DirManager::DirManager()

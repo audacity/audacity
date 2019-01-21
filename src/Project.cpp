@@ -608,7 +608,8 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (!XMLValueChecker::IsGoodPathName(strAttr))
    {
       // Maybe strAttr is just a fileName, not the full path. Try the project data directory.
-      wxFileName fileName(mProject->GetDirManager()->GetProjectDataDir(), strAttr);
+      wxFileNameWrapper fileName{
+         DirManager::Get( *mProject ).GetProjectDataDir(), strAttr };
       if (XMLValueChecker::IsGoodFileName(strAttr, fileName.GetPath(wxPATH_GET_VOLUME)))
          strAttr = fileName.GetFullPath();
       else
@@ -1094,9 +1095,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   // MM: DirManager is created dynamically, freed on demand via ref-counting
-   mDirManager = DirManager::Create();
-
    mLastSavedTracks.reset();
 
    auto &viewInfo = ViewInfo::Get( *this );
@@ -1355,7 +1353,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
    mIconized = false;
 
-   mTrackFactory.reset(safenew TrackFactory{ mDirManager, &viewInfo });
+   auto &dirManager = DirManager::Get( project );
+   mTrackFactory.reset(
+      safenew TrackFactory{ dirManager.shared_from_this(), &viewInfo });
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
@@ -1495,11 +1495,6 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
          pToolBar->ReCreateButtons();
    }
    GetRulerPanel()->ReCreateButtons();
-}
-
-const std::shared_ptr<DirManager> &AudacityProject::GetDirManager()
-{
-   return mDirManager;
 }
 
 TrackFactory *AudacityProject::GetTrackFactory()
@@ -2686,7 +2681,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //
    // LL: All objects with references to the DirManager should
    //     have been deleted before this.
-   mDirManager.reset();
+   DirManager::Destroy( project );
 
    AProjectHolder pSelf;
    {
@@ -3077,6 +3072,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 {
    auto &project = *this;
    auto &tracks = TrackList::Get( project );
+   auto &dirManager = DirManager::Get( project );
 
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
@@ -3227,7 +3223,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       if (! closed ) {
          if ( bParseSuccess ) {
             // This is a no-fail:
-            GetDirManager()->FillBlockfilesCache();
+            dirManager.FillBlockfilesCache();
             EnqueueODTasks();
          }
 
@@ -3247,7 +3243,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          // at this point mFileName != fileName, because when opening a
          // recovered file mFileName is faked to point to the original file
          // which has been recovered, not the one in the auto-save folder.
-         ::ProjectFSCK(*GetDirManager(), err, true); // Correct problems in auto-recover mode.
+         ::ProjectFSCK(dirManager, err, true); // Correct problems in auto-recover mode.
 
          // PushState calls AutoSave(), so no longer need to do so here.
          this->PushState(_("Project was recovered"), _("Recover"));
@@ -3259,7 +3255,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       else
       {
          // This is a regular project, check it and ask user
-         int status = ::ProjectFSCK(*GetDirManager(), err, false);
+         int status = ::ProjectFSCK(dirManager, err, false);
          if (status & FSCKstatus_CLOSE_REQ)
          {
             // Vaughan, 2010-08-23: Note this did not do a real close.
@@ -3457,6 +3453,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto &project = *this;
    auto &viewInfo = ViewInfo::Get( project );
+   auto &dirManager = DirManager::Get( project );
    bool bFileVersionFound = false;
    wxString fileVersion = _("<unrecognized version -- possibly corrupt project file>");
    wxString audacityVersion = _("<unrecognized version -- possibly corrupt project file>");
@@ -3530,7 +3527,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                // A previously unsaved project has been recovered, so fake
                // an unsaved project. The data files just stay in the temp
                // directory
-               mDirManager->SetLocalTempDir(mRecoveryAutoSaveDataDir);
+               dirManager.SetLocalTempDir(mRecoveryAutoSaveDataDir);
                mFileName = wxT("");
                projName = wxT("");
                projPath = wxT("");
@@ -3556,10 +3553,10 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // This is because unzipped projects e.g. those that get transfered between mac-pc
             // have encoding issues and end up expanding the wrong filenames for certain
             // international characters (such as capital 'A' with an umlaut.)
-            if (!mDirManager->SetProject(projPath, projName, false))
+            if (!dirManager.SetProject(projPath, projName, false))
             {
                projName = GetProjectName() + wxT("_data");
-               if (!mDirManager->SetProject(projPath, projName, false)) {
+               if (!dirManager.SetProject(projPath, projName, false)) {
                   AudacityMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
                                              projName),
                                              _("Error Opening Project"),
@@ -3705,6 +3702,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    auto &proj = *this;
    auto &tracks = TrackList::Get( proj );
    auto &viewInfo = ViewInfo::Get( proj );
+   auto &dirManager = DirManager::Get( proj );
 
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
@@ -3725,7 +3723,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
       // Note: This attribute must currently be written and parsed before
       //       all other attributes
       //
-      xmlFile.WriteAttr(wxT("datadir"), mDirManager->GetDataFilesDir());
+      xmlFile.WriteAttr(wxT("datadir"), dirManager.GetDataFilesDir());
 
       // Note that the code at the start assumes that if mFileName has a value
       // then the file has been saved.  This is not neccessarily true when
@@ -3854,6 +3852,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    // See explanation above
    // ProjectDisabler disabler(this);
    auto &proj = *this;
+   auto &dirManager = DirManager::Get( proj );
 
    wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
 
@@ -4018,7 +4017,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
 
       // This renames the project directory, and moves or copies
       // all of our block files over.
-      pSetter.create( *mDirManager, projPath, projName, true, moving );
+      pSetter.create( dirManager, projPath, projName, true, moving );
 
       if (!pSetter->Ok()){
          success = false;
@@ -4055,7 +4054,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
          // This was a recovered file, that is, we have just overwritten the
          // old, crashed .aup file. There may still be orphaned blockfiles in
          // this directory left over from the crash, so we DELETE them now
-         mDirManager->RemoveOrphanBlockfiles();
+         dirManager.RemoveOrphanBlockfiles();
 
          // Before we saved this, this was a recovered project, but now it is
          // a regular project, so remember this.
@@ -4067,7 +4066,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       {
          // On save as, always remove orphaned blockfiles that may be left over
          // because the user is trying to overwrite another project
-         mDirManager->RemoveOrphanBlockfiles();
+         dirManager.RemoveOrphanBlockfiles();
       }
 
       if (mLastSavedTracks)
@@ -4333,6 +4332,7 @@ void AudacityProject::ZoomAfterImport(Track *pTrack)
 bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
    auto &project = *this;
+   auto &dirManager = DirManager::Get( project );
    TrackHolders newTracks;
    wxString errorMessage;
 
@@ -4397,7 +4397,7 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
    }
 
    // This is a no-fail:
-   GetDirManager()->FillBlockfilesCache();
+   dirManager.FillBlockfilesCache();
    return true;
 }
 
@@ -4979,6 +4979,8 @@ void AudacityProject::RestartTimer()
 
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
+   auto &project = *this;
+   auto &dirManager = DirManager::Get( project );
    MixerToolBar *mixerToolBar = GetMixerToolBar();
    if( mixerToolBar )
       mixerToolBar->UpdateControls();
@@ -4986,7 +4988,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
    if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
-      wxLongLong freeSpace = mDirManager->GetFreeDiskSpace();
+      wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
       if (freeSpace >= 0) {
          wxString sMessage;
 
@@ -5233,10 +5235,12 @@ void AudacityProject::OnAudioIOStartRecording()
 // This is called after recording has stopped and all tracks have flushed.
 void AudacityProject::OnAudioIOStopRecording()
 {
+   auto &project = *this;
+   auto &dirManager = DirManager::Get( project );
+
    // Only push state if we were capturing and not monitoring
    if (GetAudioIOToken() > 0)
    {
-      auto &project = *this;
       auto &tracks = TrackList::Get( project );
       auto &intervals = gAudioIO->LostCaptureIntervals();
       if (intervals.size()) {
@@ -5285,7 +5289,7 @@ You are saving directly to a slow external storage device\n\
    }
 
    // Write all cached files to disk, if any
-   mDirManager->WriteCacheToDisk();
+   dirManager.WriteCacheToDisk();
 
    // Now we auto-save again to get the project to a "normal" state again.
    AutoSave();
@@ -5340,10 +5344,12 @@ int AudacityProject::GetOpenProjectCount() {
 }
 
 bool AudacityProject::IsProjectSaved() {
+   auto &project = *this;
+   auto &dirManager = DirManager::Get( project );
    // This is true if a project was opened from an .aup
    // Otherwise it becomes true only when a project is first saved successfully
    // in DirManager::SetProject
-   return (!mDirManager->GetProjectName().empty());
+   return (!dirManager.GetProjectName().empty());
 }
 
 // This is done to empty out the tracks, but without creating a new project.
@@ -5356,8 +5362,9 @@ void AudacityProject::ResetProjectToEmpty() {
    TrackActions::DoRemoveTracks( project );
 
    // A new DirManager.
-   mDirManager = DirManager::Create();
-   mTrackFactory.reset(safenew TrackFactory{ mDirManager, &viewInfo });
+   auto &dirManager = DirManager::Reset( project );
+   mTrackFactory.reset(
+      safenew TrackFactory{ dirManager.shared_from_this(), &viewInfo });
 
    projectFileIO.ResetProjectFileIO();
 
@@ -5451,6 +5458,7 @@ wxString AudacityProject::GetHoursMinsString(int iMinutes)
 // The calculations made are based on the user's current
 // preferences.
 int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
+   auto &project = *this;
 
    // Obtain the current settings
    auto oCaptureFormat = QualityPrefs::SampleFormatChoice();
@@ -5459,7 +5467,7 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) 
    }
 
    // Find out how much free space we have on disk
-   wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
+   wxLongLong lFreeSpace = DirManager::Get( project ).GetFreeDiskSpace();
    if (lFreeSpace < 0) {
       return 0;
    }

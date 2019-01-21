@@ -925,7 +925,7 @@ ProgressResult ExportMultiple::DoExport(std::unique_ptr<ProgressDialog> &pDialog
    wxFileName backup;
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
-      if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
+      if (!DirManager::Get( *mProject ).EnsureSafeFilename(inName)) {
          return ProgressResult::Cancelled;
       }
       name = inName;
