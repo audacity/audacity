@@ -43,6 +43,7 @@
 #include "UndoManager.h"
 #include "WaveTrack.h"
 #include "commands/CommandManager.h"
+#include "effects/EffectManager.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"

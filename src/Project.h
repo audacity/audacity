@@ -21,14 +21,11 @@
 #include "Audacity.h"
 #include "Experimental.h"
 
-#include "widgets/OverlayPanel.h"
-
-#include "DirManager.h"
+#include "Track.h"
 #include "SelectionState.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
-#include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
@@ -59,6 +56,7 @@ class AudacityProject;
 class AutoSaveFile;
 class Importer;
 class ODLock;
+class Overlay;
 class RecordingRecoveryHandler;
 class TrackList;
 class Tags;
@@ -115,6 +113,8 @@ bool IsWindowAccessible(wxRect *requestedRect);
 // Use shared_ptr to projects, because elsewhere we need weak_ptr
 using AProjectHolder = std::shared_ptr< AudacityProject >;
 using AProjectArray = std::vector< AProjectHolder >;
+
+using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 extern AProjectArray gAudacityProjects;
 

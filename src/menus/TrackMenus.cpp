@@ -13,6 +13,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../effects/EffectManager.h"
 #include "../widgets/ASlider.h"
 
 #include <wx/combobox.h>

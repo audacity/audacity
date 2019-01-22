@@ -33,6 +33,7 @@
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
 
+#include "DirManager.h"
 #include "ShuttleGui.h"
 #include "Menus.h"
 #include "Project.h"

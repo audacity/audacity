@@ -34,6 +34,7 @@ of the BlockFile system.
 #include <wx/valtext.h>
 #include <wx/intl.h>
 
+#include "DirManager.h"
 #include "ShuttleGui.h"
 #include "Project.h"
 #include "WaveTrack.h"

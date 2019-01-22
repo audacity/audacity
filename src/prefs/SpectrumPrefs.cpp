@@ -17,6 +17,7 @@
 #include "../Audacity.h"
 #include "SpectrumPrefs.h"
 
+#include <wx/choice.h>
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/checkbox.h>

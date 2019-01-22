@@ -38,11 +38,13 @@ greater use in future.
 
 #include "audacity/ConfigInterface.h"
 
+#include "EffectManager.h"
 #include "../AudacityException.h"
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Mix.h"
+#include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"

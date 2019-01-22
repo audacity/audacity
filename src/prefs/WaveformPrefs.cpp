@@ -19,6 +19,7 @@ Paul Licameli
 #include "GUISettings.h"
 
 #include <wx/checkbox.h>
+#include <wx/choice.h>
 
 #include "../Project.h"
 

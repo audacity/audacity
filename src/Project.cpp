@@ -127,6 +127,7 @@ scroll information.  It also has some status flags.
 #include "xml/XMLFileReader.h"
 #include "PlatformCompatibility.h"
 #include "Experimental.h"
+#include "effects/EffectManager.h"
 #include "export/Export.h"
 #include "FileNames.h"
 #include "BlockFile.h"

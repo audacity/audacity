@@ -38,6 +38,7 @@
 
 #include "Export.h"
 
+#include "../DirManager.h"
 #include "../Internat.h"
 #include "../FileFormats.h"
 #include "../FileNames.h"

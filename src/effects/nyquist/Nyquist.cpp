@@ -44,7 +44,9 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
+#include "../EffectManager.h"
 #include "../../AudacityApp.h"
+#include "../../DirManager.h"
 #include "../../FileException.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"

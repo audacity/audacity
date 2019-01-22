@@ -106,6 +106,7 @@
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/ProgressDialog.h"
 
 #include "ondemand/ODManager.h"
 

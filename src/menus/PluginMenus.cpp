@@ -15,6 +15,7 @@
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
 #include "../effects/Contrast.h"
+#include "../effects/EffectManager.h"
 
 // private helper classes and functions
 namespace {

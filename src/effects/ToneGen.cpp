@@ -24,6 +24,7 @@ frequency changes smoothly during the tone.
 #include <math.h>
 #include <float.h>
 
+#include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/valgen.h>
 

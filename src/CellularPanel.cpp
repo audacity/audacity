@@ -31,6 +31,7 @@
 #include "CellularPanel.h"
 #include "Project.h"
 #include "UIHandle.h"
+#include "TrackPanelCell.h"
 #include "TrackPanelMouseEvent.h"
 #include "HitTestResult.h"
 #include "RefreshCode.h"
