@@ -70,7 +70,7 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -96,25 +96,25 @@ bool DoPasteNothingSelected(AudacityProject &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.create(wc);
-               uNewTrack = trackFactory->NewWaveTrack(
+               uNewTrack = trackFactory.NewWaveTrack(
                   wc->GetSampleFormat(), wc->GetRate()),
                pNewTrack = uNewTrack.get();
             },
 #ifdef USE_MIDI
             [&](const NoteTrack *) {
-               uNewTrack = trackFactory->NewNoteTrack(),
+               uNewTrack = trackFactory.NewNoteTrack(),
                pNewTrack = uNewTrack.get();
             },
 #endif
             [&](const LabelTrack *) {
-               uNewTrack = trackFactory->NewLabelTrack(),
+               uNewTrack = trackFactory.NewLabelTrack(),
                pNewTrack = uNewTrack.get();
             },
             [&](const TimeTrack *) {
                // Maintain uniqueness of the time track!
                pNewTrack = tracks.GetTimeTrack();
                if (!pNewTrack)
-                  uNewTrack = trackFactory->NewTimeTrack(),
+                  uNewTrack = trackFactory.NewTimeTrack(),
                   pNewTrack = uNewTrack.get();
             }
          );
@@ -429,7 +429,7 @@ void OnPaste(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto isSyncLocked = project.IsSyncLocked();
 
@@ -643,7 +643,7 @@ void OnPaste(const CommandContext &context)
                wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = trackFactory->NewWaveTrack(
+               auto tmp = trackFactory.NewWaveTrack(
                   wt->GetSampleFormat(), wt->GetRate());
                tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?

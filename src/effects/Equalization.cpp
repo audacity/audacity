@@ -1092,7 +1092,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 {
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    wxASSERT(mM - 1 < windowSize);
    size_t L = windowSize - (mM - 1);   //Process L samples at a go

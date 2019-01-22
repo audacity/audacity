@@ -1144,7 +1144,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
                // Pad the recording track with silence, up to the
                // maximum time.
-               auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+               auto newTrack = TrackFactory::Get( *p ).NewWaveTrack();
                newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
                newTrack->InsertSilence(0.0, t0 - endTime);
                newTrack->Flush();
@@ -1178,7 +1178,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
          Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
-            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+            auto newTrack = TrackFactory::Get( *p ).NewWaveTrack();
             if (!first)
                first = newTrack.get();
 

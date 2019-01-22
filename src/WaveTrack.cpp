@@ -73,7 +73,7 @@ using std::max;
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "wavetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = *project.GetTrackFactory();
+      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewWaveTrack());
    }
@@ -1204,10 +1204,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          AudacityProject *p = GetActiveProject();
          if (!p)
             THROW_INCONSISTENCY_EXCEPTION;
-         TrackFactory *f = p->GetTrackFactory();
-         if (!f)
-            THROW_INCONSISTENCY_EXCEPTION;
-         auto tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
+         auto &factory = TrackFactory::Get( *p );
+         auto tmp = factory.NewWaveTrack( GetSampleFormat(), GetRate() );
 
          tmp->InsertSilence(0.0, newT1 - oldT1);
          tmp->Flush();

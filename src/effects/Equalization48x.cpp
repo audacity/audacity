@@ -411,7 +411,7 @@ bool EffectEqualization48x::DeltaTrack(
    Floats buffer2{ trackBlockSize };
 
    AudacityProject *p = GetActiveProject();
-   auto output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
    auto originalLen = len;
    auto currentSample = start;
 
@@ -628,7 +628,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
    auto trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int subBufferSize=mBufferCount==8?(mSubBufferSize>>1):mSubBufferSize; // half the buffers if avx is active
@@ -815,7 +815,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    auto trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    auto bigRuns = len/(subBufferSize-mBlockSize);
@@ -905,7 +905,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
       mEQWorkers[i].mProcessingType=processingType;
 
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    auto trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
@@ -1151,7 +1151,7 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
    auto trackBlockSize = t->GetMaxBlockSize();
 
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int bigRuns=len/(mSubBufferSize-mBlockSize);
@@ -1203,7 +1203,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
       return ProcessOne4x(count, t, start, len);
 
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    auto trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);

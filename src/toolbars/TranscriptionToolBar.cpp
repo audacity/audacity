@@ -453,7 +453,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    {
       // Create a TimeTrack if we haven't done so already
       if (!mTimeTrack) {
-         mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
+         mTimeTrack = TrackFactory::Get( *p ).NewTimeTrack();
          if (!mTimeTrack) {
             return;
          }

@@ -20,7 +20,7 @@ int DoAddLabel(
 {
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
 
    wxString title;      // of label
 
@@ -43,7 +43,7 @@ int DoAddLabel(
 
    // If none found, start a NEW label track and use it
    if (!lt)
-      lt = tracks.Add(trackFactory->NewLabelTrack());
+      lt = tracks.Add( trackFactory.NewLabelTrack() );
 
 // LLL: Commented as it seemed a little forceful to remove users
 //      selection when adding the label.  This does not happen if
@@ -281,7 +281,7 @@ void OnPasteNewLabel(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -298,9 +298,8 @@ void OnPasteNewLabel(const CommandContext &context)
             .Filter<LabelTrack>();
 
          // If no match found, add one
-         if (!t) {
-            t = tracks.Add(trackFactory->NewLabelTrack());
-         }
+         if (!t)
+            t = tracks.Add( trackFactory.NewLabelTrack() );
 
          // Select this track so the loop picks it up
          t->SetSelected(true);

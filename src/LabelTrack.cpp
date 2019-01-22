@@ -103,7 +103,7 @@ int LabelTrack::mFontHeight=-1;
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "labeltrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = *project.GetTrackFactory();
+      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewLabelTrack());
    }
@@ -3088,11 +3088,11 @@ void LabelTrack::DoEditLabels
    auto format = project.GetSelectionFormat(),
       freqFormat = project.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
    auto &viewInfo = ViewInfo::Get( project );
 
-   LabelDialog dlg(&project, *trackFactory, &tracks,
+   LabelDialog dlg(&project, trackFactory, &tracks,
                    lt, index,
                    viewInfo, rate,
                    format, freqFormat);

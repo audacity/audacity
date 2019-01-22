@@ -44,7 +44,7 @@ std::shared_ptr<TimeTrack> TrackFactory::NewTimeTrack()
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "timetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = *project.GetTrackFactory();
+      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewTimeTrack());
    }

@@ -1406,3 +1406,37 @@ TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bo
 #endif
    return result;
 }
+
+#include "ViewInfo.h"
+static auto TrackFactoryFactory = []( AudacityProject &project ) {
+   auto &dirManager = DirManager::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
+   return std::make_shared< TrackFactory >(
+      dirManager.shared_from_this(), &viewInfo );
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key2{
+   TrackFactoryFactory
+};
+
+TrackFactory &TrackFactory::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< TrackFactory >( key2 );
+}
+
+const TrackFactory &TrackFactory::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+TrackFactory &TrackFactory::Reset( AudacityProject &project )
+{
+   auto result = TrackFactoryFactory( project );
+   project.AttachedObjects::Assign( key2, result );
+   return *result;
+}
+
+void TrackFactory::Destroy( AudacityProject &project )
+{
+   project.AttachedObjects::Assign( key2, nullptr );
+}
