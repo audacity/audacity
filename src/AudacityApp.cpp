@@ -1607,7 +1607,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
-      auto &scrubber = project->GetScrubber();
+      auto &scrubber = Scrubber::Get( *project );
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();

@@ -496,8 +496,9 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    }
    else
    {
-      Scrubber &Scrubber = p->GetScrubber();
-      Scrubber.StartSpeedPlay(GetPlaySpeed(), playRegionStart, playRegionEnd);
+      auto &scrubber = Scrubber::Get( *p );
+      scrubber.StartSpeedPlay(GetPlaySpeed(),
+         playRegionStart, playRegionEnd);
    }
 }
 

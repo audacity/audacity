@@ -1980,7 +1980,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // work with a thread, or else yield to timer messages, but that would
       // execute too much else
       if (mScrubState) {
-         mOwningProject->GetScrubber().ContinueScrubbingPoll();
+         Scrubber::Get( *mOwningProject ).ContinueScrubbingPoll();
          wxMilliSleep( Scrubber::ScrubPollInterval_ms * 0.9 );
       }
       else

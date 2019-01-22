@@ -144,7 +144,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
       mNewIsCapturing = false;
-      const auto &scrubber = mProject->GetScrubber();
+      const auto &scrubber = Scrubber::Get( *mProject );
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
          const auto offset = trackPanel->GetLeftOffset();

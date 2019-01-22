@@ -142,7 +142,7 @@ void ScrubbingToolBar::RegenerateTooltips()
 
    auto project = GetActiveProject();
    if (project) {
-      auto &scrubber = project->GetScrubber();
+      auto &scrubber = Scrubber::Get( *project );
 
       const auto scrubButton = mButtons[STBScrubID];
       const auto seekButton = mButtons[STBSeekID];
@@ -184,7 +184,7 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
 {
    AudacityProject *p = GetActiveProject();
    if (!p) return;
-   auto &scrubber = p->GetScrubber();
+   auto &scrubber = Scrubber::Get( *p );
 
    int id = event.GetId();
 
@@ -215,7 +215,7 @@ void ScrubbingToolBar::EnableDisableButtons()
    AudacityProject *p = GetActiveProject();
    if (!p) return;
 
-   auto &scrubber = p->GetScrubber();
+   auto &scrubber = Scrubber::Get( *p );
    const auto canScrub = scrubber.CanScrub();
 
    if (scrubber.Scrubs()) {

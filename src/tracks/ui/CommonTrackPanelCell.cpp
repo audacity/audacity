@@ -47,7 +47,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    unsigned result = RefreshAll;
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
-   Scrubber &scrubber = pProject->GetScrubber();
+   Scrubber &scrubber = Scrubber::Get( *pProject );
    const auto steps = evt.steps;
 
    if (event.ShiftDown()

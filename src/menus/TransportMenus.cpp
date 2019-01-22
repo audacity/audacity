@@ -206,7 +206,7 @@ bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
 {
    auto toolbar = project.GetControlToolBar();
-   auto &scrubber = project.GetScrubber();
+   auto &scrubber = Scrubber::Get( project );
    auto token = project.GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
@@ -335,7 +335,7 @@ void DoTogglePinnedHead( AudacityProject &project )
       // Update button image
       ruler->UpdateButtonStates();
 
-   auto &scrubber = project.GetScrubber();
+   auto &scrubber = Scrubber::Get( project );
    if (scrubber.HasMark())
       scrubber.SetScrollScrubbing(value);
 }
@@ -1110,7 +1110,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
       ),
 
       // Scrubbing sub-menu
-      project.GetScrubber().Menu(),
+      Scrubber::Get( project ).Menu(),
 
       CursorMenu,
 

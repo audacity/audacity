@@ -196,11 +196,12 @@ AdornedRulerPanel *AdornedRulerPanel::QuickPlayRulerOverlay::GetRuler() const
 void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 {
    const auto project = mPartner.mProject;
+   auto &scrubber = Scrubber::Get( *project );
    auto ruler = GetRuler();
 
    // Hide during transport, or if mouse is not in the ruler, unless scrubbing
    if ((!ruler->LastCell() || project->IsAudioActive())
-       && (!project->GetScrubber().IsScrubbing() || project->GetScrubber().IsSpeedPlaying()))
+       && (!scrubber.IsScrubbing() || scrubber.IsSpeedPlaying()))
       mNewQPIndicatorPos = -1;
    else {
       const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
@@ -215,7 +216,6 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 
          // These determine which shape is drawn on the ruler, and whether
          // in the scrub or the qp zone
-         const auto &scrubber = mPartner.mProject->GetScrubber();
          mNewScrub =
             ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
             (ruler->LastCell() == ruler->mScrubbingCell ||
@@ -227,7 +227,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
          // the track panel, green for scrub or yellow for snapped or white
          mNewPreviewingScrub =
             ruler->LastCell() == ruler->mScrubbingCell &&
-            !project->GetScrubber().IsScrubbing();
+            !scrubber.IsScrubbing();
          mNewQPIndicatorSnapped = ruler->mIsSnapped;
       }
    }
@@ -725,7 +725,7 @@ private:
       auto result = CommonRulerHandle::Click(event, pProject);
       if (!( result & RefreshCode::Cancelled )) {
          if (mClicked == Button::Left) {
-            auto &scrubber = pProject->GetScrubber();
+            auto &scrubber = Scrubber::Get( *pProject );
             // only if scrubbing is allowed now
             bool canScrub =
                scrubber.CanScrub() &&
@@ -776,7 +776,7 @@ private:
       auto result = CommonRulerHandle::Cancel(pProject);
 
       if (mClicked == Button::Left) {
-         auto &scrubber = pProject->GetScrubber();
+         auto &scrubber = Scrubber::Get( *pProject );
          scrubber.Cancel();
          
          auto ctb = pProject->GetControlToolBar();
@@ -1233,7 +1233,7 @@ auto AdornedRulerPanel::QPHandle::Click
          if (!(mParent && mParent->mQuickPlayEnabled))
             return RefreshCode::Cancelled;
 
-         auto &scrubber = pProject->GetScrubber();
+         auto &scrubber = Scrubber::Get( *pProject );
          if(scrubber.HasMark()) {
             // We can't stop scrubbing yet (see comments in Bug 1391),
             // but we can pause it.
@@ -1394,7 +1394,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 -> HitTestPreview
 {
    (void)state;// Compiler food
-   const auto &scrubber = pProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *pProject );
    auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
    return {
@@ -1418,7 +1418,7 @@ auto AdornedRulerPanel::QPHandle::Preview
    }
 
    wxString message;
-   const auto &scrubber = pProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *pProject );
    const bool scrubbing = scrubber.HasMark();
    if (scrubbing)
       // Don't distinguish zones
@@ -1615,7 +1615,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
 // For example buttons and menus must update.
 void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
 {
-   auto &scrubber = mProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *mProject );
    scrubber.OnToggleScrubRuler(*mProject);
 }
 
@@ -1745,12 +1745,12 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 
 void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
 {
-   auto &scrubber = mProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *mProject );
    PushEventHandler(&scrubber);
    auto cleanup = finally([this]{ PopEventHandler(); });
 
    wxMenu rulerMenu;
-   mProject->GetScrubber().PopulatePopupMenu(rulerMenu);
+   scrubber.PopulatePopupMenu(rulerMenu);
    PopupMenu(&rulerMenu, pos);
 }
 
