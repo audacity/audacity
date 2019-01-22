@@ -12,9 +12,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "BackgroundCell.h"
 
 #include "../../HitTestResult.h"
+#include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"
 #include "../../Track.h"
+#include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UIHandle.h"
 
@@ -75,6 +77,24 @@ public:
    Result Cancel(AudacityProject *) override
    { return RefreshCode::RefreshNone; }
 };
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< BackgroundCell >( &parent );
+     parent.GetTrackPanel()->SetBackgroundCell( result );
+     return result;
+   }
+};
+
+BackgroundCell &BackgroundCell::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< BackgroundCell >( key );
+}
+
+const BackgroundCell &BackgroundCell::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
 
 BackgroundCell::~BackgroundCell()
 {
