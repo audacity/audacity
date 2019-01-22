@@ -1325,9 +1325,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // MM: Give track panel the focus to ensure keyboard commands work
    mTrackPanel->SetFocus();
 
-   // Create tags object
-   mTags = std::make_shared<Tags>();
-
    InitialState();
    FixScrollbars();
    mRuler->SetLeftOffset(mTrackPanel->GetLeftOffset());  // bevel on AdornedRuler
@@ -1511,21 +1508,6 @@ bool AudacityProject::IsAudioActive() const
 {
    return GetAudioIOToken() > 0 &&
       gAudioIO->IsStreamActive(GetAudioIOToken());
-}
-
-Tags *AudacityProject::GetTags()
-{
-   return mTags.get();
-}
-
-const Tags *AudacityProject::GetTags() const
-{
-   return mTags.get();
-}
-
-void AudacityProject::SetTags( const std::shared_ptr<Tags> &tags )
-{
-   mTags = tags;
 }
 
 wxString AudacityProject::GetProjectName() const
@@ -2657,8 +2639,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    TrackFactory::Destroy( project );
 
-   mTags.reset();
-
    // Delete all the tracks to free up memory and DirManager references.
    tracks.Clear();
 
@@ -3695,6 +3675,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    auto &tracks = TrackList::Get( proj );
    auto &viewInfo = ViewInfo::Get( proj );
    auto &dirManager = DirManager::Get( proj );
+   auto &tags = Tags::Get( proj );
 
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
@@ -3739,7 +3720,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    xmlFile.WriteAttr(wxT("bandwidthformat"),
                      GetBandwidthSelectionFormatName().Internal());
 
-   mTags->WriteXML(xmlFile);
+   tags.WriteXML(xmlFile);
 
    unsigned int ndx = 0;
    tracks.Any().Visit(
@@ -4326,18 +4307,24 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
 {
    auto &project = *this;
    auto &dirManager = DirManager::Get( project );
+   auto oldTags = Tags::Get( project ).shared_from_this();
    TrackHolders newTracks;
    wxString errorMessage;
 
    {
       // Backup Tags, before the import.  Be prepared to roll back changes.
-      auto cleanup = valueRestorer( mTags,
-                                   mTags ? mTags->Duplicate() : decltype(mTags){} );
+      bool committed = false;
+      auto cleanup = finally([&]{
+         if ( !committed )
+            Tags::Set( project, oldTags );
+      });
+      auto newTags = oldTags->Duplicate();
+      Tags::Set( project, newTags );
 
       bool success = Importer::Get().Import(fileName,
                                             &TrackFactory::Get( project ),
                                             newTracks,
-                                            mTags.get(),
+                                            newTags.get(),
                                             errorMessage);
 
       if (!errorMessage.empty()) {
@@ -4352,7 +4339,7 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
       FileHistory::Global().AddFileToHistory(fileName);
 
       // no more errors, commit
-      cleanup.release();
+      committed = true;
    }
 
    // for LOF ("list of files") files, do not import the file as if it
@@ -4627,11 +4614,12 @@ void AudacityProject::InitialState()
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
+   auto &tags = Tags::Get( project );
 
    undoManager.ClearStates();
 
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, mTags,
+      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
       _("Created new project"), wxT(""));
 
    undoManager.StateSaved();
@@ -4672,8 +4660,9 @@ void AudacityProject::PushState(const wxString &desc,
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
+   auto &tags = Tags::Get( project );
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, mTags,
+      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
       desc, shortDesc, flags);
 
    mDirty = true;
@@ -4703,8 +4692,9 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
+   auto &tags = Tags::Get( project );
    undoManager.ModifyState(
-      &tracks, viewInfo.selectedRegion, mTags);
+      &tracks, viewInfo.selectedRegion, tags.shared_from_this());
    if (bWantsAutoSave)
       AutoSave();
    GetTrackPanel()->HandleCursorForPresentMouseState();
@@ -4722,7 +4712,7 @@ void AudacityProject::PopState(const UndoState &state)
    viewInfo.selectedRegion = state.selectedRegion;
 
    // Restore tags
-   mTags = state.tags;
+   Tags::Set( project, state.tags );
 
    TrackList *const tracks = state.tracks.get();
 

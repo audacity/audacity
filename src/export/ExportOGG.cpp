@@ -381,7 +381,7 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
 {
    // Retrieve tags from project if not over-ridden
    if (metadata == NULL)
-      metadata = project->GetTags();
+      metadata = &Tags::Get( *project );
 
    vorbis_comment_init(comment);
 

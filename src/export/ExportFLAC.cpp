@@ -447,7 +447,7 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
 {
    // Retrieve tags if needed
    if (tags == NULL)
-      tags = project->GetTags();
+      tags = &Tags::Get( *project );
 
    mMetadata.reset(::FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT));
 

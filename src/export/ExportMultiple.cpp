@@ -732,7 +732,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
 
          /* do the metadata for this file */
          // copy project metadata to start with
-         setting.filetags = *(mProject->GetTags());
+         setting.filetags = Tags::Get( *mProject );
          // over-ride with values
          setting.filetags.SetTag(TAG_TITLE, title);
          setting.filetags.SetTag(TAG_TRACK, l+1);
@@ -849,7 +849,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 
          /* do the metadata for this file */
          // copy project metadata to start with
-         setting.filetags = *(mProject->GetTags());
+         setting.filetags = Tags::Get( *mProject );
          // over-ride with values
          setting.filetags.SetTag(TAG_TITLE, title);
          setting.filetags.SetTag(TAG_TRACK, l+1);

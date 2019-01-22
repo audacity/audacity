@@ -503,7 +503,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       }
       // Retrieve tags if not given a set
       if (metadata == NULL)
-         metadata = project->GetTags();
+         metadata = &Tags::Get( *project );
 
       // Install the metata at the beginning of the file (except for
       // WAV and WAVEX formats)

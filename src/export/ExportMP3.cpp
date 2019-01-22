@@ -1868,7 +1868,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    // Put ID3 tags at beginning of file
    if (metadata == NULL)
-      metadata = project->GetTags();
+      metadata = &Tags::Get( *project );
 
    // Open file for writing
    wxFFile outFile(fName, wxT("w+b"));

@@ -200,15 +200,19 @@ bool DoEditMetadata
 (AudacityProject &project,
  const wxString &title, const wxString &shortUndoDescription, bool force)
 {
-   auto tags = project.GetTags();
+   auto &tags = Tags::Get( project );
 
    // Back up my tags
-   auto newTags = tags->Duplicate();
+   // Tags (artist name, song properties, MP3 ID3 info, etc.)
+   // The structure may be shared with undo history entries
+   // To keep undo working correctly, always replace this with a NEW duplicate
+   // BEFORE doing any editing of it!
+   auto newTags = tags.Duplicate();
 
    if (newTags->ShowEditDialog(&project, title, force)) {
-      if (*tags != *newTags) {
+      if (tags != *newTags) {
          // Commit the change to project state only now.
-         project.SetTags( newTags );
+         Tags::Set( project, newTags );
          project.PushState(title, shortUndoDescription);
       }
       bool bShowInFuture;
