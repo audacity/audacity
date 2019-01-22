@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../NumberScale.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
+#include "../../SelectionState.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../ViewInfo.h"
@@ -552,7 +553,7 @@ UIHandle::Result SelectHandle::Click
       // Do not start a drag
       return RefreshAll | Cancelled;
    
-   auto &selectionState = pProject->GetSelectionState();
+   auto &selectionState = SelectionState::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
       auto &trackList = TrackList::Get( *pProject );
 
@@ -835,7 +836,7 @@ UIHandle::Result SelectHandle::Drag
          Track *eTrack = clickedTrack.get();
          auto &trackList = TrackList::Get( *pProject );
          if ( sTrack && eTrack && !event.ControlDown() ) {
-            auto &selectionState = pProject->GetSelectionState();
+            auto &selectionState = SelectionState::Get( *pProject );
             selectionState.SelectRangeOfTracks( trackList, *sTrack, *eTrack );
          }
 

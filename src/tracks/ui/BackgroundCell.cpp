@@ -12,8 +12,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "BackgroundCell.h"
 
 #include "../../HitTestResult.h"
-#include "../../Project.h"
 #include "../../RefreshCode.h"
+#include "../../SelectionState.h"
 #include "../../Track.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UIHandle.h"
@@ -51,7 +51,7 @@ public:
       // AS: If the user clicked outside all tracks, make nothing
       //  selected.
       if ((event.ButtonDown() || event.ButtonDClick())) {
-         pProject->GetSelectionState().SelectNone(
+         SelectionState::Get( *pProject ).SelectNone(
             TrackList::Get( *pProject ) );
          result |= RefreshAll;
       }

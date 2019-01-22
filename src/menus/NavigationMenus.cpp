@@ -4,6 +4,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Track.h"
+#include "../SelectionState.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../commands/CommandContext.h"
@@ -85,7 +86,7 @@ void DoPrevTrack(
 {
    auto trackPanel = project.GetTrackPanel();
    auto &tracks = TrackList::Get( project );
-   auto &selectionState = project.GetSelectionState();
+   auto &selectionState = SelectionState::Get( project );
 
    Track* t = trackPanel->GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
@@ -195,7 +196,7 @@ void DoNextTrack(
 {
    auto trackPanel = project.GetTrackPanel();
    auto &tracks = TrackList::Get( project );
-   auto &selectionState = project.GetSelectionState();
+   auto &selectionState = SelectionState::Get( project );
 
    auto t = trackPanel->GetFocusedTrack();   // Get currently focused track
    if( t == NULL )   // if there isn't one, focus on first
@@ -507,7 +508,7 @@ void OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &selectionState = project.GetSelectionState();
+   auto &selectionState = SelectionState::Get( project );
 
    Track *t;
 

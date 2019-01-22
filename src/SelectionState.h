@@ -9,16 +9,22 @@
 #ifndef __AUDACITY_SELECTION_STATE__
 #define __AUDACITY_SELECTION_STATE__
 
+class AudacityProject;
 class Track;
 class TrackList;
 class ViewInfo;
+#include "ClientData.h"
 #include "MemoryX.h"
 #include <vector>
 
 // State relating to the set of selected tracks
-class SelectionState
+class SelectionState final
+   : public ClientData::Base
 {
 public:
+   static SelectionState &Get( AudacityProject &project );
+   static const SelectionState &Get( const AudacityProject &project );
+
    static void SelectTrackLength
       ( ViewInfo &viewInfo, Track &track, bool syncLocked );
 

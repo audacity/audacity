@@ -120,6 +120,7 @@ scroll information.  It also has some status flags.
 #include "NoteTrack.h"
 #include "Prefs.h"
 #include "ProjectFSCK.h"
+#include "SelectionState.h"
 #include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
@@ -4162,7 +4163,7 @@ bool AudacityProject::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    wxFileName uniqueTrackFileName;
    for (auto pTrack : (trackRange + &Track::IsLeader))
    {
-      SelectionStateChanger changer{ GetSelectionState(), tracks };
+      SelectionStateChanger changer{ SelectionState::Get( project ), tracks };
       auto channels = TrackList::Channels(pTrack);
 
       for (auto channel : channels)

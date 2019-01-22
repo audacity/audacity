@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../LabelTrack.h"
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
+#include "../../../SelectionState.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../ViewInfo.h"
 #include "../../../images/Cursors.h"
@@ -74,7 +75,7 @@ UIHandle::Result LabelTextHandle::Click
 
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
-   auto &selectionState = pProject->GetSelectionState();
+   auto &selectionState = SelectionState::Get( *pProject );
    auto &tracks = TrackList::Get( *pProject );
    mChanger =
       std::make_shared< SelectionStateChanger >( selectionState, tracks );

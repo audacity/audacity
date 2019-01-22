@@ -7,6 +7,7 @@
 #include "../Menus.h" // for PrefsListener
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../SelectionState.h"
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
@@ -509,7 +510,7 @@ void DoListSelection
 {
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectionState = project.GetSelectionState();
+   auto &selectionState = SelectionState::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto isSyncLocked = project.IsSyncLocked();
 

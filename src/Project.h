@@ -24,7 +24,6 @@
 
 #include "ClientData.h"
 #include "Prefs.h"
-#include "SelectionState.h"
 #include "commands/CommandManagerWindowClasses.h"
 
 #include "TrackPanelListener.h"
@@ -304,7 +303,6 @@ public:
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
    const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
-   SelectionState &GetSelectionState() { return mSelectionState; }
 
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -557,7 +555,6 @@ private:
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
-   SelectionState mSelectionState{};
    wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;

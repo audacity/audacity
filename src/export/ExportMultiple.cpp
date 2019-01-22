@@ -44,6 +44,7 @@
 #include "../LabelTrack.h"
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../SelectionState.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
@@ -127,7 +128,7 @@ END_EVENT_TABLE()
 
 ExportMultiple::ExportMultiple(AudacityProject *project)
 : wxDialogWrapper(project, wxID_ANY, wxString(_("Export Multiple")))
-, mSelectionState{ project->GetSelectionState() }
+, mSelectionState{ SelectionState::Get( *project ) }
 {
    SetName(GetTitle());
 
