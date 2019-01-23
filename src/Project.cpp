@@ -1178,8 +1178,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              mRuler);
    mTrackPanel->UpdatePrefs();
 
-   mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
-
    mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
 
    mBackgroundCell = std::make_shared<BackgroundCell>(this);
@@ -1189,16 +1187,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mScrubber = std::make_unique<Scrubber>(this);
 #endif
 
-   // More order dependencies here...
-   // This must follow construction of *mIndicatorOverlay, because it must
-   // attach its timer event handler later (so that its handler is invoked
-   // earlier)
    mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
 
-   // This must follow construction of *mPlaybackScroller,
-   // because it must
-   // attach its timer event handler later (so that its handler is invoked
-   // earlier)
+   mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
+   
    this->Bind(EVT_TRACK_PANEL_TIMER,
       &ViewInfo::OnTimer,
       &mViewInfo);
@@ -5532,15 +5524,20 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) 
 AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-                     &PlaybackScroller::OnTimer,
-                     this);
+   mProject->GetViewInfo().Bind(EVT_TRACK_PANEL_TIMER,
+      &PlaybackScroller::OnTimer,
+      this);
 }
 
 void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
 {
    // Let other listeners get the notification
    event.Skip();
+
+   auto cleanup = finally([&]{
+      // Propagate the message to other listeners bound to this
+      this->ProcessEvent( event );
+   });
 
    if(!mProject->IsAudioActive())
       return;

@@ -110,9 +110,9 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-                     &PlayIndicatorOverlay::OnTimer,
-                     this);
+   mProject->GetPlaybackScroller().Bind(EVT_TRACK_PANEL_TIMER,
+      &PlayIndicatorOverlay::OnTimer,
+      this);
 }
 
 PlayIndicatorOverlay::~PlayIndicatorOverlay()

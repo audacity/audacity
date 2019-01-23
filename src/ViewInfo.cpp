@@ -204,4 +204,6 @@ void ViewInfo::OnTimer(wxCommandEvent &event)
 {
    mRecentStreamTime = gAudioIO->GetStreamTime();
    event.Skip();
+   // Propagate the message to other listeners bound to this
+   this->ProcessEvent( event );
 }
