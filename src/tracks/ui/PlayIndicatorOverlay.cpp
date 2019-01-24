@@ -74,9 +74,9 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
        && mLastIsCapturing != mNewIsCapturing) {
       // Detect transition to recording during punch and roll; make ruler
       // change its button color too
-      const auto ruler = mProject->GetRulerPanel();
-      ruler->UpdateButtonStates();
-      ruler->Refresh();
+      auto &ruler = AdornedRulerPanel::Get( *mProject );
+      ruler.UpdateButtonStates();
+      ruler.Refresh();
    }
    mLastIsCapturing = mNewIsCapturing;
 
@@ -138,11 +138,9 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
    // Ensure that there is an overlay attached to the ruler
    if (!mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if (ruler) {
-         mPartner = std::make_shared<PlayIndicatorOverlayBase>(mProject, false);
-         ruler->AddOverlay( mPartner );
-      }
+      auto &ruler = AdornedRulerPanel::Get( *mProject );
+      mPartner = std::make_shared<PlayIndicatorOverlayBase>(mProject, false);
+      ruler.AddOverlay( mPartner );
    }
 
    auto &trackPanel = TrackPanel::Get( *mProject );

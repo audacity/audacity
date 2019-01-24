@@ -297,7 +297,7 @@ void DoRecord( AudacityProject &project )
 void DoLockPlayRegion( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
-   auto ruler = project.GetRulerPanel();
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    double start, end;
    project.GetPlayRegion(&start, &end);
@@ -307,16 +307,16 @@ void DoLockPlayRegion( AudacityProject &project )
    }
    else {
       project.SetPlayRegionLocked( true );
-      ruler->Refresh(false);
+      ruler.Refresh(false);
    }
 }
 
 void DoUnlockPlayRegion( AudacityProject &project )
 {
-   auto ruler = project.GetRulerPanel();
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    project.SetPlayRegionLocked( false );
-   ruler->Refresh(false);
+   ruler.Refresh(false);
 }
 
 void DoTogglePinnedHead( AudacityProject &project )
@@ -330,10 +330,9 @@ void DoTogglePinnedHead( AudacityProject &project )
    if (ctb)
       ctb->StartScrollingIfPreferred();
 
-   auto ruler = project.GetRulerPanel();
-   if (ruler)
-      // Update button image
-      ruler->UpdateButtonStates();
+   auto &ruler = AdornedRulerPanel::Get( project );
+   // Update button image
+   ruler.UpdateButtonStates();
 
    auto &scrubber = Scrubber::Get( project );
    if (scrubber.HasMark())

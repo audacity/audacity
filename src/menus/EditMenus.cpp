@@ -289,7 +289,7 @@ void OnCut(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto ruler = project.GetRulerPanel();
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    // This doesn't handle cutting labels, it handles
    // cutting the _text_ inside of labels, i.e. if you're
@@ -364,7 +364,7 @@ void OnCut(const CommandContext &context)
 
    // Bug 1663
    //mRuler->ClearPlayRegion();
-   ruler->DrawOverlays( true );
+   ruler.DrawOverlays( true );
 
    project.RedrawProject();
 }

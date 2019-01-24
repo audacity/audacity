@@ -382,7 +382,7 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
          return TopDockHasFocus;
       }
 
-      if (w == project.GetRulerPanel())
+      if (w == &AdornedRulerPanel::Get( project ))
          return RulerHasFocus;
 
       if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {

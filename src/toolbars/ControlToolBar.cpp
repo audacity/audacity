@@ -731,7 +731,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    // Let other UI update appearance
    if (p)
-      p->GetRulerPanel()->DrawBothOverlays();
+      AdornedRulerPanel::Get( *p ).DrawBothOverlays();
 
    return token;
 }

@@ -213,7 +213,7 @@ namespace{
 
 AudacityProject::AttachedWindows::RegisteredFactory sKey{
    []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
-      auto &ruler = *project.GetRulerPanel();
+      auto &ruler = AdornedRulerPanel::Get( project );
       auto &viewInfo = ViewInfo::Get( project );
       auto &window = project;
       auto mainPage = window.GetMainPage();

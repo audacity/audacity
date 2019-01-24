@@ -270,7 +270,7 @@ void MoveWhenAudioInactive
    auto &viewInfo = ViewInfo::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto ruler = project.GetRulerPanel();
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    int snapToTime = project.GetSnapTo();
@@ -296,7 +296,7 @@ void MoveWhenAudioInactive
 
       // Move the visual cursor, avoiding an unnecessary complete redraw
       trackPanel.DrawOverlays(false);
-      ruler->DrawOverlays(false);
+      ruler.DrawOverlays(false);
 
       // This updates the selection shown on the selection bar, and the play
       // region
