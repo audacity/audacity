@@ -110,7 +110,6 @@ class AdornedRulerPanel::QuickPlayRulerOverlay final : public Overlay
 {
 public:
    QuickPlayRulerOverlay(QuickPlayIndicatorOverlay &partner);
-   virtual ~QuickPlayRulerOverlay();
 
    // Available to this and to partner
 
@@ -149,11 +148,10 @@ private:
 class AdornedRulerPanel::QuickPlayIndicatorOverlay final : public Overlay
 {
    friend QuickPlayRulerOverlay;
+   friend AdornedRulerPanel;
 
 public:
    QuickPlayIndicatorOverlay(AudacityProject *project);
-
-   virtual ~QuickPlayIndicatorOverlay();
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
@@ -161,8 +159,8 @@ private:
 
    AudacityProject *mProject;
 
-   std::unique_ptr<QuickPlayRulerOverlay> mPartner
-      { std::make_unique<QuickPlayRulerOverlay>(*this) };
+   std::shared_ptr<QuickPlayRulerOverlay> mPartner
+      { std::make_shared<QuickPlayRulerOverlay>(*this) };
 
    int mOldQPIndicatorPos { -1 };
    bool mOldQPIndicatorSnapped {};
@@ -179,14 +177,6 @@ AdornedRulerPanel::QuickPlayRulerOverlay::QuickPlayRulerOverlay(
    QuickPlayIndicatorOverlay &partner)
 : mPartner(partner)
 {
-   GetRuler()->AddOverlay(this);
-}
-
-AdornedRulerPanel::QuickPlayRulerOverlay::~QuickPlayRulerOverlay()
-{
-   auto ruler = GetRuler();
-   if (ruler)
-      ruler->RemoveOverlay(this);
 }
 
 AdornedRulerPanel *AdornedRulerPanel::QuickPlayRulerOverlay::GetRuler() const
@@ -286,15 +276,6 @@ AdornedRulerPanel::QuickPlayIndicatorOverlay::QuickPlayIndicatorOverlay(
    AudacityProject *project)
    : mProject(project)
 {
-   auto tp = mProject->GetTrackPanel();
-   tp->AddOverlay(this);
-}
-
-AdornedRulerPanel::QuickPlayIndicatorOverlay::~QuickPlayIndicatorOverlay()
-{
-   auto tp = mProject->GetTrackPanel();
-   if (tp)
-      tp->RemoveOverlay(this);
 }
 
 std::pair<wxRect, bool>
@@ -2175,7 +2156,10 @@ bool AdornedRulerPanel::TakesFocus() const
 
 void AdornedRulerPanel::CreateOverlays()
 {
-   if (!mOverlay)
+   if (!mOverlay) {
       mOverlay =
-         std::make_unique<QuickPlayIndicatorOverlay>( mProject );
+         std::make_shared<QuickPlayIndicatorOverlay>( mProject );
+      mProject->GetTrackPanel()->AddOverlay( mOverlay );
+      this->AddOverlay( mOverlay->mPartner );
+   }
 }

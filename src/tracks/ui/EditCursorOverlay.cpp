@@ -37,15 +37,6 @@ EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
 {
 }
 
-EditCursorOverlay::~EditCursorOverlay()
-{
-   if (mIsMaster && mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if (ruler)
-         ruler->RemoveOverlay(mPartner.get());
-   }
-}
-
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
    const SelectedRegion &selection = mProject->GetSelection();
@@ -74,8 +65,8 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (mIsMaster && !mPartner) {
       auto ruler = mProject->GetRulerPanel();
       if (ruler) {
-         mPartner = std::make_unique<EditCursorOverlay>(mProject, false);
-         ruler->AddOverlay(mPartner.get());
+         mPartner = std::make_shared<EditCursorOverlay>(mProject, false);
+         ruler->AddOverlay( mPartner );
       }
    }
 

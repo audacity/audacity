@@ -33,7 +33,7 @@
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
 
-#include "MemoryX.h"
+#include <memory>
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/log.h>
@@ -774,13 +774,13 @@ private:
    friend class CommandManager;
 
    // TrackPanelOverlay objects
-   std::unique_ptr<Overlay>
+   std::shared_ptr<Overlay>
       mIndicatorOverlay, mCursorOverlay;
 
    std::shared_ptr<BackgroundCell> mBackgroundCell;
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   std::unique_ptr<Overlay> mScrubOverlay;
+   std::shared_ptr<Overlay> mScrubOverlay;
    std::unique_ptr<Scrubber> mScrubber;
 public:
    Scrubber &GetScrubber() { return *mScrubber; }

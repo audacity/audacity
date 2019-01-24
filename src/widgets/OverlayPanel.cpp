@@ -20,16 +20,9 @@ OverlayPanel::OverlayPanel(wxWindow * parent, wxWindowID id,
 : BackedPanel(parent, id, pos, size, style)
 {}
 
-void OverlayPanel::AddOverlay(Overlay *pOverlay)
+void OverlayPanel::AddOverlay( const std::weak_ptr<Overlay> &pOverlay)
 {
    mOverlays.push_back(pOverlay);
-}
-
-bool OverlayPanel::RemoveOverlay(Overlay *pOverlay)
-{
-   const size_t oldSize = mOverlays.size();
-   mOverlays.erase(std::remove(mOverlays.begin(), mOverlays.end(), pOverlay), mOverlays.end());
-   return oldSize != mOverlays.size();
 }
 
 void OverlayPanel::ClearOverlays()
@@ -45,10 +38,14 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
    std::vector< Pair > pairs;
    pairs.reserve(n_pairs);
 
+   // First...
+   Compress();
+   // ... then assume pointers are not expired
+
    // Find out the rectangles and outdatedness for each overlay
    wxSize size(GetBackingDC().GetSize());
    for (const auto pOverlay : mOverlays)
-      pairs.push_back(pOverlay->GetRectangle(size));
+      pairs.push_back( pOverlay.lock()->GetRectangle(size) );
 
    // See what requires redrawing.  If repainting, all.
    // If not, then whatever is outdated, and whatever will be damaged by
@@ -96,7 +93,7 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
    auto it2 = pairs.begin();
    for (auto pOverlay : mOverlays) {
       if (repaint_all || it2->second)
-         pOverlay->Erase(dc, GetBackingDC());
+         pOverlay.lock()->Erase(dc, GetBackingDC());
       ++it2;
    }
 
@@ -107,10 +104,22 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
          // Guarantee a clean state of the dc each pass:
          ADCChanger changer{ &dc };
 
-         pOverlay->Draw(*this, dc);
+         pOverlay.lock()->Draw(*this, dc);
       }
       ++it2;
    }
+}
+
+void OverlayPanel::Compress()
+{
+   // remove any expired pointers
+   auto begin = mOverlays.begin();
+   auto end = mOverlays.end();
+   auto newEnd = std::remove_if( begin, end,
+      []( const std::weak_ptr<Overlay> &pOverlay ){
+         return pOverlay.expired(); } );
+   if ( end != newEnd )
+      mOverlays.resize( newEnd - begin );
 }
 
 BEGIN_EVENT_TABLE(OverlayPanel, BackedPanel)

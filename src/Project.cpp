@@ -1178,28 +1178,28 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              mRuler);
    mTrackPanel->UpdatePrefs();
 
-   mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
+   mCursorOverlay = std::make_shared<EditCursorOverlay>(this);
 
    mBackgroundCell = std::make_shared<BackgroundCell>(this);
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
+   mScrubOverlay = std::make_shared<ScrubbingOverlay>(this);
    mScrubber = std::make_unique<Scrubber>(this);
 #endif
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
 
-   mIndicatorOverlay = std::make_unique<PlayIndicatorOverlay>(this);
+   mIndicatorOverlay = std::make_shared<PlayIndicatorOverlay>(this);
    
    this->Bind(EVT_TRACK_PANEL_TIMER,
       &ViewInfo::OnTimer,
       &mViewInfo);
 
    // Add the overlays, in the sequence in which they will be painted
-   mTrackPanel->AddOverlay(mIndicatorOverlay.get());
-   mTrackPanel->AddOverlay(mCursorOverlay.get());
+   mTrackPanel->AddOverlay( mIndicatorOverlay );
+   mTrackPanel->AddOverlay( mCursorOverlay );
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   mTrackPanel->AddOverlay(mScrubOverlay.get());
+   mTrackPanel->AddOverlay( mScrubOverlay );
 #endif
 
    mMenuManager->CreateMenusAndCommands(*this);
@@ -1337,14 +1337,6 @@ AudacityProject::~AudacityProject()
    // Tool manager gives us capture sometimes
    if(HasCapture())
       ReleaseMouse();
-
-   if(mTrackPanel) {
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      mTrackPanel->RemoveOverlay(mScrubOverlay.get());
-#endif
-      mTrackPanel->RemoveOverlay(mCursorOverlay.get());
-      mTrackPanel->RemoveOverlay(mIndicatorOverlay.get());
-   }
 }
 
 void AudacityProject::ApplyUpdatedTheme()

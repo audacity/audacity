@@ -193,7 +193,7 @@ private:
 
    // Cooperating objects
    class QuickPlayIndicatorOverlay;
-   std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
+   std::shared_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    class QuickPlayRulerOverlay;
    

@@ -115,15 +115,6 @@ PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
       this);
 }
 
-PlayIndicatorOverlay::~PlayIndicatorOverlay()
-{
-   if (mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if(ruler)
-         ruler->RemoveOverlay(mPartner.get());
-   }
-}
-
 void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 {
    // Let other listeners get the notification
@@ -133,8 +124,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    if (!mPartner) {
       auto ruler = mProject->GetRulerPanel();
       if (ruler) {
-         mPartner = std::make_unique<PlayIndicatorOverlayBase>(mProject, false);
-         ruler->AddOverlay(mPartner.get());
+         mPartner = std::make_shared<PlayIndicatorOverlayBase>(mProject, false);
+         ruler->AddOverlay( mPartner );
       }
    }
 

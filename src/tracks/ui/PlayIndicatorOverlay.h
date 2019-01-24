@@ -46,12 +46,11 @@ class PlayIndicatorOverlay final : public PlayIndicatorOverlayBase
 {
 public:
    PlayIndicatorOverlay(AudacityProject *project);
-   virtual ~PlayIndicatorOverlay();
 
 private:
    void OnTimer(wxCommandEvent &event);
 
-   std::unique_ptr<PlayIndicatorOverlayBase> mPartner;
+   std::shared_ptr<PlayIndicatorOverlayBase> mPartner;
 };
 
 #endif
