@@ -20,3 +20,4 @@ script:
     - mkdir build
     - cd build
     - time ../configure && time make modules && time make -j2
+    - ./.travis/refresh-pot.sh
