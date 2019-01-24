@@ -1,23 +1,30 @@
-addons:
-    apt:
-        sources:
-            - ubuntu-toolchain-r-test
-        packages:
-            - g++-4.9
-            - gcc-4.9
-before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev gettext autopoint libasound2-dev alsa-utils alsa-oss
-    - git show -s --format="#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n" | tee ./src/RevisionIdent.h
-    - export CXX="g++-4.9" CC="gcc-4.9"
-    - FLAGS="-w -std=gnu++11"
-    - export CFLAGS="$CFLAGS $FLAGS"
-    - export CXXFLAGS="$CXXFLAGS $FLAGS"
-    - g++-4.9 --version
-language:
-    - cpp
-script:
-    - mkdir build
-    - cd build
-    - time ../configure && time make modules && time make -j2
-    - ./.travis/refresh-pot.sh
+matrix:
+    include:
+
+        - name: "Build and tests"
+          addons:
+              apt:
+                  sources:
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - g++-4.9
+                      - gcc-4.9
+          before_install:
+              - sudo apt-get update -qq
+              - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev gettext autopoint libasound2-dev alsa-utils alsa-oss
+              - git show -s --format="#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n" | tee ./src/RevisionIdent.h
+              - export CXX="g++-4.9" CC="gcc-4.9"
+              - FLAGS="-w -std=gnu++11"
+              - export CFLAGS="$CFLAGS $FLAGS"
+              - export CXXFLAGS="$CXXFLAGS $FLAGS"
+              - g++-4.9 --version
+          language:
+              - cpp
+          script:
+              - mkdir build
+              - cd build
+              - time ../configure && time make modules && time make -j2
+
+        - name: "Localization"
+          script:
+              - ./.travis/refresh-pot.sh
