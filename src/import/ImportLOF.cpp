@@ -440,7 +440,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
 
                // Amend the undo transaction made by import
-               mProject->TP_ModifyState(false);
+               mProject->ModifyState(false);
             } // end of converting "offset" argument
             else
             {
@@ -484,7 +484,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (doSomething)
       // Amend last undo state
-      mProject->TP_ModifyState(false);
+      mProject->ModifyState(false);
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()

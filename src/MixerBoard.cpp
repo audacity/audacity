@@ -417,7 +417,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    // Update the TrackPanel correspondingly.
    mProject->RefreshTPTrack(mTrack.get());
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
+      mProject->PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -430,7 +430,7 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
    // Update the TrackPanel correspondingly.
    mProject->RefreshTPTrack(mTrack.get());
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
+      mProject->PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
 }
 #endif
 
@@ -446,7 +446,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
    mProject->RefreshTPTrack(mTrack.get());
 
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
+      mProject->PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::ResetMeter(const bool bResetClipping)

@@ -473,12 +473,6 @@ public:
    void TP_DisplaySelection() override;
    void TP_DisplayStatusMessage(const wxString &msg) override;
 
-   ToolsToolBar * TP_GetToolsToolBar() override;
-
-   void TP_PushState(const wxString &longDesc, const wxString &shortDesc,
-                             UndoPush flags) override;
-   void TP_ModifyState(bool bWantsAutoSave) override;    // if true, writes auto-save file. Should set only if you really want the state change restored after
-                                                        // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    void TP_RedrawScrollbars() override;
    void TP_ScrollLeft() override;
    void TP_ScrollRight() override;

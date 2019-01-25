@@ -523,7 +523,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 {
-   mListener->TP_ModifyState(bWantsAutoSave);
+   GetProject()->ModifyState(bWantsAutoSave);
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
@@ -1068,7 +1068,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    // Don't draw a bottom margin here.
 
-   ToolsToolBar *pTtb = mListener->TP_GetToolsToolBar();
+   ToolsToolBar *pTtb = GetProject()->GetToolsToolBar();
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;

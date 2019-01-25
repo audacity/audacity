@@ -4826,11 +4826,6 @@ ControlToolBar *AudacityProject::GetControlToolBar()
            NULL);
 }
 
-ToolsToolBar * AudacityProject::TP_GetToolsToolBar()
-{
-   return GetToolsToolBar();
-}
-
 DeviceToolBar *AudacityProject::GetDeviceToolBar()
 {
    return (DeviceToolBar *)
@@ -5058,19 +5053,6 @@ void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/
    mTrackPanel->RefreshTrack(pTrk, refreshbacking);
 }
 
-
-// TrackPanel callback method
-void AudacityProject::TP_PushState(const wxString &desc, const wxString &shortDesc,
-                                   UndoPush flags)
-{
-   PushState(desc, shortDesc, flags);
-}
-
-// TrackPanel callback method
-void AudacityProject::TP_ModifyState(bool bWantsAutoSave)
-{
-   ModifyState(bWantsAutoSave);
-}
 
 // TrackPanel callback method
 void AudacityProject::TP_ScrollLeft()
