@@ -58,22 +58,16 @@ grep -v -E '^"POT-Creation-Date: [0-9]{4}-[0-9]{2}-[0-9]{2}' audacity.pot > "${R
 ./update_po_files.sh
 grep -v -E '^"POT-Creation-Date: [0-9]{4}-[0-9]{2}-[0-9]{2}' audacity.pot > "${RPOT_TMPDIR}/audacity.pot-post"
 
-printf '%s: checking changes\n' "${RPOT_COMMIT_NAME_BASE}"
-RPOT_CHANGES_DETECTED=0
-if test -n "$(diff "${RPOT_TMPDIR}/audacity.pot-pre" "${RPOT_TMPDIR}/audacity.pot-pre")"; then
-    printf -- '- changes detected in audacity.pot\n'
-    git add --all "${TRAVIS_BUILD_DIR}/locale/audacity.pot"
-    RPOT_CHANGES_DETECTED=1
-fi
-
-if test ${RPOT_CHANGES_DETECTED} -eq 0; then
+if test -z "$(diff "${RPOT_TMPDIR}/audacity.pot-pre" "${RPOT_TMPDIR}/audacity.pot-pre")"; then
     printf '%s: skipping because assets are already up-to-date\n' "${RPOT_COMMIT_NAME_BASE}"
     exit 0
 fi
-    
+
 printf '%s: commiting and pushing changes.\n' "${RPOT_COMMIT_NAME_BASE}"
 git config user.name "${RPOT_COMMIT_AUTHOR_NAME}"
 git config user.email "${RPOT_COMMIT_AUTHOR_EMAIL}"
+cd "${TRAVIS_BUILD_DIR}/locale"
+git add --all ./audacity.pot ./*.po
 git commit -m "${RPOT_COMMIT_NAME}"
 git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${RPOT_REPOSITORY_OWNER}/${RPOT_REPOSITORY_NAME}.git"
 git push deploy "${RPOT_PROCESS_BRANCH}" -vvv
