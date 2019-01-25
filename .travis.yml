@@ -2,6 +2,7 @@ matrix:
     include:
 
         - name: "Build and tests"
+          language: cpp
           addons:
               apt:
                   sources:
@@ -18,8 +19,6 @@ matrix:
               - export CFLAGS="$CFLAGS $FLAGS"
               - export CXXFLAGS="$CXXFLAGS $FLAGS"
               - g++-4.9 --version
-          language:
-              - cpp
           script:
               - mkdir build
               - cd build
