@@ -372,21 +372,35 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder
    wxFileNameWrapper result;
 
 #ifdef __WIN32__
-#if 0
-   // MJB - BUG - 'Documents' should be localised, and may be diverted outside of 'Home' - 11/01/2019
-   result.SetPath( gPrefs->Read(
-      preference, result.GetPath( wxPATH_GET_VOLUME ) + "\\Documents\\Audacity" ) );
-#else
+   // Un-numbered BUG - 'Documents' should be localised, and may be diverted outside of 'Home' - MJB - 11/01/2019
+   // result.SetPath( gPrefs->Read(
+   //   preference, result.GetPath( wxPATH_GET_VOLUME ) + "\\Documents\\Audacity" ) );
    wxFileName defaultPath( wxStandardPaths::Get().GetDocumentsDir(), "" );
    defaultPath.AppendDir( wxGetApp().GetAppName() );
    result.SetPath( gPrefs->Read( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) ) );
-#endif
-   // The path might not exist.
-   // There is no error if the path could not be created.  That's OK.
-   // The dialog that Audacity offers will allow the user to select a valid directory.
-   result.Mkdir(0755, wxPATH_MKDIR_FULL);
+   bool bCreate = true;
+   // If the result is NOT the default path - we don't want to create if it doesn't exist - BUG FIX 1899 & 2007 - MJB - 24/01/19
+   if ( result != defaultPath )
+   {
+   // Got something from the prefs file
+      bCreate = false;
+      if ( !result.DirExists() || result.FileExists() )
+      {
+      // The prefs directory doesn't exist - Deleted by our user? or exists as a file
+      // We have bum information in the prefs file - return default path
+         result.SetPath( defaultPath.GetPath( wxPATH_GET_VOLUME ) );
+         bCreate = true;
+      // QUESTION: - Update gPrefs here?
+      }
+   }
+   if ( bCreate )
+   {
+      // The default path might not exist since it is a sub-directory of 'Documents'
+      // There is no error if the path could not be created.  That's OK.
+      // The dialog that Audacity offers will allow the user to select a valid directory.
+      result.Mkdir(0755, wxPATH_MKDIR_FULL);
+   }
 #else
-    // MJB - Don't know if 'Documents' is a localised name on macOS etc.
    result.AssignHomeDir();
    result.SetPath(gPrefs->Read( preference, result.GetPath() + "/Documents"));
 #endif
