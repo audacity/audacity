@@ -10,7 +10,7 @@ RPOT_REPOSITORY_OWNER='audacity'
 RPOT_REPOSITORY_NAME='audacity'
 RPOT_COMMIT_AUTHOR_NAME='Audacity TravisCI Bot'
 RPOT_COMMIT_AUTHOR_EMAIL='travisci-bot@audacityteam.org'
-RPOT_COMMIT_NAME_BASE='Automatic update of .pot files'
+RPOT_COMMIT_NAME_BASE='Automatic update of language files'
 RPOT_COMMIT_NAME="[skip ci] ${RPOT_COMMIT_NAME_BASE}"
 
 if test "${TRAVIS_PULL_REQUEST:-}" != 'false'; then
