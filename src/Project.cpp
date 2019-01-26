@@ -12,7 +12,6 @@
 #include "Audacity.h" // for USE_* macros
 #include "Project.h"
 
-#include "AdornedRulerPanel.h"
 #include "KeyboardCapture.h"
 #include "ondemand/ODTaskThread.h"
 
@@ -154,14 +153,6 @@ void AudacityProject::SetStatus(const wxString &msg)
       wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
       project.ProcessEvent( evt );
    }
-}
-
-void AudacityProject::GetPlayRegion(double* playRegionStart,
-                                    double *playRegionEnd)
-{
-   auto &project = *this;
-   AdornedRulerPanel::Get( project ).GetPlayRegion(
-      playRegionStart, playRegionEnd);
 }
 
 wxFrame &GetProjectFrame( AudacityProject &project )

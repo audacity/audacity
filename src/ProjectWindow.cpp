@@ -1590,8 +1590,9 @@ void ProjectWindow::TP_DisplaySelection()
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
    double audioTime;
+   auto &playRegion = ViewInfo::Get( project ).playRegion;
 
-   if (!gAudioIO->IsBusy() && project.IsPlayRegionLocked())
+   if (!gAudioIO->IsBusy() && playRegion.Locked())
       ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else
       // Cause ruler redraw anyway, because we may be zooming or scrolling
@@ -1599,10 +1600,8 @@ void ProjectWindow::TP_DisplaySelection()
 
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
-   else {
-      double playEnd;
-      project.GetPlayRegion(&audioTime, &playEnd);
-   }
+   else
+      audioTime = playRegion.GetStart();
 
    SelectionBar::Get( project ).SetTimes(selectedRegion.t0(),
                                selectedRegion.t1(), audioTime);

@@ -546,11 +546,10 @@ CommandFlag MenuManager::GetUpdateFlags
 
    flags |= GetFocusedFrame(project);
 
-   double start, end;
-   project.GetPlayRegion(&start, &end);
-   if (project.IsPlayRegionLocked())
+   const auto &playRegion = viewInfo.playRegion;
+   if (playRegion.Locked())
       flags |= PlayRegionLockedFlag;
-   else if (start != end)
+   else if (!playRegion.Empty())
       flags |= PlayRegionNotLockedFlag;
 
    if (flags & AudioIONotBusyFlag) {

@@ -122,10 +122,6 @@ class AUDACITY_DLL_API AudacityProject final
    const wxFrame *GetFrame() const { return mFrame; }
    void SetFrame( wxFrame *pFrame );
  
-   void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
-   bool IsPlayRegionLocked() { return mLockPlayRegion; }
-   void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
-
    wxString GetProjectName() const;
 
    const FilePath &GetFileName() { return mFileName; }
@@ -149,8 +145,6 @@ class AUDACITY_DLL_API AudacityProject final
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
  private:
-   bool mLockPlayRegion{ false };
-
    wxString mLastMainStatusMessage;
 
    wxWeakRef< wxFrame > mFrame{};

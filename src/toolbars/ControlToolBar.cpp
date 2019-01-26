@@ -770,8 +770,7 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
    if (p)
    {
 
-      double playRegionStart, playRegionEnd;
-      p->GetPlayRegion(&playRegionStart, &playRegionEnd);
+      const auto &playRegion = ViewInfo::Get( *p ).playRegion;
 
       auto options = DefaultPlayOptions( *p );
       options.playLooped = looped;
@@ -781,7 +780,7 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
          cutpreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
-      PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
+      PlayPlayRegion(SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
                      options,
                      mode);
    }
