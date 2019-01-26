@@ -118,8 +118,6 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    else
       pWnd = safenew BrowserDialog{ pFrame, Title };
 
-   // Bug 1412 workaround for 'extra window'.  Hide the 'fake' window.
-   pFrame->SetTransparent(0);
    ShuttleGui S( pWnd, eIsCreating );
 
    S.SetStyle( wxNO_BORDER | wxTAB_TRAVERSAL );
@@ -164,24 +162,19 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    wxIcon ic{};
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
    #endif
-   pFrame->SetIcon( ic );
+   pWnd->SetIcon( ic );
    // -- END of ICON stuff -----
-
 
    pWnd->mpHtml = html;
    pWnd->SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 
    pFrame->CreateStatusBar();
-   pFrame->Centre();
-   pFrame->Layout();
-   pFrame->SetSizeHints(pWnd->GetSize());
 
-   pFrame->SetName(Title);
    if (bModal)
       pWnd->ShowModal();
    else {
       pWnd->Show(true);
-      pFrame->Show(true);
+      // Bug 1834 workaround for empty second window, do not show pFrame.
    }
 
    html->SetRelatedStatusBar( 0 );
