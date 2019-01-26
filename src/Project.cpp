@@ -3977,6 +3977,8 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    if (!success)
       return false;
 
+   {
+   std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
    Maybe<DirManager::ProjectSetter> pSetter;
 
    if (fromSaveAs && !bWantSaveCopy) {
@@ -3987,7 +3989,6 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       // (Otherwise the NEW project would be fine, but the old one would
       // be empty of all of its files.)
 
-      std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
       if (mLastSavedTracks) {
          lockers.reserve(mLastSavedTracks->size());
          for (auto wt : mLastSavedTracks->Any<WaveTrack>())
@@ -4022,6 +4023,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
 
    if (pSetter)
       pSetter->Commit();
+   }
 
    if ( !bWantSaveCopy )
    {
