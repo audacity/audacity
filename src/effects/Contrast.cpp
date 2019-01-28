@@ -57,7 +57,7 @@ bool ContrastDialog::GetDB(float &dB)
       return false;
    }
    if(numberSelectedTracks == 0) {
-      wxMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
+      AudacityMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
       m.ShowModal();
       return false;
    }
