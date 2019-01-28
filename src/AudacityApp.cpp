@@ -1093,12 +1093,14 @@ bool AudacityApp::OnExceptionInMainLoop()
 
          // Restore the state of the project to what it was before the
          // failed operation
-         pProject->RollbackState();
+         if (pProject) {
+            pProject->RollbackState();
 
-         // Forget pending changes in the TrackList
-         pProject->GetTracks()->ClearPendingTracks();
+            // Forget pending changes in the TrackList
+            pProject->GetTracks()->ClearPendingTracks();
 
-         pProject->RedrawProject();
+            pProject->RedrawProject();
+         }
 
          // Give the user an alert
          try { std::rethrow_exception( pException ); }
