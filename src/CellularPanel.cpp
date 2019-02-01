@@ -800,7 +800,7 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
          if( !HasFocus() )
-            SetFocus();
+            SetFocusIgnoringChildren();
 
          state.mpClickedCell = pCell;
 
