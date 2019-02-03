@@ -37,6 +37,7 @@
 
 #ifndef WX_PRECOMP
     #include <wx/textctrl.h>
+    #include <wx/combobox.h>
 #endif
 
 #include <wx/clipbrd.h>
@@ -79,6 +80,11 @@ wxTextEntry *NumValidatorBase::GetTextEntry() const
       return text;
 #endif // wxUSE_TEXTCTRL
 
+#if wxUSE_COMBOBOX
+    if ( wxComboBox *combo = wxDynamicCast(m_validatorWindow, wxComboBox) )
+        return combo;
+#endif // wxUSE_COMBOBOX
+
    wxFAIL_MSG(wxT("Can only be used with wxTextCtrl or wxComboBox"));
 
    return NULL;
@@ -101,7 +107,7 @@ bool NumValidatorBase::Validate(wxWindow *parent)
       if ( te )
       {
          te->SelectAll();
-         te->SetFocus();
+         m_validatorWindow->SetFocus();
       }
       return false;
    }

@@ -22,8 +22,6 @@
 
 #include <limits>
 
-#define wxTextEntry wxTextCtrl
-
 // Bit masks used for numeric validator styles.
 enum class NumValidatorStyle : int
 {
@@ -213,7 +211,7 @@ public:
                 return false;
 
             // If window is disabled, simply return
-            if ( !control->IsEnabled() )
+            if ( !this->m_validatorWindow->IsEnabled() )
                 return true;
 
             const wxString s(control->GetValue());
