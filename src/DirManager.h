@@ -65,7 +65,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
       ProjectSetter(
          DirManager &dirManager,
          wxString& newProjPath,  // assigns it if empty
-         const wxString& newProjName, const bool bCreate);
+         const wxString& newProjName, const bool bCreate, bool moving);
       ~ProjectSetter();
 
       bool Ok();

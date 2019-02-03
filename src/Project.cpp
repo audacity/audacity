@@ -3980,6 +3980,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    {
    std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
    Maybe<DirManager::ProjectSetter> pSetter;
+   bool moving = true;
 
    if (fromSaveAs && !bWantSaveCopy) {
       // We are about to move files from the current directory to
@@ -3990,6 +3991,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       // be empty of all of its files.)
 
       if (mLastSavedTracks) {
+         moving = false;
          lockers.reserve(mLastSavedTracks->size());
          for (auto wt : mLastSavedTracks->Any<WaveTrack>())
             lockers.push_back(
@@ -3998,7 +4000,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
 
       // This renames the project directory, and moves or copies
       // all of our block files over.
-      pSetter.create( *mDirManager, projPath, projName, true );
+      pSetter.create( *mDirManager, projPath, projName, true, moving );
 
       if (!pSetter->Ok()){
          success = false;

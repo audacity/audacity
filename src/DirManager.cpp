@@ -525,7 +525,8 @@ struct DirManager::ProjectSetter::Impl
 {
    Impl(
       DirManager &dm,
-      wxString& newProjPath, const wxString& newProjName, const bool bCreate );
+      wxString& newProjPath, const wxString& newProjName, const bool bCreate,
+      bool moving );
 
    void Commit();
 
@@ -555,9 +556,11 @@ struct DirManager::ProjectSetter::Impl
 
 DirManager::ProjectSetter::ProjectSetter(
    DirManager &dirManager,
-   wxString& newProjPath, const wxString& newProjName, const bool bCreate )
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate,
+   bool moving )
    : mpImpl{
-      std::make_unique<Impl>( dirManager, newProjPath, newProjName, bCreate )
+      std::make_unique<Impl>( dirManager, newProjPath, newProjName, bCreate,
+      moving )
    }
 {
    
@@ -580,8 +583,10 @@ void DirManager::ProjectSetter::Commit()
 
 DirManager::ProjectSetter::Impl::Impl(
    DirManager &dm,
-   wxString& newProjPath, const wxString& newProjName, const bool bCreate )
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate,
+   bool moving_ )
 : dirManager{ dm }
+, moving{ moving_ }
 {
    // Choose new paths
    if (newProjPath == wxT(""))
@@ -633,13 +638,23 @@ DirManager::ProjectSetter::Impl::Impl(
       proceeds only when all the building of the new tree has succeeded.
       */
 
-   moving = ! std::any_of(
+   /* Bug2059:  Don't deduce whether moving or copying just from the block
+      files, because an empty project, or one that was empty in its last saved
+      state, may have had no block files to lock.
+      Must treat as a copy if any is locked, but may also treat as copy if
+      the constructor argument tells us so.
+      With this change, the empty _data folder of the empty source project
+      will not be deleted in Commit().
+   */
+
+   moving = moving && ! std::any_of(
       dirManager.mBlockFileHash.begin(), dirManager.mBlockFileHash.end(),
       []( const BlockHash::value_type &pair ){
          auto b = pair.second.lock();
          return b && b->IsLocked();
       }
    );
+
    trueTotal = 0;
 
    {
@@ -760,7 +775,7 @@ void DirManager::ProjectSetter::Impl::Commit()
 bool DirManager::SetProject(
    wxString& newProjPath, const wxString& newProjName, const bool bCreate)
 {
-   ProjectSetter setter{ *this, newProjPath, newProjName, bCreate };
+   ProjectSetter setter{ *this, newProjPath, newProjName, bCreate, true };
    if (!setter.Ok())
       return false;
    setter.Commit();
