@@ -8652,6 +8652,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -8981,6 +8982,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -9365,6 +9367,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -9819,6 +9822,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
