@@ -306,11 +306,6 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
 }
 
 
-bool ShuttleParams::ExchangeWithMaster(const wxString & WXUNUSED(Name))
-{
-   return true;
-}
-
 #ifdef _MSC_VER
 // If this is compiled with MSVC (Visual Studio)
 #pragma warning( push )

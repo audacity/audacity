@@ -55,8 +55,9 @@ class CommandParameters;
 /**************************************************************************//**
 \brief Shuttle that deals with parameters.  This is a base class with lots of
 virtual functions that do nothing by default.
+Unrelated to class Shuttle.
 ********************************************************************************/
-class ShuttleParams /* not final */ : public Shuttle
+class ShuttleParams /* not final */
 {
 public:
    wxString mParams;
@@ -64,7 +65,6 @@ public:
    CommandParameters * mpEap;
    ShuttleParams() { mpEap = NULL; pOptionalFlag = NULL; }
    virtual ~ShuttleParams() {}
-   bool ExchangeWithMaster(const wxString & Name) override;
    bool ShouldSet();
    virtual ShuttleParams & Optional( bool & WXUNUSED(var) ){ pOptionalFlag = NULL;return *this;};
    virtual ShuttleParams & OptionalY( bool & var ){ return Optional( var );};
