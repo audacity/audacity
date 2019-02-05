@@ -17,7 +17,8 @@
 /**************************************************************************//**
 \brief Shuttle that retrieves a JSON format definition of a command's parameters.
 ********************************************************************************/
-class ShuttleGetDefinition : public ShuttleParams, public CommandMessageTargetDecorator
+class ShuttleGetDefinition final
+   : public ShuttleParams, public CommandMessageTargetDecorator
 {
 public:
    ShuttleGetDefinition( CommandMessageTarget & target );

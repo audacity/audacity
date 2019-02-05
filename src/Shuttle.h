@@ -56,7 +56,7 @@ class CommandParameters;
 \brief Shuttle that deals with parameters.  This is a base class with lots of
 virtual functions that do nothing by default.
 ********************************************************************************/
-class ShuttleParams : public Shuttle
+class ShuttleParams /* not final */ : public Shuttle
 {
 public:
    wxString mParams;
@@ -83,7 +83,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that gets parameter values into a string.
 ********************************************************************************/
-class ShuttleGetAutomation : public ShuttleParams
+class ShuttleGetAutomation final : public ShuttleParams
 {
 public:
    ShuttleParams & Optional( bool & var ) override;
@@ -101,7 +101,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that sets parameters to a value (from a string)
 ********************************************************************************/
-class ShuttleSetAutomation : public ShuttleParams
+class ShuttleSetAutomation final : public ShuttleParams
 {
 public:
    ShuttleSetAutomation(){ bWrite = false; bOK = false;};
@@ -126,7 +126,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that sets parameters to their default values.
 ********************************************************************************/
-class ShuttleDefaults : public ShuttleParams
+class ShuttleDefaults final : public ShuttleParams
 {
 public:
    wxString Result;
