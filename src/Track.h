@@ -329,6 +329,8 @@ public:
    // For use when loading a file.  Return true if ok, else make repair
    bool LinkConsistencyCheck();
 
+   bool HasOwner() const { return static_cast<bool>(GetOwner());}
+
 private:
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
 

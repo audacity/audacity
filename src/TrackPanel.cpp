@@ -715,7 +715,8 @@ void TrackPanel::OnTrackListResizing(TrackListEvent & e)
 {
    auto t = e.mpTrack.lock();
    // A deleted track can trigger the event.  In which case do nothing here.
-   if( t )
+   // A deleted track can have a valid pointer but no owner, bug 2060
+   if( t && t->HasOwner() )
       UpdateVRuler(t.get());
    e.Skip();
 }
