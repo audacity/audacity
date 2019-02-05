@@ -1833,24 +1833,6 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
    return pText;
 }
-/// Variant of the standard TieTextBox which does the two step exchange
-/// between gui and stack variable and stack variable and shuttle.
-/// This one does it for double values...
-wxTextCtrl * ShuttleGuiBase::TieTextBox(
-   const wxString & Prompt,
-   const wxString & SettingName,
-   const double & Default,
-   const int nChars)
-{
-   wxTextCtrl * pText=(wxTextCtrl*)NULL;
-
-   double Temp = Default;
-   WrappedType WrappedRef( Temp );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pText = TieTextBox( Prompt, WrappedRef, nChars );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
-   return pText;
-}
 
 /// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
@@ -2527,20 +2509,6 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const wxString &Prompt,
    const wxString &SettingName,
    const wxString &Default,
-   const int nChars) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "string", "type" );
-   AddItem( Default, "default"  );
-   EndStruct();
-   return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
-}
-wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
-   const wxString & Prompt,
-   const wxString & SettingName,
-   const double & Default,
    const int nChars) 
 {
    StartStruct();

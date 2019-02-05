@@ -255,11 +255,6 @@ public:
       const wxString &SettingName,
       const wxString &Default,
       const int nChars);
-   virtual wxTextCtrl * TieTextBox(
-      const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
-      const int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
@@ -471,11 +466,6 @@ public:
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
-      const int nChars) override;
-   wxTextCtrl * TieTextBox(
-      const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
       const int nChars) override;
    wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
