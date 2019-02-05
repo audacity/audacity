@@ -178,34 +178,25 @@ public:
    void StartRadioButtonGroup( const ChoiceSetting &Setting );
    void EndRadioButtonGroup();
 
-   void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
-
    bool DoStep( int iStep );
    int TranslateToIndex( const wxString &Value, const wxArrayStringEx &Choices );
    wxString TranslateFromIndex( const int nIn, const wxArrayStringEx &Choices );
 
 //-- Tie functions both add controls and also read/write to them.
-// The ones taking a 'WrappedType' are type-generic and are used by the type specific ones.
 
-   wxTextCtrl * TieTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
    wxTextCtrl * TieTextBox( const wxString &Caption, wxString & Value, const int nChars=0);
    wxTextCtrl * TieTextBox( const wxString &Prompt, int &Selected, const int nChars=0);
    wxTextCtrl * TieTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
-   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars=0);
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
-   wxCheckBox * TieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
    wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
-   wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
 
-   wxChoice * TieChoice( const wxString &Prompt, WrappedType & WrappedRef, const wxArrayStringEx &choices );
    wxChoice * TieChoice( const wxString &Prompt, wxString &Selected, const wxArrayStringEx &choices );
    wxChoice * TieChoice( const wxString &Prompt, int &Selected, const wxArrayStringEx &choices );
 
-   wxSlider * TieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSlider * TieSlider( const wxString &Prompt, int &pos, const int max, const int min = 0);
    wxSlider * TieSlider( const wxString &Prompt, double &pos, const double max, const double min = 0.0);
    wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
@@ -215,7 +206,6 @@ public:
    // and as many times as there are values in the enumeration.
    wxRadioButton * TieRadioButton();
 
-   wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, int &Value, const int max, const int min = 0 );
 
 
@@ -344,6 +334,15 @@ protected:
    wxMenu * mpMenu;
 
 private:
+   void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
+   wxCheckBox * DoTieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
+   wxTextCtrl * DoTieTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
+   wxTextCtrl * DoTieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
+   wxCheckBox * DoTieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
+   wxChoice * DoTieChoice( const wxString &Prompt, WrappedType & WrappedRef, const wxArrayStringEx & choices );
+   wxSlider * DoTieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
+   wxSpinCtrl * DoTieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
+
    const ChoiceSetting *mpRadioSetting = nullptr;
    wxString mRadioSettingName; /// The setting controlled by a group.
    Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
