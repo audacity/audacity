@@ -55,6 +55,7 @@ effects from this one class.
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../Project.h"
+#include "../../Shuttle.h"
 #include "../../ShuttleGui.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"

@@ -28,6 +28,7 @@
 #include <wx/intl.h>
 
 #include "../LabelTrack.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"

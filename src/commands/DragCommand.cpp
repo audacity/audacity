@@ -22,6 +22,7 @@
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 

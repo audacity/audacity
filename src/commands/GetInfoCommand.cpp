@@ -40,6 +40,7 @@ This class now lists
 #include "CommandContext.h"
 
 #include "../prefs/PrefsDialog.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 
 enum {

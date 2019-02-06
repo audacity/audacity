@@ -23,6 +23,7 @@
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
 #include "../Envelope.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 

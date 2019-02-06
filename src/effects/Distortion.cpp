@@ -37,6 +37,7 @@
 #include <wx/log.h>
 
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../TranslatableStringArray.h"

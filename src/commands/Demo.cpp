@@ -26,6 +26,7 @@ parameters.  It is for development purposes.
 
 #include <wx/intl.h>
 
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"

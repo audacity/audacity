@@ -35,7 +35,6 @@ class wxWindow;
 #include "../Experimental.h"
 #include "../SampleFormat.h"
 #include "../SelectedRegion.h"
-#include "../Shuttle.h"
 #include "../Internat.h"
 #include "../widgets/ProgressDialog.h"
 

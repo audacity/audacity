@@ -25,6 +25,7 @@
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../FFT.h"
 #include "../widgets/valnum.h"

@@ -81,6 +81,7 @@
 
 #include "../Experimental.h"
 #include "../AColor.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../PlatformCompatibility.h"
 #include "../FileNames.h"

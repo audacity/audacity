@@ -37,6 +37,7 @@ explicitly code all three.
 #include "../Project.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 

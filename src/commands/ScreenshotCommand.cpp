@@ -42,6 +42,7 @@ small calculations of rectangles.
 #include "../toolbars/ToolsToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 #include "CommandManager.h"

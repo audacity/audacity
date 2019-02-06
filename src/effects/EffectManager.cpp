@@ -32,6 +32,7 @@ effects.
 #endif
 
 #include "EffectManager.h"
+#include "../Shuttle.h"
 #include "../commands/Command.h"
 #include "../commands/CommandContext.h"
 
