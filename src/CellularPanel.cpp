@@ -106,8 +106,13 @@ void CellularPanel::Uncapture(bool escaping, wxMouseState *pState)
    if (HasCapture())
       ReleaseMouse();
    HandleMotion( *pState );
-
-   if (escaping || !TakesFocus()) {
+ 
+   if ( escaping
+#ifndef __WXGTK__
+   // See other comment in HandleClick()
+      || !TakesFocus()
+#endif
+   ) {
       auto lender = GetProject()->mFocusLender.get();
       if (lender)
          lender->SetFocus();
@@ -799,7 +804,16 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
-         if( !HasFocus() )
+         if( !HasFocus()
+#ifdef __WXGTK__
+            // Bug 2056 residual
+            // Don't take focus even temporarily in the time ruler, because
+            // the restoring of it doesn't work as expected for reasons not
+            // yet clear.
+            // The price we pay is that ESC can't abort drags in the time ruler
+            && TakesFocus()
+#endif
+         )
             SetFocusIgnoringChildren();
 
          state.mpClickedCell = pCell;
