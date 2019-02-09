@@ -1468,11 +1468,15 @@ wxString MP3Exporter::GetLibraryPath()
 
 wxString MP3Exporter::GetLibraryName()
 {
+   if (sizeof(void*) == 8)
+      return wxT("libmp3lame64bit.dylib");
    return wxT("libmp3lame.dylib");
 }
 
 wxString MP3Exporter::GetLibraryTypeString()
 {
+   if (sizeof(void*) == 8)
+      return wxString(_("Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
    return wxString(_("Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
 }
 

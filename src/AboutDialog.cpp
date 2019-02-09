@@ -639,10 +639,14 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // Current date
    AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
    AddBuildinfoRow(&informationStr, _("Commit Id:"), REV_IDENT );
+
+   // Not translated in 2.3.1.
+   wxString bits = (sizeof(void*) == 8) ? ", 64 bits" : "";
+
 #ifdef __WXDEBUG__
-   AddBuildinfoRow(&informationStr, _("Build type:"), _("Debug build"));
+   AddBuildinfoRow(&informationStr, _("Build type:"), wxString(_("Debug build"))+bits );
 #else
-   AddBuildinfoRow(&informationStr, _("Build type:"), _("Release build"));
+   AddBuildinfoRow(&informationStr, _("Build type:"), wxString(_("Release build"))+bits);
 #endif
 
 #ifdef _MSC_FULL_VER
