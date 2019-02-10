@@ -5576,11 +5576,6 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    }
 }
 
-bool AudacityProject::IsFocused( const wxWindow *window ) const
-{
-   return window == mFocusLender || window == wxWindow::FindFocus();
-}
-
 LyricsWindow* AudacityProject::GetLyricsWindow(bool create)
 {
    if (create && !mLyricsWindow)

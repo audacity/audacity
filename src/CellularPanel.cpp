@@ -37,6 +37,42 @@
 #include "HitTestResult.h"
 #include "RefreshCode.h"
 
+// A singleton class that intercepts escape key presses when some cellular
+// panel is dragging
+struct CellularPanel::Filter : wxEventFilter
+{
+   Filter()
+   {
+      wxEvtHandler::AddFilter( this );
+   }
+
+   ~Filter()
+   {
+      wxEvtHandler::RemoveFilter( this );
+   }
+
+   static void Create()
+   {
+      static Filter instance;
+   }
+
+   int FilterEvent( wxEvent &event ) override
+   {
+      if ( spActivePanel &&
+         event.GetEventType() == wxEVT_KEY_DOWN &&
+         static_cast< wxKeyEvent& >( event ).GetKeyCode() == WXK_ESCAPE ) {
+         spActivePanel->HandleEscapeKey( true );
+         return Event_Processed;
+      }
+      else
+         return Event_Skip;
+   }
+
+   static wxWeakRef< CellularPanel > spActivePanel;
+};
+
+wxWeakRef< CellularPanel > CellularPanel::Filter::spActivePanel = nullptr;
+
 struct CellularPanel::State
 {
    UIHandlePtr mUIHandle;
@@ -76,6 +112,10 @@ CellularPanel::CellularPanel(
 , mViewInfo( viewInfo )
 , mState{ std::make_unique<State>() }
 {
+   // Create the global event filter instance for CellularPanels only when the
+   // first CellularPanel is created, not sooner, so that the filter will be
+   // invoked before that for the application.
+   Filter::Create();
 }
 
 CellularPanel::~CellularPanel() = default;
@@ -109,16 +149,8 @@ void CellularPanel::Uncapture(bool escaping, wxMouseState *pState)
       ReleaseMouse();
    HandleMotion( *pState );
  
-   if ( escaping
-#ifndef __WXGTK__
-   // See other comment in HandleClick()
-      || !TakesFocus()
-#endif
-   ) {
-      auto lender = GetProject()->mFocusLender.get();
-      if (lender)
-         lender->SetFocus();
-   }
+   if ( escaping || !AcceptsFocus() )
+      Filter::spActivePanel = nullptr;
 }
 
 bool CellularPanel::CancelDragging( bool escaping )
@@ -523,6 +555,7 @@ void CellularPanel::OnKeyDown(wxKeyEvent & event)
    switch (event.GetKeyCode())
    {
    case WXK_ESCAPE:
+      // This switch case is now redundant with the global filter
       if(HandleEscapeKey(true))
          // Don't skip the event, eat it so that
          // AudacityApp does not also stop any playback.
@@ -806,16 +839,9 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
-         if( !HasFocus()
-#ifdef __WXGTK__
-            // Bug 2056 residual
-            // Don't take focus even temporarily in the time ruler, because
-            // the restoring of it doesn't work as expected for reasons not
-            // yet clear.
-            // The price we pay is that ESC can't abort drags in the time ruler
-            && TakesFocus()
-#endif
-         )
+         Filter::spActivePanel = this;
+
+         if( !HasFocus() && AcceptsFocus() )
             SetFocusIgnoringChildren();
 
          state.mpClickedCell = pCell;
@@ -857,18 +883,11 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
 
 void CellularPanel::OnSetFocus(wxFocusEvent &event)
 {
-   auto &ptr = GetProject()->mFocusLender;
-   if ( !ptr )
-      ptr = event.GetWindow();
-   
    SetFocusedCell();
 }
 
 void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
-   // Forget any borrowing of focus
-   GetProject()->mFocusLender = NULL;
-
    if (AudacityProject::HasKeyboardCapture(this))
    {
       AudacityProject::ReleaseKeyboard(this);

@@ -830,12 +830,6 @@ public:
    std::shared_ptr<BackgroundCell> GetBackgroundCell() const
       { return mBackgroundCell; }
 
-   wxWindowRef mFocusLender;
-
-   // Return true if the window is really focused, or if focus was borrowed
-   // from it
-   bool IsFocused( const wxWindow *window ) const;
-
    DECLARE_EVENT_TABLE()
 };
 

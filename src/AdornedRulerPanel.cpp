@@ -2077,6 +2077,19 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
    mRuler.GetMaxSize(width, height);
 }
 
+bool AdornedRulerPanel::s_AcceptsFocus{ false };
+
+auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return TempAllowFocus{ &s_AcceptsFocus };
+}
+
+void AdornedRulerPanel::SetFocusFromKbd()
+{
+   auto temp = TemporarilyAllowFocus();
+   SetFocus();
+}
+
 // Second-level subdivision includes quick-play region and maybe the scrub bar
 // and also shaves little margins above and below
 struct AdornedRulerPanel::Subgroup final : TrackPanelGroup {
@@ -2148,11 +2161,6 @@ void AdornedRulerPanel::ProcessUIHandleResult
 void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
 {
    GetProject()->TP_DisplayStatusMessage(message);
-}
-
-bool AdornedRulerPanel::TakesFocus() const
-{
-   return false;
 }
 
 void AdornedRulerPanel::CreateOverlays()

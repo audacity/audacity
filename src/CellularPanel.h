@@ -57,10 +57,6 @@ public:
    
    virtual void UpdateStatusMessage( const wxString & )  = 0;
    
-   // Whether this panel keeps focus after a click and drag, or only borrows
-   // it.
-   virtual bool TakesFocus() const = 0;
-   
 public:
    // Structure and functions for generalized visitation of the subdivision
    struct Visitor {
@@ -163,6 +159,8 @@ protected:
 private:
    struct State;
    std::unique_ptr<State> mState;
+
+   struct Filter;
    
    DECLARE_EVENT_TABLE()
 };
