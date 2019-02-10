@@ -175,10 +175,8 @@ public:
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
-   void StartRadioButtonGroup( const wxString & SettingName );
-   void EndRadioButtonGroup();
-
    void StartRadioButtonGroup( const wxString & SettingName, const wxString &DefaultValue );
+   void EndRadioButtonGroup();
 
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
 
@@ -215,7 +213,6 @@ public:
    wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
    wxSlider * TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
 
-   wxRadioButton * TieRadioButton( const wxString & Prompt, WrappedType &WrappedRef);
    wxRadioButton * TieRadioButton( const wxString &Prompt, const wxString &Value);
 
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
@@ -343,13 +340,6 @@ protected:
 
    teShuttleMode mShuttleMode;
 
-   // These five are needed to handle radio button groups.
-   wxString mSettingName; /// The setting controlled by a group.
-   int mRadioCount;       /// The index of this radio item.  -1 for none.
-
-   Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
-   wxString mRadioValueString; /// Unwrapped string value.
-
    int miSizerProp;
    int mSizerDepth;
    int miBorder;
@@ -371,6 +361,13 @@ protected:
    wxWindow * mpWind;
    wxMenuBar * mpMenuBar;
    wxMenu * mpMenu;
+
+private:
+   wxString mRadioSettingName; /// The setting controlled by a group.
+   Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
+   int mRadioCount;       /// The index of this radio item.  -1 for none.
+   wxString mRadioValueString; /// Unwrapped string value.
+   wxRadioButton * DoAddRadioButton(const wxString &Prompt, int style);
 };
 
 // A rarely used helper function that sets a pointer

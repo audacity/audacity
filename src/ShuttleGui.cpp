@@ -140,7 +140,7 @@ void ShuttleGuiBase::Init()
    mpWind = NULL;
    mpSubSizer = NULL;
 
-   mSettingName = wxT("");
+   mRadioSettingName = wxT("");
    mRadioCount = -1;
 
    miBorder = 5;
@@ -483,33 +483,32 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 }
 
 
-wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
+wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
+   const wxString &Prompt, int style)
 {
-   /// \todo This function and the next one, suitably adapted, could be
+   /// \todo This function and the next two, suitably adapted, could be
    /// used by TieRadioButton.
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxRadioButton);
    wxRadioButton * pRad;
    mpWind = pRad = safenew wxRadioButton(GetParent(), miId, Prompt,
-      wxDefaultPosition, wxDefaultSize, Style( wxRB_GROUP ) );
+      wxDefaultPosition, wxDefaultSize, Style( style ) );
    mpWind->SetName(wxStripMenuCodes(Prompt));
-   pRad->SetValue(true );
+   if ( style )
+      pRad->SetValue( true );
    UpdateSizers();
    return pRad;
 }
 
+wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
+{
+   return DoAddRadioButton( Prompt, wxRB_GROUP );
+}
+
 wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
 {
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxRadioButton);
-   wxRadioButton * pRad;
-   mpWind = pRad = safenew wxRadioButton(GetParent(), miId, Prompt,
-      wxDefaultPosition, wxDefaultSize, Style( 0 ) );
-   mpWind->SetName(wxStripMenuCodes(Prompt));
-   UpdateSizers();
-   return pRad;
+   return DoAddRadioButton( Prompt, 0 );
 }
 
 #ifdef __WXMAC__
@@ -1449,8 +1448,16 @@ wxChoice * ShuttleGuiBase::TieChoice(
    return pChoice;
 }
 
-wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedType & WrappedRef)
+/// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
+wxRadioButton * ShuttleGuiBase::TieRadioButton(
+   const wxString &Prompt,
+   const wxString &Value)
 {
+   // In what follows, WrappedRef is used in read only mode, but we
+   // don't have a 'read-only' version, so we copy to deal with the constness.
+   wxString Temp = Value;
+   WrappedType WrappedRef( Temp );
+
    wxASSERT( mRadioCount >= 0); // Did you remember to use StartRadioButtonGroup() ?
    mRadioCount++;
    UseUpId();
@@ -1493,12 +1500,14 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
 }
 
 /// Call this before any TieRadioButton calls.
-/// This is the generic version and requires mRadioValue already initialised.
-/// Versions for specific types must do that initialisation.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName )
+void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const wxString & DefaultValue )
 {
-   wxASSERT( mRadioValue && mRadioValue->eWrappedType != eWrappedNotSet );
-   mSettingName = SettingName;
+   // Configure the generic type mechanism to use OUR string.
+   mRadioValueString = DefaultValue;
+   mRadioValue.create( mRadioValueString );
+
+   // Now actually start the radio button group.
+   mRadioSettingName = SettingName;
    mRadioCount = 0;
    if( mShuttleMode == eIsCreating )
       DoDataShuttle( SettingName, *mRadioValue );
@@ -1509,8 +1518,9 @@ void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName )
 void ShuttleGuiBase::EndRadioButtonGroup()
 {
    if( mShuttleMode == eIsGettingFromDialog )
-      DoDataShuttle( mSettingName, *mRadioValue );
+      DoDataShuttle( mRadioSettingName, *mRadioValue );
    mRadioValue.reset();// Clear it out...
+   mRadioSettingName = wxT("");
    mRadioCount = -1; // So we detect a problem.
 }
 
@@ -1961,30 +1971,6 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
 {
    return ShuttleGuiBase::TieChoice(
       Prompt, SettingName, Default, Choices, InternalChoices );
-}
-
-/// String specific version of StartRadioButtonGroup.
-/// All 'TieRadioButton()' enclosed must be strings.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const wxString & DefaultValue )
-{
-   // Configure the generic type mechanism to use OUR string.
-   mRadioValueString = DefaultValue;
-   mRadioValue.create( mRadioValueString );
-   // Now actually start the radio button group.
-   StartRadioButtonGroup( SettingName );
-}
-
-
-/// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton(
-   const wxString &Prompt,
-   const wxString &Value)
-{
-   // In what follows, WrappedRef is used in read only mode, but we
-   // don't have a 'read-only' version, so we copy to deal with the constness.
-   wxString Temp = Value;
-   WrappedType WrappedRef( Temp );
-   return TieRadioButton( Prompt, WrappedRef );
 }
 
 //------------------------------------------------------------------//
