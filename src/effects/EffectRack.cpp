@@ -37,6 +37,7 @@
 #include "EffectManager.h"
 #include "EffectRack.h"
 #include "../commands/CommandContext.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 
@@ -394,7 +395,7 @@ void EffectRack::OnDown(wxCommandEvent & evt)
 
    evt.Skip();
 
-   size_t index = GetEffectIndex(btn);
+   int index = GetEffectIndex(btn);
    if (index < 0 || index == (mMainSizer->GetChildren().GetCount() / NUMCOLS) - 1)
    {
       return;
@@ -459,7 +460,7 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
    UpdateActive();
 }
 
-wxBitmap EffectRack::CreateBitmap(const char *xpm[], bool up, bool pusher)
+wxBitmap EffectRack::CreateBitmap(const char *const xpm[], bool up, bool pusher)
 {
    wxMemoryDC dc;
    wxBitmap pic(xpm);

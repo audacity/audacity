@@ -40,7 +40,7 @@ public:
 
 private:
 
-   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
+   wxBitmap CreateBitmap(const char *const xpm[], bool up, bool pusher);
    int GetEffectIndex(wxWindow *win);
    void MoveRowUp(int row);
    void UpdateActive();

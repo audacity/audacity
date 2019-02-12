@@ -364,7 +364,7 @@ void OnShowClipping(const CommandContext &context)
 }
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-void OnShowEffectsRack(const &WXUNUSED(context) )
+void OnShowEffectsRack(const CommandContext &WXUNUSED(context) )
 {
    EffectManager::Get().ShowRack();
 }
