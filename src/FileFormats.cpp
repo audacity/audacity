@@ -206,7 +206,7 @@ bool sf_subtype_is_integer(unsigned int format)
 
 wxArrayString sf_get_all_extensions()
 {
-   wxArrayString exts;
+   wxArrayStringEx exts;
    SF_FORMAT_INFO	format_info;
    int count, k;
 
@@ -226,12 +226,14 @@ wxArrayString sf_get_all_extensions()
    // Some other extensions that are often sound files
    // but aren't included by libsndfile
 
-   exts.Add(wxT("aif")); // AIFF file with a DOS-style extension
-   exts.Add(wxT("ircam"));
-   exts.Add(wxT("snd"));
-   exts.Add(wxT("svx"));
-   exts.Add(wxT("svx8"));
-   exts.Add(wxT("sv16"));
+   exts.insert( exts.end(), {
+      wxT("aif") , // AIFF file with a DOS-style extension
+      wxT("ircam") ,
+      wxT("snd") ,
+      wxT("svx") ,
+      wxT("svx8") ,
+      wxT("sv16") ,
+   } );
 
    return exts;
 }

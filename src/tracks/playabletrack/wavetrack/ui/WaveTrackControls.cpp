@@ -468,23 +468,24 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
       dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
-      wxArrayString rates;
       wxComboBox *cb;
 
       rate.Printf(wxT("%ld"), lrint(pTrack->GetRate()));
 
-      rates.Add(wxT("8000"));
-      rates.Add(wxT("11025"));
-      rates.Add(wxT("16000"));
-      rates.Add(wxT("22050"));
-      rates.Add(wxT("44100"));
-      rates.Add(wxT("48000"));
-      rates.Add(wxT("88200"));
-      rates.Add(wxT("96000"));
-      rates.Add(wxT("176400"));
-      rates.Add(wxT("192000"));
-      rates.Add(wxT("352800"));
-      rates.Add(wxT("384000"));
+      wxArrayStringEx rates{
+         wxT("8000") ,
+         wxT("11025") ,
+         wxT("16000") ,
+         wxT("22050") ,
+         wxT("44100") ,
+         wxT("48000") ,
+         wxT("88200") ,
+         wxT("96000") ,
+         wxT("176400") ,
+         wxT("192000") ,
+         wxT("352800") ,
+         wxT("384000") ,
+      };
 
       S.StartVerticalLay(true);
       {

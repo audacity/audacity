@@ -1749,7 +1749,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          {
-            wxArrayString windowTypeChoices;
+            wxArrayStringEx windowTypeChoices;
             for (int ii = 0; ii < WT_N_WINDOW_TYPES; ++ii)
                windowTypeChoices.push_back(windowTypesInfo[ii].name);
             S.TieChoice(_("&Window types") + wxString(wxT(":")),
@@ -1758,32 +1758,34 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          }
 
          {
-            wxArrayString windowSizeChoices;
-            windowSizeChoices.Add(_("8"));
-            windowSizeChoices.Add(_("16"));
-            windowSizeChoices.Add(_("32"));
-            windowSizeChoices.Add(_("64"));
-            windowSizeChoices.Add(_("128"));
-            windowSizeChoices.Add(_("256"));
-            windowSizeChoices.Add(_("512"));
-            windowSizeChoices.Add(_("1024"));
-            windowSizeChoices.Add(_("2048 (default)"));
-            windowSizeChoices.Add(_("4096"));
-            windowSizeChoices.Add(_("8192"));
-            windowSizeChoices.Add(_("16384"));
+            wxArrayStringEx windowSizeChoices{
+               _("8") ,
+               _("16") ,
+               _("32") ,
+               _("64") ,
+               _("128") ,
+               _("256") ,
+               _("512") ,
+               _("1024") ,
+               _("2048 (default)") ,
+               _("4096") ,
+               _("8192") ,
+               _("16384") ,
+            };
             S.TieChoice(_("Window si&ze") + wxString(wxT(":")),
                mTempSettings.mWindowSizeChoice,
                &windowSizeChoices);
          }
 
          {
-            wxArrayString stepsPerWindowChoices;
-            stepsPerWindowChoices.Add(_("2"));
-            stepsPerWindowChoices.Add(_("4 (default)"));
-            stepsPerWindowChoices.Add(_("8"));
-            stepsPerWindowChoices.Add(_("16"));
-            stepsPerWindowChoices.Add(_("32"));
-            stepsPerWindowChoices.Add(_("64"));
+            wxArrayStringEx stepsPerWindowChoices{
+               _("2") ,
+               _("4 (default)") ,
+               _("8") ,
+               _("16") ,
+               _("32") ,
+               _("64") ,
+            };
             S.TieChoice(_("S&teps per window") + wxString(wxT(":")),
                mTempSettings.mStepsPerWindowChoice,
                &stepsPerWindowChoices);
@@ -1791,7 +1793,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
          S.Id(ID_CHOICE_METHOD);
          {
-            wxArrayString methodChoices;
+            wxArrayStringEx methodChoices;
             int nn = DM_N_METHODS;
 #ifndef OLD_METHOD_AVAILABLE
             --nn;

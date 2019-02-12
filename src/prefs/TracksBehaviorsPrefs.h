@@ -33,8 +33,8 @@ class TracksBehaviorsPrefs final : public PrefsPanel
    void Populate();
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   wxArrayString mSoloCodes;
-   wxArrayString mSoloChoices;
+   wxArrayStringEx mSoloCodes;
+   wxArrayStringEx mSoloChoices;
 };
 
 /// A PrefsPanelFactory that creates one TracksBehaviorsPrefs panel.

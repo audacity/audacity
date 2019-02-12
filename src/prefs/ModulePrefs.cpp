@@ -95,12 +95,13 @@ void ModulePrefs::Populate()
 
 void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString StatusChoices;
-   StatusChoices.Add( _("Disabled" ) );
-   StatusChoices.Add( _("Enabled" ) );
-   StatusChoices.Add( _("Ask" ) );
-   StatusChoices.Add( _("Failed" ) );
-   StatusChoices.Add( _("New" ) );
+   wxArrayStringEx StatusChoices{
+      _("Disabled" ) ,
+      _("Enabled" ) ,
+      _("Ask" ) ,
+      _("Failed" ) ,
+      _("New" ) ,
+   };
 
    S.SetBorder(2);
    S.StartScroller();

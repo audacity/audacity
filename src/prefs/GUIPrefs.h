@@ -21,6 +21,7 @@
 #include "PrefsPanel.h"
 
 class ShuttleGui;
+class wxArrayStringEx;
 
 class GUIPrefs final : public PrefsPanel
 {
@@ -31,22 +32,23 @@ class GUIPrefs final : public PrefsPanel
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   static void GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes);
+   static void GetRangeChoices(
+      wxArrayStringEx *pChoices, wxArrayStringEx *pCodes);
 
  private:
    void Populate();
 
-   wxArrayString mLangCodes;
-   wxArrayString mLangNames;
+   wxArrayStringEx mLangCodes;
+   wxArrayStringEx mLangNames;
 
-   wxArrayString mHtmlHelpCodes;
-   wxArrayString mHtmlHelpChoices;
+   wxArrayStringEx mHtmlHelpCodes;
+   wxArrayStringEx mHtmlHelpChoices;
 
-   wxArrayString mThemeCodes;
-   wxArrayString mThemeChoices;
+   wxArrayStringEx mThemeCodes;
+   wxArrayStringEx mThemeChoices;
 
-   wxArrayString mRangeCodes;
-   wxArrayString mRangeChoices;
+   wxArrayStringEx mRangeCodes;
+   wxArrayStringEx mRangeChoices;
 };
 
 /// A PrefsPanelFactory that creates one GUIPrefs panel.

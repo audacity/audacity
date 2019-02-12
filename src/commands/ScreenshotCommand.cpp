@@ -465,7 +465,7 @@ void ScreenshotCommand::CaptureEffects(
 #define CAPTURE_NYQUIST_TOO
    // Commented out the effects that don't have dialogs.
    // Also any problematic ones, 
-   const wxString EffectNames[] = {
+   CaptureCommands( context, {
 #ifdef TRICKY_CAPTURE
       //"Contrast...", // renamed
       "ContrastAnalyser",
@@ -542,9 +542,7 @@ void ScreenshotCommand::CaptureEffects(
       "Silence Finder...",
       "Sound Finder...",
 #endif
-   };
-   wxArrayString Commands( sizeof(EffectNames)/sizeof(EffectNames[0]), EffectNames );
-   CaptureCommands( context, Commands );
+   } );
 }
 
 void ScreenshotCommand::CaptureScriptables( 
@@ -555,7 +553,7 @@ void ScreenshotCommand::CaptureScriptables(
    (void)&FileName;//compiler food.
    (void)&context;
 
-   const wxString ScriptablesNames[] = {
+   CaptureCommands( context, {
       "SelectTime",
       "SelectFrequencies",
       "SelectTracks",
@@ -581,16 +579,13 @@ void ScreenshotCommand::CaptureScriptables(
       "Drag",
       "CompareAudio",
       "Screenshot",
-   };
-   
-   wxArrayString Commands( sizeof(ScriptablesNames)/sizeof(ScriptablesNames[0]), ScriptablesNames );
-   CaptureCommands( context, Commands );
+   } );
 
 }
 
 
 void ScreenshotCommand::CaptureCommands( 
-   const CommandContext & context, wxArrayString & Commands ){
+   const CommandContext & context, const wxArrayStringEx & Commands ){
    AudacityProject * pProject = context.GetProject();
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;

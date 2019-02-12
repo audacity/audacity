@@ -64,6 +64,6 @@ protected:
    ArrayType mContents;
 };
 
-typedef TranslatableArray<wxArrayString> TranslatableStringArray;
+typedef TranslatableArray<wxArrayStringEx> TranslatableStringArray;
 
 #endif

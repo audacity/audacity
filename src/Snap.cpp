@@ -353,15 +353,13 @@ SnapResults SnapManager::Snap
    return results;
 }
 
-/* static */ wxArrayString SnapManager::GetSnapLabels()
+/* static */ wxArrayStringEx SnapManager::GetSnapLabels()
 {
-   wxArrayString labels;
-
-   labels.Add(_("Off"));
-   labels.Add(_("Nearest"));
-   labels.Add(_("Prior"));
-
-   return labels;
+   return wxArrayStringEx{
+      _("Off") ,
+      _("Nearest") ,
+      _("Prior") ,
+   };
 }
 
 #include "AColor.h"

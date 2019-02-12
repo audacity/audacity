@@ -111,14 +111,14 @@ static const wxString FadeEnds      = XO("Fade Ends");
 static const wxString SelectToEnds  = XO("Select to Ends");
 
 
-wxArrayString MacroCommands::GetNamesOfDefaultMacros()
+wxArrayStringEx MacroCommands::GetNamesOfDefaultMacros()
 {
-   wxArrayString defaults;
-   defaults.Add( GetCustomTranslation( MP3Conversion ) );
-   defaults.Add( GetCustomTranslation( FadeEnds )  );
-   //Don't add this one anymore, as there is a new menu command for it.
-   //defaults.Add( GetCustomTranslation( SelectToEnds )  );
-   return defaults;
+   return {
+      GetCustomTranslation( MP3Conversion ) ,
+      GetCustomTranslation( FadeEnds ) ,
+      //Don't add this one anymore, as there is a new menu command for it.
+      //GetCustomTranslation( SelectToEnds ) ,
+   };
 }
 
 void MacroCommands::RestoreMacro(const wxString & name)

@@ -211,27 +211,29 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    if (!p)
       return;
 
-   wxArrayString algChoices;
-   algChoices.Add(_("Spectrum"));
-   algChoices.Add(_("Standard Autocorrelation"));
-   algChoices.Add(_("Cuberoot Autocorrelation"));
-   algChoices.Add(_("Enhanced Autocorrelation"));
-     /* i18n-hint: This is a technical term, derived from the word
-      * "spectrum".  Do not translate it unless you are sure you
-      * know the correct technical word in your language. */
-   algChoices.Add(_("Cepstrum"));
+   wxArrayStringEx algChoices{
+      _("Spectrum") ,
+      _("Standard Autocorrelation") ,
+      _("Cuberoot Autocorrelation") ,
+      _("Enhanced Autocorrelation") ,
+        /* i18n-hint: This is a technical term, derived from the word
+         * "spectrum".  Do not translate it unless you are sure you
+         * know the correct technical word in your language. */
+      _("Cepstrum") ,
+   };
 
-   wxArrayString sizeChoices;
-   sizeChoices.Add(wxT("128"));
-   sizeChoices.Add(wxT("256"));
-   sizeChoices.Add(wxT("512"));
-   sizeChoices.Add(wxT("1024"));
-   sizeChoices.Add(wxT("2048"));
-   sizeChoices.Add(wxT("4096"));
-   sizeChoices.Add(wxT("8192"));
-   sizeChoices.Add(wxT("16384"));
-   sizeChoices.Add(wxT("32768"));
-   sizeChoices.Add(wxT("65536"));
+   wxArrayStringEx sizeChoices{
+      wxT("128") ,
+      wxT("256") ,
+      wxT("512") ,
+      wxT("1024") ,
+      wxT("2048") ,
+      wxT("4096") ,
+      wxT("8192") ,
+      wxT("16384") ,
+      wxT("32768") ,
+      wxT("65536") ,
+   };
 
    wxArrayString funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
@@ -242,9 +244,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       funcChoices.push_back(wxString::Format("%s window",  WindowFuncName(i) ) );
    }
 
-   wxArrayString axisChoices;
-   axisChoices.Add(_("Linear frequency"));
-   axisChoices.Add(_("Log frequency"));
+   wxArrayStringEx axisChoices{
+      _("Linear frequency") ,
+      _("Log frequency") ,
+   };
 
    mFreqFont = wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);

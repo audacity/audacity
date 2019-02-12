@@ -579,12 +579,13 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    if( mIsInput && !mActive )
    {
       destDC.SetFont( GetFont() );
-      wxArrayString texts;
 
-      texts.Add( _("Click to Start Monitoring") );
-      texts.Add( _("Click for Monitoring") );
-      texts.Add( _("Click to Start") );
-      texts.Add( _("Click") );
+      wxArrayStringEx texts{
+         _("Click to Start Monitoring") ,
+         _("Click for Monitoring") ,
+         _("Click to Start") ,
+         _("Click") ,
+      };
 
       for( size_t i = 0, cnt = texts.size(); i < cnt; i++ )
       {
@@ -1999,10 +2000,11 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      wxArrayString style;
-      style.Add(wxT("AutomaticStereo"));
-      style.Add(wxT("HorizontalStereo"));
-      style.Add(wxT("VerticalStereo"));
+      wxArrayStringEx style{
+         wxT("AutomaticStereo") ,
+         wxT("HorizontalStereo") ,
+         wxT("VerticalStereo") ,
+      };
 
       int s = 0;
       s = automatic->GetValue() ? 0 : s;

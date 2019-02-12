@@ -102,7 +102,7 @@ public:
              double t,
              bool rightEdge);
 
-   static wxArrayString GetSnapLabels();
+   static wxArrayStringEx GetSnapLabels();
 
    // The two coordinates need not be ordered:
    static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );

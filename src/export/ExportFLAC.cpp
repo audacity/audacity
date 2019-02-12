@@ -81,20 +81,39 @@ ExportFLACOptions::~ExportFLACOptions()
 ///
 void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString flacLevelNames, flacLevelLabels;
-   flacLevelLabels.Add(wxT("0")); flacLevelNames.Add(_("0 (fastest)"));
-   flacLevelLabels.Add(wxT("1")); flacLevelNames.Add(_("1"));
-   flacLevelLabels.Add(wxT("2")); flacLevelNames.Add(_("2"));
-   flacLevelLabels.Add(wxT("3")); flacLevelNames.Add(_("3"));
-   flacLevelLabels.Add(wxT("4")); flacLevelNames.Add(_("4"));
-   flacLevelLabels.Add(wxT("5")); flacLevelNames.Add(_("5"));
-   flacLevelLabels.Add(wxT("6")); flacLevelNames.Add(_("6"));
-   flacLevelLabels.Add(wxT("7")); flacLevelNames.Add(_("7"));
-   flacLevelLabels.Add(wxT("8")); flacLevelNames.Add(_("8 (best)"));
+   wxArrayStringEx flacLevelLabels{
+      wxT("0") ,
+      wxT("1") ,
+      wxT("2") ,
+      wxT("3") ,
+      wxT("4") ,
+      wxT("5") ,
+      wxT("6") ,
+      wxT("7") ,
+      wxT("8") ,
+   };
 
-   wxArrayString flacBitDepthNames, flacBitDepthLabels;
-   flacBitDepthLabels.Add(wxT("16")); flacBitDepthNames.Add(_("16 bit"));
-   flacBitDepthLabels.Add(wxT("24")); flacBitDepthNames.Add(_("24 bit"));
+   wxArrayStringEx flacLevelNames{
+      _("0 (fastest)") ,
+      _("1") ,
+      _("2") ,
+      _("3") ,
+      _("4") ,
+      _("5") ,
+      _("6") ,
+      _("7") ,
+      _("8 (best)") ,
+   };
+
+   wxArrayStringEx flacBitDepthLabels{
+      wxT("16") ,
+      wxT("24") ,
+   };
+
+   wxArrayStringEx flacBitDepthNames{
+      _("16 bit") ,
+      _("24 bit") ,
+   };
 
    S.StartVerticalLay();
    {

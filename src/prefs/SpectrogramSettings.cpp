@@ -145,17 +145,19 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
    {
       void Populate() override
       {
-         // Keep in correspondence with enum SpectrogramSettings::ScaleType:
-         mContents.Add(_("Linear"));
-         mContents.Add(_("Logarithmic"));
-         /* i18n-hint: The name of a frequency scale in psychoacoustics */
-         mContents.Add(_("Mel"));
-         /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
-         mContents.Add(_("Bark"));
-         /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-         mContents.Add(_("ERB"));
-         /* i18n-hint: Time units, that is Period = 1 / Frequency */
-         mContents.Add(_("Period"));
+         mContents.insert( mContents.end(), {
+            // Keep in correspondence with enum SpectrogramSettings::ScaleType:
+            _("Linear") ,
+            _("Logarithmic") ,
+            /* i18n-hint: The name of a frequency scale in psychoacoustics */
+            _("Mel") ,
+            /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
+            _("Bark") ,
+            /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
+            _("ERB") ,
+            /* i18n-hint: Time units, that is Period = 1 / Frequency */
+            _("Period") ,
+         } );
       }
    };
 
@@ -170,12 +172,14 @@ const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
    {
       void Populate() override
       {
-         // Keep in correspondence with enum SpectrogramSettings::Algorithm:
-         mContents.Add(_("Frequencies"));
-         /* i18n-hint: the Reassignment algorithm for spectrograms */
-         mContents.Add(_("Reassignment"));
-         /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
-         mContents.Add(_("Pitch (EAC)"));
+         mContents.insert( mContents.end(), {
+            // Keep in correspondence with enum SpectrogramSettings::Algorithm:
+            _("Frequencies") ,
+            /* i18n-hint: the Reassignment algorithm for spectrograms */
+            _("Reassignment") ,
+            /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
+            _("Pitch (EAC)") ,
+         } );
       }
    };
 

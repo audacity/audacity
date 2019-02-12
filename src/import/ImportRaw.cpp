@@ -321,8 +321,6 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
    ShuttleGui S(this, eIsCreating);
    wxArrayString encodings;
-   wxArrayString endians;
-   wxArrayString chans;
    int num;
    int selection;
    int endian;
@@ -354,18 +352,20 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       }
    }
 
-   /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
+   wxArrayStringEx endians{
+      /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
+          know the correct technical word. */
+      _("No endianness") ,
+      /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
        know the correct technical word. */
-   endians.Add(_("No endianness"));
-   /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
-    know the correct technical word. */
-   endians.Add(_("Little-endian"));
-   /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
-      know the correct technical word. */
-   endians.Add(_("Big-endian"));
-   /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-      know the correct technical word. */
-   endians.Add(_("Default endianness"));
+      _("Little-endian") ,
+      /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
+         know the correct technical word. */
+      _("Big-endian") ,
+      /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
+         know the correct technical word. */
+      _("Default endianness") ,
+   };
 
    switch (mEncoding & (SF_FORMAT_ENDMASK))
    {
@@ -384,8 +384,10 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          break;
    }
 
-   chans.Add(_("1 Channel (Mono)"));
-   chans.Add(_("2 Channels (Stereo)"));
+   wxArrayStringEx chans{
+      _("1 Channel (Mono)") ,
+      _("2 Channels (Stereo)") ,
+   };
    for (i=2; i<16; i++) {
       chans.push_back(wxString::Format(_("%d Channels"), i + 1));
    }

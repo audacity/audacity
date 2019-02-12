@@ -103,20 +103,21 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         wxArrayString visualgroups;
-         wxArrayString prefsgroups;
+         wxArrayStringEx visualgroups{
+            _("Sorted by Effect Name") ,
+            _("Sorted by Publisher and Effect Name") ,
+            _("Sorted by Type and Effect Name") ,
+            _("Grouped by Publisher") ,
+            _("Grouped by Type") ,
+         };
 
-         visualgroups.Add(_("Sorted by Effect Name"));
-         visualgroups.Add(_("Sorted by Publisher and Effect Name"));
-         visualgroups.Add(_("Sorted by Type and Effect Name"));
-         visualgroups.Add(_("Grouped by Publisher"));
-         visualgroups.Add(_("Grouped by Type"));
-
-         prefsgroups.Add(wxT("sortby:name"));
-         prefsgroups.Add(wxT("sortby:publisher:name"));
-         prefsgroups.Add(wxT("sortby:type:name"));
-         prefsgroups.Add(wxT("groupby:publisher"));
-         prefsgroups.Add(wxT("groupby:type"));
+         wxArrayStringEx prefsgroups{
+            wxT("sortby:name") ,
+            wxT("sortby:publisher:name") ,
+            wxT("sortby:type:name") ,
+            wxT("groupby:publisher") ,
+            wxT("groupby:type") ,
+         };
 
          wxChoice *c = S.TieChoice(_("S&ort or Group:"),
                                    wxT("/Effects/GroupBy"),

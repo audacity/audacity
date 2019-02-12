@@ -20,6 +20,7 @@
 class Effect;
 class CommandContext;
 class AudacityProject;
+class wxArrayStringEx;
 
 class MacroCommandsCatalog {
 public:
@@ -81,7 +82,7 @@ class MacroCommands final {
    // These commands do not depend on the command list.
    static void MigrateLegacyChains();
    static wxArrayString GetNames();
-   static wxArrayString GetNamesOfDefaultMacros();
+   static wxArrayStringEx GetNamesOfDefaultMacros();
 
    static wxString GetCurrentParamsFor(const wxString & command);
    static wxString PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent);

@@ -3299,11 +3299,12 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
    int curve = 0;
 
    // Setup list of characters that aren't allowed
-   wxArrayString exclude;
-   exclude.Add( wxT("<") );
-   exclude.Add( wxT(">") );
-   exclude.Add( wxT("'") );
-   exclude.Add( wxT("\"") );
+   wxArrayStringEx exclude{
+      wxT("<") ,
+      wxT(">") ,
+      wxT("'") ,
+      wxT("\"") ,
+   };
 
    // Get the first one to be renamed
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);

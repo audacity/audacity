@@ -931,12 +931,13 @@ teThemeType ThemeBase::GetFallbackThemeType(){
 
 teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
 {
-   wxArrayString aThemes;
-   aThemes.Add( "classic" );
-   aThemes.Add( "dark" );
-   aThemes.Add( "light" );
-   aThemes.Add( "high-contrast" );
-   aThemes.Add( "custom" );
+   static const wxArrayStringEx aThemes{
+      "classic" ,
+      "dark" ,
+      "light" ,
+      "high-contrast" ,
+      "custom" ,
+   };
    int themeIx = make_iterator_range( aThemes ).index( Name );
    if( themeIx < 0 )
       return GetFallbackThemeType();

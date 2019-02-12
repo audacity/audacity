@@ -340,7 +340,7 @@ private:
    bool mUseLatency;
    wxString mUIType;
 
-   wxArrayString mUITypes;
+   wxArrayStringEx mUITypes;
 
    DECLARE_EVENT_TABLE()
 };

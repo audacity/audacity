@@ -48,8 +48,8 @@ private:
    wxChoice *mRangeChoice;
 
    wxArrayString mScaleChoices;
-   wxArrayString mRangeCodes;
-   wxArrayString mRangeChoices;
+   wxArrayStringEx mRangeCodes;
+   wxArrayStringEx mRangeChoices;
 
    WaveformSettings mTempSettings;
 

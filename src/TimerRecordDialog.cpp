@@ -928,11 +928,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(1, wxEXPAND);
             {
                S.SetStretchyCol( 0 );
-               wxArrayString arrayOptions;
-               arrayOptions.Add(_("Do nothing"));
-               arrayOptions.Add(_("Exit Audacity"));
-               arrayOptions.Add(_("Restart system"));
-               arrayOptions.Add(_("Shutdown system"));
+               wxArrayStringEx arrayOptions{
+                  _("Do nothing") ,
+                  _("Exit Audacity") ,
+                  _("Restart system") ,
+                  _("Shutdown system") ,
+               };
 
                m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[0]);
                m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[1]);
