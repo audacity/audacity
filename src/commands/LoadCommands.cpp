@@ -166,7 +166,7 @@ BuiltinCommandsModule::BuiltinCommandsModule(ModuleManagerInterface *moduleManag
 
 BuiltinCommandsModule::~BuiltinCommandsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
@@ -209,13 +209,13 @@ bool BuiltinCommandsModule::Initialize()
    for (const auto &name : names)
    {
       //wxLogDebug("Adding %s", name );
-      mNames.Add(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
    }
 
 /*
    for (size_t i = 0; i < WXSIZEOF(kExcludedNames); i++)
    {
-      mNames.Add(wxString(BUILTIN_COMMAND_PREFIX) + kExcludedNames[i]);
+      mNames.push_back(wxString(BUILTIN_COMMAND_PREFIX) + kExcludedNames[i]);
    }
 */
 

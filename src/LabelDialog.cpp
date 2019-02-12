@@ -155,7 +155,7 @@ void LabelDialog::PopulateLabels()
    wxGridCellAttr *attr;
    mGrid->SetColAttr(Col_Track, (attr = safenew wxGridCellAttr));
    attr->SetEditor(mChoiceEditor);
-   mTrackNames.Add(_("New..."));
+   mTrackNames.push_back(_("New..."));
 
    // Initialize and set the time column attributes
    mGrid->SetColAttr(Col_Stime, (attr = safenew wxGridCellAttr));
@@ -384,7 +384,7 @@ bool LabelDialog::TransferDataFromWindow()
    }
 
    // Create any added tracks
-   while (tndx < (int)mTrackNames.GetCount() - 1) {
+   while (tndx < (int)mTrackNames.size() - 1) {
 
       // Extract the name
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
@@ -434,9 +434,9 @@ bool LabelDialog::Validate()
 wxString LabelDialog::TrackName(int & index, const wxString &dflt)
 {
    // Generate a NEW track name if the passed index is out of range
-   if (index < 1 || index >= (int)mTrackNames.GetCount()) {
-      index = mTrackNames.GetCount();
-      mTrackNames.Add(wxString::Format(wxT("%d - %s"), index, dflt));
+   if (index < 1 || index >= (int)mTrackNames.size()) {
+      index = mTrackNames.size();
+      mTrackNames.push_back(wxString::Format(wxT("%d - %s"), index, dflt));
    }
 
    // Return the track name
@@ -665,7 +665,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Extract the actual name.
-   wxString fName = mTrackNames[mTrackNames.GetCount() - 1].AfterFirst(wxT('-')).Mid(1);
+   wxString fName = mTrackNames[mTrackNames.size() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
       _("Export Labels As:"),

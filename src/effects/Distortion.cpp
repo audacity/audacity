@@ -332,7 +332,7 @@ wxArrayString EffectDistortion::GetFactoryPresets()
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.Add(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back(wxGetTranslation(FactoryPresets[i].name));
    }
 
    return names;

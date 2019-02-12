@@ -177,7 +177,7 @@ static bool RemoveAllAutoSaveFiles()
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       if (!wxRemoveFile(files[i]))
       {
@@ -209,7 +209,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       AudacityProject* proj{};
       if (*pproj)

@@ -177,13 +177,13 @@ static int RecursivelyEnumerate(wxString dirPath,
 
       // Don't DELETE files from a selective top level, e.g. if handed "projects*" as the
       // directory specifier.
-      if (bFiles && dirspec.IsEmpty() ){
+      if (bFiles && dirspec.empty() ){
          cont= dir.GetFirst(&name, filespec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
          while ( cont ){
             wxString filepath = dirPath + wxFILE_SEP_PATH + name;
 
             count++;
-            filePathArray.Add(filepath);
+            filePathArray.push_back(filepath);
 
             cont = dir.GetNext(&name);
 
@@ -206,7 +206,7 @@ static int RecursivelyEnumerate(wxString dirPath,
    }
 
    if (bDirs) {
-      filePathArray.Add(dirPath);
+      filePathArray.push_back(dirPath);
       count++;
    }
 
@@ -423,7 +423,7 @@ DirManager::~DirManager()
    if (numDirManagers == 0) {
       CleanTempDir();
       //::wxRmdir(temp);
-   } else if( projFull.IsEmpty() && !mytemp.IsEmpty()) {
+   } else if( projFull.empty() && !mytemp.empty()) {
       CleanDir(mytemp, wxEmptyString, ".DS_Store", _("Cleaning project temporary files"), kCleanTopDirToo | kCleanDirsOnlyIfEmpty );
    }
 }
@@ -797,7 +797,7 @@ wxLongLong DirManager::GetFreeDiskSpace()
    wxLongLong freeSpace = -1;
    wxFileName path;
 
-   path.SetPath(projPath.IsEmpty() ? mytemp : projPath);
+   path.SetPath(projPath.empty() ? mytemp : projPath);
 
    // Use the parent directory if the project directory hasn't yet been created
    if (!path.DirExists())
@@ -1208,7 +1208,7 @@ BlockFilePtr DirManager::NewAliasBlockFile(
        aliasStart, aliasLen, aliasChannel);
 
    mBlockFileHash[fileName]=newBlockFile;
-   aliasList.Add(aliasedFile);
+   aliasList.push_back(aliasedFile);
 
    return newBlockFile;
 }
@@ -1225,7 +1225,7 @@ BlockFilePtr DirManager::NewODAliasBlockFile(
        aliasStart, aliasLen, aliasChannel);
 
    mBlockFileHash[fileName]=newBlockFile;
-   aliasList.Add(aliasedFile);
+   aliasList.push_back(aliasedFile);
 
    return newBlockFile;
 }
@@ -1242,7 +1242,7 @@ BlockFilePtr DirManager::NewODDecodeBlockFile(
        aliasStart, aliasLen, aliasChannel, decodeType);
 
    mBlockFileHash[fileName]=newBlockFile;
-   aliasList.Add(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
+   aliasList.push_back(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
                                //I don't immediately see a place where aliased files remove when a file is closed.
 
    return newBlockFile;
@@ -1324,7 +1324,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       b2 = b->Copy(std::move(newFile));
 
       mBlockFileHash[newName] = b2;
-      aliasList.Add(newPath);
+      aliasList.push_back(newPath);
    }
 
    if (!b2)
@@ -1445,7 +1445,7 @@ std::pair<bool, wxString> DirManager::LinkOrCopyToNewProjectDirectory(
    // Check that this BlockFile corresponds to a file on disk
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case
    //    (!oldFileName.IsOk()) is a more correct check?
-   if (oldFileNameRef.GetName().IsEmpty()) {
+   if (oldFileNameRef.GetName().empty()) {
       return { true, newPath };
    }
 
@@ -1643,7 +1643,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       }
 
       aliasList.Remove(fullPath);
-      aliasList.Add(renamedFullPath);
+      aliasList.push_back(renamedFullPath);
    }
 
    // Success!!!  Either we successfully renamed the file,
@@ -1938,7 +1938,7 @@ _("Project check of \"%s\" folder \
    wxArrayString orphanFilePathArray;     // orphan .au and .auf files
    this->FindOrphanBlockFiles(filePathArray, orphanFilePathArray);
 
-   if ((nResult != FSCKstatus_CLOSE_REQ) && !orphanFilePathArray.IsEmpty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !orphanFilePathArray.empty())
    {
       // In auto-recover mode, leave orphan blockfiles alone.
       // They will be deleted when project is saved the first time.
@@ -1956,7 +1956,7 @@ _("Project check of \"%s\" folder \
 other projects. \
 \nThey are doing no harm and are small.");
          wxString msg;
-         msg.Printf(msgA, this->projName, (int)orphanFilePathArray.GetCount());
+         msg.Printf(msgA, this->projName, (int)orphanFilePathArray.size());
 
          const wxChar *buttons[] =
             {_("Continue without deleting; ignore the extra files this session"),
@@ -1977,7 +1977,7 @@ other projects. \
          // Plus they affect none of the valid tracks, so incorrect to mark them changed,
          // and no need for refresh.
          //    nResult |= FSCKstatus_CHANGED;
-         for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
+         for (size_t i = 0; i < orphanFilePathArray.size(); i++)
             wxRemoveFile(orphanFilePathArray[i]);
       }
    }
@@ -1998,7 +1998,7 @@ other projects. \
          !missingAliasedFileAUFHash.empty() ||
          !missingAUFHash.empty() ||
          !missingAUHash.empty() ||
-         !orphanFilePathArray.IsEmpty())
+         !orphanFilePathArray.empty())
    {
       wxLogWarning(_("Project check found file inconsistencies inspecting the loaded project data."));
       wxLog::FlushActive(); // Flush is modal and will clear the log (both desired).
@@ -2116,7 +2116,7 @@ void DirManager::FindOrphanBlockFiles(
 {
    DirManager *clipboardDM = NULL;
 
-   for (size_t i = 0; i < filePathArray.GetCount(); i++)
+   for (size_t i = 0; i < filePathArray.size(); i++)
    {
       const wxFileName &fullname = filePathArray[i];
       wxString basename = fullname.GetName();
@@ -2139,10 +2139,10 @@ void DirManager::FindOrphanBlockFiles(
 
          // Ignore it if it exists in the clipboard (from a previously closed project)
          if (!(clipboardDM && clipboardDM->ContainsBlockFile(basename)))
-            orphanFilePathArray.Add(fullname.GetFullPath());
+            orphanFilePathArray.push_back(fullname.GetFullPath());
       }
    }
-   for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
+   for (size_t i = 0; i < orphanFilePathArray.size(); i++)
       wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i]);
 }
 
@@ -2166,7 +2166,7 @@ void DirManager::RemoveOrphanBlockfiles()
             orphanFilePathArray);   // output: orphan files
 
    // Remove all orphan blockfiles.
-   for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
+   for (size_t i = 0; i < orphanFilePathArray.size(); i++)
       wxRemoveFile(orphanFilePathArray[i]);
 }
 

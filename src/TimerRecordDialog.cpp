@@ -497,7 +497,7 @@ bool TimerRecordDialog::RemoveAllAutoSaveFiles()
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       if (!wxRemoveFile(files[i]))
       {
@@ -934,13 +934,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                arrayOptions.Add(_("Restart system"));
                arrayOptions.Add(_("Shutdown system"));
 
-               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
-               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
+               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[0]);
+               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[1]);
 #ifdef __WINDOWS__
-               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(2));
-               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(3));
+               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[2]);
+               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[3]);
 #endif
-               m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
+               m_sTimerAfterCompleteOption = arrayOptions[iPostTimerRecordAction];
 
                m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
                                                              m_sTimerAfterCompleteOption,

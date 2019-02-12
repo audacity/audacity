@@ -384,7 +384,7 @@ void UndoManager::StateSaved()
 // currently unused
 //void UndoManager::Debug()
 //{
-//   for (unsigned int i = 0; i < stack.Count(); i++) {
+//   for (unsigned int i = 0; i < stack.size(); i++) {
 //      for (auto t : stack[i]->tracks->Any())
 //         wxPrintf(wxT("*%d* %s %f\n"),
 //                  i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),

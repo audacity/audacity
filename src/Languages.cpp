@@ -65,7 +65,7 @@ static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
                                   audacityPathList,
                                   results);
 
-   return (results.GetCount() > 0);
+   return (results.size() > 0);
 }
 
 #ifdef __WXMAC__
@@ -115,7 +115,7 @@ wxString GetSystemLanguageCode()
       wxString code = fullCode.Left(2);
       unsigned int i;
 
-      for(i=0; i<langCodes.GetCount(); i++) {
+      for(i=0; i<langCodes.size(); i++) {
          if (langCodes[i] == fullCode)
             return fullCode;
 
@@ -256,8 +256,8 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
          continue;
 
       if (TranslationExists(audacityPathList, code) || code==wxT("en")) {
-         tempCodes.Add(code);
-         tempNames.Add(name);
+         tempCodes.push_back(code);
+         tempNames.push_back(name);
          tempHash[code] = name;
 
 /*         wxLogDebug(wxT("code=%s name=%s fullCode=%s name=%s -> %s"),
@@ -274,8 +274,8 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
       code = wxT("en-simple");
       name = wxT("Simplified");
       if (TranslationExists(audacityPathList, code) ) {
-         tempCodes.Add(code);
-         tempNames.Add(name);
+         tempCodes.push_back(code);
+         tempNames.push_back(name);
          tempHash[code] = name;
       }
    }
@@ -283,18 +283,18 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 
    // Sort
    unsigned int j;
-   for(j=0; j<tempNames.GetCount(); j++){
+   for(j=0; j<tempNames.size(); j++){
       reverseHash[tempNames[j]] = tempCodes[j];
    }
 
-   tempNames.Sort();
+   std::sort( tempNames.begin(), tempNames.end() );
 
    // Add system language
-   langNames.Add(wxT("System"));
-   langCodes.Add(wxT(""));
+   langNames.push_back(wxT("System"));
+   langCodes.push_back(wxT(""));
 
-   for(j=0; j<tempNames.GetCount(); j++) {
-      langNames.Add(tempNames[j]);
-      langCodes.Add(reverseHash[tempNames[j]]);
+   for(j=0; j<tempNames.size(); j++) {
+      langNames.push_back(tempNames[j]);
+      langCodes.push_back(reverseHash[tempNames[j]]);
    }
 }

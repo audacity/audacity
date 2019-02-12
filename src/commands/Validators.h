@@ -98,7 +98,7 @@ private:
 public:
    void AddOption(const wxString &option)
    {
-      mOptions.Add(option);
+      mOptions.push_back(option);
    }
    void AddOptions(const wxArrayString &options)
    {
@@ -112,7 +112,7 @@ public:
    wxString GetDescription() const override
    {
       wxString desc = wxT("one of: ");
-      int optionCount = mOptions.GetCount();
+      int optionCount = mOptions.size();
       int i = 0;
       for (i = 0; i+1 < optionCount; ++i)
       {

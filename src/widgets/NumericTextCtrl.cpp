@@ -1942,7 +1942,7 @@ wxAccStatus NumericTextCtrlAx::GetChildCount(int *childCount)
 // "Press" rather than "Prints the current document."
 wxAccStatus NumericTextCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -1950,7 +1950,7 @@ wxAccStatus NumericTextCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString 
 // Returns the description for this object or a child.
 wxAccStatus NumericTextCtrlAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -1979,7 +1979,7 @@ wxAccStatus NumericTextCtrlAx::GetHelpText(int WXUNUSED(childId), wxString *help
 
    return wxACC_OK;
 #else
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_NOT_SUPPORTED;
 #endif
@@ -1989,7 +1989,7 @@ wxAccStatus NumericTextCtrlAx::GetHelpText(int WXUNUSED(childId), wxString *help
 // Return e.g. ALT+K
 wxAccStatus NumericTextCtrlAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -2034,7 +2034,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
          (childId < 1))
    {
       *name = mCtrl->GetName();
-      if (name->IsEmpty()) {
+      if (name->empty()) {
          *name = mCtrl->GetLabel();
       }
 

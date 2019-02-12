@@ -219,7 +219,7 @@ void InitPreferences()
    }
 
    // Use the system default language if one wasn't specified or if the user selected System.
-   if (langCode.IsEmpty())
+   if (langCode.empty())
    {
       langCode = GetSystemLanguageCode();
    }

@@ -86,7 +86,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
 
       bool OnFacename(const wxString& font) override
       {
-         mFontNames->Add(font);
+         mFontNames->push_back(font);
          return true;
       }
 

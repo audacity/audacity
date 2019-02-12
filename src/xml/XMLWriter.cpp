@@ -103,7 +103,7 @@ void XMLWriter::EndTag(const wxString &name)
 {
    int i;
 
-   if (mTagstack.GetCount() > 0) {
+   if (mTagstack.size() > 0) {
       if (mTagstack[0] == name) {
          if (mHasKids[1]) {  // There will always be at least 2 at this point
             if (mInTag) {
@@ -349,7 +349,7 @@ void XMLFileWriter::Commit()
 void XMLFileWriter::PreCommit()
 // may throw
 {
-   while (mTagstack.GetCount()) {
+   while (mTagstack.size()) {
       EndTag(mTagstack[0]);
    }
 
@@ -418,7 +418,7 @@ XMLStringWriter::XMLStringWriter(size_t initialSize)
 {
    if (initialSize)
    {
-      Alloc(initialSize);
+      reserve(initialSize);
    }
 }
 

@@ -154,8 +154,8 @@ const wxArrayString &WaveformSettings::GetScaleNames()
       void Populate() override
       {
          // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
-         mContents.Add(_("Linear"));
-         mContents.Add(_("Logarithmic"));
+         mContents.push_back(_("Linear"));
+         mContents.push_back(_("Logarithmic"));
       }
    };
 

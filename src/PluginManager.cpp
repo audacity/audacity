@@ -211,7 +211,7 @@ wxAccStatus CheckListAx::GetChildCount( int *childCount )
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus CheckListAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -219,7 +219,7 @@ wxAccStatus CheckListAx::GetDefaultAction( int WXUNUSED(childId), wxString *acti
 // Returns the description for this object or a child.
 wxAccStatus CheckListAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -239,7 +239,7 @@ wxAccStatus CheckListAx::GetFocus( int *childId, wxAccessible **child )
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus CheckListAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -248,7 +248,7 @@ wxAccStatus CheckListAx::GetHelpText( int WXUNUSED(childId), wxString *helpText 
 // Return e.g. ALT+K
 wxAccStatus CheckListAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -490,7 +490,7 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
    mEffects = NULL;
    SetName(GetTitle());
 
-   mStates.SetCount(STATE_COUNT);
+   mStates.resize(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
    mStates[STATE_Disabled] = _("Disabled");
    mStates[STATE_New] = _("New");
@@ -612,7 +612,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       colWidths.push_back(0);
    }
 
-   for (int i = 0, cnt = mStates.GetCount(); i < cnt; i++)
+   for (int i = 0, cnt = mStates.size(); i < cnt; i++)
    {
       int x;
       mEffects->GetTextExtent(mStates[i], &x, NULL);
@@ -1477,7 +1477,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    wxLogNull nolog;
 
    // Why bother...
-   if (pattern.IsEmpty())
+   if (pattern.empty())
    {
       return;
    }
@@ -1489,7 +1489,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    // Add the "per-user" plug-ins directory
    {
       const wxFileName &ff = FileNames::PlugInDir();
-      paths.Add(ff.GetFullPath());
+      paths.push_back(ff.GetFullPath());
    }
  
    // Add the "Audacity" plug-ins directory
@@ -1502,7 +1502,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    ff.RemoveLastDir();
 #endif
    ff.AppendDir(wxT("plug-ins"));
-   paths.Add(ff.GetPath());
+   paths.push_back(ff.GetPath());
 
    // Weed out duplicates
    for (size_t i = 0, cnt = pathList.size(); i < cnt; i++)
@@ -1511,12 +1511,12 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
       const wxString path{ ff.GetFullPath() };
       if (paths.Index(path, wxFileName::IsCaseSensitive()) == wxNOT_FOUND)
       {
-         paths.Add(path);
+         paths.push_back(path);
       }
    }
 
    // Find all matching files in each path
-   for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
    {
       ff = paths[i] + wxFILE_SEP_PATH + pattern;
       wxDir::GetAllFiles(ff.GetPath(), &files, ff.GetFullName(), directories ? wxDIR_DEFAULT : wxDIR_FILES);
@@ -1945,7 +1945,7 @@ void PluginManager::Load()
       }
       // Doing the deletion within the search loop risked skipping some items,
       // hence the delayed delete.
-      for (unsigned int i = 0; i < groupsToDelete.Count(); i++) {
+      for (unsigned int i = 0; i < groupsToDelete.size(); i++) {
          registry.DeleteGroup(groupsToDelete[i]);
       }
       registry.SetPath("");
@@ -1981,7 +1981,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
    wxFileName exeFn{ fullExePath };
    exeFn.SetEmptyExt();
    exeFn.SetName(wxString{});
-   while(exeFn.GetDirCount() && !exeFn.GetDirs().Last().EndsWith(".app"))
+   while(exeFn.GetDirCount() && !exeFn.GetDirs().back().EndsWith(".app"))
       exeFn.RemoveLastDir();
 
    const auto goodPath = exeFn.GetPath();
@@ -2038,7 +2038,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
       if (!pRegistry->Read(KEY_PROVIDERID, &strVal, wxEmptyString))
       {
          // Bypass group if the provider isn't valid
-         if (!strVal.IsEmpty() && mPlugins.find(strVal) == mPlugins.end())
+         if (!strVal.empty() && mPlugins.find(strVal) == mPlugins.end())
          {
             continue;
          }
@@ -2201,7 +2201,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             wxStringTokenizer tkr(strVal, wxT(":"));
             while (tkr.HasMoreTokens())
             {
-               extensions.Add(tkr.GetNextToken());
+               extensions.push_back(tkr.GetNextToken());
             }
             plug.SetImporterExtensions(extensions);
          }
@@ -2364,7 +2364,7 @@ void PluginManager::CheckForUpdates(bool bFast)
          continue;
       }
 
-      pathIndex.Add(plug.GetPath().BeforeFirst(wxT(';')));
+      pathIndex.push_back(plug.GetPath().BeforeFirst(wxT(';')));
    }
 
    // Check all known plugins to ensure they are still valid and scan for NEW ones.
@@ -2406,7 +2406,7 @@ void PluginManager::CheckForUpdates(bool bFast)
          {
             // Collect plugin paths
             wxArrayString paths = mm.FindPluginsForProvider(plugID, plugPath);
-            for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
+            for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
             {
                wxString path = paths[i].BeforeFirst(wxT(';'));;
                if (pathIndex.Index(path) == wxNOT_FOUND)
@@ -2789,7 +2789,7 @@ bool PluginManager::HasGroup(const wxString & group)
 
 bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgroups)
 {
-   if (group.IsEmpty() || !HasGroup(group))
+   if (group.empty() || !HasGroup(group))
    {
       return false;
    }
@@ -2803,7 +2803,7 @@ bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgrou
    {
       do
       {
-         subgroups.Add(name);
+         subgroups.push_back(name);
       } while (GetSettings()->GetNextGroup(name, index));
    }
 
@@ -2816,7 +2816,7 @@ bool PluginManager::GetConfig(const wxString & key, int & value, int defval)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Read(key, &value, defval);
    }
@@ -2828,7 +2828,7 @@ bool PluginManager::GetConfig(const wxString & key, wxString & value, const wxSt
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       wxString wxval = wxEmptyString;
 
@@ -2844,7 +2844,7 @@ bool PluginManager::GetConfig(const wxString & key, bool & value, bool defval)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Read(key, &value, defval);
    }
@@ -2856,7 +2856,7 @@ bool PluginManager::GetConfig(const wxString & key, float & value, float defval)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       double dval = 0.0;
 
@@ -2872,7 +2872,7 @@ bool PluginManager::GetConfig(const wxString & key, double & value, double defva
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Read(key, &value, defval);
    }
@@ -2884,7 +2884,7 @@ bool PluginManager::SetConfig(const wxString & key, const wxString & value)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       wxString wxval = value;
       result = GetSettings()->Write(key, wxval);
@@ -2901,7 +2901,7 @@ bool PluginManager::SetConfig(const wxString & key, const int & value)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Write(key, value);
       if (result)
@@ -2917,7 +2917,7 @@ bool PluginManager::SetConfig(const wxString & key, const bool & value)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Write(key, value);
       if (result)
@@ -2933,7 +2933,7 @@ bool PluginManager::SetConfig(const wxString & key, const float & value)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Write(key, value);
       if (result)
@@ -2949,7 +2949,7 @@ bool PluginManager::SetConfig(const wxString & key, const double & value)
 {
    bool result = false;
 
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       result = GetSettings()->Write(key, value);
       if (result)
@@ -2997,7 +2997,7 @@ wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
    wxString path = SettingsPath(ID, true);
 
    wxFileName ff(group);
-   if (!ff.GetName().IsEmpty())
+   if (!ff.GetName().empty())
    {
       path += ff.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
    }
@@ -3009,7 +3009,7 @@ wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
 wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, const wxString & key)
 {
    wxString path = SharedGroup(ID, group);
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return path;
    }
@@ -3023,7 +3023,7 @@ wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group
    wxString path = SettingsPath(ID, false);
 
    wxFileName ff(group);
-   if (!ff.GetName().IsEmpty())
+   if (!ff.GetName().empty())
    {
       path += ff.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
    }
@@ -3035,7 +3035,7 @@ wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group
 wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, const wxString & key)
 {
    wxString path = PrivateGroup(ID, group);
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return path;
    }

@@ -74,7 +74,7 @@ bool XMLValueChecker::IsGoodFileName(const wxString & strFileName, const wxStrin
 bool XMLValueChecker::IsGoodFileString(const wxString &str)
 {
    return (IsGoodString(str) &&
-            !str.IsEmpty() &&
+            !str.empty() &&
 
             // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms,
             // sometimes huge, but we use 260 for all platforms.
@@ -109,7 +109,7 @@ bool XMLValueChecker::IsGoodPathName(const wxString & strPathName)
 bool XMLValueChecker::IsGoodPathString(const wxString &str)
 {
    return (IsGoodString(str) &&
-            !str.IsEmpty() &&
+            !str.empty() &&
             (str.Length() <= PLATFORM_MAX_PATH));
 }
 
@@ -193,18 +193,18 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
 
    while (*attrs) {
       const char *s = *attrs++;
-      tmp_attrs.Add(UTF8CTOWX(s));
+      tmp_attrs.push_back(UTF8CTOWX(s));
    }
 
 // JKC: Previously the next line was:
-// const char **out_attrs = NEW char (const char *)[tmp_attrs.GetCount()+1];
+// const char **out_attrs = NEW char (const char *)[tmp_attrs.size()+1];
 // however MSVC doesn't like the constness in this position, so this is now
 // added by a cast after creating the array of pointers-to-non-const chars.
-   auto out_attrs = std::make_unique<const wxChar *[]>(tmp_attrs.GetCount() + 1);
-   for (size_t i=0; i<tmp_attrs.GetCount(); i++) {
+   auto out_attrs = std::make_unique<const wxChar *[]>(tmp_attrs.size() + 1);
+   for (size_t i=0; i<tmp_attrs.size(); i++) {
       out_attrs[i] = tmp_attrs[i];
    }
-   out_attrs[tmp_attrs.GetCount()] = 0;
+   out_attrs[tmp_attrs.size()] = 0;
 
    bool result = HandleXMLTag(UTF8CTOWX(tag), out_attrs.get());
 

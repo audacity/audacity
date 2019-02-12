@@ -308,7 +308,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
-      if (parms.IsEmpty())
+      if (parms.empty())
       {
          parms = GetDefaultPreset(ID);
       }
@@ -326,7 +326,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
-      if (parms.IsEmpty())
+      if (parms.empty())
       {
          parms = GetDefaultPreset(ID);
       }
@@ -400,8 +400,8 @@ bool EffectManager::HasPresets(const PluginID & ID)
       return false;
    }
 
-   return effect->GetUserPresets().GetCount() > 0 ||
-          effect->GetFactoryPresets().GetCount() > 0 ||
+   return effect->GetUserPresets().size() > 0 ||
+          effect->GetFactoryPresets().size() > 0 ||
           effect->HasCurrentSettings() ||
           effect->HasFactoryDefaults();
 }
@@ -424,7 +424,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
    }
 
    preset = effect->GetPreset(parent, preset);
-   if (preset.IsEmpty())
+   if (preset.empty())
    {
       return preset;
    }
@@ -456,7 +456,7 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
       preset = Effect::kFactoryDefaultsIdent;
    }
 
-   if (!preset.IsEmpty())
+   if (!preset.empty())
    {
       CommandParameters eap;
 
@@ -838,7 +838,7 @@ int EffectManager::GetRealtimeLatency()
 Effect *EffectManager::GetEffect(const PluginID & ID)
 {
    // Must have a "valid" ID
-   if (ID.IsEmpty())
+   if (ID.empty())
    {
       return NULL;
    }
@@ -890,7 +890,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
 AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
 {
    // Must have a "valid" ID
-   if (ID.IsEmpty())
+   if (ID.empty())
    {
       return NULL;
    }

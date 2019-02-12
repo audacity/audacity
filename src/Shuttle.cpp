@@ -83,7 +83,7 @@ bool Shuttle::TransferBool( const wxString & Name, bool & bValue, const bool & b
       bValue = bDefault;
       if( ExchangeWithMaster( Name ))
       {
-         if( !mValueString.IsEmpty() )
+         if( !mValueString.empty() )
             bValue = mValueString.GetChar(0) == wxT('y');
       }
    }
@@ -102,7 +102,7 @@ bool Shuttle::TransferFloat( const wxString & Name, float & fValue, const float 
       fValue = fDefault;
       if( ExchangeWithMaster( Name ))
       {
-         if( !mValueString.IsEmpty() )
+         if( !mValueString.empty() )
             fValue = wxAtof( mValueString );
       }
    }
@@ -121,7 +121,7 @@ bool Shuttle::TransferDouble( const wxString & Name, double & dValue, const doub
       dValue = dDefault;
       if( ExchangeWithMaster( Name ))
       {
-         if( !mValueString.IsEmpty() )
+         if( !mValueString.empty() )
             dValue = wxAtof( mValueString );
       }
    }

@@ -536,7 +536,7 @@ wxArrayString ExportMP3Options::GetNames(CHOICES *choices, int count)
    wxArrayString names;
 
    for (int i = 0; i < count; i++) {
-      names.Add(choices[i].name);
+      names.push_back(choices[i].name);
    }
 
    return names;
@@ -615,7 +615,7 @@ public:
          S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(0);
          {
-            if (mLibPath.GetFullPath().IsEmpty()) {
+            if (mLibPath.GetFullPath().empty()) {
                /* i18n-hint: There is a  button to the right of the arrow.*/
                text.Printf(_("To find %s, click here -->"), mName);
                mPathText = S.AddTextBox( {}, text, 0);
@@ -659,7 +659,7 @@ public:
                                    mType,
                                    wxFD_OPEN | wxRESIZE_BORDER,
                                    this);
-      if (!path.IsEmpty()) {
+      if (!path.empty()) {
          mLibPath = path;
          mPathText->SetValue(path);
       }
@@ -943,7 +943,7 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
    wxString path;
    wxString name;
 
-   if (!mLibPath.IsEmpty()) {
+   if (!mLibPath.empty()) {
       wxFileName fn = mLibPath;
       path = fn.GetPath();
       name = fn.GetFullName();
@@ -985,7 +985,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 #endif
 
    // First try loading it from a previously located path
-   if (!mLibPath.IsEmpty()) {
+   if (!mLibPath.empty()) {
       wxLogMessage(wxT("Attempting to load LAME from previously defined path"));
       mLibraryLoaded = InitLibrary(mLibPath);
    }
@@ -1016,7 +1016,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    // Oh well, just give up
    if (!ValidLibraryLoaded()) {
 #if defined(__WXMSW__)
-      if (askuser && !mBladeVersion.IsEmpty()) {
+      if (askuser && !mBladeVersion.empty()) {
          AudacityMessageBox(mBladeVersion);
       }
 #endif
@@ -1763,7 +1763,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    }
 
    // Verify sample rate
-   if (FindName(sampRates, WXSIZEOF(sampRates), rate).IsEmpty() ||
+   if (FindName(sampRates, WXSIZEOF(sampRates), rate).empty() ||
       (rate < lowrate) || (rate > highrate)) {
       rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
@@ -2006,14 +2006,14 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          for (size_t i = 0; i < WXSIZEOF(sampRates); i++) {
             int label = sampRates[i].label;
             if (label >= lowrate && label <= highrate) {
-               choices.Add(sampRates[i].name);
+               choices.push_back(sampRates[i].name);
                if (label <= rate) {
                   selected = sampRates[i].name;
                }
             }
          }
 
-         if (selected.IsEmpty()) {
+         if (selected.empty()) {
             selected = choices[0];
          }
 

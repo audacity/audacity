@@ -192,7 +192,7 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
    {
       case FLAC__METADATA_TYPE_VORBIS_COMMENT:
          for (FLAC__uint32 i = 0; i < metadata->data.vorbis_comment.num_comments; i++) {
-            mComments.Add(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
+            mComments.push_back(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
          }
       break;
 
@@ -528,7 +528,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
       outTracks.push_back(std::move(mChannels));
 
    tags->Clear();
-   size_t cnt = mFile->mComments.GetCount();
+   size_t cnt = mFile->mComments.size();
    for (size_t c = 0; c < cnt; c++) {
       wxString name = mFile->mComments[c].BeforeFirst(wxT('='));
       wxString value = mFile->mComments[c].AfterFirst(wxT('='));

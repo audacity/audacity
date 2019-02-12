@@ -348,7 +348,7 @@ void ExploreMenu(
       return;
 
    wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.GetCount();
+   size_t lcnt = list.size();
    wxMenuItem * item;
    wxString Label;
    wxString Accel;
@@ -603,7 +603,7 @@ void ScreenshotCommand::CaptureCommands(
 #endif
    mpShooter = this;
 
-   for( size_t i=0;i<Commands.GetCount();i++){
+   for( size_t i=0;i<Commands.size();i++){
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
       Str = Commands[i];

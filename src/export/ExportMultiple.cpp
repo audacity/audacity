@@ -203,7 +203,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            formats.Add(mPlugins[i]->GetDescription(j));
+            formats.push_back(mPlugins[i]->GetDescription(j));
             if (mPlugins[i]->GetFormat(j) == defaultFormat) {
                mPluginIndex = i;
                mSubFormatIndex = j;
@@ -542,7 +542,7 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
 
 //   bool overwrite = mOverwrite->GetValue();
    ProgressResult ok = ProgressResult::Failed;
-   mExported.Empty();
+   mExported.clear();
 
    // Give 'em the result
    auto cleanup = finally( [&]
@@ -556,10 +556,10 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
                  : _("Something went really wrong after exporting the following %lld file(s).")
                  )
                )
-             ), (long long) mExported.GetCount());
+             ), (long long) mExported.size());
 
       wxString FileList;
-      for (size_t i = 0; i < mExported.GetCount(); i++) {
+      for (size_t i = 0; i < mExported.size(); i++) {
          FileList += mExported[i];
          FileList += '\n';
       }
@@ -675,7 +675,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
          setting.t1 = mTracks->GetEndTime();
       }
 
-      if( name.IsEmpty() )
+      if( name.empty() )
          name = _("untitled");
 
       // store title of label to use in tags
@@ -692,7 +692,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
 
       // store sanitised and user checked name in object
       setting.destfile.SetName(MakeFileName(name));
-      if( setting.destfile.GetName().IsEmpty() )
+      if( setting.destfile.GetName().empty() )
       {  // user cancelled dialogue, or deleted everything in field.
          // or maybe the label was empty??
          // So we ignore this one and keep going.
@@ -733,7 +733,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
       // Bug 1440 fix.
-      if( activeSetting.destfile.GetName().IsEmpty() )
+      if( activeSetting.destfile.GetName().empty() )
          continue;
 
       // Export it
@@ -787,7 +787,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 
       // Get name and title
       title = tr->GetName();
-      if( title.IsEmpty() )
+      if( title.empty() )
          title = _("untitled");
 
       if (byName) {
@@ -804,7 +804,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
       // store sanitised and user checked name in object
       setting.destfile.SetName(MakeFileName(name));
 
-      if (setting.destfile.GetName().IsEmpty())
+      if (setting.destfile.GetName().empty())
       {  // user cancelled dialogue, or deleted everything in field.
          // So we ignore this one and keep going.
       }
@@ -842,7 +842,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
       wxLogDebug( "Get setting %i", count );
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
-      if( activeSetting.destfile.GetName().IsEmpty() ){
+      if( activeSetting.destfile.GetName().empty() ){
          count++;
          continue;
       }
@@ -951,7 +951,7 @@ ProgressResult ExportMultiple::DoExport(std::unique_ptr<ProgressDialog> &pDialog
                                                 mSubFormatIndex);
 
    if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
-      mExported.Add(fullPath);
+      mExported.push_back(fullPath);
    }
 
    Refresh();

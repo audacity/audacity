@@ -59,7 +59,7 @@ void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    wxString Padding;
    Padding.Pad( mCounts.size() *2 -2);
    Padding = (( value.length() < 15 ) || (mCounts.back()<=0))  ? "" : wxString("\n") + Padding;
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s%s\"%s\"", (mCounts.back()>0)?", ":"", Padding, Escaped(value)));
    else
       Update( wxString::Format( "%s%s\"%s\":\"%s\"", (mCounts.back()>0)?", ":"", Padding, name, Escaped(value)));
@@ -67,14 +67,14 @@ void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
 }
 
 void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s\"%s\"", (mCounts.back()>0)?", ":"", value?"true":"false"));
    else
       Update( wxString::Format( "%s\"%s\":\"%s\"", (mCounts.back()>0)?", ":"", name,value?"true":"false"));
    mCounts.back() += 1;
 }
 void CommandMessageTarget::AddItem(const double value,    const wxString &name){
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s%g", (mCounts.back()>0)?", ":"", value));
    else
       Update( wxString::Format( "%s\"%s\":%g", (mCounts.back()>0)?", ":"", name,value));
@@ -82,7 +82,7 @@ void CommandMessageTarget::AddItem(const double value,    const wxString &name){
 }
 
 void CommandMessageTarget::StartField(const wxString &name){
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s", (mCounts.back()>0)? ", " : ""));
    else
       Update( wxString::Format( "%s\"%s\":", (mCounts.back()>0) ?", ":"", name));
@@ -137,21 +137,21 @@ void LispyCommandMessageTarget::EndStruct(){
 }
 void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    wxString Padding = "";
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s%s\"%s\"", (mCounts.back()>0)?" ":"", Padding, Escaped(value)));
    else 
       Update( wxString::Format( "%s%s(%s \"%s\")", (mCounts.back()>0)?" ":"", Padding, name, Escaped(value)));
    mCounts.back() += 1;
 }
 void LispyCommandMessageTarget::AddBool(const bool value,      const wxString &name){
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s%s", (mCounts.back()>0)?" ":"",value?"True":"False"));
    else 
       Update( wxString::Format( "%s(%s %s)", (mCounts.back()>0)?" ":"", name,value?"True":"False"));
    mCounts.back() += 1;
 }
 void LispyCommandMessageTarget::AddItem(const double value,    const wxString &name){
-   if( name.IsEmpty() )
+   if( name.empty() )
       Update( wxString::Format( "%s%g", (mCounts.back()>0)?" ":"", value));
    else 
       Update( wxString::Format( "%s(%s %g)", (mCounts.back()>0)?" ":"", name,value));

@@ -229,7 +229,7 @@ BuiltinEffectsModule::BuiltinEffectsModule(ModuleManagerInterface *moduleManager
 
 BuiltinEffectsModule::~BuiltinEffectsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
@@ -271,13 +271,13 @@ bool BuiltinEffectsModule::Initialize()
    const auto &names = kEffectNames();
    for (const auto &name : names)
    {
-      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_EFFECT_PREFIX) + name);
    }
 
    const auto &excluded = kExcludedNames();
    for (const auto &name : excluded)
    {
-      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_EFFECT_PREFIX) + name);
    }
 
    return true;

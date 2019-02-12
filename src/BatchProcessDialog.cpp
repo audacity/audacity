@@ -175,7 +175,7 @@ void ApplyMacroDialog::PopulateMacros()
 
    int topItem = mMacros->GetTopItem();
    mMacros->DeleteAllItems();
-   for (i = 0; i < (int)names.GetCount(); i++) {
+   for (i = 0; i < (int)names.size(); i++) {
       mMacros->InsertItem(i, names[i]);
    }
 
@@ -246,7 +246,7 @@ void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasG
 void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 {
    wxString name = mMacros->GetItemText(iMacro);
-   if( name.IsEmpty() )
+   if( name.empty() )
       return;
 
 #ifdef OPTIONAL_ACTIVITY_WINDOW
@@ -420,7 +420,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    S.EndVerticalLay();
 
    int i;
-   for (i = 0; i < (int)files.GetCount(); i++ ) {
+   for (i = 0; i < (int)files.size(); i++ ) {
       fileList->InsertItem(i, files[i], i == 0);
    }
 
@@ -450,7 +450,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    Hide();
 
    mMacroCommands.ReadMacro(name);
-   for (i = 0; i < (int)files.GetCount(); i++) {
+   for (i = 0; i < (int)files.size(); i++) {
       wxWindowDisabler wd(&activityWin);
       if (i > 0) {
          //Clear the arrow in previous item.

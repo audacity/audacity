@@ -99,8 +99,8 @@ void DevicePrefs::GetNamesAndLabels()
       if ((info!=NULL)&&(info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
          wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
          if (mHostNames.Index(name) == wxNOT_FOUND) {
-            mHostNames.Add(name);
-            mHostLabels.Add(name);
+            mHostNames.push_back(name);
+            mHostLabels.push_back(name);
          }
       }
    }
@@ -267,12 +267,12 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
 
    /* deal with not having any devices at all */
    if (mPlay->GetCount() == 0) {
-      playnames.Add(_("No devices found"));
+      playnames.push_back(_("No devices found"));
       mPlay->Append(playnames[0], (void *) NULL);
       mPlay->SetSelection(0);
    }
    if (mRecord->GetCount() == 0) {
-      recordnames.Add(_("No devices found"));
+      recordnames.push_back(_("No devices found"));
       mRecord->Append(recordnames[0], (void *) NULL);
       mRecord->SetSelection(0);
    }
@@ -355,7 +355,7 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
          name = wxString::Format(wxT("%d"), i + 1);
       }
 
-      channelnames.Add(name);
+      channelnames.push_back(name);
       int index = mChannels->Append(name);
       if (i == mRecordChannels - 1) {
          mChannels->SetSelection(index);

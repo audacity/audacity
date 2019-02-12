@@ -1027,7 +1027,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
             if (label >= lowrate && label <= highrate)
             {
                wxString name = wxString::Format(wxT("%d"),label);
-               choices.Add(name);
+               choices.push_back(name);
                if (label <= rate)
                {
                   selected = name;
@@ -1035,7 +1035,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
             }
          }
 
-         if (selected.IsEmpty())
+         if (selected.empty())
          {
             selected = choices[0];
          }

@@ -89,7 +89,7 @@ NyquistEffectsModule::NyquistEffectsModule(ModuleManagerInterface *moduleManager
 
 NyquistEffectsModule::~NyquistEffectsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
@@ -130,7 +130,7 @@ bool NyquistEffectsModule::Initialize()
 {
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
 
-   for (size_t i = 0, cnt = audacityPathList.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = audacityPathList.size(); i < cnt; i++)
    {
       wxFileName name(audacityPathList[i], wxT(""));
       name.AppendDir(wxT("nyquist"));
@@ -184,9 +184,9 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
    for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
    {
-      files.Clear();
+      files.clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
-      for (size_t j = 0, cnt = files.GetCount(); j < cnt; j++)
+      for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
          if (!pm.IsPluginRegistered(files[j]))
          {
@@ -207,7 +207,7 @@ wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    wxArrayString files;
 
    // Add the Nyquist prompt
-   files.Add(NYQUIST_PROMPT_ID);
+   files.push_back(NYQUIST_PROMPT_ID);
    
    // Load .ny plug-ins
    pm.FindFilesInPathList(wxT("*.ny"), pathList, files);

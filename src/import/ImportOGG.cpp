@@ -115,7 +115,7 @@ public:
       {
          wxString strinfo;
          strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,mVorbisFile->vi[i].version,mVorbisFile->vi[i].channels,mVorbisFile->vi[i].rate);
-         mStreamInfo.Add(strinfo);
+         mStreamInfo.push_back(strinfo);
          mStreamUsage[i] = 0;
       }
 

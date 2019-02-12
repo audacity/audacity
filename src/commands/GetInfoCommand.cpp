@@ -205,7 +205,7 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
       while (plug)
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
-         if (!command.IsEmpty()){
+         if (!command.empty()){
             em.GetCommandDefinition( plug->GetID(), context, flags );
          }
          plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand );
@@ -407,7 +407,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
    CommandManager * pMan = context.GetProject()->GetCommandManager();
 
    wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.GetCount();
+   size_t lcnt = list.size();
    wxMenuItem * item;
    wxString Label;
    wxString Accel;
@@ -435,7 +435,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       context.AddItem( flags, "flags" );
       context.AddItem( Label, "label" );
       context.AddItem( Accel, "accel" );
-      if( !Name.IsEmpty() )
+      if( !Name.empty() )
          context.AddItem( Name, "id" );// It is called Scripting ID outside Audacity.
       context.EndStruct();
 
@@ -572,7 +572,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       return;
    }
    wxWindowList list = pWin->GetChildren();
-   size_t lcnt = list.GetCount();
+   size_t lcnt = list.size();
 
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       wxWindow * item = list[lndx];
@@ -587,7 +587,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       // Ignore anonymous panels.
       if( Name == "panel"  )
          continue;
-      if( Name.IsEmpty() )
+      if( Name.empty() )
          Name = wxString("*") + item->GetToolTipText();
 
       context.StartStruct();

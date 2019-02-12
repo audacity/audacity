@@ -223,7 +223,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    if (pathVar != wxT(""))
       wxGetApp().AddMultiPathsToPathList(pathVar, pathList);
 
-   for (i = 0; i < audacityPathList.GetCount(); i++) {
+   for (i = 0; i < audacityPathList.size(); i++) {
       wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
       wxGetApp().AddUniquePathToPathList(prefix + wxT("modules"),
                                          pathList);
@@ -236,7 +236,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    #endif
 
    wxString saveOldCWD = ::wxGetCwd();
-   for (i = 0; i < files.GetCount(); i++) {
+   for (i = 0; i < files.size(); i++) {
       // As a courtesy to some modules that might be bridges to
       // open other modules, we set the current working
       // directory to be the module's directory.
@@ -374,7 +374,7 @@ bool ModuleManager::DiscoverProviders()
 
    PluginManager & pm = PluginManager::Get();
 
-   for (int i = 0, cnt = provList.GetCount(); i < cnt; i++)
+   for (int i = 0, cnt = provList.size(); i < cnt; i++)
    {
       ModuleInterface *module = LoadModule(provList[i]);
       if (module)
@@ -555,7 +555,7 @@ bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxSt
 ComponentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
                                                       const wxString & path)
 {
-   if (path.IsEmpty() && mDynModules.find(providerID) != mDynModules.end())
+   if (path.empty() && mDynModules.find(providerID) != mDynModules.end())
    {
       return mDynModules[providerID].get();
    }
@@ -589,7 +589,7 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
                                     const wxString & path)
 {
    // Builtin modules do not have a path
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return true;  
    }

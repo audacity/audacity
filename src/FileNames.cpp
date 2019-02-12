@@ -116,7 +116,7 @@ void FileNames::MakeNameUnique(wxArrayString &otherNames, wxFileName &newName)
          i++;
       } while (otherNames.Index(newName.GetFullName(), false) >= 0);
    }
-   otherNames.Add(newName.GetFullName());
+   otherNames.push_back(newName.GetFullName());
 }
 
 
@@ -150,7 +150,7 @@ wxString FileNames::DataDir()
    //       between wxStandardPaths and wxConfig under Linux.  The latter
    //       creates a normal file as "$HOME/.audacity", while the former
    //       expects the ".audacity" portion to be a directory.
-   if (gDataDir.IsEmpty())
+   if (gDataDir.empty())
    {
       // If there is a directory "Portable Settings" relative to the
       // executable's EXE file, the prefs are stored in there, otherwise

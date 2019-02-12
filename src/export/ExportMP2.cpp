@@ -104,7 +104,7 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
 {
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
    {
-      mBitRateNames.Add(wxString::Format(_("%i kbps"),iBitrates[i]));
+      mBitRateNames.push_back(wxString::Format(_("%i kbps"),iBitrates[i]));
       mBitRateLabels.push_back(iBitrates[i]);
    }
 

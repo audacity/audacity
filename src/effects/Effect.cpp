@@ -794,7 +794,7 @@ wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
 wxString Effect::GetUserPresetsGroup(const wxString & name)
 {
    wxString group = wxT("UserPresets");
-   if (!name.IsEmpty())
+   if (!name.empty())
    {
       group += wxCONFIG_PATH_SEPARATOR + name;
    }
@@ -1097,7 +1097,7 @@ wxArrayString Effect::GetUserPresets()
 
    GetPrivateConfigSubgroups(GetUserPresetsGroup(wxEmptyString), presets);
 
-   presets.Sort();
+   std::sort( presets.begin(), presets.end() );
 
    return presets;
 }
@@ -1232,9 +1232,9 @@ bool Effect::DoEffect(wxWindow *parent,
    mF1 = selectedRegion->f1();
    wxArrayString Names;
    if( mF0 != SelectedRegion::UndefinedFrequency )
-      Names.Add(wxT("control-f0"));
+      Names.push_back(wxT("control-f0"));
    if( mF1 != SelectedRegion::UndefinedFrequency )
-      Names.Add(wxT("control-f1"));
+      Names.push_back(wxT("control-f1"));
    SetPresetParameters( &Names, NULL );
 
 #endif
@@ -3125,7 +3125,7 @@ bool EffectUIHost::Initialize()
       }
 
       long buttons;
-      if ( mEffect && mEffect->ManualPage().IsEmpty() && mEffect->HelpPage().IsEmpty()) {
+      if ( mEffect && mEffect->ManualPage().empty() && mEffect->HelpPage().empty()) {
          buttons = eApplyButton + eCloseButton;
          this->SetAcceleratorTable(wxNullAcceleratorTable);
       }
@@ -3317,7 +3317,7 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect && mEffect->GetFamilyId() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().IsEmpty())) {
+   if (mEffect && mEffect->GetFamilyId() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().empty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
@@ -3344,14 +3344,14 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    LoadUserPresets();
 
-   if (mUserPresets.GetCount() == 0)
+   if (mUserPresets.size() == 0)
    {
       menu.Append(kUserPresetsDummyID, _("User Presets"))->Enable(false);
    }
    else
    {
       auto sub = std::make_unique<wxMenu>();
-      for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mUserPresets.size(); i < cnt; i++)
       {
          sub->Append(kUserPresetsID + i, mUserPresets[i]);
       }
@@ -3360,14 +3360,14 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    menu.Append(kSaveAsID, _("Save Preset..."));
 
-   if (mUserPresets.GetCount() == 0)
+   if (mUserPresets.size() == 0)
    {
       menu.Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
    }
    else
    {
       auto sub = std::make_unique<wxMenu>();
-      for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mUserPresets.size(); i < cnt; i++)
       {
          sub->Append(kDeletePresetID + i, mUserPresets[i]);
       }
@@ -3381,13 +3381,13 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    {
       auto sub = std::make_unique<wxMenu>();
       sub->Append(kDefaultsID, _("Defaults"));
-      if (factory.GetCount() > 0)
+      if (factory.size() > 0)
       {
          sub->AppendSeparator();
-         for (size_t i = 0, cnt = factory.GetCount(); i < cnt; i++)
+         for (size_t i = 0, cnt = factory.size(); i < cnt; i++)
          {
             wxString label = factory[i];
-            if (label.IsEmpty())
+            if (label.empty())
             {
                label = _("None");
             }
@@ -3669,7 +3669,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       }
 
       name = text->GetValue();
-      if (name.IsEmpty())
+      if (name.empty())
       {
          AudacityMessageDialog md(this,
                             _("You must specify a name"),
@@ -3852,12 +3852,12 @@ void EffectUIHost::UpdateControls()
 
 void EffectUIHost::LoadUserPresets()
 {
-   mUserPresets.Clear();
+   mUserPresets.clear();
 
    if( mEffect )
       mEffect->GetPrivateConfigSubgroups(mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
 
-   mUserPresets.Sort();
+   std::sort( mUserPresets.begin(), mUserPresets.end() );
 
    return;
 }
@@ -3935,12 +3935,12 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
    mUserPresets = effect->GetUserPresets();
    mFactoryPresets = effect->GetFactoryPresets();
 
-   if (mUserPresets.GetCount() > 0)
+   if (mUserPresets.size() > 0)
    {
       mType->Append(_("User Presets"));
    }
 
-   if (mFactoryPresets.GetCount() > 0)
+   if (mFactoryPresets.size() > 0)
    {
       mType->Append(_("Factory Presets"));
    }
@@ -4009,10 +4009,10 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
    else if (type.IsSameAs(_("Factory Presets")))
    {
       mPresets->Clear();
-      for (size_t i = 0, cnt = mFactoryPresets.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
       {
          wxString label = mFactoryPresets[i];
-         if (label.IsEmpty())
+         if (label.empty())
          {
             label = _("None");
          }
@@ -4073,10 +4073,10 @@ void EffectPresetsDialog::UpdateUI()
       }
 
       mPresets->Clear();
-      for (size_t i = 0, cnt = mFactoryPresets.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
       {
          wxString label = mFactoryPresets[i];
-         if (label.IsEmpty())
+         if (label.empty())
          {
             label = _("None");
          }

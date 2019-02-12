@@ -692,7 +692,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                   v = UTF8CTOWX(convStr.get());
                }
 
-               if (!n.IsEmpty() && !v.IsEmpty()) {
+               if (!n.empty() && !v.empty()) {
                   tags->SetTag(n, v);
                }
             }

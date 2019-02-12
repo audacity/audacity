@@ -39,7 +39,7 @@ void HelpCommand::PopulateOrExchange(ShuttleGui & S)
 bool HelpCommand::Apply(const CommandContext & context){
    EffectManager & em = EffectManager::Get();
    PluginID ID = em.GetEffectByIdentifier( mCommandName );
-   if( ID.IsEmpty() )
+   if( ID.empty() )
       context.Status( "Command not found" );
    else
       em.GetCommandDefinition( ID, context, 1);

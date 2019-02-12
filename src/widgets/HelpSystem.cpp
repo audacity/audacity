@@ -229,16 +229,16 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    else
       localfile = localFileName;
 
-   if( (HelpMode == wxT("FromInternet")) && !remoteURL.IsEmpty() )
+   if( (HelpMode == wxT("FromInternet")) && !remoteURL.empty() )
    {
       // Always go to remote URL.  Use External browser.
       OpenInDefaultBrowser( remoteURL );
    }
-   else if( localfile.IsEmpty() || !wxFileExists( localfile ))
+   else if( localfile.empty() || !wxFileExists( localfile ))
    {
       // If you give an empty remote URL, you should have already ensured
       // that the file exists!
-      wxASSERT( !remoteURL.IsEmpty() );
+      wxASSERT( !remoteURL.empty() );
       // I can't find it'.
       // Use Built-in browser to suggest you use the remote url.
       wxString Text = HelpText( wxT("remotehelp") );
@@ -496,7 +496,7 @@ wxString QuickFixDialog::StringFromEvent( wxCommandEvent &event )
       return "";
    }
    wxString Str = pStrCd->GetData();
-   if( Str.IsEmpty()){
+   if( Str.empty()){
       wxFAIL_MSG( "String data empty");
       return "";
    }

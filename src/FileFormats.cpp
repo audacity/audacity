@@ -220,7 +220,7 @@ wxArrayString sf_get_all_extensions()
       sf_command(NULL, SFC_GET_FORMAT_MAJOR,
                  &format_info, sizeof (format_info)) ;
 
-      exts.Add(LAT1CTOWX(format_info.extension));
+      exts.push_back(LAT1CTOWX(format_info.extension));
    }
 
    // Some other extensions that are often sound files

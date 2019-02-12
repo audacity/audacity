@@ -147,7 +147,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 
    mHeaderFromChoice = 0;
    for (int i = 0, num = sf_num_headers(); i < num; i++) {
-      mHeaderNames.Add(sf_header_index_name(i));
+      mHeaderNames.push_back(sf_header_index_name(i));
       if ((format & SF_FORMAT_TYPEMASK) == (int)sf_header_index_to_type(i))
          mHeaderFromChoice = i;
    }
@@ -159,7 +159,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
       bool valid = ValidatePair(fmt);
       if (valid)
       {
-         mEncodingNames.Add(sf_encoding_index_name(i));
+         mEncodingNames.push_back(sf_encoding_index_name(i));
          mEncodingFormats.push_back(enc);
          if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
             mEncodingFromChoice = sel;
@@ -235,7 +235,7 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    if( format == SF_FORMAT_AIFF )
       format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
 
-   mEncodingNames.Clear();
+   mEncodingNames.clear();
    mEncodingChoice->Clear();
    mEncodingFormats.clear();
    int sel = wxNOT_FOUND;
@@ -259,7 +259,7 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
       if (valid)
       {
          const auto name = sf_encoding_index_name(i);
-         mEncodingNames.Add(name);
+         mEncodingNames.push_back(name);
          mEncodingChoice->Append(name);
          mEncodingFormats.push_back(encSubtype);
          for (j = 0; j < sfnum; j++)

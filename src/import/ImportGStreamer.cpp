@@ -302,7 +302,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
    auto plug = std::make_unique<GStreamerImportPlugin>();
 
    // No supported extensions...no gstreamer plugins installed
-   if (plug->GetSupportedExtensions().GetCount() == 0)
+   if (plug->GetSupportedExtensions().size() == 0)
       return;
 
    // Add to list of importers
@@ -391,7 +391,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
                wxString extension = wxString::FromUTF8(extensions[i]);
                if (mExtensions.Index(extension, false) == wxNOT_FOUND)
                {
-                  mExtensions.Add(extension);
+                  mExtensions.push_back(extension);
                }
             }
          }
@@ -403,7 +403,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
 
    // Log it for debugging
    wxString extensions = wxT("Extensions:");
-   for (size_t i = 0; i < mExtensions.GetCount(); i++)
+   for (size_t i = 0; i < mExtensions.size(); i++)
    {
       extensions = extensions + wxT(" ") + mExtensions[i];
    }
@@ -892,7 +892,7 @@ GStreamerImportFileHandle::~GStreamerImportFileHandle()
 wxInt32
 GStreamerImportFileHandle::GetStreamCount()
 {
-   return mStreamInfo.GetCount();
+   return mStreamInfo.size();
 }
 
 // ----------------------------------------------------------------------------
@@ -991,7 +991,7 @@ GStreamerImportFileHandle::Init()
                      wxString::FromUTF8(c->mType.get()),
                      (int) c->mNumChannels,
                      (int) c->mSampleRate);
-      mStreamInfo.Add(strinfo);
+      mStreamInfo.push_back(strinfo);
    }
 
    return success;

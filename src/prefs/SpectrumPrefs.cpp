@@ -83,25 +83,25 @@ enum {
 
 void SpectrumPrefs::Populate(size_t windowSize)
 {
-   mSizeChoices.Add(_("8 - most wideband"));
-   mSizeChoices.Add(wxT("16"));
-   mSizeChoices.Add(wxT("32"));
-   mSizeChoices.Add(wxT("64"));
-   mSizeChoices.Add(wxT("128"));
-   mSizeChoices.Add(wxT("256"));
-   mSizeChoices.Add(wxT("512"));
-   mSizeChoices.Add(_("1024 - default"));
-   mSizeChoices.Add(wxT("2048"));
-   mSizeChoices.Add(wxT("4096"));
-   mSizeChoices.Add(wxT("8192"));
-   mSizeChoices.Add(wxT("16384"));
-   mSizeChoices.Add(_("32768 - most narrowband"));
+   mSizeChoices.push_back(_("8 - most wideband"));
+   mSizeChoices.push_back(wxT("16"));
+   mSizeChoices.push_back(wxT("32"));
+   mSizeChoices.push_back(wxT("64"));
+   mSizeChoices.push_back(wxT("128"));
+   mSizeChoices.push_back(wxT("256"));
+   mSizeChoices.push_back(wxT("512"));
+   mSizeChoices.push_back(_("1024 - default"));
+   mSizeChoices.push_back(wxT("2048"));
+   mSizeChoices.push_back(wxT("4096"));
+   mSizeChoices.push_back(wxT("8192"));
+   mSizeChoices.push_back(wxT("16384"));
+   mSizeChoices.push_back(_("32768 - most narrowband"));
    wxASSERT(mSizeChoices.size() == SpectrogramSettings::NumWindowSizes);
 
    PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
-      mTypeChoices.Add(WindowFuncName(i));
+      mTypeChoices.push_back(WindowFuncName(i));
    }
 
    mScaleChoices = SpectrogramSettings::GetScaleNames();
@@ -140,7 +140,7 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
    const size_t maxWindowSize = 1 << (SpectrogramSettings::LogMaxWindowSize);
    while (windowSize <= maxWindowSize) {
       const wxString numeral = wxString::Format(wxT("%d"), padding);
-      mZeroPaddingChoices.Add(numeral);
+      mZeroPaddingChoices.push_back(numeral);
       if (pPaddingSizeControl)
          pPaddingSizeControl->Append(numeral);
       windowSize <<= 1;

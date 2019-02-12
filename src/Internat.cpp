@@ -103,14 +103,14 @@ void Internat::Init()
    auto forbid = wxFileName::GetForbiddenChars(format);
 
    for(auto cc: forbid)
-      exclude.Add(wxString{ cc });
+      exclude.push_back(wxString{ cc });
 
    // The path separators may not be forbidden, so add them
    auto separators = wxFileName::GetPathSeparators(format);
 
    for(auto cc: separators) {
       if (forbid.Find(cc) == wxNOT_FOUND)
-         exclude.Add(wxString{ cc });
+         exclude.push_back(wxString{ cc });
    }
 }
 
@@ -290,7 +290,7 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
 wxString Internat::StripAccelerators(const wxString &s)
 {
    wxString result;
-   result.Alloc(s.Length());
+   result.reserve(s.Length());
    for(size_t i = 0; i < s.Length(); i++) {
       if (s[i] == '\t')
          break;

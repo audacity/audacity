@@ -41,13 +41,13 @@ const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
 
 void TracksBehaviorsPrefs::Populate()
 {
-   mSoloCodes.Add(wxT("Simple"));
-   mSoloCodes.Add(wxT("Multi"));
-   mSoloCodes.Add(wxT("None"));
+   mSoloCodes.push_back(wxT("Simple"));
+   mSoloCodes.push_back(wxT("Multi"));
+   mSoloCodes.push_back(wxT("None"));
 
-   mSoloChoices.Add(_("Simple"));
-   mSoloChoices.Add(_("Multi-track"));
-   mSoloChoices.Add(_("None"));
+   mSoloChoices.push_back(_("Simple"));
+   mSoloChoices.push_back(_("Multi-track"));
+   mSoloChoices.push_back(_("None"));
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.

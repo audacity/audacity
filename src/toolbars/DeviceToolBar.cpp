@@ -511,15 +511,15 @@ void DeviceToolBar::FillHosts()
    // go over our lists add the host to the list if it isn't there yet
    for (i = 0; i < inMaps.size(); i++)
       if (hosts.Index(inMaps[i].hostString) == wxNOT_FOUND)
-         hosts.Add(inMaps[i].hostString);
+         hosts.push_back(inMaps[i].hostString);
    for (i = 0; i < outMaps.size(); i++)
       if (hosts.Index(outMaps[i].hostString) == wxNOT_FOUND)
-         hosts.Add(outMaps[i].hostString);
+         hosts.push_back(outMaps[i].hostString);
 
    mHost->Clear();
    mHost->Append(hosts);
 
-   if (hosts.GetCount() == 0)
+   if (hosts.size() == 0)
       mHost->Enable(false);
 
    mHost->InvalidateBestSize();

@@ -74,7 +74,7 @@ bool NumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
    struct lconv *info = localeconv();
    wxString s = info ? wxString::FromUTF8(info->thousands_sep) : wxT("");
 
-   if (s.IsEmpty())
+   if (s.empty())
    {
       return false;
    }

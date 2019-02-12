@@ -307,7 +307,7 @@ wxString HelpText( const wxString & Key )
    wxString Text;
    Text = HelpTextBuiltIn( Key );
 
-   if( !Text.IsEmpty())
+   if( !Text.empty())
       return LinkExpand( Text );
 
    // Perhaps useful for debugging - we'll return key that we didn't find.

@@ -50,7 +50,7 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
    {
       case FLAC__METADATA_TYPE_VORBIS_COMMENT:
          for (FLAC__uint32 i = 0; i < metadata->data.vorbis_comment.num_comments; i++) {
-            mComments.Add(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
+            mComments.push_back(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
          }
       break;
 

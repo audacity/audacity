@@ -1751,7 +1751,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          {
             wxArrayString windowTypeChoices;
             for (int ii = 0; ii < WT_N_WINDOW_TYPES; ++ii)
-               windowTypeChoices.Add(windowTypesInfo[ii].name);
+               windowTypeChoices.push_back(windowTypesInfo[ii].name);
             S.TieChoice(_("&Window types") + wxString(wxT(":")),
                mTempSettings.mWindowTypes,
                &windowTypeChoices);
@@ -1797,7 +1797,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             --nn;
 #endif
             for (int ii = 0; ii < nn; ++ii)
-               methodChoices.Add(discriminationMethodInfo[ii].name);
+               methodChoices.push_back(discriminationMethodInfo[ii].name);
             S.TieChoice(_("Discrimination &method") + wxString(wxT(":")),
                mTempSettings.mMethod,
                &methodChoices);

@@ -159,7 +159,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       // You start and end with a " or a '.
       // There is no escaping in the string.
       cmdParams = cmdParams.Mid(splitAt+1);
-      if( cmdParams.IsEmpty() )
+      if( cmdParams.empty() )
          splitAt =-1;
       else if( cmdParams[0] == '\"' ){
          cmdParams = cmdParams.Mid(1);

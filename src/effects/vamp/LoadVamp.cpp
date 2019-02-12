@@ -185,7 +185,7 @@ wxArrayString VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUS
          }
 
          wxString path = wxString::FromUTF8(i->c_str()) + wxT("/") + name;
-         names.Add(path);
+         names.push_back(path);
 
          ++output;
       }

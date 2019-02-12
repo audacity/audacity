@@ -339,7 +339,7 @@ ComponentInterfaceSymbol LV2Effect::GetVendor()
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 
-   if (vendor.IsEmpty())
+   if (vendor.empty())
    {
       vendor = XO("n/a");
    }
@@ -493,12 +493,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          if (group)
          {
             ctrl.mGroup = LilvString(lilv_world_get(gWorld, group, gLabel, NULL));
-            if (ctrl.mGroup.IsEmpty())
+            if (ctrl.mGroup.empty())
             {
                ctrl.mGroup = LilvString(lilv_world_get(gWorld, group, gName, NULL));
             }
 
-            if (ctrl.mGroup.IsEmpty())
+            if (ctrl.mGroup.empty())
             {
                ctrl.mGroup = LilvString(group);
             }
@@ -507,7 +507,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          // Add it if not previously done
          if (mGroups.Index(ctrl.mGroup) == wxNOT_FOUND)
          {
-            mGroups.Add(ctrl.mGroup);
+            mGroups.push_back(ctrl.mGroup);
          }
 
          // Get the scale points
@@ -517,7 +517,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
             const LilvScalePoint *point = lilv_scale_points_get(points, j);
 
             ctrl.mScaleValues.push_back(lilv_node_as_float(lilv_scale_point_get_value(point)));
-            ctrl.mScaleLabels.Add(LilvString(lilv_scale_point_get_label(point)));
+            ctrl.mScaleLabels.push_back(LilvString(lilv_scale_point_get_label(point)));
          }
          lilv_scale_points_free(points);
 
@@ -1147,7 +1147,7 @@ wxArrayString LV2Effect::GetFactoryPresets()
       {
          const LilvNode *preset = lilv_nodes_get(presets, i);
 
-         mFactoryPresetUris.Add(LilvString(preset));
+         mFactoryPresetUris.push_back(LilvString(preset));
 
          lilv_world_load_resource(gWorld, preset);
    
@@ -1156,13 +1156,13 @@ wxArrayString LV2Effect::GetFactoryPresets()
          {
             const LilvNode *label = lilv_nodes_get_first(labels);
 
-            mFactoryPresetNames.Add(LilvString(label));
+            mFactoryPresetNames.push_back(LilvString(label));
 
             lilv_nodes_free(labels);
          }
          else
          {
-            mFactoryPresetNames.Add(LilvString(preset).AfterLast(wxT('#')));
+            mFactoryPresetNames.push_back(LilvString(preset).AfterLast(wxT('#')));
          }
       }
    
@@ -1176,7 +1176,7 @@ wxArrayString LV2Effect::GetFactoryPresets()
 
 bool LV2Effect::LoadFactoryPreset(int id)
 {
-   if (id < 0 || id >= (int) mFactoryPresetUris.GetCount())
+   if (id < 0 || id >= (int) mFactoryPresetUris.size())
    {
       return false;
    }
@@ -1570,12 +1570,12 @@ bool LV2Effect::BuildPlain()
             innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
          }
 
-         mGroups.Sort();
+         std::sort( mGroups.begin(), mGroups.end() );
 
-         for (size_t i = 0, groupCount = mGroups.GetCount(); i < groupCount; i++)
+         for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
          {
             wxString label = mGroups[i];
-            if (label.IsEmpty())
+            if (label.empty())
             {
                label = _("Effect Settings");
             }
@@ -1590,7 +1590,7 @@ bool LV2Effect::BuildPlain()
                int p = params[pi];
                LV2Port & ctrl = mControls[p];
                wxString labelText = ctrl.mName;
-               if (!ctrl.mUnits.IsEmpty())
+               if (!ctrl.mUnits.empty())
                {
                   labelText += wxT(" (") + ctrl.mUnits + wxT(")");
                }
@@ -1838,7 +1838,7 @@ bool LV2Effect::TransferDataToWindow()
       return true;
    }
 
-   for (size_t i = 0, groupCount = mGroups.GetCount(); i < groupCount; i++)
+   for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
    {
       const auto & params = mGroupMap[mGroups[i]];
       for (size_t pi = 0, ParamCount = params.size(); pi < ParamCount; pi++)

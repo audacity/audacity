@@ -97,7 +97,7 @@ wxAccStatus HtmlWindowAx::GetChildCount(int* childCount)
 // "Press" rather than "Prints the current document."
 wxAccStatus HtmlWindowAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -105,7 +105,7 @@ wxAccStatus HtmlWindowAx::GetDefaultAction(int WXUNUSED(childId), wxString* acti
 // Returns the description for this object or a child.
 wxAccStatus HtmlWindowAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -125,7 +125,7 @@ wxAccStatus HtmlWindowAx::GetFocus(int* childId, wxAccessible** child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus HtmlWindowAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -134,7 +134,7 @@ wxAccStatus HtmlWindowAx::GetHelpText( int WXUNUSED(childId), wxString *helpText
 // Return e.g. ALT+K
 wxAccStatus HtmlWindowAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -157,7 +157,7 @@ wxAccStatus HtmlWindowAx::GetName(int WXUNUSED(childId), wxString* name)
    HtmlWindow *hw = wxDynamicCast( GetWindow(), HtmlWindow );
 
    *name = hw->GetName();
-   if( name->IsEmpty() )
+   if( name->empty() )
    {
       *name = hw->GetLabel();
    }

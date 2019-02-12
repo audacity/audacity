@@ -1140,7 +1140,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
                Tick(i, sg * step * denom, major, !major);
-               if( !major && mMinorLabels[mNumMinor-1].text.IsEmpty() ){
+               if( !major && mMinorLabels[mNumMinor-1].text.empty() ){
                   nDroppedMinorLabels++;
                }
             }
@@ -1532,7 +1532,7 @@ void Ruler::SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int star
    mMajorLabels.reinit(numLabel);
 
    for(size_t i = 0; i<numLabel; i++) {
-      mMajorLabels[i].text = label->Item(i);
+      mMajorLabels[i].text = (*label)[i];
       mMajorLabels[i].pos  = start + i*step;
    }
    //Remember: DELETE majorlabels....
@@ -1544,7 +1544,7 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int star
    mMinorLabels.reinit(numLabel);
 
    for(size_t i = 0; i<numLabel; i++) {
-      mMinorLabels[i].text = label->Item(i);
+      mMinorLabels[i].text = (*label)[i];
       mMinorLabels[i].pos  = start + i*step;
    }
    //Remember: DELETE majorlabels....

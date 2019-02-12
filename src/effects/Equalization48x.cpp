@@ -348,7 +348,7 @@ bool EffectEqualization48x::TrackCompare()
          auto o = aTrack->Duplicate();
          SecondIMap.push_back(aTrack);
          SecondIMap.push_back(o.get());
-         SecondOutputTracks.Add(std::move(o));
+         SecondOutputTracks.push_back(std::move(o));
       }
    }
 

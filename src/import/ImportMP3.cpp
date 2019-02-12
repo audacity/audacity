@@ -382,7 +382,7 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
          v = UTF8CTOWX(str.get());
       }
 
-      if (!n.IsEmpty() && !v.IsEmpty()) {
+      if (!n.empty() && !v.empty()) {
          tags->SetTag(n, v);
       }
    }

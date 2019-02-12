@@ -453,7 +453,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          }
          strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),
                         sc->m_stream->id,codec->name,lang,bitrate,(int)sc->m_stream->codec->channels,(int)duration);
-         mStreamInfo.Add(strinfo);
+         mStreamInfo.push_back(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing

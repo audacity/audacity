@@ -169,8 +169,8 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
       // (that doesn't exist) -- hence the constructor calls
       if (tmpDirPath != wxFileName(wxGetApp().defaultTempDir, wxT("")) &&
             tmpDirPath != wxFileName(mTempDir->GetValue(), wxT("")) &&
-            (dirsInPath.GetCount() == 0 ||
-             dirsInPath[dirsInPath.GetCount()-1] != newDirName))
+            (dirsInPath.size() == 0 ||
+             dirsInPath[dirsInPath.size()-1] != newDirName))
       {
          tmpDirPath.AppendDir(newDirName);
       }
