@@ -1038,7 +1038,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
-      wxArrayString presets = GetFactoryPresets();
+      auto presets = GetFactoryPresets();
       success = LoadFactoryPreset( make_iterator_range( presets ).index( preset ) );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
@@ -3376,7 +3376,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    menu.AppendSeparator();
 
-   wxArrayString factory = mEffect->GetFactoryPresets();
+   auto factory = mEffect->GetFactoryPresets();
 
    {
       auto sub = std::make_unique<wxMenu>();

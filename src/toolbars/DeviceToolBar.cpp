@@ -810,7 +810,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    }
 
 #if USE_PORTMIXER
-   wxArrayString inputSources = combo->GetStrings();
+   auto inputSources = combo->GetStrings();
 
    wxDialogWrapper dlg(nullptr, wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());

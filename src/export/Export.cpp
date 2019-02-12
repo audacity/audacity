@@ -178,7 +178,7 @@ wxString ExportPlugin::GetMask(int index)
 
    // Build the mask
    // wxString ext = GetExtension(index);
-   wxArrayString exts = GetExtensions(index);
+   auto exts = GetExtensions(index);
    for (size_t i = 0; i < exts.size(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");
    }
@@ -202,7 +202,7 @@ bool ExportPlugin::IsExtension(const wxString & ext, int index)
    for (int i = index; i < GetFormatCount(); i = GetFormatCount())
    {
       wxString defext = GetExtension(i);
-      wxArrayString defexts = GetExtensions(i);
+      auto defexts = GetExtensions(i);
       int indofext = defexts.Index(ext, false);
       if (defext == wxT("") || (indofext != wxNOT_FOUND))
          isext = true;

@@ -170,7 +170,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 /// a shared function.
 void ApplyMacroDialog::PopulateMacros()
 {
-   wxArrayString names = mMacroCommands.GetNames();
+   auto names = mMacroCommands.GetNames();
    int i;
 
    int topItem = mMacros->GetTopItem();

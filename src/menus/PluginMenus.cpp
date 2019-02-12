@@ -824,7 +824,7 @@ void AddEffectMenuItemGroup(
 MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 {
    MenuTable::BaseItemPtrs result;
-   wxArrayString names = MacroCommands::GetNames();
+   auto names = MacroCommands::GetNames();
    int i;
 
    for (i = 0; i < (int)names.size(); i++) {

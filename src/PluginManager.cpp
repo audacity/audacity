@@ -2328,7 +2328,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
          {
             pRegistry->Write(KEY_IMPORTERIDENT, plug.GetImporterIdentifier());
             pRegistry->Write(KEY_IMPORTERFILTER, plug.GetImporterFilterDescription());
-            const wxArrayString & extensions = plug.GetImporterExtensions();
+            const auto & extensions = plug.GetImporterExtensions();
             wxString strExt;
             for (size_t i = 0, cnt = extensions.size(); i < cnt; i++)
             {
@@ -2407,7 +2407,7 @@ void PluginManager::CheckForUpdates(bool bFast)
          else
          {
             // Collect plugin paths
-            wxArrayString paths = mm.FindPluginsForProvider(plugID, plugPath);
+            auto paths = mm.FindPluginsForProvider(plugID, plugPath);
             for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
             {
                wxString path = paths[i].BeforeFirst(wxT(';'));;

@@ -235,7 +235,7 @@ wxString NyquistEffect::ManualPage()
 
 wxString NyquistEffect::HelpPage()
 {
-   wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
+   auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
@@ -662,7 +662,7 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
 
-      wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
+      auto paths = NyquistEffect::GetNyquistSearchPath();
       wxString list;
       for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
       {
@@ -2343,7 +2343,7 @@ void NyquistEffect::OSCallback()
 
 wxArrayString NyquistEffect::GetNyquistSearchPath()
 {
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
+   auto audacityPathList = wxGetApp().audacityPathList;
    wxArrayString pathList;
 
    for (size_t i = 0; i < audacityPathList.size(); i++)

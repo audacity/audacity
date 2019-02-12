@@ -2879,7 +2879,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
     * and save dialogues, for the option that only shows project files created
     * with Audacity. Do not include pipe symbols or .aup (this extension will
     * now be added automatically for the Save Projects dialogues).*/
-   wxArrayString selectedFiles = ShowOpenDialog(_("Audacity projects"), wxT("*.aup"));
+   auto selectedFiles = ShowOpenDialog(_("Audacity projects"), wxT("*.aup"));
    if (selectedFiles.size() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       gPrefs->Flush();

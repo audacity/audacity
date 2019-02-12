@@ -288,7 +288,7 @@ public:
    {
       wxFileConfig::SetPath(wxT("/"));
 
-      wxArrayString parsed = wxCmdLineParser::ConvertStringToArgs(parms);
+      auto parsed = wxCmdLineParser::ConvertStringToArgs(parms);
 
       for (size_t i = 0, cnt = parsed.size(); i < cnt; i++)
       {

@@ -93,8 +93,8 @@ MacroCommands::MacroCommands()
    mMessage = "";
    ResetMacro();
 
-   wxArrayString names = GetNames();
-   wxArrayString defaults = GetNamesOfDefaultMacros();
+   auto names = GetNames();
+   auto defaults = GetNamesOfDefaultMacros();
 
    for( size_t i = 0;i<defaults.size();i++){
       wxString name = defaults[i];
@@ -1004,7 +1004,7 @@ wxArrayString MacroCommands::GetNames()
 
 bool MacroCommands::IsFixed(const wxString & name)
 {
-   wxArrayString defaults = GetNamesOfDefaultMacros();
+   auto defaults = GetNamesOfDefaultMacros();
    if( make_iterator_range( defaults ).contains( name ) )
       return true;
    return false;

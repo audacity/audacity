@@ -451,7 +451,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 #if 0
    POPUP_MENU_SEPARATOR()
    {
-      const wxArrayString & names = WaveformSettings::GetScaleNames();
+      const auto & names = WaveformSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
          POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii],
             OnWaveformScaleType);
@@ -520,7 +520,7 @@ void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
 
    {
-      const wxArrayString & names = SpectrogramSettings::GetScaleNames();
+      const auto & names = SpectrogramSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
          POPUP_MENU_RADIO_ITEM(OnFirstSpectrumScaleID + ii, names[ii],
             OnSpectrumScaleType);

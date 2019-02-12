@@ -868,7 +868,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
 
          mGrid->SetColLabelSize(mGrid->GetDefaultRowSize());
 
-         wxArrayString cs(names());
+         auto  cs = names();
 
          // Build the initial (empty) grid
          mGrid->CreateGrid(0, 2);

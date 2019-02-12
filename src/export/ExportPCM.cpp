@@ -384,7 +384,7 @@ ExportPCM::ExportPCM()
    SetFormat(wxT("LIBSNDFILE"), format);
    SetCanMetaData(true, format);
    SetDescription(_("Other uncompressed files"), format);
-   wxArrayString allext = sf_get_all_extensions();
+   auto allext = sf_get_all_extensions();
    wxString wavext = sf_header_extension(SF_FORMAT_WAV);   // get WAV ext.
 #if defined(wxMSW)
    // On Windows make sure WAV is at the beginning of the list of all possible

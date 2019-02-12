@@ -128,7 +128,7 @@ wxString NyquistEffectsModule::GetDescription()
 
 bool NyquistEffectsModule::Initialize()
 {
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
+   auto audacityPathList = wxGetApp().audacityPathList;
 
    for (size_t i = 0, cnt = audacityPathList.size(); i < cnt; i++)
    {
@@ -203,7 +203,7 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
 wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
+   auto pathList = NyquistEffect::GetNyquistSearchPath();
    wxArrayString files;
 
    // Add the Nyquist prompt

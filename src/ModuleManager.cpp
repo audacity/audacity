@@ -514,7 +514,7 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
       if (!module)
          continue;
 
-      wxArrayString newpaths = module->FindPluginPaths(pm);
+      auto newpaths = module->FindPluginPaths(pm);
       for (size_t j = 0, cntPaths = newpaths.size(); j < cntPaths; j++)
       {
          providers.push_back(providerID);

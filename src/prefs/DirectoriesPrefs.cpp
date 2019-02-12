@@ -162,7 +162,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 #else
       newDirName = wxT(".audacity_temp");
 #endif
-      wxArrayString dirsInPath = tmpDirPath.GetDirs();
+      auto dirsInPath = tmpDirPath.GetDirs();
 
       // If the default temp dir or user's pref dir don't end in '/' they cause
       // wxFileName's == operator to construct a wxFileName representing a file
