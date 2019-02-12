@@ -56,6 +56,7 @@ and sends it to that message target.
 #define __COMMANDTARGETS__
 
 #include "../MemoryX.h"
+#include <vector>
 #include <wx/string.h>
 #include <wx/statusbr.h>
 //#include "../src/Project.h"
@@ -89,7 +90,7 @@ public:
    virtual void EndField( );
    virtual void Flush();
    wxString Escaped( const wxString & str);
-   wxArrayInt mCounts;
+   std::vector<int> mCounts;
 };
 
 class CommandMessageTargetDecorator : public CommandMessageTarget
