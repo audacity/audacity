@@ -822,8 +822,8 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
      S.StartHorizontalLay(wxCENTER, false);
       {
          c = S.AddChoice(combo->GetName(),
-                         combo->GetStringSelection(),
-                         &inputSources);
+                         &inputSources,
+                         combo->GetSelection());
       }
       S.EndHorizontalLay();
    }

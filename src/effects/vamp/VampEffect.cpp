@@ -567,7 +567,11 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Program"));
 
                S.Id(ID_Program);
-               mProgram = S.AddChoice( {}, currentProgram, &choices);
+               mProgram = S.AddChoice(
+                  {},
+                  &choices,
+                  choices.Index( currentProgram )
+               );
                mProgram->SetName(_("Program"));
                mProgram->SetSizeHints(-1, -1);
                wxSizer *s = mProgram->GetContainingSizer();
@@ -624,20 +628,20 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                         !mParameters[p].valueNames.empty())
                {
                   wxArrayString choices;
-                  wxString selected;
+                  int selected = -1;
 
                   for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
                   {
                      wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
                      if (size_t(value - mParameters[p].minValue + 0.5) == i)
                      {
-                        selected = choice;
+                        selected = i;
                      }
                      choices.push_back(choice);
                   }
 
                   S.Id(ID_Choices + p);
-                  mChoices[p] = S.AddChoice( {}, selected, &choices);
+                  mChoices[p] = S.AddChoice( {}, &choices, selected );
                   mChoices[p]->SetName(labelText);
                   mChoices[p]->SetSizeHints(-1, -1);
                   if (!tip.empty())

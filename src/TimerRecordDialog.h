@@ -145,7 +145,6 @@ private:
    bool m_bProjectAlreadySaved;
 
    // Variables for After Timer Recording Option
-   wxString m_sTimerAfterCompleteOption;
    wxArrayString m_sTimerAfterCompleteOptionsArray;
 
    DECLARE_EVENT_TABLE()

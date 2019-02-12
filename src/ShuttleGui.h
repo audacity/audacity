@@ -110,7 +110,7 @@ public:
    wxCheckBox * AddCheckBox( const wxString &Prompt, const wxString &Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, const wxString &Selected);
    wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices, long style = 0 );
-   wxChoice   * AddChoice( const wxString &Prompt, const wxString &Selected, const wxArrayString * pChoices );
+   wxChoice   * AddChoice( const wxString &Prompt, const wxArrayString * pChoices, int Selected = -1 );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
    void AddIcon( wxBitmap * pBmp);

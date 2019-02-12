@@ -1020,7 +1020,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          S.EndHorizontalLay();
 
          wxArrayString choices;
-         wxString selected = wxT("");
+         int selected = -1;
          for (int i = 0; sampRates[i] > 0; i++)
          {
             int label = sampRates[i];
@@ -1030,21 +1030,19 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
                choices.push_back(name);
                if (label <= rate)
                {
-                  selected = name;
+                  selected = i;
                }
             }
          }
 
-         if (selected.empty())
-         {
-            selected = choices[0];
-         }
+         if (selected == -1)
+            selected = 0;
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 selected,
-                                 &choices);
+                                 &choices,
+                                 selected);
          }
          S.EndHorizontalLay();
       }

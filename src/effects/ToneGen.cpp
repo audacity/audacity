@@ -334,7 +334,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxCENTER);
    {
       auto waveforms = LocalizedStrings(kWaveStrings, nWaveforms);
-      wxChoice *c = S.AddChoice(_("Waveform:"), wxT(""), &waveforms);
+      wxChoice *c = S.AddChoice(_("Waveform:"), &waveforms);
       c->SetValidator(wxGenericValidator(&mWaveform));
 
       if (mChirp)
@@ -407,7 +407,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
 
          auto interpolations = LocalizedStrings(kInterStrings, nInterpolations);
-         c = S.AddChoice(_("Interpolation:"), wxT(""), &interpolations);
+         c = S.AddChoice(_("Interpolation:"), &interpolations);
          c->SetValidator(wxGenericValidator(&mInterpolation));
       }
       else

@@ -137,7 +137,6 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.Id(PlayID);
          mPlay = S.AddChoice(_("&Device:"),
-                             wxEmptyString,
                              &empty);
       }
       S.EndMultiColumn();
@@ -150,12 +149,10 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.Id(RecordID);
          mRecord = S.AddChoice(_("De&vice:"),
-                               wxEmptyString,
                                &empty);
 
          S.Id(ChannelsID);
          mChannels = S.AddChoice(_("Cha&nnels:"),
-                                 wxEmptyString,
                                  &empty);
       }
       S.EndMultiColumn();

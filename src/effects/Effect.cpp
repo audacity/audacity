@@ -3920,8 +3920,7 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
          wxArrayString empty;
 
          S.AddPrompt(_("Type:"));
-         mType = S.Id(ID_Type).AddChoice( {}, wxT(""), &empty);
-         mType->SetSelection(0);
+         mType = S.Id(ID_Type).AddChoice( {}, &empty, 0 );
 
          S.AddPrompt(_("&Preset:"));
          mPresets = S.AddListBox(&empty, wxLB_SINGLE | wxLB_NEEDED_SB );

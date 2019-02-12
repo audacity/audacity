@@ -941,11 +941,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[2]);
                m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[3]);
 #endif
-               m_sTimerAfterCompleteOption = arrayOptions[iPostTimerRecordAction];
 
                m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
-                                                             m_sTimerAfterCompleteOption,
-                                                             &m_sTimerAfterCompleteOptionsArray);
+                                                             &m_sTimerAfterCompleteOptionsArray,
+                                                             iPostTimerRecordAction);
             }
             S.EndMultiColumn();
          }

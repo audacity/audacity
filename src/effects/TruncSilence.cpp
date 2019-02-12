@@ -775,7 +775,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       {
          // Action choices
          auto actionChoices = LocalizedStrings(kActionStrings, nActions);
-         mActionChoice = S.AddChoice( {}, wxT(""), &actionChoices);
+         mActionChoice = S.AddChoice( {}, &actionChoices );
          mActionChoice->SetValidator(wxGenericValidator(&mActionIndex));
          S.SetSizeHints(-1, -1);
       }

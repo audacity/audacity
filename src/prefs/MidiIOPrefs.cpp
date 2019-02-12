@@ -141,7 +141,6 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(PlayID);
          mPlay = S.AddChoice(_("&Device:"),
-                             wxEmptyString,
                              &empty);
          int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"),
                                     DEFAULT_SYNTH_LATENCY);
@@ -159,7 +158,6 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(RecordID);
          mRecord = S.AddChoice(_("De&vice:"),
-                               wxEmptyString,
                                &empty);
 
          S.Id(ChannelsID);

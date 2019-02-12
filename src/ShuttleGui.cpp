@@ -376,7 +376,8 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int Pos
    return pBtn;
 }
 
-wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt, const wxString &Selected, const wxArrayString * pChoices )
+wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
+   const wxArrayString * pChoices, int Selected )
 {
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
@@ -396,7 +397,8 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt, const wxString &Se
 
    pChoice->SetSizeHints( 180,-1);// Use -1 for 'default size' - Platform specific.
    pChoice->SetName(wxStripMenuCodes(Prompt));
-   pChoice->SetStringSelection( Selected );
+   if ( Selected >= 0 && Selected < pChoices->size() )
+      pChoice->SetSelection( Selected );
 
    UpdateSizers();
    return pChoice;
@@ -1374,17 +1376,12 @@ wxChoice * ShuttleGuiBase::TieChoice(
    {
    case eIsCreating:
       {
-         if( WrappedRef.IsString() )
-            pChoice = AddChoice( Prompt, WrappedRef.ReadAsString(), pChoices );
-         else
-         {
-            wxString Temp;
-            if( pChoices && ( WrappedRef.ReadAsInt() < (int)pChoices->size() ) )
-            {
-               Temp = (*pChoices)[WrappedRef.ReadAsInt()];
-            }
-            pChoice = AddChoice( Prompt, Temp, pChoices );
+         if( WrappedRef.IsString() ) {
+            auto Selected = pChoices->Index( WrappedRef.ReadAsString() );
+            pChoice = AddChoice( Prompt, pChoices, Selected );
          }
+         else
+            pChoice = AddChoice( Prompt, pChoices, WrappedRef.ReadAsInt() );
       }
       break;
    // IF setting internal storage from the controls.
