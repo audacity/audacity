@@ -534,30 +534,26 @@ int TimerRecordDialog::RunWaitDialog()
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
 
       // Two column layout.
-      TimerProgressDialog::MessageTable columns(2);
-      auto &column1 = columns[0];
-      auto &column2 = columns[1];
-
-      column1.push_back( _("Recording start:") );
-      column2.push_back( GetDisplayDate(m_DateTime_Start) );
-
-      column1.push_back( _("Duration:") );
-      column2.push_back( m_TimeSpan_Duration.Format() );
-
-      column1.push_back( _("Recording end:") );
-      column2.push_back( GetDisplayDate(m_DateTime_End) );
-
-      column1.push_back( {} );
-      column2.push_back( {} );
-
-      column1.push_back( _("Automatic Save enabled:") );
-      column2.push_back( (m_bAutoSaveEnabled ? _("Yes") : _("No")) );
-
-      column1.push_back( _("Automatic Export enabled:") );
-      column2.push_back( (m_bAutoExportEnabled ? _("Yes") : _("No")) );
-
-      column1.push_back( _("Action after Timer Recording:") );
-      column2.push_back( sPostAction );
+      TimerProgressDialog::MessageTable columns{
+         {
+            _("Recording start:") ,
+            _("Duration:") ,
+            _("Recording end:") ,
+            {} ,
+            _("Automatic Save enabled:") ,
+            _("Automatic Export enabled:") ,
+            _("Action after Timer Recording:") ,
+         },
+         {
+            GetDisplayDate(m_DateTime_Start) ,
+            m_TimeSpan_Duration.Format() ,
+            GetDisplayDate(m_DateTime_End) ,
+            {} ,
+            (m_bAutoSaveEnabled ? _("Yes") : _("No")) ,
+            (m_bAutoExportEnabled ? _("Yes") : _("No")) ,
+            sPostAction ,
+         }
+      };
 
       TimerProgressDialog
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
@@ -1045,30 +1041,26 @@ ProgressResult TimerRecordDialog::WaitForStart()
    wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
 
    // Two column layout.
-   TimerProgressDialog::MessageTable columns(2);
-   auto &column1 = columns[0];
-   auto &column2 = columns[1];
-
-   column1.push_back(_("Waiting to start recording at:"));
-   column2.push_back(GetDisplayDate(m_DateTime_Start));
-
-   column1.push_back(_("Recording duration:"));
-   column2.push_back(m_TimeSpan_Duration.Format());
-
-   column1.push_back(_("Scheduled to stop at:"));
-   column2.push_back(GetDisplayDate(m_DateTime_End));
-
-   column1.push_back( {} );
-   column2.push_back( {} );
-
-   column1.push_back(_("Automatic Save enabled:"));
-   column2.push_back((m_bAutoSaveEnabled ? _("Yes") : _("No")));
-
-   column1.push_back(_("Automatic Export enabled:"));
-   column2.push_back((m_bAutoExportEnabled ? _("Yes") : _("No")));
-
-   column1.push_back(_("Action after Timer Recording:"));
-   column2.push_back(sPostAction);
+   TimerProgressDialog::MessageTable columns{
+      {
+         _("Waiting to start recording at:") ,
+         _("Recording duration:") ,
+         _("Scheduled to stop at:") ,
+         {} ,
+         _("Automatic Save enabled:") ,
+         _("Automatic Export enabled:") ,
+         _("Action after Timer Recording:") ,
+      },
+      {
+         GetDisplayDate(m_DateTime_Start) ,
+         m_TimeSpan_Duration.Format() ,
+         GetDisplayDate(m_DateTime_End) ,
+         {} ,
+         (m_bAutoSaveEnabled ? _("Yes") : _("No")) ,
+         (m_bAutoExportEnabled ? _("Yes") : _("No")) ,
+         sPostAction ,
+      },
+   };
 
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
@@ -1101,24 +1093,23 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    sCountdownLabel.Printf(_("%s in:"), sAction);
 
    // Two column layout.
-   TimerProgressDialog::MessageTable columns(2);
-   auto &column1 = columns[0];
-   auto &column2 = columns[1];
+   TimerProgressDialog::MessageTable columns{
+      {
+         _("Timer Recording completed.") ,
+         {} ,
+         _("Recording Saved:") ,
+         _("Recording Exported:") ,
+         _("Action after Timer Recording:") ,
+      },
+      {
+         {} ,
+         {} ,
+         ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")) ,
+         ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")) ,
+         sAction ,
+      },
+   };
 
-   column1.push_back(_("Timer Recording completed."));
-   column2.push_back( {} );
-
-   column1.push_back( {} );
-   column2.push_back( {} );
-
-   column1.push_back(_("Recording Saved:"));
-   column2.push_back(((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")));
-
-   column1.push_back(_("Recording Exported:"));
-   column2.push_back(((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")));
-
-   column1.push_back(_("Action after Timer Recording:"));
-   column2.push_back(sAction);
 
    wxDateTime dtNow = wxDateTime::UNow();
    wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
