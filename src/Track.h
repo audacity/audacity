@@ -1167,6 +1167,9 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 class TrackList final : public wxEvtHandler, public ListOfTracks
    , public std::enable_shared_from_this<TrackList>
 {
+   // privatize this, make you use Add instead:
+   using ListOfTracks::push_back;
+
    // privatize this, make you use Swap instead:
    using ListOfTracks::swap;
 
