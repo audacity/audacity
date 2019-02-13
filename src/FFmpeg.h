@@ -332,16 +332,22 @@ public:
 
    wxString GetLibAVFormatName()
    {
+      if (sizeof(void*) == 8)
+         return (wxT("ffmpeg.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".64bit.dylib"));
       return (wxT("libavformat.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".dylib"));
    }
 
    wxString GetLibAVCodecName()
    {
+      if (sizeof(void*) == 8)
+         return (wxT("ffmpeg_codecs.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".64bit.dylib"));
       return (wxT("libavcodec.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".dylib"));
    }
 
    wxString GetLibAVUtilName()
    {
+      if (sizeof(void*) == 8)
+         return (wxT("ffmpeg_utils.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".64bit.dylib"));
       return (wxT("libavutil.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".dylib"));
    }
 #else

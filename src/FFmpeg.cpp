@@ -591,16 +591,17 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    wxString path;
    wxString name;
 
+   // If we're looking for the lib, use the standard name, as the
+   // configured name is not found.
+   name = GetLibAVFormatName();
    wxLogMessage(wxT("Looking for FFmpeg libraries..."));
    if (!mLibAVFormatPath.IsEmpty()) {
       wxLogMessage(wxT("mLibAVFormatPath ('%s') is not empty."), mLibAVFormatPath);
       const wxFileName fn{ mLibAVFormatPath };
       path = fn.GetPath();
-      name = fn.GetFullName();
    }
    else {
       path = GetLibAVFormatPath();
-      name = GetLibAVFormatName();
       wxLogMessage(wxT("mLibAVFormatPath is empty, starting with path '%s', name '%s'."),
                   path, name);
    }
