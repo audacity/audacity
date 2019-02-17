@@ -215,6 +215,10 @@ bool EffectChangePitch::Process()
    else
 #endif
    {
+      // Macros save m_dPercentChange and not m_dSemitonesChange, so we must
+      // ensure that m_dSemitonesChange is set.
+      Calc_SemitonesChange_fromPercentChange();
+
       mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
       IdentityTimeWarper warper;
       mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
@@ -349,7 +353,6 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-
    return;
 }
 
@@ -468,7 +471,7 @@ void EffectChangePitch::DeduceFrequencies()
    m_nToOctave = PitchOctave(dToMIDInote);
 
    m_FromFrequency = m_dStartFrequency;
-   Calc_PercentChange();
+   // Calc_PercentChange();  // This will reset m_dPercentChange
    Calc_ToFrequency();
 }
 
