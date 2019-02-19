@@ -997,6 +997,8 @@ wxArrayString MacroCommands::GetNames()
       names.Add(ff.GetName());
    }
 
+   std::sort( names.begin(), names.end() );
+
    return names;
 }
 
