@@ -296,6 +296,21 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
    }
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
+   wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
+
+   wxArrayStringEx vinylChoices;
+   for (int i = 0; i < nVinyl; i++)
+   {
+      if (i == kVinyl_NA)
+      {
+         vinylChoices.push_back(wxGetTranslation(kVinylStrings[i]));
+      }
+      else
+      {
+         vinylChoices.push_back(kVinylStrings[i]);
+      }
+   }
+
    S.SetBorder(5);
 
    S.StartVerticalLay(0);
@@ -337,23 +352,9 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
          S.AddUnits(_("Standard Vinyl rpm:"));
 
-         wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
-
-         wxArrayStringEx vinylChoices;
-         for (int i = 0; i < nVinyl; i++)
-         {
-            if (i == kVinyl_NA)
-            {
-               vinylChoices.push_back(wxGetTranslation(kVinylStrings[i]));
-            }
-            else
-            {
-               vinylChoices.push_back(kVinylStrings[i]);
-            }
-         }
-
-         mpChoice_FromVinyl =
-            S.Id(ID_FromVinyl).AddChoice(_("from"), vinylChoices);
+         mpChoice_FromVinyl = S.Id(ID_FromVinyl)
+            /* i18n-hint: changing a quantity "from" one value "to" another */
+            .AddChoice(_("from"), vinylChoices);
          mpChoice_FromVinyl->SetName(_("From rpm"));
          mpChoice_FromVinyl->SetSizeHints(100, -1);
 

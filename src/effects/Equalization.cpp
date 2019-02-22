@@ -924,9 +924,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrI = S.GetSizer();
 
-               auto interpolations =
-                  LocalizedStrings(kInterpStrings, nInterpolations);
-               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, interpolations, 0 );
+               mInterpChoice = S.Id(ID_Interp)
+                  .AddChoice( {},
+                     LocalizedStrings(kInterpStrings, nInterpolations), 0 );
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
@@ -995,13 +995,15 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
-                  wxArrayStringEx curves;
-                  for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
-                  {
-                     curves.push_back(mCurves[ i ].Name);
-                  }
-
-                  mCurve = S.Id(ID_Curve).AddChoice( {}, curves );
+                  mCurve = S.Id(ID_Curve)
+                     .AddChoice( {},
+                        [this]{
+                           wxArrayStringEx curves;
+                           for (const auto &curve : mCurves)
+                              curves.push_back(curve.Name);
+                           return curves;
+                        }()
+                     );
                   mCurve->SetName(_("Select Curve"));
                }
                S.EndHorizontalLay();

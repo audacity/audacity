@@ -286,8 +286,10 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
                S.AddVariableText(_("Normalize"), false,
                                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
-               auto targetChoices = LocalizedStrings(kNormalizeTargetStrings, nAlgos);
-               mNormalizeToCtl = S.AddChoice(wxEmptyString, targetChoices, mNormalizeTo);
+               mNormalizeToCtl = S.AddChoice( {},
+                  LocalizedStrings(kNormalizeTargetStrings, nAlgos),
+                  mNormalizeTo
+               );
                mNormalizeToCtl->SetValidator(wxGenericValidator(&mNormalizeTo));
                S.AddVariableText(_("to"), false,
                                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);

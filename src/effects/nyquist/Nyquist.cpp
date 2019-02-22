@@ -2637,9 +2637,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                {
                   S.AddSpace(10, 10);
 
-                  auto choices =
-                     LocalizedStrings(ctrl.choices.data(), ctrl.choices.size());
-                  S.Id(ID_Choice + i).AddChoice( {}, choices );
+                  S.Id(ID_Choice + i).AddChoice( {},
+                     LocalizedStrings(ctrl.choices.data(), ctrl.choices.size()));
                }
                else if (ctrl.type == NYQ_CTRL_TIME)
                {

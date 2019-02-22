@@ -372,8 +372,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(4, wxCENTER);
       {
-         auto tableTypes = LocalizedStrings(kTableTypeStrings, nTableTypes);
-         mTypeChoiceCtrl = S.Id(ID_Type).AddChoice(_("Distortion type:"), tableTypes);
+         mTypeChoiceCtrl = S.Id(ID_Type)
+            .AddChoice(_("Distortion type:"),
+               LocalizedStrings(kTableTypeStrings, nTableTypes));
          mTypeChoiceCtrl->SetValidator(wxGenericValidator(&mParams.mTableChoiceIndx));
          S.SetSizeHints(-1, -1);
 

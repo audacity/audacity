@@ -395,22 +395,22 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       {
          S.StartHorizontalLay(wxALIGN_LEFT,0);
          {
-            wxArrayStringEx choices{
-               /*i18n-hint: One of the choices of what you want Audacity to do when
-               * Audacity finds a project depends on another file.*/
-               _("Ask me") ,
-               _("Always copy all files (safest)") ,
-               _("Never copy any files") ,
-            };
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
                   _("Whenever a project depends on other files:"),
-                  choices,
+                  {
+                     /*i18n-hint: One of the choices of what you want Audacity to do when
+                     * Audacity finds a project depends on another file.*/
+                     _("Ask me") ,
+                     _("Always copy all files (safest)") ,
+                     _("Never copy any files") ,
+                  },
                   0 // "Ask me"
                );
          }
          S.EndHorizontalLay();
-      } else
+      }
+      else
       {
          mFutureActionChoice = NULL;
       }

@@ -1751,62 +1751,59 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         {
-            wxArrayStringEx windowTypeChoices;
-            for (int ii = 0; ii < WT_N_WINDOW_TYPES; ++ii)
-               windowTypeChoices.push_back(windowTypesInfo[ii].name);
-            S.TieChoice(_("&Window types") + wxString(wxT(":")),
-               mTempSettings.mWindowTypes,
-               windowTypeChoices);
-         }
+         S.TieChoice(_("&Window types") + wxString(wxT(":")),
+            mTempSettings.mWindowTypes,
+            []{
+               wxArrayStringEx windowTypeChoices;
+               for (int ii = 0; ii < WT_N_WINDOW_TYPES; ++ii)
+                  windowTypeChoices.push_back(windowTypesInfo[ii].name);
+               return windowTypeChoices;
+            }()
+         );
 
-         {
-            S.TieChoice(_("Window si&ze") + wxString(wxT(":")),
-               mTempSettings.mWindowSizeChoice,
-               {
-                  _("8") ,
-                  _("16") ,
-                  _("32") ,
-                  _("64") ,
-                  _("128") ,
-                  _("256") ,
-                  _("512") ,
-                  _("1024") ,
-                  _("2048 (default)") ,
-                  _("4096") ,
-                  _("8192") ,
-                  _("16384") ,
-               }
-            );
-         }
+         S.TieChoice(_("Window si&ze") + wxString(wxT(":")),
+            mTempSettings.mWindowSizeChoice,
+            {
+               _("8") ,
+               _("16") ,
+               _("32") ,
+               _("64") ,
+               _("128") ,
+               _("256") ,
+               _("512") ,
+               _("1024") ,
+               _("2048 (default)") ,
+               _("4096") ,
+               _("8192") ,
+               _("16384") ,
+            }
+         );
 
-         {
-            S.TieChoice(_("S&teps per window") + wxString(wxT(":")),
-               mTempSettings.mStepsPerWindowChoice,
-               {
-                  _("2") ,
-                  _("4 (default)") ,
-                  _("8") ,
-                  _("16") ,
-                  _("32") ,
-                  _("64") ,
-               }
-            );
-         }
+         S.TieChoice(_("S&teps per window") + wxString(wxT(":")),
+            mTempSettings.mStepsPerWindowChoice,
+            {
+               _("2") ,
+               _("4 (default)") ,
+               _("8") ,
+               _("16") ,
+               _("32") ,
+               _("64") ,
+            }
+         );
 
-         S.Id(ID_CHOICE_METHOD);
-         {
-            wxArrayStringEx methodChoices;
-            int nn = DM_N_METHODS;
+         S.Id(ID_CHOICE_METHOD)
+         .TieChoice(_("Discrimination &method") + wxString(wxT(":")),
+            mTempSettings.mMethod,
+            []{
+               wxArrayStringEx methodChoices;
+               int nn = DM_N_METHODS;
 #ifndef OLD_METHOD_AVAILABLE
-            --nn;
+               --nn;
 #endif
-            for (int ii = 0; ii < nn; ++ii)
-               methodChoices.push_back(discriminationMethodInfo[ii].name);
-            S.TieChoice(_("Discrimination &method") + wxString(wxT(":")),
-               mTempSettings.mMethod,
-               methodChoices);
-         }
+               for (int ii = 0; ii < nn; ++ii)
+                  methodChoices.push_back(discriminationMethodInfo[ii].name);
+               return methodChoices;
+            }());
       }
       S.EndMultiColumn();
 

@@ -1003,6 +1003,8 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    ShuttleGui S(&d, eIsCreating);
    wxString text;
 
+   int selected = -1;
+
    S.StartVerticalLay();
    {
       S.SetBorder(10);
@@ -1022,30 +1024,26 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          }
          S.EndHorizontalLay();
 
-         wxArrayStringEx choices;
-         int selected = -1;
-         for (int i = 0; sampRates[i] > 0; i++)
-         {
-            int label = sampRates[i];
-            if (label >= lowrate && label <= highrate)
-            {
-               wxString name = wxString::Format(wxT("%d"),label);
-               choices.push_back(name);
-               if (label <= rate)
-               {
-                  selected = i;
-               }
-            }
-         }
-
-         if (selected == -1)
-            selected = 0;
-
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 choices,
-                                 selected);
+               [&]{
+                  wxArrayStringEx choices;
+                  for (int i = 0; sampRates[i] > 0; i++)
+                  {
+                     int label = sampRates[i];
+                     if (label >= lowrate && label <= highrate)
+                     {
+                        wxString name = wxString::Format(wxT("%d"),label);
+                        choices.push_back(name);
+                        if (label <= rate)
+                           selected = i;
+                     }
+                  }
+                  return choices;
+               }(),
+               std::max( 0, selected )
+            );
          }
          S.EndHorizontalLay();
       }

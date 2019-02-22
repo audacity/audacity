@@ -809,6 +809,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
    int iPostTimerRecordAction = gPrefs->ReadLong("/TimerRecord/PostAction", 0);
 
    S.SetBorder(5);
+   using Options = NumericTextCtrl::Options;
+   /* i18n-hint a format string for hours, minutes, and seconds */
+   auto strFormat = _("099 h 060 m 060 s");
+   /* i18n-hint a format string for days, hours, minutes, and seconds */
+   auto strFormat1 = _("099 days 024 h 060 m 060 s");
+
    S.StartMultiColumn(2, wxCENTER);
    {
       S.StartVerticalLay(true);
@@ -819,8 +825,6 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
          * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
          */
-         auto strFormat = _("099 h 060 m 060 s");
-         using Options = NumericTextCtrl::Options;
          S.StartStatic(_("Start Date and Time"), true);
          {
             m_pDatePickerCtrl_Start =
@@ -886,7 +890,6 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             * number displayed is minutes, and the 's' indicates that the fourth number displayed is
             * seconds.
             */
-            auto strFormat1 = _("099 days 024 h 060 m 060 s");
             m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
                S.GetParent(), ID_TIMETEXT_DURATION, NumericConverter::TIME,
                {}, 0, 44100,
@@ -950,23 +953,17 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(1, wxEXPAND);
             {
                S.SetStretchyCol( 0 );
-               wxArrayStringEx arrayOptions{
-                  _("Do nothing") ,
-                  _("Exit Audacity") ,
-                  _("Restart system") ,
-                  _("Shutdown system") ,
-               };
-
-               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[0]);
-               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[1]);
-#ifdef __WINDOWS__
-               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[2]);
-               m_sTimerAfterCompleteOptionsArray.push_back(arrayOptions[3]);
-#endif
-
                m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
-                                                             m_sTimerAfterCompleteOptionsArray,
-                                                             iPostTimerRecordAction);
+                     {
+                        _("Do nothing") ,
+                        _("Exit Audacity") ,
+                  #ifdef __WINDOWS__
+                        _("Restart system") ,
+                        _("Shutdown system") ,
+                  #endif
+                     },
+                     iPostTimerRecordAction
+               );
             }
             S.EndMultiColumn();
          }

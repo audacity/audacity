@@ -2002,6 +2002,8 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
    ShuttleGui S(&d, eIsCreating);
    wxString text;
 
+   int selected = -1;
+
    S.StartVerticalLay();
    {
       S.SetBorder(10);
@@ -2021,27 +2023,23 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          }
          S.EndHorizontalLay();
 
-         wxArrayStringEx choices;
-         int selected = -1;
-         for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {
-            int label = sampRates[ii];
-            if (label >= lowrate && label <= highrate) {
-               choices.push_back( wxString::Format( "%d", label ) );
-               if (label <= rate) {
-                  selected = ii;
-               }
-            }
-         }
-
-         if (selected == -1) {
-            selected = 0;
-         }
-
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 choices,
-                                 selected);
+               [&]{
+                  wxArrayStringEx choices;
+                  for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {
+                     int label = sampRates[ii];
+                     if (label >= lowrate && label <= highrate) {
+                        choices.push_back( wxString::Format( "%d", label ) );
+                        if (label <= rate)
+                           selected = ii;
+                     }
+                  }
+                  return choices;
+               }(),
+               std::max( 0, selected )
+            );
          }
          S.EndHorizontalLay();
       }
