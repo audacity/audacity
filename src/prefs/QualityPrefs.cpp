@@ -32,26 +32,21 @@
 
 //////////
 
-static const EnumValueSymbol choicesFormat[] = {
-   { wxT("Format16Bit"), XO("16-bit") },
-   { wxT("Format24Bit"), XO("24-bit") },
-   { wxT("Format32BitFloat"), XO("32-bit float") }
-};
-static const size_t nChoicesFormat = WXSIZEOF( choicesFormat );
-static const int intChoicesFormat[] = {
-   int16Sample,
-   int24Sample,
-   floatSample
-};
-static_assert( nChoicesFormat == WXSIZEOF(intChoicesFormat), "size mismatch" );
-
-static const size_t defaultChoiceFormat = 2; // floatSample
-
 static EnumSetting formatSetting{
    wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
-   choicesFormat, nChoicesFormat, defaultChoiceFormat,
-   
-   intChoicesFormat,
+   {
+      { wxT("Format16Bit"), XO("16-bit") },
+      { wxT("Format24Bit"), XO("24-bit") },
+      { wxT("Format32BitFloat"), XO("32-bit float") }
+   },
+   2, // floatSample
+
+   // for migrating old preferences:
+   {
+      int16Sample,
+      int24Sample,
+      floatSample
+   },
    wxT("/SamplingRate/DefaultProjectSampleFormat"),
 };
 

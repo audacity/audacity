@@ -253,16 +253,17 @@ wxString ChoiceSetting::Read() const
    // Remap to default if the string is not known -- this avoids surprises
    // in case we try to interpret config files from future versions
    auto index = Find( value );
-   if ( index >= mnSymbols )
+   if ( index >= mSymbols.size() )
       value = defaultValue;
    return value;
 }
 
 size_t ChoiceSetting::Find( const wxString &value ) const
 {
+   auto start = begin();
    return size_t(
-      std::find( begin(), end(), EnumValueSymbol{ value, {} } )
-         - mSymbols );
+      std::find( start, end(), EnumValueSymbol{ value, {} } )
+         - start );
 }
 
 void ChoiceSetting::Migrate( wxString &value )
@@ -273,7 +274,7 @@ void ChoiceSetting::Migrate( wxString &value )
 bool ChoiceSetting::Write( const wxString &value )
 {
    auto index = Find( value );
-   if (index >= mnSymbols)
+   if (index >= mSymbols.size())
       return false;
 
    auto result = gPrefs->Write( mKey, value );
@@ -281,24 +282,38 @@ bool ChoiceSetting::Write( const wxString &value )
    return result;
 }
 
+EnumSetting::EnumSetting(
+   const wxString &key,
+   EnumValueSymbols symbols,
+   size_t defaultSymbol,
+
+   std::vector<int> intValues, // must have same size as symbols
+   const wxString &oldKey
+)
+   : ChoiceSetting{ key, std::move( symbols ), defaultSymbol }
+   , mIntValues{ std::move( intValues ) }
+   , mOldKey{ oldKey }
+{
+   auto size = mSymbols.size();
+   if( mIntValues.size() != size ) {
+      wxASSERT( false );
+      mIntValues.resize( size );
+   }
+}
+
 int EnumSetting::ReadInt() const
 {
-   if (!mIntValues)
-      return 0;
-
    auto index = Find( Read() );
-   wxASSERT( index < mnSymbols );
+   wxASSERT( index < mIntValues.size() );
    return mIntValues[ index ];
 }
 
 size_t EnumSetting::FindInt( int code ) const
 {
-   if (!mIntValues)
-      return mnSymbols;
-
+   const auto start = mIntValues.begin();
    return size_t(
-      std::find( mIntValues, mIntValues + mnSymbols, code )
-         - mIntValues );
+      std::find( start, mIntValues.end(), code )
+         - start );
 }
 
 void EnumSetting::Migrate( wxString &value )
@@ -311,7 +326,7 @@ void EnumSetting::Migrate( wxString &value )
       // Audacity.  But further changes will be stored only to the NEW key
       // and won't be seen then.
       auto index = FindInt( intValue );
-      if ( index >= mnSymbols )
+      if ( index >= mSymbols.size() )
          index = mDefaultSymbol;
       value = mSymbols[index].Internal();
       Write(value);
@@ -322,7 +337,7 @@ void EnumSetting::Migrate( wxString &value )
 bool EnumSetting::WriteInt( int code ) // you flush gPrefs afterward
 {
    auto index = FindInt( code );
-   if ( index >= mnSymbols )
+   if ( index >= mSymbols.size() )
       return false;
    return Write( mSymbols[index].Internal() );
 }

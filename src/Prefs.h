@@ -86,6 +86,8 @@ public:
    int mVersionMicroKeyInit{};
 };
 
+using EnumValueSymbols = std::vector< EnumValueSymbol >;
+
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
 class ChoiceSetting
@@ -93,24 +95,23 @@ class ChoiceSetting
 public:
    ChoiceSetting(
       const wxString &key,
-      const EnumValueSymbol symbols[], size_t nSymbols,
+      EnumValueSymbols symbols,
       size_t defaultSymbol
    )
       : mKey{ key }
 
-      , mSymbols{ symbols }
-      , mnSymbols{ nSymbols }
+      , mSymbols{ std::move( symbols ) }
 
       , mDefaultSymbol{ defaultSymbol }
    {
-      wxASSERT( defaultSymbol < nSymbols );
+      wxASSERT( defaultSymbol < mSymbols.size() );
    }
 
    const wxString &Key() const { return mKey; }
    const EnumValueSymbol &Default() const
       { return mSymbols[mDefaultSymbol]; }
-   const EnumValueSymbol *begin() const { return mSymbols; }
-   const EnumValueSymbol *end() const { return mSymbols + mnSymbols; }
+   EnumValueSymbols::const_iterator begin() const { return mSymbols.begin(); }
+   EnumValueSymbols::const_iterator end() const { return mSymbols.end(); }
 
    wxString Read() const;
    bool Write( const wxString &value ); // you flush gPrefs afterward
@@ -121,8 +122,7 @@ protected:
 
    const wxString mKey;
 
-   const EnumValueSymbol *mSymbols;
-   const size_t mnSymbols;
+   const EnumValueSymbols mSymbols;
 
    // stores an internal value
    mutable bool mMigrated { false };
@@ -139,18 +139,12 @@ class EnumSetting : public ChoiceSetting
 public:
    EnumSetting(
       const wxString &key,
-      const EnumValueSymbol symbols[], size_t nSymbols,
+      EnumValueSymbols symbols,
       size_t defaultSymbol,
 
-      const int intValues[] = nullptr, // must have same size as symbols
-      const wxString &oldKey = wxString("")
-   )
-      : ChoiceSetting{ key, symbols, nSymbols, defaultSymbol }
-      , mIntValues{ intValues }
-      , mOldKey{ oldKey }
-   {
-      wxASSERT( mIntValues );
-   }
+      std::vector<int> intValues, // must have same size as symbols
+      const wxString &oldKey
+   );
 
    // Read and write the encoded values
    virtual int ReadInt() const;
@@ -161,7 +155,7 @@ protected:
    void Migrate( wxString& ) override;
 
 private:
-   const int *mIntValues;
+   std::vector<int> mIntValues;
    const wxString mOldKey;
 };
 

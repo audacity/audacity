@@ -54,33 +54,20 @@ namespace {
 
 
 //////////
-static const EnumValueSymbol choicesView[] = {
-   { XO("Waveform") },
-   { wxT("WaveformDB"), XO("Waveform (dB)") },
-   { XO("Spectrogram") }
-};
-static const int intChoicesView[] = {
-   (int)(WaveTrackViewConstants::Waveform),
-   (int)(WaveTrackViewConstants::obsoleteWaveformDBDisplay),
-   (int)(WaveTrackViewConstants::Spectrum)
-};
-static const size_t nChoicesView = WXSIZEOF(choicesView);
-static_assert( nChoicesView == WXSIZEOF(intChoicesView), "size mismatch" );
-
-static const size_t defaultChoiceView = 0;
-
-class TracksViewModeSetting : public EnumSetting {
+class TracksViewModeEnumSetting : public EnumSetting {
 public:
-   TracksViewModeSetting(
+   TracksViewModeEnumSetting(
       const wxString &key,
-      const EnumValueSymbol symbols[], size_t nSymbols,
+      EnumValueSymbols symbols,
       size_t defaultSymbol,
 
-      const int intValues[],
+      std::vector<int> intValues,
       const wxString &oldKey
    )
       : EnumSetting{
-         key, symbols, nSymbols, defaultSymbol, intValues, oldKey }
+         key, std::move( symbols ), defaultSymbol,
+         std::move( intValues ), oldKey
+      }
    {}
 
    void Migrate( wxString &value ) override
@@ -106,18 +93,28 @@ public:
       // Now future-proof 2.1.1 against a recurrence of this sort of bug!
       viewMode = WaveTrackViewConstants::ValidateWaveTrackDisplay(viewMode);
 
-      const_cast<TracksViewModeSetting*>(this)->WriteInt( viewMode );
+      const_cast<TracksViewModeEnumSetting*>(this)->WriteInt( viewMode );
       gPrefs->Flush();
 
       value = mSymbols[ FindInt(viewMode) ].Internal();
    }
 };
 
-static TracksViewModeSetting viewModeSetting{
+static TracksViewModeEnumSetting viewModeSetting{
    wxT("/GUI/DefaultViewModeChoice"),
-   choicesView, nChoicesView, defaultChoiceView,
+   {
+      { XO("Waveform") },
+      { wxT("WaveformDB"), XO("Waveform (dB)") },
+      { XO("Spectrogram") }
+   },
+   0, // Waveform
 
-   intChoicesView,
+   // for migrating old preferences:
+   {
+      WaveTrackViewConstants::Waveform,
+      WaveTrackViewConstants::obsoleteWaveformDBDisplay,
+      WaveTrackViewConstants::Spectrum
+   },
    wxT("/GUI/DefaultViewModeNew")
 };
 
@@ -127,25 +124,19 @@ WaveTrackViewConstants::Display TracksPrefs::ViewModeChoice()
 }
 
 //////////
-static const EnumValueSymbol choicesSampleDisplay[] = {
-   { wxT("ConnectDots"), XO("Connect dots") },
-   { wxT("StemPlot"), XO("Stem plot") }
-};
-static const size_t nChoicesSampleDisplay = WXSIZEOF( choicesSampleDisplay );
-static const int intChoicesSampleDisplay[] = {
-   (int) WaveTrackViewConstants::LinearInterpolate,
-   (int) WaveTrackViewConstants::StemPlot
-};
-static_assert(
-   nChoicesSampleDisplay == WXSIZEOF(intChoicesSampleDisplay), "size mismatch" );
-
-static const size_t defaultChoiceSampleDisplay = 1;
-
 static EnumSetting sampleDisplaySetting{
    wxT("/GUI/SampleViewChoice"),
-   choicesSampleDisplay, nChoicesSampleDisplay, defaultChoiceSampleDisplay,
+   {
+      { wxT("ConnectDots"), XO("Connect dots") },
+      { wxT("StemPlot"), XO("Stem plot") }
+   },
+   1, // StemPlot
 
-   intChoicesSampleDisplay,
+   // for migrating old preferences:
+   {
+      WaveTrackViewConstants::LinearInterpolate,
+      WaveTrackViewConstants::StemPlot
+   },
    wxT("/GUI/SampleView")
 };
 
@@ -155,7 +146,7 @@ WaveTrackViewConstants::SampleDisplay TracksPrefs::SampleViewChoice()
 }
 
 //////////
-static const EnumValueSymbol choicesZoom[] = {
+static const std::initializer_list<EnumValueSymbol> choicesZoom{
    { wxT("FitToWidth"), XO("Fit to Width") },
    { wxT("ZoomToSelection"), XO("Zoom to Selection") },
    { wxT("ZoomDefault"), XO("Zoom Default") },
@@ -172,8 +163,7 @@ static const EnumValueSymbol choicesZoom[] = {
    { wxT("FourPixelsPerSample"), XO("4 Pixels per Sample") },
    { wxT("MaxZoom"), XO("Max Zoom") },
 };
-static const size_t nChoicesZoom = WXSIZEOF( choicesZoom );
-static const int intChoicesZoom[] = {
+static const std::initializer_list<int> intChoicesZoom{
    WaveTrackViewConstants::kZoomToFit,
    WaveTrackViewConstants::kZoomToSelection,
    WaveTrackViewConstants::kZoomDefault,
@@ -190,24 +180,23 @@ static const int intChoicesZoom[] = {
    WaveTrackViewConstants::kZoom4To1,
    WaveTrackViewConstants::kMaxZoom,
 };
-static_assert( nChoicesZoom == WXSIZEOF(intChoicesZoom), "size mismatch" );
-
-static const size_t defaultChoiceZoom1 = 2; // kZoomDefault
 
 static EnumSetting zoom1Setting{
    wxT("/GUI/ZoomPreset1Choice"),
-   choicesZoom, nChoicesZoom, defaultChoiceZoom1,
+   choicesZoom,
+   2, // kZoomDefault
 
+   // for migrating old preferences:
    intChoicesZoom,
    wxT("/GUI/ZoomPreset1")
 };
 
-static const size_t defaultChoiceZoom2 = 13; // kZoom4To1
-
 static EnumSetting zoom2Setting{
    wxT("/GUI/ZoomPreset2Choice"),
-   choicesZoom, nChoicesZoom, defaultChoiceZoom2,
+   choicesZoom,
+   13, // kZoom4To1
 
+   // for migrating old preferences:
    intChoicesZoom,
    wxT("/GUI/ZoomPreset2")
 };
