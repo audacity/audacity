@@ -81,16 +81,11 @@ public:
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
-   /// Bit Rates supported by AC3 encoder
-   static const int iAC3BitRates[];
    /// Sample Rates supported by AC3 encoder (must end with zero-element)
    /// It is not used in dialog anymore, but will be required later
    static const int iAC3SampleRates[];
 
 private:
-
-   wxArrayStringEx mBitRateNames;
-   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -123,12 +118,7 @@ public:
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
-   static int iAMRNBBitRate[];
-
 private:
-
-   wxArrayStringEx mBitRateNames;
-   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -146,12 +136,8 @@ public:
    bool TransferDataFromWindow() override;
 
    static const int iWMASampleRates[];
-   static const int iWMABitRate[];
 
 private:
-
-   wxArrayStringEx mBitRateNames;
-   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -212,7 +198,6 @@ public:
 
    // Static tables
    static CompatibilityEntry CompatibilityList[];
-   static int iAACProfileValues[];
    static ExposedFormat fmts[];
    static const int iAACSampleRates[];
    static ApplicableFor apptable[];
@@ -227,10 +212,6 @@ private:
    wxArrayString mFormatLongNames;
    wxArrayStringEx mCodecNames;
    wxArrayString mCodecLongNames;
-   wxArrayStringEx mProfileNames;
-   std::vector<int> mProfileLabels;
-   wxArrayStringEx mPredictionOrderMethodNames;
-   std::vector<int> mPredictionOrderMethodLabels;
 
    wxChoice *mFormatChoice;
    wxChoice *mCodecChoice;

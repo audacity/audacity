@@ -183,8 +183,6 @@ public:
    bool DoStep( int iStep );
    int TranslateToIndex( const wxString &Value, const wxArrayStringEx &Choices );
    wxString TranslateFromIndex( const int nIn, const wxArrayStringEx &Choices );
-   int TranslateToIndex( const int Value, const std::vector<int> &Choices );
-   int TranslateFromIndex( const int nIn, const std::vector<int> &Choices );
 
 //-- Tie functions both add controls and also read/write to them.
 // The ones taking a 'WrappedType' are type-generic and are used by the type specific ones.
@@ -245,15 +243,6 @@ public:
       const wxString &Default,
       const wxArrayStringEx &Choices,
       const wxArrayStringEx & InternalChoices );
-
-   // This overload of TieChoice should no longer be used in Preferences!
-   // Some uses do remain in export settings dialogs.
-   virtual wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
-      const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices );
 
    // This overload presents what is really a numerical setting as a choice among
    // commonly used values, but the choice is not necessarily exhaustive.

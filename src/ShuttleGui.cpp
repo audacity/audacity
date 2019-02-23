@@ -1679,30 +1679,6 @@ wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayStringE
    return wxT("");
 }
 
-/// Int-to-Index (choices can be items like e.g 0x400120 )
-int ShuttleGuiBase::TranslateToIndex( const int Value, const std::vector<int> &Choices )
-{
-   int n = make_iterator_range(Choices).index( Value );
-   if( n == wxNOT_FOUND )
-      n=miNoMatchSelector;
-   miNoMatchSelector = 0;
-   return n;
-}
-
-/// Index-to-int (choices can be items like e.g 0x400120 )
-int ShuttleGuiBase::TranslateFromIndex( const int nIn, const std::vector<int> &Choices )
-{
-   int n = nIn;
-   if( n== wxNOT_FOUND )
-      n=miNoMatchSelector;
-   miNoMatchSelector = 0;
-   if( n < (int)Choices.size() )
-   {
-      return Choices[n];
-   }
-   return 0;
-}
-
 //-----------------------------------------------------------------------//
 
 
@@ -1934,37 +1910,6 @@ wxChoice * ShuttleGuiBase::TieChoice(
    if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
    if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
    if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
-   return pChoice;
-}
-
-/// Variant of the standard TieChoice which does the two step exchange
-/// between gui and stack variable and stack variable and shuttle.
-/// Difference to previous one is that the Translated choices and default
-/// are integers, not Strings.
-///   @param Prompt             The prompt shown beside the control.
-///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default value for this control (translated)
-///   @param Choices            An array of choices that appear on screen.
-///   @param InternalChoices    The corresponding values (as an integer array)
-wxChoice * ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
-   const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
-{
-   wxChoice * pChoice=(wxChoice*)NULL;
-
-   int TempIndex=0;
-   int TranslatedInt = Default;
-   WrappedType WrappedRef( TranslatedInt );
-   // Get from prefs does 1 and 2.
-   // Put to prefs does 2 and 3.
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Int from Prefs.
-   if( DoStep(1) ) TempIndex = TranslateToIndex( TranslatedInt, InternalChoices ); // Int to an index.
-   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
-   if( DoStep(3) ) TranslatedInt = TranslateFromIndex( TempIndex, InternalChoices ); // Index to int
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
 }

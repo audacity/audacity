@@ -75,11 +75,50 @@
 // ExportMP2Options
 //----------------------------------------------------------------------------
 
-static int iBitrates[] = {
-   16, 24, 32, 40, 48, 56, 64,
-   80, 96, 112, 128, 160,
-   192, 224, 256, 320, 384
+namespace {
+
+const wxArrayStringEx BitRateNames {
+   // i18n-hint kbps abbreviates "thousands of bits per second"
+   XO("16 kbps"),
+   XO("24 kbps"),
+   XO("32 kbps"),
+   XO("40 kbps"),
+   XO("48 kbps"),
+   XO("56 kbps"),
+   XO("64 kbps"),
+   XO("80 kbps"),
+   XO("96 kbps"),
+   XO("112 kbps"),
+   XO("128 kbps"),
+   XO("160 kbps"),
+   XO("192 kbps"),
+   XO("224 kbps"),
+   XO("256 kbps"),
+   XO("320 kbps"),
+   XO("384 kbps"),
 };
+
+const std::vector< int > BitRateValues {
+   16,
+   24,
+   32,
+   40,
+   48,
+   56,
+   64,
+   80,
+   96,
+   112,
+   128,
+   160,
+   192,
+   224,
+   256,
+   320,
+   384,
+};
+
+}
 
 class ExportMP2Options final : public wxPanelWrapper
 {
@@ -90,10 +129,6 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
-
-private:
-   wxArrayStringEx mBitRateNames;
-   std::vector<int> mBitRateLabels;
 };
 
 ///
@@ -101,12 +136,6 @@ private:
 ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
-   for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
-   {
-      mBitRateNames.push_back(wxString::Format(_("%i kbps"),iBitrates[i]));
-      mBitRateLabels.push_back(iBitrates[i]);
-   }
-
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -130,8 +159,13 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/MP2Bitrate"),
-               160, mBitRateNames, mBitRateLabels);
+            S.TieNumberAsChoice(
+               _("Bit Rate:"),
+               wxT("/FileFormats/MP2Bitrate"),
+               160,
+               BitRateNames,
+               &BitRateValues
+            );
          }
          S.EndMultiColumn();
       }

@@ -112,16 +112,7 @@ enum MP3ChannelMode : unsigned {
 };
 
 enum : int {
-   QUALITY_0 = 0,
-   QUALITY_1 = 1,
    QUALITY_2 = 2,
-   QUALITY_3 = 3,
-   QUALITY_4 = 4,
-   QUALITY_5 = 5,
-   QUALITY_6 = 6,
-   QUALITY_7 = 7,
-   QUALITY_8 = 8,
-   QUALITY_9 = 9,
 
    ROUTINE_FAST = 0,
    ROUTINE_STANDARD = 1,
@@ -132,95 +123,93 @@ enum : int {
    PRESET_MEDIUM = 3,
 };
 
-// Note: The label field is what will be written to preferences and carries
-//       no numerical significance.  It is simply a means to look up a value
-//       in a table.
-//
-//       The entries should be listed in order you want them to appear in the
-//       choice dropdown based on the name field.
-typedef struct
-{
-   wxString name;
-   int label;
-} CHOICES;
-
-static CHOICES fixRates[] =
-{
+static const wxArrayStringEx fixRateNames {
    /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
-   {wxT(""), 320},
-   {wxT(""), 256},
-   {wxT(""), 224},
-   {wxT(""), 192},
-   {wxT(""), 160},
-   {wxT(""), 144},
-   {wxT(""), 128},
-   {wxT(""), 112},
-   {wxT(""),  96},
-   {wxT(""),  80},
-   {wxT(""),  64},
-   {wxT(""),  56},
-   {wxT(""),  48},
-   {wxT(""),  40},
-   {wxT(""),  32},
-   {wxT(""),  24},
-   {wxT(""),  16},
-   {wxT(""),   8}
+   XO("320 kbps"),
+   XO("256 kbps"),
+   XO("224 kbps"),
+   XO("192 kbps"),
+   XO("160 kbps"),
+   XO("144 kbps"),
+   XO("128 kbps"),
+   XO("112 kbps"),
+   XO("96 kbps"),
+   XO("80 kbps"),
+   XO("64 kbps"),
+   XO("56 kbps"),
+   XO("48 kbps"),
+   XO("40 kbps"),
+   XO("32 kbps"),
+   XO("24 kbps"),
+   XO("16 kbps"),
+   XO("8 kbps"),
 };
 
-static CHOICES varRates[] =
-{
-   {wxT(""), QUALITY_0},
-   {wxT(""), QUALITY_1},
-   {wxT(""), QUALITY_2},
-   {wxT(""), QUALITY_3},
-   {wxT(""), QUALITY_4},
-   {wxT(""), QUALITY_5},
-   {wxT(""), QUALITY_6},
-   {wxT(""), QUALITY_7},
-   {wxT(""), QUALITY_8},
-   {wxT(""), QUALITY_9}
+static const std::vector<int> fixRateValues {
+   320,
+   256,
+   224,
+   192,
+   160,
+   144,
+   128,
+   112,
+   96,
+   80,
+   64,
+   56,
+   48,
+   40,
+   32,
+   24,
+   16,
+   8,
 };
 
-static const wxChar *const varRatesNumbers[] = {
-   wxT("220-260"),
-   wxT("200-250"),
-   wxT("170-210"),
-   wxT("155-195"),
-   wxT("145-185"),
-   wxT("110-150"),
-   wxT("95-135"),
-   wxT("80-120"),
-   wxT("65-105"),
-   wxT("45-85")
-};
-static_assert( WXSIZEOF(varRates) == WXSIZEOF(varRatesNumbers),
-              "size mismatch" );
-
-static CHOICES varModes[] =
-{
-   {wxT(""), ROUTINE_FAST    },
-   {wxT(""), ROUTINE_STANDARD}
+static const wxArrayStringEx varRateNames {
+   XO("220-260 kbps (Best Quality)"),
+   XO("200-250 kbps"),
+   XO("170-210 kbps"),
+   XO("155-195 kbps"),
+   XO("145-185 kbps"),
+   XO("110-150 kbps"),
+   XO("95-135 kbps"),
+   XO("80-120 kbps"),
+   XO("65-105 kbps"),
+   XO("45-85 kbps (Smaller files)"),
 };
 
-static CHOICES setRates[] =
-{
-   {wxT(""), PRESET_INSANE  },
-   {wxT(""), PRESET_EXTREME },
-   {wxT(""), PRESET_STANDARD},
-   {wxT(""), PRESET_MEDIUM  }
+static const wxArrayStringEx varModeNames {
+   XO("Fast"),
+   XO("Standard"),
 };
 
-static CHOICES sampRates[] =
-{
-   {wxT(""),  8000    },
-   {wxT(""), 11025    },
-   {wxT(""), 12000    },
-   {wxT(""), 16000    },
-   {wxT(""), 22050    },
-   {wxT(""), 24000    },
-   {wxT(""), 32000    },
-   {wxT(""), 44100    },
-   {wxT(""), 48000    }
+static const wxArrayStringEx setRateNames {
+   /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
+   XO("Insane, 320 kbps"),
+   XO("Extreme, 220-260 kbps"),
+   XO("Standard, 170-210 kbps"),
+   XO("Medium, 145-185 kbps"),
+};
+
+static const wxArrayStringEx setRateNamesShort {
+   /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
+   XO("Insane"),
+   XO("Extreme"),
+   XO("Standard"),
+   XO("Medium"),
+};
+
+static const std::vector< int > sampRates {
+   8000,
+   11025,
+   12000,
+   16000,
+   22050,
+   24000,
+   32000,
+   44100,
+   48000,
 };
 
 #define ID_SET 7000
@@ -229,33 +218,6 @@ static CHOICES sampRates[] =
 #define ID_CBR 7003
 #define ID_QUALITY 7004
 #define ID_MONO 7005
-
-static void InitMP3_Statics()
-{
-   for (size_t i=0; i < WXSIZEOF(fixRates); i++)
-      fixRates[i].name = wxString::Format(_("%d kbps"), fixRates[i].label);
-
-   varRates[0].name = wxString::Format(
-      _("%s kbps (Best Quality)"), varRatesNumbers[0] );
-
-   for (size_t i = 1; i < WXSIZEOF(varRates) - 1; i++)
-      varRates[i].name = wxString::Format( _("%s kbps"), varRatesNumbers[i] );
-
-   varRates[9].name = wxString::Format(
-      _("%s kbps (Smaller files)"), varRatesNumbers[9] );
-
-   varModes[0].name = _("Fast");
-   varModes[1].name = _("Standard");
-
-   /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
-   setRates[0].name = _("Insane, 320 kbps");
-   setRates[1].name = _("Extreme, 220-260 kbps");
-   setRates[2].name = _("Standard, 170-210 kbps");
-   setRates[3].name = _("Medium, 145-185 kbps");
-
-   for (size_t i=0; i < WXSIZEOF(sampRates); i++)
-      sampRates[i].name = wxString::Format( wxT("%d"), sampRates[i].label );
-}
 
 class ExportMP3Options final : public wxPanelWrapper
 {
@@ -275,10 +237,7 @@ public:
    void OnQuality(wxCommandEvent& evt);
    void OnMono(wxCommandEvent& evt);
 
-   void LoadNames(CHOICES *choices, int count);
-   wxArrayString GetNames(CHOICES *choices, int count);
-   std::vector<int> GetLabels(CHOICES *choices, int count);
-   int FindIndex(CHOICES *choices, int cnt, int needle, int def);
+   void LoadNames(const wxArrayStringEx &choices);
 
 private:
 
@@ -314,8 +273,6 @@ END_EVENT_TABLE()
 ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
-   InitMP3_Statics();
-
    mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
    mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_2);
    mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 192);
@@ -391,48 +348,48 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                }
                S.EndHorizontalLay();
    
-               CHOICES *choices;
-               int cnt;
+               const wxArrayStringEx *choices = nullptr;
+               const std::vector< int > *codes = nullptr;
                bool enable;
                int defrate;
    
                if (mSET->GetValue()) {
-                  choices = setRates;
-                  cnt = WXSIZEOF(setRates);
+                  choices = &setRateNames;
                   enable = true;
                   defrate = mSetRate;
                }
                else if (mVBR->GetValue()) {
-                  choices = varRates;
-                  cnt = WXSIZEOF(varRates);
+                  choices = &varRateNames;
                   enable = true;
                   defrate = mVbrRate;
                }
                else if (mABR->GetValue()) {
-                  choices = fixRates;
-                  cnt = WXSIZEOF(fixRates);
+                  choices = &fixRateNames;
+                  codes = &fixRateValues;
                   enable = false;
                   defrate = mAbrRate;
                }
                else {
                   mCBR->SetValue(true);
-                  choices = fixRates;
-                  cnt = WXSIZEOF(fixRates);
+                  choices = &fixRateNames;
+                  codes = &fixRateValues;
                   enable = false;
                   defrate = mCbrRate;
                }
-   
-               mRate = S.Id(ID_QUALITY).TieChoice(_("Quality"),
-                                                  wxT("/FileFormats/MP3Bitrate"),
-                                                  defrate,
-                                                  GetNames(choices, cnt),
-                                                  GetLabels(choices, cnt));
-   
-               mMode = S.TieChoice(_("Variable Speed:"),
-                                   wxT("/FileFormats/MP3VarMode"),
-                                   ROUTINE_FAST,
-                                   GetNames(varModes, WXSIZEOF(varModes)),
-                                   GetLabels(varModes, WXSIZEOF(varModes)));
+
+               mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
+                  _("Quality"),
+                  wxT("/FileFormats/MP3Bitrate"),
+                  defrate,
+                  *choices,
+                  codes
+               );
+
+               mMode = S.TieNumberAsChoice(
+                  _("Variable Speed:"),
+                  wxT("/FileFormats/MP3VarMode"),
+                  ROUTINE_FAST,
+                  varModeNames );
                mMode->Enable(enable);
    
                S.AddPrompt(_("Channel Mode:"));
@@ -484,13 +441,28 @@ bool ExportMP3Options::TransferDataFromWindow()
    return true;
 }
 
+namespace {
+
+int ValidateValue( int nValues, int value, int defaultValue )
+{
+   return (value >= 0 && value < nValues) ? value : defaultValue;
+}
+int ValidateValue( const std::vector<int> &values, int value, int defaultValue )
+{
+   auto start = values.begin(), finish = values.end(),
+      iter = std::find( start, finish, value );
+   return ( iter != finish ) ? value : defaultValue;
+}
+
+}
+
 ///
 ///
 void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
 {
-   LoadNames(setRates, WXSIZEOF(setRates));
+   LoadNames(setRateNames);
 
-   mRate->SetSelection(FindIndex(setRates, WXSIZEOF(setRates), mSetRate, 2));
+   mRate->SetSelection(ValidateValue(setRateNames.size(), mSetRate, 2));
    mRate->Refresh();
    mMode->Enable(true);
 }
@@ -499,9 +471,9 @@ void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
 ///
 void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
 {
-   LoadNames(varRates, WXSIZEOF(varRates));
+   LoadNames(varRateNames);
 
-   mRate->SetSelection(FindIndex(varRates, WXSIZEOF(varRates), mVbrRate, 2));
+   mRate->SetSelection(ValidateValue(varRateNames.size(), mVbrRate, 2));
    mRate->Refresh();
    mMode->Enable(true);
 }
@@ -510,9 +482,9 @@ void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
 ///
 void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
 {
-   LoadNames(fixRates, WXSIZEOF(fixRates));
+   LoadNames(fixRateNames);
 
-   mRate->SetSelection(FindIndex(fixRates, WXSIZEOF(fixRates), mAbrRate, 10));
+   mRate->SetSelection(ValidateValue(fixRateValues, mAbrRate, 10));
    mRate->Refresh();
    mMode->Enable(false);
 }
@@ -521,9 +493,9 @@ void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
 ///
 void ExportMP3Options::OnCBR(wxCommandEvent& WXUNUSED(event))
 {
-   LoadNames(fixRates, WXSIZEOF(fixRates));
+   LoadNames(fixRateNames);
 
-   mRate->SetSelection(FindIndex(fixRates, WXSIZEOF(fixRates), mCbrRate, 10));
+   mRate->SetSelection(ValidateValue(fixRateValues, mCbrRate, 10));
    mRate->Refresh();
    mMode->Enable(false);
 }
@@ -533,16 +505,16 @@ void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
    int sel = mRate->GetSelection();
 
    if (mSET->GetValue()) {
-      mSetRate = setRates[sel].label;
+      mSetRate = sel;
    }
    else if (mVBR->GetValue()) {
-      mVbrRate = varRates[sel].label;
+      mVbrRate = sel;
    }
    else if (mABR->GetValue()) {
-      mAbrRate = fixRates[sel].label;
+      mAbrRate = fixRateValues[ sel ];
    }
    else {
-      mCbrRate = fixRates[sel].label;
+      mCbrRate = fixRateValues[ sel ];
    }
 }
 
@@ -557,47 +529,11 @@ void ExportMP3Options::OnMono(wxCommandEvent& /*evt*/)
    gPrefs->Flush();
 }
 
-void ExportMP3Options::LoadNames(CHOICES *choices, int count)
+void ExportMP3Options::LoadNames(const wxArrayStringEx &names)
 {
    mRate->Clear();
-
-   for (int i = 0; i < count; i++)
-   {
-      mRate->Append(choices[i].name);
-   }
-}
-
-wxArrayString ExportMP3Options::GetNames(CHOICES *choices, int count)
-{
-   wxArrayString names;
-
-   for (int i = 0; i < count; i++) {
-      names.push_back(choices[i].name);
-   }
-
-   return names;
-}
-
-std::vector<int> ExportMP3Options::GetLabels(CHOICES *choices, int count)
-{
-   std::vector<int> labels;
-
-   for (int i = 0; i < count; i++) {
-      labels.push_back(choices[i].label);
-   }
-
-   return labels;
-}
-
-int ExportMP3Options::FindIndex(CHOICES *choices, int cnt, int needle, int def)
-{
-   for (int i = 0; i < cnt; i++) {
-      if (choices[i].label == needle) {
-         return i;
-      }
-   }
-
-   return def;
+   for (const auto &name : names)
+      mRate->Append( GetCustomTranslation( name ) );
 }
 
 //----------------------------------------------------------------------------
@@ -1732,8 +1668,6 @@ public:
 
 private:
 
-   int FindValue(CHOICES *choices, int cnt, int needle, int def);
-   wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
    unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
@@ -1745,7 +1679,6 @@ private:
 ExportMP3::ExportMP3()
 :  ExportPlugin()
 {
-   InitMP3_Statics();
    AddFormat();
    SetFormat(wxT("MP3"),0);
    AddExtension(wxT("mp3"),0);
@@ -1840,19 +1773,19 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    // Set the bitrate/quality and mode
    if (rmode == MODE_SET) {
-      int q = FindValue(setRates, WXSIZEOF(setRates), brate, PRESET_STANDARD);
-      int r = FindValue(varModes, WXSIZEOF(varModes), vmode, ROUTINE_FAST);
+      brate = ValidateValue(setRateNames.size(), brate, PRESET_STANDARD);
+      int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
       exporter.SetMode(MODE_SET);
-      exporter.SetQuality(q, r);
+      exporter.SetQuality(brate, r);
    }
    else if (rmode == MODE_VBR) {
-      int q = FindValue(varRates, WXSIZEOF(varRates), brate, QUALITY_2);
-      int r = FindValue(varModes, WXSIZEOF(varModes), vmode, ROUTINE_FAST);
+      brate = ValidateValue( varRateNames.size(), brate, QUALITY_2 );
+      int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
       exporter.SetMode(MODE_VBR);
-      exporter.SetQuality(q, r);
+      exporter.SetQuality(brate, r);
    }
    else if (rmode == MODE_ABR) {
-      bitrate = FindValue(fixRates, WXSIZEOF(fixRates), brate, 128);
+      bitrate = brate = ValidateValue(fixRateValues, brate, 128);
       exporter.SetMode(MODE_ABR);
       exporter.SetBitrate(bitrate);
 
@@ -1864,7 +1797,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       }
    }
    else {
-      bitrate = FindValue(fixRates, WXSIZEOF(fixRates), brate, 128);
+      bitrate = brate = ValidateValue(fixRateValues, brate, 128);
       exporter.SetMode(MODE_CBR);
       exporter.SetBitrate(bitrate);
 
@@ -1877,7 +1810,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    }
 
    // Verify sample rate
-   if (FindName(sampRates, WXSIZEOF(sampRates), rate).empty() ||
+   if (!make_iterator_range( sampRates ).contains( rate ) ||
       (rate < lowrate) || (rate > highrate)) {
       rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
@@ -1949,13 +1882,13 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          title.Printf(selectionOnly ?
             _("Exporting selected audio with %s preset") :
             _("Exporting the audio with %s preset"),
-            FindName(setRates, WXSIZEOF(setRates), brate));
+            setRateNamesShort[brate]);
       }
       else if (rmode == MODE_VBR) {
          title.Printf(selectionOnly ?
             _("Exporting selected audio with VBR quality %s") :
             _("Exporting the audio with VBR quality %s"),
-            FindName(varRates, WXSIZEOF(varRates), brate));
+            varRateNames[brate]);
       }
       else {
          title.Printf(selectionOnly ?
@@ -2063,28 +1996,6 @@ wxWindow *ExportMP3::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportMP3Options(parent, format);
 }
 
-int ExportMP3::FindValue(CHOICES *choices, int cnt, int needle, int def)
-{
-   for (int i = 0; i < cnt; i++) {
-      if (choices[i].label == needle) {
-         return needle;
-      }
-   }
-
-   return def;
-}
-
-wxString ExportMP3::FindName(CHOICES *choices, int cnt, int needle)
-{
-   for (int i = 0; i < cnt; i++) {
-      if (choices[i].label == needle) {
-         return choices[i].name.BeforeFirst(wxT(','));
-      }
-   }
-
-   return wxT("");
-}
-
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 {
    wxDialogWrapper d(nullptr, wxID_ANY, wxString(_("Invalid sample rate")));
@@ -2114,12 +2025,12 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 
          wxArrayStringEx choices;
          int selected = -1;
-         for (size_t i = 0; i < WXSIZEOF(sampRates); i++) {
-            int label = sampRates[i].label;
+         for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {
+            int label = sampRates[ii];
             if (label >= lowrate && label <= highrate) {
-               choices.push_back(sampRates[i].name);
+               choices.push_back( wxString::Format( "%d", label ) );
                if (label <= rate) {
-                  selected = i;
+                  selected = ii;
                }
             }
          }

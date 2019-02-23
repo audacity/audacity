@@ -213,14 +213,6 @@ public:
       const wxArrayStringEx &Choices,
       const wxArrayStringEx & InternalChoices ) override;
 
-   // An assertion will be violated if this override is reached!
-   wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
-      const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices) override;
-
    wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
       const wxString &SettingName,
@@ -305,34 +297,6 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    StartArray();
    for( size_t i=0;i<Choices.size(); i++ )
       AddItem( InternalChoices[i] );
-   EndArray();
-   EndField();
-   EndStruct();
-   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
-}
-wxChoice * ShuttleGuiGetDefinition::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
-   const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
-{
-   // Should no longer come here!
-   // Choice controls in Preferences that really are exhaustive choices among
-   // non-numerical options must now encode the internal choices as strings,
-   // not numbers.
-   wxASSERT(false);
-
-   // But if we do get here anyway, proceed sub-optimally as before.
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "enum", "type" );
-   AddItem( Default, "default"  );
-   StartField( "enum" );
-   StartArray();
-   for( size_t i=0;i<Choices.size(); i++ )
-      AddItem( Choices[i] );
    EndArray();
    EndField();
    EndStruct();
