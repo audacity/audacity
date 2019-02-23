@@ -127,7 +127,7 @@ public:
    ChoiceSetting(
       const wxString &key,
       EnumValueSymbols symbols,
-      size_t defaultSymbol
+      long defaultSymbol = -1
    )
       : mKey{ key }
 
@@ -135,16 +135,17 @@ public:
 
       , mDefaultSymbol{ defaultSymbol }
    {
-      wxASSERT( defaultSymbol < mSymbols.size() );
+      wxASSERT( defaultSymbol < (long)mSymbols.size() );
    }
 
    const wxString &Key() const { return mKey; }
-   const EnumValueSymbol &Default() const
-      { return mSymbols[mDefaultSymbol]; }
+   const EnumValueSymbol &Default() const;
    const EnumValueSymbols &GetSymbols() const { return mSymbols; }
 
    wxString Read() const;
    bool Write( const wxString &value ); // you flush gPrefs afterward
+
+   void SetDefault( long value );
 
 protected:
    size_t Find( const wxString &value ) const;
@@ -157,7 +158,7 @@ protected:
    // stores an internal value
    mutable bool mMigrated { false };
 
-   const size_t mDefaultSymbol;
+   long mDefaultSymbol;
 };
 
 /// Extends ChoiceSetting with a corresponding table of integer codes
@@ -170,7 +171,7 @@ public:
    EnumSetting(
       const wxString &key,
       EnumValueSymbols symbols,
-      size_t defaultSymbol,
+      long defaultSymbol,
 
       std::vector<int> intValues, // must have same size as symbols
       const wxString &oldKey

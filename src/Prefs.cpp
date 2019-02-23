@@ -276,6 +276,14 @@ const wxArrayStringEx &EnumValueSymbols::GetInternals() const
 }
 
 //////////
+const EnumValueSymbol &ChoiceSetting::Default() const
+{
+   if ( mDefaultSymbol >= 0 && mDefaultSymbol < mSymbols.size() )
+      return mSymbols[ mDefaultSymbol ];
+   static EnumValueSymbol empty;
+   return empty;
+}
+
 wxString ChoiceSetting::Read() const
 {
    const auto &defaultValue = Default().Internal();
@@ -321,7 +329,7 @@ bool ChoiceSetting::Write( const wxString &value )
 EnumSetting::EnumSetting(
    const wxString &key,
    EnumValueSymbols symbols,
-   size_t defaultSymbol,
+   long defaultSymbol,
 
    std::vector<int> intValues, // must have same size as symbols
    const wxString &oldKey
@@ -335,6 +343,14 @@ EnumSetting::EnumSetting(
       wxASSERT( false );
       mIntValues.resize( size );
    }
+}
+
+void ChoiceSetting::SetDefault( long value )
+{
+   if ( value < (long)mSymbols.size() )
+      mDefaultSymbol = value;
+   else
+      wxASSERT( false );
 }
 
 int EnumSetting::ReadInt() const
@@ -361,12 +377,14 @@ void EnumSetting::Migrate( wxString &value )
       // Do not DELETE the old key -- let that be read if user downgrades
       // Audacity.  But further changes will be stored only to the NEW key
       // and won't be seen then.
-      auto index = FindInt( intValue );
+      auto index = (long) FindInt( intValue );
       if ( index >= mSymbols.size() )
          index = mDefaultSymbol;
-      value = mSymbols[index].Internal();
-      Write(value);
-      gPrefs->Flush();
+      if ( index >= 0 && index < mSymbols.size() ) {
+         value = mSymbols[index].Internal();
+         Write(value);
+         gPrefs->Flush();
+      }
    }
 }
 

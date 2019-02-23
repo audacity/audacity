@@ -59,7 +59,7 @@ public:
    TracksViewModeEnumSetting(
       const wxString &key,
       EnumValueSymbols symbols,
-      size_t defaultSymbol,
+      long defaultSymbol,
 
       std::vector<int> intValues,
       const wxString &oldKey
