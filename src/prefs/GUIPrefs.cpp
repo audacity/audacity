@@ -67,37 +67,41 @@ wxString GUIPrefs::HelpPageName()
 }
 
 void GUIPrefs::GetRangeChoices(
-   wxArrayStringEx *pChoices, wxArrayStringEx *pCodes)
+   wxArrayStringEx *pChoicesUntranslated,
+   wxArrayStringEx *pChoicesTranslated,
+   wxArrayStringEx *pCodes
+)
 {
-   if (pCodes) {
-      auto &codes = *pCodes;
-      codes.clear();
-      codes.insert( codes.end(), {
-         wxT("36") ,
-         wxT("48") ,
-         wxT("60") ,
-         wxT("72") ,
-         wxT("84") ,
-         wxT("96") ,
-         wxT("120") ,
-         wxT("145") ,
-      } );
-   }
+   static const auto sCodes = {
+      wxT("36") ,
+      wxT("48") ,
+      wxT("60") ,
+      wxT("72") ,
+      wxT("84") ,
+      wxT("96") ,
+      wxT("120") ,
+      wxT("145") ,
+   };
+   if (pCodes)
+      *pCodes = sCodes;
 
-   if (pChoices) {
-      auto &choices = *pChoices;
-      choices.clear();
-      choices.insert( choices.end(), {
-         _("-36 dB (shallow range for high-amplitude editing)") ,
-         _("-48 dB (PCM range of 8 bit samples)") ,
-         _("-60 dB (PCM range of 10 bit samples)") ,
-         _("-72 dB (PCM range of 12 bit samples)") ,
-         _("-84 dB (PCM range of 14 bit samples)") ,
-         _("-96 dB (PCM range of 16 bit samples)") ,
-         _("-120 dB (approximate limit of human hearing)") ,
-         _("-145 dB (PCM range of 24 bit samples)") ,
-      } );
-   }
+   static const auto sChoices = {
+      XO("-36 dB (shallow range for high-amplitude editing)") ,
+      XO("-48 dB (PCM range of 8 bit samples)") ,
+      XO("-60 dB (PCM range of 10 bit samples)") ,
+      XO("-72 dB (PCM range of 12 bit samples)") ,
+      XO("-84 dB (PCM range of 14 bit samples)") ,
+      XO("-96 dB (PCM range of 16 bit samples)") ,
+      XO("-120 dB (approximate limit of human hearing)") ,
+      XO("-145 dB (PCM range of 24 bit samples)") ,
+   };
+
+   if (pChoicesUntranslated)
+      *pChoicesUntranslated = sChoices;
+
+   if (pChoicesTranslated)
+      *pChoicesTranslated =
+         transform_container<wxArrayStringEx>( sChoices, GetCustomTranslation );
 }
 
 void GUIPrefs::Populate()
@@ -114,8 +118,8 @@ void GUIPrefs::Populate()
 
    mHtmlHelpChoices.clear();
    auto values2 = {
-      _("Local") ,
-      _("From Internet") ,
+      XO("Local") ,
+      XO("From Internet") ,
    };
    mHtmlHelpChoices.insert( mHtmlHelpChoices.end(), values2 );
 
@@ -131,17 +135,17 @@ void GUIPrefs::Populate()
    mThemeChoices.clear();
    mThemeChoices.insert( mThemeChoices.end(), {
       /* i18n-hint: describing the "classic" or traditional appearance of older versions of Audacity */
-       _("Classic")  ,
+       XO("Classic")  ,
       /* i18n-hint: Light meaning opposite of dark */
-       _("Light")  ,
-       _("Dark")  ,
+       XO("Light")  ,
+       XO("Dark")  ,
       /* i18n-hint: greater difference between foreground and background colors */
-       _("High Contrast")  ,
+       XO("High Contrast")  ,
       /* i18n-hint: user defined */
-       _("Custom")  ,
+       XO("Custom")  ,
    } );
 
-   GetRangeChoices(&mRangeChoices, &mRangeCodes);
+   GetRangeChoices(&mRangeChoices, nullptr, &mRangeCodes);
 
 #if 0
    mLangCodes.insert( mLangCodes.end(), {

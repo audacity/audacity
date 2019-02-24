@@ -1908,7 +1908,9 @@ wxChoice * ShuttleGuiBase::TieChoice(
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Index from Prefs.
    if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
-   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
+   if( DoStep(2) )
+      pChoice = TieChoice( Prompt, TempIndex,
+         transform_container<wxArrayStringEx>(Choices, GetCustomTranslation) );
    if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;

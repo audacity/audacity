@@ -1684,7 +1684,7 @@ ExportMP3::ExportMP3()
    AddExtension(wxT("mp3"),0);
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
-   SetDescription(_("MP3 Files"),0);
+   SetDescription(XO("MP3 Files"),0);
 }
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))

@@ -178,11 +178,11 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          wxArrayStringEx visualgroups{
-            _("Sorted by Effect Name") ,
-            _("Sorted by Publisher and Effect Name") ,
-            _("Sorted by Type and Effect Name") ,
-            _("Grouped by Publisher") ,
-            _("Grouped by Type") ,
+            XO("Sorted by Effect Name") ,
+            XO("Sorted by Publisher and Effect Name") ,
+            XO("Sorted by Type and Effect Name") ,
+            XO("Grouped by Publisher") ,
+            XO("Grouped by Type") ,
          };
 
          wxArrayStringEx prefsgroups{

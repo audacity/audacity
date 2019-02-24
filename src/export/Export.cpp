@@ -153,9 +153,14 @@ wxString ExportPlugin::GetFormat(int index)
    return mFormatInfos[index].mFormat;
 }
 
-wxString ExportPlugin::GetDescription(int index)
+wxString ExportPlugin::GetUntranslatedDescription(int index)
 {
    return mFormatInfos[index].mDescription;
+}
+
+wxString ExportPlugin::GetTranslatedDescription(int index)
+{
+   return GetCustomTranslation( GetUntranslatedDescription( index ) );
 }
 
 FileExtension ExportPlugin::GetExtension(int index)
@@ -174,7 +179,7 @@ wxString ExportPlugin::GetMask(int index)
       return mFormatInfos[index].mMask;
    }
 
-   wxString mask = GetDescription(index) + wxT("|");
+   wxString mask = GetTranslatedDescription(index) + wxT("|");
 
    // Build the mask
    // const auto &ext = GetExtension(index);

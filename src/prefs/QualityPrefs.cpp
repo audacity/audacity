@@ -127,7 +127,7 @@ void QualityPrefs::GetNamesAndLabels()
       mSampleRateNames.push_back(wxString::Format(wxT("%i Hz"), iRate));
    }
 
-   mSampleRateNames.push_back(_("Other..."));
+   mSampleRateNames.push_back(XO("Other..."));
 
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten

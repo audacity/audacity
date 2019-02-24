@@ -60,9 +60,9 @@ void TracksBehaviorsPrefs::Populate()
    mSoloCodes.push_back(wxT("Multi"));
    mSoloCodes.push_back(wxT("None"));
 
-   mSoloChoices.push_back(_("Simple"));
-   mSoloChoices.push_back(_("Multi-track"));
-   mSoloChoices.push_back(_("None"));
+   mSoloChoices.push_back(XO("Simple"));
+   mSoloChoices.push_back(XO("Multi-track"));
+   mSoloChoices.push_back(XO("None"));
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.

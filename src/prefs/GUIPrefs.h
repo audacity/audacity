@@ -35,7 +35,9 @@ class GUIPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 
    static void GetRangeChoices(
-      wxArrayStringEx *pChoices, wxArrayStringEx *pCodes);
+      wxArrayStringEx *pChoicesUntranslated,
+      wxArrayStringEx *pChoicesTranslated,
+      wxArrayStringEx *pCodes);
 
    // If no input language given, defaults first to choice in preferences, then
    // to system language.

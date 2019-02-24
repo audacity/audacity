@@ -236,7 +236,7 @@ ExportMP2::ExportMP2()
    AddExtension(wxT("mp2"),0);
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
-   SetDescription(_("MP2 Files"),0);
+   SetDescription(XO("MP2 Files"),0);
 }
 
 ProgressResult ExportMP2::Export(AudacityProject *project,

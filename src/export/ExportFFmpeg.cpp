@@ -225,7 +225,7 @@ ExportFFmpeg::ExportFFmpeg()
       }
 
       SetMaxChannels(ExportFFmpegOptions::fmts[newfmt].maxchannels,fmtindex);
-      SetDescription(ExportFFmpegOptions::fmts[newfmt].Description(), fmtindex);
+      SetDescription(ExportFFmpegOptions::fmts[newfmt].description_, fmtindex);
 
       int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
       if (canmeta && (canmeta == AV_CANMETA || canmeta <= avfver))

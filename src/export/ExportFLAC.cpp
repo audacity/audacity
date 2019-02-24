@@ -93,15 +93,15 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
    };
 
    wxArrayStringEx flacLevelNames{
-      _("0 (fastest)") ,
-      _("1") ,
-      _("2") ,
-      _("3") ,
-      _("4") ,
-      _("5") ,
-      _("6") ,
-      _("7") ,
-      _("8 (best)") ,
+      XO("0 (fastest)") ,
+      XO("1") ,
+      XO("2") ,
+      XO("3") ,
+      XO("4") ,
+      XO("5") ,
+      XO("6") ,
+      XO("7") ,
+      XO("8 (best)") ,
    };
 
    wxArrayStringEx flacBitDepthLabels{
@@ -110,8 +110,8 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
    };
 
    wxArrayStringEx flacBitDepthNames{
-      _("16 bit") ,
-      _("24 bit") ,
+      XO("16 bit") ,
+      XO("24 bit") ,
    };
 
    S.StartVerticalLay();
@@ -239,7 +239,7 @@ ExportFLAC::ExportFLAC()
    AddExtension(wxT("flac"),0);
    SetMaxChannels(FLAC__MAX_CHANNELS,0);
    SetCanMetaData(true,0);
-   SetDescription(_("FLAC Files"),0);
+   SetDescription(XO("FLAC Files"),0);
 }
 
 ProgressResult ExportFLAC::Export(AudacityProject *project,

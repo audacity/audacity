@@ -234,7 +234,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            formats.push_back(mPlugins[i]->GetDescription(j));
+            formats.push_back(mPlugins[i]->GetUntranslatedDescription(j));
             if (mPlugins[i]->GetFormat(j) == defaultFormat) {
                mPluginIndex = i;
                mSubFormatIndex = j;
