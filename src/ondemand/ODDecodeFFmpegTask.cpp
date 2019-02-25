@@ -79,7 +79,7 @@ public:
    ///However it doesn't do anything because ImportFFMpeg does all that for us.
    bool ReadHeader() override {return true;}
 
-   bool SeekingAllowed() ;
+   bool SeekingAllowed() override;
 
 private:
    void InsertCache(std::unique_ptr<FFMpegDecodeCache> &&cache);
@@ -327,12 +327,11 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          mCurrentPos = start+len +1;
          while(numAttempts++ < kMaxSeekRewindAttempts && mCurrentPos > start) {
             //we want to move slightly before the start of the block file, but not too far ahead
-            targetts =
+            targetts = std::max( 0.0,
                (start - kDecodeSampleAllowance * numAttempts / kMaxSeekRewindAttempts)
                   .as_long_long() *
-               ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ));
-            if(targetts<0)
-               targetts=0;
+               ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ))
+            );
 
             //wxPrintf("attempting seek to %llu, attempts %d\n", targetts, numAttempts);
             if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
