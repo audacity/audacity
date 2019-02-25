@@ -640,4 +640,20 @@ namespace std
 }
 #endif
 
+// A utility function building a container of results
+template< typename Container, typename Iterator, typename Function >
+Container transform_range( Iterator first, Iterator last, Function &&fn )
+{
+   Container result;
+   std::transform( first, last, std::back_inserter( result ), fn );
+   return result;
+}
+// A utility function, often constructing a vector from another vector
+template< typename OutContainer, typename InContainer, typename Function >
+OutContainer transform_container( InContainer &inContainer, Function &&fn )
+{
+   return transform_range<OutContainer>(
+      inContainer.begin(), inContainer.end(), fn );
+}
+
 #endif // __AUDACITY_MEMORY_X_H__

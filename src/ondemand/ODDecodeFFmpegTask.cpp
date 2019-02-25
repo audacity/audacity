@@ -111,20 +111,13 @@ private:
 
 auto ODDecodeFFmpegTask::FromList( const TrackHolders &channels ) -> Streams
 {
-   Streams streams;
-   streams.reserve(channels.size());
-   using namespace std;
-   transform(channels.begin(), channels.end(), back_inserter(streams),
+   // Convert array of array of unique_ptr to array of array of bare pointers
+   return transform_container<Streams>( channels,
       [](const NewChannelGroup &holders) {
-         Channels channels;
-         channels.reserve(holders.size());
-         transform(holders.begin(), holders.end(), back_inserter(channels),
-            mem_fn(&NewChannelGroup::value_type::get)
-         );
-         return channels;
+         return transform_container<Channels>( holders,
+            std::mem_fn(&NewChannelGroup::value_type::get) );
       }
    );
-   return streams;
 }
 
 //------ ODDecodeFFmpegTask definitions

@@ -1152,22 +1152,17 @@ namespace {
    Array GetTypedTracks(const TrackRange &trackRange,
                        bool selectionOnly, bool includeMuted)
    {
-      Array array;
-
-      using Type = typename
-         std::remove_reference< decltype( *array[0] ) >::type;
+      using Type = typename std::remove_reference<
+         decltype( *std::declval<Array>()[0] )
+      >::type;
       auto subRange =
          trackRange.template Filter<Type>();
       if ( selectionOnly )
          subRange = subRange + &Track::IsSelected;
       if ( ! includeMuted )
          subRange = subRange - &Type::GetMute;
-      std::transform(
-         subRange.begin(), subRange.end(), std::back_inserter( array ),
-         []( Type *t ){ return Track::Pointer<Type>( t ); }
-      );
-
-      return array;
+      return transform_range<Array>( subRange.begin(), subRange.end(),
+          []( Type *t ){ return Track::Pointer<Type>( t ); } );
    }
 }
 

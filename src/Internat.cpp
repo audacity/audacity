@@ -303,8 +303,8 @@ wxString Internat::StripAccelerators(const wxString &s)
 wxArrayString LocalizedStrings(
    const ComponentInterfaceSymbol strings[], size_t nStrings)
 {
-   wxArrayString results;
-   std::transform( strings, strings + nStrings, std::back_inserter(results),
-                   std::mem_fn( &ComponentInterfaceSymbol::Translation ) );
-   return results;
+   return transform_range<wxArrayString>(
+      strings, strings + nStrings,
+      std::mem_fn( &ComponentInterfaceSymbol::Translation )
+   );
 }
