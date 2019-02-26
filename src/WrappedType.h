@@ -31,16 +31,21 @@ class AUDACITY_DLL_API WrappedType
 {
 public:
 
-   WrappedType( wxString & InStr ){ SetTo(InStr);   };
-   WrappedType( int & InInt ){      SetTo(InInt);   };
-   WrappedType( double & InDouble ){SetTo(InDouble);};
-   WrappedType( bool & InBool ){    SetTo(InBool);  };
-   WrappedType(){ Init();}
-
-   void SetTo( wxString & InStr ){ Init();mpStr=&InStr;       eWrappedType = eWrappedString;}
-   void SetTo( int & InInt ){      Init();mpInt=&InInt;       eWrappedType = eWrappedInt;};
-   void SetTo( double & InDouble ){Init();mpDouble=&InDouble; eWrappedType = eWrappedDouble;};
-   void SetTo( bool & InBool ){    Init();mpBool=&InBool;     eWrappedType = eWrappedBool;};
+   explicit WrappedType( wxString & InStr )
+      : eWrappedType{ eWrappedString }, mpStr{ &InStr }
+   {}
+   explicit WrappedType( int & InInt )
+      : eWrappedType{ eWrappedInt }, mpInt{ &InInt }
+   {}
+   explicit WrappedType( double & InDouble )
+      : eWrappedType{ eWrappedDouble }, mpDouble{ &InDouble }
+   {}
+   explicit WrappedType( bool & InBool )
+      : eWrappedType{ eWrappedBool }, mpBool{ &InBool }
+   {}
+   explicit WrappedType()
+      : eWrappedType{ eWrappedNotSet }
+   {}
 
    bool IsString();
 
@@ -58,13 +63,12 @@ public:
    void WriteToAsWrappedType( const WrappedType & W );
 
 public :
-   void Init();
 
-   teWrappedType eWrappedType;
-   wxString * mpStr;
-   int * mpInt;
-   double * mpDouble;
-   bool * mpBool;
+   const teWrappedType eWrappedType;
+   wxString *const mpStr {};
+   int *const mpInt {};
+   double *const mpDouble {};
+   bool *const mpBool {};
 
 };
 

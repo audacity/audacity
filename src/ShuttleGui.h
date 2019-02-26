@@ -335,7 +335,7 @@ protected:
    wxString mSettingName; /// The setting controlled by a group.
    int mRadioCount;       /// The index of this radio item.  -1 for none.
 
-   WrappedType mRadioValue;  /// The wrapped value associated with the active radio button.
+   Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    wxString mRadioValueString; /// Unwrapped string value.
    int mRadioValueInt;         /// Unwrapped integer value.
 

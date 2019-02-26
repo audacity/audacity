@@ -66,15 +66,6 @@ bool WrappedType::ValuesMatch( const WrappedType & W )
    return false;
 }
 
-void WrappedType::Init()
-{
-   eWrappedType = eWrappedNotSet;
-   mpStr = NULL;
-   mpInt = NULL;
-   mpDouble = NULL;
-   mpBool = NULL;
-}
-
 void WrappedType::WriteToAsWrappedType( const WrappedType & W )
 {
    wxASSERT( W.eWrappedType == eWrappedType );

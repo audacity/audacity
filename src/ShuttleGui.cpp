@@ -1440,7 +1440,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
          mpWind = pRadioButton = safenew wxRadioButton(GetParent(), miId, Prompt,
             wxDefaultPosition, wxDefaultSize,
             (mRadioCount==1)?wxRB_GROUP:0);
-         pRadioButton->SetValue(WrappedRef.ValuesMatch( mRadioValue ));
+         pRadioButton->SetValue(WrappedRef.ValuesMatch( *mRadioValue ));
          pRadioButton->SetName(wxStripMenuCodes(Prompt));
          UpdateSizers();
       }
@@ -1454,7 +1454,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
          wxASSERT( pRadioButton );
          if( pRadioButton->GetValue() )
          {
-            mRadioValue.WriteToAsWrappedType( WrappedRef );
+            mRadioValue->WriteToAsWrappedType( WrappedRef );
          }
       }
       break;
@@ -1470,11 +1470,11 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
 /// Versions for specific types must do that initialisation.
 void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName )
 {
-   wxASSERT( mRadioValue.eWrappedType != eWrappedNotSet );
+   wxASSERT( mRadioValue && mRadioValue->eWrappedType != eWrappedNotSet );
    mSettingName = SettingName;
    mRadioCount = 0;
    if( mShuttleMode == eIsCreating )
-      DoDataShuttle( SettingName, mRadioValue );
+      DoDataShuttle( SettingName, *mRadioValue );
 }
 
 /// Call this after any TieRadioButton calls.
@@ -1482,9 +1482,8 @@ void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName )
 void ShuttleGuiBase::EndRadioButtonGroup()
 {
    if( mShuttleMode == eIsGettingFromDialog )
-      DoDataShuttle( mSettingName, mRadioValue );
-   mRadioValue.Init();// Clear it out...
-   mSettingName = wxT("");
+      DoDataShuttle( mSettingName, *mRadioValue );
+   mRadioValue.reset();// Clear it out...
    mRadioCount = -1; // So we detect a problem.
 }
 
@@ -1984,7 +1983,7 @@ void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const 
 {
    // Configure the generic type mechanism to use OUR integer.
    mRadioValueInt = iDefaultValue;
-   mRadioValue.SetTo( mRadioValueInt );
+   mRadioValue.create( mRadioValueInt );
    // Now actually start the radio button group.
    StartRadioButtonGroup( SettingName );
 }
@@ -1995,7 +1994,7 @@ void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const 
 {
    // Configure the generic type mechanism to use OUR string.
    mRadioValueString = DefaultValue;
-   mRadioValue.SetTo( mRadioValueString );
+   mRadioValue.create( mRadioValueString );
    // Now actually start the radio button group.
    StartRadioButtonGroup( SettingName );
 }
