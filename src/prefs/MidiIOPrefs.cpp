@@ -138,11 +138,12 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice(_("&Host:"),
-                             wxT("/MidiIO/Host"),
-                             wxT(""),
-                             mHostNames,
-                             mHostLabels);
+         mHost = S.TieChoice( _("&Host:"),
+            {
+               wxT("/MidiIO/Host"),
+               { ByColumns, mHostNames, mHostLabels }
+            }
+         );
 
          S.AddPrompt(_("Using: PortMidi"));
       }

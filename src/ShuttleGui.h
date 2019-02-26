@@ -232,17 +232,9 @@ public:
       const wxString &SettingName,
       const bool bDefault);
 
-   // This one is defined in terms of the next and not virtual
    virtual wxChoice *TieChoice(
       const wxString &Prompt,
       const ChoiceSetting &choiceSetting );
-
-   virtual wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const wxArrayStringEx &Choices,
-      const wxArrayStringEx & InternalChoices );
 
    // This overload presents what is really a numerical setting as a choice among
    // commonly used values, but the choice is not necessarily exhaustive.

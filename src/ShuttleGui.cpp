@@ -1874,30 +1874,11 @@ wxChoice *ShuttleGuiBase::TieChoice(
    choiceSetting.Read();
 
    const auto &symbols = choiceSetting.GetSymbols();
+   const auto &SettingName = choiceSetting.Key();
+   const auto &Default = choiceSetting.Default().Internal();
+   const auto &Choices = symbols.GetTranslations();
+   const auto &InternalChoices = symbols.GetInternals();
 
-   return TieChoice(
-      Prompt,
-      choiceSetting.Key(),
-      choiceSetting.Default().Internal(),
-      symbols.GetTranslations(),
-      symbols.GetInternals()
-   );
-}
-
-/// Variant of the standard TieChoice which does the two step exchange
-/// between gui and stack variable and stack variable and shuttle.
-///   @param Prompt             The prompt shown beside the control.
-///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default internal string value for this control
-///   @param Choices            An array of choices that appear on screen.
-///   @param InternalChoices    The corresponding values (as a string array)
-wxChoice * ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const wxArrayStringEx & Choices,
-   const wxArrayStringEx & InternalChoices)
-{
    wxChoice * pChoice=(wxChoice*)NULL;
 
    int TempIndex=0;
@@ -1935,6 +1916,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const std::vector<int> * pInternalChoices)
 {
    auto fn = [](int arg){ return wxString::Format( "%d", arg ); };
+
    wxArrayStringEx InternalChoices;
    if ( pInternalChoices )
       InternalChoices =
@@ -1943,13 +1925,25 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       for ( int ii = 0; ii < Choices.size(); ++ii )
          InternalChoices.push_back( fn( ii ) );
 
-   return ShuttleGuiBase::TieChoice(
-      Prompt,
+   long defaultIndex;
+   if ( pInternalChoices )
+      defaultIndex =  make_iterator_range( *pInternalChoices ).index( Default );
+   else
+      defaultIndex = Default;
+   if ( defaultIndex < 0 || defaultIndex >= Choices.size() )
+      defaultIndex = -1;
+
+   ChoiceSetting Setting{
       SettingName,
-      fn( Default ),
-      Choices,
-      InternalChoices
-   );
+      {
+         ByColumns,
+         Choices,
+         InternalChoices,
+      },
+      defaultIndex
+   };
+
+   return ShuttleGuiBase::TieChoice( Prompt, Setting );
 }
 
 //------------------------------------------------------------------//

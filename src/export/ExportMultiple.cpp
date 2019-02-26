@@ -273,11 +273,13 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.Id(CreateID).AddButton(_("Create"));
 
             mFormat = S.Id(FormatID)
-               .TieChoice(_("Format:"),
-                          wxT("/Export/MultipleFormat"),
-                          formats[mFilterIndex],
-                          formats,
-                          formats);
+               .TieChoice( _("Format:"),
+               {
+                  wxT("/Export/MultipleFormat"),
+                  { ByColumns, formats, formats },
+                  mFilterIndex
+               }
+            );
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
 

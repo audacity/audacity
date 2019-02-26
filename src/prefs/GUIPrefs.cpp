@@ -69,7 +69,8 @@ wxString GUIPrefs::HelpPageName()
 void GUIPrefs::GetRangeChoices(
    wxArrayStringEx *pChoicesUntranslated,
    wxArrayStringEx *pChoicesTranslated,
-   wxArrayStringEx *pCodes
+   wxArrayStringEx *pCodes,
+   int *pDefaultRangeIndex
 )
 {
    static const auto sCodes = {
@@ -102,6 +103,9 @@ void GUIPrefs::GetRangeChoices(
    if (pChoicesTranslated)
       *pChoicesTranslated =
          transform_container<wxArrayStringEx>( sChoices, GetCustomTranslation );
+
+   if (pDefaultRangeIndex)
+      *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
 }
 
 void GUIPrefs::Populate()
@@ -109,43 +113,7 @@ void GUIPrefs::Populate()
    // First any pre-processing for constructing the GUI.
    GetLanguages(mLangCodes, mLangNames);
 
-   mHtmlHelpCodes.clear();
-   auto values = {
-      wxT("Local") ,
-      wxT("FromInternet") ,
-   };
-   mHtmlHelpCodes.insert( mHtmlHelpCodes.end(), values );
-
-   mHtmlHelpChoices.clear();
-   auto values2 = {
-      XO("Local") ,
-      XO("From Internet") ,
-   };
-   mHtmlHelpChoices.insert( mHtmlHelpChoices.end(), values2 );
-
-   mThemeCodes.clear();
-   mThemeCodes.insert( mThemeCodes.end(), {
-       wxT("classic")  ,
-       wxT("light")  ,
-       wxT("dark")  ,
-       wxT("high-contrast")  ,
-       wxT("custom")  ,
-   } );
-
-   mThemeChoices.clear();
-   mThemeChoices.insert( mThemeChoices.end(), {
-      /* i18n-hint: describing the "classic" or traditional appearance of older versions of Audacity */
-       XO("Classic")  ,
-      /* i18n-hint: Light meaning opposite of dark */
-       XO("Light")  ,
-       XO("Dark")  ,
-      /* i18n-hint: greater difference between foreground and background colors */
-       XO("High Contrast")  ,
-      /* i18n-hint: user defined */
-       XO("Custom")  ,
-   } );
-
-   GetRangeChoices(&mRangeChoices, nullptr, &mRangeCodes);
+   GetRangeChoices(&mRangeChoices, nullptr, &mRangeCodes, &mDefaultRangeIndex);
 
 #if 0
    mLangCodes.insert( mLangCodes.end(), {
@@ -169,6 +137,52 @@ void GUIPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+ChoiceSetting GUIManualLocation{
+   wxT("/GUI/Help"),
+   {
+      ByColumns,
+      { XO("Local") ,  XO("From Internet") , },
+      { wxT("Local") , wxT("FromInternet") , }
+   },
+   0 // "Local"
+};
+
+constexpr int defaultTheme =
+#ifdef EXPERIMENTAL_DA
+   2 // "dark"
+#else
+   1 // "light"
+#endif
+;
+
+ChoiceSetting GUITheme{
+   wxT("/GUI/Theme"),
+   {
+      ByColumns,
+      {
+         /* i18n-hint: describing the "classic" or traditional
+            appearance of older versions of Audacity */
+         XO("Classic")  ,
+         /* i18n-hint: Light meaning opposite of dark */
+         XO("Light")  ,
+         XO("Dark")  ,
+         /* i18n-hint: greater difference between foreground and
+            background colors */
+         XO("High Contrast")  ,
+         /* i18n-hint: user defined */
+         XO("Custom")  ,
+      },
+      {
+         wxT("classic")  ,
+         wxT("light")  ,
+         wxT("dark")  ,
+         wxT("high-contrast")  ,
+         wxT("custom")  ,
+      }
+   },
+   defaultTheme
+};
+
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -179,36 +193,24 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
 
-#ifdef EXPERIMENTAL_DA
-         const wxString defaultTheme = wxT("dark");
-#else
-         const wxString defaultTheme = wxT("light");
-#endif
-         const wxString defaultRange = wxString::Format(wxT("%d"), ENV_DB_RANGE);
+         S.TieChoice( _("&Language:"),
+            {
+               wxT("/Locale/Language"),
+               { ByColumns, mLangNames, mLangCodes }
+            }
+         );
 
-         S.TieChoice(_("&Language:"),
-                     wxT("/Locale/Language"),
-                     wxT(""),
-                     mLangNames,
-                     mLangCodes);
+         S.TieChoice( _("Location of &Manual:"), GUIManualLocation);
 
-         S.TieChoice(_("Location of &Manual:"),
-                     wxT("/GUI/Help"),
-                     wxT("Local"),
-                     mHtmlHelpChoices,
-                     mHtmlHelpCodes);
+         S.TieChoice( _("Th&eme:"), GUITheme);
 
-         S.TieChoice(_("Th&eme:"),
-                     wxT("/GUI/Theme"),
-                     defaultTheme,
-                     mThemeChoices,
-                     mThemeCodes);
-
-         S.TieChoice(_("Meter dB &range:"),
-                     ENV_DB_KEY,
-                     defaultRange,
-                     mRangeChoices,
-                     mRangeCodes);
+         S.TieChoice( _("Meter dB &range:"),
+            {
+               ENV_DB_KEY,
+               { ByColumns, mRangeChoices, mRangeCodes },
+               mDefaultRangeIndex
+            }
+         );
       }
       S.EndMultiColumn();
 //      S.AddSpace(10);

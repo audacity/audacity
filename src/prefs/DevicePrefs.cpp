@@ -133,11 +133,12 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.Id(HostID);
-         mHost = S.TieChoice(_("&Host:"),
-                             wxT("/AudioIO/Host"),
-                             wxT(""),
-                             mHostNames,
-                             mHostLabels);
+         mHost = S.TieChoice( _("&Host:"),
+            {
+               wxT("/AudioIO/Host"),
+               { ByColumns, mHostNames, mHostLabels }
+            }
+         );
 
          S.AddPrompt(_("Using:"));
          S.AddFixedText(wxString(wxSafeConvertMB2WX(Pa_GetVersionText())));

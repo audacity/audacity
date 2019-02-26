@@ -37,7 +37,9 @@ class GUIPrefs final : public PrefsPanel
    static void GetRangeChoices(
       wxArrayStringEx *pChoicesUntranslated,
       wxArrayStringEx *pChoicesTranslated,
-      wxArrayStringEx *pCodes);
+      wxArrayStringEx *pCodes,
+      int *pDefaultRangeIndex = nullptr
+   );
 
    // If no input language given, defaults first to choice in preferences, then
    // to system language.
@@ -57,14 +59,9 @@ class GUIPrefs final : public PrefsPanel
    wxArrayStringEx mLangCodes;
    wxArrayStringEx mLangNames;
 
-   wxArrayStringEx mHtmlHelpCodes;
-   wxArrayStringEx mHtmlHelpChoices;
-
-   wxArrayStringEx mThemeCodes;
-   wxArrayStringEx mThemeChoices;
-
    wxArrayStringEx mRangeCodes;
    wxArrayStringEx mRangeChoices;
+   int mDefaultRangeIndex;
 };
 
 /// A PrefsPanel::Factory that creates one GUIPrefs panel.

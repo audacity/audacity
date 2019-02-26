@@ -76,54 +76,58 @@ ExportFLACOptions::~ExportFLACOptions()
    TransferDataFromWindow();
 }
 
+ChoiceSetting FLACBitDepth{
+   wxT("/FileFormats/FLACBitDepth"),
+   {
+      ByColumns,
+      { XO("16 bit") , XO("24 bit") , },
+      { wxT("16") ,    wxT("24") , }
+   },
+   0 // "16",
+};
+
+ChoiceSetting FLACLevel{
+   wxT("/FileFormats/FLACLevel"),
+   {
+      ByColumns,
+      {
+         XO("0 (fastest)") ,
+         XO("1") ,
+         XO("2") ,
+         XO("3") ,
+         XO("4") ,
+         XO("5") ,
+         XO("6") ,
+         XO("7") ,
+         XO("8 (best)") ,
+      },
+      {
+         wxT("0") ,
+         wxT("1") ,
+         wxT("2") ,
+         wxT("3") ,
+         wxT("4") ,
+         wxT("5") ,
+         wxT("6") ,
+         wxT("7") ,
+         wxT("8") ,
+      }
+   },
+   5 //"5"
+};
+
 ///
 ///
 void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayStringEx flacLevelLabels{
-      wxT("0") ,
-      wxT("1") ,
-      wxT("2") ,
-      wxT("3") ,
-      wxT("4") ,
-      wxT("5") ,
-      wxT("6") ,
-      wxT("7") ,
-      wxT("8") ,
-   };
-
-   wxArrayStringEx flacLevelNames{
-      XO("0 (fastest)") ,
-      XO("1") ,
-      XO("2") ,
-      XO("3") ,
-      XO("4") ,
-      XO("5") ,
-      XO("6") ,
-      XO("7") ,
-      XO("8 (best)") ,
-   };
-
-   wxArrayStringEx flacBitDepthLabels{
-      wxT("16") ,
-      wxT("24") ,
-   };
-
-   wxArrayStringEx flacBitDepthNames{
-      XO("16 bit") ,
-      XO("24 bit") ,
-   };
-
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieChoice(_("Level:"), wxT("/FileFormats/FLACLevel"),
-                        wxT("5"), flacLevelNames, flacLevelLabels);
-            S.TieChoice(_("Bit depth:"), wxT("/FileFormats/FLACBitDepth"),
-                        wxT("16"), flacBitDepthNames, flacBitDepthLabels);
+            S.TieChoice( _("Level:"), FLACLevel);
+            S.TieChoice( _("Bit depth:"), FLACBitDepth);
          }
          S.EndMultiColumn();
       }

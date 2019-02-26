@@ -206,12 +206,6 @@ public:
       const wxString &Prompt,
       const wxString &SettingName,
       const bool bDefault) override;
-   wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const wxArrayStringEx &Choices,
-      const wxArrayStringEx & InternalChoices ) override;
 
    wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
@@ -280,27 +274,6 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    AddBool( bDefault, "default"  );
    EndStruct();
    return ShuttleGui::TieCheckBoxOnRight( Prompt, SettingName, bDefault );
-}
-wxChoice * ShuttleGuiGetDefinition::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const wxArrayStringEx &Choices,
-   const wxArrayStringEx & InternalChoices )
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "enum", "type" );
-   AddItem( Default, "default"  );
-   StartField( "enum" );
-   StartArray();
-   for( size_t i=0;i<Choices.size(); i++ )
-      AddItem( InternalChoices[i] );
-   EndArray();
-   EndField();
-   EndStruct();
-   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
 }
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const wxString &Prompt,

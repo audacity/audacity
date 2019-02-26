@@ -56,20 +56,22 @@ const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
 
 void TracksBehaviorsPrefs::Populate()
 {
-   mSoloCodes.push_back(wxT("Simple"));
-   mSoloCodes.push_back(wxT("Multi"));
-   mSoloCodes.push_back(wxT("None"));
-
-   mSoloChoices.push_back(XO("Simple"));
-   mSoloChoices.push_back(XO("Multi-track"));
-   mSoloChoices.push_back(XO("None"));
-
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
 }
+
+ChoiceSetting TracksBehaviorsSolo{
+   wxT("/GUI/Solo"),
+   {
+      ByColumns,
+      { XO("Simple"),  XO("Multi-track"), XO("None") },
+      { wxT("Simple"), wxT("Multi"),      wxT("None") }
+   },
+   0, // "Simple"
+};
 
 void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
@@ -113,11 +115,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("Solo &Button:"),
-                     wxT("/GUI/Solo"),
-                     wxT("Standard"),
-                     mSoloChoices,
-                     mSoloCodes);
+         S.TieChoice( _("Solo &Button:"), TracksBehaviorsSolo);
       }
       S.EndMultiColumn();
    }
