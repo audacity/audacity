@@ -22,7 +22,6 @@
 #include <wx/string.h>
 
 #include "audacity/EffectInterface.h"
-#include "../PluginManager.h"
 #include "Effect.h"
 
 #include <unordered_map>

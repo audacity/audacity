@@ -41,6 +41,7 @@ This class now lists
 
 #include "../prefs/PrefsDialog.h"
 #include "../Shuttle.h"
+#include "../PluginManager.h"
 #include "../ShuttleGui.h"
 
 enum {

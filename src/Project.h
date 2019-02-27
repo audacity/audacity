@@ -157,7 +157,6 @@ class ImportXMLTagHandler final : public XMLTagHandler
 };
 
 class EffectPlugs;
-typedef wxArrayString PluginIDList;
 class CommandContext;
 class CommandManager;
 class Track;

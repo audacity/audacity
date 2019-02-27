@@ -19,7 +19,6 @@
 #include <vector>
 
 #include "audacity/ModuleInterface.h"
-#include "PluginManager.h"
 
 class CommandHandler;
 
@@ -73,6 +72,7 @@ using ModuleInterfaceHandle = std::unique_ptr<
 typedef std::map<wxString, ModuleMain *> ModuleMainMap;
 typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
+using PluginIDs = wxArrayString;
 
 class ModuleManager final : public ModuleManagerInterface
 {

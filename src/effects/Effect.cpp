@@ -47,6 +47,7 @@ greater use in future.
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../WaveTrack.h"

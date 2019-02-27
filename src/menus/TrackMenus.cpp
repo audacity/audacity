@@ -6,6 +6,7 @@
 
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
