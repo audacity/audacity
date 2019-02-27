@@ -577,7 +577,7 @@ void CommandManager::PurgeData()
 
    mCommandNameHash.clear();
    mCommandKeyHash.clear();
-   mCommandIDHash.clear();
+   mCommandNumericIDHash.clear();
 
    mCurrentMenuName = COMMAND;
    mCurrentID = 17000;
@@ -1064,7 +1064,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
    // New variable
    CommandListEntry *entry = &*mCommandList.back();
-   mCommandIDHash[entry->id] = entry;
+   mCommandNumericIDHash[entry->id] = entry;
 
 #if defined(__WXDEBUG__)
    prev = mCommandNameHash[entry->name];
@@ -1192,7 +1192,7 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
 
          // This menu item is not necessarily in the same menu, because
          // multi-items can be spread across multiple sub menus
-         CommandListEntry *multiEntry = mCommandIDHash[ID];
+         CommandListEntry *multiEntry = mCommandNumericIDHash[ID];
          if (multiEntry) {
             wxMenuItem *item = multiEntry->menu->FindItem(ID);
 
@@ -1554,7 +1554,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 #include "../prefs/KeyConfigPrefs.h"
 bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 {
-   CommandListEntry *entry = mCommandIDHash[id];
+   CommandListEntry *entry = mCommandNumericIDHash[id];
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
    if (::wxGetMouseState().ShiftDown()) {
@@ -1728,9 +1728,9 @@ void CommandManager::GetAllCommandData(
    }
 }
 
-CommandID CommandManager::GetNameFromID(int id)
+CommandID CommandManager::GetNameFromNumericID(int id)
 {
-   CommandListEntry *entry = mCommandIDHash[id];
+   CommandListEntry *entry = mCommandNumericIDHash[id];
    if (!entry)
       return {};
    return entry->name;

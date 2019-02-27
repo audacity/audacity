@@ -653,7 +653,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       item = list.Item(lndx)->GetData();
       Label = item->GetItemLabelText();
-      Name = pMan->GetNameFromID( item->GetId() );
+      Name = pMan->GetNameFromNumericID( item->GetId() );
       Accel = item->GetItemLabel();
       if( Accel.Contains("\t") )
          Accel = Accel.AfterLast('\t');

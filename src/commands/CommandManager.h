@@ -95,7 +95,7 @@ using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
 
 using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;
 using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
-using CommandIDHash = std::unordered_map<int, CommandListEntry*>;
+using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
 
 class AudacityProject;
 class CommandContext;
@@ -253,7 +253,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 #endif
       bool includeMultis);
 
-   CommandID GetNameFromID( int id );
+   // Each command is assigned a numerical ID for use in wxMenu and wxEvent,
+   // which need not be the same across platforms or sessions
+   CommandID GetNameFromNumericID( int id );
 
    wxString GetLabelFromName(const CommandID &name);
    wxString GetPrefixedLabelFromName(const CommandID &name);
@@ -372,7 +374,7 @@ private:
    CommandList  mCommandList;
    CommandNameHash  mCommandNameHash;
    CommandKeyHash mCommandKeyHash;
-   CommandIDHash  mCommandIDHash;
+   CommandNumericIDHash  mCommandNumericIDHash;
    int mCurrentID;
    int mXMLKeysRead;
 
