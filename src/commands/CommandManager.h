@@ -94,7 +94,7 @@ using SubMenuList = std::vector < std::unique_ptr<SubMenuListEntry> >;
 using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
 
 using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;
-using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
+using CommandNameHash = std::unordered_map<CommandID, CommandListEntry*>;
 using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
 
 class AudacityProject;

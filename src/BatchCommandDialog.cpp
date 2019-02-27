@@ -154,7 +154,11 @@ void MacroCommandDialog::OnChoice(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
-   mSelectedCommand = mInternalCommandName.Strip(wxString::both);
+   mSelectedCommand = mInternalCommandName
+      // .Strip(wxString::both) // PRL: used to do this, here only,
+         // but ultimately mSelectedCommand is looked up in the catalog without
+         // similar adjustment of whitespace in the comparison
+   ;
    mSelectedParameters = mParameters->GetValue().Strip(wxString::trailing);
    EndModal(true);
 }
@@ -195,9 +199,12 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
       params = em.GetDefaultPreset(ID);
    }
 
+   // using GET to expose a CommandID to the user!
    // Cryptic command and category.
    // Later we can put help information there, perhaps.
-   mDetails->SetValue( mInternalCommandName + "\r\n" + command.category  );
+   // Macro command details are one place that we do expose Identifier
+   // to (more sophisticated) users
+   mDetails->SetValue( mInternalCommandName.GET() + "\r\n" + command.category  );
    mParameters->SetValue(params);
 }
 
@@ -231,12 +238,15 @@ void MacroCommandDialog::SetCommandAndParams(const CommandID &Command, const wxS
 
    mInternalCommandName = Command;
    if (iter == mCatalog.end())
-      // Expose an internal name to the user in default of any friendly name
-      // -- AVOID THIS!
-      mCommand->SetValue( Command );
+      // uh oh, using GET to expose an internal name to the user!
+      // in default of any better friendly name
+      mCommand->SetValue( Command.GET() );
    else {
       mCommand->SetValue( iter->name.Translated() );
-      mDetails->SetValue( iter->name.Internal() + "\r\n" + iter->category  );
+      // using GET to expose a CommandID to the user!
+      // Macro command details are one place that we do expose Identifier
+      // to (more sophisticated) users
+      mDetails->SetValue( iter->name.Internal().GET() + "\r\n" + iter->category  );
       mChoices->SetItemState(iter - mCatalog.begin(),
                              wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 

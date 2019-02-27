@@ -235,7 +235,8 @@ bool MacroCommands::WriteMacro(const wxString & macro)
    // Copy over the commands
    int lines = mCommandMacro.size();
    for (int i = 0; i < lines; i++) {
-      tf.AddLine(mCommandMacro[i] + wxT(":") + mParamsMacro[ i ]);
+      // using GET to serialize macro definition to a text file
+      tf.AddLine(mCommandMacro[i].GET() + wxT(":") + mParamsMacro[ i ]);
    }
 
    // Write the macro
@@ -346,11 +347,17 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             wxString squashed = label;
             squashed.Replace( " ", "" );
 
-            suffix = squashed.length() < wxMin( 18, mNames[i].length());
+            // uh oh, using GET for dubious comparison of (lengths of)
+            // user-visible name and internal CommandID!
+            // and doing this only for English locale!
+            suffix = squashed.length() < wxMin( 18, mNames[i].GET().length());
          }
 
          if( suffix )
-            label = label + " (" + mNames[i] + ")";
+            // uh oh, using GET to expose CommandID to the user, as a
+            // disambiguating suffix on a name, but this is only ever done if
+            // the locale is English!
+            label = label + " (" + mNames[i].GET() + ")";
 
          commands.push_back(
             {
@@ -759,11 +766,10 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    CommandContext const * pContext)
 {
 
-   unsigned int i;
    // Test for a special command.
    // CLEANSPEECH remnant
-   for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
-      if( command.IsSameAs( SpecialCommands[i].second, false) )
+   for( size_t i = 0; i < WXSIZEOF( SpecialCommands ); ++i ) {
+      if( command == SpecialCommands[i].second )
          return ApplySpecialCommand( i, friendlyCommand, command, params );
    }
    // end CLEANSPEECH remnant
@@ -860,7 +866,10 @@ bool MacroCommands::ApplyMacro(
       const auto &command = mCommandMacro[i];
       auto iter = catalog.ByCommandId(command);
       auto friendly = (iter == catalog.end())
-         ? command // Expose internal name to user, in default of a better one!
+         ?
+           // uh oh, using GET to expose an internal name to the user!
+           // in default of any better friendly name
+           command.GET()
          : iter->name.Translated();
       if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;

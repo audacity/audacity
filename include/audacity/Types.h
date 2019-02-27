@@ -286,8 +286,11 @@ using FileExtensions = wxArrayStringEx;
 using FilePath = wxString;
 using FilePaths = wxArrayStringEx;
 
-using CommandID = wxString;
-using CommandIDs = std::vector< CommandID >;
+// Identifies a menu command or macro.
+// Case-insensitive comparison
+struct CommandIdTag;
+using CommandID = TaggedIdentifier< CommandIdTag, false >;
+using CommandIDs = std::vector<CommandID>;
 
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples

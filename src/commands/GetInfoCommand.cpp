@@ -673,7 +673,9 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       context.AddItem( Label, "label" );
       context.AddItem( Accel, "accel" );
       if( !Name.empty() )
-         context.AddItem( Name, "id" );// It is called Scripting ID outside Audacity.
+         // using GET to expose CommandID in results of GetInfoCommand...
+         // PRL asks, is that all right?
+         context.AddItem( Name.GET(), "id" );// It is called Scripting ID outside Audacity.
       context.EndStruct();
 
       if (item->IsSubMenu()) {

@@ -996,7 +996,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       // the name in prefs is the category name plus the effect name.
       // This feature is not used for built-in effects.
       if (multi)
-         name = wxString::Format(wxT("%s_%s"), name, nameSuffix);
+         name = CommandID{ { name, nameSuffix }, wxT('_') };
 
       // wxMac 2.5 and higher will do special things with the
       // Preferences, Exit (Quit), and About menu items,
@@ -1052,9 +1052,11 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
       // Key from preferences overrides the default key given
       gPrefs->SetPath(wxT("/NewKeys"));
-      if (gPrefs->HasEntry(entry->name)) {
+      // using GET to interpret CommandID as a config path component
+      const auto &path = entry->name.GET();
+      if (gPrefs->HasEntry(path)) {
          entry->key =
-            NormalizedKeyString{ gPrefs->ReadObject(entry->name, entry->key) };
+            NormalizedKeyString{ gPrefs->ReadObject(path, entry->key) };
       }
       gPrefs->SetPath(wxT("/"));
 
@@ -1075,11 +1077,14 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       if( prev->label != entry->label )
       {
          wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name,
+                    // using GET in a log message for devs' eyes only
+                    entry->name.GET(),
                     prev->label.BeforeFirst(wxT('\t')),
                     entry->label.BeforeFirst(wxT('\t')));
          wxFAIL_MSG(wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name,
+                    // using GET in an assertion violation message for devs'
+                    // eyes only
+                    entry->name.GET(),
                     prev->label.BeforeFirst(wxT('\t')),
                     entry->label.BeforeFirst(wxT('\t'))));
       }
@@ -1199,8 +1204,9 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
          if (item) {
             item->Enable(enabled);
          } else {
+            // using GET in a log message for devs' eyes only
             wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
-                ID, (const wxChar*)entry->name);
+                ID, entry->name.GET());
          }
          } else {
             wxLogDebug(wxT("Warning: Menu entry with id %i not in hash"), ID);
@@ -1242,8 +1248,9 @@ bool CommandManager::GetEnabled(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
+      // using GET in a log message for devs' eyes only
       wxLogDebug(wxT("Warning: command doesn't exist: '%s'"),
-                 (const wxChar*)name);
+                 name.GET());
       return false;
    }
    return entry->enabled;
@@ -1584,7 +1591,11 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
       if (!entry->multi)
       {
          // Testing against labelPrefix too allows us to call Nyquist functions by name.
-         if( Str.IsSameAs( entry->name, false ) || Str.IsSameAs( entry->labelPrefix, false ))
+         if( Str == entry->name ||
+            // PRL:  uh oh, mixing internal string (Str) with user-visible
+            // (labelPrefix, which was initialized from a user-visible
+            // sub-menu name)
+            Str == entry->labelPrefix )
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }
@@ -1592,7 +1603,7 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
       else
       {
          // Handle multis too...
-         if( Str.IsSameAs( entry->name, false ) )
+         if( Str == entry->name )
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }
@@ -1612,7 +1623,7 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str, false))
+      if (em.GetCommandIdentifier(plug->GetID()) == Str)
       {
          return PluginActions::DoEffect(
             plug->GetID(), context,

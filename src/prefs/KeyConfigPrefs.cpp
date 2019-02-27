@@ -657,7 +657,8 @@ bool KeyConfigPrefs::Commit()
    bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"), false);
    for (size_t i = 0; i < mNames.size(); i++) {
       const auto &dkey = bFull ? mDefaultKeys[i] : mStandardDefaultKeys[i];
-      wxString name = wxT("/NewKeys/") + mNames[i];
+      // using GET to interpret CommandID as a config path component
+      auto name = wxT("/NewKeys/") + mNames[i].GET();
       const auto &key = mNewKeys[i];
 
       if (gPrefs->HasEntry(name)) {

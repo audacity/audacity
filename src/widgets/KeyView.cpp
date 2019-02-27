@@ -252,7 +252,7 @@ KeyView::GetIndexByName(const CommandID & name) const
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (name.CmpNoCase(mNodes[i].name) == 0)
+      if (name == mNodes[i].name)
       {
          return mNodes[i].index;
       }

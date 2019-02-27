@@ -441,7 +441,8 @@ void ScreenshotCommand::CapturePreferences(
       const CommandContext projectContext( *pProject );
       if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
-         wxLogDebug("Command %s not found", Command );
+         // using GET in a log message for devs' eyes only
+         wxLogDebug("Command %s not found", Command.GET() );
       }
       // This sleep is not needed, but gives user a chance to see the
       // dialogs as they whizz by.
