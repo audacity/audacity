@@ -1652,12 +1652,12 @@ void AudacityProject::AS_SetSnapTo(int snap)
    RedrawProject();
 }
 
-const NumericFormatId & AudacityProject::AS_GetSelectionFormat()
+const NumericFormatSymbol & AudacityProject::AS_GetSelectionFormat()
 {
    return GetSelectionFormat();
 }
 
-void AudacityProject::AS_SetSelectionFormat(const NumericFormatId & format)
+void AudacityProject::AS_SetSelectionFormat(const NumericFormatSymbol & format)
 {
    mSelectionFormat = format;
 
@@ -1675,12 +1675,12 @@ double AudacityProject::SSBL_GetRate() const
       mTracks->Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
 }
 
-const NumericFormatId & AudacityProject::SSBL_GetFrequencySelectionFormatName()
+const NumericFormatSymbol & AudacityProject::SSBL_GetFrequencySelectionFormatName()
 {
    return GetFrequencySelectionFormatName();
 }
 
-void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatId & formatName)
+void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
    mFrequencySelectionFormatName = formatName;
 
@@ -1689,12 +1689,12 @@ void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatId
    gPrefs->Flush();
 }
 
-const NumericFormatId & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
+const NumericFormatSymbol & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
 {
    return GetBandwidthSelectionFormatName();
 }
 
-void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
+void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
    mBandwidthSelectionFormatName = formatName;
 
@@ -1721,12 +1721,12 @@ void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, 
 #endif
 }
 
-const NumericFormatId & AudacityProject::GetFrequencySelectionFormatName() const
+const NumericFormatSymbol & AudacityProject::GetFrequencySelectionFormatName() const
 {
    return mFrequencySelectionFormatName;
 }
 
-void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatId & formatName)
+void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
    SSBL_SetFrequencySelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1736,12 +1736,12 @@ void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatId & fo
 #endif
 }
 
-const NumericFormatId & AudacityProject::GetBandwidthSelectionFormatName() const
+const NumericFormatSymbol & AudacityProject::GetBandwidthSelectionFormatName() const
 {
    return mBandwidthSelectionFormatName;
 }
 
-void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
+void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
    SSBL_SetBandwidthSelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1751,7 +1751,7 @@ void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatId & fo
 #endif
 }
 
-void AudacityProject::SetSelectionFormat(const NumericFormatId & format)
+void AudacityProject::SetSelectionFormat(const NumericFormatSymbol & format)
 {
    AS_SetSelectionFormat(format);
    if (GetSelectionBar()) {
@@ -1759,7 +1759,7 @@ void AudacityProject::SetSelectionFormat(const NumericFormatId & format)
    }
 }
 
-const NumericFormatId & AudacityProject::GetSelectionFormat() const
+const NumericFormatSymbol & AudacityProject::GetSelectionFormat() const
 {
    return mSelectionFormat;
 }

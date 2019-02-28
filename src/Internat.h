@@ -20,6 +20,7 @@
 
 #ifndef IN_RC
 #include "Audacity.h"
+#include "audacity/Types.h"
 
 class wxString;
 
@@ -181,7 +182,7 @@ private:
 
 class ComponentInterfaceSymbol;
 wxArrayString LocalizedStrings(
-   const ComponentInterfaceSymbol strings[], size_t nStrings);
+   const EnumValueSymbol strings[], size_t nStrings);
 
 // This object pairs an internal string, maybe empty, with a translated string.
 // Any internal string may be written to configuration or other files and,

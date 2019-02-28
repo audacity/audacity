@@ -44,7 +44,7 @@ explicitly code all three.
 // Relative to project and relative to selection cover MOST options, since you can already
 // set a selection to a clip.
 const int nRelativeTos =6;
-static const ComponentInterfaceSymbol kRelativeTo[nRelativeTos] =
+static const EnumValueSymbol kRelativeTo[nRelativeTos] =
 {
    { wxT("ProjectStart"), XO("Project Start") },
    { XO("Project") },
@@ -167,7 +167,7 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
 }
 
 const int nModes =3;
-static const ComponentInterfaceSymbol kModes[nModes] =
+static const EnumValueSymbol kModes[nModes] =
 {
    // These are acceptable dual purpose internal/visible names
 

@@ -183,7 +183,7 @@ ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
    return XO("Builtin Commands");
 }
 
-ComponentInterfaceSymbol BuiltinCommandsModule::GetVendor()
+VendorSymbol BuiltinCommandsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

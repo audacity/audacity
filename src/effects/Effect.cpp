@@ -178,7 +178,7 @@ ComponentInterfaceSymbol Effect::GetSymbol()
    return {};
 }
 
-ComponentInterfaceSymbol Effect::GetVendor()
+VendorSymbol Effect::GetVendor()
 {
    if (mClient)
    {
@@ -208,11 +208,11 @@ wxString Effect::GetDescription()
    return wxEmptyString;
 }
 
-ComponentInterfaceSymbol Effect::GetFamilyId()
+EffectFamilySymbol Effect::GetFamily()
 {
    if (mClient)
    {
-      return mClient->GetFamilyId();
+      return mClient->GetFamily();
    }
 
    // Unusually, the internal and visible strings differ for the built-in
@@ -732,12 +732,12 @@ double Effect::GetDuration()
    return mDuration;
 }
 
-NumericFormatId Effect::GetDurationFormat()
+NumericFormatSymbol Effect::GetDurationFormat()
 {
    return mDurationFormat;
 }
 
-NumericFormatId Effect::GetSelectionFormat()
+NumericFormatSymbol Effect::GetSelectionFormat()
 {
    return GetActiveProject()->GetSelectionFormat();
 }
@@ -2470,7 +2470,7 @@ void Effect::Preview(bool dryOnly)
    wxWindow *FocusDialog = wxWindow::FindFocus();
 
    double previewDuration;
-   bool isNyquist = GetFamilyId() == NYQUISTEFFECTS_FAMILY;
+   bool isNyquist = GetFamily() == NYQUISTEFFECTS_FAMILY;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
@@ -3317,7 +3317,7 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect && mEffect->GetFamilyId() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().empty())) {
+   if (mEffect && mEffect->GetFamily() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().empty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
@@ -3409,7 +3409,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       auto sub = std::make_unique<wxMenu>();
 
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
-                  ::wxGetTranslation( mEffect->GetFamilyId().Translation() )));
+                  ::wxGetTranslation( mEffect->GetFamily().Translation() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));

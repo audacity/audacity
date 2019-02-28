@@ -37,10 +37,10 @@
 class Enums {
 public:
    static const size_t    NumDbChoices;
-   static const ComponentInterfaceSymbol DbChoices[];
+   static const EnumValueSymbol DbChoices[];
 };
 
-const ComponentInterfaceSymbol Enums::DbChoices[] = {
+const EnumValueSymbol Enums::DbChoices[] = {
    // Table of text values, only for reading what was stored in legacy config
    // files.
    // It was inappropriate to make this a discrete choice control.
@@ -74,7 +74,7 @@ enum kActions
    nActions
 };
 
-static const ComponentInterfaceSymbol kActionStrings[nActions] =
+static const EnumValueSymbol kActionStrings[nActions] =
 {
    { XO("Truncate Detected Silence") },
    { XO("Compress Excess Silence") }

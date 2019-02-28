@@ -50,8 +50,6 @@ class NumericField;
 
 class DigitInfo;
 
-using NumericFormatId = ComponentInterfaceSymbol;
-
 class NumericConverter /* not final */
 {
 public:
@@ -62,16 +60,16 @@ public:
       BANDWIDTH,
    };
 
-   static NumericFormatId DefaultSelectionFormat();
-   static NumericFormatId TimeAndSampleFormat();
-   static NumericFormatId SecondsFormat();
-   static NumericFormatId HundredthsFormat();
-   static NumericFormatId HertzFormat();
+   static NumericFormatSymbol DefaultSelectionFormat();
+   static NumericFormatSymbol TimeAndSampleFormat();
+   static NumericFormatSymbol SecondsFormat();
+   static NumericFormatSymbol HundredthsFormat();
+   static NumericFormatSymbol HertzFormat();
    
-   static NumericFormatId LookupFormat( Type type, const wxString& id);
+   static NumericFormatSymbol LookupFormat( Type type, const wxString& id);
 
    NumericConverter(Type type,
-                    const NumericFormatId & formatName = {},
+                    const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
 
@@ -92,7 +90,7 @@ private:
 
 public:
    void PrintDebugInfo();
-   void SetFormatName(const NumericFormatId & formatName);
+   void SetFormatName(const NumericFormatSymbol & formatName);
    void SetFormatString(const wxString & formatString);
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -108,9 +106,9 @@ public:
    int GetFormatIndex();
 
    int GetNumBuiltins();
-   NumericFormatId GetBuiltinName(const int index);
+   NumericFormatSymbol GetBuiltinName(const int index);
    wxString GetBuiltinFormat(const int index);
-   wxString GetBuiltinFormat(const NumericFormatId & name);
+   wxString GetBuiltinFormat(const NumericFormatSymbol & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -182,7 +180,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    NumericTextCtrl(wxWindow *parent, wxWindowID winid,
                    NumericConverter::Type type,
-                   const NumericFormatId &formatName = {},
+                   const NumericFormatSymbol &formatName = {},
                    double value = 0.0,
                    double sampleRate = 44100,
                    const Options &options = {},
@@ -197,7 +195,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
    void SetFormatString(const wxString & formatString);
-   void SetFormatName(const NumericFormatId & formatName);
+   void SetFormatName(const NumericFormatSymbol & formatName);
 
    void SetFieldFocus(int /* digit */);
 

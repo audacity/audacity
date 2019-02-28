@@ -132,10 +132,10 @@ void SpectralSelectionBar::Populate()
 
    auto frequencyFormatName = mListener
       ? mListener->SSBL_GetFrequencySelectionFormatName()
-      : NumericFormatId{};
+      : NumericFormatSymbol{};
    auto bandwidthFormatName = mListener
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
-      : NumericFormatId{};
+      : NumericFormatSymbol{};
 
    wxFlexGridSizer *mainSizer;
    Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0,wxALIGN_TOP | wxLEFT | wxTOP, 5);
@@ -448,7 +448,7 @@ void SpectralSelectionBar::SetFrequencies(double bottom, double top)
    ValuesToControls();
 }
 
-void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatId & formatName)
+void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
    NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
    frequencyCtrl->SetFormatName(formatName);
@@ -458,7 +458,7 @@ void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatId
    OnUpdate(e);
 }
 
-void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
+void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
    if (mbCenterAndWidth) {
       mWidthCtrl->SetFormatName(formatName);

@@ -115,7 +115,7 @@ private:
    // private effect parameters
    int      mToVinyl;         // to standard vinyl speed (rpm)
    double   mToLength;        // target length of selection
-   NumericFormatId mFormat;          // time control format
+   NumericFormatSymbol mFormat;          // time control format
 
    DECLARE_EVENT_TABLE()
 };

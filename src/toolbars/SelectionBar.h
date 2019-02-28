@@ -39,8 +39,6 @@ class wxStaticText;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-using NumericFormatId = ComponentInterfaceSymbol;
-
 class SelectionBar final : public ToolBar {
 
  public:
@@ -56,7 +54,7 @@ class SelectionBar final : public ToolBar {
 
    void SetTimes(double start, double end, double audio);
    void SetSnapTo(int);
-   void SetSelectionFormat(const NumericFormatId & format);
+   void SetSelectionFormat(const NumericFormatSymbol & format);
    void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;

@@ -57,7 +57,7 @@ enum kTableType
    nTableTypes
 };
 
-static const ComponentInterfaceSymbol kTableTypeStrings[nTableTypes] =
+static const EnumValueSymbol kTableTypeStrings[nTableTypes] =
 {
    { XO("Hard Clipping") },
    { XO("Soft Clipping") },

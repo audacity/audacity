@@ -124,7 +124,7 @@ ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
    return XO("LADSPA Effects");
 }
 
-ComponentInterfaceSymbol LadspaEffectsModule::GetVendor()
+VendorSymbol LadspaEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -625,7 +625,7 @@ ComponentInterfaceSymbol LadspaEffect::GetSymbol()
    return LAT1CTOWX(mData->Name);
 }
 
-ComponentInterfaceSymbol LadspaEffect::GetVendor()
+VendorSymbol LadspaEffect::GetVendor()
 {
    return { LAT1CTOWX(mData->Maker) };
 }
@@ -664,7 +664,7 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-ComponentInterfaceSymbol LadspaEffect::GetFamilyId()
+EffectFamilySymbol LadspaEffect::GetFamily()
 {
    return LADSPAEFFECTS_FAMILY;
 }

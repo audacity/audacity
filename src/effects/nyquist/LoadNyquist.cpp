@@ -106,7 +106,7 @@ ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
    return XO("Nyquist Effects");
 }
 
-ComponentInterfaceSymbol NyquistEffectsModule::GetVendor()
+VendorSymbol NyquistEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

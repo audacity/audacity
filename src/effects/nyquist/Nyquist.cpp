@@ -206,7 +206,7 @@ ComponentInterfaceSymbol NyquistEffect::GetSymbol()
    return mName;
 }
 
-ComponentInterfaceSymbol NyquistEffect::GetVendor()
+VendorSymbol NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {
@@ -262,7 +262,7 @@ EffectType NyquistEffect::GetClassification()
    return mType;
 }
 
-ComponentInterfaceSymbol NyquistEffect::GetFamilyId()
+EffectFamilySymbol NyquistEffect::GetFamily()
 {
    return NYQUISTEFFECTS_FAMILY;
 }
@@ -1531,9 +1531,9 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
-std::vector<ComponentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
+std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
 {
-   std::vector<ComponentInterfaceSymbol> results;
+   std::vector<EnumValueSymbol> results;
    if (text[0] == wxT('(')) {
       // New style:  expecting a Lisp-like list of strings
       Tokenizer tzer;

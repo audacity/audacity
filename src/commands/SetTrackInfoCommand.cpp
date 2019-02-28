@@ -234,7 +234,7 @@ enum kColours
    nColours
 };
 
-static const ComponentInterfaceSymbol kColourStrings[nColours] =
+static const EnumValueSymbol kColourStrings[nColours] =
 {
    { wxT("Color0"), XO("Color 0") },
    { wxT("Color1"), XO("Color 1") },
@@ -250,7 +250,7 @@ enum kDisplayTypes
    nDisplayTypes
 };
 
-static const ComponentInterfaceSymbol kDisplayTypeStrings[nDisplayTypes] =
+static const EnumValueSymbol kDisplayTypeStrings[nDisplayTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Waveform") },
@@ -264,7 +264,7 @@ enum kScaleTypes
    nScaleTypes
 };
 
-static const ComponentInterfaceSymbol kScaleTypeStrings[nScaleTypes] =
+static const EnumValueSymbol kScaleTypeStrings[nScaleTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
@@ -280,7 +280,7 @@ enum kZoomTypes
    nZoomTypes
 };
 
-static const ComponentInterfaceSymbol kZoomTypeStrings[nZoomTypes] =
+static const EnumValueSymbol kZoomTypeStrings[nZoomTypes] =
 {
    { XO("Reset") },
    { wxT("Times2"), XO("Times 2") },

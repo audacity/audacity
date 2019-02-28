@@ -78,7 +78,7 @@ public:
 
    wxString GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
-   ComponentInterfaceSymbol GetVendor() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

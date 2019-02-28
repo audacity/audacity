@@ -80,7 +80,7 @@ AudacityCommand::~AudacityCommand()
 
 
 wxString AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
-ComponentInterfaceSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
+VendorSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
 wxString AudacityCommand::GetVersion(){     return AUDACITY_VERSION_STRING;}
 
 

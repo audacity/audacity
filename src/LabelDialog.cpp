@@ -98,8 +98,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          int index,
                          ViewInfo &viewinfo,
                          double rate,
-                         const NumericFormatId & format,
-                         const NumericFormatId &freqFormat)
+                         const NumericFormatSymbol & format,
+                         const NumericFormatSymbol &freqFormat)
 : wxDialogWrapper(parent,
            wxID_ANY,
            _("Edit Labels"),

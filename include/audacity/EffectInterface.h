@@ -59,8 +59,6 @@ typedef enum EffectType : int
    EffectTypeTool,
 } EffectType;
 
-using NumericFormatId = ComponentInterfaceSymbol;
-
 
 /*************************************************************************************//**
 
@@ -80,7 +78,7 @@ public:
    // Classification determines which menu it appears in.
    virtual EffectType GetClassification() { return GetType();};
 
-   virtual ComponentInterfaceSymbol GetFamilyId() = 0;
+   virtual EffectFamilySymbol GetFamily() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.
@@ -120,7 +118,7 @@ public:
 
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
-   virtual NumericFormatId GetDurationFormat() = 0;
+   virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 
    virtual bool Apply() = 0;

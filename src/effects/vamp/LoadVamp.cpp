@@ -80,7 +80,7 @@ ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
    return XO("Vamp Effects");
 }
 
-ComponentInterfaceSymbol VampEffectsModule::GetVendor()
+VendorSymbol VampEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

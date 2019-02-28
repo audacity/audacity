@@ -39,7 +39,7 @@ enum kInterpolations
    nInterpolations
 };
 
-static const ComponentInterfaceSymbol kInterStrings[nInterpolations] =
+static const EnumValueSymbol kInterStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
@@ -55,7 +55,7 @@ enum kWaveforms
    nWaveforms
 };
 
-static const ComponentInterfaceSymbol kWaveStrings[nWaveforms] =
+static const EnumValueSymbol kWaveStrings[nWaveforms] =
 {
    { XO("Sine") },
    { XO("Square") },

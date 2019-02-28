@@ -29,7 +29,7 @@
 #include "../Internat.h"
 
 NumericEditor::NumericEditor
-   (NumericConverter::Type type, const NumericFormatId &format, double rate)
+   (NumericConverter::Type type, const NumericFormatSymbol &format, double rate)
 {
    mType = type;
    mFormat = format;
@@ -131,7 +131,7 @@ wxString NumericEditor::GetValue() const
    return wxString::Format(wxT("%g"), GetNumericTextControl()->GetValue());
 }
 
-NumericFormatId NumericEditor::GetFormat() const
+NumericFormatSymbol NumericEditor::GetFormat() const
 {
    return mFormat;
 }
@@ -141,7 +141,7 @@ double NumericEditor::GetRate() const
    return mRate;
 }
 
-void NumericEditor::SetFormat(const NumericFormatId &format)
+void NumericEditor::SetFormat(const NumericFormatSymbol &format)
 {
    mFormat = format;
 }

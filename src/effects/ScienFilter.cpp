@@ -86,7 +86,7 @@ enum kTypes
    nTypes
 };
 
-static const ComponentInterfaceSymbol kTypeStrings[nTypes] =
+static const EnumValueSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -103,7 +103,7 @@ enum kSubTypes
    nSubTypes
 };
 
-static const ComponentInterfaceSymbol kSubTypeStrings[nSubTypes] =
+static const EnumValueSymbol kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },

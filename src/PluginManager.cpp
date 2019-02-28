@@ -1228,7 +1228,7 @@ void PluginDescriptor::SetValid(bool valid)
 
 // Effects
 
-wxString PluginDescriptor::GetEffectFamilyId() const
+wxString PluginDescriptor::GetEffectFamily() const
 {
    return mEffectFamily;
 }
@@ -1263,7 +1263,7 @@ bool PluginDescriptor::IsEffectAutomatable() const
    return mEffectAutomatable;
 }
 
-void PluginDescriptor::SetEffectFamilyId(const wxString & family)
+void PluginDescriptor::SetEffectFamily(const wxString & family)
 {
    mEffectFamily = family;
 }
@@ -1445,7 +1445,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
    plug.SetProviderID(PluginManager::GetID(provider));
 
    plug.SetEffectType(effect->GetClassification());
-   plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
+   plug.SetEffectFamily(effect->GetFamily().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2146,7 +2146,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             {
                continue;
             }
-            plug.SetEffectFamilyId(strVal);
+            plug.SetEffectFamily(strVal);
 
             // Is it a default (above the line) effect and bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTDEFAULT, &boolVal))
@@ -2316,7 +2316,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
                stype = KEY_EFFECTTYPE_HIDDEN;
 
             pRegistry->Write(KEY_EFFECTTYPE, stype);
-            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamilyId());
+            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
             pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
             pRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
@@ -2455,7 +2455,7 @@ const PluginID & PluginManager::RegisterPlugin(EffectDefinitionInterface *effect
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, type);
 
    plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
+   plug.SetEffectFamily(effect->GetFamily().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2517,7 +2517,7 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(int type)
          bool familyEnabled = true;
          if( (plugType & PluginTypeEffect) != 0)
             // This preference may be written by EffectsPrefs
-            gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
+            gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
          if (familyEnabled)
             return &mPluginsIter->second;
       }
@@ -2537,7 +2537,7 @@ const PluginDescriptor *PluginManager::GetNextPlugin(int type)
          bool familyEnabled = true;
          if( (plugType & PluginTypeEffect) != 0)
             // This preference may be written by EffectsPrefs
-            gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
+            gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
          if (familyEnabled)
             return &mPluginsIter->second;
       }
@@ -2556,7 +2556,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
 
       bool familyEnabled;
       // This preference may be written by EffectsPrefs
-      gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
+      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
@@ -2580,7 +2580,7 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
       // This preference may be written by EffectsPrefs
-      gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
+      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
@@ -2673,7 +2673,7 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
-                           effect->GetFamilyId().Internal(),
+                           effect->GetFamily().Internal(),
                            effect->GetVendor().Internal(),
                            effect->GetSymbol().Internal(),
                            effect->GetPath());
@@ -2980,7 +2980,7 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
    
    wxString id = GetPluginTypeString(plug.GetPluginType()) +
                  wxT("_") +
-                 plug.GetEffectFamilyId() + // is empty for non-Effects
+                 plug.GetEffectFamily() + // is empty for non-Effects
                  wxT("_") +
                  plug.GetVendor() +
                  wxT("_") +

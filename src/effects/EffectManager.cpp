@@ -156,7 +156,7 @@ wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
    if (effect)
-      return effect->GetFamilyId().Translation();
+      return effect->GetFamily().Translation();
    return {};
 }
 

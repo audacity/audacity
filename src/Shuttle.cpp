@@ -342,12 +342,12 @@ void ShuttleParams::Define( float & var,    const wxChar * key, const float vdef
 void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
 void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
 void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const ComponentInterfaceSymbol strings[], size_t nStrings ){;};
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings ){;};
 
 
 
 /*
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const ComponentInterfaceSymbol strings[], size_t nStrings )
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings )
 {
 }
 */
@@ -402,7 +402,7 @@ void ShuttleGetAutomation::Define( wxString &var, const wxChar * key, const wxSt
 }
 
 
-void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const ComponentInterfaceSymbol strings[], size_t nStrings )
+void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings )
 {
    if( !ShouldSet() ) return;
    mpEap->Write(key, strings[var].Internal());
@@ -512,7 +512,7 @@ void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxSt
 }
 
 
-void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const ComponentInterfaceSymbol strings[], size_t nStrings )
+void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings )
 {
    CouldGet( key );
    if( !bOK )
@@ -629,7 +629,7 @@ void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxSt
 
 void ShuttleGetDefinition::DefineEnum( int &var,
    const wxChar * key, const int vdefault,
-   const ComponentInterfaceSymbol strings[], size_t nStrings )
+   const EnumValueSymbol strings[], size_t nStrings )
 {
    StartStruct();
    AddItem( wxString(key), "key" );

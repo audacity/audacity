@@ -31,7 +31,6 @@ class GridAx;
 #endif
 
 class NumericTextCtrl;
-using NumericFormatId = ComponentInterfaceSymbol;
 
 /**********************************************************************//**
 
@@ -47,7 +46,7 @@ class NumericEditor /* not final */ : public wxGridCellEditor
 public:
 
    NumericEditor
-      (NumericConverter::Type type, const NumericFormatId &format, double rate);
+      (NumericConverter::Type type, const NumericFormatSymbol &format, double rate);
 
    ~NumericEditor();
 
@@ -66,9 +65,9 @@ public:
 
    void Reset() override;
 
-   NumericFormatId GetFormat() const;
+   NumericFormatSymbol GetFormat() const;
    double GetRate() const;
-   void SetFormat(const NumericFormatId &format);
+   void SetFormat(const NumericFormatSymbol &format);
    void SetRate(double rate);
 
    wxGridCellEditor *Clone() const override;
@@ -79,7 +78,7 @@ public:
 
  private:
 
-   NumericFormatId mFormat;
+   NumericFormatSymbol mFormat;
    double mRate;
    NumericConverter::Type mType;
    double mOld;

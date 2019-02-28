@@ -236,7 +236,7 @@ public:
       return mName;
    }
 
-   ComponentInterfaceSymbol GetVendor() override
+   VendorSymbol GetVendor() override
    {
       return { mVendor };
    }
@@ -251,7 +251,7 @@ public:
       return mDescription;
    }
 
-   ComponentInterfaceSymbol GetFamilyId() override
+   EffectFamilySymbol GetFamily() override
    {
       return VSTPLUGINTYPE;
    }
@@ -331,7 +331,7 @@ ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
    return XO("VST Effects");
 }
 
-ComponentInterfaceSymbol VSTEffectsModule::GetVendor()
+VendorSymbol VSTEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -1195,7 +1195,7 @@ ComponentInterfaceSymbol VSTEffect::GetSymbol()
    return mName;
 }
 
-ComponentInterfaceSymbol VSTEffect::GetVendor()
+VendorSymbol VSTEffect::GetVendor()
 {
    return { mVendor };
 }
@@ -1253,7 +1253,7 @@ EffectType VSTEffect::GetType()
 }
 
 
-ComponentInterfaceSymbol VSTEffect::GetFamilyId()
+EffectFamilySymbol VSTEffect::GetFamily()
 {
    return VSTPLUGINTYPE;
 }

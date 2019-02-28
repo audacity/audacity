@@ -82,14 +82,14 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    ComponentInterfaceSymbol GetSymbol() override;
 
-   ComponentInterfaceSymbol GetVendor() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   ComponentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -161,8 +161,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    double GetDefaultDuration() override;
    double GetDuration() override;
-   NumericFormatId GetDurationFormat() override;
-   virtual NumericFormatId GetSelectionFormat() /* not override? */; // time format in Selection toolbar
+   NumericFormatSymbol GetDurationFormat() override;
+   virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
    bool Apply() override;
@@ -512,7 +512,7 @@ private:
 
    bool mIsSelection;
    double mDuration;
-   NumericFormatId mDurationFormat;
+   NumericFormatSymbol mDurationFormat;
 
    bool mIsPreview;
 

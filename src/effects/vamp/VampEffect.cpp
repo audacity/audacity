@@ -97,7 +97,7 @@ ComponentInterfaceSymbol VampEffect::GetSymbol()
    return mName;
 }
 
-ComponentInterfaceSymbol VampEffect::GetVendor()
+VendorSymbol VampEffect::GetVendor()
 {
    return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }
@@ -121,7 +121,7 @@ EffectType VampEffect::GetType()
    return EffectTypeAnalyze;
 }
 
-ComponentInterfaceSymbol VampEffect::GetFamilyId()
+EffectFamilySymbol VampEffect::GetFamily()
 {
    return VAMPEFFECTS_FAMILY;
 }
@@ -166,7 +166,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         std::vector<ComponentInterfaceSymbol> choices;
+         std::vector<EnumValueSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
@@ -213,7 +213,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         std::vector<ComponentInterfaceSymbol> choices;
+         std::vector<EnumValueSymbol> choices;
          int val;
 
          for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
@@ -259,7 +259,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         std::vector<ComponentInterfaceSymbol> choices;
+         std::vector<EnumValueSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)

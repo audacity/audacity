@@ -145,7 +145,7 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const ComponentInterfaceSymbol kInterpStrings[nInterpolations] =
+static const EnumValueSymbol kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 

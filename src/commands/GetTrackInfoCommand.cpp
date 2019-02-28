@@ -27,7 +27,7 @@
 #include "CommandContext.h"
 
 const int nTypes =3;
-static const ComponentInterfaceSymbol kTypes[nTypes] =
+static const EnumValueSymbol kTypes[nTypes] =
 {
    { XO("Tracks") },
    { XO("Clips") },

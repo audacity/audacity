@@ -38,7 +38,7 @@ enum kCoordTypes
    nCoordTypes
 };
 
-static const ComponentInterfaceSymbol kCoordTypeStrings[nCoordTypes] =
+static const EnumValueSymbol kCoordTypeStrings[nCoordTypes] =
 {
    { XO("Panel") },
    { wxT("App"),    XO("Application") },

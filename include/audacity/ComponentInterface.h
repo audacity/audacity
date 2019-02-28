@@ -119,7 +119,7 @@ public:
    // So config compatibility will break if it is changed across Audacity versions
    virtual ComponentInterfaceSymbol GetSymbol() = 0;
 
-   virtual ComponentInterfaceSymbol GetVendor() = 0;
+   virtual VendorSymbol GetVendor() = 0;
 
    virtual wxString GetVersion() = 0;
 

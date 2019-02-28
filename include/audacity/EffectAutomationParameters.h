@@ -164,7 +164,7 @@ public:
    using ObsoleteMap = std::pair< wxString, size_t >;
 
    bool ReadEnum(const wxString & key, int *pi,
-                 const ComponentInterfaceSymbol choices[], size_t nChoices,
+                 const EnumValueSymbol choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -174,7 +174,7 @@ public:
          return false;
       }
       *pi = std::find( choices, choices + nChoices,
-                       ComponentInterfaceSymbol{ s, {} } ) - choices;
+                       EnumValueSymbol{ s, {} } ) - choices;
       if (*pi == (int)nChoices)
          *pi = -1;
       if (*pi < 0 && obsoletes) {
@@ -189,7 +189,7 @@ public:
    }
 
    bool ReadEnum(const wxString & key, int *pi, int defVal,
-                 const ComponentInterfaceSymbol choices[], size_t nChoices,
+                 const EnumValueSymbol choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -201,7 +201,7 @@ public:
    }
 
    bool WriteEnum(const wxString & key, int value,
-                  const ComponentInterfaceSymbol choices[], size_t nChoices)
+                  const EnumValueSymbol choices[], size_t nChoices)
    {
       if (value < 0 || value >= (int)nChoices)
       {
@@ -248,7 +248,7 @@ public:
    }
 
    bool ReadAndVerify(const wxString & key, int *val, int defVal,
-                      const ComponentInterfaceSymbol choices[], size_t nChoices,
+                      const EnumValueSymbol choices[], size_t nChoices,
                       const ObsoleteMap obsoletes[] = nullptr,
                       size_t nObsoletes = 0) const
    {

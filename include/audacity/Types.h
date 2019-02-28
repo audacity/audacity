@@ -245,6 +245,19 @@ typedef enum
    ChannelNameBottomFrontRight,
 } ChannelName, *ChannelNames;
 
+// ----------------------------------------------------------------------------
+// some frequently needed forward declarations
+// ----------------------------------------------------------------------------
+
+class ComponentInterfaceSymbol;
+
+using EnumValueSymbol = ComponentInterfaceSymbol;
+using NumericFormatSymbol = EnumValueSymbol;
+
+using VendorSymbol = ComponentInterfaceSymbol;
+
+using EffectFamilySymbol = ComponentInterfaceSymbol;
+
 // LLL FIXME: Until a complete API is devised, we have to use
 //            AUDACITY_DLL_API when defining API classes.  This
 //            it ugly, but a part of the game.  Remove it when

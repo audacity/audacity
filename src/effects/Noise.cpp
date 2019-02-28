@@ -35,7 +35,7 @@ enum kTypes
    nTypes
 };
 
-static const ComponentInterfaceSymbol kTypeStrings[nTypes] =
+static const EnumValueSymbol kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("White") },

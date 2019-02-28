@@ -136,7 +136,7 @@ private:
 
    int mSnapTo;
    double mRate;
-   NumericFormatId mFormat;
+   NumericFormatSymbol mFormat;
 };
 
 #endif

@@ -54,14 +54,14 @@ public:
 
    wxString GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
-   ComponentInterfaceSymbol GetVendor() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectComponentInterface implementation
 
    EffectType GetType() override;
-   ComponentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -233,7 +233,7 @@ public:
 
    wxString GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
-   ComponentInterfaceSymbol GetVendor() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

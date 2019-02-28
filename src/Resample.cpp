@@ -52,7 +52,7 @@ Resample::~Resample()
 }
 
 //////////
-static const ComponentInterfaceSymbol methodNames[] = {
+static const EnumValueSymbol methodNames[] = {
    { wxT("LowQuality"), XO("Low Quality (Fastest)") },
    { wxT("MediumQuality"), XO("Medium Quality") },
    { wxT("HighQuality"), XO("High Quality") },

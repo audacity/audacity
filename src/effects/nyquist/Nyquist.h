@@ -32,7 +32,7 @@
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
-#define NYQUISTEFFECTS_FAMILY ( ComponentInterfaceSymbol{ XO("Nyquist") } )
+#define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
 
 #define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
@@ -63,7 +63,7 @@ public:
    wxString var;
    wxString name;
    wxString label;
-   std::vector<ComponentInterfaceSymbol> choices;
+   std::vector<EnumValueSymbol> choices;
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -88,7 +88,7 @@ public:
 
    wxString GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
-   ComponentInterfaceSymbol GetVendor() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
    
@@ -99,7 +99,7 @@ public:
 
    EffectType GetType() override;
    EffectType GetClassification() override;
-   ComponentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
@@ -149,7 +149,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   static std::vector<ComponentInterfaceSymbol> ParseChoice(const wxString & text);
+   static std::vector<EnumValueSymbol> ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,

@@ -90,7 +90,7 @@ public:
    // (Use Effect::GetFamilyName instead)
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
-   wxString GetEffectFamilyId() const;
+   wxString GetEffectFamily() const;
 
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
@@ -100,7 +100,7 @@ public:
    bool IsEffectAutomatable() const;
 
    // "family" should be an untranslated string wrapped in wxT()
-   void SetEffectFamilyId(const wxString & family);
+   void SetEffectFamily(const wxString & family);
    void SetEffectType(EffectType type);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);

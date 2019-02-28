@@ -55,7 +55,7 @@ enum {
    nTypes
 };
 
-static const ComponentInterfaceSymbol kTypes[nTypes] =
+static const EnumValueSymbol kTypes[nTypes] =
 {
    { XO("Commands") },
    //{ wxT("CommandsPlus"), XO("Commands Plus") },
@@ -75,7 +75,7 @@ enum {
    nFormats
 };
 
-static const ComponentInterfaceSymbol kFormats[nFormats] =
+static const EnumValueSymbol kFormats[nFormats] =
 {
    // These are acceptable dual purpose internal/visible names
    

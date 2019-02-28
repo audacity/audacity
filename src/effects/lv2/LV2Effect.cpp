@@ -335,7 +335,7 @@ ComponentInterfaceSymbol LV2Effect::GetSymbol()
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }
 
-ComponentInterfaceSymbol LV2Effect::GetVendor()
+VendorSymbol LV2Effect::GetVendor()
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 
@@ -381,7 +381,7 @@ EffectType LV2Effect::GetType()
    return EffectTypeProcess;
 }
 
-ComponentInterfaceSymbol LV2Effect::GetFamilyId()
+EffectFamilySymbol LV2Effect::GetFamily()
 {
    return LV2EFFECTS_FAMILY;
 }

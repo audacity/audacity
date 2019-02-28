@@ -301,10 +301,10 @@ wxString Internat::StripAccelerators(const wxString &s)
 }
 
 wxArrayString LocalizedStrings(
-   const ComponentInterfaceSymbol strings[], size_t nStrings)
+   const EnumValueSymbol strings[], size_t nStrings)
 {
    return transform_range<wxArrayString>(
       strings, strings + nStrings,
-      std::mem_fn( &ComponentInterfaceSymbol::Translation )
+      std::mem_fn( &EnumValueSymbol::Translation )
    );
 }

@@ -145,7 +145,7 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
 
 NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * pSizer ){
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
-      : NumericFormatId{};
+      : NumericFormatSymbol{};
    auto pCtrl = safenew NumericTextCtrl(
       this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
@@ -375,7 +375,7 @@ void SelectionBar::RegenerateTooltips()
    auto formatName =
       mListener
          ? mListener->AS_GetSelectionFormat()
-         : NumericFormatId{};
+         : NumericFormatSymbol{};
    mSnapTo->SetToolTip(
       wxString::Format(
          _("Snap Clicks/Selections to %s"), formatName.Translation() ));
@@ -649,7 +649,7 @@ void SelectionBar::SetSnapTo(int snap)
    mSnapTo->SetSelection(snap);
 }
 
-void SelectionBar::SetSelectionFormat(const NumericFormatId & format)
+void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
 {
    mStartTime->SetFormatString(mStartTime->GetBuiltinFormat(format));
 

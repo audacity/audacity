@@ -198,7 +198,7 @@ different formats.
  * to the user */
 struct BuiltinFormatString
 {
-   NumericFormatId name;
+   NumericFormatSymbol name;
    wxString formatStr;
 
    friend inline bool operator ==
@@ -559,19 +559,19 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
 // NumericConverter Class
 // ----------------------------------------------------------------------------
 //
-NumericFormatId NumericConverter::DefaultSelectionFormat()
+NumericFormatSymbol NumericConverter::DefaultSelectionFormat()
 { return TimeConverterFormats_[4].name; }
-NumericFormatId NumericConverter::TimeAndSampleFormat()
+NumericFormatSymbol NumericConverter::TimeAndSampleFormat()
 { return TimeConverterFormats_[5].name; }
-NumericFormatId NumericConverter::SecondsFormat()
+NumericFormatSymbol NumericConverter::SecondsFormat()
 { return TimeConverterFormats_[0].name; }
-NumericFormatId NumericConverter::HundredthsFormat()
+NumericFormatSymbol NumericConverter::HundredthsFormat()
 { return TimeConverterFormats_[3].name; }
 
-NumericFormatId NumericConverter::HertzFormat()
+NumericFormatSymbol NumericConverter::HertzFormat()
 { return FrequencyConverterFormats_[0].name; }
 
-NumericFormatId NumericConverter::LookupFormat( Type type, const wxString& id)
+NumericFormatSymbol NumericConverter::LookupFormat( Type type, const wxString& id)
 {
    if (id.empty()) {
       if (type == TIME)
@@ -590,7 +590,7 @@ NumericFormatId NumericConverter::LookupFormat( Type type, const wxString& id)
 }
 
 NumericConverter::NumericConverter(Type type,
-                                   const NumericFormatId & formatName,
+                                   const NumericFormatSymbol & formatName,
                                    double value,
                                    double sampleRate)
    : mBuiltinFormatStrings( ChooseBuiltinFormatStrings( type ) )
@@ -970,7 +970,7 @@ void NumericConverter::ControlsToValue()
    mValue = std::max(mMinValue, std::min(mMaxValue, t));
 }
 
-void NumericConverter::SetFormatName(const NumericFormatId & formatName)
+void NumericConverter::SetFormatName(const NumericFormatSymbol & formatName)
 {
    SetFormatString(GetBuiltinFormat(formatName));
 }
@@ -1054,7 +1054,7 @@ int NumericConverter::GetNumBuiltins()
    return mNBuiltins;
 }
 
-NumericFormatId NumericConverter::GetBuiltinName(const int index)
+NumericFormatSymbol NumericConverter::GetBuiltinName(const int index)
 {
    if (index >= 0 && index < GetNumBuiltins())
       return mBuiltinFormatStrings[index].name;
@@ -1070,7 +1070,7 @@ wxString NumericConverter::GetBuiltinFormat(const int index)
    return {};
 }
 
-wxString NumericConverter::GetBuiltinFormat(const NumericFormatId &name)
+wxString NumericConverter::GetBuiltinFormat(const NumericFormatSymbol &name)
 {
    int ndx =
       std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
@@ -1211,7 +1211,7 @@ IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 
 NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
                            NumericConverter::Type type,
-                           const NumericFormatId &formatName,
+                           const NumericFormatSymbol &formatName,
                            double timeValue,
                            double sampleRate,
                            const Options &options,
@@ -1285,7 +1285,7 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
-void NumericTextCtrl::SetFormatName(const NumericFormatId & formatName)
+void NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
 {
    SetFormatString(GetBuiltinFormat(formatName));
 }

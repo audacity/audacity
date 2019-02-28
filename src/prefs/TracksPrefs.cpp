@@ -157,7 +157,7 @@ WaveTrack::SampleDisplay TracksPrefs::SampleViewChoice()
 }
 
 //////////
-static const ComponentInterfaceSymbol choicesZoom[] = {
+static const EnumValueSymbol choicesZoom[] = {
    { wxT("FitToWidth"), XO("Fit to Width") },
    { wxT("ZoomToSelection"), XO("Zoom to Selection") },
    { wxT("ZoomDefault"), XO("Zoom Default") },

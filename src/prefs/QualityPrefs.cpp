@@ -56,7 +56,7 @@ static EncodedEnumSetting formatSetting{
 };
 
 //////////
-static const ComponentInterfaceSymbol choicesDither[] = {
+static const EnumValueSymbol choicesDither[] = {
    { XO("None") },
    { XO("Rectangle") },
    { XO("Triangle") },

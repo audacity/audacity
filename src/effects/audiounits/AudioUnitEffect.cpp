@@ -117,7 +117,7 @@ ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
    return XO("Audio Unit Effects");
 }
 
-ComponentInterfaceSymbol AudioUnitEffectsModule::GetVendor()
+VendorSymbol AudioUnitEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -885,7 +885,7 @@ ComponentInterfaceSymbol AudioUnitEffect::GetSymbol()
    return mName;
 }
 
-ComponentInterfaceSymbol AudioUnitEffect::GetVendor()
+VendorSymbol AudioUnitEffect::GetVendor()
 {
    return { mVendor };
 }
@@ -932,7 +932,7 @@ EffectType AudioUnitEffect::GetType()
    return EffectTypeProcess;
 }
 
-ComponentInterfaceSymbol AudioUnitEffect::GetFamilyId()
+EffectFamilySymbol AudioUnitEffect::GetFamily()
 {
    return AUDIOUNITEFFECTS_FAMILY;
 }

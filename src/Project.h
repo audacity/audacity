@@ -432,16 +432,16 @@ public:
 
    // Selection Format
 
-   void SetSelectionFormat(const NumericFormatId & format);
-   const NumericFormatId & GetSelectionFormat() const;
+   void SetSelectionFormat(const NumericFormatSymbol & format);
+   const NumericFormatSymbol & GetSelectionFormat() const;
 
    // Spectral Selection Formats
 
-   void SetFrequencySelectionFormatName(const NumericFormatId & format);
-   const NumericFormatId & GetFrequencySelectionFormatName() const;
+   void SetFrequencySelectionFormatName(const NumericFormatSymbol & format);
+   const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
 
-   void SetBandwidthSelectionFormatName(const NumericFormatId & format);
-   const NumericFormatId & GetBandwidthSelectionFormatName() const;
+   void SetBandwidthSelectionFormatName(const NumericFormatSymbol & format);
+   const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
 
    // Scrollbars
 
@@ -524,19 +524,19 @@ public:
    void AS_SetRate(double rate) override;
    int AS_GetSnapTo() override;
    void AS_SetSnapTo(int snap) override;
-   const NumericFormatId & AS_GetSelectionFormat() override;
-   void AS_SetSelectionFormat(const NumericFormatId & format) override;
+   const NumericFormatSymbol & AS_GetSelectionFormat() override;
+   void AS_SetSelectionFormat(const NumericFormatSymbol & format) override;
    void AS_ModifySelection(double &start, double &end, bool done) override;
 
    // SpectralSelectionBarListener callback methods
 
    double SSBL_GetRate() const override;
 
-   const NumericFormatId & SSBL_GetFrequencySelectionFormatName() override;
-   void SSBL_SetFrequencySelectionFormatName(const NumericFormatId & formatName) override;
+   const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName() override;
+   void SSBL_SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName) override;
 
-   const NumericFormatId & SSBL_GetBandwidthSelectionFormatName() override;
-   void SSBL_SetBandwidthSelectionFormatName(const NumericFormatId & formatName) override;
+   const NumericFormatSymbol & SSBL_GetBandwidthSelectionFormatName() override;
+   void SSBL_SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName) override;
 
    void SSBL_ModifySpectralSelection(double &bottom, double &top, bool done) override;
 
@@ -609,9 +609,9 @@ public:
    std::shared_ptr<TrackList> mTracks;
 
    int mSnapTo;
-   NumericFormatId mSelectionFormat;
-   NumericFormatId mFrequencySelectionFormatName;
-   NumericFormatId mBandwidthSelectionFormatName;
+   NumericFormatSymbol mSelectionFormat;
+   NumericFormatSymbol mFrequencySelectionFormatName;
+   NumericFormatSymbol mBandwidthSelectionFormatName;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
 
