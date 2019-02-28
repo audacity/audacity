@@ -12,38 +12,28 @@
 #ifndef __AUDACITY_KEYBOARD__
 #define __AUDACITY_KEYBOARD__
 
+#include <audacity/Types.h>
 #include <wx/defs.h>
-#include <wx/string.h> // to inherit
 
 class wxKeyEvent;
 
-struct NormalizedKeyString : private wxString
+struct NormalizedKeyStringTag;
+// Case insensitive comparisons
+using NormalizedKeyStringBase = TaggedIdentifier<NormalizedKeyStringTag, false>;
+
+struct NormalizedKeyString : NormalizedKeyStringBase
 {
    NormalizedKeyString() = default;
-
-   explicit NormalizedKeyString( const wxString &str );
+   explicit NormalizedKeyString( const wxString &key );
 
    wxString Display(bool usesSpecialChars = false) const;
-
-   const wxString &Raw() const { return *this; }
-
-   bool NoCaseEqual( const NormalizedKeyString &other ) const
-   { return 0 == this->Raw() .CmpNoCase( other.Raw() ); }
-
-   using wxString::empty;
 };
 
-inline bool operator ==
-( const NormalizedKeyString &a, const NormalizedKeyString &b)
-{ return a.Raw () == b.Raw(); }
-
-inline bool operator !=
-( const NormalizedKeyString &a, const NormalizedKeyString &b)
-{ return a.Raw () != b.Raw(); }
-
-inline bool operator <
-( const NormalizedKeyString &a, const NormalizedKeyString &b)
-{ return a.Raw () < b.Raw(); }
+namespace std
+{
+   template<> struct hash< NormalizedKeyString >
+      : hash< NormalizedKeyStringBase > {};
+}
 
 NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & keyEvent);
 

@@ -535,7 +535,8 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
       };
 
       std::vector<NormalizedKeyString> result(
-         strings, strings + sizeof(strings)/sizeof(*strings) );
+         std::begin(strings), std::end(strings)
+      );
       std::sort( result.begin(), result.end() );
       return result;
    }();
@@ -1053,7 +1054,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       gPrefs->SetPath(wxT("/NewKeys"));
       if (gPrefs->HasEntry(entry->name)) {
          entry->key =
-            NormalizedKeyString{ gPrefs->Read(entry->name, entry->key.Raw()) };
+            NormalizedKeyString{ gPrefs->ReadObject(entry->name, entry->key) };
       }
       gPrefs->SetPath(wxT("/"));
 
@@ -1098,7 +1099,8 @@ wxString CommandManager::GetLabel(const CommandListEntry *entry) const
    wxString label = entry->label;
    if (!entry->key.empty())
    {
-      label += wxT("\t") + entry->key.Raw();
+      // using GET to compose menu item name for wxWidgets
+      label += wxT("\t") + entry->key.GET();
    }
 
    return label;
@@ -1120,7 +1122,8 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          // Dummy accelerator that looks Ok in menus but is non functional.
          // Note the space before the key.
 #ifdef __WXMSW__
-         auto key = entry->key.Raw();
+         // using GET to compose menu item name for wxWidgets
+         auto key = entry->key.GET();
          Accel = wxString("\t ") + key;
          if( key.StartsWith("Left" )) break;
          if( key.StartsWith("Right")) break;
@@ -1149,7 +1152,8 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
 #endif
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
          // Normal accelerator.
-         Accel = wxString("\t") + entry->key.Raw();
+         // using GET to compose menu item name for wxWidgets
+         Accel = wxString("\t") + entry->key.GET();
       }
    } while (false );
    label += Accel;
@@ -1847,7 +1851,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
       xmlFile.StartTag(wxT("command"));
       xmlFile.WriteAttr(wxT("name"), entry->name);
       xmlFile.WriteAttr(wxT("label"), label);
-      xmlFile.WriteAttr(wxT("key"), entry->key.Raw());
+      xmlFile.WriteAttr(wxT("key"), entry->key);
       xmlFile.EndTag(wxT("command"));
    }
 
@@ -1905,7 +1909,8 @@ void CommandManager::CheckDups()
          if (mCommandList[i]->key == mCommandList[j]->key) {
             wxString msg;
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
-                       mCommandList[i]->key.Raw(),
+                       // using GET to form debug message
+                       mCommandList[i]->key.GET(),
                        mCommandList[i]->label.BeforeFirst(wxT('\t')),
                        mCommandList[j]->label.BeforeFirst(wxT('\t')));
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);

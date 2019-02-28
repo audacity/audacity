@@ -288,7 +288,7 @@ KeyView::GetNameByKey(const NormalizedKeyString & key) const
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.NoCaseEqual( mNodes[i].key))
+      if ( key == mNodes[i].key )
       {
          return mNodes[i].name;
       }
@@ -308,7 +308,7 @@ KeyView::GetIndexByKey(const NormalizedKeyString & key) const
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.NoCaseEqual( mNodes[i].key))
+      if ( key == mNodes[i].key )
       {
          return mNodes[i].index;
       }

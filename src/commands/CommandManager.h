@@ -93,18 +93,6 @@ using SubMenuList = std::vector < std::unique_ptr<SubMenuListEntry> >;
 // so we don't want the structures to relocate with vector operations.
 using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
 
-namespace std
-{
-   template<> struct hash< NormalizedKeyString > {
-      size_t operator () (const NormalizedKeyString &str) const // noexcept
-      {
-         auto &stdstr = str.Raw(); // no allocations, a cheap fetch
-         using Hasher = std::hash< wxString >;
-         return Hasher{}( stdstr );
-      }
-   };
-}
-
 using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;
 using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
 using CommandIDHash = std::unordered_map<int, CommandListEntry*>;

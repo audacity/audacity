@@ -661,8 +661,8 @@ bool KeyConfigPrefs::Commit()
       const auto &key = mNewKeys[i];
 
       if (gPrefs->HasEntry(name)) {
-         if (key != NormalizedKeyString{ gPrefs->Read(name, key.Raw()) } ) {
-            gPrefs->Write(name, key.Raw());
+         if (key != NormalizedKeyString{ gPrefs->ReadObject(name, key) } ) {
+            gPrefs->Write(name, key);
          }
          if (key == dkey) {
             gPrefs->DeleteEntry(name);
@@ -670,7 +670,7 @@ bool KeyConfigPrefs::Commit()
       }
       else {
          if (key != dkey) {
-            gPrefs->Write(name, key.Raw());
+            gPrefs->Write(name, key);
          }
       }
    }
