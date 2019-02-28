@@ -46,8 +46,26 @@
 #include <type_traits>
 #include <vector>
 #include <wx/debug.h> // for wxASSERT
+#include <wx/string.h> // type used in inline function
+#include <wx/version.h> // for wxCHECK_VERSION
 
 class wxString;
+
+#if !wxCHECK_VERSION(3, 1, 0)
+// For using std::unordered_map on wxString
+namespace std
+{
+   template<typename T> struct hash;
+   template<> struct hash< wxString > {
+      size_t operator () (const wxString &str) const // noexcept
+      {
+         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
+         using Hasher = hash< decltype(stdstr) >;
+         return Hasher{}( stdstr );
+      }
+   };
+}
+#endif
 
 // ----------------------------------------------------------------------------
 // TODO:  I'd imagine this header may be replaced by other public headers. But,
