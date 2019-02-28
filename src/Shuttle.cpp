@@ -194,7 +194,7 @@ bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
 
          for( int i = 0; i < nChoices; i++ )
          {
-            if( str.IsSameAs( pFirstStr[i] ))
+            if( str == pFirstStr[i] )
             {
                iValue = i;
                break;

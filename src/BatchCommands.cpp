@@ -905,8 +905,8 @@ void MacroCommands::AddToMacro(const wxString &command, const wxString &params, 
       before = (int)mCommandMacro.size();
    }
 
-   mCommandMacro.Insert(command, before);
-   mParamsMacro.Insert(params, before);
+   mCommandMacro.insert(mCommandMacro.begin() + before, command);
+   mParamsMacro.insert(mParamsMacro.begin() + before, params);
 }
 
 void MacroCommands::DeleteFromMacro(int index)
@@ -915,8 +915,8 @@ void MacroCommands::DeleteFromMacro(int index)
       return;
    }
 
-   mCommandMacro.RemoveAt(index);
-   mParamsMacro.RemoveAt(index);
+   mCommandMacro.erase( mCommandMacro.begin() + index );
+   mParamsMacro.erase( mParamsMacro.begin() + index );
 }
 
 void MacroCommands::ResetMacro()

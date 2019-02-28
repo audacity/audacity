@@ -852,7 +852,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
          while (ofqueue.size()) {
             wxString name;
             name.swap(ofqueue[0]);
-            ofqueue.RemoveAt(0);
+            ofqueue.erase( ofqueue.begin() );
 
             // Get the user's attention if no file name was specified
             if (name.empty()) {

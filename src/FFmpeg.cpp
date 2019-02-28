@@ -782,8 +782,8 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    if (!gotError) {
       avutil_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
       avcodec_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
-      if (avutil_filename.GetFullPath().IsSameAs(nameFull)) {
-         if (avcodec_filename.GetFullPath().IsSameAs(nameFull)) {
+      if (avutil_filename.GetFullPath() == nameFull) {
+         if (avcodec_filename.GetFullPath() == nameFull) {
             util = avformat.get();
             codec = avformat.get();
          }

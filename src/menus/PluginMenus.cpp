@@ -723,7 +723,7 @@ void AddEffectMenuItemGroup(
    int groupCnt = namesCnt;
    for (int i = 0; i < namesCnt; i++)
    {
-      while (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
+      while (i + 1 < namesCnt && names[i] == names[i + 1])
       {
          i++;
          groupCnt--;
@@ -757,12 +757,12 @@ void AddEffectMenuItemGroup(
          pTable = &temp1;
       }
 
-      if (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
+      if (i + 1 < namesCnt && names[i] == names[i + 1])
       {
          // collect a sub-menu for like-named items
          const wxString name = names[i];
          BaseItemPtrs temp2;
-         while (i < namesCnt && names[i].IsSameAs(name))
+         while (i < namesCnt && names[i] == name)
          {
             const PluginDescriptor *plug =
                PluginManager::Get().GetPlugin(plugs[i]);

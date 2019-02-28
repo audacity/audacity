@@ -1405,7 +1405,7 @@ bool PluginManager::IsPluginRegistered(const wxString & path)
 {
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
-      if (iter->second.GetPath().IsSameAs(path))
+      if (iter->second.GetPath() == path)
       {
          return true;
       }
@@ -2124,17 +2124,17 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             if (!pRegistry->Read(KEY_EFFECTTYPE, &strVal))
                continue;
 
-            if (strVal.IsSameAs(KEY_EFFECTTYPE_NONE))
+            if (strVal == KEY_EFFECTTYPE_NONE)
                plug.SetEffectType(EffectTypeNone);
-            else if (strVal.IsSameAs(KEY_EFFECTTYPE_ANALYZE))
+            else if (strVal == KEY_EFFECTTYPE_ANALYZE)
                plug.SetEffectType(EffectTypeAnalyze);
-            else if (strVal.IsSameAs(KEY_EFFECTTYPE_GENERATE))
+            else if (strVal == KEY_EFFECTTYPE_GENERATE)
                plug.SetEffectType(EffectTypeGenerate);
-            else if (strVal.IsSameAs(KEY_EFFECTTYPE_PROCESS))
+            else if (strVal == KEY_EFFECTTYPE_PROCESS)
                plug.SetEffectType(EffectTypeProcess);
-            else if (strVal.IsSameAs(KEY_EFFECTTYPE_TOOL))
+            else if (strVal == KEY_EFFECTTYPE_TOOL)
                plug.SetEffectType(EffectTypeTool);
-            else if (strVal.IsSameAs(KEY_EFFECTTYPE_HIDDEN))
+            else if (strVal == KEY_EFFECTTYPE_HIDDEN)
                plug.SetEffectType(EffectTypeHidden);
             else
                continue;

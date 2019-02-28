@@ -2103,7 +2103,7 @@ void LV2Effect::SetPortValue(const char *port_symbol,
 
    for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
-      if (mControls[p].mSymbol.IsSameAs(symbol))
+      if (mControls[p].mSymbol == symbol)
       {
          if (type == Bool && size == sizeof(bool))
          {

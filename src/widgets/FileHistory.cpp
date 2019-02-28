@@ -48,14 +48,14 @@ void FileHistory::AddFileToHistory(const wxString & file, bool update)
 #endif
 
    if (i != wxNOT_FOUND) {
-      mHistory.RemoveAt(i);
+      mHistory.erase( mHistory.begin() + i );
    }
 
-   if (mMaxFiles == mHistory.size()) {
-      mHistory.RemoveAt(mHistory.size() - 1);
+   if (mMaxFiles > 0 && mMaxFiles == mHistory.size()) {
+      mHistory.erase( mHistory.end() - 1 );
    }
 
-   mHistory.Insert(file, 0);
+   mHistory.insert(mHistory.begin(), file);
 
    if (update) {
       AddFilesToMenu();
@@ -67,7 +67,7 @@ void FileHistory::RemoveFileFromHistory(size_t i, bool update)
    wxASSERT(i < mHistory.size());
 
    if (i < mHistory.size()) {
-      mHistory.RemoveAt(i);
+      mHistory.erase( mHistory.begin() + i );
 
       if (update) {
          AddFilesToMenu();

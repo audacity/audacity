@@ -236,7 +236,9 @@ void Importer::ReadImportItems()
             int index = new_item->divider;
             if (new_item->divider < 0)
                index = new_item->filters.size();
-            new_item->filters.Insert(importPlugin->GetPluginStringID(),index);
+            new_item->filters.insert(
+               new_item->filters.begin() + index,
+               importPlugin->GetPluginStringID());
             new_item->filter_objects.insert(
                new_item->filter_objects.begin() + index, importPlugin.get());
             if (new_item->divider >= 0)
@@ -454,7 +456,7 @@ bool Importer::Import(const wxString &fName,
    // in case subsequent code revisions to the constructor should break this assumption that
    // libsndfile is first.
    ImportPlugin *libsndfilePlugin = mImportPluginList.begin()->get();
-   wxASSERT(libsndfilePlugin->GetPluginStringID().IsSameAs(wxT("libsndfile")));
+   wxASSERT(libsndfilePlugin->GetPluginStringID() == wxT("libsndfile"));
 
    for (const auto &plugin : mImportPluginList)
    {
@@ -472,7 +474,7 @@ bool Importer::Import(const wxString &fName,
             // but then get processed as desired by libmad.
             // But a wav file which bears an incorrect .mp3 extension will be successfully
             // processed by libsndfile and thus avoid being submitted to libmad.
-            if (plugin->GetPluginStringID().IsSameAs(wxT("libmad")))
+            if (plugin->GetPluginStringID() == wxT("libmad"))
             {
                // Make sure libsndfile is not already in the list
                if (importPlugins.end() ==
@@ -494,7 +496,7 @@ bool Importer::Import(const wxString &fName,
    // formats unsuitable for it, and produce distorted results.
    for (const auto &plugin : mImportPluginList)
    {
-      if (!(plugin->GetPluginStringID().IsSameAs(wxT("libmad"))))
+      if (!(plugin->GetPluginStringID() == wxT("libmad")))
       {
          // Make sure its not already in the list
          if (importPlugins.end() ==

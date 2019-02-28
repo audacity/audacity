@@ -778,9 +778,9 @@ KeyView::RefreshLines(bool bSort)
          // For the Key View, if the filter is a single character,
          // then it has to be the last character in the searchit string,
          // and be preceded by nothing or +.
-         if ((mViewType == ViewByKey) && 
+         if ((mViewType == ViewByKey) &&
                (mFilter.length() == 1) &&
-               (!mFilter.IsSameAs(searchit.Last()) ||
+               (mFilter != searchit.Last() ||
                   ((searchit.length() > 1) &&
                      ((wxString)(searchit.GetChar(searchit.length() - 2)) != wxT("+")))))
          {

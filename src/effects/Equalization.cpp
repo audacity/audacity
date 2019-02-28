@@ -367,7 +367,7 @@ bool EffectEqualization::ValidateUI()
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
 
-   if (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
+   if (mDisallowCustom && mCurveName == wxT("unnamed"))
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
@@ -3338,7 +3338,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          for( curve = 0; curve < numCurves; curve++ )
          {
             wxString temp = mEditCurves[ curve ].Name;
-            if( name.IsSameAs( mEditCurves[ curve ].Name )) // case sensitive
+            if( name ==  mEditCurves[ curve ].Name ) // case sensitive
             {
                bad = true;
                if( curve == item )  // trying to rename a curve with the same name

@@ -417,7 +417,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       files[i] = wxPathOnly(wxPathOnly(files[i]));
       if (!files[i].EndsWith(wxT(".vst")))
       {
-         files.RemoveAt(i--);
+         files.erase( files.begin() + i-- );
       }
    }
 
@@ -619,12 +619,12 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
             break;
 
             case kKeyInteractive:
-               proc.mInteractive = val.IsSameAs(wxT("1"));
+               proc.mInteractive = val == wxT("1");
                keycount++;
             break;
 
             case kKeyAutomatable:
-               proc.mAutomatable = val.IsSameAs(wxT("1"));
+               proc.mAutomatable = val == wxT("1");
                keycount++;
             break;
 

@@ -1877,7 +1877,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                {
                   // DELETE one letter
                   if (mCurrentCursorPos > 0) {
-                     title.Remove(mCurrentCursorPos-1, 1);
+                     title.erase(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
                   }
                }
@@ -1907,7 +1907,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                {
                   // DELETE one letter
                   if (mCurrentCursorPos < len) {
-                     title.Remove(mCurrentCursorPos, 1);
+                     title.erase(mCurrentCursorPos, 1);
                   }
                }
             }

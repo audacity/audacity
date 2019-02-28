@@ -389,8 +389,8 @@ ExportPCM::ExportPCM()
 #if defined(wxMSW)
    // On Windows make sure WAV is at the beginning of the list of all possible
    // extensions for this format
-   allext.Remove(wavext);
-   allext.Insert(wavext, 0);
+   allext.erase( std::find( allext.begin(), allext.end(), wavext ) );
+   allext.insert(allext.begin(), wavext);
 #endif
    SetExtensions(allext, format);
    SetMaxChannels(255, format);

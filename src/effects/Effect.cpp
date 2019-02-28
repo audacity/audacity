@@ -3994,7 +3994,7 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
 {
    mType->SetStringSelection(type);
 
-   if (type.IsSameAs(_("User Presets")))
+   if (type == _("User Presets"))
    {
       mPresets->Clear();
       mPresets->Append(mUserPresets);
@@ -4006,7 +4006,7 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
       }
       mSelection = Effect::kUserPresetIdent + mPresets->GetStringSelection();
    }
-   else if (type.IsSameAs(_("Factory Presets")))
+   else if (type == _("Factory Presets"))
    {
       mPresets->Clear();
       for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
@@ -4026,13 +4026,13 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
       }
       mSelection = Effect::kFactoryPresetIdent + mPresets->GetStringSelection();
    }
-   else if (type.IsSameAs(_("Current Settings")))
+   else if (type == _("Current Settings"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
       mSelection = Effect::kCurrentSettingsIdent;
    }
-   else if (type.IsSameAs(_("Factory Defaults")))
+   else if (type == _("Factory Defaults"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
@@ -4050,7 +4050,7 @@ void EffectPresetsDialog::UpdateUI()
    }
    wxString type = mType->GetString(selected);
 
-   if (type.IsSameAs(_("User Presets")))
+   if (type == _("User Presets"))
    {
       selected = mPresets->GetSelection();
       if (selected == wxNOT_FOUND)
@@ -4064,7 +4064,7 @@ void EffectPresetsDialog::UpdateUI()
       mPresets->SetSelection(selected);
       mSelection = Effect::kUserPresetIdent + mPresets->GetString(selected);
    }
-   else if (type.IsSameAs(_("Factory Presets")))
+   else if (type == _("Factory Presets"))
    {
       selected = mPresets->GetSelection();
       if (selected == wxNOT_FOUND)
@@ -4086,13 +4086,13 @@ void EffectPresetsDialog::UpdateUI()
       mPresets->SetSelection(selected);
       mSelection = Effect::kFactoryPresetIdent + mPresets->GetString(selected);
    }
-   else if (type.IsSameAs(_("Current Settings")))
+   else if (type == _("Current Settings"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
       mSelection = Effect::kCurrentSettingsIdent;
    }
-   else if (type.IsSameAs(_("Factory Defaults")))
+   else if (type == _("Factory Defaults"))
    {
       mPresets->Clear();
       mPresets->Enable(false);

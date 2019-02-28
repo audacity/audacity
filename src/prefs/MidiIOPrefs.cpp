@@ -202,7 +202,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    for (int i = 0; i < nDevices; i++) {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
       wxString interf = wxSafeConvertMB2WX(info->interf);
-      if (itemAtIndex.IsSameAs(interf)) {
+      if (itemAtIndex == interf) {
          wxString name = wxSafeConvertMB2WX(info->name);
          wxString device = wxString::Format(wxT("%s: %s"),
                                             interf,

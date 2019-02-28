@@ -1642,7 +1642,8 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
 
       }
 
-      aliasList.Remove(fullPath);
+      aliasList.erase(
+         std::find( aliasList.begin(), aliasList.end(), fullPath ) );
       aliasList.push_back(renamedFullPath);
    }
 

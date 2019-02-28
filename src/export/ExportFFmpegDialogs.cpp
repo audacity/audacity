@@ -1818,7 +1818,9 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
    long index = preset->FindString(presetname);
    preset->SetValue(wxEmptyString);
    preset->Delete(index);
-   mPresetNames.Remove(presetname);
+   mPresetNames.erase(
+      std::find( mPresetNames.begin(), mPresetNames.end(), presetname )
+   );
 }
 
 ///

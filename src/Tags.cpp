@@ -484,7 +484,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
          mXref[key] = name;
          mMap[name] = value;
       }
-      else if (!iter->second.IsSameAs(name)) {
+      else if (iter->second != name) {
          // Watch out for case differences!
          mMap[name] = value;
          mMap.erase(iter->second);

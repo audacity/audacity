@@ -91,7 +91,7 @@ void XMLWriter::StartTag(const wxString &name)
 
    Write(wxString::Format(wxT("<%s"), name));
 
-   mTagstack.Insert(name, 0);
+   mTagstack.insert(mTagstack.begin(), name);
    mHasKids[0] = true;
    mHasKids.insert(mHasKids.begin(), false);
    mDepth++;
@@ -119,7 +119,7 @@ void XMLWriter::EndTag(const wxString &name)
          else {
             Write(wxT(">\n"));
          }
-         mTagstack.RemoveAt(0);
+         mTagstack.erase( mTagstack.begin() );
          mHasKids.erase(mHasKids.begin());
       }
    }
