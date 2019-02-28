@@ -66,7 +66,7 @@ BEGIN_EVENT_TABLE(VampEffect, wxEvtHandler)
 END_EVENT_TABLE()
 
 VampEffect::VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
-                       const wxString & path,
+                       const PluginPath & path,
                        int output,
                        bool hasParameters)
 :  mPlugin(std::move(plugin)),
@@ -87,7 +87,7 @@ VampEffect::~VampEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString VampEffect::GetPath()
+PluginPath VampEffect::GetPath()
 {
    return mPath;
 }

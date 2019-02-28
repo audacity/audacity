@@ -98,7 +98,7 @@ public:
    // For modules providing an interface to other dynamically loaded plugins,
    // the module returns a list of path names that will be presented to the
    // user as "New" for enablement.
-   virtual wxArrayString FindPluginPaths(PluginManagerInterface & pluginManager) = 0;
+   virtual PluginPaths FindPluginPaths(PluginManagerInterface & pluginManager) = 0;
 
    // Once the user selects desired paths from FindPluginPaths(),
    // a call to DiscoverPluginsAtPath()
@@ -115,16 +115,16 @@ public:
       std::function<
          const PluginID &(ModuleInterface *, ComponentInterface *) >;
    virtual unsigned DiscoverPluginsAtPath(
-      const wxString & path, wxString &errMsg,
+      const PluginPath & path, wxString &errMsg,
       const RegistrationCallback &callback )
          = 0;
 
    // For modules providing an interface to other dynamically loaded plugins,
    // the module returns true if the plugin is still valid, otherwise false.
-   virtual bool IsPluginValid(const wxString & path, bool bFast) = 0;
+   virtual bool IsPluginValid(const PluginPath & path, bool bFast) = 0;
 
    // When appropriate, CreateInstance() will be called to instantiate the plugin.
-   virtual ComponentInterface *CreateInstance(const wxString & path) = 0;
+   virtual ComponentInterface *CreateInstance(const PluginPath & path) = 0;
 
    // When appropriate, DeleteInstance() will be called to delete the plugin.
    virtual void DeleteInstance(ComponentInterface *instance) = 0;

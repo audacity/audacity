@@ -158,7 +158,7 @@ EffectType Effect::GetType()
    return EffectTypeNone;
 }
 
-wxString Effect::GetPath()
+PluginPath Effect::GetPath()
 {
    if (mClient)
    {

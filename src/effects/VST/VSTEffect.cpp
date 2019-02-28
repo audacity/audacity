@@ -226,7 +226,7 @@ public:
 
    // EffectClientInterface implementation
 
-   wxString GetPath() override
+   PluginPath GetPath() override
    {
       return mPath;
    }
@@ -321,7 +321,7 @@ VSTEffectsModule::~VSTEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString VSTEffectsModule::GetPath()
+PluginPath VSTEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -384,7 +384,7 @@ bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
    return true;
 }
 
-wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString pathList;
    wxArrayString files;
@@ -490,11 +490,11 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 
 #endif
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned VSTEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    bool error = false;
@@ -669,7 +669,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    return nFound;
 }
 
-bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
@@ -677,7 +677,7 @@ bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-ComponentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VSTEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
@@ -1123,7 +1123,7 @@ void VSTEffect::ResourceHandle::reset()
 }
 #endif
 
-VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
+VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
@@ -1185,7 +1185,7 @@ VSTEffect::~VSTEffect()
 // ComponentInterface Implementation
 // ============================================================================
 
-wxString VSTEffect::GetPath()
+PluginPath VSTEffect::GetPath()
 {
    return mPath;
 }

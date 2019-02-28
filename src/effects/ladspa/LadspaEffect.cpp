@@ -111,7 +111,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString LadspaEffectsModule::GetPath()
+PluginPath LadspaEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -213,7 +213,7 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString pathList = GetSearchPaths();
    wxArrayString files;
@@ -235,11 +235,11 @@ wxArrayString LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 
 #endif
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -301,7 +301,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    return nLoaded;
 }
 
-bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
@@ -309,7 +309,7 @@ bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath);
 }
 
-ComponentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *LadspaEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -615,7 +615,7 @@ LadspaEffect::~LadspaEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString LadspaEffect::GetPath()
+PluginPath LadspaEffect::GetPath()
 {
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }

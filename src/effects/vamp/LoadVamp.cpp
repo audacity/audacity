@@ -70,7 +70,7 @@ VampEffectsModule::~VampEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString VampEffectsModule::GetPath()
+PluginPath VampEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -117,9 +117,9 @@ bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm
    return false;
 }
 
-wxArrayString VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
-   wxArrayString names;
+   PluginPaths names;
 
    PluginLoader *loader = PluginLoader::getInstance();
 
@@ -195,7 +195,7 @@ wxArrayString VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUS
 }
 
 unsigned VampEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -216,7 +216,7 @@ unsigned VampEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool VampEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool VampEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    int output;
    bool hasParameters;
@@ -227,7 +227,7 @@ bool VampEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return bool(vp);
 }
 
-ComponentInterface *VampEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VampEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    int output;
@@ -252,7 +252,7 @@ void VampEffectsModule::DeleteInstance(ComponentInterface *instance)
 
 // VampEffectsModule implementation
 
-std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const wxString & path,
+std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath & path,
                                       int & output,
                                       bool & hasParameters)
 {

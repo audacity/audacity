@@ -49,7 +49,7 @@ public:
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -211,7 +211,7 @@ public:
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -226,15 +226,15 @@ public:
    wxString InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   wxArrayString FindPluginPaths(PluginManagerInterface & pm) override;
+   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
-      const wxString & path, wxString &errMsg,
+      const PluginPath & path, wxString &errMsg,
       const RegistrationCallback &callback)
          override;
 
-   bool IsPluginValid(const wxString & path, bool bFast) override;
+   bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const wxString & path) override;
+   ComponentInterface *CreateInstance(const PluginPath & path) override;
    void DeleteInstance(ComponentInterface *instance) override;
 
    // LadspaEffectModule implementation

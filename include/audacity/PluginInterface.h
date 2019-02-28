@@ -61,7 +61,7 @@ public:
    static const PluginID &AudacityCommandRegistrationCallback(
       ModuleInterface *provider, ComponentInterface *ident );
 
-   virtual bool IsPluginRegistered(const wxString & path) = 0;
+   virtual bool IsPluginRegistered(const PluginPath & path) = 0;
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) = 0;

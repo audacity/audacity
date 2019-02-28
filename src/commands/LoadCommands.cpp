@@ -173,7 +173,7 @@ BuiltinCommandsModule::~BuiltinCommandsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString BuiltinCommandsModule::GetPath()
+PluginPath BuiltinCommandsModule::GetPath()
 {
    return mPath;
 }
@@ -250,13 +250,13 @@ bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString BuiltinCommandsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths BuiltinCommandsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    return mNames;
 }
 
 unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -273,14 +273,14 @@ unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool BuiltinCommandsModule::IsPluginValid(const wxString & path, bool bFast)
+bool BuiltinCommandsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
    static_cast<void>(bFast); // avoid unused variable warning
    return make_iterator_range( mNames ).contains( path );
 }
 
-ComponentInterface *BuiltinCommandsModule::CreateInstance(const wxString & path)
+ComponentInterface *BuiltinCommandsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
@@ -299,7 +299,7 @@ void BuiltinCommandsModule::DeleteInstance(ComponentInterface *instance)
 // BuiltinCommandsModule implementation
 // ============================================================================
 
-std::unique_ptr<AudacityCommand> BuiltinCommandsModule::Instantiate(const wxString & path)
+std::unique_ptr<AudacityCommand> BuiltinCommandsModule::Instantiate(const PluginPath & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_GENERIC_COMMAND_PREFIX));
    auto index = make_iterator_range( mNames ).index( path );

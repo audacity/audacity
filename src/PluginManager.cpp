@@ -387,7 +387,7 @@ struct ItemData
 {
    std::vector<PluginDescriptor*> plugs;
    wxString name;
-   wxString path;
+   PluginPath path;
    int state;
    bool valid;
    int nameWidth;
@@ -395,7 +395,7 @@ struct ItemData
    int stateWidth;
 };
 
-using ItemDataMap = std::unordered_map<wxString, ItemData>;
+using ItemDataMap = std::unordered_map<PluginPath, ItemData>;
 
 enum
 {
@@ -455,7 +455,7 @@ private:
    int mSortColumn;
    int mSortDirection;
 
-   wxString mLongestPath;
+   PluginPath mLongestPath;
 
    wxListCtrl *mEffects;
 #if wxUSE_ACCESSIBILITY
@@ -630,7 +630,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          continue;
       }
 
-      const  wxString &path = plug.GetPath();
+      const auto &path = plug.GetPath();
       ItemData & item = mItems[path];  // will create NEW entry
       item.plugs.push_back(&plug);
       item.path = path;
@@ -646,7 +646,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       // by then.
       else if (plugType == PluginTypeStub)
       {
-         wxFileName fname = path;
+         wxFileName fname { path };
          item.name = fname.GetName().Trim(false).Trim(true);
          if (!item.valid)
          {
@@ -1151,7 +1151,7 @@ const PluginID & PluginDescriptor::GetProviderID() const
    return mProviderID;
 }
 
-const wxString & PluginDescriptor::GetPath() const
+const PluginPath & PluginDescriptor::GetPath() const
 {
    return mPath;
 }
@@ -1196,7 +1196,7 @@ void PluginDescriptor::SetProviderID(const PluginID & providerID)
    mProviderID = providerID;
 }
 
-void PluginDescriptor::SetPath(const wxString & path)
+void PluginDescriptor::SetPath(const PluginPath & path)
 {
    mPath = path;
 }
@@ -1403,7 +1403,7 @@ const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
 }
 
 
-bool PluginManager::IsPluginRegistered(const wxString & path)
+bool PluginManager::IsPluginRegistered(const PluginPath &path)
 {
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {

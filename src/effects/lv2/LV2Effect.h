@@ -109,7 +109,7 @@ public:
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;

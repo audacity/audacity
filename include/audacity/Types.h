@@ -46,12 +46,22 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <type_traits>
+#include <vector>
 
 // ----------------------------------------------------------------------------
 // TODO:  I'd imagine this header may be replaced by other public headers. But,
 //        to try and minimize more changes to the base code, we can use this
 //        until proper public headers are created for the stuff in here.
 // ----------------------------------------------------------------------------
+
+/**************************************************************************//**
+
+\brief type alias for identifying a Plugin supplied by a module, each module
+defining its own interpretation of the strings, which may or may not be as a
+file system path
+********************************************************************************/
+using PluginPath = wxString;
+using PluginPaths = std::vector< PluginPath >;
 
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples

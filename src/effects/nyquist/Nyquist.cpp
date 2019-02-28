@@ -188,7 +188,7 @@ NyquistEffect::~NyquistEffect()
 
 // ComponentInterface implementation
 
-wxString NyquistEffect::GetPath()
+PluginPath NyquistEffect::GetPath()
 {
    if (mIsPrompt)
       return NYQUIST_PROMPT_ID;

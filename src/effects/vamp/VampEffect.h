@@ -39,14 +39,14 @@ class VampEffect final : public Effect
 {
 public:
    VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
-              const wxString & path,
+              const PluginPath & path,
               int output,
               bool hasParameters);
    virtual ~VampEffect();
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -88,7 +88,7 @@ private:
 
 private:
    std::unique_ptr<Vamp::Plugin> mPlugin;
-   wxString mPath;
+   PluginPath mPath;
    int mOutput;
    bool mHasParameters;
 

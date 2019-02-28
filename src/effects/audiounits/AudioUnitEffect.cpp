@@ -106,7 +106,7 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString AudioUnitEffectsModule::GetPath()
+PluginPath AudioUnitEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -162,9 +162,9 @@ bool AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return true;
 }
 
-wxArrayString AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString effects;
+   PluginPaths effects;
 
    LoadAudioUnitsOfType(kAudioUnitType_Effect, effects);
    LoadAudioUnitsOfType(kAudioUnitType_Generator, effects);
@@ -176,7 +176,7 @@ wxArrayString AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & p
 }
 
 unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -204,7 +204,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
 }
 
 bool AudioUnitEffectsModule::IsPluginValid(
-   const wxString & path, bool bFast)
+   const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
@@ -212,7 +212,7 @@ bool AudioUnitEffectsModule::IsPluginValid(
    return FindAudioUnit(path, name) != NULL;
 }
 
-ComponentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    wxString name;
@@ -238,7 +238,7 @@ void AudioUnitEffectsModule::DeleteInstance(ComponentInterface *instance)
 // ============================================================================
 
 void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
-                                                  wxArrayString & effects)
+                                                  PluginPaths & effects)
 {
    AudioComponentDescription desc;
    AudioComponent component;
@@ -278,7 +278,7 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
    }
 }
 
-AudioComponent AudioUnitEffectsModule::FindAudioUnit(const wxString & path,
+AudioComponent AudioUnitEffectsModule::FindAudioUnit(const PluginPath & path,
                                                      wxString & name)
 {
    wxStringTokenizer tokens(path, wxT("/"));
@@ -827,7 +827,7 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AudioUnitEffect::AudioUnitEffect(const wxString & path,
+AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
                                  const wxString & name,
                                  AudioComponent component,
                                  AudioUnitEffect *master)
@@ -875,7 +875,7 @@ AudioUnitEffect::~AudioUnitEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString AudioUnitEffect::GetPath()
+PluginPath AudioUnitEffect::GetPath()
 {
    return mPath;
 }

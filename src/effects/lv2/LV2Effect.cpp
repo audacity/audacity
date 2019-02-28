@@ -325,7 +325,7 @@ LV2Effect::~LV2Effect()
 // ComponentInterface Implementation
 // ============================================================================
 
-wxString LV2Effect::GetPath()
+PluginPath LV2Effect::GetPath()
 {
    return LilvString(lilv_plugin_get_uri(mPlug));
 }

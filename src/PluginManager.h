@@ -59,7 +59,7 @@ public:
    // These return untranslated strings
    const wxString & GetID() const;
    const wxString & GetProviderID() const;
-   const wxString & GetPath() const;
+   const PluginPath & GetPath() const;
    const ComponentInterfaceSymbol & GetSymbol() const;
 
    wxString GetUntranslatedVersion() const;
@@ -73,7 +73,7 @@ public:
    // These should be passed an untranslated value
    void SetID(const PluginID & ID);
    void SetProviderID(const PluginID & providerID);
-   void SetPath(const wxString & path);
+   void SetPath(const PluginPath & path);
    void SetSymbol(const ComponentInterfaceSymbol & symbol);
 
    // These should be passed an untranslated value wrapped in XO() so
@@ -132,7 +132,7 @@ private:
    PluginType mPluginType;
 
    wxString mID;
-   wxString mPath;
+   PluginPath mPath;
    ComponentInterfaceSymbol mSymbol;
    wxString mVersion;
    wxString mVendor;
@@ -175,7 +175,7 @@ public:
 
    // PluginManagerInterface implementation
 
-   bool IsPluginRegistered(const wxString & path) override;
+   bool IsPluginRegistered(const PluginPath &path) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);

@@ -96,18 +96,18 @@ public:
    bool DiscoverProviders();
 
    // Seems we don't currently use FindAllPlugins
-   void FindAllPlugins(PluginIDs & providers, wxArrayString & paths);
+   void FindAllPlugins(PluginIDs & providers, PluginPaths & paths);
 
-   wxArrayString FindPluginsForProvider(const PluginID & provider, const wxString & path);
-   bool RegisterEffectPlugin(const PluginID & provider, const wxString & path,
+   PluginPaths FindPluginsForProvider(const PluginID & provider, const PluginPath & path);
+   bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
                        wxString &errMsg);
 
-   ComponentInterface *CreateProviderInstance(const PluginID & provider, const wxString & path);
-   ComponentInterface *CreateInstance(const PluginID & provider, const wxString & path);
+   ComponentInterface *CreateProviderInstance(const PluginID & provider, const PluginPath & path);
+   ComponentInterface *CreateInstance(const PluginID & provider, const PluginPath & path);
    void DeleteInstance(const PluginID & provider, ComponentInterface *instance);
 
-   bool IsProviderValid(const PluginID & provider, const wxString & path);
-   bool IsPluginValid(const PluginID & provider, const wxString & path, bool bFast);
+   bool IsProviderValid(const PluginID & provider, const PluginPath & path);
+   bool IsPluginValid(const PluginID & provider, const PluginPath & path, bool bFast);
 
 private:
    // I'm a singleton class
@@ -115,7 +115,7 @@ private:
    ~ModuleManager();
 
    void InitializeBuiltins();
-   ModuleInterface *LoadModule(const wxString & path);
+   ModuleInterface *LoadModule(const PluginPath & path);
 
 private:
    friend ModuleInterfaceDeleter;
