@@ -103,9 +103,6 @@ public:
              bool rightEdge);
 
    static wxArrayString GetSnapLabels();
-   static wxArrayString GetSnapValues();
-   static const wxString & GetSnapValue(int index);
-   static int GetSnapIndex(const wxString & value);
 
    // The two coordinates need not be ordered:
    static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );

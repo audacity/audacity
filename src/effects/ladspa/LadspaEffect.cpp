@@ -333,7 +333,6 @@ void LadspaEffectsModule::DeleteInstance(ComponentInterface *instance)
 wxArrayString LadspaEffectsModule::GetSearchPaths()
 {
    wxArrayString pathList;
-   wxArrayString files;
    wxString pathVar;
 
    // Check for the LADSPA_PATH environment variable

@@ -364,42 +364,6 @@ SnapResults SnapManager::Snap
    return labels;
 }
 
-/* static */ wxArrayString SnapManager::GetSnapValues()
-{
-   wxArrayString values;
-
-   values.Add(wxT("Off"));
-   values.Add(wxT("Nearest"));
-   values.Add(wxT("Prior"));
-
-   return values;
-}
-
-/* static */ const wxString & SnapManager::GetSnapValue(int index)
-{
-   wxArrayString values = SnapManager::GetSnapValues();
-
-   if (index >= 0 && index < (int) values.GetCount())
-   {
-      return values[index];
-   }
-
-   return values[SNAP_OFF];
-}
-
-/* static */ int SnapManager::GetSnapIndex(const wxString & value)
-{
-   wxArrayString values = SnapManager::GetSnapValues();
-   int index = values.Index(value);
-
-   if (index != wxNOT_FOUND)
-   {
-      return index;
-   }
-
-   return SNAP_OFF;
-}
-
 #include "AColor.h"
 
 void SnapManager::Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 )

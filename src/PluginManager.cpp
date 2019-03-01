@@ -58,8 +58,6 @@ for shared and private configs - which need to move out.
 
 #include <unordered_map>
 
-using ProviderMap = std::unordered_map<wxString, wxArrayString>;
-
 // ============================================================================
 //
 //
