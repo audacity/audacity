@@ -1791,8 +1791,8 @@ bool PluginManager::DropFile(const wxString &fileName)
 
       const auto &ff = module->InstallPath();
       auto extensions = module->GetFileExtensions();
-      if (!ff.empty() &&
-          make_iterator_range(extensions).contains(src.GetExt())) {
+      if ( !ff.empty() &&
+          extensions.Index(src.GetExt(), false) != wxNOT_FOUND ) {
          wxString errMsg;
          // Do dry-run test of the file format
          unsigned nPlugIns =

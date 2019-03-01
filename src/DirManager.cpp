@@ -2124,8 +2124,8 @@ void DirManager::FindOrphanBlockFiles(
       if ((mBlockFileHash.find(basename) == mBlockFileHash.end()) && // is orphan
             // Consider only Audacity data files.
             // Specifically, ignore <branding> JPG and <import> OGG ("Save Compressed Copy").
-            (ext.IsSameAs(wxT("au")) ||
-               ext.IsSameAs(wxT("auf"))))
+            (ext.IsSameAs(wxT("au"), false) ||
+               ext.IsSameAs(wxT("auf"), false)))
       {
          if (!clipboardDM) {
             TrackList *clipTracks = AudacityProject::GetClipboardTracks();
