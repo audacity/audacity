@@ -63,6 +63,10 @@ file system path
 using PluginPath = wxString;
 using PluginPaths = std::vector< PluginPath >;
 
+// A key to be passed to wxConfigBase
+using RegistryPath = wxString;
+using RegistryPaths = std::vector< RegistryPath >;
+
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples
 // ----------------------------------------------------------------------------

@@ -1678,7 +1678,7 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 }
 
 
-bool VSTEffect::LoadUserPreset(const wxString & name)
+bool VSTEffect::LoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1690,14 +1690,14 @@ bool VSTEffect::LoadUserPreset(const wxString & name)
    return true;
 }
 
-bool VSTEffect::SaveUserPreset(const wxString & name)
+bool VSTEffect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
 
-wxArrayString VSTEffect::GetFactoryPresets()
+RegistryPaths VSTEffect::GetFactoryPresets()
 {
-   wxArrayString progs; 
+   RegistryPaths progs;
 
    // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
    // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
@@ -2295,7 +2295,7 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-bool VSTEffect::LoadParameters(const wxString & group)
+bool VSTEffect::LoadParameters(const RegistryPath & group)
 {
    wxString value;
 
@@ -2339,7 +2339,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool VSTEffect::SaveParameters(const wxString & group)
+bool VSTEffect::SaveParameters(const RegistryPath & group)
 {
    mHost->SetPrivateConfig(group, wxT("UniqueID"), mAEffect->uniqueID);
    mHost->SetPrivateConfig(group, wxT("Version"), mAEffect->version);

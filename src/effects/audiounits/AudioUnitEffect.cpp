@@ -522,7 +522,7 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
 
    S.AddStandardButtons();
 
-   wxArrayString presets;
+   RegistryPaths presets;
 
    mEffect->mHost->GetPrivateConfigSubgroups(mEffect->mHost->GetUserPresetsGroup(wxEmptyString), presets);
 
@@ -1623,12 +1623,12 @@ bool AudioUnitEffect::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool AudioUnitEffect::LoadUserPreset(const wxString & name)
+bool AudioUnitEffect::LoadUserPreset(const RegistryPath & name)
 {
    return LoadParameters(name);
 }
 
-bool AudioUnitEffect::SaveUserPreset(const wxString & name)
+bool AudioUnitEffect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
@@ -1683,10 +1683,10 @@ bool AudioUnitEffect::LoadFactoryDefaults()
    return LoadParameters(mHost->GetFactoryDefaultsGroup());
 }
 
-wxArrayString AudioUnitEffect::GetFactoryPresets()
+RegistryPaths AudioUnitEffect::GetFactoryPresets()
 {
    OSStatus result;
-   wxArrayString presets;
+   RegistryPaths presets;
 
    // Retrieve the list of factory presets
    CFArrayRef array{};
@@ -1873,7 +1873,7 @@ void AudioUnitEffect::ShowOptions()
 // AudioUnitEffect Implementation
 // ============================================================================
 
-bool AudioUnitEffect::LoadParameters(const wxString & group)
+bool AudioUnitEffect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
    if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
@@ -1890,7 +1890,7 @@ bool AudioUnitEffect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool AudioUnitEffect::SaveParameters(const wxString & group)
+bool AudioUnitEffect::SaveParameters(const RegistryPath & group)
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))

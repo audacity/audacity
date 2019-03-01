@@ -72,39 +72,39 @@ public:
                                     wxArrayString & files,
                                     bool directories = false) = 0;
 
-   virtual bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups) = 0;
+   virtual bool GetSharedConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups) = 0;
 
-   virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxString()) = 0;
-   virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval = 0) = 0;
-   virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) = 0;
-   virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) = 0;
-   virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) = 0;
+   virtual bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = wxString()) = 0;
+   virtual bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) = 0;
+   virtual bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) = 0;
+   virtual bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) = 0;
+   virtual bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) = 0;
 
-   virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) = 0;
-   virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) = 0;
-   virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) = 0;
-   virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) = 0;
-   virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) = 0;
+   virtual bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value) = 0;
+   virtual bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value) = 0;
+   virtual bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value) = 0;
+   virtual bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value) = 0;
+   virtual bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value) = 0;
 
-   virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group) = 0;
-   virtual bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key) = 0;
+   virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const RegistryPath & group) = 0;
+   virtual bool RemoveSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key) = 0;
 
-   virtual bool GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups) = 0;
+   virtual bool GetPrivateConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups) = 0;
 
-   virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxString()) = 0;
-   virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval = 0) = 0;
-   virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) = 0;
-   virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) = 0;
-   virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) = 0;
+   virtual bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = wxString()) = 0;
+   virtual bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) = 0;
+   virtual bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) = 0;
+   virtual bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) = 0;
+   virtual bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) = 0;
 
-   virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) = 0;
-   virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) = 0;
-   virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) = 0;
-   virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) = 0;
-   virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) = 0;
+   virtual bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value) = 0;
+   virtual bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value) = 0;
+   virtual bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value) = 0;
+   virtual bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value) = 0;
+   virtual bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value) = 0;
 
-   virtual bool RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group) = 0;
-   virtual bool RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key) = 0;
+   virtual bool RemovePrivateConfigSubgroup(const PluginID & ID, const RegistryPath & group) = 0;
+   virtual bool RemovePrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key) = 0;
 };
 
 #endif // __AUDACITY_PLUGININTERFACE_H__

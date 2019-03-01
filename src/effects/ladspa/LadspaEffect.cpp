@@ -1107,7 +1107,7 @@ bool LadspaEffect::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool LadspaEffect::LoadUserPreset(const wxString & name)
+bool LadspaEffect::LoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1119,14 +1119,14 @@ bool LadspaEffect::LoadUserPreset(const wxString & name)
    return true;
 }
 
-bool LadspaEffect::SaveUserPreset(const wxString & name)
+bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
 
-wxArrayString LadspaEffect::GetFactoryPresets()
+RegistryPaths LadspaEffect::GetFactoryPresets()
 {
-   return wxArrayString();
+   return {};
 }
 
 bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
@@ -1591,7 +1591,7 @@ void LadspaEffect::Unload()
    }
 }
 
-bool LadspaEffect::LoadParameters(const wxString & group)
+bool LadspaEffect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
    if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
@@ -1608,7 +1608,7 @@ bool LadspaEffect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool LadspaEffect::SaveParameters(const wxString & group)
+bool LadspaEffect::SaveParameters(const RegistryPath & group)
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))
