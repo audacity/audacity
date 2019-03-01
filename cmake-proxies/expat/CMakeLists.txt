@@ -3,7 +3,7 @@ set( TARGET expat )
 set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
 project( ${TARGET} )
 
-set( SOURCES 
+set( SOURCES
 #${LIB_SRC_DIRECTORY}expat/amiga/expat_68k.c
 #${LIB_SRC_DIRECTORY}expat/amiga/expat_68k_handler_stubs.c
 #${LIB_SRC_DIRECTORY}expat/amiga/expat_lib.c
@@ -34,13 +34,17 @@ ${LIB_SRC_DIRECTORY}expat/lib/xmltok_ns.c
 #${LIB_SRC_DIRECTORY}expat/tests/runtestspp.cpp
 )
 # This defines the #define on both Windows and Linux.
-add_definitions( 
--D_LIB 
--DCOMPILED_FROM_DSP
-)
+add_definitions(-D_LIB)
+
+if(APPLE)
+    add_definitions(-DMACOS_CLASSIC)
+else()
+    add_definitions(-DCOMPILED_FROM_DSP)
+endif()
+
 add_library( ${TARGET} STATIC ${SOURCES})
 
-target_include_directories( ${TARGET} PRIVATE 
+target_include_directories( ${TARGET} PRIVATE
 ${TARGET_SOURCE}/lib
 )
 
