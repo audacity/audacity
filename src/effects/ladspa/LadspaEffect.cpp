@@ -156,7 +156,7 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
-wxArrayString LadspaEffectsModule::FileExtensions()
+wxArrayString LadspaEffectsModule::GetFileExtensions()
 {
    static const wxString ext[] = {
 

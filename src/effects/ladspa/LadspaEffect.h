@@ -222,7 +222,7 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   wxArrayString FileExtensions() override;
+   wxArrayString GetFileExtensions() override;
    wxString InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;

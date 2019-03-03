@@ -41,7 +41,7 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   wxArrayString FileExtensions() override { return {}; }
+   wxArrayString GetFileExtensions() override { return {}; }
    wxString InstallPath() override { return {}; }
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
