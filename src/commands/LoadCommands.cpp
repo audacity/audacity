@@ -277,7 +277,7 @@ bool BuiltinCommandsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
    static_cast<void>(bFast); // avoid unused variable warning
-   return mNames.Index(path) != wxNOT_FOUND;
+   return make_iterator_range( mNames ).contains( path );
 }
 
 ComponentInterface *BuiltinCommandsModule::CreateInstance(const wxString & path)
@@ -302,9 +302,10 @@ void BuiltinCommandsModule::DeleteInstance(ComponentInterface *instance)
 std::unique_ptr<AudacityCommand> BuiltinCommandsModule::Instantiate(const wxString & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_GENERIC_COMMAND_PREFIX));
-   wxASSERT(mNames.Index(path) != wxNOT_FOUND);
+   auto index = make_iterator_range( mNames ).index( path );
+   wxASSERT( index != wxNOT_FOUND );
 
-   switch (mNames.Index(path))
+   switch ( index )
    {
       COMMAND_LIST;
       EXCLUDE_LIST;

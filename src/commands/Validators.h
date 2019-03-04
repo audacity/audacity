@@ -107,7 +107,7 @@ public:
    bool Validate(const wxVariant &v) override
    {
       SetConverted(v);
-      return (mOptions.Index(v.GetString()) != wxNOT_FOUND);
+      return make_iterator_range( mOptions ).contains( v.GetString() );
    }
    wxString GetDescription() const override
    {

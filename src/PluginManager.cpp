@@ -2409,7 +2409,7 @@ void PluginManager::CheckForUpdates(bool bFast)
             for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
             {
                wxString path = paths[i].BeforeFirst(wxT(';'));;
-               if (pathIndex.Index(path) == wxNOT_FOUND)
+               if ( ! make_iterator_range( pathIndex ).contains( path ) )
                {
                   PluginID ID = plugID + wxT("_") + path;
                   PluginDescriptor & plug2 = mPlugins[ID];  // This will create a NEW descriptor

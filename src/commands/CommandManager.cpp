@@ -1603,7 +1603,7 @@ void CommandManager::GetCategories(wxArrayString &cats)
 
    for (const auto &entry : mCommandList) {
       wxString cat = entry->labelTop;
-      if (cats.Index(cat) == wxNOT_FOUND) {
+      if ( ! make_iterator_range( cats ).contains(cat) ) {
          cats.push_back(cat);
       }
    }

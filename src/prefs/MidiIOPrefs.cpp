@@ -103,7 +103,7 @@ void MidiIOPrefs::GetNamesAndLabels() {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
       if (info->output || info->input) { //should always happen
          wxString name = wxSafeConvertMB2WX(info->interf);
-         if (mHostNames.Index(name) == wxNOT_FOUND) {
+         if ( ! make_iterator_range( mHostNames ).contains( name ) ) {
             mHostNames.push_back(name);
             mHostLabels.push_back(name);
          }

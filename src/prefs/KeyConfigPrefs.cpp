@@ -521,7 +521,7 @@ void KeyConfigPrefs::SetKeyForSelected(const NormalizedKeyString & key)
 
    mView->SetKey(mCommandSelected, key);
    mManager->SetKeyFromName(name, key);
-   mNewKeys[mNames.Index(name)] = key;
+   mNewKeys[ make_iterator_range( mNames ).index( name ) ] = key;
 }
 
 
@@ -563,7 +563,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 
       mView->SetKeyByName(oldname, {});
       mManager->SetKeyFromName(oldname, {});
-      mNewKeys[mNames.Index(oldname)] = {};
+      mNewKeys[ make_iterator_range( mNames ).index( oldname ) ] = {};
 
    }
 

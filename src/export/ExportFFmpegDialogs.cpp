@@ -1624,7 +1624,7 @@ void ExportFFmpegOptions::FindSelectedFormat(wxString **name, wxString **longnam
    wxString selfmt = mFormatList->GetString(selections[0]);
 
    // Find it's index
-   int nFormat = mFormatNames.Index(selfmt);
+   int nFormat = make_iterator_range( mFormatNames ).index( selfmt );
    if (nFormat == wxNOT_FOUND) return;
 
    // Return short name and description
@@ -1645,7 +1645,7 @@ void ExportFFmpegOptions::FindSelectedCodec(wxString **name, wxString **longname
    wxString selcdc = mCodecList->GetString(selections[0]);
 
    // Find it's index
-   int nCodec = mCodecNames.Index(selcdc);
+   int nCodec = make_iterator_range( mCodecNames ).index( selcdc );
    if (nCodec == wxNOT_FOUND) return;
 
    // Return short name and description
@@ -1699,7 +1699,8 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
       {
          if (codec->type == AVMEDIA_TYPE_AUDIO && av_codec_is_encoder(codec))
          {
-            if (mShownCodecNames.Index(wxString::FromUTF8(codec->name)) < 0)
+            if (! make_iterator_range( mShownCodecNames )
+               .contains( wxString::FromUTF8(codec->name) ) )
             {
                if ((id >= 0) && codec->id == id) index = mShownCodecNames.size();
                mShownCodecNames.push_back(wxString::FromUTF8(codec->name));

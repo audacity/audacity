@@ -2072,7 +2072,7 @@ bool NyquistEffect::Parse(
          }
       }
 
-      if( mPresetNames.Index( ctrl.var ) == wxNOT_FOUND )
+      if( ! make_iterator_range( mPresetNames ).contains( ctrl.var ) )
       {
          mControls.push_back(ctrl);
       }

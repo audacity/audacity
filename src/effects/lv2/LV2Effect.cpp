@@ -505,7 +505,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          }
 
          // Add it if not previously done
-         if (mGroups.Index(ctrl.mGroup) == wxNOT_FOUND)
+         if ( !make_iterator_range( mGroups ).contains( ctrl.mGroup ) )
          {
             mGroups.push_back(ctrl.mGroup);
          }

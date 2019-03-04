@@ -1610,8 +1610,8 @@ wxChoice * ShuttleGuiBase::TieChoice(
 /// String-to-Index
 int ShuttleGuiBase::TranslateToIndex( const wxString &Value, const wxArrayString &Choices )
 {
-   int n = Choices.Index( Value );
-   if( n== wxNOT_FOUND )
+   int n = make_iterator_range( Choices ).index( Value );
+   if( n == wxNOT_FOUND  )
       n=miNoMatchSelector;
    miNoMatchSelector = 0;
    return n;

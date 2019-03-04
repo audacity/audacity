@@ -937,7 +937,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "light" );
    aThemes.Add( "high-contrast" );
    aThemes.Add( "custom" );
-   int themeIx = aThemes.Index( Name );
+   int themeIx = make_iterator_range( aThemes ).index( Name );
    if( themeIx < 0 )
       return GetFallbackThemeType();
    return (teThemeType)themeIx;

@@ -553,10 +553,12 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
    if (cnt > 0) {
       row = mGrid->GetGridCursorRow();
       if (row > 0 && row >= cnt) {
-         index = mTrackNames.Index(mGrid->GetCellValue(row - 1, Col_Track));
+         index = make_iterator_range( mTrackNames )
+            .index( mGrid->GetCellValue(row - 1, Col_Track) );
       }
       else {
-         index = mTrackNames.Index(mGrid->GetCellValue(row, Col_Track));
+         index = make_iterator_range( mTrackNames )
+            .index( mGrid->GetCellValue(row, Col_Track) );
       }
    }
 
@@ -801,7 +803,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
    wxString val = mGrid->GetCellValue(row, Col_Track);
 
    // User selected the "New..." choice so ask for a NEW name
-   if (mTrackNames.Index(val) == 0) {
+   if ( make_iterator_range( mTrackNames ).index( val ) == 0 ) {
       AudacityTextEntryDialog d(this,
                           _("New Label Track"),
                           _("Enter track name"),
@@ -821,7 +823,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
    }
    else {
       // Remember the tracks index
-      rd->index = mTrackNames.Index(val);
+      rd->index = make_iterator_range( mTrackNames ).index( val );
    }
 
    // Repopulate the grid

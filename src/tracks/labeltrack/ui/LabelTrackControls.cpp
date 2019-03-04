@@ -131,7 +131,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
             wxLB_SINGLE);
 
          lb->SetName(_("Face name"));
-         lb->SetSelection(facenames.Index(facename));
+         lb->SetSelection( make_iterator_range( facenames ).index( facename ));
          S.AddWindow(lb, wxALIGN_LEFT | wxEXPAND | wxALL);
 
          /* i18n-hint: (noun) The size of the typeface*/

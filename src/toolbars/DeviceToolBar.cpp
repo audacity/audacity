@@ -510,10 +510,10 @@ void DeviceToolBar::FillHosts()
    const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
    // go over our lists add the host to the list if it isn't there yet
    for (i = 0; i < inMaps.size(); i++)
-      if (hosts.Index(inMaps[i].hostString) == wxNOT_FOUND)
+      if ( ! make_iterator_range( hosts ).contains( inMaps[i].hostString ) )
          hosts.push_back(inMaps[i].hostString);
    for (i = 0; i < outMaps.size(); i++)
-      if (hosts.Index(outMaps[i].hostString) == wxNOT_FOUND)
+      if ( ! make_iterator_range( hosts ).contains( outMaps[i].hostString ) )
          hosts.push_back(outMaps[i].hostString);
 
    mHost->Clear();

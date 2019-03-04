@@ -1039,7 +1039,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
       wxArrayString presets = GetFactoryPresets();
-      success = LoadFactoryPreset(presets.Index(preset));
+      success = LoadFactoryPreset( make_iterator_range( presets ).index( preset ) );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
@@ -3679,7 +3679,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          continue;
       }
 
-      if (mUserPresets.Index(name) != wxNOT_FOUND)
+      if ( make_iterator_range( mUserPresets ).contains( name ) )
       {
          AudacityMessageDialog md(this,
                             _("Preset already exists.\n\nReplace?"),

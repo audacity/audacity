@@ -98,7 +98,7 @@ MacroCommands::MacroCommands()
 
    for( size_t i = 0;i<defaults.size();i++){
       wxString name = defaults[i];
-      if (names.Index(name) == wxNOT_FOUND) {
+      if ( ! make_iterator_range( names ).contains(name) ) {
          AddMacro(name);
          RestoreMacro(name);
          WriteMacro(name);
@@ -1005,7 +1005,7 @@ wxArrayString MacroCommands::GetNames()
 bool MacroCommands::IsFixed(const wxString & name)
 {
    wxArrayString defaults = GetNamesOfDefaultMacros();
-   if( defaults.Index( name ) != wxNOT_FOUND )
+   if( make_iterator_range( defaults ).contains( name ) )
       return true;
    return false;
 }

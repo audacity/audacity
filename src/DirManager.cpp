@@ -1516,7 +1516,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    // then the file name is A-OK.
 
    const wxString fullPath{fName.GetFullPath()};
-   if (aliasList.Index(fullPath) == wxNOT_FOUND)
+   if ( !make_iterator_range( aliasList ).contains( fullPath ) )
       return true;
 
    /* i18n-hint: 'old' is part of a filename used when a file is renamed. */

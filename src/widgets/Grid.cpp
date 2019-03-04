@@ -311,7 +311,7 @@ void ChoiceEditor::BeginEdit(int row, int col, wxGrid* grid)
 
    Choice()->Clear();
    Choice()->Append(mChoices);
-   Choice()->SetSelection(mChoices.Index(mOld));
+   Choice()->SetSelection( make_iterator_range( mChoices ).index( mOld ) );
    Choice()->SetFocus();
 }
 
@@ -356,7 +356,7 @@ void ChoiceEditor::ApplyEdit(int row, int col, wxGrid *grid)
 
 void ChoiceEditor::Reset()
 {
-   Choice()->SetSelection(mChoices.Index(mOld));
+   Choice()->SetSelection( make_iterator_range( mChoices ).index( mOld ) );
 }
 
 void ChoiceEditor::SetChoices(const wxArrayString &choices)
