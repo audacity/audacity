@@ -1097,11 +1097,12 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
 
    S.AddStandardButtons();
 
-   wxSortedArrayString g;
+   wxArrayString g;
    int cnt = mLocal.GetNumUserGenres();
    for (int i = 0; i < cnt; i++) {
       g.Add(mLocal.GetUserGenre(i));
    }
+   std::sort( g.begin(), g.end() );
 
    for (int i = 0; i < cnt; i++) {
       tc->AppendText(g[i] + wxT("\n"));
@@ -1427,11 +1428,12 @@ void TagsEditor::PopulateGenres()
    int cnt = mLocal.GetNumUserGenres();
    int i;
    wxString parm;
-   wxSortedArrayString g;
+   wxArrayString g;
 
    for (i = 0; i < cnt; i++) {
       g.Add(mLocal.GetUserGenre(i));
    }
+   std::sort( g.begin(), g.end() );
 
    for (i = 0; i < cnt; i++) {
       parm = parm + (i == 0 ? wxT("") : wxT(",")) + g[i];
