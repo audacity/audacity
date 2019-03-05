@@ -31,13 +31,14 @@ class GridAx;
 #endif
 
 class NumericTextCtrl;
-using NumericFormatId = IdentInterfaceSymbol;
+using NumericFormatId = ComponentInterfaceSymbol;
 
-// ----------------------------------------------------------------------------
-// NumericEditor
-//
-// wxGridCellEditor for the NumericTextCtrl.
-// ----------------------------------------------------------------------------
+/**********************************************************************//**
+
+\class NumericEditor
+\brief wxGridCellEditor for the NumericTextCtrl.
+
+**************************************************************************/
 #define GRID_VALUE_TIME wxT("Time")
 #define GRID_VALUE_FREQUENCY wxT("Frequency")
 
@@ -86,12 +87,10 @@ public:
    wxString mValueAsString;
 };
 
-// ----------------------------------------------------------------------------
-// NumericRenderer
-//
-// wxGridCellRenderer for the NumericTextCtrl.
-// ----------------------------------------------------------------------------
-
+/**********************************************************************//**
+\class NumericRenderer
+\brief wxGridCellRenderer for the NumericTextCtrl.
+**************************************************************************/
 class NumericRenderer final : public wxGridCellRenderer
 {
  public:
@@ -118,11 +117,11 @@ private:
    NumericConverter::Type mType;
 };
 
-// ----------------------------------------------------------------------------
-// ChoiceEditor
-//
-// Modified version of wxGridChoiceEditor using wxChoice instead of wxComboBox.
-// ----------------------------------------------------------------------------
+/**********************************************************************//**
+\class ChoiceEditor
+\brief Modified version of wxGridChoiceEditor using wxChoice instead of 
+wxComboBox.
+**************************************************************************/
 #define GRID_VALUE_CHOICE wxT("Choice")
 
 class ChoiceEditor final : public wxGridCellEditor, wxEvtHandler
@@ -184,11 +183,10 @@ public:
    wxString mValueAsString;
 };
 
-// ----------------------------------------------------------------------------
-// Grid
-//
-// wxGrid with support for accessibility.
-// ----------------------------------------------------------------------------
+/**********************************************************************//**
+\class Grid
+\brief wxGrid with support for accessibility.
+**************************************************************************/
 
 class Grid final : public wxGrid
 {
@@ -236,12 +234,10 @@ class Grid final : public wxGrid
 };
 
 #if wxUSE_ACCESSIBILITY
-// ----------------------------------------------------------------------------
-// GridAx
-//
-// wxAccessible object providing grid information for Grid.
-// ----------------------------------------------------------------------------
-
+/**********************************************************************//**
+\class GridAx
+\brief wxAccessible object providing grid information for Grid.
+**************************************************************************/
 class GridAx final : public WindowAccessible
 {
 

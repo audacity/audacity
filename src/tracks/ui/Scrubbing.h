@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/Overlay.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"
+#include "../../commands/CommandManager.h" // for MenuTable
 #include "../../../include/audacity/Types.h"
 
 class AudacityProject;
@@ -127,7 +128,7 @@ public:
    bool CanScrub() const;
 
    // For the toolbar
-   void AddMenuItems();
+   MenuTable::BaseItemPtr Menu();
    // For popup
    void PopulatePopupMenu(wxMenu &menu);
 

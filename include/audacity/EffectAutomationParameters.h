@@ -50,7 +50,7 @@
 #include <wx/intl.h>
 #include <algorithm>
 
-#include "IdentInterface.h"
+#include "ComponentInterface.h"
 
 
 /**
@@ -130,7 +130,7 @@ public:
 
    virtual bool DoWriteDouble(const wxString & key, double value) override
    {
-      return DoWriteString(key, wxString::Format(wxT("%g"), value));
+      return DoWriteString(key, wxString::Format(wxT("%.8g"), value));
    }
 
    bool ReadFloat(const wxString & key, float *pf) const
@@ -164,7 +164,7 @@ public:
    using ObsoleteMap = std::pair< wxString, size_t >;
 
    bool ReadEnum(const wxString & key, int *pi,
-                 const IdentInterfaceSymbol choices[], size_t nChoices,
+                 const ComponentInterfaceSymbol choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -174,7 +174,7 @@ public:
          return false;
       }
       *pi = std::find( choices, choices + nChoices,
-                       IdentInterfaceSymbol{ s, {} } ) - choices;
+                       ComponentInterfaceSymbol{ s, {} } ) - choices;
       if (*pi == (int)nChoices)
          *pi = -1;
       if (*pi < 0 && obsoletes) {
@@ -189,7 +189,7 @@ public:
    }
 
    bool ReadEnum(const wxString & key, int *pi, int defVal,
-                 const IdentInterfaceSymbol choices[], size_t nChoices,
+                 const ComponentInterfaceSymbol choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -201,7 +201,7 @@ public:
    }
 
    bool WriteEnum(const wxString & key, int value,
-                  const IdentInterfaceSymbol choices[], size_t nChoices)
+                  const ComponentInterfaceSymbol choices[], size_t nChoices)
    {
       if (value < 0 || value >= (int)nChoices)
       {
@@ -248,7 +248,7 @@ public:
    }
 
    bool ReadAndVerify(const wxString & key, int *val, int defVal,
-                      const IdentInterfaceSymbol choices[], size_t nChoices,
+                      const ComponentInterfaceSymbol choices[], size_t nChoices,
                       const ObsoleteMap obsoletes[] = nullptr,
                       size_t nObsoletes = 0) const
    {

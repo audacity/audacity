@@ -14,7 +14,6 @@
 #ifdef EXPERIMENTAL_MIDI_OUT
 
 #include "../../../../HitTestResult.h"
-#include "../../../../MixerBoard.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h" // for TrackInfo
@@ -47,14 +46,11 @@ float VelocitySliderHandle::GetValue()
 UIHandle::Result VelocitySliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
+   (void)pProject;//Compiler food
    auto pTrack = GetNoteTrack();
 
    if (pTrack) {
       pTrack->SetVelocity(newValue);
-
-      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->UpdateVelocity(pTrack.get());
    }
 
    return RefreshCode::RefreshCell;

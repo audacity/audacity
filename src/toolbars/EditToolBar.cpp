@@ -49,6 +49,7 @@
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../Internat.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
@@ -58,6 +59,7 @@
 
 #include "../Experimental.h"
 #include "../commands/CommandContext.h"
+#include "../commands/CommandManager.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
@@ -299,9 +301,9 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    CommandManager* cm = p->GetCommandManager();
    if (!cm) return;
 
-   auto flags = p->GetUpdateFlags();
+   auto flags = GetMenuManager(*p).GetUpdateFlags(*p);
    const CommandContext context( *GetActiveProject() );
-   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecifed);
+   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecified);
 }
 
 

@@ -11,10 +11,13 @@
 
 #include "../Audacity.h"
 
+#include <vector>
 #include <wx/defs.h>
 #include <wx/arrstr.h>
 #include <wx/string.h>
 #include <wx/vlbox.h>
+
+#include "../commands/Keyboard.h"
 
 // Class holding all information about a node.  Rather than a real tree
 // we store these in an array and simulate a tree.

@@ -89,9 +89,9 @@ EffectDtmf::~EffectDtmf()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectDtmf::GetSymbol()
+ComponentInterfaceSymbol EffectDtmf::GetSymbol()
 {
    return DTMFTONES_PLUGIN_SYMBOL;
 }

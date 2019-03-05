@@ -39,6 +39,7 @@ class DirectoriesPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+/// A PrefsPanelFactory that creates one DirectoriesPrefs panel.
 class DirectoriesPrefsFactory final : public PrefsPanelFactory
 {
 public:

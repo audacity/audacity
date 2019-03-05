@@ -87,9 +87,9 @@ bool ZoomInfo::ZoomOutAvailable() const
    return zoom > gMinZoom;
 }
 
-double ZoomInfo::GetZoom( ){ return zoom;};
-double ZoomInfo::GetMaxZoom( ){ return gMaxZoom;};
-double ZoomInfo::GetMinZoom( ){ return gMinZoom;};
+double ZoomInfo::GetZoom( ) const { return zoom;};
+double ZoomInfo::GetMaxZoom( ) { return gMaxZoom;};
+double ZoomInfo::GetMinZoom( ) { return gMinZoom;};
 
 void ZoomInfo::SetZoom(double pixelsPerSecond)
 {

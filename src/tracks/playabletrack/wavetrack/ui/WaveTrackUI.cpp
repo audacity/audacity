@@ -50,7 +50,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
    // Some special targets are not drawn in spectrogram,
    // so don't hit them in such views.
    else if (isWaveform) {
-      UIHandlePtr result;
+
       if (NULL != (result = CutlineHandle::HitTest(
          mCutlineHandle, st.state, st.rect,
          pProject, Pointer<WaveTrack>(this))))

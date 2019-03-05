@@ -41,10 +41,10 @@ protected:
    AudacityException &operator = ( const AudacityException & ) PROHIBITED;
 };
 
-// A subclass of AudacityException whose delayed handler action displays
-// a message box.  The message is specified by further subclasses.
-// Not more than one message box will be displayed for each pass through
-// the main event idle loop.
+/// \brief A subclass of AudacityException whose delayed handler action displays
+/// a message box.  The message is specified by further subclasses.
+/// Not more than one message box will be displayed for each pass through
+/// the main event idle loop.
 class MessageBoxException /* not final */ : public AudacityException
 {
    // Do not allow subclasses to change this behavior further, except
@@ -68,7 +68,7 @@ private:
    mutable bool moved { false };
 };
 
-// MessageBoxException that shows a given, unvarying string.
+/// \brief A MessageBoxException that shows a given, unvarying string.
 class SimpleMessageBoxException /* not final */ : public MessageBoxException
 {
 public:
@@ -90,6 +90,8 @@ private:
    wxString message;
 };
 
+
+/// \brief performs the delayed configured action, when invoked.
 struct DefaultDelayedHandlerAction
 {
    void operator () (AudacityException *pException) const
@@ -99,8 +101,8 @@ struct DefaultDelayedHandlerAction
    }
 };
 
-// Classes that can supply the second argument of GuardedCall:
-// Frequently useful converter of all exceptions to some failure constant
+/// \brief SimpleGuard classes add the second argument of GuardedCall:
+/// Frequently useful converter of all exceptions to some failure constant
 template <typename R> struct SimpleGuard
 {
    explicit SimpleGuard( R value ) : m_value{ value } {}
@@ -108,7 +110,7 @@ template <typename R> struct SimpleGuard
    const R m_value;
 };
 
-// Simple guard specialization that returns bool, and defines Default
+/// \brief SimpleGuard specialization that returns bool, and defines Default
 template<> struct SimpleGuard<bool>
 {
    explicit SimpleGuard( bool value ) : m_value{ value } {}
@@ -118,7 +120,7 @@ template<> struct SimpleGuard<bool>
    const bool m_value;
 };
 
-// Simple guard specialization that returns nothing, and defines Default
+/// \brief SimpleGuard specialization that returns nothing, and defines Default
 template<> struct SimpleGuard<void>
 {
    SimpleGuard() {}
@@ -132,16 +134,24 @@ SimpleGuard< R > MakeSimpleGuard( R value )
 
 inline SimpleGuard< void > MakeSimpleGuard() { return {}; }
 
-/**
- * Call the body function (usually a lambda) inside a try block.
- *
- * The handler intercepts exceptions, and is passed nullptr if the
- * exception is of a type not defined by Audacity.  It may return a value
- * for the guarded call or throw the same or another exception.
- * It executes in the same thread as the body.
- *
- * If the handler is passed non-null and does not throw, then delayedHandler
- * executes later in the main thread, in idle time of the event loop.
+/***
+  \brief GuardedCall performs a body action, and provided there is no 
+  exception a handler action on completion.  If there is an exception, 
+  it queues up the delayed handler action for execution later in 
+  the idle event loop
+
+  The template is rather configurable, and default behaviours can be 
+  overridden.  GuardedCall makes use of SimpleGuard for the handler action.
+
+  GuardedCall calls the body function (usually a lambda) inside a try block.
+ 
+  The handler intercepts exceptions, and is passed nullptr if the
+  exception is of a type not defined by Audacity.  It may return a value
+  for the guarded call or throw the same or another exception.
+  The handler executes in the same thread as the body.
+ 
+  If the handler is passed non-null and does not throw, then delayedHandler
+  executes later in the main thread, in idle time of the event loop.
  */
 template <
    typename R = void, // return type

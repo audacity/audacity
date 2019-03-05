@@ -98,7 +98,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef __WXDEBUG__
       S.AddFixedText(
-         _("This is a debug version of Audacity, with an extra button, 'Output Sourcery'.  This will save a\nC version of the image cache that can be compiled in as a default.")
+         _("This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
          );
 #endif
 

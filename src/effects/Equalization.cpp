@@ -90,6 +90,7 @@
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../TrackArtist.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"
@@ -144,7 +145,7 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
+static const ComponentInterfaceSymbol kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -280,9 +281,9 @@ EffectEqualization::~EffectEqualization()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectEqualization::GetSymbol()
+ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
@@ -471,23 +472,20 @@ bool EffectEqualization::Init()
 {
    int selcount = 0;
    double rate = 0.0;
-   TrackListIterator iter(GetActiveProject()->GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         WaveTrack *track = (WaveTrack *)t;
-         if (selcount==0) {
-            rate = track->GetRate();
+
+   auto trackRange =
+      GetActiveProject()->GetTracks()->Selected< const WaveTrack >();
+   if (trackRange) {
+      rate = (*(trackRange.first++)) -> GetRate();
+      ++selcount;
+
+      for (auto track : trackRange) {
+         if (track->GetRate() != rate) {
+            Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
+            return(false);
          }
-         else {
-            if (track->GetRate() != rate) {
-               Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
-               return(false);
-            }
-         }
-         selcount++;
+         ++selcount;
       }
-      t = iter.Next();
    }
 
    mHiFreq = rate / 2.0;
@@ -532,10 +530,8 @@ bool EffectEqualization::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -553,7 +549,6 @@ bool EffectEqualization::Process()
          }
       }
 
-      track = (WaveTrack *) iter.Next();
       count++;
    }
 
@@ -588,8 +583,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    LoadCurves();
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   const auto t = *inputTracks()->Any< const WaveTrack >().first;
    mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
    mLoFreq = loFreqI;
 
@@ -2120,7 +2114,7 @@ void EffectEqualization::UpdateCurves()
    bool selectedCurveExists = false;
    for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
-      if (mCurveName == mCurve)
+      if (mCurveName == mCurves[ i ].Name)
          selectedCurveExists = true;
       mCurve->Append(mCurves[ i ].Name);
    }
@@ -3056,9 +3050,16 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(*wxBLACK_PEN);
    if( mEffect->mDraw->GetValue() )
    {
-      TrackPanelDrawingContext context{ memDC, {}, {} };
+      ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
+
+      // Back pointer to TrackPanel won't be needed in the one drawing
+      // function we use here
+      TrackArtist artist( nullptr );
+
+      artist.pZoomInfo = &zoomInfo;
+      TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
       mEffect->mEnvelope->DrawPoints(
-         context, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
+         context, mEnvRect, false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax, false);
    }
 

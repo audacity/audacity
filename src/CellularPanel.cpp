@@ -106,8 +106,13 @@ void CellularPanel::Uncapture(bool escaping, wxMouseState *pState)
    if (HasCapture())
       ReleaseMouse();
    HandleMotion( *pState );
-
-   if (escaping || !TakesFocus()) {
+ 
+   if ( escaping
+#ifndef __WXGTK__
+   // See other comment in HandleClick()
+      || !TakesFocus()
+#endif
+   ) {
       auto lender = GetProject()->mFocusLender.get();
       if (lender)
          lender->SetFocus();
@@ -799,8 +804,17 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
-         if( !HasFocus() )
-            SetFocus();
+         if( !HasFocus()
+#ifdef __WXGTK__
+            // Bug 2056 residual
+            // Don't take focus even temporarily in the time ruler, because
+            // the restoring of it doesn't work as expected for reasons not
+            // yet clear.
+            // The price we pay is that ESC can't abort drags in the time ruler
+            && TakesFocus()
+#endif
+         )
+            SetFocusIgnoringChildren();
 
          state.mpClickedCell = pCell;
 
@@ -858,6 +872,174 @@ void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
       AudacityProject::ReleaseKeyboard(this);
    }
    Refresh( false);
+}
+
+// Empty out-of-line default functions to fill Visitor's vtable
+CellularPanel::Visitor::~Visitor() {}
+void CellularPanel::Visitor::VisitCell(
+   const wxRect &rect, TrackPanelCell &cell ) {}
+void CellularPanel::Visitor::BeginGroup(
+   const wxRect &rect, TrackPanelGroup &group ) {}
+void CellularPanel::Visitor::EndGroup(
+   const wxRect &rect, TrackPanelGroup &group ) {}
+
+// Public, top-level entry for generalized Visit
+void CellularPanel::Visit( Visitor &visitor )
+{
+   Visit( GetClientRect(), Root(), visitor );
+}
+
+// Common utility class for the functions that follow
+namespace {
+   struct Adaptor : CellularPanel::Visitor {
+      using SimpleCellVisitor = CellularPanel::SimpleCellVisitor;
+      using SimpleNodeVisitor = CellularPanel::SimpleNodeVisitor;
+
+      // Visit cells only
+      Adaptor( const SimpleCellVisitor& function_ )
+      : function{ [&](const wxRect &rect, TrackPanelNode &cell) {
+         return function_( rect, static_cast<TrackPanelCell&>(cell) );
+      } }
+      {}
+
+      // Visit cells and groups, each once only, choosing pre- or post- ordering
+      // for the groups
+      Adaptor( const SimpleNodeVisitor &function_, bool pre_ )
+         : function{ function_ }, pre{ pre_ }, post{ ! pre_ } {}
+
+      void VisitCell( const wxRect &rect, TrackPanelCell &cell ) override
+         { return function( rect, cell ); }
+      void BeginGroup( const wxRect &rect, TrackPanelGroup &group ) override
+         { if (pre) return function( rect, group ); }
+      void EndGroup( const wxRect &rect, TrackPanelGroup &group ) override
+         { if (post) return function( rect, group ); }
+
+      SimpleNodeVisitor function;
+      const bool pre{ false }, post{ false };
+   };
+}
+
+// Simplified entry points for visits that don't need all the generality of
+// CellularPanel::Visitor
+void CellularPanel::VisitCells( const SimpleCellVisitor &visitor )
+{
+   Adaptor adaptor{ visitor };
+   Visit( adaptor );
+}
+
+void CellularPanel::VisitPreorder( const SimpleNodeVisitor &visitor )
+{
+   Adaptor adaptor{ visitor, true };
+   Visit( adaptor );
+}
+
+void CellularPanel::VisitPostorder( const SimpleNodeVisitor &visitor )
+{
+   Adaptor adaptor{ visitor, false };
+   Visit( adaptor );
+}
+
+namespace {
+   wxRect Subdivide(
+      const wxRect &rect, bool divideX,
+      const TrackPanelGroup::Refinement &children,
+      const TrackPanelGroup::Refinement::const_iterator iter)
+   {
+      const auto lowerBound = (divideX ? rect.GetLeft() : rect.GetTop());
+      const auto upperBound = (divideX ? rect.GetRight() : rect.GetBottom());
+      const auto next = iter + 1;
+      const auto end = children.end();
+      const auto nextCoord = ((next == end) ? upperBound : next->first - 1);
+
+      auto lesser = std::max(lowerBound, std::min(upperBound, iter->first));
+      auto greater = std::max(lesser, std::min(upperBound, nextCoord));
+
+      auto result = rect;
+      if (divideX)
+         result.SetLeft(lesser), result.SetRight(greater);
+      else
+         result.SetTop(lesser), result.SetBottom(greater);
+
+      return result;
+   };
+}
+
+// Private, recursive implementation function of Visit
+void CellularPanel::Visit(
+   const wxRect &rect, const std::shared_ptr<TrackPanelNode> &node,
+   Visitor &visitor )
+{
+   if (auto pCell = dynamic_cast<TrackPanelCell*>(node.get()))
+      visitor.VisitCell( rect, *pCell );
+   else if (auto pGroup = dynamic_cast<TrackPanelGroup*>(node.get())) {
+      visitor.BeginGroup( rect, *pGroup );
+
+      // Recur on children
+      const auto results = pGroup->Children( rect );
+      const bool divideX = results.first == TrackPanelGroup::Axis::X;
+      const auto &children = results.second;
+      const auto begin = children.begin(), end = children.end();
+      for (auto iter = begin; iter != end; ++iter)
+         Visit(
+            Subdivide(rect, divideX, children, iter), iter->second, visitor );
+
+      visitor.EndGroup( rect, *pGroup );
+   }
+   else
+      return;
+}
+
+auto CellularPanel::FindCell(int mouseX, int mouseY) -> FoundCell
+{
+   auto rect = this->GetClientRect();
+   auto node = Root();
+   while (node) {
+      if ( auto pCell = std::dynamic_pointer_cast< TrackPanelCell >( node ) )
+         // Found the bottom of the hierarchy
+         return { pCell, rect };
+      else if ( auto pGroup = dynamic_cast< TrackPanelGroup* >( node.get() ) ) {
+         // Ask node for its subdivision
+         const auto results = pGroup->Children( rect );
+         const bool divideX = results.first == TrackPanelGroup::Axis::X;
+         const auto &children = results.second;
+
+         // Find the correct child
+         const auto begin = children.begin(), end = children.end();
+         auto iter = std::upper_bound( begin, end,
+            (divideX ? mouseX : mouseY),
+            [&]( wxCoord coord, const TrackPanelGroup::Child &child ) {
+               return coord < child.first;
+            }
+         );
+         if (iter == begin)
+            break;
+         --iter;
+
+         // Descend the hierarchy of nodes
+         rect = Subdivide(rect, divideX, children, iter);
+         node = iter->second;
+      }
+      else
+         // Nulls in the array of children are allowed, to define a void with
+         // no cell
+         break;
+   }
+
+   return { {}, {} };
+}
+
+wxRect CellularPanel::FindRect( const TrackPanelCell &cell )
+{
+   wxRect result;
+
+   struct Stop{};
+   try { VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
+      if ( &visited == &cell )
+         result = rect, throw Stop{};
+   } ); }
+   catch ( const Stop& ) {}
+
+   return result;
 }
 
 UIHandlePtr CellularPanel::Target()

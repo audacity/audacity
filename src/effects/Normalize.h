@@ -24,7 +24,7 @@
 
 class ShuttleGui;
 
-#define NORMALIZE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Normalize") }
+#define NORMALIZE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Normalize") }
 
 class EffectNormalize final : public Effect
 {
@@ -32,9 +32,9 @@ public:
    EffectNormalize();
    virtual ~EffectNormalize();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

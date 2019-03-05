@@ -552,7 +552,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
          mManager->GetPrefixedLabelFromName(newname) );
       if (AudacityMessageBox(
             wxString::Format(
-            _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead.  Otherwise, click Cancel."),
+            _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead. Otherwise, click Cancel."),
             mKey->GetValue(),
             oldlabel,
             newlabel),

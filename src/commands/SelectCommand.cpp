@@ -44,7 +44,7 @@ explicitly code all three.
 // Relative to project and relative to selection cover MOST options, since you can already
 // set a selection to a clip.
 const int nRelativeTos =6;
-static const IdentInterfaceSymbol kRelativeTo[nRelativeTos] =
+static const ComponentInterfaceSymbol kRelativeTo[nRelativeTos] =
 {
    { wxT("ProjectStart"), XO("Project Start") },
    { XO("Project") },
@@ -167,7 +167,7 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
 }
 
 const int nModes =3;
-static const IdentInterfaceSymbol kModes[nModes] =
+static const ComponentInterfaceSymbol kModes[nModes] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -220,31 +220,30 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    if( !bHasFirstTrack ) 
       mFirstTrack = 0.0;
 
-   // Stereo second tracks count as 0.5 of a track.
+   // Multiple channels count as fractions of a track.
    double last = mFirstTrack+mNumTracks;
    double first = mFirstTrack;
-   bool bIsSecondChannel = false;
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   while (t) {
+
+   for (auto t : tracks->Leaders()) {
+      auto channels = TrackList::Channels(t);
+      double term = 0.0;
       // Add 0.01 so we are free of rounding errors in comparisons.
-      // Optionally add 0.5 for second track which counts as is half a track
-      double track = index + 0.01 + (bIsSecondChannel ? 0.5 : 0.0);
-      bool sel = first <= track && track <= last;
-      if( mMode == 0 ){ // Set
-         t->SetSelected(sel);
+      constexpr double fudge = 0.01;
+      for (auto channel : channels) {
+         double track = index + fudge + term;
+         bool sel = first <= track && track <= last;
+         if( mMode == 0 ){ // Set
+            channel->SetSelected(sel);
+         }
+         else if( mMode == 1 && sel ){ // Add
+            channel->SetSelected(sel);
+         }
+         else if( mMode == 2 && sel ){ // Remove
+            channel->SetSelected(!sel);
+         }
+         term += 1.0 / channels.size();
       }
-      else if( mMode == 1 && sel ){ // Add
-         t->SetSelected(sel);
-      }
-      else if( mMode == 2 && sel ){ // Remove
-         t->SetSelected(!sel);
-      }
-      // Do second channel in stereo track too.
-      bIsSecondChannel = t->GetLinked();
-      if( !bIsSecondChannel )
-         ++index;
-      t = iter.Next();
+      ++index;
    }
    return true;
 }

@@ -97,9 +97,9 @@ EffectPhaser::~EffectPhaser()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectPhaser::GetSymbol()
+ComponentInterfaceSymbol EffectPhaser::GetSymbol()
 {
    return PHASER_PLUGIN_SYMBOL;
 }

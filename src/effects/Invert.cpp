@@ -28,9 +28,9 @@ EffectInvert::~EffectInvert()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectInvert::GetSymbol()
+ComponentInterfaceSymbol EffectInvert::GetSymbol()
 {
    return INVERT_PLUGIN_SYMBOL;
 }

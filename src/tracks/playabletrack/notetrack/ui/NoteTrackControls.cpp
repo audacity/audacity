@@ -111,7 +111,6 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 
    wxASSERT(event.GetId() == OnUpOctaveID
       || event.GetId() == OnDownOctaveID);
-   wxASSERT(pTrack->GetKind() == Track::Note);
 
    const bool bDown = (OnDownOctaveID == event.GetId());
    pTrack->SetBottomNote

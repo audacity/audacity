@@ -42,6 +42,7 @@ AliasedFile s.
 #include <wx/dialog.h>
 #include <wx/filename.h>
 #include <wx/hashmap.h>
+#include <wx/menu.h>
 #include <wx/progdlg.h>
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
@@ -73,21 +74,13 @@ using BoolBlockFileHash = std::unordered_map<BlockFile *, bool>;
 static void GetAllSeqBlocks(AudacityProject *project,
                             BlockPtrArray *outBlocks)
 {
-   TrackList *tracks = project->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         for(const auto &clip : waveTrack->GetAllClips()) {
-            Sequence *sequence = clip->GetSequence();
-            BlockArray &blocks = sequence->GetBlockArray();
-            int i;
-            for (i = 0; i < (int)blocks.size(); i++)
-               outBlocks->push_back(&blocks[i]);
-         }
+   for (auto waveTrack : project->GetTracks()->Any< WaveTrack >()) {
+      for(const auto &clip : waveTrack->GetAllClips()) {
+         Sequence *sequence = clip->GetSequence();
+         BlockArray &blocks = sequence->GetBlockArray();
+         for (size_t i = 0; i < blocks.size(); i++)
+            outBlocks->push_back(&blocks[i]);
       }
-      t = iter.Next();
    }
 }
 

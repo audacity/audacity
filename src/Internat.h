@@ -179,9 +179,9 @@ private:
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
 
-class IdentInterfaceSymbol;
+class ComponentInterfaceSymbol;
 wxArrayString LocalizedStrings(
-   const IdentInterfaceSymbol strings[], size_t nStrings);
+   const ComponentInterfaceSymbol strings[], size_t nStrings);
 
 // This object pairs an internal string, maybe empty, with a translated string.
 // Any internal string may be written to configuration or other files and,
@@ -214,7 +214,6 @@ public:
       Temp.Replace( "&","" );
       return Temp;
    }
-   const wxString &TranslatedForMenu() const { return mTranslated; }
 
 private:
    wxString mInternal;

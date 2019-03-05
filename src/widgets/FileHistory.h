@@ -19,6 +19,7 @@
 #include <wx/grid.h>
 #include <wx/string.h>
 #include <wx/window.h>
+#include <wx/weakref.h>
 
 class AUDACITY_DLL_API FileHistory
 {
@@ -30,7 +31,6 @@ class AUDACITY_DLL_API FileHistory
    void RemoveFileFromHistory(size_t i, bool update = true);
    void Clear();
    void UseMenu(wxMenu *menu);
-   void RemoveMenu(wxMenu *menu);
    void Load(wxConfigBase& config, const wxString & group);
    void Save(wxConfigBase& config, const wxString & group);
 
@@ -41,10 +41,12 @@ class AUDACITY_DLL_API FileHistory
    const wxString &GetHistoryFile(size_t i) const;
 
  private:
+   void Compress();
+
    size_t mMaxFiles;
    wxWindowID mIDBase;
 
-   std::vector<wxMenu*> mMenus;
+   std::vector< wxWeakRef< wxMenu > > mMenus;
    wxArrayString mHistory;
 
 };

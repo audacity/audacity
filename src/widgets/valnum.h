@@ -174,7 +174,7 @@ public:
     void SetMin(ValueType min)
     {
         this->DoSetMin(min);
-        BaseValidator::m_minSet = (min != std::numeric_limits<T>::min());
+        BaseValidator::m_minSet = (min != std::numeric_limits<T>::lowest());
     }
 
     void SetMax(ValueType max)
@@ -461,7 +461,7 @@ public:
     FloatingPointValidator(int precision,
                       ValueType *value = NULL,
                       NumValidatorStyle style = NumValidatorStyle::DEFAULT,
-                      ValueType min = -std::numeric_limits<ValueType>::max(),
+                      ValueType min = std::numeric_limits<ValueType>::lowest(),
                       ValueType max =  std::numeric_limits<ValueType>::max())
         : Base(value, style)
     {
@@ -482,7 +482,7 @@ private:
         // NB: Do not use min(), it's not the smallest representable value for
         //     the floating point types but rather the smallest representable
         //     positive value.
-        this->DoSetMin(-std::numeric_limits<ValueType>::max());
+        this->DoSetMin( std::numeric_limits<ValueType>::lowest());
         this->DoSetMax( std::numeric_limits<ValueType>::max());
     }
 };

@@ -75,6 +75,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Internat.h"
 #include "LangChoice.h"
 #include "Languages.h"
+#include "Menus.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -239,6 +240,8 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 /// Custom events
 ////////////////////////////////////////////////////////////
+
+wxDEFINE_EVENT( EVT_CLIPBOARD_CHANGE, wxCommandEvent);
 
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
 wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
@@ -620,7 +623,7 @@ public:
       // Add the filename to the queue.  It will be opened by
       // the OnTimer() event when it is safe to do so.
       ofqueue.Add(data);
-     
+
       return true;
    }
 };
@@ -1078,6 +1081,7 @@ bool AudacityApp::OnExceptionInMainLoop()
 
    try { throw; }
    catch ( AudacityException &e ) {
+      (void)e;// Compiler food
       // Here is the catch-all for our own exceptions
 
       // Use CallAfter to delay this to the next pass of the event loop,
@@ -1089,12 +1093,14 @@ bool AudacityApp::OnExceptionInMainLoop()
 
          // Restore the state of the project to what it was before the
          // failed operation
-         pProject->RollbackState();
+         if (pProject) {
+            pProject->RollbackState();
 
-         // Forget pending changes in the TrackList
-         pProject->GetTracks()->ClearPendingTracks();
+            // Forget pending changes in the TrackList
+            pProject->GetTracks()->ClearPendingTracks();
 
-         pProject->RedrawProject();
+            pProject->RedrawProject();
+         }
 
          // Give the user an alert
          try { std::rethrow_exception( pException ); }
@@ -1453,7 +1459,7 @@ bool AudacityApp::OnInit()
 
    if (parser->Found(wxT("v")))
    {
-      wxFprintf(stderr, wxT("Audacity v%s\n"), AUDACITY_VERSION_STRING);
+      wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
       exit(0);
    }
 
@@ -1509,7 +1515,7 @@ bool AudacityApp::OnInit()
          wndRect.GetTopLeft(),
          wxDefaultSize,
          wxSTAY_ON_TOP);
-      
+
       // Unfortunately with the Windows 10 Creators update, the splash screen 
       // now appears before setting its position.
       // On a dual monitor screen it will appear on one screen and then 
@@ -1593,7 +1599,7 @@ bool AudacityApp::OnInit()
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
       // project->MayCheckForUpdates();
-      project->OnHelpWelcome(*project);
+      HelpActions::DoHelpWelcome(*project);
    }
 
    // JKC 10-Sep-2007: Enable monitoring from the start.
@@ -1634,7 +1640,7 @@ bool AudacityApp::OnInit()
          }
 
          // As of wx3, there's no need to process the filename arguments as they
-         // will be sent view the MacOpenFile() method.
+         // will be sent via the MacOpenFile() method.
 #if !defined(__WXMAC__)
          for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
          {
@@ -1686,7 +1692,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
                gAudioIO->GetNumCaptureChannels() == 0) ||
          scrubbing)
          // ESC out of other play (but not record)
-         project->OnStop(*project);
+         TransportActions::DoStop(*project);
       else
          event.Skip();
    }
@@ -1849,12 +1855,28 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    }
    else if ( checker->IsAnotherRunning() ) {
       // Parse the command line to ensure correct syntax, but
-      // ignore options and only use the filenames, if any.
+      // ignore options other than -v, and only use the filenames, if any.
       auto parser = ParseCommandLine();
       if (!parser)
       {
          // Complaints have already been made
          return false;
+      }
+
+      if (parser->Found(wxT("v")))
+      {
+         wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
+         return false;
+      }
+
+      // Windows and Linux require absolute file names as command may
+      // not come from current working directory.
+      wxArrayString filenames;
+      for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+      {
+         wxFileName filename(parser->GetParam(i));
+         if (filename.MakeAbsolute())
+            filenames.Add(filename.GetLongPath());
       }
 
 #if defined(__WXMSW__)
@@ -1872,14 +1894,13 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          if (conn)
          {
             bool ok = false;
-            if (parser->GetParamCount() > 0)
+            if (filenames.GetCount() > 0)
             {
-               // Send each parameter to existing Audacity
-               for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+               for (size_t i = 0, cnt = filenames.GetCount(); i < cnt; i++)
                {
-                  ok = conn->Execute(parser->GetParam(i));
+                  ok = conn->Execute(filenames[i]);
                }
-             }
+            }
             else
             {
                // Send an empty string to force existing Audacity to front
@@ -1914,12 +1935,11 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             sock->Connect(addr, true);
             if (sock->IsConnected())
             {
-               if (parser->GetParamCount() > 0)
+               if (filenames.GetCount() > 0)
                {
-                  for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+                  for (size_t i = 0, cnt = filenames.GetCount(); i < cnt; i++)
                   {
-                     // Send the filename
-                     wxString param = parser->GetParam(i);
+                     const wxString param = filenames[i];
                      sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
                   }
                }

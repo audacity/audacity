@@ -12,6 +12,8 @@ Max Maisel
 #ifndef __BIQUAD_H__
 #define __BIQUAD_H__
 
+
+/// \brief Represents a biquad digital filter.
 struct Biquad
 {
    Biquad();

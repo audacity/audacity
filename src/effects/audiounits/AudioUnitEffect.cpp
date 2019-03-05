@@ -103,7 +103,7 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString AudioUnitEffectsModule::GetPath()
@@ -111,13 +111,13 @@ wxString AudioUnitEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
 {
    /* 18n-hint: Audio Unit is the name of an Apple audio software protocol */
    return XO("Audio Unit Effects");
 }
 
-IdentInterfaceSymbol AudioUnitEffectsModule::GetVendor()
+ComponentInterfaceSymbol AudioUnitEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -212,7 +212,7 @@ bool AudioUnitEffectsModule::IsPluginValid(
    return FindAudioUnit(path, name) != NULL;
 }
 
-IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    wxString name;
@@ -226,7 +226,7 @@ IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
    return safenew AudioUnitEffect(path, name, component);
 }
 
-void AudioUnitEffectsModule::DeleteInstance(IdentInterface *instance)
+void AudioUnitEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < AudioUnitEffect > {
       dynamic_cast<AudioUnitEffect *>(instance)
@@ -402,7 +402,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText(wxString() +
                _("Select \"Full\" to use the graphical interface if supplied by the Audio Unit.") +
                _(" Select \"Generic\" to use the system supplied generic interface.") +
-               _(" Select \"Basic\" for a basic text-only interface. ") +
+               _(" Select \"Basic\" for a basic text-only interface.") +
                _(" Reopen the effect for this to take effect."))->Wrap(650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
@@ -872,7 +872,7 @@ AudioUnitEffect::~AudioUnitEffect()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString AudioUnitEffect::GetPath()
@@ -880,12 +880,12 @@ wxString AudioUnitEffect::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol AudioUnitEffect::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffect::GetSymbol()
 {
    return mName;
 }
 
-IdentInterfaceSymbol AudioUnitEffect::GetVendor()
+ComponentInterfaceSymbol AudioUnitEffect::GetVendor()
 {
    return { mVendor };
 }
@@ -909,7 +909,7 @@ wxString AudioUnitEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectIdentInterface implementation
+// EffectComponentInterface implementation
 // ============================================================================
 
 EffectType AudioUnitEffect::GetType()
@@ -932,7 +932,7 @@ EffectType AudioUnitEffect::GetType()
    return EffectTypeProcess;
 }
 
-IdentInterfaceSymbol AudioUnitEffect::GetFamilyId()
+ComponentInterfaceSymbol AudioUnitEffect::GetFamilyId()
 {
    return AUDIOUNITEFFECTS_FAMILY;
 }

@@ -57,8 +57,7 @@ UIHandlePtr NoteTrackButtonHandle::HitTest
    TrackInfo::GetMidiControlsRect(rect, midiRect);
    if ( TrackInfo::HideTopItem( rect, midiRect ) )
       return {};
-   if (pTrack->GetKind() == Track::Note &&
-       midiRect.Contains(state.m_x, state.m_y)) {
+   if (midiRect.Contains(state.m_x, state.m_y)) {
       auto channel = pTrack->FindChannel(midiRect, state.m_x, state.m_y);
       auto result = std::make_shared<NoteTrackButtonHandle>(
          pTrack, channel, midiRect );

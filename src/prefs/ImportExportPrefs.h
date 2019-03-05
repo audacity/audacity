@@ -34,6 +34,7 @@ class ImportExportPrefs final : public PrefsPanel
    void Populate();
 };
 
+/// A PrefsPanelFactory that creates one ImportExportPrefs panel.
 class ImportExportPrefsFactory final : public PrefsPanelFactory
 {
 public:

@@ -86,7 +86,7 @@ enum kTypes
    nTypes
 };
 
-static const IdentInterfaceSymbol kTypeStrings[nTypes] =
+static const ComponentInterfaceSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -103,7 +103,7 @@ enum kSubTypes
    nSubTypes
 };
 
-static const IdentInterfaceSymbol kSubTypeStrings[nSubTypes] =
+static const ComponentInterfaceSymbol kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
@@ -178,9 +178,9 @@ EffectScienFilter::~EffectScienFilter()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectScienFilter::GetSymbol()
+ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
 {
    return CLASSICFILTERS_PLUGIN_SYMBOL;
 }
@@ -336,30 +336,28 @@ bool EffectScienFilter::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   auto trackRange = inputTracks()->Selected< const WaveTrack >();
 
-   mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
-
-   while (t)
    {
-      if (t->GetSelected())
+      auto t = *trackRange.begin();
+      mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+   }
+
+   for (auto t : trackRange)
+   {
+      if (selcount == 0)
       {
-         if (selcount == 0)
-         {
-            rate = t->GetRate();
-         }
-         else
-         {
-            if (t->GetRate() != rate)
-            {
-               Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
-               return false;
-            }
-         }
-         selcount++;
+         rate = t->GetRate();
       }
-      t = (WaveTrack *) iter.Next();
+      else
+      {
+         if (t->GetRate() != rate)
+         {
+            Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
+            return false;
+         }
+      }
+      selcount++;
    }
 
    return true;
@@ -666,8 +664,8 @@ bool EffectScienFilter::CalcFilter()
             fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
          for (int iPair = 1; iPair <= mOrder/2; iPair++)
          {
-            float fSPoleX = fC * cos (PI - iPair * PI / mOrder);
-            float fSPoleY = fC * sin (PI - iPair * PI / mOrder);
+            fSPoleX = fC * cos (PI - iPair * PI / mOrder);
+            fSPoleY = fC * sin (PI - iPair * PI / mOrder);
             BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
             mpBiquad[iPair].fNumerCoeffs [0] = 1;
             if (mFilterSubtype == kLowPass)		// LOWPASS

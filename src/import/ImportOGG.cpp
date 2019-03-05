@@ -155,7 +155,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    wxArrayString   mStreamInfo;
-   std::list<TrackHolders> mChannels;
+   std::list<NewChannelGroup> mChannels;
 
    sampleFormat   mFormat;
 };
@@ -228,7 +228,8 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+ProgressResult OggImportFileHandle::Import(
+   TrackFactory *trackFactory, TrackHolders &outTracks,
    Tags *tags)
 {
    outTracks.clear();
@@ -258,27 +259,8 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
       link.resize(vi->channels);
 
-      int c = -1;
-      for (auto &channel : link) {
-         ++c;
-
+      for (auto &channel : link)
          channel = trackFactory->NewWaveTrack(mFormat, vi->rate);
-
-         if (vi->channels == 2) {
-            switch (c) {
-            case 0:
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-               break;
-            case 1:
-               channel->SetChannel(Track::RightChannel);
-               break;
-            }
-         }
-         else {
-            channel->SetChannel(Track::MonoChannel);
-         }
-      }
    }
 
    /* The number of bytes to get from the codec in each run */
@@ -374,10 +356,9 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
    for (auto &link : mChannels)
    {
-      for (auto &channel : link) {
+      for (auto &channel : link)
          channel->Flush();
-         outTracks.push_back(std::move(channel));
-      }
+      outTracks.push_back(std::move(link));
    }
 
    //\todo { Extract comments from each stream? }

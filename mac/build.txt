@@ -50,22 +50,33 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 
    sudo <path to Audacity source>/mac/scripts/build_wxwidgets
 
-You should now be able to build Audacity using either the Xcode application or 
-the Xcodebuild command line tool. 
+Check that this worked by looking for <path to wxWidgets>/bld_release_x86_64 
+containing library .o files.  There should also be 3 other directories for
+other combinations of debug/release i386/x86_64.  If this step did not work,
+then later steps to build Audacity won't either.
+
+If building wxWidgets worked, you should now be able to build Audacity 
+using either the Xcode application or the Xcodebuild command line tool. 
 
 * Change directory to <path to Audacity source>/mac
 * Optionally, if you have built before, clean the Debug build with:
 
   xcodebuild clean
 
-* If you have built the Release build, clean with:
+* Or clean up other versions using some variant of:
 
-  xcodebuild clean -configuration Release  
+  xcodebuild clean -configuration Release64
+
+'Release64' is for the 64 bit build.  'Release' is for the 32 bit build.
+'Debug64' is for 64 bit debug build, 'Debug' is for 32 bit debug build.
   
 * Build Audacity and create DMG and ZIP bundles in 
   /private/tmp by typing the following in the terminal:
 
-  xcodebuild -configuration Release install   
+  xcodebuild -configuration Release64 install
+
+If you get errors about 'plist' at this stage, probably you skipped the step 
+of cleaning first.  
 
 * If you use the Xcode application, don't make any changes to 
   Audacity.xcodeproj recommended by Xcode. In particular, be sure to leave the

@@ -20,6 +20,7 @@ tasks associated with a WaveTrack.
 #include "ODWaveTrackTaskQueue.h"
 #include "ODTask.h"
 #include "ODManager.h"
+#include "../WaveTrack.h"
 /// Constructs an ODWaveTrackTaskQueue
 ODWaveTrackTaskQueue::ODWaveTrackTaskQueue()
 {
@@ -205,19 +206,19 @@ void ODWaveTrackTaskQueue::DemandTrackUpdate(WaveTrack* track, double seconds)
 
 
 //Replaces all instances of a wavetracck with a NEW one (effectively transferes the task.)
-void ODWaveTrackTaskQueue::ReplaceWaveTrack(WaveTrack* oldTrack, WaveTrack* newTrack)
+void ODWaveTrackTaskQueue::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
 {
    if(oldTrack)
    {
       mTasksMutex.Lock();
       for(unsigned int i=0;i<mTasks.size();i++)
-         mTasks[i]->ReplaceWaveTrack(oldTrack,newTrack);
+         mTasks[i]->ReplaceWaveTrack( oldTrack, newTrack );
       mTasksMutex.Unlock();
 
       mTracksMutex.Lock();
       for(unsigned int i=0;i<mTracks.size();i++)
          if(mTracks[i]==oldTrack)
-            mTracks[i]=newTrack;
+            mTracks[i] = static_cast<WaveTrack*>( newTrack );
       mTracksMutex.Unlock();
    }
 }
@@ -332,7 +333,7 @@ void ODWaveTrackTaskQueue::FillTipForWaveTrack( const WaveTrack * t, wxString &t
    {
 
     //  if(GetNumTasks()==1)
-      mTipMsg.Printf(_("%s %2.0f%% complete.  Click to change task focal point."), GetFrontTask()->GetTip(), GetFrontTask()->PercentComplete()*100.0 );
+      mTipMsg.Printf(_("%s %2.0f%% complete. Click to change task focal point."), GetFrontTask()->GetTip(), GetFrontTask()->PercentComplete()*100.0 );
      // else
        //  msg.Printf(_("%s %d additional tasks remaining."), GetFrontTask()->GetTip(), GetNumTasks());
 

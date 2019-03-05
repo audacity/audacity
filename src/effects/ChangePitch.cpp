@@ -127,9 +127,9 @@ EffectChangePitch::~EffectChangePitch()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangePitch::GetSymbol()
+ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
 {
    return CHANGEPITCH_PLUGIN_SYMBOL;
 }
@@ -215,6 +215,10 @@ bool EffectChangePitch::Process()
    else
 #endif
    {
+      // Macros save m_dPercentChange and not m_dSemitonesChange, so we must
+      // ensure that m_dSemitonesChange is set.
+      Calc_SemitonesChange_fromPercentChange();
+
       mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
       IdentityTimeWarper warper;
       mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
@@ -349,7 +353,6 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-
    return;
 }
 
@@ -407,10 +410,17 @@ bool EffectChangePitch::TransferDataFromWindow()
 // the selection. Then set some other params accordingly.
 void EffectChangePitch::DeduceFrequencies()
 {
+    auto FirstTrack = [&]()->const WaveTrack *{
+      if( !inputTracks() )
+         return nullptr;
+      return *( inputTracks()->Selected< const WaveTrack >() ).first;
+   };
+
+   m_dStartFrequency = 261.265;// Middle C.
+
    // As a neat trick, attempt to get the frequency of the note at the
    // beginning of the selection.
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *track = (WaveTrack *) iter.First();
+   auto track = FirstTrack();
    if (track) {
       double rate = track->GetRate();
 
@@ -461,7 +471,7 @@ void EffectChangePitch::DeduceFrequencies()
    m_nToOctave = PitchOctave(dToMIDInote);
 
    m_FromFrequency = m_dStartFrequency;
-   Calc_PercentChange();
+   // Calc_PercentChange();  // This will reset m_dPercentChange
    Calc_ToFrequency();
 }
 

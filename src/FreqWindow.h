@@ -29,15 +29,17 @@
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/utils.h>
-#include "widgets/Ruler.h"
 #include "SampleFormat.h"
+#include "widgets/wxPanelWrapper.h"
 
 class wxStatusBar;
 class wxButton;
 class wxChoice;
 
+class AudacityProject;
 class FreqWindow;
 class FreqGauge;
+class RulerPanel;
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQWINDOW_RECALC, -1);
 

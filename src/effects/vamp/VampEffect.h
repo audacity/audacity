@@ -44,18 +44,18 @@ public:
               bool hasParameters);
    virtual ~VampEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   ComponentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
@@ -75,7 +75,7 @@ public:
    bool TransferDataFromWindow() override;
 
 private:
-   // VampEffect implemetation
+   // VampEffect implementation
 
    void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features);
 

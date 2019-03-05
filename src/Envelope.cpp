@@ -319,11 +319,14 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 
 /// TODO: This should probably move to track artist.
 void Envelope::DrawPoints
-(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo,
+(TrackPanelDrawingContext &context, const wxRect & r,
  bool dB, double dBRange,
  float zoomMin, float zoomMax, bool mirrored) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
@@ -357,7 +360,7 @@ void Envelope::DrawPoints
                true, dBRange, false);
 
             // This follows the same logic as the envelop drawing in
-            // TrackArtist::DrawEnvelope().
+            // TrackArt::DrawEnvelope().
             // TODO: make this calculation into a reusable function.
             if (y2 - y < 9) {
                int value = (int)((zoomMax / (zoomMax - zoomMin)) * r.height);

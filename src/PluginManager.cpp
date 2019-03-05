@@ -313,7 +313,7 @@ wxAccStatus CheckListAx::GetSelections( wxVariant * WXUNUSED(selections) )
 }
 
 // Returns a state constant.
-wxAccStatus CheckListAx::GetState( int childId, long *state )
+wxAccStatus CheckListAx::GetState( int childId, long *pState )
 {
    int flag = wxACC_STATE_SYSTEM_FOCUSABLE;
 
@@ -347,7 +347,7 @@ wxAccStatus CheckListAx::GetState( int childId, long *state )
       }
    }
 
-   *state = flag;
+   *pState = flag;
 
    return wxACC_OK;
 }
@@ -924,11 +924,13 @@ void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
    std::vector<long> items;
 
-   long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-   while (i != wxNOT_FOUND)
    {
-      items.insert(items.begin(), i);
-      i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      while (i != wxNOT_FOUND)
+      {
+         items.insert(items.begin(), i);
+         i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      }
    }
 
    for (size_t i = 0, cnt = items.size(); i < cnt; i++)
@@ -941,11 +943,13 @@ void PluginRegistrationDialog::OnDisable(wxCommandEvent & WXUNUSED(evt))
 {
    std::vector<long> items;
 
-   long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-   while (i != wxNOT_FOUND)
    {
-      items.insert(items.begin(), i);
-      i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      while (i != wxNOT_FOUND)
+      {
+         items.insert(items.begin(), i);
+         i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      }
    }
 
    for (size_t i = 0, cnt = items.size(); i < cnt; i++)
@@ -1004,15 +1008,15 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
             wxString errMsgs;
 
             // Try to register the plugin via each provider until one succeeds
-            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
+            for (size_t j = 0, cntj = item.plugs.size(); j < cntj; j++)
             {
                wxString errMsg;
                if (mm.RegisterEffectPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
-                  for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
+                  for (size_t k = 0, cntk = item.plugs.size(); k < cntk; k++)
                   {
-                     pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
+                     pm.mPlugins.erase(item.plugs[k]->GetProviderID() + wxT("_") + path);
                   }
                   // Bug 1893.  We've found a provider that works.
                   // Error messages from any that failed are no longer useful.
@@ -1102,7 +1106,7 @@ bool PluginDescriptor::IsInstantiated() const
    return mInstance != NULL;
 }
 
-IdentInterface *PluginDescriptor::GetInstance()
+ComponentInterface *PluginDescriptor::GetInstance()
 {
    if (!mInstance)
    {
@@ -1119,7 +1123,7 @@ IdentInterface *PluginDescriptor::GetInstance()
    return mInstance;
 }
 
-void PluginDescriptor::SetInstance(IdentInterface *instance)
+void PluginDescriptor::SetInstance(ComponentInterface *instance)
 {
    if (mInstance && mInstance != instance)
    {
@@ -1152,7 +1156,7 @@ const wxString & PluginDescriptor::GetPath() const
    return mPath;
 }
 
-const IdentInterfaceSymbol & PluginDescriptor::GetSymbol() const
+const ComponentInterfaceSymbol & PluginDescriptor::GetSymbol() const
 {
    return mSymbol;
 }
@@ -1197,7 +1201,7 @@ void PluginDescriptor::SetPath(const wxString & path)
    mPath = path;
 }
 
-void PluginDescriptor::SetSymbol(const IdentInterfaceSymbol & symbol)
+void PluginDescriptor::SetSymbol(const ComponentInterfaceSymbol & symbol)
 {
    mSymbol = symbol;
 }
@@ -1376,12 +1380,12 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 // ============================================================================
 
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
-   ModuleInterface *provider, IdentInterface *pInterface )
+   ModuleInterface *provider, ComponentInterface *pInterface )
 {
    EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
    if( pEInterface )
       return PluginManager::Get().RegisterPlugin(provider, pEInterface, PluginTypeEffect);
-   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
+   ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
    static wxString empty;
@@ -1389,9 +1393,9 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
 }
 
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
-   ModuleInterface *provider, IdentInterface *pInterface )
+   ModuleInterface *provider, ComponentInterface *pInterface )
 {
-   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
+   ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
    static wxString empty;
@@ -1422,7 +1426,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command)
+const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ComponentInterface *command)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
 
@@ -1833,7 +1837,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             if (!copied) {
                ::AudacityMessageBox(
-                  _("Plug-in file is in use.  Failed to overwrite"));
+                  _("Plug-in file is in use. Failed to overwrite"));
                return true;
             }
 
@@ -1841,7 +1845,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, IdentInterface *ident)
+               [&](ModuleInterface *provider, ComponentInterface *ident)
                                                      -> const PluginID& {
                   // Register as by default, but also collecting the PluginIDs
                   // and names
@@ -1943,7 +1947,7 @@ void PluginManager::Load()
       }
       // Doing the deletion within the search loop risked skipping some items,
       // hence the delayed delete.
-      for (int i = 0; i < groupsToDelete.Count(); i++) {
+      for (unsigned int i = 0; i < groupsToDelete.Count(); i++) {
          registry.DeleteGroup(groupsToDelete[i]);
       }
       registry.SetPath("");
@@ -2410,13 +2414,13 @@ void PluginManager::CheckForUpdates(bool bFast)
                if (pathIndex.Index(path) == wxNOT_FOUND)
                {
                   PluginID ID = plugID + wxT("_") + path;
-                  PluginDescriptor & plug = mPlugins[ID];  // This will create a NEW descriptor
-                  plug.SetPluginType(PluginTypeStub);
-                  plug.SetID(ID);
-                  plug.SetProviderID(plugID);
-                  plug.SetPath(path);
-                  plug.SetEnabled(false);
-                  plug.SetValid(false);
+                  PluginDescriptor & plug2 = mPlugins[ID];  // This will create a NEW descriptor
+                  plug2.SetPluginType(PluginTypeStub);
+                  plug2.SetID(ID);
+                  plug2.SetProviderID(plugID);
+                  plug2.SetPath(path);
+                  plug2.SetEnabled(false);
+                  plug2.SetValid(false);
                }
             }
          }
@@ -2611,18 +2615,18 @@ void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
    return mPlugins[ID].SetEnabled(enable);
 }
 
-const IdentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
+const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
-      static IdentInterfaceSymbol empty;
+      static ComponentInterfaceSymbol empty;
       return empty;
    }
 
    return mPlugins[ID].GetSymbol();
 }
 
-IdentInterface *PluginManager::GetInstance(const PluginID & ID)
+ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
@@ -2655,7 +2659,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
                            module->GetPath());
 }
 
-PluginID PluginManager::GetID(CommandDefinitionInterface *command)
+PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeAudacityCommand),
@@ -2721,7 +2725,7 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
 }
 
 PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
-                                               IdentInterface *ident,
+                                               ComponentInterface *ident,
                                                PluginType type)
 {
    // This will either create a NEW entry or replace an existing entry
@@ -3188,9 +3192,9 @@ int PluginManager::b64decode(const wxString &in, void *out)
    return p - (unsigned char *) out;
 }
 
-// These are defined out-of-line here, to keep IdentInterface free of other
+// These are defined out-of-line here, to keep ComponentInterface free of other
 // #include directives.
-const wxString& IdentInterface::GetTranslatedName()
+const wxString& ComponentInterface::GetTranslatedName()
 {
    return GetSymbol().Translation();
 }

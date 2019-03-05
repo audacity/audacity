@@ -625,8 +625,10 @@ NumericConverter::NumericConverter(Type type,
    SetValue(value); // mValue got overridden to -1 in ControlsToValue(), reassign
 }
 
-void NumericConverter::ParseFormatString( const wxString & format)
+void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
 {
+   auto &format = ::wxGetTranslation( untranslatedFormat );
+
    mPrefix = wxT("");
    mFields.clear();
    mDigits.clear();

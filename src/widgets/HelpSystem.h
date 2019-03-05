@@ -101,4 +101,35 @@ public:
 
 };
 
+class ShuttleGui;
+
+/** @brief Class which makes a dialog for displaying quick fixes to common issues.
+ *
+ * This class originated with the 'Stuck in a mode' problem, where far too many
+ * users get into a mode without realising, and don't know how to get out.
+ * It is a band-aid, and we should do more towards a full and proper solution
+ * where there are fewer special modes, and they don't persisit.
+ */
+class QuickFixDialog : public wxDialogWrapper
+{
+public: 
+   QuickFixDialog(wxWindow * pParent);
+   void Populate();
+   void PopulateOrExchange(ShuttleGui & S);
+   void AddStuck( ShuttleGui & S, bool & bBool, wxString Pref,  wxString Prompt, wxString Help );
+
+   void OnOk(wxCommandEvent &event);
+   void OnCancel(wxCommandEvent &event);
+   void OnHelp(wxCommandEvent &event);
+   void OnFix(wxCommandEvent &event);
+
+   wxString StringFromEvent( wxCommandEvent &event );
+
+   int mItem;
+   bool mbSyncLocked;
+   bool mbInSnapTo;
+   bool mbSoundActivated;
+   DECLARE_EVENT_TABLE()
+};
+
 #endif // __AUDACITY_HELPSYSTEM__

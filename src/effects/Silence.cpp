@@ -30,9 +30,9 @@ EffectSilence::~EffectSilence()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectSilence::GetSymbol()
+ComponentInterfaceSymbol EffectSilence::GetSymbol()
 {
    return SILENCE_PLUGIN_SYMBOL;
 }

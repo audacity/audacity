@@ -37,10 +37,10 @@
 class Enums {
 public:
    static const size_t    NumDbChoices;
-   static const IdentInterfaceSymbol DbChoices[];
+   static const ComponentInterfaceSymbol DbChoices[];
 };
 
-const IdentInterfaceSymbol Enums::DbChoices[] = {
+const ComponentInterfaceSymbol Enums::DbChoices[] = {
    // Table of text values, only for reading what was stored in legacy config
    // files.
    // It was inappropriate to make this a discrete choice control.
@@ -74,7 +74,7 @@ enum kActions
    nActions
 };
 
-static const IdentInterfaceSymbol kActionStrings[nActions] =
+static const ComponentInterfaceSymbol kActionStrings[nActions] =
 {
    { XO("Truncate Detected Silence") },
    { XO("Compress Excess Silence") }
@@ -148,9 +148,9 @@ EffectTruncSilence::~EffectTruncSilence()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectTruncSilence::GetSymbol()
+ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
 {
    return TRUNCATESILENCE_PLUGIN_SYMBOL;
 }
@@ -243,12 +243,9 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
    // Start with the whole selection silent
    silences.push_back(Region(mT0, mT1));
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
    int whichTrack = 0;
 
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      WaveTrack *const wt = static_cast<WaveTrack *>(t);
-
+   for (auto wt : inputTracks()->Selected< const WaveTrack >()) {
       RegionList trackSilences;
 
       auto index = wt->TimeToLongSamples(mT0);
@@ -334,20 +331,17 @@ bool EffectTruncSilence::ProcessIndependently()
 
    // Check if it's permissible
    {
-      SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-      for (Track *track = iter.First(); track;
-         track = iter.Next(true) // skip linked tracks
-      ) {
+      for (auto track : inputTracks()->SelectedLeaders< const WaveTrack >() ) {
          if (syncLock) {
-            Track *const link = track->GetLink();
-            SyncLockedTracksIterator syncIter(inputTracks());
-            for (Track *track2 = syncIter.StartWith(track); track2; track2 = syncIter.Next()) {
-               if (track2->GetKind() == Track::Wave &&
-                  !(track2 == track || track2 == link) &&
-                  track2->GetSelected()) {
-                  ::Effect::MessageBox(_("When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."));
-                  return false;
-               }
+            auto channels = TrackList::Channels(track);
+            auto otherTracks =
+               TrackList::SyncLockGroup(track).Filter<const WaveTrack>()
+                  + &Track::IsSelected
+                  - [&](const Track *pTrack){
+                        return channels.contains(pTrack); };
+            if (otherTracks) {
+               ::Effect::MessageBox(_("When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."));
+               return false;
             }
          }
 
@@ -362,17 +356,13 @@ bool EffectTruncSilence::ProcessIndependently()
    // Now do the work
 
    // Copy tracks
-   CopyInputTracks(Track::All);
+   CopyInputTracks(true);
    double newT1 = 0.0;
 
    {
       unsigned iGroup = 0;
-      SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-      for (Track *track = iter.First(); track;
-         ++iGroup, track = iter.Next(true) // skip linked tracks
-      ) {
-         Track *const link = track->GetLink();
-         Track *const last = link ? link : track;
+      for (auto track : mOutputTracks->SelectedLeaders< WaveTrack >() ) {
+         Track *const last = *TrackList::Channels(track).rbegin();
 
          RegionList silences;
 
@@ -381,9 +371,9 @@ bool EffectTruncSilence::ProcessIndependently()
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          if (syncLock) {
-            SyncLockedTracksIterator syncIter(mOutputTracks.get());
-            groupFirst = syncIter.StartWith(track);
-            groupLast = syncIter.Last();
+            auto trackRange = TrackList::SyncLockGroup(track);
+            groupFirst = *trackRange.begin();
+            groupLast = *trackRange.rbegin();
          }
          else {
             groupFirst = track;
@@ -393,6 +383,8 @@ bool EffectTruncSilence::ProcessIndependently()
          if (!DoRemoval(silences, iGroup, nGroups, groupFirst, groupLast, totalCutLen))
             return false;
          newT1 = std::max(newT1, mT1 - totalCutLen);
+
+         ++iGroup;
       }
    }
 
@@ -404,18 +396,19 @@ bool EffectTruncSilence::ProcessIndependently()
 bool EffectTruncSilence::ProcessAll()
 {
    // Copy tracks
-   CopyInputTracks(Track::All);
+   CopyInputTracks(true);
 
    // Master list of silent regions.
    // This list should always be kept in order.
    RegionList silences;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-   if (FindSilences(silences, inputTracks(), iter.First(), iter.Last())) {
-      TrackListIterator iterOut(mOutputTracks.get());
+   auto trackRange0 = inputTracks()->Selected< const WaveTrack >();
+   if (FindSilences(
+         silences, inputTracks(), *trackRange0.begin(), *trackRange0.rbegin())) {
+      auto trackRange = mOutputTracks->Any();
       double totalCutLen = 0.0;
-      Track *const first = iterOut.First();
-      if (DoRemoval(silences, 0, 1, first, iterOut.Last(), totalCutLen)) {
+      if (DoRemoval(silences, 0, 1,
+         *trackRange.begin(), *trackRange.rbegin(), totalCutLen)) {
          mT1 -= totalCutLen;
          return true;
       }
@@ -425,20 +418,18 @@ bool EffectTruncSilence::ProcessAll()
 }
 
 bool EffectTruncSilence::FindSilences
-   (RegionList &silences, TrackList *list, Track *firstTrack, Track *lastTrack)
+   (RegionList &silences, const TrackList *list,
+    const Track *firstTrack, const Track *lastTrack)
 {
    // Start with the whole selection silent
    silences.push_back(Region(mT0, mT1));
 
    // Remove non-silent regions in each track
-   SelectedTrackListOfKindIterator iter(Track::Wave, list);
    int whichTrack = 0;
-   bool lastSeen = false;
-   for (Track *t = iter.StartWith(firstTrack); !lastSeen && t; t = iter.Next())
+   for (auto wt :
+           list->Selected< const WaveTrack >()
+               .StartingWith( firstTrack ).EndingAfter( lastTrack ) )
    {
-      lastSeen = (t == lastTrack);
-      WaveTrack *const wt = static_cast<WaveTrack *>(t);
-
       // Smallest silent region to detect in frames
       auto minSilenceFrames =
          sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
@@ -528,31 +519,26 @@ bool EffectTruncSilence::DoRemoval
                            mTruncLongestAllowedSilence);
       }
 
-      double cutLen = std::max(0.0, inLength - outLength);
+      const double cutLen = std::max(0.0, inLength - outLength);
+      // Don't waste time cutting nothing.
+      if( cutLen == 0.0 )
+         continue;
+      
       totalCutLen += cutLen;
 
-      TrackListIterator iterOut(mOutputTracks.get());
-      bool lastSeen = false;
-      for (Track *t = iterOut.StartWith(firstTrack); t && !lastSeen; t = iterOut.Next())
-      {
-         lastSeen = (t == lastTrack);
-         if (!(t->GetSelected() || t->IsSyncLockSelected()))
-            continue;
+      double cutStart = (r->start + r->end - cutLen) / 2;
+      double cutEnd = cutStart + cutLen;
+      (mOutputTracks->Any()
+         .StartingWith(firstTrack).EndingAfter(lastTrack)
+         + &Track::IsSelectedOrSyncLockSelected
+         - [&](const Track *pTrack) { return
+           // Don't waste time past the end of a track
+           pTrack->GetEndTime() < r->start;
+         }
+      ).Visit(
+         [&](WaveTrack *wt) {
 
-         // Don't waste time past the end of a track
-         if (t->GetEndTime() < r->start)
-            continue;
-
-         // Don't waste time cutting nothing.
-         if( cutLen == 0.0 )
-            continue;
-
-         double cutStart = (r->start + r->end - cutLen) / 2;
-         double cutEnd = cutStart + cutLen;
-         if (t->GetKind() == Track::Wave)
-         {
             // In WaveTracks, clear with a cross-fade
-            WaveTrack *const wt = static_cast<WaveTrack*>(t);
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
             cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
@@ -585,11 +571,12 @@ bool EffectTruncSilence::DoRemoval
 
             // Write cross-faded data
             wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames);
-         }
-         else
+         },
+         [&](Track *t) {
             // Non-wave tracks: just do a sync-lock adjust
             t->SyncLockAdjust(cutEnd, cutStart);
-      }
+         }
+      );
       ++whichReg;
    }
 

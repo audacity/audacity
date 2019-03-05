@@ -52,6 +52,7 @@ class TracksPrefs final : public PrefsPanel
    static int iPreferencePinned;
 };
 
+/// A PrefsPanelFactory that creates one TracksPrefs panel.
 class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:

@@ -1205,7 +1205,10 @@
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
-		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
+		5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */; };
+		5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E00F217E4467003C6C99 /* ClipMenus.cpp */; };
+		5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */; };
+		5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E013217E5F66003C6C99 /* LabelMenus.cpp */; };
 		5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
@@ -1220,7 +1223,19 @@
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
 		5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */; };
+		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
+		5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A09F217FA2430068E082 /* EditMenus.cpp */; };
+		5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */; };
+		5E36A0AA217FA2430068E082 /* FileMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A1217FA2430068E082 /* FileMenus.cpp */; };
+		5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */; };
+		5E36A0AC217FA2430068E082 /* SelectMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A3217FA2430068E082 /* SelectMenus.cpp */; };
+		5E36A0AD217FA2430068E082 /* TrackMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A4217FA2430068E082 /* TrackMenus.cpp */; };
+		5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A5217FA2430068E082 /* TransportMenus.cpp */; };
+		5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A6217FA2430068E082 /* ViewMenus.cpp */; };
+		5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A7217FA2430068E082 /* WindowMenus.cpp */; };
+		5E36A0B2217FC5A10068E082 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0B3217FC6540068E082 /* HelpMenus.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
 		5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */; };
 		5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */; };
@@ -1301,6 +1316,8 @@
 		AA6B5BAF2061EC58008B5B26 /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
 		AA6B5BB02061EC58008B5B26 /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
 		AA6B5BB12061EC58008B5B26 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
+		AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */ = {isa = PBXBuildFile; fileRef = AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */; };
+		AAB5D42F216A9764006136B4 /* rms.ny in Resources */ = {isa = PBXBuildFile; fileRef = AAB5D42E216A9764006136B4 /* rms.ny */; };
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
@@ -2152,7 +2169,6 @@
 		2809C4B70BCB7E560006010F /* FileIO.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileIO.h; sourceTree = "<group>"; tabWidth = 3; };
 		280A8B3E19F440160091DE70 /* ConfigInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigInterface.h; path = ../include/audacity/ConfigInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B3F19F440160091DE70 /* EffectInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectInterface.h; path = ../include/audacity/EffectInterface.h; sourceTree = SOURCE_ROOT; };
-		280A8B4019F440160091DE70 /* IdentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IdentInterface.h; path = ../include/audacity/IdentInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4119F440160091DE70 /* ImporterInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImporterInterface.h; path = ../include/audacity/ImporterInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4219F440160091DE70 /* ModuleInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModuleInterface.h; path = ../include/audacity/ModuleInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4319F440160091DE70 /* PluginInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginInterface.h; path = ../include/audacity/PluginInterface.h; sourceTree = SOURCE_ROOT; };
@@ -3053,7 +3069,11 @@
 		5E07842D1DEE6B8600CA76EA /* FileException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileException.h; sourceTree = "<group>"; };
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
-		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
+		5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AdornedRulerPanel.cpp; sourceTree = "<group>"; };
+		5E08C7382180D460004079AE /* AdornedRulerPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdornedRulerPanel.h; sourceTree = "<group>"; };
+		5E08E00F217E4467003C6C99 /* ClipMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClipMenus.cpp; path = menus/ClipMenus.cpp; sourceTree = "<group>"; };
+		5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToolbarMenus.cpp; path = menus/ToolbarMenus.cpp; sourceTree = "<group>"; };
+		5E08E013217E5F66003C6C99 /* LabelMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LabelMenus.cpp; path = menus/LabelMenus.cpp; sourceTree = "<group>"; };
 		5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CellularPanel.cpp; sourceTree = "<group>"; };
 		5E0A1CDC20E95FF7001AAF8D /* CellularPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellularPanel.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
@@ -3081,8 +3101,19 @@
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
 		5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LanguageNames.txt; path = ../locale/LanguageNames.txt; sourceTree = "<group>"; };
+		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
+		5E36A09F217FA2430068E082 /* EditMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditMenus.cpp; path = menus/EditMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtraMenus.cpp; path = menus/ExtraMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A1217FA2430068E082 /* FileMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileMenus.cpp; path = menus/FileMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavigationMenus.cpp; path = menus/NavigationMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A3217FA2430068E082 /* SelectMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectMenus.cpp; path = menus/SelectMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A4217FA2430068E082 /* TrackMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackMenus.cpp; path = menus/TrackMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A5217FA2430068E082 /* TransportMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TransportMenus.cpp; path = menus/TransportMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A6217FA2430068E082 /* ViewMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ViewMenus.cpp; path = menus/ViewMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A7217FA2430068E082 /* WindowMenus.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = WindowMenus.cpp; path = menus/WindowMenus.cpp; sourceTree = "<group>"; };
+		5E36A0B3217FC6540068E082 /* HelpMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelpMenus.cpp; path = menus/HelpMenus.cpp; sourceTree = "<group>"; };
 		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
 		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
@@ -3136,7 +3167,6 @@
 		5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectHandle.cpp; sourceTree = "<group>"; };
 		5E7396701DAFDB9D00BA0A4D /* SelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
-		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
 		5E74D2DE1CC4429700D88B0B /* EditCursorOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCursorOverlay.h; sourceTree = "<group>"; };
 		5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayIndicatorOverlay.cpp; sourceTree = "<group>"; };
@@ -3150,6 +3180,7 @@
 		5E89EEE91F78D017000F5E82 /* zh_CN.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zh_CN.po; path = ../locale/zh_CN.po; sourceTree = "<group>"; };
 		5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wxPanelWrapper.cpp; sourceTree = "<group>"; };
 		5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxPanelWrapper.h; sourceTree = "<group>"; };
+		5E9985D0218D0A7D00278D81 /* ComponentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentInterface.h; path = ../include/audacity/ComponentInterface.h; sourceTree = "<group>"; };
 		5EA0181C1EC7B226001F2996 /* NoteTrackControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackControls.cpp; sourceTree = "<group>"; };
 		5EA0181D1EC7B226001F2996 /* NoteTrackControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackControls.h; sourceTree = "<group>"; };
 		5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackUI.cpp; sourceTree = "<group>"; };
@@ -3221,6 +3252,8 @@
 		AA6B5B872061DF3B008B5B26 /* util32s.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util32s.h; sourceTree = "<group>"; };
 		AA6B5B8D2061E20A008B5B26 /* fifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fifo.h; sourceTree = "<group>"; };
 		AA6B5B8F2061E6A8008B5B26 /* std-types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "std-types.h"; sourceTree = "<group>"; };
+		AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "aud-do-support.lsp"; path = "../nyquist/aud-do-support.lsp"; sourceTree = "<group>"; };
+		AAB5D42E216A9764006136B4 /* rms.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rms.ny; path = "../plug-ins/rms.ny"; sourceTree = "<group>"; };
 		AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-import.ny"; path = "../../Audacity/plug-ins/sample-data-import.ny"; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4051,6 +4084,7 @@
 			children = (
 				1790AFC709883BFD008A330A /* AboutDialog.cpp */,
 				1790AFC909883BFD008A330A /* AColor.cpp */,
+				5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */,
 				1790AFCE09883BFD008A330A /* AudacityApp.cpp */,
 				5E78388D1DE4995E003270C0 /* AudacityException.cpp */,
 				28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */,
@@ -4092,7 +4126,6 @@
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
 				28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */,
 				1790B0A709883BFD008A330A /* Menus.cpp */,
-				5E0A0E301D23019A00CD2567 /* MenusMac.cpp */,
 				1790B0AB09883BFD008A330A /* Mix.cpp */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
@@ -4142,6 +4175,7 @@
 				28FC1AF90A47762C00A188AE /* WrappedType.cpp */,
 				1790AFC809883BFD008A330A /* AboutDialog.h */,
 				1790AFCA09883BFD008A330A /* AColor.h */,
+				5E08C7382180D460004079AE /* AdornedRulerPanel.h */,
 				28FB12230A3790DF006F0917 /* AllThemeResources.h */,
 				1790AFCC09883BFD008A330A /* Audacity.h */,
 				1790AFCF09883BFD008A330A /* AudacityApp.h */,
@@ -4240,7 +4274,6 @@
 				1790B0ED09883BFD008A330A /* TrackPanel.h */,
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */,
-				5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */,
 				5E52335F1EFDD57D001E4BB8 /* TrackPanelDrawingContext.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */,
@@ -4262,6 +4295,7 @@
 				1790AFFD09883BFD008A330A /* effects */,
 				1790B06209883BFD008A330A /* export */,
 				1790B07D09883BFD008A330A /* import */,
+				5E19D648217D50AB0024D0B1 /* menus */,
 				1841B4FD0E00AD3D00F386E9 /* ondemand */,
 				1790B0B509883BFD008A330A /* prefs */,
 				2897F6DB0AB3DB5A003C20C5 /* toolbars */,
@@ -4764,10 +4798,10 @@
 		280A8B3D19F440010091DE70 /* audacity */ = {
 			isa = PBXGroup;
 			children = (
-				28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */,
+				5E9985D0218D0A7D00278D81 /* ComponentInterface.h */,
 				280A8B3E19F440160091DE70 /* ConfigInterface.h */,
+				28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */,
 				280A8B3F19F440160091DE70 /* EffectInterface.h */,
-				280A8B4019F440160091DE70 /* IdentInterface.h */,
 				280A8B4119F440160091DE70 /* ImporterInterface.h */,
 				280A8B4219F440160091DE70 /* ModuleInterface.h */,
 				280A8B4319F440160091DE70 /* PluginInterface.h */,
@@ -5560,6 +5594,7 @@
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
 				28D34C7F1D9F52E200D4FB61 /* rhythmtrack.ny */,
 				28AA281D0F267A2D008AED9E /* rissetdrum.ny */,
+				AAB5D42E216A9764006136B4 /* rms.ny */,
 				28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */,
 				AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */,
 				28AA281E0F267A2D008AED9E /* SilenceMarker.ny */,
@@ -5580,6 +5615,7 @@
 			isa = PBXGroup;
 			children = (
 				2808026A0F32C11F0021001D /* rawwaves */,
+				AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */,
 				2808025C0F32C11F0021001D /* dspprims.lsp */,
 				2808025D0F32C11F0021001D /* envelopes.lsp */,
 				2808025E0F32C11F0021001D /* equalizer.lsp */,
@@ -5883,6 +5919,27 @@
 				5E1512521DB000DC00702E29 /* TimeTrackVRulerControls.h */,
 			);
 			path = ui;
+			sourceTree = "<group>";
+		};
+		5E19D648217D50AB0024D0B1 /* menus */ = {
+			isa = PBXGroup;
+			children = (
+				5E08E00F217E4467003C6C99 /* ClipMenus.cpp */,
+				5E36A09F217FA2430068E082 /* EditMenus.cpp */,
+				5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */,
+				5E36A0A1217FA2430068E082 /* FileMenus.cpp */,
+				5E36A0B3217FC6540068E082 /* HelpMenus.cpp */,
+				5E08E013217E5F66003C6C99 /* LabelMenus.cpp */,
+				5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */,
+				5E19D64C217D51190024D0B1 /* PluginMenus.cpp */,
+				5E36A0A3217FA2430068E082 /* SelectMenus.cpp */,
+				5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */,
+				5E36A0A4217FA2430068E082 /* TrackMenus.cpp */,
+				5E36A0A5217FA2430068E082 /* TransportMenus.cpp */,
+				5E36A0A6217FA2430068E082 /* ViewMenus.cpp */,
+				5E36A0A7217FA2430068E082 /* WindowMenus.cpp */,
+			);
+			name = menus;
 			sourceTree = "<group>";
 		};
 		5E74D2DB1CC4429700D88B0B /* tracks */ = {
@@ -7170,9 +7227,11 @@
 			files = (
 				5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
+				AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
+				AAB5D42F216A9764006136B4 /* rms.ny in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
@@ -7774,6 +7833,7 @@
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
 				5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */,
+				5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */,
 				1790B14309883BFD008A330A /* Noise.cpp in Sources */,
 				1790B14409883BFD008A330A /* NoiseRemoval.cpp in Sources */,
 				1790B14509883BFD008A330A /* Normalize.cpp in Sources */,
@@ -7781,6 +7841,7 @@
 				1790B14709883BFD008A330A /* Nyquist.cpp in Sources */,
 				1790B14809883BFD008A330A /* Phaser.cpp in Sources */,
 				1790B14A09883BFD008A330A /* Repeat.cpp in Sources */,
+				5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */,
 				5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */,
 				1790B14B09883BFD008A330A /* Reverse.cpp in Sources */,
 				1790B14C09883BFD008A330A /* Silence.cpp in Sources */,
@@ -7827,6 +7888,7 @@
 				1790B17509883BFD008A330A /* Legacy.cpp in Sources */,
 				1790B17809883BFD008A330A /* Menus.cpp in Sources */,
 				1790B17A09883BFD008A330A /* Mix.cpp in Sources */,
+				5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */,
 				1790B17C09883BFD008A330A /* NoteTrack.cpp in Sources */,
 				1790B17D09883BFD008A330A /* PitchName.cpp in Sources */,
 				1790B17E09883BFD008A330A /* PlatformCompatibility.cpp in Sources */,
@@ -7840,6 +7902,8 @@
 				5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */,
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
+				5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */,
+				5E36A0B2217FC5A10068E082 /* (null) in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,
 				5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */,
 				1790B18A09883BFD008A330A /* Printing.cpp in Sources */,
@@ -7848,6 +7912,7 @@
 				1790B18D09883BFD008A330A /* RingBuffer.cpp in Sources */,
 				1790B18E09883BFD008A330A /* SampleFormat.cpp in Sources */,
 				1790B19009883BFD008A330A /* Sequence.cpp in Sources */,
+				5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */,
 				1790B19109883BFD008A330A /* Shuttle.cpp in Sources */,
 				1790B19209883BFD008A330A /* Spectrum.cpp in Sources */,
 				1790B19309883BFD008A330A /* Tags.cpp in Sources */,
@@ -7875,13 +7940,13 @@
 				1790B1AA09883BFD008A330A /* XMLTagHandler.cpp in Sources */,
 				5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */,
 				17190D24098A3F0B004583C6 /* AColor.cpp in Sources */,
+				5E36A0AD217FA2430068E082 /* TrackMenus.cpp in Sources */,
 				17190D25098A3F15004583C6 /* AboutDialog.cpp in Sources */,
 				174D9031098C78AF00D5909F /* CommandManager.cpp in Sources */,
 				174D9033098C78AF00D5909F /* Keyboard.cpp in Sources */,
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
-				5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */,
 				5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */,
 				28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */,
 				28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */,
@@ -7909,6 +7974,7 @@
 				2897F6F30AB3DB5A003C20C5 /* MixerToolBar.cpp in Sources */,
 				2897F6F40AB3DB5A003C20C5 /* SelectionBar.cpp in Sources */,
 				2897F6F50AB3DB5A003C20C5 /* ToolBar.cpp in Sources */,
+				5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */,
 				2897F6F60AB3DB5A003C20C5 /* ToolDock.cpp in Sources */,
 				5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */,
 				2897F6F70AB3DB5A003C20C5 /* ToolManager.cpp in Sources */,
@@ -7957,12 +8023,14 @@
 				5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */,
 				2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */,
 				2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */,
+				5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */,
 				28D587CB0E264CF4009C7DEA /* LoadLV2.cpp in Sources */,
 				5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */,
 				28D587CC0E264CF4009C7DEA /* LV2Effect.cpp in Sources */,
 				28DA07390E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp in Sources */,
 				186CCE6D0E51F47400659159 /* ODDecodeBlockFile.cpp in Sources */,
 				186CCE720E51F48500659159 /* ODDecodeFlacTask.cpp in Sources */,
+				5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */,
 				186CCE730E51F48500659159 /* ODDecodeTask.cpp in Sources */,
 				186CCEA40E523C8E00659159 /* Profiler.cpp in Sources */,
 				18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */,
@@ -7988,6 +8056,7 @@
 				5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */,
 				5E667A691F0D723A00C942A5 /* TrackPanelResizerCell.cpp in Sources */,
 				28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */,
+				5E36A0AC217FA2430068E082 /* SelectMenus.cpp in Sources */,
 				28FBCA6A1B42E01100BB3405 /* AUControl.mm in Sources */,
 				28D540060FD1912A00FA7C75 /* CommandBuilder.cpp in Sources */,
 				28D540070FD1912A00FA7C75 /* CommandHandler.cpp in Sources */,
@@ -8035,6 +8104,7 @@
 				5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */,
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,
+				5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */,
 				28884947131B6CF600B59735 /* bn.po in Sources */,
 				5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */,
 				AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */,
@@ -8046,6 +8116,7 @@
 				2888494D131B6CF600B59735 /* da.po in Sources */,
 				2888494E131B6CF600B59735 /* de.po in Sources */,
 				2888494F131B6CF600B59735 /* el.po in Sources */,
+				5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */,
 				28884950131B6CF600B59735 /* es.po in Sources */,
 				28884951131B6CF600B59735 /* eu.po in Sources */,
 				28884952131B6CF600B59735 /* fa.po in Sources */,
@@ -8093,10 +8164,12 @@
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
+				5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
 				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
+				5E36A0AA217FA2430068E082 /* FileMenus.cpp in Sources */,
 				5E15126D1DB0010C00702E29 /* CommonTrackPanelCell.cpp in Sources */,
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
@@ -8107,6 +8180,7 @@
 				5E7396621DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp in Sources */,
 				EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
 				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
+				5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */,
 				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 				2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */,
 				28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */,
@@ -8519,11 +8593,14 @@
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
@@ -8537,7 +8614,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = debug;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -8575,6 +8652,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -8843,11 +8921,14 @@
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
@@ -8861,7 +8942,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = release;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -8901,6 +8982,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -9211,6 +9293,914 @@
 			};
 			name = Release;
 		};
+		5EC18AA0219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
+				CONFIG_DEBUG = yes;
+				CONFIG_FLAGS = "";
+				CONFIG_STATIC = no;
+				CONFIG_UNICODE = yes;
+				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
+				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
+				FFMPEG_PREFIX = /usr/local;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
+				INFOPLIST_PREPROCESS = YES;
+				KEEP_PRIVATE_EXTERNS = YES;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
+				SDKROOT = macosx10.7;
+				SSE_CPPFLAGS = "";
+				TOPLEVEL = ..;
+				WARNING_CFLAGS = "";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
+				WX_CXXFLAGS = "$(WX_CFLAGS)";
+				WX_FLAVOR = debug;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_PREFIX = "/usr/local/$(ARCHS)";
+				WX_VER = 3.1;
+				ZERO_LINK = NO;
+			};
+			name = Debug64;
+		};
+		5EC18AA1219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreAudioKit,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
+				PRODUCT_NAME = Audacity;
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Debug64;
+		};
+		5EC18AA2219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Header;
+			};
+			name = Debug64;
+		};
+		5EC18AA3219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				PRODUCT_NAME = expat;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = Debug64;
+		};
+		5EC18AA4219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					FLAC__NO_ASM,
+					"FLaC__INLINE=__inline__",
+					NDEBUG,
+				);
+				PRODUCT_NAME = FLAC;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AA5219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					NDEBUG,
+					"FLaC__INLINE=__inline__",
+				);
+				PRODUCT_NAME = "FLAC++";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
+			};
+			name = Debug64;
+		};
+		5EC18AA6219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
+			};
+			name = Debug64;
+		};
+		5EC18AA7219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
+				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
+			};
+			name = Debug64;
+		};
+		5EC18AA8219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CMTSTUFF,
+					EXT,
+				);
+				PRODUCT_NAME = nyquist;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+			};
+			name = Debug64;
+		};
+		5EC18AA9219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DARWIN,
+					USE_MEMORY_H,
+				);
+				PRODUCT_NAME = vorbis;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AAA219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AAB219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
+			};
+			name = Debug64;
+		};
+		5EC18AAC219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
+			};
+			name = Debug64;
+		};
+		5EC18AAD219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
+				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AAE219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
+					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
+				);
+				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AAF219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+					"$(WX_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB0219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_SCRIPT_PIPE,
+					CC_HASVISIBILITY,
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-script-pipe";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB1219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"STDC_HEADERS=1",
+					"HAVE_SYS_TYPES_H=1",
+					"HAVE_SYS_STAT_H=1",
+					"HAVE_STDLIB_H=1",
+					"HAVE_STRING_H=1",
+					"HAVE_MEMORY_H=1",
+					"HAVE_STRINGS_H=1",
+					"HAVE_INTTYPES_H=1",
+					"HAVE_STDINT_H=1",
+					"HAVE_UNISTD_H=1",
+					"HAVE_DLFCN_H=1",
+					"WORDS_BIGENDIAN=1",
+					"SIZEOF_SHORT=2",
+					"SIZEOF_INT=4",
+					"SIZEOF_LONG=4",
+					"HAVE_NANOSLEEP=1",
+					"PA_USE_COREAUDIO=1",
+				);
+				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB2219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB3219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
+				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB4219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB5219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB6219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB7219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB8219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
+				PREBINDING = NO;
+				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB9219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
+				CONFIG_DEBUG = no;
+				CONFIG_FLAGS = "";
+				CONFIG_STATIC = no;
+				CONFIG_UNICODE = yes;
+				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
+				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
+				FFMPEG_PREFIX = /usr/local;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
+				INFOPLIST_PREPROCESS = YES;
+				KEEP_PRIVATE_EXTERNS = YES;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
+				SDKROOT = macosx10.7;
+				SSE_CPPFLAGS = "";
+				TOPLEVEL = ..;
+				WARNING_CFLAGS = "";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
+				WX_CXXFLAGS = "$(WX_CFLAGS)";
+				WX_FLAVOR = release;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_PREFIX = "/usr/local/$(ARCHS)";
+				WX_VER = 3.1;
+				ZERO_LINK = NO;
+			};
+			name = Release64;
+		};
+		5EC18ABA219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Release\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreAudioKit,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
+				PRODUCT_NAME = Audacity;
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Release64;
+		};
+		5EC18ABB219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Header;
+			};
+			name = Release64;
+		};
+		5EC18ABC219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				PRODUCT_NAME = expat;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = Release64;
+		};
+		5EC18ABD219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					FLAC__NO_ASM,
+					"FLaC__INLINE=__inline__",
+					NDEBUG,
+				);
+				PRODUCT_NAME = FLAC;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18ABE219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					NDEBUG,
+					"FLaC__INLINE=__inline__",
+				);
+				PRODUCT_NAME = "FLAC++";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
+			};
+			name = Release64;
+		};
+		5EC18ABF219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
+			};
+			name = Release64;
+		};
+		5EC18AC0219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
+				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
+			};
+			name = Release64;
+		};
+		5EC18AC1219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CMTSTUFF,
+					EXT,
+				);
+				PRODUCT_NAME = nyquist;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+			};
+			name = Release64;
+		};
+		5EC18AC2219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DARWIN,
+					USE_MEMORY_H,
+				);
+				PRODUCT_NAME = vorbis;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18AC3219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18AC4219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
+			};
+			name = Release64;
+		};
+		5EC18AC5219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
+			};
+			name = Release64;
+		};
+		5EC18AC6219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
+				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC7219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
+					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
+				);
+				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC8219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+					"$(WX_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC9219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_SCRIPT_PIPE,
+					CC_HASVISIBILITY,
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-script-pipe";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACA219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"STDC_HEADERS=1",
+					"HAVE_SYS_TYPES_H=1",
+					"HAVE_SYS_STAT_H=1",
+					"HAVE_STDLIB_H=1",
+					"HAVE_STRING_H=1",
+					"HAVE_MEMORY_H=1",
+					"HAVE_STRINGS_H=1",
+					"HAVE_INTTYPES_H=1",
+					"HAVE_STDINT_H=1",
+					"HAVE_UNISTD_H=1",
+					"HAVE_DLFCN_H=1",
+					"WORDS_BIGENDIAN=1",
+					"SIZEOF_SHORT=2",
+					"SIZEOF_INT=4",
+					"SIZEOF_LONG=4",
+					"HAVE_NANOSLEEP=1",
+					"PA_USE_COREAUDIO=1",
+				);
+				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACB219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACC219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
+				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACD219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACE219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
+			};
+			name = Release64;
+		};
+		5EC18ACF219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
+			};
+			name = Release64;
+		};
+		5EC18AD0219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AD1219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
+				PREBINDING = NO;
+				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Release64;
+		};
 		ED152132163C227C00451B5F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -9338,7 +10328,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CD0DEA74F100671EA4 /* Debug */,
+				5EC18AB4219B5AFD000EFBF9 /* Debug64 */,
 				288052E20DEA74FD00671EA4 /* Release */,
+				5EC18ACD219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9347,7 +10339,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D10DEA74F100671EA4 /* Debug */,
+				5EC18AA6219B5AFD000EFBF9 /* Debug64 */,
 				288052E60DEA74FD00671EA4 /* Release */,
+				5EC18ABF219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9356,7 +10350,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D20DEA74F100671EA4 /* Debug */,
+				5EC18AA7219B5AFD000EFBF9 /* Debug64 */,
 				288052E70DEA74FD00671EA4 /* Release */,
+				5EC18AC0219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9365,7 +10361,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D50DEA74F100671EA4 /* Debug */,
+				5EC18AAA219B5AFD000EFBF9 /* Debug64 */,
 				288052EA0DEA74FD00671EA4 /* Release */,
+				5EC18AC3219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9374,7 +10372,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D70DEA74F100671EA4 /* Debug */,
+				5EC18AAB219B5AFD000EFBF9 /* Debug64 */,
 				288052EC0DEA74FD00671EA4 /* Release */,
+				5EC18AC4219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9383,7 +10383,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DB0DEA74F100671EA4 /* Debug */,
+				5EC18AB5219B5AFD000EFBF9 /* Debug64 */,
 				288052F00DEA74FD00671EA4 /* Release */,
+				5EC18ACE219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9392,7 +10394,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DA0DEA74F100671EA4 /* Debug */,
+				5EC18AB3219B5AFD000EFBF9 /* Debug64 */,
 				288052EF0DEA74FD00671EA4 /* Release */,
+				5EC18ACC219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9401,7 +10405,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D40DEA74F100671EA4 /* Debug */,
+				5EC18AA9219B5AFD000EFBF9 /* Debug64 */,
 				288052E90DEA74FD00671EA4 /* Release */,
+				5EC18AC2219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9410,7 +10416,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D30DEA74F100671EA4 /* Debug */,
+				5EC18AA8219B5AFD000EFBF9 /* Debug64 */,
 				288052E80DEA74FD00671EA4 /* Release */,
+				5EC18AC1219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9419,7 +10427,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CF0DEA74F100671EA4 /* Debug */,
+				5EC18AA4219B5AFD000EFBF9 /* Debug64 */,
 				288052E40DEA74FD00671EA4 /* Release */,
+				5EC18ABD219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9428,7 +10438,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D00DEA74F100671EA4 /* Debug */,
+				5EC18AA5219B5AFD000EFBF9 /* Debug64 */,
 				288052E50DEA74FD00671EA4 /* Release */,
+				5EC18ABE219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9437,7 +10449,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CA0DEA74F100671EA4 /* Debug */,
+				5EC18AA0219B5AFD000EFBF9 /* Debug64 */,
 				288052DF0DEA74FD00671EA4 /* Release */,
+				5EC18AB9219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9446,7 +10460,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CB0DEA74F100671EA4 /* Debug */,
+				5EC18AA1219B5AFD000EFBF9 /* Debug64 */,
 				288052E00DEA74FD00671EA4 /* Release */,
+				5EC18ABA219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9455,7 +10471,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2800FE090FF322D5005CA9E5 /* Debug */,
+				5EC18AB2219B5AFD000EFBF9 /* Debug64 */,
 				2800FE0B0FF322D5005CA9E5 /* Release */,
+				5EC18ACB219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9464,7 +10482,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DC0DEA74F100671EA4 /* Debug */,
+				5EC18AB6219B5AFD000EFBF9 /* Debug64 */,
 				288052F10DEA74FD00671EA4 /* Release */,
+				5EC18ACF219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9473,7 +10493,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D80DEA74F100671EA4 /* Debug */,
+				5EC18AAD219B5AFD000EFBF9 /* Debug64 */,
 				288052ED0DEA74FD00671EA4 /* Release */,
+				5EC18AC6219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9482,7 +10504,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				286229AD181CE4B600E1AD1A /* Debug */,
+				5EC18AAE219B5AFD000EFBF9 /* Debug64 */,
 				286229AF181CE4B600E1AD1A /* Release */,
+				5EC18AC7219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9491,7 +10515,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DE0DEA74F100671EA4 /* Debug */,
+				5EC18AB0219B5AFD000EFBF9 /* Debug64 */,
 				288052F30DEA74FD00671EA4 /* Release */,
+				5EC18AC9219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9500,7 +10526,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28D489261B5F052C00A2E4DF /* Debug */,
+				5EC18AA2219B5AFD000EFBF9 /* Debug64 */,
 				28D489271B5F052C00A2E4DF /* Release */,
+				5EC18ABB219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9509,7 +10537,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28E237050E515D1D00281398 /* Debug */,
+				5EC18AB7219B5AFD000EFBF9 /* Debug64 */,
 				28E237070E515D1D00281398 /* Release */,
+				5EC18AD0219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9518,7 +10548,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D90DEA74F100671EA4 /* Debug */,
+				5EC18AB1219B5AFD000EFBF9 /* Debug64 */,
 				288052EE0DEA74FD00671EA4 /* Release */,
+				5EC18ACA219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9527,7 +10559,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28FADDEC1833C3C500BA4141 /* Debug */,
+				5EC18AA3219B5AFD000EFBF9 /* Debug64 */,
 				28FADDEE1833C3C500BA4141 /* Release */,
+				5EC18ABC219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9536,7 +10570,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED152132163C227C00451B5F /* Debug */,
+				5EC18AAC219B5AFD000EFBF9 /* Debug64 */,
 				ED152134163C227C00451B5F /* Release */,
+				5EC18AC5219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9545,7 +10581,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED2706F60EF9C3C6007D4FFD /* Debug */,
+				5EC18AB8219B5AFD000EFBF9 /* Debug64 */,
 				ED2706F80EF9C3C6007D4FFD /* Release */,
+				5EC18AD1219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9554,7 +10592,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDBFAD10177E5399004CC1C1 /* Debug */,
+				5EC18AAF219B5AFD000EFBF9 /* Debug64 */,
 				EDBFAD12177E5399004CC1C1 /* Release */,
+				5EC18AC8219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

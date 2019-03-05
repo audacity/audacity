@@ -28,6 +28,7 @@ small calculations of rectangles.
 #include <wx/bitmap.h>
 #include <wx/valgen.h>
 
+#include "../AdornedRulerPanel.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../toolbars/ToolManager.h"
@@ -40,13 +41,13 @@ small calculations of rectangles.
 #include "../toolbars/SelectionBar.h"
 #include "../toolbars/ToolsToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
-#include "../widgets/Ruler.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
+#include "CommandManager.h"
 
 
-static const IdentInterfaceSymbol
+static const ComponentInterfaceSymbol
 kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 {
    { XO("Window") },
@@ -84,7 +85,7 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 };
 
 
-static const IdentInterfaceSymbol
+static const ComponentInterfaceSymbol
 kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
    // These are acceptable dual purpose internal/visible names
@@ -97,8 +98,8 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
    S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
-   S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
+   S.DefineEnum(                           mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
+   S.Define(                               mbBringToTop, wxT("ToTop"), true );
    return true;
 };
 
@@ -777,19 +778,13 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       return rect;
    };
 
-   TrackListIterator iter(pProj->GetTracks());
    int count = 0;
-   for (auto t = iter.First(); t; t = iter.Next()) {
+   for (auto t : pProj->GetTracks()->Leaders()) {
       count +=  1;
       if( count > n )
       {
          wxRect r =  FindRectangle( *panel, *t );
          return r;
-      }
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
       }
    }
    return wxRect( 0,0,0,0);

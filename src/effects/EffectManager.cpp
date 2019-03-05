@@ -142,7 +142,7 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
    return res;
 }
 
-IdentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
+ComponentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
 {
    return PluginManager::Get().GetSymbol(ID);
 }
@@ -231,7 +231,7 @@ wxString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   ParamsInterface *command;
+   ComponentInterface *command;
    command = GetEffect(ID);
    if( !command )
       command = GetAudacityCommand( ID );
@@ -751,7 +751,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
-   wxMilliClock_t start = wxGetLocalTimeMillis();
+   wxMilliClock_t start = wxGetUTCTimeMillis();
 
    // Allocate the in/out buffer arrays
    float **ibuf = (float **) alloca(chans * sizeof(float *));
@@ -798,7 +798,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
    }
 
    // Remember the latency
-   mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
+   mRealtimeLatency = (int) (wxGetUTCTimeMillis() - start).GetValue();
 
    mRealtimeLock.Leave();
 

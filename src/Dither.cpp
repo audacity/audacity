@@ -174,11 +174,11 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 #define DITHER_LOOP(dither, store, load, dst, dstFormat, dstStride, src, srcFormat, srcStride, len) \
     do { \
        char *d, *s; \
-       unsigned int i; \
+       unsigned int ii; \
        int x; \
-       for (d = (char*)dst, s = (char*)src, i = 0; \
-            i < len; \
-            i++, d += SAMPLE_SIZE(dstFormat) * dstStride, \
+       for (d = (char*)dst, s = (char*)src, ii = 0; \
+            ii < len; \
+            ii++, d += SAMPLE_SIZE(dstFormat) * dstStride, \
                  s += SAMPLE_SIZE(srcFormat) * srcStride) \
           DITHER_STEP(dither, store, load, d, s); \
    } while (0)

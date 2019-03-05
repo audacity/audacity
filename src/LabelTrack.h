@@ -115,6 +115,12 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    friend class LabelStruct;
 
  public:
+   static void DoEditLabels(
+      AudacityProject &project, LabelTrack *lt = nullptr, int index = -1);
+   static int DialogForLabelName(
+      AudacityProject &project, const SelectedRegion& region,
+      const wxString& initialValue, wxString& value);
+
    bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
    bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected();
@@ -147,13 +153,9 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
    static void ResetFont();
 
-   void Draw(TrackPanelDrawingContext &context, const wxRect & r,
-             const SelectedRegion &selectedRegion,
-             const ZoomInfo &zoomInfo) const;
+   void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
    int getSelectedIndex() const { return mSelIndex; }
-
-   int GetKind() const override { return Label; }
 
    double GetOffset() const override;
    double GetStartTime() const override;
@@ -227,7 +229,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void Unselect();
 
-   bool IsSelected() const;
+   // Whether any label box is selected -- not, whether the track is selected.
+   bool HasSelection() const;
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
@@ -274,6 +277,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
  public:
    void SortLabels(LabelTrackHit *pHit = nullptr);
  private:
+   TrackKind GetKind() const override { return TrackKind::Label; }
+
    void ShowContextMenu();
    void OnContextMenu(wxCommandEvent & evt);
 

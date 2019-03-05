@@ -26,6 +26,7 @@
 #include <wx/tooltip.h>
 #endif
 
+#include "../AdornedRulerPanel.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
@@ -36,7 +37,6 @@
 #include "../Track.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
-#include "../widgets/Ruler.h"
 #include "../tracks/ui/Scrubbing.h"
 #include "../commands/CommandContext.h"
 

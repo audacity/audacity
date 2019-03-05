@@ -261,7 +261,7 @@ static wxString AskCopyOrEdit()
       ;
 
       wxString clause3 = _(
-"Reading the files directly allows you to play or edit them almost immediately.  "
+"Reading the files directly allows you to play or edit them almost immediately. "
 "This is less safe than copying in, because you must retain the files with their "
 "original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and locations of any files "
@@ -364,27 +364,13 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    CreateProgress();
 
-   TrackHolders channels(mInfo.channels);
+   NewChannelGroup channels(mInfo.channels);
 
-   auto iter = channels.begin();
-   for (int c = 0; c < mInfo.channels; ++iter, ++c) {
-      *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
-
-      if (mInfo.channels > 1)
-         switch (c) {
-         case 0:
-            iter->get()->SetChannel(Track::LeftChannel);
-            break;
-         case 1:
-            iter->get()->SetChannel(Track::RightChannel);
-            break;
-         default:
-            iter->get()->SetChannel(Track::MonoChannel);
-         }
-   }
-
-   if (mInfo.channels == 2) {
-      channels.begin()->get()->SetLinked(true);
+   {
+      // iter not used outside this scope.
+      auto iter = channels.begin();
+      for (int c = 0; c < mInfo.channels; ++iter, ++c)
+         *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
    }
 
    auto fileTotalFrames =
@@ -529,10 +515,11 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
       return updateResult;
    }
 
-   for(const auto &channel : channels) {
+   for(const auto &channel : channels)
       channel->Flush();
-   }
-   outTracks.swap(channels);
+
+   if (!channels.empty())
+      outTracks.push_back(std::move(channels));
 
    const char *str;
 
@@ -689,8 +676,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                   ustr = id3_field_getstring(&frame->fields[1]);
                   if (ustr) {
                      // Is this duplication really needed?
-                     MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
-                     n = UTF8CTOWX(str.get());
+                     MallocString<> convStr{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                     n = UTF8CTOWX(convStr.get());
                   }
 
                   ustr = id3_field_getstring(&frame->fields[2]);
@@ -701,8 +688,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
                if (ustr) {
                   // Is this duplication really needed?
-                  MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
-                  v = UTF8CTOWX(str.get());
+                  MallocString<> convStr{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                  v = UTF8CTOWX(convStr.get());
                }
 
                if (!n.IsEmpty() && !v.IsEmpty()) {

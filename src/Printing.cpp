@@ -46,9 +46,10 @@ class AudacityPrintout final : public wxPrintout
 {
  public:
    AudacityPrintout(wxString title,
-                    TrackList *tracks):
+                    TrackList *tracks, TrackPanel &panel):
       wxPrintout(title),
       mTracks(tracks)
+      , mPanel(panel)
    {
    }
    bool OnPrintPage(int page);
@@ -58,6 +59,7 @@ class AudacityPrintout final : public wxPrintout
                     int *selPageFrom, int *selPageTo);
 
  private:
+   TrackPanel &mPanel;
    TrackList *mTracks;
 };
 
@@ -84,30 +86,31 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    ruler.SetLabelEdges(true);
    ruler.Draw(*dc);
 
-   TrackArtist artist;
+   TrackArtist artist( &mPanel );
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
                                *wxWHITE_PEN, *wxWHITE_PEN);
    const double screenDuration = mTracks->GetEndTime();
+   SelectedRegion region{};
+   artist.pSelectedRegion = &region;
    ZoomInfo zoomInfo(0.0, width / screenDuration);
+   artist.pZoomInfo = &zoomInfo;
    int y = rulerPageHeight;
 
-   TrackListIterator iter(mTracks);
-   Track *n = iter.First();
-   while (n) {
+   for (auto n : mTracks->Any()) {
       wxRect r;
       r.x = 0;
       r.y = y;
       r.width = width;
       r.height = (int)(n->GetHeight() * scale);
 
-      TrackPanelDrawingContext context{ *dc, {}, {} };
-      artist.DrawTrack(
-         context, n, r, SelectedRegion(), zoomInfo, false, false, false, false);
+      TrackPanelDrawingContext context{
+         *dc, {}, {}, &artist
+      };
+      TrackArt::DrawTrack( context, n, r );
 
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);
 
-      n = iter.Next();
       y += r.height;
    };
 
@@ -143,12 +146,14 @@ void HandlePageSetup(wxWindow *parent)
    gPrintData() = pageSetupDialog.GetPageSetupData().GetPrintData();
 }
 
-void HandlePrint(wxWindow *parent, const wxString &name, TrackList *tracks)
+void HandlePrint(
+   wxWindow *parent, const wxString &name, TrackList *tracks,
+   TrackPanel &panel)
 {
    wxPrintDialogData printDialogData(gPrintData());
 
    wxPrinter printer(&printDialogData);
-   AudacityPrintout printout(name, tracks);
+   AudacityPrintout printout(name, tracks, panel);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
          AudacityMessageBox(_("There was a problem printing."),

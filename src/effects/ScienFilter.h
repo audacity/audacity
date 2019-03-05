@@ -23,15 +23,15 @@ Vaughan Johnson (Preview)
 #include <wx/string.h>
 #include <wx/window.h>
 
-#include "../widgets/Ruler.h"
 #include "Biquad.h"
 
 #include "Effect.h"
 
 class wxTextCtrl;
+class RulerPanel;
 class ShuttleGui;
 
-#define CLASSICFILTERS_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Classic Filters") }
+#define CLASSICFILTERS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Classic Filters") }
 
 class EffectScienFilterPanel;
 
@@ -41,9 +41,9 @@ public:
    EffectScienFilter();
    virtual ~EffectScienFilter();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

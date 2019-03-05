@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_AUTORECOVERY__
 #define __AUDACITY_AUTORECOVERY__
 
-#include "Project.h"
-
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
 
@@ -22,6 +20,8 @@
 #include <wx/mstream.h>
 
 #include <unordered_map>
+
+class AudacityProject;
 
 //
 // Show auto recovery dialog if there are projects to recover. Should be

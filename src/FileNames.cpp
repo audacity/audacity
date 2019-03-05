@@ -22,6 +22,8 @@ used throughout Audacity into this one place.
 
 #include "Audacity.h"
 
+#include "Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
@@ -65,6 +67,21 @@ bool FileNames::CopyFile(
    if (!result && !existed)
       wxRemoveFile(file2);
    return result;
+
+#endif
+}
+
+bool FileNames::HardLinkFile( const wxString& file1, const wxString& file2 )
+{
+#ifdef __WXMSW__
+
+   // Fix forced ASCII conversions and wrong argument order - MJB - 29/01/2019
+   //return ::CreateHardLinkA( file1.c_str(), file2.c_str(), NULL );  
+   return ( 0 != ::CreateHardLink( file2, file1, NULL ) );
+
+#else
+
+   return 0 == ::link( file1.c_str(), file2.c_str() );
 
 #endif
 }

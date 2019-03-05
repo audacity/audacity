@@ -55,6 +55,7 @@ class QualityPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+/// A PrefsPanelFactory that creates one QualityPrefs panel.
 class QualityPrefsFactory final : public PrefsPanelFactory
 {
 public:

@@ -806,13 +806,13 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
    }
 
    // Read raw audio samples out of the FIFO in nAudioFrameSizeOut byte-sized groups to encode.
-   while ((ret = av_fifo_size(mEncAudioFifo.get())) >= nAudioFrameSizeOut)
+   while ( av_fifo_size(mEncAudioFifo.get()) >= nAudioFrameSizeOut)
    {
       ret = av_fifo_generic_read(mEncAudioFifo.get(), mEncAudioFifoOutBuf.get(), nAudioFrameSizeOut, NULL);
 
       AVPacketEx pkt;
 
-      int ret= encode_audio(mEncAudioCodecCtx.get(),
+      ret= encode_audio(mEncAudioCodecCtx.get(),
          &pkt,                          // out
          mEncAudioFifoOutBuf.get(), // in
          default_frame_size);
@@ -1008,10 +1008,10 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the current output\nfile format.  "), rate);
+               text.Printf(_("The project sample rate (%d) is not supported by the current output\nfile format. "), rate);
             }
             else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format.  "), rate, bitrate/1024);
+               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "), rate, bitrate/1024);
             }
 
             text += _("You may resample to one of the rates below.");

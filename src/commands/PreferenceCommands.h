@@ -26,14 +26,14 @@
 
 // GetPreference
 
-#define GET_PREFERENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Get Preference") }
-#define SET_PREFERENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Preference") }
+#define GET_PREFERENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Get Preference") }
+#define SET_PREFERENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Preference") }
 
 class GetPreferenceCommand final : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return GET_PREFERENCE_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return GET_PREFERENCE_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Gets the value of a single preference.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -50,8 +50,8 @@ public:
 class SetPreferenceCommand final : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return SET_PREFERENCE_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return SET_PREFERENCE_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets the value of a single preference.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

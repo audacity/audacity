@@ -37,7 +37,7 @@ class wxTextCtrl;
 
 #include "../RealFFTf.h"
 
-#define NOISEREMOVAL_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Noise Removal") }
+#define NOISEREMOVAL_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Noise Removal") }
 
 class EffectNoiseRemoval final : public Effect
 {
@@ -45,9 +45,9 @@ public:
    EffectNoiseRemoval();
    virtual ~EffectNoiseRemoval();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

@@ -414,7 +414,7 @@ void ODPCMAliasBlockFile::WriteSummary()
       wxPrintf("Unable to write summary data to file: %s", fileNameChar.get());
 
       throw FileException{
-         FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
+         FileException::Cause::Open, wxFileName{ fileNameChar.get() } };
    }
 
    ArrayOf<char> cleanup;

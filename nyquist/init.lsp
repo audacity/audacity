@@ -11,38 +11,31 @@
 ;; "_" (UNDERSCORE) - translation function
 ;;
 ;; Third party plug-ins are not translated by gettext in Audacity, but may include a
-;; list of translations named *local*. The format of *locale* must be:
+;; list of translations named *locale*. The format of *locale* must be:
 ;; (LIST (language-list) [(language-list) ...]) 
 ;; Each language-list is an a-list in the form:
 ;; ("cc" ((list "string" "translated-string") [(list "string" "translated-string") ...]))
 ;; where "cc" is the quoted country code.
 ;;
-(setf underscore (function _))
+(setfn underscore _)
 ;;
-(defun _(txt)
-  (setf translated nil)
+(defun _(txt &aux newtxt)
   (when (boundp '*locale*)
-    (if (not (listp *locale*))
-        (format t "Warning: Invalid *locale* (not a list).~%")
-        (let ((locale (get '*audacity* 'language)))
-          (if (not (setf language-list (assoc locale *locale* :test 'string-equal)))
-              (format t "Warning: No language-list for \"~a\" in *locale*.~%" locale)
-              (if (/= (length language-list) 2)
-                  (format t "Error: Invalid \"~a\" language list in *locale*.~%" locale)
-                  ; Get just the list of substitution pairs
-                  (let ((language-list (second language-list)))
-                    (if (not (listp language-list))
-                        (format t "Warning: No translations for \"~a\" in *locale*.~%" locale)
-                        (let ((translation (assoc txt language-list :test 'string=)))
-                          (if (not translation)
-                              (format t "Warning: No ~a translations for \"~a\".~%" locale txt)
-                              (if (not (and (listp translation)
-                                            (= (length translation) 2)))
-                                  (format t "Error: Invalid translation for ~a in *locale*.~%" txt)
-                                  (setf translated (second translation))))))))))))
-    (if translated
-        translated
-        (funcall underscore txt)))
+    (when (not (listp *locale*))
+          (error "bad argument type" *locale*))
+    (let* ((cc (get '*audacity* 'language))
+           (translations (second (assoc cc *locale* :test 'string-equal))))
+      (if translations
+          (let ((translation (second (assoc txt translations :test 'string=))))
+            (if translation
+                (if (stringp translation)
+                    (setf newtxt translation)
+                    (error "bad argument type" translation))
+                (format t "No ~s translation of ~s.~%" cc txt)))
+          (progn
+            (setf *locale* '*unbound*)
+            (format t "No ~s translations.~%" cc)))))
+  (if newtxt newtxt (underscore txt)))
 
 
 ;;; Some helpers for parsing strings returned by (aud-do "GetInfo: ...
@@ -74,3 +67,12 @@
         (error (format nil "(aud-get-info ~a) failed.~%" str)))
     (let ((info-string (first info)))
       (eval-string (quote-string info-string)))))
+
+
+;;; Path to Nyquist .lsp files.
+(setf *NYQ-PATH* (current-path))
+
+;;; Load wrapper functions for aud-do commands.
+;;; If commented out, "aud-do-support.lsp" may be loaded by a plug-in.
+;;; Example: (lisp-loader (strcat *NYQ-PATH* "aud-do-support.lsp"))
+(load "aud-do-support.lsp")

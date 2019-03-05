@@ -17,10 +17,10 @@ SetPreferenceCommand classes
 
 #include "../Audacity.h"
 #include "PreferenceCommands.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandContext.h"
-#include "../Project.h" // for "OnReloadPreferences".
 
 bool GetPreferenceCommand::DefineParams( ShuttleParams & S ){
    S.Define( mName, wxT("Name"),   wxT("") );
@@ -50,9 +50,9 @@ bool GetPreferenceCommand::Apply(const CommandContext & context)
 }
 
 bool SetPreferenceCommand::DefineParams( ShuttleParams & S ){
-   S.Define(                       mName,    wxT("Name"),    wxT("") );
-   S.Define(                       mValue,   wxT("Value"),   wxT("") );
-   S.OptionalN(bHasReload).Define( mbReload, wxT("Reload"),  false );
+   S.Define(    mName,   wxT("Name"),    wxT("") );
+   S.Define(   mValue,   wxT("Value"),   wxT("") );
+   S.Define( mbReload,   wxT("Reload"),  false );
    return true;
 }
 
@@ -73,7 +73,8 @@ bool SetPreferenceCommand::Apply(const CommandContext & context)
 {
    bool bOK = gPrefs->Write(mName, mValue) && gPrefs->Flush();
    if( bOK && mbReload ){
-      context.GetProject()->OnReloadPreferences( context );
+      auto &project = context.project;
+      EditActions::DoReloadPreferences( project );
    }
    return bOK;
 }

@@ -1,7 +1,7 @@
+include/audacity/ComponentInterface.h
 include/audacity/ConfigInterface.h
 include/audacity/EffectAutomationParameters.h
 include/audacity/EffectInterface.h
-include/audacity/IdentInterface.h
 include/audacity/ImporterInterface.h
 include/audacity/ModuleInterface.h
 include/audacity/PluginInterface.h
@@ -25,6 +25,8 @@ lib-src/mod-script-pipe/ScripterCallback.cpp
 lib-src/mod-script-pipe/ScripterCallback.h
 src/AColor.cpp
 src/AColor.h
+src/AdornedRulerPanel.cpp
+src/AdornedRulerPanel.h
 src/AboutDialog.cpp
 src/AboutDialog.h
 src/AllThemeResources.h
@@ -203,7 +205,6 @@ src/TrackPanel.h
 src/TrackPanelAx.cpp
 src/TrackPanelAx.h
 src/TrackPanelCell.h
-src/TrackPanelCellIterator.h
 src/TrackPanelDrawingContext.h
 src/TrackPanelListener.h
 src/TrackPanelMouseEvent.h
@@ -496,6 +497,20 @@ src/import/RawAudioGuess.cpp
 src/import/RawAudioGuess.h
 src/import/SpecPowerMeter.cpp
 src/import/SpecPowerMeter.h
+src/menus/ClipMenus.cpp
+src/menus/EditMenus.cpp
+src/menus/ExtraMenus.cpp
+src/menus/FileMenus.cpp
+src/menus/HelpMenus.cpp
+src/menus/LabelMenus.cpp
+src/menus/NavigationMenus.cpp
+src/menus/PluginMenus.cpp
+src/menus/SelectMenus.cpp
+src/menus/ToolbarMenus.cpp
+src/menus/TrackMenus.cpp
+src/menus/TransportMenus.cpp
+src/menus/ViewMenus.cpp
+src/menus/WindowMenus.cpp
 src/ondemand/ODComputeSummaryTask.cpp
 src/ondemand/ODComputeSummaryTask.h
 src/ondemand/ODDecodeFFmpegTask.cpp

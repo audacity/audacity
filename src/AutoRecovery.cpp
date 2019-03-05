@@ -22,6 +22,7 @@ text or binary format to a file.
 #include "Audacity.h"
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
+#include "Project.h"
 #include "Sequence.h"
 #include "ShuttleGui.h"
 

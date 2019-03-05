@@ -67,27 +67,21 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    //wxString mode = GetString(wxT("Type"));
    AudacityProject * p = context.GetProject();
    TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    LabelStruct * pLabel = NULL;
    int i=0;
    int nn=0;
 
-   LabelTrack *labelTrack = nullptr;
-   while (t && i<=mLabelIndex) {
-      if (t->GetKind() == Track::Label) {
-         labelTrack = static_cast<LabelTrack*>(t);
-         if( labelTrack )
-         {
-            for (nn = 0; 
-               (nn< (int)labelTrack->mLabels.size()) && i<=mLabelIndex; 
-               nn++) {
-               i++;
-               pLabel = &labelTrack->mLabels[nn];
-            }
-         }
+   LabelTrack *labelTrack {};
+   for (auto lt : tracks->Any<LabelTrack>()) {
+      if( i > mLabelIndex )
+         break;
+      labelTrack = lt;
+      for (nn = 0;
+         (nn< (int)labelTrack->mLabels.size()) && i<=mLabelIndex; 
+         nn++) {
+         i++;
+         pLabel = &labelTrack->mLabels[nn];
       }
-      t = iter.Next();
    }
 
    if ( (i< mLabelIndex) || (pLabel == NULL))
@@ -118,5 +112,6 @@ bool SetLabelCommand::Apply(const CommandContext & context)
          labelTrack->mSelIndex = -1;
    }
 
+   labelTrack->SortLabels();
    return true;
 }

@@ -19,6 +19,9 @@ class AudacityProject;
 class BackgroundHandle;
 class ZoomHandle;
 
+
+/// \brief Class representing the background of a Track.  It
+/// provides the hit test function that tells us what was hit.
 class BackgroundCell final : public CommonTrackPanelCell
 {
 public:

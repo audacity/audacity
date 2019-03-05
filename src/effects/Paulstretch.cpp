@@ -39,6 +39,8 @@
 Param( Amount, float,   wxT("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
 Param( Time,   float,   wxT("Time Resolution"),  0.25f,   0.00099f,  FLT_MAX, 1   );
 
+/// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 
+/// of the effect.
 class PaulStretch
 {
 public:
@@ -96,9 +98,9 @@ EffectPaulstretch::~EffectPaulstretch()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectPaulstretch::GetSymbol()
+ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
 {
    return PAULSTRETCH_PLUGIN_SYMBOL;
 }
@@ -164,11 +166,9 @@ double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
 bool EffectPaulstretch::Process()
 {
    CopyInputTracks();
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    m_t1=mT1;
    int count=0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -179,7 +179,6 @@ bool EffectPaulstretch::Process()
             return false;
       }
 
-      track = (WaveTrack *) iter.Next();
       count++;
    }
    mT1=m_t1;

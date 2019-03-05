@@ -1075,7 +1075,7 @@ void ProgressDialog::Reinit()
 {
    mLastValue = 0;
 
-   mStartTime = wxGetLocalTimeMillis().GetValue();
+   mStartTime = wxGetUTCTimeMillis().GetValue();
    mLastUpdate = mStartTime;
    mYieldTimer = mStartTime;
    mCancel = false;
@@ -1326,7 +1326,7 @@ ProgressResult ProgressDialog::Update(int value, const wxString & message)
       return ProgressResult::Stopped;
    }
 
-   wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
+   wxLongLong_t now = wxGetUTCTimeMillis().GetValue();
    wxLongLong_t elapsed = now - mStartTime;
 
    if (elapsed < 500)
@@ -1586,7 +1586,7 @@ void ProgressDialog::Beep() const
    gPrefs->Read(wxT("/GUI/BeepAfterDuration"), &after, 60);
    gPrefs->Read(wxT("/GUI/BeepFileName"), &name, wxEmptyString);
 
-   if (should && wxGetLocalTimeMillis().GetValue() - mStartTime > after * 1000)
+   if (should && wxGetUTCTimeMillis().GetValue() - mStartTime > after * 1000)
    {
       wxBusyCursor busy;
       wxSound s;
@@ -1656,7 +1656,7 @@ ProgressResult TimerProgressDialog::UpdateProgress()
       return ProgressResult::Stopped;
    }
 
-   wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
+   wxLongLong_t now = wxGetUTCTimeMillis().GetValue();
    wxLongLong_t elapsed = now - mStartTime;
 
    if (elapsed < 500)

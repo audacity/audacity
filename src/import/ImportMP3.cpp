@@ -77,6 +77,12 @@ void GetMP3ImportPlugin(ImportPluginList &importPluginList,
 #include <wx/timer.h>
 #include <wx/intl.h>
 
+#include "../WaveTrack.h"
+
+// PRL:  include these last,
+// and correct some preprocessor namespace pollution from wxWidgets that
+// caused a warning about duplicate definition
+#undef SIZEOF_LONG
 extern "C" {
 #include "mad.h"
 
@@ -84,8 +90,6 @@ extern "C" {
 #include <id3tag.h>
 #endif
 }
-
-#include "../WaveTrack.h"
 
 #define INPUT_BUFFER_SIZE 65535
 #define PROGRESS_SCALING_FACTOR 100000
@@ -98,7 +102,7 @@ struct private_data {
    ArrayOf<unsigned char> inputBuffer{ static_cast<unsigned int>(INPUT_BUFFER_SIZE) };
    int inputBufferFill;     /* amount of data in inputBuffer */
    TrackFactory *trackFactory;
-   TrackHolders channels;
+   NewChannelGroup channels;
    ProgressDialog *progress;
    unsigned numChannels;
    ProgressResult updateResult;
@@ -208,8 +212,9 @@ auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
-                                Tags *tags)
+ProgressResult MP3ImportFileHandle::Import(
+   TrackFactory *trackFactory, TrackHolders &outTracks,
+   Tags *tags)
 {
    outTracks.clear();
 
@@ -252,7 +257,8 @@ ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
    for(const auto &channel : privateData.channels) {
       channel->Flush();
    }
-   outTracks.swap(privateData.channels);
+   if (!privateData.channels.empty())
+      outTracks.push_back(std::move(privateData.channels));
 
    /* Read in any metadata */
    ImportID3(tags);
@@ -501,17 +507,9 @@ enum mad_flow output_cb(void *_data,
 
          auto format = QualityPrefs::SampleFormatChoice();
 
-         for(auto &channel: data->channels) {
+         for(auto &channel: data->channels)
             channel = data->trackFactory->NewWaveTrack(format, samplerate);
-            channel->SetChannel(Track::MonoChannel);
-         }
 
-         /* special case: 2 channels is understood to be stereo */
-         if(channels == 2) {
-            data->channels.begin()->get()->SetChannel(Track::LeftChannel);
-            data->channels.rbegin()->get()->SetChannel(Track::RightChannel);
-            data->channels.begin()->get()->SetLinked(true);
-         }
          data->numChannels = channels;
       }
       else {

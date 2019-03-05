@@ -43,24 +43,27 @@
 bool ContrastDialog::GetDB(float &dB)
 {
    float rms = float(0.0);
-   int numberSelecteTracks = 0;
 
    // For stereo tracks: sqrt((mean(L)+mean(R))/2)
-   bool isStereo = false;
    double meanSq = 0.0;
 
    AudacityProject *p = GetActiveProject();
-   SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
-   while (t) {
-      numberSelecteTracks++;
-      if (numberSelecteTracks > 1 && !isStereo) {
-         AudacityMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
-         m.ShowModal();
-         return false;
-      }
-      isStereo = t->GetLinked();
+   auto range =
+      p->GetTracks()->SelectedLeaders< const WaveTrack >();
+   auto numberSelectedTracks = range.size();
+   if (numberSelectedTracks > 1) {
+      AudacityMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
+      m.ShowModal();
+      return false;
+   }
+   if(numberSelectedTracks == 0) {
+      AudacityMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
+      m.ShowModal();
+      return false;
+   }
 
+   const auto channels = TrackList::Channels( *range.begin() );
+   for ( auto t : channels ) {
       wxASSERT(mT0 <= mT1);
 
       // Ignore whitespace beyond ends of track.
@@ -87,19 +90,15 @@ bool ContrastDialog::GetDB(float &dB)
       }
 
       // Don't throw in this analysis dialog
-      rms = ((WaveTrack *)t)->GetRMS(mT0, mT1, false);
+      rms = t->GetRMS(mT0, mT1, false);
       meanSq += rms * rms;
-      t = (WaveTrack *) iter.Next();
    }
    // TODO: This works for stereo, provided the audio clips are in both channels.
    // We should really count gaps between clips as silence.
-   rms = (meanSq > 0.0)? sqrt(meanSq/(double)numberSelecteTracks) : 0.0;
+   rms = (meanSq > 0.0)
+      ? sqrt( meanSq/static_cast<double>( channels.size() ) )
+      : 0.0;
 
-   if(numberSelecteTracks == 0) {
-      AudacityMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
-      m.ShowModal();
-      return false;
-   }
    // Gives warning C4056, Overflow in floating-point constant arithmetic
    // -INFINITY is intentional here.
    // Looks like we are stuck with this warning, as 
@@ -344,9 +343,8 @@ void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
-   SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
 
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   if( p->GetTracks()->Selected< const WaveTrack >() ) {
       mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
       mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }
@@ -360,9 +358,8 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
-   SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
 
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   if( p->GetTracks()->Selected< const WaveTrack >() ) {
       mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
       mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }

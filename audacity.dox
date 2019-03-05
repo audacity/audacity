@@ -38,7 +38,7 @@ PROJECT_NAME           = Audacity
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 2.2.2
+PROJECT_NUMBER         = 2.3.1
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -2062,7 +2062,20 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = AUDACITY_DLL_API \
-                         =
+                         = \
+                         USE_VST=1 \
+                         USE_FFMPEG=1 \
+                         USE_LV2=1 \
+                         USE_NYQUIST=1 \
+                         USE_LADSPA=1 \
+                         USE_VAMP=1 \
+                         USE_AUDIO_UNITS \
+                         USE_MIDI=1 \
+                         USE_LIBVORBIS=1 \
+                         USE_LIBMAD=1 \
+                         USE_LIBFLAC=1 \
+                         USE_SBSMS=1 \
+                         USE_GSTREAMER
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

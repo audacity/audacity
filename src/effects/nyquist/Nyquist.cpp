@@ -42,12 +42,15 @@ effects from this one class.
 #include <wx/valgen.h>
 #include <wx/wfstream.h>
 #include <wx/numformatter.h>
+#include <wx/stdpaths.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileException.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
+#include "../../NoteTrack.h"
+#include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../Project.h"
 #include "../../ShuttleGui.h"
@@ -153,19 +156,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    mMaxLen = NYQ_MAX_LEN;
 
-   // Interactive Nyquist (for effects)
-   if (fName == NYQUIST_EFFECTS_PROMPT_ID) {
-      mName = XO("Nyquist Effects Prompt");
-      mType = EffectTypeProcess;
-      mPromptName = mName;
-      mPromptType = mType;
-      mOK = true;
-      mIsPrompt = true;
-      return;
-   }
-
-   // Interactive Nyquist (for general tools)
-   if (fName == NYQUIST_TOOLS_PROMPT_ID) {
+   // Interactive Nyquist
+   if (fName == NYQUIST_PROMPT_ID) {
       mName = XO("Nyquist Prompt");
       mType = EffectTypeTool;
       mIsTool = true;
@@ -196,29 +188,25 @@ NyquistEffect::~NyquistEffect()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
 wxString NyquistEffect::GetPath()
 {
    if (mIsPrompt)
-      return (mPromptType == EffectTypeTool) ?
-         NYQUIST_TOOLS_PROMPT_ID :
-         NYQUIST_EFFECTS_PROMPT_ID;
+      return NYQUIST_PROMPT_ID;
 
    return mFileName.GetFullPath();
 }
 
-IdentInterfaceSymbol NyquistEffect::GetSymbol()
+ComponentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return (mPromptType == EffectTypeTool) ?
-         XO("Nyquist Prompt") :
-         XO("Nyquist Effects Prompt");
+      return XO("Nyquist Prompt");
 
    return mName;
 }
 
-IdentInterfaceSymbol NyquistEffect::GetVendor()
+ComponentInterfaceSymbol NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {
@@ -274,7 +262,7 @@ EffectType NyquistEffect::GetClassification()
    return mType;
 }
 
-IdentInterfaceSymbol NyquistEffect::GetFamilyId()
+ComponentInterfaceSymbol NyquistEffect::GetFamilyId()
 {
    return NYQUISTEFFECTS_FAMILY;
 }
@@ -544,8 +532,8 @@ bool NyquistEffect::Init()
       AudacityProject *project = GetActiveProject();
       bool bAllowSpectralEditing = true;
 
-      SelectedTrackListOfKindIterator sel(Track::Wave, project->GetTracks());
-      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
+      for ( auto t :
+               project->GetTracks()->Selected< const WaveTrack >() ) {
          if (t->GetDisplay() != WaveTrack::Spectrum ||
              !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = false;
@@ -608,7 +596,7 @@ bool NyquistEffect::Process()
       return true;
 
    // Restore the reentry counter (to zero) when we exit.
-   auto cleanup = valueRestorer( mReentryCount);
+   auto countRestorer = valueRestorer( mReentryCount);
    mReentryCount++;
    RegisterFunctions();
 
@@ -621,7 +609,6 @@ bool NyquistEffect::Process()
    if (mExternal) {
       mProgress->Hide();
    }
-
 
    mOutputTime = 0;
    mCount = 0;
@@ -636,28 +623,18 @@ bool NyquistEffect::Process()
 
    mTrackIndex = 0;
 
-   mNumSelectedChannels = 0;
-
    // If in tool mode, then we don't do anything with the track and selection.
-   bool bOnePassTool = (GetType() == EffectTypeTool);
+   const bool bOnePassTool = (GetType() == EffectTypeTool);
 
    // We must copy all the tracks, because Paste needs label tracks to ensure
    // correct sync-lock group behavior when the timeline is affected; then we just want
-   // to operate on the selected wave tracks.
-   // Also need to set up mOutputTracks for channel count.
-   if( !bOnePassTool )
-      CopyInputTracks(Track::All);
+   // to operate on the selected wave tracks
+   if ( !bOnePassTool )
+      CopyInputTracks(true);
 
-   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks.get());
-   for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-      mNumSelectedChannels++;
-      if (mT1 >= mT0) {
-         if (t->GetLinked()) {
-            mNumSelectedChannels++;
-            sel.Next();
-         }
-      }
-   }
+   mNumSelectedChannels = bOnePassTool
+      ? 0
+      : mOutputTracks->Selected< const WaveTrack >().size();
 
    mDebugOutput.Clear();
    if (!mHelpFile.IsEmpty() && !mHelpFileExists) {
@@ -671,7 +648,6 @@ bool NyquistEffect::Process()
       mProps = wxEmptyString;
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
-      // TODO: Document.
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
       lang = (lang == wxEmptyString)? wxGetApp().InitLang(lang) : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
@@ -682,6 +658,9 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'TEMP)\n"), EscapeString(FileNames::TempDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'SYS-TEMP)\n"), EscapeString(wxStandardPaths::Get().GetTempDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
 
       wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
       wxString list;
@@ -693,7 +672,8 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list);
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list);
-
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'USER-PLUG-IN)\n"),
+                                 EscapeString(FileNames::PlugInDir()));
 
       // Date and time:
       wxDateTime now = wxDateTime::Now();
@@ -721,8 +701,6 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), (int) gAudacityProjects.size());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetName());
 
-      TrackListIterator all(project->GetTracks());
-      Track *t;
       int numTracks = 0;
       int numWave = 0;
       int numLabel = 0;
@@ -730,29 +708,21 @@ bool NyquistEffect::Process()
       int numTime = 0;
       wxString waveTrackList = wxT("");   // track positions of selected audio tracks.
 
-      for (t = all.First(); t; t = all.Next())
       {
-         switch (t->GetKind())
-         {
-            case Track::Wave:
+         auto countRange = project->GetTracks()->Leaders();
+         for (auto t : countRange) {
+            t->TypeSwitch( [&](const WaveTrack *) {
                numWave++;
-               if (t->GetSelected()) {
+               if (t->GetSelected())
                   waveTrackList += wxString::Format(wxT("%d "), 1 + numTracks);
-               }
-            break;
-            case Track::Label: numLabel++; break;
-#if defined(USE_MIDI)
-            case Track::Note: numMidi++; break;
-#endif
-            case Track::Time: numTime++; break;
-            default: break;
+            });
+            numTracks++;
          }
-
-         numTracks++;
-         if (t->GetLinked())
-         {
-            all.Next();
-         }
+         numLabel = countRange.Filter<const LabelTrack>().size();
+   #if defined(USE_MIDI)
+         numMidi = countRange.Filter<const NoteTrack>().size();
+   #endif
+         numTime = countRange.Filter<const TimeTrack>().size();
       }
 
       // We use Internat::ToString() rather than "%g" here because we
@@ -790,8 +760,9 @@ bool NyquistEffect::Process()
       Effect::MessageBox(message, wxOK | wxCENTRE | wxICON_EXCLAMATION, _("Nyquist Error"));
    }
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   mCurTrack[0] = (WaveTrack *)iter.First();
+   Maybe<TrackIterRange<WaveTrack>> pRange;
+   if (!bOnePassTool)
+      pRange.create(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -799,19 +770,27 @@ bool NyquistEffect::Process()
    mFirstInGroup = true;
    Track *gtLast = NULL;
 
-   while (mCurTrack[0] || bOnePassTool) {
+   for (;
+        bOnePassTool || pRange->first != pRange->second;
+        (void) (!pRange || (++pRange->first, true))
+   ) {
+      mCurTrack[0] = pRange ? *pRange->first : nullptr;
       mCurNumChannels = 1;
-      if ((mT1 >= mT0)||bOnePassTool) {
+      if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
-
-         } else {
-            if (mCurTrack[0]->GetLinked()) {
+         }
+         else {
+            auto channels = TrackList::Channels(mCurTrack[0]);
+            if (channels.size() > 1) {
+               // TODO: more-than-two-channels
+               // Pay attention to consistency of mNumSelectedChannels
+               // with the running tally made by this loop!
                mCurNumChannels = 2;
 
-               mCurTrack[1] = (WaveTrack *)iter.Next();
+               mCurTrack[1] = * ++ channels.first;
                if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
                   Effect::MessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                     wxOK | wxCENTRE);
+                               wxOK | wxCENTRE);
                   success = false;
                   goto finish;
                }
@@ -819,8 +798,7 @@ bool NyquistEffect::Process()
             }
 
             // Check whether we're in the same group as the last selected track
-            SyncLockedTracksIterator gIter(mOutputTracks.get());
-            Track *gt = gIter.StartWith(mCurTrack[0]);
+            Track *gt = *TrackList::SyncLockGroup(mCurTrack[0]).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
@@ -842,6 +820,7 @@ bool NyquistEffect::Process()
 
             mCurLen = std::min(mCurLen, mMaxLen);
          }
+
          mProgressIn = 0.0;
          mProgressOut = 0.0;
 
@@ -916,7 +895,6 @@ bool NyquistEffect::Process()
          mProgressTot += mProgressIn + mProgressOut;
       }
 
-      mCurTrack[0] = (WaveTrack *) iter.Next();
       mCount += mCurNumChannels;
    }
 
@@ -1073,37 +1051,36 @@ bool NyquistEffect::ProcessOne()
       wxString bitFormat;
       wxString spectralEditp;
 
-      switch (mCurTrack[0]->GetKind())
-      {
-         case Track::Wave:
+      mCurTrack[0]->TypeSwitch(
+         [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
+            switch (wt->GetDisplay())
             {
-               case WaveTrack::Waveform:
-                  view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
-                  break;
-               case WaveTrack::Spectrum:
-                  view = wxT("\"Spectrogram\"");
-                  break;
-               default: view = wxT("NIL"); break;
+            case WaveTrack::Waveform:
+               view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+               break;
+            case WaveTrack::Spectrum:
+               view = wxT("\"Spectrogram\"");
+               break;
+            default: view = wxT("NIL"); break;
             }
-         break;
+         },
 #if defined(USE_MIDI)
-         case Track::Note:
+         [&](const NoteTrack *) {
             type = wxT("midi");
             view = wxT("\"Midi\"");
-         break;
+         },
 #endif
-         case Track::Label:
+         [&](const LabelTrack *) {
             type = wxT("label");
             view = wxT("\"Label\"");
-         break;
-         case Track::Time:
+         },
+         [&](const TimeTrack *) {
             type = wxT("time");
             view = wxT("\"Time\"");
-         break;
-      }
+         }
+      );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName());
@@ -1115,22 +1092,9 @@ bool NyquistEffect::ProcessOne()
       //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
-      double startTime = 0.0;
-      double endTime = 0.0;
-
-      if (mCurTrack[0]->GetLinked()) {
-         startTime = std::min<double>(mCurTrack[0]->GetStartTime(), mCurTrack[0]->GetLink()->GetStartTime());
-      }
-      else {
-         startTime = mCurTrack[0]->GetStartTime();
-      }
-
-      if (mCurTrack[0]->GetLinked()) {
-         endTime = std::max<double>(mCurTrack[0]->GetEndTime(), mCurTrack[0]->GetLink()->GetEndTime());
-      }
-      else {
-         endTime = mCurTrack[0]->GetEndTime();
-      }
+      auto channels = TrackList::Channels( mCurTrack[0] );
+      double startTime = channels.min( &Track::GetStartTime );
+      double endTime = channels.max( &Track::GetEndTime );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
                               Internat::ToString(startTime));
@@ -1378,18 +1342,19 @@ bool NyquistEffect::ProcessOne()
          mDebugOutput = wxString::Format(_("nyx_error returned from %s.\n"),
                                          mName.IsEmpty()? _("plug-in") : mName) + mDebugOutput;
          mDebug = true;
-         return false;
       }
       else {
          wxLogMessage("Nyquist returned nyx_error:\n%s", mDebugOutput);
       }
-      return true;
+      return false;
    }
 
    if (rval == nyx_string) {
       wxString msg = NyquistToWxString(nyx_get_string());
-      if (!msg.IsEmpty())  // Not currently a documented feature, but could be useful as a No-Op.
+      if (!msg.IsEmpty())  // Empty string may be used as a No-Op return value.
          Effect::MessageBox(msg);
+      else
+         return true;
 
       // True if not process type.
       // If not returning audio from process effect,
@@ -1400,7 +1365,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_double) {
       wxString str;
-      str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %f")),
+      str.Printf(_("Nyquist returned the value: %f"),
                  nyx_get_double());
       Effect::MessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
@@ -1408,7 +1373,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_int) {
       wxString str;
-      str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %d")),
+      str.Printf(_("Nyquist returned the value: %d"),
                  nyx_get_int());
       Effect::MessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
@@ -1418,16 +1383,7 @@ bool NyquistEffect::ProcessOne()
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      LabelTrack *ltrack = NULL;
-
-      TrackListIterator iter(mOutputTracks.get());
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetKind() == Track::Label) {
-            ltrack = (LabelTrack *)t;
-            break;
-         }
-      }
-
+      auto ltrack = * mOutputTracks->Any< LabelTrack >().begin();
       if (!ltrack) {
          ltrack = static_cast<LabelTrack*>(AddToOutputTracks(mFactory->NewLabelTrack()));
       }
@@ -1506,7 +1462,7 @@ bool NyquistEffect::ProcessOne()
 
       if (mOutputTime <= 0) {
          Effect::MessageBox(_("Nyquist returned nil audio.\n"));
-         return true;
+         return false;
       }
    }
 
@@ -1532,9 +1488,7 @@ bool NyquistEffect::ProcessOne()
 
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
-         SyncLockedTracksIterator git(mOutputTracks.get());
-         Track *t;
-         for (t = git.StartWith(mCurTrack[i]); t; t = git.Next())
+         for (auto t : TrackList::SyncLockGroup(mCurTrack[i]))
          {
             if (!t->GetSelected() && t->IsSyncLockSelected()) {
                t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
@@ -1577,9 +1531,9 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
-std::vector<IdentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
+std::vector<ComponentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
 {
-   std::vector<IdentInterfaceSymbol> results;
+   std::vector<ComponentInterfaceSymbol> results;
    if (text[0] == wxT('(')) {
       // New style:  expecting a Lisp-like list of strings
       Tokenizer tzer;
@@ -1680,12 +1634,10 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
     * be determined.
     *
    AudacityProject *project = GetActiveProject();
-   double rate = INT_MAX;
    if (project && s.IsSameAs(wxT("half-srate"), false)) {
-      SelectedTrackListOfKindIterator sel(Track::Wave, project->GetTracks());
-      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-         rate = std::min(t->GetRate(), rate);
-      }
+      auto rate =
+         project->GetTracks()->Selected< const WaveTrack >()
+            .min( &WaveTrack::GetRate );
       return (rate / 2.0);
    }
    */
@@ -2143,7 +2095,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
       return false;
    }
 
-   wxTextInputStream pgm(stream, wxT(" \t"), wxConvUTF8);
+   wxTextInputStream pgm(stream, wxT(" \t"), wxConvAuto());
 
    mCmd = wxT("");
    mIsSal = false;
@@ -2167,13 +2119,13 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    while (!stream.Eof() && stream.IsOk())
    {
       bool dollar = false;
-      wxString line = pgm.ReadLine().Trim(false);
+      wxString line = pgm.ReadLine();
       if (line.Length() > 1 &&
           // New in 2.3.0:  allow magic comment lines to start with $
           // The trick is that xgettext will not consider such lines comments
           // and will extract the strings they contain
           (line[0] == wxT(';') ||
-           (dollar = (line[0] == wxT('$')))))
+           ((dollar = (line[0] == wxT('$'))))))
       {
          Tokenizer tzer;
          unsigned nLines = 1;
@@ -2182,7 +2134,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
             // Allow run-ons only for new $ format header lines
             done = Parse(tzer, line, !dollar || stream.Eof(), nLines == 1);
          while(!done &&
-            (line = pgm.ReadLine().Trim(false), ++nLines, true));
+            (line = pgm.ReadLine(), ++nLines, true));
 
          // Don't pass these lines to the interpreter, so it doesn't get confused
          // by $, but pass blanks,
@@ -2938,7 +2890,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
 
    // Get style flags:
    // Ensure legal combinations so that wxWidgets does not throw an assert error.
-   unsigned char flags = 0;
+   unsigned int flags = 0;
    if (ctrl.highStr != wxEmptyString)
    {
       wxStringTokenizer tokenizer(ctrl.highStr, ",");
@@ -3240,16 +3192,15 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
 LVAL xlc_aud_do(void)
 {
 // Based on string-trim...
-    unsigned char *leftp,*rightp;
+    unsigned char *leftp;
     LVAL src,dst;
 
     /* get the string */
     src = xlgastring();
     xllastarg();
 
-    /* setup the string pointers */
+    /* setup the string pointer */
     leftp = getstring(src);
-    rightp = leftp + getslength(src) - 2;
 
     // Go call my real function here...
     dst = (LVAL)ExecForLisp( (char *)leftp );
@@ -3267,9 +3218,10 @@ static void RegisterFunctions()
    if (firstTime) {
       firstTime = false;
 
+      // All function names must be UP-CASED
       static const FUNDEF functions[] = {
          { "_", SUBR, gettext },
-         { "ngettext", SUBR, ngettext },
+         { "NGETTEXT", SUBR, ngettext },
          { "AUD-DO",  SUBR, xlc_aud_do },
        };
 

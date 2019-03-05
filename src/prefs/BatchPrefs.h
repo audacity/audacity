@@ -34,6 +34,8 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
+
+/// A PrefsPanelFactory that creates one BatchPrefs panel.
 class BatchPrefsFactory final : public PrefsPanelFactory
 {
 public:

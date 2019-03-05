@@ -20,14 +20,14 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define SET_PROJECT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Project") }
+#define SET_PROJECT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Project") }
 
 class SetProjectCommand : public AudacityCommand
 {
 public:
    SetProjectCommand();
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return SET_PROJECT_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return SET_PROJECT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -44,10 +44,12 @@ public:
    int mPosY;
    int mWidth;
    int mHeight;
+   double mRate;
 
 // For tracking optional parameters.
    bool bHasName;
    bool bHasSizing;
+   bool bHasRate;
 };
 
 

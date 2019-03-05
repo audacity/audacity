@@ -39,7 +39,7 @@ protected:
    // This supplies the abstract virtual function, but in fact this symbol
    // does not get used:  this class is either a temporary helper, or else
    // GetSymbol() is overridden further in derived classes.
-   IdentInterfaceSymbol GetSymbol() override { return mProxyEffectName; }
+   ComponentInterfaceSymbol GetSymbol() override { return mProxyEffectName; }
 
 private:
    bool ProcessLabelTrack(LabelTrack *track);

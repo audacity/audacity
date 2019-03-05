@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
 
-   IdentInterface.h
+   ComponentInterface.h
 
    Leland Lucius
 
@@ -39,39 +39,39 @@
    
 **********************************************************************/
 
-#ifndef __AUDACITY_IDENTINTERFACE_H__
-#define __AUDACITY_IDENTINTERFACE_H__
+#ifndef __AUDACITY_COMPONENT_INTERFACE_H__
+#define __AUDACITY_COMPONENT_INTERFACE_H__
 
 #include "audacity/Types.h"
 extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
 
 /**************************************************************************//**
 
-\brief IdentInterfaceSymbol pairs a persistent string identifier used internally
+\brief ComponentInterfaceSymbol pairs a persistent string identifier used internally
 with an optional, different string as msgid for lookup in a translation catalog.
 \details  If there is need to change a msgid in a later version of the
 program, change the constructor call to supply a second argument but leave the
 first the same, so that compatibility of older configuration files containing
 that internal string is not broken.
 ********************************************************************************/
-class IdentInterfaceSymbol
+class ComponentInterfaceSymbol
 {
 public:
-   IdentInterfaceSymbol() = default;
+   ComponentInterfaceSymbol() = default;
    
    // Allows implicit construction from a msgid re-used as an internal string
-   IdentInterfaceSymbol( const wxString &msgid )
+   ComponentInterfaceSymbol( const wxString &msgid )
       : mInternal{ msgid }, mMsgid{ msgid }
    {}
 
    // Allows implicit construction from a msgid re-used as an internal string
-   IdentInterfaceSymbol( const wxChar *msgid )
+   ComponentInterfaceSymbol( const wxChar *msgid )
       : mInternal{ msgid }, mMsgid{ msgid }
    {}
 
    // Two-argument version distinguishes internal from translatable string
    // such as when the first squeezes spaces out
-   IdentInterfaceSymbol( const wxString &internal, const wxString &msgid )
+   ComponentInterfaceSymbol( const wxString &internal, const wxString &msgid )
       : mInternal{ internal }
       // Do not permit non-empty msgid with empty internal
       , mMsgid{ internal.empty() ? wxString{} : msgid }
@@ -85,11 +85,11 @@ public:
    bool empty() const { return mInternal.empty(); }
 
    friend inline bool operator == (
-      const IdentInterfaceSymbol &a, const IdentInterfaceSymbol &b )
+      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
    { return a.mInternal == b.mInternal; }
 
    friend inline bool operator != (
-      const IdentInterfaceSymbol &a, const IdentInterfaceSymbol &b )
+      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
    { return !( a == b ); }
 
 private:
@@ -97,24 +97,29 @@ private:
    wxString mMsgid;
 };
 
+
+class ShuttleParams;
+
 /**************************************************************************//**
 
-\brief IdentInterface provides name / vendor / version functions to identify
-plugins.  It is what makes a class a plug-in.
+\brief ComponentInterface provides name / vendor / version functions to identify
+plugins.  It is what makes a class a plug-in.  Additionally it provides an
+optional parameter definitions function, for those components such as commands,
+effects and (soon) preference pagess that define parameters.
 ********************************************************************************/
-class AUDACITY_DLL_API IdentInterface /* not final */
+class AUDACITY_DLL_API ComponentInterface /* not final */
 {
 public:
-   virtual ~IdentInterface() {};
+   virtual ~ComponentInterface() {};
 
    // These should return an untranslated value
    virtual wxString GetPath() = 0;
 
    // The internal string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
-   virtual IdentInterfaceSymbol GetSymbol() = 0;
+   virtual ComponentInterfaceSymbol GetSymbol() = 0;
 
-   virtual IdentInterfaceSymbol GetVendor() = 0;
+   virtual ComponentInterfaceSymbol GetVendor() = 0;
 
    virtual wxString GetVersion() = 0;
 
@@ -124,6 +129,9 @@ public:
 
    // non-virtual convenience function
    const wxString& GetTranslatedName();
+
+   // Parameters, if defined.  false means no defined parameters.
+   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};   
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__

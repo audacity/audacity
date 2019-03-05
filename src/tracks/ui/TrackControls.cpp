@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackSelectHandle.h"
 #include "../../HitTestResult.h"
 #include "../../RefreshCode.h"
-#include "../../MixerBoard.h"
+#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/textdlg.h>
 #include "../../commands/CommandType.h"
 #include "../../commands/Command.h"
+#include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
 
 
@@ -160,7 +161,7 @@ END_POPUP_MENU()
 
 
 
-#define SET_TRACK_NAME_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Track Name") }
+#define SET_TRACK_NAME_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Track Name") }
 
 // An example of using an AudacityCommand simply to create a dialog.
 // We can add additional functions later, if we want to make it
@@ -169,8 +170,8 @@ END_POPUP_MENU()
 class SetTrackNameCommand : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override
    {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
    //wxString GetDescription() override {return _("Sets the track name.");};
    //bool DefineParams( ShuttleParams & S ) override;
@@ -209,16 +210,8 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
       if (bResult) 
       {
          wxString newName = Command.mName;
-         pTrack->SetName(newName);
-         // if we have a linked channel this name should change as well
-         // (otherwise sort by name and time will crash).
-         if (pTrack->GetLinked())
-            pTrack->GetLink()->SetName(newName);
-
-         MixerBoard *const pMixerBoard = proj->GetMixerBoard();
-         auto pt = dynamic_cast<PlayableTrack*>(pTrack);
-         if (pt && pMixerBoard)
-            pMixerBoard->UpdateName(pt);
+         for (auto channel : TrackList::Channels(pTrack))
+            channel->SetName(newName);
 
          proj->PushState(wxString::Format(_("Renamed '%s' to '%s'"),
             oldName,
@@ -233,21 +226,21 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
 void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 {
    AudacityProject *const project = GetActiveProject();
-   AudacityProject::MoveChoice choice;
+   TrackActions::MoveChoice choice;
    switch (event.GetId()) {
    default:
       wxASSERT(false);
    case OnMoveUpID:
-      choice = AudacityProject::OnMoveUpID; break;
+      choice = TrackActions::OnMoveUpID; break;
    case OnMoveDownID:
-      choice = AudacityProject::OnMoveDownID; break;
+      choice = TrackActions::OnMoveDownID; break;
    case OnMoveTopID:
-      choice = AudacityProject::OnMoveTopID; break;
+      choice = TrackActions::OnMoveTopID; break;
    case OnMoveBottomID:
-      choice = AudacityProject::OnMoveBottomID; break;
+      choice = TrackActions::OnMoveBottomID; break;
    }
 
-   project->MoveTrack(mpData->pTrack, choice);
+   TrackActions::DoMoveTrack(*project, mpData->pTrack, choice);
 
    // MoveTrack already refreshed TrackPanel, which means repaint will happen.
    // This is a harmless redundancy:

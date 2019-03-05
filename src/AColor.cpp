@@ -279,7 +279,7 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
    dc.SetPen( highlight ? uglyPen : pen );
 
    dc.DrawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
-   dc.DrawLine(r.x, r.y + r.height, r.x + r.width + 1, r.y + r.height);
+   dc.DrawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
 #endif
 }
 

@@ -44,7 +44,7 @@
 
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectInterface.h"
-#include "audacity/IdentInterface.h"
+#include "audacity/ComponentInterface.h"
 #include "audacity/ImporterInterface.h"
 #include "audacity/ModuleInterface.h"
 
@@ -57,9 +57,9 @@ class PluginManagerInterface /* not final */
 public:
 
    static const PluginID &DefaultRegistrationCallback(
-      ModuleInterface *provider, IdentInterface *ident );
+      ModuleInterface *provider, ComponentInterface *ident );
    static const PluginID &AudacityCommandRegistrationCallback(
-      ModuleInterface *provider, IdentInterface *ident );
+      ModuleInterface *provider, ComponentInterface *ident );
 
    virtual bool IsPluginRegistered(const wxString & path) = 0;
 

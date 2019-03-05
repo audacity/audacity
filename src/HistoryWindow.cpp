@@ -31,6 +31,7 @@ undo memory so as to free up space.
 #include <wx/textctrl.h>
 
 #include "AudioIO.h"
+#include "AudacityApp.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "HistoryWindow.h"
@@ -154,6 +155,11 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                      &HistoryWindow::OnAudioIO,
                      this);
+
+   wxTheApp->Bind(EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
+   manager->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
+   manager->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
+   manager->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
 }
 
 void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
@@ -168,8 +174,9 @@ void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
    mDiscard->Enable(!mAudioIOBusy);
 }
 
-void HistoryWindow::UpdateDisplay()
+void HistoryWindow::UpdateDisplay(wxEvent& e)
 {
+   e.Skip();
    if(IsShown())
       DoUpdate();
 }

@@ -576,40 +576,43 @@ void NoteTrack::Paste(double t, const Track *src)
    // the destination track).
 
    //Check that src is a non-NULL NoteTrack
-   if (src == NULL || src->GetKind() != Track::Note)
+   bool bOk = src && src->TypeSwitch< bool >( [&](const NoteTrack *other) {
+
+      auto myOffset = this->GetOffset();
+      if (t < myOffset) {
+         // workaround strange behavior described at
+         // http://bugzilla.audacityteam.org/show_bug.cgi?id=1735#c3
+         SetOffset(t);
+         InsertSilence(t, myOffset - t);
+      }
+
+      double delta = 0.0;
+      auto &seq = GetSeq();
+      auto offset = other->GetOffset();
+      if ( offset > 0 ) {
+         seq.convert_to_seconds();
+         seq.insert_silence( t - GetOffset(), offset );
+         t += offset;
+         // Is this needed or does Alg_seq::insert_silence take care of it?
+         //delta += offset;
+      }
+
+      // This seems to be needed:
+      delta += std::max( 0.0, t - GetEndTime() );
+
+      // This, not:
+      //delta += other->GetSeq().get_real_dur();
+
+      seq.paste(t - GetOffset(), &other->GetSeq());
+
+      AddToDuration( delta );
+
+      return true;
+   });
+
+   if ( !bOk )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
-
-   auto myOffset = this->GetOffset();
-   if (t < myOffset) {
-      // workaround strange behavior described at
-      // http://bugzilla.audacityteam.org/show_bug.cgi?id=1735#c3
-      SetOffset(t);
-      InsertSilence(t, myOffset - t);
-   }
-
-   NoteTrack* other = (NoteTrack*)src;
-
-   double delta = 0.0;
-   auto &seq = GetSeq();
-   auto offset = other->GetOffset();
-   if ( offset > 0 ) {
-      seq.convert_to_seconds();
-      seq.insert_silence( t - GetOffset(), offset );
-      t += offset;
-      // Is this needed or does Alg_seq::insert_silence take care of it?
-      //delta += offset;
-   }
-
-   // This seems to be needed:
-   delta += std::max( 0.0, t - GetEndTime() );
-
-   // This, not:
-   //delta += other->GetSeq().get_real_dur();
-
-   seq.paste(t - GetOffset(), &other->GetSeq());
-
-   AddToDuration( delta );
+      (void)0;// intentionally do nothing
 }
 
 void NoteTrack::Silence(double t0, double t1)
@@ -638,6 +641,14 @@ void NoteTrack::InsertSilence(double t, double len)
 
    // is this needed?
    // AddToDuration( len );
+}
+
+void NoteTrack::SetVelocity(float velocity)
+{
+   if (mVelocity != velocity) {
+      mVelocity = velocity;
+      Notify();
+   }
 }
 
 // Call this function to manipulate the underlying sequence data. This is

@@ -130,19 +130,15 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Options"));
    {
-      S.StartTwoColumn();
+      S.StartVerticalLay();
       {
          S.TieCheckBox(_("&Vari-Speed Play"), "/AudioIO/VariSpeedPlay", true);
-      }
-      S.EndTwoColumn();
-
-      S.StartTwoColumn();
-      {
+         S.TieCheckBox(_("&Micro-fades"), "/AudioIO/Microfades", false);
          S.TieCheckBox(_("Always scrub un&pinned"),
             UnpinnedScrubbingPreferenceKey(),
             UnpinnedScrubbingPreferenceDefault());
       }
-      S.EndTwoColumn();
+      S.EndVerticalLay();
    }
    S.EndStatic();
 

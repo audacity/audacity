@@ -12,12 +12,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "PlayIndicatorOverlay.h"
 
 #include "../../AColor.h"
+#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
-#include "../../TrackPanelCell.h"
-#include "../../TrackPanelCellIterator.h"
-#include "../../widgets/Ruler.h"
 #include "Scrubbing.h"
 
 #include <wx/dc.h>
@@ -82,27 +80,23 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(mIsMaster);
 
       // Draw indicator in all visible tracks
-      for ( const auto &data : tp->Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
-         if (!pTrack)
-            continue;
-
-         // Don't draw the indicator in label tracks
-         if (pTrack->GetKind() == Track::Label)
-         {
-            continue;
-         }
-
-         // Draw the NEW indicator in its NEW location
-         // AColor::Line includes both endpoints so use GetBottom()
-         const wxRect &rect = data.second;
-         AColor::Line(dc,
-                      mLastIndicatorX,
-                      rect.GetTop(),
-                      mLastIndicatorX,
-                      rect.GetBottom());
-      }
+      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+         const auto pTrack = dynamic_cast<Track*>(&cell);
+         if (pTrack) pTrack->TypeSwitch(
+            [](LabelTrack *) {
+               // Don't draw the indicator in label tracks
+            },
+            [&](Track *) {
+               // Draw the NEW indicator in its NEW location
+               // AColor::Line includes both endpoints so use GetBottom()
+               AColor::Line(dc,
+                            mLastIndicatorX,
+                            rect.GetTop(),
+                            mLastIndicatorX,
+                            rect.GetBottom());
+            }
+         );
+      } );
    }
    else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);

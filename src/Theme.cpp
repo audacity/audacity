@@ -71,7 +71,6 @@ can't be.
 #include "Project.h"
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/Ruler.h"
 #include "ImageManipulation.h"
 #include "Theme.h"
 #include "Experimental.h"
@@ -79,6 +78,7 @@ can't be.
 #include "FileNames.h"
 #include "Prefs.h"
 #include "AColor.h"
+#include "AdornedRulerPanel.h"
 #include "ImageManipulation.h"
 #include "widgets/ErrorDialog.h"
 
@@ -1179,7 +1179,7 @@ void ThemeBase::SaveComponents()
       auto result =
          AudacityMessageBox(
             wxString::Format(
-               _("Some required files in:\n  %s\nwere already present.  Overwrite?"),
+               _("Some required files in:\n  %s\nwere already present. Overwrite?"),
                FileNames::ThemeComponentsDir()),
                AudacityMessageBoxCaptionStr(),
                wxYES_NO | wxNO_DEFAULT);

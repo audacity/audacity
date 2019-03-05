@@ -23,7 +23,7 @@
 
 class AudacityProject;
 class Track;
-class TrackArray;
+using TrackArray = std::vector< Track* >;
 class TrackClipArray;
 class WaveClip;
 class WaveTrack;
@@ -40,8 +40,10 @@ public:
 
    Track *track;
    Track *origTrack;
-   WaveTrack *dstTrack;
    WaveClip *clip;
+
+   // These fields are used only during time-shift dragging
+   WaveTrack *dstTrack;
    std::shared_ptr<WaveClip> holder;
 };
 

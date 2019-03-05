@@ -53,7 +53,10 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // Then apply it to current application & project.  Note that the
    // command may change the context - for example, switching to a
    // different project.
-   cmd->Apply(*mCurrentContext);
+   auto result = GuardedCall<bool>( [&] {
+      return cmd->Apply(*mCurrentContext);
+   });
+   wxUnusedVar(result);
 
    // Redraw the project
    mCurrentContext->GetProject()->RedrawProject();

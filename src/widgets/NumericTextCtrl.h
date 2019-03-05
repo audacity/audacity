@@ -16,7 +16,7 @@
 #define __AUDACITY_TIME_TEXT_CTRL__
 
 #include "../MemoryX.h"
-#include "../../include/audacity/IdentInterface.h"
+#include "../../include/audacity/ComponentInterface.h"
 #include <vector>
 #include <wx/defs.h>
 #include <wx/event.h>
@@ -50,7 +50,7 @@ class NumericField;
 
 class DigitInfo;
 
-using NumericFormatId = IdentInterfaceSymbol;
+using NumericFormatId = ComponentInterfaceSymbol;
 
 class NumericConverter /* not final */
 {
@@ -88,7 +88,7 @@ public:
    virtual void ControlsToValue();
 
 private:
-   void ParseFormatString(const wxString & format);
+   void ParseFormatString(const wxString & untranslatedFormat);
 
 public:
    void PrintDebugInfo();

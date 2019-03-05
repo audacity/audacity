@@ -204,6 +204,14 @@ if test x$enable_universal_binary = xyes; then
    esac
 fi
 
+dnl Check if $CXX is clang by evaluating the version string because
+dnl $ax_cv_cxx_compiler_vendor seems not to work (it is either "gnu" or just empty).
+dnl If $CXX is clang (string is found), grep returns 0 and the if is executed.
+dnl Use /dev/null to suppress grep output to shell.
+if ($CXX --version | grep 'clang version' > /dev/null); then
+    LDFLAGS="${LDFLAGS} -latomic"
+fi
+
 if test x$enable_sse = xyes; then
 
    if test "${ax_cv_cxx_compiler_vendor}" = "gnu"; then

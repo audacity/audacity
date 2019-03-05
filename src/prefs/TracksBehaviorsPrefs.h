@@ -37,6 +37,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
    wxArrayString mSoloChoices;
 };
 
+/// A PrefsPanelFactory that creates one TracksBehaviorsPrefs panel.
 class TracksBehaviorsPrefsFactory final : public PrefsPanelFactory
 {
 public:

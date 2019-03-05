@@ -30,6 +30,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "effects/EffectManager.h"
 #include "FileNames.h"
 #include "Internat.h"
+#include "Menus.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Shuttle.h"
@@ -501,18 +502,7 @@ bool MacroCommands::IsMono()
       return false;
    }
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   bool mono = true;
-   while (t) {
-      if (t->GetLinked()) {
-         mono = false;
-         break;
-      }
-      t = iter.Next();
-   }
-
-   return mono;
+   return ( tracks->Any() - &Track::IsLeader ).empty();
 }
 
 wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
@@ -585,9 +575,12 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
    bool rc;
    long prevBitRate = gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), 128);
    gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), bitrate);
+   int prevMode = gPrefs->Read(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
+   gPrefs->Write(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
 
    auto cleanup = finally( [&] {
       gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
+      gPrefs->Write(wxT("/FileFormats/MP3RateMode"), prevMode);
       gPrefs->Flush();
    } );
 
@@ -653,10 +646,18 @@ bool MacroCommands::ApplySpecialCommand(
       // historically this was in use, now ignored if there
       return true;
    } else if (command == wxT("ExportMP3_56k_before")) {
+#if defined(__WXMSW__)
+      filename.Replace(wxT("cleaned\\"), wxT("cleaned\\MasterBefore_"), false);
+#else
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterBefore_"), false);
+#endif
       return WriteMp3File(filename, 56);
    } else if (command == wxT("ExportMP3_56k_after")) {
+#if defined(__WXMSW__)
+      filename.Replace(wxT("cleaned\\"), wxT("cleaned\\MasterAfter_"), false);
+#else
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterAfter_"), false);
+#endif
       return WriteMp3File(filename, 56);
    } else if (command == wxT("ExportMP3")) {
       return WriteMp3File(filename, 0); // 0 bitrate means use default/current
@@ -730,18 +731,18 @@ bool MacroCommands::ApplyEffectCommand(
    {
       if( plug->GetPluginType() == PluginTypeAudacityCommand )
          // and apply the effect...
-         res = project->DoAudacityCommand(ID, 
+         res = PluginActions::DoAudacityCommand(ID,
             Context,
-            AudacityProject::OnEffectFlags::kConfigured |
-            AudacityProject::OnEffectFlags::kSkipState |
-            AudacityProject::OnEffectFlags::kDontRepeatLast);
+            PluginActions::kConfigured |
+            PluginActions::kSkipState |
+            PluginActions::kDontRepeatLast);
       else
          // and apply the effect...
-         res = project->DoEffect(ID, 
+         res = PluginActions::DoEffect(ID,
             Context,
-            AudacityProject::OnEffectFlags::kConfigured |
-            AudacityProject::OnEffectFlags::kSkipState |
-            AudacityProject::OnEffectFlags::kDontRepeatLast);
+            PluginActions::kConfigured |
+            PluginActions::kSkipState |
+            PluginActions::kDontRepeatLast);
    }
 
    return res;
@@ -802,7 +803,7 @@ bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
 {
    AudacityProject *project = GetActiveProject();
    // Recalc flags and enable items that may have become enabled.
-   project->UpdateMenus(false);
+   GetMenuManager(*project).UpdateMenus(*project, false);
    // enter batch mode...
    bool prevShowMode = project->GetShowId3Dialog();
    project->mBatchMode++;
@@ -995,6 +996,8 @@ wxArrayString MacroCommands::GetNames()
       ff = (files[i]);
       names.Add(ff.GetName());
    }
+
+   std::sort( names.begin(), names.end() );
 
    return names;
 }

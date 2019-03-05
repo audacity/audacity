@@ -51,6 +51,7 @@ class ModulePrefs final : public PrefsPanel
    wxArrayString mPaths;
 };
 
+/// A PrefsPanelFactory that creates one ModulePrefs panel.
 class ModulePrefsFactory final : public PrefsPanelFactory
 {
 public:

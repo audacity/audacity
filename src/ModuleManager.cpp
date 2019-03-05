@@ -114,7 +114,7 @@ bool Module::Load()
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
       AudacityMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName));
+      wxLogMessage(wxString::Format(_("The module %s does not provide a version string. It will not be loaded."), mName));
       mLib->Unload();
       return false;
    }
@@ -123,7 +123,7 @@ bool Module::Load()
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
       wxString ShortName = wxFileName( mName ).GetName();
       AudacityMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName, moduleVersion), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName, moduleVersion));
+      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s. It will not be loaded."), mName, moduleVersion));
       mLib->Unload();
       return false;
    }
@@ -504,7 +504,7 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
       plug = pm.GetNextPlugin(PluginTypeModule);
    }
 
-   for (size_t i = 0, cnt = modIDs.size(); i < cnt; i++)
+   for (size_t i = 0, cntIds = modIDs.size(); i < cntIds; i++)
    {
       PluginID providerID = modIDs[i];
 
@@ -515,10 +515,10 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
          continue;
 
       wxArrayString newpaths = module->FindPluginPaths(pm);
-      for (size_t i = 0, cnt = newpaths.size(); i < cnt; i++)
+      for (size_t j = 0, cntPaths = newpaths.size(); j < cntPaths; j++)
       {
          providers.push_back(providerID);
-         paths.push_back(newpaths[i]);
+         paths.push_back(newpaths[j]);
       }
    }
 }
@@ -552,7 +552,7 @@ bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxSt
    return nFound > 0;
 }
 
-IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
+ComponentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
                                                       const wxString & path)
 {
    if (path.IsEmpty() && mDynModules.find(providerID) != mDynModules.end())
@@ -563,7 +563,7 @@ IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerI
    return LoadModule(path);
 }
 
-IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
+ComponentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
                                               const wxString & path)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -575,7 +575,7 @@ IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
 }
 
 void ModuleManager::DeleteInstance(const PluginID & providerID,
-                                   IdentInterface *instance)
+                                   ComponentInterface *instance)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
    {

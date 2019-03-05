@@ -27,7 +27,6 @@ they are kept separate to make things simpler.
 #include "CommandMisc.h"
 #include "CommandType.h"
 
-class Command;
 class CommandOutputTargets;
 
 class CommandDirectory

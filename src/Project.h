@@ -28,7 +28,6 @@
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
-#include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
@@ -93,8 +92,6 @@ class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
 struct UndoState;
-
-class Regions;
 
 class LWSlider;
 class UndoManager;
@@ -170,8 +167,9 @@ class WaveTrack;
 #include "./commands/CommandFlag.h"
 #include "../include/audacity/EffectInterface.h"
 
-#include "./commands/CommandManager.h"
+class MenuManager;
 
+class PrefsListener;
 
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
@@ -184,6 +182,24 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
+
+   using AttachedObject = PrefsListener;
+   using AttachedObjectFactory =
+      std::function< std::unique_ptr<AttachedObject>() >;
+
+   // Typically a static object.  Allows various application code to
+   // attach per-project state, without Project.cpp needing to include a header
+   // file or know the details.
+   class RegisteredAttachedObjectFactory {
+   public:
+      RegisteredAttachedObjectFactory( const AttachedObjectFactory &factory );
+
+   private:
+      friend AudacityProject;
+      size_t mIndex {};
+   };
+   AttachedObject &
+      GetAttachedObject( const RegisteredAttachedObjectFactory& factory );
 
    virtual void ApplyUpdatedTheme();
 
@@ -208,10 +224,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
 
-   std::shared_ptr<Track> GetFirstVisible();
-
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
+   void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
    void SetSel0(double);        //Added by STM
    void SetSel1(double);        //Added by STM
@@ -223,6 +238,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
    const Tags *GetTags();
+   void SetTags( const std::shared_ptr<Tags> &tags );
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
@@ -276,6 +292,8 @@ private:
    void EnqueueODTasks();
 
 public:
+   using wxFrame::DetachMenuBar;
+
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
@@ -297,8 +315,6 @@ public:
 private:
    bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
-
-   void Clear();// clears a selection
 
    const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
@@ -332,7 +348,7 @@ public:
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
    bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
-   int GetOpenProjectCount();
+   static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
 
@@ -343,10 +359,10 @@ public:
    // Converts number of minutes to human readable format
    wxString GetHoursMinsString(int iMinutes);
 
-#include "Menus.h"
-
-   CommandManager *GetCommandManager() { return &mCommandManager; }
-   const CommandManager *GetCommandManager() const { return &mCommandManager; }
+   CommandManager *GetCommandManager()
+      { return mCommandManager.get(); }
+   const CommandManager *GetCommandManager() const
+      { return mCommandManager.get(); }
 
    // Keyboard capture
    static bool HasKeyboardCapture(const wxWindow *handler);
@@ -354,8 +370,6 @@ public:
    static void CaptureKeyboard(wxWindow *handler);
    static void ReleaseKeyboard(wxWindow *handler);
 
-   void RebuildMenuBar();
-   void RebuildOtherMenus();
    void MayStartMonitoring();
 
 
@@ -395,9 +409,6 @@ public:
    int GetProjectNumber(){ return mProjectNo;};
    static int CountUnnamed();
    static void RefreshAllTitles(bool bShowProjectNumbers );
-   // checkActive is a temporary hack that should be removed as soon as we
-   // get multiple effect preview working
-   void UpdateMenus(bool checkActive = true);
    void UpdatePrefs();
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
@@ -411,28 +422,8 @@ public:
    void SkipEnd(bool shift);
 
 
-   typedef void (WaveTrack::* EditFunction)(double, double);
-   typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
-
-   void EditByLabel(EditFunction action, bool bSyncLockedTracks);
-   void EditClipboardByLabel(EditDestFunction action );
-
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
-
-   void DoTrackMute(Track *pTrack, bool exclusive);
-   void DoTrackSolo(Track *pTrack, bool exclusive);
-   void SetTrackGain(WaveTrack * track, LWSlider * slider);
-   void SetTrackPan(WaveTrack * track, LWSlider * slider);
-
-   void RemoveTrack(Track * toRemove);
-
-   // "exclusive" mute means mute the chosen track and unmute all others.
-   void HandleTrackMute(Track *t, const bool exclusive);
-
-   // Type of solo (standard or simple) follows the set preference, unless
-   // alternate == true, which causes the opposite behavior.
-   void HandleTrackSolo(Track *t, const bool alternate);
 
    // Snap To
 
@@ -514,8 +505,12 @@ public:
    MeterPanel *GetCaptureMeter();
    void SetCaptureMeter(MeterPanel *capture);
 
-   LyricsWindow* GetLyricsWindow() { return mLyricsWindow; }
-   MixerBoard* GetMixerBoard() { return mMixerBoard; }
+   LyricsWindow* GetLyricsWindow(bool create = false);
+   MixerBoardFrame* GetMixerBoardFrame(bool create = false);
+   HistoryWindow *GetHistoryWindow(bool create = false);
+   MacrosWindow *GetMacrosWindow(bool bExpanded, bool create = false);
+   FreqWindow *GetFreqWindow(bool create = false);
+   ContrastDialog *GetContrastDialog(bool create = false);
 
    wxStatusBar* GetStatusBar() { return mStatusBar; }
 
@@ -565,12 +560,6 @@ public:
    void OnAudioIOStopRecording() override;
    void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
 
-   // Command Handling
-   bool ReportIfActionNotAllowed
-      ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
-   bool TryToMakeActionAllowed
-      ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
-
    bool UndoAvailable();
    bool RedoAvailable();
 
@@ -587,22 +576,11 @@ public:
  public:
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   void RecreateMixerBoard();
 
- private:
    void PopState(const UndoState &state);
-
-   void UpdateLyrics();
-   void UpdateMixerBoard();
-
-   void GetRegionsByLabel( Regions &regions );
 
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
-
-   double GetZoomOfToFit();
-   double GetZoomOfSelection();
-   double GetZoomOfPreset(int preset );
 
  public:
    bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
@@ -621,9 +599,6 @@ public:
    double mRate;
    sampleFormat mDefaultFormat;
 
-   // Recent files
-   wxMenu *mRecentFilesMenu;
-
    // Tags (artist name, song properties, MP3 ID3 info, etc.)
    // The structure may be shared with undo history entries
    // To keep undo working correctly, always replace this with a NEW duplicate
@@ -640,13 +615,14 @@ public:
 
    std::shared_ptr<TrackList> mLastSavedTracks;
 
+public:
    // Clipboard (static because it is shared by all projects)
    static std::shared_ptr<TrackList> msClipboard;
    static AudacityProject *msClipProject;
+
    static double msClipT0;
    static double msClipT1;
 
-public:
    ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    //shared by all projects
    static ODLock &AllProjectDeleteMutex();
@@ -658,9 +634,7 @@ private:
 
    // Commands
 
-   CommandManager mCommandManager;
-
-   CommandFlag mLastFlags;
+   std::unique_ptr<CommandManager> mCommandManager;
 
    // Window elements
 
@@ -674,11 +648,15 @@ private:
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
    SelectionState mSelectionState{};
-   bool mCircularTrackNavigation{};
    std::unique_ptr<TrackFactory> mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
    wxScrollBar *mVsbar;
+
+public:
+   wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
+
+private:
    bool mAutoScrolling{ false };
    bool mActive{ true };
    bool mIconized;
@@ -715,8 +693,9 @@ private:
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
    bool IsTimerRecordCancelled(){return mTimerRecordCanceled;}
-   void ResetTimerRecordFlag(){mTimerRecordCanceled=false;}
- private:
+   void SetTimerRecordCancelled(){mTimerRecordCanceled=true;}
+   void ResetTimerRecordCancelled(){mTimerRecordCanceled=false;}
+
    //sort method used by OnSortName and OnSortTime
    //currently only supported flags are kAudacitySortByName and kAudacitySortByName
    //in the future we might have 0x01 as sort ascending and we can bit or it
@@ -724,6 +703,7 @@ private:
 #define kAudacitySortByName (1 << 2)
    void SortTracks(int flags);
 
+ private:
    int  mAudioIOToken{ -1 };
 
    bool mIsDeleting{ false };
@@ -732,9 +712,9 @@ private:
    bool mShowId3Dialog{ true }; //lda
    bool mEmptyCanBeDirty;
 
-   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   int  mWhatIfNoSelection;
-   bool mStopIfWasPaused;
+public:
+   bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
+private:
 
    bool mIsSyncLocked;
 
@@ -762,9 +742,6 @@ private:
 
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
 
-   // Last effect applied to this project
-   PluginID mLastEffect{};
-   
    wxRect mNormalizedWindowState;
 
    //flag for cancellation of timer record.
@@ -773,18 +750,22 @@ private:
    // Are we currently closing as the result of a menu command?
    bool mMenuClose{ false };
 
+public:
+   void SetMenuClose(bool value) { mMenuClose = value; }
+
+private:
    bool mbInitializingScrollbar{ false };
 
    // Flag that we're recoding.
    bool mIsCapturing{ false };
 
+public:
+   bool IsCapturing() const { return mIsCapturing; }
+
+private:
+
    // Keyboard capture
    wxWindow *mKeyboardCaptureHandler{};
-
-   double mSeekShort;
-   double mSeekLong;
-
-   wxLongLong mLastSelectionAdjustment;
 
    // See explanation in OnCloseWindow
    bool mIsBeingDeleted{ false };
@@ -804,7 +785,15 @@ private:
 public:
    Scrubber &GetScrubber() { return *mScrubber; }
    const Scrubber &GetScrubber() const { return *mScrubber; }
+private:
 #endif
+
+private:
+   std::vector< std::unique_ptr<AttachedObject> > mAttachedObjects;
+   std::unique_ptr<MenuManager> mMenuManager;
+
+public:
+   friend MenuManager &GetMenuManager(AudacityProject &project);
 
    class PlaybackScroller final : public wxEvtHandler
    {
@@ -830,6 +819,8 @@ public:
       AudacityProject *mProject;
       Mode mMode { Mode::Off };
    };
+
+private:
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
 
 public:

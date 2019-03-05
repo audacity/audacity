@@ -548,7 +548,7 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
       wxString Format = ( (id!=mDrive1) && (id!=mDrive2 ) ) ? _("%s - driven") : "%s";
       wxString Title= wxString::Format( Format, Temp );
       // i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
-      wxString VoiceOverText = wxString::Format(_("Selection %s.  %s won't change."), Temp, Text[fixed]);
+      wxString VoiceOverText = wxString::Format(_("Selection %s. %s won't change."), Temp, Text[fixed]);
       if( *Ctrls[i] ){
          (*Ctrls[i])->SetName( Temp );
       }

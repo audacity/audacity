@@ -397,12 +397,13 @@ wxString EnumSetting::Read() const
 size_t EnumSetting::Find( const wxString &value ) const
 {
    return size_t(
-      std::find( begin(), end(), IdentInterfaceSymbol{ value, {} } )
+      std::find( begin(), end(), ComponentInterfaceSymbol{ value, {} } )
          - mSymbols );
 }
 
 void EnumSetting::Migrate( wxString &value )
 {
+   (void)value;// Compiler food
 }
 
 bool EnumSetting::Write( const wxString &value )

@@ -233,7 +233,7 @@ BuiltinEffectsModule::~BuiltinEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString BuiltinEffectsModule::GetPath()
@@ -241,12 +241,12 @@ wxString BuiltinEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol BuiltinEffectsModule::GetSymbol()
+ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol()
 {
    return XO("Builtin Effects");
 }
 
-IdentInterfaceSymbol BuiltinEffectsModule::GetVendor()
+ComponentInterfaceSymbol BuiltinEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -338,14 +338,14 @@ bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return mNames.Index(path) != wxNOT_FOUND;
 }
 
-IdentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
    return Instantiate(path).release();
 }
 
-void BuiltinEffectsModule::DeleteInstance(IdentInterface *instance)
+void BuiltinEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    // Releases the resource.
    std::unique_ptr < Effect > {

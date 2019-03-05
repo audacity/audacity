@@ -19,7 +19,7 @@
 
 #include "Generator.h"
 
-#define SILENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Silence") }
+#define SILENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Silence") }
 
 class EffectSilence final : public Generator
 {
@@ -27,9 +27,9 @@ public:
    EffectSilence();
    virtual ~EffectSilence();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

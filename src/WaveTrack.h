@@ -53,7 +53,7 @@ struct Region
    }
 };
 
-class Regions : public std::vector < Region > {};
+using Regions = std::vector < Region >;
 
 class Envelope;
 
@@ -98,8 +98,8 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
-   virtual int GetChannelIgnoringPan() const;
-   virtual int GetChannel() const override;
+   virtual ChannelType GetChannelIgnoringPan() const;
+   ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
    /** @brief Get the time at which the first clip in the track starts
@@ -118,8 +118,6 @@ private:
    //
    // Identifying the type of track
    //
-
-   int GetKind() const override { return Wave; }
 
    //
    // WaveTrack parameters
@@ -642,7 +640,9 @@ private:
    // Protected methods
    //
 
- private:
+private:
+
+   TrackKind GetKind() const override { return TrackKind::Wave; }
 
    //
    // Private variables
@@ -687,7 +687,7 @@ public:
    }
    ~WaveTrackCache();
 
-   const WaveTrack *GetTrack() const { return mPTrack.get(); }
+   const std::shared_ptr<const WaveTrack>& GetTrack() const { return mPTrack; }
    void SetTrack(const std::shared_ptr<const WaveTrack> &pTrack);
 
    // Uses fillZero always

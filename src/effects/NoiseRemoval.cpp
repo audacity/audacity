@@ -108,9 +108,9 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
 {
    return XO("Noise Removal");
 }
@@ -208,10 +208,8 @@ bool EffectNoiseRemoval::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -227,7 +225,6 @@ bool EffectNoiseRemoval::Process()
             break;
          }
       }
-      track = (WaveTrack *) iter.Next();
       count++;
    }
 

@@ -78,8 +78,6 @@ class AUDACITY_DLL_API NoteTrack final
    using Holder = std::unique_ptr<NoteTrack>;
    Track::Holder Duplicate() const override;
 
-   int GetKind() const override { return Note; }
-
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
@@ -116,7 +114,7 @@ class AUDACITY_DLL_API NoteTrack final
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    float GetVelocity() const { return mVelocity; }
-   void SetVelocity(float velocity) { mVelocity = velocity; }
+   void SetVelocity(float velocity);
 #endif
 
    QuantizedTimeAndBeat NearestBeatTime( double time ) const;
@@ -238,6 +236,9 @@ class AUDACITY_DLL_API NoteTrack final
    }
 
  private:
+
+   TrackKind GetKind() const override { return TrackKind::Note; }
+
    void AddToDuration( double delta );
 
    // These are mutable to allow NoteTrack to switch details of representation

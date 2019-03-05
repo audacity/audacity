@@ -25,7 +25,7 @@
 
 class ShuttleGui;
 
-#define WAHWAH_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Wahwah") }
+#define WAHWAH_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Wahwah") }
 
 class EffectWahwahState
 {
@@ -47,9 +47,9 @@ public:
    EffectWahwah();
    virtual ~EffectWahwah();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

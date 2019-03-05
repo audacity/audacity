@@ -147,7 +147,6 @@ private:
 };
 
 using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
-WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
 // Exporter

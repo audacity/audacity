@@ -105,11 +105,6 @@
 // ExportMP3Options
 //----------------------------------------------------------------------------
 
-#define MODE_SET           0
-#define MODE_VBR           1
-#define MODE_ABR           2
-#define MODE_CBR           3
-
 #define CHANNEL_JOINT      0
 #define CHANNEL_STEREO     1
 #define CHANNEL_MONO       2
@@ -1473,11 +1468,15 @@ wxString MP3Exporter::GetLibraryPath()
 
 wxString MP3Exporter::GetLibraryName()
 {
+   if (sizeof(void*) == 8)
+      return wxT("libmp3lame64bit.dylib");
    return wxT("libmp3lame.dylib");
 }
 
 wxString MP3Exporter::GetLibraryTypeString()
 {
+   if (sizeof(void*) == 8)
+      return wxString(_("Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
    return wxString(_("Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
 }
 
@@ -1991,10 +1990,10 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format.  "), rate);
+               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format. "), rate);
             }
             else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format.  "), rate, bitrate);
+               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "), rate, bitrate);
             }
 
             text += _("You may resample to one of the rates below.");

@@ -12,10 +12,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackButtonHandles.h"
 
 #include "../../HitTestResult.h"
+#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
+#include "../../commands/CommandManager.h"
 
 MinimizeButtonHandle::MinimizeButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
@@ -34,9 +36,9 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
-      pTrack->SetMinimized(!pTrack->GetMinimized());
-      if (pTrack->GetLink())
-         pTrack->GetLink()->SetMinimized(pTrack->GetMinimized());
+      bool wasMinimized = pTrack->GetMinimized();
+      for (auto channel : TrackList::Channels(pTrack.get()))
+         channel->SetMinimized(!wasMinimized);
       pProject->ModifyState(true);
 
       // Redraw all tracks when any one of them expands or contracts
@@ -94,7 +96,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
       pProject->StopIfPaused();
       if (!pProject->IsAudioActive()) {
          // This pushes an undo item:
-         pProject->RemoveTrack(pTrack.get());
+         TrackActions::DoRemoveTrack(*pProject, pTrack.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

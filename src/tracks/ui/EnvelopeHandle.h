@@ -14,6 +14,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../UIHandle.h"
 #include "../../MemoryX.h"
 
+#include <vector>
+
 class wxMouseEvent;
 class wxMouseState;
 #include <wx/gdicmn.h>
@@ -85,8 +87,7 @@ private:
    double mdBRange{};
 
    Envelope *mEnvelope{};
-   std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
-   std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
+   std::vector< std::unique_ptr<EnvelopeEditor> > mEnvelopeEditors;
 
    bool mTimeTrack{};
 };

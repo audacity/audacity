@@ -131,7 +131,7 @@ class AUDACITY_DLL_API Mixer {
 
    /// Reposition processing to absolute time next time
    /// Process() is called.
-   void Reposition(double t);
+   void Reposition(double t, bool bSkipping = false);
 
    // Used in scrubbing.
    void SetTimesAndSpeed(double t0, double t1, double speed);

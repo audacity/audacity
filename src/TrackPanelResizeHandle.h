@@ -15,16 +15,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "UIHandle.h"
 
 class Track;
-class TrackPanelCellIterator;
 
 class TrackPanelResizeHandle final : public UIHandle
 {
    TrackPanelResizeHandle(const TrackPanelResizeHandle&) = delete;
 
 public:
-   explicit TrackPanelResizeHandle
-      ( const std::shared_ptr<Track> &pTrack, int y,
-        const AudacityProject *pProject );
+   explicit TrackPanelResizeHandle( const std::shared_ptr<Track> &pTrack, int y );
 
    TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = default;
 

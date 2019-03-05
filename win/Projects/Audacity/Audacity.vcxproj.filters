@@ -105,6 +105,9 @@
     <Filter Include="src\tracks\playabletrack\ui">
       <UniqueIdentifier>{1af54030-3637-42e2-8339-b48bf05b8564}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\menus">
+      <UniqueIdentifier>{86457c18-e1ec-4e2a-9790-f4ceaf6380a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -1085,6 +1088,51 @@
     <ClCompile Include="..\..\..\src\CellularPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ViewMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\TransportMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\TrackMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ToolbarMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\SelectMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\PluginMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\NavigationMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\LabelMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\HelpMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\FileMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ExtraMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\EditMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ClipMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1819,9 +1867,6 @@
     <ClInclude Include="..\..\..\include\audacity\EffectInterface.h">
       <Filter>includes\audacity</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h">
-      <Filter>includes\audacity</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h">
       <Filter>includes\audacity</Filter>
     </ClInclude>
@@ -1929,9 +1974,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h">
       <Filter>src\tracks\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">
       <Filter>src\commands</Filter>
@@ -2164,6 +2206,12 @@
     <ClInclude Include="..\..\..\src\CellularPanel.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">
@@ -2306,6 +2354,9 @@
     <CustomBuild Include="..\..\..\nyquist\test.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\aud-do-support.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny">
@@ -2384,6 +2435,9 @@
       <Filter>plug-ins</Filter>
     </copy>
     <copy Include="..\..\..\plug-ins\rhythmtrack.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\rms.ny">
       <Filter>plug-ins</Filter>
     </copy>
   </ItemGroup>

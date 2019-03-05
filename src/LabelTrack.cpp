@@ -56,6 +56,7 @@ for drawing different aspects of the label and its text box.
 #include "AudioIO.h"
 #include "DirManager.h"
 #include "Internat.h"
+#include "Menus.h"
 #include "Prefs.h"
 #include "RefreshCode.h"
 #include "Theme.h"
@@ -781,11 +782,12 @@ namespace {
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrack::Draw
-(TrackPanelDrawingContext &context, const wxRect & r,
- const SelectedRegion &selectedRegion,
- const ZoomInfo &zoomInfo) const
+( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    auto pHit = findHit();
 
    if(msFont.Ok())
@@ -794,9 +796,9 @@ void LabelTrack::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   TrackArtist::DrawBackgroundWithSelection(&dc, r, this,
-         AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-         selectedRegion, zoomInfo);
+   TrackArt::DrawBackgroundWithSelection( context, r, this,
+      AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
+      ( GetSelected() || IsSyncLockSelected() ) );
 
    wxCoord textWidth, textHeight;
 
@@ -1970,10 +1972,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_ESCAPE:
          if (mRestoreFocus >= 0) {
-            TrackListIterator iter(GetActiveProject()->GetTracks());
-            Track *track = iter.First();
-            while (track && mRestoreFocus--)
-               track = iter.Next();
+            auto track = *GetActiveProject()->GetTracks()->Any()
+               .begin().advance(mRestoreFocus);
             if (track)
                GetActiveProject()->GetTrackPanel()->SetFocusedTrack(track);
             mRestoreFocus = -1;
@@ -2103,7 +2103,9 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       gPrefs->Read(wxT("/Gui/DialogForNameNewLabel"), &useDialog, false);
       if (useDialog) {
          wxString title;
-         if (p->DialogForLabelName(charCode, title) == wxID_CANCEL) {
+         if (DialogForLabelName(
+            *p, p->mViewInfo.selectedRegion, charCode, title) ==
+             wxID_CANCEL) {
             return false;
          }
          SetSelected(true);
@@ -2157,6 +2159,11 @@ void LabelTrack::ShowContextMenu()
 {
    wxWindow *parent = wxWindow::FindFocus();
 
+   // Bug 2044.  parent can be nullptr after a context switch.
+   if( !parent )
+      parent = GetActiveProject();
+
+   if( parent )
    {
       wxMenu menu;
       menu.Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
@@ -2239,7 +2246,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
    case OnEditSelectedLabelID: {
       int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
       if (ndx != -1)
-         p->DoEditLabels(this, ndx);
+         DoEditLabels(*p, this, ndx);
    }
       break;
    }
@@ -2272,7 +2279,7 @@ void LabelTrack::Unselect()
    mSelIndex = -1;
 }
 
-bool LabelTrack::IsSelected() const
+bool LabelTrack::HasSelection() const
 {
    return (mSelIndex >= 0 && mSelIndex < (int)mLabels.size());
 }
@@ -2548,42 +2555,47 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 
 bool LabelTrack::PasteOver(double t, const Track * src)
 {
-   if (src->GetKind() != Track::Label)
+   auto result = src->TypeSwitch< bool >( [&](const LabelTrack *sl) {
+      int len = mLabels.size();
+      int pos = 0;
+
+      while (pos < len && mLabels[pos].getT0() < t)
+         pos++;
+
+      for (auto &labelStruct: sl->mLabels) {
+         LabelStruct l {
+            labelStruct.selectedRegion,
+            labelStruct.getT0() + t,
+            labelStruct.getT1() + t,
+            labelStruct.title
+         };
+         mLabels.insert(mLabels.begin() + pos++, l);
+      }
+
+      return true;
+   } );
+
+   if (! result )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return false;
+      (void)0;// intentionally do nothing
 
-   int len = mLabels.size();
-   int pos = 0;
-
-   while (pos < len && mLabels[pos].getT0() < t)
-      pos++;
-
-   auto sl = static_cast<const LabelTrack *>(src);
-   for (auto &labelStruct: sl->mLabels) {
-      LabelStruct l {
-         labelStruct.selectedRegion,
-         labelStruct.getT0() + t,
-         labelStruct.getT1() + t,
-         labelStruct.title
-      };
-      mLabels.insert(mLabels.begin() + pos++, l);
-   }
-
-   return true;
+   return result;
 }
 
 void LabelTrack::Paste(double t, const Track *src)
 {
-   if (src->GetKind() != Track::Label)
+   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack *lt) {
+      double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
+
+      ShiftLabelsOnInsert(shiftAmt, t);
+      PasteOver(t, src);
+
+      return true;
+   } );
+
+   if ( !bOk )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
-
-   LabelTrack *lt = (LabelTrack *)src;
-
-   double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
-
-   ShiftLabelsOnInsert(shiftAmt, t);
-   PasteOver(t, src);
+      (void)0;// intentionally do nothing
 }
 
 // This repeats the labels in a time interval a specified number of times.
@@ -3047,4 +3059,75 @@ int LabelTrack::FindNextLabel(const SelectedRegion& currentRegion)
 
    miLastLabel = i;
    return i;
+}
+
+#include "LabelDialog.h"
+
+void LabelTrack::DoEditLabels
+(AudacityProject &project, LabelTrack *lt, int index)
+{
+   auto format = project.GetSelectionFormat(),
+      freqFormat = project.GetFrequencySelectionFormatName();
+   auto tracks = project.GetTracks();
+   auto trackFactory = project.GetTrackFactory();
+   auto rate = project.GetRate();
+   auto &viewInfo = project.GetViewInfo();
+
+   LabelDialog dlg(&project, *trackFactory, tracks,
+                   lt, index,
+                   viewInfo, rate,
+                   format, freqFormat);
+#ifdef __WXGTK__
+   dlg.Raise();
+#endif
+
+   if (dlg.ShowModal() == wxID_OK) {
+      project.PushState(_("Edited labels"), _("Label"));
+      project.RedrawProject();
+   }
+}
+
+int LabelTrack::DialogForLabelName(
+   AudacityProject &project,
+   const SelectedRegion& region, const wxString& initialValue, wxString& value)
+{
+   auto trackPanel = project.GetTrackPanel();
+   auto &viewInfo = project.GetViewInfo();
+
+   wxPoint position = trackPanel->FindTrackRect(trackPanel->GetFocusedTrack(), false).GetBottomLeft();
+   // The start of the text in the text box will be roughly in line with the label's position
+   // if it's a point label, or the start of its region if it's a region label.
+   position.x += trackPanel->GetLabelWidth()
+      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
+      -40;
+   position.y += 2;  // just below the bottom of the track
+   position = trackPanel->ClientToScreen(position);
+   AudacityTextEntryDialog dialog{ &project,
+      _("Name:"),
+      _("New label"),
+      initialValue,
+      wxOK | wxCANCEL,
+      position };
+
+   // keep the dialog within Audacity's window, so that the dialog is always fully visible
+   wxRect dialogScreenRect = dialog.GetScreenRect();
+   wxRect projScreenRect = project.GetScreenRect();
+   wxPoint max = projScreenRect.GetBottomRight() + wxPoint{ -dialogScreenRect.width, -dialogScreenRect.height };
+   if (dialogScreenRect.x > max.x) {
+      position.x = max.x;
+      dialog.Move(position);
+   }
+   if (dialogScreenRect.y > max.y) {
+      position.y = max.y;
+      dialog.Move(position);
+   }
+
+   dialog.SetInsertionPointEnd();      // because, by default, initial text is selected
+   int status = dialog.ShowModal();
+   if (status != wxID_CANCEL) {
+      value = dialog.GetValue();
+      value.Trim(true).Trim(false);
+   }
+
+   return status;
 }

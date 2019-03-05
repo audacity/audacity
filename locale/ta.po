@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -32,10 +32,11 @@ msgid "Please choose an existing file."
 msgstr ""
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -233,7 +234,7 @@ msgid "No matches found"
 msgstr "கருவிகள் தென்படவில்லை"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+msgid "Code has been modified. Are you sure?"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -295,7 +296,7 @@ msgstr "பிரதி"
 msgid "Copy to clipboard"
 msgstr "இடைநிலை பலகைக்கு வெட்டு"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "வெட்டு"
@@ -305,7 +306,7 @@ msgstr "வெட்டு"
 msgid "Cut to clipboard"
 msgstr "இடைநிலை பலகைக்கு வெட்டு"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "ஒட்டு"
@@ -326,7 +327,7 @@ msgstr "&amp;தெளிவாக்கு"
 msgid "Clear selection"
 msgstr "தேர்வை வெட்டவும்"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 #, fuzzy
 msgid "Select All"
 msgstr "தெரிக"
@@ -758,6 +759,132 @@ msgstr "அடைவு அமைவுகள்"
 msgid "GPL License"
 msgstr "GPL உரிமம்"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "பதிதல் முடிவு"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Timeline"
+msgstr "Timeline Changer"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Seek"
+msgstr "மாதிரிகளை மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Scrub"
+msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release to stop seeking."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Quick-Play disabled"
+msgstr "(துர்பலமாக்கப்பட்ட )"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to unpin"
+msgstr "மேற்பார்வையை நிறுத்தவும்"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to pin"
+msgstr "ஆரம்பத்திற்கு தவிர்த்து செல்"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable dragging selection"
+msgstr "தேர்ந்தெடுக்காத ஒலியை அமைதியாக்கு"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable dragging selection"
+msgstr "தேர்ந்தெடுக்காத ஒலியை அமைதியாக்கு"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Lock Play Region"
+msgstr "பகுதி&யை ஆரம்பி"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Unlock Play Region"
+msgstr "பகுதி&யை ஆரம்பி"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable Scrub Ruler"
+msgstr "மீட்டரை துர்பலமாக்கு"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable Scrub Ruler"
+msgstr "விளைவுகளை அனுமதி"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -831,12 +958,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity துவங்குகிறது..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&புதிய"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&திற...."
 
@@ -844,7 +971,7 @@ msgstr "&திற...."
 msgid "Open &Recent..."
 msgstr "&அண்மையில் திறந்த..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "Audacity &பற்றி..."
 
@@ -852,7 +979,7 @@ msgstr "Audacity &பற்றி..."
 msgid "&Preferences..."
 msgstr "&முன்னுரிமைகள்..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&கோப்பு"
 
@@ -997,8 +1124,8 @@ msgstr "&சேமி..."
 msgid "Cl&ear"
 msgstr "துடை"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&மூடு"
 
@@ -1861,7 +1988,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "சார்புகளை செவ்வை பார்த்தல்"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "போக்கு"
@@ -1884,13 +2012,13 @@ msgid "Cleaning up temporary files"
 msgstr "தற்காலிக கோப்புகள் நீக்கபடுகின்றன"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "செயற்திட்ட தரவு கோப்புகள் சேமிக்கப்படுகின்றன"
-
-#: src/DirManager.cpp
 #, fuzzy
 msgid "Cleaning up after failed save"
 msgstr "தற்காலிக கோப்புகள் நீக்கபடுகின்றன"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "செயற்திட்ட தரவு கோப்புகள் சேமிக்கப்படுகின்றன"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2382,7 +2510,7 @@ msgstr "பதிவு நிகழ்வெண்"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2452,9 +2580,9 @@ msgstr ""
 "கொண்டிருக்க வேண்டும். "
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "அதிகளவான ஒலி தெரிவுசெய்யப்பட்டுள்ளது. முதல் %.1f விநாடி ஒலி மட்டும் ஆய்வு செய்யப்பட்டது."
@@ -2499,8 +2627,8 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "வர்ணபட்டை தரவாக ஏற்மதிச்செய்:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr "கோப்பில் எழுத முடியவில்லை: "
@@ -2776,7 +2904,8 @@ msgid "Track"
 msgstr "ஒலித்துண்டு"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "சிட்டை"
 
@@ -2810,17 +2939,17 @@ msgstr "புதிய..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "பகுதி உள்ளடக்கத்தை தொகுக்க இரட்டைச் சொடுக்கு செய்க அல்லது F2 வை அழுத்துக."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Select a text file containing labels"
 msgstr "சிட்டை கொண்டிருக்கும் ஏழுத்து கோப்பை தெரிவு செய்க..."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "ஏழுத்து கோப்புகள் (*.txt)|*.txt|அனைத்து கோப்புகள் (*.*)|*.*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "கோப்பை திறக்க முடியவில்லை: \"%s\""
@@ -2829,7 +2958,7 @@ msgstr "கோப்பை திறக்க முடியவில்லை:
 msgid "No labels to export."
 msgstr "ஏற்றுமதிக்கு சிட்டை இல்லை"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "சிட்டைகளை ஏற்றுமதி செய்ய"
 
@@ -2857,22 +2986,22 @@ msgstr "திருத்தப்பட்ட சிட்டை"
 msgid "Label Edit"
 msgstr "சிட்டை  தொகு"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "சேர்க்கப்பட்ட சிட்டை"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "வெட்டு"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "பிரதி"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "ஒட்டு"
 
@@ -2889,6 +3018,22 @@ msgstr "பெயரிடப்பட்ட பாடலை அழி"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "தொகுக்கப்பட்ட சிட்டைகள்"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "செயற்திட்ட பெயர"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "சேர்க்கப்பட்ட சிட்டை"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2931,2586 +3076,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity வெற்றிசைப்பாடல் %s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&திட்டத்தை சேமி"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "திட்டத்தை &ஆக சேமி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "திட்டத்தின் சுருக்கப்பட்ட பிரதியை சேமி..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Save Compressed Copy of Project..."
-msgstr "திட்டத்தின் சுருக்கப்பட்ட பிரதியை சேமி..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export"
-msgstr "ஏற்றுமதி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as MP&3"
-msgstr "ஏற்றுமதி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &WAV"
-msgstr "சிட்டைகளை ஏற்றுமதி செய்ய"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &OGG"
-msgstr "ஏற்றுமதி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export Audio..."
-msgstr "ஏற்றுமதி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Expo&rt Selected Audio..."
-msgstr "ஏற்றுமதி தெரிவு..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "சிட்டை ஏற்றுமதி..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "பல ஏற்றுமதி..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "MIDI ஏற்றுமதி..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&இறக்குமதி"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&ஒலி..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&சிட்டைகள்"
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&அசல் தரவு..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "&பக்க அமைப்பு..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&அச்சடி..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "&வெளியேறு"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "&தொகு"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&மீளமை"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "மறுபடியும் செய்"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "நீக்கு"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "நகல்"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "சிறப்பு நீக்கம்"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "பிரித்து வெட்டு"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "பிரித்து நீக்கு"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "சத்தமற்ற ஒலி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "ஒலியை கத்தரி"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "பகுதி ஓரங்கள்"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "பிரி"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "புதிதாய் பிரி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "ஒன்றுசேர்"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "சத்தமற்ற பிரிப்பு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Labels"
-msgstr "சிட்டை"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "சிட்டையை தொகு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "சிட்டையை தேர்ந்தெடுக்கும் போது சேர்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "சிட்டையை மீள ஓடும் போது சேர்"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "சிட்டைப்படுத்தப்பட்ட  ஒலி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "சிட்டை  தொகு"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "வெட்டு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "வெட்டி அழி"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "பிரித்து வெட்டு"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "வெட்டி பிரி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "வெட்டி அழி"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "வெட்டி நீக்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "மௌனம்"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "சத்தமற்ற ஒலி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "சிட்டை"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "பிரதி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "சிட்டை  தொகு"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "பிரி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "சிட்டை  தொகு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Me&tadata..."
-msgstr "மேனிலை தரவை தொகு..."
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "&முன்னுரிமை..."
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "&தேர்ந்தெடு"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&முழுவதும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "தேர்வு"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&வெற்று"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "&பாடல்கள்"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "அனைத்து &பாடல்"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "In All &Sync-Locked Tracks"
-msgstr "அனைத்து &ஒத்திசைந்த பாடல்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "R&egion"
-msgstr "பகுதி&யை ஆரம்பி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "தெரிவுப்புள்ளியை வழங்கி தொடங்குக"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "பின்னணி நிலை &இடது"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "தெரிவுப்புள்ளியை வழங்கி தொடங்குக"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "பின்னணி நிலை &வலது"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "பாடல் &தொடக்க நிலை காட்டி"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "பாடல் &தொடக்க நிலை காட்டி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "பாடல் &முடிவு நிலை காட்டி"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "பாடல் &முடிவு நிலை காட்டி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "முடிவை தேர்ந்தெடு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "பாடல் &தொடக்க நிலை காட்டி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&tore Selection"
-msgstr "தேர்வுக்கு &விரிவாக்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Retrieve Selectio&n"
-msgstr "தேர்வு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&pectral"
-msgstr "வர்ணப்பட்டை"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "தேர்வு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "அதிர்வெண் (hz)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "நேரியல் நிகழ்வெண்"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "பிந்திய கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Previo&us Clip"
-msgstr "பிந்திய கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "அடுத்த கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "N&ext Clip"
-msgstr "அடுத்த கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "ஆரம்பத்தை தேர்ந்தெடு"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "&பூஜியா கடவையை காண்க"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "At &Zero Crossings"
-msgstr "&பூஜியா கடவையை காண்க"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&நோக்கு"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom"
-msgstr "பெரிதாக்குக"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "&உள்ளே விரிவாக்கு"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "&சாதரணமாக விரிவாக்கு"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "&வெளியே விரிவாக்கு"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "தேர்வுக்கு &விரிவாக்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Zoom &Toggle"
-msgstr "ஜூம் கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&rack Size"
-msgstr "தட பெயர்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Fit to Width"
-msgstr "தளத்தில் &பொருந்து"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "அனைத்து பாடல்களையும் &தகர் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "E&xpand Collapsed Tracks"
-msgstr "அனைத்து பாடல்களையும் &விரிவாக்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sk&ip to"
-msgstr "முடிவிற்கு தவிர்த்து செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "தேர்வு ஆரம்ப&ம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Sta&rt"
-msgstr "தேர்வு ஆரம்பம்:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "தேர்வு முடி&வு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection En&d"
-msgstr "தேர்வு முடிவு"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&வரலாறு. . . ."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "&கரோக்கி"
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "கலவை &மன்றம்"
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "க&ருவி பட்டியில்"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Reset Toolb&ars"
-msgstr "&மீட்டமைக்கும் கருவி பட்டியல்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "&இடம்பெயர் கருவி பட்டியல்"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "கருவிகளின் கருவி பட்டியல்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording Meter Toolbar"
-msgstr "மீட்டரை பதிவு செய்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Playback Meter Toolbar"
-msgstr "மீட்டரை ஓடச்செய்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "கல&வை கருவி பட்டியல் "
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "கருவி ப&ட்டியலை தொகு"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "வேகமாக செயல்படு"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b Toolbar"
-msgstr "க&ருவி பட்டியில்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "&சாதன கருவி பட்டியில்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "&தேர்வு கருவி பட்டியல்"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Spe&ctral Selection Toolbar"
-msgstr "&தேர்வு கருவி பட்டியல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Extra Menus (on/off)"
-msgstr "பெய&ர்கொடு (ஏற்று/அணை) "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Show Clipping (on/off)"
-msgstr "வெட்டப்பட &துண்டை காட்டு"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Show Effects Rack"
-msgstr "VST விளைவுகள்"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "போக்குவரத்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "ஒலி"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&ay/Stop"
-msgstr "தொடங்கு/முடி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play/Stop and &Set Cursor"
-msgstr "தொடங்கு/முடி மற்றும் நிலை காட்டியை மாற்று"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "&மீண்டும் தொடரல்"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&காத்திறு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Google Translate"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&பதிவு செய்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Append Record"
-msgstr "மு&டிவில் எழுதி சேர்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Record &New Track"
-msgstr "தட்டுகளை &அகற்று "
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "கா&லத்தை பதிவு செய்"
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor to"
-msgstr "&நிலைக்காட்டியை அசைக்குக "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "தேர்வு ஆரம்பத்தி&ற்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Star&t"
-msgstr "தேர்வு ஆரம்பம்:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "தேர்வு முடி&விற்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "பாடல் &முடிவு நிலை காட்டி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &Start"
-msgstr "பாடல் &ஆரம்பம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "பாடல் &முடிவு நிலை காட்டி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &End"
-msgstr "பாடல் &முடிவு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Prev Clip Boundary"
-msgstr "பகுதி ஓரங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pre&vious Clip Boundary"
-msgstr "பகுதி ஓரங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Next Clip Boundary"
-msgstr "பகுதி ஓரங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ne&xt Clip Boundary"
-msgstr "பகுதி ஓரங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "திட்டங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Project Start"
-msgstr "திட்டங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "பாடல் &முடிவு நிலை காட்டி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Project E&nd"
-msgstr "திட்டங்கள்"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "பகுதி&யை ஆரம்பி"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&பூட்டு"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&பூட்டைத் திற"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "ஒலி சாதனத்தை மீ&ண்டும் பரிசோதி "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Transport &Options"
-msgstr "எடுத்தெழுதிய பொருள்"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "ஒலி செயல்படுத்தப்படும் நிலை . . ."
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "ஒலி செயல்ப&டுத்தப்படும் பதிவு (ஏற்று/அணை)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "பெய&ர்கொடு (ஏற்று/அணை) "
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "மெ&ன்பொருள் உள்ளோட்டம் (ஏற்று/அணை)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr " (ஏற்று/அணை)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "&புதிதாக சேர்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "ஒலித்துண்டை அசை"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&ஸ்டீரியோ தட்டுகள்"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "தட்டுகளை &பெயரிடு  "
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "தட்டுகளின் நேரத்தை க&ணி"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "பிரியோசையை மோனோவாக பிரி"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "கலந்&து கொடு "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix and Render to Ne&w Track"
-msgstr "கலந்து &புது தட்டாக கொடு "
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "புது&பிக்கவும்"
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "தட்டுகளை &அகற்று "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "தட்டுகளை &ஊமையாக்கு"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "தட்டுகளை &மீள பேசவை"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "இடப்பக்கம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Left"
-msgstr "இடப்பக்கம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "வலப்பக்கம் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Right"
-msgstr "வலப்பக்கம் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "மையம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Center"
-msgstr "மையம்"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "முனைகளை ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "ஒன்றாக ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "பூஜியத்தில் ஆரம்பி"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "தேர்வு ஆரம்பத்தை தொடங்கு"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "தேர்வு முடிவை தொடங்கு"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "தேர்வு ஆரம்பத்தை நிறுத்து"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "தேர்வு ஆரம்பத்தை நிறுத்து"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "பாடல்களை ஒழுங்குசெய்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Sele&ction and Tracks"
-msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "MIDIயை ஒலியுடன் சேர்"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "படல்களை வரிசைப்படுத்து"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "நேர அடிப்படையில் ஒழுங்கமைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "தொடக்க நேர அடிப்படையில்"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "பெயரால் ஒழுங்கமைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "பெயர் அடிப்படையில்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "தேர்ந்தெடுத்த பாடல்களை ஒன்று சேர்"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "உருவாக்கு"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "மெருகூட்டல்"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "திரும்பச்செய் %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "பிந்திய மெருகூட்டலை திரும்பச்செய்"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "பகுப்பாய்"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "பேதம் காட்டு ..."
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "வண்ணபட்டியை வரைந்திடு . . ."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&ools"
-msgstr "கருவிகள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&சிட்டைகள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "%s ஐ நிறைவேற்றுக"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "நீக்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "திரை புகைப்பட கருவி  ...."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "ஒப்பிடை தொடங்கு ...."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Simulate Recording Errors"
-msgstr "Google Translate"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Window"
-msgstr "சாளரம்"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr ""
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "இ&டம் பெயர்வு "
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "தொடங்கவும்"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &One Second"
-msgstr "ஒரு வினாடி செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "தேர்ந்தெடுப்பதற்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &Before Selection Start"
-msgstr "தேர்வு ஆரம்ப&ம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Af&ter Selection Start"
-msgstr "தேர்வு ஆரம்ப&ம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Be&fore Selection End"
-msgstr "தேர்ந்தெடுப்பதற்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Aft&er Selection End"
-msgstr "தேர்வு முடி&வு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before a&nd After Selection Start"
-msgstr "தேர்வு ஆரம்பத்தி&ற்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before an&d After Selection End"
-msgstr "தேர்வு ஆரம்பத்தை நிறுத்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview"
-msgstr "முற்காட்சியை வெட்டி செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection Tool"
-msgstr "தேர்ந்தெடுக்கும் கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Envelope Tool"
-msgstr "உறை கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Draw Tool"
-msgstr "வரையும் கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "ஜூம் கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Time Shift Tool"
-msgstr "நேரம் மாற்றும் கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Multi Tool"
-msgstr "பல கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Previous Tool"
-msgstr "பிந்திய கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Next Tool"
-msgstr "அடுத்த கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mi&xer"
-msgstr "கல&வை கருவி பட்டியல் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "பின்னணி வேகத்தை மாற்றியமைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "பின்னணி வேகத்தை கூட்டவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "பின்னணி வேகத்தை குறைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "பதிதல் முடிவு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "பின்னணி வேகத்தை கூட்டவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "பின்னணி வேகத்தை குறைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "அகற்றும் சாவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "அகற்றும் சாவி2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "வேகமாக செயல்படு"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "வேகமாக செயல்படு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Loop Play-at-Speed"
-msgstr "வேகத்துடன்  இயக்கவும் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview-at-Speed"
-msgstr "முற்காட்சியை வெட்டி செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "பின்னணி வேகத்தை மாற்றியமைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "பின்னணி வேகத்தை கூட்டவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "பின்னணி வேகத்தை குறைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Previous Label"
-msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Next Label"
-msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "De&vice"
-msgstr "சாதனம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "பின்னணி வேகத்தை கூட்டவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "பின்னணி வேகத்தை கூட்டவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "ஒலி புரவலனை மாற்று"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "வெளி ஆதாயத்தை மாற்றியமைக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection"
-msgstr "தேர்வு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "மாறு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "மாறு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "மாறு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to &Start"
-msgstr "ஆரம்பத்தை தேர்ந்தெடு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to En&d"
-msgstr "முடிவை தேர்ந்தெடு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Left"
-msgstr "தேர்வு முடிவு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Right"
-msgstr "தேர்வு முடிவு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "இடது தேர்வு எல்லையை தீர்மானிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "வலது தேர்வு எல்லையை தீர்மானிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract L&eft"
-msgstr "ஆரம்பத்தை தேர்ந்தெடு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract R&ight"
-msgstr "ஆரம்பத்தை தேர்ந்தெடு"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "கருவிபடியயிலிருந்து பின்நோக்கி பாடலுக்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "கருவிபடியயிலிருந்து முன்நோக்கி  பாடலுக்கு செல்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Previous Track"
-msgstr "முதலாவது தடம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Next Track"
-msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &First Track"
-msgstr "முதலாவது தடம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Last Track"
-msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to P&revious and Select"
-msgstr "முதலாவது தடம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to N&ext and Select"
-msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Toggle Focused Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Toggle Focuse&d Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor"
-msgstr "&நிலைக்காட்டியை அசைக்குக "
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Track"
-msgstr "&பாடல்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "ஒலி புரவலனை மாற்று"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "ஒலி புரவலனை மாற்று"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "ஒலி புரவலனை மாற்று"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "தெரிக"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "அதிர்வெண் (hz)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "தெரிக"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "பாடல் &ஆரம்பம்"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "விருப்பங்கள்..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "விருப்பங்கள்..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "அடுத்த கருவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "எல்லையை நிர்ணயி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "சிட்டையை தொகு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "திட்டத்தை &ஆக சேமி"
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Select..."
-msgstr "தெரிக"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "படல்களை வரிசைப்படுத்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Info..."
-msgstr "மேலும் பெறு..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "புது&பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "உதவி"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Import..."
-msgstr "&இறக்குமதி..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Export..."
-msgstr "ஏற்றுமதி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "&அண்மையில் திறந்த..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "திட்டத்தை &ஆக சேமி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "மேலும் பெறு..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "சுருக்கி..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "திரை புகைப்பட கருவி  ...."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Full Screen (on/off)"
-msgstr "முழுத்திரை செயல்படுத்து/முடக்கு"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "திட்டத்தில் உள்ள எல்லா தடத்தையும் சாதாரணப&amp;டுத்துக"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&உதவி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Getting Started"
-msgstr "தேர்வு ஆரம்பம்:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Audacity பதிவுகள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&உதவி"
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Diagnostics"
-msgstr "\t-test (சுய பரிசோதனைச் செய்)"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "ஒலி சாதனா தகவல் ..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&MIDI Device Info..."
-msgstr "ஒலி சாதனா தகவல் ..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "புகுபதிகையை காண்பி"
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "சார்ந்திருப்பவைகளை ஆராய்..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Check for Updates..."
-msgstr "சார்ந்திருப்பவைகளை ஆராய்..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Plug-in %d to %d"
-msgstr "சொருகிகள் %i இருந்து %i"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "கிட்டடியை திற"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "கிட்டடி கோப்புகள்"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&மீளமை %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&மீளமை"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&திரும்பசெய்யவும் %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "தட்டுகளை நேர அடிப்படையில் ஒழுங்கமைக்கவும்"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "இசை தட்டுகள் பெயர் அடிப்படையில் ஒழுங்கமைகபடுள்ளது"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no label track"
-msgstr "சிட்டை ஒலித்துண்டு"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no labels in label track"
-msgstr "புதிய சிட்டை தடம் உருவாக்கப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr ""
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "இடது தேர்வு எல்லையை தீர்மானிக்கவும்"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "நிலை"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "வலது தேர்வு எல்லையை தீர்மானிக்கவும்"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "செயற்பாட்டில் உள்ள ஒலித்துண்டை நீக்க முடியாது"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "அசைக்கப்பட்டது '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "அசைக்கப்பட்டது '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "அசைக்கப்பட்டது '%s' %s"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "சிட்டைகள்.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "ஏற்றுமதி செய்ய சிட்டைபடுத்தப்பட்ட ஒலித்துண்டுகள் இல்லை"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "உங்களால் ஒரு  நேரத்தில் ஒரு ஒலித்துண்டையே அளக்க முடியும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "MIDIயை இவ்வாறு ஏற்றுமதிசெய்யுங்கள்"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI கோப்பு (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"நீங்கள் தெரிவுசெய்த கோப்பு புரிந்துகொள்ளமுடியாத அமைப்பில் உள்ளது.\n"
-"உங்களுக்கு தொடர வேண்டுமா?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "MIDIயை ஏற்றுமதி செய்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export Selected Audio"
-msgstr "தெரிவு செய்யப்பட்ட ஒலியினை %s ஆக ஏற்றுமதி செய்கிறது"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "மீளமைக்க ஒன்றுமில்லை"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "திரும்பச்செய்ய ஒன்றுமில்லை"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "இடைநிலை பலகைக்கு வெட்டு"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "இடைநிலை பலகைக்கு பிரித்து வெட்டு"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "பிரித்து வெட்டு"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "ஒரு வகையை சேர்ந்த ஒலித்துண்டை இன்னொரு வகையாக சேமிக்க முடியாது "
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "பிரியோசையை ஒரோசையாக பிரதிசெய்ய முடியாது"
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "இடைநிலைப் பலகையிலிருந்து ஒட்டு"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "இடைநிலைப் பலகையிலிருந்து உரையை ஒட்டு"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "%.2f வினாடிகளை t=%.2f இல் தேர்ந்தெடுத்த ஒலிக்கோர்வையை ஒழுங்கமைக்குக "
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "ஒலியை ஒழுங்கமைக்குக"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "%.2f வினாடிகளை t=%.2f இல் வெட்டி அழி"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "வெட்டி அழி"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "%.2f வினாடிகளை t=%.2f இல் பிரி"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "பிரி"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "%.2f வினாடிகளை t=%.2f இல் சேர்"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "ஒன்றுசேர்"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "தேர்ந்தெடுத்த பாடல்களை  %.2f யிலிருந்து %.2f வினாடிகளுக்கு அமைதிப்படுத்து"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "மௌனம்"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "நகல்எடு்"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "நகல்"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "வெட்டி எடுக்கப்பட பாடல் பகுதியை இடைநிலை பகுதியில் போடு"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "பெயரிடப்பட்ட பாடலை வெட்டு"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "வெட்டி எடுத்த பாடலை பிரித்து இடைநிலை பலகைக்கு  மாற்று"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "வெட்டி எடுத்த பாடலை பிரி"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "பெயரிடப்பட்ட பாடல் பகுதியை இடைநிலை பலகைக்கு மாற்று"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "பெயரிடப்பட்ட பாடலை பிரதி செய்"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "பெயரிடப்பட்ட பாடல் பகுதியை அழி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "பெயரிடப்பட்ட பாடலை அழி"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "பெயரிடப்பட்ட பாடல் பகுதியை பிரித்து அழி"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "பெயரிடப்பட்ட பாடலை பிரித்து அழி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "மௌன பாடல் பகுதி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "பெயரிடப்பட்ட ஒலிபகுதியை அமைதியாக்கு"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "பெயரிடப்பட்ட ஒலிபகுதியை பிரி (செய்திக்கூறு அல்லது பகுதி) "
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "பெயரிடப்பட்ட ஒலிபகுதியை பிரி"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "பெயரிடப்பட்ட ஒலியை சேர் (செய்திக்கூறு அல்லது பகுதி) "
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "பெயரிடப்பட்ட ஒலியை சேர்"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "பெயரிடப்பட்ட ஒலி அமைவு பகுதியை பிரி"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "பெயரிடப்பட்ட ஒலி அமைவை பிரி"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "பிள"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "புதிய தடத்திற்கு பிள"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "புதிதாக பிள"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "அதிர்வெண் ஆய்வு"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "'%s' இலிருந்து  இறக்கப்பட்ட சிட்டைகள்"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "சிட்டைகளை இறக்குவதற்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "ஒரு MIDI கோப்பினை தெரியவும்... "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI மற்றும் Allegro கோப்புகள் (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI "
-"files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*."
-"*)|*.*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "%s' இலிருந்து  இறக்கப்பட்ட MIDI "
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "MIDI இறக்குவதற்கு"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "ஏதேனும் ஒரு சுருக்கப்படாத ஒலி கோப்பினை தெரியவும்..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "All files|*"
-msgstr "எல்லா கோப்புகளும்  (*)|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Metadata குறிகளை திருத்த"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Metadata Tags"
-msgstr "Metadata குறிகளை திருத்த"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "தடம்  '%s' இலுள்ள அனைத்து render செய்யப்பட்ட ஒலி அலைகள்"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Render"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "'%d' ஒலி அலைகள் கலக்கப்பட்டு  ஒரு பல்திசை  ஒலி அலையாக மாற்றப்படுள்ளது"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "'%d' ஒலி அலைகள் கலக்கப்பட்டு ஒரு  ஒருதிசை  ஒலி அலையாக மாற்றப்படுள்ளது"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "கலந்து வழங்கு"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "ஒலித்துண்டு %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s left"
-msgstr "இடது"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s right"
-msgstr "வலது"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "start"
-msgstr "ஆரம்பி"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "end"
-msgstr "முடிவு"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to zero"
-msgstr "%s நகர்த்தப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to zero"
-msgstr "ஆரம்பத்தில் இருந்து பூச்சியம் வரை"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Start"
-msgstr "%s/ நகர்த்த"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Start"
-msgstr "வளமை ஆரம்பம்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "நிலை காட்டியில் ஆரம்பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to cursor/selection start"
-msgstr "நிலை காட்டியில் ஆரம்பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to selection end"
-msgstr "தெரிவின் இறுதியில் ஆரம்பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to selection end"
-msgstr "தெரிவின் இறுதியில் ஆரம்பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "நிலை காட்டியின் இறுதியில் ஆரம்பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to cursor/selection start"
-msgstr "நிலை காட்டியின் இறுதியில் ஆரம்பிக்கவும்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End"
-msgstr "%s/ நகர்த்த"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End"
-msgstr "வரிசைப்படுத்து %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to selection end"
-msgstr "தெரிவின் இறுதியில் முடிக்க"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to selection end"
-msgstr "தெரிவின் இறுதியில் முடிக்க"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to end"
-msgstr "%s நகர்த்தப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to end"
-msgstr "முனைகளை ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End to End"
-msgstr "முனைகளை ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End to End"
-msgstr "முனைகளை ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved together"
-msgstr "%s நகர்த்தப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned together"
-msgstr "ஒன்றாக ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Together"
-msgstr "ஒன்றாக ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Together"
-msgstr "ஒன்றாக ஒழுங்குசெய் "
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "MIDI மற்றும் ஒலி துண்டுகளை ஒருங்கிணைத்தல்"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"வரிசைப்படுத்தல் பூர்த்தி செய்யப்பட்டுள்ளது : MIDI %.2f இலிருந்து  %.2f செக் வரைக்கும், "
-"ஒலி அமைவு  %.2f இலிருந்து  to %.2f வரைக்கும் "
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "MIDI இனை ஒலி அமைவுடன் ஒருங்கிணை"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"வரிசைப்படுத்தல் வழு : உள்ளீடு மிகவும் சிறியது : MIDI %.2f இலிருந்து  %.2f செக் "
-"வரைக்கும் , ஒலி அமைவு %.2f இலிருந்து   %.2f செக் வரைக்கும்."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "வரிசைப்படுத்தல் செயற்பாடானது உள்ளக வழுவினை தெரிவிக்குறது"
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "புதிய ஒலி தடம் உருவாக்கப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "புதிய தடம்"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "புதிய பலதிசை ஒலி அமைவு உருவாக்கப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "புதிய சிட்டை தடம் உருவாக்கப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr "இந்த Audacity அமைப்பானது ஒரு நேரத்தில் ஒரு தட சாளரத்தையே அனுமதிக்கும்"
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "புதிய நேர தடம் உருவாக்கப்பட்டுள்ளது"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Timer Recording"
-msgstr "Google Translate"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "செயற்திட்ட பெயர"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "சேர்க்கப்பட்ட சிட்டை"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "தொகுக்கப்பட்ட சிட்டைகள்"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "அகற்றப்பட்ட ஒலி தடங்கள்"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "தடத்தை அகற்ற"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "ஒலி கருவி விபரங்கள்"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "சேமிக்க"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Device Info"
-msgstr "ஒலி கருவி விபரங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save device info"
-msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "MIDI Device Info"
-msgstr "MIDI கருவிகள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save MIDI Device Info"
-msgstr "ஒலி கருவி விபரங்கள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "மீள்மாதிரி செய்யப்பட்ட ஒலி அமைவுகள்"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "ஒலித்துண்டு"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "மீள்மாதிரி"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "புதிய மாதிரி வீதம்"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "உள்ளிடப்பட்ட பெறுமதி செல்லுபடி அற்றதாகும்"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "%d தடம் மீள் மாதிரி செய்யப்படுகிறது"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "மீள்மாதிரி செய்யப்பட்ட ஒலி அமைவுகள்"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "தடத்தை மீள்மாதிரி செய்"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "மறுபடியும் செய்"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "கல"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "கலந்து வழங்கு"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5518,7 +3107,7 @@ msgstr "கலந்து வழங்கப்பட்ட தடங்கள�
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "பெறு"
@@ -5535,7 +3124,7 @@ msgid "Musical Instrument"
 msgstr "சங்கீத கருவி"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "நகர்த்தி"
@@ -5589,8 +3178,7 @@ msgstr "கூறு பொருத்தமற்றது"
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5604,7 +3192,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5774,6 +3362,11 @@ msgstr ""
 msgid "Show:"
 msgstr ""
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&முழுவதும்"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr ""
@@ -5870,7 +3463,7 @@ msgid "Plug-in already exists"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -6168,9 +3761,9 @@ msgid "Error Saving Project"
 msgstr "திட்டத்தை சேமிப்பதில் வழு"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "திட்டத்தை சேமிக்க முடியவில்லை.\n"
@@ -6283,15 +3876,6 @@ msgid "Created new project"
 msgstr "புதிய திட்டம் உருவாக்கப்பட்டுள்ளது"
 
 #: src/Project.cpp
-#, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "%.2f வினாடிகள் t=%.2f இல் நீக்கப்பட்டுள்ளது"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "அழி"
-
-#: src/Project.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "%d நிமிடங்கள் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது."
@@ -6361,23 +3945,6 @@ msgid "Record"
 msgstr "பதிவு செய்"
 
 #: src/Project.cpp
-msgid "Adjusted gain"
-msgstr ""
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr ""
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "'%s' ஒலித்துண்டு நீக்கப்பட்டது."
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "ஒலித்துண்டு நீக்கி"
-
-#: src/Project.cpp
 msgid "Less than 1 minute"
 msgstr ""
 
@@ -6399,6 +3966,14 @@ msgstr[1] ""
 #: src/Project.cpp
 #, c-format
 msgid "%s and %s."
+msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "அதிர்வெண் ஆய்வு"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
 
 #: src/Resample.cpp
@@ -6664,7 +4239,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "எச்சரிக்கை - அனாதை தொகுதி கோப்பு(கள்)"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "உதவி"
 
@@ -6922,7 +4497,7 @@ msgstr ""
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "%s  இல் இருக்கும் அனைத்து தேவையான கோப்புகளும் \n"
 "ஏற்கனவே உள்ளன."
@@ -7110,6 +4685,11 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Timer Recording"
+msgstr "Google Translate"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7162,6 +4742,11 @@ msgstr "அமைதி சுருக்கம்"
 #, fuzzy
 msgid "Save Project As:"
 msgstr "திட்டத்தை &ஆக சேமி"
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select..."
+msgstr "தெரிக"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7225,10 +4810,20 @@ msgstr "ஆரம்பத்தை தேர்ந்தெடு"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity நேர பதியி - தொடங்க காத்திருக்கிறது"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 #, fuzzy
 msgid "Recording will commence in:"
 msgstr "பதிதல் முடிவு"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7277,6 +4872,13 @@ msgstr "பிரியோசை, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "ஒலித்துண்டுப்பார்வை"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "ஒலித்துண்டு %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7892,7 +5494,7 @@ msgstr "வெள்ளை"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "எதுவும் இல்லை "
 
@@ -8126,6 +5728,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "அளவை நிர்ணயி"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "மீள சிறிதாக்கவும்"
 
@@ -8232,6 +5839,16 @@ msgstr "அளவு"
 #, fuzzy
 msgid "VZoom:"
 msgstr "பெரிதாக்குக"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "பெரிதாக்குக"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "ஜூம் கருவி"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8732,6 +6349,11 @@ msgid "You can only measure one track at a time."
 msgstr "உங்களால் ஒரு  நேரத்தில் ஒரு ஒலித்துண்டையே அளக்க முடியும்"
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8742,11 +6364,6 @@ msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -8817,6 +6434,10 @@ msgstr "மீளமை"
 #, fuzzy
 msgid "&Difference:"
 msgstr "வித்தியாசம்:"
+
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&உதவி"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9411,6 +7032,16 @@ msgstr "இயல்பு&நிலை"
 #, fuzzy
 msgid "Factory Presets"
 msgstr "முன்னமைக்கப்பட்டவையை இறக்குமதி செய்"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Import..."
+msgstr "&இறக்குமதி..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Export..."
+msgstr "ஏற்றுமதி"
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -10382,6 +8013,11 @@ msgstr "பலதிசை சோடியின்  முதலாவது �
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "பலதிசை சோடியின்  இரண்டாவது தடத்தை பகுப்பாய்கிறது :"
+
+#: src/effects/Normalize.cpp
+#, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "நடைமுறைப்படுத்தபடுகிறது : "
 
@@ -10389,11 +8025,6 @@ msgstr "நடைமுறைப்படுத்தபடுகிறது : 
 #, fuzzy, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "பலதிசை தடங்கள் சுயாதீனமாக நடைமுறைப்படுத்தபடுகிறது"
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "பலதிசை சோடியின்  இரண்டாவது தடத்தை பகுப்பாய்கிறது :"
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
@@ -10437,7 +8068,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+#, fuzzy
+msgid "(Maximum 0dB)"
 msgstr ". உயர்  0dB"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10931,6 +8563,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr ""
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "மௌனம்"
+
 #: src/effects/StereoToMono.cpp
 #, fuzzy
 msgid "Converts stereo tracks to mono"
@@ -11281,7 +8917,7 @@ msgstr "திட்டத்தை சேமிப்பதில் வழு"
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+msgid "This parameter file was saved from %s. Continue?"
 msgstr ""
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11384,7 +9020,7 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -11616,7 +9252,13 @@ msgid "plug-in"
 msgstr "சொருகியின் பெயர்"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist பெறுமானத்தை தந்துள்ளது"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Nyquist பெறுமானத்தை தந்துள்ளது"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11703,6 +9345,11 @@ msgstr ""
 #, fuzzy
 msgid "&Load"
 msgstr "ஏற்ற"
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "சேமிக்க"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11812,6 +9459,10 @@ msgstr ""
 msgid "Export Audio"
 msgstr "கோப்பு ஏற்றுமதி"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Metadata குறிகளை திருத்த"
+
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -11863,8 +9514,8 @@ msgid ""
 msgstr ""
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "\"%s\" என்று பெயரிடப்பட்ட கோப்பு  ஏற்கனவே உள்ளது.  பிரதியிடுவதா?"
 
 #: src/export/Export.cpp
@@ -12066,18 +9717,23 @@ msgstr "தெரிவு செய்யப்பட்ட ஒலியின�
 msgid "Invalid sample rate"
 msgstr "தவறான மாதிரி அளவு"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "மீள்மாதிரி"
+
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
@@ -12672,7 +10328,7 @@ msgstr "சேனல் முறை:"
 msgid "Joint Stereo"
 msgstr "இணைந்த ஒலிசாதனம்"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "ஒலிசாதனம்"
 
@@ -12807,14 +10463,14 @@ msgstr ""
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 
 #: src/export/ExportMP3.cpp
@@ -13158,6 +10814,11 @@ msgid ""
 "Data."
 msgstr ""
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13313,7 +10974,7 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13440,10 +11101,2555 @@ msgstr ""
 msgid "Sample rate:"
 msgstr "சாம்பிள் வீதம்:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&இறக்குமதி"
+
 #: src/import/RawAudioGuess.cpp
 #, fuzzy
 msgid "Bad data size"
 msgstr "மேனிலை தரவை ஆக சுமையேற்று"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s left"
+msgstr "இடது"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s right"
+msgstr "வலது"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "start"
+msgstr "ஆரம்பி"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "end"
+msgstr "முடிவு"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "பகுதி ஓரங்கள்"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Previo&us Clip"
+msgstr "பிந்திய கருவி"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "பிந்திய கருவி"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "N&ext Clip"
+msgstr "அடுத்த கருவி"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "அடுத்த கருவி"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Pre&vious Clip Boundary"
+msgstr "பகுதி ஓரங்கள்"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "பகுதி ஓரங்கள்"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Ne&xt Clip Boundary"
+msgstr "பகுதி ஓரங்கள்"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "பகுதி ஓரங்கள்"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "இடைநிலைப் பலகையிலிருந்து உரையை ஒட்டு"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "இடைநிலைப் பலகையிலிருந்து ஒட்டு"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "மீளமைக்க ஒன்றுமில்லை"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "திரும்பச்செய்ய ஒன்றுமில்லை"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "இடைநிலை பலகைக்கு வெட்டு"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "%.2f வினாடிகள் t=%.2f இல் நீக்கப்பட்டுள்ளது"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "அழி"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "ஒரு வகையை சேர்ந்த ஒலித்துண்டை இன்னொரு வகையாக சேமிக்க முடியாது "
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "பிரியோசையை ஒரோசையாக பிரதிசெய்ய முடியாது"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "நகல்எடு்"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "நகல்"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "இடைநிலை பலகைக்கு பிரித்து வெட்டு"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "பிரித்து வெட்டு"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "%.2f வினாடிகளை t=%.2f இல் வெட்டி அழி"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "வெட்டி அழி"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "தேர்ந்தெடுத்த பாடல்களை  %.2f யிலிருந்து %.2f வினாடிகளுக்கு அமைதிப்படுத்து"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "%.2f வினாடிகளை t=%.2f இல் தேர்ந்தெடுத்த ஒலிக்கோர்வையை ஒழுங்கமைக்குக "
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "ஒலியை ஒழுங்கமைக்குக"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "பிள"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "புதிய தடத்திற்கு பிள"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "புதிதாக பிள"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "%.2f வினாடிகளை t=%.2f இல் சேர்"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "ஒன்றுசேர்"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "%.2f வினாடிகளை t=%.2f இல் பிரி"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "பிரி"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Metadata Tags"
+msgstr "Metadata குறிகளை திருத்த"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "&தொகு"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "நீக்கு"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "நகல்"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "சிறப்பு நீக்கம்"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "பிரித்து வெட்டு"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "பிரித்து நீக்கு"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "சத்தமற்ற ஒலி"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "ஒலியை கத்தரி"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "பிரி"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "புதிதாய் பிரி"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "ஒன்றுசேர்"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "சத்தமற்ற பிரிப்பு"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "மேனிலை தரவை தொகு..."
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "&முன்னுரிமை..."
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "அகற்றும் சாவி"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "அகற்றும் சாவி2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Mi&xer"
+msgstr "கல&வை கருவி பட்டியல் "
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "பின்னணி வேகத்தை மாற்றியமைக்கவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "பின்னணி வேகத்தை கூட்டவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "பின்னணி வேகத்தை குறைக்கவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "பதிதல் முடிவு"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "பின்னணி வேகத்தை கூட்டவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "பின்னணி வேகத்தை குறைக்கவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "De&vice"
+msgstr "சாதனம்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "பின்னணி வேகத்தை கூட்டவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "பின்னணி வேகத்தை கூட்டவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "ஒலி புரவலனை மாற்று"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "வெளி ஆதாயத்தை மாற்றியமைக்கவும்"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
+msgstr "முழுத்திரை செயல்படுத்து/முடக்கு"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "%s' இலிருந்து  இறக்கப்பட்ட MIDI "
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "MIDI இறக்குவதற்கு"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export Selected Audio"
+msgstr "தெரிவு செய்யப்பட்ட ஒலியினை %s ஆக ஏற்றுமதி செய்கிறது"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "சிட்டைகள்.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "ஏற்றுமதி செய்ய சிட்டைபடுத்தப்பட்ட ஒலித்துண்டுகள் இல்லை"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "உங்களால் ஒரு  நேரத்தில் ஒரு ஒலித்துண்டையே அளக்க முடியும்"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "MIDIயை இவ்வாறு ஏற்றுமதிசெய்யுங்கள்"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI கோப்பு (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"நீங்கள் தெரிவுசெய்த கோப்பு புரிந்துகொள்ளமுடியாத அமைப்பில் உள்ளது.\n"
+"உங்களுக்கு தொடர வேண்டுமா?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "MIDIயை ஏற்றுமதி செய்"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "'%s' இலிருந்து  இறக்கப்பட்ட சிட்டைகள்"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "சிட்டைகளை இறக்குவதற்கு"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "ஒரு MIDI கோப்பினை தெரியவும்... "
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI மற்றும் Allegro கோப்புகள் (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI "
+"files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*."
+"*)|*.*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select any uncompressed audio file"
+msgstr "ஏதேனும் ஒரு சுருக்கப்படாத ஒலி கோப்பினை தெரியவும்..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "All files|*"
+msgstr "எல்லா கோப்புகளும்  (*)|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "முன்னமைக்கப்பட்டவையை சேமி"
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "கிட்டடியை திற"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "கிட்டடி கோப்புகள்"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&திட்டத்தை சேமி"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "திட்டத்தை &ஆக சேமி"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "திட்டத்தின் சுருக்கப்பட்ட பிரதியை சேமி..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Save Compressed Copy of Project..."
+msgstr "திட்டத்தின் சுருக்கப்பட்ட பிரதியை சேமி..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export"
+msgstr "ஏற்றுமதி"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as MP&3"
+msgstr "ஏற்றுமதி"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &WAV"
+msgstr "சிட்டைகளை ஏற்றுமதி செய்ய"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &OGG"
+msgstr "ஏற்றுமதி"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export Audio..."
+msgstr "ஏற்றுமதி"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Expo&rt Selected Audio..."
+msgstr "ஏற்றுமதி தெரிவு..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "சிட்டை ஏற்றுமதி..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "பல ஏற்றுமதி..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "MIDI ஏற்றுமதி..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&ஒலி..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&சிட்டைகள்"
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&அசல் தரவு..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "&பக்க அமைப்பு..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&அச்சடி..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "&வெளியேறு"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "ஒலி கருவி விபரங்கள்"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Save Device Info"
+msgstr "ஒலி கருவி விபரங்கள்"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Unable to save device info"
+msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "MIDI Device Info"
+msgstr "MIDI கருவிகள்"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Save MIDI Device Info"
+msgstr "ஒலி கருவி விபரங்கள்"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Unable to save MIDI device info"
+msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&உதவி"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Getting Started"
+msgstr "தேர்வு ஆரம்பம்:"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity பதிவுகள்"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&உதவி"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Diagnostics"
+msgstr "\t-test (சுய பரிசோதனைச் செய்)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "ஒலி சாதனா தகவல் ..."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&MIDI Device Info..."
+msgstr "ஒலி சாதனா தகவல் ..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "புகுபதிகையை காண்பி"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "சார்ந்திருப்பவைகளை ஆராய்..."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Check for Updates..."
+msgstr "சார்ந்திருப்பவைகளை ஆராய்..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "வெட்டி எடுக்கப்பட பாடல் பகுதியை இடைநிலை பகுதியில் போடு"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "பெயரிடப்பட்ட பாடலை வெட்டு"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "பெயரிடப்பட்ட பாடல் பகுதியை அழி"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "பெயரிடப்பட்ட பாடலை அழி"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "வெட்டி எடுத்த பாடலை பிரித்து இடைநிலை பலகைக்கு  மாற்று"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "வெட்டி எடுத்த பாடலை பிரி"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "பெயரிடப்பட்ட பாடல் பகுதியை பிரித்து அழி"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "பெயரிடப்பட்ட பாடலை பிரித்து அழி"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "மௌன பாடல் பகுதி"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "பெயரிடப்பட்ட ஒலிபகுதியை அமைதியாக்கு"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "பெயரிடப்பட்ட பாடல் பகுதியை இடைநிலை பலகைக்கு மாற்று"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "பெயரிடப்பட்ட பாடலை பிரதி செய்"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "பெயரிடப்பட்ட ஒலிபகுதியை பிரி (செய்திக்கூறு அல்லது பகுதி) "
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "பெயரிடப்பட்ட ஒலிபகுதியை பிரி"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "பெயரிடப்பட்ட ஒலியை சேர் (செய்திக்கூறு அல்லது பகுதி) "
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "பெயரிடப்பட்ட ஒலியை சேர்"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "பெயரிடப்பட்ட ஒலி அமைவு பகுதியை பிரி"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "பெயரிடப்பட்ட ஒலி அமைவை பிரி"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Labels"
+msgstr "சிட்டை"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "சிட்டையை தொகு"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "சிட்டையை தேர்ந்தெடுக்கும் போது சேர்"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "சிட்டையை மீள ஓடும் போது சேர்"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "சிட்டைப்படுத்தப்பட்ட  ஒலி"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "வெட்டு"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "சிட்டை  தொகு"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "வெட்டி அழி"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "வெட்டி பிரி"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "பிரித்து வெட்டு"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "வெட்டி நீக்கு"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "வெட்டி அழி"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "சத்தமற்ற ஒலி"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "மௌனம்"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "பிரதி"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "சிட்டை"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "பிரி"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "சிட்டை  தொகு"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "சிட்டை  தொகு"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "கருவிபடியயிலிருந்து பின்நோக்கி பாடலுக்கு செல்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "கருவிபடியயிலிருந்து முன்நோக்கி  பாடலுக்கு செல்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Previous Track"
+msgstr "முதலாவது தடம்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Next Track"
+msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &First Track"
+msgstr "முதலாவது தடம்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Last Track"
+msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to P&revious and Select"
+msgstr "முதலாவது தடம்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to N&ext and Select"
+msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "&Toggle Focused Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Toggle Focuse&d Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "திரும்பச்செய் %s"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy, c-format
+msgid "Plug-in %d to %d"
+msgstr "சொருகிகள் %i இருந்து %i"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "உருவாக்கு"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "பிந்திய மெருகூட்டலை திரும்பச்செய்"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "மெருகூட்டல்"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "பகுப்பாய்"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "பேதம் காட்டு ..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "வண்ணபட்டியை வரைந்திடு . . ."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "T&ools"
+msgstr "கருவிகள்"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&சிட்டைகள்"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "%s ஐ நிறைவேற்றுக"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "நீக்கு"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "திரை புகைப்பட கருவி  ...."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "ஒப்பிடை தொடங்கு ...."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "Google Translate"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr ""
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "மாறி"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "தெரிக"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "அதிர்வெண் (hz)"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "தெரிக"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "பாடல் &ஆரம்பம்"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "விருப்பங்கள்..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "விருப்பங்கள்..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "அடுத்த கருவி"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "எல்லையை நிர்ணயி"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "சிட்டையை தொகு"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "திட்டத்தை &ஆக சேமி"
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "படல்களை வரிசைப்படுத்து"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "மேலும் பெறு..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "புது&பிக்கவும்"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "உதவி"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "&அண்மையில் திறந்த..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "திட்டத்தை &ஆக சேமி"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "மேலும் பெறு..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "சுருக்கி..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "திரை புகைப்பட கருவி  ...."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "இடது தேர்வு எல்லையை தீர்மானிக்கவும்"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "நிலை"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "வலது தேர்வு எல்லையை தீர்மானிக்கவும்"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "&தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&வெற்று"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "தேர்வு"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "&பாடல்கள்"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "அனைத்து &பாடல்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "In All &Sync-Locked Tracks"
+msgstr "அனைத்து &ஒத்திசைந்த பாடல்கள்"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "R&egion"
+msgstr "பகுதி&யை ஆரம்பி"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "பின்னணி நிலை &இடது"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "தெரிவுப்புள்ளியை வழங்கி தொடங்குக"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "பின்னணி நிலை &வலது"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "தெரிவுப்புள்ளியை வழங்கி தொடங்குக"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "பாடல் &தொடக்க நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "பாடல் &தொடக்க நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "பாடல் &முடிவு நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "பாடல் &முடிவு நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "பாடல் &தொடக்க நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "முடிவை தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&tore Selection"
+msgstr "தேர்வுக்கு &விரிவாக்கு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Retrieve Selectio&n"
+msgstr "தேர்வு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&pectral"
+msgstr "வர்ணப்பட்டை"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "தேர்வு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "அதிர்வெண் (hz)"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "நேரியல் நிகழ்வெண்"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "ஆரம்பத்தை தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "At &Zero Crossings"
+msgstr "&பூஜியா கடவையை காண்க"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "&பூஜியா கடவையை காண்க"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Selection"
+msgstr "தேர்வு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "மாறு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "மாறு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "மாறு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to &Start"
+msgstr "ஆரம்பத்தை தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to En&d"
+msgstr "முடிவை தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Left"
+msgstr "தேர்வு முடிவு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Right"
+msgstr "தேர்வு முடிவு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "இடது தேர்வு எல்லையை தீர்மானிக்கவும்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "வலது தேர்வு எல்லையை தீர்மானிக்கவும்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract L&eft"
+msgstr "ஆரம்பத்தை தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract R&ight"
+msgstr "ஆரம்பத்தை தேர்ந்தெடு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor to"
+msgstr "&நிலைக்காட்டியை அசைக்குக "
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Star&t"
+msgstr "தேர்வு ஆரம்பம்:"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "தேர்வு ஆரம்பத்தி&ற்கு செல்"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection En&d"
+msgstr "தேர்வு முடிவு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "தேர்வு முடி&விற்கு செல்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &Start"
+msgstr "பாடல் &ஆரம்பம்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "பாடல் &முடிவு நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &End"
+msgstr "பாடல் &முடிவு"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "பாடல் &முடிவு நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Project Start"
+msgstr "திட்டங்கள்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "திட்டங்கள்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Project E&nd"
+msgstr "திட்டங்கள்"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "பாடல் &முடிவு நிலை காட்டி"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor"
+msgstr "&நிலைக்காட்டியை அசைக்குக "
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr ""
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "க&ருவி பட்டியில்"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Reset Toolb&ars"
+msgstr "&மீட்டமைக்கும் கருவி பட்டியல்"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "&இடம்பெயர் கருவி பட்டியல்"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "கருவிகளின் கருவி பட்டியல்"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Recording Meter Toolbar"
+msgstr "மீட்டரை பதிவு செய்"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Playback Meter Toolbar"
+msgstr "மீட்டரை ஓடச்செய்"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "கல&வை கருவி பட்டியல் "
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "கருவி ப&ட்டியலை தொகு"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "வேகமாக செயல்படு"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Scru&b Toolbar"
+msgstr "க&ருவி பட்டியில்"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "&சாதன கருவி பட்டியில்"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "&தேர்வு கருவி பட்டியல்"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Spe&ctral Selection Toolbar"
+msgstr "&தேர்வு கருவி பட்டியல்"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Selection Tool"
+msgstr "தேர்ந்தெடுக்கும் கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Envelope Tool"
+msgstr "உறை கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Draw Tool"
+msgstr "வரையும் கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Zoom Tool"
+msgstr "ஜூம் கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Time Shift Tool"
+msgstr "நேரம் மாற்றும் கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Multi Tool"
+msgstr "பல கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Previous Tool"
+msgstr "பிந்திய கருவி"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Next Tool"
+msgstr "அடுத்த கருவி"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "தடம்  '%s' இலுள்ள அனைத்து render செய்யப்பட்ட ஒலி அலைகள்"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Render"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "'%d' ஒலி அலைகள் கலக்கப்பட்டு  ஒரு பல்திசை  ஒலி அலையாக மாற்றப்படுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "'%d' ஒலி அலைகள் கலக்கப்பட்டு ஒரு  ஒருதிசை  ஒலி அலையாக மாற்றப்படுள்ளது"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "மீள்மாதிரி செய்யப்பட்ட ஒலி அமைவுகள்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "ஒலித்துண்டு"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to zero"
+msgstr "%s நகர்த்தப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to zero"
+msgstr "ஆரம்பத்தில் இருந்து பூச்சியம் வரை"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "%s/ நகர்த்த"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "வளமை ஆரம்பம்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "நிலை காட்டியில் ஆரம்பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to cursor/selection start"
+msgstr "நிலை காட்டியில் ஆரம்பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
+msgstr "தெரிவின் இறுதியில் ஆரம்பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to selection end"
+msgstr "தெரிவின் இறுதியில் ஆரம்பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "நிலை காட்டியின் இறுதியில் ஆரம்பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "நிலை காட்டியின் இறுதியில் ஆரம்பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End"
+msgstr "%s/ நகர்த்த"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End"
+msgstr "வரிசைப்படுத்து %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to selection end"
+msgstr "தெரிவின் இறுதியில் முடிக்க"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to selection end"
+msgstr "தெரிவின் இறுதியில் முடிக்க"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "%s நகர்த்தப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "முனைகளை ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "முனைகளை ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "முனைகளை ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "%s நகர்த்தப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "ஒன்றாக ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "ஒன்றாக ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "ஒன்றாக ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "MIDIயை ஒலியுடன் சேர்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "MIDI மற்றும் ஒலி துண்டுகளை ஒருங்கிணைத்தல்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "அகற்றப்பட்ட ஒலி தடங்கள்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "தடத்தை அகற்ற"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "'%s' ஒலித்துண்டு நீக்கப்பட்டது."
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "ஒலித்துண்டு நீக்கி"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "அசைக்கப்பட்டது '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "அசைக்கப்பட்டது '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "அசைக்கப்பட்டது '%s' %s"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "புதிய ஒலி தடம் உருவாக்கப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "புதிய தடம்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "புதிய பலதிசை ஒலி அமைவு உருவாக்கப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "புதிய சிட்டை தடம் உருவாக்கப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr "இந்த Audacity அமைப்பானது ஒரு நேரத்தில் ஒரு தட சாளரத்தையே அனுமதிக்கும்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "புதிய நேர தடம் உருவாக்கப்பட்டுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "புதிய மாதிரி வீதம்"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "உள்ளிடப்பட்ட பெறுமதி செல்லுபடி அற்றதாகும்"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "%d தடம் மீள் மாதிரி செய்யப்படுகிறது"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "மீள்மாதிரி செய்யப்பட்ட ஒலி அமைவுகள்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "தடத்தை மீள்மாதிரி செய்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"வரிசைப்படுத்தல் பூர்த்தி செய்யப்பட்டுள்ளது : MIDI %.2f இலிருந்து  %.2f செக் வரைக்கும், "
+"ஒலி அமைவு  %.2f இலிருந்து  to %.2f வரைக்கும் "
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "MIDI இனை ஒலி அமைவுடன் ஒருங்கிணை"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"வரிசைப்படுத்தல் வழு : உள்ளீடு மிகவும் சிறியது : MIDI %.2f இலிருந்து  %.2f செக் "
+"வரைக்கும் , ஒலி அமைவு %.2f இலிருந்து   %.2f செக் வரைக்கும்."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "வரிசைப்படுத்தல் செயற்பாடானது உள்ளக வழுவினை தெரிவிக்குறது"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "தட்டுகளை நேர அடிப்படையில் ஒழுங்கமைக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "நேர அடிப்படையில் ஒழுங்கமைக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "இசை தட்டுகள் பெயர் அடிப்படையில் ஒழுங்கமைகபடுள்ளது"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "பெயரால் ஒழுங்கமைக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "செயற்பாட்டில் உள்ள ஒலித்துண்டை நீக்க முடியாது"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "&புதிதாக சேர்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "ஒலித்துண்டை அசை"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&ஸ்டீரியோ தட்டுகள்"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "தட்டுகளை &பெயரிடு  "
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "தட்டுகளின் நேரத்தை க&ணி"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "பிரியோசையை மோனோவாக பிரி"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "கலந்&து கொடு "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix and Render to Ne&w Track"
+msgstr "கலந்து &புது தட்டாக கொடு "
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "புது&பிக்கவும்"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "தட்டுகளை &அகற்று "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "தட்டுகளை &ஊமையாக்கு"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "தட்டுகளை &மீள பேசவை"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Left"
+msgstr "இடப்பக்கம்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "இடப்பக்கம்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Right"
+msgstr "வலப்பக்கம் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "வலப்பக்கம் "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Center"
+msgstr "மையம்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "மையம்"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "பாடல்களை ஒழுங்குசெய்"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "முனைகளை ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "ஒன்றாக ஒழுங்குசெய் "
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "பூஜியத்தில் ஆரம்பி"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "தேர்வு ஆரம்பத்தை தொடங்கு"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "தேர்வு முடிவை தொடங்கு"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "தேர்வு ஆரம்பத்தை நிறுத்து"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "தேர்வு ஆரம்பத்தை நிறுத்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Sele&ction and Tracks"
+msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "படல்களை வரிசைப்படுத்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "தொடக்க நேர அடிப்படையில்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "பெயர் அடிப்படையில்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "தேர்ந்தெடுத்த பாடல்களை ஒன்று சேர்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Track"
+msgstr "&பாடல்கள்"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "ஒலி புரவலனை மாற்று"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "ஒலி புரவலனை மாற்று"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "ஒலி புரவலனை மாற்று"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no label track"
+msgstr "சிட்டை ஒலித்துண்டு"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no labels in label track"
+msgstr "புதிய சிட்டை தடம் உருவாக்கப்பட்டுள்ளது"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "போக்குவரத்து"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "ஒலி"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&ay/Stop"
+msgstr "தொடங்கு/முடி"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play/Stop and &Set Cursor"
+msgstr "தொடங்கு/முடி மற்றும் நிலை காட்டியை மாற்று"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "&மீண்டும் தொடரல்"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&காத்திறு"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Google Translate"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&பதிவு செய்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Append Record"
+msgstr "மு&டிவில் எழுதி சேர்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Record &New Track"
+msgstr "தட்டுகளை &அகற்று "
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "கா&லத்தை பதிவு செய்"
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "பகுதி&யை ஆரம்பி"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&பூட்டு"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&பூட்டைத் திற"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "ஒலி சாதனத்தை மீ&ண்டும் பரிசோதி "
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Transport &Options"
+msgstr "எடுத்தெழுதிய பொருள்"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "ஒலி செயல்படுத்தப்படும் நிலை . . ."
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "ஒலி செயல்ப&டுத்தப்படும் பதிவு (ஏற்று/அணை)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "பெய&ர்கொடு (ஏற்று/அணை) "
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "மெ&ன்பொருள் உள்ளோட்டம் (ஏற்று/அணை)"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr " (ஏற்று/அணை)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "இ&டம் பெயர்வு "
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "தொடங்கவும்"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &One Second"
+msgstr "ஒரு வினாடி செல்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "தேர்ந்தெடுப்பதற்கு செல்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &Before Selection Start"
+msgstr "தேர்வு ஆரம்ப&ம்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Af&ter Selection Start"
+msgstr "தேர்வு ஆரம்ப&ம்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Be&fore Selection End"
+msgstr "தேர்ந்தெடுப்பதற்கு செல்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Aft&er Selection End"
+msgstr "தேர்வு முடி&வு"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before a&nd After Selection Start"
+msgstr "தேர்வு ஆரம்பத்தி&ற்கு செல்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before an&d After Selection End"
+msgstr "தேர்வு ஆரம்பத்தை நிறுத்து"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview"
+msgstr "முற்காட்சியை வெட்டி செல்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "வேகமாக செயல்படு"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "வேகமாக செயல்படு"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Loop Play-at-Speed"
+msgstr "வேகத்துடன்  இயக்கவும் "
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview-at-Speed"
+msgstr "முற்காட்சியை வெட்டி செல்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "பின்னணி வேகத்தை மாற்றியமைக்கவும்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "பின்னணி வேகத்தை கூட்டவும்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "பின்னணி வேகத்தை குறைக்கவும்"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Previous Label"
+msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Next Label"
+msgstr "உரையை புதிய சிட்டையில் ஒட்டு"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&நோக்கு"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Zoom"
+msgstr "பெரிதாக்குக"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "&உள்ளே விரிவாக்கு"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "&சாதரணமாக விரிவாக்கு"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "&வெளியே விரிவாக்கு"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "தேர்வுக்கு &விரிவாக்கு"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Zoom &Toggle"
+msgstr "ஜூம் கருவி"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "உயர்தர கலவை தெரிவுகள்"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "T&rack Size"
+msgstr "தட பெயர்"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Fit to Width"
+msgstr "தளத்தில் &பொருந்து"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "அனைத்து பாடல்களையும் &தகர் "
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "E&xpand Collapsed Tracks"
+msgstr "அனைத்து பாடல்களையும் &விரிவாக்கு"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Sk&ip to"
+msgstr "முடிவிற்கு தவிர்த்து செல்"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection Sta&rt"
+msgstr "தேர்வு ஆரம்பம்:"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "தேர்வு ஆரம்ப&ம்"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "தேர்வு முடி&வு"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&வரலாறு. . . ."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "&கரோக்கி"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "கலவை &மன்றம்"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Extra Menus (on/off)"
+msgstr "பெய&ர்கொடு (ஏற்று/அணை) "
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Show Clipping (on/off)"
+msgstr "வெட்டப்பட &துண்டை காட்டு"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Show Effects Rack"
+msgstr "VST விளைவுகள்"
+
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Window"
+msgstr "சாளரம்"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr ""
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr ""
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "திட்டத்தில் உள்ள எல்லா தடத்தையும் சாதாரணப&amp;டுத்துக"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13455,7 +13661,7 @@ msgstr ""
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp
@@ -14070,7 +14276,7 @@ msgid "%s - %s"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -14080,7 +14286,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "குறுக்குவழி '%s' ஆனது முன்னரே இதற்கு வழங்கப்பட்டுள்ளது:\n"
 "\n"
@@ -14481,6 +14687,10 @@ msgstr "நீண்ட காலம்:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
@@ -14965,7 +15175,7 @@ msgstr ""
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 
@@ -15593,9 +15803,9 @@ msgstr ""
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
-msgstr ""
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
+msgstr "ஒரு MIDI கோப்பினை தெரியவும்... "
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -15966,7 +16176,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "மொனோ"
 
@@ -16408,6 +16618,48 @@ msgstr "பின்னோக்கி"
 #: src/widgets/HelpSystem.cpp
 msgid "Help on the Internet"
 msgstr "வலயத்தள உதவி"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "மாற்றங்களை சேமிக்க விரும்புகிறீர்களா?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "கல"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Quick Fixes"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "மீளமைக்க ஒன்றுமில்லை"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "திட்ட கோப்பினை திறக்க முடியாதுள்ளது"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "பதிதல் ஆரம்பம்"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -16889,132 +17141,6 @@ msgstr "நீங்கள் %s இனை அழிக்க உடன்பட
 msgid "Confirm Close"
 msgstr "உறுதி"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "பதிதல் முடிவு"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Timeline"
-msgstr "Timeline Changer"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Seek"
-msgstr "மாதிரிகளை மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Scrub"
-msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Quick-Play disabled"
-msgstr "(துர்பலமாக்கப்பட்ட )"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to unpin"
-msgstr "மேற்பார்வையை நிறுத்தவும்"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to pin"
-msgstr "ஆரம்பத்திற்கு தவிர்த்து செல்"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable dragging selection"
-msgstr "தேர்ந்தெடுக்காத ஒலியை அமைதியாக்கு"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable dragging selection"
-msgstr "தேர்ந்தெடுக்காத ஒலியை அமைதியாக்கு"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Lock Play Region"
-msgstr "பகுதி&யை ஆரம்பி"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Unlock Play Region"
-msgstr "பகுதி&யை ஆரம்பி"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable Scrub Ruler"
-msgstr "மீட்டரை துர்பலமாக்கு"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable Scrub Ruler"
-msgstr "விளைவுகளை அனுமதி"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "இந்த எச்சரிக்கையை மீண்டும் காட்டாதீர்"
@@ -17429,6 +17555,11 @@ msgstr "வளைவு உள்ளது"
 
 #: plug-ins/adjustable-fade.ny
 #, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "வழு."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "மீடிறன் உயர்வு மறை எண்ணாக இருக்க முடியாது"
 
@@ -17442,13 +17573,8 @@ msgstr "மீடிறன் உயர்வு மறை எண்ணாக �
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "வழு."
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17633,31 +17759,6 @@ msgstr "திரும்ப செய்ய வேண்டிய தடவை
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "வழு."
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17666,9 +17767,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "கோப்புகளை இவ்வடிப்படிபடையில் பிரிக்கவும்:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "சிட்டை  தொகு"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17688,6 +17796,11 @@ msgstr "திரும்ப செய்ய வேண்டிய தடவை
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "நீளம் (நொடிகள்)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "நீளம் (நொடிகள்)"
 
 #: plug-ins/equalabel.ny
@@ -17734,6 +17847,48 @@ msgstr ""
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
 msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "அமைதி சுருக்கம்"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "பிரி"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "எச்சரிக்கைகள்"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "பகு&தியை சேமி "
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "தொகுக்கப்பட்ட சிட்டைகள்"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy, lisp-format
+msgid "~aRegion length = ~a seconds."
+msgstr "மெட்டு நீளம் (நொடிகள்)"
 
 #: plug-ins/highpass.ny
 #, fuzzy
@@ -18095,16 +18250,6 @@ msgstr ""
 #, fuzzy
 msgid "Amplitude (0 - 1)"
 msgstr "வீச்சு (0-1)"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "இடப்பக்கம்"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "வலப்பக்கம் "
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
@@ -18782,6 +18927,18 @@ msgstr "அதிர்வெண் (hz)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "வழு."
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "இடப்பக்கம்"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "வலப்பக்கம் "
+
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
 #~ "before zero.\n"
@@ -19439,9 +19596,6 @@ msgstr ""
 #~ msgid "Selection "
 #~ msgstr "தேர்வு"
 
-#~ msgid "Re&gion Save"
-#~ msgstr "பகு&தியை சேமி "
-
 #~ msgid "Regio&n Restore"
 #~ msgstr "பகுதி&யை மிளபேறு"
 
@@ -19513,10 +19667,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "R&ight Channel"
 #~ msgstr "வலது சானெல்"
-
-#, fuzzy
-#~ msgid "&Rate"
-#~ msgstr "அளவை நிர்ணயி"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "ஒலித்துண்டின் வரிசையை மாற்ற, நிலைக்குத்தாக சொடுக்கி இழுக்கவும்"
@@ -20032,9 +20182,6 @@ msgstr ""
 
 #~ msgid "Author: "
 #~ msgstr "ஆசிரியர்: "
-
-#~ msgid "Note length (seconds)"
-#~ msgstr "மெட்டு நீளம் (நொடிகள்)"
 
 #~ msgid "Note velocity"
 #~ msgstr "மெட்டு வேகம்"

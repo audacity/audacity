@@ -128,9 +128,9 @@ EffectReverb::~EffectReverb()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectReverb::GetSymbol()
+ComponentInterfaceSymbol EffectReverb::GetSymbol()
 {
    return REVERB_PLUGIN_SYMBOL;
 }

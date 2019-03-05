@@ -10,9 +10,10 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
 
  https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2017
 
-2. Git: Download and install Git, for example by installing GitExtensions
+2. Git: Download and install Git, for example by installing:
 
- http://gitextensions.github.io/
+  Git for Windows: https://git-scm.com/download/win
+  and optionally GitExtensions: http://gitextensions.github.io/
 
  download and run the .msi installer.  GitExtensions has a GUI interface, includes Git for
  Windows and has a Git bash command line in the bottom panel of the screen.

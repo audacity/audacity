@@ -231,12 +231,12 @@ public:
       return mPath;
    }
 
-   IdentInterfaceSymbol GetSymbol() override
+   ComponentInterfaceSymbol GetSymbol() override
    {
       return mName;
    }
 
-   IdentInterfaceSymbol GetVendor() override
+   ComponentInterfaceSymbol GetVendor() override
    {
       return { mVendor };
    }
@@ -251,7 +251,7 @@ public:
       return mDescription;
    }
 
-   IdentInterfaceSymbol GetFamilyId() override
+   ComponentInterfaceSymbol GetFamilyId() override
    {
       return VSTPLUGINTYPE;
    }
@@ -318,7 +318,7 @@ VSTEffectsModule::~VSTEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString VSTEffectsModule::GetPath()
@@ -326,12 +326,12 @@ wxString VSTEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol VSTEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
 {
    return XO("VST Effects");
 }
 
-IdentInterfaceSymbol VSTEffectsModule::GetVendor()
+ComponentInterfaceSymbol VSTEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -677,7 +677,7 @@ bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
@@ -685,7 +685,7 @@ IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
    return safenew VSTEffect(path);
 }
 
-void VSTEffectsModule::DeleteInstance(IdentInterface *instance)
+void VSTEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < VSTEffect > {
       dynamic_cast<VSTEffect *>(instance)
@@ -1114,12 +1114,12 @@ void VSTEffect::BundleDeleter::operator() (void* p) const
       CFRelease(static_cast<CFBundleRef>(p));
 }
 
-void VSTEffect::ResourceDeleter::operator() (void *p) const
+void VSTEffect::ResourceHandle::reset()
 {
-   if (mpHandle) {
-      int resource = (int)p;
-      CFBundleCloseBundleResourceMap(mpHandle->get(), resource);
-   }
+   if (mpHandle)
+      CFBundleCloseBundleResourceMap(mpHandle, mNum);
+   mpHandle = nullptr;
+   mNum = 0;
 }
 #endif
 
@@ -1153,7 +1153,7 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
    mTimeInfo.sampleRate = 44100.0;  // this is a bogus value, but it's only for the display
-   mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
+   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    mTimeInfo.tempo = 120.0;
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
@@ -1182,7 +1182,7 @@ VSTEffect::~VSTEffect()
 }
 
 // ============================================================================
-// IdentInterface Implementation
+// ComponentInterface Implementation
 // ============================================================================
 
 wxString VSTEffect::GetPath()
@@ -1190,12 +1190,12 @@ wxString VSTEffect::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol VSTEffect::GetSymbol()
+ComponentInterfaceSymbol VSTEffect::GetSymbol()
 {
    return mName;
 }
 
-IdentInterfaceSymbol VSTEffect::GetVendor()
+ComponentInterfaceSymbol VSTEffect::GetVendor()
 {
    return { mVendor };
 }
@@ -1253,7 +1253,7 @@ EffectType VSTEffect::GetType()
 }
 
 
-IdentInterfaceSymbol VSTEffect::GetFamilyId()
+ComponentInterfaceSymbol VSTEffect::GetFamilyId()
 {
    return VSTPLUGINTYPE;
 }
@@ -1390,7 +1390,7 @@ bool VSTEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames W
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.sampleRate = mSampleRate;
-   mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
+   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    mTimeInfo.tempo = 120.0;
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
@@ -2061,10 +2061,8 @@ bool VSTEffect::Load()
    mBundleRef = std::move(bundleRef);
 
    // Open the resource map ... some plugins (like GRM Tools) need this.
-   mResource = ResourceHandle {
-      reinterpret_cast<char*>(
-         CFBundleOpenBundleResourceMap(mBundleRef.get())),
-      ResourceDeleter{&mBundleRef}
+   mResource = ResourceHandle{
+      mBundleRef.get(), CFBundleOpenBundleResourceMap(mBundleRef.get())
    };
 
 #elif defined(__WXMSW__)
@@ -2267,7 +2265,7 @@ void VSTEffect::Unload()
    if (mModule)
    {
 #if defined(__WXMAC__)
-      mResource = ResourceHandle{};
+      mResource.reset();
       mBundleRef.reset();
 #endif
 
@@ -2414,7 +2412,7 @@ void VSTEffect::NeedEditIdle(bool state)
 
 VstTimeInfo *VSTEffect::GetTimeInfo()
 {
-   mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
+   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    return &mTimeInfo;
 }
 
@@ -3737,7 +3735,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             if (value != GetSymbol().Internal())
             {
                wxString msg;
-               msg.Printf(_("This parameter file was saved from %s.  Continue?"), value);
+               msg.Printf(_("This parameter file was saved from %s. Continue?"), value);
                int result = AudacityMessageBox(msg, wxT("Confirm"), wxYES_NO, mParent);
                if (result == wxNO)
                {

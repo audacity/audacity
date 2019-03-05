@@ -170,7 +170,7 @@ BuiltinCommandsModule::~BuiltinCommandsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString BuiltinCommandsModule::GetPath()
@@ -178,12 +178,12 @@ wxString BuiltinCommandsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
+ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
 {
    return XO("Builtin Commands");
 }
 
-IdentInterfaceSymbol BuiltinCommandsModule::GetVendor()
+ComponentInterfaceSymbol BuiltinCommandsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -280,14 +280,14 @@ bool BuiltinCommandsModule::IsPluginValid(const wxString & path, bool bFast)
    return mNames.Index(path) != wxNOT_FOUND;
 }
 
-IdentInterface *BuiltinCommandsModule::CreateInstance(const wxString & path)
+ComponentInterface *BuiltinCommandsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
    return Instantiate(path).release();
 }
 
-void BuiltinCommandsModule::DeleteInstance(IdentInterface *instance)
+void BuiltinCommandsModule::DeleteInstance(ComponentInterface *instance)
 {
    // Releases the resource.
    std::unique_ptr < AudacityCommand > {

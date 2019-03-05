@@ -24,6 +24,7 @@
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "TrackArtist.h"
 #include "Internat.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -119,13 +120,16 @@ void TimeTrack::Clear(double t0, double t1)
 
 void TimeTrack::Paste(double t, const Track * src)
 {
-   if (src->GetKind() != Track::Time)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
+      auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+      mEnvelope->PasteEnvelope
+         (t, tt->mEnvelope.get(), sampleTime);
+      return true;
+   } );
 
-   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
-   mEnvelope->PasteEnvelope
-      (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
+   if (! bOk )
+      // THROW_INCONSISTENCY_EXCEPTION // ?
+      (void)0;// intentionally do nothing.
 }
 
 void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
@@ -262,9 +266,12 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 #include "tracks/ui/EnvelopeHandle.h"
 
 void TimeTrack::Draw
-(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo) const
+( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());

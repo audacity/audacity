@@ -18,6 +18,8 @@ class ViewInfo;
 class AudacityProject;
 
 class TrackPanelCell;
+class TrackPanelGroup;
+class TrackPanelNode;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
 
@@ -42,13 +44,10 @@ public:
    
    virtual AudacityProject *GetProject() const = 0;
    
-   // Find track info by coordinate
-   struct FoundCell {
-      std::shared_ptr<TrackPanelCell> pCell;
-      wxRect rect;
-   };
-   virtual FoundCell FindCell(int mouseX, int mouseY) = 0;
-   virtual wxRect FindRect(const TrackPanelCell &cell) = 0;
+   // Get the root object defining a recursive subdivision of the panel's
+   // area into cells
+   virtual std::shared_ptr<TrackPanelNode> Root() = 0;
+
    virtual TrackPanelCell *GetFocusedCell() = 0;
    virtual void SetFocusedCell() = 0;
    
@@ -63,6 +62,41 @@ public:
    virtual bool TakesFocus() const = 0;
    
 public:
+   // Structure and functions for generalized visitation of the subdivision
+   struct Visitor {
+      virtual ~Visitor();
+      virtual void VisitCell( const wxRect &rect, TrackPanelCell &cell );
+      virtual void BeginGroup( const wxRect &rect, TrackPanelGroup &group );
+      virtual void EndGroup( const wxRect &rect, TrackPanelGroup &group );
+   };
+
+   // Most general visit
+   void Visit( Visitor &visitor );
+
+   // Easier visit when you care only about cells
+   using SimpleCellVisitor =
+      std::function< void( const wxRect &rect, TrackPanelCell &cell ) >;
+   void VisitCells( const SimpleCellVisitor &visitor );
+
+   // Easier visits when you want to visit each node once only
+   using SimpleNodeVisitor =
+      std::function< void( const wxRect &rect, TrackPanelNode &node ) >;
+   void VisitPreorder( const SimpleNodeVisitor &visitor );
+   void VisitPostorder( const SimpleNodeVisitor &visitor );
+
+   // Find cell by coordinate
+   struct FoundCell {
+      std::shared_ptr< TrackPanelCell > pCell;
+      wxRect rect;
+   };
+
+   FoundCell FindCell(int mouseX, int mouseY);
+
+   // Search the tree of subdivisions of the panel area for the given cell.
+   // If more than one sub-area is associated with the same cell object, it
+   // is not specified which rectangle is returned.
+   wxRect FindRect(const TrackPanelCell &cell);
+
    UIHandlePtr Target();
    
    std::shared_ptr<TrackPanelCell> LastCell() const;
@@ -80,6 +114,10 @@ protected:
    void ClearTargets();
    
 private:
+   void Visit(
+      const wxRect &rect, const std::shared_ptr<TrackPanelNode> &node,
+      Visitor &visitor );
+
    bool HasRotation();
    bool ChangeTarget(bool forward, bool cycle);
    

@@ -20,13 +20,13 @@
 
 class ShuttleGui;
 
-#define DEMO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Demo") }
+#define DEMO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Demo") }
 
 class DemoCommand final : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return DEMO_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return DEMO_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Does the demo action.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

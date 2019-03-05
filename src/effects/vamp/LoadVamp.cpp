@@ -67,7 +67,7 @@ VampEffectsModule::~VampEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString VampEffectsModule::GetPath()
@@ -75,12 +75,12 @@ wxString VampEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol VampEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
 {
    return XO("Vamp Effects");
 }
 
-IdentInterfaceSymbol VampEffectsModule::GetVendor()
+ComponentInterfaceSymbol VampEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -227,7 +227,7 @@ bool VampEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return bool(vp);
 }
 
-IdentInterface *VampEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VampEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    int output;
@@ -243,7 +243,7 @@ IdentInterface *VampEffectsModule::CreateInstance(const wxString & path)
    return NULL;
 }
 
-void VampEffectsModule::DeleteInstance(IdentInterface *instance)
+void VampEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < VampEffect > {
       dynamic_cast<VampEffect *>(instance)

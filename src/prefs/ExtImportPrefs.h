@@ -108,6 +108,7 @@ class ExtImportPrefs final : public PrefsPanel
 };
 
 
+/// A PrefsPanelFactory that creates one ExtImportPrefs panel.
 class ExtImportPrefsFactory final : public PrefsPanelFactory
 {
 public:

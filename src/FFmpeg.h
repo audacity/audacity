@@ -332,16 +332,22 @@ public:
 
    wxString GetLibAVFormatName()
    {
+      if (sizeof(void*) == 8)
+         return (wxT("ffmpeg.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".64bit.dylib"));
       return (wxT("libavformat.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".dylib"));
    }
 
    wxString GetLibAVCodecName()
    {
+      if (sizeof(void*) == 8)
+         return (wxT("ffmpeg_codecs.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".64bit.dylib"));
       return (wxT("libavcodec.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".dylib"));
    }
 
    wxString GetLibAVUtilName()
    {
+      if (sizeof(void*) == 8)
+         return (wxT("ffmpeg_utils.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".64bit.dylib"));
       return (wxT("libavutil.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".dylib"));
    }
 #else
@@ -952,6 +958,9 @@ private:
 // utilites for RAII:
 
 // Deleter adaptor for functions like av_free that take a pointer
+
+/// \brief AV_Deleter is part of FFmpeg support.  It's used with the RAII
+/// idiom.
 template<typename T, typename R, R(*Fn)(T*)> struct AV_Deleter {
    inline R operator() (T* p) const
    {
@@ -996,6 +1005,9 @@ using AVCodecContextHolder = std::unique_ptr<
 using AVDictionaryCleanup = std::unique_ptr<
    AVDictionary*, AV_Deleter<AVDictionary*, void, av_dict_free>
 >;
+
+/// \brief FFmpeg structure to hold a file pointer and provide a return 
+/// value when closing the file.
 struct UFileHolder : public std::unique_ptr<
    AVIOContext, ::AV_Deleter<AVIOContext, int, ufile_close>
 >

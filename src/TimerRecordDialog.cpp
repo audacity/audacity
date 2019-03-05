@@ -34,6 +34,7 @@
 #include <wx/dynlib.h> //<! For windows.h
 
 #include "ShuttleGui.h"
+#include "Menus.h"
 #include "Project.h"
 #include "Internat.h"
 #include "Prefs.h"
@@ -527,7 +528,7 @@ int TimerRecordDialog::RunWaitDialog()
       return POST_TIMER_RECORD_CANCEL_WAIT;
    } else {
       // Record for specified time.
-      pProject->OnRecord(*pProject);
+      TransportActions::DoRecord(*pProject);
       bool bIsRecording = true;
 
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
@@ -579,7 +580,7 @@ int TimerRecordDialog::RunWaitDialog()
 
    // Must do this AFTER the timer project dialog has been deleted to ensure the application
    // responds to the AUDIOIO events...see not about bug #334 in the ProgressDialog constructor.
-   pProject->OnStop(*pProject);
+   TransportActions::DoStop(*pProject);
 
    // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == ProgressResult::Cancelled || updateResult == ProgressResult::Failed)
@@ -1075,6 +1076,8 @@ ProgressResult TimerRecordDialog::WaitForStart()
       _("Audacity Timer Record - Waiting for Start"),
       columns,
       pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
+      /* i18n-hint: "in" means after a duration of time,
+         which is shown below this string */
       _("Recording will commence in:"));
 
    auto updateResult = ProgressResult::Success;
@@ -1092,7 +1095,10 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 {
    wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
    wxString sCountdownLabel;
-   sCountdownLabel.Printf("%s in:", sAction);
+   /* i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+      or "Shutdown system", and
+      "in" means after a duration of time, shown below this string */
+   sCountdownLabel.Printf(_("%s in:"), sAction);
 
    // Two column layout.
    TimerProgressDialog::MessageTable columns(2);

@@ -39,7 +39,7 @@ enum kInterpolations
    nInterpolations
 };
 
-static const IdentInterfaceSymbol kInterStrings[nInterpolations] =
+static const ComponentInterfaceSymbol kInterStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
@@ -55,7 +55,7 @@ enum kWaveforms
    nWaveforms
 };
 
-static const IdentInterfaceSymbol kWaveStrings[nWaveforms] =
+static const ComponentInterfaceSymbol kWaveStrings[nWaveforms] =
 {
    { XO("Sine") },
    { XO("Square") },
@@ -109,9 +109,9 @@ EffectToneGen::~EffectToneGen()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectToneGen::GetSymbol()
+ComponentInterfaceSymbol EffectToneGen::GetSymbol()
 {
    return mChirp
       ? CHIRP_PLUGIN_SYMBOL

@@ -34,6 +34,7 @@ for each problem encountered, since there can be many orphans.
 #include <wx/artprov.h>
 #include <wx/radiobox.h>
 
+#include "../Menus.h"
 #include "../commands/CommandContext.h"
 
 class MultiDialog final : public wxDialogWrapper
@@ -153,7 +154,7 @@ void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 {
    auto project = GetActiveProject();
-   project->OnShowLog(*project);
+   HelpActions::DoShowLog(*project);
 }
 
 

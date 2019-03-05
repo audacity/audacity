@@ -988,9 +988,7 @@ bool LWSlider::DoShowDialog(wxPoint pos)
    if (pos == wxPoint(-1, -1)) {
       dlg.Center();
    }
-
-   float initialValue = mCurrentValue;
-
+   
    changed = (dlg.ShowModal() == wxID_OK);
    if( changed )
       value = dlg.Get();

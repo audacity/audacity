@@ -41,6 +41,7 @@ class RecordingPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+/// A PrefsPanelFactory that creates one RecordingPrefs panel.
 class RecordingPrefsFactory final : public PrefsPanelFactory
 {
 public:

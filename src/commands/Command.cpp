@@ -106,7 +106,7 @@ DecoratedCommand::~DecoratedCommand()
 {
 }
 
-IdentInterfaceSymbol DecoratedCommand::GetSymbol()
+ComponentInterfaceSymbol DecoratedCommand::GetSymbol()
 {
    return mCommand->GetSymbol();
 }
@@ -246,7 +246,7 @@ wxString CommandImplementation::GetString(const wxString &paramName)
 }
 
 /// Get the name of the command
-IdentInterfaceSymbol CommandImplementation::GetSymbol()
+ComponentInterfaceSymbol CommandImplementation::GetSymbol()
 {
    return mType.GetSymbol();
 }

@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp" />
     <ClCompile Include="..\..\..\src\AColor.cpp" />
+    <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp" />
     <ClCompile Include="..\..\..\src\AudacityApp.cpp" />
     <ClCompile Include="..\..\..\src\AudacityException.cpp" />
     <ClCompile Include="..\..\..\src\AudacityHeaders.cpp">
@@ -189,6 +190,20 @@
     <ClCompile Include="..\..\..\src\LyricsWindow.cpp" />
     <ClCompile Include="..\..\..\src\Matrix.cpp" />
     <ClCompile Include="..\..\..\src\Menus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ClipMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\EditMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ExtraMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\FileMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\HelpMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\LabelMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\NavigationMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\PluginMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\SelectMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ToolbarMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\TrackMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\TransportMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ViewMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp" />
     <ClCompile Include="..\..\..\src\Mix.cpp" />
     <ClCompile Include="..\..\..\src\MixerBoard.cpp" />
     <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp" />
@@ -457,16 +472,17 @@
     <ClCompile Include="..\..\..\src\effects\lv2\LV2Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ConfigInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectAutomationParameters.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectInterface.h" />
-    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ModuleInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\PluginInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\Types.h" />
     <ClInclude Include="..\..\..\src\AboutDialog.h" />
     <ClInclude Include="..\..\..\src\AColor.h" />
+    <ClInclude Include="..\..\..\src\AdornedRulerPanel.h" />
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
     <ClInclude Include="..\..\..\src\Audacity.h" />
     <ClInclude Include="..\..\..\src\AudacityApp.h" />
@@ -529,7 +545,6 @@
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
-    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h" />
     <ClInclude Include="..\..\..\src\TrackPanelDrawingContext.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h" />
@@ -837,6 +852,7 @@
     <copy Include="..\..\..\plug-ins\notch.ny" />
     <copy Include="..\..\..\plug-ins\pluck.ny" />
     <copy Include="..\..\..\plug-ins\rissetdrum.ny" />
+    <copy Include="..\..\..\plug-ins\rms.ny" />
     <copy Include="..\..\..\plug-ins\sample-data-export.ny" />
     <copy Include="..\..\..\plug-ins\sample-data-import.ny" />
     <copy Include="..\..\..\plug-ins\SilenceMarker.ny" />
@@ -1137,6 +1153,13 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\aud-do-support.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <None Include="..\..\ny.rules">
       <SubType>Designer</SubType>

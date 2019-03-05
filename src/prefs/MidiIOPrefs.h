@@ -63,6 +63,7 @@ class MidiIOPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+/// A PrefsPanelFactory that creates one MidiIOPrefs panel.
 class MidiIOPrefsFactory final : public PrefsPanelFactory
 {
 public:

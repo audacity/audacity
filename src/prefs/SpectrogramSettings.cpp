@@ -388,8 +388,10 @@ namespace
          break;
       case TWINDOW:
          NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
-         for (int ii = padding, multiplier = -(int)windowSize / 2; ii < (int)endOfWindow; ++ii, ++multiplier)
-            window[ii] *= multiplier;
+         {
+            for (int jj = padding, multiplier = -(int)windowSize / 2; jj < (int)endOfWindow; ++jj, ++multiplier)
+               window[jj] *= multiplier;
+         }
          break;
       case DWINDOW:
          DerivativeOfWindowFunc(windowType, windowSize, extra, window.get() + padding);
@@ -483,7 +485,7 @@ size_t SpectrogramSettings::NBins() const
    return GetFFTLength() / 2;
 }
 
-NumberScale SpectrogramSettings::GetScale( float minFreq, float maxFreq ) const
+NumberScale SpectrogramSettings::GetScale( float minFreqIn, float maxFreqIn ) const
 {
    NumberScaleType type = nstLinear;
 
@@ -506,7 +508,7 @@ NumberScale SpectrogramSettings::GetScale( float minFreq, float maxFreq ) const
       type = nstPeriod; break;
    }
 
-   return NumberScale(type, minFreq, maxFreq);
+   return NumberScale(type, minFreqIn, maxFreqIn);
 }
 
 bool SpectrogramSettings::SpectralSelectionEnabled() const

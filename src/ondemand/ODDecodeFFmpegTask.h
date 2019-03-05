@@ -31,7 +31,8 @@ public:
    using Channels = std::vector < WaveTrack* >;
    using Streams = std::vector < Channels >;
 
-   static Streams FromList(const std::list<TrackHolders> &channels);
+   static Streams FromList(
+      const std::vector< std::vector< std::unique_ptr<WaveTrack> > > &channels);
 
    /// Constructs an ODTask
    ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex);

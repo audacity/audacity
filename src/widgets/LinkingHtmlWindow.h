@@ -24,6 +24,10 @@
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
+
+/// \brief An HtmlWindow that handles linked clicked - usually the
+/// link will go to our own local copy of the manual, but it could
+/// launch a new browser window.
 class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 {
  public:
@@ -36,6 +40,8 @@ class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 
 };
 
+
+/// Adds some event handling to an HtmlWindow
 class BrowserDialog /* not final */ : public wxDialogWrapper
 {
 public:

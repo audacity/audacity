@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-11-24 10:45+0000\n"
 "PO-Revision-Date: 2018-01-18 06:39+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/klyok/audacity/"
@@ -33,10 +33,11 @@ msgid "Please choose an existing file."
 msgstr "Lütfen var olan bir dosya seçin."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -221,7 +222,8 @@ msgid "No matches found"
 msgstr "Bir eşleşme bulunamadı"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+#, fuzzy
+msgid "Code has been modified. Are you sure?"
 msgstr "Kod değiştirildi. Emin misiniz?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -273,7 +275,7 @@ msgstr "Kopyala"
 msgid "Copy to clipboard"
 msgstr "Panoya kopyala"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Kes"
@@ -282,7 +284,7 @@ msgstr "Kes"
 msgid "Cut to clipboard"
 msgstr "Panoya kes"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Yapıştır"
@@ -300,7 +302,7 @@ msgstr "Temizle"
 msgid "Clear selection"
 msgstr "Seçimi temizle"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Tümünü Seç"
 
@@ -710,6 +712,123 @@ msgstr "Ayarlar klasörü: "
 msgid "GPL License"
 msgstr "GPL Lisansı"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Kayıt sırasında zaman akışı işlemleri devre dışıdır"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr ""
+"Çift kanallı izlerin bağıl boyutunu ayarlamak için tıklayıp sürükleyin."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "&Sabitlenmiş Kayıt/Oynatma kafası"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr "Zaman Akışı"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Seek"
+msgstr "Taramayı başlatmak için tıklayın ya da sürükleyin"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "Sarmayı başlatmak için tıklayın ya da sürükleyin"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr "Sarmak için tıklayıp taşıyın. Taramak için tıklayıp sürükleyin."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr "Taramaya Taşı"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr "Sarmaya Taşı"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release to stop seeking."
+msgstr "Taramak için sürükleyin. Taramayı durdurmak için bırakın."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr "Taramak için sürükleyin. Sarmak için bırakıp taşıyın."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr "Sarmak için taşıyın. Taramak için sürükleyin."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "Hızlı oynatma devre dışı"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr "Hızlı oynatma etkin"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to unpin"
+msgstr "Sabitlemeyi kaldırmak için tıklayın"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to pin"
+msgstr "Sabitlemek için tıklayın"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr "Hızlı oynatmayı devre dışı bırak"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr "Hızlı oynatmayı etkinleştir"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable dragging selection"
+msgstr "Sürükleme seçimini devre dışı bırak"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable dragging selection"
+msgstr "Sürükleme seçimini etkinleştir"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr "Zaman Akışı İpuçlarını Devre Dışı Bırak"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr "Zaman Akışı İpuçlarını Etkinleştir"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr "Oynatma sırasında kaydırma"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr "Oynatma sırasında görüntüyü güncelle"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr "Oynatma Bölgesini Kilitle"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr "Oynatma Bölgesinin Kilidini Aç"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr "Sarma Cetvelini Devre Dışı Bırak"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr "Sarma Cetvelini Etkinleştir"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -782,12 +901,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity başlatılıyor..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Yeni"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Aç..."
 
@@ -795,7 +914,7 @@ msgstr "&Aç..."
 msgid "Open &Recent..."
 msgstr "&Son Kullanılanlar..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&Audacity Hakkında..."
 
@@ -803,7 +922,7 @@ msgstr "&Audacity Hakkında..."
 msgid "&Preferences..."
 msgstr "&Ayarlar..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Dosya"
 
@@ -943,8 +1062,8 @@ msgstr "&Kaydet..."
 msgid "Cl&ear"
 msgstr "T&emizle"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "Kapa&t"
 
@@ -1792,7 +1911,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Bağımlılık Denetimi"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "İşlem"
@@ -1814,12 +1934,12 @@ msgid "Cleaning up temporary files"
 msgstr "Geçici dosyalar temizleniyor"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Proje veri dosyaları kaydediliyor"
-
-#: src/DirManager.cpp
 msgid "Cleaning up after failed save"
 msgstr "Kayıt yapılamadığından temizleniyor"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Proje veri dosyaları kaydediliyor"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2319,7 +2439,7 @@ msgstr "Günlükleme sıklığı"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2381,9 +2501,9 @@ msgstr ""
 "Spektrum çizdirmek için, tüm seçili izler aynı örnek hızında olmalıdır."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr "Çok fazla ses seçilmiş. Sesin sadece ilk %.1f saniyesi çözümlenecek."
 
@@ -2427,8 +2547,8 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Spektral Veriyi Şu Şekilde Dışa Aktar:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Dosya yazılamadı: %s"
@@ -2740,7 +2860,8 @@ msgid "Track"
 msgstr "İz"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Etiket"
 
@@ -2772,15 +2893,15 @@ msgstr "Yeni..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "Hücre içeriğini düzenlemek için F2 tuşuna basın ya da çift tıklayın."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
 msgstr "Etiketleri içeren metin dosyasını seçin"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Metin dosyaları (*.txt)|*.txt|Tüm dosyalar|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, c-format
 msgid "Could not open file: %s"
 msgstr "Dosya açılamadı: %s"
@@ -2789,7 +2910,7 @@ msgstr "Dosya açılamadı: %s"
 msgid "No labels to export."
 msgstr "Dışa aktarılacak bir etiket yok."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Etiketleri Şu Şekilde Dışa Aktar:"
 
@@ -2817,22 +2938,22 @@ msgstr "Düzenlenmiş etiket"
 msgid "Label Edit"
 msgstr "Etiket Düzenle"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Etiket eklendi"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "K&es"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Kopyala"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "Ya&pıştır"
 
@@ -2847,6 +2968,22 @@ msgstr "Silinen Etiket"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr "Kaydedilmiş bir ya da bir kaç etiket okunamadı."
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Etiketler düzenlendi"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Ad"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Etiket eklendi"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2890,2449 +3027,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity Karaoke%s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "Kategorisiz"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Projeyi Kaydet"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "Projeyi &Farklı Kaydet..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "&Projenin Sıkıştırılmış Kopyasını Kaydet..."
-
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "&Projenin Sıkıştırılmış Kopyasını Kaydet..."
-
-#: src/Menus.cpp
-msgid "&Export"
-msgstr "&Dışa Aktar"
-
-#: src/Menus.cpp
-msgid "Export as MP&3"
-msgstr "MP&3 olarak dışa aktar"
-
-#: src/Menus.cpp
-msgid "Export as &WAV"
-msgstr "&WAV olarak dışa aktar"
-
-#: src/Menus.cpp
-msgid "Export as &OGG"
-msgstr "&OGG olarak dışa aktar"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "Sesi &Dışa Aktar..."
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "&Seçilmiş Sesleri Dışa Aktar..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "&Etiketleri Dışa Aktar..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Ç&oklu Dışa Aktar..."
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "&MIDI Dışa Aktar..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "İç&e Aktar"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&Ses..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Etiketler..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&Ham Veri..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "&Sayfa Düzeni..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&Yazdır..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "Çı&kış"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "Düz&enle"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Geri Al"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "&Yinele"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Sil"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "Ç&oğalt"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "Ö&zel Kaldır"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "&Böl ve Kes"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "&Ayır ve Sil"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "Sesi &Sustur"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "Sesi &Buda"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "&Parça Sınırları"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "&Böl"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "&Ayır ve Yeni"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "Ka&t"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "Sessi&zliklerde Çıkar"
-
-#: src/Menus.cpp
-msgid "&Labels"
-msgstr "&Etiketler"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "&Etiketleri Düzenle..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "&Seçime Etiket Ekle"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "&Oynatma Konumuna Etiket Ekle"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "&Metni Yeni Etikete Yapıştır"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "&Yazmaya Başlayınca Etiket Oluştur (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "E&tiketlenmiş Ses"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Etiket Düzenle"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&Kes"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "Ayır ve Sil"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "Ayır ve Kes"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "&Ayır ve Kes"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "Ayır ve Sil"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "&Böl ve Sil"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "Sustur"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "S&esi Sustur"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "Etiket"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "&Kopyala"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "Etiket Düzenle"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "Bö&l"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "Etiket Düzenle"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "Üs&t Veri..."
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "A&yarlar..."
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "&Seç"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&Tümü"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "Seçim"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Hiç biri"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "İ&zler"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "&Tüm İzler İçinde"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr "Tüm Eş Kilitlenmiş İ&zlerde"
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr "&Bölge"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "Oynatma Konumunda So&lda"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "Oynatma Konumunda So&lda"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "Oynatma Konumunda Sağ&da"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "Oynatma Konumunda Sağ&da"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "İ&z Başını İmlece Getir"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "İ&z Başını İmlece Getir"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "İmleci İz Bitişine Götür"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "İmleci İz Bitişine Götür"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "Bitişe Kadar Seç"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "İ&z Başını İmlece Getir"
-
-#: src/Menus.cpp
-msgid "S&tore Selection"
-msgstr "Seçimi Aklında &Tut"
-
-#: src/Menus.cpp
-msgid "Retrieve Selectio&n"
-msgstr "Seçimi &Hatırla"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "&Spektral"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Spektral Seçimi &Tersine Çevir"
-
-#: src/Menus.cpp
-msgid "Next &Higher Peak Frequency"
-msgstr "Sonraki En &Yüksek Tepe Frekansı"
-
-#: src/Menus.cpp
-msgid "Next &Lower Peak Frequency"
-msgstr "Sonraki En &Düşük Tepe Frekansı"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "Ö&nceki Parça Sınırından İmlece"
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "İmleçten S&onraki Parça Sınırına"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "Ö&nceki Parça"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr "Ö&nceki Parça"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "S&onraki Parça"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr "S&onraki Parça"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "Başlangıca Kadar Seç"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr "İmleci &Akılda Tutulan Konuma Taşı"
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr "İmleç Konumunu Akılda &Tut"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "Sıfır &Geçişlerinde"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr "Sıfır &Geçişlerinde"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Görünüm"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "&Yakınlaştır"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "&Yakınlaştır"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "&Normal Görünüm"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "&Uzaklaştır"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "&Seçimi Yakınlaştır"
-
-#: src/Menus.cpp
-msgid "Zoom &Toggle"
-msgstr "&Yakınlaştırmayı Değiştir"
-
-#: src/Menus.cpp
-msgid "T&rack Size"
-msgstr "İ&z Boyutu"
-
-#: src/Menus.cpp
-msgid "&Fit to Width"
-msgstr "&Genişliğe Sığdır"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr "&Yüksekliğe Sığdır"
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "&Tüm İzleri Daralt"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "&Daraltılmış İzleri Genişlet"
-
-#: src/Menus.cpp
-msgid "Sk&ip to"
-msgstr "Ş&uraya Atla"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "S&eçim Başına"
-
-#: src/Menus.cpp
-msgid "Selection Sta&rt"
-msgstr "Seçim &Başlangıcı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "Başlangıç Seçi&m Bitişine"
-
-#: src/Menus.cpp
-msgid "Selection En&d"
-msgstr "Seçi&m Sonu"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&Geçmiş..."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "&Karaoke..."
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "&Karıştırıcı Paneli..."
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "&Araç Çubukları"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Reset Toolb&ars"
-msgstr "A&raç Çubuklarını Sıfırla"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "&Hareketler Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "&Araçlar Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "&Kayıt Ölçüm Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "&Oynatma Ölçüm Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Karış&tırıcı Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "&Düzenleme Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Seçili hızda oynat"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "Sar&ma Araç Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "Ay&gıt Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "&Seçim Çubuğu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "S&pektral Seçim Çubuğu"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr "&Ek Menüler (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "&Show Clipping (on/off)"
-msgstr "&Kırpılma Görüntülensin (aç/kapat)"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Etki Kabinini Görüntüle"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "Hareket"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "Oynatılıyor"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "Oyn&at/Durdur"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "Oynat/Durdur ve İ&mleci Koy"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "Sürek&li Oynat"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&Duraklat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Kaydetme"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&Kaydet"
-
-#: src/Menus.cpp
-msgid "&Append Record"
-msgstr "&Kayıt Ekle"
-
-#: src/Menus.cpp
-msgid "Record &New Track"
-msgstr "Ye&ni İz Ekle"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&Zamanlanmış Kayı&t..."
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Cursor to"
-msgstr "İmle&ci Taşı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "Bitiş S&eçim Başlangıcına"
-
-#: src/Menus.cpp
-msgid "Selection Star&t"
-msgstr "S&eçim Başına"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "Başlangıç Seçi&m Bitişine"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "İmleci İz Bitişine Götür"
-
-#: src/Menus.cpp
-msgid "Track &Start"
-msgstr "İz &Başına"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "İmleci İz Bitişine Götür"
-
-#: src/Menus.cpp
-msgid "Track &End"
-msgstr "İz &Bitişine"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Prev Clip Boundary"
-msgstr "İmleçten S&onraki Parça Sınırına"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr "Ö&nceki Parça Sınırı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Next Clip Boundary"
-msgstr "İmleçten S&onraki Parça Sınırına"
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr "S&onraki Parça Sınırı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "&Proje Başına"
-
-#: src/Menus.cpp
-msgid "&Project Start"
-msgstr "&Proje Başına"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "İmleci İz Bitişine Götür"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr "Proje So&nuna"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "Bölg&eyi Çal"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "Ki&litle"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "Kili&di Aç"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "S&es Aygıtlarını Yeniden Tara"
-
-#: src/Menus.cpp
-msgid "Transport &Options"
-msgstr "Ak&tarım Ayarları"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "Kayıdı Başlatacak S&es Düzeyi..."
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Sese &Göre Kayıt (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Sabitlenmiş Oynatma/Kayıt &Kafası (açık/kapalı)"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "&Bindirme (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "&Yazılımsal Oynarken Kaydet (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "Otomatik Kayıt &Düzeyi Ayarlaması (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "&Yeni İz Ekle"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "&Tek Kanallı İz"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&Çift Kanallı İz"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&Etiket İzi"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "&Zaman İzi"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr "&Karıştır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "Çift Ka&nallıyı Tek Kanallıya Karıştır"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "&Karıştır ve Oluştur"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "Karıştır ve &Yeni İz Oluştur"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "Yeniden Ö&rnekle..."
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "İzleri &Kaldır"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute"
-msgstr "Kı&s/Aç"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "Tü&m İzlerin Sesini Sustur"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "Tüm İzlerin &Sesi Açılsın"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr "Ka&ydır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "&Sola"
-
-#: src/Menus.cpp
-msgid "&Left"
-msgstr "&Sola"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "S&ağa"
-
-#: src/Menus.cpp
-msgid "&Right"
-msgstr "S&ağa"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "Orta"
-
-#: src/Menus.cpp
-msgid "&Center"
-msgstr "&Ortaya"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "Sonu Seçim Bitişine Hiza&la"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "Birlik&te Hizalayın"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "Başlangıç Sı&fıra"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Başlangıç İm&leç/Seçim Başlangıcına"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "Başlangıç Seçi&m Bitişine"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Bitiş S&eçim Başlangıcına"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "Bitiş Seçi&m Bitişine"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "İzleri Hiz&ala"
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "Seçimi İzlerle &Taşı (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "Move Sele&ction and Tracks"
-msgstr "Seçimi ve İ&zleri Taşı"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "MIDI ile Sesi Eşleştir"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "İ&zler Sıralansın"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Tarihe Göre Sıralansın"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "&Başlama Zamanına Göre"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Ada Göre Sıralansın"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "&Ada Göre"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Eş Ki&litlenmiş İzler (aç/kapat)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&Oluştur"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Uygulama Eki Ekle / Kaldır..."
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "Et&kiler"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "%s yinele"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "Son Etkiyi Yinele"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "Çözü&mle"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "Karşıtlık..."
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Spektrum Çiz..."
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "A&raçlar"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&Etiketler..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "&Uygula"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "Si&l..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Ekran Yakalama Araçları..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Hız Sınaması Yap..."
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "Kayıt Hatalarını Taklit Et"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "Yükleme Kesintileri Algılansın"
-
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "&Pencere"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "&Küçült"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "Tümünü Öne &Getir"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "Ha&reketler"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "Oyn&at"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr "D&urdur"
-
-#: src/Menus.cpp
-msgid "Play &One Second"
-msgstr "&Bir Saniye Oynat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "&Seçime Kadar Oynat"
-
-#: src/Menus.cpp
-msgid "Play &Before Selection Start"
-msgstr "Seçim &Başlangıcından Öncesini Oynat"
-
-#: src/Menus.cpp
-msgid "Play Af&ter Selection Start"
-msgstr "Seçim Başlangıcından Sonrasını Oyna&t"
-
-#: src/Menus.cpp
-msgid "Play Be&fore Selection End"
-msgstr "Seçi&m Bitişinden Öncesini Oynat"
-
-#: src/Menus.cpp
-msgid "Play Aft&er Selection End"
-msgstr "S&eçim Bitişinden Sonrasını Oynat"
-
-#: src/Menus.cpp
-msgid "Play Before a&nd After Selection Start"
-msgstr "Seçim Başla&ngıcından Öncesini ve Sonrasını Oynat"
-
-#: src/Menus.cpp
-msgid "Play Before an&d After Selection End"
-msgstr "Seçim Bitişin&den Öncesini ve Sonrasını Oynat"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr "O&ynatma Kesme Önizleme"
-
-#: src/Menus.cpp
-msgid "&Selection Tool"
-msgstr "&Seçim Aracı"
-
-#: src/Menus.cpp
-msgid "&Envelope Tool"
-msgstr "&Kılıf Aracı"
-
-#: src/Menus.cpp
-msgid "&Draw Tool"
-msgstr "Çi&zim Aracı"
-
-#: src/Menus.cpp
-msgid "&Zoom Tool"
-msgstr "&Yakınlaştırma Aracı"
-
-#: src/Menus.cpp
-msgid "&Time Shift Tool"
-msgstr "Zaman &Kaydırma Aracı"
-
-#: src/Menus.cpp
-msgid "&Multi Tool"
-msgstr "Ç&oklu Araç"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr "Ö&nceki Araç"
-
-#: src/Menus.cpp
-msgid "&Next Tool"
-msgstr "&Sonraki Araç"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr "&Karıştırıcı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "&Oynatma düzeyini ayarla"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "Oynatma düzeyini &arttır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "Oynatma düzeyini a&zalt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Kayıt &düzeyini ayarla"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Kayıt düzeyi&ni arttır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Kayıt düz&eyini azalt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "&SilmeTuşu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "SilmeTuşu&2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Seçili hızda oynat"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Seçili &hızda oynat"
-
-#: src/Menus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "Ç&evrim oynatma hızı"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr "O&ynatma kesme önizlemesi hızı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Oynatma &hızını ayarla"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Oynatma hızını &arttır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "Oynatma hızını a&zalt"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr "Ön&ceki Etikete Geç"
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr "So&nraki Etikete Geç"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "A&ra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Left During Playback"
-msgstr "Oynatmada so&la doğru kısa tarama"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Right During Playback"
-msgstr "Oynatmada &sağa doğru kısa tarama"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Le&ft During Playback"
-msgstr "Oynatmada s&ola doğru uzun tarama"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Rig&ht During Playback"
-msgstr "Oynatmada s&ağa doğru uzun tarama"
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr "Ay&gıt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "&Kayıt aygıtını değiştir"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "&Oynatma aygıtını değiştir"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "&Ses sunucusunu değiştir"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Kayıt ka&nallarını değiştir"
-
-#: src/Menus.cpp
-msgid "&Selection"
-msgstr "&Seçim"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "Hizalama &Kapalı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "En &Yakına Hizala"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "Ö&ncekine Hizala"
-
-#: src/Menus.cpp
-msgid "Selection to &Start"
-msgstr "&Başlangıca Kadar Seç"
-
-#: src/Menus.cpp
-msgid "Selection to En&d"
-msgstr "&Sonuna Kadar Seç"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Left"
-msgstr "Seçimi So&la Genişlet"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Right"
-msgstr "Seçimi &Sağa Genişlet"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "So&ldan Seç (ya da Genişlet)"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "&Sağdan Seç (ya da Genişlet)"
-
-#: src/Menus.cpp
-msgid "Selection Contract L&eft"
-msgstr "Seçimi So&la Daralt"
-
-#: src/Menus.cpp
-msgid "Selection Contract R&ight"
-msgstr "Seçimi S&ağa Daralt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Backward Through Active Windows"
-msgstr "Etkin pencerelerde geriye doğru git"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Forward Through Active Windows"
-msgstr "Etkin pencerelerde ileriye doğru git"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr "&Odakla"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Araç çubuklarından izlere &geri git"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Araç çubuklarından izlere i&leri git"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Previous Track"
-msgstr "Ö&nceki İze Odaklan"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Next Track"
-msgstr "&Sonraki İze Odaklan"
-
-#: src/Menus.cpp
-msgid "Move Focus to &First Track"
-msgstr "İl&k İze Odaklan"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Last Track"
-msgstr "Son İ&ze Odaklan"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr "Ön&cekine Odaklan ve Seç"
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr "Sonrakin&e Odaklan ve Seç"
-
-#: src/Menus.cpp
-msgid "&Toggle Focused Track"
-msgstr "O&daklanılan İzi Değiştir"
-
-#: src/Menus.cpp
-msgid "Toggle Focuse&d Track"
-msgstr "&Odaklanılan İzi Değiştir"
-
-#: src/Menus.cpp
-msgid "&Cursor"
-msgstr "İm&leç"
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr "İmleç So&la"
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr "İmleç &Sağa"
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr "İmleci S&ola Doğru Kısa Atlat"
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr "İmleci Sağa Doğru Kısa A&tlat"
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr "İmleci Sola Doğru &Uzun Atlat"
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr "İ&mleci Sağa Doğru Uzun Atlat"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr "Parça S&ola"
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr "Parça S&ağa"
-
-#: src/Menus.cpp
-msgid "&Track"
-msgstr "İ&z"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "Od&aklanılmış izde konumu değiştir"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "Odaklanılmış izde so&la kaydır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "Odaklanılmış izde sağa kaydı&r"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "Odaklanılmış izi&n kazancını değiştir"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "Odaklanılmış izi&n kazancını arttır"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "Odaklanılmış izin kazancını a&zalt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "Odaklanılmış izin m&enüsünü aç"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "Odaklanılmış izi s&ustur/dinlet"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "Odaklanılmış iz &solo/değil"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "Odaklanılmış izi &kapat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "Odaklanılmış izi &yukarı taşı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "Odaklanılmış izi &aşağı taşı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "&Odaklanılmış izi en üste taşı"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "Odaklanılmış izi en alta &taşı"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Scriptables I"
-msgstr "Betik"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Seçin..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Frekanslar"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Seçin..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "İz &Başına"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "&Ayarlar..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "&Ayarlar..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "S&onraki Parça"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Kılıf"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&Etiketleri Düzenle..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Projeyi &Farklı Kaydet..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Seçin..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "İ&zler Sıralansın"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Info..."
-msgstr "&Daha Fazla..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "İleti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "Yardım"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "İçe Aktar..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Dışa Aktar..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "&Son Kullanılanlar..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Projeyi &Farklı Kaydet..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "&Daha Fazla..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Sesi &Dışa Aktar..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&Ekran Yakalama Araçları..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Full Screen (on/off)"
-msgstr "&Tam ekran (aç/kapat)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "Tüm izleri küçült"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Yardım"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "&Başlarken"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Audacity"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&Hızlı Yardım"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Manual..."
-msgstr "&Kitap"
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "&Tanılama"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "&Ses Aygıtı Bilgileri..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "&MIDI Aygıtı Bilgileri..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "Gün&lüğü Görüntüle..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "Destek &Verilerini Oluştur..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "&Bağımlılıkları Denetle..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "&Güncelleme Denetimi..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "Bilinmiyor"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "%d - %d arasındaki eklenti"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Son Kullanılanları Aç"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "Son K&ullanılan Dosyalar"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "%s &Geri Al"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Geri Al"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "%s &Yinele"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Zamana göre sıralanmış izler"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "İsme göre sıralanmış izler"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "herhangi bir etiket izi yok"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "odaklanılan izde ve altında herhangi bir etiket izi yok"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "etiket izinde herhangi bir etiket yok"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr "Zamanı sağa ötelenmiş parçalar"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr "Zamanı sola ötelenmiş parçalar"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Zaman Kaydırması"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr "parça taşınmadı"
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "Sol Seçim Sınırını Ayarla"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "Konum"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "Sağ Seçim Sınırını Ayarla"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Etkin sesin bulunduğu izi silemezsiniz"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Top"
-msgstr "'%s' En Üste Taşındı"
-
-#: src/Menus.cpp
-msgid "Move Track to Top"
-msgstr "İzi En Üste Taşı"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "'%s' En Alta Taşındı"
-
-#: src/Menus.cpp
-msgid "Move Track to Bottom"
-msgstr "İzi En Alta Taşı"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Up"
-msgstr "'%s' Yukarı Taşındı"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Down"
-msgstr "'%s' Aşağı Taşındı"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-msgid "Move Track Up"
-msgstr "İzi Yukarı Taşı"
-
-#: src/Menus.cpp
-msgid "Move Track Down"
-msgstr "İzi Aşağı Taşı"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "labels.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Dışa aktarılacak bir etiket izi bulunamadı."
-
-#: src/Menus.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Lütfen aynı anda yalnız bir Nota İzi seçin."
-
-#: src/Menus.cpp
-msgid "Please select a Note Track."
-msgstr "Lütfen bir Nota İzi seçin."
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI Şu Şekilde Dışa Aktar:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI dosyası (*.mid)|*.mid|Allegro dosyası (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Tanımlanmamış bir dosya uzantısına sahip bir dosya adı seçtiniz.\n"
-"Devam etmek istiyor musunuz?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "MIDI Dışa Aktar"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "Seçilmiş Sesi Dışa Aktar"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Geri alınacak birşey yok"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Yinelenecek birşey yok"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Panoya kes"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Panoya ayır ve kes"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Ayır ve Kes"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "Bir iz türünden diğerine yapıştırma yapamazsınız."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Çift kanallı ses tek kanallı ize kopyalanamaz."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Panodan yapıştırılan"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Panodan yapıştırılan metin"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "Metni Yeni Etikete Yapıştır"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Seçilmiş izleri %.2f ile %.2f saniyeleri arasında buda"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "Sesi Buda"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "%.2f saniye t=%.2f zamanında ayrılıp-silindi"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Ayır ve Sil"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "t=%.2f zamanındaki %.2f saniye çıkartıldı"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "Çıkart"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "%.2f saniye t=%.2f zamanında birleştirildi"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Birleştir"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Seçilen izler %.2f' zamanında %.2f saniye için susturuldu"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Sustur"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Çoğaltıldı"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Çoğalt"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Etiketlenmiş ses aralıklarını keserek panoya al"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "Etiketlenmiş Sesi Kes"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Etiketlenmiş ses aralıklarını ayırıp panoya kes"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Etiketlenmiş Sesi Ayırıp Kes"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Etiketlenmiş ses aralıkları panoya kopyalandı"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "Etiketlenmiş Sesi Kopyala"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "Etiketlenmiş ses aralıkları silindi"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "Etiketlenmiş Sesi Sil"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "Etiketlenmiş ses aralıklarını ayırıp sil"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "Etiketlenmiş Sesi Ayırıp Sil"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "Etiketli ses aralıkları susturuldu"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "Etiketli Ses Aralıklarını Sustur"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "Etiketlenmiş sesleri ayır (nokta ya da aralıklar)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "Etiketlenmiş Sesi Ayır"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "Etiketlenmiş sesler birleştirildi (nokta ya da aralıklar)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "Etiketlenmiş Sesleri Birleştir"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "Etiketlenmiş ses aralıkları ayrıldı"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "Etiketlenmiş Sesleri Ayır"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Ayır"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Yeni ize ayır"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Ayır Yeni"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr "ParçaSeçimiBoşDizgesi"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] "%d / %d %s parça"
-msgstr[1] "%d / %d %s parça"
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr "%s, %s"
-
-#: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Frekans Çözümlemesi"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Karşıtlık Çözümlemesi (WCAG 2 uyumlu)"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Etiketler '%s' kaynağından içe aktarıldı"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Etiketleri İçe Aktar"
-
-#: src/Menus.cpp
-msgid "Select a MIDI file"
-msgstr "Bir MIDI dosyası seçin"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI ve Allegro dosyaları (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI "
-"dosyaları (*.mid;*.midi)|*.mid;*.midi|Allegro dosyaları (*.gro)|*.gro|Tüm "
-"dosyalar|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "MIDI '%s' kaynağından içe aktarıldı"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "MIDI İçe Aktar"
-
-#: src/Menus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Sıkıştırılmamış bir ses dosyası seçin"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "Tüm dosyalar|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Üst Veri Etiketlerini Düzenle"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "Üst Veri Etiketleri"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "'%s' izindeki tüm ses çevrildi"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Çevir"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d iz yeni bir çift kanallı ize karıştırılıp çevrildi"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d iz yeni bir tek kanallı ize karıştırılıp çevrildi"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "Karıştır ve Çevir"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "İz %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s left"
-msgstr "%s sol"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s right"
-msgstr "%s sağ"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr "ParçaSınırıİletisiBoşDizgesi"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] "%s %d / %d %s parça"
-msgstr[1] "%s %d / %d %s parça"
-
-#: src/Menus.cpp
-msgid "start"
-msgstr "başlangıç"
-
-#: src/Menus.cpp
-msgid "end"
-msgstr "bitiş"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr "ParçaSınırıUzunİletisiBoşDizgesi"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] "%s %d ve %s %d / %d %s parça"
-msgstr[1] "%s %d ve %s %d / %d %s parça"
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-msgid "Aligned/Moved start to zero"
-msgstr "Başlangıç sıfıra hizalandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned start to zero"
-msgstr "Başlangıç sıfıra hizalandı"
-
-#: src/Menus.cpp
-msgid "Align/Move Start"
-msgstr "Başlangıcı Hizala/Taşı"
-
-#: src/Menus.cpp
-msgid "Align Start"
-msgstr "Başlangıcı Hizala"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Başlangı imlece/seçim başlangıcına hizalandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned start to cursor/selection start"
-msgstr "Başlangıç imlece/seçim başlangıcına hizalandı"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to selection end"
-msgstr "Başlangıç seçim bitişine hizalandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned start to selection end"
-msgstr "Başlangıç seçim bitişine hizalandı"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Bitiş imlec/seçin başlangıcına hizalandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned end to cursor/selection start"
-msgstr "Bitiş imlec/seçim başlangıcına hizalandı"
-
-#: src/Menus.cpp
-msgid "Align/Move End"
-msgstr "Bitişi Hizala/Taşı"
-
-#: src/Menus.cpp
-msgid "Align End"
-msgstr "Bitişi Hizala"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to selection end"
-msgstr "Bitiş seçim bitişine hizalandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned end to selection end"
-msgstr "Bitiş seçim bitişine hizalandı"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to end"
-msgstr "Bitiş bitişe hizalandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned end to end"
-msgstr "Bitiş bitişe hizalandı"
-
-#: src/Menus.cpp
-msgid "Align/Move End to End"
-msgstr "Bitişi Bitişe Hizala/Taşı"
-
-#: src/Menus.cpp
-msgid "Align End to End"
-msgstr "Bitişi Bitişe Hizala"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved together"
-msgstr "Birlikte hizlandı/taşındı"
-
-#: src/Menus.cpp
-msgid "Aligned together"
-msgstr "Birlikte hizalandı"
-
-#: src/Menus.cpp
-msgid "Align/Move Together"
-msgstr "Birlikte Hizala/Taşı"
-
-#: src/Menus.cpp
-msgid "Align Together"
-msgstr "Birlikte Hizala"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "MIDI ve Ses İzleri Eşleştiriliyor"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Hizalama tamamlandı: MIDI %.2f yerine %.2f saniyeye, Ses %.2f yerine %.2f "
-"saniyeye."
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "MIDI ile Sesi Eşleştir"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Hizalama hatası: giriş çok kısa: MIDI %.2f yerine %.2f saniyeye, Ses %.2f "
-"yerine %.2f saniyeye."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "Hizalama işlemi tarafından iç hata oluştuğu bildirildi."
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Yeni ses izi oluşturuldu"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Yeni İz"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Yeni çift kanallı ses izi oluşturuldu"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Yeni etiket izi oluşturuldu"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Bu Audacity sürümünde her proje penceresinde yalnız bir zaman izi "
-"kullanılabilir."
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Yeni zaman izi oluşturuldu"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-"Birden çok proje açıkken Zamanlanmış Kayıt kullanılamaz.\n"
-"\n"
-"Lütfen diğer projeleri kapatıp yeniden deneyin."
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "Zamanlanmış Kayıt"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-"Kaydedilmemiş değişiklikler varken Zamanlanmış Kayıt kullanılamaz.\n"
-"\n"
-"Lütfen bu projeyi kaydettikten ya da kapattıktan sonra yeniden deneyin."
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "Ad"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "Etiket eklendi"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "Lütfen bir ses izi seçin."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "Lütfen bir ses izi seçin."
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "Lütfen bir ses izi seçin."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "Lütfen bir Nota İzi seçin."
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Etiketler düzenlendi"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Ses izleri kaldırıldı"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "İzi Kaldır"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "Ses Aygıtı Bilgileri"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "&Kaydet"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "Aygıt Bilgilerini Kaydet"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "Aygıt bilgileri kaydedilemedi"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr "MIDI Aygıtı Bilgileri"
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr "MIDI Aygıtı Bilgilerini Kaydet"
-
-#: src/Menus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "MIDI aygıtı bilgileri kaydedilemedi"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "Ses izleri yeniden örneklendi"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "İz"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Daha ileri bölge kilitlenemiyor\n"
-"projenin sonu."
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Yeniden Örnekle"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Yeni örnekleme hızı (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "Yazdığınız değer geçersiz"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "%d izi yeniden örnekleniyor"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Ses izleri yeniden örneklendi"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "İzi Yeniden Örnekle"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&Yinele"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Karıştır"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Karıştır ve Çevir"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5340,7 +3058,7 @@ msgstr "İzler karıştırılıp çevriliyor"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Kazanç"
@@ -5357,7 +3075,7 @@ msgid "Musical Instrument"
 msgstr "Muzik Enstrumanı"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Terazi"
@@ -5412,9 +3130,8 @@ msgid "Module Unsuitable"
 msgstr "Modül Uygun Değil"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+#, fuzzy, c-format
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "%s modülü, sürüm bilgisini bildirmediğinden yüklenmeyecek."
 
 #: src/ModuleManager.cpp
@@ -5429,9 +3146,9 @@ msgstr ""
 "Bu nedenle yüklenmeyecek."
 
 #: src/ModuleManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "%s modülü, Audacity %s sürümüne uygun olduğundan yüklenmeyecek."
 
 #: src/ModuleManager.cpp
@@ -5599,6 +3316,11 @@ msgstr ""
 msgid "Show:"
 msgstr "Görüntülenecek:"
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Tümü"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Tümünü görüntüle"
@@ -5695,7 +3417,8 @@ msgid "Plug-in already exists"
 msgstr "Uygulama eki zaten var"
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+#, fuzzy
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "Uygulama eki dosyası kullanımda olduğundan üzerine yazılamadı"
 
 #: src/PluginManager.cpp
@@ -5983,9 +3706,9 @@ msgid "Error Saving Project"
 msgstr "Proje Kaydedilirken Sorun Çıktı"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "Proje kaydedilemedi. Yol bulunamadı. Projeyi bu adla \n"
@@ -6134,15 +3857,6 @@ msgstr "Yeni proje oluşturuldu"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "t=%.2f saniye %.2f zamanında silindi"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Sil"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Kalan disk alanıyla yapılabilecek kayıt: %s"
 
@@ -6218,23 +3932,6 @@ msgid "Record"
 msgstr "Kayıt"
 
 #: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Ayarlanmış kazanç"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Ayarlanmış kaydırma"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "'%s' izi kaldırıldı."
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "İz Kaldırma"
-
-#: src/Project.cpp
 msgid "Less than 1 minute"
 msgstr "1 dakikadan az"
 
@@ -6257,6 +3954,14 @@ msgstr[1] "%d dakika"
 #, c-format
 msgid "%s and %s."
 msgstr "%s ve %s."
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Frekans Çözümlemesi"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Karşıtlık Çözümlemesi (WCAG 2 uyumlu)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -6515,7 +4220,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Uyarı - Budanan Uzun Blok Dosyası"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Yardım"
 
@@ -6777,11 +4482,11 @@ msgstr ""
 "  %s"
 
 #: src/Theme.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Şunun için gereken dosyalar:\n"
 "  %s\n"
@@ -6987,6 +4692,10 @@ msgstr ""
 "\n"
 "'%s' kayıt durdurulduğundan iptal edildi."
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "Zamanlanmış Kayıt"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7036,6 +4745,10 @@ msgstr "Otomatik &Kayıt Etkinleştirilsin mi?"
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "Projeyi Farklı Kaydet:"
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "Seçin..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -7090,9 +4803,19 @@ msgstr "Ayarlanan durma zamanı:"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity Zamanlanmış Kayıt - Başlamak için bekliyor"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "Kayıt şu kadar süre sonra başlayacak:"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -7138,6 +4861,13 @@ msgstr "Çift Kanallı, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "İz Görünümü"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "İz %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7765,7 +5495,7 @@ msgstr "Beyaz"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Yok"
 
@@ -8005,6 +5735,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "Bit Hızı:"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "&Kalıntı"
 
@@ -8111,6 +5846,16 @@ msgstr "Ölçek"
 #, fuzzy
 msgid "VZoom:"
 msgstr "Yakınlaştır"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "Yakınlaştır"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "Yakınlaştırma Aracı"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8604,6 +6349,10 @@ msgid "You can only measure one track at a time."
 msgstr "Aynı anda yalnız bir izi ölçebilirsiniz."
 
 #: src/effects/Contrast.cpp
+msgid "Please select an audio track."
+msgstr "Lütfen bir ses izi seçin."
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8618,10 +6367,6 @@ msgid ""
 msgstr ""
 "Ölçülecek bir şey yok.\n"
 "Lütfen izin bir bölümünü seçin."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Lütfen bir ses izi seçin."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -8688,6 +6433,10 @@ msgstr "&Sıfırlayın"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr "&Fark:"
+
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Yardım"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9241,6 +6990,14 @@ msgstr "Varsayılanlar"
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "Fabrika Ayarları"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "İçe Aktar..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "Dışa Aktar..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -10177,6 +7934,11 @@ msgstr "Kanal çiftinin ilk izi inceleniyor: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Kanal çiftinin ikinci izi inceleniyor: %s"
+
+#: src/effects/Normalize.cpp
+#, c-format
 msgid "Processing: %s"
 msgstr "İşleniyor: %s"
 
@@ -10184,11 +7946,6 @@ msgstr "İşleniyor: %s"
 #, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "Kanal çifti bağımsız olarak işleniyor: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Kanal çiftinin ikinci izi inceleniyor: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
@@ -10233,7 +7990,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Dalga şekli hesaplamasının bitmesi bekleniyor..."
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+#, fuzzy
+msgid "(Maximum 0dB)"
 msgstr ".  En Çok 0dB."
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10703,6 +8461,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr "Sıfır genlikli ses üretir"
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Sustur"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr "Çift kanallı izi tek kanallıya dönüştürür"
@@ -11036,8 +8798,8 @@ msgid "Error Saving Effect Presets"
 msgstr "Etki Hazır Ayarları Kaydedilirken Sorun Çıktı"
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+#, fuzzy, c-format
+msgid "This parameter file was saved from %s. Continue?"
 msgstr "Bu parametre dosyasyı %s ile kaydedilmiş. Devam edilsin mi?"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11138,7 +8900,8 @@ msgstr ""
 " Sistem tarafından sağlanan genel arayüzü kullanmak için \"Genel\" seçin."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+#, fuzzy
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr " Basit salt metin arayüzünü kullanmak için \"Temel\" seçin."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -11365,7 +9128,13 @@ msgid "plug-in"
 msgstr "eklenti"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist sonuç değeri:"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Nyquist sonuç değeri:"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11459,6 +9228,10 @@ msgstr "&Eski yazım (sürüm 3) kullanılsın."
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "Yük&le"
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Kaydet"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11572,6 +9345,10 @@ msgstr "Biçime özgü bir ayar yok"
 msgid "Export Audio"
 msgstr "Sesi Dışa Aktar"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Üst Veri Etiketlerini Düzenle"
+
 #: src/export/Export.cpp
 msgid "Exported Tags"
 msgstr "Dışa Aktarılan Etiketler"
@@ -11635,8 +9412,8 @@ msgstr ""
 "ve klasör seçin."
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "\"%s\" adlı dosya zaten var. Üstüne yazmak ister misiniz?"
 
 #: src/export/Export.cpp
@@ -11855,20 +9632,25 @@ msgstr "Ses %s olarak dışa aktarılıyor"
 msgid "Invalid sample rate"
 msgstr "Örnekleme hızı geçersiz"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Yeniden Örnekle"
+
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Proje örnekleme hızı (%d) geçerli dosya çıkış biçimi tarafından\n"
 "desteklenmiyor. "
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "Proje örnekleme hızı (%d) ve bit hızı (%d kbps) kombinasyonu \n"
 "geçerli dosya çıkış biçimi tarafından desteklenmiyor. "
@@ -12531,7 +10313,7 @@ msgstr "Kanal Kipi:"
 msgid "Joint Stereo"
 msgstr "Ekli Çift Kanallı"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Çift Kanallı"
 
@@ -12664,19 +10446,19 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "MP3 kodlayıcıda %ld hatası oluştu"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Proje örnekleme hızı (%d) MP3 dosya biçimi tarafından\n"
 "desteklenmiyor.  "
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "Proje örnekleme hızı(%d) ve bit hızı (%d kbps) kombinasyonu MP3\n"
 "dosya biçimi tarafından desteklenmiyor.  "
@@ -13094,6 +10876,11 @@ msgstr ""
 "FFmpeg uygulamasını kurmayı denetin. Sıkıştırılmamış dosyalar için, Dosya > "
 "İçe Aktar > Ham Veri seçeneğini deneyin."
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13255,9 +11042,10 @@ msgstr ""
 "yapılmış.\n"
 
 #: src/import/ImportPCM.cpp
+#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13390,9 +11178,2422 @@ msgstr "İçe aktarılacak miktar:"
 msgid "Sample rate:"
 msgstr "Örnekleme hızı:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "İç&e Aktar"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr "Veri boyutu hatalı"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s left"
+msgstr "%s sol"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s right"
+msgstr "%s sağ"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr "ParçaSınırıİletisiBoşDizgesi"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] "%s %d / %d %s parça"
+msgstr[1] "%s %d / %d %s parça"
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr "başlangıç"
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr "bitiş"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr "ParçaSınırıUzunİletisiBoşDizgesi"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] "%s %d ve %s %d / %d %s parça"
+msgstr[1] "%s %d ve %s %d / %d %s parça"
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr "ParçaSeçimiBoşDizgesi"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] "%d / %d %s parça"
+msgstr[1] "%d / %d %s parça"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr "Zamanı sağa ötelenmiş parçalar"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr "Zamanı sola ötelenmiş parçalar"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Zaman Kaydırması"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr "parça taşınmadı"
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "&Parça Sınırları"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr "Ö&nceki Parça Sınırından İmlece"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr "İmleçten S&onraki Parça Sınırına"
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr "Ö&nceki Parça"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "Ö&nceki Parça"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr "S&onraki Parça"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "S&onraki Parça"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr "Ö&nceki Parça Sınırı"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "İmleçten S&onraki Parça Sınırına"
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr "S&onraki Parça Sınırı"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "İmleçten S&onraki Parça Sınırına"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr "Parça S&ola"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr "Parça S&ağa"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Panodan yapıştırılan metin"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Panodan yapıştırılan"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Geri alınacak birşey yok"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Yinelenecek birşey yok"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Panoya kes"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "t=%.2f saniye %.2f zamanında silindi"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Sil"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "Bir iz türünden diğerine yapıştırma yapamazsınız."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "Çift kanallı ses tek kanallı ize kopyalanamaz."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Çoğaltıldı"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Çoğalt"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Panoya ayır ve kes"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Ayır ve Kes"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "%.2f saniye t=%.2f zamanında ayrılıp-silindi"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Ayır ve Sil"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Seçilen izler %.2f' zamanında %.2f saniye için susturuldu"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "Seçilmiş izleri %.2f ile %.2f saniyeleri arasında buda"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "Sesi Buda"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Ayır"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Yeni ize ayır"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Ayır Yeni"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "%.2f saniye t=%.2f zamanında birleştirildi"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Birleştir"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "t=%.2f zamanındaki %.2f saniye çıkartıldı"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "Çıkart"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "Üst Veri Etiketleri"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "Düz&enle"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Sil"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "Ç&oğalt"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "Ö&zel Kaldır"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "&Böl ve Kes"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "&Ayır ve Sil"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "Sesi &Sustur"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "Sesi &Buda"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "&Böl"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "&Ayır ve Yeni"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "Ka&t"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "Sessi&zliklerde Çıkar"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "Üs&t Veri..."
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "A&yarlar..."
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "&SilmeTuşu"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "SilmeTuşu&2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr "&Karıştırıcı"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "&Oynatma düzeyini ayarla"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "Oynatma düzeyini &arttır"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "Oynatma düzeyini a&zalt"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Kayıt &düzeyini ayarla"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Kayıt düzeyi&ni arttır"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Kayıt düz&eyini azalt"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr "Ay&gıt"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "&Kayıt aygıtını değiştir"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "&Oynatma aygıtını değiştir"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "&Ses sunucusunu değiştir"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Kayıt ka&nallarını değiştir"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
+msgstr "&Tam ekran (aç/kapat)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "MIDI '%s' kaynağından içe aktarıldı"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "MIDI İçe Aktar"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "Seçilmiş Sesi Dışa Aktar"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "labels.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Dışa aktarılacak bir etiket izi bulunamadı."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Lütfen aynı anda yalnız bir Nota İzi seçin."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select a Note Track."
+msgstr "Lütfen bir Nota İzi seçin."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI Şu Şekilde Dışa Aktar:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI dosyası (*.mid)|*.mid|Allegro dosyası (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Tanımlanmamış bir dosya uzantısına sahip bir dosya adı seçtiniz.\n"
+"Devam etmek istiyor musunuz?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "MIDI Dışa Aktar"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Etiketler '%s' kaynağından içe aktarıldı"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Etiketleri İçe Aktar"
+
+#: src/menus/FileMenus.cpp
+msgid "Select a MIDI file"
+msgstr "Bir MIDI dosyası seçin"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI ve Allegro dosyaları (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI "
+"dosyaları (*.mid;*.midi)|*.mid;*.midi|Allegro dosyaları (*.gro)|*.gro|Tüm "
+"dosyalar|*"
+
+#: src/menus/FileMenus.cpp
+msgid "Select any uncompressed audio file"
+msgstr "Sıkıştırılmamış bir ses dosyası seçin"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "Tüm dosyalar|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Hazır Ayarı Kaydet..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Son Kullanılanları Aç"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "Son K&ullanılan Dosyalar"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Projeyi Kaydet"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "Projeyi &Farklı Kaydet..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "&Projenin Sıkıştırılmış Kopyasını Kaydet..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "&Projenin Sıkıştırılmış Kopyasını Kaydet..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Export"
+msgstr "&Dışa Aktar"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as MP&3"
+msgstr "MP&3 olarak dışa aktar"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &WAV"
+msgstr "&WAV olarak dışa aktar"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &OGG"
+msgstr "&OGG olarak dışa aktar"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "Sesi &Dışa Aktar..."
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "&Seçilmiş Sesleri Dışa Aktar..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "&Etiketleri Dışa Aktar..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Ç&oklu Dışa Aktar..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "&MIDI Dışa Aktar..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&Ses..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Etiketler..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&Ham Veri..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "&Sayfa Düzeni..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&Yazdır..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "Çı&kış"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "Ses Aygıtı Bilgileri"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save Device Info"
+msgstr "Aygıt Bilgilerini Kaydet"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save device info"
+msgstr "Aygıt bilgileri kaydedilemedi"
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr "MIDI Aygıtı Bilgileri"
+
+#: src/menus/HelpMenus.cpp
+msgid "Save MIDI Device Info"
+msgstr "MIDI Aygıtı Bilgilerini Kaydet"
+
+#: src/menus/HelpMenus.cpp
+msgid "Unable to save MIDI device info"
+msgstr "MIDI aygıtı bilgileri kaydedilemedi"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&Hızlı Yardım"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr "&Başlarken"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Hızlı Yardım"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "&Kitap"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr "&Tanılama"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "&Ses Aygıtı Bilgileri..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr "&MIDI Aygıtı Bilgileri..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "Gün&lüğü Görüntüle..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "Destek &Verilerini Oluştur..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "&Bağımlılıkları Denetle..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "&Güncelleme Denetimi..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "Metni Yeni Etikete Yapıştır"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Etiketlenmiş ses aralıklarını keserek panoya al"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "Etiketlenmiş Sesi Kes"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "Etiketlenmiş ses aralıkları silindi"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "Etiketlenmiş Sesi Sil"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Etiketlenmiş ses aralıklarını ayırıp panoya kes"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "Etiketlenmiş Sesi Ayırıp Kes"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "Etiketlenmiş ses aralıklarını ayırıp sil"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "Etiketlenmiş Sesi Ayırıp Sil"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "Etiketli ses aralıkları susturuldu"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "Etiketli Ses Aralıklarını Sustur"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Etiketlenmiş ses aralıkları panoya kopyalandı"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "Etiketlenmiş Sesi Kopyala"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "Etiketlenmiş sesleri ayır (nokta ya da aralıklar)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "Etiketlenmiş Sesi Ayır"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "Etiketlenmiş sesler birleştirildi (nokta ya da aralıklar)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "Etiketlenmiş Sesleri Birleştir"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "Etiketlenmiş ses aralıkları ayrıldı"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "Etiketlenmiş Sesleri Ayır"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Labels"
+msgstr "&Etiketler"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "&Etiketleri Düzenle..."
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "&Seçime Etiket Ekle"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "&Oynatma Konumuna Etiket Ekle"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "&Metni Yeni Etikete Yapıştır"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "&Yazmaya Başlayınca Etiket Oluştur (aç/kapat)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "E&tiketlenmiş Ses"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&Kes"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Etiket Düzenle"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Ayır ve Sil"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "&Ayır ve Kes"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Ayır ve Kes"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "&Böl ve Sil"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Ayır ve Sil"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "S&esi Sustur"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Sustur"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "&Kopyala"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Etiket"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "Bö&l"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Etiket Düzenle"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Etiket Düzenle"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Backward Through Active Windows"
+msgstr "Etkin pencerelerde geriye doğru git"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Forward Through Active Windows"
+msgstr "Etkin pencerelerde ileriye doğru git"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr "&Odakla"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "Araç çubuklarından izlere &geri git"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Araç çubuklarından izlere i&leri git"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Previous Track"
+msgstr "Ö&nceki İze Odaklan"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Next Track"
+msgstr "&Sonraki İze Odaklan"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &First Track"
+msgstr "İl&k İze Odaklan"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Last Track"
+msgstr "Son İ&ze Odaklan"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr "Ön&cekine Odaklan ve Seç"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr "Sonrakin&e Odaklan ve Seç"
+
+#: src/menus/NavigationMenus.cpp
+msgid "&Toggle Focused Track"
+msgstr "O&daklanılan İzi Değiştir"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Toggle Focuse&d Track"
+msgstr "&Odaklanılan İzi Değiştir"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "Kategorisiz"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "%s yinele"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "%d - %d arasındaki eklenti"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Oluştur"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "Uygulama Eki Ekle / Kaldır..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "Son Etkiyi Yinele"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "Et&kiler"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "Çözü&mle"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "Karşıtlık..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Spektrum Çiz..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+msgid "T&ools"
+msgstr "A&raçlar"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Etiketler..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "&Uygula"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "Si&l..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Ekran Yakalama Araçları..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Hız Sınaması Yap..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Simulate Recording Errors"
+msgstr "Kayıt Hatalarını Taklit Et"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Yükleme Kesintileri Algılansın"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Betik"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Seçin..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Frekanslar"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Seçin..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "İz &Başına"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "&Ayarlar..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "&Ayarlar..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "S&onraki Parça"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Kılıf"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Etiketleri Düzenle..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Projeyi &Farklı Kaydet..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "İ&zler Sıralansın"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "&Daha Fazla..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "İleti"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Yardım"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "&Son Kullanılanlar..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Projeyi &Farklı Kaydet..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "&Daha Fazla..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Sesi &Dışa Aktar..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Ekran Yakalama Araçları..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "Sol Seçim Sınırını Ayarla"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "Konum"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "Sağ Seçim Sınırını Ayarla"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "&Seç"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Hiç biri"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Seçim"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "İ&zler"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "&Tüm İzler İçinde"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr "Tüm Eş Kilitlenmiş İ&zlerde"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr "&Bölge"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "Oynatma Konumunda So&lda"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Oynatma Konumunda So&lda"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "Oynatma Konumunda Sağ&da"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "Oynatma Konumunda Sağ&da"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "İ&z Başını İmlece Getir"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "İ&z Başını İmlece Getir"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "İmleci İz Bitişine Götür"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "İmleci İz Bitişine Götür"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "İ&z Başını İmlece Getir"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Bitişe Kadar Seç"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&tore Selection"
+msgstr "Seçimi Aklında &Tut"
+
+#: src/menus/SelectMenus.cpp
+msgid "Retrieve Selectio&n"
+msgstr "Seçimi &Hatırla"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "&Spektral"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Spektral Seçimi &Tersine Çevir"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Higher Peak Frequency"
+msgstr "Sonraki En &Yüksek Tepe Frekansı"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Lower Peak Frequency"
+msgstr "Sonraki En &Düşük Tepe Frekansı"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr "İmleci &Akılda Tutulan Konuma Taşı"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Başlangıca Kadar Seç"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr "İmleç Konumunu Akılda &Tut"
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr "Sıfır &Geçişlerinde"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "Sıfır &Geçişlerinde"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Selection"
+msgstr "&Seçim"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "Hizalama &Kapalı"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "En &Yakına Hizala"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "Ö&ncekine Hizala"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to &Start"
+msgstr "&Başlangıca Kadar Seç"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to En&d"
+msgstr "&Sonuna Kadar Seç"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Left"
+msgstr "Seçimi So&la Genişlet"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Right"
+msgstr "Seçimi &Sağa Genişlet"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "So&ldan Seç (ya da Genişlet)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "&Sağdan Seç (ya da Genişlet)"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract L&eft"
+msgstr "Seçimi So&la Daralt"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract R&ight"
+msgstr "Seçimi S&ağa Daralt"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor to"
+msgstr "İmle&ci Taşı"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Star&t"
+msgstr "S&eçim Başına"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "Bitiş S&eçim Başlangıcına"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+msgid "Selection En&d"
+msgstr "Seçi&m Sonu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "Başlangıç Seçi&m Bitişine"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start"
+msgstr "İz &Başına"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "İmleci İz Bitişine Götür"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &End"
+msgstr "İz &Bitişine"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "İmleci İz Bitişine Götür"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Project Start"
+msgstr "&Proje Başına"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "&Proje Başına"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr "Proje So&nuna"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "İmleci İz Bitişine Götür"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor"
+msgstr "İm&leç"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr "İmleç So&la"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr "İmleç &Sağa"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr "İmleci S&ola Doğru Kısa Atlat"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr "İmleci Sağa Doğru Kısa A&tlat"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr "İmleci Sola Doğru &Uzun Atlat"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr "İ&mleci Sağa Doğru Uzun Atlat"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "A&ra"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Left During Playback"
+msgstr "Oynatmada so&la doğru kısa tarama"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Right During Playback"
+msgstr "Oynatmada &sağa doğru kısa tarama"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
+msgstr "Oynatmada s&ola doğru uzun tarama"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
+msgstr "Oynatmada s&ağa doğru uzun tarama"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "&Araç Çubukları"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+msgid "Reset Toolb&ars"
+msgstr "A&raç Çubuklarını Sıfırla"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "&Hareketler Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "&Araçlar Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "&Kayıt Ölçüm Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "&Oynatma Ölçüm Çubuğu"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "Karış&tırıcı Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "&Düzenleme Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Seçili hızda oynat"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "Sar&ma Araç Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "Ay&gıt Çubuğu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "&Seçim Çubuğu"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "S&pektral Seçim Çubuğu"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Tool"
+msgstr "&Seçim Aracı"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Envelope Tool"
+msgstr "&Kılıf Aracı"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Draw Tool"
+msgstr "Çi&zim Aracı"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Zoom Tool"
+msgstr "&Yakınlaştırma Aracı"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Time Shift Tool"
+msgstr "Zaman &Kaydırma Aracı"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Multi Tool"
+msgstr "Ç&oklu Araç"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr "Ö&nceki Araç"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Next Tool"
+msgstr "&Sonraki Araç"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "'%s' izindeki tüm ses çevrildi"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Çevir"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "%d iz yeni bir çift kanallı ize karıştırılıp çevrildi"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "%d iz yeni bir tek kanallı ize karıştırılıp çevrildi"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Ses izleri yeniden örneklendi"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "İz"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to zero"
+msgstr "Başlangıç sıfıra hizalandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to zero"
+msgstr "Başlangıç sıfıra hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Start"
+msgstr "Başlangıcı Hizala/Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Start"
+msgstr "Başlangıcı Hizala"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "Başlangı imlece/seçim başlangıcına hizalandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to cursor/selection start"
+msgstr "Başlangıç imlece/seçim başlangıcına hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to selection end"
+msgstr "Başlangıç seçim bitişine hizalandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to selection end"
+msgstr "Başlangıç seçim bitişine hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Bitiş imlec/seçin başlangıcına hizalandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to cursor/selection start"
+msgstr "Bitiş imlec/seçim başlangıcına hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End"
+msgstr "Bitişi Hizala/Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End"
+msgstr "Bitişi Hizala"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to selection end"
+msgstr "Bitiş seçim bitişine hizalandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to selection end"
+msgstr "Bitiş seçim bitişine hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to end"
+msgstr "Bitiş bitişe hizalandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to end"
+msgstr "Bitiş bitişe hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End to End"
+msgstr "Bitişi Bitişe Hizala/Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End to End"
+msgstr "Bitişi Bitişe Hizala"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved together"
+msgstr "Birlikte hizlandı/taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned together"
+msgstr "Birlikte hizalandı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Together"
+msgstr "Birlikte Hizala/Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Together"
+msgstr "Birlikte Hizala"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "MIDI ile Sesi Eşleştir"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "MIDI ve Ses İzleri Eşleştiriliyor"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Ayarlanmış kazanç"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Ayarlanmış kaydırma"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Ses izleri kaldırıldı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "İzi Kaldır"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "'%s' izi kaldırıldı."
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "İz Kaldırma"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Top"
+msgstr "'%s' En Üste Taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Top"
+msgstr "İzi En Üste Taşı"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "'%s' En Alta Taşındı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Bottom"
+msgstr "İzi En Alta Taşı"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Up"
+msgstr "'%s' Yukarı Taşındı"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Down"
+msgstr "'%s' Aşağı Taşındı"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Up"
+msgstr "İzi Yukarı Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Down"
+msgstr "İzi Aşağı Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Yeni ses izi oluşturuldu"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Yeni İz"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Yeni çift kanallı ses izi oluşturuldu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Yeni etiket izi oluşturuldu"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Bu Audacity sürümünde her proje penceresinde yalnız bir zaman izi "
+"kullanılabilir."
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Yeni zaman izi oluşturuldu"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Yeni örnekleme hızı (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "Yazdığınız değer geçersiz"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "%d izi yeniden örnekleniyor"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Ses izleri yeniden örneklendi"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "İzi Yeniden Örnekle"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Lütfen bir ses izi seçin."
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Hizalama tamamlandı: MIDI %.2f yerine %.2f saniyeye, Ses %.2f yerine %.2f "
+"saniyeye."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "MIDI ile Sesi Eşleştir"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Hizalama hatası: giriş çok kısa: MIDI %.2f yerine %.2f saniyeye, Ses %.2f "
+"yerine %.2f saniyeye."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "Hizalama işlemi tarafından iç hata oluştuğu bildirildi."
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Zamana göre sıralanmış izler"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "Tarihe Göre Sıralansın"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "İsme göre sıralanmış izler"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "Ada Göre Sıralansın"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Etkin sesin bulunduğu izi silemezsiniz"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "&Yeni İz Ekle"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "&Tek Kanallı İz"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&Çift Kanallı İz"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&Etiket İzi"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "&Zaman İzi"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr "&Karıştır"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "Çift Ka&nallıyı Tek Kanallıya Karıştır"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "&Karıştır ve Oluştur"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "Karıştır ve &Yeni İz Oluştur"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "Yeniden Ö&rnekle..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "İzleri &Kaldır"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "Kı&s/Aç"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "Tü&m İzlerin Sesini Sustur"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "Tüm İzlerin &Sesi Açılsın"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "Ka&ydır"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "&Sola"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "&Sola"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "S&ağa"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "S&ağa"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "&Ortaya"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Orta"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "İzleri Hiz&ala"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "Sonu Seçim Bitişine Hiza&la"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "Birlik&te Hizalayın"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Başlangıç Sı&fıra"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Başlangıç İm&leç/Seçim Başlangıcına"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Başlangıç Seçi&m Bitişine"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Bitiş S&eçim Başlangıcına"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Bitiş Seçi&m Bitişine"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "Seçimi İzlerle &Taşı (aç/kapat)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "Seçimi ve İ&zleri Taşı"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "İ&zler Sıralansın"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "&Başlama Zamanına Göre"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "&Ada Göre"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "Eş Ki&litlenmiş İzler (aç/kapat)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Track"
+msgstr "İ&z"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "Od&aklanılmış izde konumu değiştir"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "Odaklanılmış izde so&la kaydır"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "Odaklanılmış izde sağa kaydı&r"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "Odaklanılmış izi&n kazancını değiştir"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "Odaklanılmış izi&n kazancını arttır"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "Odaklanılmış izin kazancını a&zalt"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "Odaklanılmış izin m&enüsünü aç"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "Odaklanılmış izi s&ustur/dinlet"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "Odaklanılmış iz &solo/değil"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "Odaklanılmış izi &kapat"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "Odaklanılmış izi &yukarı taşı"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "Odaklanılmış izi &aşağı taşı"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "&Odaklanılmış izi en üste taşı"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "Odaklanılmış izi en alta &taşı"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "herhangi bir etiket izi yok"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "odaklanılan izde ve altında herhangi bir etiket izi yok"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "etiket izinde herhangi bir etiket yok"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Daha ileri bölge kilitlenemiyor\n"
+"projenin sonu."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+"Birden çok proje açıkken Zamanlanmış Kayıt kullanılamaz.\n"
+"\n"
+"Lütfen diğer projeleri kapatıp yeniden deneyin."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+"Kaydedilmemiş değişiklikler varken Zamanlanmış Kayıt kullanılamaz.\n"
+"\n"
+"Lütfen bu projeyi kaydettikten ya da kapattıktan sonra yeniden deneyin."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Lütfen bir ses izi seçin."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Lütfen bir ses izi seçin."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Lütfen bir ses izi seçin."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Lütfen bir Nota İzi seçin."
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Hareket"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Oynatılıyor"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "Oyn&at/Durdur"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "Oynat/Durdur ve İ&mleci Koy"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "Sürek&li Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&Duraklat"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Kaydetme"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&Kaydet"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Append Record"
+msgstr "&Kayıt Ekle"
+
+#: src/menus/TransportMenus.cpp
+msgid "Record &New Track"
+msgstr "Ye&ni İz Ekle"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&Zamanlanmış Kayı&t..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "Bölg&eyi Çal"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "Ki&litle"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "Kili&di Aç"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "S&es Aygıtlarını Yeniden Tara"
+
+#: src/menus/TransportMenus.cpp
+msgid "Transport &Options"
+msgstr "Ak&tarım Ayarları"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "Kayıdı Başlatacak S&es Düzeyi..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "Sese &Göre Kayıt (aç/kapat)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "Sabitlenmiş Oynatma/Kayıt &Kafası (açık/kapalı)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "&Bindirme (aç/kapat)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "&Yazılımsal Oynarken Kaydet (aç/kapat)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "Otomatik Kayıt &Düzeyi Ayarlaması (aç/kapat)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "Ha&reketler"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "Oyn&at"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr "D&urdur"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &One Second"
+msgstr "&Bir Saniye Oynat"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "&Seçime Kadar Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &Before Selection Start"
+msgstr "Seçim &Başlangıcından Öncesini Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Af&ter Selection Start"
+msgstr "Seçim Başlangıcından Sonrasını Oyna&t"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Be&fore Selection End"
+msgstr "Seçi&m Bitişinden Öncesini Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Aft&er Selection End"
+msgstr "S&eçim Bitişinden Sonrasını Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before a&nd After Selection Start"
+msgstr "Seçim Başla&ngıcından Öncesini ve Sonrasını Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before an&d After Selection End"
+msgstr "Seçim Bitişin&den Öncesini ve Sonrasını Oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr "O&ynatma Kesme Önizleme"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Seçili hızda oynat"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Seçili &hızda oynat"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play-at-Speed"
+msgstr "Ç&evrim oynatma hızı"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr "O&ynatma kesme önizlemesi hızı"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Oynatma &hızını ayarla"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Oynatma hızını &arttır"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "Oynatma hızını a&zalt"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr "Ön&ceki Etikete Geç"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr "So&nraki Etikete Geç"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Görünüm"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "&Yakınlaştır"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "&Yakınlaştır"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "&Normal Görünüm"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "&Uzaklaştır"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "&Seçimi Yakınlaştır"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Toggle"
+msgstr "&Yakınlaştırmayı Değiştir"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Gelişmiş &dikey yakınlaştırma"
+
+#: src/menus/ViewMenus.cpp
+msgid "T&rack Size"
+msgstr "İ&z Boyutu"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Fit to Width"
+msgstr "&Genişliğe Sığdır"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr "&Yüksekliğe Sığdır"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "&Tüm İzleri Daralt"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "&Daraltılmış İzleri Genişlet"
+
+#: src/menus/ViewMenus.cpp
+msgid "Sk&ip to"
+msgstr "Ş&uraya Atla"
+
+#: src/menus/ViewMenus.cpp
+msgid "Selection Sta&rt"
+msgstr "Seçim &Başlangıcı"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "S&eçim Başına"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "Başlangıç Seçi&m Bitişine"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&Geçmiş..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "&Karaoke..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "&Karıştırıcı Paneli..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr "&Ek Menüler (aç/kapat)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Show Clipping (on/off)"
+msgstr "&Kırpılma Görüntülensin (aç/kapat)"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Etki Kabinini Görüntüle"
+
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "&Pencere"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "&Küçült"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "Tümünü Öne &Getir"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "Tüm izleri küçült"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13403,8 +13604,8 @@ msgid "Decoding Waveform"
 msgstr "Dalga Şekli Çözülüyor"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+#, fuzzy, c-format
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 "%s %2.0f%% tamamlandı.  Görev odaklanma noktasını değiştirmek için tıklayın."
 
@@ -13982,7 +14183,7 @@ msgid "%s - %s"
 msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -13992,7 +14193,7 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "'%s' kısayol tuşu zaten şu işleme atanmış:\n"
 "\n"
@@ -14374,6 +14575,10 @@ msgstr "Uzu&n aralık:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
@@ -14835,9 +15040,10 @@ msgstr ""
 " dalga izi ayarlanabilmektedir.)"
 
 #: src/prefs/ThemePrefs.cpp
+#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "Fazladan 'Kaynağı Çıkart' düğmesi ile derlenmiş bir Audacity hata ayıklama "
@@ -15407,8 +15613,8 @@ msgstr "%s - sürülen"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
 msgstr "Seçim %s.  %s değişmeyecek."
 
 #: src/toolbars/SpectralSelectionBar.cpp
@@ -15764,7 +15970,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr "Önce Sesi Durdurun"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Tek Kanallı"
 
@@ -16181,6 +16387,49 @@ msgstr "Geriye"
 #: src/widgets/HelpSystem.cpp
 msgid "Help on the Internet"
 msgstr "Internetten Yardım"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "Değişiklikleri kaydetmek istiyor musunuz?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Karıştır"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "QuickTime dosyaları"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Geri alınacak birşey yok"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "Odaklanılmış izi &kapat"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "Proje dosyası açılamadı"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Kayıt başlangıcı:"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -16639,121 +16888,6 @@ msgstr "Kapatmak istediğinize emin misiniz?"
 msgid "Confirm Close"
 msgstr "Kapatmayı Onayla"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Kayıt sırasında zaman akışı işlemleri devre dışıdır"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr ""
-"Çift kanallı izlerin bağıl boyutunu ayarlamak için tıklayıp sürükleyin."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "&Sabitlenmiş Kayıt/Oynatma kafası"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr "Zaman Akışı"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Seek"
-msgstr "Taramayı başlatmak için tıklayın ya da sürükleyin"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "Sarmayı başlatmak için tıklayın ya da sürükleyin"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Sarmak için tıklayıp taşıyın. Taramak için tıklayıp sürükleyin."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr "Taramaya Taşı"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr "Sarmaya Taşı"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr "Taramak için sürükleyin. Taramayı durdurmak için bırakın."
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr "Taramak için sürükleyin. Sarmak için bırakıp taşıyın."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr "Sarmak için taşıyın. Taramak için sürükleyin."
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "Hızlı oynatma devre dışı"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr "Hızlı oynatma etkin"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to unpin"
-msgstr "Sabitlemeyi kaldırmak için tıklayın"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to pin"
-msgstr "Sabitlemek için tıklayın"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr "Hızlı oynatmayı devre dışı bırak"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr "Hızlı oynatmayı etkinleştir"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable dragging selection"
-msgstr "Sürükleme seçimini devre dışı bırak"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable dragging selection"
-msgstr "Sürükleme seçimini etkinleştir"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr "Zaman Akışı İpuçlarını Devre Dışı Bırak"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr "Zaman Akışı İpuçlarını Etkinleştir"
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr "Oynatma sırasında kaydırma"
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr "Oynatma sırasında görüntüyü güncelle"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr "Oynatma Bölgesini Kilitle"
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr "Oynatma Bölgesinin Kilidini Aç"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr "Sarma Cetvelini Devre Dışı Bırak"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr "Sarma Cetvelini Etkinleştir"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Bu uyarı bir daha görüntülenmesin"
@@ -17165,6 +17299,11 @@ msgstr "Eğri zaten var"
 
 #: plug-ins/adjustable-fade.ny
 #, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Hata"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "Frekans kazancı negatif olamaz"
 
@@ -17178,13 +17317,8 @@ msgstr "Frekans kazancı negatif olamaz"
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "Hata"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17374,31 +17508,6 @@ msgstr "Yinelenme sayısı"
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "Hata"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17407,9 +17516,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Dosyaları şuna göre ayır:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Etiket Düzenle"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17429,6 +17545,11 @@ msgstr "Düzenleme Sayısı:"
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "Uzunluk (saniye)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "Uzunluk (saniye)"
 
 #: plug-ins/equalabel.ny
@@ -17474,6 +17595,48 @@ msgstr ""
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "Gecikme Dengelemesi"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "Çıkart"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "Uyarılar"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Etiket eklendi"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Etiketler düzenlendi"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~aRegion length = ~a seconds."
 msgstr ""
 
 #: plug-ins/highpass.ny
@@ -17830,16 +17993,6 @@ msgstr ""
 #, fuzzy
 msgid "Amplitude (0 - 1)"
 msgstr "Genlik (0-1):"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "&Sola"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "S&ağa"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
@@ -18520,6 +18673,34 @@ msgstr "Frekans (Hz):"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
+
+#, fuzzy
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
+
+#, fuzzy
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
+
+#, fuzzy
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr "Düzenleme sayısı değeri 1 - 10000 arasında olmalıdır."
+
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "Hata"
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "&Sola"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "S&ağa"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
