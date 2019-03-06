@@ -163,7 +163,7 @@ wxString Internat::ToDisplayString(double numberToConvert,
       if (result.Find(decSep) != -1)
       {
          // Strip trailing zeros, but leave one, and decimal separator.
-         int pos = result.Length() - 1;
+         int pos = result.length() - 1;
          while ((pos > 1) &&
                   (result.GetChar(pos) == wxT('0')) &&
                   (result.GetChar(pos - 1) != decSep))
@@ -290,8 +290,8 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
 wxString Internat::StripAccelerators(const wxString &s)
 {
    wxString result;
-   result.reserve(s.Length());
-   for(size_t i = 0; i < s.Length(); i++) {
+   result.reserve(s.length());
+   for(size_t i = 0; i < s.length(); i++) {
       if (s[i] == '\t')
          break;
       if (s[i] != '&' && s[i] != '.')

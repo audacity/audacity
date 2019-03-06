@@ -456,7 +456,7 @@ BlockFilePtr SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       if (!wxStricmp(attr, wxT("filename")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
             XMLValueChecker::IsGoodFileString(strValue) &&
-            (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
+            (strValue.length() + 1 + dm.GetProjectDataDir().length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(fileName, strValue, false))
             // Make sure fileName is back to uninitialized state so we can detect problem later.

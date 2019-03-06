@@ -42,7 +42,7 @@
 // Length check.  Is in part about not supplying malicious strings to file functions.
 bool XMLValueChecker::IsGoodString(const wxString & str)
 {
-   size_t len = str.Length();
+   size_t len = str.length();
    int nullIndex = str.Find('\0', false);
    if ((len <= PLATFORM_MAX_PATH) && // Shouldn't be any reason for longer strings, except intentional file corruption.
          (nullIndex == -1)) // No null characters except terminator.
@@ -63,7 +63,7 @@ bool XMLValueChecker::IsGoodFileName(const wxString & strFileName, const wxStrin
 {
    // Test strFileName.
    if (!IsGoodFileString(strFileName) ||
-         (strDirName.Length() + 1 + strFileName.Length() > PLATFORM_MAX_PATH))
+         (strDirName.length() + 1 + strFileName.length() > PLATFORM_MAX_PATH))
       return false;
 
    // Test the corresponding wxFileName.
@@ -78,7 +78,7 @@ bool XMLValueChecker::IsGoodFileString(const wxString &str)
 
             // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms,
             // sometimes huge, but we use 260 for all platforms.
-            (str.Length() <= 260) &&
+            (str.length() <= 260) &&
 
             (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters.
 }
@@ -91,7 +91,7 @@ bool XMLValueChecker::IsGoodSubdirName(const wxString & strSubdirName, const wxS
    // where an attacker could craft an AUP file with relative pathnames to get to system files, for example.
    if (!IsGoodFileString(strSubdirName) ||
          (strSubdirName == wxT(".")) || (strSubdirName == wxT("..")) ||
-         (strDirName.Length() + 1 + strSubdirName.Length() > PLATFORM_MAX_PATH))
+         (strDirName.length() + 1 + strSubdirName.length() > PLATFORM_MAX_PATH))
       return false;
 
    // Test the corresponding wxFileName.
@@ -110,7 +110,7 @@ bool XMLValueChecker::IsGoodPathString(const wxString &str)
 {
    return (IsGoodString(str) &&
             !str.empty() &&
-            (str.Length() <= PLATFORM_MAX_PATH));
+            (str.length() <= PLATFORM_MAX_PATH));
 }
 
 
@@ -124,8 +124,8 @@ bool XMLValueChecker::IsGoodIntForRange(const wxString & strInt, const wxString 
    // We're strict about disallowing spaces and commas, and requiring minus sign to be first 
    // char for negative. No + sign for positive numbers.  It's disallowed, not optional.
 
-   const size_t lenMAXABS = strMAXABS.Length();
-   const size_t lenStrInt = strInt.Length();
+   const size_t lenMAXABS = strMAXABS.length();
+   const size_t lenStrInt = strInt.length();
 
    if( lenStrInt < 1 )
       return false;

@@ -370,7 +370,7 @@ ProgressResult OggImportFileHandle::Import(
          wxString value = comment.AfterFirst(wxT('='));
          if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
             long val;
-            if (value.Length() == 4 && value.ToLong(&val)) {
+            if (value.length() == 4 && value.ToLong(&val)) {
                name = TAG_YEAR;
             }
          }

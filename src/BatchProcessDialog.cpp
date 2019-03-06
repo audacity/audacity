@@ -957,7 +957,7 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 
       name = d.GetValue().Strip(wxString::both);
 
-      if (name.Length() == 0) {
+      if (name.length() == 0) {
          AudacityMessageBox(_("Name must not be blank"),
                       GetTitle(),
                       wxOK | wxICON_ERROR,

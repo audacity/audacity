@@ -1096,7 +1096,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
                nScore +=
                   nPointsPerMatch +
                   // Longer keywords get more points.
-                  (2 * mMusicalInstruments[nInstrIndex]->mKeywords[nKeywordIndex].Length());
+                  (2 * mMusicalInstruments[nInstrIndex]->mKeywords[nKeywordIndex].length());
             }
       }
 

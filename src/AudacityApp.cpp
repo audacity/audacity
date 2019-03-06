@@ -1756,7 +1756,7 @@ bool AudacityApp::InitTempDir()
    wxString temp = wxT("");
 
    #ifdef __WXGTK__
-   if (tempFromPrefs.Length() > 0 && tempFromPrefs[0] != wxT('/'))
+   if (tempFromPrefs.length() > 0 && tempFromPrefs[0] != wxT('/'))
       tempFromPrefs = wxT("");
    #endif
 
@@ -1940,7 +1940,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                   for (size_t i = 0, cnt = filenames.size(); i < cnt; i++)
                   {
                      const wxString param = filenames[i];
-                     sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
+                     sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
                   }
                }
                else

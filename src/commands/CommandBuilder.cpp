@@ -173,7 +173,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
          splitAt = cmdParams.Find(wxT(' '))+1;
       if (splitAt < 1)
       {
-         splitAt = cmdParams.Len();
+         splitAt = cmdParams.length();
       }
       cmdParams = cmdParams.Mid(splitAt);
    }

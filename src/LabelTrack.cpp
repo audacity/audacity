@@ -1014,7 +1014,7 @@ bool LabelTrack::CutSelectedText()
       left = text.Left(init);
 
    // get right-remaining text
-   if (cur < (int)text.Length())
+   if (cur < (int)text.length())
       right = text.Mid(cur);
 
    // set title to the combination of the two remainders
@@ -1028,7 +1028,7 @@ bool LabelTrack::CutSelectedText()
    }
 
    // set cursor positions
-   mInitialCursorPos = mCurrentCursorPos = left.Length();
+   mInitialCursorPos = mCurrentCursorPos = left.length();
    return true;
 }
 
@@ -1082,7 +1082,7 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
       }
 
       // Convert control characters to blanks
-      for (int i = 0; i < (int)text.Length(); i++) {
+      for (int i = 0; i < (int)text.length(); i++) {
          if (wxIscntrl(text[i])) {
             text[i] = wxT(' ');
          }
@@ -1095,11 +1095,11 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
    if (init > cur)
       std::swap(init, cur);
    left = title.Left(init);
-   if (cur < (int)title.Length())
+   if (cur < (int)title.length())
       right = title.Mid(cur);
 
    title = left + text + right;
-   mInitialCursorPos =  mCurrentCursorPos = left.Length() + text.Length();
+   mInitialCursorPos =  mCurrentCursorPos = left.length() + text.length();
    return true;
 }
 
@@ -1865,7 +1865,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_BACK:
          {
-            int len = title.Length();
+            int len = title.length();
 
             //IF the label is not blank THEN get rid of a letter or letters according to cursor position
             if (len > 0)
@@ -1895,7 +1895,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
       case WXK_DELETE:
       case WXK_NUMPAD_DELETE:
          {
-            int len = title.Length();
+            int len = title.length();
 
             //If the label is not blank get rid of a letter according to cursor position
             if (len > 0)
@@ -1992,7 +1992,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          mSelIndex = (mSelIndex + (int)mLabels.size()) % (int)mLabels.size();    // wrap round if necessary
          {
             LabelStruct &newLabel = mLabels[mSelIndex];
-            mCurrentCursorPos = newLabel.title.Length();
+            mCurrentCursorPos = newLabel.title.length();
             mInitialCursorPos = mCurrentCursorPos;
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
             newSel = newLabel.selectedRegion;
@@ -2040,7 +2040,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
             if (mSelIndex >= 0 && mSelIndex < len) {
                const auto &labelStruct = mLabels[mSelIndex];
-               mCurrentCursorPos = labelStruct.title.Length();
+               mCurrentCursorPos = labelStruct.title.length();
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
@@ -2267,11 +2267,11 @@ void LabelTrack::RemoveSelectedText()
    if (init > 0)
       left = title.Left(init);
 
-   if (cur < (int)title.Length())
+   if (cur < (int)title.length())
       right = title.Mid(cur);
 
    title = left + right;
-   mInitialCursorPos = mCurrentCursorPos = left.Length();
+   mInitialCursorPos = mCurrentCursorPos = left.length();
 }
 
 void LabelTrack::Unselect()

@@ -667,7 +667,7 @@ void OnApplyMacroDirectly(const CommandContext &context )
 #ifdef MACROS_BY_NUMBERS
    long item=0;
    // Take last three letters (of e.g. Macro007) and convert to a number.
-   Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
+   Name.Mid( Name.length() - 3 ).ToLong( &item, 10 );
    dlg.ApplyMacroToProject( item, false );
 #else
    dlg.ApplyMacroToProject( Name, false );

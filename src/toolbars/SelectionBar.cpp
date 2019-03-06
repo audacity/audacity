@@ -138,7 +138,7 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
    auStaticText * pTitle = safenew auStaticText(this, Title );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.Length() == 1 ) ? 0:5);
+   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.length() == 1 ) ? 0:5);
    return pTitle;
 }
 

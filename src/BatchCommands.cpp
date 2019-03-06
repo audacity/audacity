@@ -348,7 +348,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             wxString squashed = label;
             squashed.Replace( " ", "" );
 
-            suffix = squashed.Length() < wxMin( 18, mNames[i].Length());
+            suffix = squashed.length() < wxMin( 18, mNames[i].length());
          }
 
          if( suffix )

@@ -1551,7 +1551,7 @@ wxString AudacityProject::GetName()
    wxString name = wxFileNameFromPath(mFileName);
 
    // Chop off the extension
-   size_t len = name.Len();
+   size_t len = name.length();
    if (len > 4 && name.Mid(len - 4) == wxT(".aup"))
       name = name.Mid(0, len - 4);
 
@@ -3095,8 +3095,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    SetProjectTitle();
 
    const wxString autoSaveExt = wxT(".autosave");
-   if (mFileName.Length() >= autoSaveExt.Length() &&
-       mFileName.Right(autoSaveExt.Length()) == autoSaveExt)
+   if (mFileName.length() >= autoSaveExt.length() &&
+       mFileName.Right(autoSaveExt.length()) == autoSaveExt)
    {
       AutoSaveFile asf;
       if (!asf.Decode(fileName))
@@ -3472,10 +3472,10 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             realFileDir.RemoveLastDir();
 
             wxString realFileName = value;
-            if (realFileName.Length() >= 5 &&
+            if (realFileName.length() >= 5 &&
                 realFileName.Right(5) == wxT("_data"))
             {
-               realFileName = realFileName.Left(realFileName.Length() - 5);
+               realFileName = realFileName.Left(realFileName.length() - 5);
             }
 
             if (realFileName.empty())
@@ -3564,7 +3564,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // above is inaccurate.
 
    if (!bFileVersionFound ||
-         (fileVersion.Length() != 5) || // expecting '1.1.0', for example
+         (fileVersion.length() != 5) || // expecting '1.1.0', for example
          // JKC: I commentted out next line.  IsGoodInt is not for
          // checking dotted numbers.
          //!XMLValueChecker::IsGoodInt(fileVersion) ||
@@ -3694,8 +3694,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
    wxString project = mFileName;
-   if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
-      project = project.Mid(0, project.Len() - 4);
+   if (project.length() > 4 && project.Mid(project.length() - 4) == wxT(".aup"))
+      project = project.Mid(0, project.length() - 4);
    wxString projName = wxFileNameFromPath(project) + wxT("_data");
    // End Warning -DMM
 
@@ -3926,8 +3926,8 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    if (fromSaveAs) {
       // This block of code is duplicated in WriteXML, for now...
       project = mFileName;
-      if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
-         project = project.Mid(0, project.Len() - 4);
+      if (project.length() > 4 && project.Mid(project.length() - 4) == wxT(".aup"))
+         project = project.Mid(0, project.length() - 4);
       projName = wxFileNameFromPath(project) + wxT("_data");
       projPath = wxPathOnly(project);
 

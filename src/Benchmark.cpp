@@ -297,11 +297,11 @@ void BenchmarkDialog::HoldPrint(bool hold)
 
 void BenchmarkDialog::FlushPrint()
 {
-   while(mToPrint.Length() > 100) {
+   while(mToPrint.length() > 100) {
       mText->AppendText(mToPrint.Left(100));
-      mToPrint = mToPrint.Right(mToPrint.Length() - 100);
+      mToPrint = mToPrint.Right(mToPrint.length() - 100);
    }
-   if (mToPrint.Length() > 0)
+   if (mToPrint.length() > 0)
       mText->AppendText(mToPrint);
    mToPrint = wxT("");
 }

@@ -304,7 +304,7 @@ private:
       if (keyDown)
       {
          wxString chars = GetUnicodeString(temp);
-         for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
+         for (size_t i = 0, cnt = chars.length(); i < cnt; i++)
          {
             temp = event;
             temp.SetEventType(wxEVT_CHAR);

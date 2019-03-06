@@ -1553,7 +1553,7 @@ std::vector<ComponentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString 
       // un-internationalized names, ignoring leading and trailing spaces
       // on each; and the whole may be quoted
       auto choices = wxStringTokenize(
-         text[0] == wxT('"') ? text.Mid(1, text.Length() - 2) : text,
+         text[0] == wxT('"') ? text.Mid(1, text.length() - 2) : text,
          wxT(",")
       );
       for (auto &choice : choices)
@@ -1595,7 +1595,7 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
    if (pExtraString)
       *pExtraString = wxString{};
 
-   int len = s.Length();
+   int len = s.length();
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
       return wxGetTranslation( unquoted );
@@ -1973,7 +1973,7 @@ bool NyquistEffect::Parse(
          // valStr may or may not be a quoted string
          ctrl.valStr = len > 5 ? tokens[5] : wxT("");
          ctrl.val = GetCtrlValue(ctrl.valStr);
-         if (ctrl.valStr.Len() > 0 &&
+         if (ctrl.valStr.length() > 0 &&
                (ctrl.valStr[0] == wxT('(') ||
                ctrl.valStr[0] == wxT('"')))
             ctrl.valStr = UnQuote( ctrl.valStr );
@@ -2120,7 +2120,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    {
       bool dollar = false;
       wxString line = pgm.ReadLine();
-      if (line.Length() > 1 &&
+      if (line.length() > 1 &&
           // New in 2.3.0:  allow magic comment lines to start with $
           // The trick is that xgettext will not consider such lines comments
           // and will extract the strings they contain
@@ -2144,9 +2144,9 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
       }
       else
       {
-         if(!mFoundType && line.Length() > 0) {
+         if(!mFoundType && line.length() > 0) {
             if (line[0] == wxT('(') ||
-                (line[0] == wxT('#') && line.Length() > 1 && line[1] == wxT('|')))
+                (line[0] == wxT('#') && line.length() > 1 && line[1] == wxT('|')))
             {
                mIsSal = false;
                mFoundType = true;

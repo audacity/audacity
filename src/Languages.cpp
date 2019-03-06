@@ -109,7 +109,7 @@ wxString GetSystemLanguageCode()
 
    if (info) {
       wxString fullCode = info->CanonicalName;
-      if (fullCode.Length() < 2)
+      if (fullCode.length() < 2)
          return wxT("en");
 
       wxString code = fullCode.Left(2);
@@ -238,7 +238,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
       // name but associate it with the full code.  This allows someone
       // to drop in a NEW language and still get reasonable behavior.
 
-      if (fullCode.Length() < 2)
+      if (fullCode.length() < 2)
          continue;
 
       if (localLanguageName[code] != wxT("")) {

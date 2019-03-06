@@ -27,7 +27,7 @@
 
 bool ImportMIDI(const wxString &fName, NoteTrack * dest)
 {
-   if (fName.Length() <= 4){
+   if (fName.length() <= 4){
       AudacityMessageBox( wxString::Format(
          _("Could not open file %s: Filename too short."), fName
       ) );

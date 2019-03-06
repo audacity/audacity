@@ -779,10 +779,10 @@ KeyView::RefreshLines(bool bSort)
          // then it has to be the last character in the searchit string,
          // and be preceded by nothing or +.
          if ((mViewType == ViewByKey) && 
-               (mFilter.Len() == 1) && 
+               (mFilter.length() == 1) &&
                (!mFilter.IsSameAs(searchit.Last()) ||
-                  ((searchit.Len() > 1) && 
-                     ((wxString)(searchit.GetChar(searchit.Len() - 2)) != wxT("+")))))
+                  ((searchit.length() > 1) &&
+                     ((wxString)(searchit.GetChar(searchit.length() - 2)) != wxT("+")))))
          {
             // Not suitable so continue to next node
             continue;

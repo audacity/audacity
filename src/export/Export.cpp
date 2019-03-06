@@ -663,7 +663,7 @@ bool Exporter::GetFilename()
          }
       }
 
-      if (mFilename.GetFullPath().Length() >= 256) {
+      if (mFilename.GetFullPath().length() >= 256) {
          AudacityMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
          continue;
       }

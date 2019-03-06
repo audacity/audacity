@@ -189,7 +189,7 @@ bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
          wxString str = mValueString;
          if( str.Left( 1 ) == wxT('"') && str.Right( 1 ) == wxT('"') )
          {
-            str = str.Mid( 2, str.Length() - 2 );
+            str = str.Mid( 2, str.length() - 2 );
          }
 
          for( int i = 0; i < nChoices; i++ )
@@ -283,7 +283,7 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
       i=mParams.Find( wxT(" ")+Name+wxT("=") );
       if( i>=0 )
       {
-         int j=i+2+Name.Length();
+         int j=i+2+Name.length();
          wxString terminator = wxT(' ');
          if(mParams.GetChar(j) == wxT('"')) //Strings are surrounded by quotes
          {
@@ -296,7 +296,7 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
             j++;
          }         
          i=j;
-         while( j<(int)mParams.Length() && mParams.GetChar(j) != terminator )
+         while( j<(int)mParams.length() && mParams.GetChar(j) != terminator )
             j++;
          mValueString = mParams.Mid(i,j-i);
          return true;

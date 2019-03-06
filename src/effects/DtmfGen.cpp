@@ -407,7 +407,7 @@ void EffectDtmf::Recalculate()
 {
    // remember that dtmfDutyCycle is in range (0.0-100.0)
 
-   dtmfNTones = (int) dtmfSequence.Length();
+   dtmfNTones = (int) dtmfSequence.length();
 
    if (dtmfNTones==0) {
       // no tones, all zero: don't do anything

@@ -138,7 +138,7 @@ wxString FileNames::LowerCaseAppNameInPath( const wxString & dirIn){
    // BUG 1577 Capitalisation of Audacity in path...
    if( dir.EndsWith( "Audacity" ) )
    {
-      int nChars = dir.Length() - wxString( "Audacity" ).Length();
+      int nChars = dir.length() - wxString( "Audacity" ).length();
       dir = dir.Left( nChars ) + "audacity";
    }
    return dir;

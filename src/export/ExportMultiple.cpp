@@ -973,7 +973,7 @@ wxString ExportMultiple::MakeFileName(const wxString &input)
       wxString msg;
       wxString excluded = ::wxJoin( Internat::GetExcludedCharacters(), wxChar(' ') );
       // TODO: For Russian langauge we should have separate cases for 2 and more than 2 letters.
-      if( excluded.Length() > 1 ){
+      if( excluded.length() > 1 ){
          // i18n-hint: The second %s gives some letters that can't be used.
          msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input,
             excluded);
