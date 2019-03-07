@@ -155,11 +155,9 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
-wxArrayString NyquistEffectsModule::GetFileExtensions()
+FileExtensions NyquistEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = { _T("ny") };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   return {{ _T("ny") }};
 }
 
 wxString NyquistEffectsModule::InstallPath()

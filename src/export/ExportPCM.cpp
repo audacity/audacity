@@ -340,7 +340,7 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
    // optional
-   wxString GetExtension(int index) override;
+   FileExtension GetExtension(int index) override;
    bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
@@ -890,7 +890,7 @@ wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
    return ExportPlugin::OptionsCreate(parent, format);
 }
 
-wxString ExportPCM::GetExtension(int index)
+FileExtension ExportPCM::GetExtension(int index)
 {
    if (index == WXSIZEOF(kFormats)) {
       // get extension libsndfile thinks is correct for currently selected format

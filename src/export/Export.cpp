@@ -128,9 +128,9 @@ void ExportPlugin::AddExtension(const wxString &extension,int index)
    mFormatInfos[index].mExtensions.push_back(extension);
 }
 
-void ExportPlugin::SetExtensions(const wxArrayString & extensions, int index)
+void ExportPlugin::SetExtensions(FileExtensions extensions, int index)
 {
-   mFormatInfos[index].mExtensions = extensions;
+   mFormatInfos[index].mExtensions = std::move(extensions);
 }
 
 void ExportPlugin::SetMask(const wxString & mask, int index)
@@ -158,12 +158,12 @@ wxString ExportPlugin::GetDescription(int index)
    return mFormatInfos[index].mDescription;
 }
 
-wxString ExportPlugin::GetExtension(int index)
+FileExtension ExportPlugin::GetExtension(int index)
 {
    return mFormatInfos[index].mExtensions[0];
 }
 
-wxArrayString ExportPlugin::GetExtensions(int index)
+FileExtensions ExportPlugin::GetExtensions(int index)
 {
    return mFormatInfos[index].mExtensions;
 }
@@ -177,8 +177,8 @@ wxString ExportPlugin::GetMask(int index)
    wxString mask = GetDescription(index) + wxT("|");
 
    // Build the mask
-   // wxString ext = GetExtension(index);
-   auto exts = GetExtensions(index);
+   // const auto &ext = GetExtension(index);
+   const auto &exts = GetExtensions(index);
    for (size_t i = 0; i < exts.size(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");
    }
@@ -201,8 +201,8 @@ bool ExportPlugin::IsExtension(const wxString & ext, int index)
    bool isext = false;
    for (int i = index; i < GetFormatCount(); i = GetFormatCount())
    {
-      wxString defext = GetExtension(i);
-      auto defexts = GetExtensions(i);
+      const auto &defext = GetExtension(i);
+      const auto &defexts = GetExtensions(i);
       int indofext = defexts.Index(ext, false);
       if (defext.empty() || (indofext != wxNOT_FOUND))
          isext = true;
@@ -616,7 +616,7 @@ bool Exporter::GetFilename()
          }
       }
 
-      wxString ext = mFilename.GetExt();
+      const auto &ext = mFilename.GetExt();
       defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
       //

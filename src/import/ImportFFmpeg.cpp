@@ -41,8 +41,7 @@ Licensed under the GNU General Public License v2 or later
 
 //TODO: remove non-audio extensions
 #if defined(USE_FFMPEG)
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("4xm"),
    wxT("MTV"),
    wxT("roq"),
@@ -173,10 +172,9 @@ class FFmpegImportPlugin final : public ImportPlugin
 {
 public:
    FFmpegImportPlugin():
-      ImportPlugin(wxArrayString(WXSIZEOF(exts),exts))
-      {
-
-      }
+      ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
+   {
+   }
 
    ~FFmpegImportPlugin() { }
 

@@ -504,7 +504,8 @@ bool MacroCommands::IsMono()
    return ( tracks->Any() - &Track::IsLeader ).empty();
 }
 
-wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
+wxString MacroCommands::BuildCleanFileName(const wxString &fileName,
+   const FileExtension &extension)
 {
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();

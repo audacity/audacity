@@ -363,11 +363,9 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
-wxArrayString VSTEffectsModule::GetFileExtensions()
+FileExtensions VSTEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = { _T("vst") };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   return {{ _T("vst") }};
 }
 
 wxString VSTEffectsModule::InstallPath()

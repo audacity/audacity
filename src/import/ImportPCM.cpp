@@ -73,9 +73,8 @@ class PCMImportPlugin final : public ImportPlugin
 {
 public:
    PCMImportPlugin()
-   :  ImportPlugin(wxArrayString())
+   :  ImportPlugin(sf_get_all_extensions())
    {
-      mExtensions = sf_get_all_extensions();
    }
 
    ~PCMImportPlugin() { }

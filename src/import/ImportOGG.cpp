@@ -47,8 +47,7 @@
 
 #define DESC _("Ogg Vorbis files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("ogg")
 };
 
@@ -61,7 +60,7 @@ void GetOGGImportPlugin(ImportPluginList &importPluginList,
 {
    unusableImportPluginList.push_back(
       std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+         (DESC, FileExtensions( exts.begin(), exts.end() ) )
    );
 }
 
@@ -86,7 +85,7 @@ class OggImportPlugin final : public ImportPlugin
 {
 public:
    OggImportPlugin()
-   :  ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 

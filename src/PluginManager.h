@@ -112,11 +112,11 @@ public:
 
    const wxString & GetImporterIdentifier() const;
    const wxString & GetImporterFilterDescription() const;
-   const wxArrayString & GetImporterExtensions() const;
+   const FileExtensions & GetImporterExtensions() const;
 
    void SetImporterIdentifier(const wxString & identifier);
    void SetImporterFilterDescription(const wxString & filterDesc);
-   void SetImporterExtensions(const wxArrayString & extensions);
+   void SetImporterExtensions(FileExtensions extensions);
 
 private:
 
@@ -154,7 +154,7 @@ private:
 
    wxString mImporterIdentifier;
    wxString mImporterFilterDesc;
-   wxArrayString mImporterExtensions;
+   FileExtensions mImporterExtensions;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@
 #ifndef LV2EFFECTSMODULE_H
 #define LV2EFFECTSMODULE_H
 
+#include "../../MemoryX.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
 
@@ -87,7 +88,7 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   wxArrayString GetFileExtensions() override { return {}; }
+   FileExtensions GetFileExtensions() override { return {}; }
    wxString InstallPath() override { return {}; }
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;

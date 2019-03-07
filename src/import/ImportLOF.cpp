@@ -96,8 +96,7 @@
 
 #define DESC _("List of Files in basic text format")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("lof")
 };
 
@@ -105,7 +104,7 @@ class LOFImportPlugin final : public ImportPlugin
 {
 public:
    LOFImportPlugin()
-   :  ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 

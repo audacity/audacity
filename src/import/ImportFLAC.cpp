@@ -50,8 +50,7 @@
 
 #define DESC _("FLAC files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("flac"),
    wxT("flc")
 };
@@ -63,7 +62,7 @@ void GetFLACImportPlugin(ImportPluginList &importPluginList,
 {
    unusableImportPluginList.push_back(
       std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+         (DESC, FileExtensions( exts.begin(), exts.end() ) )
    );
 }
 
@@ -133,7 +132,7 @@ class FLACImportPlugin final : public ImportPlugin
 {
  public:
    FLACImportPlugin():
-      ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+   ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 

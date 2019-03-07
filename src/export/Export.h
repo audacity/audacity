@@ -48,7 +48,7 @@ class AUDACITY_DLL_API FormatInfo
       wxString mFormat;
       wxString mDescription;
       // wxString mExtension;
-      wxArrayString mExtensions;
+      FileExtensions mExtensions;
       wxString mMask;
       unsigned mMaxChannels;
       bool mCanMetaData;
@@ -68,7 +68,7 @@ public:
    void SetFormat(const wxString & format, int index);
    void SetDescription(const wxString & description, int index);
    void AddExtension(const wxString &extension,int index);
-   void SetExtensions(const wxArrayString & extensions, int index);
+   void SetExtensions(FileExtensions extensions, int index);
    void SetMask(const wxString & mask, int index);
    void SetMaxChannels(unsigned maxchannels, unsigned index);
    void SetCanMetaData(bool canmetadata, int index);
@@ -78,10 +78,10 @@ public:
    virtual wxString GetDescription(int index);
    /** @brief Return the (first) file name extension for the sub-format.
     * @param index The sub-format for which the extension is wanted */
-   virtual wxString GetExtension(int index = 0);
+   virtual FileExtension GetExtension(int index = 0);
    /** @brief Return all the file name extensions used for the sub-format.
     * @param index the sub-format for which the extension is required */
-   virtual wxArrayString GetExtensions(int index = 0);
+   virtual FileExtensions GetExtensions(int index = 0);
    virtual wxString GetMask(int index);
    virtual unsigned GetMaxChannels(int index);
    virtual bool GetCanMetaData(int index);

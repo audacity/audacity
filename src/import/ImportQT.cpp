@@ -20,8 +20,7 @@
 
 #define DESC _("QuickTime files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("aif"),
    wxT("aifc"),
    wxT("aiff"),
@@ -41,8 +40,8 @@ void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
    unusableImportPluginList.push_back(
-      std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+      std::make_unique<UnusableImportPlugin>(DESC,
+         FileExtensions( exts.begin(), exts.end() ) )
    );
 }
 
@@ -82,7 +81,7 @@ class QTImportPlugin final : public ImportPlugin
 {
  public:
    QTImportPlugin()
-   :  ImportPlugin(wxArrayString(WXSIZEOF(exts), exts)),
+   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) ),
       mInitialized(false)
    {
       OSErr err = noErr;

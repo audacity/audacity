@@ -1320,14 +1320,15 @@ void PluginDescriptor::SetImporterFilterDescription(const wxString & filterDesc)
    mImporterFilterDesc = filterDesc;
 }
 
-const wxArrayString & PluginDescriptor::GetImporterExtensions() const
+const FileExtensions & PluginDescriptor::GetImporterExtensions()
+   const
 {
    return mImporterExtensions;
 }
 
-void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
+void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )
 {
-   mImporterExtensions = extensions;
+   mImporterExtensions = std::move( extensions );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2199,7 +2200,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             {
                continue;
             }
-            wxArrayString extensions;
+            FileExtensions extensions;
             wxStringTokenizer tkr(strVal, wxT(":"));
             while (tkr.HasMoreTokens())
             {

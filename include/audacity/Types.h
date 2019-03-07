@@ -67,6 +67,12 @@ using PluginPaths = std::vector< PluginPath >;
 using RegistryPath = wxString;
 using RegistryPaths = std::vector< RegistryPath >;
 
+class wxArrayStringEx;
+
+// File extensions, not including any leading dot
+using FileExtension = wxString;
+using FileExtensions = wxArrayStringEx;
+
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples
 // ----------------------------------------------------------------------------
