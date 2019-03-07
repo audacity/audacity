@@ -44,7 +44,7 @@ wxWidgets:
 
     So...
 
-    cd vendors/wxWidgets
+    cd lib-src/wxWidgets
     mkdir buildgtk
     cd buildgtk
     ../configure --with-gtk

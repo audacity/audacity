@@ -45,10 +45,10 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
    We have applied some Audacity specific patches to wxWidgets to better 
    support VoiceOver.
 
-9) Change directory to the vendors/wxWidgets folder build/install 
+9) Change directory to the lib-src/wxWidgets folder build/install 
     wxWidgets:
 
-   sudo <path to Audacity source>/mac/scripts/build_wxwidgets
+   sudo ../../mac/scripts/build_wxwidgets
 
 Check that this worked by looking for <path to wxWidgets>/bld_release_x86_64 
 containing library .o files.  There should also be 3 other directories for
