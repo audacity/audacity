@@ -48,7 +48,7 @@ wxWidgets:
     mkdir buildgtk
     cd buildgtk
     ../configure --with-gtk
-    make
+    make install
 
   3) Having got this far, it is well worth trying out building some wxWidgets
     examples to confirm that building has worked OK
