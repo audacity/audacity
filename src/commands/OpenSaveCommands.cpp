@@ -43,7 +43,7 @@ void OpenProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool OpenProjectCommand::Apply(const CommandContext & context){
 
-   wxString oldFileName = context.GetProject()->GetFileName();
+   auto oldFileName = context.GetProject()->GetFileName();
    if(mFileName.empty())
    {
       auto project = context.GetProject();
@@ -53,7 +53,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    {
       context.GetProject()->OpenFile(mFileName, mbAddToHistory);
    }
-   const wxString &newFileName = context.GetProject()->GetFileName();
+   const auto &newFileName = context.GetProject()->GetFileName();
 
    // Because Open does not return a success or failure, we have to guess
    // at this point, based on whether the project file name has

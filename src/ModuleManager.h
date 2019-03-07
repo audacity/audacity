@@ -48,7 +48,7 @@ typedef int (*fnModuleDispatch)(ModuleDispatchTypes type);
 class Module
 {
 public:
-   Module(const wxString & name);
+   Module(const FilePath & name);
    virtual ~Module();
 
    bool Load();
@@ -57,7 +57,7 @@ public:
    void * GetSymbol(const wxString &name);
 
 private:
-   wxString mName;
+   FilePath mName;
    std::unique_ptr<wxDynamicLibrary> mLib;
    fnModuleDispatch mDispatch;
 };

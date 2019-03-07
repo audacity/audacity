@@ -1472,8 +1472,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Import
 }
 
 void PluginManager::FindFilesInPathList(const wxString & pattern,
-                                        const wxArrayString & pathList,
-                                        wxArrayString & files,
+                                        const FilePaths & pathList,
+                                        FilePaths & files,
                                         bool directories)
 {
    
@@ -1487,7 +1487,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
 
    // TODO:  We REALLY need to figure out the "Audacity" plug-in path(s)
 
-   wxArrayString paths;
+   FilePaths paths;
 
    // Add the "per-user" plug-ins directory
    {
@@ -1508,9 +1508,9 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    paths.push_back(ff.GetPath());
 
    // Weed out duplicates
-   for (size_t i = 0, cnt = pathList.size(); i < cnt; i++)
+   for (const auto &filePath : pathList)
    {
-      ff = pathList[i];
+      ff = filePath;
       const wxString path{ ff.GetFullPath() };
       if (paths.Index(path, wxFileName::IsCaseSensitive()) == wxNOT_FOUND)
       {

@@ -42,7 +42,7 @@ public:
    void Terminate() override;
 
    FileExtensions GetFileExtensions() override { return {}; }
-   wxString InstallPath() override { return {}; }
+   FilePath InstallPath() override { return {}; }
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
    PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;

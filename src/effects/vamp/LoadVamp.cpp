@@ -112,6 +112,11 @@ void VampEffectsModule::Terminate()
    return;
 }
 
+FileExtensions VampEffectsModule::GetFileExtensions()
+{
+   return {};
+}
+
 bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
    return false;

@@ -14,6 +14,7 @@
 #include "expat.h"
 
 #include "XMLTagHandler.h"
+#include "audacity/Types.h"
 
 class AUDACITY_DLL_API XMLFileReader final {
  public:
@@ -21,7 +22,7 @@ class AUDACITY_DLL_API XMLFileReader final {
    ~XMLFileReader();
 
    bool Parse(XMLTagHandler *baseHandler,
-              const wxString &fname);
+              const FilePath &fname);
 
    wxString GetErrorStr();
 

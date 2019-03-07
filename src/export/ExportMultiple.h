@@ -127,7 +127,7 @@ private:
    bool mInitialized;
 
    // List of file actually exported
-   wxArrayString mExported;
+   FilePaths mExported;
 
    wxChoice      *mFormat;    /**< Drop-down list of export formats
                                 (combinations of plug-in and subformat) */

@@ -102,7 +102,7 @@ public:
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
    // state.
-   virtual std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) = 0;
+   virtual std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) = 0;
 
    virtual ~ImportPlugin() { }
 
@@ -120,7 +120,7 @@ protected:
 class ImportFileHandle /* not final */
 {
 public:
-   ImportFileHandle(const wxString & filename)
+   ImportFileHandle(const FilePath & filename)
    :  mFilename(filename),
    mProgress{}
    {
@@ -173,7 +173,7 @@ public:
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;
 
 protected:
-   wxString mFilename;
+   FilePath mFilename;
    Maybe<ProgressDialog> mProgress;
 };
 

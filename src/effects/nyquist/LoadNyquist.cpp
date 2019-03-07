@@ -128,7 +128,7 @@ wxString NyquistEffectsModule::GetDescription()
 
 bool NyquistEffectsModule::Initialize()
 {
-   auto audacityPathList = wxGetApp().audacityPathList;
+   const auto &audacityPathList = wxGetApp().audacityPathList;
 
    for (size_t i = 0, cnt = audacityPathList.size(); i < cnt; i++)
    {
@@ -160,7 +160,7 @@ FileExtensions NyquistEffectsModule::GetFileExtensions()
    return {{ _T("ny") }};
 }
 
-wxString NyquistEffectsModule::InstallPath()
+FilePath NyquistEffectsModule::InstallPath()
 {
    return FileNames::PlugInDir();
 }
@@ -169,8 +169,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
-   wxArrayString files;
+   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   FilePaths files;
    wxString ignoredErrMsg;
 
    if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
@@ -202,7 +202,7 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 PluginPaths NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    auto pathList = NyquistEffect::GetNyquistSearchPath();
-   wxArrayString files;
+   FilePaths files;
 
    // Add the Nyquist prompt
    files.push_back(NYQUIST_PROMPT_ID);

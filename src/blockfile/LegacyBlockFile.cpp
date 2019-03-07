@@ -221,7 +221,7 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
+BlockFilePtr LegacyBlockFile::BuildFromXML(const FilePath &projDir, const wxChar **attrs,
                                          size_t len, sampleFormat format)
 {
    wxFileNameWrapper fileName;

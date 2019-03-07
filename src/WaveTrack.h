@@ -226,14 +226,14 @@ private:
    /// Flush must be called after last Append
    void Flush();
 
-   void AppendAlias(const wxString &fName, sampleCount start,
+   void AppendAlias(const FilePath &fName, sampleCount start,
                     size_t len, int channel,bool useOD);
 
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
    //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
-   void AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.

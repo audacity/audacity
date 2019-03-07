@@ -23,17 +23,17 @@
 
 #include "PlatformCompatibility.h"
 
-wxString PlatformCompatibility::GetLongFileName(const wxString& shortFileName)
+FilePath PlatformCompatibility::GetLongFileName(const FilePath &shortFileName)
 {
    wxFileName fn(shortFileName);
 
    return fn.GetLongPath();
 }
 
-const wxString &PlatformCompatibility::GetExecutablePath()
+const FilePath &PlatformCompatibility::GetExecutablePath()
 {
    static bool found = false;
-   static wxString path;
+   static FilePath path;
 
    if (!found) {
       path = wxStandardPaths::Get().GetExecutablePath();
@@ -44,7 +44,7 @@ const wxString &PlatformCompatibility::GetExecutablePath()
    return path;
 }
 
-wxString PlatformCompatibility::ConvertSlashInFileName(const wxString& filePath)
+FilePath PlatformCompatibility::ConvertSlashInFileName(const FilePath &filePath)
 {
 #ifdef __WXMAC__
    wxString path = filePath;

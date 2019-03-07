@@ -38,7 +38,7 @@ XMLFileReader::~XMLFileReader()
 }
 
 bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
-                          const wxString &fname)
+                          const FilePath &fname)
 {
    wxFFile theXMLFile(fname, wxT("rb"));
    if (!theXMLFile.IsOpened()) {

@@ -74,7 +74,7 @@ class MacroCommands final {
    void AbortBatch();
 
    // Utility functions for the special commands.
-   static wxString BuildCleanFileName(const wxString &fileName,
+   static wxString BuildCleanFileName(const FilePath &fileName,
       const FileExtension &extension);
    bool WriteMp3File( const wxString & Name, int bitrate );
    double GetEndTime();

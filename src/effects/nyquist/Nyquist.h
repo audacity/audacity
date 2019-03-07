@@ -145,7 +145,7 @@ private:
    bool IsOk();
    const wxString &InitializationError() const { return mInitError; }
 
-   static wxArrayString GetNyquistSearchPath();
+   static FilePaths GetNyquistSearchPath();
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);

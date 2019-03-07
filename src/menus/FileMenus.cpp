@@ -102,7 +102,7 @@ namespace FileActions {
 // return null on failure; if success, return the given project, or a NEW
 // one, if the given was null; create no NEW project if failure
 AudacityProject *DoImportMIDI(
-   AudacityProject *pProject, const wxString &fileName)
+   AudacityProject *pProject, const FilePath &fileName)
 {
    auto tracks = pProject->GetTracks();
 

@@ -138,10 +138,10 @@ public:
     */
     std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
-   static bool IsMidi(const wxString &fName);
+   static bool IsMidi(const FilePath &fName);
 
    // if false, the import failed and errorMessage will be set.
-   bool Import(const wxString &fName,
+   bool Import(const FilePath &fName,
               TrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,

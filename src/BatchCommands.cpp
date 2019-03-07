@@ -504,7 +504,7 @@ bool MacroCommands::IsMono()
    return ( tracks->Any() - &Track::IsLeader ).empty();
 }
 
-wxString MacroCommands::BuildCleanFileName(const wxString &fileName,
+wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
    const FileExtension &extension)
 {
    const wxFileName newFileName{ fileName };
@@ -964,7 +964,7 @@ void MacroCommands::MigrateLegacyChains()
       // which old Audacity will not read.
 
       const auto oldDir = FileNames::LegacyChainDir();
-      wxArrayString files;
+      FilePaths files;
       wxDir::GetAllFiles(oldDir, &files, wxT("*.txt"), wxDIR_FILES);
 
       // add a dummy path component to be overwritten by SetFullName
@@ -987,7 +987,7 @@ wxArrayString MacroCommands::GetNames()
    MigrateLegacyChains();
 
    wxArrayString names;
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::MacroDir(), &files, wxT("*.txt"), wxDIR_FILES);
    size_t i;
 

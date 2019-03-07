@@ -46,9 +46,9 @@
 
 using LangHash = std::unordered_map<wxString, wxString>;
 
-static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
+static bool TranslationExists(const FilePaths &audacityPathList, wxString code)
 {
-   wxArrayString results;
+   FilePaths results;
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/audacity.mo"),
                                                    code),
                                   audacityPathList,
@@ -202,7 +202,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
       localLanguageName[code] = name;
    }
 
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
+   auto audacityPathList = wxGetApp().audacityPathList;
 
 #if defined(__WXGTK__)
    wxGetApp().AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),

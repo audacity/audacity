@@ -105,7 +105,7 @@ public:
 
    bool IsEmpty() const;
 
-   bool Decode(const wxString & fileName);
+   bool Decode(const FilePath & fileName);
 
 private:
    void WriteName(const wxString & name);

@@ -368,7 +368,7 @@ FileExtensions VSTEffectsModule::GetFileExtensions()
    return {{ _T("vst") }};
 }
 
-wxString VSTEffectsModule::InstallPath()
+FilePath VSTEffectsModule::InstallPath()
 {
    // Not yet ready for VST drag-and-drop...
    // return FileNames::PlugInDir();
@@ -384,8 +384,8 @@ bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
 
 PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList;
-   wxArrayString files;
+   FilePaths pathList;
+   FilePaths files;
 
    // Check for the VST_PATH environment variable
    wxString vstpath = wxString::FromUTF8(getenv("VST_PATH"));
@@ -499,7 +499,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    unsigned nFound = 0;
    errMsg.clear();
    // TODO:  Fix this for external usage
-   const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
+   const auto &cmdpath = PlatformCompatibility::GetExecutablePath();
 
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));

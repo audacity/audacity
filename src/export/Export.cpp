@@ -616,7 +616,7 @@ bool Exporter::GetFilename()
          }
       }
 
-      const auto &ext = mFilename.GetExt();
+      auto ext = mFilename.GetExt();
       defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
       //

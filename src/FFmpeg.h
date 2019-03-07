@@ -420,8 +420,8 @@ struct FFmpegContext {
    AVFormatContext *ic_ptr{};
 };
 
-int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
-int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name);
+int ufile_fopen(AVIOContext **s, const FilePath & name, int flags);
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, FilePath & name);
 int ufile_close(AVIOContext *pb);
 
 struct streamContext;

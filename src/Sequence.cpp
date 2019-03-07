@@ -713,7 +713,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
    Paste(s0, &sTrack);
 }
 
-void Sequence::AppendAlias(const wxString &fullPath,
+void Sequence::AppendAlias(const FilePath &fullPath,
                            sampleCount start,
                            size_t len, int channel, bool useOD)
 // STRONG-GUARANTEE
@@ -732,7 +732,7 @@ void Sequence::AppendAlias(const wxString &fullPath,
    mNumSamples += len;
 }
 
-void Sequence::AppendCoded(const wxString &fName, sampleCount start,
+void Sequence::AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
 // STRONG-GUARANTEE
 {

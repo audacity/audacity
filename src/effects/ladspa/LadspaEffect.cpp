@@ -178,7 +178,7 @@ FileExtensions LadspaEffectsModule::GetFileExtensions()
    }};
 }
 
-wxString LadspaEffectsModule::InstallPath()
+FilePath LadspaEffectsModule::InstallPath()
 {
    // To do: better choice
    return FileNames::PlugInDir();
@@ -188,8 +188,8 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   wxArrayString pathList = GetSearchPaths();
-   wxArrayString files;
+   auto pathList = GetSearchPaths();
+   FilePaths files;
    wxString ignoredErrMsg;
 
    for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++)
@@ -213,8 +213,8 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
 PluginPaths LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList = GetSearchPaths();
-   wxArrayString files;
+   auto pathList = GetSearchPaths();
+   FilePaths files;
 
 #if defined(__WXMAC__)
 
@@ -328,9 +328,9 @@ void LadspaEffectsModule::DeleteInstance(ComponentInterface *instance)
    };
 }
 
-wxArrayString LadspaEffectsModule::GetSearchPaths()
+FilePaths LadspaEffectsModule::GetSearchPaths()
 {
-   wxArrayString pathList;
+   FilePaths pathList;
    wxString pathVar;
 
    // Check for the LADSPA_PATH environment variable

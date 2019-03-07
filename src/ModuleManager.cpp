@@ -85,7 +85,7 @@ wxWindow * MakeHijackPanel()
 // starts a thread and reads script commands.
 static tpRegScriptServerFunc scriptFn;
 
-Module::Module(const wxString & name)
+Module::Module(const FilePath & name)
 {
    mName = name;
    mLib = std::make_unique<wxDynamicLibrary>();
@@ -212,9 +212,9 @@ ModuleManager::~ModuleManager()
 // static 
 void ModuleManager::Initialize(CommandHandler &cmdHandler)
 {
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
-   wxArrayString pathList;
-   wxArrayString files;
+   const auto &audacityPathList = wxGetApp().audacityPathList;
+   FilePaths pathList;
+   FilePaths files;
    wxString pathVar;
    size_t i;
 
@@ -240,7 +240,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       // As a courtesy to some modules that might be bridges to
       // open other modules, we set the current working
       // directory to be the module's directory.
-      wxString prefix = ::wxPathOnly(files[i]);
+      auto prefix = ::wxPathOnly(files[i]);
       ::wxSetWorkingDirectory(prefix);
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
@@ -349,8 +349,8 @@ bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
 
-   wxArrayString provList;
-   wxArrayString pathList;
+   FilePaths provList;
+   FilePaths pathList;
 
    // Code from LoadLadspa that might be useful in load modules.
    wxString pathVar = wxString::FromUTF8(getenv("AUDACITY_MODULES_PATH"));

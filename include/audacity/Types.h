@@ -73,6 +73,9 @@ class wxArrayStringEx;
 using FileExtension = wxString;
 using FileExtensions = wxArrayStringEx;
 
+using FilePath = wxString;
+using FilePaths = wxArrayStringEx;
+
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples
 // ----------------------------------------------------------------------------

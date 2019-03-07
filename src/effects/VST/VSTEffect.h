@@ -404,7 +404,7 @@ public:
    void Terminate() override;
 
    FileExtensions GetFileExtensions() override;
-   wxString InstallPath() override;
+   FilePath InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
    PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;

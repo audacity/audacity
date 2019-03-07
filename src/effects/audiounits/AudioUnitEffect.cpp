@@ -694,7 +694,7 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
 
    S.AddStandardButtons();
 
-   wxArrayString presets;
+   FilePaths presets;
 
    // Make sure the user preset directory exists
    wxString path;

@@ -140,7 +140,7 @@ class FLACImportPlugin final : public ImportPlugin
 
    wxString GetPluginStringID() override { return wxT("libflac"); }
    wxString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename)  override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename)  override;
 };
 
 
@@ -148,7 +148,7 @@ class FLACImportFileHandle final : public ImportFileHandle
 {
    friend class MyFLACFile;
 public:
-   FLACImportFileHandle(const wxString & name);
+   FLACImportFileHandle(const FilePath & name);
    ~FLACImportFileHandle();
 
    bool Init();
@@ -302,7 +302,7 @@ wxString FLACImportPlugin::GetPluginFormatDescription()
 }
 
 
-std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const FilePath &filename)
 {
    // First check if it really is a FLAC file
 
@@ -344,7 +344,7 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filenam
 }
 
 
-FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
+FLACImportFileHandle::FLACImportFileHandle(const FilePath & name)
 :  ImportFileHandle(name),
    mSamplesDone(0),
    mStreamInfoDone(false),

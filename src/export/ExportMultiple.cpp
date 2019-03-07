@@ -638,7 +638,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
    // Figure out how many channels we should export.
    auto channels = mTracks->GetNumExportChannels(false);
 
-   wxArrayString otherNames;  // keep track of file names we will use, so we
+   FilePaths otherNames;  // keep track of file names we will use, so we
    // don't duplicate them
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
@@ -754,7 +754,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    bool tagsPrompt = mProject->GetShowId3Dialog();
    int l = 0;     // track counter
    auto ok = ProgressResult::Success;
-   wxArrayString otherNames;
+   FilePaths otherNames;
    std::vector<ExportKit> exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
    exportSettings.reserve(mNumWaveTracks);   // Allocate some guessed space to use.
