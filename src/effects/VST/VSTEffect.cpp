@@ -370,9 +370,10 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
-FileExtensions VSTEffectsModule::GetFileExtensions()
+const FileExtensions &VSTEffectsModule::GetFileExtensions()
 {
-   return {{ _T("vst") }};
+   static FileExtensions result{{ _T("vst") }};
+   return result;
 }
 
 FilePath VSTEffectsModule::InstallPath()

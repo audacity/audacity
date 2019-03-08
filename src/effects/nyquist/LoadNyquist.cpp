@@ -156,9 +156,10 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
-FileExtensions NyquistEffectsModule::GetFileExtensions()
+const FileExtensions &NyquistEffectsModule::GetFileExtensions()
 {
-   return {{ _T("ny") }};
+   static FileExtensions result{{ _T("ny") }};
+   return result;
 }
 
 FilePath NyquistEffectsModule::InstallPath()
