@@ -509,8 +509,7 @@ void ModuleManager::FindAllPlugins(PluginIDs & providers, PluginPaths & paths)
    {
       PluginID providerID = modIDs[i];
 
-      ModuleInterface *module =
-         static_cast<ModuleInterface *>(CreateProviderInstance(providerID, modPaths[i]));
+      auto module = CreateProviderInstance(providerID, modPaths[i]);
 
       if (!module)
          continue;
@@ -553,7 +552,7 @@ bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const Plug
    return nFound > 0;
 }
 
-ComponentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
+ModuleInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
                                                       const PluginPath & path)
 {
    if (path.empty() && mDynModules.find(providerID) != mDynModules.end())
