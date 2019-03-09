@@ -150,7 +150,7 @@ void AddEffectMenuItemGroup(
    MenuTable::BaseItemPtrs &table,
    const wxArrayString & names,
    const std::vector<bool> &vHasDialog,
-   const PluginIDList & plugs,
+   const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
    bool isDefault);
 
@@ -173,7 +173,7 @@ void AddEffectMenuItems(
 
    std::vector<bool> vHasDialog;
    wxArrayString groupNames;
-   PluginIDList groupPlugs;
+   PluginIDs groupPlugs;
    std::vector<CommandFlag> groupFlags;
    if (grouped)
    {
@@ -707,7 +707,7 @@ void AddEffectMenuItemGroup(
    MenuTable::BaseItemPtrs &table,
    const wxArrayString & names,
    const std::vector<bool> &vHasDialog,
-   const PluginIDList & plugs,
+   const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
    bool isDefault)
 {

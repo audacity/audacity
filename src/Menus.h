@@ -29,7 +29,7 @@ enum CommandFlag : unsigned long long;
 enum EffectType : int;
 
 typedef wxString PluginID;
-typedef wxArrayString PluginIDList;
+typedef wxArrayString PluginIDs;
 
 class PrefsListener
 {

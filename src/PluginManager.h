@@ -165,7 +165,7 @@ private:
 
 typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
-typedef wxArrayString PluginIDList;
+typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 

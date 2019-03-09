@@ -490,7 +490,7 @@ void ModuleManager::RegisterModule(ModuleInterface *inModule)
    PluginManager::Get().RegisterPlugin(inModule);
 }
 
-void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & paths)
+void ModuleManager::FindAllPlugins(PluginIDs & providers, wxArrayString & paths)
 {
    PluginManager & pm = PluginManager::Get();
 
