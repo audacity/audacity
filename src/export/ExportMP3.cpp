@@ -1154,7 +1154,7 @@ bool MP3Exporter::InitLibrary(wxString libpath)
          be_version v;
          beVersion(&v);
 
-         mBladeVersion.Printf(_("You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of the LAME MP3 library."),
+         mBladeVersion.Printf(_("You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of 'LAME for Audacity'."),
                               v.byMajorVersion,
                               v.byMinorVersion,
                               AUDACITY_VERSION,
