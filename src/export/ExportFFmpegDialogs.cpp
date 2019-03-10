@@ -1669,7 +1669,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
    wxString str(fmt);
    for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
    {
-      if (str.Cmp(CompatibilityList[i].fmt) == 0)
+      if (str == CompatibilityList[i].fmt)
       {
          // Format is found in the list
          found = 1;
@@ -1748,7 +1748,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
    {
       if (CompatibilityList[i].codec == id || CompatibilityList[i].codec == AV_CODEC_ID_NONE)
       {
-         if ((selfmt != NULL) && (selfmt->Cmp(CompatibilityList[i].fmt) == 0)) index = mShownFormatNames.size();
+         if ((selfmt != NULL) && (*selfmt == CompatibilityList[i].fmt)) index = mShownFormatNames.size();
          FromList.push_back(CompatibilityList[i].fmt);
          mShownFormatNames.push_back(CompatibilityList[i].fmt);
          AVOutputFormat *tofmt = av_guess_format(wxString(CompatibilityList[i].fmt).ToUTF8(),NULL,NULL);
@@ -1760,7 +1760,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
    {
       for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
       {
-         if (!selfmt->Cmp(CompatibilityList[i].fmt))
+         if (*selfmt == CompatibilityList[i].fmt)
          {
             found = true;
             break;
@@ -1779,7 +1779,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
             found = false;
             for (unsigned int i = 0; i < FromList.size(); i++)
             {
-               if (ofmtname.Cmp(FromList[i]) == 0)
+               if (ofmtname == FromList[i])
                {
                   found = true;
                   break;
@@ -1787,7 +1787,9 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
             }
             if (!found)
             {
-               if ((selfmt != NULL) && (selfmt->Cmp(wxString::FromUTF8(ofmt->name)) == 0)) index = mShownFormatNames.size();
+               if ((selfmt != NULL) &&
+                  (*selfmt == wxString::FromUTF8(ofmt->name)))
+                  index = mShownFormatNames.size();
                mShownFormatNames.push_back(wxString::FromUTF8(ofmt->name));
                mShownFormatLongNames.push_back(wxString::Format(wxT("%s - %s"),mShownFormatNames.back(),wxString::FromUTF8(ofmt->long_name)));
             }
@@ -1934,8 +1936,9 @@ void ExportFFmpegOptions::EnableDisableControls(AVCodec *cdc, wxString *selfmt)
          bool format = false;
          if (apptable[i].codec == AV_CODEC_ID_NONE) codec = true;
          else if (cdc != NULL && apptable[i].codec == cdc->id) codec = true;
-         if (!wxString::FromUTF8(apptable[i].format).Cmp(wxT("any"))) format = true;
-         else if (selfmt != NULL && selfmt->Cmp(wxString::FromUTF8(apptable[i].format)) == 0) format = true;
+         if (wxString::FromUTF8(apptable[i].format) == wxT("any")) format = true;
+         else if (selfmt != NULL &&
+            *selfmt == wxString::FromUTF8(apptable[i].format)) format = true;
          if (codec && format)
          {
             handled = apptable[i].control;

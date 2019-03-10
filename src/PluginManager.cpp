@@ -825,6 +825,8 @@ int wxCALLBACK PluginRegistrationDialog::SortCompare(long item1, long item2, lon
 
 int PluginRegistrationDialog::SortCompare(ItemData *item1, ItemData *item2)
 {
+   // This function is a three-valued comparator
+
    wxString *str1;
    wxString *str2;
 

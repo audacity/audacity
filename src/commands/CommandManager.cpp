@@ -577,7 +577,7 @@ wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 {
    for (const auto &entry : mMenuBarList)
    {
-      if(!entry.name.Cmp(sMenu))
+      if(entry.name == sMenu)
          return entry.menubar;
    }
 

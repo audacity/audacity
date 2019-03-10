@@ -207,7 +207,7 @@ void Importer::ReadImportItems()
          bool found = false;
          for (const auto &importPlugin : mImportPluginList)
          {
-            if (importPlugin->GetPluginStringID().Cmp(new_item->filters[i]) == 0)
+            if (importPlugin->GetPluginStringID() == new_item->filters[i])
             {
                new_item->filter_objects.push_back(importPlugin.get());
                found = true;

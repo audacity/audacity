@@ -505,7 +505,7 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
 
       wxString trimmed = vals[i];
       trimmed.Trim().Trim(false);
-      if (trimmed.Cmp(vals[i]) != 0)
+      if (trimmed != vals[i])
       {
          if (!askedAboutSpaces)
          {
