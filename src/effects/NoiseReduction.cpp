@@ -1809,7 +1809,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.SetStretchyCol(2);
       {
          for (int id = END_OF_BASIC_SLIDERS; id < END_OF_ADVANCED_SLIDERS; id += 2) {
-            const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
+            const ControlInfo &info = controlInfo()[(id - FIRST_SLIDER) / 2];
             info.CreateControls(id, S);
          }
       }
