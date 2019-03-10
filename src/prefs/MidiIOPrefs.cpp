@@ -103,9 +103,9 @@ void MidiIOPrefs::GetNamesAndLabels() {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
       if (info->output || info->input) { //should always happen
          wxString name = wxSafeConvertMB2WX(info->interf);
-         if (mHostNames.Index(name) == wxNOT_FOUND) {
-            mHostNames.Add(name);
-            mHostLabels.Add(name);
+         if ( ! make_iterator_range( mHostNames ).contains( name ) ) {
+            mHostNames.push_back(name);
+            mHostLabels.push_back(name);
          }
       }
    }
@@ -181,8 +181,8 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
 {
    wxString itemAtIndex;
    int index = mHost->GetCurrentSelection();
-   if (index >= 0 && index < (int)mHostNames.Count())
-      itemAtIndex = mHostNames.Item(index);
+   if (index >= 0 && index < (int)mHostNames.size())
+      itemAtIndex = mHostNames[index];
    int nDevices = Pm_CountDevices();
 
    if (nDevices == 0) {
@@ -193,7 +193,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
 
    mPlay->Clear();
 #ifdef EXPERIMENTAL_MIDI_IN
-   mRecord->Clear();
+   mRecord->clear();
 #endif
 
    wxArrayString playnames;
@@ -202,13 +202,13 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    for (int i = 0; i < nDevices; i++) {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
       wxString interf = wxSafeConvertMB2WX(info->interf);
-      if (itemAtIndex.IsSameAs(interf)) {
+      if (itemAtIndex == interf) {
          wxString name = wxSafeConvertMB2WX(info->name);
          wxString device = wxString::Format(wxT("%s: %s"),
                                             interf,
                                             name);
          if (info->output) {
-            playnames.Add(name);
+            playnames.push_back(name);
             index = mPlay->Append(name, (void *) info);
             if (device == mPlayDevice) {
                mPlay->SetSelection(index);
@@ -216,7 +216,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
          }
 #ifdef EXPERIMENTAL_MIDI_IN
          if (info->input) {
-            recordnames.Add(name);
+            recordnames.push_back(name);
             index = mRecord->Append(name, (void *) info);
             if (device == mRecordDevice) {
                mRecord->SetSelection(index);
@@ -227,12 +227,12 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    }
 
    if (mPlay->GetCount() == 0) {
-      playnames.Add(_("No devices found"));
+      playnames.push_back(_("No devices found"));
       mPlay->Append(playnames[0], (void *) NULL);
    }
 #ifdef EXPERIMENTAL_MIDI_IN
-   if (mRecord->GetCount() == 0) {
-      recordnames.Add(_("No devices found"));
+   if (mRecord->size() == 0) {
+      recordnames.push_back(_("No devices found"));
       mRecord->Append(recordnames[0], (void *) NULL);
    }
 #endif
@@ -240,7 +240,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
       mPlay->SetSelection(0);
    }
 #ifdef EXPERIMENTAL_MIDI_IN
-   if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
+   if (mRecord->size() && mRecord->GetSelection() == wxNOT_FOUND) {
       mRecord->SetSelection(0);
    }
 #endif

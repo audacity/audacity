@@ -250,7 +250,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    wxArrayString pitch;
    for (int ii = 0; ii < 12; ++ii)
-      pitch.Add( PitchName( ii, PitchNameChoice::Both ) );
+      pitch.push_back( PitchName( ii, PitchNameChoice::Both ) );
 
    S.SetBorder(5);
 

@@ -341,11 +341,11 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          {
             if (i == kVinyl_NA)
             {
-               vinylChoices.Add(wxGetTranslation(kVinylStrings[i]));
+               vinylChoices.push_back(wxGetTranslation(kVinylStrings[i]));
             }
             else
             {
-               vinylChoices.Add(kVinylStrings[i]);
+               vinylChoices.push_back(kVinylStrings[i]);
             }
          }
 

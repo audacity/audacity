@@ -98,7 +98,7 @@ private:
 public:
    void AddOption(const wxString &option)
    {
-      mOptions.Add(option);
+      mOptions.push_back(option);
    }
    void AddOptions(const wxArrayString &options)
    {
@@ -107,12 +107,12 @@ public:
    bool Validate(const wxVariant &v) override
    {
       SetConverted(v);
-      return (mOptions.Index(v.GetString()) != wxNOT_FOUND);
+      return make_iterator_range( mOptions ).contains( v.GetString() );
    }
    wxString GetDescription() const override
    {
       wxString desc = wxT("one of: ");
-      int optionCount = mOptions.GetCount();
+      int optionCount = mOptions.size();
       int i = 0;
       for (i = 0; i+1 < optionCount; ++i)
       {
@@ -159,7 +159,7 @@ public:
       if (!v.Convert(&val))
          return false;
       SetConverted(val);
-      for(size_t i=0; i != val.Len(); i++)
+      for(size_t i=0; i != val.length(); i++)
          if( val[i] != '0' && val[i] != '1' && val[i] != 'x' && val[i] != 'X')
             return false;
       return true;

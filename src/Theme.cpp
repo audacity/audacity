@@ -486,7 +486,7 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
    mBitmaps.push_back( wxBitmap( Image ) );
 #endif
 
-   mBitmapNames.Add( Name );
+   mBitmapNames.push_back( Name );
    mBitmapFlags.push_back( mFlow.mFlags );
    mFlow.mFlags &= ~resFlagSkip;
    iIndex = mBitmaps.size() - 1;
@@ -496,7 +496,7 @@ void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same colour twice!
    mColours.push_back( Clr );
-   mColourNames.Add( Name );
+   mColourNames.push_back( Name );
    iIndex = mColours.size() - 1;
 }
 
@@ -937,7 +937,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "light" );
    aThemes.Add( "high-contrast" );
    aThemes.Add( "custom" );
-   int themeIx = aThemes.Index( Name );
+   int themeIx = make_iterator_range( aThemes ).index( Name );
    if( themeIx < 0 )
       return GetFallbackThemeType();
    return (teThemeType)themeIx;

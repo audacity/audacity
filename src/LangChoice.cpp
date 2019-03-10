@@ -77,7 +77,7 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
 {
    SetName(GetTitle());
    GetLanguages(mLangCodes, mLangNames);
-   int ndx = mLangCodes.Index(GetSystemLanguageCode());
+   int ndx = make_iterator_range( mLangCodes ).index( GetSystemLanguageCode() );
    wxString lang;
 
    if (ndx != wxNOT_FOUND) {
@@ -111,7 +111,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    mLang = mLangCodes[ndx];
 
    wxString slang = GetSystemLanguageCode();
-   int sndx = mLangCodes.Index(slang);
+   int sndx = make_iterator_range( mLangCodes ).index( slang );
    wxString sname;
 
    if (sndx == wxNOT_FOUND) {

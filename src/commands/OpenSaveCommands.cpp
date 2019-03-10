@@ -44,7 +44,7 @@ void OpenProjectCommand::PopulateOrExchange(ShuttleGui & S)
 bool OpenProjectCommand::Apply(const CommandContext & context){
 
    wxString oldFileName = context.GetProject()->GetFileName();
-   if(mFileName.IsEmpty())
+   if(mFileName.empty())
    {
       auto project = context.GetProject();
       AudacityProject::OpenFiles(project);
@@ -83,7 +83,7 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SaveProjectCommand::Apply(const CommandContext &context)
 {
-   if(mFileName.IsEmpty())
+   if(mFileName.empty())
       return context.GetProject()->SaveAs(mbCompress);
    else
       return context.GetProject()->SaveAs(mFileName,mbCompress,mbAddToHistory);

@@ -230,7 +230,7 @@ void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
    int pos;
    GetCurrentValueAndInsertionPoint(val, pos);
 
-   for (size_t i = 0, cnt = toPaste.Length(); i < cnt; i++)
+   for (size_t i = 0, cnt = toPaste.length(); i < cnt; i++)
    {
       const wxChar ch = toPaste[i];
 

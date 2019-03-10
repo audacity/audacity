@@ -345,7 +345,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
       if (sf_format_check(&info)) {
          mEncodingSubtype[mNumEncodings] = subtype;
-         encodings.Add(sf_encoding_index_name(i));
+         encodings.push_back(sf_encoding_index_name(i));
 
          if ((mEncoding & SF_FORMAT_SUBMASK) == subtype)
             selection = mNumEncodings;
@@ -387,7 +387,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
    chans.Add(_("1 Channel (Mono)"));
    chans.Add(_("2 Channels (Stereo)"));
    for (i=2; i<16; i++) {
-      chans.Add(wxString::Format(_("%d Channels"), i + 1));
+      chans.push_back(wxString::Format(_("%d Channels"), i + 1));
    }
 
    S.StartVerticalLay(false);

@@ -34,8 +34,8 @@ void DoExport
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired =
-      (project.mBatchMode == 0) || project.GetFileName().IsEmpty() ||
-      Format.IsEmpty();
+      (project.mBatchMode == 0) || project.GetFileName().empty() ||
+      Format.empty();
    wxString filename;
 
    if (!bPromptingRequired) {
@@ -394,7 +394,7 @@ void OnImport(const CommandContext &context)
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
    wxArrayString selectedFiles = project.ShowOpenDialog(wxT(""));
-   if (selectedFiles.GetCount() == 0) {
+   if (selectedFiles.size() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       gPrefs->Flush();
       return;
@@ -418,7 +418,7 @@ void OnImport(const CommandContext &context)
       project.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
-   for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
+   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       wxString fileName = selectedFiles[ff];
 
       FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);

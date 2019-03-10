@@ -1492,7 +1492,7 @@ ProgressResult ProgressDialog::Update(double current, double total, const wxStri
 //
 void ProgressDialog::SetMessage(const wxString & message)
 {
-   if (!message.IsEmpty())
+   if (!message.empty())
    {
       mMessage->SetLabel(message);
 
@@ -1591,7 +1591,7 @@ void ProgressDialog::Beep() const
       wxBusyCursor busy;
       wxSound s;
 
-      if (name.IsEmpty())
+      if (name.empty())
       {
          s.Create(sizeof(beep), beep);
       }

@@ -229,7 +229,7 @@ BuiltinEffectsModule::BuiltinEffectsModule(ModuleManagerInterface *moduleManager
 
 BuiltinEffectsModule::~BuiltinEffectsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
@@ -271,13 +271,13 @@ bool BuiltinEffectsModule::Initialize()
    const auto &names = kEffectNames();
    for (const auto &name : names)
    {
-      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_EFFECT_PREFIX) + name);
    }
 
    const auto &excluded = kExcludedNames();
    for (const auto &name : excluded)
    {
-      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_EFFECT_PREFIX) + name);
    }
 
    return true;
@@ -335,7 +335,7 @@ bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
    static_cast<void>(bFast);
-   return mNames.Index(path) != wxNOT_FOUND;
+   return make_iterator_range( mNames ).contains( path );
 }
 
 ComponentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
@@ -360,9 +360,10 @@ void BuiltinEffectsModule::DeleteInstance(ComponentInterface *instance)
 std::unique_ptr<Effect> BuiltinEffectsModule::Instantiate(const wxString & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_EFFECT_PREFIX));
-   wxASSERT(mNames.Index(path) != wxNOT_FOUND);
+   auto index = make_iterator_range( mNames ).index( path );
+   wxASSERT( index != wxNOT_FOUND );
 
-   switch (mNames.Index(path))
+   switch ( index )
    {
       EFFECT_LIST;
       EXCLUDE_LIST;

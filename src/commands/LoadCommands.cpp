@@ -166,7 +166,7 @@ BuiltinCommandsModule::BuiltinCommandsModule(ModuleManagerInterface *moduleManag
 
 BuiltinCommandsModule::~BuiltinCommandsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
@@ -209,13 +209,13 @@ bool BuiltinCommandsModule::Initialize()
    for (const auto &name : names)
    {
       //wxLogDebug("Adding %s", name );
-      mNames.Add(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
    }
 
 /*
    for (size_t i = 0; i < WXSIZEOF(kExcludedNames); i++)
    {
-      mNames.Add(wxString(BUILTIN_COMMAND_PREFIX) + kExcludedNames[i]);
+      mNames.push_back(wxString(BUILTIN_COMMAND_PREFIX) + kExcludedNames[i]);
    }
 */
 
@@ -277,7 +277,7 @@ bool BuiltinCommandsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
    static_cast<void>(bFast); // avoid unused variable warning
-   return mNames.Index(path) != wxNOT_FOUND;
+   return make_iterator_range( mNames ).contains( path );
 }
 
 ComponentInterface *BuiltinCommandsModule::CreateInstance(const wxString & path)
@@ -302,9 +302,10 @@ void BuiltinCommandsModule::DeleteInstance(ComponentInterface *instance)
 std::unique_ptr<AudacityCommand> BuiltinCommandsModule::Instantiate(const wxString & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_GENERIC_COMMAND_PREFIX));
-   wxASSERT(mNames.Index(path) != wxNOT_FOUND);
+   auto index = make_iterator_range( mNames ).index( path );
+   wxASSERT( index != wxNOT_FOUND );
 
-   switch (mNames.Index(path))
+   switch ( index )
    {
       COMMAND_LIST;
       EXCLUDE_LIST;

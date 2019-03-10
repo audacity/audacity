@@ -239,7 +239,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       /* i18n-hint: This refers to a "window function",
        * such as Hann or Rectangular, used in the
        * Frequency analyze dialog box. */
-      funcChoices.Add(wxString::Format("%s window",  WindowFuncName(i) ) );
+      funcChoices.push_back(wxString::Format("%s window",  WindowFuncName(i) ) );
    }
 
    wxArrayString axisChoices;

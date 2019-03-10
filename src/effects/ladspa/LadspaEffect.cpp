@@ -196,9 +196,9 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
    for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++)
    {
-      files.Clear();
+      files.clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
-      for (size_t j = 0, cnt = files.GetCount(); j < cnt; j++)
+      for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
          if (!pm.IsPluginRegistered(files[j]))
          {
@@ -342,7 +342,7 @@ wxArrayString LadspaEffectsModule::GetSearchPaths()
       wxStringTokenizer tok(pathVar);
       while (tok.HasMoreTokens())
       {
-         pathList.Add(tok.GetNextToken());
+         pathList.push_back(tok.GetNextToken());
       }
    }
 
@@ -350,8 +350,8 @@ wxArrayString LadspaEffectsModule::GetSearchPaths()
 #define LADSPAPATH wxT("/Library/Audio/Plug-Ins/LADSPA")
 
    // Look in ~/Library/Audio/Plug-Ins/LADSPA and /Library/Audio/Plug-Ins/LADSPA
-   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + LADSPAPATH);
-   pathList.Add(LADSPAPATH);
+   pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + LADSPAPATH);
+   pathList.push_back(LADSPAPATH);
 
 #elif defined(__WXMSW__)
 
@@ -359,10 +359,10 @@ wxArrayString LadspaEffectsModule::GetSearchPaths()
 
 #else
    
-   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".ladspa"));
-   pathList.Add(wxT("/usr/local/lib/ladspa"));
-   pathList.Add(wxT("/usr/lib/ladspa"));
-   pathList.Add(wxT(LIBDIR) wxT("/ladspa"));
+   pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".ladspa"));
+   pathList.push_back(wxT("/usr/local/lib/ladspa"));
+   pathList.push_back(wxT("/usr/lib/ladspa"));
+   pathList.push_back(wxT(LIBDIR) wxT("/ladspa"));
 
 #endif
 

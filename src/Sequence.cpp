@@ -993,7 +993,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
       SeqBlock &block = mBlock[b];
       if (block.start != numSamples) {
          wxString sFileAndExtension = block.f->GetFileName().name.GetFullName();
-         if (sFileAndExtension.IsEmpty())
+         if (sFileAndExtension.empty())
             sFileAndExtension = wxT("(replaced with silence)");
          else
             sFileAndExtension = wxT("\"") + sFileAndExtension + wxT("\"");

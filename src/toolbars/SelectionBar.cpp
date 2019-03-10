@@ -138,7 +138,7 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
    auStaticText * pTitle = safenew auStaticText(this, Title );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.Length() == 1 ) ? 0:5);
+   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.length() == 1 ) ? 0:5);
    return pTitle;
 }
 
@@ -250,7 +250,7 @@ void SelectionBar::Populate()
    // the control that gets the focus events.  So we have to find the
    // textctrl.
    wxWindowList kids = mRateBox->GetChildren();
-   for (unsigned int i = 0; i < kids.GetCount(); i++) {
+   for (unsigned int i = 0; i < kids.size(); i++) {
       wxClassInfo *ci = kids[i]->GetClassInfo();
       if (ci->IsKindOf(CLASSINFO(wxTextCtrl))) {
          mRateText = kids[i];

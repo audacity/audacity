@@ -304,7 +304,7 @@ private:
       if (keyDown)
       {
          wxString chars = GetUnicodeString(temp);
-         for (size_t i = 0, cnt = chars.Length(); i < cnt; i++)
+         for (size_t i = 0, cnt = chars.length(); i < cnt; i++)
          {
             temp = event;
             temp.SetEventType(wxEVT_CHAR);
@@ -577,7 +577,7 @@ wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 {
    for (const auto &entry : mMenuBarList)
    {
-      if(!entry.name.Cmp(sMenu))
+      if(entry.name == sMenu)
          return entry.menubar;
    }
 
@@ -994,7 +994,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 
       entry->name = name;
       entry->label = label;
-      entry->longLabel = longLabel.IsEmpty() ? label : longLabel;
+      entry->longLabel = longLabel.empty() ? label : longLabel;
       entry->hasDialog = hasDialog;
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
@@ -1549,7 +1549,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 /// code to run.
 bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandContext & context, CommandFlag flags, CommandMask mask)
 {
-   if( Str.IsEmpty() )
+   if( Str.empty() )
       return false;
    // Linear search for now...
    for (const auto &entry : mCommandList)
@@ -1599,18 +1599,18 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
 
 void CommandManager::GetCategories(wxArrayString &cats)
 {
-   cats.Clear();
+   cats.clear();
 
    for (const auto &entry : mCommandList) {
       wxString cat = entry->labelTop;
-      if (cats.Index(cat) == wxNOT_FOUND) {
-         cats.Add(cat);
+      if ( ! make_iterator_range( cats ).contains(cat) ) {
+         cats.push_back(cat);
       }
    }
 #if 0
-   mCommandList.GetCount(); i++) {
+   mCommandList.size(); i++) {
       if (includeMultis || !mCommandList[i]->multi)
-         names.Add(mCommandList[i]->name);
+         names.push_back(mCommandList[i]->name);
    }
 
    AudacityProject *p = GetActiveProject();
@@ -1621,10 +1621,10 @@ void CommandManager::GetCategories(wxArrayString &cats)
    wxMenuBar *bar = p->GetMenuBar();
    size_t cnt = bar->GetMenuCount();
    for (size_t i = 0; i < cnt; i++) {
-      cats.Add(bar->GetMenuLabelText(i));
+      cats.push_back(bar->GetMenuLabelText(i));
    }
 
-   cats.Add(COMMAND);
+   cats.push_back(COMMAND);
 #endif
 }
 
@@ -1635,9 +1635,9 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
       if ( entry->isEffect )
          continue;
       if (!entry->multi)
-         names.Add(entry->name);
+         names.push_back(entry->name);
       else if( includeMultis )
-         names.Add(entry->name );// + wxT(":")/*+ mCommandList[i]->label*/);
+         names.push_back(entry->name );// + wxT(":")/*+ mCommandList[i]->label*/);
    }
 }
 
@@ -1654,9 +1654,9 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
       if ( entry->isEffect )
          continue;
       if (!entry->multi)
-         names.Add(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
+         names.push_back(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
       else if( includeMultis )
-         names.Add(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
+         names.push_back(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
    }
 }
 
@@ -1678,24 +1678,24 @@ void CommandManager::GetAllCommandData(
       //   continue;
       if (!entry->multi)
       {
-         names.Add(entry->name);
+         names.push_back(entry->name);
          keys.push_back(entry->key);
          default_keys.push_back(entry->defaultKey);
-         labels.Add(entry->label);
-         categories.Add(entry->labelTop);
+         labels.push_back(entry->label);
+         categories.push_back(entry->labelTop);
 #if defined(EXPERIMENTAL_KEY_VIEW)
-         prefixes.Add(entry->labelPrefix);
+         prefixes.push_back(entry->labelPrefix);
 #endif
       }
       else if( includeMultis )
       {
-         names.Add(entry->name);
+         names.push_back(entry->name);
          keys.push_back(entry->key);
          default_keys.push_back(entry->defaultKey);
-         labels.Add(entry->label);
-         categories.Add(entry->labelTop);
+         labels.push_back(entry->label);
+         categories.push_back(entry->labelTop);
 #if defined(EXPERIMENTAL_KEY_VIEW)
-         prefixes.Add(entry->labelPrefix);
+         prefixes.push_back(entry->labelPrefix);
 #endif
       }
    }
@@ -1726,7 +1726,7 @@ wxString CommandManager::GetPrefixedLabelFromName(const wxString &name)
 
 #if defined(EXPERIMENTAL_KEY_VIEW)
    wxString prefix;
-   if (!entry->labelPrefix.IsEmpty()) {
+   if (!entry->labelPrefix.empty()) {
       prefix = entry->labelPrefix + wxT(" - ");
    }
    return wxMenuItem::GetLabelText(prefix + entry->label);

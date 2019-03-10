@@ -586,7 +586,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       texts.Add( _("Click to Start") );
       texts.Add( _("Click") );
 
-      for( size_t i = 0, cnt = texts.GetCount(); i < cnt; i++ )
+      for( size_t i = 0, cnt = texts.size(); i < cnt; i++ )
       {
          wxString Text = wxT(" ") + texts[i] + wxT(" ");
          wxSize Siz = destDC.GetTextExtent( Text );
@@ -2116,7 +2116,7 @@ wxAccStatus MeterAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionNam
 // Returns the description for this object or a child.
 wxAccStatus MeterAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
    return wxACC_NOT_SUPPORTED;
 }
 
@@ -2134,7 +2134,7 @@ wxAccStatus MeterAx::GetFocus(int* childId, wxAccessible** child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus MeterAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-   helpText->Clear();
+   helpText->clear();
    return wxACC_NOT_SUPPORTED;
 }
 
@@ -2142,7 +2142,7 @@ wxAccStatus MeterAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 // Return e.g. ALT+K
 wxAccStatus MeterAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
    return wxACC_OK;
 }
 
@@ -2170,10 +2170,10 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
    else
    {
       *name = m->GetName();
-      if (name->IsEmpty())
+      if (name->empty())
          *name = m->GetLabel();
 
-      if (name->IsEmpty())
+      if (name->empty())
          *name = _("Meter");
 
       if (m->mMonitoring)

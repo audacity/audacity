@@ -272,7 +272,7 @@ AudacityCommandDialog::AudacityCommandDialog(wxWindow * parent,
    wxASSERT( pCommand );
    mpCommand = pCommand;
    mAdditionalButtons = additionalButtons |eCancelButton;
-   if( !pCommand->ManualPage().IsEmpty() )
+   if( !pCommand->ManualPage().empty() )
       mAdditionalButtons |= eHelpButton;
 }
 

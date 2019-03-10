@@ -177,7 +177,7 @@ static bool RemoveAllAutoSaveFiles()
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       if (!wxRemoveFile(files[i]))
       {
@@ -209,7 +209,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       AudacityProject* proj{};
       if (*pproj)
@@ -512,7 +512,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
    mBuffer.PutC(FT_String);
    WriteName(name);
 
-   int len = value.Length() * sizeof(wxChar);
+   int len = value.length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
    mBuffer.Write(value.wx_str(), len);
@@ -580,7 +580,7 @@ void AutoSaveFile::WriteData(const wxString & value)
 {
    mBuffer.PutC(FT_Data);
 
-   int len = value.Length() * sizeof(wxChar);
+   int len = value.length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
    mBuffer.Write(value.wx_str(), len);
@@ -590,7 +590,7 @@ void AutoSaveFile::Write(const wxString & value)
 {
    mBuffer.PutC(FT_Raw);
 
-   int len = value.Length() * sizeof(wxChar);
+   int len = value.length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
    mBuffer.Write(value.wx_str(), len);
@@ -649,8 +649,8 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
 
 void AutoSaveFile::WriteName(const wxString & name)
 {
-   wxASSERT(name.Length() * sizeof(wxChar) <= SHRT_MAX);
-   short len = name.Length() * sizeof(wxChar);
+   wxASSERT(name.length() * sizeof(wxChar) <= SHRT_MAX);
+   short len = name.length() * sizeof(wxChar);
    short id;
 
    if (mNames.count(name))

@@ -469,7 +469,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          wxArrayString orders;
          for (int i = 1; i <= 10; i++)
          {
-            orders.Add(wxString::Format(wxT("%d"), i));
+            orders.push_back(wxString::Format(wxT("%d"), i));
          }
          /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
          mFilterOrderCtl = S.Id(ID_Order).AddChoice(_("O&rder:"), wxT(""), &orders);

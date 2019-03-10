@@ -482,7 +482,7 @@ public:
          S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(0);
          {
-            if (mLibPath.GetFullPath().IsEmpty()) {
+            if (mLibPath.GetFullPath().empty()) {
                text.Printf(_("To find '%s', click here -->"), mName);
                mPathText = S.AddTextBox( {}, text, 0);
             }
@@ -523,7 +523,7 @@ public:
          mType,
          wxFD_OPEN | wxRESIZE_BORDER,
          this);
-      if (!path.IsEmpty()) {
+      if (!path.empty()) {
          mLibPath = path;
          mPathText->SetValue(path);
       }
@@ -595,7 +595,7 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    // configured name is not found.
    name = GetLibAVFormatName();
    wxLogMessage(wxT("Looking for FFmpeg libraries..."));
-   if (!mLibAVFormatPath.IsEmpty()) {
+   if (!mLibAVFormatPath.empty()) {
       wxLogMessage(wxT("mLibAVFormatPath ('%s') is not empty."), mLibAVFormatPath);
       const wxFileName fn{ mLibAVFormatPath };
       path = fn.GetPath();
@@ -645,13 +645,13 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    }
 
    // First try loading it from a previously located path
-   if (!mLibAVFormatPath.IsEmpty()) {
+   if (!mLibAVFormatPath.empty()) {
       wxLogMessage(wxT("mLibAVFormatPath ('%s') is not empty. Loading from it."),mLibAVFormatPath);
       mLibsLoaded = InitLibs(mLibAVFormatPath,showerr);
    }
 
    // If not successful, try loading it from default path
-   if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
+   if (!mLibsLoaded && !GetLibAVFormatPath().empty()) {
       const wxFileName fn{ GetLibAVFormatPath(), GetLibAVFormatName() };
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from default path, '%s'."), path);
@@ -663,7 +663,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
 
 #if defined(__WXMAC__)
    // If not successful, try loading it from legacy path
-   if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
+   if (!mLibsLoaded && !GetLibAVFormatPath().empty()) {
       const wxFileName fn{wxT("/usr/local/lib/audacity"), GetLibAVFormatName()};
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from legacy path, '%s'."), path);
@@ -782,8 +782,8 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    if (!gotError) {
       avutil_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
       avcodec_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
-      if (avutil_filename.GetFullPath().IsSameAs(nameFull)) {
-         if (avcodec_filename.GetFullPath().IsSameAs(nameFull)) {
+      if (avutil_filename.GetFullPath() == nameFull) {
+         if (avcodec_filename.GetFullPath() == nameFull) {
             util = avformat.get();
             codec = avformat.get();
          }

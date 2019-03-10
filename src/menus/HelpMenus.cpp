@@ -96,7 +96,7 @@ void OnAudioDeviceInfo(const CommandContext &context)
          wxT("*.txt"),
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
          &project);
-      if (!fName.IsEmpty())
+      if (!fName.empty())
       {
          if (!text->SaveFile(fName))
          {
@@ -140,7 +140,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
          wxT("*.txt"),
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
          &project);
-      if (!fName.IsEmpty())
+      if (!fName.empty())
       {
          if (!text->SaveFile(fName))
          {

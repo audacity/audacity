@@ -181,7 +181,7 @@ bool LV2EffectsModule::Initialize()
    wxString pathVar;
    wxGetEnv(wxT("LV2_PATH"), &pathVar);
 
-   if (pathVar.IsEmpty())
+   if (pathVar.empty())
    {
       pathVar = newVar.Mid(1);
    }
@@ -233,7 +233,7 @@ wxArrayString LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSE
          continue;
       }
 
-      plugins.Add(LilvString(lilv_plugin_get_uri(plug)));
+      plugins.push_back(LilvString(lilv_plugin_get_uri(plug)));
    }
 
    return plugins;

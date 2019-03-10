@@ -255,7 +255,7 @@ wxAccStatus TrackPanelAx::GetChildCount( int* childCount )
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus TrackPanelAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -263,7 +263,7 @@ wxAccStatus TrackPanelAx::GetDefaultAction( int WXUNUSED(childId), wxString *act
 // Returns the description for this object or a child.
 wxAccStatus TrackPanelAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -271,7 +271,7 @@ wxAccStatus TrackPanelAx::GetDescription( int WXUNUSED(childId), wxString *descr
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus TrackPanelAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -280,7 +280,7 @@ wxAccStatus TrackPanelAx::GetHelpText( int WXUNUSED(childId), wxString *helpText
 // Return e.g. ALT+K
 wxAccStatus TrackPanelAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }

@@ -328,7 +328,7 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
          if (bShowTrackNameInWaveform &&
              wt->IsLeader() &&
              // Exclude empty name.
-             !wt->GetName().IsEmpty()) {
+             !wt->GetName().empty()) {
             wxBrush Brush;
             wxCoord x,y;
             wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);

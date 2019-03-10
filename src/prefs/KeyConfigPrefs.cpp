@@ -283,7 +283,7 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
    wxArrayString Categories;
    wxArrayString Prefixes;
 
-   mNames.Clear();
+   mNames.clear();
    mKeys.clear();
    mDefaultKeys.clear();
    mStandardDefaultKeys.clear();
@@ -432,7 +432,7 @@ void KeyConfigPrefs::OnHotkeyChar(wxKeyEvent & WXUNUSED(e))
 
 void KeyConfigPrefs::OnHotkeyKillFocus(wxFocusEvent & e)
 {
-   if (mKey->GetValue().IsEmpty() && mCommandSelected != wxNOT_FOUND) {
+   if (mKey->GetValue().empty() && mCommandSelected != wxNOT_FOUND) {
       mKey->AppendText(mView->GetKey(mCommandSelected).Display());
    }
 
@@ -521,7 +521,7 @@ void KeyConfigPrefs::SetKeyForSelected(const NormalizedKeyString & key)
 
    mView->SetKey(mCommandSelected, key);
    mManager->SetKeyFromName(name, key);
-   mNewKeys[mNames.Index(name)] = key;
+   mNewKeys[ make_iterator_range( mNames ).index( name ) ] = key;
 }
 
 
@@ -563,7 +563,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 
       mView->SetKeyByName(oldname, {});
       mManager->SetKeyFromName(oldname, {});
-      mNewKeys[mNames.Index(oldname)] = {};
+      mNewKeys[ make_iterator_range( mNames ).index( oldname ) ] = {};
 
    }
 
@@ -635,7 +635,7 @@ bool KeyConfigPrefs::Commit()
    PopulateOrExchange(S);
 
    bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"), false);
-   for (size_t i = 0; i < mNames.GetCount(); i++) {
+   for (size_t i = 0; i < mNames.size(); i++) {
       const auto &dkey = bFull ? mDefaultKeys[i] : mStandardDefaultKeys[i];
       wxString name = wxT("/NewKeys/") + mNames[i];
       const auto &key = mNewKeys[i];
@@ -661,7 +661,7 @@ bool KeyConfigPrefs::Commit()
 void KeyConfigPrefs::Cancel()
 {
    // Restore original key values
-   for (size_t i = 0; i < mNames.GetCount(); i++) {
+   for (size_t i = 0; i < mNames.size(); i++) {
       mManager->SetKeyFromIndex(i, mKeys[i]);
    }
 

@@ -1551,7 +1551,7 @@ wxString AudacityProject::GetName()
    wxString name = wxFileNameFromPath(mFileName);
 
    // Chop off the extension
-   size_t len = name.Len();
+   size_t len = name.length();
    if (len > 4 && name.Mid(len - 4) == wxT(".aup"))
       name = name.Mid(0, len - 4);
 
@@ -1568,10 +1568,10 @@ void AudacityProject::SetProjectTitle( int number)
    if( number >= 0 ){
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
       name = wxString::Format( _TS("[Project %02i] Audacity \"%s\""), number+1 ,
-         name.IsEmpty() ? "<untitled>" : (const char *)name );
+         name.empty() ? "<untitled>" : (const char *)name );
    }
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
-   else if( name.IsEmpty() )
+   else if( name.empty() )
    {
       mbLoadedFromAup = false;
       name = _TS("Audacity");
@@ -2172,7 +2172,7 @@ int AudacityProject::CountUnnamed()
    int j = 0;
    for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
       if ( gAudacityProjects[i] )
-         if ( gAudacityProjects[i]->GetName().IsEmpty() )
+         if ( gAudacityProjects[i]->GetName().empty() )
             j++;
    }
    return j;
@@ -2469,7 +2469,7 @@ public:
       // Construct this projects name and number.
       sProjNumber = "";
       sProjName = p->GetName();
-      if (sProjName.IsEmpty()){
+      if (sProjName.empty()){
          sProjName = _("<untitled>");
          UnnamedCount=AudacityProject::CountUnnamed();
          if( UnnamedCount > 1 ){
@@ -2740,7 +2740,7 @@ void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
 {
    const wxString &cmd = event.GetString();
 
-   if (!cmd.IsEmpty()) {
+   if (!cmd.empty()) {
       OpenFile(cmd);
    }
 
@@ -2880,7 +2880,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
     * with Audacity. Do not include pipe symbols or .aup (this extension will
     * now be added automatically for the Save Projects dialogues).*/
    wxArrayString selectedFiles = ShowOpenDialog(_("Audacity projects"), wxT("*.aup"));
-   if (selectedFiles.GetCount() == 0) {
+   if (selectedFiles.size() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       gPrefs->Flush();
       return;
@@ -2897,7 +2897,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       gPrefs->Flush();
    } );
 
-   for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
+   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       const wxString &fileName = selectedFiles[ff];
 
       // Make sure it isn't already open.
@@ -3095,8 +3095,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    SetProjectTitle();
 
    const wxString autoSaveExt = wxT(".autosave");
-   if (mFileName.Length() >= autoSaveExt.Length() &&
-       mFileName.Right(autoSaveExt.Length()) == autoSaveExt)
+   if (mFileName.length() >= autoSaveExt.length() &&
+       mFileName.Right(autoSaveExt.length()) == autoSaveExt)
    {
       AutoSaveFile asf;
       if (!asf.Decode(fileName))
@@ -3472,13 +3472,13 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             realFileDir.RemoveLastDir();
 
             wxString realFileName = value;
-            if (realFileName.Length() >= 5 &&
+            if (realFileName.length() >= 5 &&
                 realFileName.Right(5) == wxT("_data"))
             {
-               realFileName = realFileName.Left(realFileName.Length() - 5);
+               realFileName = realFileName.Left(realFileName.length() - 5);
             }
 
-            if (realFileName.IsEmpty())
+            if (realFileName.empty())
             {
                // A previously unsaved project has been recovered, so fake
                // an unsaved project. The data files just stay in the temp
@@ -3502,7 +3502,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             projPath = wxPathOnly(mFileName);
          }
 
-         if (!projName.IsEmpty())
+         if (!projName.empty())
          {
             // First try to load the data files based on the _data dir given in the .aup file
             // If this fails then try to use the filename of the .aup as the base directory
@@ -3564,7 +3564,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // above is inaccurate.
 
    if (!bFileVersionFound ||
-         (fileVersion.Length() != 5) || // expecting '1.1.0', for example
+         (fileVersion.length() != 5) || // expecting '1.1.0', for example
          // JKC: I commentted out next line.  IsGoodInt is not for
          // checking dotted numbers.
          //!XMLValueChecker::IsGoodInt(fileVersion) ||
@@ -3694,8 +3694,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
    wxString project = mFileName;
-   if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
-      project = project.Mid(0, project.Len() - 4);
+   if (project.length() > 4 && project.Mid(project.length() - 4) == wxT(".aup"))
+      project = project.Mid(0, project.length() - 4);
    wxString projName = wxFileNameFromPath(project) + wxT("_data");
    // End Warning -DMM
 
@@ -3926,8 +3926,8 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    if (fromSaveAs) {
       // This block of code is duplicated in WriteXML, for now...
       project = mFileName;
-      if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
-         project = project.Mid(0, project.Len() - 4);
+      if (project.length() > 4 && project.Mid(project.length() - 4) == wxT(".aup"))
+         project = project.Mid(0, project.length() - 4);
       projName = wxFileNameFromPath(project) + wxT("_data");
       projPath = wxPathOnly(project);
 
@@ -4321,7 +4321,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
                                             mTags.get(),
                                             errorMessage);
 
-      if (!errorMessage.IsEmpty()) {
+      if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
          ShowErrorDialog(this, _("Error Importing"),
@@ -4433,7 +4433,7 @@ bool AudacityProject::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= 
       bWantSaveCopy = true;
 
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
-   if( filename.GetFullPath().IsEmpty() ){
+   if( filename.GetFullPath().empty() ){
       bHasPath = false;
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
@@ -4478,7 +4478,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
       return false;
    }
 
-   bool bPrompt = (mBatchMode == 0) || (mFileName.IsEmpty());
+   bool bPrompt = (mBatchMode == 0) || (mFileName.empty());
    wxString fName = "";
 
    if (bPrompt) {
@@ -5123,7 +5123,7 @@ void AudacityProject::AutoSave()
    // file with the extension ".tmp", then rename the file to .autosave
    wxString projName;
 
-   if (mFileName.IsEmpty())
+   if (mFileName.empty())
       projName = wxT("New Project");
    else
       projName = wxFileName(mFileName).GetName();
@@ -5140,7 +5140,7 @@ void AudacityProject::AutoSave()
       AutoSaveFile buffer;
       WriteXMLHeader(buffer);
       WriteXML(buffer, false);
-      mStrOtherNamesArray.Clear();
+      mStrOtherNamesArray.clear();
 
       wxFFile saveFile;
       saveFile.Open(fn + wxT(".tmp"), wxT("wb"));
@@ -5153,7 +5153,7 @@ void AudacityProject::AutoSave()
    // Now that we have a NEW auto-save file, DELETE the old one
    DeleteCurrentAutoSaveFile();
 
-   if (!mAutoSaveFileName.IsEmpty())
+   if (!mAutoSaveFileName.empty())
       return; // could not remove auto-save file
 
    if (!wxRenameFile(fn + wxT(".tmp"), fn + wxT(".autosave")))
@@ -5173,7 +5173,7 @@ void AudacityProject::AutoSave()
 
 void AudacityProject::DeleteCurrentAutoSaveFile()
 {
-   if (!mAutoSaveFileName.IsEmpty())
+   if (!mAutoSaveFileName.empty())
    {
       if (wxFileExists(mAutoSaveFileName))
       {
@@ -5293,7 +5293,7 @@ You are saving directly to a slow external storage device\n\
 void AudacityProject::OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog)
 {
    // New blockfiles have been created, so add them to the auto-save file
-   if (!mAutoSaveFileName.IsEmpty())
+   if (!mAutoSaveFileName.empty())
    {
       wxFFile f(mAutoSaveFileName, wxT("ab"));
       if (!f.IsOpened())

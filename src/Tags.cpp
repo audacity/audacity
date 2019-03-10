@@ -350,14 +350,14 @@ void Tags::AllowEditTrackNumber(bool editTrackNumber)
 
 int Tags::GetNumUserGenres()
 {
-   return mGenres.GetCount();
+   return mGenres.size();
 }
 
 void Tags::LoadDefaultGenres()
 {
-   mGenres.Clear();
+   mGenres.clear();
    for (size_t i = 0; i < WXSIZEOF(DefaultGenres); i++) {
-      mGenres.Add(DefaultGenres[i]);
+      mGenres.push_back(DefaultGenres[i]);
    }
 }
 
@@ -371,11 +371,11 @@ void Tags::LoadGenres()
       return;
    }
 
-   mGenres.Clear();
+   mGenres.clear();
 
    int cnt = tf.GetLineCount();
    for (int i = 0; i < cnt; i++) {
-      mGenres.Add(tf.GetLine(i));
+      mGenres.push_back(tf.GetLine(i));
    }
 }
 
@@ -449,7 +449,7 @@ Tags::Iterators Tags::GetRange() const
 void Tags::SetTag(const wxString & name, const wxString & value)
 {
    // We don't like empty names
-   if (name.IsEmpty()) {
+   if (name.empty()) {
       return;
    }
 
@@ -466,7 +466,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Look it up
    TagMap::iterator iter = mXref.find(key);
 
-   if (value.IsEmpty()) {
+   if (value.empty()) {
       // Erase the tag
       if (iter == mXref.end())
          // nothing to do
@@ -484,7 +484,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
          mXref[key] = name;
          mMap[name] = value;
       }
-      else if (!iter->second.IsSameAs(name)) {
+      else if (iter->second != name) {
          // Watch out for case differences!
          mMap[name] = value;
          mMap.erase(iter->second);
@@ -513,7 +513,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       while (*attrs) {
          wxString attr = *attrs++;
-         if (attr.IsEmpty())
+         if (attr.empty())
             break;
          wxString value = *attrs++;
 
@@ -942,7 +942,7 @@ bool TagsEditor::TransferDataFromWindow()
       wxString n = mGrid->GetCellValue(i, 0);
       wxString v = mGrid->GetCellValue(i, 1);
 
-      if (n.IsEmpty()) {
+      if (n.empty()) {
          continue;
       }
 
@@ -1097,11 +1097,12 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
 
    S.AddStandardButtons();
 
-   wxSortedArrayString g;
+   wxArrayString g;
    int cnt = mLocal.GetNumUserGenres();
    for (int i = 0; i < cnt; i++) {
-      g.Add(mLocal.GetUserGenre(i));
+      g.push_back(mLocal.GetUserGenre(i));
    }
+   std::sort( g.begin(), g.end() );
 
    for (int i = 0; i < cnt; i++) {
       tc->AppendText(g[i] + wxT("\n"));
@@ -1186,7 +1187,7 @@ void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
                      this);
 
    // User canceled...
-   if (fn.IsEmpty()) {
+   if (fn.empty()) {
       return;
    }
 
@@ -1241,7 +1242,7 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
                      this);
 
    // User canceled...
-   if (fn.IsEmpty()) {
+   if (fn.empty()) {
       return;
    }
 
@@ -1427,11 +1428,12 @@ void TagsEditor::PopulateGenres()
    int cnt = mLocal.GetNumUserGenres();
    int i;
    wxString parm;
-   wxSortedArrayString g;
+   wxArrayString g;
 
    for (i = 0; i < cnt; i++) {
-      g.Add(mLocal.GetUserGenre(i));
+      g.push_back(mLocal.GetUserGenre(i));
    }
+   std::sort( g.begin(), g.end() );
 
    for (i = 0; i < cnt; i++) {
       parm = parm + (i == 0 ? wxT("") : wxT(",")) + g[i];

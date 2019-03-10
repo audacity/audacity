@@ -135,7 +135,7 @@ void Importer::StringToList(wxString &str, wxString &delims, wxArrayString &list
    wxStringTokenizer toker;
 
    for (toker.SetString(str, delims, mod);
-      toker.HasMoreTokens(); list.Add (toker.GetNextToken()));
+      toker.HasMoreTokens(); list.push_back(toker.GetNextToken()));
 }
 
 void Importer::ReadImportItems()
@@ -195,19 +195,19 @@ void Importer::ReadImportItems()
          /* Filters are stored in one list, but the position at which
           * unused filters start is remembered
           */
-         new_item->divider = new_item->filters.Count();
+         new_item->divider = new_item->filters.size();
          StringToList (unused_filters, delims, new_item->filters);
       }
       else
          new_item->divider = -1;
 
       /* Find corresponding filter object for each filter ID */
-      for (size_t i = 0; i < new_item->filters.Count(); i++)
+      for (size_t i = 0; i < new_item->filters.size(); i++)
       {
          bool found = false;
          for (const auto &importPlugin : mImportPluginList)
          {
-            if (importPlugin->GetPluginStringID().Cmp(new_item->filters[i]) == 0)
+            if (importPlugin->GetPluginStringID() == new_item->filters[i])
             {
                new_item->filter_objects.push_back(importPlugin.get());
                found = true;
@@ -235,8 +235,10 @@ void Importer::ReadImportItems()
          {
             int index = new_item->divider;
             if (new_item->divider < 0)
-               index = new_item->filters.Count();
-            new_item->filters.Insert(importPlugin->GetPluginStringID(),index);
+               index = new_item->filters.size();
+            new_item->filters.insert(
+               new_item->filters.begin() + index,
+               importPlugin->GetPluginStringID());
             new_item->filter_objects.insert(
                new_item->filter_objects.begin() + index, importPlugin.get());
             if (new_item->divider >= 0)
@@ -254,35 +256,35 @@ void Importer::WriteImportItems()
    for (i = 0; i < this->mExtImportItems.size(); i++)
    {
       ExtImportItem *item = mExtImportItems[i].get();
-      val.Clear();
+      val.clear();
 
-      for (size_t j = 0; j < item->extensions.Count(); j++)
+      for (size_t j = 0; j < item->extensions.size(); j++)
       {
          val.Append (item->extensions[j]);
-         if (j < item->extensions.Count() - 1)
+         if (j < item->extensions.size() - 1)
             val.Append (wxT(":"));
       }
       val.Append (wxT("\\"));
-      for (size_t j = 0; j < item->mime_types.Count(); j++)
+      for (size_t j = 0; j < item->mime_types.size(); j++)
       {
          val.Append (item->mime_types[j]);
-         if (j < item->mime_types.Count() - 1)
+         if (j < item->mime_types.size() - 1)
             val.Append (wxT(":"));
       }
       val.Append (wxT("|"));
-      for (size_t j = 0; j < item->filters.Count() && ((int) j < item->divider || item->divider < 0); j++)
+      for (size_t j = 0; j < item->filters.size() && ((int) j < item->divider || item->divider < 0); j++)
       {
          val.Append (item->filters[j]);
-         if (j < item->filters.Count() - 1 && ((int) j < item->divider - 1 || item->divider < 0))
+         if (j < item->filters.size() - 1 && ((int) j < item->divider - 1 || item->divider < 0))
             val.Append (wxT(":"));
       }
       if (item->divider >= 0)
       {
          val.Append (wxT("\\"));
-         for (size_t j = item->divider; j < item->filters.Count(); j++)
+         for (size_t j = item->divider; j < item->filters.size(); j++)
          {
             val.Append (item->filters[j]);
-            if (j < item->filters.Count() - 1)
+            if (j < item->filters.size() - 1)
                val.Append (wxT(":"));
          }
       }
@@ -311,12 +313,12 @@ void Importer::WriteImportItems()
 std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 {
    auto new_item = std::make_unique<ExtImportItem>();
-   new_item->extensions.Add(wxT("*"));
-   new_item->mime_types.Add(wxT("*"));
+   new_item->extensions.push_back(wxT("*"));
+   new_item->mime_types.push_back(wxT("*"));
 
    for (const auto &importPlugin : mImportPluginList)
    {
-      new_item->filters.Add (importPlugin->GetPluginStringID());
+      new_item->filters.push_back(importPlugin->GetPluginStringID());
       new_item->filter_objects.push_back(importPlugin.get());
    }
    new_item->divider = -1;
@@ -396,7 +398,7 @@ bool Importer::Import(const wxString &fName,
       ExtImportItem *item = uItem.get();
       bool matches_ext = false, matches_mime = false;
       wxLogDebug(wxT("Testing extensions"));
-      for (size_t j = 0; j < item->extensions.Count(); j++)
+      for (size_t j = 0; j < item->extensions.size(); j++)
       {
          wxLogDebug(wxT("%s"), item->extensions[j].Lower());
          if (wxMatchWild (item->extensions[j].Lower(),fName.Lower(), false))
@@ -406,7 +408,7 @@ bool Importer::Import(const wxString &fName,
             break;
          }
       }
-      if (item->extensions.Count() == 0)
+      if (item->extensions.size() == 0)
       {
          wxLogDebug(wxT("Match! (empty list)"));
          matches_ext = true;
@@ -415,7 +417,7 @@ bool Importer::Import(const wxString &fName,
          wxLogDebug(wxT("Testing mime types"));
       else
          wxLogDebug(wxT("Not testing mime types"));
-      for (size_t j = 0; matches_ext && j < item->mime_types.Count(); j++)
+      for (size_t j = 0; matches_ext && j < item->mime_types.size(); j++)
       {
          if (wxMatchWild (item->mime_types[j].Lower(),mime_type.Lower(), false))
          {
@@ -424,7 +426,7 @@ bool Importer::Import(const wxString &fName,
             break;
          }
       }
-      if (item->mime_types.Count() == 0)
+      if (item->mime_types.size() == 0)
       {
          wxLogDebug(wxT("Match! (empty list)"));
          matches_mime = true;
@@ -454,7 +456,7 @@ bool Importer::Import(const wxString &fName,
    // in case subsequent code revisions to the constructor should break this assumption that
    // libsndfile is first.
    ImportPlugin *libsndfilePlugin = mImportPluginList.begin()->get();
-   wxASSERT(libsndfilePlugin->GetPluginStringID().IsSameAs(wxT("libsndfile")));
+   wxASSERT(libsndfilePlugin->GetPluginStringID() == wxT("libsndfile"));
 
    for (const auto &plugin : mImportPluginList)
    {
@@ -472,7 +474,7 @@ bool Importer::Import(const wxString &fName,
             // but then get processed as desired by libmad.
             // But a wav file which bears an incorrect .mp3 extension will be successfully
             // processed by libsndfile and thus avoid being submitted to libmad.
-            if (plugin->GetPluginStringID().IsSameAs(wxT("libmad")))
+            if (plugin->GetPluginStringID() == wxT("libmad"))
             {
                // Make sure libsndfile is not already in the list
                if (importPlugins.end() ==
@@ -494,7 +496,7 @@ bool Importer::Import(const wxString &fName,
    // formats unsuitable for it, and produce distorted results.
    for (const auto &plugin : mImportPluginList)
    {
-      if (!(plugin->GetPluginStringID().IsSameAs(wxT("libmad"))))
+      if (!(plugin->GetPluginStringID() == wxT("libmad")))
       {
          // Make sure its not already in the list
          if (importPlugins.end() ==

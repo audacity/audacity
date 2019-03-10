@@ -247,7 +247,7 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
       TieCheckBox( "", *pVar);
       //return;
    }
-   if( Prompt.IsEmpty() )
+   if( Prompt.empty() )
       return;
    miProp=1;
    mpWind = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
@@ -259,7 +259,7 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
 /// Left aligned text string.
 void ShuttleGuiBase::AddUnits(const wxString &Prompt)
 {
-   if( Prompt.IsEmpty() )
+   if( Prompt.empty() )
       return;
    if( mShuttleMode != eIsCreating )
       return;
@@ -273,7 +273,7 @@ void ShuttleGuiBase::AddUnits(const wxString &Prompt)
 /// Centred text string.
 void ShuttleGuiBase::AddTitle(const wxString &Prompt)
 {
-   if( Prompt.IsEmpty() )
+   if( Prompt.empty() )
       return;
    if( mShuttleMode != eIsCreating )
       return;
@@ -313,7 +313,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
    mpWind = pCheckBox = safenew wxCheckBox(GetParent(), miId, realPrompt, wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
    pCheckBox->SetValue(Selected == wxT("true"));
-   if (realPrompt.IsEmpty()) {
+   if (realPrompt.empty()) {
       // NVDA 2018.3 does not read controls which are buttons, check boxes or radio buttons which have
       // an accessibility name which is empty. Bug 1980.
 #if wxUSE_ACCESSIBILITY
@@ -455,7 +455,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
    wxComboBox * pCombo;
    miProp=0;
 
-   int n = pChoices->GetCount();
+   int n = pChoices->size();
    if( n>50 ) n=50;
    int i;
    wxString Choices[50];
@@ -1379,7 +1379,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
          else
          {
             wxString Temp;
-            if( pChoices && ( WrappedRef.ReadAsInt() < (int)pChoices->GetCount() ) )
+            if( pChoices && ( WrappedRef.ReadAsInt() < (int)pChoices->size() ) )
             {
                Temp = (*pChoices)[WrappedRef.ReadAsInt()];
             }
@@ -1610,8 +1610,8 @@ wxChoice * ShuttleGuiBase::TieChoice(
 /// String-to-Index
 int ShuttleGuiBase::TranslateToIndex( const wxString &Value, const wxArrayString &Choices )
 {
-   int n = Choices.Index( Value );
-   if( n== wxNOT_FOUND )
+   int n = make_iterator_range( Choices ).index( Value );
+   if( n == wxNOT_FOUND  )
       n=miNoMatchSelector;
    miNoMatchSelector = 0;
    return n;
@@ -1624,7 +1624,7 @@ wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayString 
    if( n== wxNOT_FOUND )
       n=miNoMatchSelector;
    miNoMatchSelector = 0;
-   if( n < (int)Choices.GetCount() )
+   if( n < (int)Choices.size() )
    {
       return Choices[n];
    }
@@ -2332,7 +2332,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       size_t lastLastSpacer = 0;
       size_t lastSpacer = 0;
       wxSizerItemList & list = bs->GetChildren();
-      for( size_t i = 0, cnt = list.GetCount(); i < cnt; i++ )
+      for( size_t i = 0, cnt = list.size(); i < cnt; i++ )
       {
          if( list[i]->IsSpacer() )
          {
@@ -2382,7 +2382,7 @@ void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayString & items
 {
    int maxw = 0;
 
-   for( size_t i = 0; i < items.GetCount(); i++ )
+   for( size_t i = 0; i < items.size(); i++ )
    {
       int x;
       int y;
@@ -2470,7 +2470,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    AddItem( Default, "default"  );
    StartField( "enum" );
    StartArray();
-   for( size_t i=0;i<Choices.Count(); i++ )
+   for( size_t i=0;i<Choices.size(); i++ )
       AddItem( InternalChoices[i] );
    EndArray();
    EndField();
@@ -2498,7 +2498,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    AddItem( Default, "default"  );
    StartField( "enum" );
    StartArray();
-   for( size_t i=0;i<Choices.Count(); i++ )
+   for( size_t i=0;i<Choices.size(); i++ )
       AddItem( Choices[i] );
    EndArray();
    EndField();

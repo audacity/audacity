@@ -627,7 +627,7 @@ wxAccStatus AButtonAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionN
 // Returns the description for this object or a child.
 wxAccStatus AButtonAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -658,7 +658,7 @@ wxAccStatus AButtonAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 
    return wxACC_OK;
 #else
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_NOT_SUPPORTED;
 #endif
@@ -668,7 +668,7 @@ wxAccStatus AButtonAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 // Return e.g. ALT+K
 wxAccStatus AButtonAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -691,12 +691,12 @@ wxAccStatus AButtonAx::GetName(int WXUNUSED(childId), wxString* name)
    AButton *ab = wxDynamicCast( GetWindow(), AButton );
 
    *name = ab->GetName();
-   if( name->IsEmpty() )
+   if( name->empty() )
    {
       *name = ab->GetLabel();
    }
 
-   if( name->IsEmpty() )
+   if( name->empty() )
    {
       *name = _("Button");
    }

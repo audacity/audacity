@@ -857,7 +857,7 @@ wxString LWSlider::GetTip(float value) const
 {
    wxString label;
 
-   if (mTipTemplate.IsEmpty())
+   if (mTipTemplate.empty())
    {
       wxString val;
 
@@ -919,7 +919,7 @@ wxArrayString LWSlider::GetWidestTips() const
 {
    wxArrayString results;
 
-   if (mTipTemplate.IsEmpty())
+   if (mTipTemplate.empty())
    {
       wxString val;
 
@@ -1694,7 +1694,7 @@ wxAccStatus ASliderAx::GetChildCount(int* childCount)
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus ASliderAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -1702,7 +1702,7 @@ wxAccStatus ASliderAx::GetDefaultAction( int WXUNUSED(childId), wxString *action
 // Returns the description for this object or a child.
 wxAccStatus ASliderAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -1722,7 +1722,7 @@ wxAccStatus ASliderAx::GetFocus(int* childId, wxAccessible** child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus ASliderAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -1731,7 +1731,7 @@ wxAccStatus ASliderAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 // Return e.g. ALT+K
 wxAccStatus ASliderAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }

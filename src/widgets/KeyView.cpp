@@ -130,7 +130,7 @@ KeyView::GetFullLabel(int index) const
    wxString label = node.label;
 
    // Prepend the prefix if available
-   if (!node.prefix.IsEmpty())
+   if (!node.prefix.empty())
    {
       label = node.prefix + wxT(" - ") + label;
    }
@@ -462,7 +462,7 @@ KeyView::RecalcExtents()
 
          // Prepend prefix for view types other than tree
          wxString label = node.label;
-         if (mViewType != ViewByTree && !node.prefix.IsEmpty())
+         if (mViewType != ViewByTree && !node.prefix.empty())
          {
             label = node.prefix + wxT(" - ") + label;
          }
@@ -542,7 +542,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
    bool inpfx = false;
 
    // Examine all names...all arrays passed have the same indexes
-   int cnt = (int) names.GetCount();
+   int cnt = (int) names.size();
    for (int i = 0; i < cnt; i++)
    {
       wxString name = names[i];
@@ -682,7 +682,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
       // Prepend prefix for all view types to determine maximum
       // column widths
       wxString label = node.label;
-      if (!node.prefix.IsEmpty())
+      if (!node.prefix.empty())
       {
          label = node.prefix + wxT(" - ") + label;
       }
@@ -695,7 +695,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
 
 #if 0
    // For debugging
-   for (int j = 0; j < mNodes.GetCount(); j++)
+   for (int j = 0; j < mNodes.size(); j++)
    {
       KeyNode & node = mNodes[j];
       wxLogDebug(wxT("NODE line %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d name %s STR %s | %s | %s"),
@@ -737,7 +737,7 @@ KeyView::RefreshLines(bool bSort)
    mLines.clear();
 
    // Process a filter if one is set
-   if (!mFilter.IsEmpty())
+   if (!mFilter.empty())
    {
       // Examine all nodes
       for (int i = 0; i < cnt; i++)
@@ -778,11 +778,11 @@ KeyView::RefreshLines(bool bSort)
          // For the Key View, if the filter is a single character,
          // then it has to be the last character in the searchit string,
          // and be preceded by nothing or +.
-         if ((mViewType == ViewByKey) && 
-               (mFilter.Len() == 1) && 
-               (!mFilter.IsSameAs(searchit.Last()) ||
-                  ((searchit.Len() > 1) && 
-                     ((wxString)(searchit.GetChar(searchit.Len() - 2)) != wxT("+")))))
+         if ((mViewType == ViewByKey) &&
+               (mFilter.length() == 1) &&
+               (mFilter != searchit.Last() ||
+                  ((searchit.length() > 1) &&
+                     ((wxString)(searchit.GetChar(searchit.length() - 2)) != wxT("+")))))
          {
             // Not suitable so continue to next node
             continue;
@@ -918,7 +918,7 @@ KeyView::RefreshLines(bool bSort)
    if( bSort )
    {
       //To see how many lines are being sorted (and how often).
-      //wxLogDebug("Sorting %i lines for type %i", mLines.GetCount(), mViewType);
+      //wxLogDebug("Sorting %i lines for type %i", mLines.size(), mViewType);
 
       // Speed up the comparison function used in sorting
       // by only translating this string once.
@@ -949,7 +949,7 @@ KeyView::RefreshLines(bool bSort)
 
 #if 0
    // For debugging
-   for (int j = 0; j < mLines.GetCount(); j++)
+   for (int j = 0; j < mLines.size(); j++)
    {
       KeyNode & node = *mLines[j];
       wxLogDebug(wxT("LINE line %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d name %s STR %s | %s | %s"),
@@ -1175,7 +1175,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       wxCoord x = rect.x + KV_LEFT_MARGIN - mScrollX;
 
       // Prepend prefix if available
-      if (!node->prefix.IsEmpty())
+      if (!node->prefix.empty())
       {
          label = node->prefix + wxT(" - ") + label;
       }
@@ -1599,13 +1599,13 @@ KeyView::CmpKeyNodeByName(KeyNode *t1, KeyNode *t2)
    wxString k2 = t2->label;
 
    // Prepend prefix if available
-   if (!t1->prefix.IsEmpty())
+   if (!t1->prefix.empty())
    {
       k1 = t1->prefix + wxT(" - ") + k1;
    }
 
    // Prepend prefix if available
-   if (!t2->prefix.IsEmpty())
+   if (!t2->prefix.empty())
    {
       k2 = t2->prefix + wxT(" - ") + k2;
    }
@@ -1633,25 +1633,25 @@ KeyView::CmpKeyNodeByKey(KeyNode *t1, KeyNode *t2)
    wxString k2 = t2->key.Display();
 
    // Left node is unassigned, so prefix it
-   if(k1.IsEmpty())
+   if(k1.empty())
    {
       k1 = wxT("\xff");
    }
 
    // Right node is unassigned, so prefix it
-   if(k2.IsEmpty())
+   if(k2.empty())
    {
       k2 = wxT("\xff");
    }
 
    // Add prefix if available
-   if (!t1->prefix.IsEmpty())
+   if (!t1->prefix.empty())
    {
       k1 += t1->prefix + wxT(" - ");
    }
 
    // Add prefix if available
-   if (!t2->prefix.IsEmpty())
+   if (!t2->prefix.empty())
    {
       k2 += t2->prefix + wxT(" - ");
    }
@@ -1742,7 +1742,7 @@ KeyView::GetValue(int line)
    wxString key = GetKey(index).Display();
 
    // Add the key if it isn't empty
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       if (mViewType == ViewByKey)
       {
@@ -1933,7 +1933,7 @@ KeyViewAx::GetChildCount(int *childCount)
 wxAccStatus
 KeyViewAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -1942,7 +1942,7 @@ KeyViewAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 wxAccStatus
 KeyViewAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -1951,7 +1951,7 @@ KeyViewAx::GetDescription(int WXUNUSED(childId), wxString *description)
 wxAccStatus
 KeyViewAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -1961,7 +1961,7 @@ KeyViewAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 wxAccStatus
 KeyViewAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -2152,7 +2152,7 @@ KeyViewAx::GetValue(int childId, wxString *strValue)
 {
    int line;
 
-   strValue->Clear();
+   strValue->clear();
 
    if (!IdToLine(childId, line))
    {

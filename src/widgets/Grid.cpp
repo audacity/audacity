@@ -255,9 +255,9 @@ wxGridCellRenderer *NumericRenderer::Clone() const
 ChoiceEditor::ChoiceEditor(size_t count, const wxString choices[])
 {
    if (count) {
-      mChoices.Alloc(count);
+      mChoices.reserve(count);
       for (size_t n = 0; n < count; n++) {
-         mChoices.Add(choices[n]);
+         mChoices.push_back(choices[n]);
       }
    }
 }
@@ -311,7 +311,7 @@ void ChoiceEditor::BeginEdit(int row, int col, wxGrid* grid)
 
    Choice()->Clear();
    Choice()->Append(mChoices);
-   Choice()->SetSelection(mChoices.Index(mOld));
+   Choice()->SetSelection( make_iterator_range( mChoices ).index( mOld ) );
    Choice()->SetFocus();
 }
 
@@ -332,7 +332,7 @@ bool ChoiceEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col),
    int sel = Choice()->GetSelection();
 
    // This can happen if the wxChoice control is displayed and the list of choices get changed
-   if ((sel < 0) || (sel >= (int)(mChoices.GetCount())))
+   if ((sel < 0) || (sel >= (int)(mChoices.size())))
    {
       return false;
    }
@@ -356,7 +356,7 @@ void ChoiceEditor::ApplyEdit(int row, int col, wxGrid *grid)
 
 void ChoiceEditor::Reset()
 {
-   Choice()->SetSelection(mChoices.Index(mOld));
+   Choice()->SetSelection( make_iterator_range( mChoices ).index( mOld ) );
 }
 
 void ChoiceEditor::SetChoices(const wxArrayString &choices)
@@ -707,7 +707,7 @@ wxAccStatus GridAx::GetChildCount(int *childCount)
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus GridAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -715,7 +715,7 @@ wxAccStatus GridAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName
 // Returns the description for this object or a child.
 wxAccStatus GridAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -723,7 +723,7 @@ wxAccStatus GridAx::GetDescription(int WXUNUSED(childId), wxString *description)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus GridAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -732,7 +732,7 @@ wxAccStatus GridAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 // Return e.g. ALT+K
 wxAccStatus GridAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -766,7 +766,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
    if (GetRowCol(childId, row, col)) {
       wxString n = mGrid->GetColLabelValue(col);
       wxString v = mGrid->GetCellValue(row, col);
-      if (v.IsEmpty()) {
+      if (v.empty()) {
          v = _("Empty");
       }
 
@@ -888,7 +888,7 @@ wxAccStatus GridAx::GetValue(int childId, wxString *strValue)
 wxAccStatus GridAx::GetValue(int WXUNUSED(childId), wxString *strValue)
 #endif
 {
-   strValue->Clear();
+   strValue->clear();
 
 #if defined(__WXMSW__)
    return wxACC_OK;

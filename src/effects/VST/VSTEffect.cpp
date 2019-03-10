@@ -396,7 +396,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       wxStringTokenizer tok(vstpath);
       while (tok.HasMoreTokens())
       {
-         pathList.Add(tok.GetNextToken());
+         pathList.push_back(tok.GetNextToken());
       }
    }
 
@@ -404,20 +404,20 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 #define VSTPATH wxT("/Library/Audio/Plug-Ins/VST")
 
    // Look in ~/Library/Audio/Plug-Ins/VST and /Library/Audio/Plug-Ins/VST
-   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + VSTPATH);
-   pathList.Add(VSTPATH);
+   pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + VSTPATH);
+   pathList.push_back(VSTPATH);
 
    // Recursively search all paths for Info.plist files.  This will identify all
    // bundles.
    pm.FindFilesInPathList(wxT("Info.plist"), pathList, files, true);
 
    // Remove the 'Contents/Info.plist' portion of the names
-   for (size_t i = 0; i < files.GetCount(); i++)
+   for (size_t i = 0; i < files.size(); i++)
    {
       files[i] = wxPathOnly(wxPathOnly(files[i]));
       if (!files[i].EndsWith(wxT(".vst")))
       {
-         files.RemoveAt(i--);
+         files.erase( files.begin() + i-- );
       }
    }
 
@@ -441,7 +441,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       tpath[len] = 0;
       dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.Add(dpath);
+      pathList.push_back(dpath);
    }
 
    // Then try HKEY_LOCAL_MACHINE registry key
@@ -458,7 +458,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       tpath[len] = 0;
       dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.Add(dpath);
+      pathList.push_back(dpath);
    }
 
    // Add the default path last
@@ -466,7 +466,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    ExpandEnvironmentStrings(wxT("%ProgramFiles%\\Steinberg\\VSTPlugins"),
                             dpath,
                             WXSIZEOF(dpath));
-   pathList.Add(dpath);
+   pathList.push_back(dpath);
 
    // Recursively scan for all DLLs
    pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
@@ -474,15 +474,15 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 #else
 
    // Nothing specified in the VST_PATH environment variable...provide defaults
-   if (vstpath.IsEmpty())
+   if (vstpath.empty())
    {
       // We add this "non-default" one
-      pathList.Add(wxT(LIBDIR) wxT("/vst"));
+      pathList.push_back(wxT(LIBDIR) wxT("/vst"));
 
       // These are the defaults used by other hosts
-      pathList.Add(wxT("/usr/lib/vst"));
-      pathList.Add(wxT("/usr/local/lib/vst"));
-      pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".vst"));
+      pathList.push_back(wxT("/usr/lib/vst"));
+      pathList.push_back(wxT("/usr/local/lib/vst"));
+      pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".vst"));
    }
 
    // Recursively scan for all shared objects
@@ -619,12 +619,12 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
             break;
 
             case kKeyInteractive:
-               proc.mInteractive = val.IsSameAs(wxT("1"));
+               proc.mInteractive = val == wxT("1");
                keycount++;
             break;
 
             case kKeyAutomatable:
-               proc.mAutomatable = val.IsSameAs(wxT("1"));
+               proc.mAutomatable = val == wxT("1");
                keycount++;
             break;
 
@@ -1633,7 +1633,7 @@ bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
-      if (name.IsEmpty())
+      if (name.empty())
       {
          name.Printf(wxT("parm_%d"), i);
       }
@@ -1654,7 +1654,7 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
-      if (name.IsEmpty())
+      if (name.empty())
       {
          name.Printf(wxT("parm_%d"), i);
       }
@@ -1706,7 +1706,7 @@ wxArrayString VSTEffect::GetFactoryPresets()
    {
       for (int i = 0; i < mAEffect->numPrograms; i++)
       {
-         progs.Add(GetString(effGetProgramNameIndexed, i));
+         progs.push_back(GetString(effGetProgramNameIndexed, i));
       }
    }
 
@@ -1854,7 +1854,7 @@ void VSTEffect::ExportPresets()
                        NULL);
 
    // User canceled...
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return;
    }
@@ -1906,7 +1906,7 @@ void VSTEffect::ImportPresets()
                        mParent);
 
    // User canceled...
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return;
    }
@@ -2976,7 +2976,7 @@ void VSTEffect::RefreshParameters(int skip)
       name = text;
 
       text = GetString(effGetParamDisplay, i);
-      if (text.IsEmpty())
+      if (text.empty())
       {
          text.Printf(wxT("%.5g"),callGetParameter(i));
       }
@@ -2984,7 +2984,7 @@ void VSTEffect::RefreshParameters(int skip)
       name += wxT(' ') + text;
 
       text = GetString(effGetParamDisplay, i);
-      if (!text.IsEmpty())
+      if (!text.empty())
       {
          text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i));
          mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text));

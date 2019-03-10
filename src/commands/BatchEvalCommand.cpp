@@ -64,7 +64,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    bool bResult = Batch.ApplyCommandInBatchMode(friendly, cmdName, cmdParams, &context);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();
-   if( !Message.IsEmpty() )
+   if( !Message.empty() )
       context.Status( Message );
    return bResult;
 }

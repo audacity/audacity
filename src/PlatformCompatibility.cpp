@@ -51,7 +51,7 @@ wxString PlatformCompatibility::ConvertSlashInFileName(const wxString& filePath)
    wxString filename;
    wxString newPath = filePath;
    // int pathLen = 1;
-   while (!wxDirExists(wxPathOnly(newPath)) && ! path.IsEmpty()) {
+   while (!wxDirExists(wxPathOnly(newPath)) && ! path.empty()) {
       path = newPath.BeforeLast('/');
       filename = newPath.AfterLast('/');
       newPath = path;

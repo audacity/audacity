@@ -561,7 +561,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                wxArrayString choices;
                for (size_t i = 0, cnt = programs.size(); i < cnt; i++)
                {
-                  choices.Add(wxString::FromUTF8(programs[i].c_str()));
+                  choices.push_back(wxString::FromUTF8(programs[i].c_str()));
                }
 
                S.AddPrompt(_("Program"));
@@ -592,7 +592,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                mValues[p] = 0.0;
 
                wxString labelText = wxString::FromUTF8(mParameters[p].name.c_str());
-               if (!unit.IsEmpty())
+               if (!unit.empty())
                {
                   labelText += wxT(" (") + unit + wxT(")");
                }
@@ -607,7 +607,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   mToggles[p] = S.AddCheckBox( {},
                                               value > 0.5 ? wxT("true") : wxT("false"));
                   mToggles[p]->SetName(labelText);
-                  if (!tip.IsEmpty())
+                  if (!tip.empty())
                   {
                      mToggles[p]->SetToolTip(tip);
                   }
@@ -633,14 +633,14 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      {
                         selected = choice;
                      }
-                     choices.Add(choice);
+                     choices.push_back(choice);
                   }
 
                   S.Id(ID_Choices + p);
                   mChoices[p] = S.AddChoice( {}, selected, &choices);
                   mChoices[p]->SetName(labelText);
                   mChoices[p]->SetSizeHints(-1, -1);
-                  if (!tip.IsEmpty())
+                  if (!tip.empty())
                   {
                      mChoices[p]->SetToolTip(tip);
                   }
@@ -667,7 +667,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   mFields[p] = S.AddTextBox( {}, wxT(""), 12);
                   mFields[p]->SetName(labelText);
                   mFields[p]->SetValidator(vld);
-                  if (!tip.IsEmpty())
+                  if (!tip.empty())
                   {
                      mFields[p]->SetToolTip(tip);
                   }
@@ -682,7 +682,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   mSliders[p] = S.AddSlider( {}, 0, 1000, 0);
                   mSliders[p]->SetName(labelText);
                   mSliders[p]->SetSizeHints(150, -1);
-                  if (!tip.IsEmpty())
+                  if (!tip.empty())
                   {
                      mSliders[p]->SetToolTip(tip);
                   }

@@ -125,7 +125,7 @@ void ExportPlugin::SetDescription(const wxString & description, int index)
 
 void ExportPlugin::AddExtension(const wxString &extension,int index)
 {
-   mFormatInfos[index].mExtensions.Add(extension);
+   mFormatInfos[index].mExtensions.push_back(extension);
 }
 
 void ExportPlugin::SetExtensions(const wxArrayString & extensions, int index)
@@ -170,7 +170,7 @@ wxArrayString ExportPlugin::GetExtensions(int index)
 
 wxString ExportPlugin::GetMask(int index)
 {
-   if (!mFormatInfos[index].mMask.IsEmpty()) {
+   if (!mFormatInfos[index].mMask.empty()) {
       return mFormatInfos[index].mMask;
    }
 
@@ -179,7 +179,7 @@ wxString ExportPlugin::GetMask(int index)
    // Build the mask
    // wxString ext = GetExtension(index);
    wxArrayString exts = GetExtensions(index);
-   for (size_t i = 0; i < exts.GetCount(); i++) {
+   for (size_t i = 0; i < exts.size(); i++) {
       mask += wxT("*.") + exts[i] + wxT(";");
    }
 
@@ -527,7 +527,7 @@ bool Exporter::GetFilename()
 
    wxString maskString;
    wxString defaultFormat = mFormatName;
-   if( defaultFormat.IsEmpty() )
+   if( defaultFormat.empty() )
       defaultFormat = gPrefs->Read(wxT("/Export/Format"),
                                          wxT("WAV"));
 
@@ -624,7 +624,7 @@ bool Exporter::GetFilename()
       // Check the extension - add the default if it's not there,
       // and warn user if it's abnormal.
       //
-      if (ext.IsEmpty()) {
+      if (ext.empty()) {
          //
          // Make sure the user doesn't accidentally save the file
          // as an extension with no name, like just plain ".wav".
@@ -648,7 +648,7 @@ bool Exporter::GetFilename()
       {
          continue;
       }
-      else if (!ext.IsEmpty() && !mPlugins[mFormat]->IsExtension(ext,mSubFormat) && ext.CmpNoCase(defext)) {
+      else if (!ext.empty() && !mPlugins[mFormat]->IsExtension(ext,mSubFormat) && ext.CmpNoCase(defext)) {
          wxString prompt;
          prompt.Printf(_("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?"),
                        mPlugins[mFormat]->GetFormat(mSubFormat),
@@ -663,7 +663,7 @@ bool Exporter::GetFilename()
          }
       }
 
-      if (mFilename.GetFullPath().Length() >= 256) {
+      if (mFilename.GetFullPath().length() >= 256) {
          AudacityMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
          continue;
       }
@@ -730,7 +730,7 @@ bool Exporter::CheckFilename()
    if (!mProject->GetDirManager()->EnsureSafeFilename(mFilename))
       return false;
 
-   if( mFormatName.IsEmpty() )
+   if( mFormatName.empty() )
       gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
    gPrefs->Write(wxT("/Export/Path"), mFilename.GetPath());
    gPrefs->Flush();
@@ -1311,12 +1311,12 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
       const wxString sTrackName = (t->GetName()).Left(20);
       if( t->GetChannel() == Track::LeftChannel )
       /* i18n-hint: track name and L abbreviating Left channel */
-         mTrackNames.Add( wxString::Format( _( "%s - L" ), sTrackName ) );
+         mTrackNames.push_back( wxString::Format( _( "%s - L" ), sTrackName ) );
       else if( t->GetChannel() == Track::RightChannel )
       /* i18n-hint: track name and R abbreviating Right channel */
-         mTrackNames.Add( wxString::Format( _( "%s - R" ), sTrackName ) );
+         mTrackNames.push_back( wxString::Format( _( "%s - R" ), sTrackName ) );
       else
-         mTrackNames.Add(sTrackName);
+         mTrackNames.push_back(sTrackName);
    }
 
    // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is

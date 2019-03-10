@@ -174,7 +174,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
-   mEditParams->Enable(!ID.IsEmpty());
+   mEditParams->Enable(!ID.empty());
    mUsePreset->Enable(em.HasPresets(ID));
 
    if ( command.name.Translated() == mCommand->GetValue() )
@@ -185,7 +185,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
    mInternalCommandName = command.name.Internal();
 
    wxString params = MacroCommands::GetCurrentParamsFor(mInternalCommandName);
-   if (params.IsEmpty())
+   if (params.empty())
    {
       params = em.GetDefaultPreset(ID);
    }
@@ -240,7 +240,7 @@ void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxSt
 
       // If ID is empty, then the effect wasn't found, in which case, the user must have
       // selected one of the "special" commands.
-      mEditParams->Enable(!ID.IsEmpty());
+      mEditParams->Enable(!ID.empty());
       mUsePreset->Enable(em.HasPresets(ID));
    }
 }

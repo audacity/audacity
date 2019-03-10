@@ -282,7 +282,7 @@ void QuitAudacity(bool bForce)
    // BG: unless force is true
 
    // BG: Are there any projects open?
-   //-   if (!gAudacityProjects.IsEmpty())
+   //-   if (!gAudacityProjects.empty())
 /*start+*/
    if (gAudacityProjects.empty())
    {
@@ -622,7 +622,7 @@ public:
    {
       // Add the filename to the queue.  It will be opened by
       // the OnTimer() event when it is safe to do so.
-      ofqueue.Add(data);
+      ofqueue.push_back(data);
 
       return true;
    }
@@ -696,13 +696,13 @@ IMPLEMENT_APP(AudacityApp)
 // in response of an open-document apple event
 void AudacityApp::MacOpenFile(const wxString &fileName)
 {
-   ofqueue.Add(fileName);
+   ofqueue.push_back(fileName);
 }
 
 // in response of a print-document apple event
 void AudacityApp::MacPrintFile(const wxString &fileName)
 {
-   ofqueue.Add(fileName);
+   ofqueue.push_back(fileName);
 }
 
 // in response of a open-application apple event
@@ -771,7 +771,7 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
 
    AudacityProject *proj = GetActiveProject();
 
-   if (!fullPathStr.IsEmpty())
+   if (!fullPathStr.empty())
    {
       // verify that the file exists
       if (wxFile::Exists(fullPathStr))
@@ -847,15 +847,15 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
    if (gInited) {
-      if (ofqueue.GetCount()) {
+      if (ofqueue.size()) {
          // Load each file on the queue
-         while (ofqueue.GetCount()) {
+         while (ofqueue.size()) {
             wxString name;
             name.swap(ofqueue[0]);
-            ofqueue.RemoveAt(0);
+            ofqueue.erase( ofqueue.begin() );
 
             // Get the user's attention if no file name was specified
-            if (name.IsEmpty()) {
+            if (name.empty()) {
                // Get the users attention
                AudacityProject *project = GetActiveProject();
                if (project) {
@@ -1021,7 +1021,7 @@ wxString AudacityApp::InitLang( const wxString & lang )
    }
    mLocale = std::make_unique<wxLocale>(info->Language);
 
-   for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
+   for(unsigned int i=0; i<audacityPathList.size(); i++)
       mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
 
    // LL:  Must add the wxWidgets catalog manually since the search
@@ -1703,7 +1703,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
 // We now disallow temp directory name that puts it where cleaner apps will
 // try to clean out the files.  
 bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
-   if( Name.IsEmpty() )
+   if( Name.empty() )
       return false;
 
    wxFileName tmpFile;
@@ -1734,7 +1734,7 @@ bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
 // result is unchanged if unsuccessful.
 void SetToExtantDirectory( wxString & result, const wxString & dir ){
    // don't allow path of "".
-   if( dir.IsEmpty() )
+   if( dir.empty() )
       return;
    if( wxDirExists( dir ) ){
       result = dir;
@@ -1756,7 +1756,7 @@ bool AudacityApp::InitTempDir()
    wxString temp = wxT("");
 
    #ifdef __WXGTK__
-   if (tempFromPrefs.Length() > 0 && tempFromPrefs[0] != wxT('/'))
+   if (tempFromPrefs.length() > 0 && tempFromPrefs[0] != wxT('/'))
       tempFromPrefs = wxT("");
    #endif
 
@@ -1876,7 +1876,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       {
          wxFileName filename(parser->GetParam(i));
          if (filename.MakeAbsolute())
-            filenames.Add(filename.GetLongPath());
+            filenames.push_back(filename.GetLongPath());
       }
 
 #if defined(__WXMSW__)
@@ -1894,9 +1894,9 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          if (conn)
          {
             bool ok = false;
-            if (filenames.GetCount() > 0)
+            if (filenames.size() > 0)
             {
-               for (size_t i = 0, cnt = filenames.GetCount(); i < cnt; i++)
+               for (size_t i = 0, cnt = filenames.size(); i < cnt; i++)
                {
                   ok = conn->Execute(filenames[i]);
                }
@@ -1935,12 +1935,12 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             sock->Connect(addr, true);
             if (sock->IsConnected())
             {
-               if (filenames.GetCount() > 0)
+               if (filenames.size() > 0)
                {
-                  for (size_t i = 0, cnt = filenames.GetCount(); i < cnt; i++)
+                  for (size_t i = 0, cnt = filenames.size(); i < cnt; i++)
                   {
                      const wxString param = filenames[i];
-                     sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
+                     sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
                   }
                }
                else
@@ -2028,7 +2028,7 @@ void AudacityApp::OnSocketEvent(wxSocketEvent & evt)
    {
       // Add the filename to the queue.  It will be opened by
       // the OnTimer() event when it is safe to do so.
-      ofqueue.Add(name);
+      ofqueue.push_back(name);
    }
 }
 
@@ -2082,12 +2082,12 @@ void AudacityApp::AddUniquePathToPathList(const wxString &pathArg,
    pathNorm.Normalize();
    const wxString newpath{ pathNorm.GetFullPath() };
 
-   for(unsigned int i=0; i<pathList.GetCount(); i++) {
+   for(unsigned int i=0; i<pathList.size(); i++) {
       if (wxFileName(newpath) == wxFileName(pathList[i]))
          return;
    }
 
-   pathList.Add(newpath);
+   pathList.push_back(newpath);
 }
 
 // static
@@ -2116,7 +2116,7 @@ void AudacityApp::FindFilesInPathList(const wxString & pattern,
 
    wxFileName ff;
 
-   for(size_t i = 0; i < pathList.GetCount(); i++) {
+   for(size_t i = 0; i < pathList.size(); i++) {
       ff = pathList[i] + wxFILE_SEP_PATH + pattern;
       wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
@@ -2358,7 +2358,7 @@ void AudacityApp::AssociateFileTypes()
                   root_key.Empty();
                }
             }
-            if (root_key.IsEmpty()) {
+            if (root_key.empty()) {
                //v Warn that we can't set keys. Ask whether to set pref for no retry?
             } else {
                associateFileTypes = wxT("Audacity.Project"); // Finally set value for .AUP key

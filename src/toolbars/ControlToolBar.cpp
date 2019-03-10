@@ -1190,14 +1190,14 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             }
 
             if (useDateStamp) {
-               if (!nameSuffix.IsEmpty()) {
+               if (!nameSuffix.empty()) {
                   nameSuffix += wxT("_");
                }
                nameSuffix += wxDateTime::Now().FormatISODate();
             }
 
             if (useTimeStamp) {
-               if (!nameSuffix.IsEmpty()) {
+               if (!nameSuffix.empty()) {
                   nameSuffix += wxT("_");
                }
                nameSuffix += wxDateTime::Now().FormatISOTime();
@@ -1206,10 +1206,10 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             // ISO standard would be nice, but ":" is unsafe for file name.
             nameSuffix.Replace(wxT(":"), wxT("-"));
 
-            if (baseTrackName.IsEmpty()) {
+            if (baseTrackName.empty()) {
                newTrack->SetName(nameSuffix);
             }
-            else if (nameSuffix.IsEmpty()) {
+            else if (nameSuffix.empty()) {
                newTrack->SetName(baseTrackName);
             }
             else {
@@ -1389,7 +1389,7 @@ wxString ControlToolBar::StateForStatusBar()
    auto pProject = GetActiveProject();
    auto scrubState =
       pProject ? pProject->GetScrubber().GetUntranslatedStateString() : wxString();
-   if (!scrubState.IsEmpty())
+   if (!scrubState.empty())
       state = wxGetTranslation(scrubState);
    else if (mPlay->IsDown())
       state = wxGetTranslation(mStatePlay);

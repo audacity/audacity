@@ -116,7 +116,7 @@ void FileNames::MakeNameUnique(wxArrayString &otherNames, wxFileName &newName)
          i++;
       } while (otherNames.Index(newName.GetFullName(), false) >= 0);
    }
-   otherNames.Add(newName.GetFullName());
+   otherNames.push_back(newName.GetFullName());
 }
 
 
@@ -138,7 +138,7 @@ wxString FileNames::LowerCaseAppNameInPath( const wxString & dirIn){
    // BUG 1577 Capitalisation of Audacity in path...
    if( dir.EndsWith( "Audacity" ) )
    {
-      int nChars = dir.Length() - wxString( "Audacity" ).Length();
+      int nChars = dir.length() - wxString( "Audacity" ).length();
       dir = dir.Left( nChars ) + "audacity";
    }
    return dir;
@@ -150,7 +150,7 @@ wxString FileNames::DataDir()
    //       between wxStandardPaths and wxConfig under Linux.  The latter
    //       creates a normal file as "$HOME/.audacity", while the former
    //       expects the ".audacity" portion to be a directory.
-   if (gDataDir.IsEmpty())
+   if (gDataDir.empty())
    {
       // If there is a directory "Portable Settings" relative to the
       // executable's EXE file, the prefs are stored in there, otherwise

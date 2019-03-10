@@ -643,12 +643,12 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
    unsigned int i;
 
    mNtscDrop = false;
-   for(i=0; i<format.Length(); i++) {
+   for(i=0; i<format.length(); i++) {
       bool handleDelim = false;
       bool handleNum = false;
 
       if (format[i] == '|') {
-         wxString remainder = format.Right(format.Length() - i - 1);
+         wxString remainder = format.Right(format.length() - i - 1);
 
          if (remainder == wxT("#"))
             mScalingFactor = mSampleRate;
@@ -657,7 +657,7 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
          }
          else
             remainder.ToDouble(&mScalingFactor);
-         i = format.Length()-1; // force break out of loop
+         i = format.length()-1; // force break out of loop
          if (delimStr != wxT(""))
             handleDelim = true;
          if (numStr != wxT(""))
@@ -675,7 +675,7 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
             handleNum = true;
       }
 
-      if (i == format.Length() - 1) {
+      if (i == format.length() - 1) {
          if (numStr != wxT(""))
             handleNum = true;
          if (delimStr != wxT(""))
@@ -691,7 +691,7 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
          else if (numStr.Right(1) != wxT("*")) {
             numStr.ToLong(&range);
          }
-         if (numStr.GetChar(0)=='0' && numStr.Length()>1)
+         if (numStr.GetChar(0)=='0' && numStr.length()>1)
             zeropad = true;
 
          // Hack: always zeropad
@@ -716,9 +716,9 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
       if (handleDelim) {
          bool goToFrac = false;
 
-         if (!inFrac && delimStr[delimStr.Length()-1]=='.') {
+         if (!inFrac && delimStr[delimStr.length()-1]=='.') {
             goToFrac = true;
-            if (delimStr.Length() > 1)
+            if (delimStr.length() > 1)
                delimStr = delimStr.BeforeLast('.');
          }
 
@@ -756,9 +756,9 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
    mValueTemplate = wxT("");
 
    mValueTemplate += mPrefix;
-   for(j=0; j<(int)mPrefix.Length(); j++)
+   for(j=0; j<(int)mPrefix.length(); j++)
       mValueMask += wxT(".");
-   pos += mPrefix.Length();
+   pos += mPrefix.length();
 
    for(i = 0; i < mFields.size(); i++) {
       mFields[i].pos = pos;
@@ -770,9 +770,9 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
          pos++;
       }
 
-      pos += mFields[i].label.Length();
+      pos += mFields[i].label.length();
       mValueTemplate += mFields[i].label;
-      for(j=0; j<(int)mFields[i].label.Length(); j++)
+      for(j=0; j<(int)mFields[i].label.length(); j++)
          mValueMask += wxT(".");
    }
 }
@@ -1397,7 +1397,7 @@ bool NumericTextCtrl::Layout()
    memDC.SetFont(*mLabelFont);
    memDC.GetTextExtent(mPrefix, &strW, &strH);
    x += strW;
-   pos += mPrefix.Length();
+   pos += mPrefix.length();
 
    for(i = 0; i < mFields.size(); i++) {
       mFields[i].fieldX = x;
@@ -1410,7 +1410,7 @@ bool NumericTextCtrl::Layout()
 
       mFields[i].labelX = x;
       memDC.GetTextExtent(mFields[i].label, &strW, &strH);
-      pos += mFields[i].label.Length();
+      pos += mFields[i].label.length();
       x += strW;
       mFields[i].fieldW = x;
    }
@@ -1942,7 +1942,7 @@ wxAccStatus NumericTextCtrlAx::GetChildCount(int *childCount)
 // "Press" rather than "Prints the current document."
 wxAccStatus NumericTextCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -1950,7 +1950,7 @@ wxAccStatus NumericTextCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString 
 // Returns the description for this object or a child.
 wxAccStatus NumericTextCtrlAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -1979,7 +1979,7 @@ wxAccStatus NumericTextCtrlAx::GetHelpText(int WXUNUSED(childId), wxString *help
 
    return wxACC_OK;
 #else
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_NOT_SUPPORTED;
 #endif
@@ -1989,7 +1989,7 @@ wxAccStatus NumericTextCtrlAx::GetHelpText(int WXUNUSED(childId), wxString *help
 // Return e.g. ALT+K
 wxAccStatus NumericTextCtrlAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -2034,7 +2034,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
          (childId < 1))
    {
       *name = mCtrl->GetName();
-      if (name->IsEmpty()) {
+      if (name->empty()) {
          *name = mCtrl->GetLabel();
       }
 

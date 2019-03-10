@@ -332,7 +332,7 @@ wxArrayString EffectReverb::GetFactoryPresets()
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.Add(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back(wxGetTranslation(FactoryPresets[i].name));
    }
 
    return names;
@@ -410,7 +410,7 @@ bool EffectReverb::Startup()
          gPrefs->Read(path + wxT("WetOnly"), &mParams.mWetOnly, DEF_WetOnly);
          gPrefs->Read(path + wxT("name"), &name, wxEmptyString);
       
-         if (!name.IsEmpty())
+         if (!name.empty())
          {
             name.Prepend(wxT(" - "));
          }
@@ -541,7 +541,7 @@ void EffectReverb::SetTitle(const wxString & name)
 {
    wxString title(_("Reverb"));
 
-   if (!name.IsEmpty())
+   if (!name.empty())
    {
       title += wxT(": ") + name;
    }

@@ -169,7 +169,7 @@ void LyricsPanel::Add(double t, const wxString &syllable, wxString &highlightTex
          // same time.
          prevSyllable.text += syllable;
          prevSyllable.textWithSpace += syllable;
-         prevSyllable.char1 += syllable.Length();
+         prevSyllable.char1 += syllable.length();
          return;
       }
    }
@@ -179,21 +179,21 @@ void LyricsPanel::Add(double t, const wxString &syllable, wxString &highlightTex
    thisSyllable.t = t;
    thisSyllable.text = syllable;
 
-   thisSyllable.char0 = mText.Length();
+   thisSyllable.char0 = mText.length();
 
    // Put a space between syllables unless the previous one
    // ended in a hyphen
    if (i > 0 &&
-         // mSyllables[i-1].text.Length() > 0 &&
+         // mSyllables[i-1].text.length() > 0 &&
          mSyllables[i - 1].text.Right(1) != wxT("-"))
       thisSyllable.textWithSpace = wxT(" ") + syllable;
    else
       thisSyllable.textWithSpace = syllable;
 
    mText += thisSyllable.textWithSpace;
-   thisSyllable.char1 = mText.Length();
+   thisSyllable.char1 = mText.length();
 
-   int nTextLen = thisSyllable.textWithSpace.Length();
+   int nTextLen = thisSyllable.textWithSpace.length();
    if ((nTextLen > 0) && (thisSyllable.textWithSpace.Right(1) == wxT("_")))
       highlightText += (thisSyllable.textWithSpace.Left(nTextLen - 1) + wxT("\n"));
    else
@@ -631,8 +631,8 @@ void LyricsPanel::HandlePaint_BouncingBall(wxDC &dc)
       }
 
       wxString text = mSyllables[i].text;
-      if (text.Length() > 0 && text.Right(1) == wxT("_")) {
-         text = text.Left(text.Length() - 1);
+      if (text.length() > 0 && text.Right(1) == wxT("_")) {
+         text = text.Left(text.length() - 1);
       }
 
       dc.DrawText(text,

@@ -1302,7 +1302,7 @@ void TrackInfo::CloseTitleDrawFunction
       wxCoord textWidth, textHeight;
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
       while (textWidth > allowableWidth) {
-         titleStr = titleStr.Left(titleStr.Length() - 1);
+         titleStr = titleStr.Left(titleStr.length() - 1);
          dc->GetTextExtent(titleStr, &textWidth, &textHeight);
       }
 

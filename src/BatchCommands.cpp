@@ -96,9 +96,9 @@ MacroCommands::MacroCommands()
    wxArrayString names = GetNames();
    wxArrayString defaults = GetNamesOfDefaultMacros();
 
-   for( size_t i = 0;i<defaults.Count();i++){
+   for( size_t i = 0;i<defaults.size();i++){
       wxString name = defaults[i];
-      if (names.Index(name) == wxNOT_FOUND) {
+      if ( ! make_iterator_range( names ).contains(name) ) {
          AddMacro(name);
          RestoreMacro(name);
          WriteMacro(name);
@@ -143,7 +143,7 @@ void MacroCommands::RestoreMacro(const wxString & name)
 
 wxString MacroCommands::GetCommand(int index)
 {
-   if (index < 0 || index >= (int)mCommandMacro.GetCount()) {
+   if (index < 0 || index >= (int)mCommandMacro.size()) {
       return wxT("");
    }
 
@@ -152,7 +152,7 @@ wxString MacroCommands::GetCommand(int index)
 
 wxString MacroCommands::GetParams(int index)
 {
-   if (index < 0 || index >= (int)mParamsMacro.GetCount()) {
+   if (index < 0 || index >= (int)mParamsMacro.size()) {
       return wxT("");
    }
 
@@ -161,7 +161,7 @@ wxString MacroCommands::GetParams(int index)
 
 int MacroCommands::GetCount()
 {
-   return (int)mCommandMacro.GetCount();
+   return (int)mCommandMacro.size();
 }
 
 bool MacroCommands::ReadMacro(const wxString & macro)
@@ -198,8 +198,8 @@ bool MacroCommands::ReadMacro(const wxString & macro)
          wxString parm = tf[i].Mid(splitAt + 1).Strip(wxString::trailing);
 
          // Add to lists
-         mCommandMacro.Add(cmd);
-         mParamsMacro.Add(parm);
+         mCommandMacro.push_back(cmd);
+         mParamsMacro.push_back(parm);
       }
    }
 
@@ -235,7 +235,7 @@ bool MacroCommands::WriteMacro(const wxString & macro)
    tf.Clear();
 
    // Copy over the commands
-   int lines = mCommandMacro.GetCount();
+   int lines = mCommandMacro.size();
    for (int i = 0; i < lines; i++) {
       tf.AddLine(mCommandMacro[i] + wxT(":") + mParamsMacro[ i ]);
    }
@@ -309,7 +309,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
       while (plug)
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
-         if (!command.IsEmpty())
+         if (!command.empty())
             commands.push_back( {
                { command, plug->GetSymbol().Translation() },
                plug->GetPluginType() == PluginTypeEffect ?
@@ -323,14 +323,14 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    wxArrayString mLabels;
    wxArrayString mNames;
    std::vector<bool> vHasDialog;
-   mLabels.Clear();
-   mNames.Clear();
+   mLabels.clear();
+   mNames.clear();
    mManager->GetAllCommandLabels(mLabels, vHasDialog, true);
    mManager->GetAllCommandNames(mNames, true);
 
    const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
 
-   for(size_t i=0; i<mNames.GetCount(); i++) {
+   for(size_t i=0; i<mNames.size(); i++) {
       wxString label = mLabels[i];
       if( !vHasDialog[i] ){
          label.Replace( "&", "" );
@@ -348,7 +348,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             wxString squashed = label;
             squashed.Replace( " ", "" );
 
-            suffix = squashed.Length() < wxMin( 18, mNames[i].Length());
+            suffix = squashed.length() < wxMin( 18, mNames[i].length());
          }
 
          if( suffix )
@@ -459,7 +459,7 @@ wxString MacroCommands::PromptForPresetFor(const wxString & command, const wxStr
 
    // Preset will be empty if the user cancelled the dialog, so return the original
    // parameter value.
-   if (preset.IsEmpty())
+   if (preset.empty())
    {
       return params;
    }
@@ -630,7 +630,7 @@ bool MacroCommands::ApplySpecialCommand(
       extension = wxT(".flac");
    else extension = wxT(".mp3");
 
-   if (mFileName.IsEmpty()) {
+   if (mFileName.empty()) {
       filename = BuildCleanFileName(project->GetFileName(), extension);
    }
    else {
@@ -642,7 +642,7 @@ bool MacroCommands::ApplySpecialCommand(
    // FIXME: TRAP_ERR No error reporting on write file failure in batch mode.
    if (command == wxT("NoAction")) {
       return true;
-   } else if (!mFileName.IsEmpty() && command == wxT("Import")) {
+   } else if (!mFileName.empty() && command == wxT("Import")) {
       // historically this was in use, now ignored if there
       return true;
    } else if (command == wxT("ExportMP3_56k_before")) {
@@ -868,7 +868,7 @@ bool MacroCommands::ApplyMacro(
    // Macro was successfully applied; save the NEW project state
    wxString longDesc, shortDesc;
    wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
-   if (name.IsEmpty())
+   if (name.empty())
    {
       /* i18n-hint: active verb in past tense */
       longDesc = _("Applied Macro");
@@ -902,27 +902,27 @@ void MacroCommands::AddToMacro(const wxString &command, int before)
 void MacroCommands::AddToMacro(const wxString &command, const wxString &params, int before)
 {
    if (before == -1) {
-      before = (int)mCommandMacro.GetCount();
+      before = (int)mCommandMacro.size();
    }
 
-   mCommandMacro.Insert(command, before);
-   mParamsMacro.Insert(params, before);
+   mCommandMacro.insert(mCommandMacro.begin() + before, command);
+   mParamsMacro.insert(mParamsMacro.begin() + before, params);
 }
 
 void MacroCommands::DeleteFromMacro(int index)
 {
-   if (index < 0 || index >= (int)mCommandMacro.GetCount()) {
+   if (index < 0 || index >= (int)mCommandMacro.size()) {
       return;
    }
 
-   mCommandMacro.RemoveAt(index);
-   mParamsMacro.RemoveAt(index);
+   mCommandMacro.erase( mCommandMacro.begin() + index );
+   mParamsMacro.erase( mParamsMacro.begin() + index );
 }
 
 void MacroCommands::ResetMacro()
 {
-   mCommandMacro.Clear();
-   mParamsMacro.Clear();
+   mCommandMacro.clear();
+   mParamsMacro.clear();
 }
 
 // ReportAndSkip() is a diagnostic function that avoids actually
@@ -992,9 +992,9 @@ wxArrayString MacroCommands::GetNames()
    size_t i;
 
    wxFileName ff;
-   for (i = 0; i < files.GetCount(); i++) {
+   for (i = 0; i < files.size(); i++) {
       ff = (files[i]);
-      names.Add(ff.GetName());
+      names.push_back(ff.GetName());
    }
 
    std::sort( names.begin(), names.end() );
@@ -1005,7 +1005,7 @@ wxArrayString MacroCommands::GetNames()
 bool MacroCommands::IsFixed(const wxString & name)
 {
    wxArrayString defaults = GetNamesOfDefaultMacros();
-   if( defaults.Index( name ) != wxNOT_FOUND )
+   if( make_iterator_range( defaults ).contains( name ) )
       return true;
    return false;
 }
@@ -1017,7 +1017,7 @@ void MacroCommands::Split(const wxString & str, wxString & command, wxString & p
    command.Empty();
    param.Empty();
 
-   if (str.IsEmpty()) {
+   if (str.empty()) {
       return;
    }
 

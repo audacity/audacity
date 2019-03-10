@@ -526,7 +526,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
          break;
       }
 
-      if (!v.IsEmpty()) {
+      if (!v.empty()) {
          tags->SetTag(names[i].name, v);
       }
    }

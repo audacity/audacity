@@ -152,10 +152,10 @@ void QualityPrefs::GetNamesAndLabels()
    for (int i = 0; i < AudioIO::NumStandardRates; i++) {
       int iRate = AudioIO::StandardRates[i];
       mSampleRateLabels.push_back(iRate);
-      mSampleRateNames.Add(wxString::Format(wxT("%i Hz"), iRate));
+      mSampleRateNames.push_back(wxString::Format(wxT("%i Hz"), iRate));
    }
 
-   mSampleRateNames.Add(_("Other..."));
+   mSampleRateNames.push_back(_("Other..."));
 
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
@@ -176,7 +176,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             // If the value in Prefs isn't in the list, then we want
             // the last item, 'Other...' to be shown.
-            S.SetNoMatchSelector(mSampleRateNames.GetCount() - 1);
+            S.SetNoMatchSelector(mSampleRateNames.size() - 1);
             // First the choice...
             // We make sure it uses the ID we want, so that we get changes
             S.Id(ID_SAMPLE_RATE_CHOICE);

@@ -1016,7 +1016,7 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
 
    // Strip last <br>, if any
    if (s.Right(4) == wxT("<br>"))
-      s = s.Left(s.Length() - 4);
+      s = s.Left(s.length() - 4);
 
    return s;
 }

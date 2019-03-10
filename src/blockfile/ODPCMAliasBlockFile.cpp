@@ -295,7 +295,7 @@ BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **at
       if (!wxStricmp(attr, wxT("summaryfile")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
             XMLValueChecker::IsGoodFileString(strValue) &&
-            (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
+            (strValue.length() + 1 + dm.GetProjectDataDir().length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(summaryFileName, strValue, false))
             // Make sure summaryFileName is back to uninitialized state so we can detect problem later.

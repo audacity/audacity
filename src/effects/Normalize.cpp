@@ -369,7 +369,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                wxString prompt1 = _("Normalize peak amplitude to");
 #ifdef EXPERIMENTAL_R128_NORM
                wxString prompt2 = _("Normalize loudness to");
-               wxString longerPrompt = ((prompt1.Length() > prompt2.Length()) ? prompt1 : prompt2) + "   ";
+               wxString longerPrompt = ((prompt1.length() > prompt2.length()) ? prompt1 : prompt2) + "   ";
 #else
                wxString longerPrompt = prompt1 + "   ";
 #endif

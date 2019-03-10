@@ -115,7 +115,7 @@ public:
       {
          wxString strinfo;
          strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,mVorbisFile->vi[i].version,mVorbisFile->vi[i].channels,mVorbisFile->vi[i].rate);
-         mStreamInfo.Add(strinfo);
+         mStreamInfo.push_back(strinfo);
          mStreamUsage[i] = 0;
       }
 
@@ -370,7 +370,7 @@ ProgressResult OggImportFileHandle::Import(
          wxString value = comment.AfterFirst(wxT('='));
          if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
             long val;
-            if (value.Length() == 4 && value.ToLong(&val)) {
+            if (value.length() == 4 && value.ToLong(&val)) {
                name = TAG_YEAR;
             }
          }

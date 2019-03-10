@@ -367,7 +367,7 @@ bool EffectEqualization::ValidateUI()
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
 
-   if (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
+   if (mDisallowCustom && mCurveName == wxT("unnamed"))
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
@@ -833,7 +833,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                wxArrayString curves;
                for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
                {
-                  curves.Add(mCurves[ i ].Name);
+                  curves.push_back(mCurves[ i ].Name);
                }
 
                mCurve = S.Id(ID_Curve).AddChoice( {}, wxT(""), &curves);
@@ -3338,7 +3338,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          for( curve = 0; curve < numCurves; curve++ )
          {
             wxString temp = mEditCurves[ curve ].Name;
-            if( name.IsSameAs( mEditCurves[ curve ].Name )) // case sensitive
+            if( name ==  mEditCurves[ curve ].Name ) // case sensitive
             {
                bad = true;
                if( curve == item )  // trying to rename a curve with the same name
@@ -3444,7 +3444,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    }
 
    if(highlight == -1)
-      PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
+      PopulateList(mEditCurves.size()-1);   // set 'unnamed' as the selected curve
    else
       PopulateList(highlight);   // user said 'No' to deletion
 #else // 'DELETE all N' code
@@ -3656,7 +3656,7 @@ wxAccStatus SliderAx::GetChildCount(int* childCount)
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus SliderAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -3664,7 +3664,7 @@ wxAccStatus SliderAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionN
 // Returns the description for this object or a child.
 wxAccStatus SliderAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -3684,7 +3684,7 @@ wxAccStatus SliderAx::GetFocus(int* childId, wxAccessible** child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus SliderAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -3693,7 +3693,7 @@ wxAccStatus SliderAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 // Return e.g. ALT+K
 wxAccStatus SliderAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }

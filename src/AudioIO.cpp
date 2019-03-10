@@ -75,7 +75,7 @@ to the meters.
   \par Implementation Notes and Details for MIDI
   When opening devices, successAudio and successMidi indicate errors
   if false, so normally both are true. Use playbackChannels,
-  captureChannels and mMidiPlaybackTracks.IsEmpty() to determine if
+  captureChannels and mMidiPlaybackTracks.empty() to determine if
   Audio or MIDI is actually in use.
 
   \par Audio Time
@@ -1043,7 +1043,7 @@ AudioIO::AudioIO()
       wxString errStr = _("Could not find any audio devices.\n");
       errStr += _("You will not be able to play or record audio.\n\n");
       wxString paErrStr = LAT1CTOWX(Pa_GetErrorText(err));
-      if (!paErrStr.IsEmpty())
+      if (!paErrStr.empty())
          errStr += _("Error: ")+paErrStr;
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
@@ -1225,7 +1225,7 @@ wxArrayString AudioIO::GetInputSourceNames()
    {
       int numSources = Px_GetNumInputSources(mPortMixer);
       for( int source = 0; source < numSources; source++ )
-         deviceNames.Add(wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(mPortMixer, source))));
+         deviceNames.push_back(wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(mPortMixer, source))));
    }
    else
    {
@@ -3069,10 +3069,10 @@ std::vector<long> AudioIO::GetSupportedSampleRates(int playDevice, int recDevice
          result.push_back(playback[i]);
 
    // If this yields no results, use the default sample rates nevertheless
-/*   if (result.IsEmpty())
+/*   if (result.empty())
    {
       for (i = 0; i < NumStandardRates; i++)
-         result.Add(StandardRates[i]);
+         result.push_back(StandardRates[i]);
    }*/
 
    return result;
@@ -3286,7 +3286,7 @@ int AudioIO::getPlayDevIndex(const wxString &devNameArg)
 {
    wxString devName(devNameArg);
    // if we don't get given a device, look up the preferences
-   if (devName.IsEmpty())
+   if (devName.empty())
    {
       devName = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
    }
@@ -3343,7 +3343,7 @@ int AudioIO::getRecordDevIndex(const wxString &devNameArg)
 {
    wxString devName(devNameArg);
    // if we don't get given a device, look up the preferences
-   if (devName.IsEmpty())
+   if (devName.empty())
    {
       devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    }

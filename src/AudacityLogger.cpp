@@ -71,7 +71,7 @@ void AudacityLogger::DoLogText(const wxString & str)
       wxMutexGuiEnter();
    }
 
-   if (mBuffer.IsEmpty()) {
+   if (mBuffer.empty()) {
       wxString stamp;
 
       TimeStamp(&stamp);

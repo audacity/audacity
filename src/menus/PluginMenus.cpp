@@ -44,11 +44,11 @@ bool CompareEffectsByPublisher(
    auto akey = em.GetVendorName(a->GetID());
    auto bkey = em.GetVendorName(b->GetID());
 
-   if (akey.IsEmpty())
+   if (akey.empty())
    {
       akey = _("Uncategorized");
    }
-   if (bkey.IsEmpty())
+   if (bkey.empty())
    {
       bkey = _("Uncategorized");
    }
@@ -94,11 +94,11 @@ bool CompareEffectsByTypeAndName(
    auto akey = em.GetEffectFamilyName(a->GetID());
    auto bkey = em.GetEffectFamilyName(b->GetID());
 
-   if (akey.IsEmpty())
+   if (akey.empty())
    {
       akey = _("Uncategorized");
    }
-   if (bkey.IsEmpty())
+   if (bkey.empty())
    {
       bkey = _("Uncategorized");
    }
@@ -127,11 +127,11 @@ bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
    auto akey = em.GetEffectFamilyName(a->GetID());
    auto bkey = em.GetEffectFamilyName(b->GetID());
 
-   if (akey.IsEmpty())
+   if (akey.empty())
    {
       akey = _("Uncategorized");
    }
-   if (bkey.IsEmpty())
+   if (bkey.empty())
    {
       bkey = _("Uncategorized");
    }
@@ -195,7 +195,7 @@ void AddEffectMenuItems(
          if (groupBy == wxT("groupby:publisher"))
          {
             current = EffectManager::Get().GetVendorName(plug->GetID());
-            if (current.IsEmpty())
+            if (current.empty())
             {
                current = _("Unknown");
             }
@@ -203,7 +203,7 @@ void AddEffectMenuItems(
          else if (groupBy == wxT("groupby:type"))
          {
             current = EffectManager::Get().GetEffectFamilyName(plug->GetID());
-            if (current.IsEmpty())
+            if (current.empty())
             {
                current = _("Unknown");
             }
@@ -213,7 +213,7 @@ void AddEffectMenuItems(
          {
             using namespace MenuTable;
             BaseItemPtrs temp;
-            bool bInSubmenu = !last.IsEmpty() && (groupNames.Count() > 1);
+            bool bInSubmenu = !last.empty() && (groupNames.size() > 1);
 
             AddEffectMenuItemGroup(temp,
                groupNames, vHasDialog,
@@ -223,25 +223,25 @@ void AddEffectMenuItems(
                ( bInSubmenu ? last : wxString{} ), std::move( temp )
             ) );
 
-            groupNames.Clear();
+            groupNames.clear();
             vHasDialog.clear();
-            groupPlugs.Clear();
+            groupPlugs.clear();
             groupFlags.clear();
             last = current;
          }
 
-         groupNames.Add(name);
+         groupNames.push_back(name);
          vHasDialog.push_back(hasDialog);
-         groupPlugs.Add(plug->GetID());
+         groupPlugs.push_back(plug->GetID());
          groupFlags.push_back(
             plug->IsEffectRealtime() ? realflags : batchflags);
       }
 
-      if (groupNames.GetCount() > 0)
+      if (groupNames.size() > 0)
       {
          using namespace MenuTable;
          BaseItemPtrs temp;
-         bool bInSubmenu = groupNames.Count() > 1;
+         bool bInSubmenu = groupNames.size() > 1;
 
          AddEffectMenuItemGroup(temp,
             groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
@@ -280,18 +280,18 @@ void AddEffectMenuItems(
             group = wxEmptyString;
          }
 
-         if (!group.IsEmpty())
+         if (!group.empty())
          {
             group += wxT(": ");
          }
 
-         groupNames.Add(group + name);
+         groupNames.push_back(group + name);
          vHasDialog.push_back(hasDialog);
-         groupPlugs.Add(plug->GetID());
+         groupPlugs.push_back(plug->GetID());
          groupFlags.push_back(plug->IsEffectRealtime() ? realflags : batchflags);
       }
 
-      if (groupNames.GetCount() > 0)
+      if (groupNames.size() > 0)
       {
          AddEffectMenuItemGroup(
             table, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
@@ -568,7 +568,7 @@ void OnManageEffects(const CommandContext &context)
 void OnRepeatLastEffect(const CommandContext &context)
 {
    auto lastEffect = GetMenuManager(context.project).mLastEffect;
-   if (!lastEffect.IsEmpty())
+   if (!lastEffect.empty())
    {
       DoEffect( lastEffect, context, kConfigured );
    }
@@ -667,7 +667,7 @@ void OnApplyMacroDirectly(const CommandContext &context )
 #ifdef MACROS_BY_NUMBERS
    long item=0;
    // Take last three letters (of e.g. Macro007) and convert to a number.
-   Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
+   Name.Mid( Name.length() - 3 ).ToLong( &item, 10 );
    dlg.ApplyMacroToProject( item, false );
 #else
    dlg.ApplyMacroToProject( Name, false );
@@ -711,7 +711,7 @@ void AddEffectMenuItemGroup(
    const std::vector<CommandFlag> & flags,
    bool isDefault)
 {
-   const int namesCnt = (int) names.GetCount();
+   const int namesCnt = (int) names.size();
    int perGroup;
 
 #if defined(__WXGTK__)
@@ -723,7 +723,7 @@ void AddEffectMenuItemGroup(
    int groupCnt = namesCnt;
    for (int i = 0; i < namesCnt; i++)
    {
-      while (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
+      while (i + 1 < namesCnt && names[i] == names[i + 1])
       {
          i++;
          groupCnt--;
@@ -757,12 +757,12 @@ void AddEffectMenuItemGroup(
          pTable = &temp1;
       }
 
-      if (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
+      if (i + 1 < namesCnt && names[i] == names[i + 1])
       {
          // collect a sub-menu for like-named items
          const wxString name = names[i];
          BaseItemPtrs temp2;
-         while (i < namesCnt && names[i].IsSameAs(name))
+         while (i < namesCnt && names[i] == name)
          {
             const PluginDescriptor *plug =
                PluginManager::Get().GetPlugin(plugs[i]);
@@ -827,7 +827,7 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
    wxArrayString names = MacroCommands::GetNames();
    int i;
 
-   for (i = 0; i < (int)names.GetCount(); i++) {
+   for (i = 0; i < (int)names.size(); i++) {
       wxString MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
       result.push_back( MenuTable::Command( MacroID,
          names[i], false, FN(OnApplyMacroDirectly),
@@ -871,7 +871,7 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
 
    const auto &lastEffect = GetMenuManager(project).mLastEffect;
    wxString buildMenuLabel;
-   if (!lastEffect.IsEmpty()) {
+   if (!lastEffect.empty()) {
       buildMenuLabel.Printf(_("Repeat %s"),
          EffectManager::Get().GetCommandName(lastEffect));
    }

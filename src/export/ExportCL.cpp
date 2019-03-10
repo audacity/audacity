@@ -103,7 +103,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
    wxString cmd;
 
    for (size_t i = 0; i < mHistory.GetCount(); i++) {
-      cmds.Add(mHistory.GetHistoryFile(i));
+      cmds.push_back(mHistory.GetHistoryFile(i));
    }
    cmd = cmds[0];
 
@@ -178,7 +178,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
                        wxT("*") + ext,
                        wxFD_OPEN | wxRESIZE_BORDER,
                        this);
-   if (path.IsEmpty()) {
+   if (path.empty()) {
       return;
    }
 
@@ -347,7 +347,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       if (reg.Exists()) {
          wxString ipath;
          reg.QueryValue(wxT("InstallPath"), ipath);
-         if (!ipath.IsEmpty()) {
+         if (!ipath.empty()) {
             npath += wxPATH_SEP + ipath;
          }
       }
@@ -362,7 +362,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    {
 #if defined(__WXMSW__)
       auto cleanup = finally( [&] {
-         if (!opath.IsEmpty()) {
+         if (!opath.empty()) {
             wxSetEnv(wxT("PATH"),opath);
          }
       } );

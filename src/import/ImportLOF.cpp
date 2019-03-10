@@ -344,7 +344,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             }
          }     // End if statement
 
-         if (tokenholder.IsSameAs(wxT("#")))
+         if (tokenholder == wxT("#"))
          {
             // # indicates comments; ignore line
             tok = wxStringTokenizer(wxT(""), wxT(" "));
@@ -399,7 +399,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       {
          tokenholder = tok.GetNextToken();
 
-         if (tokenholder.IsSameAs(wxT("#")))
+         if (tokenholder == wxT("#"))
          {
             // # indicates comments; ignore line
             tok = wxStringTokenizer(wxT(""), wxT(" "));
@@ -453,7 +453,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       }     // End if statement (more tokens after file name)
    }     // End if statement "file" lines
 
-   else if (tokenholder.IsSameAs(wxT("#")))
+   else if (tokenholder == wxT("#"))
    {
       // # indicates comments; ignore line
       tok = wxStringTokenizer(wxT(""), wxT(" "));

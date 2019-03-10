@@ -99,7 +99,7 @@ AudioUnitEffectsModule::AudioUnitEffectsModule(ModuleManagerInterface *moduleMan
 
 AudioUnitEffectsModule::~AudioUnitEffectsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
@@ -266,7 +266,7 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
          {
             wxString name = wxCFStringRef::AsString(cfName);
       
-            effects.Add(wxString::Format(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
+            effects.push_back(wxString::Format(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
                         FromOSType(found.componentManufacturer),
                         FromOSType(found.componentType),
                         FromOSType(found.componentSubType),
@@ -354,9 +354,9 @@ AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, Ef
 {
    mHost = host;
 
-   mUITypes.Add(_("Full"));
-   mUITypes.Add(_("Generic"));
-   mUITypes.Add(_("Basic"));
+   mUITypes.push_back(_("Full"));
+   mUITypes.push_back(_("Generic"));
+   mUITypes.push_back(_("Basic"));
 
    mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
    mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
@@ -526,9 +526,9 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
 
    mEffect->mHost->GetPrivateConfigSubgroups(mEffect->mHost->GetUserPresetsGroup(wxEmptyString), presets);
 
-   presets.Sort();
+   std::sort( presets.begin(), presets.end() );
 
-   for (size_t i = 0, cnt = presets.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = presets.size(); i < cnt; i++)
    {
       mList->InsertItem(i, presets[i]);
    }
@@ -722,7 +722,7 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    
    presets.Sort();
 
-   for (size_t i = 0, cnt = presets.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = presets.size(); i < cnt; i++)
    {
       fn = presets[i];
       mList->InsertItem(i, fn.GetName());
@@ -1515,7 +1515,7 @@ bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
          name = wxCFStringRef::AsString(info.cfNameString);
       }
 
-      if (name.IsEmpty())
+      if (name.empty())
       {
          continue;
       }
@@ -1588,7 +1588,7 @@ bool AudioUnitEffect::SetAutomationParameters(CommandParameters & parms)
          name = wxCFStringRef::AsString(info.cfNameString);
       }
 
-      if (name.IsEmpty())
+      if (name.empty())
       {
          continue;
       }
@@ -1703,7 +1703,7 @@ wxArrayString AudioUnitEffect::GetFactoryPresets()
       for (CFIndex i = 0, cnt = CFArrayGetCount(array); i < cnt; i++)
       {
          AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, i);
-         presets.Add(wxCFStringRef::AsString(preset->presetName));
+         presets.push_back(wxCFStringRef::AsString(preset->presetName));
       }
    }
                         

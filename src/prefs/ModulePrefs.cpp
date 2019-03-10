@@ -52,9 +52,9 @@ void ModulePrefs::GetAllModuleStatuses(){
 
    // TODO: On an Audacity upgrade we should (?) actually untick modules.
    // The old modules might be still around, and we do not want to use them.
-   mModules.Clear();
+   mModules.clear();
    mStatuses.clear();
-   mPaths.Clear();
+   mPaths.clear();
 
 
    // Iterate through all Modules listed in prefs.
@@ -72,9 +72,9 @@ void ModulePrefs::GetAllModuleStatuses(){
             gPrefs->Write( str, iStatus );
          }
          //wxLogDebug( wxT("Entry: %s Value: %i"), str, iStatus );
-         mModules.Add( str );
+         mModules.push_back( str );
          mStatuses.push_back( iStatus );
-         mPaths.Add( fname );
+         mPaths.push_back( fname );
       }
       bCont = gPrefs->GetNextEntry(str, dummy);
    }
@@ -115,11 +115,11 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       {
         S.StartMultiColumn( 2 );
         int i;
-        for(i=0;i<(int)mModules.GetCount();i++)
+        for(i=0;i<(int)mModules.size();i++)
            S.TieChoice( mModules[i], mStatuses[i], &StatusChoices );
         S.EndMultiColumn();
       }
-      if( mModules.GetCount() < 1 )
+      if( mModules.size() < 1 )
       {
         S.AddFixedText( _("No modules were found") );
       }
@@ -133,7 +133,7 @@ bool ModulePrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    int i;
-   for(i=0;i<(int)mPaths.GetCount();i++)
+   for(i=0;i<(int)mPaths.size();i++)
       SetModuleStatus( mPaths[i], mStatuses[i] );
    return true;
 }

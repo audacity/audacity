@@ -91,7 +91,7 @@ void XMLWriter::StartTag(const wxString &name)
 
    Write(wxString::Format(wxT("<%s"), name));
 
-   mTagstack.Insert(name, 0);
+   mTagstack.insert(mTagstack.begin(), name);
    mHasKids[0] = true;
    mHasKids.insert(mHasKids.begin(), false);
    mDepth++;
@@ -103,7 +103,7 @@ void XMLWriter::EndTag(const wxString &name)
 {
    int i;
 
-   if (mTagstack.GetCount() > 0) {
+   if (mTagstack.size() > 0) {
       if (mTagstack[0] == name) {
          if (mHasKids[1]) {  // There will always be at least 2 at this point
             if (mInTag) {
@@ -119,7 +119,7 @@ void XMLWriter::EndTag(const wxString &name)
          else {
             Write(wxT(">\n"));
          }
-         mTagstack.RemoveAt(0);
+         mTagstack.erase( mTagstack.begin() );
          mHasKids.erase(mHasKids.begin());
       }
    }
@@ -226,7 +226,7 @@ void XMLWriter::WriteSubTree(const wxString &value)
 wxString XMLWriter::XMLEsc(const wxString & s)
 {
    wxString result;
-   int len = s.Length();
+   int len = s.length();
 
    for(int i=0; i<len; i++) {
       wxUChar c = s.GetChar(i);
@@ -349,7 +349,7 @@ void XMLFileWriter::Commit()
 void XMLFileWriter::PreCommit()
 // may throw
 {
-   while (mTagstack.GetCount()) {
+   while (mTagstack.size()) {
       EndTag(mTagstack[0]);
    }
 
@@ -418,7 +418,7 @@ XMLStringWriter::XMLStringWriter(size_t initialSize)
 {
    if (initialSize)
    {
-      Alloc(initialSize);
+      reserve(initialSize);
    }
 }
 

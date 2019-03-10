@@ -501,7 +501,7 @@ CommandFlag MenuManager::GetUpdateFlags
    if (undoManager.UnsavedChanges() || !project.IsProjectSaved())
       flags |= UnsavedChangesFlag;
 
-   if (!mLastEffect.IsEmpty())
+   if (!mLastEffect.empty())
       flags |= HasLastEffectFlag;
 
    if (project.UndoAvailable())

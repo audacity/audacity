@@ -785,16 +785,16 @@ MusicalInstrument::MusicalInstrument(std::unique_ptr<wxBitmap> &&pBitmap, const 
    while ((nUnderscoreIndex = strFilename.Find(wxT('_'))) != -1)
    {
       strKeyword = strFilename.Left(nUnderscoreIndex);
-      mKeywords.Add(strKeyword);
+      mKeywords.push_back(strKeyword);
       strFilename = strFilename.Mid(nUnderscoreIndex + 1);
    }
-   if (!strFilename.IsEmpty()) // Skip trailing underscores.
-      mKeywords.Add(strFilename); // Add the last one.
+   if (!strFilename.empty()) // Skip trailing underscores.
+      mKeywords.push_back(strFilename); // Add the last one.
 }
 
 MusicalInstrument::~MusicalInstrument()
 {
-   mKeywords.Clear();
+   mKeywords.clear();
 }
 
 
@@ -899,7 +899,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 
    /* This doesn't work to make the mScrolledWindow automatically resize, so do it explicitly in OnSize.
          auto pBoxSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-         pBoxSizer->Add(mScrolledWindow, 0, wxExpand, 0);
+         pBoxSizer->push_back(mScrolledWindow, 0, wxExpand, 0);
          this->SetAutoLayout(true);
          this->SetSizer(pBoxSizer);
          pBoxSizer->Fit(this);
@@ -964,7 +964,7 @@ void MixerBoard::UpdatePrefs()
       mImageSoloDown.reset();
       mImageSoloDisabled.reset();
    }
-   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.GetCount(); nClusterIndex++)
+   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.size(); nClusterIndex++)
       mMixerTrackClusters[nClusterIndex]->UpdatePrefs();
    Refresh();
 #endif
@@ -1072,7 +1072,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
    if (mMusicalInstruments.empty())
       return NULL;
 
-   // random choice:    return mMusicalInstruments[(int)pTrack % mMusicalInstruments.GetCount()].mBitmap;
+   // random choice:    return mMusicalInstruments[(int)pTrack % mMusicalInstruments.size()].mBitmap;
 
    const wxString strTrackName(pTrack->GetName().MakeLower());
    size_t nBestItemIndex = 0;
@@ -1086,7 +1086,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
    {
       nScore = 0;
 
-      nNumKeywords = mMusicalInstruments[nInstrIndex]->mKeywords.GetCount();
+      nNumKeywords = mMusicalInstruments[nInstrIndex]->mKeywords.size();
       if (nNumKeywords > 0)
       {
          nPointsPerMatch = 10 / nNumKeywords;
@@ -1096,7 +1096,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
                nScore +=
                   nPointsPerMatch +
                   // Longer keywords get more points.
-                  (2 * mMusicalInstruments[nInstrIndex]->mKeywords[nKeywordIndex].Length());
+                  (2 * mMusicalInstruments[nInstrIndex]->mKeywords[nKeywordIndex].length());
             }
       }
 
