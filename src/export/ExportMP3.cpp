@@ -1619,7 +1619,7 @@ private:
    int FindValue(CHOICES *choices, int cnt, int needle, int def);
    wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
-   id3_length_t AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+   unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -1801,7 +1801,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    ArrayOf<char> id3buffer;
    bool endOfFile;
-   id3_length_t id3len = AddTags(project, id3buffer, &endOfFile, metadata);
+   unsigned long id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
       if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
@@ -2051,7 +2051,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
 // returns buffer len; caller frees
-id3_length_t ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
+unsigned long ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };
@@ -2100,7 +2100,7 @@ id3_length_t ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char
 
    *endOfFile = false;
 
-   id3_length_t len;
+   unsigned long len;
 
    len = id3_tag_render(tp.get(), 0);
    buffer.reinit(len);
