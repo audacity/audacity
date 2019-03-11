@@ -225,7 +225,7 @@ void EditToolBar::EnableDisableButtons()
 
 static const struct Entry {
    int tool;
-   wxString commandName;
+   CommandID commandName;
    wxString untranslatedLabel;
 } EditToolbarButtonList[] = {
    { ETBCutID,      wxT("Cut"),         XO("Cut")  },

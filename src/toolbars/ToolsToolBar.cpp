@@ -126,7 +126,7 @@ void ToolsToolBar::RegenerateTooltips()
 
    static const struct Entry {
       int tool;
-      wxString commandName;
+      CommandID commandName;
       wxString untranslatedLabel;
    } table[] = {
       { selectTool,   wxT("SelectTool"),    XO("Selection Tool")  },

@@ -56,9 +56,9 @@ class ApplyMacroDialog : public wxDialogWrapper {
    virtual wxString GetHelpPageName() {return "Apply_Macro";};
 
    void PopulateMacros();
-   static wxString MacroIdOfName( const wxString & MacroName );
+   static CommandID MacroIdOfName( const wxString & MacroName );
    void ApplyMacroToProject( int iMacro, bool bHasGui=true );
-   void ApplyMacroToProject( const wxString & MacroID, bool bHasGui=true );
+   void ApplyMacroToProject( const CommandID & MacroID, bool bHasGui=true );
 
 
    // These will be reused in the derived class...
@@ -99,7 +99,7 @@ private:
          : "Apply_Macro";};
 
    void PopulateList();
-   void AddItem(const wxString &command, wxString const &params);
+   void AddItem(const CommandID &command, wxString const &params);
    bool ChangeOK();
    void UpdateMenus();
 

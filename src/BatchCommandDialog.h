@@ -42,9 +42,9 @@ class MacroCommandDialog final : public wxDialogWrapper {
  public:
    // constructors and destructors
    MacroCommandDialog(wxWindow *parent, wxWindowID id);
-   void SetCommandAndParams(const wxString &Command, const wxString &Params);
+   void SetCommandAndParams(const CommandID &Command, const wxString &Params);
  public:
-   wxString   mSelectedCommand;
+   CommandID   mSelectedCommand;
    wxString   mSelectedParameters;
  private:
    void Populate();
@@ -69,7 +69,7 @@ class MacroCommandDialog final : public wxDialogWrapper {
    wxTextCtrl * mParameters;
    wxTextCtrl * mDetails;
 
-   wxString mInternalCommandName;
+   CommandID mInternalCommandName;
 
    const MacroCommandsCatalog mCatalog;
 

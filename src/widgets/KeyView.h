@@ -10,6 +10,7 @@
 #define __AUDACITY_WIDGETS_KEYVIEW__
 
 #include "../Audacity.h"
+#include "audacity/Types.h"
 
 #include <vector>
 #include <wx/defs.h>
@@ -40,7 +41,7 @@ public:
    //KeyNode &operator = ( KeyNode && ) = default;
 
 public:
-   wxString name;
+   CommandID name;
    wxString category;
    wxString prefix;
    wxString label;
@@ -83,7 +84,7 @@ public:
    virtual ~KeyView();
    wxString GetName() const; // Gets the control name from the base class
 
-   void RefreshBindings(const wxArrayString & names,
+   void RefreshBindings(const CommandIDs & names,
                         const wxArrayString & categories,
                         const wxArrayString & prefixes,
                         const wxArrayString & labels,
@@ -95,15 +96,15 @@ public:
    wxString GetLabel(int index) const;
    wxString GetFullLabel(int index) const;
 
-   int GetIndexByName(const wxString & name) const;
-   wxString GetName(int index) const;
-   wxString GetNameByKey(const NormalizedKeyString & key) const;
+   int GetIndexByName(const CommandID & name) const;
+   CommandID GetName(int index) const;
+   CommandID GetNameByKey(const NormalizedKeyString & key) const;
 
    int GetIndexByKey(const NormalizedKeyString & key) const;
    NormalizedKeyString GetKey(int index) const;
    bool CanSetKey(int index) const;
    bool SetKey(int index, const NormalizedKeyString & key);
-   bool SetKeyByName(const wxString & name, const NormalizedKeyString & key);
+   bool SetKeyByName(const CommandID & name, const NormalizedKeyString & key);
 
    void SetView(ViewByType type);
 

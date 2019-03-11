@@ -77,7 +77,7 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
-                               const wxString &name)
+                               const CommandID &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
 :  PrefsPanel(parent, winid, _("Keyboard")),
    mView(NULL),
@@ -501,7 +501,7 @@ void KeyConfigPrefs::OnFilterChar(wxKeyEvent & e)
 
 // Given a hotkey combination, returns the name (description) of the
 // corresponding command, or the empty string if none is found.
-wxString KeyConfigPrefs::NameFromKey(const NormalizedKeyString & key)
+CommandID KeyConfigPrefs::NameFromKey(const NormalizedKeyString & key)
 {
    return mView->GetNameByKey(key);
 }
@@ -510,7 +510,7 @@ wxString KeyConfigPrefs::NameFromKey(const NormalizedKeyString & key)
 // This is not yet a committed change, which will happen on a save.
 void KeyConfigPrefs::SetKeyForSelected(const NormalizedKeyString & key)
 {
-   wxString name = mView->GetName(mCommandSelected);
+   auto name = mView->GetName(mCommandSelected);
 
    if (!mView->CanSetKey(mCommandSelected))
    {
@@ -534,8 +534,8 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
    }
 
    NormalizedKeyString key { mKey->GetValue() };
-   wxString oldname = mView->GetNameByKey(key);
-   wxString newname = mView->GetName(mCommandSelected);
+   auto oldname = mView->GetNameByKey(key);
+   auto newname = mView->GetName(mCommandSelected);
 
    // Just ignore it if they are the same
    if (oldname == newname) {

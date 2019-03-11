@@ -221,7 +221,7 @@ void ApplyMacroDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    ApplyMacroToProject( item );
 }
 
-wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
+CommandID ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
 {
    wxString Temp = MacroName;
    Temp.Replace(" ","");
@@ -231,7 +231,7 @@ wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
 
 // Apply macro, given its ID.
 // Does nothing if not found, rather than returning an error.
-void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasGui )
+void ApplyMacroDialog::ApplyMacroToProject( const CommandID & MacroID, bool bHasGui )
 {
    for( int i=0;i<mMacros->GetItemCount();i++){
       wxString name = mMacros->GetItemText(i);
@@ -728,7 +728,7 @@ void MacrosWindow::PopulateList()
 }
 
 /// Add one item into mList
-void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
+void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
 {
    auto entry = mCatalog.ByCommandId(Action);
    auto friendlyName = entry != mCatalog.end()
@@ -1099,7 +1099,7 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    }
 
    // Just edit the parameters, and not the command.
-   wxString command = mMacroCommands.GetCommand(item);
+   auto command = mMacroCommands.GetCommand(item);
    wxString params  = mMacroCommands.GetParams(item);
 
    params = MacroCommands::PromptForParamsFor(command, params, this).Trim();

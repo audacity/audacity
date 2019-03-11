@@ -36,7 +36,7 @@ public:
    // binary search
    Entries::const_iterator ByFriendlyName( const wxString &friendlyName ) const;
    // linear search
-   Entries::const_iterator ByCommandId( const wxString &commandId ) const;
+   Entries::const_iterator ByCommandId( const CommandID &commandId ) const;
 
    // Lookup by position as sorted by friendly name
    const Entry &operator[] ( size_t index ) const { return mCommands[index]; }
@@ -58,17 +58,17 @@ class MacroCommands final {
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
       const wxString & filename = {});
    bool ApplyCommand( const wxString &friendlyCommand,
-      const wxString & command, const wxString & params,
+      const CommandID & command, const wxString & params,
       CommandContext const * pContext=NULL );
    bool ApplyCommandInBatchMode( const wxString &friendlyCommand,
-      const wxString & command, const wxString &params,
+      const CommandID & command, const wxString &params,
       CommandContext const * pContext = NULL);
    bool ApplySpecialCommand(
       int iCommand, const wxString &friendlyCommand,
-      const wxString & command, const wxString & params);
+      const CommandID & command, const wxString & params);
    bool ApplyEffectCommand(
       const PluginID & ID, const wxString &friendlyCommand,
-      const wxString & command,
+      const CommandID & command,
       const wxString & params, const CommandContext & Context);
    bool ReportAndSkip( const wxString & friendlyCommand, const wxString & params );
    void AbortBatch();
@@ -85,9 +85,9 @@ class MacroCommands final {
    static wxArrayString GetNames();
    static wxArrayStringEx GetNamesOfDefaultMacros();
 
-   static wxString GetCurrentParamsFor(const wxString & command);
-   static wxString PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent);
-   static wxString PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent);
+   static wxString GetCurrentParamsFor(const CommandID & command);
+   static wxString PromptForParamsFor(const CommandID & command, const wxString & params, wxWindow *parent);
+   static wxString PromptForPresetFor(const CommandID & command, const wxString & params, wxWindow *parent);
 
    // These commands do depend on the command list.
    void ResetMacro();
@@ -99,10 +99,11 @@ class MacroCommands final {
    bool DeleteMacro(const wxString & name);
    bool RenameMacro(const wxString & oldmacro, const wxString & newmacro);
 
-   void AddToMacro(const wxString & command, int before = -1);
-   void AddToMacro(const wxString & command, const wxString & params, int before = -1);
+   void AddToMacro(const CommandID & command, int before = -1);
+   void AddToMacro(const CommandID & command, const wxString & params, int before = -1);
+
    void DeleteFromMacro(int index);
-   wxString GetCommand(int index);
+   CommandID GetCommand(int index);
    wxString GetParams(int index);
    int GetCount();
    wxString GetMessage(){ return mMessage;};
@@ -113,7 +114,7 @@ class MacroCommands final {
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
 
-   wxArrayString mCommandMacro;
+   CommandIDs mCommandMacro;
    wxArrayString mParamsMacro;
    bool mAbort;
    wxString mMessage;

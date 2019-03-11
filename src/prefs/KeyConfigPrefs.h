@@ -36,7 +36,7 @@ struct NormalizedKeyString;
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
-   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const wxString &name);
+   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const CommandID &name);
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
@@ -46,7 +46,7 @@ private:
    void Populate();
    void RefreshBindings(bool bSort);
    void FilterKeys( std::vector<NormalizedKeyString> & arr );
-   wxString NameFromKey(const NormalizedKeyString & key);
+   CommandID NameFromKey(const NormalizedKeyString & key);
    void SetKeyForSelected(const NormalizedKeyString & key);
 
    void OnViewBy(wxCommandEvent & e);
@@ -84,7 +84,7 @@ private:
    CommandManager *mManager;
    int mCommandSelected;
 
-   wxArrayString mNames;
+   CommandIDs mNames;
    std::vector<NormalizedKeyString> mDefaultKeys; // The full set.
    std::vector<NormalizedKeyString> mStandardDefaultKeys; // The reduced set.
    std::vector<NormalizedKeyString> mKeys;
@@ -98,11 +98,11 @@ private:
 class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   KeyConfigPrefsFactory(const wxString &name = wxString{})
+   KeyConfigPrefsFactory(const CommandID &name = {})
       : mName{ name } {}
    PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 
 private:
-   wxString mName;
+   CommandID mName;
 };
 #endif

@@ -14,6 +14,8 @@
 
 #include "../Experimental.h"
 
+#include "audacity/Types.h"
+
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
 
@@ -30,8 +32,8 @@
 
 #include <unordered_map>
 
-using CommandParameter = wxString;
 class TranslatedInternalString;
+using CommandParameter = CommandID;
 
 struct MenuBarListEntry
 {
@@ -62,7 +64,7 @@ struct SubMenuListEntry
 struct CommandListEntry
 {
    int id;
-   wxString name;
+   CommandID name;
    wxString longLabel;
    NormalizedKeyString key;
    NormalizedKeyString defaultKey;
@@ -178,7 +180,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
       bool global{ false };
    };
 
-   void AddItemList(const wxString & name,
+   void AddItemList(const CommandID & name,
                     const ComponentInterfaceSymbol items[],
                     size_t nItems,
                     CommandHandlerFinder finder,
@@ -186,7 +188,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                     CommandFlag flags,
                     bool bIsEffect = false);
 
-   void AddItem(const wxChar *name,
+   void AddItem(const CommandID &name,
                 const wxChar *label_in,
                 bool hasDialog,
                 CommandHandlerFinder finder,
@@ -198,13 +200,13 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    // A command doesn't actually appear in a menu but might have a
    // keyboard shortcut.
-   void AddCommand(const wxChar *name,
+   void AddCommand(const CommandID &name,
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
                    CommandFlag flags);
 
-   void AddCommand(const wxChar *name,
+   void AddCommand(const CommandID &name,
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
@@ -216,7 +218,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void EndOccultCommands();
 
 
-   void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
+   void SetCommandFlags(const CommandID &name, CommandFlag flags, CommandMask mask);
 
    //
    // Modifying menus
@@ -224,7 +226,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void EnableUsingFlags(CommandFlag flags, CommandMask mask);
    void Enable(const wxString &name, bool enabled);
-   void Check(const wxString &name, bool checked);
+   void Check(const CommandID &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);
 
    // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
@@ -236,7 +238,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Modifying accelerators
    //
 
-   void SetKeyFromName(const wxString &name, const NormalizedKeyString &key);
+   void SetKeyFromName(const CommandID &name, const NormalizedKeyString &key);
    void SetKeyFromIndex(int i, const NormalizedKeyString &key);
 
    //
@@ -247,19 +249,19 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
-   bool HandleTextualCommand(const wxString & Str, const CommandContext & context, CommandFlag flags, CommandMask mask);
+   bool HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, CommandMask mask);
 
    //
    // Accessing
    //
 
    void GetCategories(wxArrayString &cats);
-   void GetAllCommandNames(wxArrayString &names, bool includeMultis) const;
+   void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
       wxArrayString &labels, std::vector<bool> &vHasDialog,
       bool includeMultis) const;
    void GetAllCommandData(
-      wxArrayString &names,
+      CommandIDs &names,
       std::vector<NormalizedKeyString> &keys,
       std::vector<NormalizedKeyString> &default_keys,
       wxArrayString &labels, wxArrayString &categories,
@@ -268,14 +270,15 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 #endif
       bool includeMultis);
 
-   wxString GetNameFromID( int id );
-   wxString GetLabelFromName(const wxString &name);
-   wxString GetPrefixedLabelFromName(const wxString &name);
-   wxString GetCategoryFromName(const wxString &name);
-   NormalizedKeyString GetKeyFromName(const wxString &name) const;
-   NormalizedKeyString GetDefaultKeyFromName(const wxString &name);
+   CommandID GetNameFromID( int id );
 
-   bool GetEnabled(const wxString &name);
+   wxString GetLabelFromName(const CommandID &name);
+   wxString GetPrefixedLabelFromName(const CommandID &name);
+   wxString GetCategoryFromName(const CommandID &name);
+   NormalizedKeyString GetKeyFromName(const CommandID &name) const;
+   NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);
+
+   bool GetEnabled(const CommandID &name);
 
 #if defined(__WXDEBUG__)
    void CheckDups();
@@ -307,18 +310,18 @@ private:
    //
 
    int NextIdentifier(int ID);
-   CommandListEntry *NewIdentifier(const wxString & name,
+   CommandListEntry *NewIdentifier(const CommandID & name,
                                    const wxString & label,
                                    const wxString & longLabel,
                                    bool hasDialog,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
-                                   const wxString &nameSuffix,
+                                   const CommandID &nameSuffix,
                                    int index,
                                    int count,
                                    bool bIsEffect);
-   CommandListEntry *NewIdentifier(const wxString & name,
+   CommandListEntry *NewIdentifier(const CommandID & name,
                                    const wxString & label,
                                    const wxString & longLabel,
                                    bool hasDialog,
@@ -326,13 +329,13 @@ private:
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
-                                   const wxString &nameSuffix,
+                                   const CommandID &nameSuffix,
                                    int index,
                                    int count,
                                    bool bIsEffect,
                                    const CommandParameter &parameter);
    
-   void AddGlobalCommand(const wxChar *name,
+   void AddGlobalCommand(const CommandID &name,
                          const wxChar *label,
                          bool hasDialog,
                          CommandHandlerFinder finder,
@@ -508,7 +511,7 @@ namespace MenuTable {
    };
 
    struct CommandItem final : BaseItem {
-      CommandItem(const wxString &name_,
+      CommandItem(const CommandID &name_,
                const wxString &label_in_,
                bool hasDialog_,
                CommandHandlerFinder finder_,
@@ -517,7 +520,7 @@ namespace MenuTable {
                const CommandManager::Options &options_);
       ~CommandItem() override;
 
-      const wxString name;
+      const CommandID name;
       const wxString label_in;
       bool hasDialog;
       CommandHandlerFinder finder;
@@ -608,7 +611,7 @@ namespace MenuTable {
       { return std::make_unique<SeparatorItem>(); }
 
    inline std::unique_ptr<CommandItem> Command(
-      const wxString &name, const wxString &label_in, bool hasDialog,
+      const CommandID &name, const wxString &label_in, bool hasDialog,
       CommandHandlerFinder finder, CommandFunctorPointer callback,
       CommandFlag flags, const CommandManager::Options &options = {})
    {

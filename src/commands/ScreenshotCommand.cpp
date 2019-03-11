@@ -442,7 +442,7 @@ void ScreenshotCommand::CapturePreferences(
       SetIdleHandler( IdleHandler );
       gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
       gPrefs->Flush();
-      wxString Command = "Preferences";
+      CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
       if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {

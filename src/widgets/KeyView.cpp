@@ -142,7 +142,7 @@ KeyView::GetFullLabel(int index) const
 // Returns the index for the given name
 //
 int
-KeyView::GetIndexByName(const wxString & name) const
+KeyView::GetIndexByName(const CommandID & name) const
 {
    int cnt = (int) mNodes.size();
 
@@ -161,14 +161,14 @@ KeyView::GetIndexByName(const wxString & name) const
 //
 // Returns the command manager name for the given index
 //
-wxString
+CommandID
 KeyView::GetName(int index) const
 {
    // Make sure index is valid
    if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
-      return wxEmptyString;
+      return {};
    }
 
    return mNodes[index].name;
@@ -177,7 +177,7 @@ KeyView::GetName(int index) const
 //
 // Returns the command manager index for the given key combination
 //
-wxString
+CommandID
 KeyView::GetNameByKey(const NormalizedKeyString & key) const
 {
    int cnt = (int) mNodes.size();
@@ -191,7 +191,7 @@ KeyView::GetNameByKey(const NormalizedKeyString & key) const
       }
    }
 
-   return wxEmptyString;
+   return {};
 }
 
 //
@@ -292,7 +292,7 @@ KeyView::SetKey(int index, const NormalizedKeyString & key)
 // Sets the key for the given name
 //
 bool
-KeyView::SetKeyByName(const wxString & name, const NormalizedKeyString & key)
+KeyView::SetKeyByName(const CommandID & name, const NormalizedKeyString & key)
 {
    int index = GetIndexByName(name);
 
@@ -518,7 +518,7 @@ KeyView::UpdateHScroll()
 // Process a NEW set of bindings
 //
 void
-KeyView::RefreshBindings(const wxArrayString & names,
+KeyView::RefreshBindings(const CommandIDs & names,
                          const wxArrayString & categories,
                          const wxArrayString & prefixes,
                          const wxArrayString & labels,
@@ -545,7 +545,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
    int cnt = (int) names.size();
    for (int i = 0; i < cnt; i++)
    {
-      wxString name = names[i];
+      auto name = names[i];
       int x, y;
 
       // Remove any menu code from the category and prefix
@@ -587,7 +587,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
             KeyNode node;
 
             // Fill in the node info
-            node.name = wxEmptyString;    // don't associate branches with a command
+            node.name = CommandID{};    // don't associate branches with a command
             node.category = cat;
             node.prefix = pfx;
             node.label = cat;
@@ -627,7 +627,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
             KeyNode node;
 
             // Fill in the node info
-            node.name = wxEmptyString;    // don't associate branches with a command
+            node.name = CommandID{};    // don't associate branches with a command
             node.category = cat;
             node.prefix = pfx;
             node.label = pfx;

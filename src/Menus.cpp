@@ -114,7 +114,7 @@ ConditionalGroupItem::~ConditionalGroupItem() {}
 
 SeparatorItem::~SeparatorItem() {}
 
-CommandItem::CommandItem(const wxString &name_,
+CommandItem::CommandItem(const CommandID &name_,
          const wxString &label_in_,
          bool hasDialog_,
          CommandHandlerFinder finder_,

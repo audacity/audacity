@@ -76,6 +76,9 @@ using FileExtensions = wxArrayStringEx;
 using FilePath = wxString;
 using FilePaths = wxArrayStringEx;
 
+using CommandID = wxString;
+using CommandIDs = std::vector< CommandID >;
+
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples
 // ----------------------------------------------------------------------------

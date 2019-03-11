@@ -1637,7 +1637,7 @@ void AdornedRulerPanel::DrawBothOverlays()
 void AdornedRulerPanel::UpdateButtonStates()
 {
    auto common = [this]
-   (AButton &button, const wxString &commandName, const wxString &label) {
+   (AButton &button, const CommandID &commandName, const wxString &label) {
       TranslatedInternalString command{ commandName, label };
       ToolBar::SetButtonToolTip( button, &command, 1u );
       button.SetLabel(button.GetToolTipText());

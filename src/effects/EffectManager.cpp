@@ -168,7 +168,7 @@ wxString EffectManager::GetVendorName(const PluginID & ID)
    return {};
 }
 
-wxString EffectManager::GetCommandIdentifier(const PluginID & ID)
+CommandID EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
    wxString name = PluginManager::Get().GetSymbol(ID).Internal();
 
@@ -944,7 +944,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
 }
 
 
-const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget)
+const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarget)
 {
    static PluginID empty;
    if (strTarget.empty()) // set GetCommandIdentifier to wxT("") to not show an effect in Batch mode

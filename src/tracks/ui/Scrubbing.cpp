@@ -232,7 +232,7 @@ Scrubber::~Scrubber()
 
 namespace {
    const struct MenuItem {
-      wxString name;
+      CommandID name;
       wxString label;
       wxString status;
       CommandFlag flags;

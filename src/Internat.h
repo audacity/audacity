@@ -195,7 +195,9 @@ class TranslatedInternalString
 {
 public:
 
-   TranslatedInternalString() = default;
+   using ID = CommandID;
+
+   TranslatedInternalString() =  default;
 
    // One-argument constructor from a msgid
    explicit TranslatedInternalString( const wxString &internal )
@@ -203,12 +205,12 @@ public:
    {}
 
    // Two-argument version, when translated does not derive from internal
-   TranslatedInternalString( const wxString &internal,
+   TranslatedInternalString( const ID &internal,
                              const wxString &translated )
    : mInternal{ internal }, mTranslated{ translated }
    {}
 
-   const wxString &Internal() const { return mInternal; }
+   const ID &Internal() const { return mInternal; }
    const wxString Translated() const 
    {  
       wxString Temp = mTranslated;
@@ -217,7 +219,7 @@ public:
    }
 
 private:
-   wxString mInternal;
+   ID mInternal;
    wxString mTranslated;
 };
 
