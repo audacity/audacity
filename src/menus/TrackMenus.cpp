@@ -133,8 +133,16 @@ enum {
    kAlignTogether
 };
 
-constexpr size_t kAlignLabelsCount = 5;
-   
+static const std::initializer_list< ComponentInterfaceSymbol > alignLabels{
+   { wxT("StartToZero"),     XO("Start to &Zero") },
+   { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
+   { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
+   { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
+   { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
+};
+
+const size_t kAlignLabelsCount = alignLabels.end() - alignLabels.begin();
+
 void DoAlign
 (AudacityProject &project, int index, bool moveSel)
 {
@@ -1530,38 +1538,20 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
       //////////////////////////////////////////////////////////////////////////
 
       Menu( _("&Align Tracks"), //_("Just Move Tracks"),
-         []{
-            // Mutual alignment of tracks independent of selection or zero
-            static const ComponentInterfaceSymbol alignLabelsNoSync[] = {
+         // Mutual alignment of tracks independent of selection or zero
+         CommandGroup(wxT("Align"),
+            {
                { wxT("EndToEnd"),     XO("&Align End to End") },
                { wxT("Together"),     XO("Align &Together") },
-            };
-            return CommandGroup(wxT("Align"),
-               alignLabelsNoSync, 2u, FN(OnAlignNoSync),
-               AudioIONotBusyFlag | TracksSelectedFlag);
-         }(),
+            },
+            FN(OnAlignNoSync), AudioIONotBusyFlag | TracksSelectedFlag),
 
          Separator(),
 
-         []{
             // Alignment commands using selection or zero
-            static const ComponentInterfaceSymbol alignLabels[] = {
-               { wxT("StartToZero"),     XO("Start to &Zero") },
-               { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start")
-               },
-               { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
-               { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start")
-               },
-               { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
-            };
-            static_assert(
-               kAlignLabelsCount == WXSIZEOF(alignLabels),
-               "incorrect count"
-            );
-            return CommandGroup(wxT("Align"),
-               alignLabels, kAlignLabelsCount, FN(OnAlign),
-               AudioIONotBusyFlag | TracksSelectedFlag);
-         }(),
+         CommandGroup(wxT("Align"),
+            alignLabels,
+            FN(OnAlign), AudioIONotBusyFlag | TracksSelectedFlag),
 
          Separator(),
 
@@ -1577,7 +1567,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
       // TODO: Can these labels be made clearer?
       // Do we need this sub-menu at all?
       Menu( _("Move Sele&ction and Tracks"), {
-         CommandGroup(wxT("AlignMove"), alignLabels, kAlignLabelsCount,
+         CommandGroup(wxT("AlignMove"), alignLabels,
             FN(OnAlignMoveSel), AudioIONotBusyFlag | TracksSelectedFlag),
       } ),
 #endif

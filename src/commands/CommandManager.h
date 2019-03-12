@@ -528,8 +528,7 @@ namespace MenuTable {
 
    struct CommandGroupItem final : BaseItem {
       CommandGroupItem(const wxString &name_,
-               const ComponentInterfaceSymbol items_[],
-               size_t nItems_,
+               std::initializer_list< ComponentInterfaceSymbol > items_,
                CommandHandlerFinder finder_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
@@ -620,12 +619,12 @@ namespace MenuTable {
 
    inline std::unique_ptr<CommandGroupItem> CommandGroup(
       const wxString &name,
-      const ComponentInterfaceSymbol items[], size_t nItems,
+      std::initializer_list< ComponentInterfaceSymbol > items,
       CommandHandlerFinder finder, CommandFunctorPointer callback,
       CommandFlag flags, bool isEffect = false)
    {
       return std::make_unique<CommandGroupItem>(
-         name, items, nItems, finder, callback, flags, isEffect
+         name, items, finder, callback, flags, isEffect
       );
    }
 

@@ -128,13 +128,12 @@ CommandItem::CommandItem(const wxString &name_,
 CommandItem::~CommandItem() {}
 
 CommandGroupItem::CommandGroupItem(const wxString &name_,
-         const ComponentInterfaceSymbol items_[],
-         size_t nItems_,
+         std::initializer_list< ComponentInterfaceSymbol > items_,
          CommandHandlerFinder finder_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
          bool isEffect_)
-: name{ name_ }, items{ items_, items_ + nItems_ }
+: name{ name_ }, items{ items_ }
 , finder{ finder_ }, callback{ callback_ }
 , flags{ flags_ }, isEffect{ isEffect_ }
 {}
