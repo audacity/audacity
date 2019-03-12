@@ -961,14 +961,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       // For key bindings for commands with a list, such as align,
       // the name in prefs is the category name plus the effect name.
       // This feature is not used for built-in effects.
-      if (multi) {
-         // The name needs to be clean for use by automation.
-         wxString cleanedName = wxString::Format(wxT("%s_%s"), name, nameSuffix);
-         cleanedName.Replace( "/", "" );
-         cleanedName.Replace( "&", "" );
-         cleanedName.Replace( " ", "" );
-         name = cleanedName;
-      }
+      if (multi)
+         name = wxString::Format(wxT("%s_%s"), name, nameSuffix);
 
       // wxMac 2.5 and higher will do special things with the
       // Preferences, Exit (Quit), and About menu items,
