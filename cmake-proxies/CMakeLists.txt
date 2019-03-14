@@ -9,11 +9,14 @@ set( LIB_SRC_DIRECTORY ${top_dir}/lib-src/ )
 #add_subdirectory( "mod-track-panel" )
 
 #These are all headers, nothing to build.
-#add_subdirectory( "ffmpeg" ) 
-#add_subdirectory( "lame" ) 
+#add_subdirectory( "ffmpeg" )
+#add_subdirectory( "lame" )
 
 
-add_subdirectory( "expat" )
+# libexpat
+set( BUILD_shared OFF CACHE INTERNAL "" FORCE )
+add_subdirectory( "${LIB_SRC_DIRECTORY}expat" "${CMAKE_CURRENT_BINARY_DIR}/expat" EXCLUDE_FROM_ALL )
+
 add_subdirectory( "FileDialog" )
 #add_subdirectory( "help" )
 add_subdirectory( "libflac" )
