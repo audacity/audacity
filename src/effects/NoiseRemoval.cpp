@@ -27,7 +27,7 @@
   but if it were, there would be a significant delay.
 
   The gain controls are applied to the complex FFT of the signal,
-  and then the inverse FFT is applied, followed by a Hanning window;
+  and then the inverse FFT is applied, followed by a Hann window;
   the output signal is then pieced together using overlap/add of
   half the window size.
 
@@ -288,7 +288,7 @@ void EffectNoiseRemoval::Initialize()
    mWindow.reinit(mWindowSize);
    mOutOverlapBuffer.reinit(mWindowSize);
 
-   // Create a Hanning window function
+   // Create a Hann window function
    for(size_t i=0; i<mWindowSize; i++)
       mWindow[i] = 0.5 - 0.5 * cos((2.0*M_PI*i) / mWindowSize);
 

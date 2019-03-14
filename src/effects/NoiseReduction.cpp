@@ -29,7 +29,7 @@
   but if it were, there would be a significant delay.
 
   The gain controls are applied to the complex FFT of the signal,
-  and then the inverse FFT is applied.  A Hanning window may be
+  and then the inverse FFT is applied.  A Hann window may be
   applied (depending on the advanced window types setting), and then
   the output signal is then pieced together using overlap/add.
 

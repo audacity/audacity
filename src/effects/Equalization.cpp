@@ -28,7 +28,7 @@
    Also allows the curve to be specified with a series of 'graphic EQ'
    sliders.
 
-   The filter is applied using overlap/add of Hanning windows.
+   The filter is applied using overlap/add of Hann windows.
 
    Clone of the FFT Filter effect, no longer part of Audacity.
 

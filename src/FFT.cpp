@@ -343,7 +343,7 @@ const wxChar *WindowFuncName(int whichFunction)
    case eWinFuncHamming:
       return wxT("Hamming");
    case eWinFuncHanning:
-      return wxT("Hanning");
+      return wxT("Hann");
    case eWinFuncBlackman:
       return wxT("Blackman");
    case eWinFuncBlackmanHarris:
@@ -404,7 +404,7 @@ void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, flo
       break;
    case eWinFuncHanning:
    {
-      // Hanning
+      // Hann
       const double multiplier = 2 * M_PI / NumSamples;
       static const double coeff0 = 0.5, coeff1 = -0.5;
       for (int ii = 0; ii < NumSamples; ++ii)
@@ -601,7 +601,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       break;
    case eWinFuncHanning:
    {
-      // Hanning
+      // Hann
       const double multiplier = 2 * M_PI / NumSamples;
       const double coeff1 = -0.5 * multiplier;
       for (int ii = 0; ii < (int)NumSamples; ++ii)

@@ -217,7 +217,7 @@ size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, 
          f = pre4divPI * sin(pre2PI * mPositionInCycles / mSampleRate);
          for (k = 3; (k < 200) && (k * BlendedFrequency < mSampleRate / 2.0); k += 2)
          {
-            //Hanning Window in freq domain
+            //Hann Window in freq domain
             a = 1.0 + cos((pre2PI * k * BlendedFrequency) / mSampleRate);
             //calc harmonic, apply window, scale to amplitude of fundamental
             f += a * sin(pre2PI * mPositionInCycles / mSampleRate * k) / (b * k);
