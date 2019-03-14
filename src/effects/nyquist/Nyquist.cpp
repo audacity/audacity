@@ -649,7 +649,7 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-      lang = (lang == wxEmptyString)? wxGetApp().InitLang(lang) : lang;
+      lang = (lang.empty())? wxGetApp().InitLang(lang) : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
@@ -2656,7 +2656,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   item->SetValidator(wxGenericValidator(&ctrl.valStr));
                   item->SetName(prompt);
 
-                  if (ctrl.label == wxEmptyString)
+                  if (ctrl.label.empty())
                      // We'd expect wxFileSelectorPromptStr to already be translated, but apparently not.
                      ctrl.label = wxGetTranslation( wxFileSelectorPromptStr );
                   S.Id(ID_FILE + i).AddButton(ctrl.label, wxALIGN_LEFT);
@@ -2863,7 +2863,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
 
    // Basic sanity check of wildcard flags so that we
    // don't show scary wxFAIL_MSG from wxParseCommonDialogsFilter.
-   if (ctrl.lowStr != wxEmptyString)
+   if (!ctrl.lowStr.empty())
    {
       bool validWildcards = true;
       size_t wildcards = 0;
@@ -2871,7 +2871,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
       while (tokenizer.HasMoreTokens())
       {
          wxString token = tokenizer.GetNextToken().Trim(true).Trim(false);
-         if (token == wxEmptyString)
+         if (token.empty())
          {
             validWildcards = false;
             break;
@@ -2891,7 +2891,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
    // Get style flags:
    // Ensure legal combinations so that wxWidgets does not throw an assert error.
    unsigned int flags = 0;
-   if (ctrl.highStr != wxEmptyString)
+   if (!ctrl.highStr.empty())
    {
       wxStringTokenizer tokenizer(ctrl.highStr, ",");
       while ( tokenizer.HasMoreTokens() )
@@ -3020,7 +3020,7 @@ void NyquistEffect::resolveFilePath(wxString& path, wxString extension /* empty 
 
    // If the directory is invalid, better to leave it as is (invalid) so that
    // the user sees the error rather than an unexpected file path.
-   if (fname.wxFileName::IsOk() && fname.GetFullName() == wxEmptyString)
+   if (fname.wxFileName::IsOk() && fname.GetFullName().empty())
    {
       path = fname.GetPathWithSep() + _("untitled");
       if (!extension.empty())
@@ -3036,7 +3036,7 @@ bool NyquistEffect::validatePath(wxString path)
 
    return (fname.wxFileName::IsOk() &&
            wxFileName::DirExists(dir) &&
-           fname.GetFullName() != wxEmptyString);
+           !fname.GetFullName().empty());
 }
 
 

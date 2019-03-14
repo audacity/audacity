@@ -240,7 +240,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                         mFrame.get());
 
-   if (fName == wxEmptyString) {
+   if (fName.empty()) {
       return;
    }
 

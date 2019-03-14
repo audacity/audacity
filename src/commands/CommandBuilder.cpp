@@ -139,12 +139,12 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
 
    wxString cmdParams(cmdParamsArg);
 
-   while (cmdParams != wxEmptyString)
+   while (!cmdParams.empty())
    {
       cmdParams.Trim(true);
       cmdParams.Trim(false);
       int splitAt = cmdParams.Find(wxT('='));
-      if (splitAt < 0 && cmdParams != wxEmptyString)
+      if (splitAt < 0 && !cmdParams.empty())
       {
          Failure(wxT("Parameter string is missing '='"));
          return;

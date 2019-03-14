@@ -175,7 +175,7 @@ wxString EffectManager::GetCommandIdentifier(const PluginID & ID)
    // Get rid of leading and trailing white space
    name.Trim(true).Trim(false);
 
-   if (name == wxEmptyString)
+   if (name.empty())
    {
       return name;
    }
@@ -947,7 +947,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
 const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget)
 {
    static PluginID empty;
-   if (strTarget == wxEmptyString) // set GetCommandIdentifier to wxT("") to not show an effect in Batch mode
+   if (strTarget.empty()) // set GetCommandIdentifier to wxT("") to not show an effect in Batch mode
    {
       return empty;
    }

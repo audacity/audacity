@@ -582,7 +582,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
          lastcat = cat;
 
          // Add a NEW category node
-         if (cat != wxEmptyString)
+         if (!cat.empty())
          {
             KeyNode node;
 
@@ -622,7 +622,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
          lastpfx = pfx;
 
          // Add a NEW prefix node
-         if (pfx != wxEmptyString)
+         if (!pfx.empty())
          {
             KeyNode node;
 

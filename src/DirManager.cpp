@@ -2032,7 +2032,7 @@ void DirManager::FindMissingAliasedFiles(
             static_cast< AliasBlockFile* > ( &*b )->GetAliasedFileName();
             wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
             // wxEmptyString can happen if user already chose to "replace... with silence".
-            if ((aliasedFileFullPath != wxEmptyString) &&
+            if ((!aliasedFileFullPath.empty()) &&
                 !aliasedFileName.FileExists())
             {
                missingAliasedFileAUFHash[key] = b;

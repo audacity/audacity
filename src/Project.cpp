@@ -2757,7 +2757,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    wxString all;  ///< One long list of all supported file extensions,
    /// semicolon separated
 
-   if (extraformat != wxEmptyString)
+   if (!extraformat.empty())
    {  // additional format specified
       all = extrafilter + wxT(';');
       // add it to the "all supported files" filter string
@@ -2799,7 +2799,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    /* i18n-hint: The vertical bars and * are essential here.*/
    wxString mask = _("All files|*|All supported files|") +
                    all + wxT("|"); // "all" and "all supported" entries
-   if (extraformat != wxEmptyString)
+   if (!extraformat.empty())
    {  // append caller-defined format if supplied
       mask +=  extraformat + wxT("|") + extrafilter + wxT("|");
    }

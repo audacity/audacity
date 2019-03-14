@@ -893,7 +893,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                wxString sInitialValue = wxT("");
                AudacityProject* pProject = GetActiveProject();
                wxString sSaveValue = pProject->GetFileName();
-               if (sSaveValue != wxEmptyString) {
+               if (!sSaveValue.empty()) {
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = _("Current Project");
                }

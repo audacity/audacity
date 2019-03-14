@@ -1240,7 +1240,7 @@ bool ProgressDialog::Create(const wxString & title,
 
          // Customised "Remaining" label text
          wxString sRemainingText = sRemainingLabelText;
-         if (sRemainingText == wxEmptyString) {
+         if (sRemainingText.empty()) {
             sRemainingText = _("Remaining Time:");
          }
 

@@ -1399,7 +1399,7 @@ const wxSize kDefaultSize =
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
 : wxFrame(parent, -1,
           wxString::Format(_("Audacity Mixer Board%s"),
-                           ((parent->GetName() == wxEmptyString) ?
+                           ((parent->GetName().empty()) ?
                               wxT("") :
                               wxString::Format(wxT(" - %s"),
                                              parent->GetName()))),

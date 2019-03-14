@@ -66,7 +66,7 @@ void ModulePrefs::GetAllModuleStatuses(){
       gPrefs->Read( str, &iStatus, kModuleDisabled );
       wxString fname;
       gPrefs->Read( wxString( wxT("/ModulePath/") ) + str, &fname, wxEmptyString );
-      if( fname != wxEmptyString && wxFileExists( fname ) ){
+      if( !fname.empty() && wxFileExists( fname ) ){
          if( iStatus > kModuleNew ){
             iStatus = kModuleNew;
             gPrefs->Write( str, iStatus );

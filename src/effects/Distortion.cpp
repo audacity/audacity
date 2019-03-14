@@ -937,13 +937,13 @@ void EffectDistortion::UpdateControl(control id, bool enabled, wxString name)
 void EffectDistortion::UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled)
 {
    if (enabled) {
-      if (textCtrl->GetValue() == wxEmptyString)
+      if (textCtrl->GetValue().empty())
          textCtrl->SetValue(string);
       else
          string = textCtrl->GetValue();
    }
    else {
-      if (textCtrl->GetValue() != wxEmptyString)
+      if (!textCtrl->GetValue().empty())
          string = textCtrl->GetValue();
       textCtrl->SetValue(wxT(""));
    }

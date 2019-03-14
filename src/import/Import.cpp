@@ -179,7 +179,7 @@ void Importer::ReadImportItems()
       wxString delims(wxT(":"));
       StringToList (extensions, delims, new_item->extensions);
 
-      if (mime_types != wxEmptyString)
+      if (!mime_types.empty())
          StringToList (mime_types, delims, new_item->mime_types);
 
       /* Filter token consists of used and unused filter lists */
@@ -190,7 +190,7 @@ void Importer::ReadImportItems()
 
       StringToList (used_filters, delims, new_item->filters);
 
-      if (unused_filters != wxEmptyString)
+      if (!unused_filters.empty())
       {
          /* Filters are stored in one list, but the position at which
           * unused filters start is remembered

@@ -46,7 +46,7 @@ const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 LyricsWindow::LyricsWindow(AudacityProject *parent):
    wxFrame(parent, -1,
             wxString::Format(_("Audacity Karaoke%s"),
-                              ((parent->GetName() == wxEmptyString) ?
+                              ((parent->GetName().empty()) ?
                                  wxT("") :
                                  wxString::Format(
                                    wxT(" - %s"),

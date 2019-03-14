@@ -472,7 +472,7 @@ void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
       wxString key = KeyEventToKeyString(e).Display();
       t->SetValue(key);
 
-      if (key != wxEmptyString) {
+      if (!key.empty()) {
          mView->SetFilter(t->GetValue());
       }
    }

@@ -58,7 +58,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    // Because Open does not return a success or failure, we have to guess
    // at this point, based on whether the project file name has
    // changed and what to...
-   return newFileName != wxEmptyString && newFileName != oldFileName;
+   return !newFileName.empty() && newFileName != oldFileName;
 }
 
 bool SaveProjectCommand::DefineParams( ShuttleParams & S ){

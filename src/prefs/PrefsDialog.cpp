@@ -115,7 +115,7 @@ int wxTreebookExt::SetSelection(size_t n)
    static_cast<wxDialog*>(GetParent())->SetName( Temp );
 
    PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
-   const bool showHelp = (panel->HelpPageName() != wxEmptyString);
+   const bool showHelp = (!panel->HelpPageName().empty());
    const bool showPreview = panel->ShowsPreviewButton();
    wxWindow *const helpButton = wxWindow::FindWindowById(wxID_HELP, GetParent());
    wxWindow *const previewButton = wxWindow::FindWindowById(wxID_PREVIEW, GetParent());
