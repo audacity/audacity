@@ -220,7 +220,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
 
    // Code from LoadLadspa that might be useful in load modules.
    pathVar = wxGetenv(wxT("AUDACITY_MODULES_PATH"));
-   if (pathVar != wxT(""))
+   if (!pathVar.empty())
       wxGetApp().AddMultiPathsToPathList(pathVar, pathList);
 
    for (i = 0; i < audacityPathList.size(); i++) {
@@ -355,7 +355,7 @@ bool ModuleManager::DiscoverProviders()
    // Code from LoadLadspa that might be useful in load modules.
    wxString pathVar = wxString::FromUTF8(getenv("AUDACITY_MODULES_PATH"));
 
-   if (pathVar != wxT(""))
+   if (!pathVar.empty())
    {
       wxGetApp().AddMultiPathsToPathList(pathVar, pathList);
    }

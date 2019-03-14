@@ -936,7 +936,7 @@ bool MacroCommands::ReportAndSkip(
       return false;
 
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
-   if( params != wxT("") )
+   if( !params.empty() )
    {
       AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),friendlyCommand, params),
          _("Test Mode"));

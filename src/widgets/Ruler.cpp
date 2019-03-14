@@ -715,7 +715,7 @@ wxString Ruler::LabelString(double d, bool major)
       }
    }
 
-   if (mUnits != wxT(""))
+   if (!mUnits.empty())
       s = (s + mUnits);
 
    return s;
@@ -1393,7 +1393,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
    mDC->SetFont(*mMinorMinorFont);
 
    for(i=0; i<mNumMinorMinor; i++) {
-      if (mMinorMinorLabels[i].text != wxT(""))
+      if (!mMinorMinorLabels[i].text.empty())
       {
          int pos = mMinorMinorLabels[i].pos;
 
@@ -1552,7 +1552,7 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int star
 
 void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 {
-   if (text != wxT("")) {
+   if (!text.empty()) {
       bool altColor = twoTone && value < 0.0;
 
 #ifdef EXPERIMENTAL_THEMING

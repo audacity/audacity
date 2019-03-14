@@ -1298,7 +1298,7 @@ bool AudacityApp::OnInit()
    wxString home = wxGetHomeDir();
 
    wxString envTempDir = wxGetenv(wxT("TMPDIR"));
-   if (envTempDir != wxT("")) {
+   if (!envTempDir.empty()) {
       /* On Unix systems, the environment variable TMPDIR may point to
          an unusual path when /tmp and /var/tmp are not desirable. */
       defaultTempDir.Printf(wxT("%s/audacity-%s"), envTempDir, wxGetUserId());
@@ -1313,7 +1313,7 @@ bool AudacityApp::OnInit()
 #else
    wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
 #endif
-   if (pathVar != wxT(""))
+   if (!pathVar.empty())
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
@@ -1770,7 +1770,7 @@ bool AudacityApp::InitTempDir()
 
    // If that didn't work, try the default location
 
-   if (temp==wxT(""))
+   if (temp.empty())
       SetToExtantDirectory( temp, tempDefaultLoc );
 
    // Check temp directory ownership on *nix systems only
@@ -1786,7 +1786,7 @@ bool AudacityApp::InitTempDir()
    }
    #endif
 
-   if (temp == wxT("")) {
+   if (temp.empty()) {
       // Failed
       if( !IsTempDirectoryNameOK( tempFromPrefs ) ) {
          AudacityMessageBox(_("Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
@@ -2095,7 +2095,7 @@ void AudacityApp::AddMultiPathsToPathList(const wxString &multiPathStringArg,
                                           wxArrayString &pathList)
 {
    wxString multiPathString(multiPathStringArg);
-   while (multiPathString != wxT("")) {
+   while (!multiPathString.empty()) {
       wxString onePath = multiPathString.BeforeFirst(wxPATH_SEP[0]);
       multiPathString = multiPathString.AfterFirst(wxPATH_SEP[0]);
       AddUniquePathToPathList(onePath, pathList);
@@ -2110,7 +2110,7 @@ void AudacityApp::FindFilesInPathList(const wxString & pattern,
 {
    wxLogNull nolog;
 
-   if (pattern == wxT("")) {
+   if (pattern.empty()) {
       return;
    }
 

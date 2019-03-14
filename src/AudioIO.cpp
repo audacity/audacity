@@ -938,7 +938,7 @@ void InitAudioIO()
 #endif
 
    // Make sure device prefs are initialized
-   if (gPrefs->Read(wxT("AudioIO/RecordingDevice"), wxT("")) == wxT("")) {
+   if (gPrefs->Read(wxT("AudioIO/RecordingDevice"), wxT("")).empty()) {
       int i = AudioIO::getRecordDevIndex();
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info) {
@@ -947,7 +947,7 @@ void InitAudioIO()
       }
    }
 
-   if (gPrefs->Read(wxT("AudioIO/PlaybackDevice"), wxT("")) == wxT("")) {
+   if (gPrefs->Read(wxT("AudioIO/PlaybackDevice"), wxT("")).empty()) {
       int i = AudioIO::getPlayDevIndex();
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info) {

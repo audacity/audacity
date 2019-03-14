@@ -258,7 +258,7 @@ void OnExportLabels(const CommandContext &context)
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                         &project);
 
-   if (fName == wxT(""))
+   if (fName.empty())
       return;
 
    // Move existing files out of the way.  Otherwise wxTextFile will
@@ -343,7 +343,7 @@ void OnExportMIDI(const CommandContext &context)
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
          &project);
 
-      if (fName == wxT(""))
+      if (fName.empty())
          return;
 
       if(!fName.Contains(wxT("."))) {
@@ -445,7 +445,7 @@ void OnImportLabels(const CommandContext &context)
                     wxRESIZE_BORDER,        // Flags
                     &project);    // Parent
 
-   if (fileName != wxT("")) {
+   if (!fileName.empty()) {
       wxTextFile f;
 
       f.Open(fileName);
@@ -487,7 +487,7 @@ void OnImportMIDI(const CommandContext &context)
       wxRESIZE_BORDER,        // Flags
       &project);    // Parent
 
-   if (fileName != wxT(""))
+   if (!fileName.empty())
       DoImportMIDI(&project, fileName);
 }
 #endif
@@ -507,7 +507,7 @@ void OnImportRaw(const CommandContext &context)
                     wxRESIZE_BORDER,        // Flags
                     &project);    // Parent
 
-   if (fileName == wxT(""))
+   if (fileName.empty())
       return;
 
    TrackHolders newTracks;

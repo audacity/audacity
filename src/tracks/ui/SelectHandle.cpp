@@ -970,7 +970,7 @@ HitTestPreview SelectHandle::Preview
 
       MaySetOnDemandTip(pTrack.get(), tip);
    }
-   if (tip == "") {
+   if (tip.empty()) {
       tip = _("Click and drag to select audio");
    }
    if (HasEscape() && mUseSnap) {

@@ -1342,7 +1342,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    // MJS:  I don't know what the above means, or if I have broken it.
    wxFileName fn;
 
-   if(fileName == wxT("")) {
+   if(fileName.empty()) {
       // Check if presets are up to date.
       wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
       wxString eqCurvesInstalledVersion = wxT("");
@@ -1568,7 +1568,7 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
 void EffectEqualization::SaveCurves(const wxString &fileName)
 {
    wxFileName fn;
-   if( fileName == wxT(""))
+   if( fileName.empty() )
    {
       // Construct default curve filename
       //
@@ -3358,7 +3358,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
                }
             }
          }
-         if( name == wxT("") || name == wxT("unnamed") )
+         if( name.empty() || name == wxT("unnamed") )
             bad = true;
       }
 

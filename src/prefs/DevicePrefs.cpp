@@ -236,7 +236,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    wxString recDevice;
 
    recDevice = mRecordDevice;
-   if (this->mRecordSource != wxT(""))
+   if (!this->mRecordSource.empty())
       recDevice += wxT(": ") + mRecordSource;
 
    mRecord->Clear();

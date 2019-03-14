@@ -45,7 +45,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    MacroCommandsCatalog catalog(&context.project);
 
    wxString macroName = GetString(wxT("MacroName"));
-   if (macroName != wxT(""))
+   if (!macroName.empty())
    {
       MacroCommands batch;
       batch.ReadMacro(macroName);

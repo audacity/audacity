@@ -541,7 +541,7 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
                     current);
 
    dlog.ShowModal();
-   if (dlog.GetPath() != wxT("")) {
+   if (!dlog.GetPath().empty()) {
       wxFileName tmpDirPath;
       tmpDirPath.AssignDir(dlog.GetPath());
       wxString path = tmpDirPath.GetPath(wxPATH_GET_VOLUME|wxPATH_GET_SEPARATOR);

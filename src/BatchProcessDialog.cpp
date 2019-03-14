@@ -1070,7 +1070,7 @@ void MacrosWindow::InsertCommandAt(int item)
    }
    Raise();
 
-   if(d.mSelectedCommand != wxT(""))
+   if(!d.mSelectedCommand.empty())
    {
       mMacroCommands.AddToMacro(d.mSelectedCommand,
                                 d.mSelectedParameters,

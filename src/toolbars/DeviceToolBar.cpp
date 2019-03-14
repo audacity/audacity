@@ -240,7 +240,7 @@ void DeviceToolBar::UpdatePrefs()
 
    devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
-   if (sourceName == wxT(""))
+   if (sourceName.empty())
       desc = devName;
    else
       desc = devName + wxT(": ") + sourceName;
@@ -270,7 +270,7 @@ void DeviceToolBar::UpdatePrefs()
 
    devName = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/PlaybackSource"), wxT(""));
-   if (sourceName == wxT(""))
+   if (sourceName.empty())
       desc = devName;
    else
       desc = devName + wxT(": ") + sourceName;
@@ -304,7 +304,7 @@ void DeviceToolBar::UpdatePrefs()
    if (newChannels > 0 && oldChannels != newChannels)
       mInputChannels->SetSelection(newChannels - 1);
 
-   if (hostName != wxT("") && mHost->GetStringSelection() != hostName)
+   if (!hostName.empty() && mHost->GetStringSelection() != hostName)
       mHost->SetStringSelection(hostName);
 
    RegenerateTooltips();
@@ -577,7 +577,7 @@ void DeviceToolBar::FillHostDevices()
    for (i = 0; i < inMaps.size(); i++) {
       if (foundHostIndex == inMaps[i].hostIndex) {
          mInput->Append(MakeDeviceSourceString(&inMaps[i]));
-         if (host == wxT("")) {
+         if (host.empty()) {
             host = inMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
             mHost->SetStringSelection(host);
@@ -592,7 +592,7 @@ void DeviceToolBar::FillHostDevices()
    for (i = 0; i < outMaps.size(); i++) {
       if (foundHostIndex == outMaps[i].hostIndex) {
          mOutput->Append(MakeDeviceSourceString(&outMaps[i]));
-         if (host == wxT("")) {
+         if (host.empty()) {
             host = outMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
             gPrefs->Flush();

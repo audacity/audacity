@@ -658,27 +658,27 @@ void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
          else
             remainder.ToDouble(&mScalingFactor);
          i = format.length()-1; // force break out of loop
-         if (delimStr != wxT(""))
+         if (!delimStr.empty())
             handleDelim = true;
-         if (numStr != wxT(""))
+         if (!numStr.empty())
             handleNum = true;
       }
       else if ((format[i] >= '0' && format[i] <='9') ||
           format[i] == wxT('*') || format[i] == wxT('#')) {
          numStr += format[i];
-         if (delimStr != wxT(""))
+         if (!delimStr.empty())
             handleDelim = true;
       }
       else {
          delimStr += format[i];
-         if (numStr != wxT(""))
+         if (!numStr.empty())
             handleNum = true;
       }
 
       if (i == format.length() - 1) {
-         if (numStr != wxT(""))
+         if (!numStr.empty())
             handleNum = true;
-         if (delimStr != wxT(""))
+         if (!delimStr.empty())
             handleDelim = true;
       }
 

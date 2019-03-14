@@ -286,7 +286,7 @@ void LabelTrack::RestoreFlags( const Flags& flags )
 wxFont LabelTrack::GetFont(const wxString &faceName, int size)
 {
    wxFontEncoding encoding;
-   if (faceName == wxT(""))
+   if (faceName.empty())
       encoding = wxFONTENCODING_DEFAULT;
    else
       encoding = wxFONTENCODING_SYSTEM;

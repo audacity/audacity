@@ -589,7 +589,7 @@ DirManager::ProjectSetter::Impl::Impl(
 , moving{ moving_ }
 {
    // Choose new paths
-   if (newProjPath == wxT(""))
+   if (newProjPath.empty())
       newProjPath = ::wxGetCwd();
 
    dirManager.projPath = newProjPath;
@@ -815,7 +815,7 @@ wxLongLong DirManager::GetFreeDiskSpace()
 
 wxString DirManager::GetDataFilesDir() const
 {
-   return projFull != wxT("")? projFull: mytemp;
+   return !projFull.empty()? projFull: mytemp;
 }
 
 void DirManager::SetLocalTempDir(const wxString &path)
@@ -1031,7 +1031,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
             dirMidPool.erase(midkey);
 
             // DELETE the actual directory
-            wxString dir=(projFull != wxT("")? projFull: mytemp);
+            wxString dir=(!projFull.empty()? projFull: mytemp);
             dir += wxFILE_SEP_PATH;
             dir += file.Mid(0,3);
             dir += wxFILE_SEP_PATH;
@@ -1051,7 +1051,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
                if(--dirTopPool[topnum]<1){
                   // do *not* erase the hash entry from dirTopPool
                   // *do* DELETE the actual directory
-                  dir=(projFull != wxT("")? projFull: mytemp);
+                  dir=(!projFull.empty()? projFull: mytemp);
                   dir += wxFILE_SEP_PATH;
                   dir += file.Mid(0,3);
                   wxFileName::Rmdir(dir);
@@ -1695,7 +1695,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    }
 
    wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   wxString dirPath = (!projFull.empty() ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
@@ -2151,7 +2151,7 @@ void DirManager::FindOrphanBlockFiles(
 void DirManager::RemoveOrphanBlockfiles()
 {
    wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   wxString dirPath = (!projFull.empty() ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree

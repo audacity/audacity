@@ -3898,7 +3898,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    wxString project, projName, projPath;
 
    auto cleanup = finally( [&] {
-      if (safetyFileName != wxT("")) {
+      if (!safetyFileName.empty()) {
          if (wxFileExists(mFileName))
             wxRemove(mFileName);
          wxRename(safetyFileName, mFileName);
@@ -4071,7 +4071,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    // If we get here, saving the project was successful, so we can DELETE
    // the .bak file (because it now does not fit our block files anymore
    // anyway).
-   if (safetyFileName != wxT(""))
+   if (!safetyFileName.empty())
       wxRemoveFile(safetyFileName),
       // cancel the cleanup:
       safetyFileName = wxT("");
@@ -4495,7 +4495,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
          wxFD_SAVE | wxRESIZE_BORDER,
          this);
 
-      if (fName == wxT(""))
+      if (fName.empty())
          return false;
 
       filename = fName;
@@ -5395,7 +5395,7 @@ bool AudacityProject::IsProjectSaved() {
    // Otherwise it becomes true only when a project is first saved successfully
    // in DirManager::SetProject
    wxString sProjectName = mDirManager->GetProjectName();
-   return (sProjectName != wxT(""));
+   return (!sProjectName.empty());
 }
 
 // This is done to empty out the tracks, but without creating a new project.

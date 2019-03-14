@@ -241,10 +241,10 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
       if (fullCode.length() < 2)
          continue;
 
-      if (localLanguageName[code] != wxT("")) {
+      if (!localLanguageName[code].empty()) {
          name = localLanguageName[code];
       }
-      if (localLanguageName[fullCode] != wxT("")) {
+      if (!localLanguageName[fullCode].empty()) {
          name = localLanguageName[fullCode];
       }
 
@@ -252,7 +252,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
          code = fullCode;
       }
 
-      if (tempHash[code] != wxT(""))
+      if (!tempHash[code].empty())
          continue;
 
       if (TranslationExists(audacityPathList, code) || code==wxT("en")) {

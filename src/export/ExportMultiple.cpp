@@ -391,12 +391,12 @@ void ExportMultiple::EnableControls()
    bool ok = true;
 
    if (mLabel->GetValue() && mFirst->GetValue() &&
-       mFirstFileName->GetValue() == wxT("") &&
-       mPrefix->GetValue() == wxT(""))
+       mFirstFileName->GetValue().empty() &&
+       mPrefix->GetValue().empty())
       ok = false;
 
    if (mByNumber->GetValue() &&
-       mPrefix->GetValue() == wxT(""))
+       mPrefix->GetValue().empty())
       ok = false;
 
    mExport->Enable(ok);
@@ -458,7 +458,7 @@ void ExportMultiple::OnChoose(wxCommandEvent& WXUNUSED(event))
                     _("Choose a location to save the exported files"),
                     mDir->GetValue());
    dlog.ShowModal();
-   if (dlog.GetPath() != wxT(""))
+   if (!dlog.GetPath().empty())
       mDir->SetValue(dlog.GetPath());
 }
 

@@ -204,7 +204,7 @@ bool ExportPlugin::IsExtension(const wxString & ext, int index)
       wxString defext = GetExtension(i);
       auto defexts = GetExtensions(i);
       int indofext = defexts.Index(ext, false);
-      if (defext == wxT("") || (indofext != wxNOT_FOUND))
+      if (defext.empty() || (indofext != wxNOT_FOUND))
          isext = true;
    }
    return isext;

@@ -312,7 +312,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
       wxFD_SAVE | wxRESIZE_BORDER,
       this);
 
-   if (fName == wxT(""))
+   if (fName.empty())
       return;
 
    AudacityProject* pProject = GetActiveProject();

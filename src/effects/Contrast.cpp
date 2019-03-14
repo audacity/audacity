@@ -505,7 +505,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
                         wxFD_SAVE | wxRESIZE_BORDER,
                         this);
 
-   if (fName == wxT(""))
+   if (fName.empty())
       return;
 
    wxTextFile f(fName);

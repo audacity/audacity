@@ -630,7 +630,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
                     this);    // Parent
 
    // They gave us one...
-   if (fileName != wxT("")) {
+   if (!fileName.empty()) {
       wxTextFile f;
 
       // Get at the data
@@ -678,7 +678,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       this);
 
-   if (fName == wxT(""))
+   if (fName.empty())
       return;
 
    // Move existing files out of the way.  Otherwise wxTextFile will

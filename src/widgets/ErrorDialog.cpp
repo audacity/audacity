@@ -90,7 +90,7 @@ ErrorDialog::ErrorDialog(
    long buttonMask;
 
    // only add the help button if we have a URL
-   buttonMask = (helpPage == wxT("")) ? eOkButton : (eHelpButton | eOkButton);
+   buttonMask = (helpPage.empty()) ? eOkButton : (eHelpButton | eOkButton);
    dhelpPage = helpPage;
    dClose = Close;
    dModal = modal;

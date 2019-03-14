@@ -769,7 +769,7 @@ void CommandManager::AddItem(const wxChar *name,
 
    wxString cookedParameter;
    const auto &parameter = options.parameter;
-   if( parameter == "" )
+   if( parameter.empty() )
       cookedParameter = name;
    else
       cookedParameter = parameter;
