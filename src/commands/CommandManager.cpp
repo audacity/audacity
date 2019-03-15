@@ -746,7 +746,7 @@ void CommandManager::ClearCurrentMenu()
 
 
 
-void CommandManager::AddItem(const wxChar *name,
+void CommandManager::AddItem(const CommandID &name,
                              const wxChar *label_in,
                              bool hasDialog,
                              CommandHandlerFinder finder,
@@ -767,7 +767,7 @@ void CommandManager::AddItem(const wxChar *name,
    if (mask == NoFlagsSpecified)
       mask = flags;
 
-   wxString cookedParameter;
+   CommandParameter cookedParameter;
    const auto &parameter = options.parameter;
    if( parameter.empty() )
       cookedParameter = name;
@@ -804,7 +804,7 @@ void CommandManager::AddItem(const wxChar *name,
 /// with its position in the list as the index number.
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
-void CommandManager::AddItemList(const wxString & name,
+void CommandManager::AddItemList(const CommandID & name,
                                  const ComponentInterfaceSymbol items[],
                                  size_t nItems,
                                  CommandHandlerFinder finder,
@@ -835,7 +835,7 @@ void CommandManager::AddItemList(const wxString & name,
 ///
 /// Add a command that doesn't appear in a menu.  When the key is pressed, the
 /// given function pointer will be called (via the CommandManagerListener)
-void CommandManager::AddCommand(const wxChar *name,
+void CommandManager::AddCommand(const CommandID &name,
                                 const wxChar *label,
                                 CommandHandlerFinder finder,
                                 CommandFunctorPointer callback,
@@ -844,7 +844,7 @@ void CommandManager::AddCommand(const wxChar *name,
    AddCommand(name, label, finder, callback, wxT(""), flags);
 }
 
-void CommandManager::AddCommand(const wxChar *name,
+void CommandManager::AddCommand(const CommandID &name,
                                 const wxChar *label_in,
                                 CommandHandlerFinder finder,
                                 CommandFunctorPointer callback,
@@ -858,7 +858,7 @@ void CommandManager::AddCommand(const wxChar *name,
    SetCommandFlags(name, flags, flags);
 }
 
-void CommandManager::AddGlobalCommand(const wxChar *name,
+void CommandManager::AddGlobalCommand(const CommandID &name,
                                       const wxChar *label_in,
                                       bool hasDialog,
                                       CommandHandlerFinder finder,
@@ -898,14 +898,14 @@ int CommandManager::NextIdentifier(int ID)
 ///WARNING: Does this conflict with the identifiers set for controls/windows?
 ///If it does, a workaround may be to keep controls below wxID_LOWEST
 ///and keep menus above wxID_HIGHEST
-CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
+CommandListEntry *CommandManager::NewIdentifier(const CommandID & name,
                                                 const wxString & label,
                                                 const wxString & longLabel,
                                                 bool hasDialog,
                                                 wxMenu *menu,
                                                 CommandHandlerFinder finder,
                                                 CommandFunctorPointer callback,
-                                                const wxString &nameSuffix,
+                                                const CommandID &nameSuffix,
                                                 int index,
                                                 int count,
                                                 bool bIsEffect)
@@ -925,7 +925,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                         {});
 }
 
-CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
+CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    const wxString & label,
    const wxString & longLabel,
    bool hasDialog,
@@ -933,14 +933,14 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
-   const wxString &nameSuffix,
+   const CommandID &nameSuffix,
    int index,
    int count,
    bool bIsEffect,
    const CommandParameter &parameter)
 {
    const bool multi = !nameSuffix.empty();
-   wxString name = nameIn;
+   auto name = nameIn;
 
    // If we have the identifier already, reuse it.
    CommandListEntry *prev = mCommandNameHash[name];
@@ -1201,7 +1201,7 @@ void CommandManager::EnableUsingFlags(CommandFlag flags, CommandMask mask)
    }
 }
 
-bool CommandManager::GetEnabled(const wxString &name)
+bool CommandManager::GetEnabled(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
@@ -1212,7 +1212,7 @@ bool CommandManager::GetEnabled(const wxString &name)
    return entry->enabled;
 }
 
-void CommandManager::Check(const wxString &name, bool checked)
+void CommandManager::Check(const CommandID &name, bool checked)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu || entry->isOccult) {
@@ -1231,7 +1231,7 @@ void CommandManager::Modify(const wxString &name, const wxString &newLabel)
    }
 }
 
-void CommandManager::SetKeyFromName(const wxString &name,
+void CommandManager::SetKeyFromName(const CommandID &name,
                                     const NormalizedKeyString &key)
 {
    CommandListEntry *entry = mCommandNameHash[name];
@@ -1330,7 +1330,7 @@ wxString CommandManager::DescribeCommandsAndShortcuts
       // was missing from the translation file and defaulted to the English.
       auto piece = wxString::Format(wxT("%s%s"), mark, pair.Translated());
 
-      wxString name{ pair.Internal() };
+      auto name = pair.Internal();
       if (!name.empty()) {
          auto keyStr = GetKeyFromName(name);
          if (!keyStr.empty()){
@@ -1541,7 +1541,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 /// HandleTextualCommand() allows us a limitted version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
-bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandContext & context, CommandFlag flags, CommandMask mask)
+bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, CommandMask mask)
 {
    if( Str.empty() )
       return false;
@@ -1622,7 +1622,7 @@ void CommandManager::GetCategories(wxArrayString &cats)
 #endif
 }
 
-void CommandManager::GetAllCommandNames(wxArrayString &names,
+void CommandManager::GetAllCommandNames(CommandIDs &names,
                                         bool includeMultis) const
 {
    for(const auto &entry : mCommandList) {
@@ -1655,7 +1655,7 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
 }
 
 void CommandManager::GetAllCommandData(
-   wxArrayString &names,
+   CommandIDs &names,
    std::vector<NormalizedKeyString> &keys,
    std::vector<NormalizedKeyString> &default_keys,
    wxArrayString &labels,
@@ -1695,15 +1695,15 @@ void CommandManager::GetAllCommandData(
    }
 }
 
-wxString CommandManager::GetNameFromID(int id)
+CommandID CommandManager::GetNameFromID(int id)
 {
    CommandListEntry *entry = mCommandIDHash[id];
    if (!entry)
-      return wxT("");
+      return {};
    return entry->name;
 }
 
-wxString CommandManager::GetLabelFromName(const wxString &name)
+wxString CommandManager::GetLabelFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1712,7 +1712,7 @@ wxString CommandManager::GetLabelFromName(const wxString &name)
    return entry->longLabel;
 }
 
-wxString CommandManager::GetPrefixedLabelFromName(const wxString &name)
+wxString CommandManager::GetPrefixedLabelFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1729,7 +1729,7 @@ wxString CommandManager::GetPrefixedLabelFromName(const wxString &name)
 #endif
 }
 
-wxString CommandManager::GetCategoryFromName(const wxString &name)
+wxString CommandManager::GetCategoryFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1738,7 +1738,7 @@ wxString CommandManager::GetCategoryFromName(const wxString &name)
    return entry->labelTop;
 }
 
-NormalizedKeyString CommandManager::GetKeyFromName(const wxString &name) const
+NormalizedKeyString CommandManager::GetKeyFromName(const CommandID &name) const
 {
    CommandListEntry *entry =
       // May create a NULL entry
@@ -1749,7 +1749,7 @@ NormalizedKeyString CommandManager::GetKeyFromName(const wxString &name) const
    return entry->key;
 }
 
-NormalizedKeyString CommandManager::GetDefaultKeyFromName(const wxString &name)
+NormalizedKeyString CommandManager::GetDefaultKeyFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
@@ -1847,7 +1847,7 @@ void CommandManager::EndOccultCommands()
    mTempMenuBar.reset();
 }
 
-void CommandManager::SetCommandFlags(const wxString &name,
+void CommandManager::SetCommandFlags(const CommandID &name,
                                      CommandFlag flags, CommandMask mask)
 {
    CommandListEntry *entry = mCommandNameHash[name];

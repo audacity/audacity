@@ -387,7 +387,7 @@ struct ItemData
 {
    std::vector<PluginDescriptor*> plugs;
    wxString name;
-   wxString path;
+   PluginPath path;
    int state;
    bool valid;
    int nameWidth;
@@ -395,7 +395,7 @@ struct ItemData
    int stateWidth;
 };
 
-using ItemDataMap = std::unordered_map<wxString, ItemData>;
+using ItemDataMap = std::unordered_map<PluginPath, ItemData>;
 
 enum
 {
@@ -455,7 +455,7 @@ private:
    int mSortColumn;
    int mSortDirection;
 
-   wxString mLongestPath;
+   PluginPath mLongestPath;
 
    wxListCtrl *mEffects;
 #if wxUSE_ACCESSIBILITY
@@ -630,7 +630,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          continue;
       }
 
-      const  wxString &path = plug.GetPath();
+      const auto &path = plug.GetPath();
       ItemData & item = mItems[path];  // will create NEW entry
       item.plugs.push_back(&plug);
       item.path = path;
@@ -646,7 +646,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       // by then.
       else if (plugType == PluginTypeStub)
       {
-         wxFileName fname = path;
+         wxFileName fname { path };
          item.name = fname.GetName().Trim(false).Trim(true);
          if (!item.valid)
          {
@@ -1151,7 +1151,7 @@ const PluginID & PluginDescriptor::GetProviderID() const
    return mProviderID;
 }
 
-const wxString & PluginDescriptor::GetPath() const
+const PluginPath & PluginDescriptor::GetPath() const
 {
    return mPath;
 }
@@ -1196,7 +1196,7 @@ void PluginDescriptor::SetProviderID(const PluginID & providerID)
    mProviderID = providerID;
 }
 
-void PluginDescriptor::SetPath(const wxString & path)
+void PluginDescriptor::SetPath(const PluginPath & path)
 {
    mPath = path;
 }
@@ -1320,14 +1320,15 @@ void PluginDescriptor::SetImporterFilterDescription(const wxString & filterDesc)
    mImporterFilterDesc = filterDesc;
 }
 
-const wxArrayString & PluginDescriptor::GetImporterExtensions() const
+const FileExtensions & PluginDescriptor::GetImporterExtensions()
+   const
 {
    return mImporterExtensions;
 }
 
-void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
+void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )
 {
-   mImporterExtensions = extensions;
+   mImporterExtensions = std::move( extensions );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1403,7 +1404,7 @@ const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
 }
 
 
-bool PluginManager::IsPluginRegistered(const wxString & path)
+bool PluginManager::IsPluginRegistered(const PluginPath &path)
 {
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
@@ -1471,8 +1472,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Import
 }
 
 void PluginManager::FindFilesInPathList(const wxString & pattern,
-                                        const wxArrayString & pathList,
-                                        wxArrayString & files,
+                                        const FilePaths & pathList,
+                                        FilePaths & files,
                                         bool directories)
 {
    
@@ -1486,7 +1487,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
 
    // TODO:  We REALLY need to figure out the "Audacity" plug-in path(s)
 
-   wxArrayString paths;
+   FilePaths paths;
 
    // Add the "per-user" plug-ins directory
    {
@@ -1507,9 +1508,9 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    paths.push_back(ff.GetPath());
 
    // Weed out duplicates
-   for (size_t i = 0, cnt = pathList.size(); i < cnt; i++)
+   for (const auto &filePath : pathList)
    {
-      ff = pathList[i];
+      ff = filePath;
       const wxString path{ ff.GetFullPath() };
       if (paths.Index(path, wxFileName::IsCaseSensitive()) == wxNOT_FOUND)
       {
@@ -1527,67 +1528,67 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    return;
 }
 
-bool PluginManager::HasSharedConfigGroup(const PluginID & ID, const wxString & group)
+bool PluginManager::HasSharedConfigGroup(const PluginID & ID, const RegistryPath & group)
 {
    return HasGroup(SharedGroup(ID, group));
 }
 
-bool PluginManager::GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups)
+bool PluginManager::GetSharedConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups)
 {
    return GetSubgroups(SharedGroup(ID, group), subgroups);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval)
+bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
 {
    return GetConfig(SharedKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval)
+bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval)
 {
    return GetConfig(SharedKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval)
+bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
 {
    return GetConfig(SharedKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval)
+bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval)
 {
    return GetConfig(SharedKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval)
+bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval)
 {
    return GetConfig(SharedKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value)
+bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
 }
 
-bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) 
+bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
 }
 
-bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value)
+bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
 }
 
-bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value)
+bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
 }
 
-bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value)
+bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value)
 {
    return SetConfig(SharedKey(ID, group, key), value);
 }
 
-bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group)
+bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const RegistryPath & group)
 {
    bool result = GetSettings()->DeleteGroup(SharedGroup(ID, group));
    if (result)
@@ -1598,7 +1599,7 @@ bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const wxStri
    return result;
 }
 
-bool PluginManager::RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key)
+bool PluginManager::RemoveSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
 {
    bool result = GetSettings()->DeleteEntry(SharedKey(ID, group, key));
    if (result)
@@ -1609,67 +1610,67 @@ bool PluginManager::RemoveSharedConfig(const PluginID & ID, const wxString & gro
    return result;
 }
 
-bool PluginManager::HasPrivateConfigGroup(const PluginID & ID, const wxString & group)
+bool PluginManager::HasPrivateConfigGroup(const PluginID & ID, const RegistryPath & group)
 {
    return HasGroup(PrivateGroup(ID, group));
 }
 
-bool PluginManager::GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups)
+bool PluginManager::GetPrivateConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups)
 {
    return GetSubgroups(PrivateGroup(ID, group), subgroups);
 }
 
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval)
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
 {
    return GetConfig(PrivateKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval)
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval)
 {
    return GetConfig(PrivateKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval)
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
 {
    return GetConfig(PrivateKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval)
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval)
 {
    return GetConfig(PrivateKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval)
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval)
 {
    return GetConfig(PrivateKey(ID, group, key), value, defval);
 }
 
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value)
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
 }
 
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) 
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
 }
 
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value)
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
 }
 
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value)
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
 }
 
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value)
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value)
 {
    return SetConfig(PrivateKey(ID, group, key), value);
 }
 
-bool PluginManager::RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group)
+bool PluginManager::RemovePrivateConfigSubgroup(const PluginID & ID, const RegistryPath & group)
 {
    bool result = GetSettings()->DeleteGroup(PrivateGroup(ID, group));
    if (result)
@@ -1680,7 +1681,7 @@ bool PluginManager::RemovePrivateConfigSubgroup(const PluginID & ID, const wxStr
    return result;
 }
 
-bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key)
+bool PluginManager::RemovePrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
 {
    bool result = GetSettings()->DeleteEntry(PrivateKey(ID, group, key));
    if (result)
@@ -2199,7 +2200,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             {
                continue;
             }
-            wxArrayString extensions;
+            FileExtensions extensions;
             wxStringTokenizer tkr(strVal, wxT(":"));
             while (tkr.HasMoreTokens())
             {
@@ -2772,7 +2773,7 @@ wxFileConfig *PluginManager::GetSettings()
    return mSettings.get();
 }
 
-bool PluginManager::HasGroup(const wxString & group)
+bool PluginManager::HasGroup(const RegistryPath & group)
 {
    wxFileConfig *settings = GetSettings();
 
@@ -2789,7 +2790,7 @@ bool PluginManager::HasGroup(const wxString & group)
    return res;
 }
 
-bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgroups)
+bool PluginManager::GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups)
 {
    if (group.empty() || !HasGroup(group))
    {
@@ -2814,7 +2815,7 @@ bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgrou
    return true;
 }
 
-bool PluginManager::GetConfig(const wxString & key, int & value, int defval)
+bool PluginManager::GetConfig(const RegistryPath & key, int & value, int defval)
 {
    bool result = false;
 
@@ -2826,7 +2827,7 @@ bool PluginManager::GetConfig(const wxString & key, int & value, int defval)
    return result;
 }
 
-bool PluginManager::GetConfig(const wxString & key, wxString & value, const wxString & defval)
+bool PluginManager::GetConfig(const RegistryPath & key, wxString & value, const wxString & defval)
 {
    bool result = false;
 
@@ -2842,7 +2843,7 @@ bool PluginManager::GetConfig(const wxString & key, wxString & value, const wxSt
    return result;
 }
 
-bool PluginManager::GetConfig(const wxString & key, bool & value, bool defval)
+bool PluginManager::GetConfig(const RegistryPath & key, bool & value, bool defval)
 {
    bool result = false;
 
@@ -2854,7 +2855,7 @@ bool PluginManager::GetConfig(const wxString & key, bool & value, bool defval)
    return result;
 }
 
-bool PluginManager::GetConfig(const wxString & key, float & value, float defval)
+bool PluginManager::GetConfig(const RegistryPath & key, float & value, float defval)
 {
    bool result = false;
 
@@ -2870,7 +2871,7 @@ bool PluginManager::GetConfig(const wxString & key, float & value, float defval)
    return result;
 }
 
-bool PluginManager::GetConfig(const wxString & key, double & value, double defval)
+bool PluginManager::GetConfig(const RegistryPath & key, double & value, double defval)
 {
    bool result = false;
 
@@ -2882,7 +2883,7 @@ bool PluginManager::GetConfig(const wxString & key, double & value, double defva
    return result;
 }
 
-bool PluginManager::SetConfig(const wxString & key, const wxString & value)
+bool PluginManager::SetConfig(const RegistryPath & key, const wxString & value)
 {
    bool result = false;
 
@@ -2899,7 +2900,7 @@ bool PluginManager::SetConfig(const wxString & key, const wxString & value)
    return result;
 }
 
-bool PluginManager::SetConfig(const wxString & key, const int & value) 
+bool PluginManager::SetConfig(const RegistryPath & key, const int & value)
 {
    bool result = false;
 
@@ -2915,7 +2916,7 @@ bool PluginManager::SetConfig(const wxString & key, const int & value)
    return result;
 }
 
-bool PluginManager::SetConfig(const wxString & key, const bool & value)
+bool PluginManager::SetConfig(const RegistryPath & key, const bool & value)
 {
    bool result = false;
 
@@ -2931,7 +2932,7 @@ bool PluginManager::SetConfig(const wxString & key, const bool & value)
    return result;
 }
 
-bool PluginManager::SetConfig(const wxString & key, const float & value)
+bool PluginManager::SetConfig(const RegistryPath & key, const float & value)
 {
    bool result = false;
 
@@ -2947,7 +2948,7 @@ bool PluginManager::SetConfig(const wxString & key, const float & value)
    return result;
 }
 
-bool PluginManager::SetConfig(const wxString & key, const double & value)
+bool PluginManager::SetConfig(const RegistryPath & key, const double & value)
 {
    bool result = false;
 
@@ -2964,7 +2965,7 @@ bool PluginManager::SetConfig(const wxString & key, const double & value)
 }
 
 /* Return value is a key for lookup in a config file */
-wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
+RegistryPath PluginManager::SettingsPath(const PluginID & ID, bool shared)
 {
    // All the strings reported by PluginDescriptor and used in this function
    // persist in the plugin settings configuration file, so they should not
@@ -2994,7 +2995,7 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
 }
 
 /* Return value is a key for lookup in a config file */
-wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
+RegistryPath PluginManager::SharedGroup(const PluginID & ID, const RegistryPath & group)
 {
    wxString path = SettingsPath(ID, true);
 
@@ -3008,9 +3009,9 @@ wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
 }
 
 /* Return value is a key for lookup in a config file */
-wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, const wxString & key)
+RegistryPath PluginManager::SharedKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
 {
-   wxString path = SharedGroup(ID, group);
+   auto path = SharedGroup(ID, group);
    if (path.empty())
    {
       return path;
@@ -3020,9 +3021,9 @@ wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, c
 }
 
 /* Return value is a key for lookup in a config file */
-wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group)
+RegistryPath PluginManager::PrivateGroup(const PluginID & ID, const RegistryPath & group)
 {
-   wxString path = SettingsPath(ID, false);
+   auto path = SettingsPath(ID, false);
 
    wxFileName ff(group);
    if (!ff.GetName().empty())
@@ -3034,9 +3035,9 @@ wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group
 }
 
 /* Return value is a key for lookup in a config file */
-wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, const wxString & key)
+RegistryPath PluginManager::PrivateKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
 {
-   wxString path = PrivateGroup(ID, group);
+   auto path = PrivateGroup(ID, group);
    if (path.empty())
    {
       return path;

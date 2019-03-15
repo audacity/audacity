@@ -96,7 +96,7 @@ NyquistEffectsModule::~NyquistEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString NyquistEffectsModule::GetPath()
+PluginPath NyquistEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -128,7 +128,7 @@ wxString NyquistEffectsModule::GetDescription()
 
 bool NyquistEffectsModule::Initialize()
 {
-   auto audacityPathList = wxGetApp().audacityPathList;
+   const auto &audacityPathList = wxGetApp().audacityPathList;
 
    for (size_t i = 0, cnt = audacityPathList.size(); i < cnt; i++)
    {
@@ -155,14 +155,12 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
-wxArrayString NyquistEffectsModule::GetFileExtensions()
+FileExtensions NyquistEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = { _T("ny") };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   return {{ _T("ny") }};
 }
 
-wxString NyquistEffectsModule::InstallPath()
+FilePath NyquistEffectsModule::InstallPath()
 {
    return FileNames::PlugInDir();
 }
@@ -171,8 +169,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
-   wxArrayString files;
+   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   FilePaths files;
    wxString ignoredErrMsg;
 
    if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
@@ -201,10 +199,10 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    auto pathList = NyquistEffect::GetNyquistSearchPath();
-   wxArrayString files;
+   FilePaths files;
 
    // Add the Nyquist prompt
    files.push_back(NYQUIST_PROMPT_ID);
@@ -214,11 +212,11 @@ wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    // LLL:  Works for all platform with NEW plugin support (dups are removed)
    pm.FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -234,7 +232,7 @@ unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool NyquistEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    // Ignores bFast parameter, since checking file exists is fast enough for
    // the small number of Nyquist plug-ins that we have.
@@ -245,7 +243,7 @@ bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(path);
 }
 
-ComponentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *NyquistEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    auto effect = std::make_unique<NyquistEffect>(path);

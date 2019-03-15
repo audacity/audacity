@@ -15,6 +15,7 @@
 #define __AUDACITY_APP__
 
 #include "Audacity.h"
+#include "audacity/Types.h"
 
 #include "MemoryX.h"
 #include <wx/app.h>
@@ -91,7 +92,7 @@ class AudacityApp final : public wxApp {
    void OnMRUClear(wxCommandEvent &event);
    void OnMRUFile(wxCommandEvent &event);
    // Backend for above - returns true for success, false for failure
-   bool MRUOpen(const wxString &fileName);
+   bool MRUOpen(const FilePath &fileName);
    // A wrapper of the above that does not throw
    bool SafeMRUOpen(const wxString &fileName);
 
@@ -140,24 +141,24 @@ class AudacityApp final : public wxApp {
     * directories can be specified using the AUDACITY_PATH environment
     * variable.  On Windows or Mac OS, this will include the directory
     * which contains the Audacity program. */
-   wxArrayString audacityPathList;
+   FilePaths audacityPathList;
 
    /** \brief Default temp directory */
    wxString defaultTempDir;
 
    // Useful functions for working with search paths
-   static void AddUniquePathToPathList(const wxString &path,
-                                       wxArrayString &pathList);
+   static void AddUniquePathToPathList(const FilePath &path,
+                                       FilePaths &pathList);
    static void AddMultiPathsToPathList(const wxString &multiPathString,
-                                       wxArrayString &pathList);
+                                       FilePaths &pathList);
    static void FindFilesInPathList(const wxString & pattern,
-                                   const wxArrayString & pathList,
-                                   wxArrayString &results,
+                                   const FilePaths & pathList,
+                                   FilePaths &results,
                                    int flags = wxDIR_FILES);
    static bool IsTempDirectoryNameOK( const wxString & Name );
 
    FileHistory *GetRecentFiles() {return mRecentFiles.get();}
-   void AddFileToHistory(const wxString & name);
+   void AddFileToHistory(const FilePath & name);
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
 

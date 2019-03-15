@@ -159,8 +159,8 @@ wxMemorySize GetFreeMemory()
 // JKC: Using flag wxDIR_NO_FOLLOW to NOT follow symbolic links.
 // Directories and files inside a project should never be symbolic 
 // links, so if we find one, do not follow it.
-static int RecursivelyEnumerate(wxString dirPath,
-                                  wxArrayString& filePathArray,  // output: all files in dirPath tree
+static int RecursivelyEnumerate(const FilePath &dirPath,
+                                  FilePaths& filePathArray,  // output: all files in dirPath tree
                                   wxString dirspec,
                                   wxString filespec,
                                   bool bFiles, bool bDirs,
@@ -180,7 +180,7 @@ static int RecursivelyEnumerate(wxString dirPath,
       if (bFiles && dirspec.empty() ){
          cont= dir.GetFirst(&name, filespec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
          while ( cont ){
-            wxString filepath = dirPath + wxFILE_SEP_PATH + name;
+            FilePath filepath = dirPath + wxFILE_SEP_PATH + name;
 
             count++;
             filePathArray.push_back(filepath);
@@ -195,7 +195,7 @@ static int RecursivelyEnumerate(wxString dirPath,
 
       cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS | wxDIR_NO_FOLLOW);
       while ( cont ){
-         wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+         FilePath subdirPath = dirPath + wxFILE_SEP_PATH + name;
          count += RecursivelyEnumerate(
                      subdirPath, filePathArray, wxEmptyString,filespec,
                      bFiles, bDirs,
@@ -213,8 +213,8 @@ static int RecursivelyEnumerate(wxString dirPath,
    return count;
 }
 
-static int RecursivelyEnumerateWithProgress(wxString dirPath,
-                                             wxArrayString& filePathArray, // output: all files in dirPath tree
+static int RecursivelyEnumerateWithProgress(const FilePath &dirPath,
+                                             FilePaths& filePathArray, // output: all files in dirPath tree
                                              wxString dirspec,
                                              wxString filespec,
                                              bool bFiles, bool bDirs,
@@ -235,7 +235,7 @@ static int RecursivelyEnumerateWithProgress(wxString dirPath,
    return count;
 }
 
-static int RecursivelyCountSubdirs(wxString dirPath)
+static int RecursivelyCountSubdirs( const FilePath &dirPath )
 {
    bool bContinue;
    int nCount = 0;
@@ -247,7 +247,7 @@ static int RecursivelyCountSubdirs(wxString dirPath)
       while (bContinue)
       {
          nCount++;
-         wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+         FilePath subdirPath = dirPath + wxFILE_SEP_PATH + name;
          nCount += RecursivelyCountSubdirs(subdirPath);
          bContinue = dir.GetNext(&name);
       }
@@ -255,7 +255,7 @@ static int RecursivelyCountSubdirs(wxString dirPath)
    return nCount;
 }
 
-static int RecursivelyRemoveEmptyDirs(wxString dirPath,
+static int RecursivelyRemoveEmptyDirs(const FilePath &dirPath,
                                        int nDirCount = 0,
                                        ProgressDialog* pProgress = NULL)
 {
@@ -270,7 +270,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
          bContinue = dir.GetFirst(&name, wxEmptyString, wxDIR_DIRS);
          while (bContinue)
          {
-            wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+            FilePath subdirPath = dirPath + wxFILE_SEP_PATH + name;
             nCount += RecursivelyRemoveEmptyDirs(subdirPath, nDirCount, pProgress);
             bContinue = dir.GetNext(&name);
          }
@@ -300,7 +300,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
    return nCount;
 }
 
-static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
+static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
                               int flags, const wxChar* message = NULL)
 {
    bool bFiles= (flags & kCleanFiles) != 0;
@@ -313,8 +313,8 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
       progress.create( _("Progress"), message );
 
    auto nn = filePathArray.size();
-   for (unsigned int i = 0; i < nn; i++) {
-      const wxChar *file = filePathArray[i];
+   for ( size_t ii = 0; ii < nn; ++ii ) {
+      const auto &file = filePathArray[ ii ];
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs) {
@@ -351,7 +351,7 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
          }
       }
       if (progress)
-         progress->Update(i + bias, count);
+         progress->Update(ii + bias, count);
    }
 }
 
@@ -442,7 +442,7 @@ void DirManager::CleanTempDir()
 
 // static
 void DirManager::CleanDir(
-   const wxString &path, 
+   const FilePath &path,
    const wxString &dirSpec, 
    const wxString &fileSpec, 
    const wxString &msg,
@@ -451,7 +451,7 @@ void DirManager::CleanDir(
    if (dontDeleteTempFiles)
       return; // do nothing
 
-   wxArrayString filePathArray, dirPathArray;
+   FilePaths filePathArray, dirPathArray;
 
    int countFiles =
       RecursivelyEnumerate(path, filePathArray, dirSpec, fileSpec, true, false);
@@ -477,7 +477,7 @@ void DirManager::CleanDir(
 namespace {
    struct PathRestorer {
       PathRestorer(
-         bool &commitFlag, wxString &path, wxString &name, wxString &full )
+         bool &commitFlag, FilePath &path, FilePath &name, FilePath &full )
          : committed( commitFlag )
 
          , projPath( path )
@@ -496,12 +496,12 @@ namespace {
       }
 
       bool &committed;
-      wxString &projPath, &projName, &projFull;
-      const wxString oldPath, oldName, oldFull;
+      FilePath &projPath, &projName, &projFull;
+      const FilePath oldPath, oldName, oldFull;
    };
 
    struct DirCleaner {
-      DirCleaner( bool &commitFlag, const wxString &path )
+      DirCleaner( bool &commitFlag, const FilePath &path )
          : committed( commitFlag )
          , fullPath( path )
       {}
@@ -517,7 +517,7 @@ namespace {
       }
 
       bool &committed;
-      wxString fullPath;
+      FilePath fullPath;
    };
 }
 
@@ -525,7 +525,7 @@ struct DirManager::ProjectSetter::Impl
 {
    Impl(
       DirManager &dm,
-      wxString& newProjPath, const wxString& newProjName, const bool bCreate,
+      FilePath& newProjPath, const FilePath& newProjName, const bool bCreate,
       bool moving );
 
    void Commit();
@@ -545,8 +545,8 @@ struct DirManager::ProjectSetter::Impl
    
    // State variables to carry over into Commit()
    // Remember old path to be cleaned up in case of successful move
-   wxString oldFull{ dirManager.projFull };
-   wxArrayString newPaths;
+   FilePath oldFull{ dirManager.projFull };
+   FilePaths newPaths;
    size_t trueTotal{ 0 };
    bool moving{ true };
 
@@ -556,7 +556,7 @@ struct DirManager::ProjectSetter::Impl
 
 DirManager::ProjectSetter::ProjectSetter(
    DirManager &dirManager,
-   wxString& newProjPath, const wxString& newProjName, const bool bCreate,
+   FilePath& newProjPath, const FilePath& newProjName, const bool bCreate,
    bool moving )
    : mpImpl{
       std::make_unique<Impl>( dirManager, newProjPath, newProjName, bCreate,
@@ -583,7 +583,7 @@ void DirManager::ProjectSetter::Commit()
 
 DirManager::ProjectSetter::Impl::Impl(
    DirManager &dm,
-   wxString& newProjPath, const wxString& newProjName, const bool bCreate,
+   FilePath& newProjPath, const FilePath& newProjName, const bool bCreate,
    bool moving_ )
 : dirManager{ dm }
 , moving{ moving_ }
@@ -670,7 +670,7 @@ DirManager::ProjectSetter::Impl::Impl(
          if( progress.Update(newPaths.size(), total) != ProgressResult::Success )
             return;
 
-         wxString newPath;
+         FilePath newPath;
          if (auto b = pair.second.lock()) {
             auto result =
                dirManager.LinkOrCopyToNewProjectDirectory( &*b, link );
@@ -773,7 +773,7 @@ void DirManager::ProjectSetter::Impl::Commit()
 }
 
 bool DirManager::SetProject(
-   wxString& newProjPath, const wxString& newProjName, const bool bCreate)
+   FilePath& newProjPath, const FilePath& newProjName, const bool bCreate)
 {
    ProjectSetter setter{ *this, newProjPath, newProjName, bCreate, true };
    if (!setter.Ok())
@@ -782,12 +782,12 @@ bool DirManager::SetProject(
    return true;
 }
 
-wxString DirManager::GetProjectDataDir()
+FilePath DirManager::GetProjectDataDir()
 {
    return projFull;
 }
 
-wxString DirManager::GetProjectName()
+FilePath DirManager::GetProjectName()
 {
    return projName;
 }
@@ -813,7 +813,7 @@ wxLongLong DirManager::GetFreeDiskSpace()
    return freeSpace;
 }
 
-wxString DirManager::GetDataFilesDir() const
+FilePath DirManager::GetDataFilesDir() const
 {
    return !projFull.empty()? projFull: mytemp;
 }
@@ -1031,7 +1031,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
             dirMidPool.erase(midkey);
 
             // DELETE the actual directory
-            wxString dir=(!projFull.empty()? projFull: mytemp);
+            auto dir = !projFull.empty() ? projFull : mytemp;
             dir += wxFILE_SEP_PATH;
             dir += file.Mid(0,3);
             dir += wxFILE_SEP_PATH;
@@ -1197,7 +1197,7 @@ BlockFilePtr DirManager::NewSimpleBlockFile(
 }
 
 BlockFilePtr DirManager::NewAliasBlockFile(
-                                 const wxString &aliasedFile, sampleCount aliasStart,
+                                 const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
@@ -1214,7 +1214,7 @@ BlockFilePtr DirManager::NewAliasBlockFile(
 }
 
 BlockFilePtr DirManager::NewODAliasBlockFile(
-                                 const wxString &aliasedFile, sampleCount aliasStart,
+                                 const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
@@ -1231,7 +1231,7 @@ BlockFilePtr DirManager::NewODAliasBlockFile(
 }
 
 BlockFilePtr DirManager::NewODDecodeBlockFile(
-                                 const wxString &aliasedFile, sampleCount aliasStart,
+                                 const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel, int decodeType)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
@@ -1435,10 +1435,10 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-std::pair<bool, wxString> DirManager::LinkOrCopyToNewProjectDirectory(
+std::pair<bool, FilePath> DirManager::LinkOrCopyToNewProjectDirectory(
    BlockFile *f, bool &link )
 {
-   wxString newPath;
+   FilePath newPath;
    auto result = f->GetFileName();
    const auto &oldFileNameRef = result.name;
 
@@ -1694,8 +1694,8 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
          nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
    }
 
-   wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (!projFull.empty() ? projFull : mytemp);
+   FilePaths filePathArray; // *all* files in the project directory/subdirectories
+   auto dirPath = (!projFull.empty() ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
@@ -1936,7 +1936,7 @@ _("Project check of \"%s\" folder \
    //
    // ORPHAN BLOCKFILES (.au and .auf files that are not in the project.)
    //
-   wxArrayString orphanFilePathArray;     // orphan .au and .auf files
+   FilePaths orphanFilePathArray;     // orphan .au and .auf files
    this->FindOrphanBlockFiles(filePathArray, orphanFilePathArray);
 
    if ((nResult != FSCKstatus_CLOSE_REQ) && !orphanFilePathArray.empty())
@@ -1978,8 +1978,8 @@ other projects. \
          // Plus they affect none of the valid tracks, so incorrect to mark them changed,
          // and no need for refresh.
          //    nResult |= FSCKstatus_CHANGED;
-         for (size_t i = 0; i < orphanFilePathArray.size(); i++)
-            wxRemoveFile(orphanFilePathArray[i]);
+         for ( const auto &orphan : orphanFilePathArray )
+            wxRemoveFile(orphan);
       }
    }
 
@@ -2112,8 +2112,8 @@ void DirManager::FindMissingAUs(
 
 // Find .au and .auf files that are not in the project.
 void DirManager::FindOrphanBlockFiles(
-      const wxArrayString& filePathArray,       // input: all files in project directory
-      wxArrayString& orphanFilePathArray)       // output: orphan files
+      const FilePaths &filePathArray,       // input: all files in project directory
+      FilePaths &orphanFilePathArray)       // output: orphan files
 {
    DirManager *clipboardDM = NULL;
 
@@ -2143,15 +2143,15 @@ void DirManager::FindOrphanBlockFiles(
             orphanFilePathArray.push_back(fullname.GetFullPath());
       }
    }
-   for (size_t i = 0; i < orphanFilePathArray.size(); i++)
-      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i]);
+   for ( const auto &orphan : orphanFilePathArray )
+      wxLogWarning(_("Orphan block file: '%s'"), orphan);
 }
 
 
 void DirManager::RemoveOrphanBlockfiles()
 {
-   wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (!projFull.empty() ? projFull : mytemp);
+   FilePaths filePathArray; // *all* files in the project directory/subdirectories
+   auto dirPath = (!projFull.empty() ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
@@ -2161,14 +2161,14 @@ void DirManager::RemoveOrphanBlockfiles()
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
       _("Inspecting project file data"));
 
-   wxArrayString orphanFilePathArray;
+   FilePaths orphanFilePathArray;
    this->FindOrphanBlockFiles(
             filePathArray,          // input: all files in project directory tree
             orphanFilePathArray);   // output: orphan files
 
    // Remove all orphan blockfiles.
-   for (size_t i = 0; i < orphanFilePathArray.size(); i++)
-      wxRemoveFile(orphanFilePathArray[i]);
+   for ( const auto &orphan : orphanFilePathArray )
+      wxRemoveFile(orphan);
 }
 
 void DirManager::FillBlockfilesCache()

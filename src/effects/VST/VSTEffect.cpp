@@ -226,7 +226,7 @@ public:
 
    // EffectClientInterface implementation
 
-   wxString GetPath() override
+   PluginPath GetPath() override
    {
       return mPath;
    }
@@ -321,7 +321,7 @@ VSTEffectsModule::~VSTEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString VSTEffectsModule::GetPath()
+PluginPath VSTEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -363,14 +363,12 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
-wxArrayString VSTEffectsModule::GetFileExtensions()
+FileExtensions VSTEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = { _T("vst") };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   return {{ _T("vst") }};
 }
 
-wxString VSTEffectsModule::InstallPath()
+FilePath VSTEffectsModule::InstallPath()
 {
    // Not yet ready for VST drag-and-drop...
    // return FileNames::PlugInDir();
@@ -384,10 +382,10 @@ bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
    return true;
 }
 
-wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList;
-   wxArrayString files;
+   FilePaths pathList;
+   FilePaths files;
 
    // Check for the VST_PATH environment variable
    wxString vstpath = wxString::FromUTF8(getenv("VST_PATH"));
@@ -490,18 +488,18 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 
 #endif
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned VSTEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    bool error = false;
    unsigned nFound = 0;
    errMsg.clear();
    // TODO:  Fix this for external usage
-   const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
+   const auto &cmdpath = PlatformCompatibility::GetExecutablePath();
 
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));
@@ -669,7 +667,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    return nFound;
 }
 
-bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
@@ -677,7 +675,7 @@ bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-ComponentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VSTEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
@@ -1123,7 +1121,7 @@ void VSTEffect::ResourceHandle::reset()
 }
 #endif
 
-VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
+VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
@@ -1185,7 +1183,7 @@ VSTEffect::~VSTEffect()
 // ComponentInterface Implementation
 // ============================================================================
 
-wxString VSTEffect::GetPath()
+PluginPath VSTEffect::GetPath()
 {
    return mPath;
 }
@@ -1678,7 +1676,7 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 }
 
 
-bool VSTEffect::LoadUserPreset(const wxString & name)
+bool VSTEffect::LoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1690,14 +1688,14 @@ bool VSTEffect::LoadUserPreset(const wxString & name)
    return true;
 }
 
-bool VSTEffect::SaveUserPreset(const wxString & name)
+bool VSTEffect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
 
-wxArrayString VSTEffect::GetFactoryPresets()
+RegistryPaths VSTEffect::GetFactoryPresets()
 {
-   wxArrayString progs; 
+   RegistryPaths progs;
 
    // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
    // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
@@ -2295,7 +2293,7 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-bool VSTEffect::LoadParameters(const wxString & group)
+bool VSTEffect::LoadParameters(const RegistryPath & group)
 {
    wxString value;
 
@@ -2339,7 +2337,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool VSTEffect::SaveParameters(const wxString & group)
+bool VSTEffect::SaveParameters(const RegistryPath & group)
 {
    mHost->SetPrivateConfig(group, wxT("UniqueID"), mAEffect->uniqueID);
    mHost->SetPrivateConfig(group, wxT("Version"), mAEffect->version);

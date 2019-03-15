@@ -85,7 +85,7 @@ wxWindow * MakeHijackPanel()
 // starts a thread and reads script commands.
 static tpRegScriptServerFunc scriptFn;
 
-Module::Module(const wxString & name)
+Module::Module(const FilePath & name)
 {
    mName = name;
    mLib = std::make_unique<wxDynamicLibrary>();
@@ -212,9 +212,9 @@ ModuleManager::~ModuleManager()
 // static 
 void ModuleManager::Initialize(CommandHandler &cmdHandler)
 {
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
-   wxArrayString pathList;
-   wxArrayString files;
+   const auto &audacityPathList = wxGetApp().audacityPathList;
+   FilePaths pathList;
+   FilePaths files;
    wxString pathVar;
    size_t i;
 
@@ -240,7 +240,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       // As a courtesy to some modules that might be bridges to
       // open other modules, we set the current working
       // directory to be the module's directory.
-      wxString prefix = ::wxPathOnly(files[i]);
+      auto prefix = ::wxPathOnly(files[i]);
       ::wxSetWorkingDirectory(prefix);
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
@@ -349,8 +349,8 @@ bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
 
-   wxArrayString provList;
-   wxArrayString pathList;
+   FilePaths provList;
+   FilePaths pathList;
 
    // Code from LoadLadspa that might be useful in load modules.
    wxString pathVar = wxString::FromUTF8(getenv("AUDACITY_MODULES_PATH"));
@@ -419,7 +419,7 @@ void ModuleManager::InitializeBuiltins()
    }
 }
 
-ModuleInterface *ModuleManager::LoadModule(const wxString & path)
+ModuleInterface *ModuleManager::LoadModule(const PluginPath & path)
 {
    auto lib = std::make_unique<wxDynamicLibrary>();
 
@@ -490,12 +490,12 @@ void ModuleManager::RegisterModule(ModuleInterface *inModule)
    PluginManager::Get().RegisterPlugin(inModule);
 }
 
-void ModuleManager::FindAllPlugins(PluginIDs & providers, wxArrayString & paths)
+void ModuleManager::FindAllPlugins(PluginIDs & providers, PluginPaths & paths)
 {
    PluginManager & pm = PluginManager::Get();
 
    wxArrayString modIDs;
-   wxArrayString modPaths;
+   PluginPaths modPaths;
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeModule);
    while (plug)
    {
@@ -523,8 +523,8 @@ void ModuleManager::FindAllPlugins(PluginIDs & providers, wxArrayString & paths)
    }
 }
 
-wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
-                                                    const wxString & path)
+PluginPaths ModuleManager::FindPluginsForProvider(const PluginID & providerID,
+                                                    const PluginPath & path)
 {
    // Instantiate if it hasn't already been done
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -532,14 +532,14 @@ wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
       // If it couldn't be created, just give up and return an empty list
       if (!CreateProviderInstance(providerID, path))
       {
-         return wxArrayString();
+         return {};
       }
    }
 
    return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
+bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, wxString &errMsg)
 {
    errMsg.clear();
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -553,7 +553,7 @@ bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxSt
 }
 
 ComponentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
-                                                      const wxString & path)
+                                                      const PluginPath & path)
 {
    if (path.empty() && mDynModules.find(providerID) != mDynModules.end())
    {
@@ -564,7 +564,7 @@ ComponentInterface *ModuleManager::CreateProviderInstance(const PluginID & provi
 }
 
 ComponentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
-                                              const wxString & path)
+                                              const PluginPath & path)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
    {
@@ -586,7 +586,7 @@ void ModuleManager::DeleteInstance(const PluginID & providerID,
 }
 
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
-                                    const wxString & path)
+                                    const PluginPath & path)
 {
    // Builtin modules do not have a path
    if (path.empty())
@@ -604,7 +604,7 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
 }
 
 bool ModuleManager::IsPluginValid(const PluginID & providerID,
-                                  const wxString & path,
+                                  const PluginPath & path,
                                   bool bFast)
 {
    if (mDynModules.find(providerID) == mDynModules.end())

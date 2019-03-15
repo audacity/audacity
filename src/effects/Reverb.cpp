@@ -326,9 +326,9 @@ bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-wxArrayString EffectReverb::GetFactoryPresets()
+RegistryPaths EffectReverb::GetFactoryPresets()
 {
-   wxArrayString names;
+   RegistryPaths names;
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {

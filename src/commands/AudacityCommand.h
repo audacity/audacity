@@ -63,7 +63,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    // ComponentInterface implementation
 
    //These four can be defaulted....
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    //  virtual wxString GetFamily();

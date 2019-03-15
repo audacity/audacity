@@ -325,7 +325,7 @@ LV2Effect::~LV2Effect()
 // ComponentInterface Implementation
 // ============================================================================
 
-wxString LV2Effect::GetPath()
+PluginPath LV2Effect::GetPath()
 {
    return LilvString(lilv_plugin_get_uri(mPlug));
 }
@@ -1118,7 +1118,7 @@ bool LV2Effect::CloseUI()
    return true;
 }
 
-bool LV2Effect::LoadUserPreset(const wxString & name)
+bool LV2Effect::LoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1128,12 +1128,12 @@ bool LV2Effect::LoadUserPreset(const wxString & name)
    return TransferDataToWindow();
 }
 
-bool LV2Effect::SaveUserPreset(const wxString & name)
+bool LV2Effect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
 
-wxArrayString LV2Effect::GetFactoryPresets()
+RegistryPaths LV2Effect::GetFactoryPresets()
 {
    if (mFactoryPresetsLoaded)
    {
@@ -1243,7 +1243,7 @@ void LV2Effect::ShowOptions()
 // LV2Effect Implementation
 // ============================================================================
 
-bool LV2Effect::LoadParameters(const wxString & group)
+bool LV2Effect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
    if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
@@ -1260,7 +1260,7 @@ bool LV2Effect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool LV2Effect::SaveParameters(const wxString & group)
+bool LV2Effect::SaveParameters(const RegistryPath & group)
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))

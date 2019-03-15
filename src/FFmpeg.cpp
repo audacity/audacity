@@ -211,7 +211,7 @@ int ufile_close(AVIOContext *pb)
 }
 
 // Open a file with a (possibly) Unicode filename
-int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
+int ufile_fopen(AVIOContext **s, const FilePath & name, int flags)
 {
    wxFile::OpenMode mode;
 
@@ -250,7 +250,7 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 
 // Detect type of input file and open it if recognized. Routine
 // based on the av_open_input_file() libavformat function.
-int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name)
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, FilePath & name)
 {
    context_ptr.reset();
    auto context = std::make_unique<FFmpegContext>();

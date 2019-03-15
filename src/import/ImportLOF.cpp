@@ -96,8 +96,7 @@
 
 #define DESC _("List of Files in basic text format")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("lof")
 };
 
@@ -105,7 +104,7 @@ class LOFImportPlugin final : public ImportPlugin
 {
 public:
    LOFImportPlugin()
-   :  ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 
@@ -113,14 +112,14 @@ public:
 
    wxString GetPluginStringID() override { return wxT("lof"); }
    wxString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 };
 
 
 class LOFImportFileHandle final : public ImportFileHandle
 {
 public:
-   LOFImportFileHandle(const wxString & name, std::unique_ptr<wxTextFile> &&file);
+   LOFImportFileHandle(const FilePath & name, std::unique_ptr<wxTextFile> &&file);
    ~LOFImportFileHandle();
 
    wxString GetFileDescription() override;
@@ -162,7 +161,7 @@ private:
 };
 
 LOFImportFileHandle::LOFImportFileHandle
-   (const wxString & name, std::unique_ptr<wxTextFile> &&file)
+   (const FilePath & name, std::unique_ptr<wxTextFile> &&file)
 :  ImportFileHandle(name),
    mTextFile(std::move(file))
    , mLOFFileName{name}
@@ -180,7 +179,7 @@ wxString LOFImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const FilePath &filename)
 {
    // Check if it is a binary file
    {

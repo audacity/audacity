@@ -21,13 +21,16 @@
 #include <wx/window.h>
 #include <wx/weakref.h>
 
+#include "audacity/Types.h"
+#include "../MemoryX.h"
+
 class AUDACITY_DLL_API FileHistory
 {
  public:
    FileHistory(size_t maxfiles = 12, wxWindowID idbase = wxID_FILE);
    virtual ~FileHistory();
 
-   void AddFileToHistory(const wxString & file, bool update = true);
+   void AddFileToHistory(const FilePath & file, bool update = true);
    void RemoveFileFromHistory(size_t i, bool update = true);
    void Clear();
    void UseMenu(wxMenu *menu);
@@ -38,7 +41,7 @@ class AUDACITY_DLL_API FileHistory
    void AddFilesToMenu(wxMenu *menu);
 
    size_t GetCount();
-   const wxString &GetHistoryFile(size_t i) const;
+   const FilePath &GetHistoryFile(size_t i) const;
 
  private:
    void Compress();
@@ -47,7 +50,7 @@ class AUDACITY_DLL_API FileHistory
    wxWindowID mIDBase;
 
    std::vector< wxWeakRef< wxMenu > > mMenus;
-   wxArrayString mHistory;
+   FilePaths mHistory;
 
 };
 

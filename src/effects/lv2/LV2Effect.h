@@ -109,7 +109,7 @@ public:
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -172,10 +172,10 @@ public:
    bool HideUI() override;
    bool CloseUI() override;
 
-   bool LoadUserPreset(const wxString & name) override;
-   bool SaveUserPreset(const wxString & name) override;
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
 
-   wxArrayString GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -192,8 +192,8 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(const wxString & group);
-   bool SaveParameters(const wxString & group);
+   bool LoadParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group);
 
    LilvInstance *InitInstance(float sampleRate);
    void FreeInstance(LilvInstance *handle);
@@ -321,7 +321,7 @@ private:
    ArrayOf<wxTextCtrl*> mFields;
 
    bool mFactoryPresetsLoaded;
-   wxArrayString mFactoryPresetNames;
+   RegistryPaths mFactoryPresetNames;
    wxArrayString mFactoryPresetUris;
 
    DECLARE_EVENT_TABLE()

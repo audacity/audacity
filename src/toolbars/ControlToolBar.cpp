@@ -227,7 +227,7 @@ void ControlToolBar::RegenerateTooltips()
    for (long iWinID = ID_PLAY_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
       auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
-      const wxChar *name = nullptr;
+      CommandID name;
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:

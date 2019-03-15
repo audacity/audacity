@@ -15,6 +15,8 @@
 
 #include "../Internat.h"
 
+#include "audacity/Types.h"
+
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
 template <typename Base>
@@ -150,8 +152,8 @@ public:
    FileDialogWrapper(
       wxWindow *parent,
       const wxString& message = _("Select a file"),
-      const wxString& defaultDir = {},
-      const wxString& defaultFile = {},
+      const FilePath& defaultDir = {},
+      const FilePath& defaultFile = {},
       const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
@@ -166,8 +168,8 @@ public:
    void Create(
       wxWindow *parent,
       const wxString& message = _("Select a file"),
-      const wxString& defaultDir = {},
-      const wxString& defaultFile = {},
+      const FilePath& defaultDir = {},
+      const FilePath& defaultFile = {},
       const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,

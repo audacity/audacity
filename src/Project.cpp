@@ -2852,7 +2852,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
 }
 
 // static method, can be called outside of a project
-bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
+bool AudacityProject::IsAlreadyOpen(const FilePath &projPathName)
 {
    const wxFileName newProjPathName(projPathName);
    size_t numProjects = gAudacityProjects.size();
@@ -2953,7 +2953,7 @@ bool AudacityProject::WarnOfLegacyFile( )
 
 
 AudacityProject *AudacityProject::OpenProject(
-   AudacityProject *pProject, const wxString &fileNameArg, bool addtohistory)
+   AudacityProject *pProject, const FilePath &fileNameArg, bool addtohistory)
 {
    AudacityProject *pNewProject = nullptr;
    if ( ! pProject )
@@ -2969,12 +2969,12 @@ AudacityProject *AudacityProject::OpenProject(
 
 // FIXME:? TRAP_ERR This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
-void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
+void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 {
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
-   wxString fileName = PlatformCompatibility::ConvertSlashInFileName(
+   auto fileName = PlatformCompatibility::ConvertSlashInFileName(
       PlatformCompatibility::GetLongFileName(fileNameArg));
 
    // Make sure it isn't already open.
@@ -3026,7 +3026,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       int numRead = ff.Read(buf, 15);
       if (numRead != 15) {
          AudacityMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
-            (const wxChar*)fileName), _("Error Opening File or Project"),
+            fileName), _("Error Opening File or Project"),
             wxOK | wxCENTRE, this);
          ff.Close();
          return;
@@ -3459,8 +3459,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       else if (!wxStrcmp(attr, wxT("projname"))) {
-         wxString projName;
-         wxString projPath;
+         FilePath projName;
+         FilePath projPath;
 
          if (mIsRecovered) {
             // Fake the filename as if we had opened the original file
@@ -3894,7 +3894,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    }
 
    bool success = true;
-   wxString project, projName, projPath;
+   FilePath project, projName, projPath;
 
    auto cleanup = finally( [&] {
       if (!safetyFileName.empty()) {
@@ -4082,7 +4082,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
 }
 
 
-bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
+bool AudacityProject::SaveCopyWaveTracks(const FilePath & strProjectPathName,
                                          const bool bLossless /*= false*/)
 {
    wxString extension, fileFormat;
@@ -4149,7 +4149,7 @@ bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
       pWaveTrack->SetPan(0.0);
    }
 
-   wxString strDataDirPathName = strProjectPathName + wxT("_data");
+   FilePath strDataDirPathName = strProjectPathName + wxT("_data");
    if (!wxFileName::DirExists(strDataDirPathName) &&
          !wxFileName::Mkdir(strDataDirPathName, 0777, wxPATH_MKDIR_FULL))
       return false;
@@ -4191,7 +4191,7 @@ bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
 
 
 std::vector< std::shared_ptr< Track > >
-AudacityProject::AddImportedTracks(const wxString &fileName,
+AudacityProject::AddImportedTracks(const FilePath &fileName,
                                    TrackHolders &&newTracks)
 {
    std::vector< std::shared_ptr< Track > > results;
@@ -4304,7 +4304,7 @@ void AudacityProject::ZoomAfterImport(Track *pTrack)
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
-bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
+bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
    TrackHolders newTracks;
    wxString errorMessage;
@@ -4378,7 +4378,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*
 {
    // This version of SaveAs is invoked only from scripting and does not
    // prompt for a file name
-   wxString oldFileName = mFileName;
+   auto oldFileName = mFileName;
 
    bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==newFileName);
    //check to see if the NEW project file already exists.
@@ -4566,7 +4566,7 @@ will be irreversibly overwritten."), fName, fName);
       }
    }
 
-   wxString oldFileName = mFileName;
+   auto oldFileName = mFileName;
    mFileName = fName;
    bool success = false;
    auto cleanup = finally( [&] {
@@ -5393,8 +5393,7 @@ bool AudacityProject::IsProjectSaved() {
    // This is true if a project was opened from an .aup
    // Otherwise it becomes true only when a project is first saved successfully
    // in DirManager::SetProject
-   wxString sProjectName = mDirManager->GetProjectName();
-   return (!sProjectName.empty());
+   return (!mDirManager->GetProjectName().empty());
 }
 
 // This is done to empty out the tracks, but without creating a new project.
@@ -5435,7 +5434,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
 
    // MY: To allow SaveAs from Timer Recording we need to check what
    // the value of mFileName is before we change it.
-   wxString sOldFilename;
+   FilePath sOldFilename;
    if (IsProjectSaved()) {
       sOldFilename = mFileName;
    }

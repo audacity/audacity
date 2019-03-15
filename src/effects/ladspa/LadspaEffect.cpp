@@ -111,7 +111,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString LadspaEffectsModule::GetPath()
+PluginPath LadspaEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -156,31 +156,29 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
-wxArrayString LadspaEffectsModule::GetFileExtensions()
+FileExtensions LadspaEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = {
+   return {{
 
 #ifdef __WXMSW__
 
-      { _T("dll") }
+      _T("dll")
 
 #else
 
-      { _T("so") }
+      _T("so")
 
    #ifdef __WXMAC__
    // Is it correct that these are candidate plug-in files too for macOs?
-      , { _T("dylib") }
+      , _T("dylib")
    #endif
 
 #endif
 
-   };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   }};
 }
 
-wxString LadspaEffectsModule::InstallPath()
+FilePath LadspaEffectsModule::InstallPath()
 {
    // To do: better choice
    return FileNames::PlugInDir();
@@ -190,8 +188,8 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   wxArrayString pathList = GetSearchPaths();
-   wxArrayString files;
+   auto pathList = GetSearchPaths();
+   FilePaths files;
    wxString ignoredErrMsg;
 
    for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++)
@@ -213,10 +211,10 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList = GetSearchPaths();
-   wxArrayString files;
+   auto pathList = GetSearchPaths();
+   FilePaths files;
 
 #if defined(__WXMAC__)
 
@@ -235,11 +233,11 @@ wxArrayString LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 
 #endif
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -301,7 +299,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    return nLoaded;
 }
 
-bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
@@ -309,7 +307,7 @@ bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath);
 }
 
-ComponentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *LadspaEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -330,9 +328,9 @@ void LadspaEffectsModule::DeleteInstance(ComponentInterface *instance)
    };
 }
 
-wxArrayString LadspaEffectsModule::GetSearchPaths()
+FilePaths LadspaEffectsModule::GetSearchPaths()
 {
-   wxArrayString pathList;
+   FilePaths pathList;
    wxString pathVar;
 
    // Check for the LADSPA_PATH environment variable
@@ -615,7 +613,7 @@ LadspaEffect::~LadspaEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString LadspaEffect::GetPath()
+PluginPath LadspaEffect::GetPath()
 {
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
@@ -1107,7 +1105,7 @@ bool LadspaEffect::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool LadspaEffect::LoadUserPreset(const wxString & name)
+bool LadspaEffect::LoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1119,14 +1117,14 @@ bool LadspaEffect::LoadUserPreset(const wxString & name)
    return true;
 }
 
-bool LadspaEffect::SaveUserPreset(const wxString & name)
+bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
 
-wxArrayString LadspaEffect::GetFactoryPresets()
+RegistryPaths LadspaEffect::GetFactoryPresets()
 {
-   return wxArrayString();
+   return {};
 }
 
 bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
@@ -1591,7 +1589,7 @@ void LadspaEffect::Unload()
    }
 }
 
-bool LadspaEffect::LoadParameters(const wxString & group)
+bool LadspaEffect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
    if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
@@ -1608,7 +1606,7 @@ bool LadspaEffect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool LadspaEffect::SaveParameters(const wxString & group)
+bool LadspaEffect::SaveParameters(const RegistryPath & group)
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))

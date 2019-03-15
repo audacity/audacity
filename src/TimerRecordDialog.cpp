@@ -493,7 +493,7 @@ bool TimerRecordDialog::HaveFilesToRecover()
 
 bool TimerRecordDialog::RemoveAllAutoSaveFiles()
 {
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
       wxT("*.autosave"), wxDIR_FILES);
 
@@ -892,7 +892,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             {
                wxString sInitialValue;
                AudacityProject* pProject = GetActiveProject();
-               wxString sSaveValue = pProject->GetFileName();
+               auto sSaveValue = pProject->GetFileName();
                if (!sSaveValue.empty()) {
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = _("Current Project");

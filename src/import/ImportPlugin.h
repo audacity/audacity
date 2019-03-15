@@ -56,6 +56,7 @@ but little else.
 #define __AUDACITY_IMPORTER__
 
 #include "../Audacity.h"
+#include "audacity/Types.h"
 #include "../Internat.h"
 #include <wx/filename.h>
 #include "../MemoryX.h"
@@ -87,12 +88,12 @@ public:
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
-   virtual wxArrayString GetSupportedExtensions()
+   virtual FileExtensions GetSupportedExtensions()
    {
       return mExtensions;
    }
 
-   bool SupportsExtension(const wxString &extension)
+   bool SupportsExtension(const FileExtension &extension)
    {
       // Case-insensitive check if extension is supported
       return mExtensions.Index(extension, false) != wxNOT_FOUND;
@@ -101,25 +102,25 @@ public:
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
    // state.
-   virtual std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) = 0;
+   virtual std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) = 0;
 
    virtual ~ImportPlugin() { }
 
 protected:
 
-   ImportPlugin(wxArrayString supportedExtensions):
-      mExtensions(supportedExtensions)
+   ImportPlugin(FileExtensions supportedExtensions):
+      mExtensions( std::move( supportedExtensions ) )
    {
    }
 
-   wxArrayString mExtensions;
+   const FileExtensions mExtensions;
 };
 
 
 class ImportFileHandle /* not final */
 {
 public:
-   ImportFileHandle(const wxString & filename)
+   ImportFileHandle(const FilePath & filename)
    :  mFilename(filename),
    mProgress{}
    {
@@ -172,7 +173,7 @@ public:
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;
 
 protected:
-   wxString mFilename;
+   FilePath mFilename;
    Maybe<ProgressDialog> mProgress;
 };
 
@@ -181,9 +182,10 @@ protected:
 class UnusableImportPlugin
 {
 public:
-   UnusableImportPlugin(const wxString &formatName, wxArrayString extensions):
+   UnusableImportPlugin(
+      const wxString &formatName, FileExtensions extensions):
       mFormatName(formatName),
-      mExtensions(extensions)
+      mExtensions( std::move( extensions ) )
    {
    }
 
@@ -199,7 +201,7 @@ public:
 
 private:
    wxString mFormatName;
-   wxArrayString mExtensions;
+   const FileExtensions mExtensions;
 };
 
 #endif

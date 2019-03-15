@@ -78,7 +78,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
 
    ComponentInterfaceSymbol GetSymbol() override;
 
@@ -134,10 +134,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
-   bool LoadUserPreset(const wxString & name) override;
-   bool SaveUserPreset(const wxString & name) override;
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
 
-   wxArrayString GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -170,48 +170,48 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) override;
 
-   wxString GetUserPresetsGroup(const wxString & name) override;
-   wxString GetCurrentSettingsGroup() override;
-   wxString GetFactoryDefaultsGroup() override;
+   RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
+   RegistryPath GetCurrentSettingsGroup() override;
+   RegistryPath GetFactoryDefaultsGroup() override;
    virtual wxString GetSavedStateGroup() /* not override? */;
 
    // ConfigClientInterface implementation
 
-   bool HasSharedConfigGroup(const wxString & group) override;
-   bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups) override;
+   bool HasSharedConfigGroup(const RegistryPath & group) override;
+   bool GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths &subgroups) override;
 
-   bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = {}) override;
-   bool GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval = 0) override;
-   bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
-   bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
-   bool GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
+   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = {}) override;
+   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
+   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
+   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
+   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
 
-   bool SetSharedConfig(const wxString & group, const wxString & key, const wxString & value) override;
-   bool SetSharedConfig(const wxString & group, const wxString & key, const int & value) override;
-   bool SetSharedConfig(const wxString & group, const wxString & key, const bool & value) override;
-   bool SetSharedConfig(const wxString & group, const wxString & key, const float & value) override;
-   bool SetSharedConfig(const wxString & group, const wxString & key, const double & value) override;
+   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
+   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const int & value) override;
+   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) override;
+   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const float & value) override;
+   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const double & value) override;
 
-   bool RemoveSharedConfigSubgroup(const wxString & group) override;
-   bool RemoveSharedConfig(const wxString & group, const wxString & key) override;
+   bool RemoveSharedConfigSubgroup(const RegistryPath & group) override;
+   bool RemoveSharedConfig(const RegistryPath & group, const RegistryPath & key) override;
 
-   bool HasPrivateConfigGroup(const wxString & group) override;
-   bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups) override;
+   bool HasPrivateConfigGroup(const RegistryPath & group) override;
+   bool GetPrivateConfigSubgroups(const RegistryPath & group, RegistryPaths &paths) override;
 
-   bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = {}) override;
-   bool GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval = 0) override;
-   bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
-   bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
-   bool GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
+   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = {}) override;
+   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
+   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
+   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
+   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
 
-   bool SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value) override;
-   bool SetPrivateConfig(const wxString & group, const wxString & key, const int & value) override;
-   bool SetPrivateConfig(const wxString & group, const wxString & key, const bool & value) override;
-   bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value) override;
-   bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value) override;
+   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
+   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const int & value) override;
+   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) override;
+   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const float & value) override;
+   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const double & value) override;
 
-   bool RemovePrivateConfigSubgroup(const wxString & group) override;
-   bool RemovePrivateConfig(const wxString & group, const wxString & key) override;
+   bool RemovePrivateConfigSubgroup(const RegistryPath & group) override;
+   bool RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key) override;
 
    // Effect implementation
 
@@ -224,7 +224,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual bool GetAutomationParameters(wxString & parms);
    virtual bool SetAutomationParameters(const wxString & parms);
 
-   virtual wxArrayString GetUserPresets();
+   virtual RegistryPaths GetUserPresets();
    virtual bool HasCurrentSettings();
    virtual bool HasFactoryDefaults();
    virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
@@ -649,7 +649,7 @@ private:
    AudacityCommand * mCommand;
    EffectUIClientInterface *mClient;
 
-   wxArrayString mUserPresets;
+   RegistryPaths mUserPresets;
    bool mInitialized;
    bool mSupportsRealtime;
    bool mIsGUI;
@@ -707,8 +707,8 @@ private:
    wxChoice *mType;
    wxListBox *mPresets;
 
-   wxArrayString mFactoryPresets;
-   wxArrayString mUserPresets;
+   RegistryPaths mFactoryPresets;
+   RegistryPaths mUserPresets;
    wxString mSelection;
 
    DECLARE_EVENT_TABLE()

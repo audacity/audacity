@@ -19,13 +19,14 @@ into a NoteTrack.
 #define _IMPORT_MIDI_
 
 #include "../Audacity.h"
+#include "audacity/Types.h"
 
 #if defined(USE_MIDI)
 
 class wxString;
 class NoteTrack;
 
-bool ImportMIDI(const wxString &fName, NoteTrack * dest);
+bool ImportMIDI(const FilePath &fName, NoteTrack * dest);
 
 class MIDIParser {
  public:

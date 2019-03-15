@@ -765,7 +765,7 @@ END_EVENT_TABLE()
 // TODO: Would be nice to make this handle not opening a file with more panache.
 //  - Inform the user if DefaultOpenPath not set.
 //  - Switch focus to correct instance of project window, if already open.
-bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
+bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
    // Most of the checks below are copied from AudacityProject::OpenFiles.
    // - some rationalisation might be possible.
 
@@ -827,7 +827,7 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - ID_RECENT_FIRST;
-   const wxString &fullPathStr = mRecentFiles->GetHistoryFile(n);
+   const auto &fullPathStr = mRecentFiles->GetHistoryFile(n);
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
@@ -1871,7 +1871,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
       // Windows and Linux require absolute file names as command may
       // not come from current working directory.
-      wxArrayString filenames;
+      FilePaths filenames;
       for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
       {
          wxFileName filename(parser->GetParam(i));
@@ -2075,8 +2075,8 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
 }
 
 // static
-void AudacityApp::AddUniquePathToPathList(const wxString &pathArg,
-                                          wxArrayString &pathList)
+void AudacityApp::AddUniquePathToPathList(const FilePath &pathArg,
+                                          FilePaths &pathList)
 {
    wxFileName pathNorm = pathArg;
    pathNorm.Normalize();
@@ -2092,7 +2092,7 @@ void AudacityApp::AddUniquePathToPathList(const wxString &pathArg,
 
 // static
 void AudacityApp::AddMultiPathsToPathList(const wxString &multiPathStringArg,
-                                          wxArrayString &pathList)
+                                          FilePaths &pathList)
 {
    wxString multiPathString(multiPathStringArg);
    while (!multiPathString.empty()) {
@@ -2104,8 +2104,8 @@ void AudacityApp::AddMultiPathsToPathList(const wxString &multiPathStringArg,
 
 // static
 void AudacityApp::FindFilesInPathList(const wxString & pattern,
-                                      const wxArrayString & pathList,
-                                      wxArrayString & results,
+                                      const FilePaths & pathList,
+                                      FilePaths & results,
                                       int flags)
 {
    wxLogNull nolog;
@@ -2158,7 +2158,7 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
    }
 }
 
-void AudacityApp::AddFileToHistory(const wxString & name)
+void AudacityApp::AddFileToHistory(const FilePath & name)
 {
    mRecentFiles->AddFileToHistory(name);
 }

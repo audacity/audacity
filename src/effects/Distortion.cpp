@@ -326,9 +326,9 @@ bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-wxArrayString EffectDistortion::GetFactoryPresets()
+RegistryPaths EffectDistortion::GetFactoryPresets()
 {
-   wxArrayString names;
+   RegistryPaths names;
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {

@@ -173,7 +173,7 @@ static bool HaveFilesToRecover()
 
 static bool RemoveAllAutoSaveFiles()
 {
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
@@ -205,7 +205,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    // Open a project window for each auto save file
    wxString filename;
 
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
@@ -678,7 +678,7 @@ bool AutoSaveFile::IsEmpty() const
    return mBuffer.GetLength() == 0;
 }
 
-bool AutoSaveFile::Decode(const wxString & fileName)
+bool AutoSaveFile::Decode(const FilePath & fileName)
 {
    char ident[sizeof(AutoSaveIdent)];
    size_t len = strlen(AutoSaveIdent);

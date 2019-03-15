@@ -158,7 +158,7 @@ EffectType Effect::GetType()
    return EffectTypeNone;
 }
 
-wxString Effect::GetPath()
+PluginPath Effect::GetPath()
 {
    if (mClient)
    {
@@ -584,7 +584,7 @@ bool Effect::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool Effect::LoadUserPreset(const wxString & name)
+bool Effect::LoadUserPreset(const RegistryPath & name)
 {
    if (mClient)
    {
@@ -600,7 +600,7 @@ bool Effect::LoadUserPreset(const wxString & name)
    return SetAutomationParameters(parms);
 }
 
-bool Effect::SaveUserPreset(const wxString & name)
+bool Effect::SaveUserPreset(const RegistryPath & name)
 {
    if (mClient)
    {
@@ -616,14 +616,14 @@ bool Effect::SaveUserPreset(const wxString & name)
    return SetPrivateConfig(name, wxT("Parameters"), parms);
 }
 
-wxArrayString Effect::GetFactoryPresets()
+RegistryPaths Effect::GetFactoryPresets()
 {
    if (mClient)
    {
       return mClient->GetFactoryPresets();
    }
 
-   return wxArrayString();
+   return {};
 }
 
 bool Effect::LoadFactoryPreset(int id)
@@ -791,9 +791,9 @@ wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
    return NULL;
 }
 
-wxString Effect::GetUserPresetsGroup(const wxString & name)
+RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
 {
-   wxString group = wxT("UserPresets");
+   RegistryPath group = wxT("UserPresets");
    if (!name.empty())
    {
       group += wxCONFIG_PATH_SEPARATOR + name;
@@ -802,12 +802,12 @@ wxString Effect::GetUserPresetsGroup(const wxString & name)
    return group;
 }
 
-wxString Effect::GetCurrentSettingsGroup()
+RegistryPath Effect::GetCurrentSettingsGroup()
 {
    return wxT("CurrentSettings");
 }
 
-wxString Effect::GetFactoryDefaultsGroup()
+RegistryPath Effect::GetFactoryDefaultsGroup()
 {
    return wxT("FactoryDefaults");
 }
@@ -818,142 +818,142 @@ wxString Effect::GetSavedStateGroup()
 }
 
 // ConfigClientInterface implementation
-bool Effect::HasSharedConfigGroup(const wxString & group)
+bool Effect::HasSharedConfigGroup(const RegistryPath & group)
 {
    return PluginManager::Get().HasSharedConfigGroup(GetID(), group);
 }
 
-bool Effect::GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups)
+bool Effect::GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths &subgroups)
 {
    return PluginManager::Get().GetSharedConfigSubgroups(GetID(), group, subgroups);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval)
+bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
 {
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval)
+bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval)
 {
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval)
+bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
 {
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval)
+bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval)
 {
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval)
+bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval)
 {
    return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const wxString & value)
+bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const int & value)
+bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const int & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const bool & value)
+bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const bool & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const float & value)
+bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const float & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const double & value)
+bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const double & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
 }
 
-bool Effect::RemoveSharedConfigSubgroup(const wxString & group)
+bool Effect::RemoveSharedConfigSubgroup(const RegistryPath & group)
 {
    return PluginManager::Get().RemoveSharedConfigSubgroup(GetID(), group);
 }
 
-bool Effect::RemoveSharedConfig(const wxString & group, const wxString & key)
+bool Effect::RemoveSharedConfig(const RegistryPath & group, const RegistryPath & key)
 {
    return PluginManager::Get().RemoveSharedConfig(GetID(), group, key);
 }
 
-bool Effect::HasPrivateConfigGroup(const wxString & group)
+bool Effect::HasPrivateConfigGroup(const RegistryPath & group)
 {
    return PluginManager::Get().HasPrivateConfigGroup(GetID(), group);
 }
 
-bool Effect::GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups)
+bool Effect::GetPrivateConfigSubgroups(const RegistryPath & group, RegistryPaths & subgroups)
 {
    return PluginManager::Get().GetPrivateConfigSubgroups(GetID(), group, subgroups);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval)
+bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
 {
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval)
+bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval)
 {
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval)
+bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
 {
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval)
+bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval)
 {
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval)
+bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval)
 {
    return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
 }
 
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value)
+bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const int & value)
+bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const int & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const bool & value)
+bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const bool & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const float & value)
+bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const float & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
 
-bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, const double & value)
+bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const double & value)
 {
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
 
-bool Effect::RemovePrivateConfigSubgroup(const wxString & group)
+bool Effect::RemovePrivateConfigSubgroup(const RegistryPath & group)
 {
    return PluginManager::Get().RemovePrivateConfigSubgroup(GetID(), group);
 }
 
-bool Effect::RemovePrivateConfig(const wxString & group, const wxString & key)
+bool Effect::RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key)
 {
    return PluginManager::Get().RemovePrivateConfig(GetID(), group, key);
 }
@@ -1091,10 +1091,10 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    return TransferDataToWindow();
 }
 
-wxArrayString Effect::GetUserPresets()
+RegistryPaths Effect::GetUserPresets()
 {
-   wxArrayString presets;
-
+   RegistryPaths presets;
+   
    GetPrivateConfigSubgroups(GetUserPresetsGroup(wxEmptyString), presets);
 
    std::sort( presets.begin(), presets.end() );
@@ -3386,7 +3386,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
          sub->AppendSeparator();
          for (size_t i = 0, cnt = factory.size(); i < cnt; i++)
          {
-            wxString label = factory[i];
+            auto label = factory[i];
             if (label.empty())
             {
                label = _("None");
@@ -3616,7 +3616,7 @@ void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 
 void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
 {
-   wxString preset = mUserPresets[evt.GetId() - kDeletePresetID];
+   auto preset = mUserPresets[evt.GetId() - kDeletePresetID];
 
    int res = AudacityMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset),
                           _("Delete Preset"),
@@ -3997,7 +3997,8 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
    if (type == _("User Presets"))
    {
       mPresets->Clear();
-      mPresets->Append(mUserPresets);
+      for (const auto &preset : mUserPresets)
+         mPresets->Append(preset);
       mPresets->Enable(true);
       mPresets->SetStringSelection(prefix);
       if (mPresets->GetSelection() == wxNOT_FOUND)
@@ -4011,7 +4012,7 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
       mPresets->Clear();
       for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
       {
-         wxString label = mFactoryPresets[i];
+         auto label = mFactoryPresets[i];
          if (label.empty())
          {
             label = _("None");
@@ -4059,7 +4060,8 @@ void EffectPresetsDialog::UpdateUI()
       }
 
       mPresets->Clear();
-      mPresets->Append(mUserPresets);
+      for (const auto &preset : mUserPresets)
+         mPresets->Append(preset);
       mPresets->Enable(true);
       mPresets->SetSelection(selected);
       mSelection = Effect::kUserPresetIdent + mPresets->GetString(selected);
@@ -4075,7 +4077,7 @@ void EffectPresetsDialog::UpdateUI()
       mPresets->Clear();
       for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
       {
-         wxString label = mFactoryPresets[i];
+         auto label = mFactoryPresets[i];
          if (label.empty())
          {
             label = _("None");

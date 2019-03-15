@@ -593,7 +593,7 @@ class SourceOutputStream final : public wxOutputStream
 {
 public:
    SourceOutputStream(){;};
-   int OpenFile(const wxString & Filename);
+   int OpenFile(const FilePath & Filename);
    virtual ~SourceOutputStream();
 
 protected:
@@ -603,7 +603,7 @@ protected:
 };
 
 /// Opens the file and also adds a standard comment at the start of it.
-int SourceOutputStream::OpenFile(const wxString & Filename)
+int SourceOutputStream::OpenFile(const FilePath & Filename)
 {
    nBytes = 0;
    bool bOk;
@@ -755,7 +755,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // IF bBinarySave, THEN saving to a normal PNG file.
    if( bBinarySave )
    {
-      const wxString &FileName = FileNames::ThemeCachePng();
+      const auto &FileName = FileNames::ThemeCachePng();
 
       // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
@@ -799,7 +799,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    else
    {
       SourceOutputStream OutStream;
-      const wxString &FileName = FileNames::ThemeCacheAsCee( );
+      const auto &FileName = FileNames::ThemeCacheAsCee( );
       if( !OutStream.OpenFile( FileName ))
       {
          AudacityMessageBox(
@@ -967,7 +967,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 
    if(  type == themeFromFile )
    {
-      const wxString &FileName = FileNames::ThemeCachePng();
+      const auto &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
       {
          if( bOkIfNotFound )
@@ -1092,7 +1092,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
    wxBusyCursor busy;
    int i;
    int n=0;
-   wxString FileName;
+   FilePath FileName;
    for(i = 0; i < (int)mImages.size(); i++)
    {
 
@@ -1161,7 +1161,7 @@ void ThemeBase::SaveComponents()
    wxBusyCursor busy;
    int i;
    int n=0;
-   wxString FileName;
+   FilePath FileName;
    for(i = 0; i < (int)mImages.size(); i++)
    {
       if( (mBitmapFlags[i] & resFlagInternal)==0)

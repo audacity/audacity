@@ -128,9 +128,9 @@ public:
    virtual wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) = 0;
 
    // Preset handling
-   virtual wxString GetUserPresetsGroup(const wxString & name) = 0;
-   virtual wxString GetCurrentSettingsGroup() = 0;
-   virtual wxString GetFactoryDefaultsGroup() = 0;
+   virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
+   virtual RegistryPath GetCurrentSettingsGroup() = 0;
+   virtual RegistryPath GetFactoryDefaultsGroup() = 0;
 };
 
 /*************************************************************************************//**
@@ -187,10 +187,10 @@ public:
    virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
    virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
 
-   virtual bool LoadUserPreset(const wxString & name) = 0;
-   virtual bool SaveUserPreset(const wxString & name) = 0;
+   virtual bool LoadUserPreset(const RegistryPath & name) = 0;
+   virtual bool SaveUserPreset(const RegistryPath & name) = 0;
 
-   virtual wxArrayString GetFactoryPresets() = 0;
+   virtual RegistryPaths GetFactoryPresets() = 0;
    virtual bool LoadFactoryPreset(int id) = 0;
    virtual bool LoadFactoryDefaults() = 0;
 };
@@ -253,8 +253,8 @@ public:
    virtual ~EffectManagerInterface() {};
 
    virtual void FindFilesInPathList(const wxString & pattern,
-                                    const wxArrayString & pathList,
-                                    wxArrayString & files,
+                                    const FilePaths & pathList,
+                                    FilePaths & files,
                                     int searchFlags) = 0;
 };
 

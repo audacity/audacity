@@ -13,6 +13,7 @@
 
 #include <wx/string.h>
 #include <wx/event.h>
+#include "audacity/Types.h"
 #include "../MemoryX.h"
 #include "Command.h"
 
@@ -20,7 +21,7 @@ class AudacityProject;
 class AudacityApp;
 class wxEvent;
 class CommandOutputTargets;
-using CommandParameter = wxString;
+using CommandParameter = CommandID;
 
 class AUDACITY_DLL_API CommandContext {
 public:

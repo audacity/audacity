@@ -58,7 +58,7 @@ enum eCommandType { CtEffect, CtMenu, CtSpecial };
 // TIDY-ME: Not currently translated,
 // but there are issues to address if we do.
 // CLEANSPEECH remnant
-static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
+static const std::pair<const wxChar*, CommandID> SpecialCommands[] = {
    // Use translations of the first members, some other day.
    // For 2.2.2 we'll get them into the catalog at least.
 
@@ -140,7 +140,7 @@ void MacroCommands::RestoreMacro(const wxString & name)
    } 
 }
 
-wxString MacroCommands::GetCommand(int index)
+CommandID MacroCommands::GetCommand(int index)
 {
    if (index < 0 || index >= (int)mCommandMacro.size()) {
       return wxT("");
@@ -320,7 +320,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 
    auto mManager = project->GetCommandManager();
    wxArrayString mLabels;
-   wxArrayString mNames;
+   CommandIDs mNames;
    std::vector<bool> vHasDialog;
    mLabels.clear();
    mNames.clear();
@@ -401,7 +401,7 @@ auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
 }
 
 // linear search
-auto MacroCommandsCatalog::ByCommandId( const wxString &commandId ) const
+auto MacroCommandsCatalog::ByCommandId( const CommandID &commandId ) const
    -> Entries::const_iterator
 {
    // Maybe this too should have a uniqueness check?
@@ -412,9 +412,10 @@ auto MacroCommandsCatalog::ByCommandId( const wxString &commandId ) const
 
 
 
-wxString MacroCommands::GetCurrentParamsFor(const wxString & command)
+wxString MacroCommands::GetCurrentParamsFor(const CommandID & command)
 {
-   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+   const PluginID & ID =
+      EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
@@ -423,9 +424,10 @@ wxString MacroCommands::GetCurrentParamsFor(const wxString & command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-wxString MacroCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForParamsFor(const CommandID & command, const wxString & params, wxWindow *parent)
 {
-   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+   const PluginID & ID =
+      EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
    {
       return wxEmptyString;   // effect not found
@@ -446,9 +448,10 @@ wxString MacroCommands::PromptForParamsFor(const wxString & command, const wxStr
    return res;
 }
 
-wxString MacroCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForPresetFor(const CommandID & command, const wxString & params, wxWindow *parent)
 {
-   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+   const PluginID & ID =
+      EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
@@ -504,7 +507,8 @@ bool MacroCommands::IsMono()
    return ( tracks->Any() - &Track::IsLeader ).empty();
 }
 
-wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
+wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
+   const FileExtension &extension)
 {
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
@@ -605,7 +609,7 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 // CLEANSPEECH remnant
 bool MacroCommands::ApplySpecialCommand(
    int WXUNUSED(iCommand), const wxString &friendlyCommand,
-   const wxString & command, const wxString & params)
+   const CommandID & command, const wxString & params)
 {
    if (ReportAndSkip(friendlyCommand, params))
       return true;
@@ -700,7 +704,7 @@ bool MacroCommands::ApplySpecialCommand(
 
 bool MacroCommands::ApplyEffectCommand(
    const PluginID & ID, const wxString &friendlyCommand,
-   const wxString & command, const wxString & params,
+   const CommandID & command, const wxString & params,
    const CommandContext & Context)
 {
    static_cast<void>(command);//compiler food.
@@ -748,7 +752,7 @@ bool MacroCommands::ApplyEffectCommand(
 }
 
 bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
-   const wxString & command, const wxString & params,
+   const CommandID & command, const wxString & params,
    CommandContext const * pContext)
 {
 
@@ -762,7 +766,8 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    // end CLEANSPEECH remnant
 
    // Test for an effect.
-   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier( command );
+   const PluginID & ID =
+      EffectManager::Get().GetEffectByIdentifier( command );
    if (!ID.empty())
    {
       if( pContext )
@@ -797,7 +802,7 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
 }
 
 bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
-   const wxString & command, const wxString &params,
+   const CommandID & command, const wxString &params,
    CommandContext const * pContext)
 {
    AudacityProject *project = GetActiveProject();
@@ -893,12 +898,12 @@ void MacroCommands::AbortBatch()
    mAbort = true;
 }
 
-void MacroCommands::AddToMacro(const wxString &command, int before)
+void MacroCommands::AddToMacro(const CommandID &command, int before)
 {
    AddToMacro(command, GetCurrentParamsFor(command), before);
 }
 
-void MacroCommands::AddToMacro(const wxString &command, const wxString &params, int before)
+void MacroCommands::AddToMacro(const CommandID &command, const wxString &params, int before)
 {
    if (before == -1) {
       before = (int)mCommandMacro.size();
@@ -963,7 +968,7 @@ void MacroCommands::MigrateLegacyChains()
       // which old Audacity will not read.
 
       const auto oldDir = FileNames::LegacyChainDir();
-      wxArrayString files;
+      FilePaths files;
       wxDir::GetAllFiles(oldDir, &files, wxT("*.txt"), wxDIR_FILES);
 
       // add a dummy path component to be overwritten by SetFullName
@@ -986,7 +991,7 @@ wxArrayString MacroCommands::GetNames()
    MigrateLegacyChains();
 
    wxArrayString names;
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::MacroDir(), &files, wxT("*.txt"), wxDIR_FILES);
    size_t i;
 

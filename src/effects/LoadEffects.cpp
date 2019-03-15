@@ -236,7 +236,7 @@ BuiltinEffectsModule::~BuiltinEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-wxString BuiltinEffectsModule::GetPath()
+PluginPath BuiltinEffectsModule::GetPath()
 {
    return mPath;
 }
@@ -295,7 +295,7 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    const auto &names = kEffectNames();
    for (const auto &name : names)
    {
-      wxString path(wxString(BUILTIN_EFFECT_PREFIX) + name);
+      PluginPath path(wxString(BUILTIN_EFFECT_PREFIX) + name);
 
       if (!pm.IsPluginRegistered(path))
       {
@@ -309,13 +309,13 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString BuiltinEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths BuiltinEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    return mNames;
 }
 
 unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -331,14 +331,14 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool BuiltinEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
    static_cast<void>(bFast);
    return make_iterator_range( mNames ).contains( path );
 }
 
-ComponentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *BuiltinEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
@@ -357,7 +357,7 @@ void BuiltinEffectsModule::DeleteInstance(ComponentInterface *instance)
 // BuiltinEffectsModule implementation
 // ============================================================================
 
-std::unique_ptr<Effect> BuiltinEffectsModule::Instantiate(const wxString & path)
+std::unique_ptr<Effect> BuiltinEffectsModule::Instantiate(const PluginPath & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_EFFECT_PREFIX));
    auto index = make_iterator_range( mNames ).index( path );

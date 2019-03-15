@@ -12,6 +12,7 @@
 #ifndef LV2EFFECTSMODULE_H
 #define LV2EFFECTSMODULE_H
 
+#include "../../MemoryX.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
 
@@ -76,7 +77,7 @@ public:
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -87,29 +88,29 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   wxArrayString GetFileExtensions() override { return {}; }
-   wxString InstallPath() override { return {}; }
+   FileExtensions GetFileExtensions() override { return {}; }
+   FilePath InstallPath() override { return {}; }
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   wxArrayString FindPluginPaths(PluginManagerInterface & pm) override;
+   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
-      const wxString & path, wxString &errMsg,
+      const PluginPath & path, wxString &errMsg,
       const RegistrationCallback &callback)
          override;
 
-   bool IsPluginValid(const wxString & path, bool bFast) override;
+   bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const wxString & path) override;
+   ComponentInterface *CreateInstance(const PluginPath & path) override;
    void DeleteInstance(ComponentInterface *instance) override;
 
    // LV2EffectModule implementation
 
 private:
-   const LilvPlugin *GetPlugin(const wxString & path);
+   const LilvPlugin *GetPlugin(const PluginPath & path);
 
 private:
    ModuleManagerInterface *mModMan;
-   wxString mPath;
+   PluginPath mPath;
 };
 
 extern LilvWorld *gWorld;

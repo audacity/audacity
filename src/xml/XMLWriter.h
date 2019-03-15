@@ -16,6 +16,8 @@
 
 #include "../FileException.h"
 
+#include "audacity/Types.h"
+
 ///
 /// XMLWriter
 ///
@@ -78,7 +80,7 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
    /// The caption is for message boxes to show in case of errors.
    /// Might throw.
    XMLFileWriter
-      ( const wxString &outputPath, const wxString &caption,
+      ( const FilePath &outputPath, const wxString &caption,
         bool keepBackup = false );
 
    virtual ~XMLFileWriter();
@@ -99,7 +101,7 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
    /// Write to file. Might throw.
    void Write(const wxString &data) override;
 
-   wxString GetBackupName() const { return mBackupName; }
+   FilePath GetBackupName() const { return mBackupName; }
 
  private:
 
@@ -113,9 +115,9 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
    /// Might throw.
    void CloseWithoutEndingTags(); // for auto-save files
 
-   const wxString mOutputPath;
+   const FilePath mOutputPath;
    const wxString mCaption;
-   wxString mBackupName;
+   FilePath mBackupName;
    const bool mKeepBackup;
 
    wxFFile mBackupFile;

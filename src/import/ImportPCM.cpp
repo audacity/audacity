@@ -73,23 +73,22 @@ class PCMImportPlugin final : public ImportPlugin
 {
 public:
    PCMImportPlugin()
-   :  ImportPlugin(wxArrayString())
+   :  ImportPlugin(sf_get_all_extensions())
    {
-      mExtensions = sf_get_all_extensions();
    }
 
    ~PCMImportPlugin() { }
 
    wxString GetPluginStringID() override { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 };
 
 
 class PCMImportFileHandle final : public ImportFileHandle
 {
 public:
-   PCMImportFileHandle(wxString name, SFFile &&file, SF_INFO info);
+   PCMImportFileHandle(const FilePath &name, SFFile &&file, SF_INFO info);
    ~PCMImportFileHandle();
 
    wxString GetFileDescription() override;
@@ -125,7 +124,7 @@ wxString PCMImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const FilePath &filename)
 {
    SF_INFO info;
    wxFile f;   // will be closed when it goes out of scope
@@ -189,7 +188,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const wxString &filename
    return std::make_unique<PCMImportFileHandle>(filename, std::move(file), info);
 }
 
-PCMImportFileHandle::PCMImportFileHandle(wxString name,
+PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
                                          SFFile &&file, SF_INFO info)
 :  ImportFileHandle(name),
    mFile(std::move(file)),

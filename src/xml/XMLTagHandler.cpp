@@ -59,7 +59,7 @@ bool XMLValueChecker::IsGoodLongString(const wxString & str)
 
 
 // "Good" means the name is well-formed and names an existing file or folder.
-bool XMLValueChecker::IsGoodFileName(const wxString & strFileName, const wxString & strDirName /* = {} */)
+bool XMLValueChecker::IsGoodFileName(const FilePath & strFileName, const FilePath & strDirName /* = "{} */)
 {
    // Test strFileName.
    if (!IsGoodFileString(strFileName) ||
@@ -71,7 +71,7 @@ bool XMLValueChecker::IsGoodFileName(const wxString & strFileName, const wxStrin
    return (fileName.IsOk() && fileName.FileExists());
 }
 
-bool XMLValueChecker::IsGoodFileString(const wxString &str)
+bool XMLValueChecker::IsGoodFileString(const FilePath &str)
 {
    return (IsGoodString(str) &&
             !str.empty() &&
@@ -83,7 +83,7 @@ bool XMLValueChecker::IsGoodFileString(const wxString &str)
             (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters.
 }
 
-bool XMLValueChecker::IsGoodSubdirName(const wxString & strSubdirName, const wxString & strDirName /* = {} */)
+bool XMLValueChecker::IsGoodSubdirName(const FilePath & strSubdirName, const FilePath & strDirName /* = {} */)
 {
    // Test strSubdirName.
    // Note this prevents path separators, and relative path to parents (strDirName),
@@ -99,14 +99,14 @@ bool XMLValueChecker::IsGoodSubdirName(const wxString & strSubdirName, const wxS
    return (fileName.IsOk() && fileName.DirExists());
 }
 
-bool XMLValueChecker::IsGoodPathName(const wxString & strPathName)
+bool XMLValueChecker::IsGoodPathName(const FilePath & strPathName)
 {
    // Test the corresponding wxFileName.
    wxFileName fileName(strPathName);
    return XMLValueChecker::IsGoodFileName(fileName.GetFullName(), fileName.GetPath(wxPATH_GET_VOLUME));
 }
 
-bool XMLValueChecker::IsGoodPathString(const wxString &str)
+bool XMLValueChecker::IsGoodPathString(const FilePath &str)
 {
    return (IsGoodString(str) &&
             !str.empty() &&

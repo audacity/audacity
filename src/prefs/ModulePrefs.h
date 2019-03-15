@@ -40,15 +40,15 @@ class ModulePrefs final : public PrefsPanel
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   static int GetModuleStatus( const wxString &fname );
-   static void SetModuleStatus( const wxString &fname, int iStatus );
+   static int GetModuleStatus( const FilePath &fname );
+   static void SetModuleStatus( const FilePath &fname, int iStatus );
 
  private:
    void GetAllModuleStatuses();
    void Populate();
    wxArrayString mModules;
    std::vector<int> mStatuses;
-   wxArrayString mPaths;
+   FilePaths mPaths;
 };
 
 /// A PrefsPanelFactory that creates one ModulePrefs panel.

@@ -294,7 +294,7 @@ wxString XMLWriter::XMLEsc(const wxString & s)
 /// XMLFileWriter class
 ///
 XMLFileWriter::XMLFileWriter
-   ( const wxString &outputPath, const wxString &caption, bool keepBackup )
+   ( const FilePath &outputPath, const wxString &caption, bool keepBackup )
    : mOutputPath{ outputPath }
    , mCaption{ caption }
    , mKeepBackup{ keepBackup }
@@ -359,7 +359,7 @@ void XMLFileWriter::PreCommit()
 void XMLFileWriter::PostCommit()
 // may throw
 {
-   auto tempPath = GetName();
+   FilePath tempPath = GetName();
    if (mKeepBackup) {
       if (! mBackupFile.Close() ||
           ! wxRenameFile( mOutputPath, mBackupName ) )

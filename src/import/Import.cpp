@@ -325,7 +325,7 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    return new_item;
 }
 
-bool Importer::IsMidi(const wxString &fName)
+bool Importer::IsMidi(const FilePath &fName)
 {
    const auto extension = fName.AfterLast(wxT('.'));
    return
@@ -335,7 +335,7 @@ bool Importer::IsMidi(const wxString &fName)
 }
 
 // returns number of tracks imported
-bool Importer::Import(const wxString &fName,
+bool Importer::Import(const FilePath &fName,
                      TrackFactory *trackFactory,
                      TrackHolders &tracks,
                      Tags *tags,

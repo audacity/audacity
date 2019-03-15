@@ -82,12 +82,12 @@ class VSTEffect final : public wxEvtHandler,
                   public VSTEffectLink
 {
  public:
-   VSTEffect(const wxString & path, VSTEffect *master = NULL);
+   VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
    virtual ~VSTEffect();
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -141,10 +141,10 @@ class VSTEffect final : public wxEvtHandler,
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
-   bool LoadUserPreset(const wxString & name) override;
-   bool SaveUserPreset(const wxString & name) override;
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
 
-   wxArrayString GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -183,8 +183,8 @@ private:
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
-   bool LoadParameters(const wxString & group);
-   bool SaveParameters(const wxString & group);
+   bool LoadParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group);
 
    // Base64 encoding and decoding
    static wxString b64encode(const void *in, int len);
@@ -269,7 +269,7 @@ private:
 
    EffectHostInterface *mHost;
    PluginID mID;
-   wxString mPath;
+   PluginPath mPath;
    unsigned mAudioIns;
    unsigned mAudioOuts;
    int mMidiIns;
@@ -392,7 +392,7 @@ public:
 
    // ComponentInterface implementation
 
-   wxString GetPath() override;
+   PluginPath GetPath() override;
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
@@ -403,19 +403,19 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   wxArrayString GetFileExtensions() override;
-   wxString InstallPath() override;
+   FileExtensions GetFileExtensions() override;
+   FilePath InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   wxArrayString FindPluginPaths(PluginManagerInterface & pm) override;
+   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
-      const wxString & path, wxString &errMsg,
+      const PluginPath & path, wxString &errMsg,
       const RegistrationCallback &callback)
          override;
 
-   bool IsPluginValid(const wxString & path, bool bFast) override;
+   bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const wxString & path) override;
+   ComponentInterface *CreateInstance(const PluginPath & path) override;
    void DeleteInstance(ComponentInterface *instance) override;
 
    // VSTEffectModule implementation
@@ -424,7 +424,7 @@ public:
 
 private:
    ModuleManagerInterface *mModMan;
-   wxString mPath;
+   PluginPath mPath;
 };
 
 #endif // USE_VST

@@ -276,7 +276,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
     */
    static wxArrayString ShowOpenDialog(const wxString &extraformat = {},
          const wxString &extrafilter = {});
-   static bool IsAlreadyOpen(const wxString & projPathName);
+   static bool IsAlreadyOpen(const FilePath &projPathName);
    static void OpenFiles(AudacityProject *proj);
 
    // Return the given project if that is not NULL, else create a project.
@@ -284,9 +284,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    // But if an exception escapes this function, create no NEW project.
    static AudacityProject *OpenProject(
       AudacityProject *pProject,
-      const wxString &fileNameArg, bool addtohistory = true);
+      const FilePath &fileNameArg, bool addtohistory = true);
 
-   void OpenFile(const wxString &fileName, bool addtohistory = true);
+   void OpenFile(const FilePath &fileName, bool addtohistory = true);
 
 private:
    void EnqueueODTasks();
@@ -297,26 +297,26 @@ public:
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
-   bool Import(const wxString &fileName, WaveTrackArray *pTrackArray = NULL);
+   bool Import(const FilePath &fileName, WaveTrackArray *pTrackArray = NULL);
 
    void ZoomAfterImport(Track *pTrack);
 
    // Takes array of unique pointers; returns array of shared
    std::vector< std::shared_ptr<Track> >
-   AddImportedTracks(const wxString &fileName,
+   AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
    bool Save();
    bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
    bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false, bool addToHistory = true);
    // strProjectPathName is full path for aup except extension
-   bool SaveCopyWaveTracks(const wxString & strProjectPathName, bool bLossless = false);
+   bool SaveCopyWaveTracks(const FilePath & strProjectPathName, bool bLossless = false);
 
 private:
    bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
 
-   const wxString &GetFileName() { return mFileName; }
+   const FilePath &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
    void SetProjectTitle( int number =-1);
 
@@ -589,7 +589,7 @@ public:
  private:
 
    // The project's name and file info
-   wxString mFileName;
+   FilePath mFileName; // Note: extension-less
    bool mbLoadedFromAup;
    std::shared_ptr<DirManager> mDirManager; // MM: DirManager now created dynamically
 
@@ -740,7 +740,7 @@ private:
    // Dependencies have been imported and a warning should be shown on save
    bool mImportedDependencies{ false };
 
-   wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
+   FilePaths mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    wxRect mNormalizedWindowState;
 

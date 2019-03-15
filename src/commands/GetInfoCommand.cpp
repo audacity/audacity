@@ -411,7 +411,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
    wxMenuItem * item;
    wxString Label;
    wxString Accel;
-   wxString Name;
+   CommandID Name;
 
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       item = list.Item(lndx)->GetData();

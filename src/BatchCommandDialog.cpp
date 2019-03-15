@@ -198,7 +198,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
 
 void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mInternalCommandName;
+   auto command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
    params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
@@ -209,7 +209,7 @@ void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mInternalCommandName;
+   auto command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
    wxString preset = MacroCommands::PromptForPresetFor(command, params, this).Trim();
@@ -218,7 +218,7 @@ void MacroCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
    mParameters->Refresh();
 }
 
-void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
+void MacroCommandDialog::SetCommandAndParams(const CommandID &Command, const wxString &Params)
 {
    auto iter = mCatalog.ByCommandId( Command );
 

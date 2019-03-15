@@ -246,11 +246,11 @@ public:
    ///! Destructor
    virtual ~GStreamerImportPlugin();
 
-   wxString GetPluginFormatDescription();
+   wxString GetPluginFormatDescription() override;
 
-   wxString GetPluginStringID();
+   wxString GetPluginStringID() override;
 
-   wxArrayString GetSupportedExtensions();
+   FileExtensions GetSupportedExtensions() override;
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
@@ -316,7 +316,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
 // ----------------------------------------------------------------------------
 // Constructor
 GStreamerImportPlugin::GStreamerImportPlugin()
-:  ImportPlugin(wxArrayString())
+:  ImportPlugin( {} )
 {
 }
 
@@ -344,7 +344,7 @@ GStreamerImportPlugin::GetPluginStringID()
 
 // Obtains a list of supported extensions from typefind factories
 // TODO: improve the list. It is obviously incomplete.
-wxArrayString
+FileExtensions
 GStreamerImportPlugin::GetSupportedExtensions()
 {
    // We refresh the extensions each time this is called in case the

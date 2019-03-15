@@ -11,6 +11,7 @@
 #define __AUDACITY_MENUS__
 
 #include "Experimental.h"
+#include "audacity/Types.h"
 
 #include <wx/arrstr.h>
 
@@ -100,7 +101,7 @@ MenuManager &GetMenuManager(AudacityProject &project);
 /// Namespace for functions for File menu
 namespace FileActions {
 AudacityProject *DoImportMIDI(
-   AudacityProject *pProject, const wxString &fileName );
+   AudacityProject *pProject, const FilePath &fileName );
 }
 
 /// Namespace for functions for Edit menu

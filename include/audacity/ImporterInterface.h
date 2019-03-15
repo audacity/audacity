@@ -72,7 +72,7 @@ public:
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
-   virtual wxArrayString GetSupportedExtensions() = 0;
+   virtual FileExtensions GetSupportedExtensions() = 0;
    virtual bool SupportsExtension(const wxString & extension) = 0;
 
    // Create the client that will be used to import a file.

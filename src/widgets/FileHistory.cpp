@@ -33,7 +33,7 @@ FileHistory::~FileHistory()
 }
 
 // File history management
-void FileHistory::AddFileToHistory(const wxString & file, bool update)
+void FileHistory::AddFileToHistory(const FilePath & file, bool update)
 {
    // Needed to transition from wxFileHistory to FileHistory since there
    // can be empty history "slots".
@@ -82,7 +82,7 @@ void FileHistory::Clear()
    AddFilesToMenu();
 }
 
-const wxString &FileHistory::GetHistoryFile(size_t i) const
+const FilePath &FileHistory::GetHistoryFile(size_t i) const
 {
    wxASSERT(i < mHistory.size());
 
@@ -90,7 +90,7 @@ const wxString &FileHistory::GetHistoryFile(size_t i) const
       return mHistory[i];
    }
 
-   static const wxString empty;
+   static const FilePath empty{};
    return empty;
 }
 

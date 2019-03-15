@@ -41,8 +41,7 @@ Licensed under the GNU General Public License v2 or later
 
 //TODO: remove non-audio extensions
 #if defined(USE_FFMPEG)
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("4xm"),
    wxT("MTV"),
    wxT("roq"),
@@ -173,10 +172,9 @@ class FFmpegImportPlugin final : public ImportPlugin
 {
 public:
    FFmpegImportPlugin():
-      ImportPlugin(wxArrayString(WXSIZEOF(exts),exts))
-      {
-
-      }
+      ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
+   {
+   }
 
    ~FFmpegImportPlugin() { }
 
@@ -184,7 +182,7 @@ public:
    wxString GetPluginFormatDescription() override;
 
    ///! Probes the file and opens it if appropriate
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -192,7 +190,7 @@ class FFmpegImportFileHandle final : public ImportFileHandle
 {
 
 public:
-   FFmpegImportFileHandle(const wxString & name);
+   FFmpegImportFileHandle(const FilePath & name);
    ~FFmpegImportFileHandle();
 
    ///! Format initialization
@@ -273,7 +271,7 @@ private:
 
    bool                  mCancelled;     //!< True if importing was canceled by user
    bool                  mStopped;       //!< True if importing was stopped by user
-   wxString              mName;
+   FilePath              mName;
    TrackHolders mChannels;               //!< 2-dimensional array of WaveTrack's.
                                          //!< First dimension - streams,
                                          //!< second - channels of a stream.
@@ -297,7 +295,7 @@ wxString FFmpegImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const FilePath &filename)
 {
    auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
 
@@ -340,7 +338,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
 }
 
 
-FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
+FFmpegImportFileHandle::FFmpegImportFileHandle(const FilePath & name)
 :  ImportFileHandle(name)
 {
    PickFFmpegLibs();

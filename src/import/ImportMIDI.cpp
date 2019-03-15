@@ -25,7 +25,7 @@
 #include "../NoteTrack.h"
 #include "../widgets/ErrorDialog.h"
 
-bool ImportMIDI(const wxString &fName, NoteTrack * dest)
+bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
 {
    if (fName.length() <= 4){
       AudacityMessageBox( wxString::Format(

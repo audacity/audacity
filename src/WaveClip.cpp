@@ -1447,7 +1447,7 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
    }
 }
 
-void WaveClip::AppendAlias(const wxString &fName, sampleCount start,
+void WaveClip::AppendAlias(const FilePath &fName, sampleCount start,
                             size_t len, int channel,bool useOD)
 // STRONG-GUARANTEE
 {
@@ -1459,7 +1459,7 @@ void WaveClip::AppendAlias(const wxString &fName, sampleCount start,
    MarkChanged();
 }
 
-void WaveClip::AppendCoded(const wxString &fName, sampleCount start,
+void WaveClip::AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
 // STRONG-GUARANTEE
 {

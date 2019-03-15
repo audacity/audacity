@@ -49,8 +49,7 @@
 
 #define DESC _("MP3 files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("mp3"),
    wxT("mp2"),
    wxT("mpa")
@@ -63,7 +62,7 @@ void GetMP3ImportPlugin(ImportPluginList &importPluginList,
 {
    unusableImportPluginList.push_back(
       std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+         (DESC, FileExtensions( exts.begin(), exts.end() ) )
   );
 }
 
@@ -114,7 +113,7 @@ class MP3ImportPlugin final : public ImportPlugin
 {
 public:
    MP3ImportPlugin():
-      ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+      ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 
@@ -122,13 +121,13 @@ public:
 
    wxString GetPluginStringID() override { return wxT("libmad"); }
    wxString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 };
 
 class MP3ImportFileHandle final : public ImportFileHandle
 {
 public:
-   MP3ImportFileHandle(std::unique_ptr<wxFile> &&file, wxString filename):
+   MP3ImportFileHandle(std::unique_ptr<wxFile> &&file, const FilePath &filename):
       ImportFileHandle(filename),
       mFile(std::move(file))
    {
@@ -188,7 +187,7 @@ wxString MP3ImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const wxString &Filename)
+std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const FilePath &Filename)
 {
    auto file = std::make_unique<wxFile>(Filename);
 

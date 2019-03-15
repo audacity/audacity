@@ -22,6 +22,8 @@
 #include <wx/string.h>
 #include <stdio.h>
 
+#include "audacity/Types.h"
+
 #include "XMLWriter.h"
 class XMLValueChecker
 {
@@ -33,11 +35,11 @@ public:
    // Labels are allowed to be very long.  At some future date we will format long labels nicely.
    static bool IsGoodLongString(const wxString & str);
 
-   static bool IsGoodFileName(const wxString & strFileName, const wxString & strDirName = {});
-   static bool IsGoodFileString(const wxString &str);
-   static bool IsGoodSubdirName(const wxString & strSubdirName, const wxString & strDirName = {});
-   static bool IsGoodPathName(const wxString & strPathName);
-   static bool IsGoodPathString(const wxString &str);
+   static bool IsGoodFileName(const FilePath & strFileName, const FilePath & strDirName = {});
+   static bool IsGoodFileString(const FilePath &str);
+   static bool IsGoodSubdirName(const FilePath & strSubdirName, const FilePath & strDirName = {});
+   static bool IsGoodPathName(const FilePath & strPathName);
+   static bool IsGoodPathString(const FilePath &str);
 
    /** @brief Check that the supplied string can be converted to a long (32bit)
 	* integer.

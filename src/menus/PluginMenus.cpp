@@ -660,7 +660,7 @@ void OnApplyMacroDirectly(const CommandContext &context )
 
    //wxLogDebug( "Macro was: %s", context.parameter);
    ApplyMacroDialog dlg( &project );
-   wxString Name = context.parameter;
+   const auto &Name = context.parameter;
 
 // We used numbers previously, but macros could get renumbered, making
 // macros containing macros unpredictable.
@@ -760,7 +760,7 @@ void AddEffectMenuItemGroup(
       if (i + 1 < namesCnt && names[i] == names[i + 1])
       {
          // collect a sub-menu for like-named items
-         const wxString name = names[i];
+         const auto name = names[i];
          BaseItemPtrs temp2;
          while (i < namesCnt && names[i] == name)
          {
@@ -828,7 +828,7 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
    int i;
 
    for (i = 0; i < (int)names.size(); i++) {
-      wxString MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
+      auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
       result.push_back( MenuTable::Command( MacroID,
          names[i], false, FN(OnApplyMacroDirectly),
          flags ) );
