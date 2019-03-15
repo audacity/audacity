@@ -30,11 +30,11 @@ END_EVENT_TABLE()
 
 HighlightTextCtrl::HighlightTextCtrl(LyricsPanel* parent,
                                        wxWindowID id,
-                                       const wxString& value /*= ""*/,
+                                       const wxString& value /* = {} */,
                                        const wxPoint& pos /*= wxDefaultPosition*/,
                                        const wxSize& size /*= wxDefaultSize*/)
 : wxTextCtrl(parent, id, // wxWindow* parent, wxWindowID id,
-               value, // const wxString& value = "",
+               value, // const wxString& value = {},
                pos, // const wxPoint& pos = wxDefaultPosition,
                size, // const wxSize& size = wxDefaultSize,
                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | wxTE_AUTO_URL | wxTE_NOHIDESEL), //v | wxHSCROLL)
@@ -97,7 +97,7 @@ LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
 
    mHighlightTextCtrl =
       safenew HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
-                              wxT(""), // const wxString& value = wxT(""),
+                              wxT(""), // const wxString& value = {},
                               wxPoint(0, 0), // const wxPoint& pos = wxDefaultPosition,
                               size); // const wxSize& size = wxDefaultSize
    this->SetHighlightFont();

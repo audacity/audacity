@@ -156,7 +156,7 @@ class ToolBarDialog final : public wxDialogWrapper
 
    ToolBarDialog(wxWindow* parent,
                  wxWindowID id,
-                 const wxString& name = wxEmptyString,
+                 const wxString& name = {},
                  const wxPoint& pos = wxDefaultPosition);
 
    ~ToolBarDialog();
@@ -178,7 +178,7 @@ class ToolBarFrame final : public wxMiniFrame
 
    ToolBarFrame(wxWindow* parent,
                 wxWindowID id,
-                const wxString& name = wxEmptyString,
+                const wxString& name = {},
                 const wxPoint& pos = wxDefaultPosition);
 
    ~ToolBarFrame();

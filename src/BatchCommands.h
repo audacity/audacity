@@ -56,7 +56,7 @@ class MacroCommands final {
    MacroCommands();
  public:
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
-      const wxString & filename = wxT(""));
+      const wxString & filename = {});
    bool ApplyCommand( const wxString &friendlyCommand,
       const wxString & command, const wxString & params,
       CommandContext const * pContext=NULL );

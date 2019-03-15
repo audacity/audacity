@@ -83,10 +83,10 @@ public:
    virtual void EndArray();
    virtual void StartStruct();
    virtual void EndStruct();
-   virtual void AddItem(const wxString &value , const wxString &name="" );
-   virtual void AddBool(const bool value      , const wxString &name="" );
-   virtual void AddItem(const double value    , const wxString &name="" );
-   virtual void StartField( const wxString &name="" );
+   virtual void AddItem(const wxString &value , const wxString &name = {} );
+   virtual void AddBool(const bool value      , const wxString &name = {} );
+   virtual void AddItem(const double value    , const wxString &name = {} );
+   virtual void StartField( const wxString &name = {} );
    virtual void EndField( );
    virtual void Flush();
    wxString Escaped( const wxString & str);
@@ -103,13 +103,13 @@ public:
    void EndArray() override { mTarget.EndArray();}
    void StartStruct() override { mTarget.StartStruct();}
    void EndStruct() override { mTarget.EndStruct();}
-   void AddItem(const wxString &value , const wxString &name="" ) override
+   void AddItem(const wxString &value , const wxString &name = {} ) override
       { mTarget.AddItem(value,name);}
-   void AddBool(const bool value      , const wxString &name="" ) override
+   void AddBool(const bool value      , const wxString &name = {} ) override
       { mTarget.AddBool(value,name);}
-   void AddItem(const double value    , const wxString &name="" ) override
+   void AddItem(const double value    , const wxString &name = {} ) override
       { mTarget.AddItem(value,name);}
-   void StartField( const wxString &name="" ) override
+   void StartField( const wxString &name = {} ) override
       { mTarget.StartField(name);}
    void EndField( ) override
       { mTarget.EndField();}
@@ -126,10 +126,10 @@ public:
    virtual void EndArray() override;
    virtual void StartStruct() override;
    virtual void EndStruct() override;
-   virtual void AddItem(const wxString &value , const wxString &name="" )override;
-   virtual void AddBool(const bool value      , const wxString &name="" )override;
-   virtual void AddItem(const double value    , const wxString &name="" )override;
-   virtual void StartField( const wxString &name="" )override;
+   virtual void AddItem(const wxString &value , const wxString &name = {} )override;
+   virtual void AddBool(const bool value      , const wxString &name = {} )override;
+   virtual void AddItem(const double value    , const wxString &name = {} )override;
+   virtual void StartField( const wxString &name = {} )override;
    virtual void EndField( ) override;
 };
 
@@ -141,10 +141,10 @@ public:
    virtual void EndArray() override;
    virtual void StartStruct() override;
    virtual void EndStruct() override;
-   virtual void AddItem(const wxString &value , const wxString &name="" )override;
-   virtual void AddBool(const bool value      , const wxString &name="" )override;
-   virtual void AddItem(const double value    , const wxString &name="" )override;
-   virtual void StartField( const wxString &name="" )override;
+   virtual void AddItem(const wxString &value , const wxString &name = {} )override;
+   virtual void AddBool(const bool value      , const wxString &name = {} )override;
+   virtual void AddItem(const double value    , const wxString &name = {} )override;
+   virtual void StartField( const wxString &name = {} )override;
    virtual void EndField( ) override;
 };
 
@@ -367,17 +367,17 @@ public:
       if (mStatusTarget)
          mStatusTarget->EndField();
    }
-   void AddItem(const wxString &value , const wxString &name="" )
+   void AddItem(const wxString &value , const wxString &name = {} )
    {
       if (mStatusTarget)
          mStatusTarget->AddItem( value, name );
    }
-   void AddBool(const bool value      , const wxString &name="" )
+   void AddBool(const bool value      , const wxString &name = {} )
    {
       if (mStatusTarget)
          mStatusTarget->AddItem( value, name );
    }
-   void AddItem(const double value    , const wxString &name="" )
+   void AddItem(const double value    , const wxString &name = {} )
    {
       if (mStatusTarget)
          mStatusTarget->AddItem( value, name );

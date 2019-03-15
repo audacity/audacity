@@ -180,7 +180,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool HasSharedConfigGroup(const wxString & group) override;
    bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups) override;
 
-   bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString) override;
+   bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = {}) override;
    bool GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval = 0) override;
    bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
    bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
@@ -198,7 +198,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool HasPrivateConfigGroup(const wxString & group) override;
    bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups) override;
 
-   bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString) override;
+   bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = {}) override;
    bool GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval = 0) override;
    bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval = false) override;
    bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
@@ -332,15 +332,15 @@ protected:
    // is okay, but don't try to undo).
 
    // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac, const wxString & = wxEmptyString);
+   bool TotalProgress(double frac, const wxString & = {});
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac, const wxString & = wxEmptyString);
+   bool TrackProgress(int whichTrack, double frac, const wxString & = {});
 
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
-   bool TrackGroupProgress(int whichGroup, double frac, const wxString & = wxEmptyString);
+   bool TrackGroupProgress(int whichGroup, double frac, const wxString & = {});
 
    int GetNumWaveTracks() { return mNumTracks; }
    int GetNumWaveGroups() { return mNumGroups; }

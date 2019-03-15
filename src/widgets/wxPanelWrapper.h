@@ -112,7 +112,7 @@ public:
    wxDirDialogWrapper(
       wxWindow *parent,
       const wxString& message = _("Select a directory"),
-      const wxString& defaultPath = wxT(""),
+      const wxString& defaultPath = {},
       long style = wxDD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
@@ -126,7 +126,7 @@ public:
    void Create(
       wxWindow *parent,
       const wxString& message = _("Select a directory"),
-      const wxString& defaultPath = wxT(""),
+      const wxString& defaultPath = {},
       long style = wxDD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
@@ -150,8 +150,8 @@ public:
    FileDialogWrapper(
       wxWindow *parent,
       const wxString& message = _("Select a file"),
-      const wxString& defaultDir = wxEmptyString,
-      const wxString& defaultFile = wxEmptyString,
+      const wxString& defaultDir = {},
+      const wxString& defaultFile = {},
       const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
@@ -166,8 +166,8 @@ public:
    void Create(
       wxWindow *parent,
       const wxString& message = _("Select a file"),
-      const wxString& defaultDir = wxEmptyString,
-      const wxString& defaultFile = wxEmptyString,
+      const wxString& defaultDir = {},
+      const wxString& defaultFile = {},
       const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,

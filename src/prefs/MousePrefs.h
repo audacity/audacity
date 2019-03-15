@@ -34,7 +34,7 @@ class MousePrefs final : public PrefsPanel
    void AddItem(wxString const & buttons,
                 wxString const & tool,
                 wxString const & action,
-                wxString const & comment = wxEmptyString);
+                wxString const & comment = {});
 
    wxListCtrl * mList;
 };

@@ -236,7 +236,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    const LabelStruct *GetLabel(int index) const;
 
    //This returns the index of the label we just added.
-   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""),
+   int AddLabel(const SelectedRegion &region, const wxString &title = {},
       int restoreFocus = -1);
    //And this tells us the index, if there is a label already there.
    int GetLabelIndex(double t, double t1);

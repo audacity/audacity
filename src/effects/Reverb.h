@@ -79,7 +79,7 @@ public:
 private:
    // EffectReverb implementation
 
-   void SetTitle(const wxString & name = wxT(""));
+   void SetTitle(const wxString & name = {});
 
 #define SpinSliderHandlers(n) \
    void On ## n ## Slider(wxCommandEvent & evt); \

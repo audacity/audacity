@@ -33,7 +33,7 @@ class CommandBuilder
       OldStyleCommandPointer mCommand;
       wxString mError;
 
-      void Failure(const wxString &msg = wxEmptyString);
+      void Failure(const wxString &msg = {});
       void Success(const OldStyleCommandPointer &cmd);
       void BuildCommand(const wxString &cmdName, const wxString &cmdParams);
       void BuildCommand(const wxString &cmdString);

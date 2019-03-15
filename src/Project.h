@@ -274,8 +274,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
     * @return Array of file paths which the user selected to open (multiple
     * selections allowed).
     */
-   static wxArrayString ShowOpenDialog(const wxString &extraformat = wxEmptyString,
-         const wxString &extrafilter = wxEmptyString);
+   static wxArrayString ShowOpenDialog(const wxString &extraformat = {},
+         const wxString &extrafilter = {});
    static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
 

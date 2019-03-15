@@ -1152,7 +1152,7 @@ private:
     * and would be neater done once. If the device isn't found, return the
     * default device index.
     */
-   static int getRecordDevIndex(const wxString &devName = wxEmptyString);
+   static int getRecordDevIndex(const wxString &devName = {});
    /** \brief get the index of the device selected in the preferences.
     *
     * If the device isn't found, returns -1
@@ -1168,7 +1168,7 @@ private:
     * and would be neater done once. If the device isn't found, return the
     * default device index.
     */
-   static int getPlayDevIndex(const wxString &devName = wxEmptyString);
+   static int getPlayDevIndex(const wxString &devName = {});
 
    /** \brief Array of audio sample rates to try to use
     *

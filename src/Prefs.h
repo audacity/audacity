@@ -52,10 +52,10 @@ extern int gMenusDirty;
 class  AUDACITY_DLL_API AudacityPrefs : public wxFileConfig 
 {
 public:
-   AudacityPrefs(const wxString& appName = wxEmptyString,
-               const wxString& vendorName = wxEmptyString,
-               const wxString& localFilename = wxEmptyString,
-               const wxString& globalFilename = wxEmptyString,
+   AudacityPrefs(const wxString& appName = {},
+               const wxString& vendorName = {},
+               const wxString& localFilename = {},
+               const wxString& globalFilename = {},
                long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE,
                const wxMBConv& conv = wxConvAuto());
    bool GetEditClipsCanMove();

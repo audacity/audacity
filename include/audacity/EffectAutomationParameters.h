@@ -67,7 +67,7 @@ with the code that still uses it.
 class CommandParameters final : public wxFileConfig
 {
 public:
-   CommandParameters(const wxString & parms = wxEmptyString)
+   CommandParameters(const wxString & parms = {})
    :  wxFileConfig(wxEmptyString,
                    wxEmptyString,
                    wxEmptyString,

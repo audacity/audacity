@@ -52,7 +52,7 @@ class HighlightTextCtrl final : public wxTextCtrl
 public:
    HighlightTextCtrl(LyricsPanel* parent,
                      wxWindowID id,
-                     const wxString& value = wxT(""),
+                     const wxString& value = {},
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
    virtual ~HighlightTextCtrl() {};

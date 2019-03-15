@@ -78,7 +78,7 @@ public:
 class EQCurve
 {
 public:
-   EQCurve( const wxString & name = wxEmptyString ) { Name = name; }
+   EQCurve( const wxString & name = {} ) { Name = name; }
    EQCurve( const wxChar * name ) { Name = name; }
 
    bool operator < (const EQCurve &that) const
@@ -157,8 +157,8 @@ private:
    void EnvelopeUpdated(Envelope *env, bool lin);
    bool IsLinear();
 
-   void LoadCurves(const wxString &fileName = wxEmptyString, bool append = false);
-   void SaveCurves(const wxString &fileName = wxEmptyString);
+   void LoadCurves(const wxString &fileName = {}, bool append = false);
+   void SaveCurves(const wxString &fileName = {});
    // Merge NEW curves only or update all factory presets.
    void UpdateDefaultCurves( bool updateAll = false);
    void Select(int sel);

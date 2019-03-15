@@ -1000,9 +1000,9 @@ ProgressDialog::ProgressDialog()
 }
 
 ProgressDialog::ProgressDialog(const wxString & title,
-                               const wxString & message /* = wxEmptyString*/,
+                               const wxString & message /* = {}*/,
                                int flags /* = pdlgDefaultFlags */,
-                               const wxString & sRemainingLabelText /* = wxEmptyString */)
+                               const wxString & sRemainingLabelText /* = {} */)
 :  wxDialogWrapper()
 {
    Create(title, message, flags, sRemainingLabelText);
@@ -1011,7 +1011,7 @@ ProgressDialog::ProgressDialog(const wxString & title,
 ProgressDialog::ProgressDialog(const wxString & title,
                                const MessageTable &columns,
                                int flags /* = pdlgDefaultFlags */,
-                               const wxString & sRemainingLabelText /* = wxEmptyString */)
+                               const wxString & sRemainingLabelText /* = {} */)
 :  wxDialogWrapper()
 {
    Create(title, columns, flags, sRemainingLabelText);
@@ -1132,9 +1132,9 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer,
 }
 
 bool ProgressDialog::Create(const wxString & title,
-                            const wxString & message /* = wxEmptyString */,
+                            const wxString & message /* = {} */,
                             int flags /* = pdlgDefaultFlags */,
-                            const wxString & sRemainingLabelText /* = wxEmptyString */)
+                            const wxString & sRemainingLabelText /* = {} */)
 {
    MessageTable columns(1);
    columns.back().push_back(message);
@@ -1153,7 +1153,7 @@ bool ProgressDialog::Create(const wxString & title,
 bool ProgressDialog::Create(const wxString & title,
                             const MessageTable & columns,
                             int flags /* = pdlgDefaultFlags */,
-                            const wxString & sRemainingLabelText /* = wxEmptyString */)
+                            const wxString & sRemainingLabelText /* = {} */)
 {
    Init();
 
@@ -1638,7 +1638,7 @@ TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
                                          const wxString & title,
                                          const MessageTable & columns,
                                          int flags /* = pdlgDefaultFlags */,
-                                         const wxString & sRemainingLabelText /* = wxEmptyString */)
+                                         const wxString & sRemainingLabelText /* = {} */)
 : ProgressDialog(title, columns, flags, sRemainingLabelText)
 {
    mDuration = duration;

@@ -197,7 +197,7 @@ private:
    void OnTime(wxCommandEvent & evt);
    void OnFileButton(wxCommandEvent & evt);
 
-   void resolveFilePath(wxString & path, wxString extension = "");
+   void resolveFilePath(wxString & path, wxString extension = {});
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 

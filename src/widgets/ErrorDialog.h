@@ -112,7 +112,7 @@ public:
          wxWindow *parent,
          const wxString& message,
          const wxString& caption, // don't use = wxGetTextFromUserPromptStr,
-         const wxString& value = wxEmptyString,
+         const wxString& value = {},
          long style = wxTextEntryDialogStyle,
          const wxPoint& pos = wxDefaultPosition)
    : wxTabTraversalWrapper< wxTextEntryDialog>
