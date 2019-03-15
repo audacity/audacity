@@ -503,6 +503,8 @@ std::vector<long> AudioIoCallback::mCachedCaptureRates;
 std::vector<long> AudioIoCallback::mCachedSampleRates;
 double AudioIoCallback::mCachedBestRateIn = 0.0;
 double AudioIoCallback::mCachedBestRateOut;
+bool AudioIoCallback::mCachedBestRatePlaying;
+bool AudioIoCallback::mCachedBestRateCapturing;
 
 enum {
    // This is the least positive latency we can
@@ -3105,7 +3107,8 @@ int AudioIO::GetOptimalSupportedSampleRate()
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
 {
    // Check if we can use the cached value
-   if (mCachedBestRateIn != 0.0 && mCachedBestRateIn == sampleRate) {
+   if (mCachedBestRateIn != 0.0 && mCachedBestRateIn == sampleRate
+      && mCachedBestRatePlaying == playing && mCachedBestRateCapturing == capturing) {
       return mCachedBestRateOut;
    }
 
@@ -3174,6 +3177,8 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
 finished:
    mCachedBestRateIn = sampleRate;
    mCachedBestRateOut = retval;
+   mCachedBestRatePlaying = playing;
+   mCachedBestRateCapturing = capturing;
    return retval;
 }
 
