@@ -449,6 +449,8 @@ audacity_SOURCES = \
 	effects/Invert.h \
 	effects/LoadEffects.cpp \
 	effects/LoadEffects.h \
+	effects/Loudness.cpp \
+	effects/Loudness.h \
 	effects/Noise.cpp \
 	effects/Noise.h \
 	effects/NoiseReduction.cpp \

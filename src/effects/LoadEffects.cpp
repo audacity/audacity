@@ -31,6 +31,7 @@
 #include "Equalization.h"
 #include "Fade.h"
 #include "Invert.h"
+#include "Loudness.h"
 #include "Noise.h"
 #ifdef EXPERIMENTAL_NOISE_REDUCTION
 #include "NoiseReduction.h"
@@ -122,6 +123,7 @@
    EFFECT( FILTER_CURVE,         EffectEqualization, (kEqOptionCurve) )   \
    EFFECT( GRAPHIC_EQ,        EffectEqualization, (kEqOptionGraphic) ) \
    EFFECT( INVERT,            EffectInvert, () )                       \
+   EFFECT( LOUDNESS ,         EffectLoudness, () )                     \
    EFFECT( NORMALIZE,         EffectNormalize, () )                    \
    EFFECT( PHASER,            EffectPhaser, () )                       \
    EFFECT( REPAIR,            EffectRepair, () )                       \

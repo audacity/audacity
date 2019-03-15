@@ -252,6 +252,7 @@ set( EFFECTS_SOURCE
    ${CMAKE_SOURCE_DIRECTORY}effects/Invert.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Leveller.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/LoadEffects.cpp
+   ${CMAKE_SOURCE_DIRECTORY}effects/Loudness.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Noise.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/NoiseReduction.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/NoiseRemoval.cpp

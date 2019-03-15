@@ -284,6 +284,7 @@
 		1790B13F09883BFD008A330A /* LadspaEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02609883BFD008A330A /* LadspaEffect.cpp */; };
 		1790B14109883BFD008A330A /* Leveller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02A09883BFD008A330A /* Leveller.cpp */; };
 		1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02C09883BFD008A330A /* LoadEffects.cpp */; };
+		1790B14219883BFD008A330A /* Loudness.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02D19883BFD008A330A /* Loudness.cpp */; };
 		1790B14309883BFD008A330A /* Noise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02E09883BFD008A330A /* Noise.cpp */; };
 		1790B14409883BFD008A330A /* NoiseRemoval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03009883BFD008A330A /* NoiseRemoval.cpp */; };
 		1790B14509883BFD008A330A /* Normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03209883BFD008A330A /* Normalize.cpp */; };
@@ -2012,6 +2013,8 @@
 		1790B02B09883BFD008A330A /* Leveller.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Leveller.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02C09883BFD008A330A /* LoadEffects.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadEffects.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02D09883BFD008A330A /* LoadEffects.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LoadEffects.h; sourceTree = "<group>"; tabWidth = 3; };
+		1790B02D19883BFD008A330A /* Loudness.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Loudness.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		1790B02D29883BFD008A330A /* Loudness.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Loudness.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02E09883BFD008A330A /* Noise.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Noise.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02F09883BFD008A330A /* Noise.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Noise.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B03009883BFD008A330A /* NoiseRemoval.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = NoiseRemoval.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4744,6 +4747,8 @@
 				1790B02B09883BFD008A330A /* Leveller.h */,
 				1790B02C09883BFD008A330A /* LoadEffects.cpp */,
 				1790B02D09883BFD008A330A /* LoadEffects.h */,
+				1790B02D19883BFD008A330A /* Loudness.cpp */,
+				1790B02D29883BFD008A330A /* Loudness.h */,
 				28D587C50E264CBB009C7DEA /* lv2 */,
 				1790B02E09883BFD008A330A /* Noise.cpp */,
 				1790B02F09883BFD008A330A /* Noise.h */,
@@ -8442,6 +8447,7 @@
 				5E000A211EC7B5D500E8FD93 /* SampleHandle.cpp in Sources */,
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
+				1790B14219883BFD008A330A /* Loudness.cpp in Sources */,
 				5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */,
 				5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */,
 				1790B14309883BFD008A330A /* Noise.cpp in Sources */,

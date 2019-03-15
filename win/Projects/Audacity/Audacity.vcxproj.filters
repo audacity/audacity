@@ -452,6 +452,9 @@
     <ClCompile Include="..\..\..\src\effects\LoadEffects.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Loudness.cpp">
+      <Filter>src\effects</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\effects\Noise.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
@@ -1607,6 +1610,9 @@
       <Filter>src\effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\LoadEffects.h">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Loudness.h">
       <Filter>src\effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Noise.h">

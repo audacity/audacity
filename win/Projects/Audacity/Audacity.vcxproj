@@ -364,6 +364,7 @@
     <ClCompile Include="..\..\..\src\effects\Generator.cpp" />
     <ClCompile Include="..\..\..\src\effects\Invert.cpp" />
     <ClCompile Include="..\..\..\src\effects\LoadEffects.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Loudness.cpp" />
     <ClCompile Include="..\..\..\src\effects\Noise.cpp" />
     <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp" />
     <ClCompile Include="..\..\..\src\effects\Normalize.cpp" />
@@ -764,6 +765,7 @@
     <ClInclude Include="..\..\..\src\effects\Generator.h" />
     <ClInclude Include="..\..\..\src\effects\Invert.h" />
     <ClInclude Include="..\..\..\src\effects\LoadEffects.h" />
+    <ClInclude Include="..\..\..\src\effects\Loudness.h" />
     <ClInclude Include="..\..\..\src\effects\Noise.h" />
     <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h" />
     <ClInclude Include="..\..\..\src\effects\Normalize.h" />
