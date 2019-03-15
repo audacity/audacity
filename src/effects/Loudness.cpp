@@ -160,10 +160,76 @@ bool EffectLoudness::Startup()
    return true;
 }
 
+// TODO: more method extraction
 bool EffectLoudness::Process()
 {
-   // TODO
-   return true;
+   if(mNormalizeTo == kLoudness)
+      // LU use 10*log10(...) instead of 20*log10(...)
+      // so multiply level by 2 and use standard DB_TO_LINEAR macro.
+      mRatio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
+
+   // Iterate over each track
+   this->CopyInputTracks(); // Set up mOutputTracks.
+   bool bGoodResult = true;
+   wxString topMsg = _("Normalizing Loudness...\n");
+
+   AllocBuffers();
+   mProgressVal = 0;
+
+   for(auto track : mOutputTracks->Selected<WaveTrack>()
+       + (mStereoInd ? &Track::Any : &Track::IsLeader))
+   {
+      // Get start and end times from track
+      // PRL: No accounting for multiple channels ?
+      double trackStart = track->GetStartTime();
+      double trackEnd = track->GetEndTime();
+
+      // Set the current bounds to whichever left marker is
+      // greater and whichever right marker is less:
+      mCurT0 = mT0 < trackStart? trackStart: mT0;
+      mCurT1 = mT1 > trackEnd? trackEnd: mT1;
+
+      // Get the track rate
+      mCurRate = track->GetRate();
+
+      wxString msg;
+      auto trackName = track->GetName();
+      mSteps = 2;
+
+      mProgressMsg =
+         topMsg + wxString::Format(_("Analyzing: %s"), trackName);
+
+      auto range = mStereoInd
+         ? TrackList::SingletonRange(track)
+         : TrackList::Channels(track);
+
+      mProcStereo = range.size() > 1;
+
+      InitTrackAnalysis();
+      if(!ProcessOne(range, true))
+      {
+         // Processing failed -> abort
+         bGoodResult = false;
+         break;
+      }
+
+      // Calculate normalization values the analysis results
+      float extent = 1.0;
+      // TODO: add it in separate method
+      mMult = mRatio / extent;
+
+      mProgressMsg = topMsg + wxString::Format(_("Processing: %s"), trackName);
+      if(!ProcessOne(range, false))
+      {
+         // Processing failed -> abort
+         bGoodResult = false;
+         break;
+      }
+   }
+
+   this->ReplaceProcessedTracks(bGoodResult);
+   FreeBuffers();
+   return bGoodResult;
 }
 
 void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
@@ -240,7 +306,171 @@ bool EffectLoudness::TransferDataFromWindow()
 
 // EffectLoudness implementation
 
-// TODO
+/// Get required buffer size for the largest whole track and allocate buffers.
+/// This reduces the amount of allocations required.
+void EffectLoudness::AllocBuffers()
+{
+   mTrackBufferCapacity = 0;
+   bool stereoTrackFound = false;
+   double maxSampleRate = 0;
+   mProcStereo = false;
+
+   for(auto track : mOutputTracks->Selected<WaveTrack>() + &Track::Any)
+   {
+      mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
+      maxSampleRate = std::max(maxSampleRate, track->GetRate());
+
+      // There is a stereo track
+      if(track->IsLeader())
+         stereoTrackFound = true;
+   }
+
+   // TODO: hist and block buffers go here
+
+   // Initiate a processing buffer.  This buffer will (most likely)
+   // be shorter than the length of the track being processed.
+   mTrackBuffer[0].reinit(mTrackBufferCapacity);
+
+   if(!mStereoInd && stereoTrackFound)
+      mTrackBuffer[1].reinit(mTrackBufferCapacity);
+}
+
+void EffectLoudness::FreeBuffers()
+{
+   mTrackBuffer[0].reset();
+   mTrackBuffer[1].reset();
+   // TODO: additional destroy -> function
+}
+
+void EffectLoudness::InitTrackAnalysis()
+{
+   mCount = 0;
+  // TODO: additional init goes here
+}
+
+/// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
+/// and executes ProcessData, on it...
+///  uses mMult to normalize a track.
+///  mMult must be set before this is called
+/// In analyse mode, it executes the selected analyse operation on it...
+///  mMult does not have to be set before this is called
+bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
+{
+   WaveTrack* track = *range.begin();
+
+   // Transform the marker timepoints to samples
+   auto start = track->TimeToLongSamples(mCurT0);
+   auto end   = track->TimeToLongSamples(mCurT1);
+
+   // Get the length of the buffer (as double). len is
+   // used simply to calculate a progress meter, so it is easier
+   // to make it a double now than it is to do it later
+   mTrackLen = (end - start).as_double();
+
+   // Abort if the right marker is not to the right of the left marker
+   if(mCurT1 <= mCurT0)
+      return false;
+
+   // Go through the track one buffer at a time. s counts which
+   // sample the current buffer starts at.
+   auto s = start;
+   while(s < end)
+   {
+      // Get a block of samples (smaller than the size of the buffer)
+      // Adjust the block size if it is the final block in the track
+      auto blockLen = limitSampleBufferSize(
+         track->GetBestBlockSize(s),
+         mTrackBufferCapacity);
+
+      const size_t remainingLen = (end - s).as_size_t();
+      blockLen = blockLen > remainingLen ? remainingLen : blockLen;
+      if(!LoadBufferBlock(range, s, blockLen))
+         return false;
+
+      // Process the buffer.
+      if(analyse)
+      {
+         if(!AnalyseBufferBlock())
+            return false;
+      }
+      else
+      {
+         if(!ProcessBufferBlock())
+            return false;
+      }
+
+      sleep(1);
+
+      if(!analyse)
+         StoreBufferBlock(range, s, blockLen);
+
+      // Increment s one blockfull of samples
+      s += blockLen;
+   }
+
+   // Return true because the effect processing succeeded ... unless cancelled
+   return true;
+}
+
+bool EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
+                                     sampleCount pos, size_t len)
+{
+   sampleCount read_size = -1;
+   // Get the samples from the track and put them in the buffer
+   int idx = 0;
+   for(auto channel : range)
+   {
+      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len,
+                   fillZero, true, &read_size);
+      mTrackBufferLen = read_size.as_size_t();
+
+      // Fail if we read different sample count from stereo pair tracks.
+      // Ignore this check during first iteration (read_size == -1).
+      if(read_size.as_size_t() != mTrackBufferLen && read_size != -1)
+         return false;
+
+      ++idx;
+   }
+   return true;
+}
+
+/// Calculates sample sum (for DC) and EBU R128 weighted square sum
+/// (for loudness).
+bool EffectLoudness::AnalyseBufferBlock()
+{
+   // TODO: analysis loop goes here
+   mCount += mTrackBufferLen;
+
+   if(!UpdateProgress())
+      return false;
+   return true;
+}
+
+bool EffectLoudness::ProcessBufferBlock()
+{
+   for(size_t i = 0; i < mTrackBufferLen; i++)
+   {
+      mTrackBuffer[0][i] = mTrackBuffer[0][i] * mMult;
+      if(mProcStereo)
+         mTrackBuffer[1][i] = mTrackBuffer[1][i] * mMult;
+   }
+
+   if(!UpdateProgress())
+      return false;
+   return true;
+}
+
+void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack> range,
+                                      sampleCount pos, size_t len)
+{
+   int idx = 0;
+   for(auto channel : range)
+   {
+      // Copy the newly-changed samples back onto the track.
+      channel->Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      ++idx;
+   }
+}
 
 bool EffectLoudness::UpdateProgress()
 {

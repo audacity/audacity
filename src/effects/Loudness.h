@@ -4,7 +4,7 @@
 
   Loudness.h
 
-  Max Maisel
+  Max Maisel (based on Normalize effect)
 
 **********************************************************************/
 
@@ -59,6 +59,17 @@ public:
 private:
    // EffectLoudness implementation
 
+   void AllocBuffers();
+   void FreeBuffers();
+   void InitTrackAnalysis();
+   bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
+   bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
+                        sampleCount pos, size_t len);
+   bool AnalyseBufferBlock();
+   bool ProcessBufferBlock();
+   void StoreBufferBlock(TrackIterRange<WaveTrack> range,
+                         sampleCount pos, size_t len);
+
    bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
@@ -79,6 +90,8 @@ private:
    double mTrackLen;
    double mCurRate;
 
+   float  mMult;
+   float  mRatio;
    sampleCount    mCount;
 
    wxTextCtrl *mLevelTextCtrl;
