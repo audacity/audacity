@@ -332,7 +332,7 @@ void OnExportMIDI(const CommandContext &context)
 
    while(true) {
 
-      wxString fName = wxT("");
+      wxString fName;
 
       fName = FileNames::SelectFile(FileNames::Operation::Export,
          _("Export MIDI As:"),

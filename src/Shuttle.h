@@ -47,7 +47,7 @@ class ShuttleCli final : public Shuttle
 {
 public:
    wxString mParams;
-   ShuttleCli(){ mParams = wxT("") ;}
+   ShuttleCli() {}
    virtual ~ShuttleCli() {}
    bool ExchangeWithMaster(const wxString & Name) override;
 };
@@ -63,7 +63,7 @@ public:
    wxString mParams;
    bool *pOptionalFlag;
    CommandParameters * mpEap;
-   ShuttleParams(){ mParams = wxT("") ;mpEap=NULL;pOptionalFlag=NULL;}
+   ShuttleParams() { mpEap = NULL; pOptionalFlag = NULL; }
    virtual ~ShuttleParams() {}
    bool ExchangeWithMaster(const wxString & Name) override;
    bool ShouldSet();

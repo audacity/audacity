@@ -607,11 +607,6 @@ NumericConverter::NumericConverter(Type type,
    if (type == NumericConverter::TIME )
       mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
 
-   mPrefix = wxT("");
-   mValueTemplate = wxT("");
-   mValueMask = wxT("");
-   mValueString = wxT("");
-
    mScalingFactor = 1.0f;
    mSampleRate = 1.0f;
    mNtscDrop = false;

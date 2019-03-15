@@ -1345,7 +1345,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    if(fileName.empty()) {
       // Check if presets are up to date.
       wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
-      wxString eqCurvesInstalledVersion = wxT("");
+      wxString eqCurvesInstalledVersion;
       gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
 
       bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
@@ -3490,7 +3490,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
-   wxString fileName = wxT("");
+   wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
    else
@@ -3510,7 +3510,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
-   wxString fileName = wxT("");
+   wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
    else

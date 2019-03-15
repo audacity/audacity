@@ -1080,7 +1080,7 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
 {
    wxString label = entry->label;
 #if 1
-   wxString Accel = "";
+   wxString Accel;
    do{
       if (!entry->key.empty())
       {
@@ -1253,7 +1253,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    wxString reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
    // The default title string is 'Disallowed'.
    wxString title = _("Disallowed");
-   wxString helpPage ="";
+   wxString helpPage;
 
    auto missingFlags = flagsRequired & (~flagsGot );
    if( missingFlags & AudioIONotBusyFlag )

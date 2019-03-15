@@ -416,13 +416,13 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    if (iMinsRecording >= iMinsLeft) {
 
       // Format the strings
-      wxString sRemainingTime = "";
+      wxString sRemainingTime;
       sRemainingTime = pProject->GetHoursMinsString(iMinsLeft);
-      wxString sPlannedTime = "";
+      wxString sPlannedTime;
       sPlannedTime = pProject->GetHoursMinsString(iMinsRecording);
 
       // Create the message string
-      wxString sMessage = "";
+      wxString sMessage;
       sMessage.Printf(_("You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s"),
          sPlannedTime,
          sRemainingTime);
@@ -890,7 +890,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                                                                                     (bAutoSave ? "true" : "false"));
             S.StartMultiColumn(3, wxEXPAND);
             {
-               wxString sInitialValue = wxT("");
+               wxString sInitialValue;
                AudacityProject* pProject = GetActiveProject();
                wxString sSaveValue = pProject->GetFileName();
                if (!sSaveValue.empty()) {

@@ -2467,7 +2467,6 @@ public:
       p->Raise(); // May help identifying the window on Mac
 
       // Construct this projects name and number.
-      sProjNumber = "";
       sProjName = p->GetName();
       if (sProjName.empty()){
          sProjName = _("<untitled>");
@@ -3873,7 +3872,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    // Always save a backup of the original project file
    //
 
-   wxString safetyFileName = wxT("");
+   wxString safetyFileName;
    if (wxFileExists(mFileName)) {
 
 #ifdef __WXGTK__
@@ -4308,7 +4307,7 @@ void AudacityProject::ZoomAfterImport(Track *pTrack)
 bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
    TrackHolders newTracks;
-   wxString errorMessage = wxEmptyString;
+   wxString errorMessage;
 
    {
       // Backup Tags, before the import.  Be prepared to roll back changes.
@@ -4479,7 +4478,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
    }
 
    bool bPrompt = (mBatchMode == 0) || (mFileName.empty());
-   wxString fName = "";
+   wxString fName;
 
    if (bPrompt) {
       // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
@@ -5436,7 +5435,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
 
    // MY: To allow SaveAs from Timer Recording we need to check what
    // the value of mFileName is before we change it.
-   wxString sOldFilename = "";
+   wxString sOldFilename;
    if (IsProjectSaved()) {
       sOldFilename = mFileName;
    }
@@ -5477,7 +5476,7 @@ bool AudacityProject::ProjectHasTracks() {
 wxString AudacityProject::GetHoursMinsString(int iMinutes)
 {
 
-   wxString sFormatted = wxEmptyString;
+   wxString sFormatted;
 
    if (iMinutes < 1) {
       // Less than a minute...

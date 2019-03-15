@@ -2799,7 +2799,7 @@ bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgrou
    wxString path = GetSettings()->GetPath();
    GetSettings()->SetPath(group);
 
-   wxString name = wxEmptyString;
+   wxString name;
    long index = 0;
    if (GetSettings()->GetFirstGroup(name, index))
    {
@@ -2832,7 +2832,7 @@ bool PluginManager::GetConfig(const wxString & key, wxString & value, const wxSt
 
    if (!key.empty())
    {
-      wxString wxval = wxEmptyString;
+      wxString wxval;
 
       result = GetSettings()->Read(key, &wxval, defval);
 

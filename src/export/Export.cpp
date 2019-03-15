@@ -282,7 +282,6 @@ Exporter::Exporter()
 {
    mMixerSpec = NULL;
    mBook = NULL;
-   mFormatName = "";
 
    SetFileDialogTitle( _("Export Audio") );
 

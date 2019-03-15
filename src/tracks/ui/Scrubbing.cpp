@@ -1121,7 +1121,6 @@ const wxString &Scrubber::GetUntranslatedStateString() const
 wxString Scrubber::StatusMessageForWave() const
 {
    wxString result;
-   result = "";
 
    if(  Seeks() )
       result = _("Move mouse pointer to Seek");

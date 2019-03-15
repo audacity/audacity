@@ -77,7 +77,7 @@ wxString NormalizedKeyString::Display(bool usesSpecialChars) const
 
 NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & event)
 {
-   wxString newStr = wxT("");
+   wxString newStr;
 
    long key = event.GetKeyCode();
 

@@ -450,7 +450,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // create a html pane in it to put the content in.
    wxString enabled = _("Enabled");
    wxString disabled = _("Disabled");
-   wxString blank = wxT("");
+   wxString blank;
 
    /* this builds up the list of information to go in the window in the string
     * informationStr */

@@ -129,8 +129,6 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mOutputTrack[0] = mOutputTrack[1] = nullptr;
 
    mAction = XO("Applying Nyquist Effect...");
-   mInputCmd = wxEmptyString;
-   mCmd = wxEmptyString;
    mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
@@ -706,7 +704,7 @@ bool NyquistEffect::Process()
       int numLabel = 0;
       int numMidi = 0;
       int numTime = 0;
-      wxString waveTrackList = wxT("");   // track positions of selected audio tracks.
+      wxString waveTrackList;   // track positions of selected audio tracks.
 
       {
          auto countRange = project->GetTracks()->Leaders();
@@ -2637,7 +2635,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   S.AddSpace(10, 10);
 
                   // Get default file extension if specified in wildcards
-                  wxString defaultExtension = "";
+                  wxString defaultExtension;
                   size_t len = ctrl.lowStr.length();
                   int characters = ctrl.lowStr.Find("*");
 
@@ -2949,7 +2947,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
       return;
    }
 
-   wxString path = "";
+   wxString path;
    // When multiple files selected, return file paths as a list of quoted strings.
    if (flags & wxFD_MULTIPLE)
    {

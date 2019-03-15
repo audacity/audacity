@@ -265,7 +265,7 @@ void AddEffectMenuItems(
             name += wxT("...");
          }
 
-         wxString group = wxEmptyString;
+         wxString group;
          if (groupBy == wxT("sortby:publisher:name"))
          {
             group = EffectManager::Get().GetVendorName(plug->GetID());

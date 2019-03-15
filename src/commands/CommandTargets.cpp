@@ -136,7 +136,7 @@ void LispyCommandMessageTarget::EndStruct(){
    Update( ")" );
 }
 void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
-   wxString Padding = "";
+   wxString Padding;
    if( name.empty() )
       Update( wxString::Format( "%s%s\"%s\"", (mCounts.back()>0)?" ":"", Padding, Escaped(value)));
    else 

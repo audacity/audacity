@@ -511,7 +511,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       if (err != noErr)
          continue;
 
-      wxString v = wxT("");
+      wxString v;
 
       switch (dataType)
       {

@@ -85,7 +85,6 @@ Ruler::Ruler()
    mFlip = false;
    mLog = false;
    mLabelEdges = false;
-   mUnits = wxT("");
 
    mLeft = -1;
    mTop = -1;

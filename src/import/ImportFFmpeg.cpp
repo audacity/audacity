@@ -439,7 +439,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
          else
             duration = mFormatContext->duration / AV_TIME_BASE;
-         wxString bitrate = wxT("");
+         wxString bitrate;
          if (sc->m_codecCtx->bit_rate > 0)
             bitrate.Printf(wxT("%d"),(int)sc->m_codecCtx->bit_rate);
          else

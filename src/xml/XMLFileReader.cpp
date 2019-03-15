@@ -29,7 +29,6 @@ XMLFileReader::XMLFileReader()
    XML_SetElementHandler(mParser, startElement, endElement);
    XML_SetCharacterDataHandler(mParser, charHandler);
    mBaseHandler = NULL;
-   mErrorStr = wxT("");
    mHandler.reserve(128);
 }
 

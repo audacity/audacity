@@ -2002,7 +2002,7 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          S.EndHorizontalLay();
 
          wxArrayString choices;
-         wxString selected = wxT("");
+         wxString selected;
          for (size_t i = 0; i < WXSIZEOF(sampRates); i++) {
             int label = sampRates[i].label;
             if (label >= lowrate && label <= highrate) {

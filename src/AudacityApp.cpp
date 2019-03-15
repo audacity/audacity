@@ -1753,7 +1753,7 @@ bool AudacityApp::InitTempDir()
    wxString tempFromPrefs = gPrefs->Read(wxT("/Directories/TempDir"), wxT(""));
    wxString tempDefaultLoc = wxGetApp().defaultTempDir;
 
-   wxString temp = wxT("");
+   wxString temp;
 
    #ifdef __WXGTK__
    if (tempFromPrefs.length() > 0 && tempFromPrefs[0] != wxT('/'))

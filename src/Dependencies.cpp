@@ -533,7 +533,7 @@ void DependencyDialog::OnRightClick( wxListEvent& event)
 void DependencyDialog::OnCopyToClipboard( wxCommandEvent& evt )
 {
    static_cast<void>(evt);
-   wxString Files = "";
+   wxString Files;
    for (const auto &aliasedFile : mAliasedFiles) {
       const wxFileName & fileName = aliasedFile.mFileName;
       wxLongLong byteCount = (aliasedFile.mByteCount * 124) / 100;

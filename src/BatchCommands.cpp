@@ -90,7 +90,6 @@ static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
 
 MacroCommands::MacroCommands()
 {
-   mMessage = "";
    ResetMacro();
 
    auto names = GetNames();

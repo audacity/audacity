@@ -152,7 +152,7 @@ void Importer::ReadImportItems()
     */
    for (item_counter = 0; true; item_counter++)
    {
-      wxString condition, filters, used_filters, unused_filters = wxEmptyString, extensions, mime_types = wxEmptyString;
+      wxString condition, filters, used_filters, unused_filters, extensions, mime_types;
       item_name.Printf (wxT("/ExtImportItems/Item%d"), item_counter);
       /* Break at first non-existent item */
       if (!gPrefs->Read(item_name, &item_value))
