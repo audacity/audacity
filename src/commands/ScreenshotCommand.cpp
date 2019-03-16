@@ -105,15 +105,15 @@ bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
 
 void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto whats = LocalizedStrings(kCaptureWhatStrings, nCaptureWhats);
-   auto backs = LocalizedStrings(kBackgroundStrings, nBackgrounds);
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.TieTextBox(  _("Path:"), mPath);
-      S.TieChoice(   _("Capture What:"), mWhat, &whats);
-      S.TieChoice(   _("Background:"), mBack, &backs);
+      S.TieChoice(   _("Capture What:"),
+         mWhat, LocalizedStrings(kCaptureWhatStrings, nCaptureWhats));
+      S.TieChoice(   _("Background:"),
+         mBack, LocalizedStrings(kBackgroundStrings, nBackgrounds));
       S.TieCheckBox( _("Bring To Top:"), mbBringToTop);
    }
    S.EndMultiColumn();

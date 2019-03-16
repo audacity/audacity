@@ -21,6 +21,7 @@ struct FFTParam;
 class NumberScale;
 class SpectrumPrefs;
 class wxArrayString;
+class wxArrayStringEx;
 
 class SpectrogramSettings
 {
@@ -65,8 +66,8 @@ public:
       stNumScaleTypes,
    };
 
-   static const wxArrayString &GetScaleNames();
-   static const wxArrayString &GetAlgorithmNames();
+   static const wxArrayStringEx &GetScaleNames();
+   static const wxArrayStringEx &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();

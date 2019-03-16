@@ -47,7 +47,7 @@ private:
 
    int mNumLangs;
    wxArrayString mLangCodes;
-   wxArrayString mLangNames;
+   wxArrayStringEx mLangNames;
 
    DECLARE_EVENT_TABLE()
 };
@@ -77,12 +77,8 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
 {
    SetName(GetTitle());
    GetLanguages(mLangCodes, mLangNames);
-   int ndx = make_iterator_range( mLangCodes ).index( GetSystemLanguageCode() );
-   wxString lang;
-
-   if (ndx != wxNOT_FOUND) {
-      lang = mLangNames[ndx];
-   }
+   int lang =
+      make_iterator_range( mLangCodes ).index( GetSystemLanguageCode() );
 
    ShuttleGui S(this, eIsCreating);
 
@@ -92,8 +88,8 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
       {
          S.SetBorder(15);
          mChoice = S.AddChoice(_("Choose Language for Audacity to use:"),
-                              lang,
-                              &mLangNames);
+                              mLangNames,
+                              lang);
       }
       S.EndVerticalLay();
 

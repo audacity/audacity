@@ -306,20 +306,19 @@ bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){
 
 void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto colours = LocalizedStrings(  kColourStrings, nColours );
-   auto displays = LocalizedStrings( kDisplayTypeStrings, nDisplayTypes );
-   auto scales = LocalizedStrings( kScaleTypeStrings, nScaleTypes );
-   auto vzooms = LocalizedStrings( kZoomTypeStrings, nZoomTypes );
-
    SetTrackBase::PopulateOrExchange( S );
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
       S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),        mHeight );
-      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,      &colours );
-      S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType, &displays );
-      S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,   &scales );
-      S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,       &vzooms );
+      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,
+         LocalizedStrings(  kColourStrings, nColours ) );
+      S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType,
+         LocalizedStrings( kDisplayTypeStrings, nDisplayTypes ) );
+      S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,
+         LocalizedStrings( kScaleTypeStrings, nScaleTypes ) );
+      S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,
+         LocalizedStrings( kZoomTypeStrings, nZoomTypes ) );
       S.Optional( bHasVZoomTop    ).TieTextBox(         _("VZoom Top:"),     mVZoomTop );
       S.Optional( bHasVZoomBottom ).TieTextBox(         _("VZoom Bottom:"),  mVZoomBottom );
    }

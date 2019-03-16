@@ -21,6 +21,7 @@
 #include "PrefsPanel.h"
 
 class ShuttleGui;
+class wxArrayStringEx;
 
 class DevicePrefs final : public PrefsPanel
 {
@@ -38,8 +39,8 @@ class DevicePrefs final : public PrefsPanel
    void OnHost(wxCommandEvent & e);
    void OnDevice(wxCommandEvent & e);
 
-   wxArrayString mHostNames;
-   wxArrayString mHostLabels;
+   wxArrayStringEx mHostNames;
+   wxArrayStringEx mHostLabels;
 
    wxString mPlayDevice;
    wxString mRecordDevice;

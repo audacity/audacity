@@ -116,8 +116,8 @@ private:
 
 private:
 
-   wxArrayString mHeaderNames;
-   wxArrayString mEncodingNames;
+   wxArrayStringEx mHeaderNames;
+   wxArrayStringEx mEncodingNames;
    wxChoice *mHeaderChoice;
    wxChoice *mEncodingChoice;
    int mHeaderFromChoice;
@@ -191,12 +191,12 @@ void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol(1);
             mHeaderChoice = S.Id(ID_HEADER_CHOICE)
                .AddChoice(_("Header:"),
-                          mHeaderNames[mHeaderFromChoice],
-                          &mHeaderNames);
+                          mHeaderNames,
+                          mHeaderFromChoice);
             mEncodingChoice = S.Id(ID_ENCODING_CHOICE)
                .AddChoice(_("Encoding:"),
-                          mEncodingNames[mEncodingFromChoice],
-                          &mEncodingNames);
+                          mEncodingNames,
+                          mEncodingFromChoice);
          }
          S.EndMultiColumn();
       }

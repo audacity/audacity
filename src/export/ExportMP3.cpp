@@ -2001,27 +2001,27 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          }
          S.EndHorizontalLay();
 
-         wxArrayString choices;
-         wxString selected;
+         wxArrayStringEx choices;
+         int selected = -1;
          for (size_t i = 0; i < WXSIZEOF(sampRates); i++) {
             int label = sampRates[i].label;
             if (label >= lowrate && label <= highrate) {
                choices.push_back(sampRates[i].name);
                if (label <= rate) {
-                  selected = sampRates[i].name;
+                  selected = i;
                }
             }
          }
 
-         if (selected.empty()) {
-            selected = choices[0];
+         if (selected == -1) {
+            selected = 0;
          }
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 selected,
-                                 &choices);
+                                 choices,
+                                 selected);
          }
          S.EndHorizontalLay();
       }

@@ -58,14 +58,13 @@ bool SetClipCommand::DefineParams( ShuttleParams & S ){
 
 void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto colours = LocalizedStrings( kColourStrings, nColours );
-
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       S.Optional( bHasContainsTime).TieNumericTextBox(  _("At:"),            mContainsTime );
-      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour, &colours );
+      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,
+         LocalizedStrings( kColourStrings, nColours ) );
       S.Optional( bHasT0          ).TieNumericTextBox(  _("Start:"),         mT0 );
    }
    S.EndMultiColumn();

@@ -762,9 +762,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                auto interpolations =
                   LocalizedStrings(kInterpStrings, nInterpolations);
-               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &interpolations);
+               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, interpolations, 0 );
                mInterpChoice->SetName(_("Interpolation type"));
-               mInterpChoice->SetSelection(0);
             }
             S.EndHorizontalLay();
 
@@ -830,13 +829,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
             {
-               wxArrayString curves;
+               wxArrayStringEx curves;
                for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
                {
                   curves.push_back(mCurves[ i ].Name);
                }
 
-               mCurve = S.Id(ID_Curve).AddChoice( {}, wxT(""), &curves);
+               mCurve = S.Id(ID_Curve).AddChoice( {}, curves );
                mCurve->SetName(_("Select Curve"));
             }
             S.EndHorizontalLay();

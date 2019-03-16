@@ -376,7 +376,8 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int Pos
    return pBtn;
 }
 
-wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt, const wxString &Selected, const wxArrayString * pChoices )
+wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
+   const wxArrayStringEx &choices, int Selected )
 {
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
@@ -391,12 +392,13 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt, const wxString &Se
       miId,
       wxDefaultPosition,
       wxDefaultSize,
-      *pChoices,
+      choices,
       Style( 0 ) );
 
    pChoice->SetSizeHints( 180,-1);// Use -1 for 'default size' - Platform specific.
    pChoice->SetName(wxStripMenuCodes(Prompt));
-   pChoice->SetStringSelection( Selected );
+   if ( Selected >= 0 && Selected < choices.size() )
+      pChoice->SetSelection( Selected );
 
    UpdateSizers();
    return pChoice;
@@ -445,7 +447,7 @@ wxStaticText * ShuttleGuiBase::AddVariableText(const wxString &Str, bool bCenter
    return pStatic;
 }
 
-wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices, long style )
+wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style )
 {
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
@@ -455,13 +457,13 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
    wxComboBox * pCombo;
    miProp=0;
 
-   int n = pChoices->size();
+   int n = choices.size();
    if( n>50 ) n=50;
    int i;
    wxString Choices[50];
    for(i=0;i<n;i++)
    {
-      Choices[i] = (*pChoices)[i];
+      Choices[i] = choices[i];
    }
 
    mpWind = pCombo = safenew wxComboBox(GetParent(), miId, Selected, wxDefaultPosition, wxDefaultSize,
@@ -651,7 +653,7 @@ void ShuttleGuiBase::AddConstTextBox(const wxString &Prompt, const wxString &Val
    UpdateSizers();
 }
 
-wxListBox * ShuttleGuiBase::AddListBox(const wxArrayString * pChoices, long style)
+wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices, long style)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -659,7 +661,7 @@ wxListBox * ShuttleGuiBase::AddListBox(const wxArrayString * pChoices, long styl
    wxListBox * pListBox;
    SetProportions( 1 );
    mpWind = pListBox = safenew wxListBox(GetParent(), miId,
-      wxDefaultPosition, wxDefaultSize,*pChoices, style);
+      wxDefaultPosition, wxDefaultSize, choices, style);
    pListBox->SetMinSize( wxSize( 120,150 ));
    UpdateSizers();
    return pListBox;
@@ -1361,7 +1363,7 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, WrappedType & Wrap
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    WrappedType &WrappedRef,
-   const wxArrayString * pChoices )
+   const wxArrayStringEx &choices )
 {
    HandleOptionality( Prompt );
 
@@ -1374,17 +1376,12 @@ wxChoice * ShuttleGuiBase::TieChoice(
    {
    case eIsCreating:
       {
-         if( WrappedRef.IsString() )
-            pChoice = AddChoice( Prompt, WrappedRef.ReadAsString(), pChoices );
-         else
-         {
-            wxString Temp;
-            if( pChoices && ( WrappedRef.ReadAsInt() < (int)pChoices->size() ) )
-            {
-               Temp = (*pChoices)[WrappedRef.ReadAsInt()];
-            }
-            pChoice = AddChoice( Prompt, Temp, pChoices );
+         if( WrappedRef.IsString() ) {
+            auto Selected = choices.Index( WrappedRef.ReadAsString() );
+            pChoice = AddChoice( Prompt, choices, Selected );
          }
+         else
+            pChoice = AddChoice( Prompt, choices, WrappedRef.ReadAsInt() );
       }
       break;
    // IF setting internal storage from the controls.
@@ -1422,7 +1419,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
       wxASSERT( false );
       break;
    }
-   SetSizeHints(*pChoices);
+   SetSizeHints(choices);
    return pChoice;
 }
 
@@ -1585,19 +1582,19 @@ wxSlider * ShuttleGuiBase::TieVSlider( const wxString &Prompt, float &pos, const
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    wxString &Selected,
-   const wxArrayString * pChoices )
+   const wxArrayStringEx &choices )
 {
    WrappedType WrappedRef( Selected );
-   return TieChoice( Prompt, WrappedRef, pChoices );
+   return TieChoice( Prompt, WrappedRef, choices );
 }
 
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    int &Selected,
-   const wxArrayString * pChoices )
+   const wxArrayStringEx &choices )
 {
    WrappedType WrappedRef( Selected );
-   return TieChoice( Prompt, WrappedRef, pChoices );
+   return TieChoice( Prompt, WrappedRef, choices );
 }
 
 //-----------------------------------------------------------------------//
@@ -1608,7 +1605,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
 //-----------------------------------------------------------------------//
 
 /// String-to-Index
-int ShuttleGuiBase::TranslateToIndex( const wxString &Value, const wxArrayString &Choices )
+int ShuttleGuiBase::TranslateToIndex( const wxString &Value, const wxArrayStringEx &Choices )
 {
    int n = make_iterator_range( Choices ).index( Value );
    if( n == wxNOT_FOUND  )
@@ -1618,7 +1615,7 @@ int ShuttleGuiBase::TranslateToIndex( const wxString &Value, const wxArrayString
 }
 
 /// Index-to-String
-wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayString &Choices )
+wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayStringEx &Choices )
 {
    int n = nIn;
    if( n== wxNOT_FOUND )
@@ -1885,7 +1882,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
    // Do this to force any needed migrations first
    enumSetting.Read();
 
-   wxArrayString visibleChoices, internalChoices;
+   wxArrayStringEx visibleChoices, internalChoices;
    for (const auto &ident : enumSetting) {
       visibleChoices.push_back( ident.Translation() );
       internalChoices.push_back( ident.Internal() );
@@ -1906,8 +1903,8 @@ wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const wxString &Default,
-   const wxArrayString & Choices,
-   const wxArrayString & InternalChoices)
+   const wxArrayStringEx & Choices,
+   const wxArrayStringEx & InternalChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
 
@@ -1919,7 +1916,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Index from Prefs.
    if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
-   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, &Choices ); // Get/Put index from GUI.
+   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
    if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
@@ -1938,7 +1935,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
-   const wxArrayString & Choices,
+   const wxArrayStringEx & Choices,
    const std::vector<int> & InternalChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
@@ -1950,7 +1947,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Int from Prefs.
    if( DoStep(1) ) TempIndex = TranslateToIndex( TranslatedInt, InternalChoices ); // Int to an index.
-   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, &Choices ); // Get/Put index from GUI.
+   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
    if( DoStep(3) ) TranslatedInt = TranslateFromIndex( TempIndex, InternalChoices ); // Index to int
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
@@ -1970,7 +1967,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
-   const wxArrayString & Choices,
+   const wxArrayStringEx & Choices,
    const std::vector<int> & InternalChoices)
 {
    return ShuttleGuiBase::TieChoice(
@@ -2378,7 +2375,7 @@ wxSizerItem * ShuttleGui::AddSpace( int width, int height )
    return mpSizer->Add( width, height, miProp);
 }
 
-void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayString & items )
+void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayStringEx & items )
 {
    int maxw = 0;
 
@@ -2409,7 +2406,7 @@ void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayString & items
    window->SetSizeHints( maxw, -1 );
 }
 
-void ShuttleGuiBase::SetSizeHints( const wxArrayString & items )
+void ShuttleGuiBase::SetSizeHints( const wxArrayStringEx & items )
 {
    if( mShuttleMode != eIsCreating )
       return;
@@ -2460,8 +2457,8 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const wxString &Default,
-   const wxArrayString &Choices,
-   const wxArrayString & InternalChoices )
+   const wxArrayStringEx &Choices,
+   const wxArrayStringEx & InternalChoices )
 {
    StartStruct();
    AddItem( SettingName, "id" );
@@ -2481,7 +2478,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
-   const wxArrayString & Choices,
+   const wxArrayStringEx & Choices,
    const std::vector<int> & InternalChoices)
 {
    // Should no longer come here!
@@ -2509,7 +2506,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
-   const wxArrayString & Choices,
+   const wxArrayStringEx & Choices,
    const std::vector<int> & InternalChoices)
 {
    // Come here for controls that present non-exhaustive choices among some

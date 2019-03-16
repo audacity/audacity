@@ -31,6 +31,8 @@
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
 
+class wxArrayStringEx;
+
 class wxChoice;
 class wxCheckBox;
 class wxTextCtrl;
@@ -73,19 +75,15 @@ class SpectrumPrefs final : public PrefsPanel
    wxTextCtrl *mRange;
    wxTextCtrl *mFrequencyGain;
 
-   wxArrayStringEx mSizeChoices;
-
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    int mZeroPaddingChoice;
    wxChoice *mZeroPaddingChoiceCtrl;
-   wxArrayString mZeroPaddingChoices;
+   wxArrayStringEx mZeroPaddingChoices;
 #endif
 
-   wxArrayString mTypeChoices;
-   wxArrayString mScaleChoices;
+   wxArrayStringEx mTypeChoices;
 
    wxChoice *mAlgorithmChoice;
-   wxArrayString mAlgorithmChoices;
 
 
 #ifdef EXPERIMENTAL_FIND_NOTES

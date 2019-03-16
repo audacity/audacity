@@ -300,10 +300,10 @@ wxString Internat::StripAccelerators(const wxString &s)
    return result;
 }
 
-wxArrayString LocalizedStrings(
+wxArrayStringEx LocalizedStrings(
    const EnumValueSymbol strings[], size_t nStrings)
 {
-   return transform_range<wxArrayString>(
+   return transform_range<wxArrayStringEx>(
       strings, strings + nStrings,
       std::mem_fn( &EnumValueSymbol::Translation )
    );

@@ -95,14 +95,6 @@ void ModulePrefs::Populate()
 
 void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayStringEx StatusChoices{
-      _("Disabled" ) ,
-      _("Enabled" ) ,
-      _("Ask" ) ,
-      _("Failed" ) ,
-      _("New" ) ,
-   };
-
    S.SetBorder(2);
    S.StartScroller();
 
@@ -117,7 +109,16 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
         S.StartMultiColumn( 2 );
         int i;
         for(i=0;i<(int)mModules.size();i++)
-           S.TieChoice( mModules[i], mStatuses[i], &StatusChoices );
+           S.TieChoice( mModules[i],
+              mStatuses[i],
+              {
+                 _("Disabled" ) ,
+                 _("Enabled" ) ,
+                 _("Ask" ) ,
+                 _("Failed" ) ,
+                 _("New" ) ,
+              }
+           );
         S.EndMultiColumn();
       }
       if( mModules.size() < 1 )

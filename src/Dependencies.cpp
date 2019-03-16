@@ -397,7 +397,9 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
                   _("Whenever a project depends on other files:"),
-                  _("Ask me"), &choices);
+                  choices,
+                  0 // "Ask me"
+               );
          }
          S.EndHorizontalLay();
       } else

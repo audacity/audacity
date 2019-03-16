@@ -192,7 +192,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    wxString name = mProject->GetName();
    wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
 
-   wxArrayString formats;
+   wxArrayStringEx formats;
    mPluginIndex = -1;
    mFilterIndex = 0;
 

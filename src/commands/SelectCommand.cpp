@@ -65,7 +65,6 @@ bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
 
 void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto relativeSpec = LocalizedStrings( kRelativeTo, nRelativeTos );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxEXPAND);
@@ -74,8 +73,9 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasT0 ).TieTextBox(_("Start Time:"), mT0);
       S.Optional( bHasT1 ).TieTextBox(_("End Time:"),   mT1);
       // Chooses what time is relative to.
-      S.Optional( bHasRelativeSpec ).TieChoice( 
-         _("Relative To:"), mRelativeTo, &relativeSpec);
+      S.Optional( bHasRelativeSpec ).TieChoice(
+         _("Relative To:"),
+         mRelativeTo, LocalizedStrings( kRelativeTo, nRelativeTos ));
    }
    S.EndMultiColumn();
 }
@@ -187,7 +187,6 @@ bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
 
 void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto modes = LocalizedStrings( kModes, nModes );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxEXPAND);
@@ -200,7 +199,7 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       // Always used, so no check box.
-      S.TieChoice( _("Mode:"), mMode, &modes);
+      S.TieChoice( _("Mode:"), mMode, LocalizedStrings( kModes, nModes ));
    }
    S.EndMultiColumn();
 }

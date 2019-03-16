@@ -248,7 +248,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
-   wxArrayString pitch;
+   wxArrayStringEx pitch;
    for (int ii = 0; ii < 12; ++ii)
       pitch.push_back( PitchName( ii, PitchNameChoice::Both ) );
 
@@ -270,7 +270,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(6, wxALIGN_CENTER); // 6 controls, because each AddChoice adds a wxStaticText and a wxChoice.
          {
-            m_pChoice_FromPitch = S.Id(ID_FromPitch).AddChoice(_("from"), wxT(""), &pitch);
+            m_pChoice_FromPitch = S.Id(ID_FromPitch).AddChoice(_("from"), pitch);
             m_pChoice_FromPitch->SetName(_("from"));
             m_pChoice_FromPitch->SetSizeHints(80, -1);
 
@@ -278,7 +278,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
             m_pSpin_FromOctave->SetName(_("from Octave"));
             m_pSpin_FromOctave->SetSizeHints(50, -1);
 
-            m_pChoice_ToPitch = S.Id(ID_ToPitch).AddChoice(_("to"), wxT(""), &pitch);
+            m_pChoice_ToPitch = S.Id(ID_ToPitch).AddChoice(_("to"), pitch);
             m_pChoice_ToPitch->SetName(_("to"));
             m_pChoice_ToPitch->SetSizeHints(80, -1);
 
