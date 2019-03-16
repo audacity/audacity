@@ -55,11 +55,11 @@ dnl if $CFLAGS is blank and it finds GCC
 cflags_save="$CFLAGS"
 cppflags_save="$CPPFLAGS"
 cxxflags_save="$CXXFLAGS"
-AX_COMPILER_VENDOR
 AC_PROG_CC
 AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CXXCPP
+AX_COMPILER_VENDOR
 CFLAGS="$cflags_save"
 CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
@@ -204,12 +204,8 @@ if test x$enable_universal_binary = xyes; then
    esac
 fi
 
-dnl Check if $CXX is clang by evaluating the version string because
-dnl $ax_cv_cxx_compiler_vendor seems not to work (it is either "gnu" or just empty).
-dnl If $CXX is clang (string is found), grep returns 0 and the if is executed.
-dnl Use /dev/null to suppress grep output to shell.
-if ($CXX --version | grep 'clang version' > /dev/null); then
-    LDFLAGS="${LDFLAGS} -latomic"
+if test x$ax_cv_cxx_compiler_vendor = xclang; then
+    AX_LD_CHECK_FLAG([-latomic], [], [], [LIBS="$LIBS -latomic"])
 fi
 
 if test x$enable_sse = xyes; then
