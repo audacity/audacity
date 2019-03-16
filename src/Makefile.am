@@ -427,6 +427,8 @@ audacity_SOURCES = \
 	effects/Distortion.h \
 	effects/DtmfGen.cpp \
 	effects/DtmfGen.h \
+	effects/EBUR128.cpp \
+	effects/EBUR128.h \
 	effects/Echo.cpp \
 	effects/Echo.h \
 	effects/Effect.cpp \

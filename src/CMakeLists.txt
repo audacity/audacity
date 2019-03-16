@@ -240,6 +240,7 @@ set( EFFECTS_SOURCE
    ${CMAKE_SOURCE_DIRECTORY}effects/Contrast.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Distortion.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/DtmfGen.cpp
+   ${CMAKE_SOURCE_DIRECTORY}effects/EBUR128.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Echo.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Effect.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/EffectManager.cpp

@@ -276,6 +276,7 @@
 		1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
 		1790B13709883BFD008A330A /* ClickRemoval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01209883BFD008A330A /* ClickRemoval.cpp */; };
 		1790B13809883BFD008A330A /* Compressor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01409883BFD008A330A /* Compressor.cpp */; };
+		1790B13819883BFD008A330A /* EBUR128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01609883BFD008A330A /* EBUR128.cpp */; };
 		1790B13909883BFD008A330A /* Echo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01709883BFD008A330A /* Echo.cpp */; };
 		1790B13A09883BFD008A330A /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01909883BFD008A330A /* Effect.cpp */; };
 		1790B13B09883BFD008A330A /* Equalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01B09883BFD008A330A /* Equalization.cpp */; };
@@ -1996,6 +1997,8 @@
 		1790B01309883BFD008A330A /* ClickRemoval.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ClickRemoval.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01409883BFD008A330A /* Compressor.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Compressor.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01509883BFD008A330A /* Compressor.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Compressor.h; sourceTree = "<group>"; tabWidth = 3; };
+		1790B01609883BFD008A330A /* EBUR128.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = EBUR128.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		1790B01619883BFD008A330A /* EBUR128.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = EBUR128.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01709883BFD008A330A /* Echo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Echo.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01809883BFD008A330A /* Echo.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Echo.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01909883BFD008A330A /* Effect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; indentWidth = 3; path = Effect.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4716,6 +4719,8 @@
 				1790B01309883BFD008A330A /* ClickRemoval.h */,
 				1790B01409883BFD008A330A /* Compressor.cpp */,
 				1790B01509883BFD008A330A /* Compressor.h */,
+				1790B01609883BFD008A330A /* EBUR128.cpp */,
+				1790B01619883BFD008A330A /* EBUR128.h */,
 				18D8314C0ED0F56200FD870D /* Contrast.cpp */,
 				18D8314D0ED0F56200FD870D /* Contrast.h */,
 				5E02BFF01D1164DF00EB7578 /* Distortion.cpp */,
@@ -8438,6 +8443,7 @@
 				5EF3E65A203FDACE006C6882 /* SetClipCommand.cpp in Sources */,
 				1790B13709883BFD008A330A /* ClickRemoval.cpp in Sources */,
 				1790B13809883BFD008A330A /* Compressor.cpp in Sources */,
+				1790B13819883BFD008A330A /* EBUR128.cpp in Sources */,
 				1790B13909883BFD008A330A /* Echo.cpp in Sources */,
 				1790B13A09883BFD008A330A /* Effect.cpp in Sources */,
 				1790B13B09883BFD008A330A /* Equalization.cpp in Sources */,
