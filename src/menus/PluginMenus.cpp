@@ -378,7 +378,7 @@ namespace PluginActions {
 
 // exported helper functions
 
-/// DoEffect() takes a PluginID and has the EffectManager execute the assocated
+/// DoEffect() takes a PluginID and has the EffectManager execute the associated
 /// effect.
 ///
 /// At the moment flags are used only to indicate whether to prompt for
