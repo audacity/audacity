@@ -97,6 +97,12 @@ public:
    // is not specified which rectangle is returned.
    wxRect FindRect(const TrackPanelCell &cell);
 
+   // Search the tree of subdivisions of the panel area for a node (group or
+   // cell) satisfying the predicate. If more than one sub-area is associated
+   // with some node satisfying the predicate, it is not specified which
+   // rectangle is returned.
+   wxRect FindRect(const std::function< bool( TrackPanelNode& ) > &pred);
+
    UIHandlePtr Target();
    
    std::shared_ptr<TrackPanelCell> LastCell() const;

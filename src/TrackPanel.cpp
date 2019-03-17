@@ -275,7 +275,8 @@ TrackPanel::~TrackPanel()
 
 LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
 {
-   auto rect = FindTrackRect( wt, true );
+   auto pControls = wt->GetTrackControl();
+   auto rect = FindRect( *pControls );
    wxRect sliderRect;
    TrackInfo::GetGainRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::GainSlider(sliderRect, wt, false, this);
@@ -283,7 +284,8 @@ LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
 
 LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
 {
-   auto rect = FindTrackRect( wt, true );
+   auto pControls = wt->GetTrackControl();
+   auto rect = FindRect( *pControls );
    wxRect sliderRect;
    TrackInfo::GetPanRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::PanSlider(sliderRect, wt, false, this);
@@ -292,7 +294,8 @@ LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
 #ifdef EXPERIMENTAL_MIDI_OUT
 LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
 {
-   auto rect = FindTrackRect( nt, true );
+   auto pControls = nt->GetTrackControl();
+   auto rect = FindRect( *pControls );
    wxRect sliderRect;
    TrackInfo::GetVelocityRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::VelocitySlider(sliderRect, nt, false, this);
@@ -2166,46 +2169,18 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 // This finds the rectangle of a given track (including all channels),
 // either that of the label 'adornment' or the track itself
 // The given track is assumed to be the first channel
-wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
+wxRect TrackPanel::FindTrackRect( const Track * target )
 {
-   if (!target) {
+   auto leader = *GetTracks()->FindLeader( target );
+   if (!leader) {
       return { 0, 0, 0, 0 };
    }
 
-   // PRL:  I think the following very old comment misused the term "race
-   // condition" for a bug that happened with only a single thread.  I think the
-   // real problem referred to, was that this function could be reached, via
-   // TrackPanelAx callbacks, during low-level operations while the TrackList
-   // was not in a consistent state.
-   // Now the problem is fixed by delaying the handling of events generated
-   // by TrackList.  And besides that, we use Channels() instead of looking
-   // directly at the links.
-
-   // Old comment:
-   // The check for a null linked track is necessary because there's
-   // a possible race condition between the time the 2 linked tracks
-   // are added and when wxAccessible methods are called.  This is
-   // most evident when using Jaws.
-   auto height = TrackList::Channels( target ).sum( &Track::GetHeight );
-
-   wxRect rect{
-      0,
-      target->GetY() - mViewInfo->vpos,
-      GetSize().GetWidth(),
-      height
-   };
-
-
-   rect.x += kLeftMargin;
-   if (label)
-      rect.width = GetVRulerOffset() - kLeftMargin;
-   else
-      rect.width -= (kLeftMargin + kRightMargin);
-
-   rect.y += kTopMargin;
-   rect.height -= (kTopMargin + kBottomMargin);
-
-   return rect;
+   return CellularPanel::FindRect( [&] ( TrackPanelNode &node ) {
+      if (auto pGroup = dynamic_cast<const LabeledChannelGroup*>( &node ))
+         return pGroup->mpTrack.get() == leader;
+      return false;
+   } );
 }
 
 int TrackPanel::GetVRulerWidth() const
