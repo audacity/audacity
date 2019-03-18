@@ -139,7 +139,7 @@ void Track::SetOwner
 int Track::GetMinimizedHeight() const
 {
    auto height = TrackInfo::MinimumTrackHeight();
-   auto channels = TrackList::Channels(this);
+   auto channels = TrackList::Channels(this->SubstituteOriginalTrack().get());
    auto nChannels = channels.size();
    auto begin = channels.begin();
    auto index = std::distance(begin, std::find(begin, channels.end(), this));
