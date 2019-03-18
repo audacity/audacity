@@ -15,6 +15,8 @@
 #include <wx/window.h>
 #include <wx/panel.h>
 
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
+
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
 #include "widgets/WindowAccessible.h"

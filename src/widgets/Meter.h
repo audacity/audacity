@@ -17,7 +17,7 @@
 #define __AUDACITY_METER__
 
 #include <wx/brush.h>
-#include <wx/defs.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 #include <wx/timer.h>

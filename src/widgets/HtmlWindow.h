@@ -25,7 +25,7 @@ around to NEW positions.
 
 #include "../Audacity.h"
 
-#include <wx/defs.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/html/htmlwin.h>
 
 #if wxUSE_ACCESSIBILITY

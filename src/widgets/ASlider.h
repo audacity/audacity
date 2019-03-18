@@ -14,7 +14,7 @@
 #define __AUDACITY_SLIDER__
 
 #include "../MemoryX.h"
-#include <wx/defs.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/window.h>
 #include <wx/panel.h>
 #include <wx/timer.h>

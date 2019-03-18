@@ -16,6 +16,7 @@ Vaughan Johnson (Preview)
 #include <wx/arrstr.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/slider.h>

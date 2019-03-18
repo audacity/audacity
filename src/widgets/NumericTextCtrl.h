@@ -20,7 +20,7 @@
 #include "../MemoryX.h"
 #include "../../include/audacity/ComponentInterface.h"
 #include <vector>
-#include <wx/defs.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/stattext.h>

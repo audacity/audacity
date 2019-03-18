@@ -13,7 +13,7 @@
 
 #include "../MemoryX.h"
 #include <vector>
-#include <wx/defs.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/grid.h>

@@ -13,7 +13,7 @@
 #include "audacity/Types.h"
 
 #include <vector>
-#include <wx/defs.h>
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/arrstr.h>
 #include <wx/string.h>
 #include <wx/vlbox.h>

@@ -15,6 +15,8 @@
 #include "../MemoryX.h"
 #include <vector>
 
+#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
+
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
 #include "WindowAccessible.h"
