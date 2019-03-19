@@ -55,6 +55,7 @@
 #include "../FileFormats.h"
 #include "../Mix.h"
 #include "../Prefs.h"
+#include "../prefs/ImportExportPrefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
@@ -847,7 +848,7 @@ bool Exporter::CheckMix()
    // Detemine if exported file will be stereo or mono or multichannel,
    // and if mixing will occur.
 
-   int downMix = gPrefs->Read(wxT("/FileFormats/ExportDownMix"), true);
+   auto downMix = ImportExportPrefs::ExportDownMixSetting.ReadEnum();
    int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {

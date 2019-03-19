@@ -34,6 +34,7 @@
 #include "DirManager.h"
 #include "Prefs.h"
 #include "ProjectFileIORegistry.h"
+#include "prefs/ImportExportPrefs.h"
 
 #include "InconsistencyException.h"
 
@@ -847,8 +848,7 @@ bool NoteTrack::ExportMIDI(const wxString &f) const
 bool NoteTrack::ExportAllegro(const wxString &f) const
 {
    double offset = GetOffset();
-   bool in_seconds;
-   gPrefs->Read(wxT("/FileFormats/AllegroStyle"), &in_seconds, true);
+   auto in_seconds = ImportExportPrefs::AllegroStyleSetting.ReadEnum();
    auto &seq = GetSeq();
    if (in_seconds) {
        seq.convert_to_seconds();

@@ -576,12 +576,12 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
    bool rc;
    long prevBitRate = gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), 128);
    gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), bitrate);
-   int prevMode = gPrefs->Read(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
-   gPrefs->Write(wxT("/FileFormats/MP3RateMode"), MODE_CBR);
+   auto prevMode = MP3RateModeSetting.ReadEnum();
+   MP3RateModeSetting.WriteEnum(MODE_CBR);
 
    auto cleanup = finally( [&] {
       gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
-      gPrefs->Write(wxT("/FileFormats/MP3RateMode"), prevMode);
+      MP3RateModeSetting.WriteEnum(prevMode);
       gPrefs->Flush();
    } );
 

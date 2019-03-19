@@ -60,6 +60,36 @@ void ImportExportPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+EnumSetting< bool > ImportExportPrefs::ExportDownMixSetting{
+   wxT("/FileFormats/ExportDownMixChoice"),
+   {
+      EnumValueSymbol{ wxT("MixDown"), XO("&Mix down to Stereo or Mono") },
+      EnumValueSymbol{ wxT("Custom"), XO("&Use Advanced Mixing Options") },
+   },
+   0, // true
+
+   // for migrating old preferences:
+   {
+      true, false,
+   },
+   wxT("/FileFormats/ExportDownMix"),
+};
+
+EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
+   wxT("/FileFormats/AllegroStyleChoice"),
+   {
+      EnumValueSymbol{ wxT("Seconds"), XO("&Seconds") },
+      EnumValueSymbol{ wxT("Beats"), XO("&Beats") },
+   },
+   0, // true
+
+   // for migrating old preferences:
+   {
+      true, false,
+   },
+   wxT("/FileFormats/AllegroStyle"),
+};
+
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -81,12 +111,12 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    S.StartStatic(_("When exporting tracks to an audio file"));
    {
-      S.StartRadioButtonGroup(wxT("/FileFormats/ExportDownMix"), true);
+      S.StartRadioButtonGroup(wxT("/FileFormats/ExportDownMixChoice"), wxT("MixDown"));
       {
          S.TieRadioButton(_("&Mix down to Stereo or Mono"),
-                          true);
+                          wxT("MixDown"));
          S.TieRadioButton(_("&Use Advanced Mixing Options"),
-                          false);
+                          wxT("Custom"));
       }
       S.EndRadioButtonGroup();
 
@@ -102,12 +132,12 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef USE_MIDI
    S.StartStatic(_("Exported Allegro (.gro) files save time as:"));
    {
-      S.StartRadioButtonGroup(wxT("/FileFormats/AllegroStyle"), true);
+      S.StartRadioButtonGroup(wxT("/FileFormats/AllegroStyleChoice"), wxT("Seconds"));
       {
          S.TieRadioButton(_("&Seconds"),
-                          true);
+                          wxT("Seconds"));
          S.TieRadioButton(_("&Beats"),
-                          false);
+                          wxT("Beats"));
       }
       S.EndRadioButtonGroup();
    }
