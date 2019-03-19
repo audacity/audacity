@@ -178,7 +178,6 @@ public:
    void StartRadioButtonGroup( const wxString & SettingName );
    void EndRadioButtonGroup();
 
-   void StartRadioButtonGroup( const wxString & SettingName, const int iDefaultValue );
    void StartRadioButtonGroup( const wxString & SettingName, const wxString &DefaultValue );
 
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
@@ -217,7 +216,6 @@ public:
    wxSlider * TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
 
    wxRadioButton * TieRadioButton( const wxString & Prompt, WrappedType &WrappedRef);
-   wxRadioButton * TieRadioButton( const wxString &Prompt, const int iValue);
    wxRadioButton * TieRadioButton( const wxString &Prompt, const wxString &Value);
 
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
@@ -351,7 +349,6 @@ protected:
 
    Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    wxString mRadioValueString; /// Unwrapped string value.
-   int mRadioValueInt;         /// Unwrapped integer value.
 
    int miSizerProp;
    int mSizerDepth;

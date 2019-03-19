@@ -1959,17 +1959,6 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       Prompt, SettingName, Default, Choices, InternalChoices );
 }
 
-/// Integer specific version of StartRadioButtonGroup.
-/// All 'TieRadioButton()' enclosed must be ints.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const int iDefaultValue )
-{
-   // Configure the generic type mechanism to use OUR integer.
-   mRadioValueInt = iDefaultValue;
-   mRadioValue.create( mRadioValueInt );
-   // Now actually start the radio button group.
-   StartRadioButtonGroup( SettingName );
-}
-
 /// String specific version of StartRadioButtonGroup.
 /// All 'TieRadioButton()' enclosed must be strings.
 void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const wxString & DefaultValue )
@@ -1981,16 +1970,6 @@ void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const 
    StartRadioButtonGroup( SettingName );
 }
 
-
-/// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton(
-   const wxString &Prompt,
-   const int iValue)
-{
-   int iTemp = iValue;
-   WrappedType WrappedRef( iTemp );
-   return TieRadioButton( Prompt, WrappedRef );
-}
 
 /// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
 wxRadioButton * ShuttleGuiBase::TieRadioButton(
