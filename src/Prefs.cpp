@@ -397,7 +397,7 @@ wxString EnumSetting::Read() const
 size_t EnumSetting::Find( const wxString &value ) const
 {
    return size_t(
-      std::find( begin(), end(), ComponentInterfaceSymbol{ value, {} } )
+      std::find( begin(), end(), EnumValueSymbol{ value, {} } )
          - mSymbols );
 }
 

@@ -69,7 +69,7 @@ class EnumSetting
 public:
    EnumSetting(
       const wxString &key,
-      const ComponentInterfaceSymbol symbols[], size_t nSymbols,
+      const EnumValueSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol
    )
       : mKey{ key }
@@ -83,10 +83,10 @@ public:
    }
 
    const wxString &Key() const { return mKey; }
-   const ComponentInterfaceSymbol &Default() const
+   const EnumValueSymbol &Default() const
       { return mSymbols[mDefaultSymbol]; }
-   const ComponentInterfaceSymbol *begin() const { return mSymbols; }
-   const ComponentInterfaceSymbol *end() const { return mSymbols + mnSymbols; }
+   const EnumValueSymbol *begin() const { return mSymbols; }
+   const EnumValueSymbol *end() const { return mSymbols + mnSymbols; }
 
    wxString Read() const;
    bool Write( const wxString &value ); // you flush gPrefs afterward
@@ -97,7 +97,7 @@ protected:
 
    const wxString mKey;
 
-   const ComponentInterfaceSymbol *mSymbols;
+   const EnumValueSymbol *mSymbols;
    const size_t mnSymbols;
 
    // stores an internal value
@@ -115,7 +115,7 @@ class EncodedEnumSetting : public EnumSetting
 public:
    EncodedEnumSetting(
       const wxString &key,
-      const ComponentInterfaceSymbol symbols[], size_t nSymbols,
+      const EnumValueSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol,
 
       const int intValues[] = nullptr, // must have same size as symbols

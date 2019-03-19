@@ -32,7 +32,7 @@
 
 //////////
 
-static const ComponentInterfaceSymbol choicesFormat[] = {
+static const EnumValueSymbol choicesFormat[] = {
    { wxT("Format16Bit"), XO("16-bit") },
    { wxT("Format24Bit"), XO("24-bit") },
    { wxT("Format32BitFloat"), XO("32-bit float") }

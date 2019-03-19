@@ -57,7 +57,7 @@ namespace {
 
 
 //////////
-static const ComponentInterfaceSymbol choicesView[] = {
+static const EnumValueSymbol choicesView[] = {
    { XO("Waveform") },
    { wxT("WaveformDB"), XO("Waveform (dB)") },
    { XO("Spectrogram") }
@@ -76,7 +76,7 @@ class TracksViewModeSetting : public EncodedEnumSetting {
 public:
    TracksViewModeSetting(
       const wxString &key,
-      const ComponentInterfaceSymbol symbols[], size_t nSymbols,
+      const EnumValueSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol,
 
       const int intValues[],
@@ -130,7 +130,7 @@ WaveTrack::WaveTrackDisplay TracksPrefs::ViewModeChoice()
 }
 
 //////////
-static const ComponentInterfaceSymbol choicesSampleDisplay[] = {
+static const EnumValueSymbol choicesSampleDisplay[] = {
    { wxT("ConnectDots"), XO("Connect dots") },
    { wxT("StemPlot"), XO("Stem plot") }
 };
