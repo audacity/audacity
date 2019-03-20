@@ -70,6 +70,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/limiter.ny \
    plug-ins/lowpass.ny \
    plug-ins/notch.ny \
+   plug-ins/nyquist-plug-in-installer.ny \
    plug-ins/pluck.ny \
    plug-ins/rhythmtrack.ny \
    plug-ins/rissetdrum.ny \

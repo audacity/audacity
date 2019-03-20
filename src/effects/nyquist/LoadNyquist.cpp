@@ -33,6 +33,7 @@ const static wxChar *kShippedEffects[] =
    wxT("limiter.ny"),
    wxT("lowpass.ny"),
    wxT("notch.ny"),
+   wxT("nyquist-plug-in-installer.ny"),
    wxT("pluck.ny"),
    wxT("rhythmtrack.ny"),
    wxT("rissetdrum.ny"),

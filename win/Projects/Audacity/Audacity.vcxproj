@@ -838,6 +838,7 @@
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny" />
     <copy Include="..\..\..\plug-ins\beat.ny" />
+    <copy Include="..\..\..\plug-ins\nyquist-plug-in-installer.ny" />
     <copy Include="..\..\..\plug-ins\rhythmtrack.ny" />
     <copy Include="..\..\..\plug-ins\clipfix.ny" />
     <copy Include="..\..\..\plug-ins\crossfadeclips.ny" />
