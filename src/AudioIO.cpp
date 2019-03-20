@@ -4553,7 +4553,7 @@ double AudioIO::AILAGetLastDecisionTime() {
 }
 
 void AudioIO::AILAProcess(double maxPeak) {
-   AudacityProject *const proj = mOwningProject);
+   AudacityProject *const proj = mOwningProject;
    if (proj && mAILAActive) {
       if (mInputMeter && mInputMeter->IsClipping()) {
          mAILAClipped = true;
