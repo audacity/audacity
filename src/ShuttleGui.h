@@ -174,8 +174,7 @@ public:
    wxTextCtrl * TieTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
-   wxTextCtrl * TieNumericTextBox( const wxString &Caption, wxString & Value, const int nChars=0);
-   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Selected, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars=0);
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
    wxCheckBox * TieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
@@ -251,11 +250,6 @@ public:
       const std::vector<int> & InternalChoices );
 
    virtual wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const int nChars);
-   virtual wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
@@ -463,11 +457,6 @@ public:
       const std::vector<int> & InternalChoices) override;
 
    wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const int nChars) override;
-   wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,

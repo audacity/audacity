@@ -1530,15 +1530,9 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, double &Value, 
    return TieTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, wxString &Selected, const int nChars)
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars)
 {
-   WrappedType WrappedRef(Selected);
-   return TieNumericTextBox( Prompt, WrappedRef, nChars );
-}
-
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, int &Selected, const int nChars)
-{
-   WrappedType WrappedRef( Selected );
+   WrappedType WrappedRef( Value );
    return TieNumericTextBox( Prompt, WrappedRef, nChars );
 }
 
@@ -1812,24 +1806,6 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
    WrappedType WrappedRef( Temp );
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
    if( DoStep(2) ) pText = TieTextBox( Prompt, WrappedRef, nChars );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
-   return pText;
-}
-
-/// Variant of the standard TieTextBox which does the two step exchange
-/// between gui and stack variable and stack variable and shuttle.
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
-   const wxString & Prompt,
-   const wxString & SettingName,
-   const wxString & Default,
-   const int nChars)
-{
-   wxTextCtrl * pText=(wxTextCtrl*)NULL;
-
-   wxString Temp = Default;
-   WrappedType WrappedRef( Temp );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pText = TieNumericTextBox( Prompt, WrappedRef, nChars );
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
    return pText;
 }
@@ -2518,20 +2494,6 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    AddItem( Default, "default"  );
    EndStruct();
    return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
-}
-wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const int nChars) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "number", "type" );
-   AddItem( Default, "default"  );
-   EndStruct();
-   return ShuttleGui::TieNumericTextBox( Prompt, SettingName, Default, nChars );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const wxString & Prompt,
