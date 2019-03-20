@@ -33,7 +33,7 @@ add_subdirectory( "libvorbis" )
 #add_subdirectory( "locale" )
 add_subdirectory( "lv2" )
 add_subdirectory( "mod-script-pipe" )
-add_subdirectory( "portaudio-v19" )
+add_subdirectory( "${LIB_SRC_DIRECTORY}portaudio-v19" "${CMAKE_CURRENT_BINARY_DIR}/portaudio-v19" EXCLUDE_FROM_ALL )
 add_subdirectory( "portmidi" )
 add_subdirectory( "portmixer" )
 #add_subdirectory( "portburn" ) # not built

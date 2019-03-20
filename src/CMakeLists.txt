@@ -493,13 +493,13 @@ add_executable( Audacity ${SOURCE} )
 message( STATUS "link directory is: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug" )
 message( STATUS "wxWidgets libraries in: ${wxWidgets_LIBRARIES}" )
 
-target_link_libraries(Audacity 
+target_link_libraries(Audacity
 ${wxWidgets_LIBRARIES}
-expat.lib
-FileDialog.lib
-libsndfile.lib
-libsoxr.lib
-portaudio-v19.lib
+expat
+FileDialog
+libsndfile
+libsoxr
+portaudio_static
 )
 if(MSVC)
     set_property(TARGET Audacity APPEND PROPERTY LINK_FLAGS "/SUBSYSTEM:WINDOWS /LIBPATH:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
