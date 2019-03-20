@@ -22,7 +22,6 @@
 #include "SoundActivatedRecord.h"
 
 #include "ShuttleGui.h"
-#include "ShuttlePrefs.h"
 #include "Prefs.h"
 #include "prefs/GUISettings.h"
 #include "Internat.h"
