@@ -346,6 +346,8 @@ private:
    NumericTextCtrl *mCtrl;
    int mLastField;
    int mLastDigit;
+   wxString mCachedName;
+   wxString mLastCtrlString;
 };
 
 #endif // wxUSE_ACCESSIBILITY

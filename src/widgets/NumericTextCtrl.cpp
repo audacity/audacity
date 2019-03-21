@@ -1825,17 +1825,6 @@ void NumericTextCtrl::SetFieldFocus(int  digit)
    mFocusedDigit = digit;
    mLastField = mDigits[mFocusedDigit].field + 1;
 
-   // This looks strange (and it is), but it was the only way I could come
-   // up with that allowed Jaws, Window-Eyes, and NVDA to read the control
-   // somewhat the same.  See NumericTextCtrlAx below for even more odd looking
-   // hackery.
-   //
-   // If you change SetFieldFocus(), Updated(), or NumericTextCtrlAx, make sure
-   // you test with Jaws, Window-Eyes, and NVDA.
-   GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
-                                this,
-                                wxOBJID_CLIENT,
-                                0);
    GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
                                 this,
                                 wxOBJID_CLIENT,
@@ -1856,7 +1845,23 @@ void NumericTextCtrl::Updated(bool keyup /* = false */)
 
 #if wxUSE_ACCESSIBILITY
    if (!keyup) {
-      SetFieldFocus(mFocusedDigit);
+      if (mDigits.size() == 0)
+      {
+         mFocusedDigit = 0;
+         return;
+      }
+
+      // The object_focus event is only needed by Window-Eyes
+      // and can be removed when we cease to support this screen reader.
+      GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+         this,
+         wxOBJID_CLIENT,
+         mFocusedDigit + 1);
+
+      GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
+         this,
+         wxOBJID_CLIENT,
+         mFocusedDigit + 1);
    }
 #endif
 }
@@ -2018,7 +2023,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    // Slightly messy trick to save us some prefixing.
    std::vector<NumericField> & mFields = mCtrl->mFields;
 
-   wxString value = mCtrl->GetString();
+   wxString ctrlString = mCtrl->GetString();
    int field = mCtrl->GetFocusedField();
 
    // Return the entire string including the control label
@@ -2037,68 +2042,83 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
       *name += wxT(" ") +
                mCtrl->GetString();
    }
-   // The user has moved from one field of the time to another so
-   // report the value of the field and the field's label.
-   else if (mLastField != field) {
-      wxString label = mFields[field - 1].label;
-      int cnt = mFields.size();
-      wxString decimal = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
+   // This case is needed because of the behaviour of Narrator, which
+   // is different for the other Windows screen readers. After a focus event,
+   // Narrator causes getName() to be called more than once. However, the code in
+   // the following else statement assumes that it is executed only once
+   // when the focus has been moved to another digit. This else if statement
+   // ensures that this is the case, by using a cached value if nothing
+   // has changed.
+   else if (childId == mLastDigit && ctrlString.IsSameAs(mLastCtrlString)) {
+      *name = mCachedName;
+   }
+   else {
+      // The user has moved from one field of the time to another so
+      // report the value of the field and the field's label.
+      if (mLastField != field) {
+         wxString label = mFields[field - 1].label;
+         int cnt = mFields.size();
+         wxString decimal = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
 
-      // If the NEW field is the last field, then check it to see if
-      // it represents fractions of a second.
-      // PRL: click a digit of the control and use left and right arrow keys
-      // to exercise this code
-      const bool isTime = (mCtrl->mType == NumericTextCtrl::TIME);
-      if (field > 1 && field == cnt) {
-         if (mFields[field - 2].label == decimal) {
-            int digits = mFields[field - 1].digits;
-            if (digits == 2) {
-               if (isTime)
-                  label = _("centiseconds");
-               else {
-                  // other units
-                  // PRL:  does this create translation problems?
-                  label = _("hundredths of ");
-                  label += mFields[field - 1].label;
+         // If the NEW field is the last field, then check it to see if
+         // it represents fractions of a second.
+         // PRL: click a digit of the control and use left and right arrow keys
+         // to exercise this code
+         const bool isTime = (mCtrl->mType == NumericTextCtrl::TIME);
+         if (field > 1 && field == cnt) {
+            if (mFields[field - 2].label == decimal) {
+               int digits = mFields[field - 1].digits;
+               if (digits == 2) {
+                  if (isTime)
+                     label = _("centiseconds");
+                  else {
+                     // other units
+                     // PRL:  does this create translation problems?
+                     label = _("hundredths of ");
+                     label += mFields[field - 1].label;
+                  }
                }
-            }
-            else if (digits == 3) {
-               if (isTime)
-                  label = _("milliseconds");
-               else {
-                  // other units
-                  // PRL:  does this create translation problems?
-                  label = _("thousandths of ");
-                  label += mFields[field - 1].label;
+               else if (digits == 3) {
+                  if (isTime)
+                     label = _("milliseconds");
+                  else {
+                     // other units
+                     // PRL:  does this create translation problems?
+                     label = _("thousandths of ");
+                     label += mFields[field - 1].label;
+                  }
                }
             }
          }
+         // If the field following this one represents fractions of a
+         // second then use that label instead of the decimal point.
+         else if (label == decimal && field == cnt - 1) {
+            label = mFields[field].label;
+         }
+
+         *name = mFields[field - 1].str +
+                 wxT(" ") +
+                 label +
+                 wxT(", ") +     // comma inserts a slight pause
+                 mCtrl->GetString().at(mCtrl->mDigits[childId - 1].pos);
+         mLastField = field;
+         mLastDigit = childId;
       }
-      // If the field following this one represents fractions of a
-      // second then use that label instead of the decimal point.
-      else if (label == decimal && field == cnt - 1) {
-         label = mFields[field].label;
+      // The user has moved from one digit to another within a field so
+      // just report the digit under the cursor.
+      else if (mLastDigit != childId) {
+         *name = mCtrl->GetString().at(mCtrl->mDigits[childId - 1].pos);
+         mLastDigit = childId;
+      }
+      // The user has updated the value of a field, so report the field's
+      // value only.
+      else if (field > 0)
+      {
+         *name = mFields[field - 1].str;
       }
 
-      *name = mFields[field - 1].str +
-              wxT(" ") +
-              label +
-              wxT(", ") +     // comma inserts a slight pause
-              mCtrl->GetString().at(mCtrl->mDigits[childId - 1].pos);
-      mLastField = field;
-      mLastDigit = childId;
-   }
-   // The user has moved from one digit to another within a field so
-   // just report the digit under the cursor.
-   else if (mLastDigit != childId) {
-      *name = mCtrl->GetString().at(mCtrl->mDigits[childId - 1].pos);
-      mLastDigit = childId;
-   }
-   // The user has updated the value of a field, so report the field's
-   // value only.
-   else if (field > 0)
-   {
-      *name = mFields[field - 1].str;
+      mCachedName = *name;
+      mLastCtrlString = ctrlString;
    }
 
    return wxACC_OK;
