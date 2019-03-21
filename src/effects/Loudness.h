@@ -20,6 +20,7 @@
 
 #include "Effect.h"
 #include "Biquad.h"
+#include "EBUR128.h"
 
 class ShuttleGui;
 
@@ -61,7 +62,6 @@ private:
 
    void AllocBuffers();
    void FreeBuffers();
-   void InitTrackAnalysis();
    bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
    bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
                         sampleCount pos, size_t len);
@@ -92,7 +92,7 @@ private:
 
    float  mMult;
    float  mRatio;
-   sampleCount    mCount;
+   std::unique_ptr<EBUR128> mLoudnessProcessor;
 
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;

@@ -147,7 +147,7 @@ bool EffectLoudness::Startup()
    // Load the old "current" settings
    if (gPrefs->Exists(base))
    {
-      mStereoInd = true;
+      mStereoInd = false;
       mDualMono = DEF_DualMono;
       mNormalizeTo = kLoudness;
       mLUFSLevel = DEF_LUFSLevel;
@@ -160,7 +160,6 @@ bool EffectLoudness::Startup()
    return true;
 }
 
-// TODO: more method extraction
 bool EffectLoudness::Process()
 {
    if(mNormalizeTo == kLoudness)
@@ -205,7 +204,8 @@ bool EffectLoudness::Process()
 
       mProcStereo = range.size() > 1;
 
-      InitTrackAnalysis();
+      mLoudnessProcessor.reset(new EBUR128(mCurRate, range.size()));
+      mLoudnessProcessor->Initialize();
       if(!ProcessOne(range, true))
       {
          // Processing failed -> abort
@@ -214,9 +214,16 @@ bool EffectLoudness::Process()
       }
 
       // Calculate normalization values the analysis results
-      float extent = 1.0;
-      // TODO: add it in separate method
+      float extent = mLoudnessProcessor->IntegrativeLoudness();
       mMult = mRatio / extent;
+
+      // Target half the LUFS value if mono (or independent processed stereo)
+      // shall be treated as dual mono.
+      if(range.size() == 1 && (mDualMono || track->GetChannel() != Track::MonoChannel))
+         mMult /= 2.0;
+
+      // LUFS are related to square values so the multiplier must be the root.
+      mMult = sqrt(mMult);
 
       mProgressMsg = topMsg + wxString::Format(_("Processing: %s"), trackName);
       if(!ProcessOne(range, false))
@@ -228,6 +235,7 @@ bool EffectLoudness::Process()
    }
 
    this->ReplaceProcessedTracks(bGoodResult);
+   mLoudnessProcessor.reset();
    FreeBuffers();
    return bGoodResult;
 }
@@ -325,9 +333,7 @@ void EffectLoudness::AllocBuffers()
          stereoTrackFound = true;
    }
 
-   // TODO: hist and block buffers go here
-
-   // Initiate a processing buffer.  This buffer will (most likely)
+   // Initiate a processing buffer. This buffer will (most likely)
    // be shorter than the length of the track being processed.
    mTrackBuffer[0].reinit(mTrackBufferCapacity);
 
@@ -339,13 +345,6 @@ void EffectLoudness::FreeBuffers()
 {
    mTrackBuffer[0].reset();
    mTrackBuffer[1].reset();
-   // TODO: additional destroy -> function
-}
-
-void EffectLoudness::InitTrackAnalysis()
-{
-   mCount = 0;
-  // TODO: additional init goes here
 }
 
 /// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
@@ -399,8 +398,6 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
             return false;
       }
 
-      sleep(1);
-
       if(!analyse)
          StoreBufferBlock(range, s, blockLen);
 
@@ -438,8 +435,13 @@ bool EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
 /// (for loudness).
 bool EffectLoudness::AnalyseBufferBlock()
 {
-   // TODO: analysis loop goes here
-   mCount += mTrackBufferLen;
+   for(size_t i = 0; i < mTrackBufferLen; i++)
+   {
+      mLoudnessProcessor->ProcessSampleFromChannel(mTrackBuffer[0][i], 0);
+      if(mProcStereo)
+         mLoudnessProcessor->ProcessSampleFromChannel(mTrackBuffer[1][i], 1);
+      mLoudnessProcessor->NextSample();
+   }
 
    if(!UpdateProgress())
       return false;
@@ -496,7 +498,7 @@ void EffectLoudness::UpdateUI()
    mWarning->SetLabel(wxT(""));
    EnableApply(true);
 
-   // Changing the prompts causes an unwanted UpdateUI event.  
+   // Changing the prompts causes an unwanted UpdateUI event.
    // This 'guard' stops that becoming an infinite recursion.
    if (mNormalizeTo != mGUINormalizeTo)
    {
