@@ -74,6 +74,56 @@ UIHandlePtr MinimizeButtonHandle::HitTest
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+SelectButtonHandle::SelectButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect }
+{}
+
+SelectButtonHandle::~SelectButtonHandle()
+{
+}
+
+UIHandle::Result SelectButtonHandle::CommitChanges
+(const wxMouseEvent &event, AudacityProject *pProject, wxWindow*)
+{
+   using namespace RefreshCode;
+
+   auto pTrack = mpTrack.lock();
+   if (pTrack)
+   {
+      const bool unsafe = pProject->IsAudioActive();
+      SelectActions::DoListSelection(*pProject,
+         pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
+//    return RefreshAll ;
+   }
+
+   return RefreshNone;
+}
+
+wxString SelectButtonHandle::Tip(const wxMouseState &) const
+{
+   auto pTrack = GetTrack();
+   return pTrack->GetSelected() ? _("Unselect") : _("Select");
+}
+
+UIHandlePtr SelectButtonHandle::HitTest
+(std::weak_ptr<SelectButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
+{
+   wxRect buttonRect;
+   TrackInfo::GetSelectButtonRect(rect, buttonRect);
+
+   if (buttonRect.Contains(state.m_x, state.m_y)) {
+      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto result = std::make_shared<SelectButtonHandle>( pTrack, buttonRect );
+      result = AssignUIHandlePtr(holder, result);
+      return result;
+   }
+   else
+      return {};
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 CloseButtonHandle::CloseButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )

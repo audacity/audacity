@@ -1379,6 +1379,36 @@ void TrackInfo::MinimizeSyncLockDrawFunction
                     minimized);
    }
 
+   {
+      wxRect bev = rect;
+      GetSelectButtonHorizontalBounds(rect, bev);
+      auto target = dynamic_cast<SelectButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
+
+#ifdef EXPERIMENTAL_THEMING
+      wxColour c = theTheme.Colour(clrTrackPanelText);
+      dc->SetBrush(c);
+      dc->SetPen(c);
+#else
+      AColor::Dark(dc, selected);
+#endif
+
+      wxString str = _("Select");
+      wxCoord textWidth;
+      wxCoord textHeight;
+      SetTrackInfoFont(dc);
+      dc->GetTextExtent(str, &textWidth, &textHeight);
+
+      dc->SetTextForeground( c );
+      dc->SetTextBackground( wxTRANSPARENT );
+      dc->DrawText(str, bev.x + 2 + (bev.width-textWidth)/2, bev.y + (bev.height - textHeight) / 2);
+   }
+
+
    // Draw the sync-lock indicator if this track is in a sync-lock selected group.
    if (syncLockSelected)
    {
@@ -2429,12 +2459,39 @@ void TrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
 
    // Width is rect.width less space on left for track select
    // and on right for sync-lock icon.
-   dest.width = rect.width - (space + syncLockRect.width);
+   dest.width = kTrackInfoBtnSize;
+// rect.width - (space + syncLockRect.width);
 }
 
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
 {
    GetMinimizeHorizontalBounds( rect, dest );
+   auto results = CalcBottomItemY
+      ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
+   dest.y = rect.y + results.first;
+   dest.height = results.second;
+}
+
+void TrackInfo::GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest )
+{
+   const int space = 0;// was 3.
+   dest.x = rect.x + space;
+
+   wxRect syncLockRect;
+   GetSyncLockHorizontalBounds( rect, syncLockRect );
+   wxRect minimizeRect;
+   GetMinimizeHorizontalBounds( rect, minimizeRect );
+
+   dest.x = dest.x + space + minimizeRect.width;
+   // Width is rect.width less space on left for track select
+   // and on right for sync-lock icon.
+   dest.width = rect.width - (space + syncLockRect.width) - (space + minimizeRect.width);
+}
+
+
+void TrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
+{
+   GetSelectButtonHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
    dest.y = rect.y + results.first;

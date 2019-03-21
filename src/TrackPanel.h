@@ -182,6 +182,9 @@ namespace TrackInfo
    void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
    void GetMinimizeRect(const wxRect & rect, wxRect &dest);
 
+   void GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest );
+   void GetSelectButtonRect(const wxRect & rect, wxRect &dest);
+
    void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
 
