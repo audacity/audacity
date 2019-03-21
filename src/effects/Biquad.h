@@ -66,7 +66,6 @@ struct Biquad
    static ArrayOf<Biquad> CalcButterworthFilter(int order, double fn, double fc, int type);
    static ArrayOf<Biquad> CalcChebyshevType1Filter(int order, double fn, double fc, double ripple, int type);
    static ArrayOf<Biquad> CalcChebyshevType2Filter(int order, double fn, double fc, double ripple, int type);
-   static ArrayOf<Biquad> CalcEBUR128WeightingFilter(float fs);
 
    static void ComplexDiv (double fNumerR, double fNumerI, double fDenomR, double fDenomI,
                            double* pfQuotientR, double* pfQuotientI);
