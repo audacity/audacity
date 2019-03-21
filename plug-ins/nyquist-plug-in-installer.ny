@@ -139,5 +139,5 @@ $control plug-in (_ "Select plug-in file") file (_ "File Browser") "~/Desktop/" 
   ((or (not (boundp 'plug-in))(not (audacity-version-ok '(2 3 1))))
       (_ "This plug-in requires Audacity 2.3.1 or later."))
   ((not (isfilename plug-in))
-      (_ "Error.\nNo file selected."))
+      (_ (format nil "Error.~%No file selected.")))
   (t  (install plug-in)))
