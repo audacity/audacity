@@ -420,7 +420,8 @@ void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool, wxString Pref, wxSt
    if( !bBool)
       return;
    S.AddFixedText( Prompt );
-   S.Id(FixButtonID + mItem).AddButton( _("Fix") )->SetClientData( safenew wxStringClientData(Pref));
+   S.Id(FixButtonID + mItem).AddButton( _("Fix") )->SetClientObject(
+      safenew wxStringClientData(Pref));
 
    {
      // Replace standard Help button with smaller icon button.
@@ -428,7 +429,7 @@ void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool, wxString Pref, wxSt
       auto b = safenew wxBitmapButton(S.GetParent(), HelpButtonID+mItem, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( _("Help") );
       b->SetLabel(_("Help"));       // for screen readers
-      b->SetClientData( safenew wxStringClientData( Help ));
+      b->SetClientObject( safenew wxStringClientData( Help ));
       S.AddWindow( b );
    }
 }
@@ -469,7 +470,7 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
 
    wxButton * pBtn = (wxButton*)FindWindowById( wxID_HELP );
    if( pBtn )
-      pBtn->SetClientData( safenew wxStringClientData( "Quick_Fix#" ));
+      pBtn->SetClientObject( safenew wxStringClientData( "Quick_Fix#" ));
 
 }
 
@@ -492,7 +493,7 @@ wxString QuickFixDialog::StringFromEvent( wxCommandEvent &event )
       wxFAIL_MSG( "Event Object not found");
       return "";
    }
-   wxStringClientData * pStrCd = (wxStringClientData*)(pBtn->GetClientData());
+   wxStringClientData * pStrCd = (wxStringClientData*)(pBtn->GetClientObject());
    if( !pStrCd ){
       wxFAIL_MSG( "Client Data not found");
       return "";
