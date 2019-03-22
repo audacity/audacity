@@ -30,6 +30,11 @@
 #ifndef __EXPERIMENTAL__
 #define __EXPERIMENTAL__
 
+#ifndef __AUDACITY_H__
+// Audacity.h is needed for the USE_* macros
+#error Must include Audacity.h before Experimental.h
+#endif
+
 // ACH 08 Jan 2014
 // EQ accelerated code
 //#define EXPERIMENTAL_EQ_SSE_THREADED

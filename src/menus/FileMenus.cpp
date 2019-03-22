@@ -1,3 +1,4 @@
+#include "../Audacity.h" // for USE_* macros
 #include "../Experimental.h"
 
 #include "../AudacityApp.h"

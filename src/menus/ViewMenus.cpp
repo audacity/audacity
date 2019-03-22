@@ -1,3 +1,4 @@
+#include "../Audacity.h"
 #include "../Experimental.h"
 
 #include "../HistoryWindow.h"
