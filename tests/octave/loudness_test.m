@@ -122,5 +122,115 @@ if TEST_LUFS_HELPER
   printf("LUFS-selftest3.wav should be %f LUFS\n", calc_LUFS(x, fs));
 end
 
-# TODO: add tests here
+## Test Loudness LUFS mode: stereo dependent
+CURRENT_TEST = "Loudness LUFS mode, keep DC and stereo balance";
+randn("seed", 1);
+fs= 44100;
+# Include some silecne in the test signal to test loudness gating
+# and vary the overall loudness over time.
+x = [0.1*randn(15*fs, 2).', zeros(5*fs, 2).', 0.1*randn(15*fs, 2).'].';
+x(:,1) = x(:,1) .* sin(2*pi/fs/35*(1:1:35*fs)).' .* 1.2;
+x(:,2) = x(:,2) .* sin(2*pi/fs/35*(1:1:35*fs)).';
+audiowrite(TMP_FILENAME, x, fs);
+if EXPORT_TEST_SIGNALS
+  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-stereo-test.wav"), x, fs);
+end
+
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("Loudness: LUFSLevel=-23 DualMono=1 NormalizeTo=0 StereoIndependent=0\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+do_test_equ(calc_LUFS(y, fs), -23, "loudness", LUFS_epsilon);
+do_test_neq(calc_LUFS(y(:,1), fs), calc_LUFS(y(:,2), fs), "stereo balance", 1);
+
+## Test Loudness LUFS mode, stereo independent
+CURRENT_TEST = "Loudness LUFS mode, stereo independence";
+audiowrite(TMP_FILENAME, x, fs);
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("Loudness: LUFSLevel=-23 DualMono=0 NormalizeTo=0 StereoIndependent=1\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+# Independently processed stereo channels have half the target loudness.
+do_test_equ(calc_LUFS(y(:,1), fs), -26, "channel 1 loudness", LUFS_epsilon);
+do_test_equ(calc_LUFS(y(:,2), fs), -26, "channel 2 loudness", LUFS_epsilon);
+
+## Test Loudness LUFS mode: mono as mono
+CURRENT_TEST = "Test Loudness LUFS mode: mono as mono";
+x = x(:,1);
+audiowrite(TMP_FILENAME, x, fs);
+if EXPORT_TEST_SIGNALS
+  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-mono-test.wav"), x, fs);
+end
+
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("Loudness: LUFSLevel=-26 DualMono=0 NormalizeTo=0 StereoIndependent=1\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=1\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+do_test_equ(calc_LUFS(y, fs), -26, "loudness", LUFS_epsilon);
+
+## Test Loudness LUFS mode: mono as dual-mono
+CURRENT_TEST = "Test Loudness LUFS mode: mono as dual-mono";
+audiowrite(TMP_FILENAME, x, fs);
+
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("Loudness: LUFSLevel=-26 DualMono=1 NormalizeTo=0 StereoIndependent=0\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=1\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+# This shall be 3 LU quieter as it is compared to strict spec.
+do_test_equ(calc_LUFS(y, fs), -29, "loudness", LUFS_epsilon);
+
+## Test Loudness LUFS mode: multi-rate project
+CURRENT_TEST = "Test Loudness LUFS mode: multi-rate project";
+audiowrite(TMP_FILENAME, x, fs);
+
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+
+randn("seed", 2);
+fs1= 8000;
+x1 = [0.2*randn(2, 10*fs1) zeros(2, 10*fs1) 0.1*randn(2, 10*fs1)].';
+x1(:,1) = x1(:,1) * 0.6;
+audiowrite(TMP_FILENAME, x1, fs1);
+if EXPORT_TEST_SIGNALS
+  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-stereo-test-8kHz.wav"), x1, fs1);
+end
+
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("Loudness: LUFSLevel=-30 DualMono=0 NormalizeTo=0 StereoIndependent=0\n");
+
+aud_do("SelectTracks: Track=0 TrackCount=1 Mode=Set\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=1\n"));
+system("sync");
+y = audioread(TMP_FILENAME);
+
+aud_do("SelectTracks: Track=1 TrackCount=1 Mode=Set\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
+system("sync");
+y1 = audioread(TMP_FILENAME);
+
+do_test_equ(calc_LUFS(y, fs),   -30, "loudness track 1", LUFS_epsilon);
+# XXX: Audacity does not export at 8kHz through scripting thus this test is expected to fail!
+#      To ensure that this works you have to set the project rate to 8 kHz,
+#      export the track and check the results manually.
+do_test_equ(calc_LUFS(y1, fs1), -30, "loudness track 2", LUFS_epsilon, true);
+# No stereo balance check for track 1 - it's a mono track.
+do_test_neq(calc_LUFS(y1(:,1), fs), calc_LUFS(y1(:,2), fs), "stereo balance track 2", LUFS_epsilon);
 
