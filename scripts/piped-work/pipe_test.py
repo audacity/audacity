@@ -34,7 +34,7 @@ if not os.path.exists( fromname ) :
 
 print( "-- Both pipes exist.  Good." )
 
-tofile = open( toname, 'wt+' )
+tofile = open( toname, 'w' )
 print( "-- File to write to has been opened" )
 fromfile = open( fromname, 'rt')
 print( "-- File to read from has now been opened too\r\n" )
@@ -51,7 +51,7 @@ def getResponse() :
     while line != '\n' :
         result += line
         line = fromfile.readline()
-	#print(" I read line:["+line+"]")
+        #print(" I read line:["+line+"]")
     return result
 
 def doCommand( command ) :
