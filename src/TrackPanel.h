@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
+#include "Audacity.h" // for USE_* macros
 #include "Experimental.h"
 
 #include "MemoryX.h"

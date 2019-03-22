@@ -8,6 +8,8 @@
 
 **********************************************************************/
 
+#include "../../Audacity.h" // for USE_* macros
+
 #if USE_VST
 
 #include <wx/wx.h>

@@ -1,3 +1,4 @@
+#include "../Audacity.h" // for USE_* macros
 #include "../AdornedRulerPanel.h"
 #include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
 #include "../LabelTrack.h"

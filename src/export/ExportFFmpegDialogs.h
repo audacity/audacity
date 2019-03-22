@@ -11,9 +11,9 @@ LRN
 #if !defined(__EXPORT_FFMPEG_DIALOGS_H__)
 #define __EXPORT_FFMPEG_DIALOGS_H__
 
-#if defined(USE_FFMPEG)
+#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact
+#if defined(USE_FFMPEG)
 
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
