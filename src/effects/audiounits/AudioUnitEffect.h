@@ -10,7 +10,7 @@
 **********************************************************************/
 #ifndef AUDACITY_AUDIOUNIT_EFFECT_H
 
-#include "../../Audacity.h"
+#include "../../Audacity.h" // for USE_* macros
 
 #if USE_AUDIO_UNITS
 

@@ -32,7 +32,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ControlToolBar.h"
 
 #include "../Experimental.h"

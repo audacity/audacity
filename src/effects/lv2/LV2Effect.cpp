@@ -9,7 +9,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+#include "../../Audacity.h" // for USE_* macros
 
 #if defined(USE_LV2)
 #include "LV2Effect.h"

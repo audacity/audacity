@@ -28,7 +28,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ImportOGG.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

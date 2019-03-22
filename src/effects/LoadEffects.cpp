@@ -11,7 +11,7 @@
 \brief Internal module to auto register all built in effects.  
 *****************************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "LoadEffects.h"
 
 #include "../Experimental.h"

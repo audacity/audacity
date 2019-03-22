@@ -25,7 +25,7 @@ hold information about one contributor to Audacity.
 *//********************************************************************/
 
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "AboutDialog.h"
 
 #include "Experimental.h"

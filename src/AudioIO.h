@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 
 #include "Experimental.h"
 

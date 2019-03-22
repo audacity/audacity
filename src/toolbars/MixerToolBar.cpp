@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "MixerToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

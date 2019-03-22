@@ -38,7 +38,7 @@
 
 *//******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "Meter.h"
 
 #include "../Experimental.h"

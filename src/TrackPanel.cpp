@@ -60,7 +60,7 @@ is time to refresh some aspect of the screen.
 
 *//*****************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "TrackPanel.h"
 
 #include "Experimental.h"

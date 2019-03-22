@@ -38,7 +38,7 @@ audio tracks.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "TrackArtist.h"
 
 #include "Experimental.h"

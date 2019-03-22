@@ -20,7 +20,7 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"    // needed before FFmpeg.h
+#include "../Audacity.h"    // needed before FFmpeg.h // for USE_* macros
 #include "ImportFFmpeg.h"
 
 #include "../Experimental.h"

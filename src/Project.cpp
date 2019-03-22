@@ -48,7 +48,7 @@ scroll information.  It also has some status flags.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "Project.h"
 
 #include "Experimental.h"

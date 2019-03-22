@@ -9,7 +9,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "MixerBoard.h"
 
 #include "Experimental.h"

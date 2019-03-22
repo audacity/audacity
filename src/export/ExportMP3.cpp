@@ -59,7 +59,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ExportMP3.h"
 
 #include <wx/app.h>

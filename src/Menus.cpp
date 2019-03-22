@@ -25,7 +25,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "Menus.h"
 
 #include "Experimental.h"

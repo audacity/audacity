@@ -22,7 +22,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ImportFLAC.h"
 
 #include "../Experimental.h"

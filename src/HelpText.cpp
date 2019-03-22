@@ -12,7 +12,7 @@
 \brief Given a key, returns some html.
 *//********************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "HelpText.h"
 
 #include "Experimental.h"

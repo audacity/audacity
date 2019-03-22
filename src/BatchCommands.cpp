@@ -16,7 +16,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
 #include "BatchCommands.h"
 
 #include <wx/defs.h>

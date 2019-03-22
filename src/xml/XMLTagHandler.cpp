@@ -21,7 +21,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "XMLTagHandler.h"
 
 #include "../MemoryX.h"

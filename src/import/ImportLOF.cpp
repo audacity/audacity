@@ -69,7 +69,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ImportLOF.h"
 
 #include <wx/string.h>

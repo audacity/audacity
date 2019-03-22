@@ -28,7 +28,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "Export.h"
 
 #include <wx/file.h>

@@ -24,7 +24,7 @@ in which buttons can be placed.
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ToolBar.h"
 
 #include "../Experimental.h"

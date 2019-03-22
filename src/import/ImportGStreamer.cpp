@@ -23,7 +23,7 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"	// needed before GStreamer.h
+#include "../Audacity.h"	// needed before GStreamer.h // for USE_* macros
 
 #if defined(USE_GSTREAMER)
 #include "ImportGStreamer.h"

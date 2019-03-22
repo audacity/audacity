@@ -10,7 +10,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "HelpSystem.h"
 
 #include "../Experimental.h"

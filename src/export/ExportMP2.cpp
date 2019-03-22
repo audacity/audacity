@@ -32,7 +32,7 @@
 
 */
 
-#include "../Audacity.h"
+#include "../Audacity.h"// for USE_* macros
 #include "ExportMP2.h"
 
 #ifdef USE_LIBTWOLAME

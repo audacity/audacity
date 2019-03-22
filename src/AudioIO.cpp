@@ -414,7 +414,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 *//*******************************************************************/
 
 #include "Audacity.h"
-#include "AudioIO.h"
+#include "AudioIO.h" // for USE_* macros
 
 #include "Experimental.h"
 

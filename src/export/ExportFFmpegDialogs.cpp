@@ -36,7 +36,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact
+#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
 #include "ExportFFmpegDialogs.h"
 
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h

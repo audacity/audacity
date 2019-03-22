@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "EffectsPrefs.h"
 
 #include "../Experimental.h"
