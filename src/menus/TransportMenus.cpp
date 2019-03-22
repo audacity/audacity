@@ -667,7 +667,7 @@ void OnToggleSWPlaythrough(const CommandContext &WXUNUSED(context) )
 }
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-void AudacityProject::OnToggleAutomatedInputLevelAdjustment(
+void OnToggleAutomatedInputLevelAdjustment(
    const CommandContext &WXUNUSED(context) )
 {
    bool AVEnabled;
