@@ -213,11 +213,14 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
 #endif
 END_EVENT_TABLE()
 
-EffectEqualization::EffectEqualization()
+EffectEqualization::EffectEqualization(int Options)
    : mFFTBuffer{ windowSize }
    , mFilterFuncR{ windowSize }
    , mFilterFuncI{ windowSize }
 {
+   mOptions = Options;
+   mGraphic = NULL;
+   mDraw = NULL;
    mCurve = NULL;
    mPanel = NULL;
 
@@ -288,6 +291,10 @@ EffectEqualization::~EffectEqualization()
 
 ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
+   if( mOptions == kEqOptionGraphic )
+      return GRAPHICEQ_PLUGIN_SYMBOL;
+   if( mOptions == kEqOptionCurve )
+      return FILTERCURVE_PLUGIN_SYMBOL;
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
@@ -360,6 +367,11 @@ bool EffectEqualization::LoadFactoryDefaults()
    mDrawMode = DEF_DrawMode;
    mDrawGrid = DEF_DrawGrid;
 
+   if( mOptions == kEqOptionCurve)
+      mDrawMode = true;
+   if( mOptions == kEqOptionGraphic)
+      mDrawMode = false;
+
    return Effect::LoadFactoryDefaults();
 }
 
@@ -412,9 +424,20 @@ bool EffectEqualization::ValidateUI()
 
 // Effect implementation
 
-bool EffectEqualization::Startup()
+wxString EffectEqualization::GetPrefsPrefix()
 {
    wxString base = wxT("/Effects/Equalization/");
+   if( mOptions == kEqOptionGraphic )
+      base = wxT("/Effects/GraphicEq/");
+   else if( mOptions == kEqOptionCurve )
+      base = wxT("/Effects/FilterCurve/");
+   return base;
+}
+
+
+bool EffectEqualization::Startup()
+{
+   wxString base = GetPrefsPrefix();
 
    // Migrate settings from 2.1.0 or before
 
@@ -741,19 +764,21 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
-         {
+         if( mOptions == kEqLegacy ){
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
             {
-               mDraw = S.Id(ID_Draw).AddRadioButton(_("&Draw"));
-               mDraw->SetName(_("Draw Curves"));
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+               {
+                  mDraw = S.Id(ID_Draw).AddRadioButton(_("&Draw"));
+                  mDraw->SetName(_("Draw Curves"));
 
-               mGraphic = S.Id(ID_Graphic).AddRadioButtonToGroup(_("&Graphic"));
-               mGraphic->SetName(_("Graphic EQ"));
+                  mGraphic = S.Id(ID_Graphic).AddRadioButtonToGroup(_("&Graphic"));
+                  mGraphic->SetName(_("Graphic EQ"));
+               }
+               S.EndHorizontalLay();
             }
             S.EndHorizontalLay();
          }
-         S.EndHorizontalLay();
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
@@ -844,7 +869,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
          }
          S.EndHorizontalLay();
-         S.Id(ID_Manage).AddButton(_("S&ave/Manage Curves..."));
+
+         if( mOptions == kEqLegacy )
+            S.Id(ID_Manage).AddButton(_("S&ave/Manage Curves..."));
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
@@ -964,17 +991,25 @@ bool EffectEqualization::TransferDataToWindow()
    // Set graphic interpolation mode
    mInterpChoice->SetSelection(mInterp);
 
+   // Override draw mode, if we're not displaying the radio buttons.
+   if( mOptions == kEqOptionCurve)
+      mDrawMode = true;
+   if( mOptions == kEqOptionGraphic)
+      mDrawMode = false;
+
    // Set Graphic (Fader) or Draw mode
    if (mDrawMode)
    {
-      mDraw->SetValue(true);
+      if( mDraw )
+         mDraw->SetValue(true);
       szrV->Show(szrG,false);    // eq sliders
       szrH->Show(szrI,false);    // interpolation choice
       szrH->Show(szrL,true);     // linear freq checkbox
    }
    else
    {
-      mGraphic->SetValue(true);
+      if( mGraphic) 
+         mGraphic->SetValue(true);
       UpdateGraphic();
    }
 
@@ -1348,7 +1383,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
       // Check if presets are up to date.
       wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
       wxString eqCurvesInstalledVersion;
-      gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
+      gPrefs->Read(GetPrefsPrefix() + "PresetVersion", &eqCurvesInstalledVersion, wxT(""));
 
       bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
 
@@ -1531,7 +1566,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    // Write current EqCurve version number
    // TODO: Probably better if we used pluginregistry.cfg
    wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
-   gPrefs->Write(wxT("/Effects/Equalization/PresetVersion"), eqCurvesCurrentVersion);
+   gPrefs->Write(GetPrefsPrefix()+"PresetVersion", eqCurvesCurrentVersion);
    gPrefs->Flush();
 
    return;
@@ -2632,7 +2667,8 @@ void EffectEqualization::OnSlider(wxCommandEvent & event)
 
 void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mGraphic->GetValue())
+   bool bIsGraphic = !mDrawMode;
+   if (bIsGraphic)
    {
       GraphicEQ(mLogEnvelope.get());
       EnvelopeUpdated();
@@ -2642,16 +2678,14 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnDrawMode(wxCommandEvent & WXUNUSED(event))
 {
-   UpdateDraw();
-
    mDrawMode = true;
+   UpdateDraw();
 }
 
 void EffectEqualization::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
 {
-   UpdateGraphic();
-
    mDrawMode = false;
+   UpdateGraphic();
 }
 
 void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
@@ -3050,7 +3084,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    }
 
    memDC.SetPen(*wxBLACK_PEN);
-   if( mEffect->mDraw->GetValue() )
+   if( mEffect->mDrawMode )
    {
       ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
 

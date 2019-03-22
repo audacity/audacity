@@ -109,36 +109,38 @@
 // Define the list of effects that will be autoregistered and how to instantiate each
 //
 #define EFFECT_LIST \
-   EFFECT( CHIRP,             EffectToneGen, (true) )      \
-   EFFECT( DTMFTONES,         EffectDtmf, () )             \
-   EFFECT( NOISE,             EffectNoise, () )            \
-   EFFECT( SILENCE,           EffectSilence, () )          \
-   EFFECT( TONE,              EffectToneGen, (false) )     \
-   EFFECT( AMPLIFY,           EffectAmplify, () )          \
-   EFFECT( BASSTREBLE,        EffectBassTreble, () )       \
-   EFFECT( CHANGESPEED,       EffectChangeSpeed, () )      \
-   EFFECT( CLICKREMOVAL,      EffectClickRemoval, () )     \
-   EFFECT( COMPRESSOR,        EffectCompressor, () )       \
-   EFFECT( DISTORTION,        EffectDistortion, () )       \
-   EFFECT( ECHO,              EffectEcho, () )             \
-   EFFECT( EQUALIZATION,      EffectEqualization, () )     \
-   EFFECT( FADEIN,            EffectFade, (true) )         \
-   EFFECT( FADEOUT,           EffectFade, (false) )        \
-   EFFECT( INVERT,            EffectInvert, () )           \
-   EFFECT( NORMALIZE,         EffectNormalize, () )        \
-   EFFECT( PHASER,            EffectPhaser, () )           \
-   EFFECT( REPAIR,            EffectRepair, () )           \
-   EFFECT( REPEAT,            EffectRepeat, () )           \
-   EFFECT( REVERB,            EffectReverb, () )           \
-   EFFECT( REVERSE,           EffectReverse, () )          \
-   EFFECT( STEREOTOMONO,      EffectStereoToMono, () )     \
-   EFFECT( TRUNCATESILENCE,   EffectTruncSilence, () )     \
-   EFFECT( WAHWAH,            EffectWahwah, () )           \
-   EFFECT( FINDCLIPPING,      EffectFindClipping, () )     \
-   NOISEREDUCTION_EFFECT                                 \
-   SOUNDTOUCH_EFFECTS                                    \
-   EFFECT( AUTODUCK,          EffectAutoDuck, () )         \
-   EFFECT( PAULSTRETCH,       EffectPaulstretch, () )      \
+   EFFECT( CHIRP,             EffectToneGen, (true) )                  \
+   EFFECT( DTMFTONES,         EffectDtmf, () )                         \
+   EFFECT( NOISE,             EffectNoise, () )                        \
+   EFFECT( SILENCE,           EffectSilence, () )                      \
+   EFFECT( TONE,              EffectToneGen, (false) )                 \
+   EFFECT( AMPLIFY,           EffectAmplify, () )                      \
+   EFFECT( BASSTREBLE,        EffectBassTreble, () )                   \
+   EFFECT( CHANGESPEED,       EffectChangeSpeed, () )                  \
+   EFFECT( CLICKREMOVAL,      EffectClickRemoval, () )                 \
+   EFFECT( COMPRESSOR,        EffectCompressor, () )                   \
+   EFFECT( DISTORTION,        EffectDistortion, () )                   \
+   EFFECT( ECHO,              EffectEcho, () )                         \
+   EFFECT( EQUALIZATION,      EffectEqualization, (kEqLegacy) )        \
+   EFFECT( FADEIN,            EffectFade, (true) )                     \
+   EFFECT( FADEOUT,           EffectFade, (false) )                    \
+   EFFECT( FILTERCURVE,       EffectEqualization, (kEqOptionCurve) )   \
+   EFFECT( GRAPHICEQ,         EffectEqualization, (kEqOptionGraphic) ) \
+   EFFECT( INVERT,            EffectInvert, () )                       \
+   EFFECT( NORMALIZE,         EffectNormalize, () )                    \
+   EFFECT( PHASER,            EffectPhaser, () )                       \
+   EFFECT( REPAIR,            EffectRepair, () )                       \
+   EFFECT( REPEAT,            EffectRepeat, () )                       \
+   EFFECT( REVERB,            EffectReverb, () )                       \
+   EFFECT( REVERSE,           EffectReverse, () )                      \
+   EFFECT( STEREOTOMONO,      EffectStereoToMono, () )                 \
+   EFFECT( TRUNCATESILENCE,   EffectTruncSilence, () )                 \
+   EFFECT( WAHWAH,            EffectWahwah, () )                       \
+   EFFECT( FINDCLIPPING,      EffectFindClipping, () )                 \
+   NOISEREDUCTION_EFFECT                                               \
+   SOUNDTOUCH_EFFECTS                                                  \
+   EFFECT( AUTODUCK,          EffectAutoDuck, () )                     \
+   EFFECT( PAULSTRETCH,       EffectPaulstretch, () )                  \
    SBSMS_EFFECTS
 
 //

@@ -45,7 +45,14 @@
 #include "../SampleFormat.h"
 
 #define EQUALIZATION_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Equalization") }
+#define GRAPHICEQ_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Graphic EQ") }
+#define FILTERCURVE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Filter Curve") }
 
+// Flags to specialise the UI
+const int kEqOptionGraphic =1;
+const int kEqOptionCurve   =1<<1;
+// The legacy version offers both Graphic and curve on the same UI.
+const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
 class Envelope;
 class EnvelopeEditor;
@@ -101,7 +108,7 @@ class EffectEqualization final : public Effect,
                            public XMLTagHandler
 {
 public:
-   EffectEqualization();
+   EffectEqualization(int Options);
    virtual ~EffectEqualization();
 
    // ComponentInterface implementation
@@ -139,6 +146,7 @@ public:
 
 private:
    // EffectEqualization implementation
+   wxString GetPrefsPrefix();
 
    // Number of samples in an FFT window
    static const size_t windowSize = 16384u; //MJS - work out the optimum for this at run time?  Have a dialog box for it?
@@ -205,6 +213,7 @@ private:
 #endif
 
 private:
+   int mOptions;
    HFFT hFFT;
    Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;
    size_t mM;
