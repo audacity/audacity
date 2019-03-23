@@ -15,7 +15,7 @@ It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
 
-#include "Audacity.h" // This should always be included first; for USE_* macros
+#include "Audacity.h" // This should always be included first; for USE_* macros and __UNIX__
 #include "AudacityApp.h"
 
 #include "Experimental.h"

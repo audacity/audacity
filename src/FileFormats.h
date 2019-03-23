@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_FILE_FORMATS__
 #define __AUDACITY_FILE_FORMATS__
 
-#include "Audacity.h"
+#include "Audacity.h" // for __UNIX__
 
 #include <wx/list.h>
 #include <wx/arrstr.h>

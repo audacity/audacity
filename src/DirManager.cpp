@@ -61,7 +61,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+#include "Audacity.h" // for __UNIX__
 #include "DirManager.h"
 
 #include "MemoryX.h"
