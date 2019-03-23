@@ -32,6 +32,7 @@
 #include "Export.h"
 
 #include <wx/file.h>
+#include <wx/filectrl.h>
 #include <wx/filename.h>
 #include <wx/progdlg.h>
 #include <wx/sizer.h>

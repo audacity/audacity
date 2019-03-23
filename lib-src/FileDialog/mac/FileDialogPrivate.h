@@ -14,9 +14,9 @@
 #ifndef _MAC_FILEDIALOG_H_
 #define _MAC_FILEDIALOG_H_
 
-#include <wx/choice.h>
-
 #include "../FileDialog.h"
+
+class wxChoice;
 
 //-------------------------------------------------------------------------
 // wxFileDialog
