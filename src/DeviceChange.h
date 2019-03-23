@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_DEVICECHANGE_H__
 #define __AUDACITY_DEVICECHANGE_H__
 
-#include "Audacity.h"
+#include "Audacity.h" // for HAVE_LIBUDEV_H
 
 #include "Experimental.h"
 

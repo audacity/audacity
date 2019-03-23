@@ -37,7 +37,7 @@
 
 #include "AudioIO.h"
 
-#include "DeviceChange.h"
+#include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
 #include "toolbars/DeviceToolBar.h"
 
 DeviceManager DeviceManager::dm;

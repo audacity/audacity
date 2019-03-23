@@ -413,8 +413,8 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
-#include "AudioIO.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
+#include "AudioIO.h"
 
 #include "Experimental.h"
 
@@ -2677,7 +2677,7 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
-#ifdef HAVE_MIDI
+#ifdef USE_MIDI
    mMidiPlaybackTracks.clear();
 #endif
 
