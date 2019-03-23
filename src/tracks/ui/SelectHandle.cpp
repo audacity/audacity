@@ -1144,7 +1144,7 @@ void SelectHandle::AdjustSelection
       std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
    double origSelend = selend;
 
-   auto pTrack = track->SharedPointer();
+   auto pTrack = Track::SharedPointer( track );
    if (!pTrack)
       pTrack = pProject->GetTracks()->Lock(mpTrack);
 

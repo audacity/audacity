@@ -695,7 +695,7 @@ UIHandle::Result TimeShiftHandle::Drag
    }
 
    // May need a shared_ptr to reassign mCapturedTrack below
-   auto pTrack = track->SharedPointer();
+   auto pTrack = Track::SharedPointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;
 

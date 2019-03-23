@@ -238,7 +238,6 @@ class AUDACITY_DLL_API Track /* not final */
    {
       // shared_from_this is injected into class scope by base class
       // std::enable_shared_from_this<Track>
-      if (!this) return {};
       return std::static_pointer_cast<Subclass>( shared_from_this() );
    }
 
@@ -250,9 +249,17 @@ class AUDACITY_DLL_API Track /* not final */
    {
       // shared_from_this is injected into class scope by base class
       // std::enable_shared_from_this<Track>
-      if (!this) return {};
       return std::static_pointer_cast<Subclass>( shared_from_this() );
    }
+
+   // Static overloads of SharedPointer for when the pointer may be null
+   template<typename Subclass = Track>
+   static inline std::shared_ptr<Subclass> SharedPointer( Track *pTrack )
+   { return pTrack ? pTrack->SharedPointer<Subclass>() : nullptr; }
+
+   template<typename Subclass = const Track>
+   static inline std::shared_ptr<Subclass> SharedPointer( const Track *pTrack )
+   { return pTrack ? pTrack->SharedPointer<Subclass>() : nullptr; }
 
    // Find anything registered with TrackList::RegisterPendingChangedTrack and
    // not yet cleared or applied; if no such exists, return this track

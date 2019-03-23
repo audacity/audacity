@@ -97,7 +97,7 @@ void SelectionState::ChangeSelectionOnShiftClick
 
       // Our track was earlier than the first.  Extend from the last.
       if( !pExtendFrom )
-         pExtendFrom = (*trackRange.rbegin())->SharedPointer();
+         pExtendFrom = Track::SharedPointer( *trackRange.rbegin() );
    }
 
    SelectNone( tracks );

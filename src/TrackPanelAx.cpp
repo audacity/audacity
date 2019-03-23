@@ -64,7 +64,7 @@ std::shared_ptr<Track> TrackPanelAx::GetFocus()
       }
       if (!focusedTrack) {
          focusedTrack =
-            (*mTrackPanel->GetTracks()->Any().first)->SharedPointer();
+            Track::SharedPointer( *mTrackPanel->GetTracks()->Any().first );
          // only call SetFocus if the focus has changed to avoid
          // unnecessary focus events
          if (focusedTrack) 
@@ -99,7 +99,7 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 #endif
 
    if( !track )
-      track = (*mTrackPanel->GetTracks()->Any().begin())->SharedPointer();
+      track = Track::SharedPointer( *mTrackPanel->GetTracks()->Any().begin() );
 
    mFocusedTrack = track;
    mNumFocusedTrack = TrackNum(track);

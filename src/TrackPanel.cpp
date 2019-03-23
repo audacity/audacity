@@ -2247,7 +2247,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
    // Make sure we always have the first linked track of a stereo track
    t = *GetTracks()->FindLeader(t);
 
-   auto cell = mAx->SetFocus( t->SharedPointer() ).get();
+   auto cell = mAx->SetFocus( Track::SharedPointer( t ) ).get();
 
    if (cell) {
       AudacityProject::CaptureKeyboard(this);
