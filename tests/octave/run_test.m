@@ -128,6 +128,11 @@ function result = do_test(result, msg, skip = false)
   global CURRENT_TEST;
   TESTS_RUN = TESTS_RUN + 1;
 
+  ANSI_COLOR_RED    = "\x1b[31m";
+  ANSI_COLOR_GREEN  = "\x1b[32m";
+  ANSI_COLOR_YELLOW = "\x1b[33m";
+  ANSI_COLOR_RESET  = "\x1b[0m";
+
   suffix = "";
   if !strcmp(msg, "")
     suffix = cstrcat(" - ", msg);
@@ -135,15 +140,21 @@ function result = do_test(result, msg, skip = false)
 
   if skip
     TESTS_SKIPPED = TESTS_SKIPPED + 1;
+    printf(ANSI_COLOR_YELLOW);
     printf(cstrcat("[Skip]:    ", CURRENT_TEST, suffix, "\n"));
+    printf(ANSI_COLOR_RESET);
     result = 1;
   else
     if result
+      printf(ANSI_COLOR_GREEN);
       printf(cstrcat("[Success]: ", CURRENT_TEST, suffix, "\n"));
+      printf(ANSI_COLOR_RESET);
       return;
     else
       TESTS_FAILED = TESTS_FAILED + 1;
+      printf(ANSI_COLOR_RED);
       printf(cstrcat("[Failed]:  ", CURRENT_TEST, suffix, "\n"));
+      printf(ANSI_COLOR_RESET);
       return;
     end
   end
