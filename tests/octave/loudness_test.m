@@ -234,3 +234,41 @@ do_test_equ(calc_LUFS(y1, fs1), -30, "loudness track 2", LUFS_epsilon, true);
 # No stereo balance check for track 1 - it's a mono track.
 do_test_neq(calc_LUFS(y1(:,1), fs), calc_LUFS(y1(:,2), fs), "stereo balance track 2", LUFS_epsilon);
 
+## Test Loudness RMS mode: stereo independent
+CURRENT_TEST = "Loudness RMS mode, stereo independent";
+randn("seed", 1);
+fs= 44100;
+x = 0.1*randn(30*fs, 2);
+x(:,1) = x(:,1) * 0.6;
+audiowrite(TMP_FILENAME, x, fs);
+if EXPORT_TEST_SIGNALS
+  audiowrite(cstrcat(pwd(), "/Loudness-RMS-test.wav"), x, fs);
+end
+
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("Loudness: RMSLevel=-20 DualMono=0 NormalizeTo=1 StereoIndependent=1\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+do_test_equ(20*log10(sqrt(sum(y(:,1).*y(:,1)/length(y)))), -20, "channel 1 RMS");
+do_test_equ(20*log10(sqrt(sum(y(:,2).*y(:,2)/length(y)))), -20, "channel 2 RMS");
+
+## Test Loudness RMS mode: stereo dependent
+CURRENT_TEST = "Loudness RMS mode, stereo dependent";
+audiowrite(TMP_FILENAME, x, fs);
+
+aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+aud_do("RemoveTracks:\n");
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+aud_do("Loudness: RMSLevel=-22 DualMono=1 NormalizeTo=1 StereoIndependent=0\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+# Stereo RMS must be calculated in quadratic domain.
+do_test_equ(20*log10(sqrt(sum(rms(y).^2)/size(y)(2))), -22, "RMS");
+do_test_neq(20*log10(rms(y(:,1))), 20*log10(rms(y(:,2))), "stereo balance", 1);
+
