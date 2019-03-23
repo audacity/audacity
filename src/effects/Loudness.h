@@ -62,6 +62,7 @@ private:
 
    void AllocBuffers();
    void FreeBuffers();
+   bool GetTrackRMS(WaveTrack* track, float& rms);
    bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
    bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
                         sampleCount pos, size_t len);
@@ -92,6 +93,7 @@ private:
 
    float  mMult;
    float  mRatio;
+   float  mRMS[2];
    std::unique_ptr<EBUR128> mLoudnessProcessor;
 
    wxTextCtrl *mLevelTextCtrl;

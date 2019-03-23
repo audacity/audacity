@@ -24,6 +24,7 @@
 
 #include "../Internat.h"
 #include "../Prefs.h"
+#include "../ProjectFileManager.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
@@ -166,6 +167,8 @@ bool EffectLoudness::Process()
       // LU use 10*log10(...) instead of 20*log10(...)
       // so multiply level by 2 and use standard DB_TO_LINEAR macro.
       mRatio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
+   else // RMS
+      mRatio = DB_TO_LINEAR(TrapDouble(mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
 
    // Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
@@ -204,26 +207,55 @@ bool EffectLoudness::Process()
 
       mProcStereo = range.size() > 1;
 
-      mLoudnessProcessor.reset(new EBUR128(mCurRate, range.size()));
-      mLoudnessProcessor->Initialize();
-      if(!ProcessOne(range, true))
+      if(mNormalizeTo == kLoudness)
       {
-         // Processing failed -> abort
-         bGoodResult = false;
-         break;
+         mLoudnessProcessor.reset(new EBUR128(mCurRate, range.size()));
+         mLoudnessProcessor->Initialize();
+         if(!ProcessOne(range, true))
+         {
+            // Processing failed -> abort
+            bGoodResult = false;
+            break;
+         }
+      }
+      else // RMS
+      {
+         size_t idx = 0;
+         for(auto channel : range)
+         {
+            if(!GetTrackRMS(channel, mRMS[idx]))
+            {
+               bGoodResult = false;
+               return false;
+            }
+            ++idx;
+         }
+         mSteps = 1;
       }
 
       // Calculate normalization values the analysis results
-      float extent = mLoudnessProcessor->IntegrativeLoudness();
+      float extent;
+      if(mNormalizeTo == kLoudness)
+         extent = mLoudnessProcessor->IntegrativeLoudness();
+      else // RMS
+      {
+         extent = mRMS[0];
+         if(mProcStereo)
+            // RMS: use average RMS, average must be calculated in quadratic domain.
+            extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
+      }
       mMult = mRatio / extent;
 
-      // Target half the LUFS value if mono (or independent processed stereo)
-      // shall be treated as dual mono.
-      if(range.size() == 1 && (mDualMono || track->GetChannel() != Track::MonoChannel))
-         mMult /= 2.0;
+      if(mNormalizeTo == kLoudness)
+      {
+         // Target half the LUFS value if mono (or independent processed stereo)
+         // shall be treated as dual mono.
+         if(range.size() == 1 && (mDualMono || track->GetChannel() != Track::MonoChannel))
+            mMult /= 2.0;
 
-      // LUFS are related to square values so the multiplier must be the root.
-      mMult = sqrt(mMult);
+         // LUFS are related to square values so the multiplier must be the root.
+         mMult = sqrt(mMult);
+      }
 
       mProgressMsg = topMsg + wxString::Format(_("Processing: %s"), trackName);
       if(!ProcessOne(range, false))
@@ -345,6 +377,25 @@ void EffectLoudness::FreeBuffers()
 {
    mTrackBuffer[0].reset();
    mTrackBuffer[1].reset();
+}
+
+bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
+{
+   // Since we need complete summary data, we need to block until the OD tasks are done for this track
+   // This is needed for track->GetMinMax
+   // TODO: should we restrict the flags to just the relevant block files (for selections)
+   while (ProjectFileManager::GetODFlags(*track)) {
+      // update the gui
+      if (ProgressResult::Cancelled == mProgress->Update(
+         0, _("Waiting for waveform to finish computing...")) )
+         return false;
+      wxMilliSleep(100);
+   }
+
+   // set mRMS.  No progress bar here as it's fast.
+   float _rms = track->GetRMS(mCurT0, mCurT1); // may throw
+   rms = _rms;
+   return true;
 }
 
 /// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
