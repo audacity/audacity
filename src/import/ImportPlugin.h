@@ -127,20 +127,11 @@ public:
    {
    }
 
-   virtual ~ImportFileHandle()
-   {
-   }
+   virtual ~ImportFileHandle();
 
    // The importer should call this to create the progress dialog and
    // identify the filename being imported.
-   void CreateProgress()
-   {
-      wxFileName ff(mFilename);
-      wxString title;
-
-      title.Printf(_("Importing %s"), GetFileDescription());
-      mProgress.create(title, ff.GetFullName());
-   }
+   void CreateProgress();
 
    // This is similar to GetImporterDescription, but if possible the
    // importer will return a more specific description of the

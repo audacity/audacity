@@ -747,3 +747,16 @@ void ImportStreamDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    EndModal( wxID_CANCEL );
 }
 
+ImportFileHandle::~ImportFileHandle()
+{
+}
+
+void ImportFileHandle::CreateProgress()
+{
+   wxFileName ff( mFilename );
+   wxString title;
+
+   title.Printf(_("Importing %s"), GetFileDescription());
+   mProgress.create(title, ff.GetFullName());
+}
+

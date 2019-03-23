@@ -219,10 +219,7 @@ public:
    StatusBarTarget(wxStatusBar &sb)
       : mStatus(sb)
    {}
-   void Update(const wxString &message) override
-   {
-      mStatus.SetStatusText(message, 0);
-   }
+   void Update(const wxString &message) override;
 };
 
 /// Adds messages to a response queue (to be sent back to a script)

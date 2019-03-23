@@ -432,3 +432,8 @@ InteractiveOutputTargets::InteractiveOutputTargets() :
    )
 {
 }
+
+void StatusBarTarget::Update(const wxString &message)
+{
+   mStatus.SetStatusText(message, 0);
+}
