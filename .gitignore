@@ -114,6 +114,8 @@ dox/
 *.ipch
 *.opensdf
 *.vcxproj.user
+*.sbr
+*.bsc
 
 # Precompiled Headers
 *.gch
