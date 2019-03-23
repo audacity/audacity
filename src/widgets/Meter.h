@@ -16,8 +16,9 @@
 #ifndef __AUDACITY_METER__
 #define __AUDACITY_METER__
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/brush.h>
-#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
+#include <wx/defs.h>
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 #include <wx/timer.h>

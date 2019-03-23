@@ -36,6 +36,7 @@ or ASlider.
 
 #include <math.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>

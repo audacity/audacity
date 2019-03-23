@@ -17,7 +17,7 @@
 #include "MemoryX.h"
 #include <vector>
 
-#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/timer.h>
 
 #include "HitTestResult.h"

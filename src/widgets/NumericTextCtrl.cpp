@@ -179,6 +179,8 @@ different formats.
 #include <math.h>
 #include <limits>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/wx.h>
 #include <wx/dcmemory.h>
 #include <wx/font.h>

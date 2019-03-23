@@ -29,6 +29,7 @@ effects from this one class.
 
 #include <float.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxprec.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>

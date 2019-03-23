@@ -45,6 +45,8 @@ and in the spectrogram spectral selection.
 
 #include <algorithm>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/brush.h>
 #include <wx/button.h>
 #include <wx/choice.h>

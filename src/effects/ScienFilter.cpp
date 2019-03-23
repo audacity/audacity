@@ -38,6 +38,8 @@ a graph for EffectScienFilter.
 #include <math.h>
 #include <float.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>

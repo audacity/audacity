@@ -13,10 +13,11 @@ Vaughan Johnson (Preview)
 #ifndef __AUDACITY_EFFECT_SCIENFILTER__
 #define __AUDACITY_EFFECT_SCIENFILTER__
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/arrstr.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
-#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
 #include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/slider.h>

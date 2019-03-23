@@ -56,6 +56,9 @@ scroll information.  It also has some status flags.
 #include <stdio.h>
 #include <iostream>
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/apptrait.h>
 
 #include <wx/defs.h>

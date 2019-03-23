@@ -30,6 +30,7 @@
 #include "Audacity.h"
 #include "CellularPanel.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include "Project.h"
 #include "UIHandle.h"
 #include "TrackPanelCell.h"

@@ -26,6 +26,8 @@
 #include "../float_cast.h"
 #include <vector>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/string.h>

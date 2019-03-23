@@ -16,6 +16,8 @@
 #include "../Audacity.h"
 #include "Grid.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/dc.h>

@@ -19,6 +19,8 @@
 #include <cfloat>
 #include <math.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/dcmemory.h>
 #include <wx/icon.h>
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric

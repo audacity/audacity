@@ -42,6 +42,7 @@
 #include <limits.h>
 #include <stdio.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/dynlib.h>
 #include <wx/app.h>
 #include <wx/defs.h>

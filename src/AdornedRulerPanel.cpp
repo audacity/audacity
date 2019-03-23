@@ -23,6 +23,7 @@
 
 #include "Experimental.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/tooltip.h>
 
 #include "AColor.h"

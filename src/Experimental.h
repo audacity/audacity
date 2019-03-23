@@ -219,12 +219,14 @@
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
 #ifndef IN_RC
-// Define to include crash reporting
-#include <wx/defs.h>
-#define EXPERIMENTAL_CRASH_REPORT
-#if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
-#undef EXPERIMENTAL_CRASH_REPORT
-#endif
+   // Define to include crash reporting
+   #define EXPERIMENTAL_CRASH_REPORT
+   #ifdef EXPERIMENTAL_CRASH_REPORT
+      #include <wx/setup.h> // for wxUSE* macros
+      #if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
+         #undef EXPERIMENTAL_CRASH_REPORT
+      #endif
+   #endif
 #endif
 
 // Paul Licameli (PRL) 31 May 2015

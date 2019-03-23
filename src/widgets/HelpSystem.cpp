@@ -15,6 +15,7 @@
 
 #include "../Experimental.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/button.h>
 #include <wx/icon.h>
 #include <wx/dialog.h>

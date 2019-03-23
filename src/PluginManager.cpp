@@ -25,6 +25,7 @@ for shared and private configs - which need to move out.
 
 #include <algorithm>
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dir.h>

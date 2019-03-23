@@ -18,7 +18,7 @@
 #define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
 
 #include <wx/button.h>
-#include <wx/defs.h> // for wxUSE_ACCESSIBILITY
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/panel.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>

@@ -16,6 +16,7 @@ contained GetParent() which was incorrect.
 
 #include "WindowAccessible.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/window.h>
 
 #if wxUSE_ACCESSIBILITY

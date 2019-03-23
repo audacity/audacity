@@ -102,6 +102,7 @@ for registering for changes.
 #include "Shuttle.h"
 
 #include "MemoryX.h"
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wx.h>
 #include <wx/wxprec.h>
 #include <wx/listctrl.h>
