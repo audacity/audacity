@@ -47,6 +47,7 @@
 #include <wx/sizer.h>
 #include <wx/tokenzr.h>
 #include <wx/modalhook.h>
+#include <wx/filectrl.h>
 
 #include "../FileDialog.h"
 
