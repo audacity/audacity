@@ -189,7 +189,7 @@ int ShowMultiDialog(const wxString &message,
    return dlog.ShowModal();
 }
 
-wxString DefaultMultiDialogMessage()
+const wxString &DefaultMultiDialogMessage()
 {
    return _("Please select an action");
 }

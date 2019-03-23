@@ -19,7 +19,7 @@
 
 class wxString;
 
-wxString DefaultMultiDialogMessage();
+const wxString &DefaultMultiDialogMessage();
 
 // Display a dialog with radio buttons.
 // Return the zero-based index of the chosen button.
