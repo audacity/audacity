@@ -2088,7 +2088,7 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       }
       bool useDialog;
       AudacityProject *p = GetActiveProject();
-      gPrefs->Read(wxT("/Gui/DialogForNameNewLabel"), &useDialog, false);
+      gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
       if (useDialog) {
          wxString title;
          if (DialogForLabelName(
