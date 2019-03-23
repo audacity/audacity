@@ -27,6 +27,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/ffile.h>
 #include <wx/intl.h>
 #include <wx/filedlg.h>
+#include <wx/menu.h>
 #include <wx/button.h>
 
 #include "../Prefs.h"

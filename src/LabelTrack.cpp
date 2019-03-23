@@ -49,6 +49,7 @@ for drawing different aspects of the label and its text box.
 #include <wx/event.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/menu.h>
 #include <wx/pen.h>
 #include <wx/string.h>
 #include <wx/textfile.h>

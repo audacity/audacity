@@ -24,6 +24,7 @@
 #include "../commands/Keyboard.h"
 
 #include <wx/dc.h>
+#include <wx/menu.h>
 #include "../Internat.h"
 
 // Various drawing constants

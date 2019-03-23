@@ -23,7 +23,6 @@
 #include "Keyboard.h"
 #include <vector>
 #include <wx/string.h>
-#include <wx/menu.h>
 #include <wx/hashmap.h>
 
 #include "../xml/XMLTagHandler.h"
@@ -32,14 +31,15 @@
 
 #include <unordered_map>
 
+class wxMenu;
+class wxMenuBar;
 class TranslatedInternalString;
 using CommandParameter = CommandID;
 
 struct MenuBarListEntry
 {
-   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
-      : name(name_), menubar(menubar_)
-   {}
+   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
+   ~MenuBarListEntry();
 
    wxString name;
    wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
@@ -47,15 +47,9 @@ struct MenuBarListEntry
 
 struct SubMenuListEntry
 {
-   SubMenuListEntry(const wxString &name_, std::unique_ptr<wxMenu> &&menu_)
-      : name(name_), menu( std::move(menu_) )
-   {}
-
-   SubMenuListEntry(SubMenuListEntry &&that)
-      : name(std::move(that.name))
-      , menu(std::move(that.menu))
-   {
-   }
+   SubMenuListEntry(const wxString &name_, std::unique_ptr<wxMenu> &&menu_);
+   SubMenuListEntry(SubMenuListEntry &&that);
+   ~SubMenuListEntry();
 
    wxString name;
    std::unique_ptr<wxMenu> menu;

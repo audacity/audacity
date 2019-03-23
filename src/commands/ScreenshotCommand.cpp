@@ -25,6 +25,7 @@ small calculations of rectangles.
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
+#include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/bitmap.h>
 #include <wx/valgen.h>

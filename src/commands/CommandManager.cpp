@@ -90,6 +90,7 @@ CommandManager.  It holds the callback for one command.
 #include <wx/hash.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/menu.h>
 #include <wx/tokenzr.h>
 
 #include "../AudacityException.h"
@@ -131,6 +132,31 @@ NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
 }
 
 TopLevelKeystrokeHandlingWindow::~TopLevelKeystrokeHandlingWindow()
+{
+}
+
+MenuBarListEntry::MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
+   : name(name_), menubar(menubar_)
+{
+}
+
+MenuBarListEntry::~MenuBarListEntry()
+{
+}
+
+SubMenuListEntry::SubMenuListEntry(
+   const wxString &name_, std::unique_ptr<wxMenu> &&menu_ )
+   : name(name_), menu( std::move(menu_) )
+{
+}
+
+SubMenuListEntry::SubMenuListEntry(SubMenuListEntry &&that)
+   : name(std::move(that.name))
+   , menu(std::move(that.menu))
+{
+}
+
+SubMenuListEntry::~SubMenuListEntry()
 {
 }
 

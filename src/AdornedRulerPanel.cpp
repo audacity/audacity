@@ -43,6 +43,8 @@
 #include "widgets/AButton.h"
 #include "widgets/Grabber.h"
 
+#include <wx/menu.h>
+
 using std::min;
 using std::max;
 

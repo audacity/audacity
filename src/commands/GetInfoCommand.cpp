@@ -46,6 +46,8 @@ This class now lists
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
 
+#include <wx/menu.h>
+
 enum {
    kCommands,
    //kCommandsPlus,

@@ -21,6 +21,8 @@
 
 #include "../ondemand/ODManager.h"
 
+#include <wx/menu.h>
+
 // private helper classes and functions
 namespace {
 void DoExport

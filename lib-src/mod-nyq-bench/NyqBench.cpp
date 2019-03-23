@@ -14,6 +14,7 @@
 #include <wx/filedlg.h>
 #include <wx/font.h>
 #include <wx/fontdlg.h>
+#include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>

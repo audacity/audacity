@@ -49,6 +49,8 @@
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
 
+#include <wx/menu.h>
+
 PrefsListener::~PrefsListener()
 {
 }
