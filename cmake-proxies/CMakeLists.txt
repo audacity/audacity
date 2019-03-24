@@ -34,7 +34,11 @@ add_subdirectory( "libvorbis" )
 add_subdirectory( "lv2" )
 add_subdirectory( "mod-script-pipe" )
 add_subdirectory( "${LIB_SRC_DIRECTORY}portaudio-v19" "${CMAKE_CURRENT_BINARY_DIR}/portaudio-v19" EXCLUDE_FROM_ALL )
-add_subdirectory( "portmidi" )
+
+set(CMAKE_CACHEFILE_DIR ${CMAKE_BINARY_DIR})
+add_subdirectory( "${LIB_SRC_DIRECTORY}portmidi" "${CMAKE_CURRENT_BINARY_DIR}/portmidi" EXCLUDE_FROM_ALL )
+set_target_properties(portmidi-static PROPERTIES OSX_ARCHITECTURES "")
+
 add_subdirectory( "portmixer" )
 #add_subdirectory( "portburn" ) # not built
 add_subdirectory( "portsmf" )
