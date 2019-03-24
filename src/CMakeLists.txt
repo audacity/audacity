@@ -37,7 +37,6 @@ include_directories(${top_dir}/lib-src/sbsms/include)
 include_directories(${top_dir}/lib-src/soundtouch/include)
 include_directories(${top_dir}/lib-src/twolame/libtwolame)
 include_directories(${top_dir}/lib-src/portmidi/pm_common)
-include_directories(${top_dir}/lib-src/portmidi/pm_win)
 include_directories(${top_dir}/lib-src/portmidi/porttime)
 include_directories(${top_dir}/lib-src/lv2/lilv)
 include_directories(${top_dir}/lib-src/lv2/lv2)
@@ -500,6 +499,7 @@ FileDialog
 libsndfile
 libsoxr
 portaudio_static
+portmidi-static
 )
 if(MSVC)
     set_property(TARGET Audacity APPEND PROPERTY LINK_FLAGS "/SUBSYSTEM:WINDOWS /LIBPATH:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
