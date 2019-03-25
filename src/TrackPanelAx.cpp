@@ -191,12 +191,17 @@ void TrackPanelAx::Updated()
    auto t = GetFocus();
    mTrackName = true;
 
-   // logically, this should be an OBJECT_NAMECHANGE event, but Window eyes 9.1
-   // does not read out the name with this event type, hence use OBJECT_FOCUS.
+   // The object_focus event is only needed by Window-Eyes
+   // and can be removed when we cease to support this screen reader.
    NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
                mTrackPanel,
                wxOBJID_CLIENT,
                TrackNum(t));
+
+   NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
+      mTrackPanel,
+      wxOBJID_CLIENT,
+      TrackNum(t));
 #endif
 }
 
@@ -217,7 +222,7 @@ void TrackPanelAx::MessageForScreenReader(const wxString& message)
       mMessageCount++;
 
       mTrackName = false;
-      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+      NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
                mTrackPanel,
                wxOBJID_CLIENT,
                childId);
