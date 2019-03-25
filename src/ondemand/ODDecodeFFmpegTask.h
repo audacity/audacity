@@ -23,6 +23,10 @@
 #include "ODDecodeTask.h"
 #include "ODTaskThread.h"
 
+struct streamContext;
+using Scs = ArrayOf<std::unique_ptr<streamContext>>;
+using ScsPtr = std::shared_ptr<Scs>;
+
 struct FFmpegContext;
 class ODFileDecoder;
 class WaveTrack;
