@@ -103,7 +103,11 @@ UIHandle::Result SelectButtonHandle::CommitChanges
 wxString SelectButtonHandle::Tip(const wxMouseState &) const
 {
    auto pTrack = GetTrack();
-   return pTrack->GetSelected() ? _("Unselect") : _("Select");
+#if defined(__WXMAC__)
+   return pTrack->GetSelected() ? _("Command+Click to Unselect") : _("Select");
+#else
+   return pTrack->GetSelected() ? _("Ctrl+Click to Unselect") : _("Select");
+#endif
 }
 
 UIHandlePtr SelectButtonHandle::HitTest
