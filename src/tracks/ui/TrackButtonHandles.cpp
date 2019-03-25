@@ -104,9 +104,9 @@ wxString SelectButtonHandle::Tip(const wxMouseState &) const
 {
    auto pTrack = GetTrack();
 #if defined(__WXMAC__)
-   return pTrack->GetSelected() ? _("Command+Click to Unselect") : _("Select");
+   return pTrack->GetSelected() ? _("Command+Click to Unselect") : _("Select track");
 #else
-   return pTrack->GetSelected() ? _("Ctrl+Click to Unselect") : _("Select");
+   return pTrack->GetSelected() ? _("Ctrl+Click to Unselect") : _("Select track");
 #endif
 }
 
