@@ -859,7 +859,10 @@ wxAccStatus GridAx::GetState(int childId, long *state)
            wxACC_STATE_SYSTEM_SELECTED;
 
       if (mGrid->IsReadOnly(row, col)) {
-         flag = wxACC_STATE_SYSTEM_UNAVAILABLE;
+         // It would be more logical to also include the state
+         // wxACC_STATE_SYSTEM_FOCUSABLE, but this causes Window-Eyes to 
+         // no longer read the cell as disabled
+         flag = wxACC_STATE_SYSTEM_UNAVAILABLE | wxACC_STATE_SYSTEM_FOCUSED;
       }
 #endif
 
@@ -925,9 +928,17 @@ wxAccStatus GridAx::Select(int childId, wxAccSelectionFlags selectFlags)
 // If childId is 0 and child is NULL, no object in
 // this subhierarchy has the focus.
 // If this object has the focus, child should be 'this'.
-wxAccStatus GridAx::GetFocus(int * WXUNUSED(childId), wxAccessible **child)
+wxAccStatus GridAx::GetFocus(int * childId, wxAccessible **child)
 {
-   *child = this;
+   if (mGrid == wxWindow::FindFocus()) {
+      if (mGrid->GetNumberRows() * mGrid->GetNumberCols() == 0) {
+         *child = this;
+      }
+      else {
+         *childId = mGrid->GetGridCursorRow()*mGrid->GetNumberCols() +
+            mGrid->GetGridCursorCol() + 1;
+      }
+   }
 
    return wxACC_OK;
 }
