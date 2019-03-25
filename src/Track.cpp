@@ -1236,7 +1236,7 @@ void TrackList::UpdatePendingTracks()
          if (updater)
             updater( *pendingTrack, *src );
          pendingTrack->DoSetY(src->GetY());
-         pendingTrack->DoSetHeight(src->GetHeight());
+         pendingTrack->DoSetHeight(src->GetActualHeight());
          pendingTrack->DoSetMinimized(src->GetMinimized());
          pendingTrack->DoSetLinked(src->GetLinked());
       }
