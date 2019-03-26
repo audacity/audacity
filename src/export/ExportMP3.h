@@ -20,6 +20,10 @@
 #define MODE_ABR           2
 #define MODE_CBR           3
 
+#if defined(__WXMSW__)
+#define MP3_EXPORT_BUILT_IN 1
+#endif
+
 class ExportPlugin;
 class wxString;
 class wxWindow;

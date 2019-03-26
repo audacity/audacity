@@ -818,6 +818,8 @@ public:
 
    /* initialize the library interface */
    bool InitLibrary(wxString libpath);
+   bool InitLibraryInternal();
+   bool InitLibraryExternal(wxString libpath);
    void FreeLibrary();
 
    /* get library info */
@@ -847,6 +849,7 @@ public:
    bool PutInfoTag(wxFFile & f, wxFileOffset off);
 
 private:
+   bool mLibIsExternal;
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    wxString mLibPath;
@@ -912,6 +915,17 @@ private:
 
 MP3Exporter::MP3Exporter()
 {
+// We could use #defines rather than this variable.
+// The idea of the variable is that if we wanted, we could allow
+// a dynamic override of the library, e.g. with a newer faster version,
+// or to fix CVEs in the underlying librray.
+// for now though the 'variable' is a constant.
+#ifdef MP3_EXPORT_BUILT_IN
+   mLibIsExternal = false;
+#else
+   mLibIsExternal = true;
+#endif
+
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    mLibraryLoaded = false;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
@@ -975,6 +989,7 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
 
 bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 {
+
    if (ValidLibraryLoaded()) {
       FreeLibrary();
       mLibraryLoaded = false;
@@ -983,6 +998,11 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 #if defined(__WXMSW__)
    mBladeVersion.Empty();
 #endif
+
+   if( !mLibIsExternal ){
+      mLibraryLoaded = InitLibraryInternal();
+      return mLibraryLoaded;
+   }
 
    // First try loading it from a previously located path
    if (!mLibPath.empty()) {
@@ -1059,6 +1079,64 @@ void MP3Exporter::SetChannel(int mode)
 }
 
 bool MP3Exporter::InitLibrary(wxString libpath)
+{
+   return mLibIsExternal ? InitLibraryExternal(libpath) : InitLibraryInternal();
+}
+
+bool MP3Exporter::InitLibraryInternal()
+{
+   wxLogMessage(wxT("Using internal LAME"));
+
+// The global ::lame_something symbols only exist if LAME is built in.
+// So we don't reference them unless they are.
+#ifdef MP3_EXPORT_BUILT_IN 
+
+   lame_init = ::lame_init;
+   get_lame_version = ::get_lame_version;
+   lame_init_params = ::lame_init_params;
+   lame_encode_buffer = ::lame_encode_buffer;
+   lame_encode_buffer_interleaved = ::lame_encode_buffer_interleaved;
+   lame_encode_flush = ::lame_encode_flush;
+   lame_close = ::lame_close;
+
+   lame_set_in_samplerate = ::lame_set_in_samplerate;
+   lame_set_out_samplerate = ::lame_set_out_samplerate;
+   lame_set_num_channels = ::lame_set_num_channels;
+   lame_set_quality = ::lame_set_quality;
+   lame_set_brate = ::lame_set_brate;
+   lame_set_VBR = ::lame_set_VBR;
+   lame_set_VBR_q = ::lame_set_VBR_q;
+   lame_set_VBR_min_bitrate_kbps = ::lame_set_VBR_min_bitrate_kbps;
+   lame_set_mode = ::lame_set_mode;
+   lame_set_preset = ::lame_set_preset;
+   lame_set_error_protection = ::lame_set_error_protection;
+   lame_set_disable_reservoir = ::lame_set_disable_reservoir;
+   lame_set_padding_type = ::lame_set_padding_type;
+   lame_set_bWriteVbrTag = ::lame_set_bWriteVbrTag;
+
+   // These are optional
+   //lame_get_lametag_frame = ::lame_get_lametag_frame;
+   lame_get_lametag_frame = NULL;
+   lame_mp3_tags_fid = ::lame_mp3_tags_fid;
+
+#if defined(__WXMSW__)
+   //beWriteInfoTag = ::beWriteInfoTag;
+   //beVersion = ::beVersion;
+   beWriteInfoTag = NULL;
+   beVersion = NULL;
+#endif
+
+   mGF = lame_init();
+   if (mGF == NULL) {
+      return false;
+   }
+#endif
+
+   return true;
+}
+
+
+bool MP3Exporter::InitLibraryExternal(wxString libpath)
 {
    wxLogMessage(wxT("Loading LAME from %s"), libpath);
 
@@ -2179,6 +2257,11 @@ wxString GetMP3Version(wxWindow *parent, bool prompt)
    if (exporter.LoadLibrary(parent, prompt ? MP3Exporter::Yes : MP3Exporter::No)) {
 #endif // DISABLE_DYNAMIC_LOADING_LAME
       versionString = exporter.GetLibraryVersion();
+#ifdef MP3_EXPORT_BUILT_IN
+      versionString += " ";
+      versionString += _("(Built In)");
+#endif
+
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    }
 #endif // DISABLE_DYNAMIC_LOADING_LAME

@@ -93,6 +93,9 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          mMP3Version = S.AddVariableText(wxT("9.99"),
                                          true,
                                          wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+// Old buttons, not needed now that the lib is built-in.
+#ifndef MP3_EXPORT_BUILT_IN
+
          S.AddVariableText(_("MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
@@ -103,6 +106,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          wxButton *download_button = S.Id(ID_MP3_DOWN_BUTTON).AddButton(_("&Download"),
                                             wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
          locate_button->Enable(FALSE);
          download_button->Enable(FALSE);
@@ -110,6 +114,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
         (void)locate_button;
         (void)download_button;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
+#endif
+
       }
       S.EndTwoColumn();
    }
