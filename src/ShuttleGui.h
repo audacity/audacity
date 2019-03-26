@@ -177,7 +177,6 @@ public:
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
    wxCheckBox * TieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
-   wxCheckBox * TieCheckBox( const wxString &Prompt, const wxString &Selected );
    wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
