@@ -42,9 +42,12 @@
 #include "../RealFFTf.h"
 #include "../SampleFormat.h"
 
-#define EQUALIZATION_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Equalization") }
-#define GRAPHICEQ_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Graphic EQ") }
-#define FILTERCURVE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Filter Curve") }
+#define EQUALIZATION_PLUGIN_SYMBOL \
+ComponentInterfaceSymbol{ XO("Equalization") }
+#define GRAPHICEQ_PLUGIN_SYMBOL \
+ComponentInterfaceSymbol{ wxT("GraphicEQ"), XO("Graphic EQ") }
+#define FILTERCURVE_PLUGIN_SYMBOL \
+ComponentInterfaceSymbol{ wxT("FilterCurve"), XO("Filter Curve") }
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;

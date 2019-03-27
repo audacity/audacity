@@ -30,8 +30,8 @@
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 /* 18n-hint: the name of an Apple audio software protocol */
-#define AUDIOUNITEFFECTS_FAMILY XO("Audio Unit")
-
+#define AUDIOUNITEFFECTS_FAMILY ComponentInterfaceSymbol{ wxT("AudioUnit"),
+XO("Audio Unit") }
 class AudioUnitEffect;
 
 using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
