@@ -56,7 +56,8 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
       {
          Syllable* pCurSyl = mLyricsPanel->GetSyllable(nNewSyl);
          AudacityProject* pProj = GetActiveProject();
-         pProj->SetSel0(pCurSyl->t);
+         auto &selectedRegion = pProj->GetViewInfo().selectedRegion;
+         selectedRegion.setT0( pCurSyl->t );
 
          //v Should probably select to end as in
          // SelectActions::Handler::OnSelectCursorEnd,
@@ -438,7 +439,8 @@ void LyricsPanel::Update(double t)
       // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -DBL_MAX if !IsStreamActive().
       // In that case, use the selection start time.
       AudacityProject* pProj = GetActiveProject();
-      mT = pProj->GetSel0();
+      const auto &selectedRegion = pProj->GetViewInfo().selectedRegion;
+      mT = selectedRegion.t0();
    }
    else
       mT = t;
@@ -501,7 +503,8 @@ void LyricsPanel::UpdateLyrics(wxEvent &e)
 
    AddLabels(pLabelTrack);
    Finish(pLabelTrack->GetEndTime());
-   Update(mProject->GetSel0());
+   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   Update(selectedRegion.t0());
 }
 
 void LyricsPanel::OnStartStop(wxCommandEvent &e)

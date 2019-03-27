@@ -2191,6 +2191,7 @@ void LabelTrack::ShowContextMenu()
 void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 {
    AudacityProject *p = GetActiveProject();
+   auto &selectedRegion = p->GetViewInfo().selectedRegion;
 
    switch (evt.GetId())
    {
@@ -2211,7 +2212,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 
    /// paste selected text if paste menu item is selected
    case OnPasteSelectedTextID:
-      if (PasteSelectedText(p->GetSel0(), p->GetSel1()))
+      if (PasteSelectedText(selectedRegion.t0(), selectedRegion.t1()))
       {
          p->PushState(_("Modified Label"),
                       _("Label Edit"),
@@ -2221,7 +2222,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 
    /// DELETE selected label
    case OnDeleteSelectedLabelID: {
-      int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
+      int ndx = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
       if (ndx != -1)
       {
          DeleteLabel(ndx);
@@ -2233,7 +2234,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       break;
 
    case OnEditSelectedLabelID: {
-      int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
+      int ndx = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
       if (ndx != -1)
          DoEditLabels(*p, this, ndx);
    }

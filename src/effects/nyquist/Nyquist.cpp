@@ -925,8 +925,9 @@ finish:
       // Selection is to be set to whatever it is in the project.
       AudacityProject *project = GetActiveProject();
       if (project) {
-         mT0 = project->GetSel0();
-         mT1 = project->GetSel1();
+         auto &selectedRegion = project->GetViewInfo().selectedRegion;
+         mT0 = selectedRegion.t0();
+         mT1 = selectedRegion.t1();
       }
       else {
          mT0 = 0;

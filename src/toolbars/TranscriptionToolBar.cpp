@@ -414,8 +414,9 @@ void TranscriptionToolBar::GetSamples(
    //First, get the current selection. It is part of the mViewInfo, which is
    //part of the project
 
-   double start = p->GetSel0();
-   double end = p->GetSel1();
+   const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+   double start = selectedRegion.t0();
+   double end = selectedRegion.t1();
 
    auto ss0 = sampleCount( (start - t->GetOffset()) * t->GetRate() );
    auto ss1 = sampleCount( (end - t->GetOffset()) * t->GetRate() );
@@ -563,7 +564,8 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
       auto newstart = mVk->OnForward(*wt, start, len);
       double newpos = newstart.as_double() / wt->GetRate();
 
-      p->SetSel0(newpos);
+      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      selectedRegion.setT0( newpos );
       p->RedrawProject();
 
       SetButton(false, mButtons[TTB_StartOn]);
@@ -594,7 +596,8 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       auto newstart = mVk->OffForward(*wt, start, len);
       double newpos = newstart.as_double() / wt->GetRate();
 
-      p->SetSel0(newpos);
+      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      selectedRegion.setT0( newpos );
       p->RedrawProject();
 
       SetButton(false, mButtons[TTB_StartOn]);
@@ -699,8 +702,9 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
       mVk->OffForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
 
       //reset the selection bounds.
-      p->SetSel0(newstart.as_double() / rate);
-      p->SetSel1(newend.as_double() /  rate);
+      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      selectedRegion.setTimes(
+         newstart.as_double() / rate, newend.as_double() /  rate );
       p->RedrawProject();
 
    }

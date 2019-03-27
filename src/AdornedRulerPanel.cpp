@@ -198,8 +198,9 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
        && (!project->GetScrubber().IsScrubbing() || project->GetScrubber().IsSpeedPlaying()))
       mNewQPIndicatorPos = -1;
    else {
+      const auto &selectedRegion = project->GetViewInfo().selectedRegion;
       double latestEnd =
-         std::max(ruler->mTracks->GetEndTime(), project->GetSel1());
+         std::max(ruler->mTracks->GetEndTime(), selectedRegion.t1());
       if (ruler->mQuickPlayPos >= latestEnd)
          mNewQPIndicatorPos = -1;
       else {
@@ -1461,8 +1462,9 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
-   const double sel0 = mProject->GetSel0();
-   const double sel1 = mProject->GetSel1();
+   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   const double sel0 = selectedRegion.t0();
+   const double sel1 = selectedRegion.t1();
 
    // We want some audio in the selection, but we allow a dragged
    // region to include selected white-space and space before audio start.
@@ -1529,8 +1531,9 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
 {
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
-   const double sel0 = mProject->GetSel0();
-   const double sel1 = mProject->GetSel1();
+   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   const double sel0 = selectedRegion.t0();
+   const double sel1 = selectedRegion.t1();
 
    // Start / Restart playback on left click.
    bool startPlaying = (mPlayRegionStart >= 0);

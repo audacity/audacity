@@ -1470,20 +1470,6 @@ void AudacityProject::RefreshCursor()
    mTrackPanel->HandleCursorForPresentMouseState();
 }
 
-void AudacityProject::SetSel0(double newSel0)
-{
-   //Bound checking should go on here
-
-   mViewInfo.selectedRegion.setT0(newSel0);
-}
-
-void AudacityProject::SetSel1(double newSel1)
-{
-   //Bound checking should go on here
-
-   mViewInfo.selectedRegion.setT1(newSel1);
-}
-
 void AudacityProject::OnCapture(wxCommandEvent& evt)
 {
    evt.Skip();

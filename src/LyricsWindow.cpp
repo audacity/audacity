@@ -158,7 +158,8 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
    else
    {
       // Reset lyrics display.
-      GetLyricsPanel()->Update(mProject->GetSel0());
+      const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+      GetLyricsPanel()->Update(selectedRegion.t0());
    }
 
    // Let other listeners get the notification

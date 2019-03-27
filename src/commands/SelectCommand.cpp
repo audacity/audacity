@@ -102,6 +102,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    double t0;
    double t1;
 
+   const auto &selectedRegion = p->GetViewInfo().selectedRegion;
    switch( bHasRelativeSpec ? mRelativeTo : 0 ){
    default:
    case 0: //project start
@@ -117,16 +118,16 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       t1 = end - mT1;
       break;
    case 3: //selection start
-      t0 = mT0 + p->GetSel0();
-      t1 = mT1 + p->GetSel0();
+      t0 = mT0 + selectedRegion.t0();
+      t1 = mT1 + selectedRegion.t0();
       break;
    case 4: //selection
-      t0 = mT0 + p->GetSel0();
-      t1 = mT1 + p->GetSel1();
+      t0 = mT0 + selectedRegion.t0();
+      t1 = mT1 + selectedRegion.t1();
       break;
    case 5: //selection end
-      t0 =  p->GetSel1() - mT0;
-      t1 =  p->GetSel1() - mT1;
+      t0 =  selectedRegion.t1() - mT0;
+      t1 =  selectedRegion.t1() - mT1;
       break;
    }
 

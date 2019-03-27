@@ -220,8 +220,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
    const SelectedRegion &GetSelection() const { return mViewInfo.selectedRegion; }
    SelectedRegion &GetSelection() { return mViewInfo.selectedRegion; }
-   double GetSel0() const { return mViewInfo.selectedRegion.t0(); }
-   double GetSel1() const { return mViewInfo.selectedRegion.t1(); }
    const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
@@ -230,8 +228,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
-   void SetSel0(double);        //Added by STM
-   void SetSel1(double);        //Added by STM
 
    bool Clipboard() { return (msClipT1 - msClipT0) > 0.0; }
 

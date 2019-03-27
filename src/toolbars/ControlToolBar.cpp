@@ -612,13 +612,14 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    if (t1 == t0) {
       if (looped) {
+         const auto &selectedRegion = p->GetViewInfo().selectedRegion;
          // play selection if there is one, otherwise
          // set start of play region to project start, 
          // and loop the project from current play position.
 
-         if ((t0 > p->GetSel0()) && (t0 < p->GetSel1())) {
-            t0 = p->GetSel0();
-            t1 = p->GetSel1();
+         if ((t0 > selectedRegion.t0()) && (t0 < selectedRegion.t1())) {
+            t0 = selectedRegion.t0();
+            t1 = selectedRegion.t1();
          }
          else {
             // loop the entire project
@@ -983,8 +984,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    const bool appendRecord = (altAppearance == bPreferNewTrack);
 
    if (p) {
-      double t0 = p->GetSel0();
-      double t1 = p->GetSel1();
+      const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      double t0 = selectedRegion.t0();
+      double t1 = selectedRegion.t1();
       // When no time selection, recording duration is 'unlimited'.
       if (t1 == t0)
          t1 = DBL_MAX;
@@ -1008,8 +1010,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
 
          // Whether we decided on NEW tracks or not:
-         if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
-            t1 = p->GetSel1();   // record within the selection
+         if (t1 <= selectedRegion.t0() && selectedRegion.t1() > selectedRegion.t0()) {
+            t1 = selectedRegion.t1();   // record within the selection
          }
          else {
             t1 = DBL_MAX;        // record for a long, long time

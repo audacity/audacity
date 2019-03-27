@@ -1869,8 +1869,10 @@ bool Effect::ProcessTrack(int count,
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      left->ClearAndPaste(mT0, p->GetSel1(), genLeft.get(), true, true,
-                          nullptr /* &warper */);
+      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      left->ClearAndPaste(mT0,
+         selectedRegion.t1(), genLeft.get(), true, true,
+         nullptr /* &warper */);
 
       if (genRight)
       {

@@ -248,8 +248,8 @@ UIHandle::Result CutlineHandle::Cancel(AudacityProject *pProject)
    pProject->RollbackState();
    if (mOperation == Expand) {
       AudacityProject *const project = pProject;
-      project->SetSel0(mStartTime);
-      project->SetSel1(mEndTime);
+      auto &selectedRegion = project->GetViewInfo().selectedRegion;
+      selectedRegion.setTimes( mStartTime, mEndTime );
       result |= UpdateSelection;
    }
    return result;
