@@ -991,7 +991,22 @@ wxLanguageInfo userLangs[] =
 };
 #endif
 
-wxString AudacityApp::InitLang( const wxString & lang )
+wxString AudacityApp::InitLang( wxString langCode )
+{
+   if ( langCode.empty() )
+      langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
+
+   // Use the system default language if one wasn't specified or if the user selected System.
+   if (langCode.empty())
+   {
+      langCode = GetSystemLanguageCode();
+   }
+
+   // Initialize the language
+   return SetLang(langCode);
+}
+
+wxString AudacityApp::SetLang( const wxString & lang )
 {
    wxString result = lang;
 
@@ -1057,6 +1072,14 @@ wxString AudacityApp::InitLang( const wxString & lang )
    wxString future1 = _("Master Gain Control");
 
    return result;
+}
+
+wxString AudacityApp::GetLang() const
+{
+   if (mLocale)
+      return mLocale->GetSysName();
+   else
+      return {};
 }
 
 void AudacityApp::OnFatalException()

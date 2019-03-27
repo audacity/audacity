@@ -650,7 +650,7 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-      lang = (lang.empty())? wxGetApp().InitLang(lang) : lang;
+      lang = (lang.empty())? wxGetApp().SetLang(lang) : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());

@@ -218,14 +218,7 @@ void InitPreferences()
       }
    }
 
-   // Use the system default language if one wasn't specified or if the user selected System.
-   if (langCode.empty())
-   {
-      langCode = GetSystemLanguageCode();
-   }
-
-   // Initialize the language
-   langCode = wxGetApp().InitLang(langCode);
+   langCode = wxGetApp().InitLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
