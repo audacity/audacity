@@ -3410,10 +3410,9 @@ wxString AudioIO::GetDeviceInfo()
 {
    wxStringOutputStream o;
    wxTextOutputStream s(o, wxEOL_UNIX);
-   wxString e(wxT("\n"));
 
    if (IsStreamActive()) {
-      return wxT("Stream is active ... unable to gather information.");
+      return _("Stream is active ... unable to gather information.\n");
    }
 
 
@@ -3422,11 +3421,12 @@ wxString AudioIO::GetDeviceInfo()
    int playDeviceNum = Pa_GetDefaultOutputDevice();
    int cnt = Pa_GetDeviceCount();
 
+   // PRL:  why only into the log?
    wxLogDebug(wxT("Portaudio reports %d audio devices"),cnt);
-
-   s << wxT("==============================") << e;
-   s << wxT("Default recording device number: ") << recDeviceNum << e;
-   s << wxT("Default playback device number: ") << playDeviceNum << e;
+   
+   s << wxT("==============================\n");
+   s << wxString::Format(_("Default recording device number: %d\n"), recDeviceNum);
+   s << wxString::Format(_("Default playback device number: %d\n"), playDeviceNum);
 
    wxString recDevice = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    wxString playDevice = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
@@ -3434,37 +3434,38 @@ wxString AudioIO::GetDeviceInfo()
 
    // This gets info on all available audio devices (input and output)
    if (cnt <= 0) {
-      s << wxT("No devices found\n");
+      s << _("No devices found\n");
       return o.GetString();
    }
 
    const PaDeviceInfo* info;
 
    for (j = 0; j < cnt; j++) {
-      s << wxT("==============================") << e;
+      s << wxT("==============================\n");
 
       info = Pa_GetDeviceInfo(j);
       if (!info) {
-         s << wxT("Device info unavailable for: ") << j << wxT("\n");
+         s << wxString::Format(_("Device info unavailable for: %d\n"), j);
          continue;
       }
 
       wxString name = DeviceName(info);
-      s << wxT("Device ID: ") << j << e;
-      s << wxT("Device name: ") << name << e;
-      s << wxT("Host name: ") << HostName(info) << e;
-      s << wxT("Recording channels: ") << info->maxInputChannels << e;
-      s << wxT("Playback channels: ") << info->maxOutputChannels << e;
-      s << wxT("Low Recording Latency: ") << info->defaultLowInputLatency << e;
-      s << wxT("Low Playback Latency: ") << info->defaultLowOutputLatency << e;
-      s << wxT("High Recording Latency: ") << info->defaultHighInputLatency << e;
-      s << wxT("High Playback Latency: ") << info->defaultHighOutputLatency << e;
+      s << wxString::Format(_("Device ID: %d\n"), j);
+      s << wxString::Format(_("Device name: %s\n"), name);
+      s << wxString::Format(_("Host name: %s\n"), HostName(info));
+      s << wxString::Format(_("Recording channels: %d\n"), info->maxInputChannels);
+      s << wxString::Format(_("Playback channels: %d\n"), info->maxOutputChannels);
+      s << wxString::Format(_("Low Recording Latency: %g\n"), info->defaultLowInputLatency);
+      s << wxString::Format(_("Low Playback Latency: %g\n"), info->defaultLowOutputLatency);
+      s << wxString::Format(_("High Recording Latency: %g\n"), info->defaultHighInputLatency);
+      s << wxString::Format(_("High Playback Latency: %g\n"), info->defaultHighOutputLatency);
 
       auto rates = GetSupportedPlaybackRates(j, 0.0);
 
-      s << wxT("Supported Rates:") << e;
+      /* i18n-hint: Supported, meaning made available by the system */
+      s << _("Supported Rates:\n");
       for (int k = 0; k < (int) rates.size(); k++) {
-         s << wxT("    ") << (int)rates[k] << e;
+         s << wxT("    ") << (int)rates[k] << wxT("\n");
       }
 
       if (name == playDevice && info->maxOutputChannels > 0)
@@ -3486,29 +3487,29 @@ wxString AudioIO::GetDeviceInfo()
    bool haveRecDevice = (recDeviceNum >= 0);
    bool havePlayDevice = (playDeviceNum >= 0);
 
-   s << wxT("==============================") << e;
-   if(haveRecDevice){
-      s << wxT("Selected recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
-   }else{
-      s << wxT("No recording device found for '") << recDevice << wxT("'.") << e;
-   }
-   if(havePlayDevice){
-      s << wxT("Selected playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
-   }else{
-      s << wxT("No playback device found for '") << playDevice << wxT("'.") << e;
-   }
+   s << wxT("==============================\n");
+   if (haveRecDevice)
+      s << wxString::Format(_("Selected recording device: %d - %s\n"), recDeviceNum, recDevice);
+   else
+      s << wxString::Format(_("No recording device found for '%s'.\n"), recDevice);
+
+   if (havePlayDevice)
+      s << wxString::Format(_("Selected playback device: %d - %s\n"), playDeviceNum, playDevice);
+   else
+      s << wxString::Format(_("No playback device found for '%s'.\n"), playDevice);
 
    std::vector<long> supportedSampleRates;
 
-   if(havePlayDevice && haveRecDevice){
+   if (havePlayDevice && haveRecDevice) {
       supportedSampleRates = GetSupportedSampleRates(playDeviceNum, recDeviceNum);
 
-      s << wxT("Supported Rates:") << e;
+      s << _("Supported Rates:\n");
       for (int k = 0; k < (int) supportedSampleRates.size(); k++) {
-         s << wxT("    ") << (int)supportedSampleRates[k] << e;
+         s << wxT("    ") << (int)supportedSampleRates[k] << wxT("\n");
       }
-   }else{
-      s << wxT("Cannot check mutual sample rates without both devices.") << e;
+   }
+   else {
+      s << _("Cannot check mutual sample rates without both devices.\n");
       return o.GetString();
    }
 
@@ -3567,42 +3568,42 @@ wxString AudioIO::GetDeviceInfo()
       }
 
       if (error) {
-         s << wxT("Received ") << error << wxT(" while opening devices") << e;
+         s << wxString::Format(_("Received %d while opening devices\n"), error);
          return o.GetString();
       }
 
       PxMixer *PortMixer = Px_OpenMixer(stream, 0);
 
       if (!PortMixer) {
-         s << wxT("Unable to open Portmixer") << e;
+         s << _("Unable to open Portmixer\n");
          Pa_CloseStream(stream);
          return o.GetString();
       }
 
-      s << wxT("==============================") << e;
-      s << wxT("Available mixers:") << e;
+      s << wxT("==============================\n");
+      s << _("Available mixers:\n");
 
       // FIXME: ? PortMixer errors on query not reported in GetDeviceInfo
       cnt = Px_GetNumMixers(stream);
       for (int i = 0; i < cnt; i++) {
          wxString name = wxSafeConvertMB2WX(Px_GetMixerName(stream, i));
-         s << i << wxT(" - ") << name << e;
+         s << wxString::Format(_("%d - %s\n"), i, name);
       }
 
-      s << wxT("==============================") << e;
-      s << wxT("Available recording sources:") << e;
+      s << wxT("==============================\n");
+      s << _("Available recording sources:\n");
       cnt = Px_GetNumInputSources(PortMixer);
       for (int i = 0; i < cnt; i++) {
          wxString name = wxSafeConvertMB2WX(Px_GetInputSourceName(PortMixer, i));
-         s << i << wxT(" - ") << name << e;
+         s << wxString::Format(_("%d - %s\n"), i, name);
       }
 
-      s << wxT("==============================") << e;
-      s << wxT("Available playback volumes:") << e;
+      s << wxT("==============================\n");
+      s << _("Available playback volumes:\n");
       cnt = Px_GetNumOutputVolumes(PortMixer);
       for (int i = 0; i < cnt; i++) {
          wxString name = wxSafeConvertMB2WX(Px_GetOutputVolumeName(PortMixer, i));
-         s << i << wxT(" - ") << name << e;
+         s << wxString::Format(_("%d - %s\n"), i, name);
       }
 
       // Determine mixer capabilities - it it doesn't support either
@@ -3633,9 +3634,13 @@ wxString AudioIO::GetDeviceInfo()
 
       Pa_CloseStream(stream);
 
-      s << wxT("==============================") << e;
-      s << wxT("Recording volume is ") << (EmulateMixerInputVol? wxT("emulated"): wxT("native")) << e;
-      s << wxT("Playback volume is ") << (EmulateMixerOutputVol? wxT("emulated"): wxT("native")) << e;
+      s << wxT("==============================\n");
+      s << ( EmulateMixerInputVol
+         ? _("Recording volume is emulated\n")
+         : _("Recording volume is native\n") );
+      s << ( EmulateMixerOutputVol
+         ? _("Playback volume is emulated\n")
+         : _("Playback volume is native\n") );
 
       Px_CloseMixer(PortMixer);
 
@@ -3650,10 +3655,9 @@ wxString AudioIO::GetMidiDeviceInfo()
 {
    wxStringOutputStream o;
    wxTextOutputStream s(o, wxEOL_UNIX);
-   wxString e(wxT("\n"));
 
    if (IsStreamActive()) {
-      return wxT("Stream is active ... unable to gather information.");
+      return _("Stream is active ... unable to gather information.\n");
    }
 
 
@@ -3662,39 +3666,41 @@ wxString AudioIO::GetMidiDeviceInfo()
    int playDeviceNum = Pm_GetDefaultOutputDeviceID();
    int cnt = Pm_CountDevices();
 
+   // PRL:  why only into the log?
    wxLogDebug(wxT("PortMidi reports %d MIDI devices"), cnt);
 
-   s << wxT("==============================") << e;
-   s << wxT("Default recording device number: ") << recDeviceNum << e;
-   s << wxT("Default playback device number: ") << playDeviceNum << e;
+   s << wxT("==============================\n");
+   s << wxString::Format(_("Default recording device number: %d\n"), recDeviceNum);
+   s << wxString::Format(_("Default playback device number: %d\n"), playDeviceNum);
 
    wxString recDevice = gPrefs->Read(wxT("/MidiIO/RecordingDevice"), wxT(""));
    wxString playDevice = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"), wxT(""));
 
    // This gets info on all available audio devices (input and output)
    if (cnt <= 0) {
-      s << wxT("No devices found\n");
+      s << _("No devices found\n");
       return o.GetString();
    }
 
    for (int i = 0; i < cnt; i++) {
-      s << wxT("==============================") << e;
+      s << wxT("==============================\n");
 
       const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
       if (!info) {
-         s << wxT("Device info unavailable for: ") << i << e;
+         s << wxString::Format(_("Device info unavailable for: %d\n"), i);
          continue;
       }
 
       wxString name = wxSafeConvertMB2WX(info->name);
       wxString hostName = wxSafeConvertMB2WX(info->interf);
 
-      s << wxT("Device ID: ") << i << e;
-      s << wxT("Device name: ") << name << e;
-      s << wxT("Host name: ") << hostName << e;
-      s << wxT("Supports output: ") << info->output << e;
-      s << wxT("Supports input: ") << info->input << e;
-      s << wxT("Opened: ") << info->opened << e;
+      s << wxString::Format(_("Device ID: %d\n"), i);
+      s << wxString::Format(_("Device name: %s\n"), name);
+      s << wxString::Format(_("Host name: %s\n"), hostName);
+      /* i18n-hint: Supported, meaning made available by the system */
+      s << wxString::Format(_("Supports output: %d\n"), info->output);
+      s << wxString::Format(_("Supports input: %d\n"), info->input);
+      s << wxString::Format(_("Opened: %d\n"), info->opened);
 
       if (name == playDevice && info->output)
          playDeviceNum = i;
@@ -3715,31 +3721,31 @@ wxString AudioIO::GetMidiDeviceInfo()
    bool haveRecDevice = (recDeviceNum >= 0);
    bool havePlayDevice = (playDeviceNum >= 0);
 
-   s << wxT("==============================") << e;
-   if (haveRecDevice) {
-      s << wxT("Selected MIDI recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
-   } else {
-      s << wxT("No MIDI recording device found for '") << recDevice << wxT("'.") << e;
-   }
-   if (havePlayDevice) {
-      s << wxT("Selected MIDI playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
-   } else {
-      s << wxT("No MIDI playback device found for '") << playDevice << wxT("'.") << e;
-   }
+   s << wxT("==============================\n");
+   if (haveRecDevice)
+      s << wxString::Format(_("Selected MIDI recording device: %d - %s\n"), recDeviceNum, recDevice);
+   else
+      s << wxString::Format(_("No MIDI recording device found for '%s'.\n"), recDevice);
+
+   if (havePlayDevice)
+      s << wxString::Format(_("Selected MIDI playback device: %d - %s\n"), playDeviceNum, playDevice);
+   else
+      s << wxString::Format(_("No MIDI playback device found for '%s'.\n"), playDevice);
 
    // Mention our conditional compilation flags for Alpha only
 #ifdef IS_ALPHA
 
-   s << wxT("==============================") << e;
+   // Not internationalizing these alpha-only messages
+   s << wxT("==============================\n");
 #ifdef EXPERIMENTAL_MIDI_OUT
-   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled") << e;
+   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled\n");
 #else
-   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled") << e;
+   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled\n");
 #endif
 #ifdef EXPERIMENTAL_MIDI_IN
-   s << wxT("EXPERIMENTAL_MIDI_IN is enabled") << e;
+   s << wxT("EXPERIMENTAL_MIDI_IN is enabled\n");
 #else
-   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled") << e;
+   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled\n");
 #endif
 
 #endif

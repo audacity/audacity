@@ -1162,6 +1162,10 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
 
    if (ctx == wxDebugReport::Context_Current)
    {
+      auto saveLang = GetLang();
+      InitLang( wxT("en") );
+      auto cleanup = finally( [&]{ InitLang( saveLang ); } );
+
       rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
 #ifdef EXPERIMENTAL_MIDI_OUT
       rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));
