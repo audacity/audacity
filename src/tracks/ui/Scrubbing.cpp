@@ -792,7 +792,8 @@ bool Scrubber::ShouldDrawScrubSpeed()
 double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
    ViewInfo &viewInfo = mProject->GetViewInfo();
-   const double screen = mProject->GetScreenEndTime() - viewInfo.h;
+   const double screen =
+      mProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
       (viewInfo, mMaxSpeed, screen, time);
 }

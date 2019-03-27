@@ -87,7 +87,8 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
 
       // Scrubbing? Expand or contract about the center, ignoring mouse position
       if (scrubber.IsScrollScrubbing())
-         center_h = viewInfo.h + (pProject->GetScreenEndTime() - viewInfo.h) / 2.0;
+         center_h = viewInfo.h +
+            (pProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h) / 2.0;
       // Zooming out? Focus on mouse.
       else if( steps <= 0 )
          center_h = mouse_h;

@@ -161,7 +161,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
-         mProject->GetScreenEndTime() + tolerance);
+         mProject->GetTrackPanel()->GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
       mProject->TP_DisplaySelection();
@@ -190,7 +190,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
                            playPos,
-                           mProject->GetScreenEndTime());
+                           mProject->GetTrackPanel()->GetScreenEndTime());
          }
       }
 

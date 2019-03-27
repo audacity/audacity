@@ -1983,7 +1983,8 @@ void AudacityProject::FixScrollbars()
    LastTime =
       std::max(LastTime, mViewInfo.selectedRegion.t1());
 
-   const double screen = GetScreenEndTime() - mViewInfo.h;
+   const double screen =
+      GetTrackPanel()->GetScreenEndTime() - mViewInfo.h;
    const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
@@ -2029,7 +2030,8 @@ void AudacityProject::FixScrollbars()
 
    bool oldhstate;
    bool oldvstate;
-   bool newhstate = (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total;
+   bool newhstate =
+      (GetTrackPanel()->GetScreenEndTime() - mViewInfo.h) < mViewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
@@ -2088,7 +2090,7 @@ void AudacityProject::FixScrollbars()
                         panelHeight / mViewInfo.scrollStep, TRUE);
 
    if (refresh || (rescroll &&
-       (GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
+       (GetTrackPanel()->GetScreenEndTime() - mViewInfo.h) < mViewInfo.total)) {
       mTrackPanel->Refresh(false);
    }
 
@@ -4745,7 +4747,7 @@ void AudacityProject::Zoom(double level)
    // tOnLeft is the amount of time we would need before the selection left edge to center it.
    float t0 = mViewInfo.selectedRegion.t0();
    float t1 = mViewInfo.selectedRegion.t1();
-   float tAvailable = GetScreenEndTime() - mViewInfo.h;
+   float tAvailable = GetTrackPanel()->GetScreenEndTime() - mViewInfo.h;
    float tOnLeft = (tAvailable - t0 + t1)/2.0;
    // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
    // If tOnLeft is positive, then we have room for the selection, so scroll to it.
@@ -5605,11 +5607,6 @@ ContrastDialog *AudacityProject::GetContrastDialog(bool create)
    return mContrastDialog.get();
 }
 
-double AudacityProject::GetScreenEndTime() const
-{
-   return mTrackPanel->GetScreenEndTime();
-}
-
 void AudacityProject::SelectNone()
 {
    for (auto t : GetTracks()->Any())
@@ -5634,7 +5631,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    // when there's a selection that's currently at least
    // partially on-screen
 
-   const double endTime = GetScreenEndTime();
+   const double endTime = GetTrackPanel()->GetScreenEndTime();
    const double duration = endTime - mViewInfo.h;
 
    bool selectionIsOnscreen =
@@ -5661,7 +5658,8 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
 
       // Zoom in
       ZoomBy(ZoomFactor);
-      const double newDuration = GetScreenEndTime() - mViewInfo.h;
+      const double newDuration =
+         GetTrackPanel()->GetScreenEndTime() - mViewInfo.h;
 
       // Recenter on selCenter
       TP_ScrollWindow(selCenter - newDuration / 2);
@@ -5673,7 +5671,8 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    double origWidth = duration;
    ZoomBy(ZoomFactor);
 
-   const double newDuration = GetScreenEndTime() - mViewInfo.h;
+   const double newDuration =
+      GetTrackPanel()->GetScreenEndTime() - mViewInfo.h;
    double newh = origLeft + (origWidth - newDuration) / 2;
 
    // MM: Commented this out because it was confusing users
@@ -5696,10 +5695,10 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
 {
    //Zoom() may change these, so record original values:
    const double origLeft = mViewInfo.h;
-   const double origWidth = GetScreenEndTime() - origLeft;
+   const double origWidth = GetTrackPanel()->GetScreenEndTime() - origLeft;
 
    ZoomBy(ZoomFactor);
-   const double newWidth = GetScreenEndTime() - mViewInfo.h;
+   const double newWidth = GetTrackPanel()->GetScreenEndTime() - mViewInfo.h;
 
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;

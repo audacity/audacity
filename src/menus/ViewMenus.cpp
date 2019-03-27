@@ -290,12 +290,13 @@ void OnGoSelStart(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = project.GetViewInfo();
    auto &selectedRegion = viewInfo.selectedRegion;
+   auto &trackPanel = *project.GetTrackPanel();
 
    if (selectedRegion.isPoint())
       return;
 
    project.TP_ScrollWindow(
-      selectedRegion.t0() - ((project.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t0() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnGoSelEnd(const CommandContext &context)
@@ -303,12 +304,13 @@ void OnGoSelEnd(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = project.GetViewInfo();
    auto &selectedRegion = viewInfo.selectedRegion;
+   auto &trackPanel = *project.GetTrackPanel();
 
    if (selectedRegion.isPoint())
       return;
 
    project.TP_ScrollWindow(
-      selectedRegion.t1() - ((project.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t1() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnHistory(const CommandContext &context)
