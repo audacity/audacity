@@ -508,10 +508,10 @@ CommandFlag MenuManager::GetUpdateFlags
    if (project.RedoAvailable())
       flags |= RedoAvailableFlag;
 
-   if (project.ZoomInAvailable() && (flags & TracksExistFlag))
+   if (project.GetViewInfo().ZoomInAvailable() && (flags & TracksExistFlag))
       flags |= ZoomInAvailableFlag;
 
-   if (project.ZoomOutAvailable() && (flags & TracksExistFlag))
+   if (project.GetViewInfo().ZoomOutAvailable() && (flags & TracksExistFlag))
       flags |= ZoomOutAvailableFlag;
 
    // TextClipFlag is currently unused (Jan 2017, 2.1.3 alpha)

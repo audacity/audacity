@@ -408,7 +408,7 @@ void OnTimerRecord(const CommandContext &context)
    // preventing issues surrounding "dirty" projects when Automatic Save/Export
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
-       (project.ProjectHasTracks() || project.EmptyCanBeDirty())) {
+       (project.GetTracks()->Any() || project.EmptyCanBeDirty())) {
       AudacityMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);

@@ -797,7 +797,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // there are no tracks, but there's an Undo history, etc, then
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
-         if (proj && (proj->GetDirty() || !proj->GetIsEmpty()))
+         if (proj && (proj->GetDirty() || !proj->GetTracks()->empty()))
             proj = nullptr;
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,

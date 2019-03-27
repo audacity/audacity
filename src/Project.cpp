@@ -1564,11 +1564,6 @@ void AudacityProject::SetProjectTitle( int number)
    SetName(name);       // to make the nvda screen reader read the correct title
 }
 
-bool AudacityProject::GetIsEmpty()
-{
-   return mTracks->empty();
-}
-
 bool AudacityProject::SnapSelection()
 {
    if (mSnapTo != SNAP_OFF) {
@@ -2521,7 +2516,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    }
 
    // MY: Use routine here so other processes can make same check
-   bool bHasTracks = ProjectHasTracks();
+   bool bHasTracks = !GetTracks()->empty();
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
@@ -5423,13 +5418,6 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    }
 
    return bSuccess;
-}
-
-// Does the project have any tracks?
-bool AudacityProject::ProjectHasTracks() {
-   // Test for an 'empty' project.
-   // of course it could still have a history at this stage.
-   return ! ( GetTracks()->Any() ).empty();
 }
 
 wxString AudacityProject::GetHoursMinsString(int iMinutes)

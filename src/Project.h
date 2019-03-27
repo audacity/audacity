@@ -216,8 +216,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
    double GetRate() const { return mRate; }
-   bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
-   bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
    const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
@@ -225,9 +223,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
-
-
-   bool Clipboard() { return (msClipT1 - msClipT0) > 0.0; }
 
    wxString GetName();
    const std::shared_ptr<DirManager> &GetDirManager();
@@ -321,8 +316,6 @@ public:
    const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
    SelectionState &GetSelectionState() { return mSelectionState; }
 
-   bool GetIsEmpty();
-
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
 
@@ -347,8 +340,6 @@ public:
    static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
-
-   bool ProjectHasTracks();
 
    // Routine to estimate how many minutes of recording time are left on disk
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);

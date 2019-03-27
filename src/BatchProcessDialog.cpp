@@ -323,7 +323,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
 
    AudacityProject *project = GetActiveProject();
-   if (!project->GetIsEmpty()) {
+   if (!project->GetTracks()->empty()) {
       AudacityMessageBox(_("Please save and close the current project first."));
       return;
    }
