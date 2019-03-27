@@ -810,9 +810,11 @@ bool MenuManager::TryToMakeActionAllowed
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
-   // This was 'OnSelectAll'.  Changing it to DoSelectSomething means if
-   // selecting all tracks is enough, we just do that.
-   SelectActions::DoSelectSomething(project);
+   // This was 'DoSelectSomething()'.  
+   // This made autoselect more confusing.
+   // When autoselect triggers, it might not select all audio in all tracks.
+   // So changed to DoSelectAll.
+   SelectActions::DoSelectAll(project);
    flags = GetMenuManager(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;

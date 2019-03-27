@@ -64,7 +64,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("A&uto-select, if selection required"),
+      S.TieCheckBox(_("&Select all audio, if selection required"),
                     wxT("/GUI/SelectAllOnNone"),
                     false);
       /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
