@@ -394,7 +394,7 @@ bool DoEffect(
    auto trackPanel = project.GetTrackPanel();
    auto trackFactory = project.GetTrackFactory();
    auto rate = project.GetRate();
-   auto &selectedRegion = project.GetSelection();
+   auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto commandManager = project.GetCommandManager();
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);

@@ -154,7 +154,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
    // If there is a single label track, or there is a label track at or below
    // the focused track
-   auto &selectedRegion = project.GetSelection();
+   auto &selectedRegion = project.GetViewInfo().selectedRegion;
    if (lt) {
       int i;
       if (next)

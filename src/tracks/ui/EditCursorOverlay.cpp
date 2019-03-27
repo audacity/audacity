@@ -40,7 +40,7 @@ EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
 
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
-   const SelectedRegion &selection = mProject->GetSelection();
+   const auto &selection = mProject->GetViewInfo().selectedRegion;
    if (!selection.isPoint()) {
       mCursorTime = -1.0;
       mNewCursorX = -1;

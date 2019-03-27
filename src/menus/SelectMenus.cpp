@@ -735,7 +735,7 @@ void OnToggleSpectralSelection(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetSelection();
+   auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    const double f0 = selectedRegion.f0();
    const double f1 = selectedRegion.f1();

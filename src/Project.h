@@ -218,8 +218,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    double GetRate() const { return mRate; }
    bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
    bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
-   const SelectedRegion &GetSelection() const { return mViewInfo.selectedRegion; }
-   SelectedRegion &GetSelection() { return mViewInfo.selectedRegion; }
    const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
