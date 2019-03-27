@@ -72,14 +72,11 @@
     <ClCompile Include="..\..\..\lib-src\libmp3lame\version.c">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libmp3lame\vector\xmm_quantize_sub.c">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\lib-src\libmp3lame\lame_global_flags.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\libmp3lame\lameerror.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\lib-src\libmp3lame\vbrquantize.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -137,6 +134,15 @@
     <ClInclude Include="..\..\..\lib-src\libmp3lame\version.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libmp3lame\lame_global_flags.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libmp3lame\vector\lame_intrin.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libmp3lame\lameerror.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\lib-src\libmp3lame\i386\choose_table.nas">
@@ -163,5 +169,15 @@
     <None Include="..\..\..\lib-src\libmp3lame\i386\scalar.nas">
       <Filter>Asm</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <NASM Include="..\libmp3lame\i386\choose_table.nas" />
+    <NASM Include="..\libmp3lame\i386\cpu_feat.nas" />
+    <NASM Include="..\libmp3lame\i386\fft.nas" />
+    <NASM Include="..\libmp3lame\i386\fft3dn.nas" />
+    <NASM Include="..\libmp3lame\i386\fftfpu.nas" />
+    <NASM Include="..\libmp3lame\i386\fftsse.nas" />
+    <NASM Include="..\libmp3lame\i386\ffttbl.nas" />
+    <NASM Include="..\libmp3lame\i386\scalar.nas" />
   </ItemGroup>
 </Project>
