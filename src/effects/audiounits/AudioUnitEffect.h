@@ -30,7 +30,7 @@
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 /* 18n-hint: the name of an Apple audio software protocol */
-#define AUDIOUNITEFFECTS_FAMILY XO("AudioUnit")
+#define AUDIOUNITEFFECTS_FAMILY XO("Audio Unit")
 
 class AudioUnitEffect;
 

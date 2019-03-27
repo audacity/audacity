@@ -2259,7 +2259,7 @@ wxString GetMP3Version(wxWindow *parent, bool prompt)
       versionString = exporter.GetLibraryVersion();
 #ifdef MP3_EXPORT_BUILT_IN
       versionString += " ";
-      versionString += _("(Built In)");
+      versionString += _("(Built-in)");
 #endif
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME

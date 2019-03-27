@@ -83,7 +83,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("MP3 Export Library"));
+   S.StartStatic(_("LAME MP3 Export Library"));
    {
       S.StartTwoColumn();
       {
@@ -96,7 +96,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 // Old buttons, not needed now that the lib is built-in.
 #ifndef MP3_EXPORT_BUILT_IN
 
-         S.AddVariableText(_("MP3 Library:"),
+         S.AddVariableText(_("LAME MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          wxButton *locate_button = S.Id(ID_MP3_FIND_BUTTON).AddButton(_("&Locate..."),
