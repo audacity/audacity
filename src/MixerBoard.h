@@ -20,13 +20,13 @@
 #include <wx/scrolwin.h>
 #include <wx/statbmp.h>
 
-#include "widgets/AButton.h"
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"
 #include "commands/CommandManagerWindowClasses.h"
 
 class wxArrayString;
 class wxBitmapButton;
+class AButton;
 struct TrackListEvent;
 
 // containment hierarchy:
