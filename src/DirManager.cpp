@@ -68,6 +68,7 @@
 
 #include <time.h> // to use time() for srand()
 
+#include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/dir.h>

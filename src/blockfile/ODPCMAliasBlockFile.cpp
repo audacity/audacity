@@ -23,7 +23,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 #include <wx/file.h>
 #include <wx/utils.h>
-#include <wx/wxchar.h>
+#include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/thread.h>
 #include <sndfile.h>

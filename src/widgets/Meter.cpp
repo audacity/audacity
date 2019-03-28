@@ -45,6 +45,7 @@
 
 #include <algorithm>
 #include <wx/setup.h> // for wxUSE_* macros
+#include <wx/wxcrtvararg.h>
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>

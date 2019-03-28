@@ -29,6 +29,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "TranslatableStringArray.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
+#include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/bitmap.h>

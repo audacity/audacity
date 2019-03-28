@@ -19,6 +19,7 @@
 
 #include "Experimental.h"
 
+#include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
 #include <wx/brush.h>
 #include <wx/pen.h>

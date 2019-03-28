@@ -19,6 +19,7 @@
 #include "Experimental.h"
 
 #include <cfloat>
+#include <wx/wxcrtvararg.h>
 #include <wx/intl.h>
 #include "AColor.h"
 #include "widgets/Ruler.h"

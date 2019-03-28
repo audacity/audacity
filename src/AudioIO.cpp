@@ -438,6 +438,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "portmixer.h"
 #endif
 
+#include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>

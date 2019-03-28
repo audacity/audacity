@@ -34,6 +34,7 @@ a draggable point type.
 
 #include <math.h>
 
+#include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
 #include <wx/brush.h>
 #include <wx/event.h>
