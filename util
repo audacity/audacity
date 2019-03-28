@@ -1,2 +1,0 @@
-#!/bin/sh
-echo `git diff --raw "$1"^ $1 | wc -l` $1
