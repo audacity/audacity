@@ -32,6 +32,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
+#include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>

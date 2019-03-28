@@ -23,13 +23,11 @@
 #include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
-#include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include <wx/radiobut.h>
 #include <wx/checkbox.h>
 
 #if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
 #include "../widgets/WindowAccessible.h"
 #endif
 
@@ -53,7 +51,10 @@ const int kEqOptionCurve   =1<<1;
 // The legacy version offers both Graphic and curve on the same UI.
 const int kEqLegacy = kEqOptionGraphic + kEqOptionCurve;
 
+class wxBoxSizer;
 class wxChoice;
+class wxSizer;
+class wxSizerItem;
 class wxSlider;
 class wxStaticText;
 class Envelope;

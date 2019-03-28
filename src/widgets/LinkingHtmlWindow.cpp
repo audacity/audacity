@@ -21,6 +21,7 @@
 
 #include <wx/mimetype.h>
 #include <wx/filename.h>
+#include <wx/frame.h>
 #include <wx/uri.h>
 #include <wx/settings.h>
 #include <wx/log.h>

@@ -18,7 +18,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
 #include "WindowAccessible.h"
 #endif
 

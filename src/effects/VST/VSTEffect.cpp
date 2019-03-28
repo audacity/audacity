@@ -53,7 +53,6 @@
 #include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filename.h>
-#include <wx/frame.h>
 #include <wx/imaglist.h>
 #include <wx/listctrl.h>
 #include <wx/log.h>

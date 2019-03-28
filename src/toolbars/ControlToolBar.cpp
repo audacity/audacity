@@ -51,6 +51,7 @@
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/intl.h>
+#include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/timer.h>
 #endif

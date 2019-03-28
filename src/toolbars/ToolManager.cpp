@@ -41,6 +41,7 @@
 #include <wx/intl.h>
 #include <wx/region.h>
 #include <wx/settings.h>
+#include <wx/sizer.h>
 #include <wx/sysopt.h>
 #include <wx/timer.h>
 #include <wx/utils.h>

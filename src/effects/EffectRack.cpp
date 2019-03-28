@@ -21,7 +21,6 @@
 #include "../MemoryX.h"
 #include "../UndoManager.h"
 
-#include <wx/access.h>
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>

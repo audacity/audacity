@@ -19,7 +19,6 @@
 #endif
 
 //#include  "wx/log.h"
-#include  <wx/sizer.h>
 #include  <wx/menuitem.h>
 #include  <wx/checklst.h>
 

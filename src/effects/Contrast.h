@@ -12,7 +12,6 @@
 #include "../widgets/wxPanelWrapper.h"
 
 class wxButton;
-class wxSizer;
 class wxString;
 class wxTextCtrl;
 

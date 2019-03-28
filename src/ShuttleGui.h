@@ -19,7 +19,6 @@
 #include <vector>
 #include "MemoryX.h"
 #include <wx/grid.h>
-#include <wx/sizer.h>
 
 #include "WrappedType.h"
 
@@ -68,6 +67,7 @@ class wxRadioButton;
 class wxBitmap;
 class wxPanel;
 class wxSizer;
+class wxSizerItem;
 class wxStaticBox;
 class wxMenuBar;
 class wxMenu;

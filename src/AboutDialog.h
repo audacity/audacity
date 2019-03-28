@@ -13,7 +13,6 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/bitmap.h>
 #include "widgets/wxPanelWrapper.h"

@@ -18,17 +18,16 @@
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
-#include <wx/access.h>
 #include <wx/bmpbuttn.h>
 #include <wx/defs.h>
-#include <wx/frame.h>
+#include <wx/frame.h> // to inherit
 #include <wx/image.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
 #include <wx/timer.h>
 
 #include "EffectManager.h"
 
+class wxFlexGridSizer;
 class wxStaticText;
 
 class EffectRack final : public wxFrame

@@ -35,6 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../widgets/ErrorDialog.h"
 
 #include <wx/combobox.h>
+#include <wx/sizer.h>
 
 namespace
 {

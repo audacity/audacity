@@ -12,7 +12,6 @@
 #define __AUDACITY_HISTORY_WINDOW__
 
 #include <wx/button.h>
-#include <wx/frame.h>
 #include <wx/listctrl.h>
 #include <wx/spinctrl.h>
 

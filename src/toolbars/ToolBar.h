@@ -17,11 +17,11 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/sizer.h>
 
 #include "../Theme.h"
 #include "../widgets/wxPanelWrapper.h"
 
+class wxBoxSizer;
 class wxDC;
 class wxEraseEvent;
 class wxMouseEvent;

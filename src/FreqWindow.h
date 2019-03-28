@@ -15,7 +15,6 @@
 #include <vector>
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
-#include <wx/frame.h>
 #include <wx/panel.h>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
@@ -23,7 +22,6 @@
 #include <wx/pen.h>
 #include <wx/font.h>
 #include <wx/scrolbar.h>
-#include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/utils.h>
 #include "SampleFormat.h"

@@ -20,7 +20,6 @@
 #include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
 #include "WindowAccessible.h"
 
 class GridAx;

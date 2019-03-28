@@ -17,7 +17,6 @@
 #define __AUDACITY_LINKINGHTMLWINDOW__
 
 #include <wx/html/htmlwin.h>
-#include <wx/frame.h>
 
 #include "HtmlWindow.h"
 #include "wxPanelWrapper.h"

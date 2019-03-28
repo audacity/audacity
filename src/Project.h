@@ -38,7 +38,7 @@
 #include <wx/log.h>
 #include <wx/dragimag.h>
 #include <wx/generic/dragimgg.h>
-#include <wx/frame.h>
+#include <wx/frame.h> // to inherit
 #include <wx/intl.h>
 #include <wx/dcclient.h>
 
@@ -49,7 +49,6 @@ const int AudacityProjectTimerID = 5200;
 class wxArrayString;
 class wxWindow;
 class wxDialog;
-class wxBoxSizer;
 class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;

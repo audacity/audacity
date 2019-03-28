@@ -39,6 +39,7 @@ effects from this one class.
 #include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/sstream.h>
 #include <wx/stattext.h>

@@ -80,6 +80,7 @@
 #include <wx/filefn.h>
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
+#include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/tooltip.h>
 #include <wx/utils.h>

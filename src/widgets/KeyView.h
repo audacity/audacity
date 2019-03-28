@@ -67,7 +67,6 @@ enum ViewByType
 };
 
 #if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
 #include "WindowAccessible.h"
 
 // Forward reference accessibility provideer

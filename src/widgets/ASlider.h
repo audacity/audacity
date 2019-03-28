@@ -21,7 +21,6 @@
 #include "widgets/wxPanelWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
 #include "WindowAccessible.h"
 #endif
 

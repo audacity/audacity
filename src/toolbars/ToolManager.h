@@ -16,7 +16,7 @@
 #include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/eventfilter.h>
-#include <wx/frame.h>
+#include <wx/frame.h> // to inherit
 #include <wx/timer.h>
 
 #include "ToolDock.h"

@@ -15,7 +15,7 @@
 
 #if wxUSE_ACCESSIBILITY
 
-#include <wx/access.h>
+#include <wx/access.h> // to inherit
 
 class WindowAccessible: public wxAccessible
 {
