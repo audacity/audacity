@@ -12,6 +12,10 @@
 #include "../commands/CommandManager.h"
 #include "../prefs/TracksPrefs.h"
 
+#ifdef EXPERIMENTAL_EFFECTS_RACK
+#include "../effects/EffectManager.h"
+#endif
+
 #include <wx/scrolbar.h>
 
 // private helper classes and functions
