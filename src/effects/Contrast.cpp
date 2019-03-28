@@ -224,7 +224,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mForegroundStartT = safenew
-               NumericTextCtrl(this, ID_FOREGROUNDSTART_T,
+               NumericTextCtrl(S.GetParent(), ID_FOREGROUNDSTART_T,
                          NumericConverter::TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
@@ -237,7 +237,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mForegroundEndT = safenew
-               NumericTextCtrl(this, ID_FOREGROUNDEND_T,
+               NumericTextCtrl(S.GetParent(), ID_FOREGROUNDEND_T,
                          NumericConverter::TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
@@ -256,7 +256,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundStartT = safenew
-               NumericTextCtrl(this, ID_BACKGROUNDSTART_T,
+               NumericTextCtrl(S.GetParent(), ID_BACKGROUNDSTART_T,
                          NumericConverter::TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
@@ -269,7 +269,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundEndT = safenew
-               NumericTextCtrl(this, ID_BACKGROUNDEND_T,
+               NumericTextCtrl(S.GetParent(), ID_BACKGROUNDEND_T,
                          NumericConverter::TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,

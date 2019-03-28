@@ -150,7 +150,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   wxStaticBox* staticBox = S.StartStatic(_("Key Bindings"), 1);
+   S.StartStatic(_("Key Bindings"), 1);
    {
       S.StartMultiColumn(3, wxEXPAND);
       {
@@ -189,7 +189,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mFilterLabel = S.AddVariableText(_("Searc&h:"));
 
             if (!mFilter) {
-               mFilter = safenew wxTextCtrl(staticBox,
+               mFilter = safenew wxTextCtrl(S.GetParent(),
                                         FilterID,
                                         wxT(""),
                                         wxDefaultPosition,
@@ -217,7 +217,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND, 1);
       {
          if (!mView) {
-            mView = safenew KeyView(staticBox, CommandsListID);
+            mView = safenew KeyView(S.GetParent(), CommandsListID);
             mView->SetName(_("Bindings"));
          }
          S.Prop(true);
@@ -228,7 +228,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          if (!mKey) {
-            mKey = safenew wxTextCtrl(staticBox,
+            mKey = safenew wxTextCtrl(S.GetParent(),
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
