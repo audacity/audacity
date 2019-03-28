@@ -31,6 +31,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/menu.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
+#include <wx/statbox.h>
 
 #include "../Prefs.h"
 #include "../Project.h"
@@ -149,7 +150,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.StartStatic(_("Key Bindings"), 1);
+   wxStaticBox* staticBox = S.StartStatic(_("Key Bindings"), 1);
    {
       S.StartMultiColumn(3, wxEXPAND);
       {
@@ -188,7 +189,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mFilterLabel = S.AddVariableText(_("Searc&h:"));
 
             if (!mFilter) {
-               mFilter = safenew wxTextCtrl(this,
+               mFilter = safenew wxTextCtrl(staticBox,
                                         FilterID,
                                         wxT(""),
                                         wxDefaultPosition,
@@ -216,7 +217,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND, 1);
       {
          if (!mView) {
-            mView = safenew KeyView(this, CommandsListID);
+            mView = safenew KeyView(staticBox, CommandsListID);
             mView->SetName(_("Bindings"));
          }
          S.Prop(true);
@@ -227,7 +228,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          if (!mKey) {
-            mKey = safenew wxTextCtrl(this,
+            mKey = safenew wxTextCtrl(staticBox,
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
@@ -419,7 +420,7 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
    // active, buttons on the Mac do not accept focus and all the
    // controls between this one and the tree control are buttons.
    if (e.GetKeyCode() == WXK_TAB) {
-      NavigateIn(e.ShiftDown()
+      t->Navigate(e.ShiftDown()
                  ? wxNavigationKeyEvent::IsBackward
                  : wxNavigationKeyEvent::IsForward);
       return;
