@@ -26,6 +26,7 @@
 
 class wxArrayString;
 class wxBitmapButton;
+class wxMemoryDC;
 class AButton;
 struct TrackListEvent;
 
