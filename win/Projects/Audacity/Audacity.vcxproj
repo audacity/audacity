@@ -1186,6 +1186,12 @@
       <Project>{a52bbea5-8b02-4147-8734-5d9bbf4d1177}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\libmp3lame\libmp3lame.vcxproj">
+      <Project>{20536101-3b0e-43ef-94f9-080d595dac57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\libmpg123\libmpg123.vcxproj">
+      <Project>{e2dab91a-8248-4625-8a85-2c2c2a390dd8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\libnyquist\libnyquist.vcxproj">
       <Project>{7aa41bed-41b0-427a-9148-dea40549d158}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
