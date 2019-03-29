@@ -122,7 +122,10 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
 
             // TODO: more-than-two-channels
             auto channels = TrackList::Channels(leftTrack);
-            if (auto rightTrack = * ++ channels.begin()) {
+            auto rightTrack = (channels.size() > 1)
+               ? * ++ channels.first
+               : nullptr;
+            if ( rightTrack ) {
                double t;
 
                //Adjust bounds by the right tracks markers

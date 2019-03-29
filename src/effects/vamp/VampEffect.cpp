@@ -372,7 +372,9 @@ bool VampEffect::Process()
 
       unsigned channels = 1;
 
-      const WaveTrack *right = *channelGroup.first++;
+      // channelGroup now contains all but the first channel
+      const WaveTrack *right =
+         channelGroup.size() ? *channelGroup.first++ : nullptr;
       if (right)
       {
          channels = 2;

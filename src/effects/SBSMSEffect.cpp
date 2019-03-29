@@ -253,8 +253,10 @@ bool EffectSBSMS::Process()
             auto end = leftTrack->TimeToLongSamples(mCurT1);
 
             // TODO: more-than-two-channels
-            WaveTrack *rightTrack =
-               * ++ TrackList::Channels(leftTrack).begin();
+            auto channels = TrackList::Channels(leftTrack);
+            WaveTrack *rightTrack = (channels.size() > 1)
+               ? * ++ channels.first
+               : nullptr;
             if (rightTrack) {
                double t;
 

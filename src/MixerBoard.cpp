@@ -342,10 +342,12 @@ WaveTrack *MixerTrackCluster::GetRight() const
 {
   // TODO: more-than-two-channels
    auto left = GetWave();
-   if (left)
-      return * ++ TrackList::Channels(left).begin();
-   else
-      return nullptr;
+   if (left) {
+      auto channels = TrackList::Channels(left);
+      if ( channels.size() > 1 )
+         return * ++ channels.first;
+   }
+   return nullptr;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
