@@ -10,6 +10,7 @@
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../NoteTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
@@ -30,8 +31,35 @@ void DoSelectTimeAndTracks
          tracks->GetMinOffset(), tracks->GetEndTime());
 
    if( bAllTracks ) {
-      for (auto t : tracks->Any())
+      for (auto t : tracks->Any()){
          t->SetSelected(true);
+      }
+
+      project.ModifyState(false);
+      trackPanel->Refresh(false);
+   }
+}
+
+// Temporal selection (not TimeTrack selection)
+// potentially for all wave or not tracks.
+void DoSelectTimeAndAudioTracks
+(AudacityProject &project, bool bAllTime, bool bAllTracks)
+{
+   auto tracks = project.GetTracks();
+   auto trackPanel = project.GetTrackPanel();
+   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+
+   if( bAllTime )
+      selectedRegion.setTimes(
+         tracks->GetMinOffset(), tracks->GetEndTime());
+
+   if( bAllTracks ) {
+      for (auto t : tracks->Any()){
+         auto wt = dynamic_cast<WaveTrack *>(t);
+         auto nt = dynamic_cast<NoteTrack *>(t);
+         if( wt || nt )
+            t->SetSelected(true);
+      }
 
       project.ModifyState(false);
       trackPanel->Refresh(false);
@@ -480,6 +508,11 @@ void DoListSelection
 void DoSelectAll(AudacityProject &project)
 {
    DoSelectTimeAndTracks( project, true, true );
+}
+
+void DoSelectAllAudio(AudacityProject &project)
+{
+   DoSelectTimeAndAudioTracks( project, true, true );
 }
 
 // This function selects all tracks if no tracks selected,

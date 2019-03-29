@@ -119,6 +119,7 @@ void DoListSelection(
    AudacityProject &project, Track *t,
    bool shift, bool ctrl, bool modifyState );
 void DoSelectAll( AudacityProject &project );
+void DoSelectAllAudio( AudacityProject &project );
 void DoSelectSomething( AudacityProject &project );
 }
 

@@ -5701,7 +5701,7 @@ void AudacityProject::SelectAllIfNone()
    auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
    if(!(flags & TracksSelectedFlag) ||
       (mViewInfo.selectedRegion.isPoint()))
-      SelectActions::DoSelectAll(*this);
+      SelectActions::DoSelectAllAudio(*this);
 }
 
 // Stop playing or recording, if paused.

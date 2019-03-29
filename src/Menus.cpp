@@ -813,8 +813,8 @@ bool MenuManager::TryToMakeActionAllowed
    // This was 'DoSelectSomething()'.  
    // This made autoselect more confusing.
    // When autoselect triggers, it might not select all audio in all tracks.
-   // So changed to DoSelectAll.
-   SelectActions::DoSelectAll(project);
+   // So changed to DoSelectAllAudio.
+   SelectActions::DoSelectAllAudio(project);
    flags = GetMenuManager(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
