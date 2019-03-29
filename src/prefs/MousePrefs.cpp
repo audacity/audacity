@@ -83,6 +83,12 @@ void MousePrefs::Populate()
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
    CreateList();
+   if (mList->GetItemCount() > 0) {
+      // set first item to be selected (and the focus when the
+      // list first becomes the focus)
+      mList->SetItemState(0, wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED,
+         wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+   }
 }
 
 /// Places controls on the panel and also exchanges data with them.
