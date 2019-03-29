@@ -26,6 +26,7 @@ It is also a place to document colour usage policy in Audacity
 #include <wx/colour.h>
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
+#include <wx/graphics.h>
 #include <wx/settings.h>
 #include <wx/utils.h>
 
@@ -291,7 +292,9 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
 // Set colour of and select brush and pen.
 // Use -1 to omit brush or pen.
 // If pen omitted, then the same colour as the brush will be used.
-void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen )
+// alpha for the brush is normally 255, but if set will make a difference 
+// on mac (only) currently.
+void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen, int alpha )
 {
    if (!inited)
       Init();
@@ -301,6 +304,7 @@ void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen )
    wxColour col = wxColour(0,0,0);
    if( iBrush !=-1 ){
       col = theTheme.Colour( iBrush );
+      col.Set( col.Red(), col.Green(), col.Blue(), alpha);
       spareBrush.SetColour( col );
       dc->SetBrush( spareBrush );
    }
