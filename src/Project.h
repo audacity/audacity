@@ -36,7 +36,11 @@
 #include <memory>
 #include <wx/defs.h>
 #include <wx/log.h>
+
+// dragimgg.h uses this incomplete type without declaring it on some OSs !
+class wxMemoryDC;
 #include <wx/generic/dragimgg.h>
+
 #include <wx/frame.h> // to inherit
 #include <wx/intl.h>
 
