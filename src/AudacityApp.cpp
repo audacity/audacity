@@ -101,7 +101,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "prefs/DirectoriesPrefs.h"
 #include "tracks/ui/Scrubbing.h"
 
-//temporarilly commented out till it is added to all projects
+//temporarily commented out till it is added to all projects
 //#include "Profiler.h"
 
 #include "ModuleManager.h"
@@ -327,7 +327,7 @@ void QuitAudacity(bool bForce)
    ODManager::Quit();
 
    //print out profile if we have one by deleting it
-   //temporarilly commented out till it is added to all projects
+   //temporarily commented out till it is added to all projects
    //DELETE Profiler::Instance();
 
    //remove our logger

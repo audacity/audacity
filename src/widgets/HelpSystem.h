@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  ErrorDialog.h
+  HelpSystem.h
 
   Jimmy Johnson
   James Crook
