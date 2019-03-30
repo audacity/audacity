@@ -13,7 +13,8 @@
 
 #include <wx/defs.h>
 
-#include "widgets/NumericTextCtrl.h" // for NumericFormatSymbol
+#include "audacity/ComponentInterface.h" // member variable
+
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 class NumericTextCtrl;

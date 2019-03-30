@@ -20,6 +20,7 @@
 
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../widgets/NumericTextCtrl.h"
 
 EffectSilence::EffectSilence()
 {

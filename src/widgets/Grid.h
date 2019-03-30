@@ -15,7 +15,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/grid.h> // to inherit wxGridCellEditor
-#include "NumericTextCtrl.h"
+#include "NumericTextCtrl.h" // for NumericConverter::Type
 
 #if wxUSE_ACCESSIBILITY
 class GridAx;

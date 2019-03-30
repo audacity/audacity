@@ -17,6 +17,8 @@ class wxArrayString;
 
 #include <vector>
 
+#include <wx/event.h> // to inherit
+
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/data-access/data-access.h"
 #include "lv2/lv2plug.in/ns/ext/options/options.h"
@@ -28,7 +30,6 @@ class wxArrayString;
 #include <suil/suil.h>
 
 #include "../../SampleFormat.h"
-#include "../../widgets/NumericTextCtrl.h"
 
 #include "LoadLV2.h"
 
@@ -36,6 +37,8 @@ class wxArrayString;
 
 class wxSlider;
 class wxTextCtrl;
+
+class NumericTextCtrl;
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates

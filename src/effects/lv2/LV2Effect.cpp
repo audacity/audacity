@@ -37,6 +37,7 @@
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/ErrorDialog.h"
+#include "../../widgets/NumericTextCtrl.h"
 
 #include "lilv/lilv.h"
 #include "suil/suil.h"

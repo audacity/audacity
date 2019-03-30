@@ -61,6 +61,8 @@ with changes in the SpectralSelectionBar.
 #include "../widgets/WindowAccessible.h"
 #endif
 
+#include "../widgets/NumericTextCtrl.h"
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 
 IMPLEMENT_CLASS(SpectralSelectionBar, ToolBar);

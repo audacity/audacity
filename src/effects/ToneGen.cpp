@@ -32,6 +32,7 @@ frequency changes smoothly during the tone.
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
+#include "../widgets/NumericTextCtrl.h"
 
 enum kInterpolations
 {

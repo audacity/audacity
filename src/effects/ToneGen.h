@@ -13,10 +13,9 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
-#include "../widgets/NumericTextCtrl.h"
-
 #include "Effect.h"
 
+class NumericTextCtrl;
 class ShuttleGui;
 
 #define CHIRP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Chirp") }

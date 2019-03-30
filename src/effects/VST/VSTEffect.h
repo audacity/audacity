@@ -17,12 +17,13 @@
 #include "audacity/PluginInterface.h"
 
 #include "../../SampleFormat.h"
-#include "../../widgets/NumericTextCtrl.h"
 #include "../../xml/XMLTagHandler.h"
 
 class wxSizerItem;
 class wxSlider;
 class wxStaticText;
+
+class NumericTextCtrl;
 
 class VSTControl;
 #include "VSTControl.h"

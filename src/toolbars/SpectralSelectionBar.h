@@ -14,7 +14,6 @@ Paul Licameli
 #include <wx/defs.h>
 
 #include "ToolBar.h"
-#include "../widgets/NumericTextCtrl.h"
 
 class wxChoice;
 class wxComboBox;

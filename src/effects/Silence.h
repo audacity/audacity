@@ -13,9 +13,9 @@
 #ifndef __AUDACITY_EFFECT_SILENCE__
 #define __AUDACITY_EFFECT_SILENCE__
 
-#include "../widgets/NumericTextCtrl.h"
-
 #include "Generator.h"
+
+class NumericTextCtrl;
 
 #define SILENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Silence") }
 
