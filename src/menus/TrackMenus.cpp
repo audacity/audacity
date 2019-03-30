@@ -19,6 +19,7 @@
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/ASlider.h"
+#include "../widgets/ErrorDialog.h"
 
 #include <wx/combobox.h>
 

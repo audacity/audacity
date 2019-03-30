@@ -1,6 +1,8 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
+#include <wx/textctrl.h>
+
 #include "../AboutDialog.h"
 #include "../AudacityApp.h"
 #include "../AudacityLogger.h"
@@ -12,6 +14,7 @@
 #include "../SplashDialog.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 

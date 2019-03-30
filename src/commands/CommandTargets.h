@@ -60,7 +60,6 @@ and sends it to that message target.
 //#include "../src/Project.h"
 #include "../widgets/ProgressDialog.h"
 #include "../commands/ResponseQueue.h"
-#include "../widgets/ErrorDialog.h"
 
 class wxStatusBar;
 
@@ -204,10 +203,7 @@ class MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
-   void Update(const wxString &message) override
-   {
-      AudacityMessageBox(message);
-   }
+   void Update(const wxString &message) override;
 };
 
 /// Displays messages from a command in a wxStatusBar

@@ -169,8 +169,6 @@ scroll information.  It also has some status flags.
 #include "tracks/ui/PlayIndicatorOverlay.h"
 #include "tracks/ui/Scrubbing.h"
 
-#include "widgets/ErrorDialog.h"
-
 #include "commands/ScriptCommandRelay.h"
 #include "commands/CommandTargets.h"
 #include "commands/Command.h"

@@ -20,6 +20,7 @@
 
 #include <wx/choice.h>
 #include <wx/defs.h>
+#include <wx/textctrl.h>
 
 #include "../AudioIO.h"
 #include "../Dither.h"
