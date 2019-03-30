@@ -30,7 +30,6 @@ for shared and private configs - which need to move out.
 #include <wx/dialog.h>
 #include <wx/dir.h>
 #include <wx/dynlib.h>
-#include <wx/hashmap.h>
 #include <wx/filename.h>
 #include <wx/list.h>
 #include <wx/listctrl.h>

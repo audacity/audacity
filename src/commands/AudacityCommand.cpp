@@ -25,7 +25,6 @@ ShuttleGui.
 #include <algorithm>
 
 #include <wx/defs.h>
-#include <wx/hashmap.h>
 #include <wx/sizer.h>
 #include <wx/stockitem.h>
 #include <wx/string.h>

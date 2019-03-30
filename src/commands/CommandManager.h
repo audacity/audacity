@@ -22,7 +22,6 @@
 #include "../MemoryX.h"
 #include "Keyboard.h"
 #include <vector>
-#include <wx/hashmap.h>
 
 #include "../xml/XMLTagHandler.h"
 

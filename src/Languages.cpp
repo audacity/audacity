@@ -34,7 +34,6 @@
 #include "Languages.h"
 
 #include <wx/defs.h>
-#include <wx/hashmap.h>
 #include <wx/intl.h>
 #include <wx/textfile.h>
 

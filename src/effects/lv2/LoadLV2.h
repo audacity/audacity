@@ -13,7 +13,6 @@
 #define LV2EFFECTSMODULE_H
 
 #include "../../MemoryX.h"
-#include <wx/hashmap.h>
 
 #include <lilv/lilv.h>
 

@@ -27,7 +27,6 @@
 #include "audacity/Types.h"
 
 class wxRect;
-class wxHashTable;
 
 class Track;
 class WaveDisplay;

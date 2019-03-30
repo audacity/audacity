@@ -33,7 +33,6 @@ greater use in future.
 #include <wx/choice.h>
 #include <wx/dcmemory.h>
 #include <wx/defs.h>
-#include <wx/hashmap.h>
 #include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>

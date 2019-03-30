@@ -17,7 +17,6 @@
 #include <wx/dialog.h>
 #include <wx/dragimag.h>
 #include <wx/panel.h>
-#include <wx/hashmap.h>
 #include <wx/timer.h>
 #include <wx/minifram.h>
 
