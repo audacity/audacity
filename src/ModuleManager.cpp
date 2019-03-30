@@ -24,7 +24,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "Experimental.h"
 
 #include <wx/dynlib.h>
-#include <wx/list.h>
 #include <wx/log.h>
 #include <wx/string.h>
 #include <wx/filename.h>

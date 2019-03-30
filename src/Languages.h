@@ -12,8 +12,7 @@
 #define __AUDACITY_LANGUAGES__
 
 class wxArrayString;
-
-#include <wx/list.h>
+class wxString;
 
 void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames);
 

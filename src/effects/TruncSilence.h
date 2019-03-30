@@ -17,8 +17,6 @@
 #ifndef __AUDACITY_EFFECT_TRUNC_SILENCE__
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
-#include <wx/list.h>
-
 #include "Effect.h"
 
 class ShuttleGui;

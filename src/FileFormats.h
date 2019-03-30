@@ -13,8 +13,6 @@
 
 #include "Audacity.h" // for __UNIX__
 
-#include <wx/list.h>
-
 #include "audacity/Types.h"
 
 #include "sndfile.h"

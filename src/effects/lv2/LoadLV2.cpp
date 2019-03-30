@@ -26,7 +26,6 @@ Functions that find and load all LV2 plugins on the system.
 
 #include <wx/dynlib.h>
 #include <wx/filename.h>
-#include <wx/list.h>
 #include <wx/log.h>
 #include <wx/string.h>
 
