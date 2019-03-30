@@ -41,7 +41,7 @@ void DoSelectTimeAndTracks
 }
 
 // Temporal selection (not TimeTrack selection)
-// potentially for all wave or not tracks.
+// potentially for all wave tracks.
 void DoSelectTimeAndAudioTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
@@ -56,8 +56,7 @@ void DoSelectTimeAndAudioTracks
    if( bAllTracks ) {
       for (auto t : tracks->Any()){
          auto wt = dynamic_cast<WaveTrack *>(t);
-         auto nt = dynamic_cast<NoteTrack *>(t);
-         if( wt || nt )
+         if( wt  )
             t->SetSelected(true);
       }
 
