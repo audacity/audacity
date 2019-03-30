@@ -13,7 +13,7 @@
 #define __AUDACITY_PREFS_DIALOG__
 
 #include <vector>
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../Internat.h"
 
 class wxTreebook;

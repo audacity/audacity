@@ -18,7 +18,6 @@
 #include <wx/scrolwin.h> // to inherit
 
 #include "widgets/ASlider.h" // to inherit
-#include "widgets/wxPanelWrapper.h"
 #include "commands/CommandManagerWindowClasses.h"
 
 class wxArrayString;

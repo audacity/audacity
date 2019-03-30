@@ -36,7 +36,7 @@
 #include "MemoryX.h"
 #include <utility>
 
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
 

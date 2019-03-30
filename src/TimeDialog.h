@@ -14,7 +14,7 @@
 #include <wx/defs.h>
 
 #include "widgets/NumericTextCtrl.h" // for NumericFormatSymbol
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 #include "Internat.h"
 
 class NumericTextCtrl;

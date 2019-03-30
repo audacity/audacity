@@ -16,7 +16,7 @@
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit
 #include "SampleFormat.h"
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 class wxMemoryDC;
 class wxScrollBar;

@@ -19,7 +19,7 @@
 #include <wx/minifram.h> // to inherit
 
 #include "ImageRoll.h"
-#include "wxPanelWrapper.h"
+#include "wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
 

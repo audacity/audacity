@@ -15,7 +15,7 @@
 #include <vector>
 #include <wx/filename.h> // member variable
 #include "../SampleFormat.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
 class wxArrayString;
 class FileDialogWrapper;
