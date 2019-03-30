@@ -47,7 +47,6 @@ and ImportLOF.cpp.
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
-#include <wx/listimpl.cpp>
 #include "../ShuttleGui.h"
 #include "../Project.h"
 #include "../WaveTrack.h"

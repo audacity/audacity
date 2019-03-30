@@ -52,7 +52,6 @@
 #include <wx/window.h>
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
-#include <wx/listimpl.cpp>
 #include <wx/stattext.h>
 
 #include <FileDialog.h>

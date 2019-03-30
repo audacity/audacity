@@ -43,8 +43,6 @@
 
 #include "prefs/SpectrogramSettings.h"
 
-#include <wx/listimpl.cpp>
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif

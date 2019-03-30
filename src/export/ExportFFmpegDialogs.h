@@ -17,7 +17,6 @@ LRN
 
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
-#include <wx/listimpl.cpp>
 #include "../xml/XMLFileReader.h"
 #include "../FileNames.h"
 #include "../widgets/wxPanelWrapper.h"
