@@ -107,6 +107,10 @@
 #include "../AllThemeResources.h"
 #include "../float_cast.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 #include "FileDialog.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED

@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../commands/Command.h"
 #include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
+#include "../../widgets/PopupMenuTable.h"
 
 
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )

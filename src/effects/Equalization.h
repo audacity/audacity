@@ -19,10 +19,6 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
-#endif
-
 #include "Effect.h"
 #include "../xml/XMLTagHandler.h"
 #include "../widgets/Grid.h"

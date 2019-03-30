@@ -150,7 +150,6 @@ extern "C" {
 
 /* rather earlier than normal, but pulls in config*.h and other program stuff
  * we need for the next bit */
-#include "widgets/LinkingHtmlWindow.h"
 #include "ShuttleGui.h"
 #include "Prefs.h"
 
