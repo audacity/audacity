@@ -54,11 +54,8 @@ void DoSelectTimeAndAudioTracks
          tracks->GetMinOffset(), tracks->GetEndTime());
 
    if( bAllTracks ) {
-      for (auto t : tracks->Any()){
-         auto wt = dynamic_cast<WaveTrack *>(t);
-         if( wt  )
-            t->SetSelected(true);
-      }
+      for (auto t : tracks->Any<WaveTrack>())
+         t->SetSelected(true);
 
       project.ModifyState(false);
       trackPanel->Refresh(false);
