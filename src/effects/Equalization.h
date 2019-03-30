@@ -26,7 +26,6 @@
 #include "Effect.h"
 #include "../xml/XMLTagHandler.h"
 #include "../widgets/Grid.h"
-#include "../widgets/Ruler.h"
 #include "../RealFFTf.h"
 #include "../SampleFormat.h"
 
@@ -58,6 +57,7 @@ class wxStaticText;
 class Envelope;
 class EnvelopeEditor;
 class EqualizationPanel;
+class RulerPanel;
 
 //
 // One point in a curve

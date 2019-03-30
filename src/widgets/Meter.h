@@ -22,7 +22,7 @@
 #include <wx/timer.h> // member variable
 
 #include "../SampleFormat.h"
-#include "Ruler.h"
+#include "Ruler.h" // member variable
 
 class AudacityProject;
 
