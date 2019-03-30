@@ -17,13 +17,14 @@
 #include <wx/timer.h> // member variable
 #include <wx/minifram.h> // to inherit
 
-#include "ImageRoll.h"
+#include "wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
 
 class AButton;
 
 class ExpandingToolBar;
+class ImageRollPanel;
 class ToolBarFrame;
 class ToolBarDialog;
 class ToolBarArea;
