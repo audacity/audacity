@@ -59,7 +59,7 @@ public:
 // Declare the KeyNode arrays
 
 // Types of view currently supported
-enum ViewByType
+enum ViewByType : int
 {
    ViewByTree,
    ViewByName,

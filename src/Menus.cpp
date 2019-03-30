@@ -48,6 +48,7 @@
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
+#include "widgets/FileHistory.h"
 
 #include <wx/menu.h>
 

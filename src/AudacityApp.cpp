@@ -100,6 +100,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
 #include "tracks/ui/Scrubbing.h"
+#include "widgets/FileHistory.h"
 
 //temporarily commented out till it is added to all projects
 //#include "Profiler.h"
