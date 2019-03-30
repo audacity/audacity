@@ -101,20 +101,6 @@ extern FileExtensions sf_get_all_extensions();
 
 wxString sf_normalize_name(const char *name);
 
-//
-// Mac OS 4-char type
-//
-
-#ifdef __WXMAC__
-# ifdef __UNIX__
-#  include <CoreServices/CoreServices.h>
-# else
-#  include <Types.h>
-# endif
-
-OSType sf_header_mactype(int format);
-#endif
-
 // This function wrapper uses a mutex to serialize calls to the SndFile library.
 #include "MemoryX.h"
 #include "ondemand/ODTaskThread.h"

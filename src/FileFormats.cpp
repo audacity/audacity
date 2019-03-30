@@ -260,6 +260,16 @@ wxString sf_normalize_name(const char *name)
 
 #define NUM_HEADERS 13
 
+//
+// Mac OS 4-char type
+//
+
+# ifdef __UNIX__
+#  include <CoreServices/CoreServices.h>
+# else
+#  include <Types.h>
+# endif
+
 OSType MacNames[NUM_HEADERS] = {
    'WAVE', // WAVE
    'AIFF', // AIFF
@@ -276,7 +286,7 @@ OSType MacNames[NUM_HEADERS] = {
    'MAT5', // ?? Matlab 5
 };
 
-OSType sf_header_mactype(int format)
+static OSType sf_header_mactype(int format)
 {
    if (format >= 0x10000)
       return MacNames[(format/0x10000)-1];
