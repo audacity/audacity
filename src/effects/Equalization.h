@@ -21,7 +21,6 @@
 
 #include "Effect.h"
 #include "../xml/XMLTagHandler.h"
-#include "../widgets/Grid.h"
 #include "../RealFFTf.h"
 #include "../SampleFormat.h"
 
