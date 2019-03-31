@@ -20,6 +20,7 @@
 #include "../effects/EffectManager.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include <wx/combobox.h>
 

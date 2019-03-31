@@ -52,6 +52,7 @@
 #include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 
 namespace {

@@ -26,6 +26,7 @@ text or binary format to a file.
 #include "Sequence.h"
 #include "ShuttleGui.h"
 
+#include <wx/evtloop.h>
 #include <wx/wxprec.h>
 #include <wx/filefn.h>
 #include <wx/listctrl.h>

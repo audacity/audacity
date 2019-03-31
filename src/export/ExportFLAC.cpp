@@ -42,6 +42,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class

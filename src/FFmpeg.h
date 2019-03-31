@@ -22,6 +22,8 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "Internat.h"
 
+#include "widgets/wxPanelWrapper.h" // to inherit
+
 #if defined(__WXMSW__)
 #include <wx/msw/registry.h> // for wxRegKey
 #endif

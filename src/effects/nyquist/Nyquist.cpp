@@ -74,6 +74,7 @@ effects from this one class.
 #include "../../wxFileNameWrapper.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
+#include "../../widgets/ProgressDialog.h"
 
 #include "../lib-src/FileDialog/FileDialog.h"
 

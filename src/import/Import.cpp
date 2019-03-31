@@ -37,9 +37,9 @@ and ImportLOF.cpp.
 
 #include "../Audacity.h" // for USE_* macros
 #include "Import.h"
+#include "ImportPlugin.h"
 
 #include <algorithm>
-#include "ImportPlugin.h"
 
 #include <wx/textctrl.h>
 #include <wx/string.h>
@@ -61,6 +61,8 @@ and ImportLOF.cpp.
 #include "ImportFFmpeg.h"
 #include "ImportGStreamer.h"
 #include "../Prefs.h"
+
+#include "../widgets/ProgressDialog.h"
 
 // ============================================================================
 //
@@ -747,6 +749,11 @@ void ImportStreamDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    EndModal( wxID_CANCEL );
 }
 
+ImportFileHandle::ImportFileHandle(const FilePath & filename)
+:  mFilename(filename)
+{
+}
+
 ImportFileHandle::~ImportFileHandle()
 {
 }
@@ -757,6 +764,6 @@ void ImportFileHandle::CreateProgress()
    wxString title;
 
    title.Printf(_("Importing %s"), GetFileDescription());
-   mProgress.create(title, ff.GetFullName());
+   mProgress = std::make_unique< ProgressDialog >( title, ff.GetFullName() );
 }
 

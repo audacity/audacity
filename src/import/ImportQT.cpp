@@ -18,6 +18,7 @@
 
 #include "ImportPlugin.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #define DESC _("QuickTime files")
 

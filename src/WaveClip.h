@@ -16,7 +16,6 @@
 
 #include "MemoryX.h"
 #include "SampleFormat.h"
-#include "widgets/ProgressDialog.h"
 #include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"
 
@@ -29,6 +28,7 @@
 class BlockArray;
 class DirManager;
 class Envelope;
+class ProgressDialog;
 class Sequence;
 class SpectrogramSettings;
 class WaveCache;

@@ -36,6 +36,7 @@ Licensed under the GNU General Public License v2 or later
 #endif
 
 #include "../MemoryX.h"
+#include "../widgets/ProgressDialog.h"
 
 
 #define DESC _("FFmpeg-compatible files")

@@ -34,6 +34,7 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ProgressDialog.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

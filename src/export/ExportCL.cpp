@@ -38,6 +38,7 @@
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include "../Track.h"
 

@@ -34,9 +34,10 @@ class wxWindow;
 #include "../SampleFormat.h"
 #include "../SelectedRegion.h"
 #include "../Internat.h"
-#include "../widgets/ProgressDialog.h"
 
 #include "../Track.h"
+
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
 class wxArrayString;
 class ShuttleGui;
@@ -46,6 +47,7 @@ class AudacityCommand;
 
 class AudacityProject;
 class LabelTrack;
+class ProgressDialog;
 class SelectedRegion;
 class EffectUIHost;
 class Track;

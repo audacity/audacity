@@ -75,6 +75,7 @@
 #include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
