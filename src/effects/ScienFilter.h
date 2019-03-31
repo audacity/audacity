@@ -173,12 +173,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#if wxUSE_ACCESSIBILITY
-
-// ScienceFilter and Equalisation effects both need SliderAx class.
-// For now it is declared and defined in Equalisation effect.
-// TODO: Move it to its own file.
-
-#endif // wxUSE_ACCESSIBILITY
-
 #endif

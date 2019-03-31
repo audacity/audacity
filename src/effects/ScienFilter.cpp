@@ -62,8 +62,7 @@ a graph for EffectScienFilter.
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/ErrorDialog.h"
-
-#include "Equalization.h" // For SliderAx
+#include "../widgets/Ruler.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
