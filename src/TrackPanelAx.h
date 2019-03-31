@@ -18,7 +18,7 @@
 #include <wx/string.h> // member variable
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h" // to inherit
 #endif
 
 

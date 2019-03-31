@@ -50,10 +50,6 @@ for shared and private configs - which need to move out.
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
 
-#if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
-#endif
-
 #include <unordered_map>
 
 // ============================================================================
