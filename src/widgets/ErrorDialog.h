@@ -16,7 +16,6 @@
 
 #include <wx/defs.h>
 #include <wx/msgdlg.h> // to inherit
-#include "LinkingHtmlWindow.h"
 #include "wxPanelWrapper.h"
 
 class AudacityProject;
@@ -41,28 +40,6 @@ private:
    void OnOk( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );
    DECLARE_EVENT_TABLE()
-};
-
-// Helper class to make browser "simulate" a modal dialog
-class HtmlTextHelpDialog final : public BrowserDialog
-{
-public:
-   HtmlTextHelpDialog(wxWindow *pParent, const wxString &title)
-      : BrowserDialog{ pParent, title }
-   {
-#if !wxCHECK_VERSION(3, 0, 0)
-      MakeModal( true );
-#endif
-   }
-   virtual ~HtmlTextHelpDialog()
-   {
-#if !wxCHECK_VERSION(3, 0, 0)
-      MakeModal( false );
-#endif
-      // On Windows, for some odd reason, the Audacity window will be sent to
-      // the back.  So, make sure that doesn't happen.
-      GetParent()->Raise();
-   }
 };
 
 /// Displays an error dialog with a button that offers help

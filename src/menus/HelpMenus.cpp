@@ -13,6 +13,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/LinkingHtmlWindow.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>
