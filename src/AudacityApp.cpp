@@ -64,6 +64,10 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/stat.h>
 #endif
 
+#if defined(__WXMSW__)
+#include <wx/msw/registry.h> // for wxRegKey
+#endif
+
 #include "AudacityException.h"
 #include "AudacityLogger.h"
 #include "AboutDialog.h"

@@ -22,6 +22,10 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "Internat.h"
 
+#if defined(__WXMSW__)
+#include <wx/msw/registry.h> // for wxRegKey
+#endif
+
 class wxCheckBox;
 
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav

@@ -24,6 +24,10 @@
 #include <wx/process.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
+#if defined(__WXMSW__)
+#include <wx/msw/registry.h> // for wxRegKey
+#endif
+
 #include "../FileNames.h"
 #include "Export.h"
 
