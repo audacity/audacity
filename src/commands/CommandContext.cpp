@@ -66,6 +66,8 @@ CommandContext::CommandContext(
 {
 }
 
+CommandContext::~CommandContext() = default;
+
 void CommandContext::Status( const wxString & message, bool bFlush ) const
 {
    if( pOutput )

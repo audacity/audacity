@@ -34,6 +34,8 @@ public:
       AudacityProject &p,
       std::unique_ptr<CommandOutputTargets> target);
 
+   ~CommandContext();
+
    virtual void Status( const wxString &message, bool bFlush = false ) const;
    virtual void Error(  const wxString &message ) const;
    virtual void Progress( double d ) const;

@@ -21,7 +21,6 @@
 
 #include "CommandMisc.h"
 #include "CommandSignature.h"
-#include "CommandTargets.h"
 #include "../commands/AudacityCommand.h"
 
 class AudacityApp;
