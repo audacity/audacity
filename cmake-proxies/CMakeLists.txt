@@ -16,11 +16,11 @@ set( LIB_SRC_DIRECTORY ${top_dir}/lib-src/ )
 # libexpat
 set( BUILD_shared OFF CACHE INTERNAL "" FORCE )
 add_subdirectory( "${LIB_SRC_DIRECTORY}expat" "${CMAKE_CURRENT_BINARY_DIR}/expat" EXCLUDE_FROM_ALL )
+set_target_properties(expat PROPERTIES OSX_ARCHITECTURES "")
 
 add_subdirectory( "FileDialog" )
 #add_subdirectory( "help" )
 add_subdirectory( "libflac" )
-add_subdirectory( "libflac++" )
 add_subdirectory( "libid3tag" )
 add_subdirectory( "libmad" )
 add_subdirectory( "libnyquist" )
@@ -35,9 +35,12 @@ add_subdirectory( "lv2" )
 add_subdirectory( "mod-script-pipe" )
 add_subdirectory( "${LIB_SRC_DIRECTORY}portaudio-v19" "${CMAKE_CURRENT_BINARY_DIR}/portaudio-v19" EXCLUDE_FROM_ALL )
 
+cmake_policy(PUSH)
+cmake_policy(VERSION 2.8.11)
 set(CMAKE_CACHEFILE_DIR ${CMAKE_BINARY_DIR})
 add_subdirectory( "${LIB_SRC_DIRECTORY}portmidi" "${CMAKE_CURRENT_BINARY_DIR}/portmidi" EXCLUDE_FROM_ALL )
 set_target_properties(portmidi-static PROPERTIES OSX_ARCHITECTURES "")
+cmake_policy(POP)
 
 add_subdirectory( "portmixer" )
 #add_subdirectory( "portburn" ) # not built
