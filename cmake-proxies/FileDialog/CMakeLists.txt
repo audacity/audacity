@@ -5,7 +5,9 @@ project(${TARGET})
 
 add_library(${TARGET} STATIC ${LIB_SRC_DIRECTORY}FileDialog/FileDialog.cpp)
 target_include_directories(${TARGET} PRIVATE ${TARGET_SOURCE})
-set_target_properties(${TARGET} PROPERTIES CXX_STANDARD 11)
+set_target_properties(${TARGET} PROPERTIES
+    CXX_STANDARD 11
+    OSX_ARCHITECTURES "")
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 include(${wxWidgets_USE_FILE})
@@ -15,7 +17,7 @@ target_link_libraries(${TARGET} PRIVATE ${wxWidgets_LIBRARIES})
 
 if(WIN32)
     target_sources(${TARGET} PRIVATE ${LIB_SRC_DIRECTORY}FileDialog/win/FileDialogPrivate.cpp)
-    target_compile_definitions(${TARGET} PRIVATE /D__WIN32__)
+    target_compile_definitions(${TARGET} PRIVATE __WIN32__)
     target_include_directories(${TARGET} PRIVATE ${TARGET_SOURCE}/win)
 elseif(APPLE)
     target_sources(${TARGET} PRIVATE ${LIB_SRC_DIRECTORY}FileDialog/mac/FileDialogPrivate.mm)

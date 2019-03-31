@@ -18,7 +18,6 @@ include_directories(${top_dir}/lib-src/FileDialog/win)
 include_directories(${top_dir}/lib-src/ffmpeg)
 include_directories(${top_dir}/lib-src/ffmpeg/win32)
 include_directories(${top_dir}/lib-src/lib-widget-extra)
-include_directories(${top_dir}/lib-src/libflac/include)
 include_directories(${top_dir}/lib-src/libid3tag) #for id3tag.h
 include_directories(${top_dir}/lib-src/libmad/msvc++)
 include_directories(${top_dir}/lib-src/libmad)
@@ -58,7 +57,6 @@ include_directories(${top_dir}/lib-src/lame)
 add_definitions( -D_CRT_SECURE_NO_WARNINGS )
 
 add_definitions( -DBUILDING_AUDACITY )
-add_definitions( -DFLAC__NO_DLL )
 add_definitions( -DXML_STATIC )
 add_definitions( -D__STDC_CONSTANT_MACROS )
 add_definitions( -DWXINTL_NO_GETTEXT_MACRO )
@@ -496,6 +494,7 @@ target_link_libraries(Audacity
 ${wxWidgets_LIBRARIES}
 expat
 FileDialog
+FLACXX-static
 libsndfile
 libsoxr
 portaudio_static
