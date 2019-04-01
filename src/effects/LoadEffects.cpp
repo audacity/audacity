@@ -124,8 +124,9 @@
    EFFECT( EQUALIZATION,      EffectEqualization, (kEqLegacy) )        \
    EFFECT( FADEIN,            EffectFade, (true) )                     \
    EFFECT( FADEOUT,           EffectFade, (false) )                    \
-   EFFECT( FILTERCURVE,       EffectEqualization, (kEqOptionCurve) )   \
-   EFFECT( GRAPHICEQ,         EffectEqualization, (kEqOptionGraphic) ) \
+   /* These two effects, not yet */ \
+   /*EFFECT( FILTERCURVE,       EffectEqualization, (kEqOptionCurve) )*/   \
+   /*EFFECT( GRAPHICEQ,         EffectEqualization, (kEqOptionGraphic) )*/ \
    EFFECT( INVERT,            EffectInvert, () )                       \
    EFFECT( NORMALIZE,         EffectNormalize, () )                    \
    EFFECT( PHASER,            EffectPhaser, () )                       \
