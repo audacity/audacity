@@ -130,7 +130,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartTwoColumn();
       {
-         S.TieNumericTextBox(_("Mi&nimum Free Memory (MB):"),
+         S.TieIntegerTextBox(_("Mi&nimum Free Memory (MB):"),
                              wxT("/Directories/CacheLowMem"),
                              16,
                              9);

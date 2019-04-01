@@ -217,13 +217,13 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartThreeColumn();
          {
-            S.TieNumericTextBox(_("Analysis Time:"),
+            S.TieIntegerTextBox(_("Analysis Time:"),
                                 wxT("/AudioIO/AnalysisTime"),
                                 AILA_DEF_ANALYSIS_TIME,
                                 9);
             S.AddUnits(_("milliseconds (time of one analysis)"));
 
-            S.TieNumericTextBox(_("Number of consecutive analysis:"),
+            S.TieIntegerTextBox(_("Number of consecutive analysis:"),
                                 wxT("/AudioIO/NumberAnalysis"),
                                 AILA_DEF_NUMBER_ANALYSIS,
                                 2);

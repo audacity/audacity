@@ -219,6 +219,11 @@ public:
       const wxString &SettingName,
       const wxString &Default,
       const int nChars) override;
+   wxTextCtrl * TieIntegerTextBox(
+      const wxString & Prompt,
+      const wxString & SettingName,
+      const int & Default,
+      const int nChars) override;
    wxTextCtrl * TieNumericTextBox(
       const wxString & Prompt,
       const wxString & SettingName,
@@ -307,6 +312,20 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    AddItem( Default, "default"  );
    EndStruct();
    return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
+}
+wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
+   const wxString & Prompt,
+   const wxString & SettingName,
+   const int & Default,
+   const int nChars) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" );
+   AddItem( Default, "default"  );
+   EndStruct();
+   return ShuttleGui::TieIntegerTextBox( Prompt, SettingName, Default, nChars );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const wxString & Prompt,

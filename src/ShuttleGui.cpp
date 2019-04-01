@@ -1844,6 +1844,25 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
 /// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 /// This one does it for double values...
+wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
+   const wxString & Prompt,
+   const wxString & SettingName,
+   const int & Default,
+   const int nChars)
+{
+   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+
+   auto Temp = Default;
+   WrappedType WrappedRef( Temp );
+   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
+   if( DoStep(2) ) pText = DoTieNumericTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   return pText;
+}
+
+/// Variant of the standard TieTextBox which does the two step exchange
+/// between gui and stack variable and stack variable and shuttle.
+/// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    const wxString & Prompt,
    const wxString & SettingName,
@@ -1852,7 +1871,7 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
 
-   double Temp = Default;
+   auto Temp = Default;
    WrappedType WrappedRef( Temp );
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
    if( DoStep(2) ) pText = DoTieNumericTextBox( Prompt, WrappedRef, nChars );

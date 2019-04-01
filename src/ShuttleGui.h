@@ -243,6 +243,11 @@ public:
       const wxString &SettingName,
       const wxString &Default,
       const int nChars);
+   virtual wxTextCtrl * TieIntegerTextBox(
+      const wxString & Prompt,
+      const wxString & SettingName,
+      const int & Default,
+      const int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
       const wxString & Prompt,
       const wxString & SettingName,
