@@ -59,9 +59,6 @@ public:
    void WriteToAsDouble( const double InDouble);
    void WriteToAsBool( const bool InBool);
 
-   bool ValuesMatch( const WrappedType & W );
-   void WriteToAsWrappedType( const WrappedType & W );
-
 public :
 
    const teWrappedType eWrappedType;

@@ -1463,7 +1463,13 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
          mpWind = pRadioButton = safenew wxRadioButton(GetParent(), miId, Prompt,
             wxDefaultPosition, wxDefaultSize,
             (mRadioCount==1)?wxRB_GROUP:0);
-         pRadioButton->SetValue(WrappedRef.ValuesMatch( *mRadioValue ));
+
+         wxASSERT( WrappedRef.IsString() );
+         wxASSERT( mRadioValue->IsString() );
+         const bool value =
+            (WrappedRef.ReadAsString() == mRadioValue->ReadAsString() );
+         pRadioButton->SetValue( value );
+
          pRadioButton->SetName(wxStripMenuCodes(Prompt));
          UpdateSizers();
       }
@@ -1476,9 +1482,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
          pRadioButton = wxDynamicCast(pWnd, wxRadioButton);
          wxASSERT( pRadioButton );
          if( pRadioButton->GetValue() )
-         {
-            mRadioValue->WriteToAsWrappedType( WrappedRef );
-         }
+            mRadioValue->WriteToAsString( WrappedRef.ReadAsString() );
       }
       break;
    default:
