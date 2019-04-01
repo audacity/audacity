@@ -765,16 +765,16 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          // ROWS 4:
          // -------------------------------------------------------------------
-
          S.AddSpace(5, 5);
 
-         S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         if( mOptions == kEqLegacy )
          {
-            S.AddPrompt(_("&EQ Type:"));
-         }
-         S.EndHorizontalLay();
+            S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+            {
+               S.AddPrompt(_("&EQ Type:"));
+            }
+            S.EndHorizontalLay();
 
-         if( mOptions == kEqLegacy ){
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
@@ -854,34 +854,33 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          // ROW 5:
          // -------------------------------------------------------------------
-
-         S.AddSpace(5, 5);
-
-         S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         {
-            S.AddPrompt(_("&Select Curve:"));
-         }
-         S.EndHorizontalLay();
-
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
-         {
-            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+         if( mOptions == kEqLegacy ){
+            S.AddSpace(5, 5);
+            S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
             {
-               wxArrayStringEx curves;
-               for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
-               {
-                  curves.push_back(mCurves[ i ].Name);
-               }
-
-               mCurve = S.Id(ID_Curve).AddChoice( {}, curves );
-               mCurve->SetName(_("Select Curve"));
+               S.AddPrompt(_("&Select Curve:"));
             }
             S.EndHorizontalLay();
-         }
-         S.EndHorizontalLay();
 
-         if( mOptions == kEqLegacy )
+            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+            {
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+               {
+                  wxArrayStringEx curves;
+                  for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
+                  {
+                     curves.push_back(mCurves[ i ].Name);
+                  }
+
+                  mCurve = S.Id(ID_Curve).AddChoice( {}, curves );
+                  mCurve->SetName(_("Select Curve"));
+               }
+               S.EndHorizontalLay();
+            }
+            S.EndHorizontalLay();
+
             S.Id(ID_Manage).AddButton(_("S&ave/Manage Curves..."));
+         }
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
@@ -2156,22 +2155,27 @@ void EffectEqualization::LayoutEQSliders()
 
 void EffectEqualization::UpdateCurves()
 {
+
    // Reload the curve names
-   mCurve->Clear();
+   if( mCurve ) 
+      mCurve->Clear();
    bool selectedCurveExists = false;
    for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
       if (mCurveName == mCurves[ i ].Name)
          selectedCurveExists = true;
-      mCurve->Append(mCurves[ i ].Name);
+      if( mCurve ) 
+         mCurve->Append(mCurves[ i ].Name);
    }
    // In rare circumstances, mCurveName may not exist (bug 1891)
    if (!selectedCurveExists)
       mCurveName = mCurves[ (int)mCurves.size() - 1 ].Name;
-   mCurve->SetStringSelection(mCurveName);
-
+   if( mCurve ) 
+      mCurve->SetStringSelection(mCurveName);
+   
    // Allow the control to resize
-   mCurve->SetSizeHints(-1, -1);
+   if( mCurve ) 
+      mCurve->SetSizeHints(-1, -1);
 
    // Set initial curve
    setCurve( mCurveName );
