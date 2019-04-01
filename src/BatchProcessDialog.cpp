@@ -544,7 +544,6 @@ BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
 END_EVENT_TABLE()
 
 enum {
-   BlankColumn,
    ItemNumberColumn,
    ActionColumn,
    ParamsColumn,
@@ -647,13 +646,14 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                         wxLC_SINGLE_SEL);
             mList = S.Id(CommandsListID).AddListControlReportMode();
 
-            //An empty first column is a workaround - under Win98 the first column
+            //A dummy first column, which is then deleted, is a workaround - under Windows the first column
             //can't be right aligned.
-            mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
+            mList->InsertColumn(0, wxT(""), wxLIST_FORMAT_LEFT);
             /* i18n-hint: This is the number of the command in the list */
-            mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
-            mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
-            mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
+            mList->InsertColumn(ItemNumberColumn + 1, _("Num"), wxLIST_FORMAT_RIGHT);
+            mList->InsertColumn(ActionColumn + 1, _("Command  "), wxLIST_FORMAT_RIGHT);
+            mList->InsertColumn(ParamsColumn + 1, _("Parameters"), wxLIST_FORMAT_LEFT);
+            mList->DeleteColumn(0);
 
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
@@ -746,8 +746,7 @@ void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
 
    int i = mList->GetItemCount();
 
-   mList->InsertItem(i, wxT(""));
-   mList->SetItem(i, ItemNumberColumn, wxString::Format(wxT(" %02i"), i + 1));
+   mList->InsertItem(i, wxString::Format(wxT(" %02i"), i + 1));
    mList->SetItem(i, ActionColumn, friendlyName );
    mList->SetItem(i, ParamsColumn, Params );
 }
@@ -874,13 +873,12 @@ void MacrosWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 
 void MacrosWindow::FitColumns()
 {
-   mList->SetColumnWidth(0, 0);  // First column width is zero, to hide it.
 
 #if defined(__WXMAC__)
    // wxMac uses a hard coded width of 150 when wxLIST_AUTOSIZE_USEHEADER
    // is specified, so we calculate the width ourselves. This method may
    // work equally well on other platforms.
-   for (size_t c = 1; c < mList->GetColumnCount(); c++) {
+   for (size_t c = 0; c < mList->GetColumnCount(); c++) {
       wxListItem info;
       int width;
 
@@ -902,17 +900,17 @@ void MacrosWindow::FitColumns()
    // user attempts to resize the columns.
    mList->SetClientSize(mList->GetClientSize());
 #else
+   mList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
    mList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
-   mList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
-   mList->SetColumnWidth(3, wxLIST_AUTOSIZE);
+   mList->SetColumnWidth(2, wxLIST_AUTOSIZE);
 #endif
 
-   int bestfit = mList->GetColumnWidth(3);
+   int bestfit = mList->GetColumnWidth(2);
    int clientsize = mList->GetClientSize().GetWidth();
+   int col0 = mList->GetColumnWidth(0);
    int col1 = mList->GetColumnWidth(1);
-   int col2 = mList->GetColumnWidth(2);
-   bestfit = (bestfit > clientsize-col1-col2)? bestfit : clientsize-col1-col2;
-   mList->SetColumnWidth(3, bestfit);
+   bestfit = (bestfit > clientsize-col0-col1)? bestfit : clientsize-col0-col1;
+   mList->SetColumnWidth(2, bestfit);
 
 }
 
