@@ -380,12 +380,12 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Bit Rate Mode:"));
                S.StartHorizontalLay();
                {
-                  S.StartRadioButtonGroup(wxT("/FileFormats/MP3RateModeChoice"), wxT("SET"));
+                  S.StartRadioButtonGroup(MP3RateModeSetting);
                   {
-                     mSET = S.Id(ID_SET).TieRadioButton(_("Preset"), wxT("SET"));
-                     mVBR = S.Id(ID_VBR).TieRadioButton(_("Variable"), wxT("VBR"));
-                     mABR = S.Id(ID_ABR).TieRadioButton(_("Average"), wxT("ABR"));
-                     mCBR = S.Id(ID_CBR).TieRadioButton(_("Constant"), wxT("CBR"));
+                     mSET = S.Id(ID_SET).TieRadioButton();
+                     mVBR = S.Id(ID_VBR).TieRadioButton();
+                     mABR = S.Id(ID_ABR).TieRadioButton();
+                     mCBR = S.Id(ID_CBR).TieRadioButton();
                   }
                   S.EndRadioButtonGroup();
                }
@@ -441,10 +441,10 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   bool mono = false;
                   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
 
-                  S.StartRadioButtonGroup(wxT("/FileFormats/MP3ChannelModeChoice"), wxT("JOINT"));
+                  S.StartRadioButtonGroup(MP3ChannelModeSetting);
                   {
-                     mJoint = S.TieRadioButton(_("Joint Stereo"), wxT("JOINT"));
-                     mStereo = S.TieRadioButton(_("Stereo"), wxT("STEREO"));
+                     mJoint = S.TieRadioButton();
+                     mStereo = S.TieRadioButton();
                      mJoint->Enable(!mono);
                      mStereo->Enable(!mono);
                   }

@@ -175,7 +175,7 @@ public:
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
-   void StartRadioButtonGroup( const wxString & SettingName, const wxString &DefaultValue );
+   void StartRadioButtonGroup( const ChoiceSetting &Setting );
    void EndRadioButtonGroup();
 
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
@@ -213,7 +213,9 @@ public:
    wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
    wxSlider * TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
 
-   wxRadioButton * TieRadioButton( const wxString &Prompt, const wxString &Value);
+   // Must be called between a StartRadioButtonGroup / EndRadioButtonGroup pair,
+   // and as many times as there are values in the enumeration.
+   wxRadioButton * TieRadioButton();
 
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, int &Value, const int max, const int min = 0 );
@@ -363,6 +365,7 @@ protected:
    wxMenu * mpMenu;
 
 private:
+   const ChoiceSetting *mpRadioSetting = nullptr;
    wxString mRadioSettingName; /// The setting controlled by a group.
    Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    int mRadioCount;       /// The index of this radio item.  -1 for none.

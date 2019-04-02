@@ -353,16 +353,21 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(_("Name files:"), 1);
       {
          S.SetBorder(2);
-         S.StartRadioButtonGroup(wxT("/Export/TrackNameWithOrWithoutNumbers"), wxT("labelTrack"));
+         S.StartRadioButtonGroup({
+            wxT("/Export/TrackNameWithOrWithoutNumbers"),
+            {
+               { wxT("labelTrack"), XO("Using Label/Track Name") },
+               { wxT("numberBefore"), XO("Numbering before Label/Track Name") },
+               { wxT("numberAfter"), XO("Numbering after File name prefix") },
+            },
+            0 // labelTrack
+         });
          {
-            mByName = S.Id(ByNameID)
-               .TieRadioButton(_("Using Label/Track Name"), wxT("labelTrack"));
+            mByName = S.Id(ByNameID).TieRadioButton();
 
-            mByNumberAndName = S.Id(ByNameAndNumberID)
-               .TieRadioButton(_("Numbering before Label/Track Name"), wxT("numberBefore"));
+            mByNumberAndName = S.Id(ByNameAndNumberID).TieRadioButton();
 
-            mByNumber = S.Id(ByNumberID)
-               .TieRadioButton(_("Numbering after File name prefix"), wxT("numberAfter"));
+            mByNumber = S.Id(ByNumberID).TieRadioButton();
          }
          S.EndRadioButtonGroup();
 

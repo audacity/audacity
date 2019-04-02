@@ -23,6 +23,7 @@ information.
 #include "sndfile.h"
 #include "Internat.h"
 #include "widgets/AudacityMessageBox.h"
+#include "Prefs.h"
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
@@ -334,3 +335,28 @@ int SFFileCloser::operator() (SNDFILE *sf) const
    }
    return err;
 }
+
+ChoiceSetting FileFormatsCopyOrEditSetting{
+   wxT("/FileFormats/CopyOrEditUncompressedData"),
+   {
+      EnumValueSymbol{
+         wxT("copy"),
+         XO("&Copy uncompressed files into the project (safer)")
+      },
+      EnumValueSymbol{
+         wxT("edit"),
+         XO("&Read uncompressed files from original location (faster)")
+      },
+   },
+   0 // copy
+};
+
+ChoiceSetting FileFormatsSaveWithDependenciesSetting{
+   wxT("/FileFormats/SaveProjectWithDependencies"),
+   {
+      { wxT("copy"), XO("&Copy all audio into project (safest)") },
+      { wxT("never"), XO("Do &not copy any audio") },
+      { wxT("ask"), XO("As&k") },
+   },
+   2 // ask
+};

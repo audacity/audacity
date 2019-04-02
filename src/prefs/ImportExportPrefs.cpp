@@ -20,6 +20,7 @@
 
 #include <wx/defs.h>
 
+#include "../FileFormats.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -98,12 +99,10 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef EXPERIMENTAL_OD_DATA
    S.StartStatic(_("When importing audio files"));
    {
-      S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+      S.StartRadioButtonGroup(FileFormatsCopyOrEditSetting);
       {
-         S.TieRadioButton(_("&Copy uncompressed files into the project (safer)"),
-                          wxT("copy"));
-         S.TieRadioButton(_("&Read uncompressed files from original location (faster)"),
-                          wxT("edit"));
+         S.TieRadioButton();
+         S.TieRadioButton();
       }
       S.EndRadioButtonGroup();
    }
@@ -111,12 +110,10 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    S.StartStatic(_("When exporting tracks to an audio file"));
    {
-      S.StartRadioButtonGroup(wxT("/FileFormats/ExportDownMixChoice"), wxT("MixDown"));
+      S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);
       {
-         S.TieRadioButton(_("&Mix down to Stereo or Mono"),
-                          wxT("MixDown"));
-         S.TieRadioButton(_("&Use Advanced Mixing Options"),
-                          wxT("Custom"));
+         S.TieRadioButton();
+         S.TieRadioButton();
       }
       S.EndRadioButtonGroup();
 
@@ -132,12 +129,10 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef USE_MIDI
    S.StartStatic(_("Exported Allegro (.gro) files save time as:"));
    {
-      S.StartRadioButtonGroup(wxT("/FileFormats/AllegroStyleChoice"), wxT("Seconds"));
+      S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
       {
-         S.TieRadioButton(_("&Seconds"),
-                          wxT("Seconds"));
-         S.TieRadioButton(_("&Beats"),
-                          wxT("Beats"));
+         S.TieRadioButton();
+         S.TieRadioButton();
       }
       S.EndRadioButtonGroup();
    }

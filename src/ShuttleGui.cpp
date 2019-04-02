@@ -1449,17 +1449,26 @@ wxChoice * ShuttleGuiBase::TieChoice(
 }
 
 /// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton(
-   const wxString &Prompt,
-   const wxString &Value)
+wxRadioButton * ShuttleGuiBase::TieRadioButton()
 {
+   wxASSERT( mRadioCount >= 0); // Did you remember to use StartRadioButtonGroup() ?
+
+   EnumValueSymbol symbol;
+   if (mpRadioSetting && mRadioCount >= 0) {
+      const auto &symbols = mpRadioSetting->GetSymbols();
+      if ( mRadioCount < symbols.size() )
+         symbol = symbols[ mRadioCount ];
+   }
+
    // In what follows, WrappedRef is used in read only mode, but we
    // don't have a 'read-only' version, so we copy to deal with the constness.
-   wxString Temp = Value;
+   auto Temp = symbol.Internal();
+   wxASSERT( !Temp.empty() ); // More buttons than values?
+
    WrappedType WrappedRef( Temp );
 
-   wxASSERT( mRadioCount >= 0); // Did you remember to use StartRadioButtonGroup() ?
    mRadioCount++;
+
    UseUpId();
    wxRadioButton * pRadioButton = NULL;
 
@@ -1467,6 +1476,8 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(
    {
    case eIsCreating:
       {
+         const auto &Prompt = symbol.Translation();
+
          mpWind = pRadioButton = safenew wxRadioButton(GetParent(), miId, Prompt,
             wxDefaultPosition, wxDefaultSize,
             (mRadioCount==1)?wxRB_GROUP:0);
@@ -1500,28 +1511,34 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(
 }
 
 /// Call this before any TieRadioButton calls.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const wxString & DefaultValue )
+void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
 {
+   mpRadioSetting = &Setting;
+
    // Configure the generic type mechanism to use OUR string.
-   mRadioValueString = DefaultValue;
+   mRadioValueString = Setting.Default().Internal();
    mRadioValue.create( mRadioValueString );
 
    // Now actually start the radio button group.
-   mRadioSettingName = SettingName;
+   mRadioSettingName = Setting.Key();
    mRadioCount = 0;
    if( mShuttleMode == eIsCreating )
-      DoDataShuttle( SettingName, *mRadioValue );
+      DoDataShuttle( Setting.Key(), *mRadioValue );
 }
 
 /// Call this after any TieRadioButton calls.
 /// It's generic too.  We don't need type-specific ones.
 void ShuttleGuiBase::EndRadioButtonGroup()
 {
+   // too few buttons?
+   wxASSERT( mRadioCount == mpRadioSetting->GetSymbols().size() );
+
    if( mShuttleMode == eIsGettingFromDialog )
       DoDataShuttle( mRadioSettingName, *mRadioValue );
    mRadioValue.reset();// Clear it out...
    mRadioSettingName = wxT("");
    mRadioCount = -1; // So we detect a problem.
+   mpRadioSetting = nullptr;
 }
 
 //-----------------------------------------------------------------------//
