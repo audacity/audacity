@@ -1811,10 +1811,8 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       if (mCommandNameHash[name]) {
-         if (GetDefaultKeyFromName(name) != key) {
-            mCommandNameHash[name]->key = key;
-            mXMLKeysRead++;
-         }
+         mCommandNameHash[name]->key = key;
+         mXMLKeysRead++;
       }
    }
 
