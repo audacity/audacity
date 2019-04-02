@@ -360,7 +360,7 @@ void MixerTrackCluster::UpdatePrefs()
 {
    this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
    mStaticText_TrackName->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
-   HandleResize(); // in case prefs "/GUI/Solo" changed
+   HandleResize(); // in case TracksBehaviorsSolo changed
 }
 #endif
 

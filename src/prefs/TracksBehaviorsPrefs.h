@@ -16,6 +16,7 @@
 
 #include "PrefsPanel.h"
 
+class ChoiceSetting;
 class ShuttleGui;
 class wxArrayStringEx;
 
@@ -42,4 +43,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
 
 /// A PrefsPanel::Factory that creates one TracksBehaviorsPrefs panel.
 extern PrefsPanel::Factory TracksBehaviorsPrefsFactory;
+
+extern ChoiceSetting TracksBehaviorsSolo;
+
 #endif

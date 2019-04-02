@@ -17,6 +17,7 @@
 
 #include "PrefsPanel.h"
 
+class ChoiceSetting;
 class ShuttleGui;
 class wxArrayStringEx;
 
@@ -68,5 +69,10 @@ class GUIPrefs final : public PrefsPanel
 extern PrefsPanel::Factory GUIPrefsFactory;
 
 int ShowClippingPrefsID();
+
+extern ChoiceSetting
+     GUIManualLocation
+   , GUITheme
+;
 
 #endif

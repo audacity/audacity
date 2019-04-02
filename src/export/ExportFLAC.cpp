@@ -264,11 +264,10 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
    auto updateResult = ProgressResult::Success;
 
-   int levelPref;
-   gPrefs->Read(wxT("/FileFormats/FLACLevel"), &levelPref, 5);
+   long levelPref;
+   FLACLevel.Read().ToLong( &levelPref );
 
-   wxString bitDepthPref =
-      gPrefs->Read(wxT("/FileFormats/FLACBitDepth"), wxT("16"));
+   auto bitDepthPref = FLACBitDepth.Read();
 
    FLAC::Encoder::File encoder;
 

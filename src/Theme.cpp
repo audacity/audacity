@@ -77,6 +77,7 @@ can't be.
 #include "Prefs.h"
 #include "ImageManipulation.h"
 #include "Internat.h"
+#include "prefs/GUIPrefs.h"
 #include "widgets/AudacityMessageBox.h"
 
 // JKC: First get the MAC specific images.
@@ -234,11 +235,7 @@ void Theme::EnsureInitialised()
 bool ThemeBase::LoadPreferredTheme()
 {
 // DA: Default themes differ.
-#ifdef EXPERIMENTAL_DA
-   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
-#else
-   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("light"));
-#endif
+   auto theme = GUITheme.Read();
 
    theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
    return true;

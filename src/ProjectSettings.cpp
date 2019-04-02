@@ -16,6 +16,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "prefs/QualityPrefs.h"
 #include "widgets/NumericTextCtrl.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
@@ -91,7 +92,7 @@ void ProjectSettings::UpdatePrefs()
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
+   mSoloPref = TracksBehaviorsSolo.Read();
    // Update the old default to the NEW default.
    if (mSoloPref == wxT("Standard"))
       mSoloPref = wxT("Simple");

@@ -52,6 +52,7 @@ AliasedFile s.
 
 #include "blockfile/SimpleBlockFile.h"
 #include "DirManager.h"
+#include "FileFormats.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectSettings.h"
@@ -589,8 +590,7 @@ void DependencyDialog::SaveFutureActionChoice()
       case 2: savePref = wxT("never"); break;
       default: savePref = wxT("ask");
       }
-      gPrefs->Write(wxT("/FileFormats/SaveProjectWithDependencies"),
-                    savePref);
+      FileFormatsSaveWithDependenciesSetting.Write( savePref );
       gPrefs->Flush();
    }
 }
@@ -632,9 +632,7 @@ New projects will be self-contained and are less risky.");
    {
 #ifdef EXPERIMENTAL_OD_DATA
       wxString action =
-         gPrefs->Read(
-            wxT("/FileFormats/SaveProjectWithDependencies"),
-            wxT("ask"));
+         FileFormatsSaveWithDependenciesSetting.Read();
       if (action == wxT("copy"))
       {
          // User always wants to remove dependencies

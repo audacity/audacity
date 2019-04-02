@@ -22,6 +22,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "AutoRecovery.h"
 #include "Dependencies.h"
 #include "DirManager.h"
+#include "FileFormats.h"
 #include "FileNames.h"
 #include "Legacy.h"
 #include "PlatformCompatibility.h"
@@ -122,13 +123,12 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
 #ifdef EXPERIMENTAL_OD_DATA
    // 'Lossless copy' projects have dependencies. We need to always copy-in
    // these dependencies when converting to a normal project.
-   wxString oldAction =
-      gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   auto oldAction = FileFormatsCopyOrEditSetting.Read();
    bool oldAsk =
       gPrefs->ReadBool(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
 
    if (oldAction != wxT("copy"))
-      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+      FileFormatsCopyOrEditSetting.Write( wxT("copy") );
    if (oldAsk)
       gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
    gPrefs->Flush();
@@ -136,7 +136,7 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
    auto cleanup = finally( [&] {
       // and restore old settings if necessary.
       if (oldAction != wxT("copy"))
-         gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), oldAction);
+         FileFormatsCopyOrEditSetting.Write( oldAction );
       if (oldAsk)
          gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
       gPrefs->Flush();

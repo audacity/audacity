@@ -46,6 +46,7 @@
 #include "../HelpText.h"
 #include "../Prefs.h"
 #include "../wxFileNameWrapper.h"
+#include "../prefs/GUIPrefs.h"
 
 #ifdef USE_ALPHA_MANUAL
 const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");
@@ -248,8 +249,8 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       // these next lines are for legacy cfg files (pre 2.0) where we had different modes
       if( (HelpMode == wxT("Standard")) || (HelpMode == wxT("InBrowser")) )
       {
-         HelpMode = wxT("Local");
-         gPrefs->Write(wxT("/GUI/Help"), HelpMode);
+         HelpMode = GUIManualLocation.Default().Internal();
+         GUIManualLocation.Write(HelpMode);
          gPrefs->Flush();
       }
    }

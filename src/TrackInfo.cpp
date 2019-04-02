@@ -40,8 +40,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "tracks/ui/TrackView.h"
-
 
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
@@ -52,7 +52,7 @@ struct Settings : PrefsListener {
 
    void UpdatePrefs() override
    {
-      gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
+      gSoloPref = TracksBehaviorsSolo.Read();
 
       // Calculation of best font size depends on language, so it should be redone in case
       // the language preference changed.
