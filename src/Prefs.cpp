@@ -240,6 +240,42 @@ void FinishPreferences()
 }
 
 //////////
+EnumValueSymbols::EnumValueSymbols(
+   ByColumns_t,
+   const wxArrayStringEx &msgids,
+   wxArrayStringEx internals
+)
+   : mInternals( std::move( internals ) )
+{
+   auto size = mInternals.size(), size2 = msgids.size();
+   if ( size != size2 ) {
+      wxASSERT( false );
+      size = std::min( size, size2 );
+   }
+   reserve( size );
+   auto iter1 = mInternals.begin();
+   auto iter2 = msgids.begin();
+   while( size-- )
+      emplace_back( *iter1++, *iter2++ );
+}
+
+const wxArrayStringEx &EnumValueSymbols::GetTranslations() const
+{
+   if ( mTranslations.empty() )
+      mTranslations = transform_container<wxArrayStringEx>( *this,
+         std::mem_fn( &EnumValueSymbol::Translation ) );
+   return mTranslations;
+}
+
+const wxArrayStringEx &EnumValueSymbols::GetInternals() const
+{
+   if ( mInternals.empty() )
+      mInternals = transform_container<wxArrayStringEx>( *this,
+         std::mem_fn( &EnumValueSymbol::Internal ) );
+   return mInternals;
+}
+
+//////////
 wxString ChoiceSetting::Read() const
 {
    const auto &defaultValue = Default().Internal();
@@ -260,9 +296,9 @@ wxString ChoiceSetting::Read() const
 
 size_t ChoiceSetting::Find( const wxString &value ) const
 {
-   auto start = begin();
+   auto start = GetSymbols().begin();
    return size_t(
-      std::find( start, end(), EnumValueSymbol{ value, {} } )
+      std::find( start, GetSymbols().end(), EnumValueSymbol{ value, {} } )
          - start );
 }
 
@@ -346,3 +382,5 @@ wxString WarningDialogKey(const wxString &internalDialogName)
 {
    return wxT("/Warnings/") + internalDialogName;
 }
+
+ByColumns_t ByColumns{};

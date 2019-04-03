@@ -32,6 +32,7 @@
 #include "Audacity.h"
 
 #include "../include/audacity/ComponentInterface.h"
+#include "MemoryX.h" // for wxArrayStringEx
 
 #include <memory>
 #include <wx/fileconf.h>  // to inherit wxFileConfig
@@ -86,7 +87,37 @@ public:
    int mVersionMicroKeyInit{};
 };
 
-using EnumValueSymbols = std::vector< EnumValueSymbol >;
+struct ByColumns_t{};
+extern ByColumns_t ByColumns;
+
+/// A table of EnumValueSymbol that you can access by "row" with
+/// operator [] but also allowing access to the "columns" of internal or
+/// translated strings, and also allowing convenient column-wise construction
+class EnumValueSymbols : public std::vector< EnumValueSymbol >
+{
+public:
+   EnumValueSymbols() = default;
+   EnumValueSymbols( std::initializer_list<EnumValueSymbol> symbols )
+     : vector( symbols )
+   {}
+
+   // columnwise constructor; arguments must have same size
+   // (Implicit constructor takes initial tag argument to avoid unintended
+   // overload resolution to the inherited constructor taking
+   // initializer_list, in the case that each column has exactly two strings)
+   EnumValueSymbols(
+      ByColumns_t,
+      const wxArrayStringEx &msgids, // untranslated!
+      wxArrayStringEx internals
+   );
+
+   const wxArrayStringEx &GetTranslations() const;
+   const wxArrayStringEx &GetInternals() const;
+
+private:
+   mutable wxArrayStringEx mTranslations;
+   mutable wxArrayStringEx mInternals;
+};
 
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
@@ -110,8 +141,7 @@ public:
    const wxString &Key() const { return mKey; }
    const EnumValueSymbol &Default() const
       { return mSymbols[mDefaultSymbol]; }
-   EnumValueSymbols::const_iterator begin() const { return mSymbols.begin(); }
-   EnumValueSymbols::const_iterator end() const { return mSymbols.end(); }
+   const EnumValueSymbols &GetSymbols() const { return mSymbols; }
 
    wxString Read() const;
    bool Write( const wxString &value ); // you flush gPrefs afterward

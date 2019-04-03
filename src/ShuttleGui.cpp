@@ -1866,14 +1866,15 @@ wxChoice *ShuttleGuiBase::TieChoice(
    // Do this to force any needed migrations first
    choiceSetting.Read();
 
-   wxArrayStringEx visibleChoices, internalChoices;
-   for (const auto &ident : choiceSetting) {
-      visibleChoices.push_back( ident.Translation() );
-      internalChoices.push_back( ident.Internal() );
-   }
+   const auto &symbols = choiceSetting.GetSymbols();
+
    return TieChoice(
-      Prompt, choiceSetting.Key(), choiceSetting.Default().Internal(),
-         visibleChoices, internalChoices );
+      Prompt,
+      choiceSetting.Key(),
+      choiceSetting.Default().Internal(),
+      symbols.GetTranslations(),
+      symbols.GetInternals()
+   );
 }
 
 /// Variant of the standard TieChoice which does the two step exchange
