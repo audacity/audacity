@@ -266,8 +266,8 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          {
             mDir = S.Id(DirID)
                .TieTextBox(_("Folder:"),
-                           wxT("/Export/MultiplePath"),
-                           DefaultPath,
+                           {wxT("/Export/MultiplePath"),
+                            DefaultPath},
                            64);
             S.Id(ChooseID).AddButton(_("Choose..."));
             S.Id(CreateID).AddButton(_("Create"));
@@ -395,8 +395,8 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxEXPAND, false);
    {
       mOverwrite = S.Id(OverwriteID).TieCheckBox(_("Overwrite existing files"),
-                                                 wxT("/Export/OverwriteExisting"),
-                                                 false);
+                                                 {wxT("/Export/OverwriteExisting"),
+                                                  false});
    }
    S.EndHorizontalLay();
 

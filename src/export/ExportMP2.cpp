@@ -161,8 +161,8 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
          {
             S.TieNumberAsChoice(
                _("Bit Rate:"),
-               wxT("/FileFormats/MP2Bitrate"),
-               160,
+               {wxT("/FileFormats/MP2Bitrate"),
+                160},
                BitRateNames,
                &BitRateValues
             );

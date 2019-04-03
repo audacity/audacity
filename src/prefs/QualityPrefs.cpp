@@ -154,8 +154,8 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_SAMPLE_RATE_CHOICE);
             // We make sure we have a pointer to it, so that we can drive it.
             mSampleRates = S.TieNumberAsChoice( {},
-                                       wxT("/SamplingRate/DefaultProjectSampleRate"),
-                                       AudioIOBase::GetOptimalSupportedSampleRate(),
+                                       {wxT("/SamplingRate/DefaultProjectSampleRate"),
+                                        AudioIOBase::GetOptimalSupportedSampleRate()},
                                        mSampleRateNames,
                                        &mSampleRateLabels);
 

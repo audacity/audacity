@@ -126,8 +126,8 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );
             S.TieCheckBox(_("Show output"),
-                          wxT("/FileFormats/ExternalProgramShowOutput"),
-                          false);
+                          {wxT("/FileFormats/ExternalProgramShowOutput"),
+                           false});
          }
          S.EndMultiColumn();
       }

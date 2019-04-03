@@ -70,27 +70,27 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Show Warnings/Prompts for"));
    {
       S.TieCheckBox(_("Saving &projects"),
-                    wxT("/Warnings/FirstProjectSave"),
-                    true);
+                    {wxT("/Warnings/FirstProjectSave"),
+                     true});
       S.TieCheckBox(_("Saving &empty project"),
-                    wxT("/GUI/EmptyCanBeDirty"),
-                    true);
+                    {wxT("/GUI/EmptyCanBeDirty"),
+                     true});
       S.TieCheckBox(_("&Low disk space at launch or new project"),
-                    wxT("/Warnings/DiskSpaceWarning"),
-                    true);
+                    {wxT("/Warnings/DiskSpaceWarning"),
+                     true});
       S.TieCheckBox(_("Mixing down to &mono during export"),
-                    wxT("/Warnings/MixMono"),
-                    true);
+                    {wxT("/Warnings/MixMono"),
+                     true});
       S.TieCheckBox(_("Mixing down to &stereo during export"),
-                    wxT("/Warnings/MixStereo"),
-                    true);
+                    {wxT("/Warnings/MixStereo"),
+                     true});
       S.TieCheckBox(_("Mixing down on export (&Custom FFmpeg or external program)"),
-                    wxT("/Warnings/MixUnknownChannels"),
-                    true);
+                    {wxT("/Warnings/MixUnknownChannels"),
+                     true});
 #ifdef EXPERIMENTAL_OD_DATA
       S.TieCheckBox(_("&Importing uncompressed audio files"),
-                    wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
-                    true);
+                    {wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
+                     true});
 #endif
    }
    S.EndStatic();

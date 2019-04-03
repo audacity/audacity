@@ -379,16 +379,14 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 
                mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
                   _("Quality"),
-                  wxT("/FileFormats/MP3Bitrate"),
-                  defrate,
+                  { wxT("/FileFormats/MP3Bitrate"), defrate },
                   *choices,
                   codes
                );
 
                mMode = S.TieNumberAsChoice(
                   _("Variable Speed:"),
-                  wxT("/FileFormats/MP3VarMode"),
-                  ROUTINE_FAST,
+                  { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
                   varModeNames );
                mMode->Enable(enable);
    

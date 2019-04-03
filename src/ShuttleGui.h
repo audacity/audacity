@@ -15,6 +15,7 @@
 #define SHUTTLE_GUI
 
 #include "Audacity.h"
+#include "audacity/Types.h"
 
 #include <vector>
 #include <wx/slider.h> // to inherit
@@ -102,6 +103,20 @@ public:
 using wxStaticBoxWrapper = wxStaticBox;
 using wxSliderWrapper = wxSlider;
 #endif
+
+template< typename T > class SettingSpec {
+public:
+   SettingSpec( const RegistryPath &path, const T &defaultValue = {} )
+      : mPath{ path }, mDefaultValue{ defaultValue }
+   {}
+
+   const RegistryPath &GetPath() const { return mPath; }
+   const T &GetDefault() const { return mDefaultValue; }
+
+private:
+   RegistryPath mPath;
+   T mDefaultValue;
+};
 
 class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
@@ -215,12 +230,10 @@ public:
 // so it doesn't need an argument that is writeable.
    virtual wxCheckBox * TieCheckBox(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const bool bDefault);
+      const SettingSpec< bool > &Setting);
    virtual wxCheckBox * TieCheckBoxOnRight(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const bool bDefault);
+      const SettingSpec< bool > &Setting);
 
    virtual wxChoice *TieChoice(
       const wxString &Prompt,
@@ -233,36 +246,30 @@ public:
    // emitting scripting information about Preferences.
    virtual wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
+      const SettingSpec< int > &Setting,
       const wxArrayStringEx & Choices,
       const std::vector<int> * pInternalChoices = nullptr );
 
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
+      const SettingSpec< wxString > &Setting,
       const int nChars);
    virtual wxTextCtrl * TieIntegerTextBox(
       const wxString & Prompt,
-      const wxString & SettingName,
-      const int & Default,
+      const SettingSpec< int > &Setting,
       const int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
       const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
+      const SettingSpec< double > &Setting,
       const int nChars);
    virtual wxSlider * TieSlider(
       const wxString & Prompt,
-      const wxString & SettingName,
-      const int iDefault,
+      const SettingSpec< int > &Setting,
       const int max,
       const int min = 0);
    virtual wxSpinCtrl * TieSpinCtrl(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const int Value,
+      const SettingSpec< int > &Setting,
       const int max,
       const int min);
 //-- End of variants.

@@ -227,32 +227,32 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       // Start wording of options with a verb, if possible.
       S.TieCheckBox(_("Show 'How to Get &Help' at launch"),
-                    wxT("/GUI/ShowSplashScreen"),
-                    true);
+                    {wxT("/GUI/ShowSplashScreen"),
+                     true});
       S.TieCheckBox(_("Show e&xtra menus"),
-                    wxT("/GUI/ShowExtraMenus"),
-                    false);
+                    {wxT("/GUI/ShowExtraMenus"),
+                     false});
 #ifdef EXPERIMENTAL_THEME_PREFS
       // We do not want to make this option mainstream.  It's a 
       // convenience for developers.
       S.TieCheckBox(_("Show alternative &styling (Mac vs PC)"),
-                    wxT("/GUI/ShowMac"),
-                    false);
+                    {wxT("/GUI/ShowMac"),
+                     false});
 #endif
       S.TieCheckBox(_("&Beep on completion of longer activities"),
-                    wxT("/GUI/BeepOnCompletion"),
-                    false);
+                    {wxT("/GUI/BeepOnCompletion"),
+                     false});
       S.TieCheckBox(_("Re&tain labels if selection snaps to a label"),
-                    wxT("/GUI/RetainLabels"),
-                    false);
+                    {wxT("/GUI/RetainLabels"),
+                     false});
       S.TieCheckBox(_("B&lend system and Audacity theme"),
-                    wxT("/GUI/BlendThemes"),
-                    true);
+                    {wxT("/GUI/BlendThemes"),
+                     true});
 #ifndef __WXMAC__
       /* i18n-hint: RTL stands for 'Right to Left'  */
       S.TieCheckBox(_("Use mostly Left-to-Right layouts in RTL languages"),
-         "/GUI/RtlWorkaround",
-         true);
+         {"/GUI/RtlWorkaround",
+          true});
 #endif
    }
    S.EndStatic();

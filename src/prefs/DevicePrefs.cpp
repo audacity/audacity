@@ -186,15 +186,15 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          // only show the following controls if we use Portaudio v19, because
          // for Portaudio v18 we always use default buffer sizes
          w = S.TieNumericTextBox(_("&Buffer length:"),
-                                 wxT("/AudioIO/LatencyDuration"),
-                                 DEFAULT_LATENCY_DURATION,
+                                 {wxT("/AudioIO/LatencyDuration"),
+                                  DEFAULT_LATENCY_DURATION},
                                  9);
          S.AddUnits(_("milliseconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
 
          w = S.TieNumericTextBox(_("&Latency compensation:"),
-                                 wxT("/AudioIO/LatencyCorrection"),
-                                 DEFAULT_LATENCY_CORRECTION,
+                                 {wxT("/AudioIO/LatencyCorrection"),
+                                  DEFAULT_LATENCY_CORRECTION},
                                  9);
          S.AddUnits(_("milliseconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));

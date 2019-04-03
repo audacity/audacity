@@ -188,8 +188,8 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.TieCheckBox(
             GetCustomTranslation( entry.prompt ),
-            entry.setting,
-            true
+            {entry.setting,
+             true}
          );
       }
    }
@@ -203,12 +203,13 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
          if( c ) c->SetMinSize(c->GetBestSize());
 
          S.TieIntegerTextBox(_("&Maximum effects per group (0 to disable):"),
-                             wxT("/Effects/MaxPerGroup"),
+                             {wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)
-                             15,
+                              15
 #else
-                             0,
+                              0
 #endif
+                             },
                              5);
       }
       S.EndMultiColumn();

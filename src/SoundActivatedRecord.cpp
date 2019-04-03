@@ -55,7 +55,7 @@ void SoundActivatedRecord::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(1);
          dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
-         S.TieSlider(_("Activation level (dB):"), wxT("/AudioIO/SilenceLevel"), -50, 0, -dBRange);
+         S.TieSlider(_("Activation level (dB):"), {wxT("/AudioIO/SilenceLevel"), -50}, 0, -dBRange);
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
