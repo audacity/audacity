@@ -105,28 +105,32 @@
 // ExportMP3Options
 //----------------------------------------------------------------------------
 
-#define CHANNEL_JOINT      0
-#define CHANNEL_STEREO     1
-#define CHANNEL_MONO       2
+enum MP3ChannelMode : unsigned {
+   CHANNEL_JOINT = 0,
+   CHANNEL_STEREO = 1,
+   CHANNEL_MONO = 2,
+};
 
-#define QUALITY_0          0
-#define QUALITY_1          1
-#define QUALITY_2          2
-#define QUALITY_3          3
-#define QUALITY_4          4
-#define QUALITY_5          5
-#define QUALITY_6          6
-#define QUALITY_7          7
-#define QUALITY_8          8
-#define QUALITY_9          9
+enum : int {
+   QUALITY_0 = 0,
+   QUALITY_1 = 1,
+   QUALITY_2 = 2,
+   QUALITY_3 = 3,
+   QUALITY_4 = 4,
+   QUALITY_5 = 5,
+   QUALITY_6 = 6,
+   QUALITY_7 = 7,
+   QUALITY_8 = 8,
+   QUALITY_9 = 9,
 
-#define ROUTINE_FAST       0
-#define ROUTINE_STANDARD   1
+   ROUTINE_FAST = 0,
+   ROUTINE_STANDARD = 1,
 
-#define PRESET_INSANE      0
-#define PRESET_EXTREME     1
-#define PRESET_STANDARD    2
-#define PRESET_MEDIUM      3
+   PRESET_INSANE = 0,
+   PRESET_EXTREME = 1,
+   PRESET_STANDARD = 2,
+   PRESET_MEDIUM = 3,
+};
 
 // Note: The label field is what will be written to preferences and carries
 //       no numerical significance.  It is simply a means to look up a value
