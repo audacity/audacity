@@ -63,7 +63,7 @@ static auto intChoicesMethod = {
    0, 1, 2, 3
 };
 
-EnumSetting Resample::FastMethodSetting{
+EnumSetting< int > Resample::FastMethodSetting{
    wxT("/Quality/LibsoxrSampleRateConverterChoice"),
    methodNames,
    1,  // Medium Quality
@@ -73,7 +73,7 @@ EnumSetting Resample::FastMethodSetting{
    wxT("/Quality/LibsoxrSampleRateConverter")
 };
 
-EnumSetting Resample::BestMethodSetting
+EnumSetting< int > Resample::BestMethodSetting
 {
    wxT("/Quality/LibsoxrHQSampleRateConverterChoice"),
    methodNames,
@@ -115,7 +115,7 @@ std::pair<size_t, size_t>
 void Resample::SetMethod(const bool useBestMethod)
 {
    if (useBestMethod)
-      mMethod = BestMethodSetting.ReadInt();
+      mMethod = BestMethodSetting.ReadEnum();
    else
-      mMethod = FastMethodSetting.ReadInt();
+      mMethod = FastMethodSetting.ReadEnum();
 }

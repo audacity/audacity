@@ -171,10 +171,10 @@ protected:
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class EnumSetting : public ChoiceSetting
+class EnumSettingBase : public ChoiceSetting
 {
 public:
-   EnumSetting(
+   EnumSettingBase(
       const wxString &key,
       EnumValueSymbols symbols,
       long defaultSymbol,
@@ -182,6 +182,8 @@ public:
       std::vector<int> intValues, // must have same size as symbols
       const wxString &oldKey
    );
+
+protected:
 
    // Read and write the encoded values
    int ReadInt() const;
@@ -193,13 +195,51 @@ public:
 
    bool WriteInt( int code ); // you flush gPrefs afterward
 
-protected:
    size_t FindInt( int code ) const;
    void Migrate( wxString& ) override;
 
 private:
    std::vector<int> mIntValues;
    const wxString mOldKey;
+};
+
+/// Adapts EnumSettingBase to a particular enumeration type
+template< typename Enum >
+class EnumSetting : public EnumSettingBase
+{
+public:
+
+   EnumSetting(
+      const wxString &key,
+      EnumValueSymbols symbols,
+      long defaultSymbol,
+
+      std::initializer_list< Enum > values, // must have same size as symbols
+      const wxString &oldKey
+   )
+      : EnumSettingBase{
+         key, symbols, defaultSymbol,
+         { values.begin(), values.end() },
+         oldKey
+      }
+   {}
+
+   // Wrap ReadInt() and ReadIntWithDefault() and WriteInt()
+   Enum ReadEnum() const
+   { return static_cast<Enum>( ReadInt() ); }
+
+   // new direct use is discouraged but it may be needed in legacy code:
+   // use a default in case the preference is not defined, which may not be
+   // the default-default stored in this object.
+   Enum ReadEnumWithDefault( Enum defaultValue ) const
+   {
+      auto integer = static_cast<int>(defaultValue);
+      return static_cast<Enum>( ReadIntWithDefault( integer ) );
+   }
+
+   bool WriteEnum( Enum value )
+   { return WriteInt( static_cast<int>( value ) ); }
+
 };
 
 // An event emitted by the application when the Preference dialog commits

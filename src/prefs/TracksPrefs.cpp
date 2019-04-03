@@ -54,14 +54,15 @@ namespace {
 
 
 //////////
-class TracksViewModeEnumSetting : public EnumSetting {
+class TracksViewModeEnumSetting
+   : public EnumSetting< WaveTrackViewConstants::Display > {
 public:
    TracksViewModeEnumSetting(
       const wxString &key,
       EnumValueSymbols symbols,
       long defaultSymbol,
 
-      std::vector<int> intValues,
+      std::initializer_list< WaveTrackViewConstants::Display > intValues,
       const wxString &oldKey
    )
       : EnumSetting{
@@ -120,11 +121,12 @@ static TracksViewModeEnumSetting viewModeSetting{
 
 WaveTrackViewConstants::Display TracksPrefs::ViewModeChoice()
 {
-   return (WaveTrackViewConstants::Display) viewModeSetting.ReadInt();
+   return viewModeSetting.ReadEnum();
 }
 
 //////////
-static EnumSetting sampleDisplaySetting{
+static EnumSetting< WaveTrackViewConstants::SampleDisplay >
+sampleDisplaySetting{
    wxT("/GUI/SampleViewChoice"),
    {
       { wxT("ConnectDots"), XO("Connect dots") },
@@ -142,7 +144,7 @@ static EnumSetting sampleDisplaySetting{
 
 WaveTrackViewConstants::SampleDisplay TracksPrefs::SampleViewChoice()
 {
-   return (WaveTrackViewConstants::SampleDisplay) sampleDisplaySetting.ReadInt();
+   return sampleDisplaySetting.ReadEnum();
 }
 
 //////////
@@ -163,7 +165,7 @@ static const std::initializer_list<EnumValueSymbol> choicesZoom{
    { wxT("FourPixelsPerSample"), XO("4 Pixels per Sample") },
    { wxT("MaxZoom"), XO("Max Zoom") },
 };
-static const std::initializer_list<int> intChoicesZoom{
+static auto enumChoicesZoom = {
    WaveTrackViewConstants::kZoomToFit,
    WaveTrackViewConstants::kZoomToSelection,
    WaveTrackViewConstants::kZoomDefault,
@@ -181,34 +183,34 @@ static const std::initializer_list<int> intChoicesZoom{
    WaveTrackViewConstants::kMaxZoom,
 };
 
-static EnumSetting zoom1Setting{
+static EnumSetting< WaveTrackViewConstants::ZoomPresets > zoom1Setting{
    wxT("/GUI/ZoomPreset1Choice"),
    choicesZoom,
    2, // kZoomDefault
 
    // for migrating old preferences:
-   intChoicesZoom,
+   enumChoicesZoom,
    wxT("/GUI/ZoomPreset1")
 };
 
-static EnumSetting zoom2Setting{
+static EnumSetting< WaveTrackViewConstants::ZoomPresets > zoom2Setting{
    wxT("/GUI/ZoomPreset2Choice"),
    choicesZoom,
    13, // kZoom4To1
 
    // for migrating old preferences:
-   intChoicesZoom,
+   enumChoicesZoom,
    wxT("/GUI/ZoomPreset2")
 };
 
 WaveTrackViewConstants::ZoomPresets TracksPrefs::Zoom1Choice()
 {
-   return (WaveTrackViewConstants::ZoomPresets) zoom1Setting.ReadInt();
+   return zoom1Setting.ReadEnum();
 }
 
 WaveTrackViewConstants::ZoomPresets TracksPrefs::Zoom2Choice()
 {
-   return (WaveTrackViewConstants::ZoomPresets) zoom2Setting.ReadInt();
+   return zoom2Setting.ReadEnum();
 }
 
 //////////

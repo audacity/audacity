@@ -331,7 +331,7 @@ bool ChoiceSetting::Write( const wxString &value )
    return result;
 }
 
-EnumSetting::EnumSetting(
+EnumSettingBase::EnumSettingBase(
    const wxString &key,
    EnumValueSymbols symbols,
    long defaultSymbol,
@@ -358,7 +358,7 @@ void ChoiceSetting::SetDefault( long value )
       wxASSERT( false );
 }
 
-int EnumSetting::ReadInt() const
+int EnumSettingBase::ReadInt() const
 {
    auto index = Find( Read() );
 
@@ -366,7 +366,7 @@ int EnumSetting::ReadInt() const
    return mIntValues[ index ];
 }
 
-int EnumSetting::ReadIntWithDefault( int defaultValue ) const
+int EnumSettingBase::ReadIntWithDefault( int defaultValue ) const
 {
    wxString defaultString;
    auto index0 = FindInt( defaultValue );
@@ -381,7 +381,7 @@ int EnumSetting::ReadIntWithDefault( int defaultValue ) const
    return mIntValues[ index ];
 }
 
-size_t EnumSetting::FindInt( int code ) const
+size_t EnumSettingBase::FindInt( int code ) const
 {
    const auto start = mIntValues.begin();
    return size_t(
@@ -389,7 +389,7 @@ size_t EnumSetting::FindInt( int code ) const
          - start );
 }
 
-void EnumSetting::Migrate( wxString &value )
+void EnumSettingBase::Migrate( wxString &value )
 {
    int intValue = 0;
    if ( !mOldKey.empty() &&
@@ -409,7 +409,7 @@ void EnumSetting::Migrate( wxString &value )
    }
 }
 
-bool EnumSetting::WriteInt( int code ) // you flush gPrefs afterward
+bool EnumSettingBase::WriteInt( int code ) // you flush gPrefs afterward
 {
    auto index = FindInt( code );
    if ( index >= mSymbols.size() )

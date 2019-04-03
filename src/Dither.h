@@ -12,7 +12,7 @@
 
 #include "audacity/Types.h" // for samplePtr
 
-class EnumSetting;
+template< typename Enum > class EnumSetting;
 
 
 /// These ditherers are currently available:
@@ -25,7 +25,7 @@ public:
     static DitherType FastDitherChoice();
     static DitherType BestDitherChoice();
 
-    static EnumSetting FastSetting, BestSetting;
+    static EnumSetting< DitherType > FastSetting, BestSetting;
 
     /// Default constructor
     Dither();

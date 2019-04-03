@@ -403,14 +403,14 @@ static const std::initializer_list<EnumValueSymbol> choicesDither{
    { XO("Triangle") },
    { XO("Shaped") },
 };
-static const std::initializer_list<int> intChoicesDither{
+static auto intChoicesDither = {
    DitherType::none,
    DitherType::rectangle,
    DitherType::triangle,
    DitherType::shaped,
 };
 
-EnumSetting Dither::FastSetting{
+EnumSetting< DitherType > Dither::FastSetting{
    wxT("Quality/DitherAlgorithmChoice"),
    choicesDither,
    0, // none
@@ -420,7 +420,7 @@ EnumSetting Dither::FastSetting{
    wxT("Quality/DitherAlgorithm")
 };
 
-EnumSetting Dither::BestSetting{
+EnumSetting< DitherType > Dither::BestSetting{
    wxT("Quality/HQDitherAlgorithmChoice"),
    choicesDither,
    3, // shaped
@@ -432,10 +432,10 @@ EnumSetting Dither::BestSetting{
 
 DitherType Dither::FastDitherChoice()
 {
-   return (DitherType) FastSetting.ReadInt();
+   return (DitherType) FastSetting.ReadEnum();
 }
 
 DitherType Dither::BestDitherChoice()
 {
-   return (DitherType) BestSetting.ReadInt();
+   return (DitherType) BestSetting.ReadEnum();
 }

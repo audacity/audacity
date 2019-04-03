@@ -32,7 +32,7 @@
 
 //////////
 
-static EnumSetting formatSetting{
+static EnumSetting< sampleFormat > formatSetting{
    wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
    {
       { wxT("Format16Bit"), XO("16-bit") },
@@ -241,6 +241,6 @@ QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 
 sampleFormat QualityPrefs::SampleFormatChoice()
 {
-   return (sampleFormat)formatSetting.ReadInt();
+   return formatSetting.ReadEnum();
 }
 
