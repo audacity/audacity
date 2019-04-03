@@ -136,7 +136,7 @@ class LWSlider
    void OnPaint(wxDC &dc, bool highlighted);
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
-   void OnKeyEvent(wxKeyEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
    void Refresh();
 
    bool ShowDialog();
@@ -290,7 +290,7 @@ class ASlider /* not final */ : public wxPanel
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
-   void OnKeyEvent(wxKeyEvent &event);
+   void OnKeyDown(wxKeyEvent &event);
    void OnSlider(wxCommandEvent &event);
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
