@@ -142,11 +142,9 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          S.Id(PlayID);
          mPlay = S.AddChoice(_("&Device:"),
                              {} );
-         int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"),
-                                    DEFAULT_SYNTH_LATENCY);
          mLatency = S.TieNumericTextBox(_("MIDI Synth L&atency (ms):"),
                                         wxT("/MidiIO/SynthLatency"),
-                                        latency, 3);
+                                        DEFAULT_SYNTH_LATENCY, 3);
       }
       S.EndMultiColumn();
    }
