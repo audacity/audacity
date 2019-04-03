@@ -17,6 +17,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/timer.h> // member variable
+#include "wxPanelWrapper.h"
 
 class wxArrayString;
 class wxBitmap;
