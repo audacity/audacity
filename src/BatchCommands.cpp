@@ -513,8 +513,8 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
    wxString pathName = newFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-   /* i18n-hint: this is part of a directory name (where results will be put)*/
-   const auto cleanedString = _("Macro-output");
+
+   const wxString cleanedString( "macro-output" );
 
    if (justName.empty()) {
       wxDateTime now = wxDateTime::Now();
@@ -643,8 +643,7 @@ bool MacroCommands::ApplySpecialCommand(
       filename = BuildCleanFileName(mFileName, extension);
    }
 
-   /* i18n-hint: this is part of a directory name (where results will be put)*/
-   const auto cleanedString = _("Macro-output");
+   const wxString cleanedString("macro-output");
    // We have a command index, but we don't use it!
    // TODO: Make this special-batch-command code use the menu item code....
    // FIXME: TRAP_ERR No error reporting on write file failure in batch mode.
