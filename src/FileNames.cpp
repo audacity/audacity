@@ -398,7 +398,7 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference
       // IF the prefs directory doesn't exist - (Deleted by our user perhaps?)
       //    or exists as a file
       // THEN fallback to using the default directory.
-      bIsDefaultPath = !IsPathAvailable( result.GetPath(wxPATH_GET_VOLUME ) );
+      bIsDefaultPath = !IsPathAvailable( result.GetPath(wxPATH_GET_VOLUME|wxPATH_GET_SEPARATOR ) );
       if( bIsDefaultPath )
       {
          result.SetPath( defaultPath.GetPath( wxPATH_GET_VOLUME ) );
