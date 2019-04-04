@@ -297,27 +297,20 @@ bool ImageRoll::Ok() const
 }
 
 void ImageRoll::DrawBitmap(wxDC &dc, wxBitmap &bitmap,
-                           int x, int y, int logicalFunc)
+                           int x, int y, wxRasterOperationMode logicalFunc)
 {
-   auto func = static_cast< wxRasterOperationMode >( logicalFunc );
-   if (func == wxCOPY)
+   if (logicalFunc == wxCOPY)
       dc.DrawBitmap(bitmap, x, y);
    else {
       wxMemoryDC memDC;
       memDC.SelectObject(bitmap);
       dc.Blit(x, y, bitmap.GetWidth(), bitmap.GetHeight(),
-              &memDC, 0, 0, func);
+              &memDC, 0, 0, logicalFunc);
    }
 }
 
-void ImageRoll::Draw(wxDC &dc, wxRect rect)
+void ImageRoll::Draw(wxDC &dc, wxRect rect, wxRasterOperationMode WXUNUSED(logicalFunc))
 {
-   Draw( dc, rect, wxCOPY );
-}
-
-void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
-{
-   auto func = wxCOPY;
    int width = rect.width;
    int height = rect.height;
    int num = (int)mPieces.size();
@@ -342,7 +335,7 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
             // fixed
 
             if (mPieces[i].Ok())
-               DrawBitmap(dc, mPieces[i], rect.x + x, rect.y, func);
+               DrawBitmap(dc, mPieces[i], rect.x + x, rect.y);
             x += w;
          }
          else {
@@ -355,7 +348,7 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
             j = 0;
             while(j < space) {
                if (mPieces[i].Ok())
-                  DrawBitmap(dc, mPieces[i], rect.x + x + j, rect.y, func);
+                  DrawBitmap(dc, mPieces[i], rect.x + x + j, rect.y);
                j += w;
             }
 
@@ -382,7 +375,7 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
             // fixed
 
             if (mPieces[i].Ok())
-               DrawBitmap(dc, mPieces[i], rect.x, rect.y + y, func);
+               DrawBitmap(dc, mPieces[i], rect.x, rect.y + y);
             y += h;
          }
          else {
@@ -395,7 +388,7 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
             j = 0;
             while(j < space) {
                if (mPieces[i].Ok())
-                  DrawBitmap(dc, mPieces[i], rect.x, rect.y + y + j, func);
+                  DrawBitmap(dc, mPieces[i], rect.x, rect.y + y + j);
                j += h;
             }
 
@@ -405,7 +398,7 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
    } break; // case VerticalRoll
 
    case FixedImage:
-      DrawBitmap(dc, mPieces[0], rect.x, rect.y, func);
+      DrawBitmap(dc, mPieces[0], rect.x, rect.y);
       break;
    /* the other possible cases don't really make sense, but not having them
     * listed gives a GCC warning */

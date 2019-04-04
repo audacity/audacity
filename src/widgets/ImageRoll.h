@@ -13,7 +13,7 @@
 #define __AUDACITY_IMAGE_ROLL__
 
 #include <vector>
-// #include <wx/dc.h> // for enum wxRasterOperationMode
+#include <wx/dc.h> // for enum wxRasterOperationMode
 #include <wx/defs.h>
 #include "wxPanelWrapper.h" // to inherit
 
@@ -45,8 +45,7 @@ class ImageRoll
    wxSize GetMaxSize() const { return mMaxSize; }
 
    void Draw(wxDC &dc, wxRect rect,
-             int /* wxRasterOperationMode */ logicalFunc);
-   void Draw(wxDC &dc, wxRect rect); // default logicalFunc to wxCOPY
+             wxRasterOperationMode logicalFunc = wxCOPY);
 
    static ImageArray SplitH(const wxImage &src, wxColour magicColor);
    static ImageArray SplitV(const wxImage &src, wxColour magicColor);
@@ -54,8 +53,7 @@ class ImageRoll
  protected:
 
    void DrawBitmap(wxDC &dc, wxBitmap &bitmap,
-                   int x, int y,
-                   int /* wxRasterOperationMode */ logicalFunc);
+                   int x, int y, wxRasterOperationMode logicalFunc = wxCOPY);
 
    void Init(RollType type, const wxImage &src, wxColour magicColor);
 
