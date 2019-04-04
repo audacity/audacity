@@ -2094,6 +2094,8 @@ void DirManager::FindMissingAUs(
    {
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second.lock();
+      // TODO key can be empty in doing a ProjectFSK
+      // In which case MakeFilePath will fail.  Bail out?
       if (b) {
          if (!b->IsAlias())
          {
