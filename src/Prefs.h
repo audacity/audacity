@@ -143,6 +143,12 @@ public:
    const EnumValueSymbols &GetSymbols() const { return mSymbols; }
 
    wxString Read() const;
+
+   // new direct use is discouraged but it may be needed in legacy code:
+   // use a default in case the preference is not defined, which may not be
+   // the default-default stored in this object.
+   wxString ReadWithDefault( const wxString & ) const;
+
    bool Write( const wxString &value ); // you flush gPrefs afterward
 
    void SetDefault( long value );
@@ -178,7 +184,13 @@ public:
    );
 
    // Read and write the encoded values
-   virtual int ReadInt() const;
+   int ReadInt() const;
+
+   // new direct use is discouraged but it may be needed in legacy code:
+   // use a default in case the preference is not defined, which may not be
+   // the default-default stored in this object.
+   int ReadIntWithDefault( int defaultValue ) const;
+
    bool WriteInt( int code ); // you flush gPrefs afterward
 
 protected:

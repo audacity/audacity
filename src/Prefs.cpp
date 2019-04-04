@@ -287,6 +287,11 @@ const EnumValueSymbol &ChoiceSetting::Default() const
 wxString ChoiceSetting::Read() const
 {
    const auto &defaultValue = Default().Internal();
+   return ReadWithDefault( defaultValue );
+}
+
+wxString ChoiceSetting::ReadWithDefault( const wxString &defaultValue ) const
+{
    wxString value;
    if ( !gPrefs->Read(mKey, &value, defaultValue) )
       if (!mMigrated) {
@@ -356,7 +361,23 @@ void ChoiceSetting::SetDefault( long value )
 int EnumSetting::ReadInt() const
 {
    auto index = Find( Read() );
+
    wxASSERT( index < mIntValues.size() );
+   return mIntValues[ index ];
+}
+
+int EnumSetting::ReadIntWithDefault( int defaultValue ) const
+{
+   wxString defaultString;
+   auto index0 = FindInt( defaultValue );
+   if ( index0 < mSymbols.size() )
+      defaultString = mSymbols[ index0 ].Internal();
+   else
+      wxASSERT( false );
+
+   auto index = Find( ReadWithDefault( defaultString ) );
+
+   wxASSERT( index < mSymbols.size() );
    return mIntValues[ index ];
 }
 
