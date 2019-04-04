@@ -78,6 +78,7 @@ public:
    // Obtain name of loaded module that contains address
    static FilePath PathFromAddr(void *addr);
 
+   static bool IsPathAvailable( const FilePath & Path);
    static wxFileNameWrapper DefaultToDocumentsFolder
       (const wxString &preference);
 

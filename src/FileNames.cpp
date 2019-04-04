@@ -370,6 +370,18 @@ FilePath FileNames::PathFromAddr(void *addr)
     return name.GetFullPath();
 }
 
+
+bool FileNames::IsPathAvailable( const FilePath & Path){
+   if( Path.IsEmpty() )
+      return false;
+#ifndef __WIN32__
+   return true;
+#else
+   wxFileNameWrapper filePath( Path );
+   return filePath.DirExists() && !filePath.FileExists();
+#endif
+}
+
 wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference)
 {
    wxFileNameWrapper result;
@@ -380,18 +392,18 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference
    result.SetPath( gPrefs->Read( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) ) );
 
    // MJB: Bug 1899 & Bug 2007.  Only create directory if the result is the default path
-   bool bIsDefaultPath =  result == defaultPath;
+   bool bIsDefaultPath = result == defaultPath;
    if( !bIsDefaultPath ) 
    {
       // IF the prefs directory doesn't exist - (Deleted by our user perhaps?)
       //    or exists as a file
       // THEN fallback to using the default directory.
-      bIsDefaultPath = !result.DirExists() || result.FileExists();
+      bIsDefaultPath = !IsPathAvailable( result.GetPath(wxPATH_GET_VOLUME ) );
       if( bIsDefaultPath )
       {
          result.SetPath( defaultPath.GetPath( wxPATH_GET_VOLUME ) );
-         gPrefs->Write( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) );
-         gPrefs->Flush();
+         // Don't write to gPrefs.
+         // We typically do it later, (if directory actually gets used)
       }
    }
    if ( bIsDefaultPath )

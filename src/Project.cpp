@@ -4404,7 +4404,7 @@ bool AudacityProject::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= 
       bWantSaveCopy = true;
 
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
-   if( filename.GetFullPath().empty() ){
+   if( !FileNames::IsPathAvailable( filename.GetFullPath() ) ){
       bHasPath = false;
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
