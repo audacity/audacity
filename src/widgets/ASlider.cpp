@@ -1507,7 +1507,7 @@ void LWSlider::SetEnabled(bool enabled)
 // ASlider
 //
 
-BEGIN_EVENT_TABLE(ASlider, wxWindow)
+BEGIN_EVENT_TABLE(ASlider, wxPanel)
    EVT_KEY_DOWN(ASlider::OnKeyDown)
    EVT_MOUSE_EVENTS(ASlider::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(ASlider::OnCaptureLost)
