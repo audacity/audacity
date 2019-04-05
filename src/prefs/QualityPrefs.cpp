@@ -157,7 +157,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                                        wxT("/SamplingRate/DefaultProjectSampleRate"),
                                        AudioIOBase::GetOptimalSupportedSampleRate(),
                                        mSampleRateNames,
-                                       mSampleRateLabels);
+                                       &mSampleRateLabels);
 
             // Now do the edit box...
             mOtherSampleRate = S.TieNumericTextBox( {},

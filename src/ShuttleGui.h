@@ -256,9 +256,7 @@ public:
       const std::vector<int> & InternalChoices );
 
    // This overload presents what is really a numerical setting as a choice among
-   // commonly used values, but the choice is not exhaustive because there is
-   // also an associated control that allows entry of a user-specified value
-   // that is arbitrary (within some bounds).
+   // commonly used values, but the choice is not necessarily exhaustive.
    // This behaves just like the previous for building dialogs, but the
    // behavior is different when the call is intercepted for purposes of
    // emitting scripting information about Preferences.
@@ -267,7 +265,7 @@ public:
       const wxString &SettingName,
       const int Default,
       const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices );
+      const std::vector<int> * pInternalChoices = nullptr );
 
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,

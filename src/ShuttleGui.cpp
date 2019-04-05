@@ -1912,7 +1912,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 /// between gui and stack variable and stack variable and shuttle.
 ///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default value for this control (translated)
+///   @param Default            The default internal string value for this control
 ///   @param Choices            An array of choices that appear on screen.
 ///   @param InternalChoices    The corresponding values (as a string array)
 wxChoice * ShuttleGuiBase::TieChoice(
@@ -1976,18 +1976,33 @@ wxChoice * ShuttleGuiBase::TieChoice(
 /// are non-exhaustive and there is a companion control for abitrary entry.
 ///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default value for this control (translated)
+///   @param Default            The default integer value for this control
 ///   @param Choices            An array of choices that appear on screen.
-///   @param InternalChoices    The corresponding values (as an integer array)
+///   @param pInternalChoices   The corresponding values (as an integer array)
+///                             if null, then use 0, 1, 2, ...
 wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
    const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
+   const std::vector<int> * pInternalChoices)
 {
+   auto fn = [](int arg){ return wxString::Format( "%d", arg ); };
+   wxArrayStringEx InternalChoices;
+   if ( pInternalChoices )
+      InternalChoices =
+         transform_container<wxArrayStringEx>(*pInternalChoices, fn);
+   else
+      for ( int ii = 0; ii < Choices.size(); ++ii )
+         InternalChoices.push_back( fn( ii ) );
+
    return ShuttleGuiBase::TieChoice(
-      Prompt, SettingName, Default, Choices, InternalChoices );
+      Prompt,
+      SettingName,
+      fn( Default ),
+      Choices,
+      InternalChoices
+   );
 }
 
 //------------------------------------------------------------------//
