@@ -1,6 +1,8 @@
 #ifndef CONFIGMS_H_INCLUDED
 #define CONFIGMS_H_INCLUDED
 
+/*#if defined(_MSC_VER)*/
+#if 0
 /* The number of bytes in a double.  */
 #define SIZEOF_DOUBLE 8
 
@@ -27,6 +29,7 @@
 
 /* The number of bytes in a unsigned short.  */
 #define SIZEOF_UNSIGNED_SHORT 2
+#endif
 
 /* Define if you have the ANSI C header files.  */
 #define STDC_HEADERS
@@ -66,6 +69,13 @@
 
 	typedef float  float32_t;
 	typedef double float64_t;
+#elif defined(STDC_HEADERS)
+
+#include <stdlib.h>
+typedef u_int8_t uint8_t;
+typedef u_int16_t uint16_t;
+typedef u_int32_t uint32_t;
+
 #elif defined (__GNUC__)
 #define __int8_t_defined
 #define uint8_t unsigned char
