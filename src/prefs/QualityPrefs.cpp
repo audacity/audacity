@@ -117,7 +117,7 @@ void QualityPrefs::Populate()
    GetNamesAndLabels();
    gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
                 &mOtherSampleRateValue,
-                44100);
+                AudioIO::GetOptimalSupportedSampleRate());
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
