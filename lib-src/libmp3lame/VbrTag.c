@@ -251,7 +251,7 @@ IsVbrTag(const unsigned char *buf)
     return (isTag0 || isTag1);
 }
 
-#define SHIFT_IN_BITS_VALUE(x,n,v) ( x = (x << (n)) | ( (v) & ~(-1 << (n)) ) )
+#define SHIFT_IN_BITS_VALUE(x,n,v) ( x = (x << (n)) | ( (v) & ~(-1u << (n)) ) )
 
 static void
 setLameTagFrameHeader(lame_internal_flags const *gfc, unsigned char *buffer)
@@ -427,7 +427,7 @@ GetVbrTag(VBRTAGDATA * pTagData, const unsigned char *buf)
     }
 
     if (head_flags & TOC_FLAG) {
-        if (pTagData->toc != NULL) {
+        if ((void *)pTagData->toc != NULL) {
             for (i = 0; i < NUMTOCENTRIES; i++)
                 pTagData->toc[i] = buf[i];
         }

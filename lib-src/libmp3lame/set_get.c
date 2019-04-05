@@ -1723,7 +1723,7 @@ float
 lame_get_interChRatio(const lame_global_flags * gfp)
 {
     if (is_lame_global_flags_valid(gfp)) {
-        assert((0 <= gfp->interChRatio && gfp->interChRatio <= 1.0) || EQ(gfp->interChRatio, -1));
+        assert((0 <= gfp->interChRatio && gfp->interChRatio <= 1.0) || EQ(gfp->interChRatio, -1.0));
         return gfp->interChRatio;
     }
     return 0;

@@ -638,7 +638,7 @@ lame_init_params(lame_global_flags * gfp)
 
     if (cfg->vbr == vbr_off && gfp->brate == 0) {
         /* no bitrate or compression ratio specified, use 11.025 */
-        if (EQ(gfp->compression_ratio, 0))
+        if (EQ(gfp->compression_ratio, 0.0))
             gfp->compression_ratio = 11.025; /* rate to compress a CD down to exactly 128000 bps */
     }
 
@@ -1603,7 +1603,7 @@ save_gain_values(lame_internal_flags * gfc)
     /* save the ReplayGain value */
     if (cfg->findReplayGain) {
         FLOAT const RadioGain = (FLOAT) GetTitleGain(rsv->rgdata);
-        if (NEQ(RadioGain, GAIN_NOT_ENOUGH_SAMPLES)) {
+        if (NEQ(RadioGain, (float)GAIN_NOT_ENOUGH_SAMPLES)) {
             rov->RadioGain = (int) floor(RadioGain * 10.0 + 0.5); /* round to nearest */
         }
         else {
