@@ -24,7 +24,6 @@
 #include <wx/dir.h> // for wxDIR_FILES
 #include <wx/timer.h> // member variable
 
-#include "widgets/FileHistory.h"
 #include "ondemand/ODTaskThread.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -41,6 +40,7 @@ class CommandHandler;
 class AppCommandEvent;
 class AudacityLogger;
 class AudacityProject;
+class FileHistory;
 
 void SaveWindowSize();
 

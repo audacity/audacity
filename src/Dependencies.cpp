@@ -59,6 +59,7 @@ AliasedFile s.
 #include "WaveTrack.h"
 #include "WaveClip.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/ProgressDialog.h"
 
 #include <unordered_map>
 

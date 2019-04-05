@@ -15,11 +15,14 @@
 #include <wx/defs.h>
 
 #include "Internat.h"
-#include "widgets/Grid.h"
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
+#include "audacity/ComponentInterface.h" // member variable
 
 class wxArrayString;
 class wxGridEvent;
+class ChoiceEditor;
+class Grid;
+class NumericEditor;
 class TrackFactory;
 class TrackList;
 class RowData;

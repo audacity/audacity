@@ -11,7 +11,7 @@
 
 #include <memory>
 #include <vector>
-#include "BackedPanel.h"
+#include "BackedPanel.h" // to inherit
 
 class Overlay;
 

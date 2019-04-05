@@ -59,7 +59,7 @@ public:
 // Declare the KeyNode arrays
 
 // Types of view currently supported
-enum ViewByType
+enum ViewByType : int
 {
    ViewByTree,
    ViewByName,
@@ -79,7 +79,7 @@ public:
            const wxPoint & pos = wxDefaultPosition,
            const wxSize & size = wxDefaultSize);
    virtual ~KeyView();
-   wxString GetName() const; // Gets the control name from the base class
+   wxString GetName() const override; // Gets the control name from the base class
 
    void RefreshBindings(const CommandIDs & names,
                         const wxArrayString & categories,
@@ -120,9 +120,9 @@ private:
    int LineToIndex(int line) const;
    int IndexToLine(int index) const;
 
-   void OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const;
-   void OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const;
-   wxCoord OnMeasureItem(size_t line) const;
+   void OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const override;
+   void OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const override;
+   wxCoord OnMeasureItem(size_t line) const override;
 
    void OnSelected(wxCommandEvent & event);
    void OnSetFocus(wxFocusEvent & event);

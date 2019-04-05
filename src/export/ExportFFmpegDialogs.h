@@ -19,7 +19,6 @@ LRN
 
 #include "../xml/XMLFileReader.h"
 #include "../FileNames.h"
-#include "../widgets/wxPanelWrapper.h"
 
 #include <unordered_map>
 

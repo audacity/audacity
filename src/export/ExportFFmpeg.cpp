@@ -43,6 +43,7 @@ function.
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include "Export.h"
 

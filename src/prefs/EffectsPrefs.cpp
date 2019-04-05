@@ -121,7 +121,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 
          wxChoice *c = S.TieChoice(_("S&ort or Group:"),
                                    wxT("/Effects/GroupBy"),
-                                   wxT("name"),
+                                   wxT("sortby:name"),
                                    visualgroups,
                                    prefsgroups);
          if( c ) c->SetMinSize(c->GetBestSize());

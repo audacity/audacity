@@ -18,14 +18,14 @@ class ShuttleGui;
 #include <wx/defs.h>
 #include <wx/timer.h> // member variable
 
-#include "../widgets/KeyView.h"
-
 #include "PrefsPanel.h"
 
 class wxRadioButton;
 class wxStaticText;
 class wxTextCtrl;
+class KeyView;
 struct NormalizedKeyString;
+enum ViewByType : int;
 
 class KeyConfigPrefs final : public PrefsPanel
 {

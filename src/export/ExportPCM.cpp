@@ -36,6 +36,7 @@
 #include "../Track.h"
 #include "../ondemand/ODManager.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include "Export.h"
 

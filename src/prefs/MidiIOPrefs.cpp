@@ -142,11 +142,9 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          S.Id(PlayID);
          mPlay = S.AddChoice(_("&Device:"),
                              {} );
-         int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"),
-                                    DEFAULT_SYNTH_LATENCY);
          mLatency = S.TieNumericTextBox(_("MIDI Synth L&atency (ms):"),
                                         wxT("/MidiIO/SynthLatency"),
-                                        latency, 3);
+                                        DEFAULT_SYNTH_LATENCY, 3);
       }
       S.EndMultiColumn();
    }
@@ -191,11 +189,11 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
 
    mPlay->Clear();
 #ifdef EXPERIMENTAL_MIDI_IN
-   mRecord->clear();
+   mRecord->Clear();
 #endif
 
    wxArrayStringEx playnames;
-   wxArrayString recordnames;
+   wxArrayStringEx recordnames;
 
    for (int i = 0; i < nDevices; i++) {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
@@ -229,7 +227,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
       mPlay->Append(playnames[0], (void *) NULL);
    }
 #ifdef EXPERIMENTAL_MIDI_IN
-   if (mRecord->size() == 0) {
+   if (mRecord->GetCount() == 0) {
       recordnames.push_back(_("No devices found"));
       mRecord->Append(recordnames[0], (void *) NULL);
    }
@@ -238,7 +236,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
       mPlay->SetSelection(0);
    }
 #ifdef EXPERIMENTAL_MIDI_IN
-   if (mRecord->size() && mRecord->GetSelection() == wxNOT_FOUND) {
+   if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
       mRecord->SetSelection(0);
    }
 #endif

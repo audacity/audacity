@@ -19,7 +19,7 @@
 #include <wx/defs.h>
 
 #include "../Theme.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
 class wxBoxSizer;
 class wxDC;

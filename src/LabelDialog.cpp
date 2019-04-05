@@ -38,6 +38,7 @@
 #include "ViewInfo.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/Grid.h"
 #include "widgets/HelpSystem.h"
 
 #include "FileNames.h"

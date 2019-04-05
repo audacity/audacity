@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <vector>
 #include <wx/longlong.h>
 
-#include "../../widgets/Overlay.h"
+#include "../../widgets/Overlay.h" // to inherit
 #include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h" // for MenuTable

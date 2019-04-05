@@ -51,6 +51,32 @@ const wxString HelpSystem::HelpServerManDir = wxT("/man/");
 const wxString HelpSystem::LocalHelpManDir = wxT("/man/");
 const wxString HelpSystem::ReleaseSuffix = wxT(".html");
 
+namespace {
+
+// Helper class to make browser "simulate" a modal dialog
+class HtmlTextHelpDialog final : public BrowserDialog
+{
+public:
+   HtmlTextHelpDialog(wxWindow *pParent, const wxString &title)
+      : BrowserDialog{ pParent, title }
+   {
+#if !wxCHECK_VERSION(3, 0, 0)
+      MakeModal( true );
+#endif
+   }
+   virtual ~HtmlTextHelpDialog()
+   {
+#if !wxCHECK_VERSION(3, 0, 0)
+      MakeModal( false );
+#endif
+      // On Windows, for some odd reason, the Audacity window will be sent to
+      // the back.  So, make sure that doesn't happen.
+      GetParent()->Raise();
+   }
+};
+
+}
+
 /// Mostly we use this so that we have the code for resizability
 /// in one place.  Other considerations like screen readers are also
 /// handled by having the code in one place.

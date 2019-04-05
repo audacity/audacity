@@ -22,6 +22,12 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "Internat.h"
 
+#include "widgets/wxPanelWrapper.h" // to inherit
+
+#if defined(__WXMSW__)
+#include <wx/msw/registry.h> // for wxRegKey
+#endif
+
 class wxCheckBox;
 
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav
@@ -150,7 +156,6 @@ extern "C" {
 
 /* rather earlier than normal, but pulls in config*.h and other program stuff
  * we need for the next bit */
-#include "widgets/LinkingHtmlWindow.h"
 #include "ShuttleGui.h"
 #include "Prefs.h"
 

@@ -169,8 +169,6 @@ scroll information.  It also has some status flags.
 #include "tracks/ui/PlayIndicatorOverlay.h"
 #include "tracks/ui/Scrubbing.h"
 
-#include "widgets/ErrorDialog.h"
-
 #include "commands/ScriptCommandRelay.h"
 #include "commands/CommandTargets.h"
 #include "commands/Command.h"
@@ -4406,7 +4404,7 @@ bool AudacityProject::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= 
       bWantSaveCopy = true;
 
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
-   if( filename.GetFullPath().empty() ){
+   if( !FileNames::IsPathAvailable( filename.GetPath( wxPATH_GET_VOLUME| wxPATH_GET_SEPARATOR) ) ){
       bHasPath = false;
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }

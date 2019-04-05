@@ -27,6 +27,7 @@ capture the more lengthy output from some commands.
 #include <wx/string.h>
 #include "../ShuttleGui.h"
 #include "../Project.h"
+#include "../widgets/ErrorDialog.h"
 
 void CommandMessageTarget::StartArray()
 {
@@ -234,6 +235,12 @@ void BriefCommandMessageTarget::EndField(){
    if( mCounts.size() > 1 ){
       mCounts.pop_back();
    }
+}
+
+
+void MessageBoxTarget::Update(const wxString &message)
+{
+   AudacityMessageBox(message);
 }
 
 

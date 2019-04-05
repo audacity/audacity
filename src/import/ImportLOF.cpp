@@ -91,6 +91,7 @@
 #include "../Prefs.h"
 #include "../Internat.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024
 

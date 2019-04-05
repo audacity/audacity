@@ -11,7 +11,7 @@
 
 #include "../MemoryX.h"
 #include <wx/dcmemory.h> // member variable
-#include "wxPanelWrapper.h"
+#include "wxPanelWrapper.h" // to inherit
 
 
 /// \brief BackedPanel is for a panel that consists of a bitmap with something drawn

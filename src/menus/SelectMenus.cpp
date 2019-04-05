@@ -54,6 +54,9 @@ void DoSelectTimeAndAudioTracks
          tracks->GetMinOffset(), tracks->GetEndTime());
 
    if( bAllTracks ) {
+      // Unselect all tracks before selecting audio.
+      for (auto t : tracks->Any())
+         t->SetSelected(false);
       for (auto t : tracks->Any<WaveTrack>())
          t->SetSelected(true);
 

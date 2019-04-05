@@ -33,7 +33,6 @@
 
 #include "../include/audacity/ComponentInterface.h"
 
-#include <wx/config.h>
 #include <wx/fileconf.h>  // to inherit wxFileConfig
 
 void InitPreferences();

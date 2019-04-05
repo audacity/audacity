@@ -52,7 +52,30 @@
 #include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
+
+namespace {
+/** \brief A private class used to store the information needed to do an
+    * export.
+    *
+    * We create a set of these during the interactive phase of the export
+    * cycle, then use them when the actual exports are done. */
+   class ExportKit
+   {
+   public:
+      Tags filetags; /**< The set of metadata to use for the export */
+      wxFileNameWrapper destfile; /**< The file to export to */
+      double t0;           /**< Start time for the export */
+      double t1;           /**< End time for the export */
+      unsigned channels;   /**< Number of channels for ExportMultipleByTrack */
+   };  // end of ExportKit declaration
+   /* we are going to want an set of these kits, and don't know how many until
+    * runtime. I would dearly like to use a std::vector, but it seems that
+    * this isn't done anywhere else in Audacity, presumably for a reason?, so
+    * I'm stuck with wxArrays, which are much harder, as well as non-standard.
+    */
+}
 
 /* define our dynamic array of export settings */
 

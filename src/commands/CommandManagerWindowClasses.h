@@ -16,7 +16,7 @@
  and certain navigation keys with commands, but certain windows do not, and
  those inherit this class.
  */
-struct NonKeystrokeInterceptingWindow
+struct AUDACITY_DLL_API NonKeystrokeInterceptingWindow
 {
    virtual ~NonKeystrokeInterceptingWindow();
 };

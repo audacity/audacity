@@ -16,6 +16,7 @@
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros
+#include <wx/window.h> // to inherit
 
 #include "ImageRoll.h"
 

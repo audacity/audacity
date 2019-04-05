@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_EDIT_CURSOR_OVERLAY__
 
 #include <memory>
-#include "../../widgets/Overlay.h"
+#include "../../widgets/Overlay.h" // to inherit
 
 class AudacityProject;
 

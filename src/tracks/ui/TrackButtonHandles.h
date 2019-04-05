@@ -93,8 +93,6 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../../widgets/PopupMenuTable.h"
-
 class MenuButtonHandle final : public ButtonHandle
 {
    MenuButtonHandle(const MenuButtonHandle&) = delete;

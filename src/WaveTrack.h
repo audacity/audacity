@@ -13,12 +13,13 @@
 
 #include "Track.h"
 #include "SampleFormat.h"
-#include "widgets/ProgressDialog.h"
 
 #include <vector>
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"
+
+class ProgressDialog;
 
 class SpectrogramSettings;
 class WaveformSettings;

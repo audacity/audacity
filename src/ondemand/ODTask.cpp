@@ -25,7 +25,7 @@ in a background thread.
 #include "../WaveTrack.h"
 #include "../Project.h"
 #include "../UndoManager.h"
-//temporarilly commented out till it is added to all projects
+//temporarily commented out till it is added to all projects
 //#include "../Profiler.h"
 
 

@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  ErrorDialog.h
+  HelpSystem.h
 
   Jimmy Johnson
   James Crook
@@ -15,7 +15,7 @@
 #include "../Audacity.h"
 
 #include <wx/defs.h>
-#include "wxPanelWrapper.h"
+#include "wxPanelWrapper.h" // to inherit
 
 class AudacityProject;
 

@@ -33,7 +33,7 @@ PrefsPanel.
 #ifndef __AUDACITY_PREFS_PANEL__
 #define __AUDACITY_PREFS_PANEL__
 
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8

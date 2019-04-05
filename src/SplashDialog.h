@@ -12,7 +12,7 @@
 #define __AUDACITY_SPLASH_DLG__
 
 #include "MemoryX.h"
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 class wxBitmap;
 class ShuttleGui;

@@ -40,6 +40,7 @@ effects from this one class.
 #include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/scrolwin.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/sstream.h>
@@ -73,6 +74,7 @@ effects from this one class.
 #include "../../wxFileNameWrapper.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
+#include "../../widgets/ProgressDialog.h"
 
 #include "../lib-src/FileDialog/FileDialog.h"
 

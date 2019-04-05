@@ -513,7 +513,8 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
    wxString pathName = newFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
-   const auto cleanedString = _("cleaned");
+
+   const wxString cleanedString( "macro-output" );
 
    if (justName.empty()) {
       wxDateTime now = wxDateTime::Now();
@@ -543,7 +544,9 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
    cleanedName += cleanedString;
    bool flag  = ::wxFileName::FileExists(cleanedName);
    if (flag == true) {
-      ::AudacityMessageBox(_("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
+      ::AudacityMessageBox(_("Cannot create directory '%s'. \nFile already exists that is not a directory"),
+         cleanedName
+      );
       return wxString{};
    }
    ::wxFileName::Mkdir(cleanedName, 0777, wxPATH_MKDIR_FULL); // make sure it exists
@@ -640,6 +643,7 @@ bool MacroCommands::ApplySpecialCommand(
       filename = BuildCleanFileName(mFileName, extension);
    }
 
+   const wxString cleanedString("macro-output");
    // We have a command index, but we don't use it!
    // TODO: Make this special-batch-command code use the menu item code....
    // FIXME: TRAP_ERR No error reporting on write file failure in batch mode.
@@ -650,16 +654,16 @@ bool MacroCommands::ApplySpecialCommand(
       return true;
    } else if (command == wxT("ExportMP3_56k_before")) {
 #if defined(__WXMSW__)
-      filename.Replace(wxT("cleaned\\"), wxT("cleaned\\MasterBefore_"), false);
+      filename.Replace(cleanedString + wxT("\\"), cleanedString + wxT("\\MasterBefore_"), false);
 #else
-      filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterBefore_"), false);
+      filename.Replace(cleanedString + wxT("/"), cleanedString + wxT("/MasterBefore_"), false);
 #endif
       return WriteMp3File(filename, 56);
    } else if (command == wxT("ExportMP3_56k_after")) {
 #if defined(__WXMSW__)
-      filename.Replace(wxT("cleaned\\"), wxT("cleaned\\MasterAfter_"), false);
+      filename.Replace(cleanedString + wxT("\\"), cleanedString + wxT("\\MasterAfter_"), false);
 #else
-      filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterAfter_"), false);
+      filename.Replace(cleanedString + wxT("/"), cleanedString + wxT("/MasterAfter_"), false);
 #endif
       return WriteMp3File(filename, 56);
    } else if (command == wxT("ExportMP3")) {

@@ -43,6 +43,7 @@
 #include "../Internat.h"
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
+#include "../widgets/ProgressDialog.h"
 
 
 #define DESC _("Ogg Vorbis files")

@@ -87,6 +87,7 @@ CommandManager.  It holds the callback for one command.
 
 #include <wx/defs.h>
 #include <wx/eventfilter.h>
+#include <wx/evtloop.h>
 #include <wx/hash.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -1811,10 +1812,8 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       if (mCommandNameHash[name]) {
-         if (GetDefaultKeyFromName(name) != key) {
-            mCommandNameHash[name]->key = key;
-            mXMLKeysRead++;
-         }
+         mCommandNameHash[name]->key = key;
+         mXMLKeysRead++;
       }
    }
 

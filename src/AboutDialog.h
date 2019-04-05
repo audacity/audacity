@@ -13,7 +13,7 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 extern const wxString VerCheckArgs();
 extern const wxString VerCheckUrl();

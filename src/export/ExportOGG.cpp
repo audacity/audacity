@@ -37,6 +37,7 @@
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions

@@ -24,6 +24,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/Grid.h"
 
 #define EXTIMPORT_MIME_SUPPORT 0
 

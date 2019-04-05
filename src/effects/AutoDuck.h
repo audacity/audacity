@@ -12,7 +12,6 @@
 #define __AUDACITY_EFFECT_AUTODUCK__
 
 #include "Effect.h"
-#include "../widgets/wxPanelWrapper.h"
 
 class wxBitmap;
 class wxTextCtrl;

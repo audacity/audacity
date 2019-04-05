@@ -64,6 +64,10 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/stat.h>
 #endif
 
+#if defined(__WXMSW__)
+#include <wx/msw/registry.h> // for wxRegKey
+#endif
+
 #include "AudacityException.h"
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
@@ -100,8 +104,9 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
 #include "tracks/ui/Scrubbing.h"
+#include "widgets/FileHistory.h"
 
-//temporarilly commented out till it is added to all projects
+//temporarily commented out till it is added to all projects
 //#include "Profiler.h"
 
 #include "ModuleManager.h"
@@ -327,7 +332,7 @@ void QuitAudacity(bool bForce)
    ODManager::Quit();
 
    //print out profile if we have one by deleting it
-   //temporarilly commented out till it is added to all projects
+   //temporarily commented out till it is added to all projects
    //DELETE Profiler::Instance();
 
    //remove our logger

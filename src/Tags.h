@@ -31,19 +31,20 @@
 
 #include "Audacity.h"
 
-#include "widgets/Grid.h"
 #include "xml/XMLTagHandler.h"
 
 #include "MemoryX.h"
 #include <utility>
 
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
 
 class wxArrayString;
 class wxComboBox;
 class wxGridCellChoiceEditor;
+class wxGridCellStringRenderer;
+class wxGridEvent;
 class wxTextCtrl;
 
 class Grid;

@@ -56,6 +56,7 @@
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"

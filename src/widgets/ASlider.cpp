@@ -1239,7 +1239,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       SendUpdate( mCurrentValue );
 }
 
-void LWSlider::OnKeyEvent(wxKeyEvent & event)
+void LWSlider::OnKeyDown(wxKeyEvent & event)
 {
    if (mEnabled)
    {
@@ -1507,8 +1507,8 @@ void LWSlider::SetEnabled(bool enabled)
 // ASlider
 //
 
-BEGIN_EVENT_TABLE(ASlider, wxWindow)
-   EVT_CHAR(ASlider::OnKeyEvent)
+BEGIN_EVENT_TABLE(ASlider, wxPanel)
+   EVT_KEY_DOWN(ASlider::OnKeyDown)
    EVT_MOUSE_EVENTS(ASlider::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(ASlider::OnCaptureLost)
    EVT_PAINT(ASlider::OnPaint)
@@ -1628,9 +1628,9 @@ void ASlider::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
    mLWSlider->OnMouseEvent(e);
 }
 
-void ASlider::OnKeyEvent(wxKeyEvent &event)
+void ASlider::OnKeyDown(wxKeyEvent &event)
 {
-   mLWSlider->OnKeyEvent(event);
+   mLWSlider->OnKeyDown(event);
 }
 
 void ASlider::OnSetFocus(wxFocusEvent & WXUNUSED(event))

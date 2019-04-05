@@ -166,7 +166,7 @@ void AddEffectMenuItems(
 {
    size_t pluginCnt = plugs.size();
 
-   wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
+   wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("sortby:name"));
 
    bool grouped = false;
    if (groupBy.StartsWith(wxT("groupby")))
@@ -340,7 +340,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
       plug = pm.GetNextPluginForEffectType(type);
    }
 
-   wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
+   wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("sortby:name"));
 
    using Comparator = bool(*)(const PluginDescriptor*, const PluginDescriptor*);
    Comparator comp1, comp2;

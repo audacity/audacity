@@ -24,7 +24,6 @@ class wxWindow;
 #include "../SampleFormat.h"
 #include "../SelectedRegion.h"
 #include "../Internat.h"
-#include "../widgets/ProgressDialog.h"
 #include "../include/audacity/ComponentInterface.h"
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 

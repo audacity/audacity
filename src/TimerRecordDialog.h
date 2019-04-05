@@ -21,6 +21,7 @@
 #include "export/Export.h"
 
 class wxCheckBox;
+class wxChoice;
 class wxDateEvent;
 class wxDatePickerCtrl;
 class wxTimerEvent;

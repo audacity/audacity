@@ -40,6 +40,7 @@
 #include "../ondemand/ODManager.h"
 #include "../ondemand/ODComputeSummaryTask.h"
 #include "../prefs/QualityPrefs.h"
+#include "../widgets/ProgressDialog.h"
 
 //If OD is enabled, he minimum number of samples a file has to use it.
 //Otherwise, we use the older PCMAliasBlockFile method since it should be fast enough.

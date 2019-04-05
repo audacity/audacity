@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
-#include "wxPanelWrapper.h"
+#include "wxPanelWrapper.h" // to inherit
 
 #include <wx/colour.h> // member variable
 #include <wx/pen.h> // member variable

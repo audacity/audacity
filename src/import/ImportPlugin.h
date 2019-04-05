@@ -61,11 +61,11 @@ but little else.
 #include "../Internat.h"
 #include "../MemoryX.h"
 
-#include "../widgets/ProgressDialog.h"
-
 #include "ImportRaw.h" // defines TrackHolders
 
 class wxArrayString;
+class ProgressDialog;
+enum class ProgressResult : unsigned;
 class TrackFactory;
 class Track;
 class Tags;
@@ -121,11 +121,7 @@ protected:
 class ImportFileHandle /* not final */
 {
 public:
-   ImportFileHandle(const FilePath & filename)
-   :  mFilename(filename),
-   mProgress{}
-   {
-   }
+   ImportFileHandle(const FilePath & filename);
 
    virtual ~ImportFileHandle();
 
@@ -166,7 +162,7 @@ public:
 
 protected:
    FilePath mFilename;
-   Maybe<ProgressDialog> mProgress;
+   std::unique_ptr<ProgressDialog> mProgress;
 };
 
 

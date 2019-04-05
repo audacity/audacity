@@ -16,8 +16,8 @@
 #ifndef __AUDACITY_LINKINGHTMLWINDOW__
 #define __AUDACITY_LINKINGHTMLWINDOW__
 
-#include "HtmlWindow.h"
-#include "wxPanelWrapper.h"
+#include "HtmlWindow.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
