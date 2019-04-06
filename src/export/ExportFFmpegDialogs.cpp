@@ -1570,7 +1570,10 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mMaxPartitionOrderSpin = S.Id(FEMaxPartOrderID).TieSpinCtrl(_("Max. PtO"), wxT("/FileFormats/FFmpegMaxPartOrder"), -1, 8, -1);
                   mMaxPartitionOrderSpin->SetToolTip(_("Maximal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"));
 
+                  /* i18n-hint:  Abbreviates "Linear Predictive Coding",
+                     but this text needs to be kept very short */
                   S.AddVariableText(_("Use LPC"));
+                  // PRL:  This preference is not used anywhere!
                   S.Id(FEUseLPCID).TieCheckBox( {}, wxT("/FileFormats/FFmpegUseLPC"), true);
                }
                S.EndMultiColumn();
