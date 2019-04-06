@@ -29,7 +29,6 @@ include_directories(${top_dir}/lib-src/libsoxr/src) #really?  Src?
 include_directories(${top_dir}/lib-src/libvamp)
 include_directories(${top_dir}/lib-src/libvorbis/include)
 include_directories(${top_dir}/lib-src/lib-widget-extra)
-include_directories(${top_dir}/lib-src/portaudio-v19/include)
 include_directories(${top_dir}/lib-src/portmixer/include)
 include_directories(${top_dir}/lib-src/portsmf)
 include_directories(${top_dir}/lib-src/sbsms/include)
@@ -497,7 +496,7 @@ FileDialog
 FLACXX-static
 libsndfile
 libsoxr
-portaudio_static
+portmixer
 portmidi-static
 )
 if(MSVC)

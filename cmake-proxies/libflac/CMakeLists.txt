@@ -190,8 +190,7 @@ add_library(FLAC-static STATIC
     "${TARGET_SOURCE}/src/libFLAC/ogg_decoder_aspect.c"
     "${TARGET_SOURCE}/src/libFLAC/ogg_encoder_aspect.c"
     "${TARGET_SOURCE}/src/libFLAC/ogg_helper.c"
-    "${TARGET_SOURCE}/src/libFLAC/ogg_mapping.c"
-    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/libFLAC/windows_unicode_filenames.c>")
+    "${TARGET_SOURCE}/src/libFLAC/ogg_mapping.c")
 
 include_directories(
     "${TARGET_SOURCE}/include"
