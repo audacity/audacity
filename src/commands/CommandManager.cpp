@@ -482,7 +482,7 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
    static const auto list = [] {
       // These short cuts are for the max list only....
       const char *const strings[] = {
-         "Ctrl+I",
+         // "Ctrl+I",
          "Ctrl+Alt+I",
          "Ctrl+J",
          "Ctrl+Alt+J",
