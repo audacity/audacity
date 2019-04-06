@@ -337,11 +337,31 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
             wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
             dc.SetFont(labelFont);
             dc.GetTextExtent( wt->GetName(), &x, &y );
-            dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-            // Shield's background is translucent, alpha=100, but currently 
-            // only on mac.
-            AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, 100 );
+
+#ifdef __WXMAC__
+            // Mac dc is a graphics dc already.
+            // Shield's background is translucent, alpha=180
+            AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, 180 );
             dc.DrawRoundedRectangle( rect.x+7, rect.y+1,  x+16, y+4, 8.0 );
+#else
+            // This little dance with wxImage in order to draw to a graphic dc
+            // which we can then paste as a translucent bitmap onto the real dc.
+            wxImage image( x+18, y+6 );
+            image.InitAlpha();
+            unsigned char *alpha=image.GetAlpha();
+            memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
+    
+            wxGraphicsContext &gc=*wxGraphicsContext::Create(image);
+            // Shield's background is translucent, alpha=180.  This is to a gc, not a dc.
+            AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, 180 );
+            // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
+            gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
+            // delete the gc so as to free and so update the wxImage.
+            delete &gc;
+            wxBitmap bitmap( image );
+            dc.DrawBitmap( bitmap, rect.x+6, rect.y);
+#endif
+            dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
             dc.DrawText (wt->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
          }
       },

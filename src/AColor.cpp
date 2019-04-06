@@ -314,6 +314,27 @@ void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen, int alpha )
    dc->SetPen( sparePen );
 }
 
+void AColor::UseThemeColour( wxGraphicsContext * gc, int iBrush, int iPen, int alpha )
+{
+   if (!inited)
+      Init();
+   // do nothing if no colours set.
+   if( (iBrush == -1) && ( iPen ==-1))
+      return;
+   wxColour col = wxColour(0,0,0);
+   if( iBrush !=-1 ){
+      col = theTheme.Colour( iBrush );
+      col.Set( col.Red(), col.Green(), col.Blue(), alpha);
+      spareBrush.SetColour( col );
+      gc->SetBrush( spareBrush );
+   }
+   if( iPen != -1)
+      col = theTheme.Colour( iPen );
+   sparePen.SetColour( col );
+   gc->SetPen( sparePen );
+}
+
+
 void AColor::Light(wxDC * dc, bool selected, bool highlight)
 {
    if (!inited)
