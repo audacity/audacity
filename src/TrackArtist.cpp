@@ -289,11 +289,53 @@ void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
    }
 }
 
+// Draws the track name on the track, if it is needed.
+void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
+{
+   auto name = t->GetName();
+   if( name.IsEmpty())
+      return;
+   if( !t->IsLeader())
+      return;
+   auto &dc = context.dc;
+   wxBrush Brush;
+   wxCoord x,y;
+   wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   dc.SetFont(labelFont);
+   dc.GetTextExtent( t->GetName(), &x, &y );
+
+#ifdef __WXMAC__
+   // Mac dc is a graphics dc already.
+   // Shield's background is translucent, alpha=140
+   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, 140 );
+   dc.DrawRoundedRectangle( rect.x+7, rect.y+1,  x+16, y+4, 8.0 );
+#else
+   // This little dance with wxImage in order to draw to a graphic dc
+   // which we can then paste as a translucent bitmap onto the real dc.
+   wxImage image( x+18, y+6 );
+   image.InitAlpha();
+   unsigned char *alpha=image.GetAlpha();
+   memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
+    
+   wxGraphicsContext &gc=*wxGraphicsContext::Create(image);
+   // Shield's background is translucent, alpha=140.  This is to a gc, not a dc.
+   AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, 140 );
+   // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
+   gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
+   // delete the gc so as to free and so update the wxImage.
+   delete &gc;
+   wxBitmap bitmap( image );
+   dc.DrawBitmap( bitmap, rect.x+6, rect.y);
+#endif
+   dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
+   dc.DrawText (t->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
+}
+
 void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
                             const Track * t,
                             const wxRect & rect)
 {
-   auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
 
    t->TypeSwitch(
       [&](const WaveTrack *wt) {
@@ -301,7 +343,6 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
             clip->ClearDisplayRect();
          }
 
-         const auto artist = TrackArtist::Get( context );
          const auto hasSolo = artist->hasSolo;
          bool muted = (hasSolo || wt->GetMute()) &&
             !wt->GetSolo();
@@ -325,51 +366,12 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
    #if defined(__WXMAC__)
          dc.GetGraphicsContext()->SetAntialiasMode(aamode);
    #endif
-
-         const auto bShowTrackNameInWaveform =
-            artist->mbShowTrackNameInWaveform;
-         if (bShowTrackNameInWaveform &&
-             wt->IsLeader() &&
-             // Exclude empty name.
-             !wt->GetName().empty()) {
-            wxBrush Brush;
-            wxCoord x,y;
-            wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-            dc.SetFont(labelFont);
-            dc.GetTextExtent( wt->GetName(), &x, &y );
-
-#ifdef __WXMAC__
-            // Mac dc is a graphics dc already.
-            // Shield's background is translucent, alpha=180
-            AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, 180 );
-            dc.DrawRoundedRectangle( rect.x+7, rect.y+1,  x+16, y+4, 8.0 );
-#else
-            // This little dance with wxImage in order to draw to a graphic dc
-            // which we can then paste as a translucent bitmap onto the real dc.
-            wxImage image( x+18, y+6 );
-            image.InitAlpha();
-            unsigned char *alpha=image.GetAlpha();
-            memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
-    
-            wxGraphicsContext &gc=*wxGraphicsContext::Create(image);
-            // Shield's background is translucent, alpha=180.  This is to a gc, not a dc.
-            AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, 180 );
-            // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-            gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
-            // delete the gc so as to free and so update the wxImage.
-            delete &gc;
-            wxBitmap bitmap( image );
-            dc.DrawBitmap( bitmap, rect.x+6, rect.y);
-#endif
-            dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-            dc.DrawText (wt->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
-         }
       },
    #ifdef USE_MIDI
       [&](const NoteTrack *nt) {
          bool muted = false;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         const auto artist = TrackArtist::Get( context );
+//       const auto artist = TrackArtist::Get( context );
          const auto hasSolo = artist->hasSolo;
          muted = (hasSolo || nt->GetMute()) && !nt->GetSolo();
 #endif
@@ -383,6 +385,8 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
          DrawTimeTrack( context, tt, rect );
       }
    );
+   if( artist->mbShowTrackNameInTrack )
+      DrawTrackName( context, t, rect );
 }
 
 void TrackArt::DrawVRuler
@@ -3245,7 +3249,7 @@ void TrackArtist::UpdatePrefs()
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
    mSampleDisplay = TracksPrefs::SampleViewChoice();
 
-   mbShowTrackNameInWaveform =
+   mbShowTrackNameInTrack =
       gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
    
    SetColours(0);

@@ -477,7 +477,10 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
    // allowed to be obscured by the text].
    const int xExtra= (3 * mIconWidth)/2;
 
+   bool bAvoidName = false;
    const int nRows = wxMin((r.height / yRowHeight) + 1, MAX_NUM_ROWS);
+   if( nRows > 2 )
+      bAvoidName = gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
    // Initially none of the rows have been used.
    // So set a value that is less than any valid value.
    {
@@ -502,6 +505,7 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
       // (This is to encourage merging of adjacent label boundaries).
       while( (iRow<nRowsUsed) && (xUsed[iRow] != x ))
          iRow++;
+
       // IF we didn't find one THEN
       // find any row that can take a span starting at x.
       if( iRow >= nRowsUsed )
@@ -513,6 +517,21 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
       // IF we found such a row THEN record a valid position.
       if( iRow<nRows )
       {
+         // Logic to ameliorate case where first label is under the 
+         // (on track) track name.  For later labels it does not matter
+         // as we can scroll left or right and/or zoom.
+         // A possible alternative idea would be to (instead) increase the 
+         // translucency of the track name, when the mouse is inside it.
+         if( (i==0 ) && (iRow==0) && bAvoidName ){
+            // reserve some space in first row.
+            // reserve max of 200px or t1, or text box right edge.
+            const int x2 = zoomInfo.TimeToPosition(0.0, r.x) + 200;
+            xUsed[iRow]=x+labelStruct.width+xExtra;
+            if( xUsed[iRow] < x1 ) xUsed[iRow]=x1;
+            if( xUsed[iRow] < x2 ) xUsed[iRow]=x2;
+            iRow=1;
+         }
+
          // Possibly update the number of rows actually used.
          if( iRow >= nRowsUsed )
             nRowsUsed=iRow+1;

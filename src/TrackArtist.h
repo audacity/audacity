@@ -60,6 +60,9 @@ namespace TrackArt {
 
    void DrawVRuler(TrackPanelDrawingContext &context,
                    const Track *t, const wxRect & rect, bool bSelected );
+   
+   void DrawTrackName(TrackPanelDrawingContext &context, 
+                      const Track *t, const wxRect & rect );
 
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
    void DrawSyncLockTiles(
@@ -177,7 +180,7 @@ public:
    float mdBrange;            // "/GUI/EnvdBRange"
    long mShowClipping;        // "/GUI/ShowClipping"
    int  mSampleDisplay;
-   bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
+   bool mbShowTrackNameInTrack;  // "/GUI/ShowTrackNameInWaveform"
 
    wxBrush blankBrush;
    wxBrush unselectedBrush;
