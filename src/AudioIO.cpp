@@ -1771,9 +1771,16 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
    if(silenceLevelDB < -dBRange)
    {
-      silenceLevelDB = -dBRange + 3;   // meter range was made smaller than SilenceLevel
-      gPrefs->Write(ENV_DB_KEY, dBRange); // so set SilenceLevel reasonable
-      gPrefs->Flush();
+      silenceLevelDB = -dBRange + 3;
+      // meter range was made smaller than SilenceLevel
+      // so set SilenceLevel reasonable
+
+      // PRL:  update prefs, or correct it only in-session?
+      // The behavior (as of 2.3.1) was the latter, the code suggested that
+      // the intent was the former;  I preserve the behavior, but uncomment
+      // this if you disagree.
+      // gPrefs->Write(wxT("/AudioIO/SilenceLevel"), silenceLevelDB);
+      // gPrefs->Flush();
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
 
