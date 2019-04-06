@@ -66,6 +66,9 @@
     <ClInclude Include="..\..\..\lib-src\mpglib\tabinit.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\mpglib\config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
