@@ -62,10 +62,10 @@ public:
 
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
-class EnumSetting
+class ChoiceSetting
 {
 public:
-   EnumSetting(
+   ChoiceSetting(
       const wxString &key,
       const EnumValueSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol
@@ -104,14 +104,14 @@ protected:
    const size_t mDefaultSymbol;
 };
 
-/// Extends EnumSetting with a corresponding table of integer codes
+/// Extends ChoiceSetting with a corresponding table of integer codes
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class EncodedEnumSetting : public EnumSetting
+class EnumSetting : public ChoiceSetting
 {
 public:
-   EncodedEnumSetting(
+   EnumSetting(
       const wxString &key,
       const EnumValueSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol,
@@ -119,7 +119,7 @@ public:
       const int intValues[] = nullptr, // must have same size as symbols
       const wxString &oldKey = wxString("")
    )
-      : EnumSetting{ key, symbols, nSymbols, defaultSymbol }
+      : ChoiceSetting{ key, symbols, nSymbols, defaultSymbol }
       , mIntValues{ intValues }
       , mOldKey{ oldKey }
    {

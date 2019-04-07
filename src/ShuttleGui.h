@@ -24,7 +24,7 @@
 // For ShuttleGuiGetDefinitions.
 #include "commands/CommandTargets.h"
 
-class EnumSetting;
+class ChoiceSetting;
 
 class wxArrayStringEx;
 
@@ -213,7 +213,7 @@ public:
    // This one is defined in terms of the next and not virtual
    virtual wxChoice *TieChoice(
       const wxString &Prompt,
-      EnumSetting &enumSetting );
+      ChoiceSetting &choiceSetting );
 
    virtual wxChoice * TieChoice(
       const wxString &Prompt,

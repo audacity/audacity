@@ -368,13 +368,13 @@ void FinishPreferences()
 }
 
 //////////
-wxString EnumSetting::Read() const
+wxString ChoiceSetting::Read() const
 {
    const auto &defaultValue = Default().Internal();
    wxString value;
    if ( !gPrefs->Read(mKey, &value, defaultValue) )
       if (!mMigrated) {
-         const_cast<EnumSetting*>(this)->Migrate( value );
+         const_cast<ChoiceSetting*>(this)->Migrate( value );
          mMigrated = true;
       }
 
@@ -386,19 +386,19 @@ wxString EnumSetting::Read() const
    return value;
 }
 
-size_t EnumSetting::Find( const wxString &value ) const
+size_t ChoiceSetting::Find( const wxString &value ) const
 {
    return size_t(
       std::find( begin(), end(), EnumValueSymbol{ value, {} } )
          - mSymbols );
 }
 
-void EnumSetting::Migrate( wxString &value )
+void ChoiceSetting::Migrate( wxString &value )
 {
    (void)value;// Compiler food
 }
 
-bool EnumSetting::Write( const wxString &value )
+bool ChoiceSetting::Write( const wxString &value )
 {
    auto index = Find( value );
    if (index >= mnSymbols)
@@ -409,7 +409,7 @@ bool EnumSetting::Write( const wxString &value )
    return result;
 }
 
-int EncodedEnumSetting::ReadInt() const
+int EnumSetting::ReadInt() const
 {
    if (!mIntValues)
       return 0;
@@ -419,7 +419,7 @@ int EncodedEnumSetting::ReadInt() const
    return mIntValues[ index ];
 }
 
-size_t EncodedEnumSetting::FindInt( int code ) const
+size_t EnumSetting::FindInt( int code ) const
 {
    if (!mIntValues)
       return mnSymbols;
@@ -429,7 +429,7 @@ size_t EncodedEnumSetting::FindInt( int code ) const
          - mIntValues );
 }
 
-void EncodedEnumSetting::Migrate( wxString &value )
+void EnumSetting::Migrate( wxString &value )
 {
    int intValue = 0;
    if ( !mOldKey.empty() &&
@@ -447,7 +447,7 @@ void EncodedEnumSetting::Migrate( wxString &value )
    }
 }
 
-bool EncodedEnumSetting::WriteInt( int code ) // you flush gPrefs afterward
+bool EnumSetting::WriteInt( int code ) // you flush gPrefs afterward
 {
    auto index = FindInt( code );
    if ( index >= mnSymbols )

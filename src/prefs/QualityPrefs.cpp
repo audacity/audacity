@@ -49,7 +49,7 @@ static_assert( nChoicesFormat == WXSIZEOF(intChoicesFormat), "size mismatch" );
 
 static const size_t defaultChoiceFormat = 2; // floatSample
 
-static EncodedEnumSetting formatSetting{
+static EnumSetting formatSetting{
    wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
    choicesFormat, nChoicesFormat, defaultChoiceFormat,
    
@@ -78,7 +78,7 @@ static_assert(
 
 static const size_t defaultFastDither = 0; // none
 
-static EncodedEnumSetting fastDitherSetting{
+static EnumSetting fastDitherSetting{
    wxT("Quality/DitherAlgorithmChoice"),
    choicesDither, nChoicesDither, defaultFastDither,
    intChoicesDither,
@@ -87,7 +87,7 @@ static EncodedEnumSetting fastDitherSetting{
 
 static const size_t defaultBestDither = 3; // shaped
 
-static EncodedEnumSetting bestDitherSetting{
+static EnumSetting bestDitherSetting{
    wxT("Quality/HQDitherAlgorithmChoice"),
    choicesDither, nChoicesDither, defaultBestDither,
 

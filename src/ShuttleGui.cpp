@@ -1843,18 +1843,18 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 ///                             those as default.
 wxChoice *ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
-   EnumSetting &enumSetting )
+   ChoiceSetting &choiceSetting )
 {
    // Do this to force any needed migrations first
-   enumSetting.Read();
+   choiceSetting.Read();
 
    wxArrayStringEx visibleChoices, internalChoices;
-   for (const auto &ident : enumSetting) {
+   for (const auto &ident : choiceSetting) {
       visibleChoices.push_back( ident.Translation() );
       internalChoices.push_back( ident.Internal() );
    }
    return TieChoice(
-      Prompt, enumSetting.Key(), enumSetting.Default().Internal(),
+      Prompt, choiceSetting.Key(), choiceSetting.Default().Internal(),
          visibleChoices, internalChoices );
 }
 

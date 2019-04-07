@@ -82,7 +82,7 @@ static const int intChoicesMethod[] = {
 
 static_assert( WXSIZEOF(intChoicesMethod) == numMethods, "size mismatch" );
 
-EncodedEnumSetting Resample::FastMethodSetting{
+EnumSetting Resample::FastMethodSetting{
    fastMethodKey,
    methodNames, numMethods,
    fastMethodDefault,
@@ -91,7 +91,7 @@ EncodedEnumSetting Resample::FastMethodSetting{
    oldFastMethodKey
 };
 
-EncodedEnumSetting Resample::BestMethodSetting
+EnumSetting Resample::BestMethodSetting
 {
    bestMethodKey,
    methodNames, numMethods,

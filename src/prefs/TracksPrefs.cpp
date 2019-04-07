@@ -72,7 +72,7 @@ static_assert( nChoicesView == WXSIZEOF(intChoicesView), "size mismatch" );
 
 static const size_t defaultChoiceView = 0;
 
-class TracksViewModeSetting : public EncodedEnumSetting {
+class TracksViewModeSetting : public EnumSetting {
 public:
    TracksViewModeSetting(
       const wxString &key,
@@ -82,7 +82,7 @@ public:
       const int intValues[],
       const wxString &oldKey
    )
-      : EncodedEnumSetting{
+      : EnumSetting{
          key, symbols, nSymbols, defaultSymbol, intValues, oldKey }
    {}
 
@@ -91,7 +91,7 @@ public:
       // Special logic for this preference which was twice migrated!
 
       // First test for the older but not oldest key:
-      EncodedEnumSetting::Migrate(value);
+      EnumSetting::Migrate(value);
       if (!value.empty())
          return;
 
@@ -144,7 +144,7 @@ static_assert(
 
 static const size_t defaultChoiceSampleDisplay = 1;
 
-static EncodedEnumSetting sampleDisplaySetting{
+static EnumSetting sampleDisplaySetting{
    wxT("/GUI/SampleViewChoice"),
    choicesSampleDisplay, nChoicesSampleDisplay, defaultChoiceSampleDisplay,
 
@@ -197,7 +197,7 @@ static_assert( nChoicesZoom == WXSIZEOF(intChoicesZoom), "size mismatch" );
 
 static const size_t defaultChoiceZoom1 = 2; // kZoomDefault
 
-static EncodedEnumSetting zoom1Setting{
+static EnumSetting zoom1Setting{
    wxT("/GUI/ZoomPreset1Choice"),
    choicesZoom, nChoicesZoom, defaultChoiceZoom1,
 
@@ -207,7 +207,7 @@ static EncodedEnumSetting zoom1Setting{
 
 static const size_t defaultChoiceZoom2 = 13; // kZoom4To1
 
-static EncodedEnumSetting zoom2Setting{
+static EnumSetting zoom2Setting{
    wxT("/GUI/ZoomPreset2Choice"),
    choicesZoom, nChoicesZoom, defaultChoiceZoom2,
 
