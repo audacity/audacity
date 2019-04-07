@@ -348,6 +348,7 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
             !wt->GetSolo();
 
    #if defined(__WXMAC__)
+         const auto &dc = context.dc;
          wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
          dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
    #endif
