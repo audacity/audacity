@@ -70,7 +70,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       // JKC: LADSPA, LV2, Nyquist, VST, VAMP should not be translated.
 #if USE_LADSPA
       S.TieCheckBox(wxT("&LADSPA"),
-                    wxT("/Ladspa/Enable"),
+                    wxT("/LADSPA/Enable"),
                     true);
 #endif
 
@@ -87,7 +87,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 
 #if USE_VAMP
       S.TieCheckBox(wxT("&Vamp"),
-                    wxT("/VAMP/Enable"),
+                    wxT("/Vamp/Enable"),
                     true);
 #endif
 
