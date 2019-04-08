@@ -207,6 +207,15 @@ void LV2EffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol LV2EffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_LV2
+   return LV2EFFECTS_FAMILY;
+#else
+   return {};
+#endif
+}
+
 const FileExtensions &LV2EffectsModule::GetFileExtensions()
 {
    static FileExtensions empty;

@@ -154,6 +154,15 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol NyquistEffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_NYQUIST
+   return NYQUISTEFFECTS_FAMILY;
+#else
+   return {};
+#endif
+}
+
 const FileExtensions &NyquistEffectsModule::GetFileExtensions()
 {
    static FileExtensions result{{ _T("ny") }};

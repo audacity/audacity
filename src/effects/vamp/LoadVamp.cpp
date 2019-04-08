@@ -111,6 +111,15 @@ void VampEffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol VampEffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_VAMP
+   return VAMPEFFECTS_FAMILY;
+#else
+   return {};
+#endif
+}
+
 const FileExtensions &VampEffectsModule::GetFileExtensions()
 {
    static FileExtensions empty;

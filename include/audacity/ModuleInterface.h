@@ -76,6 +76,11 @@ public:
    // Called just prior to deletion to allow releasing any resources.
    virtual void Terminate() = 0;
 
+   // A symbol identifying the family of plugin provided by this module;
+   // if it is not empty, then the family as a whole can be enabled or
+   // disabled by the user in Preferences
+   virtual EffectFamilySymbol GetOptionalFamilySymbol() = 0;
+
    // "Paths" returned by FindPluginPaths() and passed back to
    // DiscoverPluginsAtPath() have module-specific meaning.
    // They are not necessarily file system paths to existent files that

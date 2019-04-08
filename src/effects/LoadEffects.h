@@ -38,6 +38,7 @@ public:
 
    bool Initialize() override;
    void Terminate() override;
+   EffectFamilySymbol GetOptionalFamilySymbol() override;
 
    const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override { return {}; }

@@ -290,6 +290,13 @@ void BuiltinEffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol BuiltinEffectsModule::GetOptionalFamilySymbol()
+{
+   // Returns empty, because there should not be an option in Preferences to
+   // disable the built-in effects.
+   return {};
+}
+
 const FileExtensions &BuiltinEffectsModule::GetFileExtensions()
 {
    static FileExtensions empty;
