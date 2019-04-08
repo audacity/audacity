@@ -62,6 +62,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    {
 
 #if USE_AUDIO_UNITS
+/* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
       S.TieCheckBox(_("Audio Unit"),
                     wxT("/AudioUnit/Enable"),
                     true);
@@ -69,30 +70,43 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 
       // JKC: LADSPA, LV2, Nyquist, VST, VAMP should not be translated.
 #if USE_LADSPA
-      S.TieCheckBox(wxT("&LADSPA"),
+/* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+   (Application programming interface)
+ */
+      S.TieCheckBox(_("&LADSPA"),
                     wxT("/LADSPA/Enable"),
                     true);
 #endif
 
 #if USE_LV2
-      S.TieCheckBox(wxT("LV&2"),
+/* i18n-hint: abbreviates
+   "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
+      S.TieCheckBox(_("LV&2"),
                     wxT("/LV2/Enable"),
                     true);
 #endif
 #if USE_NYQUIST
-      S.TieCheckBox(wxT("N&yquist"),
+/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
+ Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+ In the translations of this and other strings, you may transliterate the
+ name into another alphabet.  */
+      S.TieCheckBox(_("N&yquist"),
                     wxT("/Nyquist/Enable"),
                     true);
 #endif
 
 #if USE_VAMP
-      S.TieCheckBox(wxT("&Vamp"),
+/* i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+   It is not an abbreviation for anything.  See http://vamp-plugins.org */
+      S.TieCheckBox(_("&Vamp"),
                     wxT("/Vamp/Enable"),
                     true);
 #endif
 
 #if USE_VST
-      S.TieCheckBox(wxT("V&ST"),
+/* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+   developed by Steinberg GmbH */
+      S.TieCheckBox(_("V&ST"),
                     wxT("/VST/Enable"),
                     true);
 #endif
