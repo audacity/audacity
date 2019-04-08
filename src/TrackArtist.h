@@ -61,6 +61,11 @@ namespace TrackArt {
    void DrawVRuler(TrackPanelDrawingContext &context,
                    const Track *t, const wxRect & rect, bool bSelected );
    
+   void DrawTrackNames(TrackPanelDrawingContext &context,
+                       const TrackList *tracks,
+                       const wxRegion & reg,
+                       const wxRect &clip);
+
    void DrawTrackName(TrackPanelDrawingContext &context, 
                       const Track *t, const wxRect & rect );
 

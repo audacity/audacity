@@ -48,6 +48,7 @@ audio tracks.
 #include <math.h>
 #include <float.h>
 #include <limits>
+#include <wx/utils.h>
 
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>
@@ -289,6 +290,52 @@ void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
    }
 }
 
+void TrackArt::DrawTrackNames(TrackPanelDrawingContext &context,
+                              const TrackList * tracks,
+                              const wxRegion & reg,
+                              const wxRect & clip)
+{
+   // Fix the horizontal extent; will later change only the vertical extent.
+   const auto artist = TrackArtist::Get( context );
+   const auto leftOffset = artist->leftOffset;
+   wxRect teamRect{
+      clip.x + leftOffset, 0, clip.width - (leftOffset + kRightMargin), 0
+   };
+
+   const auto &zoomInfo = *artist->pZoomInfo;
+   if( !artist->mbShowTrackNameInTrack )
+      return;
+
+   for(auto leader : tracks->Leaders()) {
+      auto group = TrackList::Channels( leader );
+      leader = leader->SubstitutePendingChangedTrack().get();
+
+      teamRect.y = leader->GetY() - zoomInfo.vpos;
+      teamRect.height = group.sum( [&] (const Track *channel) {
+         channel = channel->SubstitutePendingChangedTrack().get();
+         return channel->GetHeight();
+      });
+
+      if (teamRect.GetBottom() < clip.GetTop())
+         continue;
+      else if (teamRect.GetTop() > clip.GetBottom())
+         break;
+
+      for (auto t : group) {
+         if (teamRect.Intersects(clip) && reg.Contains(teamRect)) {
+            t = t->SubstitutePendingChangedTrack().get();
+            wxRect trackRect {
+               teamRect.x,
+               t->GetY() - zoomInfo.vpos + kTopMargin,
+               teamRect.width,
+               teamRect.height
+            };
+            DrawTrackName( context, t, trackRect );
+         }
+      }
+   }
+}
+
 // Draws the track name on the track, if it is needed.
 void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
 {
@@ -304,10 +351,24 @@ void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t
    dc.SetFont(labelFont);
    dc.GetTextExtent( t->GetName(), &x, &y );
 
+   // Logic for name background translucency (aka 'shields')
+   // Tracks less than kOpaqueHeight high will have opaque shields.
+   // Tracks more than kTranslucentHeight will have maximum translucency for shields.
+   const int kOpaqueHeight = 44;
+   const int kTranslucentHeight = 124;
+   int h = rect.GetHeight();
+   // f codes the opacity as a number between 0.0 and 1.0
+   float f= wxClip((h -kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
+   // kOpaque is the shield's alpha for tracks that are not tall
+   // kTranslucent is the shield's alpha for tracks that are tall.
+   const int kOpaque = 255;
+   const int kTranslucent = 140;
+   // 0.0 maps to full opacity, 1.0 maps to full translucency.
+   int opacity = 255 - (255-140)*f;
+
 #ifdef __WXMAC__
    // Mac dc is a graphics dc already.
-   // Shield's background is translucent, alpha=140
-   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, 140 );
+   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
    dc.DrawRoundedRectangle( rect.x+7, rect.y+1,  x+16, y+4, 8.0 );
 #else
    // This little dance with wxImage in order to draw to a graphic dc
@@ -318,8 +379,8 @@ void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t
    memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
     
    wxGraphicsContext &gc=*wxGraphicsContext::Create(image);
-   // Shield's background is translucent, alpha=140.  This is to a gc, not a dc.
-   AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, 140 );
+   // This is to a gc, not a dc.
+   AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
    // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
    gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
    // delete the gc so as to free and so update the wxImage.
@@ -386,8 +447,6 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
          DrawTimeTrack( context, tt, rect );
       }
    );
-   if( artist->mbShowTrackNameInTrack )
-      DrawTrackName( context, t, rect );
 }
 
 void TrackArt::DrawVRuler

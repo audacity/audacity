@@ -1093,6 +1093,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    // Draw the rest, including the click-to-deselect blank area below all
    // tracks
    DrawEverythingElse(context, region, clip);
+   TrackArt::DrawTrackNames( context, GetTracks(), region, clip );
 }
 
 /// Draws 'Everything else'.  In particular it draws:
