@@ -439,7 +439,6 @@ private:
    void OnDisable(wxCommandEvent & evt);
 
 private:
-   ModuleInterface *mMod;
    EffectType mType;
    int mFilter;
 
