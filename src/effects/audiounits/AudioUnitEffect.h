@@ -28,7 +28,7 @@
 #include "AUControl.h"
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
-/* 18n-hint: the name of an Apple audio software protocol */
+/* i18n-hint: the name of an Apple audio software protocol */
 #define AUDIOUNITEFFECTS_FAMILY \
    EffectFamilySymbol{ wxT("AudioUnit"), XO("Audio Unit") }
 class AudioUnitEffect;

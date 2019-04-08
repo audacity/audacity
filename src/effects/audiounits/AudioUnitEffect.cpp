@@ -113,7 +113,7 @@ PluginPath AudioUnitEffectsModule::GetPath()
 
 ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
 {
-   /* 18n-hint: Audio Unit is the name of an Apple audio software protocol */
+   /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
    return XO("Audio Unit Effects");
 }
 
