@@ -1396,6 +1396,31 @@ const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
    return empty;
 }
 
+RegistryPath PluginManager::GetPluginEnabledSetting( const PluginID &ID )
+{
+   auto pPlugin = GetPlugin( ID );
+   if ( pPlugin )
+      return GetPluginEnabledSetting( *pPlugin );
+   return {};
+}
+
+RegistryPath PluginManager::GetPluginEnabledSetting(
+   const PluginDescriptor &desc )
+{
+   switch ( desc.GetPluginType() ) {
+      case PluginTypeEffect: {
+         // Retrieve optional family symbol that was recorded in
+         // RegisterPlugin() for the module
+         auto family = desc.GetEffectFamily();
+         if ( family.empty() )
+            return {};
+         else
+            return wxT('/') + family + wxT("/Enable");
+      }
+      default:
+         return {};
+   }
+}
 
 bool PluginManager::IsPluginRegistered(const PluginPath &path)
 {
@@ -2509,9 +2534,13 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(int type)
       if( plug.IsValid() && plug.IsEnabled() &&  ((plugType & type) != 0))
       {
          bool familyEnabled = true;
-         if( (plugType & PluginTypeEffect) != 0)
+         if( (plugType & PluginTypeEffect) != 0) {
             // This preference may be written by EffectsPrefs
-            gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+            auto setting = GetPluginEnabledSetting( plug );
+            familyEnabled = setting.empty()
+               ? true
+               : gPrefs->Read( setting, true );
+         }
          if (familyEnabled)
             return &mPluginsIter->second;
       }
@@ -2529,9 +2558,13 @@ const PluginDescriptor *PluginManager::GetNextPlugin(int type)
       if( plug.IsValid() && plug.IsEnabled() &&  ((plugType & type) != 0))
       {
          bool familyEnabled = true;
-         if( (plugType & PluginTypeEffect) != 0)
+         if( (plugType & PluginTypeEffect) != 0) {
             // This preference may be written by EffectsPrefs
-            gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+            auto setting = GetPluginEnabledSetting( plug );
+            familyEnabled = setting.empty()
+               ? true
+               : gPrefs->Read( setting, true );
+         }
          if (familyEnabled)
             return &mPluginsIter->second;
       }
@@ -2548,7 +2581,10 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
 
       bool familyEnabled;
       // This preference may be written by EffectsPrefs
-      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      auto setting = GetPluginEnabledSetting( plug );
+      familyEnabled = setting.empty()
+         ? true
+         : gPrefs->Read( setting, true );
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          return &plug;
@@ -2565,7 +2601,10 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
       // This preference may be written by EffectsPrefs
-      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      auto setting = GetPluginEnabledSetting( plug );
+      familyEnabled = setting.empty()
+         ? true
+         : gPrefs->Read( setting, true );
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          return &plug;
