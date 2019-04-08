@@ -1408,15 +1408,20 @@ RegistryPath PluginManager::GetPluginEnabledSetting(
    const PluginDescriptor &desc )
 {
    switch ( desc.GetPluginType() ) {
-      case PluginTypeEffect: {
+      case PluginTypeModule: {
          // Retrieve optional family symbol that was recorded in
          // RegisterPlugin() for the module
          auto family = desc.GetEffectFamily();
-         if ( family.empty() )
+         if ( family.empty() ) // as for built-in effect and command modules
             return {};
          else
             return wxT('/') + family + wxT("/Enable");
       }
+      case PluginTypeEffect:
+         // do NOT use GetEffectFamily() for this descriptor, but instead,
+         // delegate to the plugin descriptor of the provider, which may
+         // be different (may be empty)
+         return GetPluginEnabledSetting( desc.GetProviderID() );
       default:
          return {};
    }
@@ -1438,6 +1443,7 @@ bool PluginManager::IsPluginRegistered(const PluginPath &path)
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(module), module, PluginTypeModule);
+   plug.SetEffectFamily(module->GetOptionalFamilySymbol().Internal());
 
    plug.SetEnabled(true);
    plug.SetValid(true);
