@@ -41,10 +41,15 @@ static const auto exts = {
 void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
-   unusableImportPluginList.push_back(
-      std::make_unique<UnusableImportPlugin>(DESC,
-         FileExtensions( exts.begin(), exts.end() ) )
-   );
+// Bug 2068: misleading error message about QuickTime  
+// In 64 bit versions we cannot compile in (obsolete) QuickTime
+// So don't register the QuickTime extensions, so ensuring we never report
+// "This version of Audacity was not compiled with QuickTime files support"  
+// When attempting to import MP4 files.
+//   unusableImportPluginList.push_back(
+//      std::make_unique<UnusableImportPlugin>(DESC,
+//         FileExtensions( exts.begin(), exts.end() ) )
+//   );
 }
 
 #else /* USE_QUICKTIME */
