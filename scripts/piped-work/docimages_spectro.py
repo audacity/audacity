@@ -149,7 +149,7 @@ def spectro_imagesF():
     do( 'SetTrack: Display=Spectrogram' )
     capture( 'ScaleLin.png', 'AllTracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=1 Reload=1')
-    capture( 'ScaleLog.png', 'All_Tracks' )
+    capture( 'ScaleLog.png', 'AllTracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=0 Reload=1')
     
         
