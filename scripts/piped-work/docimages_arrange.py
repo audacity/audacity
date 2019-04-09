@@ -13,16 +13,16 @@ import time
 
 def loadFourColours() :
     loadMonoTracks( 4 )
-    do( 'SelectTrack: Track=0' )
+    do( 'SelectTracks: Track=0' )
     do( 'SetTrack: Name="Claire" Height=60 Color=Color0')
     do( 'SetClip: At=1 Start=25')
-    do( 'SelectTrack: Track=1' )
+    do( 'SelectTracks: Track=1' )
     do( 'SetTrack: Track=1 Name="Ann" Height=60 Color=Color1')
     do( 'SetClip: At=1 Start=15')
-    do( 'SelectTrack: Track=2' )
+    do( 'SelectTracks: Track=2' )
     do( 'SetTrack: Track=2 Name="Bob" Height=60 Color=Color2')
     do( 'SetClip: At=1 Start=20')
-    do( 'SelectTrack: Track=3' )
+    do( 'SelectTracks: Track=3' )
     do( 'SetTrack: Track=3 Name="David" Height=60 Color=Color3')
     do( 'SetClip: At=1 Start=10')
     do( 'Select: TrackCount=100 Mode=Remove' )
@@ -98,7 +98,7 @@ def arrange_imagesB() :
 #quickTest()
 
 arrange_imagesA()
-#arrange_imagesB()
+arrange_imagesB()
 
 
 
