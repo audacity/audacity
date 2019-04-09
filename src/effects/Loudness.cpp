@@ -29,6 +29,7 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ProgressDialog.h"
 
 enum kNormalizeTargets
 {
