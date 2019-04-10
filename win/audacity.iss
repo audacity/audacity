@@ -128,6 +128,7 @@ Source: ".\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversi
 ; Source: ".\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: ".\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: ".\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
+Source: ".\release\modules\mod-script-pipe.dll"; DestDir: "{app}\modules\"; Flags: ignoreversion
 
 [Icons]
 Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
