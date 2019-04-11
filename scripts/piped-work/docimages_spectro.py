@@ -26,7 +26,7 @@ def makeStepper():
     do( 'Select: Start=0 End=22')
     do( 'Join' )
     do( 'FitInWindow')
-    do( 'AddLabelTrack' )
+    do( 'NewLabelTrack' )
     for i in range( 0, 11 ):
         do( 'Select: Track=1 Start='+str(i*2)+' End='+str(i*2+2) )
         do( 'AddLabel' )

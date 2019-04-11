@@ -50,7 +50,7 @@ def ntrack_pinned() :
 
 def ntrack_punch():
     loadMonoTracks(2)
-    do( 'AddLabelTrack' )
+    #do( 'NewLabelTrack' )
 
     #create the end result
     do('Select: Track=1 Start=50 End=70')
@@ -63,7 +63,7 @@ def ntrack_punch():
     do( 'Select: Track=0' )
     #show a messed up original...
     do( 'Distortion' )
-    do( 'WahWah' )
+    do( 'Wahwah' )
     
     do( 'Select: Track=2 Start=40 End=80' )
     do( 'Duplicate' )

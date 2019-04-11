@@ -36,19 +36,19 @@ def blockMoves( name ):
     # These are the align commands that move tracks 'en block'.
     loadFourColoursSelected()
     capture( name + '001.png', 'AllTracksPlus' )
-    do( 'Align_StarttoZero' )
+    do( 'Align_StartToZero' )
     capture( name + '002.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_StarttoCursorSelectionStart' )
+    do( 'Align_StartToSelStart' )
     capture( name + '003.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_StarttoSelectionEnd' )
+    do( 'Align_StartToSelEnd' )
     capture( name + '004.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_EndtoCursorSelectionStart' )
+    do( 'Align_EndtoSelStart' )
     capture( name + '005.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_EndtoSelectionEnd' )
+    do( 'Align_EndtoSelEnd' )
     capture( name + '006.png', 'AllTracksPlus' )
 
 def track_moves( type ) :
@@ -80,9 +80,9 @@ def arrange_imagesA() :
     capture( 'TrackOrder004.png', 'AllTracks' )
     # Aligning tracks
     do( 'Select: First=0 Last=100 From=0 To=0')
-    do( 'Align_AlignTogether' )
+    do( 'Align_Together' )
     capture( 'TrackAlign001.png', 'AllTracks' )
-    do( 'Align_AlignEndtoEnd' )
+    do( 'Align_EndtoEnd' )
     do( 'FitInWindow' )
     capture( 'TrackAlign002.png', 'AllTracks' )
 

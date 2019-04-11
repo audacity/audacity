@@ -21,13 +21,11 @@ Effects  = [
             "Amplify","BassAndTreble","Compressor","Distortion","Echo",
             "Equalization","Normalize","Phaser",
             "Repeat","Reverb","Wahwah",
-            "HighPassFilter","LowPassFilter",
+            "High-passFilter","Low-passFilter",
             "NotchFilter","AdjustableFade","Delay","Limiter"               
             ]
 
-Slow = ["ChangePitch","ChangeSpeed", "ChangeTempo","Paulstretch",
-         "TimeScale"
-            ]
+Slow = ["ChangePitch","ChangeSpeed", "ChangeTempo","Paulstretch" ]
 
 
 Generators = ["Chirp","DtmfTones","Noise","Tone","Pluck"]
