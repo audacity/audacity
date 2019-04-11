@@ -3,7 +3,7 @@ $version 4
 $type tool
 $name (_ "Nyquist Plug-in Installer")
 $manpage "Nyquist_Plug-in_Installer"
-;$debugbutton false
+$debugbutton false
 $preview disabled
 $author "Steve Daulton"
 $release 2.3.1
@@ -17,7 +17,8 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control plug-in (_ "Select plug-in file") file (_ "File Browser") "~/Desktop/" "Plug-in|*.ny;*.NY|Text file|*.txt;*.TXT|All files|*.*;*" "open,exists"
+;i18n-hint: "Browse..." is text on a button that launches a file browser.
+$control plug-in (_ "Select plug-in file") file (_ "Browse...") "~/Desktop/" "Plug-in|*.ny;*.NY|Text file|*.txt;*.TXT|All files|*.*;*" "open,exists"
 
 ;; As this plug-in is intended primarily to help novice users, it is unsafe to allow overwriting.
 ;$control overwrite (_ "If plug-in is already installed") choice ((_ "Keep original") (_ "Overwrite")) 0
@@ -130,7 +131,7 @@ $control plug-in (_ "Select plug-in file") file (_ "File Browser") "~/Desktop/" 
             (format nil (_ "Error.~%~s cannot be written.~%") out-fname))
         (t
             (copy-file fname out-fname)
-        (format nil (_ "~s installed to:~%~s~%~%~
+        (format nil (_ "~s installed to:~%\"~a\"~%~%~
             Use the Plug-in Manager to enable the effect.")
             short-name out-fname))))))
 
