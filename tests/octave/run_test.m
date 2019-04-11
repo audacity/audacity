@@ -62,6 +62,18 @@ function aud_do(command)
   until strncmp(string, "BatchCommand finished:", length("BatchCommand finished:"));
 end
 
+## Selection helper functions
+function remove_all_tracks()
+  aud_do("SelectTracks: Track=0 TrackCount=100 Mode=Set\n");
+  aud_do("RemoveTracks:\n");
+end
+
+function select_tracks(num, count)
+  aud_do("Select: Start=0 Mode=Set\n");
+  aud_do("SelCursorToTrackEnd:\n");
+  aud_do(sprintf("SelectTracks: Track=%d TrackCount=%d Mode=Set\n", num, count));
+end
+
 ## Float equal comparison helper
 function [ret] = float_eq(x, y, eps=0.001)
   ret = abs(x - y) < eps;
