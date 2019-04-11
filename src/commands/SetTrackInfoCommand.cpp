@@ -48,6 +48,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 
 SetTrackBase::SetTrackBase(){
    mbPromptForTracks = true;
+   bIsSecondChannel = false;
 }
 
 //Define for the old scheme, where SetTrack defines its own track selection.
