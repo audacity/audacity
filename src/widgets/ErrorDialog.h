@@ -97,6 +97,10 @@ public:
    {}
    
    void SetInsertionPointEnd();
+   bool Show(bool show = true) override;
+
+private:
+   bool mSetInsertionPointEnd{};
 };
 
 /**************************************************************************//**
