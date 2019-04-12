@@ -1166,6 +1166,9 @@
     <None Include="..\..\po.rules" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\expat\expat.vcxproj">
+      <Project>{a939aaf8-44f1-4ce7-9dd0-7a6e99814856}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\filedialog\filedialog.vcxproj">
       <Project>{5284d863-3813-479f-bbf0-ac234e216bc6}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
