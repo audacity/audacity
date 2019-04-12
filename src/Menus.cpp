@@ -636,7 +636,7 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
    project.SetSyncLock(active);
    commandManager.Check(wxT("SyncLock"), active);
-   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"),&active, true);
+   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"),&active, false);
    commandManager.Check(wxT("TypeToCreateLabel"), active);
 }
 

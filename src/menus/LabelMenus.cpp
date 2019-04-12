@@ -346,7 +346,7 @@ void OnPasteNewLabel(const CommandContext &context)
 void OnToggleTypeToCreateLabel(const CommandContext &WXUNUSED(context) )
 {
    bool typeToCreateLabel;
-   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, true);
+   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, false);
    gPrefs->Write(wxT("/GUI/TypeToCreateLabel"), !typeToCreateLabel);
    gPrefs->Flush();
    MenuManager::ModifyAllProjectToolbarMenus();

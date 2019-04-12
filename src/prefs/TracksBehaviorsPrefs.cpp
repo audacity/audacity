@@ -82,7 +82,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                     false);
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
-                    true);
+                    false);
       S.TieCheckBox(_("Use dialog for the &name of a new label"),
                     wxT("/GUI/DialogForNameNewLabel"),
                     false);
