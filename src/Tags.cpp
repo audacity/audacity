@@ -50,6 +50,7 @@
 #include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/HelpSystem.h"
 #include "xml/XMLFileReader.h"
 
 #include <wx/button.h>
@@ -757,7 +758,8 @@ enum {
    SaveID,
    SaveDefaultsID,
    AddID,
-   RemoveID
+   RemoveID,
+   DontShowID
 };
 
 BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
@@ -770,8 +772,10 @@ BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
    EVT_BUTTON(SaveDefaultsID, TagsEditor::OnSaveDefaults)
    EVT_BUTTON(AddID, TagsEditor::OnAdd)
    EVT_BUTTON(RemoveID, TagsEditor::OnRemove)
+   EVT_BUTTON(wxID_HELP, TagsEditor::OnHelp)
    EVT_BUTTON(wxID_CANCEL, TagsEditor::OnCancel)
    EVT_BUTTON(wxID_OK, TagsEditor::OnOk)
+   EVT_CHECKBOX( DontShowID, TagsEditor::OnDontShow )
    EVT_KEY_DOWN(TagsEditor::OnKeyDown)
 END_EVENT_TABLE()
 
@@ -830,6 +834,8 @@ TagsEditor::TagsEditor(wxWindow * parent,
    r.width -= 10;
    r.width -= r.x;
    mGrid->SetColSize(1, r.width);
+   //Bug 2038
+   mGrid->SetFocus();
 
    // Load the genres
    PopulateGenres();
@@ -850,9 +856,12 @@ TagsEditor::~TagsEditor()
 
 void TagsEditor::PopulateOrExchange(ShuttleGui & S)
 {
+   bool bShow;
+   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShow, true );
+
    S.StartVerticalLay();
    {
-      S.StartHorizontalLay(wxALIGN_LEFT, false);
+      S.StartHorizontalLay(wxALIGN_LEFT, 0);
       {
          S.AddUnits(_("Use arrow keys (or ENTER key after editing) to navigate fields."));
       }
@@ -885,7 +894,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
          mGrid->SetColSize(0, tc.GetSize().x);
          mGrid->SetColMinimalWidth(0, tc.GetSize().x);
       }
-      S.Prop(true);
+      S.Prop(1);
       S.AddWindow(mGrid, wxEXPAND | wxALL);
 
       S.StartMultiColumn(4, wxALIGN_CENTER);
@@ -897,7 +906,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndMultiColumn();
 
-      S.StartHorizontalLay(wxALIGN_CENTRE, false);
+      S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
          S.StartStatic(_("Genres"));
          {
@@ -923,10 +932,27 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
          S.EndStatic();
       }
       S.EndHorizontalLay();
+      S.StartHorizontalLay(wxALIGN_LEFT, 0);
+      {
+         S.Id( DontShowID ).AddCheckBox( _("Don't show this when exporting audio"), !bShow );
+      }
+      S.EndHorizontalLay();
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons(eOkButton | eCancelButton);
+   S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
+}
+
+void TagsEditor::OnDontShow( wxCommandEvent & Evt )
+{
+   bool bShow = !Evt.IsChecked();
+   gPrefs->Write(wxT("/AudioFiles/ShowId3Dialog"), bShow );
+   gPrefs->Flush();
+}
+
+void TagsEditor::OnHelp(wxCommandEvent& WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Metadata_Editor"), true);
 }
 
 bool TagsEditor::TransferDataFromWindow()

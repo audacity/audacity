@@ -141,6 +141,8 @@ class TagsEditor final : public wxDialogWrapper
 
    void PopulateOrExchange(ShuttleGui & S);
 
+   void OnDontShow( wxCommandEvent & Evt);
+   void OnHelp(wxCommandEvent & Evt);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

@@ -209,7 +209,9 @@ bool DoEditMetadata
          project.SetTags( newTags );
          project.PushState(title, shortUndoDescription);
       }
-
+      bool bShowInFuture;
+      gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
+      project.SetShowId3Dialog( bShowInFuture );
       return true;
    }
 
