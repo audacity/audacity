@@ -777,7 +777,6 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
-   bool tagsPrompt = mProject->GetShowId3Dialog();
    int l = 0;     // track counter
    auto ok = ProgressResult::Success;
    FilePaths otherNames;
@@ -851,8 +850,14 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
          setting.filetags.SetTag(TAG_TITLE, title);
          setting.filetags.SetTag(TAG_TRACK, l+1);
          // let the user have a crack at editing it, exit if cancelled
-         if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata Tags"), tagsPrompt))
-            return ProgressResult::Cancelled;
+         bool bShowTagsDialog = mProject->GetShowId3Dialog();
+         if( bShowTagsDialog ){
+            bool bCancelled = !setting.filetags.ShowEditDialog(mProject,_("Edit Metadata Tags"), bShowTagsDialog);
+            gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
+            mProject->SetShowId3Dialog( bShowTagsDialog );
+            if( bCancelled )
+               return ProgressResult::Cancelled;
+         }
       }
       /* add the settings to the array of settings to be used for export */
       exportSettings.push_back(setting);
