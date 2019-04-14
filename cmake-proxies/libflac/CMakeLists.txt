@@ -190,7 +190,8 @@ add_library(FLAC-static STATIC
     "${TARGET_SOURCE}/src/libFLAC/ogg_decoder_aspect.c"
     "${TARGET_SOURCE}/src/libFLAC/ogg_encoder_aspect.c"
     "${TARGET_SOURCE}/src/libFLAC/ogg_helper.c"
-    "${TARGET_SOURCE}/src/libFLAC/ogg_mapping.c")
+    "${TARGET_SOURCE}/src/libFLAC/ogg_mapping.c"
+    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/share/win_utf8_io/win_utf8_io.c>")
 
 include_directories(
     "${TARGET_SOURCE}/include"
@@ -202,8 +203,11 @@ target_include_directories(FLAC-static INTERFACE
 target_link_libraries(FLAC-static PUBLIC
     libogg
     $<TARGET_NAME_IF_EXISTS:FLAC-asm>
-    $<$<BOOL:${HAVE_LROUND}>:m>)
-set_target_properties(FLAC-static PROPERTIES OSX_ARCHITECTURES "")
+    $<$<BOOL:${HAVE_LROUND}>:m>
+    $<TARGET_NAME_IF_EXISTS:win_utf8_io>)
+set_target_properties(FLAC-static PROPERTIES
+    OSX_ARCHITECTURES ""
+    OUTPUT_NAME libflac)
 
 add_library(FLACXX-static STATIC
     "${TARGET_SOURCE}/src/libFLAC++/metadata.cpp"
@@ -213,4 +217,6 @@ target_compile_definitions(FLACXX-static PUBLIC FLAC__NO_DLL)
 target_include_directories(FLACXX-static INTERFACE
     "$<BUILD_INTERFACE:${TARGET_SOURCE}/include>")
 target_link_libraries(FLACXX-static PUBLIC FLAC-static)
-set_target_properties(FLACXX-static PROPERTIES OSX_ARCHITECTURES "")
+set_target_properties(FLACXX-static PROPERTIES
+    OSX_ARCHITECTURES ""
+    OUTPUT_NAME libflac++)

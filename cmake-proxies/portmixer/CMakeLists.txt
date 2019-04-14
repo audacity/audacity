@@ -20,7 +20,7 @@ add_library(${TARGET} STATIC
 
 
 target_compile_definitions(${TARGET} PRIVATE
-    $<$<BOOL:${WIN32}>:PX_USE_WIN_DSOUND>
+#   $<$<BOOL:${WIN32}>:PX_USE_WIN_DSOUND>
     $<$<BOOL:${WIN32}>:PX_USE_WIN_MME>
     $<$<BOOL:${WIN32}>:PX_USE_WIN_WASAPI>
     $<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFINITIONS}>:PX_USE_LINUX_ALSA>
