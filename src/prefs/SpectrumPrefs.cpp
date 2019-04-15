@@ -65,6 +65,28 @@ SpectrumPrefs::~SpectrumPrefs()
       Rollback();
 }
 
+ComponentInterfaceSymbol SpectrumPrefs::GetSymbol()
+{
+   return SPECTRUM_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString SpectrumPrefs::GetDescription()
+{
+   return _("Preferences for Spectrum");
+}
+
+wxString SpectrumPrefs::HelpPageName()
+{
+   // Currently (May2017) Spectrum Settings is the only preferences
+   // we ever display in a dialog on its own without others.
+   // We do so when it is configuring spectrums for a track.
+   // Because this happens, we want to visit a different help page.
+   // So we change the page name in the case of a page on its own.
+   return mWt
+      ? "Spectrogram_Settings"
+      : "Spectrograms_Preferences";
+}
+
 enum {
    ID_WINDOW_SIZE = 10001,
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
@@ -532,18 +554,6 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoiceCtrl->Enable(STFT);
 #endif
-}
-
-wxString SpectrumPrefs::HelpPageName()
-{
-   // Currently (May2017) Spectrum Settings is the only preferences
-   // we ever display in a dialog on its own without others.
-   // We do so when it is configuring spectrums for a track.
-   // Because this happens, we want to visit a different help page.
-   // So we change the page name in the case of a page on its own.
-   return mWt
-      ? "Spectrogram_Settings"
-      : "Spectrograms_Preferences";
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)

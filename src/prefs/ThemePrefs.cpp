@@ -70,6 +70,21 @@ ThemePrefs::~ThemePrefs(void)
 {
 }
 
+ComponentInterfaceSymbol ThemePrefs::GetSymbol()
+{
+   return THEME_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ThemePrefs::GetDescription()
+{
+   return _("Preferences for Theme");
+}
+
+wxString ThemePrefs::HelpPageName()
+{
+   return "Theme_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void ThemePrefs::Populate()
 {

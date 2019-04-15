@@ -71,6 +71,21 @@ MousePrefs::~MousePrefs()
 {
 }
 
+ComponentInterfaceSymbol MousePrefs::GetSymbol()
+{
+   return MOUSE_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString MousePrefs::GetDescription()
+{
+   return _("Preferences for Mouse");
+}
+
+wxString MousePrefs::HelpPageName()
+{
+   return "Mouse_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void MousePrefs::Populate()
 {
@@ -201,11 +216,6 @@ bool MousePrefs::Commit()
 //   ShuttleGui S(this, eIsSavingToPrefs);
 //   PopulateOrExchange(S);
    return true;
-}
-
-wxString MousePrefs::HelpPageName()
-{
-   return "Mouse_Preferences";
 }
 
 PrefsPanel *MousePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

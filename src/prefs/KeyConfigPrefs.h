@@ -27,10 +27,15 @@ class KeyView;
 struct NormalizedKeyString;
 enum ViewByType : int;
 
+#define KEY_CONFIG_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Key Config") }
+
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
    KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const CommandID &name);
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;

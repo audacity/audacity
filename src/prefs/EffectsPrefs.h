@@ -19,11 +19,16 @@
 
 class ShuttleGui;
 
+#define EFFECTS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Effects") }
+
 class EffectsPrefs final : public PrefsPanel
 {
  public:
    EffectsPrefs(wxWindow * parent, wxWindowID winid);
    ~EffectsPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;

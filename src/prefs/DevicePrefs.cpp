@@ -62,6 +62,22 @@ DevicePrefs::~DevicePrefs()
 {
 }
 
+
+ComponentInterfaceSymbol DevicePrefs::GetSymbol()
+{
+   return DEVICE_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString DevicePrefs::GetDescription()
+{
+   return _("Preferences for Device");
+}
+
+wxString DevicePrefs::HelpPageName()
+{
+   return "Devices_Preferences";
+}
+
 void DevicePrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
@@ -84,6 +100,7 @@ void DevicePrefs::Populate()
    wxCommandEvent e;
    OnHost(e);
 }
+
 
 /*
  * Get names of device hosts.
@@ -401,11 +418,6 @@ bool DevicePrefs::Commit()
    }
 
    return true;
-}
-
-wxString DevicePrefs::HelpPageName()
-{
-   return "Devices_Preferences";
 }
 
 PrefsPanel *DevicePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

@@ -111,6 +111,21 @@ QualityPrefs::~QualityPrefs()
 {
 }
 
+ComponentInterfaceSymbol QualityPrefs::GetSymbol()
+{
+   return QUALITY_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString QualityPrefs::GetDescription()
+{
+   return _("Preferences for Quality");
+}
+
+wxString QualityPrefs::HelpPageName()
+{
+   return "Quality_Preferences";
+}
+
 void QualityPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
@@ -260,11 +275,6 @@ bool QualityPrefs::Commit()
    InitDitherers();
 
    return true;
-}
-
-wxString QualityPrefs::HelpPageName()
-{
-   return "Quality_Preferences";
 }
 
 PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

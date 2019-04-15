@@ -19,11 +19,16 @@
 
 class ShuttleGui;
 
+#define WARNINGS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Warnings") }
+
 class WarningsPrefs final : public PrefsPanel
 {
  public:
    WarningsPrefs(wxWindow * parent, wxWindowID winid);
    ~WarningsPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
 

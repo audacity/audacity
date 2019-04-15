@@ -19,11 +19,16 @@
 
 class ShuttleGui;
 
+#define PROJECTS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Projects") }
+
 class ProjectsPrefs final : public PrefsPanel
 {
  public:
    ProjectsPrefs(wxWindow * parent, wxWindowID winid);
    ~ProjectsPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;

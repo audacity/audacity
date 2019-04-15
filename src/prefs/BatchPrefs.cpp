@@ -38,6 +38,21 @@ BatchPrefs::BatchPrefs(wxWindow * parent, wxWindowID winid):
    Populate();
 }
 
+ComponentInterfaceSymbol BatchPrefs::GetSymbol()
+{
+   return BATCH_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString BatchPrefs::GetDescription()
+{
+   return _("Preferences for Batch");
+}
+
+wxString BatchPrefs::HelpPageName()
+{
+   return  "Batch_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void BatchPrefs::Populate( )
 {

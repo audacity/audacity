@@ -77,6 +77,15 @@
 #include "../widgets/WindowAccessible.h"
 #endif
 
+
+// PrefsPanel might move out into its own file in due ocurse.
+PluginPath PrefsPanel::GetPath(){      return BUILTIN_PREFS_PANEL_PREFIX + GetSymbol().Internal(); }
+VendorSymbol PrefsPanel::GetVendor(){  return XO("Audacity");}
+wxString PrefsPanel::GetVersion(){     return AUDACITY_VERSION_STRING;}
+
+
+
+
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)

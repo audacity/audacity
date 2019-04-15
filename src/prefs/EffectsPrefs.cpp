@@ -42,6 +42,21 @@ EffectsPrefs::~EffectsPrefs()
 {
 }
 
+ComponentInterfaceSymbol EffectsPrefs::GetSymbol()
+{
+   return EFFECTS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString EffectsPrefs::GetDescription()
+{
+   return _("Preferences for Effects");
+}
+
+wxString EffectsPrefs::HelpPageName()
+{
+   return "Effects_Preferences";
+}
+
 void EffectsPrefs::Populate()
 {
    //------------------------- Main section --------------------
@@ -184,11 +199,6 @@ bool EffectsPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString EffectsPrefs::HelpPageName()
-{
-   return "Effects_Preferences";
 }
 
 PrefsPanel *EffectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

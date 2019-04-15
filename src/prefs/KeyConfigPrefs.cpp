@@ -98,6 +98,21 @@ KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
    }
 }
 
+ComponentInterfaceSymbol KeyConfigPrefs::GetSymbol()
+{
+   return KEY_CONFIG_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString KeyConfigPrefs::GetDescription()
+{
+   return _("Preferences for KeyConfig");
+}
+
+wxString KeyConfigPrefs::HelpPageName()
+{
+   return "Keyboard_Preferences";
+}
+
 void KeyConfigPrefs::Populate()
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
@@ -671,11 +686,6 @@ void KeyConfigPrefs::Cancel()
    }
 
    return;
-}
-
-wxString KeyConfigPrefs::HelpPageName()
-{
-   return "Keyboard_Preferences";
 }
 
 PrefsPanel *KeyConfigPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

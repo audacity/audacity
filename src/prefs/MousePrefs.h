@@ -16,11 +16,16 @@
 class wxListCtrl;
 class ShuttleGui;
 
+#define MOUSE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Mouse") }
+
 class MousePrefs final : public PrefsPanel
 {
  public:
    MousePrefs(wxWindow * parent, wxWindowID winid);
    ~MousePrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;

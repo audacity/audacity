@@ -28,6 +28,8 @@ class ExtImportPrefs;
 class Grid;
 class ShuttleGui;
 
+#define EXT_IMPORT_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Ext Import") }
+
 class ExtImportPrefsDropTarget final : public wxDropTarget
 {
 public:
@@ -49,6 +51,9 @@ class ExtImportPrefs final : public PrefsPanel
  public:
    ExtImportPrefs(wxWindow * parent, wxWindowID winid);
    ~ExtImportPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;

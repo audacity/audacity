@@ -26,11 +26,16 @@ class ShuttleGui;
 
 class wxArrayStringEx;
 
+#define MIDI_IO_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Midi IO") }
+
 class MidiIOPrefs final : public PrefsPanel
 {
  public:
    MidiIOPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~MidiIOPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;

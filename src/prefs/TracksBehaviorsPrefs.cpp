@@ -34,6 +34,21 @@ TracksBehaviorsPrefs::~TracksBehaviorsPrefs()
 {
 }
 
+ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol()
+{
+   return TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString TracksBehaviorsPrefs::GetDescription()
+{
+   return _("Preferences for TracksBehaviors");
+}
+
+wxString TracksBehaviorsPrefs::HelpPageName()
+{
+   return "Tracks_Behaviors_Preferences";
+}
+
 const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
 {
    static auto string = wxT("/GUI/ScrollBeyondZero");
@@ -117,11 +132,6 @@ bool TracksBehaviorsPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString TracksBehaviorsPrefs::HelpPageName()
-{
-   return "Tracks_Behaviors_Preferences";
 }
 
 TracksBehaviorsPrefsFactory::TracksBehaviorsPrefsFactory()

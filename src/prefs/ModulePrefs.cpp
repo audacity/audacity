@@ -39,6 +39,21 @@ ModulePrefs::~ModulePrefs()
 {
 }
 
+ComponentInterfaceSymbol ModulePrefs::GetSymbol()
+{
+   return MODULE_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ModulePrefs::GetDescription()
+{
+   return _("Preferences for Module");
+}
+
+wxString ModulePrefs::HelpPageName()
+{
+   return "Modules_Preferences";
+}
+
 void ModulePrefs::GetAllModuleStatuses(){
    wxString str;
    long dummy;
@@ -163,11 +178,6 @@ void ModulePrefs::SetModuleStatus(const FilePath &fname, int iStatus){
    PrefName = wxString( wxT("/ModulePath/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, fname );
    gPrefs->Flush();
-}
-
-wxString ModulePrefs::HelpPageName()
-{
-   return "Modules_Preferences";
 }
 
 PrefsPanel *ModulePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

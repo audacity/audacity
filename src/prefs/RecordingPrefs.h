@@ -19,11 +19,16 @@
 class wxTextCtrl;
 class ShuttleGui;
 
+#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Recording") }
+
 class RecordingPrefs final : public PrefsPanel
 {
  public:
    RecordingPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~RecordingPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;

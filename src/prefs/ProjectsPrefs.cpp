@@ -41,6 +41,21 @@ ProjectsPrefs::~ProjectsPrefs()
 {
 }
 
+ComponentInterfaceSymbol ProjectsPrefs::GetSymbol()
+{
+   return PROJECTS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ProjectsPrefs::GetDescription()
+{
+   return _("Preferences for Projects");
+}
+
+wxString ProjectsPrefs::HelpPageName()
+{
+   return "Projects_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void ProjectsPrefs::Populate()
 {
@@ -82,11 +97,6 @@ bool ProjectsPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString ProjectsPrefs::HelpPageName()
-{
-   return "Projects_Preferences";
 }
 
 PrefsPanel *ProjectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

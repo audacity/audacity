@@ -67,6 +67,21 @@ MidiIOPrefs::~MidiIOPrefs()
 {
 }
 
+ComponentInterfaceSymbol MidiIOPrefs::GetSymbol()
+{
+   return MIDI_IO_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString MidiIOPrefs::GetDescription()
+{
+   return _("Preferences for MidiIO");
+}
+
+wxString MidiIOPrefs::HelpPageName()
+{
+   return "MIDI_Devices_Preferences";
+}
+
 void MidiIOPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
@@ -282,11 +297,6 @@ bool MidiIOPrefs::Validate()
       return false;
    }
    return true;
-}
-
-wxString MidiIOPrefs::HelpPageName()
-{
-   return "MIDI_Devices_Preferences";
 }
 
 PrefsPanel *MidiIOPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

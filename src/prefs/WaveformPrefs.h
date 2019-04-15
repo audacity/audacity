@@ -22,11 +22,17 @@ class wxChoice;
 
 class wxArrayStringEx;
 
+#define WAVEFORM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Waveform") }
+
 class WaveformPrefs final : public PrefsPanel
 {
 public:
    WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~WaveformPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+   wxString HelpPageName() override;
+
    bool Commit() override;
    bool ShowsPreviewButton() override;
    bool Validate() override;

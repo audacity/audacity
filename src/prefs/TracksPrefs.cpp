@@ -239,6 +239,21 @@ TracksPrefs::~TracksPrefs()
 {
 }
 
+ComponentInterfaceSymbol TracksPrefs::GetSymbol()
+{
+   return TRACKS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString TracksPrefs::GetDescription()
+{
+   return _("Preferences for Tracks");
+}
+
+wxString TracksPrefs::HelpPageName()
+{
+   return "Tracks_Preferences";
+}
+
 void TracksPrefs::Populate()
 {
    // Keep view choices and codes in proper correspondence --
@@ -390,11 +405,6 @@ bool TracksPrefs::Commit()
    }
 
    return true;
-}
-
-wxString TracksPrefs::HelpPageName()
-{
-   return "Tracks_Preferences";
 }
 
 PrefsPanel *TracksPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

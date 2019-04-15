@@ -61,6 +61,22 @@ DirectoriesPrefs::~DirectoriesPrefs()
 {
 }
 
+
+ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol()
+{
+   return DIRECTORIES_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString DirectoriesPrefs::GetDescription()
+{
+   return _("Preferences for Directories");
+}
+
+wxString DirectoriesPrefs::HelpPageName()
+{
+   return "Directories_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void DirectoriesPrefs::Populate()
 {
@@ -269,11 +285,6 @@ bool DirectoriesPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString DirectoriesPrefs::HelpPageName()
-{
-   return "Directories_Preferences";
 }
 
 PrefsPanel *DirectoriesPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

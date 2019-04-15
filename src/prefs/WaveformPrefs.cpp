@@ -52,6 +52,21 @@ WaveformPrefs::~WaveformPrefs()
 {
 }
 
+ComponentInterfaceSymbol WaveformPrefs::GetSymbol()
+{
+   return WAVEFORM_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString WaveformPrefs::GetDescription()
+{
+   return _("Preferences for Waveforms");
+}
+
+wxString WaveformPrefs::HelpPageName()
+{
+   return "Waveform_Preferences";
+}
+
 enum {
    ID_DEFAULTS = 10001,
 

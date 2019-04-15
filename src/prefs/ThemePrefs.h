@@ -20,12 +20,18 @@
 
 class ShuttleGui;
 
+#define THEME_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Theme") }
+
 class ThemePrefs final : public PrefsPanel
 {
  public:
    ThemePrefs(wxWindow * parent, wxWindowID winid);
    ~ThemePrefs(void);
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

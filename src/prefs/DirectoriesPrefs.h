@@ -18,11 +18,16 @@ class ShuttleGui;
 class wxStaticText;
 class wxTextCtrl;
 
+#define DIRECTORIES_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Directories") }
+
 class DirectoriesPrefs final : public PrefsPanel
 {
  public:
    DirectoriesPrefs(wxWindow * parent, wxWindowID winid);
    ~DirectoriesPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;

@@ -38,6 +38,21 @@ WarningsPrefs::~WarningsPrefs()
 {
 }
 
+ComponentInterfaceSymbol WarningsPrefs::GetSymbol()
+{
+   return WARNINGS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString WarningsPrefs::GetDescription()
+{
+   return _("Preferences for Warnings");
+}
+
+wxString WarningsPrefs::HelpPageName()
+{
+   return "Warnings_Preferences";
+}
+
 void WarningsPrefs::Populate()
 {
    //------------------------- Main section --------------------
@@ -89,11 +104,6 @@ bool WarningsPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString WarningsPrefs::HelpPageName()
-{
-   return "Warnings_Preferences";
 }
 
 PrefsPanel *WarningsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

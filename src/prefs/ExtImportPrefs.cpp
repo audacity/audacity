@@ -70,6 +70,21 @@ ExtImportPrefs::~ExtImportPrefs()
 {
 }
 
+ComponentInterfaceSymbol ExtImportPrefs::GetSymbol()
+{
+   return EXT_IMPORT_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ExtImportPrefs::GetDescription()
+{
+   return _("Preferences for ExtImport");
+}
+
+wxString ExtImportPrefs::HelpPageName()
+{
+   return "Extended_Import_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void ExtImportPrefs::Populate()
 {
@@ -672,11 +687,6 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    }
 
    event.Skip();
-}
-
-wxString ExtImportPrefs::HelpPageName()
-{
-   return "Extended_Import_Preferences";
 }
 
 ExtImportPrefsDropTarget::ExtImportPrefsDropTarget(wxDataObject *dataObject)

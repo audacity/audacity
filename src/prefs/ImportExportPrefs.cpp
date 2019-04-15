@@ -35,6 +35,21 @@ ImportExportPrefs::~ImportExportPrefs()
 {
 }
 
+ComponentInterfaceSymbol ImportExportPrefs::GetSymbol()
+{
+   return IMPORT_EXPORT_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ImportExportPrefs::GetDescription()
+{
+   return _("Preferences for ImportExport");
+}
+
+wxString ImportExportPrefs::HelpPageName()
+{
+   return "Import_-_Export_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void ImportExportPrefs::Populate()
 {
@@ -111,11 +126,6 @@ bool ImportExportPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString ImportExportPrefs::HelpPageName()
-{
-   return "Import_-_Export_Preferences";
 }
 
 PrefsPanel *ImportExportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

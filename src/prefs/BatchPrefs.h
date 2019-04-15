@@ -18,11 +18,17 @@
 
 class ShuttleGui;
 
+#define BATCH_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Batch") }
+
 class BatchPrefs final : public PrefsPanel
 {
 public:
    BatchPrefs(wxWindow * parent, wxWindowID winid);
    ~BatchPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+   wxString HelpPageName() override;
+
    bool Commit() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

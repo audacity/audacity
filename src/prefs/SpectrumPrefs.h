@@ -39,11 +39,16 @@ class ShuttleGui;
 class SpectrogramSettings;
 class WaveTrack;
 
+#define SPECTRUM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Spectrum") }
+
 class SpectrumPrefs final : public PrefsPanel
 {
  public:
    SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~SpectrumPrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    void Preview() override;
    bool Commit() override;
    void PopulateOrExchange(ShuttleGui & S) override;

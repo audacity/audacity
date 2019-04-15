@@ -30,11 +30,16 @@ enum {
 };
 
 
+#define MODULE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Module") }
+
 class ModulePrefs final : public PrefsPanel
 {
  public:
    ModulePrefs(wxWindow * parent, wxWindowID winid);
    ~ModulePrefs();
+   virtual ComponentInterfaceSymbol GetSymbol();
+   virtual wxString GetDescription();
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;

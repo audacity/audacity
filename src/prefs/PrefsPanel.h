@@ -34,9 +34,12 @@ PrefsPanel.
 #define __AUDACITY_PREFS_PANEL__
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include "../include/audacity/ComponentInterface.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8
+
+#define BUILTIN_PREFS_PANEL_PREFIX wxT("Built-in PrefsPanel: ")
 
 /* these are spacing guidelines: ie. radio buttons should have a 5 pixel
  * border on each side */
@@ -46,7 +49,7 @@ PrefsPanel.
 
 class ShuttleGui;
 
-class PrefsPanel /* not final */ : public wxPanelWrapper
+class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
 {
  public:
    PrefsPanel(wxWindow * parent, wxWindowID winid, const wxString &title)
@@ -61,6 +64,15 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    // NEW virtuals
    virtual void Preview() {} // Make tentative changes
    virtual bool Commit() = 0; // used to be called "Apply"
+
+
+   virtual PluginPath GetPath();
+   virtual VendorSymbol GetVendor();
+   virtual wxString GetVersion();
+
+   //virtual ComponentInterfaceSymbol GetSymbol();
+   //virtual wxString GetDescription();
+
 
    // If it returns True, the Preview button is added below the panel
    // Default returns false

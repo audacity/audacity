@@ -38,6 +38,21 @@ PlaybackPrefs::~PlaybackPrefs()
 {
 }
 
+ComponentInterfaceSymbol PlaybackPrefs::GetSymbol()
+{
+   return PLAYBACK_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString PlaybackPrefs::GetDescription()
+{
+   return _("Preferences for Playback");
+}
+
+wxString PlaybackPrefs::HelpPageName()
+{
+   return "Playback_Preferences";
+}
+
 void PlaybackPrefs::Populate()
 {
    //------------------------- Main section --------------------
@@ -166,11 +181,6 @@ bool PlaybackPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString PlaybackPrefs::HelpPageName()
-{
-   return "Playback_Preferences";
 }
 
 PrefsPanel *PlaybackPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

@@ -58,6 +58,21 @@ LibraryPrefs::~LibraryPrefs()
 {
 }
 
+ComponentInterfaceSymbol LibraryPrefs::GetSymbol()
+{
+   return LIBRARY_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString LibraryPrefs::GetDescription()
+{
+   return _("Preferences for Library");
+}
+
+wxString LibraryPrefs::HelpPageName()
+{
+   return "Libraries_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void LibraryPrefs::Populate()
 {
@@ -250,11 +265,6 @@ bool LibraryPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString LibraryPrefs::HelpPageName()
-{
-   return "Libraries_Preferences";
 }
 
 PrefsPanel *LibraryPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

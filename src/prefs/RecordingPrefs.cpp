@@ -58,6 +58,21 @@ RecordingPrefs::~RecordingPrefs()
 {
 }
 
+ComponentInterfaceSymbol RecordingPrefs::GetSymbol()
+{
+   return RECORDING_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString RecordingPrefs::GetDescription()
+{
+   return _("Preferences for Recording");
+}
+
+wxString RecordingPrefs::HelpPageName()
+{
+   return "Recording_Preferences";
+}
+
 void RecordingPrefs::Populate()
 {
    //------------------------- Main section --------------------
@@ -288,11 +303,6 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
 {
    mUseCustomTrackName = !mUseCustomTrackName;
    mToggleCustomName->Enable(mUseCustomTrackName);
-}
-
-wxString RecordingPrefs::HelpPageName()
-{
-   return "Recording_Preferences";
 }
 
 PrefsPanel *RecordingPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

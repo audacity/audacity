@@ -47,6 +47,21 @@ GUIPrefs::~GUIPrefs()
 {
 }
 
+ComponentInterfaceSymbol GUIPrefs::GetSymbol()
+{
+   return GUI_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString GUIPrefs::GetDescription()
+{
+   return _("Preferences for GUI");
+}
+
+wxString GUIPrefs::HelpPageName()
+{
+   return "Interface_Preferences";
+}
+
 void GUIPrefs::GetRangeChoices(
    wxArrayStringEx *pChoices, wxArrayStringEx *pCodes)
 {
@@ -251,11 +266,6 @@ bool GUIPrefs::Commit()
    }
 
    return true;
-}
-
-wxString GUIPrefs::HelpPageName()
-{
-   return "Interface_Preferences";
 }
 
 PrefsPanel *GUIPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
