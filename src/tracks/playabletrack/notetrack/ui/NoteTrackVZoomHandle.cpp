@@ -241,6 +241,8 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       break;
    }
    GetActiveProject()->ModifyState(false);
+   using namespace RefreshCode;
+   mpData->result = UpdateVRuler | RefreshAll;
 }
 
 
