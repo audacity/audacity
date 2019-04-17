@@ -1180,7 +1180,6 @@ bool Effect::DoEffect(wxWindow *parent,
 
    mOutputTracks.reset();
 
-   mpSelectedRegion = selectedRegion;
    mFactory = factory;
    mProjectRate = projectRate;
    mTracks = list;
@@ -1289,10 +1288,11 @@ bool Effect::DoEffect(wxWindow *parent,
    return returnVal;
 }
 
-bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
+bool Effect::Delegate( Effect &delegate,
+   wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt)
 {
    return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
-      mpSelectedRegion, shouldPrompt );
+      selectedRegion, shouldPrompt );
 }
 
 // All legacy effects should have this overridden

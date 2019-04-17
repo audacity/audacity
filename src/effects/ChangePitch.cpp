@@ -211,11 +211,12 @@ bool EffectChangePitch::Process()
    if (mUseSBSMS)
    {
       double pitchRatio = 1.0 + m_dPercentChange / 100.0;
+      SelectedRegion region(mT0, mT1);
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
 
-      return Delegate(proxy, mUIParent, false);
+      return Delegate(proxy, mUIParent, &region, false);
    }
    else
 #endif
