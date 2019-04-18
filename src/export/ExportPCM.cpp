@@ -345,7 +345,7 @@ public:
    bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
-
+   void ReportTooBigError(wxWindow * pParent);
    ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
    bool AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
@@ -395,6 +395,24 @@ ExportPCM::ExportPCM()
 #endif
    SetExtensions(allext, format);
    SetMaxChannels(255, format);
+}
+
+// Bug 2057
+// This function is not yet called anywhere.
+// It is provided to get the translation strings.
+// We can hook it in properly whilst translation happens.
+void ExportPCM::ReportTooBigError(wxWindow * pParent)
+{
+
+   ShowErrorDialog(pParent, _("Error Exporting"),
+                  _("You have attempted to Export a WAV file which would be greater than 4GB.\n"
+                    "Audacity cannot do this, the Export was abandoned."),
+                  wxT("Error_wav_too_big"));
+
+   ShowErrorDialog(pParent, _("Error Exporting"),
+                  _("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+                    "files bigger than 4GB."),
+                  wxT("Error_wav_truncated"));
 }
 
 /**
