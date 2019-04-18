@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3.7\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-11-24 10:45+0000\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2010-01-27 06:35-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team: Burmese <my@li.org>\n"
@@ -609,7 +609,7 @@ msgid ""
 msgstr ""
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "အိုဒေးစီးတီး %s ခလုတ်တန်း"
@@ -1166,6 +1166,189 @@ msgid "Out of memory!"
 msgstr ""
 
 #: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "No devices found\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "အစမ်းမြင်ကွင်း မရနိုင်ဘူး"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "ကိရိယာ"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "ကိရိယာများ"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "အမည်"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "ပြန်ဖွင့်ချက်"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "နမူနာ နှုန်းထားများ"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "အမြန်နှုန်းကို ပြန်ဖွင့်ပါ"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "အမျိုအစားဖိုင်ကို မဖွင့်နိုင်ဘူး။"
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "အသံသွင်းနေခြင်း"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "ပြန်ဖွင့်ချက်"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "ပြန်ဖွင့်ချက်"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "ပြန်ဖွင့်ချက်"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "အမြန်နှုန်းကို ပြန်ဖွင့်ပါ"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
@@ -1375,10 +1558,6 @@ msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr ""
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1391,8 +1570,9 @@ msgid "Export recording"
 msgstr "အသံသွင်းနေခြင်း"
 
 #: src/BatchCommands.cpp
+#, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 
@@ -2278,6 +2458,7 @@ msgid "To find '%s', click here -->"
 msgstr ""
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "လှော်လှန်ပါ..."
 
@@ -2299,15 +2480,10 @@ msgid "Where is '%s'?"
 msgstr ""
 
 #: src/FFmpeg.cpp
-#, fuzzy
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "လိုက်ဖက်တဲ့ FFmpeg စုစည်းချက်များကို မတွေ့နိုင်ဘူး"
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr "FFmpeg ကို မတွေ့ရှိဘူး"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2321,9 +2497,14 @@ msgstr ""
 "FFmpeg တင်သွင်းမှုကို သုံးဖို့၊ ဦးစားပေးချက်များ > စုစည်းချက်များဆီ သွားပြီး\n"
 "FFmpeg စုစည်းချက်များကို ဆွဲချ (သို့) ​ရှာတွေ့နိုင်တယ်။"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "ဒီသတိပေးချက်ကို နောက်တကြိမ် မပြပါနဲ့"
+
+#: src/FFmpeg.cpp
+#, fuzzy
+msgid "Failed to find compatible FFmpeg libraries."
+msgstr "လိုက်ဖက်တဲ့ FFmpeg စုစည်းချက်များကို မတွေ့နိုင်ဘူး"
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2387,7 +2568,7 @@ msgstr "LOF အမှားအယွင်း"
 msgid "Error (file may not have been written): %s"
 msgstr "အမှားအယွင်း (ဖိုင်ကို ရေးထားတာ မဖြစ်နိုင်ဘူး) - %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "ရောင်စဉ်"
 
@@ -3963,10 +4144,6 @@ msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr "၅ စက္ကန့် စောင့်ပြီး ရှေ့ဆုံးက ၀င်းဒိုး/အညွှန်းစာမျက်နှာကို ဖမ်းယူပါ"
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr "မှားတယ်"
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr "စီမံချက်  ၀င်းဒိုးတခုရဲ့ တစိတ်တပိုင်းကို ဖမ်းယူပါ"
 
@@ -4038,7 +4215,7 @@ msgid "Edit"
 msgstr "တည်းဖြတ်ပါ"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "ကိရိယာ"
 
@@ -4067,6 +4244,7 @@ msgstr "ပေတံ"
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "အသံလမ်းကြောများ"
 
@@ -4260,6 +4438,11 @@ msgstr "ဖွင့်ပါ..."
 #: src/Tags.cpp
 msgid "Set De&fault"
 msgstr ""
+
+#: src/Tags.cpp
+#, fuzzy
+msgid "Don't show this when exporting audio"
+msgstr "ဒီသတိပေးချက်ကို နောက်တခါ မပြနဲ့"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -4750,6 +4933,10 @@ msgstr "အိုဒေးစီးတီး အချိန်တိုင်�
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr ""
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "ရွေးချယ်ပါ"
 
 #: src/TrackPanel.cpp
 #, fuzzy, c-format
@@ -5338,6 +5525,7 @@ msgid "Toolbars"
 msgstr "ခလုတ်တန်းများ"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr ""
 
@@ -5530,10 +5718,6 @@ msgstr "ကြိမ်နှုန်း (Hz)"
 msgid "Select Tracks"
 msgstr "အသံလမ်းကြောတိုများ"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "ရွေးချယ်ပါ"
-
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -5703,6 +5887,7 @@ msgid "Pan:"
 msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "လှိုင်းသဏ္ဍာန်"
 
@@ -7271,7 +7456,7 @@ msgstr "မျဉ်းခုံးများကို ရေးဆွဲပ�
 msgid "&Graphic"
 msgstr "EQ ရုပ်ကား"
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr "EQ ရုပ်ကား"
 
@@ -7521,6 +7706,11 @@ msgstr ""
 #: src/effects/Equalization.h
 msgid "Equalization"
 msgstr "ညီမျှစေခြင်း"
+
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "ကြိုတင်သတ်မှတ်ချက်ကို ပယ်ဖျက်ပါ"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -7778,30 +7968,35 @@ msgstr "၀င်းဒိုး အမျိုးအစား"
 
 #: src/effects/NoiseReduction.cpp
 #, fuzzy
+msgid "Window si&ze"
+msgstr "၀င်းဒိုး အရွယ်"
+
+#: src/effects/NoiseReduction.cpp
+#, fuzzy
 msgid "8"
 msgstr "၄၈"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr "၁၆"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr "၃၂"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr "၆၄"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr "၁၂၈"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr "၅၁၂"
 
@@ -7814,22 +8009,21 @@ msgstr "၁၀၂၄"
 msgid "2048 (default)"
 msgstr "၂၅၆ - စံထားချက်"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr "၄၀၉၆"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr "၈၁၉၂"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr "၁၆၃၈၄"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "Window si&ze"
-msgstr "၀င်းဒိုး အရွယ်"
+msgid "S&teps per window"
+msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
@@ -7839,10 +8033,6 @@ msgstr "၂"
 #, fuzzy
 msgid "4 (default)"
 msgstr "ချဲ့ထွင်မှု စံထားချက်"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -8865,6 +9055,7 @@ msgstr "ရာခိုင်နှုန်းအလိုက် ဝါ ကြ�
 msgid "Wahwah"
 msgstr "ဝါဝါ"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr ""
@@ -8887,19 +9078,6 @@ msgstr "MP3 စာဝှက်ရေးသားတဲ့ စုစည်းခ�
 #, fuzzy
 msgid "Audio Unit Effect Options"
 msgstr "သက်ရောက်မှု တပ်ဆင်ချက်များ"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "ထုတ်လုပ်ပါ"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -8933,6 +9111,19 @@ msgstr ""
 msgid "Select &interface"
 msgstr "ထည့်သွင်း ကိရိယာ"
 
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+msgid "Generic"
+msgstr "ထုတ်လုပ်ပါ"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr ""
+
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
 msgid "Export Audio Unit Presets"
@@ -8956,11 +9147,15 @@ msgstr "ကြိုတင်သတ်မှတ်ချက်များကိ
 msgid "Location"
 msgstr "လုပ်ဆောင်ချက်"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
-msgid "AudioUnit"
-msgstr "အသံ ဖိုင်"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
+msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 #, fuzzy
 msgid "LADSPA Effects"
@@ -8992,6 +9187,9 @@ msgstr ""
 msgid "Effect Output"
 msgstr "သက်ရောက်မှု တပ်ဆင်ချက်များ"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 #, fuzzy
 msgid "LADSPA"
@@ -9059,11 +9257,6 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "နိုင်ခွီးစ်ထ် သ​က်ရောက်မှုကို အသုံးချ​ခြင်း..."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Effects Prompt"
-msgstr "နောက်ဆုံး သက်ရောက်မှုကို ထပ်လုပ်ပါ"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -10072,6 +10265,8 @@ msgstr ""
 "အနည်းဆုံး - ၀\n"
 "အများဆုံး - ၈"
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr "LPC ကို သုံးစွဲပါ"
@@ -10307,7 +10502,7 @@ msgid "Constant"
 msgstr "အမြဲတမ်း"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "အရည်အသွေး"
 
@@ -10368,11 +10563,11 @@ msgid "Where is %s?"
 msgstr "%s ဘယ်မှာ ရှိလဲ။"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "သင်ဟာ lame_enc.dll v%d.%d ကို ချိတ်ဆက်နေတယ်။ ဒီမူအဆင့်ဟာ အိုဒေးစီးတီး %d.%d.%d နဲ့ မလိုက်ဖက်ဘူး။\n"
 "လမ် MP3 စုစည်းခန်း နောက်ဆုံး မူအဆင့်ကို ဆွဲချပါ။"
@@ -10385,6 +10580,15 @@ msgid ""
 msgstr ""
 "lame_enc.dll|lame_enc.dll|တက်ကြွစွာ ချိတ်ဆက်ထားတဲ့ စုစည်းခန်းများ (*.dll)|*.dll|ဖိုင်များ "
 "အားလုံး (*.*)|* ကိုသာ"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr ""
+"libmp3lame.dylib|libmp3lame.dylib|တက်ကြွတဲ့ စုစည်းခန်းများ (*.dylib)|*.dylib|ဖိုင်များ "
+"အားလုံး (*)|* ကိုသာ"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10479,6 +10683,11 @@ msgstr ""
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "MP3 တင်ပို့မှု စုစည်းခန်းကို မတွေ့ရဘူး"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid "(Built-in)"
+msgstr "နောက်ဆုံး သက်ရောက်မှုကို ထပ်လုပ်ပါ"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -10668,6 +10877,23 @@ msgid "Other uncompressed files"
 msgstr "တခြား ဖိသိပ်မထားတဲ့ ဖိုင်များ"
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "တင်သွင်းနေတဲ့ အမှားအယွင်း"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "အသံကို ဒီအမျိုးအစားနဲ့ မတင်ပို့နိုင်ဘူး။"
 
@@ -10749,11 +10975,13 @@ msgstr ""
 "သင် အသွင်းပြောင်းဖို့ လိုအပ်တယ်။"
 
 #: src/import/Import.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 "\"%s\" ဟာ အဆင့်မြင့် အသံ ကုဒ်ရေးသားခြင်း ဖိုင်တခု ဖြစ်တယ် \n"
 "အိုဒေးစီးတီးက ဒီလို ဖိုင်အမျိုးအစားကို မဖွင့်နိုင်ဘူး။\n"
@@ -10894,6 +11122,11 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "%s ကို တင်သွင်းနေခြင်း"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -11066,11 +11299,6 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "%s ကို တင်သွင်းနေခြင်း"
 
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
@@ -11779,30 +12007,22 @@ msgid "E&xit"
 msgstr "ထွက်ခွါပါ"
 
 #: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "သိမ်းဆည်းချက် %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "'%s' ကို မဖယ်ရှားနိုင်ဘူး"
+
+#: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
-msgid "Save Device Info"
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "Unable to save device info"
-msgstr "အမျိုးအစား ဖိုင်ကို မသိမ်းဆည်းနိုင်ဘူး။"
-
-#: src/menus/HelpMenus.cpp
 msgid "MIDI Device Info"
 msgstr ""
-
-#: src/menus/HelpMenus.cpp
-msgid "Save MIDI Device Info"
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "အမျိုးအစား ဖိုင်ကို မသိမ်းဆည်းနိုင်ဘူး။"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -12825,6 +13045,31 @@ msgstr "နမူနာပြန်တင်ထားတဲ့ အသံလမ�
 msgid "Pan Track"
 msgstr "အသံလမ်းကြော"
 
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Zero"
+msgstr "ရက်စွဲကို စတင်ပါ"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Cursor/Selection Start"
+msgstr "ရွေးချယ်မှုအတွက် အစပြုမှု"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to Selection &End"
+msgstr "ရွေးချယ်မှု အတွက် ပြီးဆုံးမှု"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Cu&rsor/Selection Start"
+msgstr "ရွေးချယ်မှုအတွက် အစပြုမှု"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Selection En&d"
+msgstr "ရွေးချယ်မှု အတွက် ပြီးဆုံးမှု"
+
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
 #. times, and the time selection may be "moved" too.  The first
@@ -13222,31 +13467,6 @@ msgstr "အဆုံးကို ရွေးချယ်ချက် အဆု�
 #, fuzzy
 msgid "Align &Together"
 msgstr "အသံလမ်းကြောများကို အတူတကွ တန်းညှိပါ"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Start to &Zero"
-msgstr "ရက်စွဲကို စတင်ပါ"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Start to &Cursor/Selection Start"
-msgstr "ရွေးချယ်မှုအတွက် အစပြုမှု"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Start to Selection &End"
-msgstr "ရွေးချယ်မှု အတွက် ပြီးဆုံးမှု"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "End to Cu&rsor/Selection Start"
-msgstr "ရွေးချယ်မှုအတွက် အစပြုမှု"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "End to Selection En&d"
-msgstr "ရွေးချယ်မှု အတွက် ပြီးဆုံးမှု"
 
 #: src/menus/TrackMenus.cpp
 #, fuzzy
@@ -13767,9 +13987,14 @@ msgstr "လှိုင်းသဏ္ဍာန်ကို စာဝှက်�
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% ပြီးစီးတယ်။ ဆုံချက်လုပ်ငန်း အမှတ်ကို ပြောင်းဖို့ နှိုပ်ပါ။"
 
-#: src/prefs/BatchPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "စုစည်းမှု"
+
+#: src/prefs/BatchPrefs.cpp
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13782,6 +14007,11 @@ msgstr "စုစည်းမှု စနစ်မှာ သက်ရောက�
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr "ကိရိယာများ"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "ဦးစားပေးချက်များ..."
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13799,7 +14029,7 @@ msgid "Using:"
 msgstr "သုံးစွဲခြင်း -"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "ပြန်ဖွင့်ချက်"
 
@@ -13809,7 +14039,8 @@ msgid "&Device:"
 msgstr "ကိရိယာ"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "အသံသွင်းနေခြင်း"
 
@@ -13859,9 +14090,13 @@ msgid "2 (Stereo)"
 msgstr "၂ (စတီရီယို)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "ဖိုင်တွဲများ"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Preferences for Directories"
+msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13939,11 +14174,47 @@ msgid "Temp Directory Update"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "ဦးစားပေးချက်များ..."
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "သက်ရောက်မှု"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "နိုင်ခွီးစ်ထ်"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Vamp"
+msgstr ""
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -14007,6 +14278,11 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -14075,6 +14351,16 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "တင်သွင်းပါ"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -14194,9 +14480,17 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "တင်သွင်းပါ / တင်ပို့ပါ"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -14248,10 +14542,19 @@ msgstr "စက္ကန့်များ"
 msgid "&Beats"
 msgstr "ထပ်လုပ်ပါ"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "ကီးဘုတ်"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -14375,8 +14678,19 @@ msgid ""
 "instead. Otherwise, click Cancel."
 msgstr ""
 
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "သော့ချက် ပေါင်းစပ်ခြင်း"
+
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "ဦးစားပေးချက်များ..."
+
+#: src/prefs/LibraryPrefs.cpp
+#, fuzzy
+msgid "LAME MP3 Export Library"
 msgstr "MP3 တင်ပို့မှု စုစည်းခန်း"
 
 #: src/prefs/LibraryPrefs.cpp
@@ -14384,16 +14698,12 @@ msgid "MP3 Library Version:"
 msgstr "MP3 စုစည်းခြင်း မူအဆင့် -"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
-msgstr "MP3 စုစည်းခန်း -"
+msgid "LAME MP3 Library:"
+msgstr "လမ် MP3 စုစည်းခန်း -"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
 msgstr "ရှာပါ..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "လမ် MP3 စုစည်းခန်း -"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -14433,10 +14743,20 @@ msgid ""
 "Do you still want to locate them manually?"
 msgstr ""
 
+#: src/prefs/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "စုစည်းခန်းများ"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr ""
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -14454,6 +14774,10 @@ msgstr ""
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
 msgid "Modules"
@@ -14461,12 +14785,8 @@ msgstr "အသံညှိကိရိယာ"
 
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
-msgid "Ask"
-msgstr "ကျွန်ပ်ကို မေးပါ"
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr ""
+msgid "Preferences for Module"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -14495,16 +14815,35 @@ msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr "ယာယီ ဖိုင်တွဲမှာ ပြင်ဆင်မှုများဟာ အိုဒေးစီးတီးကို ပြန်မဖွင့်မှီတိုင်အောင် သက်ရောက်မှု ရှိမှာ မဟုတ်ဘူး"
 
 #: src/prefs/ModulePrefs.cpp
+#, fuzzy
+msgid "Ask"
+msgstr "ကျွန်ပ်ကို မေးပါ"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
 msgstr ""
+
+#: src/prefs/ModulePrefs.h
+#, fuzzy
+msgid "Module"
+msgstr "အသံညှိကိရိယာ"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr ""
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "ကြွတ်ခလုတ်"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14714,6 +15053,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "မီတာ/လှိုင်းသဏ္ဍာန် dB အတိုင်းအတာ -"
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "ဦးစားပေးချက်များ..."
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr "သက်ရောက်ချက်များ အစမ်းမြင်ကွင်း"
 
@@ -14774,9 +15118,14 @@ msgid "Preferences: "
 msgstr ""
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr "စီမံချက်များ"
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "စီမံချက်များကို ဆယ်တင်ပါ"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14816,6 +15165,11 @@ msgstr "တြိဂံပုံ"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "ပုံဖေါ်ထားချက်"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14862,6 +15216,11 @@ msgstr "နမူနာ နှုန်းထား အသွင်ပြော�
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "အသံက အသံသွင်းမှုကို သက်၀င်စေတယ်"
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -15051,17 +15410,9 @@ msgid "Spectrograms"
 msgstr "စပက်ထရိုဂရမ်များ"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr "၈ - အကျယ်ဆုံး အဖွဲ့"
-
-#: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
-msgid "1024 - default"
-msgstr "၂၅၆ - စံထားချက်"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr "၃၂၇၆၈ - အကျဉ်းမြောင်းဆုံး အဖွဲ့"
+msgid "Preferences for Spectrum"
+msgstr "ဦးစားပေးချက်များ..."
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -15119,6 +15470,23 @@ msgstr "အယ်လဂိုရီသမ်"
 #, fuzzy
 msgid "Window &size:"
 msgstr "၀င်းဒိုး အရွယ်"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr "၈ - အကျယ်ဆုံး အဖွဲ့"
+
+#: src/prefs/SpectrumPrefs.cpp
+#, fuzzy
+msgid "1024 - default"
+msgstr "၂၅၆ - စံထားချက်"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr "၂၀၄၈"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
+msgstr "၃၂၇၆၈ - အကျဉ်းမြောင်းဆုံး အဖွဲ့"
 
 #: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
@@ -15205,9 +15573,14 @@ msgstr "မှတ်စုများရဲ့ အများဆုံး အ�
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr "အဓိကအချက်"
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -15286,9 +15659,14 @@ msgid "Load Files"
 msgstr "ဖိုင်များကို ဖွင့်ပါ"
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 #, fuzzy
 msgid "Tracks Behaviors"
+msgstr "လုပ်ဆောင်ပုံများ"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Preferences for TracksBehaviors"
 msgstr "လုပ်ဆောင်ပုံများ"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -15301,8 +15679,9 @@ msgid "Multi-track"
 msgstr "မျိုးစုံ"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
-msgstr ""
+#, fuzzy
+msgid "&Select all audio, if selection required"
+msgstr "ရွေးချယ်ချက်နဲ့ တန်းညှိထားတဲ့ ပြီးဆုံးမှု"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -15425,9 +15804,15 @@ msgid "4 Pixels per Sample"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Max Zoom"
 msgstr "ချဲ့ထွင်ပါ"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -15487,9 +15872,14 @@ msgstr "ကြိုတင်သတ်မှတ်ချက် -"
 msgid "Preset 2:"
 msgstr "ကြိုတင်သတ်မှတ်ချက် -"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr "သတိပေးချက်များ"
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -15528,6 +15918,11 @@ msgstr ""
 #, fuzzy
 msgid "Waveforms"
 msgstr "လှိုင်းသဏ္ဍာန်"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "ဦးစားပေးချက်များ..."
 
 #: src/prefs/WaveformPrefs.cpp
 #, fuzzy
@@ -15990,11 +16385,13 @@ msgid "Face size"
 msgstr "ဖောင့် အရွယ်"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Up &Octave"
 msgstr "ရှစ်သံတွဲ အထက်"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Down Octa&ve"
 msgstr "ရှစ်သံတွဲ အောက်"
@@ -16541,6 +16938,20 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "ညွှန်ကြားချက်"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "အသံလမ်းကြောတိုများ"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
 msgid "Open menu..."
 msgstr "လတ်တလောကို ဖွင့်ပါ..."
 
@@ -16874,7 +17285,7 @@ msgstr ""
 msgid "Show Log for Details"
 msgstr ""
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
 
@@ -17338,10 +17749,11 @@ msgstr ""
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -18133,6 +18545,53 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "နိုင်ခွီးစ်ထ် ရလဒ် -"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "MIDI ဖိုင်တခုကို ရွေးပါ..."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "အမှားအယွင်း (ဖိုင်ကို ရေးထားတာ မဖြစ်နိုင်ဘူး) - %s"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr ""
 
 #: plug-ins/pluck.ny
@@ -19019,6 +19478,28 @@ msgstr "ကြိမ်နှုန်း (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "false"
+#~ msgstr "မှားတယ်"
+
+#, fuzzy
+#~ msgid "AudioUnit"
+#~ msgstr "အသံ ဖိုင်"
+
+#, fuzzy
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "နောက်ဆုံး သက်ရောက်မှုကို ထပ်လုပ်ပါ"
+
+#, fuzzy
+#~ msgid "Unable to save device info"
+#~ msgstr "အမျိုးအစား ဖိုင်ကို မသိမ်းဆည်းနိုင်ဘူး။"
+
+#, fuzzy
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "အမျိုးအစား ဖိုင်ကို မသိမ်းဆည်းနိုင်ဘူး။"
+
+#~ msgid "MP3 Library:"
+#~ msgstr "MP3 စုစည်းခန်း -"
+
 #, fuzzy
 #~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
 #~ msgstr "မှတ်စုများရဲ့ အများဆုံး အရေအတွက်ဟာ ၁...၁၂၈ အတိုင်းအတာထဲမှာ ရှိရမယ်"
@@ -19524,9 +20005,6 @@ msgstr ""
 #~ msgid "Version"
 #~ msgstr "ပြောင်းပြန်လှန်နေခြင်း"
 
-#~ msgid "Key Combination"
-#~ msgstr "သော့ချက် ပေါင်းစပ်ခြင်း"
-
 #~ msgid ""
 #~ "The keyboard shortcut '%s' is already assigned to:\n"
 #~ "\n"
@@ -19617,10 +20095,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Host:"
 #~ msgstr "အခြေစိုက်စခန်း"
-
-#, fuzzy
-#~ msgid "Device:"
-#~ msgstr "ကိရိယာ"
 
 #, fuzzy
 #~ msgid "&Length of preview:"
@@ -20793,9 +21267,6 @@ msgstr ""
 #~ msgstr ""
 #~ "မှတ်ချက် - တင်ပို့မှု အရည်အသွေး ရွေးစရာများကို တင်ပို့မှု အညွှန်းစာမျက်နှာထဲမှ\n"
 #~ " ရွေးစရာများ ခလုတ်ကို နှိုပ်ခြင်းဖြင့် ရွေးချယ်နိုင်တယ်။"
-
-#~ msgid "2048"
-#~ msgstr "၂၀၄၈"
 
 #~ msgid "FFT Skip Points"
 #~ msgstr "FFT ခုန်ကျော်မှု အမှတ်များ"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-11-24 10:45+0000\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2018-11-24 14:40+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -17,10 +17,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11"
-" ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 >"
-" 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n %"
-" 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Lokalize 2.0\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -587,7 +587,7 @@ msgstr ""
 "маркою Домініка Маццоні (Dominic Mazzoni).<br><br>"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1135,6 +1135,190 @@ msgid "Out of memory!"
 msgstr "Не вистачає пам'яті!"
 
 #: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Виберіть пристрій запису"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "No devices found\n"
+msgstr "Пристроїв не виявлено"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "Не вдалося отримати дані щодо пристрою."
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "П&ристрій:"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "Пристрої"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "Назва: %s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "Канали запису"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "Гучність відтворення: %s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Завершення запису:"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Завершення запису:"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Частоти дискретизації"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Виберіть пристрій запису"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Виберіть пристрій відтворення"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "Не вдалося відкрити файл зі списком жанрів."
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "%d - %s\n"
+msgstr "%s — %s"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "Імітувати помилки запису"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "Гучність відтворення"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "Гучність запису"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "Гучність запису"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "Гучність відтворення: %s (емуляція)"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "Гучність відтворення: %s (емуляція)"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Виберіть пристрій запису"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Виберіть пристрій відтворення"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
@@ -1342,10 +1526,6 @@ msgid "Menu Command (No Parameters)"
 msgstr "Команда меню (без параметрів)"
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr "очищено"
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1359,8 +1539,9 @@ msgid "Export recording"
 msgstr "Експортувати запис"
 
 #: src/BatchCommands.cpp
+#, fuzzy, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 "Не вдалося створити каталог «очищене». \n"
@@ -2297,6 +2478,7 @@ msgid "To find '%s', click here -->"
 msgstr "Щоб знайти «%s», клацніть тут —>"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Огляд…"
 
@@ -2318,14 +2500,10 @@ msgid "Where is '%s'?"
 msgstr "Де знаходиться «%s»?"
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Спроба знайти сумісну версію бібліотеки FFmpeg була невдалою."
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr "FFmpeg не знайдено"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2341,9 +2519,13 @@ msgstr ""
 "сторінку «Параметри > Бібліотеки»,\n"
 "щоб звантажити або вказати адресу потрібних бібліотек FFmpeg."
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Більше не показувати це попередження"
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
+msgstr "Спроба знайти сумісну версію бібліотеки FFmpeg була невдалою."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2402,7 +2584,7 @@ msgstr "Файлова помилка"
 msgid "Error (file may not have been written): %s"
 msgstr "Помилка (можливо, файл не записано): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Спектр"
 
@@ -2507,8 +2689,8 @@ msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
-"Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f"
-" секунд звуку."
+"Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f "
+"секунд звуку."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -3136,8 +3318,8 @@ msgstr "Модуль є невідповідним"
 #, c-format
 msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr ""
-"Модуль %s не надає даних щодо відповідної версії програми. Його не буде"
-" завантажено."
+"Модуль %s не надає даних щодо відповідної версії програми. Його не буде "
+"завантажено."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3726,8 +3908,8 @@ msgid ""
 "Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
-"Не вдалося зберегти проект. Не знайдено відповідного каталогу. Спробуйте"
-" \nстворити каталог «%s» перед зберіганням проекту з цією назвою."
+"Не вдалося зберегти проект. Не знайдено відповідного каталогу. Спробуйте \n"
+"створити каталог «%s» перед зберіганням проекту з цією назвою."
 
 #: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4067,10 +4249,6 @@ msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr "Чекати 5 секунд і зняти верхнє вікно"
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr "ні"
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr "Створити знімок частини вікна проекту"
 
@@ -4138,7 +4316,7 @@ msgid "Edit"
 msgstr "Змінити"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Пристрій"
 
@@ -4166,6 +4344,7 @@ msgstr "Лінійка"
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "Доріжки"
 
@@ -4359,6 +4538,11 @@ msgid "Set De&fault"
 msgstr "Зробити &типовими"
 
 #: src/Tags.cpp
+#, fuzzy
+msgid "Don't show this when exporting audio"
+msgstr "Більше не показувати"
+
+#: src/Tags.cpp
 msgid "Edit Genres"
 msgstr "Редагувати жанри"
 
@@ -4502,7 +4686,10 @@ msgid ""
 "Some required files in:\n"
 "  %s\n"
 "were already present. Overwrite?"
-msgstr "Деякі потрібні файли у\n  %s\nвже були наявні. Перезаписати їх?"
+msgstr ""
+"Деякі потрібні файли у\n"
+"  %s\n"
+"вже були наявні. Перезаписати їх?"
 
 #: src/Theme.cpp
 #, c-format
@@ -4844,6 +5031,10 @@ msgstr "Запис за таймером Audacity — очікування"
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr "(Esc — скасувати)"
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Позначення"
 
 #: src/TrackPanel.cpp
 #, c-format
@@ -5397,6 +5588,7 @@ msgid "Toolbars"
 msgstr "Панелі інструментів"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr "Ефекти"
 
@@ -5561,10 +5753,6 @@ msgstr "Вибір частот"
 msgid "Select Tracks"
 msgstr "Позначити доріжки"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Позначення"
-
 #: src/commands/SelectCommand.h
 msgid "Selects a time range."
 msgstr "Позначає діапазон за часом."
@@ -5714,6 +5902,7 @@ msgid "Pan:"
 msgstr "Панорамування:"
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Форма сигналу"
 
@@ -7191,7 +7380,7 @@ msgstr "Малювати криві"
 msgid "&Graphic"
 msgstr "&Графіка"
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr "Графічний EQ"
 
@@ -7442,6 +7631,11 @@ msgstr "Жодної кривої не експортовано"
 msgid "Equalization"
 msgstr "Еквалайзер"
 
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "Вибрати криву"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -7689,30 +7883,34 @@ msgid "&Window types"
 msgstr "Типи &вікон"
 
 #: src/effects/NoiseReduction.cpp
+msgid "Window si&ze"
+msgstr "Розмір &вікна"
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr "Б"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr "16"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr "32"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr "64"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr "128"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr "256"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr "512"
 
@@ -7724,21 +7922,21 @@ msgstr "1024"
 msgid "2048 (default)"
 msgstr "2048 (типово)"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr "4096"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr "8192"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
-msgid "Window si&ze"
-msgstr "Розмір &вікна"
+msgid "S&teps per window"
+msgstr "Кроків &на вікно"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
@@ -7747,10 +7945,6 @@ msgstr "2"
 #: src/effects/NoiseReduction.cpp
 msgid "4 (default)"
 msgstr "4 (типово)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr "Кроків &на вікно"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -8746,6 +8940,7 @@ msgstr "Зсув частоти «вау» (%)"
 msgid "Wahwah"
 msgstr "Вау-вау"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr "Ефекти звукових модулів"
@@ -8765,18 +8960,6 @@ msgstr "Не вдалося ініціалізувати компонент"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
 msgstr "Параметри ефектів Audio Unit"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr "Повний"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Generic"
-msgstr "Типовий"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr "Базовий"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -8812,6 +8995,18 @@ msgstr " Виберіть «Базовий», щоб скористатися б
 msgid "Select &interface"
 msgstr "Вибір і&нтерфейсу"
 
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr "Повний"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Generic"
+msgstr "Типовий"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr "Базовий"
+
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
 msgstr "Експортувати набори налаштувань Audio Unit"
@@ -8832,10 +9027,15 @@ msgstr "Імпортувати набори налаштувань Audio Unit"
 msgid "Location"
 msgstr "Розташування"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-msgid "AudioUnit"
-msgstr "AudioUnit"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
+msgstr "Звуковий модуль"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "Ефекти LADSPA"
@@ -8866,6 +9066,9 @@ msgstr "це працює не для усіх ефектів LADSPA."
 msgid "Effect Output"
 msgstr "Результат ефекту"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr "LADSPA"
@@ -8934,10 +9137,6 @@ msgstr "Надає підтримку ефектів Nyquist у Audacity"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "Застосовуємо ефект Nyquist…"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Effects Prompt"
-msgstr "Запит ефектів Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -9560,8 +9759,8 @@ msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr ""
-"Частота дискретизації проекту (%d) не підтримується поточним форматом\nфайла"
-" виводу даних."
+"Частота дискретизації проекту (%d) не підтримується поточним форматом\n"
+"файла виводу даних."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -9569,8 +9768,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"Набір частоти дискретизації проекту (%d) та швидкості (%d кб/с)\nне"
-" підтримується поточним форматом файла виводу."
+"Набір частоти дискретизації проекту (%d) та швидкості (%d кб/с)\n"
+"не підтримується поточним форматом файла виводу."
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -9982,6 +10181,8 @@ msgstr ""
 "min — 0\n"
 "max — 8"
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr "Використовувати LPC"
@@ -10216,7 +10417,7 @@ msgid "Constant"
 msgstr "Стала"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Якість"
 
@@ -10275,11 +10476,11 @@ msgid "Where is %s?"
 msgstr "Де знаходиться %s?"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "Було здійснено спробу з’єднатися з бібліотекою lame_enc.dll v%d.%d. Ця "
 "версія бібліотеки не є сумісною з Audacity %d.%d.%d.\n"
@@ -10291,6 +10492,15 @@ msgid ""
 "All Files|*"
 msgstr ""
 "Лише lame_enc.dll|lame_enc.dll|Динамічні бібліотеки (*.dll)|*.dll|Усі файли|*"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr ""
+"Тільки libmp3lame.dylib|libmp3lame.dylib|Динамічні бібліотеки (*.dylib)|*."
+"dylib|Всі файли (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10369,7 +10579,8 @@ msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
 msgstr ""
-"Частота дискретизації проекту (%d) не підтримується форматом\nфайлів MP3."
+"Частота дискретизації проекту (%d) не підтримується форматом\n"
+"файлів MP3."
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10377,12 +10588,17 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"Набір частоти дискретизації проекту (%d) та швидкості (%d кб/с)\nне"
-" підтримується форматом файлів MP3."
+"Набір частоти дискретизації проекту (%d) та швидкості (%d кб/с)\n"
+"не підтримується форматом файлів MP3."
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "Не знайдено бібліотеку експорту до MP3"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid "(Built-in)"
+msgstr "Вбудовані"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -10578,6 +10794,23 @@ msgid "Other uncompressed files"
 msgstr "Інші нестиснуті файли"
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "Помилка під час спроби імпортування"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Не вдається експортувати дані у цьому форматі."
 
@@ -10662,11 +10895,13 @@ msgstr ""
 "або AIFF."
 
 #: src/import/Import.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 "«%s» є файлом вдосконаленого аудіокодування (AAC). \n"
 "Audacity не може відкривати цей тип файлів. \n"
@@ -10817,6 +11052,11 @@ msgstr ""
 "Серед інструментів імпортування, які могли б підтримувати такі файли:\n"
 "%s,\n"
 "але жоден з інструментів не може обробити файл у цьому форматі."
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "Імпортування %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -10978,13 +11218,15 @@ msgid ""
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
-"Безпосереднє читання файлів надасть вам змогу відтворювати та редагувати дані"
-" майже негайно. Використання цього способу є менш безпечним, оскільки вам"
-" доведеться зберігати початкові назви та розташування редагованих"
-" файлів.\nПереглянути список назв та розташування файлів, дані яких"
-" використовуються безпосередньо, можна за допомогою пункту меню «Довідка ->"
-" Діагностика -> Перевірити залежності».\n\nОтже, який спосіб слід використати"
-" для імпортування поточних файлів?"
+"Безпосереднє читання файлів надасть вам змогу відтворювати та редагувати "
+"дані майже негайно. Використання цього способу є менш безпечним, оскільки "
+"вам доведеться зберігати початкові назви та розташування редагованих "
+"файлів.\n"
+"Переглянути список назв та розташування файлів, дані яких використовуються "
+"безпосередньо, можна за допомогою пункту меню «Довідка -> Діагностика -> "
+"Перевірити залежності».\n"
+"\n"
+"Отже, який спосіб слід використати для імпортування поточних файлів?"
 
 #: src/import/ImportPCM.cpp
 msgid "Choose an import method"
@@ -11001,11 +11243,6 @@ msgstr "Прочитати дані &безпосередньо з джерел�
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
 msgstr "Більше не &попереджати, використовувати вказаних вище спосіб"
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "Імпортування %s"
 
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
@@ -11677,28 +11914,22 @@ msgid "E&xit"
 msgstr "Ви&йти"
 
 #: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Збережено %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Не вдалося вилучити «%s»."
+
+#: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "Інформація про аудіопристрої"
 
 #: src/menus/HelpMenus.cpp
-msgid "Save Device Info"
-msgstr "Збереження даних щодо пристрою"
-
-#: src/menus/HelpMenus.cpp
-msgid "Unable to save device info"
-msgstr "Не вдалося зберегти дані щодо пристрою"
-
-#: src/menus/HelpMenus.cpp
 msgid "MIDI Device Info"
 msgstr "Дані щодо пристрою MIDI"
-
-#: src/menus/HelpMenus.cpp
-msgid "Save MIDI Device Info"
-msgstr "Зберегти відомості щодо пристрою MIDI"
-
-#: src/menus/HelpMenus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "Не вдалося зберегти відомості щодо пристрою MIDI"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
@@ -12580,6 +12811,26 @@ msgstr "Панорамовані звукові доріжки"
 msgid "Pan Track"
 msgstr "Панорамувати доріжку"
 
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Почати з &нуля"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Почати з &курсора або початку позначеного"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Почати з &кінця позначеного"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Завершити на к&урсорі або початку позначеного"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Завершити на &кінці позначеного"
+
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
 #. times, and the time selection may be "moved" too.  The first
@@ -12941,26 +13192,6 @@ msgstr "&Вирівняти за кінцями"
 #: src/menus/TrackMenus.cpp
 msgid "Align &Together"
 msgstr "Спі&льне вирівнювання"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to &Zero"
-msgstr "Почати з &нуля"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Почати з &курсора або початку позначеного"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to Selection &End"
-msgstr "Почати з &кінця позначеного"
-
-#: src/menus/TrackMenus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Завершити на к&урсорі або початку позначеного"
-
-#: src/menus/TrackMenus.cpp
-msgid "End to Selection En&d"
-msgstr "Завершити на &кінці позначеного"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Move Selection with Tracks (on/off)"
@@ -13418,9 +13649,14 @@ msgstr "Декодування форми сигналу"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% завершено. Натисніть, щоб змінити фокус задачі."
 
-#: src/prefs/BatchPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Пакет"
+
+#: src/prefs/BatchPrefs.cpp
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "Параметри: "
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13433,6 +13669,11 @@ msgstr "&Не застосовувати ефекти у пакетному ре
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr "Пристрої"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "Параметри: "
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13449,7 +13690,7 @@ msgid "Using:"
 msgstr "Використовується:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Відтворення"
 
@@ -13458,7 +13699,8 @@ msgid "&Device:"
 msgstr "П&ристрій:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Запис"
 
@@ -13504,9 +13746,14 @@ msgid "2 (Stereo)"
 msgstr "2 (стерео)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Каталоги"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Preferences for Directories"
+msgstr "Параметри: "
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13586,12 +13833,49 @@ msgid "Temp Directory Update"
 msgstr "Оновлення теки тимчасових даних"
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "Параметри: "
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr "Увімкнути ефекти"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
-msgstr "Звуковий модуль"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "LADSPA"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "Найквіст"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "&Vamp"
+msgstr "Vamp"
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -13650,6 +13934,11 @@ msgstr "Ви&користовувати SSE/SSE2/…/AVX"
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr "Розш. імпортування"
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "Параметри: "
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13722,6 +14011,16 @@ msgstr "Ви справді бажаєте вилучити позначене �
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr "Підтвердження вилучення правила"
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "Розш. імпортування"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "Параметри: "
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -13836,9 +14135,17 @@ msgstr "О&б'єднати загальносистемну тему та тем
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Використовувати компонування зліва праворуч для мов із лівописом"
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "Імпорт / Експорт"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -13884,10 +14191,19 @@ msgstr "с&екундах"
 msgid "&Beats"
 msgstr "&тактах"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Клавіатура"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "Параметри: "
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -14006,13 +14322,29 @@ msgid ""
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
-"Клавіатурне скорочення «%s» вже призначено до такої дії:\n\n\t«"
-"%s»\n\nНатисніть кнопку «Гаразд», щоб призначити скорочення до такої"
-" дії:\n\n\t«%s»\n\nЯкщо змінювати призначення не слід, натисніть кнопку"
-" «Скасувати»."
+"Клавіатурне скорочення «%s» вже призначено до такої дії:\n"
+"\n"
+"\t«%s»\n"
+"\n"
+"Натисніть кнопку «Гаразд», щоб призначити скорочення до такої дії:\n"
+"\n"
+"\t«%s»\n"
+"\n"
+"Якщо змінювати призначення не слід, натисніть кнопку «Скасувати»."
+
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "Прив'язка до клавіш"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Параметри: "
+
+#: src/prefs/LibraryPrefs.cpp
+#, fuzzy
+msgid "LAME MP3 Export Library"
 msgstr "Бібліотека експорту MP3"
 
 #: src/prefs/LibraryPrefs.cpp
@@ -14020,16 +14352,12 @@ msgid "MP3 Library Version:"
 msgstr "Версія бібліотеки MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
-msgstr "Бібліотека MP3:"
+msgid "LAME MP3 Library:"
+msgstr "Бібліотека LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
 msgstr "В&казати…"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Бібліотека LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -14071,10 +14399,20 @@ msgstr ""
 "Audacity було у автоматичному режимі визначено належні бібліотеки FFmpeg.\n"
 "Бажаєте вказати розташування цих бібліотек вручну?"
 
+#: src/prefs/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Бібліотеки"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr "Пристрої MIDI"
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "Параметри: "
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -14092,17 +14430,18 @@ msgstr "MIDI-інтерфейсів немає"
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr "Латентність синтезатора MIDI має бути визначено цілим числом"
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Модулі"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Запитувати"
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr "Помилка"
+#, fuzzy
+msgid "Preferences for Module"
+msgstr "Параметри: "
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -14136,16 +14475,34 @@ msgstr ""
 "Зміни цих параметрів набудуть чинності лише після перезапуску Audacity."
 
 #: src/prefs/ModulePrefs.cpp
+msgid "Ask"
+msgstr "Запитувати"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr "Помилка"
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
 msgstr "Модулів не знайдено"
+
+#: src/prefs/ModulePrefs.h
+#, fuzzy
+msgid "Module"
+msgstr "Модулі"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr "Ctrl"
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Миша"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "Параметри: "
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14345,6 +14702,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Діапазон вертикального масштабування форми у дБ"
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "Параметри: "
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr "Прослуховування ефекту"
 
@@ -14402,9 +14764,14 @@ msgid "Preferences: "
 msgstr "Параметри: "
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr "Проекти"
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "Відновити проекти"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14441,6 +14808,11 @@ msgstr "Трикутне"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "За формою"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "Параметри: "
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14483,6 +14855,11 @@ msgstr "Перетвор&ювач част. дискр.:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Під&мішування шуму:"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "Параметри: "
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -14657,16 +15034,9 @@ msgid "Spectrograms"
 msgstr "Спектрограми"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr "8 — найширший"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "1024 - default"
-msgstr "1024 — типово"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr "32768 — найточніше"
+#, fuzzy
+msgid "Preferences for Spectrum"
+msgstr "Параметри: "
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14716,6 +15086,22 @@ msgstr "&Алгоритм"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
 msgstr "&Розмір вікна:"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr "8 — найширший"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "1024 - default"
+msgstr "1024 — типово"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
+msgstr "32768 — найточніше"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &type:"
@@ -14799,9 +15185,14 @@ msgstr ""
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr "Стиль"
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "Параметри: "
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -14841,9 +15232,9 @@ msgid ""
 "Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
-"Це тестова версія Audacity з додатковою кнопкою, «Чарівник виведення». Цей"
-" засіб збереже C-версію \nкешу зображень, який потім може бути зібраний як"
-" типовий."
+"Це тестова версія Audacity з додатковою кнопкою, «Чарівник виведення». Цей "
+"засіб збереже C-версію \n"
+"кешу зображень, який потім може бути зібраний як типовий."
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -14882,8 +15273,13 @@ msgid "Load Files"
 msgstr "Завантажити файли"
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
+msgstr "Поведінка доріжок"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Preferences for TracksBehaviors"
 msgstr "Поведінка доріжок"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14895,7 +15291,8 @@ msgid "Multi-track"
 msgstr "Декілька доріжок"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
+#, fuzzy
+msgid "&Select all audio, if selection required"
 msgstr "А&втовибір, якщо потрібно щось вибрати"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
@@ -15004,8 +15401,14 @@ msgid "4 Pixels per Sample"
 msgstr "4 пікселі на фрагмент"
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Max Zoom"
 msgstr "Макс. масштаб"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "Параметри: "
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -15060,9 +15463,14 @@ msgstr "Шаблон 1:"
 msgid "Preset 2:"
 msgstr "Шаблон 2:"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr "Попередження"
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "Параметри: "
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -15100,6 +15508,11 @@ msgstr "&Імпортування нестиснених звукових фай
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
 msgstr "Форми сигналу"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "Параметри: "
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range"
@@ -15510,10 +15923,12 @@ msgid "Face size"
 msgstr "Розмір шрифту"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Up &Octave"
 msgstr "Октаво&ю вище"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Down Octa&ve"
 msgstr "О&ктавою нижче"
 
@@ -16031,6 +16446,20 @@ msgid "Collapse"
 msgstr "Згорнути"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "Command-клацання"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "Позначити доріжки"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
 msgstr "Відкрити меню…"
 
@@ -16341,7 +16770,7 @@ msgstr " Обрізано "
 msgid "Show Log for Details"
 msgstr "Показувати журнал повідомлень"
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr "Будь ласка, вкажіть дію"
 
@@ -16786,10 +17215,11 @@ msgstr "Alex S. Brown"
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 "Випущено за умов дотримання Загальної громадської ліцензії GNU (GPL) версії 2"
@@ -17102,9 +17532,9 @@ msgid ""
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
 "                                 \t-6 dB halves the amplitude."
 msgstr ""
-"~aЗначення у дБ не можуть перевищувати +100 дБ.~%~%~\n                       "
-"          Підказка: 6 дБ подвоює амплітуду~%~\n                              "
-"   \t-6 дБ зменшує амплітуду удвічі."
+"~aЗначення у дБ не можуть перевищувати +100 дБ.~%~%~\n"
+"                                 Підказка: 6 дБ подвоює амплітуду~%~\n"
+"                                 \t-6 дБ зменшує амплітуду удвічі."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -17539,6 +17969,53 @@ msgstr ""
 "доріжки.~%~%~\n"
 "                   Частотою дискретизації доріжки є ~a Гц.~%~\n"
 "                   Частота має бути нижчою за ~a Гц."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "додатки Nyquist"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "Виберіть файл"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr "Помилка.~%\"~a\" не вдалося записати."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Помилка.~%\"~a\" не вдалося записати."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
+msgstr ""
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
@@ -18441,19 +18918,46 @@ msgstr "Частота голок радару (у Гц)"
 msgid "Error.~%Stereo track required."
 msgstr "Помилка.~%Потрібна стереодоріжка."
 
+#~ msgid "cleaned"
+#~ msgstr "очищено"
+
+#~ msgid "false"
+#~ msgstr "ні"
+
+#~ msgid "AudioUnit"
+#~ msgstr "AudioUnit"
+
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Запит ефектів Nyquist"
+
+#~ msgid "Save Device Info"
+#~ msgstr "Збереження даних щодо пристрою"
+
+#~ msgid "Unable to save device info"
+#~ msgstr "Не вдалося зберегти дані щодо пристрою"
+
+#~ msgid "Save MIDI Device Info"
+#~ msgstr "Зберегти відомості щодо пристрою MIDI"
+
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "Не вдалося зберегти відомості щодо пристрою MIDI"
+
+#~ msgid "MP3 Library:"
+#~ msgstr "Бібліотека MP3:"
+
 #~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
 #~ msgstr ""
 #~ "Кількість відлунь «~a» не належить коректному діапазону від 1 до 50.~%~a"
 
 #~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
 #~ msgstr ""
-#~ "Зміна тону «~a» не належить коректному діапазону від -12 до +12 півтонів."
-#~ "~%~a"
+#~ "Зміна тону «~a» не належить коректному діапазону від -12 до +12 півтонів.~"
+#~ "%~a"
 
 #~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
 #~ msgstr ""
-#~ "Час затримки «~a» не належить до коректного діапазону від 0 до 10 секунд."
-#~ "~%~a"
+#~ "Час затримки «~a» не належить до коректного діапазону від 0 до 10 секунд.~"
+#~ "%~a"
 
 #~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
 #~ msgstr ""

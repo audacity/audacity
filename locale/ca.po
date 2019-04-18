@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-11-24 10:45+0000\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2018-09-10 17:16+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -564,7 +564,7 @@ msgstr ""
 "Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1100,6 +1100,190 @@ msgid "Out of memory!"
 msgstr "S'ha exhaurit la memòria!"
 
 #: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Seleccioneu el dispositiu d'enregistrament"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "No devices found\n"
+msgstr "No s'ha trobat cap dispositiu"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "La informació del dispositiu no està disponible."
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "&Dispositiu:"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "Dispositius"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "Nom: %s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "Canals d'enregistrament"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "Volum de reproducció: %s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Acabament de l'enregistrament:"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Acabament de l'enregistrament:"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Freqüències de mostreig"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Seleccioneu el dispositiu d'enregistrament"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Seleccioneu el dispositiu de reproducció"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "No es pot obrir el fitxer de gèneres."
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "%d - %s\n"
+msgstr "%s - %s"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "Simula errors d'enregistrament"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "Volum de reproducció"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "Volum d'enregistrament"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "Volum d'enregistrament"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "Volum de reproducció: %s (emulat)"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "Volum de reproducció: %s (emulat)"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Seleccioneu el dispositiu d'enregistrament"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Seleccioneu el dispositiu de reproducció"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
@@ -1304,10 +1488,6 @@ msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr "netejat"
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1319,8 +1499,9 @@ msgid "Export recording"
 msgstr "Exporta l'enregistrament"
 
 #: src/BatchCommands.cpp
+#, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 
@@ -2270,6 +2451,7 @@ msgid "To find '%s', click here -->"
 msgstr "Per trobar «%s», feu clic aquí —>"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Navega..."
 
@@ -2291,14 +2473,10 @@ msgid "Where is '%s'?"
 msgstr "On és «%s»?"
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "No s'han trobat biblioteques FFmpeg compatibles."
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr "No s'ha trobat FFmpeg"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2312,9 +2490,13 @@ msgstr ""
 "Per importar mitjançant FFmpeg aneu a Preferències > Biblioteques\n"
 "i descarregueu o localitzeu les biblioteques de FFmpeg."
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "No tornis a mostrar aquesta advertència"
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
+msgstr "No s'han trobat biblioteques FFmpeg compatibles."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2373,7 +2555,7 @@ msgstr "Error de fitxer"
 msgid "Error (file may not have been written): %s"
 msgstr "Error (podria ser que el fitxer no s'hagués escrit): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Espectre"
 
@@ -3985,10 +4167,6 @@ msgstr ""
 "Espera 5 segons i captura la finestra o el diàleg que es trobi en primer pla"
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr "fals"
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr "Captura una part de la finestra del projecte"
 
@@ -4056,7 +4234,7 @@ msgid "Edit"
 msgstr "Edita"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Dispositiu"
 
@@ -4084,6 +4262,7 @@ msgstr "Regle"
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "Pistes"
 
@@ -4275,6 +4454,11 @@ msgstr "Ca&rrega..."
 #: src/Tags.cpp
 msgid "Set De&fault"
 msgstr "&Estableix-ho com a predeterminat"
+
+#: src/Tags.cpp
+#, fuzzy
+msgid "Don't show this when exporting audio"
+msgstr "No tornis a mostrar aquesta advertència"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -4741,6 +4925,10 @@ msgstr "Enregistrament temporitzat d'Audacity - S'està esperant"
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr "(Esc per cancel·lar)"
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Selecciona"
 
 #: src/TrackPanel.cpp
 #, c-format
@@ -5280,6 +5468,7 @@ msgid "Toolbars"
 msgstr "Barres d'eines"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr "Efectes"
 
@@ -5444,10 +5633,6 @@ msgstr "Seleccioneu les freqüències"
 msgid "Select Tracks"
 msgstr ""
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Selecciona"
-
 #: src/commands/SelectCommand.h
 msgid "Selects a time range."
 msgstr ""
@@ -5598,6 +5783,7 @@ msgid "Pan:"
 msgstr "Panoramització:"
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Forma d'ona"
 
@@ -7061,7 +7247,7 @@ msgstr "Dibuixa les corbes"
 msgid "&Graphic"
 msgstr "&Gràfic"
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr "Equalitzador gràfic"
 
@@ -7309,6 +7495,11 @@ msgstr "No s'ha exportat cap corba"
 #: src/effects/Equalization.h
 msgid "Equalization"
 msgstr "Equalització"
+
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "Seleccioneu la corba"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -7561,30 +7752,34 @@ msgid "&Window types"
 msgstr "Tipus de &finestres"
 
 #: src/effects/NoiseReduction.cpp
+msgid "Window si&ze"
+msgstr "&Mida de la finestra"
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr "8"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr "16"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr "32"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr "64"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr "128"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr "256"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr "512"
 
@@ -7596,21 +7791,21 @@ msgstr "1024"
 msgid "2048 (default)"
 msgstr "2048 (predeterminat)"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr "4096"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr "8192"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
-msgid "Window si&ze"
-msgstr "&Mida de la finestra"
+msgid "S&teps per window"
+msgstr "&Passos per finestra"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
@@ -7619,10 +7814,6 @@ msgstr "2"
 #: src/effects/NoiseReduction.cpp
 msgid "4 (default)"
 msgstr "4 (predeterminat)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr "&Passos per finestra"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -8603,6 +8794,7 @@ msgstr "Desplaçament percentual de la freqüència Wah"
 msgid "Wahwah"
 msgstr "Wah-wah"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr "Efectes d'Audio Unit"
@@ -8622,18 +8814,6 @@ msgstr "No s'ha pogut inicialitzar el component"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
 msgstr "Opcions de l'efecte d'Audio Unit"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Generic"
-msgstr "Genèric"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr "Bàsic"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -8667,6 +8847,18 @@ msgstr ""
 msgid "Select &interface"
 msgstr "Selecciona la &interfície"
 
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Generic"
+msgstr "Genèric"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr "Bàsic"
+
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
 msgstr "Exporta els valors predefinits d'Audio Unit"
@@ -8687,10 +8879,15 @@ msgstr "Importa els valors predefinits d'Audio Unit"
 msgid "Location"
 msgstr "Ubicació"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-msgid "AudioUnit"
-msgstr ""
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
+msgstr "Audio Unit"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "Efectes LADSPA"
@@ -8720,6 +8917,9 @@ msgstr "no funciona amb tots els efectes LADSPA."
 msgid "Effect Output"
 msgstr "Sortida de l'efecte"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr "LADSPA"
@@ -8787,10 +8987,6 @@ msgstr "Proporciona suport per utilitzar efectes Nyquist amb Audacity"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "S'està aplicant l'efecte Nyquist..."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Effects Prompt"
-msgstr "Indicador d'efectes Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -9805,6 +10001,8 @@ msgstr ""
 "mín. - 0\n"
 "màx. - 8"
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr "Utilitza LPC"
@@ -10040,7 +10238,7 @@ msgid "Constant"
 msgstr "Constant"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Qualitat"
 
@@ -10099,11 +10297,11 @@ msgid "Where is %s?"
 msgstr "On és %s?"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "Esteu enllaçant amb lame_enc.dll v%d.%d. Aquesta versió no és compatible amb "
 "Audacity %d.%d.%d.\n"
@@ -10116,6 +10314,15 @@ msgid ""
 msgstr ""
 "Només lame_enc.dll|lame_enc.dll|Biblioteques enllaçades dinàmicament (*.dll)|"
 "*.dll|Tots els fitxers|*"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr ""
+"Només libmp3lame.dylib|libmp3lame.dylib|Biblioteques dinàmiques (*.dylib)|*."
+"dylib|Tots els fitxers (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10210,6 +10417,11 @@ msgstr ""
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "No s'ha trobat el connector d'exportació MP3"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid "(Built-in)"
+msgstr "Integrat"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -10400,6 +10612,23 @@ msgid "Other uncompressed files"
 msgstr "Altres fitxers no comprimits"
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "S'ha produït un error en importar"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "No es pot exportar el so en aquest format."
 
@@ -10485,11 +10714,13 @@ msgstr ""
 "Hauríeu de convertir-lo a un format d'àudio admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 "«%s» és un fitxer AAC (Advanced Audio Coding). \n"
 "Audacity no pot obrir aquest tipus de fitxer.\n"
@@ -10630,6 +10861,11 @@ msgstr ""
 "Els importadors que suposadament haurien d'admetre aquests fitxers són:\n"
 "%s,\n"
 "però cap d'ells ha entès el format del fitxer."
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "S'està important %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -10798,11 +11034,6 @@ msgstr "Llegeix els fitxers &directament de l'original (més ràpid)"
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
 msgstr "No m'a&visis més i utilitza sempre aquesta elecció"
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "S'està important %s"
 
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
@@ -11475,28 +11706,22 @@ msgid "E&xit"
 msgstr "&Surt"
 
 #: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "S'ha desat %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "No es pot eliminar «%s»."
+
+#: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "Informació sobre el dispositiu d'àudio"
 
 #: src/menus/HelpMenus.cpp
-msgid "Save Device Info"
-msgstr "Desa la informació sobre el dispositiu"
-
-#: src/menus/HelpMenus.cpp
-msgid "Unable to save device info"
-msgstr "No es pot desar la informació del dispositiu"
-
-#: src/menus/HelpMenus.cpp
 msgid "MIDI Device Info"
 msgstr "Informació del dispositiu MIDI"
-
-#: src/menus/HelpMenus.cpp
-msgid "Save MIDI Device Info"
-msgstr "Desa la informació del dispositiu MIDI"
-
-#: src/menus/HelpMenus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "No es pot desar la informació del dispositiu MIDI"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -12379,6 +12604,26 @@ msgstr ""
 msgid "Pan Track"
 msgstr ""
 
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Comença al &zero"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Comença al &cursor o al començament de la selecció"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Comença a l'acabament de la s&elecció"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Acaba al cu&rsor o al començament de la selecció"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Acaba a l'acabament &de la selecció"
+
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
 #. times, and the time selection may be "moved" too.  The first
@@ -12741,26 +12986,6 @@ msgstr "&Alinea l'acabament a l'acabament"
 #: src/menus/TrackMenus.cpp
 msgid "Align &Together"
 msgstr "Alinea conjun&tament"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to &Zero"
-msgstr "Comença al &zero"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Comença al &cursor o al començament de la selecció"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to Selection &End"
-msgstr "Comença a l'acabament de la s&elecció"
-
-#: src/menus/TrackMenus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Acaba al cu&rsor o al començament de la selecció"
-
-#: src/menus/TrackMenus.cpp
-msgid "End to Selection En&d"
-msgstr "Acaba a l'acabament &de la selecció"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Move Selection with Tracks (on/off)"
@@ -13212,9 +13437,14 @@ msgstr "S'està descodificant la forma d'ona"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% completat.  Feu clic per canviar el punt focal de la tasca."
 
-#: src/prefs/BatchPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Processos en cadena"
+
+#: src/prefs/BatchPrefs.cpp
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "Preferències: "
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13227,6 +13457,11 @@ msgstr "&No apliquis els efectes en mode de procés per lots"
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr "Dispositius"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "Preferències: "
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13243,7 +13478,7 @@ msgid "Using:"
 msgstr "Mitjançant:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Reproducció"
 
@@ -13252,7 +13487,8 @@ msgid "&Device:"
 msgstr "&Dispositiu:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Enregistrament"
 
@@ -13298,9 +13534,14 @@ msgid "2 (Stereo)"
 msgstr "2 (estèreo)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Directoris"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Preferences for Directories"
+msgstr "Preferències: "
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13380,12 +13621,49 @@ msgid "Temp Directory Update"
 msgstr "Actualitza el directori temporal"
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "Preferències: "
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr "Habilita els efectes"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
-msgstr "Audio Unit"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "LADSPA"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "Nyquist"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "&Vamp"
+msgstr "Vamp"
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -13444,6 +13722,11 @@ msgstr "&Utilitza SSE/SSE2/.../AVX"
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr "Importació ampliada"
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "Preferències: "
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13518,6 +13801,16 @@ msgstr "Segur que voleu eliminar el criteri seleccionat?"
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr "Confirmació de l'eliminació del criteri"
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "Importació ampliada"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "Preferències: "
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -13632,9 +13925,17 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "Importació / exportació"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -13680,10 +13981,19 @@ msgstr "&Segons"
 msgid "&Beats"
 msgstr "&Pulsacions"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Teclat"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "Preferències: "
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -13811,8 +14121,19 @@ msgstr ""
 "\n"
 "tant si com no.  Altrament, feu clic a Cancel·la."
 
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "Vinculacions de les tecles"
+
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Preferències: "
+
+#: src/prefs/LibraryPrefs.cpp
+#, fuzzy
+msgid "LAME MP3 Export Library"
 msgstr "Biblioteca d'exportació MP3"
 
 #: src/prefs/LibraryPrefs.cpp
@@ -13820,16 +14141,12 @@ msgid "MP3 Library Version:"
 msgstr "Versió de la biblioteca MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
-msgstr "Biblioteca MP3:"
+msgid "LAME MP3 Library:"
+msgstr "Biblioteca MP3 LAME:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
 msgstr "U&bicació..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Biblioteca MP3 LAME:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -13871,10 +14188,20 @@ msgstr ""
 "Audacity ha detectat automàticament les biblioteques FFmpeg vàlides.\n"
 "Encara voleu localitzar-les manualment?"
 
+#: src/prefs/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Biblioteques"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr "Dispositius MIDI"
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "Preferències: "
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -13892,17 +14219,18 @@ msgstr "No hi ha cap interfície MIDI"
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr "La latència del sintetitzador MIDI ha de ser un nombre enter"
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Mòduls"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Pregunta"
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr "Ha fallat"
+#, fuzzy
+msgid "Preferences for Module"
+msgstr "Preferències: "
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -13939,16 +14267,34 @@ msgstr ""
 "nou."
 
 #: src/prefs/ModulePrefs.cpp
+msgid "Ask"
+msgstr "Pregunta"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr "Ha fallat"
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
 msgstr "No s'ha trobat cap mòdul"
+
+#: src/prefs/ModulePrefs.h
+#, fuzzy
+msgid "Module"
+msgstr "Mòduls"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr "Ctrl"
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Ratolí"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "Preferències: "
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14148,6 +14494,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "Preferències: "
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr "Vista prèvia dels efectes"
 
@@ -14205,9 +14556,14 @@ msgid "Preferences: "
 msgstr "Preferències: "
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr "Projectes"
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "Recupera els projectes"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14244,6 +14600,11 @@ msgstr "Triangle"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "Modelat"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "Preferències: "
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14286,6 +14647,11 @@ msgstr "Conver&tidor de freqüències de mostreig:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Tra&ma:"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "Preferències: "
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -14460,16 +14826,9 @@ msgid "Spectrograms"
 msgstr "Espectrogrames"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr "8 - banda més ampla"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "1024 - default"
-msgstr "1024 - per defecte"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr "32768 - banda més estreta"
+#, fuzzy
+msgid "Preferences for Spectrum"
+msgstr "Preferències: "
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14519,6 +14878,22 @@ msgstr "A&lgorisme"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
 msgstr "&Mida de la finestra:"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr "8 - banda més ampla"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "1024 - default"
+msgstr "1024 - per defecte"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
+msgstr "32768 - banda més estreta"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &type:"
@@ -14601,9 +14976,14 @@ msgstr "El nombre màxim de notes ha d'estar dins de l'interval 1..128"
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr "Tema"
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "Preferències: "
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -14684,8 +15064,13 @@ msgid "Load Files"
 msgstr "Carrega els fitxers"
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
+msgstr "Comportaments de les pistes"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Preferences for TracksBehaviors"
 msgstr "Comportaments de les pistes"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14697,7 +15082,8 @@ msgid "Multi-track"
 msgstr "Multipista"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
+#, fuzzy
+msgid "&Select all audio, if selection required"
 msgstr "A&uto-selecciona, si es requereix la selecció"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
@@ -14808,8 +15194,14 @@ msgid "4 Pixels per Sample"
 msgstr "4 píxels per mostra"
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Max Zoom"
 msgstr "Zoom màx."
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "Preferències: "
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -14864,9 +15256,14 @@ msgstr "Valor predefinit 1:"
 msgid "Preset 2:"
 msgstr "Valor predefinit 2:"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr "Advertències"
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "Preferències: "
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -14904,6 +15301,11 @@ msgstr "Quan s'&importen fitxers d'àudio sense comprimir"
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
 msgstr "Formes d'ona"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "Preferències: "
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range"
@@ -15316,10 +15718,12 @@ msgid "Face size"
 msgstr "Mida de la portada"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Up &Octave"
 msgstr "Apuja-ho una &octava"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Down Octa&ve"
 msgstr "Baixa-ho una octa&va"
 
@@ -15827,6 +16231,20 @@ msgid "Collapse"
 msgstr "Contreu"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "cmd-clic"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "Selecciona les pistes..."
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
 msgstr "Obre un &menú..."
 
@@ -16142,7 +16560,7 @@ msgstr " Clipat "
 msgid "Show Log for Details"
 msgstr "Mostra el registre per als detalls"
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr "Seleccioneu una acció"
 
@@ -16587,10 +17005,11 @@ msgstr "Alex S. Brown"
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 "Publicat sota els termes de la versió 2 de la llicència pública general GNU"
@@ -17318,6 +17737,53 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "Connectors Nyquist"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "Seleccioneu un fitxer"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Error (podria ser que el fitxer no s'hagués escrit): %s"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr ""
 
 #: plug-ins/pluck.ny
@@ -18124,6 +18590,30 @@ msgstr "Freqüència del tren de polsos (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Error.~%Es requereix la pista estèreo."
+
+#~ msgid "cleaned"
+#~ msgstr "netejat"
+
+#~ msgid "false"
+#~ msgstr "fals"
+
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Indicador d'efectes Nyquist"
+
+#~ msgid "Save Device Info"
+#~ msgstr "Desa la informació sobre el dispositiu"
+
+#~ msgid "Unable to save device info"
+#~ msgstr "No es pot desar la informació del dispositiu"
+
+#~ msgid "Save MIDI Device Info"
+#~ msgstr "Desa la informació del dispositiu MIDI"
+
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "No es pot desar la informació del dispositiu MIDI"
+
+#~ msgid "MP3 Library:"
+#~ msgstr "Biblioteca MP3:"
 
 #~ msgid "Error.~%~a"
 #~ msgstr "Error.~%~a"

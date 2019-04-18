@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-11-24 10:45+0000\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2015-09-18 20:53+0300\n"
 "Last-Translator: Heino Keränen\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -586,7 +586,7 @@ msgstr ""
 "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1134,6 +1134,190 @@ msgid "Out of memory!"
 msgstr "Muisti on täysi!"
 
 #: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Valitse äänityslaite"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "No devices found\n"
+msgstr "Ei äänilaitetta"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "Laitteen tietoja ei ole saatavilla."
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "Laite:"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "Laitteet"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "Nimi: %s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "Äänityskanavat"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "Toiston voimakkuus: %%.2f%s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Äänityksen loppu"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Äänityksen loppu"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Näyteenottotaajuudet"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Valitse äänityslaite"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Valitse toistolaite"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "Tyylilajitiedostoa ei voida avata."
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "Äänitys"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "Toiston voimakkuus"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "Äänitysvoimakkuus"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "Äänitysvoimakkuus"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "Toiston voimakkuus: %%.2f%s"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "Toiston voimakkuus: %%.2f%s"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Valitse äänityslaite"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Valitse toistolaite"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
@@ -1351,10 +1535,6 @@ msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr ""
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1367,8 +1547,9 @@ msgid "Export recording"
 msgstr "Äänitys"
 
 #: src/BatchCommands.cpp
+#, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 
@@ -2319,6 +2500,7 @@ msgid "To find '%s', click here -->"
 msgstr "Etsi '%s', napsauta tästä -->"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Selaa..."
 
@@ -2340,14 +2522,10 @@ msgid "Where is '%s'?"
 msgstr "Missä on '%s'?"
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Yhteensopivien FFmpeg-kirjastojen etsiminen epäonnistui."
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr "FFmpeg ei löytynyt"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2361,9 +2539,13 @@ msgstr ""
 "Käytä FFmpeg-tuontia, mene Asetukset... > Kirjastot\n"
 "lataa tai paikanna FFmpeg-kirjastot."
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Älä näytä tätä varoitusta uudelleen"
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
+msgstr "Yhteensopivien FFmpeg-kirjastojen etsiminen epäonnistui."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2425,7 +2607,7 @@ msgstr "LOF-virhe"
 msgid "Error (file may not have been written): %s"
 msgstr "Virhe (tiedostoa ei ehkä ole tallennettu): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektri"
 
@@ -4092,10 +4274,6 @@ msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr "Odota 5 sekuntia ja kaappaa päällimmäinen ikkuna/dialogi"
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr "väärä"
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr "Kaappaa osa projekti-ikkunasta"
 
@@ -4166,7 +4344,7 @@ msgid "Edit"
 msgstr "Muokkaus"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Laite"
 
@@ -4195,6 +4373,7 @@ msgstr "Viivain"
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "Raidat"
 
@@ -4385,6 +4564,11 @@ msgstr "&Lataa..."
 #: src/Tags.cpp
 msgid "Set De&fault"
 msgstr "Aseta &oletukseksi"
+
+#: src/Tags.cpp
+#, fuzzy
+msgid "Don't show this when exporting audio"
+msgstr "Älä näytä tätä varoitusta uudelleen"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -4877,6 +5061,10 @@ msgstr "Audacityn ajastettu äänitys - odottaa aloitusta"
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr ""
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Valitse"
 
 #: src/TrackPanel.cpp
 #, fuzzy, c-format
@@ -5462,6 +5650,7 @@ msgid "Toolbars"
 msgstr "&Työkalupalkit"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr "Efektit"
 
@@ -5654,10 +5843,6 @@ msgstr "Taajuusdet"
 msgid "Select Tracks"
 msgstr "L&ajittele raidat"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Valitse"
-
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -5833,6 +6018,7 @@ msgid "Pan:"
 msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Aaltomuoto"
 
@@ -7336,7 +7522,7 @@ msgstr "Piirrä käyriä"
 msgid "&Graphic"
 msgstr "&Graafinen"
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr "Graafinen EQ"
 
@@ -7585,6 +7771,11 @@ msgstr "Käyriä ei viety"
 msgid "Equalization"
 msgstr "Taajuuskorjaus"
 
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "&Valitse käyrä"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -7823,30 +8014,34 @@ msgid "&Window types"
 msgstr "&Ikkunatyypit"
 
 #: src/effects/NoiseReduction.cpp
+msgid "Window si&ze"
+msgstr "Ikkuna&koko"
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr "16"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr "32"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr "64"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr ""
 
@@ -7858,21 +8053,21 @@ msgstr ""
 msgid "2048 (default)"
 msgstr "2048 (oletus)"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
-msgid "Window si&ze"
-msgstr "Ikkuna&koko"
+msgid "S&teps per window"
+msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
@@ -7881,10 +8076,6 @@ msgstr "2"
 #: src/effects/NoiseReduction.cpp
 msgid "4 (default)"
 msgstr "4 (oletus)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -8860,6 +9051,7 @@ msgstr "Wahwah-taajuussiirtymä prosentteina"
 msgid "Wahwah"
 msgstr "Wahwah"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr "Audioyksikön efektit"
@@ -8881,18 +9073,6 @@ msgstr "MP3-koodauskirjastoa ei voitu avata!"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
 msgstr "Audioyksikön efektivalinnat"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr "Täysi"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Generic"
-msgstr "Yleinen"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr "Perus"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -8925,6 +9105,18 @@ msgstr " Valitse \"Perus\" vain-teksti käyttöliittymässä. "
 msgid "Select &interface"
 msgstr "Valitse k&äyttöliittymä"
 
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr "Täysi"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Generic"
+msgstr "Yleinen"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr "Perus"
+
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
 msgstr "Vie audioyksikön esiasetukset"
@@ -8945,11 +9137,15 @@ msgstr "Tuo audioyksikön esiasetuksia"
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
-msgid "AudioUnit"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
 msgstr "Audiolaite"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "LADSPA-efektit"
@@ -8978,6 +9174,9 @@ msgstr ""
 msgid "Effect Output"
 msgstr "Efektin tulostus"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 #, fuzzy
 msgid "LADSPA"
@@ -9041,11 +9240,6 @@ msgstr "Huolehtii Audacityn Nyquist-efektituesta"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "Suoritetaan Nyquist-efektiä..."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Effects Prompt"
-msgstr "Nyquist-efekti"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -9996,6 +10190,8 @@ msgid ""
 "max - 8"
 msgstr ""
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr "Käytä lineaarisen ennustuksen koodausta (LPC)"
@@ -10225,7 +10421,7 @@ msgid "Constant"
 msgstr "Jatkuva"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Laatu"
 
@@ -10286,11 +10482,11 @@ msgid "Where is %s?"
 msgstr "Missä on %s?"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "Olet linkittynyt lame_enc.dll v%d.%d. Tämä versio ei ole yhteensopiva "
 "Audacityn %d.%d.%d. kanssa.\n"
@@ -10303,6 +10499,15 @@ msgid ""
 msgstr ""
 "Vain lame_enc.dll|lame_enc.dll|Dynaamiset kirjastot (*.dll)|*.dll|Kaikki "
 "tiedostot|*"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr ""
+"Vain libmp3lame.dylib|libmp3lame.dylib|Dynaamiset kirjastot (*.dylib)|*."
+"dylib|Kaikki tiedostot (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10392,6 +10597,11 @@ msgstr ""
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "MP3-vientikirjastoa ei löytynyt"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid "(Built-in)"
+msgstr "Sisäiset efektit"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -10583,6 +10793,23 @@ msgid "Other uncompressed files"
 msgstr "Muut pakkaamattomat tiedostot"
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "Tuontivirhe"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Audion vienti tässä muodossa ei onnistu."
 
@@ -10665,11 +10892,13 @@ msgstr ""
 "Sinun täytyy muuntaa se tuettuun äänimuotoon, kuten WAV tai AIFF."
 
 #: src/import/Import.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 "\"%s\" on erityinen audion koodaustiedosto. \n"
 "Audacity ei avata tällaista tiedostoa. \n"
@@ -10806,6 +11035,11 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "Tuodaan %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -10975,11 +11209,6 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
 msgstr "Älä &varoita uudelleen ja käyttä aina edellä olevia valintoja"
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "Tuodaan %s"
 
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
@@ -11687,31 +11916,23 @@ msgid "E&xit"
 msgstr "&Lopeta"
 
 #: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Tallennettu %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Ei voitu poistaa '%s'."
+
+#: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "Audiolaitteen tiedot"
-
-#: src/menus/HelpMenus.cpp
-msgid "Save Device Info"
-msgstr "Tallenna laitteen tiedot"
-
-#: src/menus/HelpMenus.cpp
-msgid "Unable to save device info"
-msgstr "Laitetietoja ei voida tallentaa."
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "MIDI Device Info"
 msgstr "MIDI-laitteet"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "Save MIDI Device Info"
-msgstr "Tallenna laitteen tiedot"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "Laitetietoja ei voida tallentaa."
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -12714,6 +12935,26 @@ msgstr "Muutettu audiorait(oj)a"
 msgid "Pan Track"
 msgstr "Raita"
 
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Alku &nollaan"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Alku k&ursoriin / Valinnan alkuun"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Alku &valinnan loppuun"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Loppu kur&soriin / Valinnan alkuun"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Loppu valinnan l&oppuun"
+
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
 #. times, and the time selection may be "moved" too.  The first
@@ -13109,26 +13350,6 @@ msgstr "&Kohdista raidanpää loppuun"
 #: src/menus/TrackMenus.cpp
 msgid "Align &Together"
 msgstr "Kohdista &toisiinsa"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to &Zero"
-msgstr "Alku &nollaan"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Alku k&ursoriin / Valinnan alkuun"
-
-#: src/menus/TrackMenus.cpp
-msgid "Start to Selection &End"
-msgstr "Alku &valinnan loppuun"
-
-#: src/menus/TrackMenus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Loppu kur&soriin / Valinnan alkuun"
-
-#: src/menus/TrackMenus.cpp
-msgid "End to Selection En&d"
-msgstr "Loppu valinnan l&oppuun"
 
 #: src/menus/TrackMenus.cpp
 #, fuzzy
@@ -13645,9 +13866,14 @@ msgstr "Aaltomuoto dekoodaus"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 
-#: src/prefs/BatchPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Erä"
+
+#: src/prefs/BatchPrefs.cpp
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "Asetukset: "
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13660,6 +13886,11 @@ msgstr "&Älä käytä efektejä eräajotilassa"
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr "Laitteet"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "Asetukset: "
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13676,7 +13907,7 @@ msgid "Using:"
 msgstr "Käytetään:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Toisto"
 
@@ -13685,7 +13916,8 @@ msgid "&Device:"
 msgstr "&Laite:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Äänitys"
 
@@ -13733,9 +13965,14 @@ msgid "2 (Stereo)"
 msgstr "2 (stereo)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Hakemistot"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Preferences for Directories"
+msgstr "Asetukset: "
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13812,12 +14049,48 @@ msgid "Temp Directory Update"
 msgstr "Väliaikaishakemiston päivitys"
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "Asetukset: "
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr "Salli efektit"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
-msgstr "Audiolaite"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "LADSPA-efektit"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "Nyquist"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Vamp"
+msgstr ""
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -13878,6 +14151,11 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr "Laajennettu tuonti"
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "Asetukset: "
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13946,6 +14224,16 @@ msgstr "Haluatko varmasti poistaa valitun säännön?"
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr "Säännön poistovahvistus"
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "Laajennettu tuonti"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "Asetukset: "
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -14064,9 +14352,17 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "Tuo / Vie"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -14117,10 +14413,19 @@ msgstr "sekuntia"
 msgid "&Beats"
 msgstr "Toistin"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Näppäimistö"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "Asetukset: "
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -14238,8 +14543,19 @@ msgid ""
 "instead. Otherwise, click Cancel."
 msgstr ""
 
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "Näppäinyhdistelmä"
+
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Asetukset: "
+
+#: src/prefs/LibraryPrefs.cpp
+#, fuzzy
+msgid "LAME MP3 Export Library"
 msgstr "MP3-vientikirjasto"
 
 #: src/prefs/LibraryPrefs.cpp
@@ -14247,16 +14563,12 @@ msgid "MP3 Library Version:"
 msgstr "MP3-kirjaston versio:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
-msgstr "MP3-kirjasto:"
+msgid "LAME MP3 Library:"
+msgstr "LAME MP3 -kirjasto:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
 msgstr "&Sijainti..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 -kirjasto:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -14298,10 +14610,20 @@ msgstr ""
 "Audacity on poistanut automaattisesti olevat FFmpeg-kirjastot.\n"
 "Haluatko silti paikantaa ne manuaalisesti?"
 
+#: src/prefs/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Kirjastot"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr "MIDI-laitteet"
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "Asetukset: "
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -14320,17 +14642,18 @@ msgstr "Ei MIDI-käyttöliittymää"
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr "MIDI-syntetisaattorin viive tulee olla kokonaisluku"
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Moduulit"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Kysy"
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr "Epäonnistui"
+#, fuzzy
+msgid "Preferences for Module"
+msgstr "Asetukset: "
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -14362,16 +14685,34 @@ msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr "Muutos tulee voimaan vasta kun Audacity käynnistetään uudelleen."
 
 #: src/prefs/ModulePrefs.cpp
+msgid "Ask"
+msgstr "Kysy"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr "Epäonnistui"
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
 msgstr "Moduleita ei löytynyt"
+
+#: src/prefs/ModulePrefs.h
+#, fuzzy
+msgid "Module"
+msgstr "Moduulit"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr "Ctrl"
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Hiiri"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "Asetukset: "
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14577,6 +14918,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Aaltomuoto alue (dB)"
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "Asetukset: "
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr "Efektien esikuuntelu"
 
@@ -14638,9 +14984,14 @@ msgid "Preferences: "
 msgstr "Asetukset: "
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr "Projektit"
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "Palauta projekteja"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14683,6 +15034,11 @@ msgid "Shaped"
 msgstr "Kuvioitu"
 
 #: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "Asetukset: "
+
+#: src/prefs/QualityPrefs.cpp
 msgid "Other..."
 msgstr "Muu..."
 
@@ -14723,6 +15079,11 @@ msgstr "Näytetaajuusmuun&nin:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Peh&mennys:"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "Asetukset: "
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -14908,17 +15269,9 @@ msgid "Spectrograms"
 msgstr "Spektrogrammit"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr "8 - erittäin laajakaista"
-
-#: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
-msgid "1024 - default"
-msgstr "256 - oletus"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr "32768 - erittäin kapeakaista"
+msgid "Preferences for Spectrum"
+msgstr "Asetukset: "
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14972,6 +15325,23 @@ msgstr "&Algoritmi"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
 msgstr "Ikkunan &koko:"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr "8 - erittäin laajakaista"
+
+#: src/prefs/SpectrumPrefs.cpp
+#, fuzzy
+msgid "1024 - default"
+msgstr "256 - oletus"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
+msgstr "32768 - erittäin kapeakaista"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &type:"
@@ -15054,9 +15424,14 @@ msgstr "Merkintöjen maksimimäärä täytyy olla välillä 1...128"
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr "Teema"
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "Asetukset: "
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -15119,9 +15494,14 @@ msgid "Load Files"
 msgstr "Lataa tiedostot"
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 #, fuzzy
 msgid "Tracks Behaviors"
+msgstr "Käyttäytyminen"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Preferences for TracksBehaviors"
 msgstr "Käyttäytyminen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -15134,8 +15514,9 @@ msgid "Multi-track"
 msgstr "Monitoimi"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
-msgstr ""
+#, fuzzy
+msgid "&Select all audio, if selection required"
+msgstr "Ketjua ei valittu"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -15256,9 +15637,15 @@ msgid "4 Pixels per Sample"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Max Zoom"
 msgstr "Zoomaa"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "Asetukset: "
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -15318,9 +15705,14 @@ msgstr "Esiasetus:"
 msgid "Preset 2:"
 msgstr "Esiasetus:"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr "Varoitukset"
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "Asetukset: "
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -15358,6 +15750,11 @@ msgstr "&Tuodaan pakkaamattomia audiotiedostoja"
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
 msgstr "Aaltomuodot"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "Asetukset: "
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range"
@@ -15791,10 +16188,12 @@ msgid "Face size"
 msgstr "Face-koko"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Up &Octave"
 msgstr "Oktaavi &ylös"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Down Octa&ve"
 msgstr "Oktaavi &alas"
 
@@ -16312,6 +16711,20 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "Komento"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "L&ajittele raidat"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
 msgid "Open menu..."
 msgstr "Avaa &viimeisin..."
 
@@ -16628,7 +17041,7 @@ msgstr "-Leikattu "
 msgid "Show Log for Details"
 msgstr ""
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr "Valitse toimenpide"
 
@@ -17085,10 +17498,11 @@ msgstr ""
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -17884,6 +18298,53 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "Nyquist tuloste: "
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "Valitse MIDI-tiedosto..."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Virhe (tiedostoa ei ehkä ole tallennettu): %s"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr ""
 
 #: plug-ins/pluck.ny
@@ -18771,6 +19232,34 @@ msgstr "Taajuus (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "false"
+#~ msgstr "väärä"
+
+#, fuzzy
+#~ msgid "AudioUnit"
+#~ msgstr "Audiolaite"
+
+#, fuzzy
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Nyquist-efekti"
+
+#~ msgid "Save Device Info"
+#~ msgstr "Tallenna laitteen tiedot"
+
+#~ msgid "Unable to save device info"
+#~ msgstr "Laitetietoja ei voida tallentaa."
+
+#, fuzzy
+#~ msgid "Save MIDI Device Info"
+#~ msgstr "Tallenna laitteen tiedot"
+
+#, fuzzy
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "Laitetietoja ei voida tallentaa."
+
+#~ msgid "MP3 Library:"
+#~ msgstr "MP3-kirjasto:"
+
 #, fuzzy
 #~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
 #~ msgstr "Merkintöjen maksimimäärä täytyy olla välillä 1...128"
@@ -19303,9 +19792,6 @@ msgstr ""
 #~ msgid "C&ategory:"
 #~ msgstr "&Luokka:"
 
-#~ msgid "Key Combination"
-#~ msgstr "Näppäinyhdistelmä"
-
 #~ msgid "Size"
 #~ msgstr "Koko"
 
@@ -19384,9 +19870,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Host:"
 #~ msgstr "&Isäntä:"
-
-#~ msgid "Device:"
-#~ msgstr "Laite:"
 
 #~ msgid "&Length of preview:"
 #~ msgstr "Esikuuntelun pituus:"
