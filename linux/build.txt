@@ -9,53 +9,54 @@ Some prerequisites:
 
 - Audacity requires gcc 4.9 or later to build.
 
-- CMake ( http://www.cmake.org/ ) is required to build the local copy of 
+- CMake ( http://www.cmake.org/ ) is required to build the local copy of
   the libsoxr resampling library used by Audacity.
 
 On a modern Debian distro, e.g. Ubuntu 16.04 (bionic), you would do:
 
-sudo apt-get install build-essential cmake
+'sudo apt-get install build-essential cmake'
 
-- libasound and gtk are required. Having gtk2 and gtk3 too  
+- libasound and gtk are required. Having gtk2 and gtk3 too
   may not be required, but compilation works if both are.
 
 - Auto-tools are also needed.
 
-sudo apt-get install libasound2-dev libgtk2.0-dev libgtk-3-dev
-sudo apt-get install autoconf automake
+'sudo apt-get install libasound2-dev libgtk2.0-dev libgtk-3-dev'
+'sudo apt-get install autoconf automake'
 
-- Since you will be fetching code from git repositories you 
+- Since you will be fetching code from git repositories you
   will need git.
 
-sudo apt-get install git git-gui gitk
+'sudo apt-get install git git-gui gitk'
 
 
 wxWidgets:
 
- 1) Clone wxWidgets and checkout 3.1.1 from the Audacity fork of the 
-    wxWidgets project: 
+ 1) Clone wxWidgets and checkout 3.1.1 from the Audacity fork of the
+    wxWidgets project:
        https://github.com/audacity/wxWidgets/....
 
     for example
       mkdir ./wxWidgets
       cd ./wxWidgets
-      git clone --recurse-submodules https://github.com/audacity/wxWidgets/
+      'git clone --recurse-submodules https://github.com/audacity/wxWidgets/'
 
-    Don't be tempted to use Widgets already installed on Linux because this 
-    will typically be a different version and will cause problems.              
+    Don't be tempted to use Widgets already installed on Linux because this
+    will typically be a different version and will cause problems.
 
     IF you forgot the --recurse-submodules, you can correct that later by:
       git submodule update --init
 
-  2) Follow instructions for building at 
+  2) Follow instructions for building at
     https://github.com/audacity/wxWidgets/blob/v3.1.1/docs/gtk/install.txt
 
     So...
-
-    mkdir buildgtk
-    cd buildgtk
-    ../configure --with-gtk
-    make    
+    'cd wxWidgets'
+    'mkdir buildgtk'
+    'cd buildgtk'
+    '../configure --with-gtk'
+    'make'
+    'sudo make install'
 
   3) Having got this far, it is well worth trying out building some wxWidgets
     examples to confirm that building has worked OK
@@ -64,11 +65,11 @@ Audacity:
 
   1) Create a 'build' subdirectory under Audacity and change to it.
 
-  2) Now to build Audacity itself.  
+  2) Now to build Audacity itself.
     Using a build directory (and .. in the command) keeps source and object files
     in separate directories.
 
-    ../configure --with-lib-preference="local system"
+    '../configure --with-lib-preference="local system"'
 
-    make
-    make install  # as root
+    'make'
+    'make install'  # as root ('sudo make install')
