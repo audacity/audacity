@@ -14398,7 +14398,7 @@ msgstr "Die Latenz des MIDI-Synthesizers muss ganzzahlig sein"
 
 #: src/prefs/MidiIOPrefs.h
 msgid "Midi IO"
-msgstr "^^MIDI-EA"
+msgstr "MIDI-EA"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
