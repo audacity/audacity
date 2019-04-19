@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-04-18 18:13+0100\n"
-"PO-Revision-Date: 2019-04-19 08:31+0300\n"
+"PO-Revision-Date: 2019-04-19 09:59+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -4176,7 +4176,7 @@ msgstr "PCM 24 δυαδικών"
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
-msgstr "αριθμός κινητής υποδιαστολής 32 δυαδικών"
+msgstr "κιν υποδ 32-bit"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
