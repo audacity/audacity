@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-04-18 18:13+0100\n"
-"PO-Revision-Date: 2018-12-10 10:10+0100\n"
+"PO-Revision-Date: 2019-04-19 09:42+0200\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "Language: it\n"
@@ -1120,9 +1120,9 @@ msgid "Stream is active ... unable to gather information.\n"
 msgstr "Il flusso è attivo... impossibile raccogliere informazioni.\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Default recording device number: %d\n"
-msgstr "Seleziona dispositivo di registrazione"
+msgstr "Numero dispositivo di registrazione predefinito: %d\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1130,44 +1130,43 @@ msgid "Default playback device number: %d\n"
 msgstr "Numero dispositivo di riproduzione predefinito: %d\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "No devices found\n"
-msgstr "Nessun dispositivo trovato"
+msgstr "Nessun dispositivo trovato\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Device info unavailable for: %d\n"
-msgstr "Informazioni sul dispositivo non disponibili."
+msgstr "Informazioni sul dispositivo non disponibili per: %d\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Device ID: %d\n"
-msgstr "Dispositivo:"
+msgstr "ID dispositivo: %d\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Device name: %s\n"
-msgstr "Dispositivi"
+msgstr "Nome dispositivo: %s\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Host name: %s\n"
-msgstr "Nome: %s"
+msgstr "Nome host: %s\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Recording channels: %d\n"
-msgstr "Canali di registrazione"
+msgstr "Canali di registrazione: %d\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Playback channels: %d\n"
-msgstr "Volume riproduzione: %s"
+msgstr "Canali di riproduzione: %d\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Low Recording Latency: %g\n"
-msgstr "Fine registrazione:"
+msgstr "Latenza registrazione inferiore: %g\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1175,9 +1174,9 @@ msgid "Low Playback Latency: %g\n"
 msgstr "Latenza riproduzione inferiore: %g\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "High Recording Latency: %g\n"
-msgstr "Fine registrazione:"
+msgstr "Latenza registrazione superiore: %g\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1186,14 +1185,13 @@ msgstr "Latenza riproduzione superiore: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Supported Rates:\n"
-msgstr "Frequenze di campionamento"
+msgstr "Frequenze supportate:\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selected recording device: %d - %s\n"
-msgstr "Seleziona dispositivo di registrazione"
+msgstr "Dispositivo di registrazione selezionato: %d - %s\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1201,9 +1199,9 @@ msgid "No recording device found for '%s'.\n"
 msgstr "Nessun dispositivo di registrazione trovato per '%s'.\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selected playback device: %d - %s\n"
-msgstr "Seleziona dispositivo di riproduzione"
+msgstr "Dispositivo di riproduzione selezionato: %d - %s\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1222,48 +1220,41 @@ msgid "Received %d while opening devices\n"
 msgstr "Ricevuto %d durante l'apertura dei dispositivi\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Unable to open Portmixer\n"
-msgstr "Impossibile aprire il file dei generi."
+msgstr "Non è stato possibile aprire Portmixer\n"
 
 #: src/AudioIO.cpp
 msgid "Available mixers:\n"
 msgstr "Mixer disponibili:\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%d - %s\n"
-msgstr "%s - %s"
+msgstr "%d - %s\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Available recording sources:\n"
-msgstr "Simula errori di registrazione"
+msgstr "Fonti di registrazione disponibili:\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Available playback volumes:\n"
-msgstr "Volume riproduzione"
+msgstr "Volumi di riproduzione disponibili:\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Recording volume is emulated\n"
-msgstr "Volume registrazione"
+msgstr "Il volume di registrazione è simulato\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Recording volume is native\n"
-msgstr "Volume registrazione"
+msgstr "Il volume di registrazione è nativo\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Playback volume is emulated\n"
-msgstr "Volume riproduzione: %s (simulato)"
+msgstr "Il volume di riproduzione è simulato\n"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Playback volume is native\n"
-msgstr "Volume riproduzione: %s (simulato)"
+msgstr "Il volume di riproduzione è nativo\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: src/AudioIO.cpp
@@ -1282,9 +1273,9 @@ msgid "Opened: %d\n"
 msgstr "Aperto: %d\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Seleziona dispositivo di registrazione"
+msgstr "Dispositivo MIDI di registrazione selezionato: %d - %s\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1292,9 +1283,9 @@ msgid "No MIDI recording device found for '%s'.\n"
 msgstr "Nessun dispositivo MIDI di registrazione trovato per '%s'.\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Seleziona dispositivo di riproduzione"
+msgstr "Dispositivo MIDI di riproduzione selezionato: %d - %s\n"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1526,12 +1517,12 @@ msgid "Export recording"
 msgstr "Esporta registrazione"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
-"Impossibile creare la cartella 'ripulito'. \n"
+"Impossibile creare la cartella '%s'. \n"
 "Il file esiste già e non è una cartella"
 
 #: src/BatchCommands.cpp
@@ -4519,9 +4510,8 @@ msgid "Set De&fault"
 msgstr "Imposta prede&finito"
 
 #: src/Tags.cpp
-#, fuzzy
 msgid "Don't show this when exporting audio"
-msgstr "Non mostrare più questo avviso"
+msgstr "Non mostrarlo quando si esporta l'audio"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -7610,9 +7600,8 @@ msgid "Equalization"
 msgstr "Equalizzazione"
 
 #: src/effects/Equalization.h
-#, fuzzy
 msgid "Filter Curve"
-msgstr "Seleziona curva"
+msgstr "Curva del filtro"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -10461,7 +10450,7 @@ msgid "Where is %s?"
 msgstr "Dove si trova il file %s?"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
@@ -10469,7 +10458,7 @@ msgid ""
 msgstr ""
 "Ci si sta collegando a lame_enc.dll v%d.%d. Questa versione non è "
 "compatibile con Audacity %d.%d.%d.\n"
-"Scaricare l'ultima versione della libreria LAME MP3."
+"Scaricare l'ultima versione di 'LAME per Audacity'."
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10480,13 +10469,12 @@ msgstr ""
 "dll|Tutti i file|*"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid ""
 "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
 "*.dylib|All Files (*)|*"
 msgstr ""
-"Solo libmp3lame.dylib|libmp3lame.dylib|Librerie dinamiche(*.dylib)|*.dylib|"
-"Tutti i file (*)|*"
+"Solo libmp3lame64bit.dylib|libmp3lame64bit.dylib|Librerie dinamiche (*."
+"dylib)|*.dylib|Tutti i file (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10582,9 +10570,8 @@ msgid "MP3 export library not found"
 msgstr "Libreria di esportazione MP3 non trovata"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "(Built-in)"
-msgstr "Incorporato"
+msgstr "(incorporato)"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -10775,17 +10762,16 @@ msgid "Other uncompressed files"
 msgstr "Altri file non compressi"
 
 #: src/export/ExportPCM.cpp
-#, fuzzy
 msgid "Error Exporting"
-msgstr "Errore d'importazione"
+msgstr "Errore di esportazione"
 
 #: src/export/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
-"Si è cercato di esportare in un file WAV che sarebbe più grande di "
-"4GB.\nQuesta operazione non è supportata da Aucacity: l'esportazione è stata "
+"Si è cercato di esportare in un file WAV che sarebbe più grande di 4GB.\n"
+"Questa operazione non è supportata da Aucacity: l'esportazione è stata "
 "interrotta."
 
 #: src/export/ExportPCM.cpp
@@ -10793,8 +10779,8 @@ msgid ""
 "Your exported WAV file has been truncated as Audacity cannot export WAV\n"
 "files bigger than 4GB."
 msgstr ""
-"Il file WAV esportato è stato troncato in quanto Aucacity non può "
-"esportare\nfile WAV più grandi di 4GB."
+"Il file WAV esportato è stato troncato in quanto Aucacity non può esportare\n"
+"file WAV più grandi di 4GB."
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -10882,7 +10868,7 @@ msgstr ""
 "È necessario convertirlo in un formato audio supportato, come WAV o AIFF."
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
 "Without the optional FFmpeg library, Audacity cannot open this type of "
@@ -10891,8 +10877,10 @@ msgid ""
 "or AIFF."
 msgstr ""
 "\"%s\" è un file Advanced Audio Coding. \n"
-"Audacity non può aprire questo tipo di file. \n"
-"È necessario convertirlo in un formato audio supportato, come WAV o AIFF."
+"Audacity non può aprire questo tipo di file senza la libreria facoltativa "
+"FFmpeg.\n"
+"Senza di essa è necessario convertirlo in un formato audio supportato, come "
+"WAV o AIFF."
 
 #: src/import/Import.cpp
 #, c-format
@@ -11886,14 +11874,14 @@ msgid "E&xit"
 msgstr "E&sci"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Save %s"
-msgstr "%s salvato"
+msgstr "Salva %s"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to save %s"
-msgstr "Impossibile eliminare '%s'."
+msgstr "Impossibile salvare %s"
 
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
@@ -13625,9 +13613,8 @@ msgid "Batch"
 msgstr "Batch"
 
 #: src/prefs/BatchPrefs.cpp
-#, fuzzy
 msgid "Preferences for Batch"
-msgstr "Preferenze: "
+msgstr "Preferenze per batch"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13642,9 +13629,8 @@ msgid "Devices"
 msgstr "Dispositivi"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "Preferences for Device"
-msgstr "Preferenze: "
+msgstr "Preferenze per dispositivo"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13722,9 +13708,8 @@ msgid "Directories"
 msgstr "Cartelle"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Preferences for Directories"
-msgstr "Preferenze: "
+msgstr "Preferenze per cartelle"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13805,9 +13790,8 @@ msgid "Temp Directory Update"
 msgstr "Aggiornamento cartella temporanea"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Preferences for Effects"
-msgstr "Preferenze: "
+msgstr "Preferenze per effetti"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
@@ -13817,9 +13801,8 @@ msgstr "Abilita effetti"
 #. (Application programming interface)
 #.
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "&LADSPA"
-msgstr "LADSPA"
+msgstr "&LADSPA"
 
 #. i18n-hint: abbreviates
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
@@ -13832,16 +13815,14 @@ msgstr "LV&2"
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "N&yquist"
-msgstr "Nyquist"
+msgstr "N&yquist"
 
 #. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "&Vamp"
-msgstr "Vamp"
+msgstr "&Vamp"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
@@ -13908,9 +13889,8 @@ msgid "Extended Import"
 msgstr "Importazione estesa"
 
 #: src/prefs/ExtImportPrefs.cpp
-#, fuzzy
 msgid "Preferences for ExtImport"
-msgstr "Preferenze: "
+msgstr "Preferenze per ExtImport"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13985,14 +13965,12 @@ msgid "Rule deletion confirmation"
 msgstr "Conferma eliminazione regola"
 
 #: src/prefs/ExtImportPrefs.h
-#, fuzzy
 msgid "Ext Import"
-msgstr "Importazione estesa"
+msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Preferences for GUI"
-msgstr "Preferenze: "
+msgstr "Preferenze per GUI"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -14173,9 +14151,8 @@ msgid "Keyboard"
 msgstr "Tastiera"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
 msgid "Preferences for KeyConfig"
-msgstr "Preferenze: "
+msgstr "Preferenze per KeyConfig"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -14306,19 +14283,16 @@ msgstr ""
 "In caso contrario fare clic su Annulla."
 
 #: src/prefs/KeyConfigPrefs.h
-#, fuzzy
 msgid "Key Config"
-msgstr "Combinazione tasti"
+msgstr "Configura tasti"
 
 #: src/prefs/LibraryPrefs.cpp
-#, fuzzy
 msgid "Preferences for Library"
-msgstr "Preferenze: "
+msgstr "Preferenze per libreria"
 
 #: src/prefs/LibraryPrefs.cpp
-#, fuzzy
 msgid "LAME MP3 Export Library"
-msgstr "Libreria esportazione MP3"
+msgstr "Libreria esportazione LAME MP3"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Library Version:"
@@ -14373,9 +14347,8 @@ msgstr ""
 "Proseguire comunque con la ricerca manuale?"
 
 #: src/prefs/LibraryPrefs.h
-#, fuzzy
 msgid "Library"
-msgstr "Librerie"
+msgstr "Libreria"
 
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
@@ -14383,9 +14356,8 @@ msgid "MIDI Devices"
 msgstr "Dispositivi MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
-#, fuzzy
 msgid "Preferences for MidiIO"
-msgstr "Preferenze: "
+msgstr "Preferenze per IO MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -14412,9 +14384,8 @@ msgid "Modules"
 msgstr "Moduli"
 
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "Preferences for Module"
-msgstr "Preferenze: "
+msgstr "Preferenze per modulo"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -14461,9 +14432,8 @@ msgid "No modules were found"
 msgstr "Non è stato trovato alcun modulo"
 
 #: src/prefs/ModulePrefs.h
-#, fuzzy
 msgid "Module"
-msgstr "Moduli"
+msgstr "Modulo"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
@@ -14474,9 +14444,8 @@ msgid "Mouse"
 msgstr "Mouse"
 
 #: src/prefs/MousePrefs.cpp
-#, fuzzy
 msgid "Preferences for Mouse"
-msgstr "Preferenze: "
+msgstr "Preferenze per mouse"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14676,9 +14645,8 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Intervallo scala verticale forma d'onda (dB)"
 
 #: src/prefs/PlaybackPrefs.cpp
-#, fuzzy
 msgid "Preferences for Playback"
-msgstr "Preferenze: "
+msgstr "Preferenze per riproduzione"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
@@ -14743,9 +14711,8 @@ msgid "Projects"
 msgstr "Progetti"
 
 #: src/prefs/ProjectsPrefs.cpp
-#, fuzzy
 msgid "Preferences for Projects"
-msgstr "Recupera i progetti"
+msgstr "Preferenze per progetti"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14784,9 +14751,8 @@ msgid "Shaped"
 msgstr "Sagomata"
 
 #: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "Preferences for Quality"
-msgstr "Preferenze: "
+msgstr "Preferenze per qualità"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14831,9 +14797,8 @@ msgid "Dit&her:"
 msgstr "Reti&natura:"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Preferences for Recording"
-msgstr "Preferenze: "
+msgstr "Preferenze per registrazione"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -15008,9 +14973,8 @@ msgid "Spectrograms"
 msgstr "Spettrogrammi"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "Preferences for Spectrum"
-msgstr "Preferenze: "
+msgstr "Preferenze per spettro"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -15163,9 +15127,8 @@ msgid "Theme"
 msgstr "Tema"
 
 #: src/prefs/ThemePrefs.cpp
-#, fuzzy
 msgid "Preferences for Theme"
-msgstr "Preferenze: "
+msgstr "Preferenze per tema"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -15251,9 +15214,8 @@ msgid "Tracks Behaviors"
 msgstr "Comportamenti tracce"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Preferences for TracksBehaviors"
-msgstr "Comportamenti tracce"
+msgstr "Preferenze per ComportamentiTracce"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Simple"
@@ -15264,9 +15226,8 @@ msgid "Multi-track"
 msgstr "Multi-traccia"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "&Select all audio, if selection required"
-msgstr "Selezione a&utomatica, se selezione necessaria"
+msgstr "&Seleziona tutto l'audio, se richiesta una selezione"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -15380,9 +15341,8 @@ msgid "Max Zoom"
 msgstr "Zoom massimo"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Preferences for Tracks"
-msgstr "Preferenze: "
+msgstr "Preferenze per tracce"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -15442,9 +15402,8 @@ msgid "Warnings"
 msgstr "Avvisi"
 
 #: src/prefs/WarningsPrefs.cpp
-#, fuzzy
 msgid "Preferences for Warnings"
-msgstr "Preferenze: "
+msgstr "Preferenze per avvisi"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -15486,9 +15445,8 @@ msgid "Waveforms"
 msgstr "Forme d'onda"
 
 #: src/prefs/WaveformPrefs.cpp
-#, fuzzy
 msgid "Preferences for Waveforms"
-msgstr "Preferenze: "
+msgstr "Preferenze per forme d'onda"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range"
@@ -16418,14 +16376,12 @@ msgid "Collapse"
 msgstr "Comprimi"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Command+Click to Unselect"
-msgstr "Comando-clic"
+msgstr "Comando-Clic per deselezionare"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Select track"
-msgstr "Seleziona tracce"
+msgstr "Seleziona traccia"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to Unselect"
@@ -17944,20 +17900,18 @@ msgstr ""
 "                 La frequenza deve essere inferiore a ~a Hz."
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Nyquist Plug-in Installer"
-msgstr "Estensione Nyquist"
+msgstr "Installatore estensioni Nyquist"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Select plug-in file"
-msgstr "Seleziona un file"
+msgstr "Seleziona file dell'estensione"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%~s not found or cannot be read.~%"
-msgstr "Errore.~%\"~a\" non può essere scritto."
+msgstr "Error.~%~s non trovato o impossibile da leggere.~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -17975,9 +17929,9 @@ msgid "Error.~%~s is already installed.~%"
 msgstr "Errore.~%~s è già installato.~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%~s cannot be written.~%"
-msgstr "Errore.~%\"~a\" non può essere scritto."
+msgstr "Error.~%~s non può essere scritto.~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -17985,8 +17939,8 @@ msgid ""
 "~s installed to:~%\"~a\"~%~%~\n"
 "            Use the Plug-in Manager to enable the effect."
 msgstr ""
-"~s installato in:~%\"~a\"~%~%~\n            Usare il gestore delle estensioni "
-"per abilitare l'effetto."
+"~s installato in:~%\"~a\"~%~%~\n"
+"            Usare il gestore delle estensioni per abilitare l'effetto."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "This plug-in requires Audacity 2.3.1 or later."
