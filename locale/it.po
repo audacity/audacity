@@ -1117,7 +1117,7 @@ msgstr "Memoria esaurita!"
 
 #: src/AudioIO.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr ""
+msgstr "Il flusso è attivo... impossibile raccogliere informazioni.\n"
 
 #: src/AudioIO.cpp
 #, fuzzy, c-format
@@ -1127,7 +1127,7 @@ msgstr "Seleziona dispositivo di registrazione"
 #: src/AudioIO.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
-msgstr ""
+msgstr "Numero dispositivo di riproduzione predefinito: %d\n"
 
 #: src/AudioIO.cpp
 #, fuzzy
@@ -1172,7 +1172,7 @@ msgstr "Fine registrazione:"
 #: src/AudioIO.cpp
 #, c-format
 msgid "Low Playback Latency: %g\n"
-msgstr ""
+msgstr "Latenza riproduzione inferiore: %g\n"
 
 #: src/AudioIO.cpp
 #, fuzzy, c-format
@@ -1182,7 +1182,7 @@ msgstr "Fine registrazione:"
 #: src/AudioIO.cpp
 #, c-format
 msgid "High Playback Latency: %g\n"
-msgstr ""
+msgstr "Latenza riproduzione superiore: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: src/AudioIO.cpp
@@ -1198,7 +1198,7 @@ msgstr "Seleziona dispositivo di registrazione"
 #: src/AudioIO.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr ""
+msgstr "Nessun dispositivo di registrazione trovato per '%s'.\n"
 
 #: src/AudioIO.cpp
 #, fuzzy, c-format
@@ -1208,16 +1208,18 @@ msgstr "Seleziona dispositivo di riproduzione"
 #: src/AudioIO.cpp
 #, c-format
 msgid "No playback device found for '%s'.\n"
-msgstr ""
+msgstr "Nessun dispositivo di riproduzione trovato per '%s'.\n"
 
 #: src/AudioIO.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
 msgstr ""
+"Impossibile verificare le frequenze di campionamento reciproche senza "
+"entrambi i dispositivi.\n"
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Received %d while opening devices\n"
-msgstr ""
+msgstr "Ricevuto %d durante l'apertura dei dispositivi\n"
 
 #: src/AudioIO.cpp
 #, fuzzy
@@ -1226,7 +1228,7 @@ msgstr "Impossibile aprire il file dei generi."
 
 #: src/AudioIO.cpp
 msgid "Available mixers:\n"
-msgstr ""
+msgstr "Mixer disponibili:\n"
 
 #: src/AudioIO.cpp
 #, fuzzy, c-format
@@ -1267,17 +1269,17 @@ msgstr "Volume riproduzione: %s (simulato)"
 #: src/AudioIO.cpp
 #, c-format
 msgid "Supports output: %d\n"
-msgstr ""
+msgstr "Supporta output: %d\n"
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Supports input: %d\n"
-msgstr ""
+msgstr "Supporta input: %d\n"
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Opened: %d\n"
-msgstr ""
+msgstr "Aperto: %d\n"
 
 #: src/AudioIO.cpp
 #, fuzzy, c-format
@@ -1287,7 +1289,7 @@ msgstr "Seleziona dispositivo di registrazione"
 #: src/AudioIO.cpp
 #, c-format
 msgid "No MIDI recording device found for '%s'.\n"
-msgstr ""
+msgstr "Nessun dispositivo MIDI di registrazione trovato per '%s'.\n"
 
 #: src/AudioIO.cpp
 #, fuzzy, c-format
@@ -1297,7 +1299,7 @@ msgstr "Seleziona dispositivo di riproduzione"
 #: src/AudioIO.cpp
 #, c-format
 msgid "No MIDI playback device found for '%s'.\n"
-msgstr ""
+msgstr "Nessun dispositivo MIDI di riproduzione trovato per '%s'.\n"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -10782,12 +10784,17 @@ msgid ""
 "You have attempted to Export a WAV file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
+"Si è cercato di esportare in un file WAV che sarebbe più grande di "
+"4GB.\nQuesta operazione non è supportata da Aucacity: l'esportazione è stata "
+"interrotta."
 
 #: src/export/ExportPCM.cpp
 msgid ""
 "Your exported WAV file has been truncated as Audacity cannot export WAV\n"
 "files bigger than 4GB."
 msgstr ""
+"Il file WAV esportato è stato troncato in quanto Aucacity non può "
+"esportare\nfile WAV più grandi di 4GB."
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -13818,7 +13825,7 @@ msgstr "LADSPA"
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/prefs/EffectsPrefs.cpp
 msgid "LV&2"
-msgstr ""
+msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
@@ -13840,7 +13847,7 @@ msgstr "Vamp"
 #. developed by Steinberg GmbH
 #: src/prefs/EffectsPrefs.cpp
 msgid "V&ST"
-msgstr ""
+msgstr "V&ST"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -14102,7 +14109,7 @@ msgstr "Usa principalmente i layout da sinistra a destra per le lingue RTL"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
-msgstr ""
+msgstr "GUI"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -14110,7 +14117,7 @@ msgstr "Importazione / esportazione"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Preferences for ImportExport"
-msgstr ""
+msgstr "Prefenze di ImportaEsporta"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -14158,7 +14165,7 @@ msgstr "&Battute"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
-msgstr ""
+msgstr "IMPORTA ESPORTA"
 
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
@@ -14398,7 +14405,7 @@ msgstr "La latenza del sintetizzatore MIDI deve essere un numero intero"
 
 #: src/prefs/MidiIOPrefs.h
 msgid "Midi IO"
-msgstr ""
+msgstr "IO MIDI"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
@@ -15064,7 +15071,7 @@ msgstr "1024 - predefinita"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "2048"
-msgstr ""
+msgstr "2048"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "32768 - most narrowband"
@@ -16422,7 +16429,7 @@ msgstr "Seleziona tracce"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to Unselect"
-msgstr ""
+msgstr "Ctrl+Clic per deselezionare"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -17955,17 +17962,17 @@ msgstr "Errore.~%\"~a\" non può essere scritto."
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%~s is not a supported plug-in.~%"
-msgstr ""
+msgstr "Errore.~%~s non è un'estensione supportata.~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
-msgstr ""
+msgstr "Errore.~%~s non è un'estensione Nyquist valida.~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%~s is already installed.~%"
-msgstr ""
+msgstr "Errore.~%~s è già installato.~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy, lisp-format
@@ -17978,10 +17985,12 @@ msgid ""
 "~s installed to:~%\"~a\"~%~%~\n"
 "            Use the Plug-in Manager to enable the effect."
 msgstr ""
+"~s installato in:~%\"~a\"~%~%~\n            Usare il gestore delle estensioni "
+"per abilitare l'effetto."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "This plug-in requires Audacity 2.3.1 or later."
-msgstr ""
+msgstr "Questa estensione richiede Audacity 2.3.1 o superiore."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
