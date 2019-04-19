@@ -25,8 +25,8 @@ class PlaybackPrefs final : public PrefsPanel
  public:
    PlaybackPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~PlaybackPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

@@ -29,8 +29,8 @@ class WaveformPrefs final : public PrefsPanel
 public:
    WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~WaveformPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
    wxString HelpPageName() override;
 
    bool Commit() override;

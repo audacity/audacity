@@ -32,8 +32,8 @@ class QualityPrefs final : public PrefsPanel
  public:
    QualityPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~QualityPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

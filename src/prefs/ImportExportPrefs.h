@@ -26,8 +26,8 @@ class ImportExportPrefs final : public PrefsPanel
  public:
    ImportExportPrefs(wxWindow * parent, wxWindowID winid);
    ~ImportExportPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

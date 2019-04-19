@@ -27,8 +27,8 @@ class ThemePrefs final : public PrefsPanel
  public:
    ThemePrefs(wxWindow * parent, wxWindowID winid);
    ~ThemePrefs(void);
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

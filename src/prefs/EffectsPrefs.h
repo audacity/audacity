@@ -26,8 +26,8 @@ class EffectsPrefs final : public PrefsPanel
  public:
    EffectsPrefs(wxWindow * parent, wxWindowID winid);
    ~EffectsPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

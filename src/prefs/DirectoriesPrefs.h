@@ -25,8 +25,8 @@ class DirectoriesPrefs final : public PrefsPanel
  public:
    DirectoriesPrefs(wxWindow * parent, wxWindowID winid);
    ~DirectoriesPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    bool Validate() override;

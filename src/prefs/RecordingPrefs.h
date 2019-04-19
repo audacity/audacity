@@ -26,8 +26,8 @@ class RecordingPrefs final : public PrefsPanel
  public:
    RecordingPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~RecordingPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

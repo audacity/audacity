@@ -27,8 +27,8 @@ class DevicePrefs final : public PrefsPanel
  public:
    DevicePrefs(wxWindow * parent, wxWindowID winid);
    virtual ~DevicePrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

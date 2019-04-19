@@ -46,8 +46,8 @@ class SpectrumPrefs final : public PrefsPanel
  public:
    SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~SpectrumPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    void Preview() override;
    bool Commit() override;

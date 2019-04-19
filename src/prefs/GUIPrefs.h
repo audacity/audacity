@@ -27,8 +27,8 @@ class GUIPrefs final : public PrefsPanel
  public:
    GUIPrefs(wxWindow * parent, wxWindowID winid);
    ~GUIPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

@@ -28,8 +28,8 @@ class TracksPrefs final : public PrefsPanel
  public:
    TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
-   virtual ComponentInterfaceSymbol GetSymbol();
-   virtual wxString GetDescription();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;
