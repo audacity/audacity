@@ -1291,6 +1291,8 @@ bool Effect::DoEffect(wxWindow *parent,
 
 bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
 {
+   // Ensure no net effect on the selected region
+   ValueRestorer< SelectedRegion > cleanup{ *mpSelectedRegion };
    return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
       mpSelectedRegion, shouldPrompt );
 }
