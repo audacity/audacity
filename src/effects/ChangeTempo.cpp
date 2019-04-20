@@ -197,11 +197,10 @@ bool EffectChangeTempo::Process()
    if (mUseSBSMS)
    {
       double tempoRatio = 1.0 + m_PercentChange / 100.0;
-      SelectedRegion region(mT0, mT1);
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
-      success = Delegate(proxy, mUIParent, &region, false);
+      success = Delegate(proxy, mUIParent, false);
    }
    else
 #endif

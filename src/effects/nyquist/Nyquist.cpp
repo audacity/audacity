@@ -968,8 +968,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
 
    effect.SetCommand(mInputCmd);
    effect.mDebug = (mUIResultID == eDebugID);
-   SelectedRegion region(mT0, mT1);
-   bool result = Delegate(effect, parent, &region, true);
+   bool result = Delegate(effect, parent, true);
    mT0 = effect.mT0;
    mT1 = effect.mT1;
    return result;
