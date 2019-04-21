@@ -36,7 +36,7 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
 
    wxWindow *const begin [rotationSize] = {
       project.GetTopPanel(),
-      project.GetTrackPanel(),
+      &TrackPanel::Get( project ),
       botDock,
    };
 
@@ -84,16 +84,16 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
 void DoPrevTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectionState = SelectionState::Get( project );
 
-   Track* t = trackPanel->GetFocusedTrack();
+   Track* t = trackPanel.GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
    {
       t = *tracks.Any().rbegin();
-      trackPanel->SetFocusedTrack( t );
-      trackPanel->EnsureVisible( t );
+      trackPanel.SetFocusedTrack( t );
+      trackPanel.EnsureVisible( t );
       project.ModifyState(false);
       return;
    }
@@ -113,7 +113,7 @@ void DoPrevTrack(
             p = *tracks.Any().rbegin();
          else
          {
-            trackPanel->EnsureVisible( t );
+            trackPanel.EnsureVisible( t );
             return;
          }
       }
@@ -124,8 +124,8 @@ void DoPrevTrack(
       {
          selectionState.SelectTrack
             ( *t, false, false );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track up
-         trackPanel->EnsureVisible( p );
+         trackPanel.SetFocusedTrack( p );   // move focus to next track up
+         trackPanel.EnsureVisible( p );
          project.ModifyState(false);
          return;
       }
@@ -133,8 +133,8 @@ void DoPrevTrack(
       {
          selectionState.SelectTrack
             ( *p, true, false );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track up
-         trackPanel->EnsureVisible( p );
+         trackPanel.SetFocusedTrack( p );   // move focus to next track up
+         trackPanel.EnsureVisible( p );
          project.ModifyState(false);
          return;
       }
@@ -142,8 +142,8 @@ void DoPrevTrack(
       {
          selectionState.SelectTrack
             ( *p, false, false );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track up
-         trackPanel->EnsureVisible( p );
+         trackPanel.SetFocusedTrack( p );   // move focus to next track up
+         trackPanel.EnsureVisible( p );
          project.ModifyState(false);
          return;
       }
@@ -151,8 +151,8 @@ void DoPrevTrack(
       {
          selectionState.SelectTrack
             ( *t, true, false );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track up
-         trackPanel->EnsureVisible( p );
+         trackPanel.SetFocusedTrack( p );   // move focus to next track up
+         trackPanel.EnsureVisible( p );
           project.ModifyState(false);
          return;
       }
@@ -167,21 +167,21 @@ void DoPrevTrack(
          {
             auto range = tracks.Leaders();
             p = * range.rbegin(); // null if range is empty
-            trackPanel->SetFocusedTrack( p );   // Wrap to the last track
-            trackPanel->EnsureVisible( p );
+            trackPanel.SetFocusedTrack( p );   // Wrap to the last track
+            trackPanel.EnsureVisible( p );
              project.ModifyState(false);
             return;
          }
          else
          {
-            trackPanel->EnsureVisible( t );
+            trackPanel.EnsureVisible( t );
             return;
          }
       }
       else
       {
-         trackPanel->SetFocusedTrack( p );   // move focus to next track up
-         trackPanel->EnsureVisible( p );
+         trackPanel.SetFocusedTrack( p );   // move focus to next track up
+         trackPanel.EnsureVisible( p );
          project.ModifyState(false);
          return;
       }
@@ -194,16 +194,16 @@ void DoPrevTrack(
 void DoNextTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectionState = SelectionState::Get( project );
 
-   auto t = trackPanel->GetFocusedTrack();   // Get currently focused track
+   auto t = trackPanel.GetFocusedTrack();   // Get currently focused track
    if( t == NULL )   // if there isn't one, focus on first
    {
       t = *tracks.Any().begin();
-      trackPanel->SetFocusedTrack( t );
-      trackPanel->EnsureVisible( t );
+      trackPanel.SetFocusedTrack( t );
+      trackPanel.EnsureVisible( t );
       project.ModifyState(false);
       return;
    }
@@ -218,7 +218,7 @@ void DoNextTrack(
             n = *tracks.Any().begin();
          else
          {
-            trackPanel->EnsureVisible( t );
+            trackPanel.EnsureVisible( t );
             return;
          }
       }
@@ -228,8 +228,8 @@ void DoNextTrack(
       {
          selectionState.SelectTrack
             ( *t, false, false );
-         trackPanel->SetFocusedTrack( n );   // move focus to next track down
-         trackPanel->EnsureVisible( n );
+         trackPanel.SetFocusedTrack( n );   // move focus to next track down
+         trackPanel.EnsureVisible( n );
          project.ModifyState(false);
          return;
       }
@@ -237,8 +237,8 @@ void DoNextTrack(
       {
          selectionState.SelectTrack
             ( *n, true, false );
-         trackPanel->SetFocusedTrack( n );   // move focus to next track down
-         trackPanel->EnsureVisible( n );
+         trackPanel.SetFocusedTrack( n );   // move focus to next track down
+         trackPanel.EnsureVisible( n );
          project.ModifyState(false);
          return;
       }
@@ -246,8 +246,8 @@ void DoNextTrack(
       {
          selectionState.SelectTrack
             ( *n, false, false );
-         trackPanel->SetFocusedTrack( n );   // move focus to next track down
-         trackPanel->EnsureVisible( n );
+         trackPanel.SetFocusedTrack( n );   // move focus to next track down
+         trackPanel.EnsureVisible( n );
          project.ModifyState(false);
          return;
       }
@@ -255,8 +255,8 @@ void DoNextTrack(
       {
          selectionState.SelectTrack
             ( *t, true, false );
-         trackPanel->SetFocusedTrack( n );   // move focus to next track down
-         trackPanel->EnsureVisible( n );
+         trackPanel.SetFocusedTrack( n );   // move focus to next track down
+         trackPanel.EnsureVisible( n );
          project.ModifyState(false);
          return;
       }
@@ -270,21 +270,21 @@ void DoNextTrack(
          if( circularTrackNavigation )
          {
             n = *tracks.Any().begin();
-            trackPanel->SetFocusedTrack( n );   // Wrap to the first track
-            trackPanel->EnsureVisible( n );
+            trackPanel.SetFocusedTrack( n );   // Wrap to the first track
+            trackPanel.EnsureVisible( n );
             project.ModifyState(false);
             return;
          }
          else
          {
-            trackPanel->EnsureVisible( t );
+            trackPanel.EnsureVisible( t );
             return;
          }
       }
       else
       {
-         trackPanel->SetFocusedTrack( n );   // move focus to next track down
-         trackPanel->EnsureVisible( n );
+         trackPanel.SetFocusedTrack( n );   // move focus to next track down
+         trackPanel.EnsureVisible( n );
          project.ModifyState(false);
          return;
       }
@@ -457,39 +457,39 @@ void OnCursorDown(const CommandContext &context)
 void OnFirstTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
 
-   Track *t = trackPanel->GetFocusedTrack();
+   Track *t = trackPanel.GetFocusedTrack();
    if (!t)
       return;
 
    auto f = *tracks.Any().begin();
    if (t != f)
    {
-      trackPanel->SetFocusedTrack(f);
+      trackPanel.SetFocusedTrack(f);
       project.ModifyState(false);
    }
-   trackPanel->EnsureVisible(f);
+   trackPanel.EnsureVisible(f);
 }
 
 void OnLastTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
 
-   Track *t = trackPanel->GetFocusedTrack();
+   Track *t = trackPanel.GetFocusedTrack();
    if (!t)
       return;
 
    auto l = *tracks.Any().rbegin();
    if (t != l)
    {
-      trackPanel->SetFocusedTrack(l);
+      trackPanel.SetFocusedTrack(l);
       project.ModifyState(false);
    }
-   trackPanel->EnsureVisible(l);
+   trackPanel.EnsureVisible(l);
 }
 
 void OnShiftUp(const CommandContext &context)
@@ -507,21 +507,21 @@ void OnShiftDown(const CommandContext &context)
 void OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &selectionState = SelectionState::Get( project );
 
    Track *t;
 
-   t = trackPanel->GetFocusedTrack();   // Get currently focused track
+   t = trackPanel.GetFocusedTrack();   // Get currently focused track
    if (!t)
       return;
 
    selectionState.SelectTrack
       ( *t, !t->GetSelected(), true );
-   trackPanel->EnsureVisible( t );
+   trackPanel.EnsureVisible( t );
    project.ModifyState(false);
 
-   trackPanel->GetAx().Updated();
+   trackPanel.GetAx().Updated();
 
    return;
 }

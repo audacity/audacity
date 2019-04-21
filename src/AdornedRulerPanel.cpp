@@ -530,19 +530,19 @@ namespace
 
 wxCoord GetPlayHeadX( const AudacityProject *pProject )
 {
-   const TrackPanel *tp = pProject->GetTrackPanel();
+   const auto &tp = TrackPanel::Get( *pProject );
    int width;
-   tp->GetTracksUsableArea(&width, NULL);
-   return tp->GetLeftOffset()
+   tp.GetTracksUsableArea(&width, NULL);
+   return tp.GetLeftOffset()
       + width * TracksPrefs::GetPinnedHeadPositionPreference();
 }
 
 double GetPlayHeadFraction( const AudacityProject *pProject, wxCoord xx )
 {
-   const TrackPanel *tp = pProject->GetTrackPanel();
+   const auto &tp = TrackPanel::Get( *pProject );
    int width;
-   tp->GetTracksUsableArea(&width, NULL);
-   auto fraction = (xx - tp->GetLeftOffset()) / double(width);
+   tp.GetTracksUsableArea(&width, NULL);
+   auto fraction = (xx - tp.GetLeftOffset()) / double(width);
    return std::max(0.0, std::min(1.0, fraction));
 }
 
@@ -1637,7 +1637,7 @@ void AdornedRulerPanel::SetPanelSize()
 
 void AdornedRulerPanel::DrawBothOverlays()
 {
-   mProject->GetTrackPanel()->DrawOverlays( false );
+   TrackPanel::Get( *mProject ).DrawOverlays( false );
    DrawOverlays( false );
 }
 
@@ -1680,11 +1680,11 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown)
 {
    // Keep Quick-Play within usable track area.
-   TrackPanel *tp = mProject->GetTrackPanel();
+   const auto &tp = TrackPanel::Get( *mProject );
    int width;
-   tp->GetTracksUsableArea(&width, NULL);
-   mousePosX = std::max(mousePosX, tp->GetLeftOffset());
-   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
+   tp.GetTracksUsableArea(&width, NULL);
+   mousePosX = std::max(mousePosX, tp.GetLeftOffset());
+   mousePosX = std::min(mousePosX, tp.GetLeftOffset() + width - 1);
 
    mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
 
@@ -2198,7 +2198,7 @@ void AdornedRulerPanel::CreateOverlays()
    if (!mOverlay) {
       mOverlay =
          std::make_shared<QuickPlayIndicatorOverlay>( mProject );
-      mProject->GetTrackPanel()->AddOverlay( mOverlay );
+      TrackPanel::Get( *mProject ).AddOverlay( mOverlay );
       this->AddOverlay( mOverlay->mPartner );
    }
 }

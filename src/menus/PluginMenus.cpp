@@ -421,7 +421,7 @@ bool DoEffect(
 {
    AudacityProject &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -526,10 +526,10 @@ bool DoEffect(
    // Label track and we want to see it.
    if( tracks.size() > nTracksOriginally ){
       // 0.0 is min scroll position, 1.0 is max scroll position.
-      trackPanel->VerticalScroll( 1.0 );
+      trackPanel.VerticalScroll( 1.0 );
    }  else {
-      trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
-      trackPanel->Refresh(false);
+      trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
+      trackPanel.Refresh(false);
    }
 
    return true;

@@ -796,7 +796,7 @@ namespace {
    LabelTrackHit *findHit()
    {
       // Fetch the highlighting state
-      auto target = GetActiveProject()->GetTrackPanel()->Target();
+      auto target = TrackPanel::Get( *GetActiveProject() ).Target();
       if (target) {
          auto handle = dynamic_cast<LabelGlyphHandle*>( target.get() );
          if (handle)
@@ -1820,7 +1820,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
    // Make sure caret is in view
    int x;
    if (CalcCursorX(&x)) {
-      pProj->GetTrackPanel()->ScrollIntoView(x);
+      TrackPanel::Get( *pProj ).ScrollIntoView(x);
    }
 
    // If selection modified, refresh
@@ -1993,7 +1993,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             auto track = *TrackList::Get( *GetActiveProject() ).Any()
                .begin().advance(mRestoreFocus);
             if (track)
-               GetActiveProject()->GetTrackPanel()->SetFocusedTrack(track);
+               TrackPanel::Get( *GetActiveProject() ).SetFocusedTrack(track);
             mRestoreFocus = -1;
          }
          mSelIndex = -1;
@@ -3110,18 +3110,17 @@ int LabelTrack::DialogForLabelName(
    AudacityProject &project,
    const SelectedRegion& region, const wxString& initialValue, wxString& value)
 {
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
-   wxPoint position =
-      trackPanel->FindTrackRect(trackPanel->GetFocusedTrack()).GetBottomLeft();
+   wxPoint position = trackPanel.FindTrackRect(trackPanel.GetFocusedTrack()).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
-   position.x += trackPanel->GetLabelWidth()
+   position.x += trackPanel.GetLabelWidth()
       + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
       -40;
    position.y += 2;  // just below the bottom of the track
-   position = trackPanel->ClientToScreen(position);
+   position = trackPanel.ClientToScreen(position);
    AudacityTextEntryDialog dialog{ &project,
       _("Name:"),
       _("New label"),

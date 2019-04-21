@@ -377,7 +377,7 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 {
    wxWindow *w = wxWindow::FindFocus();
 
-   while (w && project.GetTrackPanel()) {
+   while (w) {
       if (w == ToolManager::Get( project ).GetTopDock()) {
          return TopDockHasFocus;
       }

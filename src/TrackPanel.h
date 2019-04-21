@@ -257,13 +257,17 @@ class AUDACITY_DLL_API TrackPanel final
    , private PrefsListener
 {
  public:
+   static TrackPanel &Get( AudacityProject &project );
+   static const TrackPanel &Get( const AudacityProject &project );
+   static void Destroy( AudacityProject &project );
+ 
    TrackPanel(wxWindow * parent,
               wxWindowID id,
               const wxPoint & pos,
               const wxSize & size,
               const std::shared_ptr<TrackList> &tracks,
               ViewInfo * viewInfo,
-              TrackPanelListener * listener,
+              AudacityProject * project,
               AdornedRulerPanel * ruler );
 
    virtual ~ TrackPanel();

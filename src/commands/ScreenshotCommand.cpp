@@ -814,7 +814,7 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    if (!w)
       return false;
 
-   TrackPanel *panel = context.project.GetTrackPanel();
+   TrackPanel *panel = &TrackPanel::Get( context.project );
    AdornedRulerPanel *ruler = panel->mRuler;
 
    int nTracks = TrackList::Get( context.project ).size();

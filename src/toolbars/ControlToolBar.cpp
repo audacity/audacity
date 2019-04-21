@@ -1232,7 +1232,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
-            p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
+            TrackPanel::Get( *p ).SetFocusedTrack( newTrack.get() );
          }
          TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
       }

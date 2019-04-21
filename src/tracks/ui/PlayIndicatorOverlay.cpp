@@ -118,7 +118,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
   []( AudacityProject &parent ){
      auto result = std::make_shared< PlayIndicatorOverlay >( &parent );
-     parent.GetTrackPanel()->AddOverlay( result );
+     TrackPanel::Get( parent ).AddOverlay( result );
      return result;
    }
 };
@@ -145,9 +145,9 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       }
    }
 
-   auto trackPanel = mProject->GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( *mProject );
    int width;
-   trackPanel->GetTracksUsableArea(&width, nullptr);
+   trackPanel.GetTracksUsableArea(&width, nullptr);
 
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
@@ -155,8 +155,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       const auto &scrubber = Scrubber::Get( *mProject );
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
-         const auto offset = trackPanel->GetLeftOffset();
-         if(position >= trackPanel->GetLeftOffset() &&
+         const auto offset = trackPanel.GetLeftOffset();
+         if(position >= trackPanel.GetLeftOffset() &&
             position < offset + width)
             mNewIndicatorX = position;
       }
@@ -173,11 +173,12 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right
+      auto &trackPanel = TrackPanel::Get( *mProject );
       const auto tolerance = pinned ? 1.5 * kTimerInterval / 1000.0 : 0;
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
-         mProject->GetTrackPanel()->GetScreenEndTime() + tolerance);
+         trackPanel.GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
       mProject->TP_DisplaySelection();
@@ -207,7 +208,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
                            playPos,
-                           mProject->GetTrackPanel()->GetScreenEndTime());
+                           trackPanel.GetScreenEndTime());
          }
       }
 
@@ -217,7 +218,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       mProject->TP_RedrawScrollbars();
 
       if (onScreen)
-         mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel->GetLeftOffset());
+         mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel.GetLeftOffset());
       else
          mNewIndicatorX = -1;
 

@@ -408,7 +408,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
       GetRight()->SetGain(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+   TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       mProject->PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
@@ -421,7 +421,7 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
       GetNote()->SetVelocity(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+   TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       mProject->PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
 }
@@ -436,7 +436,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
       GetRight()->SetPan(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+   TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
 
    if (bWantPushState)
       mProject->PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
@@ -753,7 +753,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    }
    else
       // Update only the changed track.
-      mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+      TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
 }
 
 void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))

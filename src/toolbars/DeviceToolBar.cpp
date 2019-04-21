@@ -339,7 +339,7 @@ void DeviceToolBar::EnableDisableButtons()
          if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels) {
             AudacityProject *activeProject = GetActiveProject();
             if (activeProject) {
-               activeProject->GetTrackPanel()->SetFocus();
+               TrackPanel::Get( *activeProject ).SetFocus();
             }
          }
       }

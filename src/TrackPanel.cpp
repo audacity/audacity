@@ -209,6 +209,48 @@ std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const
 }
 
 
+namespace{
+
+AudacityProject::AttachedWindows::RegisteredFactory sKey{
+   []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
+      auto &ruler = *project.GetRulerPanel();
+      auto &viewInfo = ViewInfo::Get( project );
+      auto &window = project;
+      auto mainPage = window.GetMainPage();
+      wxASSERT( mainPage ); // to justify safenew
+
+      auto &tracks = TrackList::Get( project );
+      return safenew TrackPanel(mainPage,
+         window.NextWindowID(),
+         wxDefaultPosition,
+         wxDefaultSize,
+         tracks.shared_from_this(),
+         &viewInfo,
+         &project,
+         &ruler);
+   }
+};
+
+}
+
+TrackPanel &TrackPanel::Get( AudacityProject &project )
+{
+   return project.AttachedWindows::Get< TrackPanel >( sKey );
+}
+
+const TrackPanel &TrackPanel::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+void TrackPanel::Destroy( AudacityProject &project )
+{
+   auto *pPanel = project.AttachedWindows::Find( sKey );
+   if (pPanel) {
+      pPanel->wxWindow::Destroy();
+      project.AttachedWindows::Assign( sKey, nullptr );
+   }
+}
 
 // Don't warn us about using 'this' in the base member initializer list.
 #ifndef __WXGTK__ //Get rid if this pragma for gtk
@@ -219,11 +261,11 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        const wxSize & size,
                        const std::shared_ptr<TrackList> &tracks,
                        ViewInfo * viewInfo,
-                       TrackPanelListener * listener,
+                       AudacityProject * project,
                        AdornedRulerPanel * ruler)
    : CellularPanel(parent, id, pos, size, viewInfo,
                    wxWANTS_CHARS | wxNO_BORDER),
-     mListener(listener),
+     mListener(project),
      mTracks(tracks),
      mRuler(ruler),
      mTrackArtist(nullptr),
@@ -2846,7 +2888,7 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
    : mPanelRect {
         wxPoint{ 0, ViewInfo::Get( *project ).vpos },
-        project->GetTrackPanel()->GetTracksUsableArea()
+        TrackPanel::Get( *project ).GetTracksUsableArea()
      }
 {}
 

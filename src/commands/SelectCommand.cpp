@@ -86,7 +86,7 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 bool SelectTimeCommand::Apply(const CommandContext & context){
    // Many commands need focus on track panel.
    // No harm in setting it with a scripted select.
-   context.project.GetTrackPanel()->SetFocus();
+   TrackPanel::Get( context.project ).SetFocus();
    if( !bHasT0 && !bHasT1 )
       return true;
 

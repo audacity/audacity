@@ -302,8 +302,6 @@ public:
 
    wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
-   TrackPanel * GetTrackPanel() {return mTrackPanel;}
-   const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
 
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -544,7 +542,6 @@ private:
 
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
-   TrackPanel *mTrackPanel{};
    wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;

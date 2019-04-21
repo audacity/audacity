@@ -534,7 +534,7 @@ UIHandle::Result SelectHandle::Click
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
 
-   TrackPanel *const trackPanel = pProject->GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( *pProject );
 
    bool selectChange = (
       event.LeftDown() &&
@@ -608,7 +608,7 @@ UIHandle::Result SelectHandle::Click
          //Actual bIsSelected will always add.
          bool bIsSelected = false;
          // Don't toggle away the last selected track.
-         if( !bIsSelected || trackPanel->GetSelectedTrackCount() > 1 )
+         if( !bIsSelected || trackPanel.GetSelectedTrackCount() > 1 )
             selectionState.SelectTrack( *pTrack, !bIsSelected, true );
       }
 
@@ -765,7 +765,7 @@ UIHandle::Result SelectHandle::Click
 #endif
       StartSelection(pProject);
       selectionState.SelectTrack( *pTrack, true, true );
-      trackPanel->SetFocusedTrack(pTrack);
+      trackPanel.SetFocusedTrack(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
       pTrack->TypeSwitch( [&](WaveTrack *wt) {
          if(ODManager::IsInstanceCreated())
@@ -1066,7 +1066,7 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
    //  smoother on MacOS 9.
 
    const auto project = mConnectedProject;
-   const auto trackPanel = project->GetTrackPanel();
+   const auto &trackPanel = TrackPanel::Get( *project );
    if (mParent->mMostRecentX >= mParent->mRect.x + mParent->mRect.width) {
       mParent->mAutoScrolling = true;
       project->TP_ScrollRight();
@@ -1081,7 +1081,7 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
       // track area.
 
       int xx = mParent->mMostRecentX, yy = 0;
-      trackPanel->ClientToScreen(&xx, &yy);
+      trackPanel.ClientToScreen(&xx, &yy);
       if (xx == 0) {
          mParent->mAutoScrolling = true;
          project->TP_ScrollLeft();
@@ -1104,10 +1104,10 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
 
       // AS: For some reason, GCC won't let us pass this directly.
       wxMouseEvent evt(wxEVT_MOTION);
-      const auto size = trackPanel->GetSize();
+      const auto size = trackPanel.GetSize();
       mParent->Drag(TrackPanelMouseEvent{ evt, mParent->mRect, size, pTrack }, project);
       mParent->mAutoScrolling = false;
-      mConnectedProject->GetTrackPanel()->Refresh(false);
+      TrackPanel::Get( *mConnectedProject ).Refresh(false);
    }
 }
 
@@ -1406,7 +1406,7 @@ void SelectHandle::MoveSnappingFreqSelection
 
       // SelectNone();
       // SelectTrack(pTrack, true);
-      pProject->GetTrackPanel()->SetFocusedTrack(pTrack);
+      TrackPanel::Get( *pProject ).SetFocusedTrack(pTrack);
    }
 }
 

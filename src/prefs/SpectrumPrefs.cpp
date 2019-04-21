@@ -426,9 +426,9 @@ void SpectrumPrefs::Rollback()
    }
 
    if (isOpenPage) {
-      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
-      tp->UpdateVRulers();
-      tp->Refresh(false);
+      auto &tp = TrackPanel::Get ( *::GetActiveProject() );
+      tp.UpdateVRulers();
+      tp.Refresh(false);
    }
 }
 
@@ -473,9 +473,9 @@ void SpectrumPrefs::Preview()
    }
 
    if (isOpenPage) {
-      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
-      tp->UpdateVRulers();
-      tp->Refresh(false);
+      auto &tp = TrackPanel::Get( *::GetActiveProject() );
+      tp.UpdateVRulers();
+      tp.Refresh(false);
    }
 }
 

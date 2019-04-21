@@ -134,7 +134,7 @@ void DoPlayStop(const CommandContext &context)
 void DoMoveToLabel(AudacityProject &project, bool next)
 {
    auto &tracks = TrackList::Get( project );
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
 
    // Find the number of label tracks, and ptr to last track found
    auto trackRange = tracks.Any<LabelTrack>();
@@ -142,14 +142,14 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto nLabelTrack = trackRange.size();
 
    if (nLabelTrack == 0 ) {
-      trackPanel->MessageForScreenReader(_("no label track"));
+      trackPanel.MessageForScreenReader(_("no label track"));
    }
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
       lt =
-         *tracks.Find(trackPanel->GetFocusedTrack()).Filter<LabelTrack>();
+         *tracks.Find(trackPanel.GetFocusedTrack()).Filter<LabelTrack>();
       if (!lt)
-         trackPanel->MessageForScreenReader(
+         trackPanel.MessageForScreenReader(
             _("no label track at or below focused track"));
    }
 
@@ -173,17 +173,17 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          }
          else {
             selectedRegion = label->selectedRegion;
-            trackPanel->ScrollIntoView(selectedRegion.t0());
+            trackPanel.ScrollIntoView(selectedRegion.t0());
             project.RedrawProject();
          }
 
          wxString message;
          message.Printf(
             wxT("%s %d of %d"), label->title, i + 1, lt->GetNumLabels() );
-         trackPanel->MessageForScreenReader(message);
+         trackPanel.MessageForScreenReader(message);
       }
       else {
-         trackPanel->MessageForScreenReader(_("no labels in label track"));
+         trackPanel.MessageForScreenReader(_("no labels in label track"));
       }
    }
 }
@@ -704,11 +704,11 @@ void OnPlayOneSecond(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto controlToolBar = project.GetControlToolBar();
    auto options = project.GetDefaultPlayOptions();
 
-   double pos = trackPanel->GetMostRecentXPos();
+   double pos = trackPanel.GetMostRecentXPos();
    controlToolBar->PlayPlayRegion(
       SelectedRegion(pos - 0.5, pos + 0.5), options,
       PlayMode::oneSecondPlay);
@@ -728,11 +728,11 @@ void OnPlayToSelection(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
-   double pos = trackPanel->GetMostRecentXPos();
+   double pos = trackPanel.GetMostRecentXPos();
 
    double t0,t1;
    // check region between pointer and the nearest selection edge

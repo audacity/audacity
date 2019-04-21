@@ -165,7 +165,7 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Close");
    auto project = ::GetActiveProject();
    auto focused =
-      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
    if (!focused)
       return name;
 
@@ -207,7 +207,7 @@ MenuButtonHandle::~MenuButtonHandle()
 UIHandle::Result MenuButtonHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
-   auto pPanel = pProject->GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( *pProject );
    auto pCell = mpCell.lock();
    if (!pCell)
       return RefreshCode::Cancelled;
@@ -215,7 +215,8 @@ UIHandle::Result MenuButtonHandle::CommitChanges
       static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
    if (!pTrack)
       return RefreshCode::Cancelled;
-   pPanel->CallAfter( [=]{ pPanel->OnTrackMenu( pTrack.get() ); } );
+   trackPanel.CallAfter(
+      [&trackPanel,pTrack]{ trackPanel.OnTrackMenu( pTrack.get() ); } );
    return RefreshCode::RefreshNone;
 }
 
@@ -224,7 +225,7 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Open menu...");
    auto project = ::GetActiveProject();
    auto focused =
-      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
    if (!focused)
       return name;
 

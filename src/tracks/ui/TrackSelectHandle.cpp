@@ -143,7 +143,7 @@ UIHandle::Result TrackSelectHandle::Drag
 HitTestPreview TrackSelectHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *project)
 {
-   const auto trackCount = project->GetTrackPanel()->GetTrackCount();
+   const auto trackCount = TrackPanel::Get( *project ).GetTrackCount();
    auto message = Message(trackCount);
    if (mClicked) {
       static auto disabledCursor =
