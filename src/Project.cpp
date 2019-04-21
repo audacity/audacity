@@ -2351,11 +2351,6 @@ void AudacityProject::DoScroll()
          GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
-#ifdef EXPERIMENTAL_DA
-   // No SelectAll if none.
-   return false;
-#else
-#endif
 void AudacityProject::OnMenu(wxCommandEvent & event)
 {
 #ifdef __WXMSW__

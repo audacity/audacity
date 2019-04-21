@@ -279,15 +279,15 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(MeterPanel, ASlider)
-   EVT_CHAR(ASlider::OnKeyEvent)
+   //EVT_CHAR(ASlider::OnKeyEvent)
    //EVT_MOUSE_EVENTS(ASlider::OnMouseEvent)
-   EVT_MOUSE_CAPTURE_LOST(ASlider::OnCaptureLost)
+   //EVT_MOUSE_CAPTURE_LOST(ASlider::OnCaptureLost)
 
    EVT_TIMER(OnMeterUpdateID, MeterPanel::OnMeterUpdate)
    EVT_SLIDER(wxID_ANY, MeterPanel::SetMixer)
-   EVT_SET_FOCUS(ASlider::OnSetFocus)
-   EVT_KILL_FOCUS(ASlider::OnKillFocus)
-   EVT_TIMER(wxID_ANY, ASlider::OnTimer)
+   //EVT_SET_FOCUS(ASlider::OnSetFocus)
+   //EVT_KILL_FOCUS(ASlider::OnKillFocus)
+   //EVT_TIMER(wxID_ANY, ASlider::OnTimer)
 
 
    EVT_MOUSE_EVENTS(MeterPanel::OnMouse)
