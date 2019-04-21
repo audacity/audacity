@@ -7,7 +7,7 @@
 ;
 
 ; This requires that the ISS Preprocessor be installed
-#define AppExe ".\release\audacity.exe" 
+#define AppExe "..\release\audacity.exe" 
 #define AppMajor ""
 #define AppMinor ""
 #define AppRev ""
@@ -24,8 +24,8 @@ Filename: "{app}\unins*.*";
 ; compiler-related directives
 OutputBaseFilename=audacity-win-{#AppVersion}
 
-WizardImageFile=audacity_InnoWizardImage.bmp
-WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
+WizardImageFile=".\audacity_InnoWizardImage.bmp"
+WizardSmallImageFile=".\audacity_InnoWizardSmallImage.bmp"
 
 SolidCompression=yes
 
@@ -62,8 +62,8 @@ DisableProgramGroupPage=yes
 UninstallDisplayIcon="{app}\audacity.exe"
 
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
-InfoBeforeFile=audacity_InnoWizard_InfoBefore.rtf
-InfoAfterFile=..\README.txt
+InfoBeforeFile=".\audacity_InnoWizard_InfoBefore.rtf"
+InfoAfterFile=..\..\README.txt
 
 ; We no longer produce new ANSI builds. 
 ; As we use Inno Setup (u), the Unicode version, to build this script, 
@@ -72,7 +72,7 @@ InfoAfterFile=..\README.txt
 ;   MinVersion=4.0,5.0
 
 ; cosmetic-related directives
-SetupIconFile=audacity.ico
+SetupIconFile="..\audacity.ico"
 
 [INI]
 Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "ResetPrefs"; String: "1"; Tasks: resetPrefs;
@@ -86,30 +86,30 @@ Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 
 [Files]
 ; Prime the first time .ini file so the permissions can be set
-Source: "FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Permissions: users-modify
+Source: ".\FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Permissions: users-modify
 
 ; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
-Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
-Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
+Source: "..\..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
 
-Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "..\..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 ; wxWidgets DLLs. Be specific (not *.dll) so we don't accidentally distribute avformat.dll, for example.
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: ".\release\wxbase311u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\wxbase311u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\wxbase311u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\wxmsw311u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\wxmsw311u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\wxmsw311u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxbase311u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxbase311u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxbase311u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw311u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw311u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw311u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
@@ -120,15 +120,15 @@ Source: ".\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignorev
 ; "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; or "C:\Program Files\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; according to your system 
-Source: ".\release\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: ".\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
-; We don't currently ship any modules, so the next line is commented out
-; Source: ".\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: ".\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
-Source: ".\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
-Source: ".\release\modules\mod-script-pipe.dll"; DestDir: "{app}\modules\"; Flags: ignoreversion
+Source: "..\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
+; We don't ship all modules, so the next line is commented out
+; Source: "..\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: "..\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
+Source: "..\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
+Source: "..\release\modules\mod-script-pipe.dll"; DestDir: "{app}\modules\"; Flags: ignoreversion
 
 [Icons]
 Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
