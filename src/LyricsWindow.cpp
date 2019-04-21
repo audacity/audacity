@@ -46,11 +46,11 @@ const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 LyricsWindow::LyricsWindow(AudacityProject *parent):
    wxFrame(parent, -1,
             wxString::Format(_("Audacity Karaoke%s"),
-                              ((parent->GetName().empty()) ?
+                              ((parent->GetProjectName().empty()) ?
                                  wxT("") :
                                  wxString::Format(
                                    wxT(" - %s"),
-                                   parent->GetName()))),
+                                   parent->GetProjectName()))),
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow,

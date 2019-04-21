@@ -1408,10 +1408,10 @@ const wxSize kDefaultSize =
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
 : wxFrame(parent, -1,
           wxString::Format(_("Audacity Mixer Board%s"),
-                           ((parent->GetName().empty()) ?
+                           ((parent->GetProjectName().empty()) ?
                               wxT("") :
                               wxString::Format(wxT(" - %s"),
-                                             parent->GetName()))),
+                                             parent->GetProjectName()))),
             wxDefaultPosition, kDefaultSize,
             //vvv Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and MixerBoardFrame are minimized and you restore MixerBoardFrame,

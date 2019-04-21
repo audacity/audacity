@@ -218,7 +218,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
-   wxString GetName();
+   wxString GetProjectName() const;
    const std::shared_ptr<DirManager> &GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
