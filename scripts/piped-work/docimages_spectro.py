@@ -26,7 +26,7 @@ def makeStepper():
     do( 'Select: Start=0 End=22')
     do( 'Join' )
     do( 'FitInWindow')
-    do( 'AddLabelTrack' )
+    do( 'NewLabelTrack' )
     for i in range( 0, 11 ):
         do( 'Select: Track=1 Start='+str(i*2)+' End='+str(i*2+2) )
         do( 'AddLabel' )
@@ -149,7 +149,7 @@ def spectro_imagesF():
     do( 'SetTrack: Display=Spectrogram' )
     capture( 'ScaleLin.png', 'AllTracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=1 Reload=1')
-    capture( 'ScaleLog.png', 'All_Tracks' )
+    capture( 'ScaleLog.png', 'AllTracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=0 Reload=1')
     
         

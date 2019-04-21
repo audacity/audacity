@@ -13,18 +13,17 @@
 #ifndef __AUDACITY_EFFECT_NORMALIZE__
 #define __AUDACITY_EFFECT_NORMALIZE__
 
-#include <wx/checkbox.h>
-#include <wx/event.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
+#include "../Experimental.h"
 
 #include "Effect.h"
 #include "Biquad.h"
 
+class wxCheckBox;
+class wxStaticText;
+class wxTextCtrl;
 class ShuttleGui;
 
-#define NORMALIZE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Normalize") }
+#define NORMALIZE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Normalize") }
 
 class EffectNormalize final : public Effect
 {
@@ -32,9 +31,9 @@ public:
    EffectNormalize();
    virtual ~EffectNormalize();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

@@ -22,7 +22,8 @@
 
 #include <chrono>
 #include <vector>
-#include "wx/wx.h"
+
+#include <wx/string.h> // member variables
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #include "DeviceChange.h"

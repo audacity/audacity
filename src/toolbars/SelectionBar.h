@@ -26,13 +26,10 @@
 
 #define SIZER_COLS 5
 
-class wxBitmap;
-class wxCheckBox;
 class wxChoice;
 class wxComboBox;
 class wxCommandEvent;
 class wxDC;
-class wxRadioButton;
 class wxSizeEvent;
 class wxStaticText;
 
@@ -54,7 +51,7 @@ class SelectionBar final : public ToolBar {
 
    void SetTimes(double start, double end, double audio);
    void SetSnapTo(int);
-   void SetSelectionFormat(const NumericFormatId & format);
+   void SetSelectionFormat(const NumericFormatSymbol & format);
    void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;

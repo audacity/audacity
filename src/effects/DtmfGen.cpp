@@ -14,14 +14,18 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "../Experimental.h"
 #include "DtmfGen.h"
 
+#include "../Experimental.h"
+
 #include <wx/intl.h>
+#include <wx/slider.h>
 #include <wx/valgen.h>
 #include <wx/valtext.h>
+#include <wx/stattext.h>
 
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -89,9 +93,9 @@ EffectDtmf::~EffectDtmf()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectDtmf::GetSymbol()
+ComponentInterfaceSymbol EffectDtmf::GetSymbol()
 {
    return DTMFTONES_PLUGIN_SYMBOL;
 }
@@ -407,7 +411,7 @@ void EffectDtmf::Recalculate()
 {
    // remember that dtmfDutyCycle is in range (0.0-100.0)
 
-   dtmfNTones = (int) dtmfSequence.Length();
+   dtmfNTones = (int) dtmfSequence.length();
 
    if (dtmfNTones==0) {
       // no tones, all zero: don't do anything

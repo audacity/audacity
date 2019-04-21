@@ -14,9 +14,12 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "PrefsDialog.h"
 
+#include "../Experimental.h"
+
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -32,7 +35,6 @@
 #include <wx/treebook.h>
 
 #include "../AudioIO.h"
-#include "../Experimental.h"
 #include "../Project.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -75,6 +77,15 @@
 #include "../widgets/WindowAccessible.h"
 #endif
 
+
+// PrefsPanel might move out into its own file in due ocurse.
+PluginPath PrefsPanel::GetPath(){      return BUILTIN_PREFS_PANEL_PREFIX + GetSymbol().Internal(); }
+VendorSymbol PrefsPanel::GetVendor(){  return XO("Audacity");}
+wxString PrefsPanel::GetVersion(){     return AUDACITY_VERSION_STRING;}
+
+
+
+
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
@@ -115,7 +126,7 @@ int wxTreebookExt::SetSelection(size_t n)
    static_cast<wxDialog*>(GetParent())->SetName( Temp );
 
    PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
-   const bool showHelp = (panel->HelpPageName() != wxEmptyString);
+   const bool showHelp = (!panel->HelpPageName().empty());
    const bool showPreview = panel->ShowsPreviewButton();
    wxWindow *const helpButton = wxWindow::FindWindowById(wxID_HELP, GetParent());
    wxWindow *const previewButton = wxWindow::FindWindowById(wxID_PREVIEW, GetParent());
@@ -442,13 +453,6 @@ void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
    wxString page = GetCurrentPanel()->HelpPageName();
-   // Currently (May2017) Spectrum Settings is the only preferences
-   // we ever display in a dialog on its own without others.
-   // We do so when it is configuring spectrums for a track.
-   // Because this happens, we want to visit a different help page.
-   // So we change the page name in the case of a page on its own.
-   if( !mCategories)
-      page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
    HelpSystem::ShowHelp(this, page, true);
 }
 
@@ -556,7 +560,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    // LL:  wxMac can't handle recreating the menus when this dialog is still active,
    //      so AudacityProject::UpdatePrefs() or any of the routines it calls must
-   //      not cause AudacityProject::RebuildMenuBar() to be executed.
+   //      not cause MenuCreator::RebuildMenuBar() to be executed.
    for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       gAudacityProjects[i]->UpdatePrefs();
    }

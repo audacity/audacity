@@ -19,11 +19,14 @@
 // headers
 // ----------------------------------------------------------------------------
 
+#include "../Audacity.h"
+#include "valnum.h"
+
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
 
-#include "../Audacity.h"
-#include "valnum.h"
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include "ErrorDialog.h"
 
 #ifdef __BORLANDC__
@@ -34,6 +37,7 @@
 
 #ifndef WX_PRECOMP
     #include <wx/textctrl.h>
+    #include <wx/combobox.h>
 #endif
 
 #include <wx/clipbrd.h>
@@ -76,6 +80,11 @@ wxTextEntry *NumValidatorBase::GetTextEntry() const
       return text;
 #endif // wxUSE_TEXTCTRL
 
+#if wxUSE_COMBOBOX
+    if ( wxComboBox *combo = wxDynamicCast(m_validatorWindow, wxComboBox) )
+        return combo;
+#endif // wxUSE_COMBOBOX
+
    wxFAIL_MSG(wxT("Can only be used with wxTextCtrl or wxComboBox"));
 
    return NULL;
@@ -98,7 +107,7 @@ bool NumValidatorBase::Validate(wxWindow *parent)
       if ( te )
       {
          te->SelectAll();
-         te->SetFocus();
+         m_validatorWindow->SetFocus();
       }
       return false;
    }
@@ -230,7 +239,7 @@ void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
    int pos;
    GetCurrentValueAndInsertionPoint(val, pos);
 
-   for (size_t i = 0, cnt = toPaste.Length(); i < cnt; i++)
+   for (size_t i = 0, cnt = toPaste.length(); i < cnt; i++)
    {
       const wxChar ch = toPaste[i];
 

@@ -13,16 +13,14 @@
 #define __AUDACITY_WAVECLIP__
 
 #include "Audacity.h"
+
 #include "MemoryX.h"
 #include "SampleFormat.h"
-#include "widgets/ProgressDialog.h"
 #include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"
 
-#include "Experimental.h"
 #include "RealFFTf.h"
 
-#include <wx/gdicmn.h>
 #include <wx/longlong.h>
 
 #include <vector>
@@ -30,6 +28,7 @@
 class BlockArray;
 class DirManager;
 class Envelope;
+class ProgressDialog;
 class Sequence;
 class SpectrogramSettings;
 class WaveCache;
@@ -121,10 +120,6 @@ class WaveClip;
 using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
-
-// Temporary arrays of mere pointers
-using WaveClipPointers = std::vector < WaveClip* >;
-using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
@@ -286,10 +281,10 @@ public:
    /// Flush must be called after last Append
    void Flush();
 
-   void AppendAlias(const wxString &fName, sampleCount start,
+   void AppendAlias(const FilePath &fName, sampleCount start,
                     size_t len, int channel,bool useOD);
 
-   void AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"

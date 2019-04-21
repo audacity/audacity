@@ -20,6 +20,7 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "ErrorDialog.h"
 
 #include <wx/button.h>
 #include <wx/icon.h>
@@ -41,8 +42,6 @@
 #include "../Project.h"
 #include "../Prefs.h"
 #include "HelpSystem.h"
-
-#include "ErrorDialog.h"
 
 // special case for alias missing dialog because we keep track of if it exists.
 class AliasedFileMissingDialog final : public ErrorDialog
@@ -90,7 +89,7 @@ ErrorDialog::ErrorDialog(
    long buttonMask;
 
    // only add the help button if we have a URL
-   buttonMask = (helpPage == wxT("")) ? eOkButton : (eHelpButton | eOkButton);
+   buttonMask = (helpPage.empty()) ? eOkButton : (eHelpButton | eOkButton);
    dhelpPage = helpPage;
    dClose = Close;
    dModal = modal;
@@ -240,6 +239,17 @@ extern wxString AudacityMessageBoxCaptionStr()
 
 void AudacityTextEntryDialog::SetInsertionPointEnd()
 {
-   // m_textctrl is protected member of wxTextEntryDialog
-   m_textctrl->SetInsertionPointEnd();
+   mSetInsertionPointEnd = true;
+}
+
+bool AudacityTextEntryDialog::Show(bool show)
+{
+   bool ret = wxTabTraversalWrapper< wxTextEntryDialog >::Show(show);
+
+   if (show && mSetInsertionPointEnd) {
+      // m_textctrl is protected member of wxTextEntryDialog
+      m_textctrl->SetInsertionPointEnd();
+   }
+
+   return ret;
 }

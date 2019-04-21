@@ -13,22 +13,19 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1D64095C-F936-4FCF-B609-56E9DDF941FA}</ProjectGuid>
     <RootNamespace>Audacity</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-    <LocalDebuggerEnvironment>PATH=%WXWIN%\lib\vc_dll;%PATH%</LocalDebuggerEnvironment>
+    <LocalDebuggerEnvironment>PATH=$(WXWIN)\lib\vc_dll;%PATH%</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <LocalDebuggerEnvironment>PATH=%WXWIN%\lib\vc_dll;%PATH%</LocalDebuggerEnvironment>
+    <LocalDebuggerEnvironment>PATH=$(WXWIN)\lib\vc_dll;%PATH%</LocalDebuggerEnvironment>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -79,8 +76,8 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <Link>
-      <AdditionalDependencies>expat.lib;filedialog.lib;libsndfile.lib;libsoxr.lib;portaudio-v19.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;winmm.lib;oleacc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(WXWIN)\lib\vc_dll;$(GSTREAMER_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>expat.lib;filedialog.lib;libmp3lame.lib;libmpg123.lib;libsndfile.lib;libsoxr.lib;portaudio-v19.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;winmm.lib;oleacc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)..\ReleaseSSE2\;$(OutDir);$(WXWIN)\lib\vc_dll;$(GSTREAMER_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <StackReserveSize>8388608</StackReserveSize>
       <TargetMachine>MachineX86</TargetMachine>
@@ -89,7 +86,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\suil;..\..\..\lib-src\lame;&amp;quot;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\gstreamer-1.0\include;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\suil;..\..\..\lib-src\lame;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\gstreamer-1.0\include;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXINTL_NO_GETTEXT_MACRO;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -112,7 +109,7 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <Link>
-      <AdditionalDependencies>expat.lib;filedialog.lib;libsndfile.lib;libsoxr.lib;portaudio-v19.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;winmm.lib;oleacc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>expat.lib;filedialog.lib;libmp3lame.lib;libmpg123.lib;libsndfile.lib;libsoxr.lib;portaudio-v19.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;winmm.lib;oleacc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);$(WXWIN)\lib\vc_dll;$(GSTREAMER_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -123,6 +120,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp" />
     <ClCompile Include="..\..\..\src\AColor.cpp" />
+    <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp" />
     <ClCompile Include="..\..\..\src\AudacityApp.cpp" />
     <ClCompile Include="..\..\..\src\AudacityException.cpp" />
     <ClCompile Include="..\..\..\src\AudacityHeaders.cpp">
@@ -189,6 +187,20 @@
     <ClCompile Include="..\..\..\src\LyricsWindow.cpp" />
     <ClCompile Include="..\..\..\src\Matrix.cpp" />
     <ClCompile Include="..\..\..\src\Menus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ClipMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\EditMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ExtraMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\FileMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\HelpMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\LabelMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\NavigationMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\PluginMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\SelectMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ToolbarMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\TrackMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\TransportMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\ViewMenus.cpp" />
+    <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp" />
     <ClCompile Include="..\..\..\src\Mix.cpp" />
     <ClCompile Include="..\..\..\src\MixerBoard.cpp" />
     <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp" />
@@ -458,16 +470,17 @@
     <ClCompile Include="..\..\..\src\effects\lv2\LV2Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ConfigInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectAutomationParameters.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectInterface.h" />
-    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ModuleInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\PluginInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\Types.h" />
     <ClInclude Include="..\..\..\src\AboutDialog.h" />
     <ClInclude Include="..\..\..\src\AColor.h" />
+    <ClInclude Include="..\..\..\src\AdornedRulerPanel.h" />
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
     <ClInclude Include="..\..\..\src\Audacity.h" />
     <ClInclude Include="..\..\..\src\AudacityApp.h" />
@@ -532,7 +545,6 @@
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
     <ClInclude Include="..\..\..\src\toolbars\TimeToolbarListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
-    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h" />
     <ClInclude Include="..\..\..\src\TrackPanelDrawingContext.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h" />
@@ -769,6 +781,7 @@
     <ClInclude Include="..\..\..\src\commands\CommandDirectory.h" />
     <ClInclude Include="..\..\..\src\commands\CommandHandler.h" />
     <ClInclude Include="..\..\..\src\commands\CommandManager.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandManagerWindowClasses.h" />
     <ClInclude Include="..\..\..\src\commands\CommandMisc.h" />
     <ClInclude Include="..\..\..\src\commands\CommandSignature.h" />
     <ClInclude Include="..\..\..\src\commands\CommandTargets.h" />
@@ -828,6 +841,7 @@
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny" />
     <copy Include="..\..\..\plug-ins\beat.ny" />
+    <copy Include="..\..\..\plug-ins\nyquist-plug-in-installer.ny" />
     <copy Include="..\..\..\plug-ins\rhythmtrack.ny" />
     <copy Include="..\..\..\plug-ins\clipfix.ny" />
     <copy Include="..\..\..\plug-ins\crossfadeclips.ny" />
@@ -840,6 +854,7 @@
     <copy Include="..\..\..\plug-ins\notch.ny" />
     <copy Include="..\..\..\plug-ins\pluck.ny" />
     <copy Include="..\..\..\plug-ins\rissetdrum.ny" />
+    <copy Include="..\..\..\plug-ins\rms.ny" />
     <copy Include="..\..\..\plug-ins\sample-data-export.ny" />
     <copy Include="..\..\..\plug-ins\sample-data-import.ny" />
     <copy Include="..\..\..\plug-ins\SilenceMarker.ny" />
@@ -1141,12 +1156,22 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\aud-do-support.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
     <None Include="..\..\ny.rules">
       <SubType>Designer</SubType>
     </None>
     <None Include="..\..\po.rules" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\expat\expat.vcxproj">
+      <Project>{a939aaf8-44f1-4ce7-9dd0-7a6e99814856}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\filedialog\filedialog.vcxproj">
       <Project>{5284d863-3813-479f-bbf0-ac234e216bc6}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -1166,6 +1191,12 @@
     <ProjectReference Include="..\libmad\libmad.vcxproj">
       <Project>{a52bbea5-8b02-4147-8734-5d9bbf4d1177}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libmp3lame\libmp3lame.vcxproj">
+      <Project>{20536101-3b0e-43ef-94f9-080d595dac57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\libmpg123\libmpg123.vcxproj">
+      <Project>{e2dab91a-8248-4625-8a85-2c2c2a390dd8}</Project>
     </ProjectReference>
     <ProjectReference Include="..\libnyquist\libnyquist.vcxproj">
       <Project>{7aa41bed-41b0-427a-9148-dea40549d158}</Project>

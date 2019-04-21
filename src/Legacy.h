@@ -9,6 +9,7 @@
 **********************************************************************/
 
 #include <wx/defs.h>
-#include <wx/filename.h>
+
+class wxFileName;
 
 bool ConvertLegacyProjectFile(const wxFileName &filename);

@@ -14,7 +14,8 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
+#include "MixerToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -28,8 +29,6 @@
 #include <wx/statbmp.h>
 #include <wx/tooltip.h>
 #endif
-
-#include "MixerToolBar.h"
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"

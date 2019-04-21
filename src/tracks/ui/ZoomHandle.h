@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../UIHandle.h"
 
 class wxMouseState;
-#include <wx/gdicmn.h>
 
 // This handle class, unlike most, doesn't associate with any particular cell.
 class ZoomHandle final : public UIHandle

@@ -9,8 +9,9 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../Audacity.h"
-#include "../../HitTestResult.h"
 #include "TrackVRulerControls.h"
+
+#include "../../HitTestResult.h"
 
 #include "../../TrackPanel.h"
 #include "../../Track.h"
@@ -27,7 +28,7 @@ TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
-std::shared_ptr<Track> TrackVRulerControls::FindTrack()
+std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 {
    return mwTrack.lock();
 }

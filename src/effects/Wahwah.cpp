@@ -21,14 +21,16 @@
 #include "../Audacity.h"
 #include "Wahwah.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/slider.h>
 
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-
-#include "../Experimental.h"
 
 enum
 {
@@ -88,9 +90,9 @@ EffectWahwah::~EffectWahwah()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectWahwah::GetSymbol()
+ComponentInterfaceSymbol EffectWahwah::GetSymbol()
 {
    return WAHWAH_PLUGIN_SYMBOL;
 }

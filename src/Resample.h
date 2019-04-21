@@ -15,12 +15,10 @@
 #include "Audacity.h"
 
 #include "MemoryX.h"
-#include <wx/intl.h>
-#include <wx/string.h>
 
 #include "SampleFormat.h"
 
-class EncodedEnumSetting;
+class EnumSetting;
 
 struct soxr;
 extern "C" void soxr_delete(soxr*);
@@ -45,8 +43,8 @@ class Resample final
    Resample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
    ~Resample();
 
-   static EncodedEnumSetting FastMethodSetting;
-   static EncodedEnumSetting BestMethodSetting;
+   static EnumSetting FastMethodSetting;
+   static EnumSetting BestMethodSetting;
 
    /** @brief Main processing function. Resamples from the input buffer to the
     * output buffer.

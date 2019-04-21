@@ -12,16 +12,12 @@
 #ifndef __AUDACITY_EFFECT_ECHO__
 #define __AUDACITY_EFFECT_ECHO__
 
-#include <wx/event.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
-
 #include "Effect.h"
 #include "../SampleFormat.h"
 
 class ShuttleGui;
 
-#define ECHO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Echo") }
+#define ECHO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Echo") }
 
 class EffectEcho final : public Effect
 {
@@ -29,9 +25,9 @@ public:
    EffectEcho();
    virtual ~EffectEcho();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

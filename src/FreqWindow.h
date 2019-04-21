@@ -13,31 +13,23 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/brush.h>
-#include <wx/dcmemory.h>
-#include <wx/frame.h>
-#include <wx/panel.h>
-#include <wx/checkbox.h>
-#include <wx/dialog.h>
-#include <wx/gdicmn.h>
-#include <wx/pen.h>
-#include <wx/font.h>
-#include <wx/scrolbar.h>
-#include <wx/sizer.h>
-#include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/statusbr.h>
-#include <wx/textctrl.h>
-#include <wx/utils.h>
-#include "widgets/Ruler.h"
+#include <wx/font.h> // member variable
+#include <wx/statusbr.h> // to inherit
 #include "SampleFormat.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
-class wxStatusBar;
+class wxMemoryDC;
+class wxScrollBar;
+class wxSlider;
+class wxTextCtrl;
 class wxButton;
+class wxCheckBox;
 class wxChoice;
 
+class AudacityProject;
 class FreqWindow;
 class FreqGauge;
+class RulerPanel;
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQWINDOW_RECALC, -1);
 

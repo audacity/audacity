@@ -36,6 +36,8 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
@@ -48,6 +50,7 @@
 #include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/HelpSystem.h"
 #include "xml/XMLFileReader.h"
 
 #include <wx/button.h>
@@ -58,6 +61,7 @@
 #include <wx/listctrl.h>
 #include <wx/notebook.h>
 #include <wx/radiobut.h>
+#include <wx/scrolbar.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
@@ -350,14 +354,14 @@ void Tags::AllowEditTrackNumber(bool editTrackNumber)
 
 int Tags::GetNumUserGenres()
 {
-   return mGenres.GetCount();
+   return mGenres.size();
 }
 
 void Tags::LoadDefaultGenres()
 {
-   mGenres.Clear();
+   mGenres.clear();
    for (size_t i = 0; i < WXSIZEOF(DefaultGenres); i++) {
-      mGenres.Add(DefaultGenres[i]);
+      mGenres.push_back(DefaultGenres[i]);
    }
 }
 
@@ -371,11 +375,11 @@ void Tags::LoadGenres()
       return;
    }
 
-   mGenres.Clear();
+   mGenres.clear();
 
    int cnt = tf.GetLineCount();
    for (int i = 0; i < cnt; i++) {
-      mGenres.Add(tf.GetLine(i));
+      mGenres.push_back(tf.GetLine(i));
    }
 }
 
@@ -449,7 +453,7 @@ Tags::Iterators Tags::GetRange() const
 void Tags::SetTag(const wxString & name, const wxString & value)
 {
    // We don't like empty names
-   if (name.IsEmpty()) {
+   if (name.empty()) {
       return;
    }
 
@@ -466,7 +470,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Look it up
    TagMap::iterator iter = mXref.find(key);
 
-   if (value.IsEmpty()) {
+   if (value.empty()) {
       // Erase the tag
       if (iter == mXref.end())
          // nothing to do
@@ -484,7 +488,7 @@ void Tags::SetTag(const wxString & name, const wxString & value)
          mXref[key] = name;
          mMap[name] = value;
       }
-      else if (!iter->second.IsSameAs(name)) {
+      else if (iter->second != name) {
          // Watch out for case differences!
          mMap[name] = value;
          mMap.erase(iter->second);
@@ -513,7 +517,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       while (*attrs) {
          wxString attr = *attrs++;
-         if (attr.IsEmpty())
+         if (attr.empty())
             break;
          wxString value = *attrs++;
 
@@ -754,7 +758,8 @@ enum {
    SaveID,
    SaveDefaultsID,
    AddID,
-   RemoveID
+   RemoveID,
+   DontShowID
 };
 
 BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
@@ -767,8 +772,10 @@ BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
    EVT_BUTTON(SaveDefaultsID, TagsEditor::OnSaveDefaults)
    EVT_BUTTON(AddID, TagsEditor::OnAdd)
    EVT_BUTTON(RemoveID, TagsEditor::OnRemove)
+   EVT_BUTTON(wxID_HELP, TagsEditor::OnHelp)
    EVT_BUTTON(wxID_CANCEL, TagsEditor::OnCancel)
    EVT_BUTTON(wxID_OK, TagsEditor::OnOk)
+   EVT_CHECKBOX( DontShowID, TagsEditor::OnDontShow )
    EVT_KEY_DOWN(TagsEditor::OnKeyDown)
 END_EVENT_TABLE()
 
@@ -827,6 +834,8 @@ TagsEditor::TagsEditor(wxWindow * parent,
    r.width -= 10;
    r.width -= r.x;
    mGrid->SetColSize(1, r.width);
+   //Bug 2038
+   mGrid->SetFocus();
 
    // Load the genres
    PopulateGenres();
@@ -847,9 +856,12 @@ TagsEditor::~TagsEditor()
 
 void TagsEditor::PopulateOrExchange(ShuttleGui & S)
 {
+   bool bShow;
+   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShow, true );
+
    S.StartVerticalLay();
    {
-      S.StartHorizontalLay(wxALIGN_LEFT, false);
+      S.StartHorizontalLay(wxALIGN_LEFT, 0);
       {
          S.AddUnits(_("Use arrow keys (or ENTER key after editing) to navigate fields."));
       }
@@ -868,7 +880,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
 
          mGrid->SetColLabelSize(mGrid->GetDefaultRowSize());
 
-         wxArrayString cs(names());
+         auto  cs = names();
 
          // Build the initial (empty) grid
          mGrid->CreateGrid(0, 2);
@@ -882,7 +894,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
          mGrid->SetColSize(0, tc.GetSize().x);
          mGrid->SetColMinimalWidth(0, tc.GetSize().x);
       }
-      S.Prop(true);
+      S.Prop(1);
       S.AddWindow(mGrid, wxEXPAND | wxALL);
 
       S.StartMultiColumn(4, wxALIGN_CENTER);
@@ -894,7 +906,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndMultiColumn();
 
-      S.StartHorizontalLay(wxALIGN_CENTRE, false);
+      S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
          S.StartStatic(_("Genres"));
          {
@@ -920,10 +932,27 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
          S.EndStatic();
       }
       S.EndHorizontalLay();
+      S.StartHorizontalLay(wxALIGN_LEFT, 0);
+      {
+         S.Id( DontShowID ).AddCheckBox( _("Don't show this when exporting audio"), !bShow );
+      }
+      S.EndHorizontalLay();
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons(eOkButton | eCancelButton);
+   S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
+}
+
+void TagsEditor::OnDontShow( wxCommandEvent & Evt )
+{
+   bool bShow = !Evt.IsChecked();
+   gPrefs->Write(wxT("/AudioFiles/ShowId3Dialog"), bShow );
+   gPrefs->Flush();
+}
+
+void TagsEditor::OnHelp(wxCommandEvent& WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Metadata_Editor"), true);
 }
 
 bool TagsEditor::TransferDataFromWindow()
@@ -942,7 +971,7 @@ bool TagsEditor::TransferDataFromWindow()
       wxString n = mGrid->GetCellValue(i, 0);
       wxString v = mGrid->GetCellValue(i, 1);
 
-      if (n.IsEmpty()) {
+      if (n.empty()) {
          continue;
       }
 
@@ -1097,11 +1126,12 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
 
    S.AddStandardButtons();
 
-   wxSortedArrayString g;
+   wxArrayString g;
    int cnt = mLocal.GetNumUserGenres();
    for (int i = 0; i < cnt; i++) {
-      g.Add(mLocal.GetUserGenre(i));
+      g.push_back(mLocal.GetUserGenre(i));
    }
+   std::sort( g.begin(), g.end() );
 
    for (int i = 0; i < cnt; i++) {
       tc->AppendText(g[i] + wxT("\n"));
@@ -1186,7 +1216,7 @@ void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
                      this);
 
    // User canceled...
-   if (fn.IsEmpty()) {
+   if (fn.empty()) {
       return;
    }
 
@@ -1241,7 +1271,7 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
                      this);
 
    // User canceled...
-   if (fn.IsEmpty()) {
+   if (fn.empty()) {
       return;
    }
 
@@ -1427,11 +1457,12 @@ void TagsEditor::PopulateGenres()
    int cnt = mLocal.GetNumUserGenres();
    int i;
    wxString parm;
-   wxSortedArrayString g;
+   wxArrayString g;
 
    for (i = 0; i < cnt; i++) {
-      g.Add(mLocal.GetUserGenre(i));
+      g.push_back(mLocal.GetUserGenre(i));
    }
+   std::sort( g.begin(), g.end() );
 
    for (i = 0; i < cnt; i++) {
       parm = parm + (i == 0 ? wxT("") : wxT(",")) + g[i];

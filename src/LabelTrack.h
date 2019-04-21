@@ -16,14 +16,8 @@
 #include "SelectedRegion.h"
 #include "Track.h"
 
-#include <wx/brush.h>
-#include <wx/event.h>
-#include <wx/font.h>
-#include <wx/pen.h>
-#include <wx/string.h>
-#include <wx/clipbrd.h>
 
-
+class wxFont;
 class wxKeyEvent;
 class wxMouseEvent;
 class wxTextFile;
@@ -115,6 +109,12 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    friend class LabelStruct;
 
  public:
+   static void DoEditLabels(
+      AudacityProject &project, LabelTrack *lt = nullptr, int index = -1);
+   static int DialogForLabelName(
+      AudacityProject &project, const SelectedRegion& region,
+      const wxString& initialValue, wxString& value);
+
    bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
    bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected();
@@ -147,19 +147,15 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
    static void ResetFont();
 
-   void Draw(TrackPanelDrawingContext &context, const wxRect & r,
-             const SelectedRegion &selectedRegion,
-             const ZoomInfo &zoomInfo) const;
+   void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
    int getSelectedIndex() const { return mSelIndex; }
-
-   int GetKind() const override { return Label; }
 
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
 
-   using Holder = std::unique_ptr<LabelTrack>;
+   using Holder = std::shared_ptr<LabelTrack>;
    Track::Holder Duplicate() const override;
 
    void SetSelected(bool s) override;
@@ -227,13 +223,14 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void Unselect();
 
-   bool IsSelected() const;
+   // Whether any label box is selected -- not, whether the track is selected.
+   bool HasSelection() const;
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
 
    //This returns the index of the label we just added.
-   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""),
+   int AddLabel(const SelectedRegion &region, const wxString &title = {},
       int restoreFocus = -1);
    //And this tells us the index, if there is a label already there.
    int GetLabelIndex(double t, double t1);
@@ -274,6 +271,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
  public:
    void SortLabels(LabelTrackHit *pHit = nullptr);
  private:
+   TrackKind GetKind() const override { return TrackKind::Label; }
+
    void ShowContextMenu();
    void OnContextMenu(wxCommandEvent & evt);
 
@@ -319,8 +318,8 @@ private:
    std::weak_ptr<LabelTextHandle> mTextHandle;
 
 protected:
-   std::shared_ptr<TrackControls> GetControls() override;
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
+   std::shared_ptr<TrackControls> DoGetControls() override;
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
    friend class GetInfoCommand; // to get labels.
    friend class SetLabelCommand; // to set labels.
 };

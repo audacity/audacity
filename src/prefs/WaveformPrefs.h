@@ -20,11 +20,19 @@ class WaveTrack;
 class wxCheckBox;
 class wxChoice;
 
+class wxArrayStringEx;
+
+#define WAVEFORM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Waveform") }
+
 class WaveformPrefs final : public PrefsPanel
 {
 public:
    WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~WaveformPrefs();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+   wxString HelpPageName() override;
+
    bool Commit() override;
    bool ShowsPreviewButton() override;
    bool Validate() override;
@@ -47,15 +55,15 @@ private:
    wxChoice *mScaleChoice;
    wxChoice *mRangeChoice;
 
-   wxArrayString mScaleChoices;
-   wxArrayString mRangeCodes;
-   wxArrayString mRangeChoices;
+   wxArrayStringEx mRangeCodes;
+   wxArrayStringEx mRangeChoices;
 
    WaveformSettings mTempSettings;
 
    bool mPopulating;
 };
 
+/// A PrefsPanelFactory that creates one WaveformPrefs panel.
 class WaveformPrefsFactory final : public PrefsPanelFactory
 {
 public:

@@ -11,9 +11,6 @@
 #ifndef __AUDACITY_SIMPLE_BLOCKFILE__
 #define __AUDACITY_SIMPLE_BLOCKFILE__
 
-#include <wx/string.h>
-#include <wx/filename.h>
-
 #include "../BlockFile.h"
 #include "../DirManager.h"
 #include "../xml/XMLWriter.h"

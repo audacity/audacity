@@ -14,14 +14,14 @@ modelled on BuiltinEffectsModule
 *****************************************************************************/
 
 #include "../Audacity.h"
+#include "LoadCommands.h"
+
 #include "../Prefs.h"
 
-#include "LoadCommands.h"
 #include "../MemoryX.h"
 
 #include "../effects/EffectManager.h"
 #include "Demo.h"
-#include "../Experimental.h"
 #include "../commands/MessageCommand.h"
 #include "../commands/ScreenshotCommand.h"
 #include "../commands/CompareAudioCommand.h"
@@ -166,24 +166,24 @@ BuiltinCommandsModule::BuiltinCommandsModule(ModuleManagerInterface *moduleManag
 
 BuiltinCommandsModule::~BuiltinCommandsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
-wxString BuiltinCommandsModule::GetPath()
+PluginPath BuiltinCommandsModule::GetPath()
 {
    return mPath;
 }
 
-IdentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
+ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
 {
    return XO("Builtin Commands");
 }
 
-IdentInterfaceSymbol BuiltinCommandsModule::GetVendor()
+VendorSymbol BuiltinCommandsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -209,13 +209,13 @@ bool BuiltinCommandsModule::Initialize()
    for (const auto &name : names)
    {
       //wxLogDebug("Adding %s", name );
-      mNames.Add(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
+      mNames.push_back(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
    }
 
 /*
    for (size_t i = 0; i < WXSIZEOF(kExcludedNames); i++)
    {
-      mNames.Add(wxString(BUILTIN_COMMAND_PREFIX) + kExcludedNames[i]);
+      mNames.push_back(wxString(BUILTIN_COMMAND_PREFIX) + kExcludedNames[i]);
    }
 */
 
@@ -250,13 +250,13 @@ bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString BuiltinCommandsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths BuiltinCommandsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    return mNames;
 }
 
 unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -273,21 +273,21 @@ unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool BuiltinCommandsModule::IsPluginValid(const wxString & path, bool bFast)
+bool BuiltinCommandsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
    static_cast<void>(bFast); // avoid unused variable warning
-   return mNames.Index(path) != wxNOT_FOUND;
+   return make_iterator_range( mNames ).contains( path );
 }
 
-IdentInterface *BuiltinCommandsModule::CreateInstance(const wxString & path)
+ComponentInterface *BuiltinCommandsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
    return Instantiate(path).release();
 }
 
-void BuiltinCommandsModule::DeleteInstance(IdentInterface *instance)
+void BuiltinCommandsModule::DeleteInstance(ComponentInterface *instance)
 {
    // Releases the resource.
    std::unique_ptr < AudacityCommand > {
@@ -299,12 +299,13 @@ void BuiltinCommandsModule::DeleteInstance(IdentInterface *instance)
 // BuiltinCommandsModule implementation
 // ============================================================================
 
-std::unique_ptr<AudacityCommand> BuiltinCommandsModule::Instantiate(const wxString & path)
+std::unique_ptr<AudacityCommand> BuiltinCommandsModule::Instantiate(const PluginPath & path)
 {
    wxASSERT(path.StartsWith(BUILTIN_GENERIC_COMMAND_PREFIX));
-   wxASSERT(mNames.Index(path) != wxNOT_FOUND);
+   auto index = make_iterator_range( mNames ).index( path );
+   wxASSERT( index != wxNOT_FOUND );
 
-   switch (mNames.Index(path))
+   switch ( index )
    {
       COMMAND_LIST;
       EXCLUDE_LIST;

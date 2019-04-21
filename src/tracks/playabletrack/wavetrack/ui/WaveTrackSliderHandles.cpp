@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../MixerBoard.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h"
@@ -44,19 +43,13 @@ float GainSliderHandle::GetValue()
 UIHandle::Result GainSliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
+   (void)pProject;//Compiler food
    auto pTrack = GetWaveTrack();
 
    if (pTrack) {
-      pTrack->SetGain(newValue);
-
-      // Assume linked track is wave or null
-      const auto link = static_cast<WaveTrack*>(mpTrack.lock()->GetLink());
-      if (link)
-         link->SetGain(newValue);
-
-      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->UpdateGain(pTrack.get());
+      for (auto channel :
+           TrackList::Channels(pTrack.get()))
+         channel->SetGain(newValue);
    }
 
    return RefreshCode::RefreshNone;
@@ -82,8 +75,8 @@ UIHandlePtr GainSliderHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
-      wxRect sliderRect;
-      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
+      wxRect sliderRect2;
+      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect2);
       auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::GainSlider
@@ -91,7 +84,7 @@ UIHandlePtr GainSliderHandle::HitTest
              const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
       auto result =
-         std::make_shared<GainSliderHandle>( sliderFn, sliderRect, pTrack );
+         std::make_shared<GainSliderHandle>( sliderFn, sliderRect2, pTrack );
       result = AssignUIHandlePtr(holder, result);
 
       return result;
@@ -126,21 +119,15 @@ float PanSliderHandle::GetValue()
 
 UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newValue)
 {
+   (void)pProject;//Compiler food
    using namespace RefreshCode;
    Result result = RefreshNone;
    auto pTrack = GetWaveTrack();
 
    if (pTrack) {
-      pTrack->SetPan(newValue);
-
-      // Assume linked track is wave or null
-      const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
-      if (link)
-         link->SetPan(newValue);
-
-      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->UpdatePan(pTrack.get());
+      for (auto channel :
+           TrackList::Channels(pTrack.get()))
+         channel->SetPan(newValue);
    }
 
    return result;

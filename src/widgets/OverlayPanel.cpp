@@ -8,6 +8,7 @@
 
 #include "../Audacity.h"
 #include "OverlayPanel.h"
+
 #include "Overlay.h"
 #include "../AColor.h"
 #include <algorithm>
@@ -20,16 +21,9 @@ OverlayPanel::OverlayPanel(wxWindow * parent, wxWindowID id,
 : BackedPanel(parent, id, pos, size, style)
 {}
 
-void OverlayPanel::AddOverlay(Overlay *pOverlay)
+void OverlayPanel::AddOverlay( const std::weak_ptr<Overlay> &pOverlay)
 {
    mOverlays.push_back(pOverlay);
-}
-
-bool OverlayPanel::RemoveOverlay(Overlay *pOverlay)
-{
-   const size_t oldSize = mOverlays.size();
-   mOverlays.erase(std::remove(mOverlays.begin(), mOverlays.end(), pOverlay), mOverlays.end());
-   return oldSize != mOverlays.size();
 }
 
 void OverlayPanel::ClearOverlays()
@@ -41,13 +35,18 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
 {
    size_t n_pairs = mOverlays.size();
 
-   std::vector< std::pair<wxRect, bool /*out of date?*/> > pairs;
+   using Pair = std::pair<wxRect, bool /*out of date?*/>;
+   std::vector< Pair > pairs;
    pairs.reserve(n_pairs);
+
+   // First...
+   Compress();
+   // ... then assume pointers are not expired
 
    // Find out the rectangles and outdatedness for each overlay
    wxSize size(GetBackingDC().GetSize());
    for (const auto pOverlay : mOverlays)
-      pairs.push_back(pOverlay->GetRectangle(size));
+      pairs.push_back( pOverlay.lock()->GetRectangle(size) );
 
    // See what requires redrawing.  If repainting, all.
    // If not, then whatever is outdated, and whatever will be damaged by
@@ -55,13 +54,28 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
    // By redrawing only what needs it, we avoid flashing things like
    // the cursor that are drawn with invert, and also avoid
    // unnecessary work.
-   bool some_overlays_need_repainting = repaint_all;
+
+   // But first, a quick exit test.
+   bool some_overlays_need_repainting =
+      repaint_all ||
+      std::any_of( pairs.begin(), pairs.end(),
+         []( const Pair &pair ){ return pair.second; } );
+
+   if (!some_overlays_need_repainting) {
+     // This function (OverlayPanel::DrawOverlays()) is called at
+     // fairly high frequency through a timer in TrackPanel. In case
+     // there is nothing to do, we exit early because creating the
+     // wxClientDC below is expensive, at least on Linux.
+     return;
+   }
+
    if (!repaint_all) {
+      // For each overlay that needs update, any other overlay whose
+      // rectangle instersects it will also need update.
       bool done;
       do {
          done = true;
-         for (size_t ii = 0; ii < n_pairs; ++ii) {
-	   some_overlays_need_repainting |= pairs[ii].second;
+         for (size_t ii = 0; ii < n_pairs - 1; ++ii) {
             for (size_t jj = ii + 1; jj < n_pairs; ++jj) {
                if (pairs[ii].second != pairs[jj].second &&
                    pairs[ii].first.Intersects(pairs[jj].first)) {
@@ -73,41 +87,40 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
       } while (!done);
    }
 
-   if (!some_overlays_need_repainting) {
-     // This function (OverlayPanel::DrawOverlays()) is called at
-     // fairly high frequency through a timer in TrackPanel. In case
-     // there is nothing to do, we exit early because creating the
-     // wxClientDC below is expensive, at least on Linux.
-     return;
-   }
-
    Maybe<wxClientDC> myDC;
    auto &dc = pDC ? *pDC : (myDC.create(this), *myDC);
 
    // Erase
-   bool done = true;
    auto it2 = pairs.begin();
    for (auto pOverlay : mOverlays) {
-      if (repaint_all || it2->second) {
-         done = false;
-         pOverlay->Erase(dc, GetBackingDC());
-      }
+      if (repaint_all || it2->second)
+         pOverlay.lock()->Erase(dc, GetBackingDC());
       ++it2;
    }
 
    // Draw
-   if (!done) {
-      it2 = pairs.begin();
-      for (auto pOverlay : mOverlays) {
-         if (repaint_all || it2->second) {
-            // Guarantee a clean state of the dc each pass:
-            ADCChanger changer{ &dc };
+   it2 = pairs.begin();
+   for (auto pOverlay : mOverlays) {
+      if (repaint_all || it2->second) {
+         // Guarantee a clean state of the dc each pass:
+         ADCChanger changer{ &dc };
 
-            pOverlay->Draw(*this, dc);
-         }
-         ++it2;
+         pOverlay.lock()->Draw(*this, dc);
       }
+      ++it2;
    }
+}
+
+void OverlayPanel::Compress()
+{
+   // remove any expired pointers
+   auto begin = mOverlays.begin();
+   auto end = mOverlays.end();
+   auto newEnd = std::remove_if( begin, end,
+      []( const std::weak_ptr<Overlay> &pOverlay ){
+         return pOverlay.expired(); } );
+   if ( end != newEnd )
+      mOverlays.resize( newEnd - begin );
 }
 
 BEGIN_EVENT_TABLE(OverlayPanel, BackedPanel)

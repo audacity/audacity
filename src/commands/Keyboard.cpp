@@ -10,8 +10,9 @@
 **********************************************************************/
 
 #include "../Audacity.h"
-
 #include "Keyboard.h"
+
+#include <wx/event.h>
 
 NormalizedKeyString::NormalizedKeyString(const wxString & key)
 {
@@ -77,7 +78,7 @@ wxString NormalizedKeyString::Display(bool usesSpecialChars) const
 
 NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & event)
 {
-   wxString newStr = wxT("");
+   wxString newStr;
 
    long key = event.GetKeyCode();
 

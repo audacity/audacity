@@ -17,6 +17,12 @@
 #include "Audacity.h"
 #include "BatchProcessDialog.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
+
+#ifdef __WXMSW__
+    #include  <wx/ownerdrw.h>
+#endif
+
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -34,6 +40,7 @@
 
 #include "AudacityException.h"
 #include "ShuttleGui.h"
+#include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Internat.h"
@@ -169,12 +176,12 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 /// a shared function.
 void ApplyMacroDialog::PopulateMacros()
 {
-   wxArrayString names = mMacroCommands.GetNames();
+   auto names = mMacroCommands.GetNames();
    int i;
 
    int topItem = mMacros->GetTopItem();
    mMacros->DeleteAllItems();
-   for (i = 0; i < (int)names.GetCount(); i++) {
+   for (i = 0; i < (int)names.size(); i++) {
       mMacros->InsertItem(i, names[i]);
    }
 
@@ -220,7 +227,7 @@ void ApplyMacroDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    ApplyMacroToProject( item );
 }
 
-wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
+CommandID ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
 {
    wxString Temp = MacroName;
    Temp.Replace(" ","");
@@ -230,7 +237,7 @@ wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
 
 // Apply macro, given its ID.
 // Does nothing if not found, rather than returning an error.
-void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasGui )
+void ApplyMacroDialog::ApplyMacroToProject( const CommandID & MacroID, bool bHasGui )
 {
    for( int i=0;i<mMacros->GetItemCount();i++){
       wxString name = mMacros->GetItemText(i);
@@ -245,7 +252,7 @@ void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasG
 void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 {
    wxString name = mMacros->GetItemText(iMacro);
-   if( name.IsEmpty() )
+   if( name.empty() )
       return;
 
 #ifdef OPTIONAL_ACTIVITY_WINDOW
@@ -321,7 +328,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
 
    AudacityProject *project = GetActiveProject();
-   if (!project->GetIsEmpty()) {
+   if (!project->GetTracks()->empty()) {
       AudacityMessageBox(_("Please save and close the current project first."));
       return;
    }
@@ -419,7 +426,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    S.EndVerticalLay();
 
    int i;
-   for (i = 0; i < (int)files.GetCount(); i++ ) {
+   for (i = 0; i < (int)files.size(); i++ ) {
       fileList->InsertItem(i, files[i], i == 0);
    }
 
@@ -449,7 +456,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    Hide();
 
    mMacroCommands.ReadMacro(name);
-   for (i = 0; i < (int)files.GetCount(); i++) {
+   for (i = 0; i < (int)files.size(); i++) {
       wxWindowDisabler wd(&activityWin);
       if (i > 0) {
          //Clear the arrow in previous item.
@@ -461,7 +468,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       auto success = GuardedCall< bool >( [&] {
          project->Import(files[i]);
          project->ZoomAfterImport(nullptr);
-         project->OnSelectAll(*project);
+         SelectActions::DoSelectAll(*project);
          if (!mMacroCommands.ApplyMacro(mCatalog))
             return false;
 
@@ -476,6 +483,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       
       project->ResetProjectToEmpty();
    }
+
    Show();
    Raise();
 }
@@ -536,7 +544,6 @@ BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
 END_EVENT_TABLE()
 
 enum {
-   BlankColumn,
    ItemNumberColumn,
    ActionColumn,
    ParamsColumn,
@@ -639,13 +646,14 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                         wxLC_SINGLE_SEL);
             mList = S.Id(CommandsListID).AddListControlReportMode();
 
-            //An empty first column is a workaround - under Win98 the first column
+            //A dummy first column, which is then deleted, is a workaround - under Windows the first column
             //can't be right aligned.
-            mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
+            mList->InsertColumn(0, wxT(""), wxLIST_FORMAT_LEFT);
             /* i18n-hint: This is the number of the command in the list */
-            mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
-            mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
-            mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
+            mList->InsertColumn(ItemNumberColumn + 1, _("Num"), wxLIST_FORMAT_RIGHT);
+            mList->InsertColumn(ActionColumn + 1, _("Command  "), wxLIST_FORMAT_RIGHT);
+            mList->InsertColumn(ParamsColumn + 1, _("Parameters"), wxLIST_FORMAT_LEFT);
+            mList->DeleteColumn(0);
 
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
@@ -726,7 +734,7 @@ void MacrosWindow::PopulateList()
 }
 
 /// Add one item into mList
-void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
+void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
 {
    auto entry = mCatalog.ByCommandId(Action);
    auto friendlyName = entry != mCatalog.end()
@@ -738,8 +746,7 @@ void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
 
    int i = mList->GetItemCount();
 
-   mList->InsertItem(i, wxT(""));
-   mList->SetItem(i, ItemNumberColumn, wxString::Format(wxT(" %02i"), i + 1));
+   mList->InsertItem(i, wxString::Format(wxT(" %02i"), i + 1));
    mList->SetItem(i, ActionColumn, friendlyName );
    mList->SetItem(i, ParamsColumn, Params );
 }
@@ -747,7 +754,8 @@ void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
 void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
-   GetActiveProject()->RebuildMenuBar();
+   auto p = GetActiveProject();
+   GetMenuManager(*p).RebuildMenuBar(*p);
 }
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )
@@ -865,13 +873,12 @@ void MacrosWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 
 void MacrosWindow::FitColumns()
 {
-   mList->SetColumnWidth(0, 0);  // First column width is zero, to hide it.
 
 #if defined(__WXMAC__)
    // wxMac uses a hard coded width of 150 when wxLIST_AUTOSIZE_USEHEADER
    // is specified, so we calculate the width ourselves. This method may
    // work equally well on other platforms.
-   for (size_t c = 1; c < mList->GetColumnCount(); c++) {
+   for (size_t c = 0; c < mList->GetColumnCount(); c++) {
       wxListItem info;
       int width;
 
@@ -893,17 +900,17 @@ void MacrosWindow::FitColumns()
    // user attempts to resize the columns.
    mList->SetClientSize(mList->GetClientSize());
 #else
+   mList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
    mList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
-   mList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
-   mList->SetColumnWidth(3, wxLIST_AUTOSIZE);
+   mList->SetColumnWidth(2, wxLIST_AUTOSIZE);
 #endif
 
-   int bestfit = mList->GetColumnWidth(3);
+   int bestfit = mList->GetColumnWidth(2);
    int clientsize = mList->GetClientSize().GetWidth();
+   int col0 = mList->GetColumnWidth(0);
    int col1 = mList->GetColumnWidth(1);
-   int col2 = mList->GetColumnWidth(2);
-   bestfit = (bestfit > clientsize-col1-col2)? bestfit : clientsize-col1-col2;
-   mList->SetColumnWidth(3, bestfit);
+   bestfit = (bestfit > clientsize-col0-col1)? bestfit : clientsize-col0-col1;
+   mList->SetColumnWidth(2, bestfit);
 
 }
 
@@ -954,7 +961,7 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 
       name = d.GetValue().Strip(wxString::both);
 
-      if (name.Length() == 0) {
+      if (name.length() == 0) {
          AudacityMessageBox(_("Name must not be blank"),
                       GetTitle(),
                       wxOK | wxICON_ERROR,
@@ -1067,7 +1074,7 @@ void MacrosWindow::InsertCommandAt(int item)
    }
    Raise();
 
-   if(d.mSelectedCommand != wxT(""))
+   if(!d.mSelectedCommand.empty())
    {
       mMacroCommands.AddToMacro(d.mSelectedCommand,
                                 d.mSelectedParameters,
@@ -1096,7 +1103,7 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    }
 
    // Just edit the parameters, and not the command.
-   wxString command = mMacroCommands.GetCommand(item);
+   auto command = mMacroCommands.GetCommand(item);
    wxString params  = mMacroCommands.GetParams(item);
 
    params = MacroCommands::PromptForParamsFor(command, params, this).Trim();

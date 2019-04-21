@@ -17,13 +17,12 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/string.h>
 #include "widgets/NumericTextCtrl.h"
 #include "Internat.h"
 
 class AudacityProject;
 class Track;
-class TrackArray;
+using TrackArray = std::vector< Track* >;
 class TrackClipArray;
 class WaveClip;
 class WaveTrack;
@@ -40,8 +39,10 @@ public:
 
    Track *track;
    Track *origTrack;
-   WaveTrack *dstTrack;
    WaveClip *clip;
+
+   // These fields are used only during time-shift dragging
+   WaveTrack *dstTrack;
    std::shared_ptr<WaveClip> holder;
 };
 
@@ -100,10 +101,7 @@ public:
              double t,
              bool rightEdge);
 
-   static wxArrayString GetSnapLabels();
-   static wxArrayString GetSnapValues();
-   static const wxString & GetSnapValue(int index);
-   static int GetSnapIndex(const wxString & value);
+   static wxArrayStringEx GetSnapLabels();
 
    // The two coordinates need not be ordered:
    static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );
@@ -137,7 +135,7 @@ private:
 
    int mSnapTo;
    double mRate;
-   NumericFormatId mFormat;
+   NumericFormatSymbol mFormat;
 };
 
 #endif

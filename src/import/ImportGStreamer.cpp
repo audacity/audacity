@@ -23,11 +23,13 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"	// needed before GStreamer.h
-#include <wx/window.h>
-#include <wx/log.h>
+#include "../Audacity.h"	// needed before GStreamer.h // for USE_* macros
 
 #if defined(USE_GSTREAMER)
+#include "ImportGStreamer.h"
+
+#include <wx/window.h>
+#include <wx/log.h>
 
 #include "../MemoryX.h"
 
@@ -53,7 +55,6 @@ Licensed under the GNU General Public License v2 or later
 #include "../WaveTrack.h"
 #include "Import.h"
 #include "ImportPlugin.h"
-#include "ImportGStreamer.h"
 
 extern "C"
 {
@@ -130,7 +131,7 @@ struct GStreamContext
    GstElement    *mConv{};         // Audio converter
    GstElement    *mSink{};         // Application sink
    bool           mUse{};          // True if this stream should be imported
-   TrackHolders   mChannels;     // Array of WaveTrack pointers, one for each channel
+   NewChannelGroup mChannels;     // Array of WaveTrack pointers, one for each channel
    unsigned       mNumChannels{};  // Number of channels
    gdouble        mSampleRate{};   // Sample rate
    GstString      mType;         // Audio type
@@ -246,11 +247,11 @@ public:
    ///! Destructor
    virtual ~GStreamerImportPlugin();
 
-   wxString GetPluginFormatDescription();
+   wxString GetPluginFormatDescription() override;
 
-   wxString GetPluginStringID();
+   wxString GetPluginStringID() override;
 
-   wxArrayString GetSupportedExtensions();
+   FileExtensions GetSupportedExtensions() override;
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
@@ -302,7 +303,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
    auto plug = std::make_unique<GStreamerImportPlugin>();
 
    // No supported extensions...no gstreamer plugins installed
-   if (plug->GetSupportedExtensions().GetCount() == 0)
+   if (plug->GetSupportedExtensions().size() == 0)
       return;
 
    // Add to list of importers
@@ -316,7 +317,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
 // ----------------------------------------------------------------------------
 // Constructor
 GStreamerImportPlugin::GStreamerImportPlugin()
-:  ImportPlugin(wxArrayString())
+:  ImportPlugin( {} )
 {
 }
 
@@ -344,7 +345,7 @@ GStreamerImportPlugin::GetPluginStringID()
 
 // Obtains a list of supported extensions from typefind factories
 // TODO: improve the list. It is obviously incomplete.
-wxArrayString
+FileExtensions
 GStreamerImportPlugin::GetSupportedExtensions()
 {
    // We refresh the extensions each time this is called in case the
@@ -391,7 +392,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
                wxString extension = wxString::FromUTF8(extensions[i]);
                if (mExtensions.Index(extension, false) == wxNOT_FOUND)
                {
-                  mExtensions.Add(extension);
+                  mExtensions.push_back(extension);
                }
             }
          }
@@ -403,7 +404,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
 
    // Log it for debugging
    wxString extensions = wxT("Extensions:");
-   for (size_t i = 0; i < mExtensions.GetCount(); i++)
+   for (size_t i = 0; i < mExtensions.size(); i++)
    {
       extensions = extensions + wxT(" ") + mExtensions[i];
    }
@@ -789,14 +790,6 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
             return;
          }
       }
-
-      // Set to stereo if there's exactly 2 channels
-      if (c->mNumChannels == 2)
-      {
-         c->mChannels[0]->SetChannel(Track::LeftChannel);
-         c->mChannels[1]->SetChannel(Track::RightChannel);
-         c->mChannels[0]->SetLinked(true);
-      }
    }
 
    // Get the buffer for the sample...no need to release
@@ -900,7 +893,7 @@ GStreamerImportFileHandle::~GStreamerImportFileHandle()
 wxInt32
 GStreamerImportFileHandle::GetStreamCount()
 {
-   return mStreamInfo.GetCount();
+   return mStreamInfo.size();
 }
 
 // ----------------------------------------------------------------------------
@@ -999,7 +992,7 @@ GStreamerImportFileHandle::Init()
                      wxString::FromUTF8(c->mType.get()),
                      (int) c->mNumChannels,
                      (int) c->mSampleRate);
-      mStreamInfo.Add(strinfo);
+      mStreamInfo.push_back(strinfo);
    }
 
    return success;
@@ -1140,18 +1133,6 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    // Grab the streams lock
    g_mutex_locker locker{ mStreamsLock };
 
-   // Count the total number of tracks collected
-   unsigned outNumTracks = 0;
-   for (guint s = 0; s < mStreams.size(); s++)
-   {
-      GStreamContext *c = mStreams[s].get();
-      if (c)
-         outNumTracks += c->mNumChannels;
-   }
-
-   // Create NEW tracks
-   outTracks.resize(outNumTracks);
-
    // Copy audio from mChannels to newly created tracks (destroying mChannels in process)
    int trackindex = 0;
    for (guint s = 0; s < mStreams.size(); s++)
@@ -1160,12 +1141,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
       if (c->mNumChannels)
       {
          for (int ch = 0; ch < c->mNumChannels; ch++)
-         {
             c->mChannels[ch]->Flush();
-            outTracks[trackindex++] = std::move(c->mChannels[ch]);
-         }
-
-         c->mChannels.clear();
+         outTracks.push_back(std::move(c->mChannels));
       }
    }
 

@@ -18,15 +18,18 @@
 
 #include "../Audacity.h"
 #include "GetTrackInfoCommand.h"
+
 #include "../Project.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
+#include "../NoteTrack.h"
 #include "../WaveTrack.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
 const int nTypes =3;
-static const IdentInterfaceSymbol kTypes[nTypes] =
+static const EnumValueSymbol kTypes[nTypes] =
 {
    { XO("Tracks") },
    { XO("Clips") },
@@ -47,12 +50,11 @@ bool GetTrackInfoCommand::DefineParams( ShuttleParams & S ){
 
 void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto types = LocalizedStrings( kTypes, nTypes );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Types:"), mInfoType, &types);
+      S.TieChoice( _("Types:"), mInfoType, LocalizedStrings( kTypes, nTypes ));
    }
    S.EndMultiColumn();
 }

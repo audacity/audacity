@@ -1205,7 +1205,10 @@
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
-		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
+		5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */; };
+		5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E00F217E4467003C6C99 /* ClipMenus.cpp */; };
+		5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */; };
+		5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E013217E5F66003C6C99 /* LabelMenus.cpp */; };
 		5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
@@ -1220,7 +1223,19 @@
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
 		5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */; };
+		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
+		5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A09F217FA2430068E082 /* EditMenus.cpp */; };
+		5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */; };
+		5E36A0AA217FA2430068E082 /* FileMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A1217FA2430068E082 /* FileMenus.cpp */; };
+		5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */; };
+		5E36A0AC217FA2430068E082 /* SelectMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A3217FA2430068E082 /* SelectMenus.cpp */; };
+		5E36A0AD217FA2430068E082 /* TrackMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A4217FA2430068E082 /* TrackMenus.cpp */; };
+		5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A5217FA2430068E082 /* TransportMenus.cpp */; };
+		5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A6217FA2430068E082 /* ViewMenus.cpp */; };
+		5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A7217FA2430068E082 /* WindowMenus.cpp */; };
+		5E36A0B2217FC5A10068E082 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0B3217FC6540068E082 /* HelpMenus.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
 		5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */; };
 		5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */; };
@@ -1275,6 +1290,78 @@
 		5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */; };
 		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
+		65326EC72253D70900844F28 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EAA2253D70900844F28 /* common.c */; };
+		65326EC82253D70900844F28 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAB2253D70900844F28 /* common.h */; };
+		65326EC92253D70900844F28 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAC2253D70900844F28 /* config.h */; };
+		65326ECA2253D70900844F28 /* dct64_i386.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EAD2253D70900844F28 /* dct64_i386.c */; };
+		65326ECB2253D70900844F28 /* dct64_i386.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAE2253D70900844F28 /* dct64_i386.h */; };
+		65326ECC2253D70900844F28 /* decode_i386.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EAF2253D70900844F28 /* decode_i386.c */; };
+		65326ECD2253D70900844F28 /* decode_i386.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB02253D70900844F28 /* decode_i386.h */; };
+		65326ECE2253D70900844F28 /* huffman.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB22253D70900844F28 /* huffman.h */; };
+		65326ECF2253D70900844F28 /* interface.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EB32253D70900844F28 /* interface.c */; };
+		65326ED02253D70900844F28 /* interface.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB42253D70900844F28 /* interface.h */; };
+		65326ED12253D70900844F28 /* machine.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB62253D70900844F28 /* machine.h */; };
+		65326ED22253D70900844F28 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB72253D70900844F28 /* version.h */; };
+		65326ED32253D70900844F28 /* l2tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB82253D70900844F28 /* l2tables.h */; };
+		65326ED42253D70900844F28 /* lame.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EB92253D70900844F28 /* lame.h */; };
+		65326ED52253D70900844F28 /* layer1.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EBA2253D70900844F28 /* layer1.c */; };
+		65326ED62253D70900844F28 /* layer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EBB2253D70900844F28 /* layer1.h */; };
+		65326ED72253D70900844F28 /* layer2.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EBC2253D70900844F28 /* layer2.c */; };
+		65326ED82253D70900844F28 /* layer2.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EBD2253D70900844F28 /* layer2.h */; };
+		65326ED92253D70900844F28 /* layer3.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EBE2253D70900844F28 /* layer3.c */; };
+		65326EDA2253D70900844F28 /* layer3.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EBF2253D70900844F28 /* layer3.h */; };
+		65326EDB2253D70900844F28 /* mpg123.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EC22253D70900844F28 /* mpg123.h */; };
+		65326EDC2253D70900844F28 /* mpglib.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EC32253D70900844F28 /* mpglib.h */; };
+		65326EDD2253D70900844F28 /* tabinit.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EC52253D70900844F28 /* tabinit.c */; };
+		65326EDE2253D70900844F28 /* tabinit.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EC62253D70900844F28 /* tabinit.h */; };
+		65326F1F2253DA5F00844F28 /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EE02253DA5F00844F28 /* bitstream.c */; };
+		65326F202253DA5F00844F28 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EE12253DA5F00844F28 /* bitstream.h */; };
+		65326F212253DA5F00844F28 /* encoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EE32253DA5F00844F28 /* encoder.c */; };
+		65326F222253DA5F00844F28 /* encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EE42253DA5F00844F28 /* encoder.h */; };
+		65326F232253DA5F00844F28 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EE52253DA5F00844F28 /* fft.c */; };
+		65326F242253DA5F00844F28 /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EE62253DA5F00844F28 /* fft.h */; };
+		65326F252253DA5F00844F28 /* gain_analysis.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EE72253DA5F00844F28 /* gain_analysis.c */; };
+		65326F262253DA5F00844F28 /* gain_analysis.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EE82253DA5F00844F28 /* gain_analysis.h */; };
+		65326F272253DA5F00844F28 /* nasm.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EF32253DA5F00844F28 /* nasm.h */; };
+		65326F282253DA5F00844F28 /* id3tag.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EF52253DA5F00844F28 /* id3tag.c */; };
+		65326F292253DA5F00844F28 /* id3tag.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EF62253DA5F00844F28 /* id3tag.h */; };
+		65326F2A2253DA5F00844F28 /* l3side.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EF72253DA5F00844F28 /* l3side.h */; };
+		65326F2B2253DA5F00844F28 /* lame-analysis.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EF82253DA5F00844F28 /* lame-analysis.h */; };
+		65326F2C2253DA5F00844F28 /* lame.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EF92253DA5F00844F28 /* lame.c */; };
+		65326F2D2253DA5F00844F28 /* lame_global_flags.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EFB2253DA5F00844F28 /* lame_global_flags.h */; };
+		65326F2E2253DA5F00844F28 /* lameerror.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EFC2253DA5F00844F28 /* lameerror.h */; };
+		65326F2F2253DA5F00844F28 /* machine.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EFE2253DA5F00844F28 /* machine.h */; };
+		65326F302253DA5F00844F28 /* mpglib_interface.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F012253DA5F00844F28 /* mpglib_interface.c */; };
+		65326F312253DA5F00844F28 /* newmdct.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F022253DA5F00844F28 /* newmdct.c */; };
+		65326F322253DA5F00844F28 /* newmdct.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F032253DA5F00844F28 /* newmdct.h */; };
+		65326F332253DA5F00844F28 /* presets.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F042253DA5F00844F28 /* presets.c */; };
+		65326F342253DA5F00844F28 /* psymodel.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F052253DA5F00844F28 /* psymodel.c */; };
+		65326F352253DA5F00844F28 /* psymodel.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F062253DA5F00844F28 /* psymodel.h */; };
+		65326F362253DA5F00844F28 /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F072253DA5F00844F28 /* quantize.c */; };
+		65326F372253DA5F00844F28 /* quantize.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F082253DA5F00844F28 /* quantize.h */; };
+		65326F382253DA5F00844F28 /* quantize_pvt.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F092253DA5F00844F28 /* quantize_pvt.c */; };
+		65326F392253DA5F00844F28 /* quantize_pvt.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F0A2253DA5F00844F28 /* quantize_pvt.h */; };
+		65326F3A2253DA5F00844F28 /* reservoir.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F0B2253DA5F00844F28 /* reservoir.c */; };
+		65326F3B2253DA5F00844F28 /* reservoir.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F0C2253DA5F00844F28 /* reservoir.h */; };
+		65326F3C2253DA5F00844F28 /* set_get.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F0D2253DA5F00844F28 /* set_get.c */; };
+		65326F3D2253DA5F00844F28 /* set_get.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F0E2253DA5F00844F28 /* set_get.h */; };
+		65326F3E2253DA5F00844F28 /* tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F0F2253DA5F00844F28 /* tables.c */; };
+		65326F3F2253DA5F00844F28 /* tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F102253DA5F00844F28 /* tables.h */; };
+		65326F402253DA5F00844F28 /* takehiro.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F112253DA5F00844F28 /* takehiro.c */; };
+		65326F412253DA5F00844F28 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F122253DA5F00844F28 /* util.c */; };
+		65326F422253DA5F00844F28 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F132253DA5F00844F28 /* util.h */; };
+		65326F432253DA5F00844F28 /* vbrquantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F142253DA5F00844F28 /* vbrquantize.c */; };
+		65326F442253DA5F00844F28 /* vbrquantize.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F152253DA5F00844F28 /* vbrquantize.h */; };
+		65326F452253DA5F00844F28 /* VbrTag.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F162253DA5F00844F28 /* VbrTag.c */; };
+		65326F462253DA5F00844F28 /* VbrTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F172253DA5F00844F28 /* VbrTag.h */; };
+		65326F472253DA5F00844F28 /* lame_intrin.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F192253DA5F00844F28 /* lame_intrin.h */; };
+		65326F482253DA5F00844F28 /* xmm_quantize_sub.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F1C2253DA5F00844F28 /* xmm_quantize_sub.c */; };
+		65326F492253DA5F00844F28 /* version.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F1D2253DA5F00844F28 /* version.c */; };
+		65326F4A2253DA5F00844F28 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F1E2253DA5F00844F28 /* version.h */; };
+		6563A80A2257AD77001CB678 /* liblibmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65326E9E2253D2BE00844F28 /* liblibmp3lame.a */; };
+		6563A80B2257AD77001CB678 /* liblibmpg123.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65326EA72253D68900844F28 /* liblibmpg123.a */; };
+		656854742258B372005FC068 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAC2253D70900844F28 /* config.h */; };
+		656854752258B483005FC068 /* encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EE42253DA5F00844F28 /* encoder.h */; };
 		659B26C5207501970039894A /* WindowAccessible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 659B26C3207501970039894A /* WindowAccessible.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
@@ -1301,6 +1388,9 @@
 		AA6B5BAF2061EC58008B5B26 /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
 		AA6B5BB02061EC58008B5B26 /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
 		AA6B5BB12061EC58008B5B26 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
+		AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */ = {isa = PBXBuildFile; fileRef = AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */; };
+		AAA677852243BA4400D42A28 /* nyquist-plug-in-installer.ny in Resources */ = {isa = PBXBuildFile; fileRef = AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */; };
+		AAB5D42F216A9764006136B4 /* rms.ny in Resources */ = {isa = PBXBuildFile; fileRef = AAB5D42E216A9764006136B4 /* rms.ny */; };
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
@@ -1480,6 +1570,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 28E67F510A3A160D0021D89F;
 			remoteInfo = "portaudio-v19";
+		};
+		65326F4D2253E03200844F28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 65326E6C2253D2BE00844F28;
+			remoteInfo = libmp3lame;
+		};
+		65326F4F2253E03200844F28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 65326E9F2253D68900844F28;
+			remoteInfo = libmpg123;
 		};
 		ED1521FE163C2D3200451B5F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2152,7 +2256,6 @@
 		2809C4B70BCB7E560006010F /* FileIO.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileIO.h; sourceTree = "<group>"; tabWidth = 3; };
 		280A8B3E19F440160091DE70 /* ConfigInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigInterface.h; path = ../include/audacity/ConfigInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B3F19F440160091DE70 /* EffectInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectInterface.h; path = ../include/audacity/EffectInterface.h; sourceTree = SOURCE_ROOT; };
-		280A8B4019F440160091DE70 /* IdentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IdentInterface.h; path = ../include/audacity/IdentInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4119F440160091DE70 /* ImporterInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImporterInterface.h; path = ../include/audacity/ImporterInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4219F440160091DE70 /* ModuleInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModuleInterface.h; path = ../include/audacity/ModuleInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4319F440160091DE70 /* PluginInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginInterface.h; path = ../include/audacity/PluginInterface.h; sourceTree = SOURCE_ROOT; };
@@ -3053,7 +3156,11 @@
 		5E07842D1DEE6B8600CA76EA /* FileException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileException.h; sourceTree = "<group>"; };
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
-		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
+		5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AdornedRulerPanel.cpp; sourceTree = "<group>"; };
+		5E08C7382180D460004079AE /* AdornedRulerPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdornedRulerPanel.h; sourceTree = "<group>"; };
+		5E08E00F217E4467003C6C99 /* ClipMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClipMenus.cpp; path = menus/ClipMenus.cpp; sourceTree = "<group>"; };
+		5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToolbarMenus.cpp; path = menus/ToolbarMenus.cpp; sourceTree = "<group>"; };
+		5E08E013217E5F66003C6C99 /* LabelMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LabelMenus.cpp; path = menus/LabelMenus.cpp; sourceTree = "<group>"; };
 		5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CellularPanel.cpp; sourceTree = "<group>"; };
 		5E0A1CDC20E95FF7001AAF8D /* CellularPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellularPanel.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
@@ -3081,8 +3188,19 @@
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
 		5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LanguageNames.txt; path = ../locale/LanguageNames.txt; sourceTree = "<group>"; };
+		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
+		5E36A09F217FA2430068E082 /* EditMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditMenus.cpp; path = menus/EditMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtraMenus.cpp; path = menus/ExtraMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A1217FA2430068E082 /* FileMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileMenus.cpp; path = menus/FileMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavigationMenus.cpp; path = menus/NavigationMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A3217FA2430068E082 /* SelectMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectMenus.cpp; path = menus/SelectMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A4217FA2430068E082 /* TrackMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackMenus.cpp; path = menus/TrackMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A5217FA2430068E082 /* TransportMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TransportMenus.cpp; path = menus/TransportMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A6217FA2430068E082 /* ViewMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ViewMenus.cpp; path = menus/ViewMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A7217FA2430068E082 /* WindowMenus.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = WindowMenus.cpp; path = menus/WindowMenus.cpp; sourceTree = "<group>"; };
+		5E36A0B3217FC6540068E082 /* HelpMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelpMenus.cpp; path = menus/HelpMenus.cpp; sourceTree = "<group>"; };
 		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
 		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
@@ -3136,7 +3254,6 @@
 		5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectHandle.cpp; sourceTree = "<group>"; };
 		5E7396701DAFDB9D00BA0A4D /* SelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectHandle.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
-		5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCellIterator.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
 		5E74D2DE1CC4429700D88B0B /* EditCursorOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCursorOverlay.h; sourceTree = "<group>"; };
 		5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayIndicatorOverlay.cpp; sourceTree = "<group>"; };
@@ -3150,6 +3267,7 @@
 		5E89EEE91F78D017000F5E82 /* zh_CN.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zh_CN.po; path = ../locale/zh_CN.po; sourceTree = "<group>"; };
 		5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wxPanelWrapper.cpp; sourceTree = "<group>"; };
 		5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxPanelWrapper.h; sourceTree = "<group>"; };
+		5E9985D0218D0A7D00278D81 /* ComponentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentInterface.h; path = ../include/audacity/ComponentInterface.h; sourceTree = "<group>"; };
 		5EA0181C1EC7B226001F2996 /* NoteTrackControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackControls.cpp; sourceTree = "<group>"; };
 		5EA0181D1EC7B226001F2996 /* NoteTrackControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackControls.h; sourceTree = "<group>"; };
 		5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackUI.cpp; sourceTree = "<group>"; };
@@ -3174,6 +3292,7 @@
 		5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPanel.h; sourceTree = "<group>"; };
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
+		5EE8984821D68D88006DE939 /* CommandManagerWindowClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandManagerWindowClasses.h; sourceTree = "<group>"; };
 		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
 		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityCommand.cpp; sourceTree = "<group>"; };
@@ -3199,6 +3318,99 @@
 		5EF3E661203FE73C006C6882 /* DragCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragCommand.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
+		65326E9E2253D2BE00844F28 /* liblibmp3lame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = liblibmp3lame.a; path = libmp3lame.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		65326EA72253D68900844F28 /* liblibmpg123.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = liblibmpg123.a; path = libmpg123.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		65326EA92253D70900844F28 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		65326EAA2253D70900844F28 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
+		65326EAB2253D70900844F28 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		65326EAC2253D70900844F28 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		65326EAD2253D70900844F28 /* dct64_i386.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dct64_i386.c; sourceTree = "<group>"; };
+		65326EAE2253D70900844F28 /* dct64_i386.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dct64_i386.h; sourceTree = "<group>"; };
+		65326EAF2253D70900844F28 /* decode_i386.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = decode_i386.c; sourceTree = "<group>"; };
+		65326EB02253D70900844F28 /* decode_i386.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode_i386.h; sourceTree = "<group>"; };
+		65326EB12253D70900844F28 /* depcomp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = depcomp; sourceTree = "<group>"; };
+		65326EB22253D70900844F28 /* huffman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = huffman.h; sourceTree = "<group>"; };
+		65326EB32253D70900844F28 /* interface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interface.c; sourceTree = "<group>"; };
+		65326EB42253D70900844F28 /* interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interface.h; sourceTree = "<group>"; };
+		65326EB62253D70900844F28 /* machine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = machine.h; sourceTree = "<group>"; };
+		65326EB72253D70900844F28 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		65326EB82253D70900844F28 /* l2tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l2tables.h; sourceTree = "<group>"; };
+		65326EB92253D70900844F28 /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
+		65326EBA2253D70900844F28 /* layer1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = layer1.c; sourceTree = "<group>"; };
+		65326EBB2253D70900844F28 /* layer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layer1.h; sourceTree = "<group>"; };
+		65326EBC2253D70900844F28 /* layer2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = layer2.c; sourceTree = "<group>"; };
+		65326EBD2253D70900844F28 /* layer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layer2.h; sourceTree = "<group>"; };
+		65326EBE2253D70900844F28 /* layer3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = layer3.c; sourceTree = "<group>"; };
+		65326EBF2253D70900844F28 /* layer3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layer3.h; sourceTree = "<group>"; };
+		65326EC02253D70900844F28 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		65326EC12253D70900844F28 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		65326EC22253D70900844F28 /* mpg123.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpg123.h; sourceTree = "<group>"; };
+		65326EC32253D70900844F28 /* mpglib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpglib.h; sourceTree = "<group>"; };
+		65326EC42253D70900844F28 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		65326EC52253D70900844F28 /* tabinit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tabinit.c; sourceTree = "<group>"; };
+		65326EC62253D70900844F28 /* tabinit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tabinit.h; sourceTree = "<group>"; };
+		65326EE02253DA5F00844F28 /* bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitstream.c; sourceTree = "<group>"; };
+		65326EE12253DA5F00844F28 /* bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
+		65326EE22253DA5F00844F28 /* depcomp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = depcomp; sourceTree = "<group>"; };
+		65326EE32253DA5F00844F28 /* encoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encoder.c; sourceTree = "<group>"; };
+		65326EE42253DA5F00844F28 /* encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encoder.h; sourceTree = "<group>"; };
+		65326EE52253DA5F00844F28 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
+		65326EE62253DA5F00844F28 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		65326EE72253DA5F00844F28 /* gain_analysis.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gain_analysis.c; sourceTree = "<group>"; };
+		65326EE82253DA5F00844F28 /* gain_analysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gain_analysis.h; sourceTree = "<group>"; };
+		65326EEA2253DA5F00844F28 /* choose_table.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = choose_table.nas; sourceTree = "<group>"; };
+		65326EEB2253DA5F00844F28 /* cpu_feat.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cpu_feat.nas; sourceTree = "<group>"; };
+		65326EEC2253DA5F00844F28 /* fft.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fft.nas; sourceTree = "<group>"; };
+		65326EED2253DA5F00844F28 /* fft3dn.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fft3dn.nas; sourceTree = "<group>"; };
+		65326EEE2253DA5F00844F28 /* fftfpu.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fftfpu.nas; sourceTree = "<group>"; };
+		65326EEF2253DA5F00844F28 /* fftsse.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fftsse.nas; sourceTree = "<group>"; };
+		65326EF02253DA5F00844F28 /* ffttbl.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ffttbl.nas; sourceTree = "<group>"; };
+		65326EF12253DA5F00844F28 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		65326EF22253DA5F00844F28 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		65326EF32253DA5F00844F28 /* nasm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nasm.h; sourceTree = "<group>"; };
+		65326EF42253DA5F00844F28 /* scalar.nas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scalar.nas; sourceTree = "<group>"; };
+		65326EF52253DA5F00844F28 /* id3tag.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = id3tag.c; sourceTree = "<group>"; };
+		65326EF62253DA5F00844F28 /* id3tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = id3tag.h; sourceTree = "<group>"; };
+		65326EF72253DA5F00844F28 /* l3side.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l3side.h; sourceTree = "<group>"; };
+		65326EF82253DA5F00844F28 /* lame-analysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "lame-analysis.h"; sourceTree = "<group>"; };
+		65326EF92253DA5F00844F28 /* lame.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lame.c; sourceTree = "<group>"; };
+		65326EFA2253DA5F00844F28 /* lame.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lame.rc; sourceTree = "<group>"; };
+		65326EFB2253DA5F00844F28 /* lame_global_flags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame_global_flags.h; sourceTree = "<group>"; };
+		65326EFC2253DA5F00844F28 /* lameerror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lameerror.h; sourceTree = "<group>"; };
+		65326EFD2253DA5F00844F28 /* logoe.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = logoe.ico; sourceTree = "<group>"; };
+		65326EFE2253DA5F00844F28 /* machine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = machine.h; sourceTree = "<group>"; };
+		65326EFF2253DA5F00844F28 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		65326F002253DA5F00844F28 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		65326F012253DA5F00844F28 /* mpglib_interface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mpglib_interface.c; sourceTree = "<group>"; };
+		65326F022253DA5F00844F28 /* newmdct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = newmdct.c; sourceTree = "<group>"; };
+		65326F032253DA5F00844F28 /* newmdct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newmdct.h; sourceTree = "<group>"; };
+		65326F042253DA5F00844F28 /* presets.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = presets.c; sourceTree = "<group>"; };
+		65326F052253DA5F00844F28 /* psymodel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = psymodel.c; sourceTree = "<group>"; };
+		65326F062253DA5F00844F28 /* psymodel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = psymodel.h; sourceTree = "<group>"; };
+		65326F072253DA5F00844F28 /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		65326F082253DA5F00844F28 /* quantize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quantize.h; sourceTree = "<group>"; };
+		65326F092253DA5F00844F28 /* quantize_pvt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize_pvt.c; sourceTree = "<group>"; };
+		65326F0A2253DA5F00844F28 /* quantize_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quantize_pvt.h; sourceTree = "<group>"; };
+		65326F0B2253DA5F00844F28 /* reservoir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = reservoir.c; sourceTree = "<group>"; };
+		65326F0C2253DA5F00844F28 /* reservoir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reservoir.h; sourceTree = "<group>"; };
+		65326F0D2253DA5F00844F28 /* set_get.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = set_get.c; sourceTree = "<group>"; };
+		65326F0E2253DA5F00844F28 /* set_get.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = set_get.h; sourceTree = "<group>"; };
+		65326F0F2253DA5F00844F28 /* tables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tables.c; sourceTree = "<group>"; };
+		65326F102253DA5F00844F28 /* tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tables.h; sourceTree = "<group>"; };
+		65326F112253DA5F00844F28 /* takehiro.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = takehiro.c; sourceTree = "<group>"; };
+		65326F122253DA5F00844F28 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
+		65326F132253DA5F00844F28 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		65326F142253DA5F00844F28 /* vbrquantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vbrquantize.c; sourceTree = "<group>"; };
+		65326F152253DA5F00844F28 /* vbrquantize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vbrquantize.h; sourceTree = "<group>"; };
+		65326F162253DA5F00844F28 /* VbrTag.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = VbrTag.c; sourceTree = "<group>"; };
+		65326F172253DA5F00844F28 /* VbrTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VbrTag.h; sourceTree = "<group>"; };
+		65326F192253DA5F00844F28 /* lame_intrin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame_intrin.h; sourceTree = "<group>"; };
+		65326F1A2253DA5F00844F28 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		65326F1B2253DA5F00844F28 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		65326F1C2253DA5F00844F28 /* xmm_quantize_sub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmm_quantize_sub.c; sourceTree = "<group>"; };
+		65326F1D2253DA5F00844F28 /* version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = version.c; sourceTree = "<group>"; };
+		65326F1E2253DA5F00844F28 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		6563A8092257A314001CB678 /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
 		659B26C3207501970039894A /* WindowAccessible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowAccessible.cpp; sourceTree = "<group>"; };
 		659B26C4207501970039894A /* WindowAccessible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowAccessible.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
@@ -3221,6 +3433,9 @@
 		AA6B5B872061DF3B008B5B26 /* util32s.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util32s.h; sourceTree = "<group>"; };
 		AA6B5B8D2061E20A008B5B26 /* fifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fifo.h; sourceTree = "<group>"; };
 		AA6B5B8F2061E6A8008B5B26 /* std-types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "std-types.h"; sourceTree = "<group>"; };
+		AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "aud-do-support.lsp"; path = "../nyquist/aud-do-support.lsp"; sourceTree = "<group>"; };
+		AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "nyquist-plug-in-installer.ny"; path = "../plug-ins/nyquist-plug-in-installer.ny"; sourceTree = "<group>"; };
+		AAB5D42E216A9764006136B4 /* rms.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rms.ny; path = "../plug-ins/rms.ny"; sourceTree = "<group>"; };
 		AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-import.ny"; path = "../../Audacity/plug-ins/sample-data-import.ny"; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -3323,6 +3538,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6563A80A2257AD77001CB678 /* liblibmp3lame.a in Frameworks */,
+				6563A80B2257AD77001CB678 /* liblibmpg123.a in Frameworks */,
 				17C99D560989710D0041B1BC /* libvorbis.a in Frameworks */,
 				17C99D58098971380041B1BC /* libportsmf.a in Frameworks */,
 				17C99D5A098971390041B1BC /* libid3tag.a in Frameworks */,
@@ -3387,6 +3604,8 @@
 				176EE9E209A2EF1000188F3B /* libflac */,
 				17072F6A0988D6A9008541CC /* libid3tag */,
 				17072FD10988D6A9008541CC /* libmad */,
+				65326EDF2253DA5F00844F28 /* libmp3lame */,
+				65326EA82253D70900844F28 /* mpglib */,
 				17C8BA11098B398C00216F16 /* libnyquist */,
 				170731EB0988D6AA008541CC /* libogg */,
 				ED05D0FF0E50AD5600CC4BD3 /* libscorealign */,
@@ -3838,6 +4057,7 @@
 				5E4685F81CCA9D84008741F2 /* CommandFunctors.h */,
 				28D540010FD1912A00FA7C75 /* CommandHandler.h */,
 				174D9027098C78AF00D5909F /* CommandManager.h */,
+				5EE8984821D68D88006DE939 /* CommandManagerWindowClasses.h */,
 				1818558F0FFE916C0026D190 /* CommandMisc.h */,
 				28851F9E1027F16400152EE1 /* CommandSignature.h */,
 				181855900FFE916C0026D190 /* CommandTargets.h */,
@@ -4042,6 +4262,8 @@
 				EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */,
 				286229B0181CE4B600E1AD1A /* liblv2.a */,
 				28FADDEF1833C3C500BA4141 /* libexpat.a */,
+				65326E9E2253D2BE00844F28 /* liblibmp3lame.a */,
+				65326EA72253D68900844F28 /* liblibmpg123.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4051,6 +4273,7 @@
 			children = (
 				1790AFC709883BFD008A330A /* AboutDialog.cpp */,
 				1790AFC909883BFD008A330A /* AColor.cpp */,
+				5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */,
 				1790AFCE09883BFD008A330A /* AudacityApp.cpp */,
 				5E78388D1DE4995E003270C0 /* AudacityException.cpp */,
 				28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */,
@@ -4092,7 +4315,6 @@
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
 				28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */,
 				1790B0A709883BFD008A330A /* Menus.cpp */,
-				5E0A0E301D23019A00CD2567 /* MenusMac.cpp */,
 				1790B0AB09883BFD008A330A /* Mix.cpp */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
@@ -4142,6 +4364,7 @@
 				28FC1AF90A47762C00A188AE /* WrappedType.cpp */,
 				1790AFC809883BFD008A330A /* AboutDialog.h */,
 				1790AFCA09883BFD008A330A /* AColor.h */,
+				5E08C7382180D460004079AE /* AdornedRulerPanel.h */,
 				28FB12230A3790DF006F0917 /* AllThemeResources.h */,
 				1790AFCC09883BFD008A330A /* Audacity.h */,
 				1790AFCF09883BFD008A330A /* AudacityApp.h */,
@@ -4240,7 +4463,6 @@
 				1790B0ED09883BFD008A330A /* TrackPanel.h */,
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */,
-				5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */,
 				5E52335F1EFDD57D001E4BB8 /* TrackPanelDrawingContext.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */,
@@ -4262,6 +4484,7 @@
 				1790AFFD09883BFD008A330A /* effects */,
 				1790B06209883BFD008A330A /* export */,
 				1790B07D09883BFD008A330A /* import */,
+				5E19D648217D50AB0024D0B1 /* menus */,
 				1841B4FD0E00AD3D00F386E9 /* ondemand */,
 				1790B0B509883BFD008A330A /* prefs */,
 				2897F6DB0AB3DB5A003C20C5 /* toolbars */,
@@ -4764,10 +4987,10 @@
 		280A8B3D19F440010091DE70 /* audacity */ = {
 			isa = PBXGroup;
 			children = (
-				28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */,
+				5E9985D0218D0A7D00278D81 /* ComponentInterface.h */,
 				280A8B3E19F440160091DE70 /* ConfigInterface.h */,
+				28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */,
 				280A8B3F19F440160091DE70 /* EffectInterface.h */,
-				280A8B4019F440160091DE70 /* IdentInterface.h */,
 				280A8B4119F440160091DE70 /* ImporterInterface.h */,
 				280A8B4219F440160091DE70 /* ModuleInterface.h */,
 				280A8B4319F440160091DE70 /* PluginInterface.h */,
@@ -5557,9 +5780,11 @@
 				2860736B1B1ED77100850872 /* limiter.ny */,
 				28AA281B0F267A2D008AED9E /* lowpass.ny */,
 				28ED7B701A1C77B0008A01D9 /* notch.ny */,
+				AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */,
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
 				28D34C7F1D9F52E200D4FB61 /* rhythmtrack.ny */,
 				28AA281D0F267A2D008AED9E /* rissetdrum.ny */,
+				AAB5D42E216A9764006136B4 /* rms.ny */,
 				28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */,
 				AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */,
 				28AA281E0F267A2D008AED9E /* SilenceMarker.ny */,
@@ -5580,6 +5805,7 @@
 			isa = PBXGroup;
 			children = (
 				2808026A0F32C11F0021001D /* rawwaves */,
+				AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */,
 				2808025C0F32C11F0021001D /* dspprims.lsp */,
 				2808025D0F32C11F0021001D /* envelopes.lsp */,
 				2808025E0F32C11F0021001D /* equalizer.lsp */,
@@ -5885,6 +6111,27 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
+		5E19D648217D50AB0024D0B1 /* menus */ = {
+			isa = PBXGroup;
+			children = (
+				5E08E00F217E4467003C6C99 /* ClipMenus.cpp */,
+				5E36A09F217FA2430068E082 /* EditMenus.cpp */,
+				5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */,
+				5E36A0A1217FA2430068E082 /* FileMenus.cpp */,
+				5E36A0B3217FC6540068E082 /* HelpMenus.cpp */,
+				5E08E013217E5F66003C6C99 /* LabelMenus.cpp */,
+				5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */,
+				5E19D64C217D51190024D0B1 /* PluginMenus.cpp */,
+				5E36A0A3217FA2430068E082 /* SelectMenus.cpp */,
+				5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */,
+				5E36A0A4217FA2430068E082 /* TrackMenus.cpp */,
+				5E36A0A5217FA2430068E082 /* TransportMenus.cpp */,
+				5E36A0A6217FA2430068E082 /* ViewMenus.cpp */,
+				5E36A0A7217FA2430068E082 /* WindowMenus.cpp */,
+			);
+			name = menus;
+			sourceTree = "<group>";
+		};
 		5E74D2DB1CC4429700D88B0B /* tracks */ = {
 			isa = PBXGroup;
 			children = (
@@ -5998,6 +6245,135 @@
 				5E667A5F1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.h */,
 			);
 			path = ui;
+			sourceTree = "<group>";
+		};
+		65326EA82253D70900844F28 /* mpglib */ = {
+			isa = PBXGroup;
+			children = (
+				65326EA92253D70900844F28 /* AUTHORS */,
+				65326EAA2253D70900844F28 /* common.c */,
+				65326EAB2253D70900844F28 /* common.h */,
+				65326EAC2253D70900844F28 /* config.h */,
+				65326EAD2253D70900844F28 /* dct64_i386.c */,
+				65326EAE2253D70900844F28 /* dct64_i386.h */,
+				65326EAF2253D70900844F28 /* decode_i386.c */,
+				65326EB02253D70900844F28 /* decode_i386.h */,
+				65326EB12253D70900844F28 /* depcomp */,
+				65326EB22253D70900844F28 /* huffman.h */,
+				65326EB32253D70900844F28 /* interface.c */,
+				65326EB42253D70900844F28 /* interface.h */,
+				65326EB52253D70900844F28 /* junk */,
+				65326EB82253D70900844F28 /* l2tables.h */,
+				65326EB92253D70900844F28 /* lame.h */,
+				65326EBA2253D70900844F28 /* layer1.c */,
+				65326EBB2253D70900844F28 /* layer1.h */,
+				65326EBC2253D70900844F28 /* layer2.c */,
+				65326EBD2253D70900844F28 /* layer2.h */,
+				65326EBE2253D70900844F28 /* layer3.c */,
+				65326EBF2253D70900844F28 /* layer3.h */,
+				65326EC02253D70900844F28 /* Makefile.am */,
+				65326EC12253D70900844F28 /* Makefile.in */,
+				65326EC22253D70900844F28 /* mpg123.h */,
+				65326EC32253D70900844F28 /* mpglib.h */,
+				65326EC42253D70900844F28 /* README */,
+				65326EC52253D70900844F28 /* tabinit.c */,
+				65326EC62253D70900844F28 /* tabinit.h */,
+			);
+			path = mpglib;
+			sourceTree = "<group>";
+		};
+		65326EB52253D70900844F28 /* junk */ = {
+			isa = PBXGroup;
+			children = (
+				65326EB62253D70900844F28 /* machine.h */,
+				65326EB72253D70900844F28 /* version.h */,
+			);
+			path = junk;
+			sourceTree = "<group>";
+		};
+		65326EDF2253DA5F00844F28 /* libmp3lame */ = {
+			isa = PBXGroup;
+			children = (
+				6563A8092257A314001CB678 /* lame.h */,
+				65326EE02253DA5F00844F28 /* bitstream.c */,
+				65326EE12253DA5F00844F28 /* bitstream.h */,
+				65326EE22253DA5F00844F28 /* depcomp */,
+				65326EE32253DA5F00844F28 /* encoder.c */,
+				65326EE42253DA5F00844F28 /* encoder.h */,
+				65326EE52253DA5F00844F28 /* fft.c */,
+				65326EE62253DA5F00844F28 /* fft.h */,
+				65326EE72253DA5F00844F28 /* gain_analysis.c */,
+				65326EE82253DA5F00844F28 /* gain_analysis.h */,
+				65326EE92253DA5F00844F28 /* i386 */,
+				65326EF52253DA5F00844F28 /* id3tag.c */,
+				65326EF62253DA5F00844F28 /* id3tag.h */,
+				65326EF72253DA5F00844F28 /* l3side.h */,
+				65326EF82253DA5F00844F28 /* lame-analysis.h */,
+				65326EF92253DA5F00844F28 /* lame.c */,
+				65326EFA2253DA5F00844F28 /* lame.rc */,
+				65326EFB2253DA5F00844F28 /* lame_global_flags.h */,
+				65326EFC2253DA5F00844F28 /* lameerror.h */,
+				65326EFD2253DA5F00844F28 /* logoe.ico */,
+				65326EFE2253DA5F00844F28 /* machine.h */,
+				65326EFF2253DA5F00844F28 /* Makefile.am */,
+				65326F002253DA5F00844F28 /* Makefile.in */,
+				65326F012253DA5F00844F28 /* mpglib_interface.c */,
+				65326F022253DA5F00844F28 /* newmdct.c */,
+				65326F032253DA5F00844F28 /* newmdct.h */,
+				65326F042253DA5F00844F28 /* presets.c */,
+				65326F052253DA5F00844F28 /* psymodel.c */,
+				65326F062253DA5F00844F28 /* psymodel.h */,
+				65326F072253DA5F00844F28 /* quantize.c */,
+				65326F082253DA5F00844F28 /* quantize.h */,
+				65326F092253DA5F00844F28 /* quantize_pvt.c */,
+				65326F0A2253DA5F00844F28 /* quantize_pvt.h */,
+				65326F0B2253DA5F00844F28 /* reservoir.c */,
+				65326F0C2253DA5F00844F28 /* reservoir.h */,
+				65326F0D2253DA5F00844F28 /* set_get.c */,
+				65326F0E2253DA5F00844F28 /* set_get.h */,
+				65326F0F2253DA5F00844F28 /* tables.c */,
+				65326F102253DA5F00844F28 /* tables.h */,
+				65326F112253DA5F00844F28 /* takehiro.c */,
+				65326F122253DA5F00844F28 /* util.c */,
+				65326F132253DA5F00844F28 /* util.h */,
+				65326F142253DA5F00844F28 /* vbrquantize.c */,
+				65326F152253DA5F00844F28 /* vbrquantize.h */,
+				65326F162253DA5F00844F28 /* VbrTag.c */,
+				65326F172253DA5F00844F28 /* VbrTag.h */,
+				65326F182253DA5F00844F28 /* vector */,
+				65326F1D2253DA5F00844F28 /* version.c */,
+				65326F1E2253DA5F00844F28 /* version.h */,
+			);
+			path = libmp3lame;
+			sourceTree = "<group>";
+		};
+		65326EE92253DA5F00844F28 /* i386 */ = {
+			isa = PBXGroup;
+			children = (
+				65326EEA2253DA5F00844F28 /* choose_table.nas */,
+				65326EEB2253DA5F00844F28 /* cpu_feat.nas */,
+				65326EEC2253DA5F00844F28 /* fft.nas */,
+				65326EED2253DA5F00844F28 /* fft3dn.nas */,
+				65326EEE2253DA5F00844F28 /* fftfpu.nas */,
+				65326EEF2253DA5F00844F28 /* fftsse.nas */,
+				65326EF02253DA5F00844F28 /* ffttbl.nas */,
+				65326EF12253DA5F00844F28 /* Makefile.am */,
+				65326EF22253DA5F00844F28 /* Makefile.in */,
+				65326EF32253DA5F00844F28 /* nasm.h */,
+				65326EF42253DA5F00844F28 /* scalar.nas */,
+			);
+			path = i386;
+			sourceTree = "<group>";
+		};
+		65326F182253DA5F00844F28 /* vector */ = {
+			isa = PBXGroup;
+			children = (
+				65326F192253DA5F00844F28 /* lame_intrin.h */,
+				65326F1A2253DA5F00844F28 /* Makefile.am */,
+				65326F1B2253DA5F00844F28 /* Makefile.in */,
+				65326F1C2253DA5F00844F28 /* xmm_quantize_sub.c */,
+			);
+			path = vector;
 			sourceTree = "<group>";
 		};
 		ED05D0FF0E50AD5600CC4BD3 /* libscorealign */ = {
@@ -6643,6 +7019,61 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		65326E6D2253D2BE00844F28 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				656854742258B372005FC068 /* config.h in Headers */,
+				65326F292253DA5F00844F28 /* id3tag.h in Headers */,
+				65326F3F2253DA5F00844F28 /* tables.h in Headers */,
+				65326F272253DA5F00844F28 /* nasm.h in Headers */,
+				65326F3B2253DA5F00844F28 /* reservoir.h in Headers */,
+				65326F422253DA5F00844F28 /* util.h in Headers */,
+				65326F242253DA5F00844F28 /* fft.h in Headers */,
+				65326F442253DA5F00844F28 /* vbrquantize.h in Headers */,
+				65326F372253DA5F00844F28 /* quantize.h in Headers */,
+				65326F2A2253DA5F00844F28 /* l3side.h in Headers */,
+				65326F3D2253DA5F00844F28 /* set_get.h in Headers */,
+				65326F202253DA5F00844F28 /* bitstream.h in Headers */,
+				65326F2B2253DA5F00844F28 /* lame-analysis.h in Headers */,
+				65326F392253DA5F00844F28 /* quantize_pvt.h in Headers */,
+				65326F352253DA5F00844F28 /* psymodel.h in Headers */,
+				65326F222253DA5F00844F28 /* encoder.h in Headers */,
+				65326F2F2253DA5F00844F28 /* machine.h in Headers */,
+				65326F262253DA5F00844F28 /* gain_analysis.h in Headers */,
+				65326F322253DA5F00844F28 /* newmdct.h in Headers */,
+				65326F2E2253DA5F00844F28 /* lameerror.h in Headers */,
+				65326F472253DA5F00844F28 /* lame_intrin.h in Headers */,
+				65326F462253DA5F00844F28 /* VbrTag.h in Headers */,
+				65326F2D2253DA5F00844F28 /* lame_global_flags.h in Headers */,
+				65326F4A2253DA5F00844F28 /* version.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65326EA02253D68900844F28 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				656854752258B483005FC068 /* encoder.h in Headers */,
+				65326ECE2253D70900844F28 /* huffman.h in Headers */,
+				65326ED82253D70900844F28 /* layer2.h in Headers */,
+				65326ED32253D70900844F28 /* l2tables.h in Headers */,
+				65326ECD2253D70900844F28 /* decode_i386.h in Headers */,
+				65326EDC2253D70900844F28 /* mpglib.h in Headers */,
+				65326EC92253D70900844F28 /* config.h in Headers */,
+				65326ED62253D70900844F28 /* layer1.h in Headers */,
+				65326EDB2253D70900844F28 /* mpg123.h in Headers */,
+				65326EC82253D70900844F28 /* common.h in Headers */,
+				65326ED42253D70900844F28 /* lame.h in Headers */,
+				65326EDE2253D70900844F28 /* tabinit.h in Headers */,
+				65326ED02253D70900844F28 /* interface.h in Headers */,
+				65326ED22253D70900844F28 /* version.h in Headers */,
+				65326EDA2253D70900844F28 /* layer3.h in Headers */,
+				65326ECB2253D70900844F28 /* dct64_i386.h in Headers */,
+				65326ED12253D70900844F28 /* machine.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ED15212C163C227C00451B5F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -6912,6 +7343,8 @@
 				2800FE280FF323C0005CA9E5 /* PBXTargetDependency */,
 				17C99D4F098970800041B1BC /* PBXTargetDependency */,
 				17C99D4D098970800041B1BC /* PBXTargetDependency */,
+				65326F4E2253E03200844F28 /* PBXTargetDependency */,
+				65326F502253E03200844F28 /* PBXTargetDependency */,
 				176A1B6E098B7C7200DC73B4 /* PBXTargetDependency */,
 				17C99D4B098970800041B1BC /* PBXTargetDependency */,
 				28E237270E515E1300281398 /* PBXTargetDependency */,
@@ -7062,6 +7495,38 @@
 			productReference = 28FADDEF1833C3C500BA4141 /* libexpat.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		65326E6C2253D2BE00844F28 /* libmp3lame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65326E992253D2BE00844F28 /* Build configuration list for PBXNativeTarget "libmp3lame" */;
+			buildPhases = (
+				65326E6D2253D2BE00844F28 /* Headers */,
+				65326E852253D2BE00844F28 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libmp3lame;
+			productName = libsndfile;
+			productReference = 65326E9E2253D2BE00844F28 /* liblibmp3lame.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		65326E9F2253D68900844F28 /* libmpg123 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65326EA22253D68900844F28 /* Build configuration list for PBXNativeTarget "libmpg123" */;
+			buildPhases = (
+				65326EA02253D68900844F28 /* Headers */,
+				65326EA12253D68900844F28 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libmpg123;
+			productName = libsndfile;
+			productReference = 65326EA72253D68900844F28 /* liblibmpg123.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		ED15212F163C227C00451B5F /* libsoxr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ED152148163C22A700451B5F /* Build configuration list for PBXNativeTarget "libsoxr" */;
@@ -7142,6 +7607,8 @@
 				176EEC1D09A2F2DD00188F3B /* libFLAC++ */,
 				17073F610988E121008541CC /* libid3tag */,
 				17073FC30988E561008541CC /* libmad */,
+				65326E6C2253D2BE00844F28 /* libmp3lame */,
+				65326E9F2253D68900844F28 /* libmpg123 */,
 				176A1A5A098B7B8D00DC73B4 /* libnyquist */,
 				170740D30988F820008541CC /* libvorbis */,
 				17073FFD0988EA60008541CC /* libogg */,
@@ -7170,9 +7637,12 @@
 			files = (
 				5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
+				AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
+				AAA677852243BA4400D42A28 /* nyquist-plug-in-installer.ny in Resources */,
+				AAB5D42F216A9764006136B4 /* rms.ny in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
@@ -7774,6 +8244,7 @@
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
 				5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */,
+				5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */,
 				1790B14309883BFD008A330A /* Noise.cpp in Sources */,
 				1790B14409883BFD008A330A /* NoiseRemoval.cpp in Sources */,
 				1790B14509883BFD008A330A /* Normalize.cpp in Sources */,
@@ -7781,6 +8252,7 @@
 				1790B14709883BFD008A330A /* Nyquist.cpp in Sources */,
 				1790B14809883BFD008A330A /* Phaser.cpp in Sources */,
 				1790B14A09883BFD008A330A /* Repeat.cpp in Sources */,
+				5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */,
 				5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */,
 				1790B14B09883BFD008A330A /* Reverse.cpp in Sources */,
 				1790B14C09883BFD008A330A /* Silence.cpp in Sources */,
@@ -7827,6 +8299,7 @@
 				1790B17509883BFD008A330A /* Legacy.cpp in Sources */,
 				1790B17809883BFD008A330A /* Menus.cpp in Sources */,
 				1790B17A09883BFD008A330A /* Mix.cpp in Sources */,
+				5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */,
 				1790B17C09883BFD008A330A /* NoteTrack.cpp in Sources */,
 				1790B17D09883BFD008A330A /* PitchName.cpp in Sources */,
 				1790B17E09883BFD008A330A /* PlatformCompatibility.cpp in Sources */,
@@ -7840,6 +8313,8 @@
 				5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */,
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
+				5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */,
+				5E36A0B2217FC5A10068E082 /* (null) in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,
 				5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */,
 				1790B18A09883BFD008A330A /* Printing.cpp in Sources */,
@@ -7848,6 +8323,7 @@
 				1790B18D09883BFD008A330A /* RingBuffer.cpp in Sources */,
 				1790B18E09883BFD008A330A /* SampleFormat.cpp in Sources */,
 				1790B19009883BFD008A330A /* Sequence.cpp in Sources */,
+				5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */,
 				1790B19109883BFD008A330A /* Shuttle.cpp in Sources */,
 				1790B19209883BFD008A330A /* Spectrum.cpp in Sources */,
 				1790B19309883BFD008A330A /* Tags.cpp in Sources */,
@@ -7875,13 +8351,13 @@
 				1790B1AA09883BFD008A330A /* XMLTagHandler.cpp in Sources */,
 				5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */,
 				17190D24098A3F0B004583C6 /* AColor.cpp in Sources */,
+				5E36A0AD217FA2430068E082 /* TrackMenus.cpp in Sources */,
 				17190D25098A3F15004583C6 /* AboutDialog.cpp in Sources */,
 				174D9031098C78AF00D5909F /* CommandManager.cpp in Sources */,
 				174D9033098C78AF00D5909F /* Keyboard.cpp in Sources */,
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
-				5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */,
 				5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */,
 				28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */,
 				28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */,
@@ -7909,6 +8385,7 @@
 				2897F6F30AB3DB5A003C20C5 /* MixerToolBar.cpp in Sources */,
 				2897F6F40AB3DB5A003C20C5 /* SelectionBar.cpp in Sources */,
 				2897F6F50AB3DB5A003C20C5 /* ToolBar.cpp in Sources */,
+				5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */,
 				2897F6F60AB3DB5A003C20C5 /* ToolDock.cpp in Sources */,
 				5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */,
 				2897F6F70AB3DB5A003C20C5 /* ToolManager.cpp in Sources */,
@@ -7957,12 +8434,14 @@
 				5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */,
 				2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */,
 				2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */,
+				5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */,
 				28D587CB0E264CF4009C7DEA /* LoadLV2.cpp in Sources */,
 				5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */,
 				28D587CC0E264CF4009C7DEA /* LV2Effect.cpp in Sources */,
 				28DA07390E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp in Sources */,
 				186CCE6D0E51F47400659159 /* ODDecodeBlockFile.cpp in Sources */,
 				186CCE720E51F48500659159 /* ODDecodeFlacTask.cpp in Sources */,
+				5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */,
 				186CCE730E51F48500659159 /* ODDecodeTask.cpp in Sources */,
 				186CCEA40E523C8E00659159 /* Profiler.cpp in Sources */,
 				18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */,
@@ -7988,6 +8467,7 @@
 				5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */,
 				5E667A691F0D723A00C942A5 /* TrackPanelResizerCell.cpp in Sources */,
 				28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */,
+				5E36A0AC217FA2430068E082 /* SelectMenus.cpp in Sources */,
 				28FBCA6A1B42E01100BB3405 /* AUControl.mm in Sources */,
 				28D540060FD1912A00FA7C75 /* CommandBuilder.cpp in Sources */,
 				28D540070FD1912A00FA7C75 /* CommandHandler.cpp in Sources */,
@@ -8035,6 +8515,7 @@
 				5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */,
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,
+				5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */,
 				28884947131B6CF600B59735 /* bn.po in Sources */,
 				5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */,
 				AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */,
@@ -8046,6 +8527,7 @@
 				2888494D131B6CF600B59735 /* da.po in Sources */,
 				2888494E131B6CF600B59735 /* de.po in Sources */,
 				2888494F131B6CF600B59735 /* el.po in Sources */,
+				5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */,
 				28884950131B6CF600B59735 /* es.po in Sources */,
 				28884951131B6CF600B59735 /* eu.po in Sources */,
 				28884952131B6CF600B59735 /* fa.po in Sources */,
@@ -8093,10 +8575,12 @@
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
+				5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
 				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
+				5E36A0AA217FA2430068E082 /* FileMenus.cpp in Sources */,
 				5E15126D1DB0010C00702E29 /* CommonTrackPanelCell.cpp in Sources */,
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
@@ -8107,6 +8591,7 @@
 				5E7396621DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp in Sources */,
 				EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
 				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
+				5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */,
 				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 				2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */,
 				28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */,
@@ -8278,6 +8763,49 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		65326E852253D2BE00844F28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65326F452253DA5F00844F28 /* VbrTag.c in Sources */,
+				65326F342253DA5F00844F28 /* psymodel.c in Sources */,
+				65326F482253DA5F00844F28 /* xmm_quantize_sub.c in Sources */,
+				65326F412253DA5F00844F28 /* util.c in Sources */,
+				65326F492253DA5F00844F28 /* version.c in Sources */,
+				65326F232253DA5F00844F28 /* fft.c in Sources */,
+				65326F402253DA5F00844F28 /* takehiro.c in Sources */,
+				65326F282253DA5F00844F28 /* id3tag.c in Sources */,
+				65326F362253DA5F00844F28 /* quantize.c in Sources */,
+				65326F2C2253DA5F00844F28 /* lame.c in Sources */,
+				65326F212253DA5F00844F28 /* encoder.c in Sources */,
+				65326F3E2253DA5F00844F28 /* tables.c in Sources */,
+				65326F312253DA5F00844F28 /* newmdct.c in Sources */,
+				65326F3C2253DA5F00844F28 /* set_get.c in Sources */,
+				65326F332253DA5F00844F28 /* presets.c in Sources */,
+				65326F252253DA5F00844F28 /* gain_analysis.c in Sources */,
+				65326F432253DA5F00844F28 /* vbrquantize.c in Sources */,
+				65326F382253DA5F00844F28 /* quantize_pvt.c in Sources */,
+				65326F1F2253DA5F00844F28 /* bitstream.c in Sources */,
+				65326F302253DA5F00844F28 /* mpglib_interface.c in Sources */,
+				65326F3A2253DA5F00844F28 /* reservoir.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65326EA12253D68900844F28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65326ED92253D70900844F28 /* layer3.c in Sources */,
+				65326ED72253D70900844F28 /* layer2.c in Sources */,
+				65326ECC2253D70900844F28 /* decode_i386.c in Sources */,
+				65326ED52253D70900844F28 /* layer1.c in Sources */,
+				65326ECF2253D70900844F28 /* interface.c in Sources */,
+				65326EDD2253D70900844F28 /* tabinit.c in Sources */,
+				65326EC72253D70900844F28 /* common.c in Sources */,
+				65326ECA2253D70900844F28 /* dct64_i386.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ED15212D163C227C00451B5F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8422,6 +8950,16 @@
 			target = 28E67F510A3A160D0021D89F /* portaudio-v19 */;
 			targetProxy = 28E67F630A3A16AA0021D89F /* PBXContainerItemProxy */;
 		};
+		65326F4E2253E03200844F28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 65326E6C2253D2BE00844F28 /* libmp3lame */;
+			targetProxy = 65326F4D2253E03200844F28 /* PBXContainerItemProxy */;
+		};
+		65326F502253E03200844F28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 65326E9F2253D68900844F28 /* libmpg123 */;
+			targetProxy = 65326F4F2253E03200844F28 /* PBXContainerItemProxy */;
+		};
 		ED1521FF163C2D3200451B5F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = ED15212F163C227C00451B5F /* libsoxr */;
@@ -8519,11 +9057,14 @@
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
@@ -8537,7 +9078,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = debug;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -8575,6 +9116,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -8843,11 +9385,14 @@
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
@@ -8861,7 +9406,7 @@
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = release;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
-				WX_PREFIX = /usr/local;
+				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
@@ -8901,6 +9446,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -9211,6 +9757,1034 @@
 			};
 			name = Release;
 		};
+		5EC18AA0219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
+				CONFIG_DEBUG = yes;
+				CONFIG_FLAGS = "";
+				CONFIG_STATIC = no;
+				CONFIG_UNICODE = yes;
+				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
+				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
+				FFMPEG_PREFIX = /usr/local;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
+				INFOPLIST_PREPROCESS = YES;
+				KEEP_PRIVATE_EXTERNS = YES;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
+				SDKROOT = macosx10.7;
+				SSE_CPPFLAGS = "";
+				TOPLEVEL = ..;
+				WARNING_CFLAGS = "";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
+				WX_CXXFLAGS = "$(WX_CFLAGS)";
+				WX_FLAVOR = debug;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_PREFIX = "/usr/local/$(ARCHS)";
+				WX_VER = 3.1;
+				ZERO_LINK = NO;
+			};
+			name = Debug64;
+		};
+		5EC18AA1219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreAudioKit,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
+				PRODUCT_NAME = Audacity;
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Debug64;
+		};
+		5EC18AA2219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Header;
+			};
+			name = Debug64;
+		};
+		5EC18AA3219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				PRODUCT_NAME = expat;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = Debug64;
+		};
+		5EC18AA4219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					FLAC__NO_ASM,
+					"FLaC__INLINE=__inline__",
+					NDEBUG,
+				);
+				PRODUCT_NAME = FLAC;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AA5219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					NDEBUG,
+					"FLaC__INLINE=__inline__",
+				);
+				PRODUCT_NAME = "FLAC++";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
+			};
+			name = Debug64;
+		};
+		5EC18AA6219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
+			};
+			name = Debug64;
+		};
+		5EC18AA7219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
+				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
+			};
+			name = Debug64;
+		};
+		5EC18AA8219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CMTSTUFF,
+					EXT,
+				);
+				PRODUCT_NAME = nyquist;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+			};
+			name = Debug64;
+		};
+		5EC18AA9219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DARWIN,
+					USE_MEMORY_H,
+				);
+				PRODUCT_NAME = vorbis;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AAA219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Debug64;
+		};
+		5EC18AAB219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
+			};
+			name = Debug64;
+		};
+		5EC18AAC219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
+			};
+			name = Debug64;
+		};
+		5EC18AAD219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
+				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AAE219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
+					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
+				);
+				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AAF219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+					"$(WX_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB0219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_SCRIPT_PIPE,
+					CC_HASVISIBILITY,
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-script-pipe";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB1219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"STDC_HEADERS=1",
+					"HAVE_SYS_TYPES_H=1",
+					"HAVE_SYS_STAT_H=1",
+					"HAVE_STDLIB_H=1",
+					"HAVE_STRING_H=1",
+					"HAVE_MEMORY_H=1",
+					"HAVE_STRINGS_H=1",
+					"HAVE_INTTYPES_H=1",
+					"HAVE_STDINT_H=1",
+					"HAVE_UNISTD_H=1",
+					"HAVE_DLFCN_H=1",
+					"WORDS_BIGENDIAN=1",
+					"SIZEOF_SHORT=2",
+					"SIZEOF_INT=4",
+					"SIZEOF_LONG=4",
+					"HAVE_NANOSLEEP=1",
+					"PA_USE_COREAUDIO=1",
+				);
+				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB2219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB3219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
+				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB4219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB5219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB6219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB7219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		5EC18AB8219B5AFD000EFBF9 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
+				PREBINDING = NO;
+				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Debug64;
+		};
+		5EC18AB9219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
+				CONFIG_DEBUG = no;
+				CONFIG_FLAGS = "";
+				CONFIG_STATIC = no;
+				CONFIG_UNICODE = yes;
+				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
+				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
+				FFMPEG_PREFIX = /usr/local;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
+				INFOPLIST_PREPROCESS = YES;
+				KEEP_PRIVATE_EXTERNS = YES;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-headerpad_max_install_names",
+				);
+				SDKROOT = macosx10.7;
+				SSE_CPPFLAGS = "";
+				TOPLEVEL = ..;
+				WARNING_CFLAGS = "";
+				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
+				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
+				WX_CXXFLAGS = "$(WX_CFLAGS)";
+				WX_FLAVOR = release;
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_PREFIX = "/usr/local/$(ARCHS)";
+				WX_VER = 3.1;
+				ZERO_LINK = NO;
+			};
+			name = Release64;
+		};
+		5EC18ABA219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Release\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-headerpad_max_install_names",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreAudioKit,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
+				PRODUCT_NAME = Audacity;
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Release64;
+		};
+		5EC18ABB219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Header;
+			};
+			name = Release64;
+		};
+		5EC18ABC219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				PRODUCT_NAME = expat;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = Release64;
+		};
+		5EC18ABD219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					FLAC__NO_ASM,
+					"FLaC__INLINE=__inline__",
+					NDEBUG,
+				);
+				PRODUCT_NAME = FLAC;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18ABE219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					NDEBUG,
+					"FLaC__INLINE=__inline__",
+				);
+				PRODUCT_NAME = "FLAC++";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
+			};
+			name = Release64;
+		};
+		5EC18ABF219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
+			};
+			name = Release64;
+		};
+		5EC18AC0219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "-DFPM_INTEL";
+				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
+			};
+			name = Release64;
+		};
+		5EC18AC1219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CMTSTUFF,
+					EXT,
+				);
+				PRODUCT_NAME = nyquist;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+			};
+			name = Release64;
+		};
+		5EC18AC2219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DARWIN,
+					USE_MEMORY_H,
+				);
+				PRODUCT_NAME = vorbis;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18AC3219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
+			};
+			name = Release64;
+		};
+		5EC18AC4219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
+			};
+			name = Release64;
+		};
+		5EC18AC5219B5B01000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
+			};
+			name = Release64;
+		};
+		5EC18AC6219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
+				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC7219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
+					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
+				);
+				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC8219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+					"$(WX_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Release64;
+		};
+		5EC18AC9219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_SCRIPT_PIPE,
+					CC_HASVISIBILITY,
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-script-pipe";
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
+				ZERO_LINK = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACA219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"STDC_HEADERS=1",
+					"HAVE_SYS_TYPES_H=1",
+					"HAVE_SYS_STAT_H=1",
+					"HAVE_STDLIB_H=1",
+					"HAVE_STRING_H=1",
+					"HAVE_MEMORY_H=1",
+					"HAVE_STRINGS_H=1",
+					"HAVE_INTTYPES_H=1",
+					"HAVE_STDINT_H=1",
+					"HAVE_UNISTD_H=1",
+					"HAVE_DLFCN_H=1",
+					"WORDS_BIGENDIAN=1",
+					"SIZEOF_SHORT=2",
+					"SIZEOF_INT=4",
+					"SIZEOF_LONG=4",
+					"HAVE_NANOSLEEP=1",
+					"PA_USE_COREAUDIO=1",
+				);
+				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACB219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACC219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
+				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACD219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18ACE219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
+			};
+			name = Release64;
+		};
+		5EC18ACF219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
+			};
+			name = Release64;
+		};
+		5EC18AD0219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
+		5EC18AD1219B5B02000EFBF9 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
+				PREBINDING = NO;
+				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
+			};
+			name = Release64;
+		};
+		65326E9A2253D2BE00844F28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_MPGLIB,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mp3lame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/libmp3lame/**";
+			};
+			name = Debug;
+		};
+		65326E9B2253D2BE00844F28 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_MPGLIB,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mp3lame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/libmp3lame/**";
+			};
+			name = Debug64;
+		};
+		65326E9C2253D2BE00844F28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_MPGLIB,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mp3lame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/libmp3lame/**";
+			};
+			name = Release;
+		};
+		65326E9D2253D2BE00844F28 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_MPGLIB,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mp3lame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/libmp3lame/**";
+			};
+			name = Release64;
+		};
+		65326EA32253D68900844F28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					USE_LAYER_2,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mpg123;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/mpglib/**";
+			};
+			name = Debug;
+		};
+		65326EA42253D68900844F28 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					USE_LAYER_2,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mpg123;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/mpglib/**";
+			};
+			name = Debug64;
+		};
+		65326EA52253D68900844F28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					USE_LAYER_2,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mpg123;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/mpglib/**";
+			};
+			name = Release;
+		};
+		65326EA62253D68900844F28 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					USE_LAYER_2,
+					HAVE_CONFIG_H,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				PRODUCT_NAME = mpg123;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/lib-src/mpglib/**";
+			};
+			name = Release64;
+		};
 		ED152132163C227C00451B5F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -9338,7 +10912,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CD0DEA74F100671EA4 /* Debug */,
+				5EC18AB4219B5AFD000EFBF9 /* Debug64 */,
 				288052E20DEA74FD00671EA4 /* Release */,
+				5EC18ACD219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9347,7 +10923,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D10DEA74F100671EA4 /* Debug */,
+				5EC18AA6219B5AFD000EFBF9 /* Debug64 */,
 				288052E60DEA74FD00671EA4 /* Release */,
+				5EC18ABF219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9356,7 +10934,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D20DEA74F100671EA4 /* Debug */,
+				5EC18AA7219B5AFD000EFBF9 /* Debug64 */,
 				288052E70DEA74FD00671EA4 /* Release */,
+				5EC18AC0219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9365,7 +10945,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D50DEA74F100671EA4 /* Debug */,
+				5EC18AAA219B5AFD000EFBF9 /* Debug64 */,
 				288052EA0DEA74FD00671EA4 /* Release */,
+				5EC18AC3219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9374,7 +10956,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D70DEA74F100671EA4 /* Debug */,
+				5EC18AAB219B5AFD000EFBF9 /* Debug64 */,
 				288052EC0DEA74FD00671EA4 /* Release */,
+				5EC18AC4219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9383,7 +10967,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DB0DEA74F100671EA4 /* Debug */,
+				5EC18AB5219B5AFD000EFBF9 /* Debug64 */,
 				288052F00DEA74FD00671EA4 /* Release */,
+				5EC18ACE219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9392,7 +10978,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DA0DEA74F100671EA4 /* Debug */,
+				5EC18AB3219B5AFD000EFBF9 /* Debug64 */,
 				288052EF0DEA74FD00671EA4 /* Release */,
+				5EC18ACC219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9401,7 +10989,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D40DEA74F100671EA4 /* Debug */,
+				5EC18AA9219B5AFD000EFBF9 /* Debug64 */,
 				288052E90DEA74FD00671EA4 /* Release */,
+				5EC18AC2219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9410,7 +11000,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D30DEA74F100671EA4 /* Debug */,
+				5EC18AA8219B5AFD000EFBF9 /* Debug64 */,
 				288052E80DEA74FD00671EA4 /* Release */,
+				5EC18AC1219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9419,7 +11011,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CF0DEA74F100671EA4 /* Debug */,
+				5EC18AA4219B5AFD000EFBF9 /* Debug64 */,
 				288052E40DEA74FD00671EA4 /* Release */,
+				5EC18ABD219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9428,7 +11022,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D00DEA74F100671EA4 /* Debug */,
+				5EC18AA5219B5AFD000EFBF9 /* Debug64 */,
 				288052E50DEA74FD00671EA4 /* Release */,
+				5EC18ABE219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9437,7 +11033,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CA0DEA74F100671EA4 /* Debug */,
+				5EC18AA0219B5AFD000EFBF9 /* Debug64 */,
 				288052DF0DEA74FD00671EA4 /* Release */,
+				5EC18AB9219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9446,7 +11044,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052CB0DEA74F100671EA4 /* Debug */,
+				5EC18AA1219B5AFD000EFBF9 /* Debug64 */,
 				288052E00DEA74FD00671EA4 /* Release */,
+				5EC18ABA219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9455,7 +11055,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2800FE090FF322D5005CA9E5 /* Debug */,
+				5EC18AB2219B5AFD000EFBF9 /* Debug64 */,
 				2800FE0B0FF322D5005CA9E5 /* Release */,
+				5EC18ACB219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9464,7 +11066,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DC0DEA74F100671EA4 /* Debug */,
+				5EC18AB6219B5AFD000EFBF9 /* Debug64 */,
 				288052F10DEA74FD00671EA4 /* Release */,
+				5EC18ACF219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9473,7 +11077,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D80DEA74F100671EA4 /* Debug */,
+				5EC18AAD219B5AFD000EFBF9 /* Debug64 */,
 				288052ED0DEA74FD00671EA4 /* Release */,
+				5EC18AC6219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9482,7 +11088,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				286229AD181CE4B600E1AD1A /* Debug */,
+				5EC18AAE219B5AFD000EFBF9 /* Debug64 */,
 				286229AF181CE4B600E1AD1A /* Release */,
+				5EC18AC7219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9491,7 +11099,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052DE0DEA74F100671EA4 /* Debug */,
+				5EC18AB0219B5AFD000EFBF9 /* Debug64 */,
 				288052F30DEA74FD00671EA4 /* Release */,
+				5EC18AC9219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9500,7 +11110,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28D489261B5F052C00A2E4DF /* Debug */,
+				5EC18AA2219B5AFD000EFBF9 /* Debug64 */,
 				28D489271B5F052C00A2E4DF /* Release */,
+				5EC18ABB219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9509,7 +11121,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28E237050E515D1D00281398 /* Debug */,
+				5EC18AB7219B5AFD000EFBF9 /* Debug64 */,
 				28E237070E515D1D00281398 /* Release */,
+				5EC18AD0219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9518,7 +11132,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288052D90DEA74F100671EA4 /* Debug */,
+				5EC18AB1219B5AFD000EFBF9 /* Debug64 */,
 				288052EE0DEA74FD00671EA4 /* Release */,
+				5EC18ACA219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9527,7 +11143,31 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28FADDEC1833C3C500BA4141 /* Debug */,
+				5EC18AA3219B5AFD000EFBF9 /* Debug64 */,
 				28FADDEE1833C3C500BA4141 /* Release */,
+				5EC18ABC219B5B01000EFBF9 /* Release64 */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		65326E992253D2BE00844F28 /* Build configuration list for PBXNativeTarget "libmp3lame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65326E9A2253D2BE00844F28 /* Debug */,
+				65326E9B2253D2BE00844F28 /* Debug64 */,
+				65326E9C2253D2BE00844F28 /* Release */,
+				65326E9D2253D2BE00844F28 /* Release64 */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		65326EA22253D68900844F28 /* Build configuration list for PBXNativeTarget "libmpg123" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65326EA32253D68900844F28 /* Debug */,
+				65326EA42253D68900844F28 /* Debug64 */,
+				65326EA52253D68900844F28 /* Release */,
+				65326EA62253D68900844F28 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9536,7 +11176,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED152132163C227C00451B5F /* Debug */,
+				5EC18AAC219B5AFD000EFBF9 /* Debug64 */,
 				ED152134163C227C00451B5F /* Release */,
+				5EC18AC5219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9545,7 +11187,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED2706F60EF9C3C6007D4FFD /* Debug */,
+				5EC18AB8219B5AFD000EFBF9 /* Debug64 */,
 				ED2706F80EF9C3C6007D4FFD /* Release */,
+				5EC18AD1219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -9554,7 +11198,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDBFAD10177E5399004CC1C1 /* Debug */,
+				5EC18AAF219B5AFD000EFBF9 /* Debug64 */,
 				EDBFAD12177E5399004CC1C1 /* Release */,
+				5EC18AC8219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

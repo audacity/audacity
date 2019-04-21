@@ -45,16 +45,22 @@ and in the spectrogram spectral selection.
 
 #include <algorithm>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/brush.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
+#include <wx/dcclient.h>
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/dcmemory.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
 #include <wx/intl.h>
+#include <wx/scrolbar.h>
 #include <wx/sizer.h>
+#include <wx/slider.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
@@ -79,11 +85,10 @@ and in the spectrogram spectral selection.
 
 #include "WaveTrack.h"
 
-#include "Experimental.h"
-
 #include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/Ruler.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -210,40 +215,43 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    if (!p)
       return;
 
-   wxArrayString algChoices;
-   algChoices.Add(_("Spectrum"));
-   algChoices.Add(_("Standard Autocorrelation"));
-   algChoices.Add(_("Cuberoot Autocorrelation"));
-   algChoices.Add(_("Enhanced Autocorrelation"));
-     /* i18n-hint: This is a technical term, derived from the word
-      * "spectrum".  Do not translate it unless you are sure you
-      * know the correct technical word in your language. */
-   algChoices.Add(_("Cepstrum"));
+   wxArrayStringEx algChoices{
+      _("Spectrum") ,
+      _("Standard Autocorrelation") ,
+      _("Cuberoot Autocorrelation") ,
+      _("Enhanced Autocorrelation") ,
+        /* i18n-hint: This is a technical term, derived from the word
+         * "spectrum".  Do not translate it unless you are sure you
+         * know the correct technical word in your language. */
+      _("Cepstrum") ,
+   };
 
-   wxArrayString sizeChoices;
-   sizeChoices.Add(wxT("128"));
-   sizeChoices.Add(wxT("256"));
-   sizeChoices.Add(wxT("512"));
-   sizeChoices.Add(wxT("1024"));
-   sizeChoices.Add(wxT("2048"));
-   sizeChoices.Add(wxT("4096"));
-   sizeChoices.Add(wxT("8192"));
-   sizeChoices.Add(wxT("16384"));
-   sizeChoices.Add(wxT("32768"));
-   sizeChoices.Add(wxT("65536"));
+   wxArrayStringEx sizeChoices{
+      wxT("128") ,
+      wxT("256") ,
+      wxT("512") ,
+      wxT("1024") ,
+      wxT("2048") ,
+      wxT("4096") ,
+      wxT("8192") ,
+      wxT("16384") ,
+      wxT("32768") ,
+      wxT("65536") ,
+   };
 
-   wxArrayString funcChoices;
+   wxArrayStringEx funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
       /* i18n-hint: This refers to a "window function",
        * such as Hann or Rectangular, used in the
        * Frequency analyze dialog box. */
-      funcChoices.Add(wxString::Format("%s window",  WindowFuncName(i) ) );
+      funcChoices.push_back(wxString::Format("%s window",  WindowFuncName(i) ) );
    }
 
-   wxArrayString axisChoices;
-   axisChoices.Add(_("Linear frequency"));
-   axisChoices.Add(_("Log frequency"));
+   wxArrayStringEx axisChoices{
+      _("Linear frequency") ,
+      _("Log frequency") ,
+   };
 
    mFreqFont = wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);
@@ -412,8 +420,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             mPeakText = S.AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
-            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), wxT("false"));
-            mGridOnOff->SetValue(mDrawGrid);
+            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), mDrawGrid);
          }
          S.EndMultiColumn();
       }
@@ -439,14 +446,14 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.AddSpace(5);
 
-      mAlgChoice = S.Id(FreqAlgChoiceID).AddChoice(_("&Algorithm:"), wxT(""), &algChoices);
-      mAlgChoice->SetSelection(mAlg);
+      mAlgChoice = S.Id(FreqAlgChoiceID)
+         .AddChoice(_("&Algorithm:"), algChoices, mAlg);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
 
-      mSizeChoice = S.Id(FreqSizeChoiceID).AddChoice(_("&Size:"), wxT(""), &sizeChoices);
-      mSizeChoice->SetSelection(mSize);
+      mSizeChoice = S.Id(FreqSizeChoiceID)
+         .AddChoice(_("&Size:"), sizeChoices, mSize);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
@@ -462,15 +469,15 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.AddSpace(5);
 
-      mFuncChoice = S.Id(FreqFuncChoiceID).AddChoice(_("&Function:"), wxT(""), &funcChoices);
-      mFuncChoice->SetSelection(mFunc);
+      mFuncChoice = S.Id(FreqFuncChoiceID)
+         .AddChoice(_("&Function:"), funcChoices, mFunc);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
-      mAxisChoice = S.Id(FreqAxisChoiceID).AddChoice(_("&Axis:"), wxT(""), &axisChoices);
-      mAxisChoice->SetSelection(mAxis);
+      mAxisChoice = S.Id(FreqAxisChoiceID)
+         .AddChoice(_("&Axis:"), axisChoices, mAxis);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
@@ -504,7 +511,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    }
    mLogAxis = mAxis != 0;
 
-   mCloseButton = reinterpret_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
+   mCloseButton = static_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
    mCloseButton->SetDefault();
    mCloseButton->SetFocus();
 
@@ -577,46 +584,40 @@ void FreqWindow::GetAudio()
 
    int selcount = 0;
    bool warning = false;
-   TrackListIterator iter(p->GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         WaveTrack *track = (WaveTrack *)t;
-         if (selcount==0) {
-            mRate = track->GetRate();
-            auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
-            auto end = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t1());
-            auto dataLen = end - start;
-            if (dataLen > 10485760) {
-               warning = true;
-               mDataLen = 10485760;
-            }
-            else
-               // dataLen is not more than 10 * 2 ^ 20
-               mDataLen = dataLen.as_size_t();
-            mData = Floats{ mDataLen };
-            // Don't allow throw for bad reads
-            track->Get((samplePtr)mData.get(), floatSample, start, mDataLen,
-                       fillZero, false);
+   for (auto track : p->GetTracks()->Selected< const WaveTrack >()) {
+      if (selcount==0) {
+         mRate = track->GetRate();
+         auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
+         auto end = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t1());
+         auto dataLen = end - start;
+         if (dataLen > 10485760) {
+            warning = true;
+            mDataLen = 10485760;
          }
-         else {
-            if (track->GetRate() != mRate) {
-               AudacityMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
-               mData.reset();
-               mDataLen = 0;
-               return;
-            }
-            auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
-            Floats buffer2{ mDataLen };
-            // Again, stop exceptions
-            track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen,
-                       fillZero, false);
-            for (size_t i = 0; i < mDataLen; i++)
-               mData[i] += buffer2[i];
-         }
-         selcount++;
+         else
+            // dataLen is not more than 10 * 2 ^ 20
+            mDataLen = dataLen.as_size_t();
+         mData = Floats{ mDataLen };
+         // Don't allow throw for bad reads
+         track->Get((samplePtr)mData.get(), floatSample, start, mDataLen,
+                    fillZero, false);
       }
-      t = iter.Next();
+      else {
+         if (track->GetRate() != mRate) {
+            AudacityMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
+            mData.reset();
+            mDataLen = 0;
+            return;
+         }
+         auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
+         Floats buffer2{ mDataLen };
+         // Again, stop exceptions
+         track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen,
+                    fillZero, false);
+         for (size_t i = 0; i < mDataLen; i++)
+            mData[i] += buffer2[i];
+      }
+      selcount++;
    }
 
    if (selcount == 0)
@@ -624,7 +625,7 @@ void FreqWindow::GetAudio()
 
    if (warning) {
       wxString msg;
-      msg.Printf(_("Too much audio was selected.  Only the first %.1f seconds of audio will be analyzed."),
+      msg.Printf(_("Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."),
                           (mDataLen / mRate));
       AudacityMessageBox(msg);
    }
@@ -1055,7 +1056,7 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
       _("Export Spectral Data As:"),
       wxEmptyString, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
 
-   if (fName == wxT(""))
+   if (fName.empty())
       return;
 
    wxTextFile f(fName);

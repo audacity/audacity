@@ -11,11 +11,9 @@
 #ifndef __AUDACITY_EFFECT_REPAIR__
 #define __AUDACITY_EFFECT_REPAIR__
 
-#include <wx/string.h>
-
 #include "Effect.h"
 
-#define REPAIR_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Repair") }
+#define REPAIR_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Repair") }
 
 class WaveTrack;
 
@@ -25,9 +23,9 @@ public:
    EffectRepair();
    virtual ~EffectRepair();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

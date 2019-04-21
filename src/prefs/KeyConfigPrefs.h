@@ -12,31 +12,30 @@
 #ifndef __AUDACITY_KEY_CONFIG_PREFS__
 #define __AUDACITY_KEY_CONFIG_PREFS__
 
-#include "../Experimental.h"
-
+class CommandManager;
 class ShuttleGui;
 
 #include <wx/defs.h>
-#include <wx/imaglist.h>
-#include <wx/listctrl.h>
-#include <wx/radiobut.h>
-#include <wx/srchctrl.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
-#include <wx/timer.h>
-
-#include "../commands/CommandManager.h"
-#include "../widgets/KeyView.h"
+#include <wx/timer.h> // member variable
 
 #include "PrefsPanel.h"
 
+class wxRadioButton;
 class wxStaticText;
+class wxTextCtrl;
+class KeyView;
 struct NormalizedKeyString;
+enum ViewByType : int;
+
+#define KEY_CONFIG_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Key Config") }
 
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
-   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const wxString &name);
+   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const CommandID &name);
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
@@ -46,7 +45,7 @@ private:
    void Populate();
    void RefreshBindings(bool bSort);
    void FilterKeys( std::vector<NormalizedKeyString> & arr );
-   wxString NameFromKey(const NormalizedKeyString & key);
+   CommandID NameFromKey(const NormalizedKeyString & key);
    void SetKeyForSelected(const NormalizedKeyString & key);
 
    void OnViewBy(wxCommandEvent & e);
@@ -84,7 +83,7 @@ private:
    CommandManager *mManager;
    int mCommandSelected;
 
-   wxArrayString mNames;
+   CommandIDs mNames;
    std::vector<NormalizedKeyString> mDefaultKeys; // The full set.
    std::vector<NormalizedKeyString> mStandardDefaultKeys; // The reduced set.
    std::vector<NormalizedKeyString> mKeys;
@@ -94,14 +93,15 @@ private:
 };
 
 
+/// A PrefsPanelFactory that creates one KeyConfigPrefs panel.
 class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   KeyConfigPrefsFactory(const wxString &name = wxString{})
+   KeyConfigPrefsFactory(const CommandID &name = {})
       : mName{ name } {}
    PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 
 private:
-   wxString mName;
+   CommandID mName;
 };
 #endif

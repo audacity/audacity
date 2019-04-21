@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  ToolBar.cpp
+  ToolDock.cpp
 
   Dominic Mazzoni
   Shane T. Mueller
@@ -22,12 +22,15 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "ToolDock.h"
+
 #include <wx/tokenzr.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -38,7 +41,6 @@
 #endif  /*  */
 
 #include "ToolManager.h"
-#include "ToolDock.h"
 
 #include <algorithm>
 
@@ -733,7 +735,7 @@ ToolBarConfiguration::Position
 
       void ModifySize
          (ToolBar *ct,
-          const wxRect &rect,
+          const wxRect &rectIn,
           ToolBarConfiguration::Position prevPosition,
           ToolBarConfiguration::Position position,
           wxSize &sz)
@@ -743,16 +745,16 @@ ToolBarConfiguration::Position
          // and is in the right place.
 
          // Does the location fall within this bar?
-         if (rect.Contains(point))
+         if (rectIn.Contains(point))
          {
             sz = tb->GetDockedSize();
             // Choose a position always, if there is a bar to displace.
             // Else, only if the fit is possible.
-            if (ct || (sz.x <= rect.width && sz.y <= rect.height)) {
+            if (ct || (sz.x <= rectIn.width && sz.y <= rectIn.height)) {
                // May choose current or previous.
                if (ct &&
-                   (sz.y < rect.height ||
-                    point.y < (rect.GetTop() + rect.GetBottom()) / 2))
+                   (sz.y < rectIn.height ||
+                    point.y < (rectIn.GetTop() + rectIn.GetBottom()) / 2))
                   // "Wedge" the bar into a crack alone, not adopting others,
                   // if either a short bar displaces a tall one, or else
                   // the displacing bar is at least at tall, but the pointer is
@@ -766,13 +768,13 @@ ToolBarConfiguration::Position
       }
 
       void Visit
-         (ToolBar *, wxPoint point)
+         (ToolBar *, wxPoint pointIn)
          override
       {
          if (result != ToolBarConfiguration::UnspecifiedPosition) {
             // If we've placed it, we're done.
-            rect.x = point.x;
-            rect.y = point.y;
+            rect.x = pointIn.x;
+            rect.y = pointIn.y;
             if (usedPrev)
                rect.y -= tb->GetDockedSize().GetHeight() / 2;
 
@@ -792,8 +794,8 @@ ToolBarConfiguration::Position
          if (result == ToolBarConfiguration::UnspecifiedPosition) {
             // Default of all other placements.
             result = finalPosition;
-            wxPoint point { finalRect.GetLeft(), finalRect.GetBottom() };
-            rect.SetPosition(point);
+            wxPoint point1 { finalRect.GetLeft(), finalRect.GetBottom() };
+            rect.SetPosition(point1);
          }
       }
 

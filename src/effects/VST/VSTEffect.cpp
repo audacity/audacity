@@ -24,17 +24,15 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
-#include "../../Audacity.h"
+#include "../../Audacity.h" // for USE_* macros
+#include "VSTEffect.h"
 
 #if 0
 #if defined(BUILDING_AUDACITY)
-#include "../../Audacity.h"
 #include "../../PlatformCompatibility.h"
 
 // Make the main function private
-#define MODULEMAIN_SCOPE static
 #else
-#define MODULEMAIN_SCOPE
 #define USE_VST 1
 #endif
 #endif
@@ -44,6 +42,7 @@
 #include <limits.h>
 #include <stdio.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/dynlib.h>
 #include <wx/app.h>
 #include <wx/defs.h>
@@ -54,7 +53,6 @@
 #include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filename.h>
-#include <wx/frame.h>
 #include <wx/imaglist.h>
 #include <wx/listctrl.h>
 #include <wx/log.h>
@@ -100,9 +98,18 @@
 
 #include "audacity/ConfigInterface.h"
 
-#include "VSTEffect.h"
 #include "../../MemoryX.h"
 #include <cstring>
+
+// Put this inclusion last.  On Linux it makes some unfortunate pollution of
+// preprocessor macro name space that interferes with other headers.
+#if defined(__WXOSX__)
+#include "VSTControlOSX.h"
+#elif defined(__WXMSW__)
+#include "VSTControlMSW.h"
+#elif defined(__WXGTK__)
+#include "VSTControlGTK.h"
+#endif
 
 static float reinterpretAsFloat(uint32_t x)
 {
@@ -226,17 +233,17 @@ public:
 
    // EffectClientInterface implementation
 
-   wxString GetPath() override
+   PluginPath GetPath() override
    {
       return mPath;
    }
 
-   IdentInterfaceSymbol GetSymbol() override
+   ComponentInterfaceSymbol GetSymbol() override
    {
       return mName;
    }
 
-   IdentInterfaceSymbol GetVendor() override
+   VendorSymbol GetVendor() override
    {
       return { mVendor };
    }
@@ -251,7 +258,7 @@ public:
       return mDescription;
    }
 
-   IdentInterfaceSymbol GetFamilyId() override
+   EffectFamilySymbol GetFamily() override
    {
       return VSTPLUGINTYPE;
    }
@@ -318,20 +325,20 @@ VSTEffectsModule::~VSTEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
-wxString VSTEffectsModule::GetPath()
+PluginPath VSTEffectsModule::GetPath()
 {
    return mPath;
 }
 
-IdentInterfaceSymbol VSTEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
 {
    return XO("VST Effects");
 }
 
-IdentInterfaceSymbol VSTEffectsModule::GetVendor()
+VendorSymbol VSTEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -363,14 +370,12 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
-wxArrayString VSTEffectsModule::FileExtensions()
+FileExtensions VSTEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = { _T("vst") };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   return {{ _T("vst") }};
 }
 
-wxString VSTEffectsModule::InstallPath()
+FilePath VSTEffectsModule::InstallPath()
 {
    // Not yet ready for VST drag-and-drop...
    // return FileNames::PlugInDir();
@@ -384,10 +389,10 @@ bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
    return true;
 }
 
-wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList;
-   wxArrayString files;
+   FilePaths pathList;
+   FilePaths files;
 
    // Check for the VST_PATH environment variable
    wxString vstpath = wxString::FromUTF8(getenv("VST_PATH"));
@@ -396,7 +401,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       wxStringTokenizer tok(vstpath);
       while (tok.HasMoreTokens())
       {
-         pathList.Add(tok.GetNextToken());
+         pathList.push_back(tok.GetNextToken());
       }
    }
 
@@ -404,20 +409,20 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 #define VSTPATH wxT("/Library/Audio/Plug-Ins/VST")
 
    // Look in ~/Library/Audio/Plug-Ins/VST and /Library/Audio/Plug-Ins/VST
-   pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + VSTPATH);
-   pathList.Add(VSTPATH);
+   pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + VSTPATH);
+   pathList.push_back(VSTPATH);
 
    // Recursively search all paths for Info.plist files.  This will identify all
    // bundles.
    pm.FindFilesInPathList(wxT("Info.plist"), pathList, files, true);
 
    // Remove the 'Contents/Info.plist' portion of the names
-   for (size_t i = 0; i < files.GetCount(); i++)
+   for (size_t i = 0; i < files.size(); i++)
    {
       files[i] = wxPathOnly(wxPathOnly(files[i]));
       if (!files[i].EndsWith(wxT(".vst")))
       {
-         files.RemoveAt(i--);
+         files.erase( files.begin() + i-- );
       }
    }
 
@@ -441,7 +446,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       tpath[len] = 0;
       dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.Add(dpath);
+      pathList.push_back(dpath);
    }
 
    // Then try HKEY_LOCAL_MACHINE registry key
@@ -458,7 +463,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
       tpath[len] = 0;
       dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.Add(dpath);
+      pathList.push_back(dpath);
    }
 
    // Add the default path last
@@ -466,7 +471,7 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    ExpandEnvironmentStrings(wxT("%ProgramFiles%\\Steinberg\\VSTPlugins"),
                             dpath,
                             WXSIZEOF(dpath));
-   pathList.Add(dpath);
+   pathList.push_back(dpath);
 
    // Recursively scan for all DLLs
    pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
@@ -474,15 +479,15 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 #else
 
    // Nothing specified in the VST_PATH environment variable...provide defaults
-   if (vstpath.IsEmpty())
+   if (vstpath.empty())
    {
       // We add this "non-default" one
-      pathList.Add(wxT(LIBDIR) wxT("/vst"));
+      pathList.push_back(wxT(LIBDIR) wxT("/vst"));
 
       // These are the defaults used by other hosts
-      pathList.Add(wxT("/usr/lib/vst"));
-      pathList.Add(wxT("/usr/local/lib/vst"));
-      pathList.Add(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".vst"));
+      pathList.push_back(wxT("/usr/lib/vst"));
+      pathList.push_back(wxT("/usr/local/lib/vst"));
+      pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".vst"));
    }
 
    // Recursively scan for all shared objects
@@ -490,18 +495,18 @@ wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 
 #endif
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned VSTEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    bool error = false;
    unsigned nFound = 0;
    errMsg.clear();
    // TODO:  Fix this for external usage
-   const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
+   const auto &cmdpath = PlatformCompatibility::GetExecutablePath();
 
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));
@@ -619,12 +624,12 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
             break;
 
             case kKeyInteractive:
-               proc.mInteractive = val.IsSameAs(wxT("1"));
+               proc.mInteractive = val == wxT("1");
                keycount++;
             break;
 
             case kKeyAutomatable:
-               proc.mAutomatable = val.IsSameAs(wxT("1"));
+               proc.mAutomatable = val == wxT("1");
                keycount++;
             break;
 
@@ -669,7 +674,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    return nFound;
 }
 
-bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
@@ -677,7 +682,7 @@ bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VSTEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
@@ -685,7 +690,7 @@ IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
    return safenew VSTEffect(path);
 }
 
-void VSTEffectsModule::DeleteInstance(IdentInterface *instance)
+void VSTEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < VSTEffect > {
       dynamic_cast<VSTEffect *>(instance)
@@ -1114,16 +1119,16 @@ void VSTEffect::BundleDeleter::operator() (void* p) const
       CFRelease(static_cast<CFBundleRef>(p));
 }
 
-void VSTEffect::ResourceDeleter::operator() (void *p) const
+void VSTEffect::ResourceHandle::reset()
 {
-   if (mpHandle) {
-      int resource = (int)p;
-      CFBundleCloseBundleResourceMap(mpHandle->get(), resource);
-   }
+   if (mpHandle)
+      CFBundleCloseBundleResourceMap(mpHandle, mNum);
+   mpHandle = nullptr;
+   mNum = 0;
 }
 #endif
 
-VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
+VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
@@ -1153,7 +1158,7 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
    mTimeInfo.sampleRate = 44100.0;  // this is a bogus value, but it's only for the display
-   mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
+   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    mTimeInfo.tempo = 120.0;
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
@@ -1182,20 +1187,20 @@ VSTEffect::~VSTEffect()
 }
 
 // ============================================================================
-// IdentInterface Implementation
+// ComponentInterface Implementation
 // ============================================================================
 
-wxString VSTEffect::GetPath()
+PluginPath VSTEffect::GetPath()
 {
    return mPath;
 }
 
-IdentInterfaceSymbol VSTEffect::GetSymbol()
+ComponentInterfaceSymbol VSTEffect::GetSymbol()
 {
    return mName;
 }
 
-IdentInterfaceSymbol VSTEffect::GetVendor()
+VendorSymbol VSTEffect::GetVendor()
 {
    return { mVendor };
 }
@@ -1253,7 +1258,7 @@ EffectType VSTEffect::GetType()
 }
 
 
-IdentInterfaceSymbol VSTEffect::GetFamilyId()
+EffectFamilySymbol VSTEffect::GetFamily()
 {
    return VSTPLUGINTYPE;
 }
@@ -1390,7 +1395,7 @@ bool VSTEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames W
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.sampleRate = mSampleRate;
-   mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
+   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    mTimeInfo.tempo = 120.0;
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
@@ -1633,7 +1638,7 @@ bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
-      if (name.IsEmpty())
+      if (name.empty())
       {
          name.Printf(wxT("parm_%d"), i);
       }
@@ -1654,7 +1659,7 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
-      if (name.IsEmpty())
+      if (name.empty())
       {
          name.Printf(wxT("parm_%d"), i);
       }
@@ -1678,7 +1683,7 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 }
 
 
-bool VSTEffect::LoadUserPreset(const wxString & name)
+bool VSTEffect::LoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1690,14 +1695,14 @@ bool VSTEffect::LoadUserPreset(const wxString & name)
    return true;
 }
 
-bool VSTEffect::SaveUserPreset(const wxString & name)
+bool VSTEffect::SaveUserPreset(const RegistryPath & name)
 {
    return SaveParameters(name);
 }
 
-wxArrayString VSTEffect::GetFactoryPresets()
+RegistryPaths VSTEffect::GetFactoryPresets()
 {
-   wxArrayString progs; 
+   RegistryPaths progs;
 
    // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
    // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
@@ -1706,7 +1711,7 @@ wxArrayString VSTEffect::GetFactoryPresets()
    {
       for (int i = 0; i < mAEffect->numPrograms; i++)
       {
-         progs.Add(GetString(effGetProgramNameIndexed, i));
+         progs.push_back(GetString(effGetProgramNameIndexed, i));
       }
    }
 
@@ -1854,7 +1859,7 @@ void VSTEffect::ExportPresets()
                        NULL);
 
    // User canceled...
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return;
    }
@@ -1906,7 +1911,7 @@ void VSTEffect::ImportPresets()
                        mParent);
 
    // User canceled...
-   if (path.IsEmpty())
+   if (path.empty())
    {
       return;
    }
@@ -2061,10 +2066,8 @@ bool VSTEffect::Load()
    mBundleRef = std::move(bundleRef);
 
    // Open the resource map ... some plugins (like GRM Tools) need this.
-   mResource = ResourceHandle {
-      reinterpret_cast<char*>(
-         CFBundleOpenBundleResourceMap(mBundleRef.get())),
-      ResourceDeleter{&mBundleRef}
+   mResource = ResourceHandle{
+      mBundleRef.get(), CFBundleOpenBundleResourceMap(mBundleRef.get())
    };
 
 #elif defined(__WXMSW__)
@@ -2267,7 +2270,7 @@ void VSTEffect::Unload()
    if (mModule)
    {
 #if defined(__WXMAC__)
-      mResource = ResourceHandle{};
+      mResource.reset();
       mBundleRef.reset();
 #endif
 
@@ -2297,7 +2300,7 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-bool VSTEffect::LoadParameters(const wxString & group)
+bool VSTEffect::LoadParameters(const RegistryPath & group)
 {
    wxString value;
 
@@ -2341,7 +2344,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
    return SetAutomationParameters(eap);
 }
 
-bool VSTEffect::SaveParameters(const wxString & group)
+bool VSTEffect::SaveParameters(const RegistryPath & group)
 {
    mHost->SetPrivateConfig(group, wxT("UniqueID"), mAEffect->uniqueID);
    mHost->SetPrivateConfig(group, wxT("Version"), mAEffect->version);
@@ -2414,7 +2417,7 @@ void VSTEffect::NeedEditIdle(bool state)
 
 VstTimeInfo *VSTEffect::GetTimeInfo()
 {
-   mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
+   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    return &mTimeInfo;
 }
 
@@ -2978,7 +2981,7 @@ void VSTEffect::RefreshParameters(int skip)
       name = text;
 
       text = GetString(effGetParamDisplay, i);
-      if (text.IsEmpty())
+      if (text.empty())
       {
          text.Printf(wxT("%.5g"),callGetParameter(i));
       }
@@ -2986,7 +2989,7 @@ void VSTEffect::RefreshParameters(int skip)
       name += wxT(' ') + text;
 
       text = GetString(effGetParamDisplay, i);
-      if (!text.IsEmpty())
+      if (!text.empty())
       {
          text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i));
          mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text));
@@ -3737,7 +3740,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             if (value != GetSymbol().Internal())
             {
                wxString msg;
-               msg.Printf(_("This parameter file was saved from %s.  Continue?"), value);
+               msg.Printf(_("This parameter file was saved from %s. Continue?"), value);
                int result = AudacityMessageBox(msg, wxT("Confirm"), wxYES_NO, mParent);
                if (result == wxNO)
                {

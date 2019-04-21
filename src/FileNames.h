@@ -11,12 +11,13 @@
 #ifndef __AUDACITY_FILE_NAMES__
 #define __AUDACITY_FILE_NAMES__
 
-#include <wx/string.h>
 #include "Audacity.h"
+
+#include <wx/string.h> // function return value
+#include "audacity/Types.h"
 
 class wxFileName;
 class wxFileNameWrapper;
-class wxArrayString;
 
 // Uh, this is really a namespace rather than a class,
 // since all the functions are static.
@@ -25,13 +26,19 @@ class AUDACITY_DLL_API FileNames
 public:
    // This exists to compensate for bugs in wxCopyFile:
    static bool CopyFile(
-      const wxString& file1, const wxString& file2, bool overwrite = true);
+      const FilePath& file1, const FilePath& file2, bool overwrite = true);
+
+   // wxWidgets doesn't have a function to do this:  make a hard file-system
+   // link if possible.  It might not be, as when the paths are on different
+   // storage devices.
+   static bool HardLinkFile( const FilePath& file1, const FilePath& file2);
 
    static wxString MkDir(const wxString &Str);
    static wxString TempDir();
 
    // originally an ExportMultiple method. Append suffix if newName appears in otherNames.
-   static void MakeNameUnique(wxArrayString &otherNames, wxFileName &newName);
+   static void MakeNameUnique(
+      FilePaths &otherNames, wxFileName &newName);
 
    static wxString LowerCaseAppNameInPath( const wxString & dirIn);
    /** \brief Audacity user data directory
@@ -39,38 +46,39 @@ public:
     * Where audacity keeps it's settings and other user data squirreled away,
     * by default ~/.audacity-data/ on Unix, Application Data/Audacity on
     * windows system */
-   static wxString DataDir();
-   static wxString ResourcesDir();
-   static wxString AutoSaveDir();
-   static wxString HtmlHelpDir();
-   static wxString HtmlHelpIndexFile(bool quick);
-   static wxString LegacyChainDir();
-   static wxString MacroDir();
-   static wxString NRPDir();
-   static wxString NRPFile();
-   static wxString PluginRegistry();
-   static wxString PluginSettings();
+   static FilePath DataDir();
+   static FilePath ResourcesDir();
+   static FilePath AutoSaveDir();
+   static FilePath HtmlHelpDir();
+   static FilePath HtmlHelpIndexFile(bool quick);
+   static FilePath LegacyChainDir();
+   static FilePath MacroDir();
+   static FilePath NRPDir();
+   static FilePath NRPFile();
+   static FilePath PluginRegistry();
+   static FilePath PluginSettings();
 
-   static wxString BaseDir();
-   static wxString ModulesDir();
+   static FilePath BaseDir();
+   static FilePath ModulesDir();
 
    /** \brief The user plug-in directory (not a system one)
     *
     * This returns the string path to where the user may have put plug-ins
     * if they don't have system admin rights. Under default settings, it's
     * <DataDir>/Plug-Ins/ */
-   static wxString PlugInDir();
-   static wxString ThemeDir();
-   static wxString ThemeComponentsDir();
-   static wxString ThemeCachePng();
-   static wxString ThemeCacheAsCee();
-   static wxString ThemeComponent(const wxString &Str);
-   static wxString ThemeCacheHtm();
-   static wxString ThemeImageDefsAsCee();
+   static FilePath PlugInDir();
+   static FilePath ThemeDir();
+   static FilePath ThemeComponentsDir();
+   static FilePath ThemeCachePng();
+   static FilePath ThemeCacheAsCee();
+   static FilePath ThemeComponent(const wxString &Str);
+   static FilePath ThemeCacheHtm();
+   static FilePath ThemeImageDefsAsCee();
 
    // Obtain name of loaded module that contains address
-   static wxString PathFromAddr(void *addr);
+   static FilePath PathFromAddr(void *addr);
 
+   static bool IsPathAvailable( const FilePath & Path);
    static wxFileNameWrapper DefaultToDocumentsFolder
       (const wxString &preference);
 
@@ -84,12 +92,12 @@ public:
    };
 
    static wxString FindDefaultPath(Operation op);
-   static void UpdateDefaultPath(Operation op, const wxString &path);
+   static void UpdateDefaultPath(Operation op, const FilePath &path);
 
    // F is a function taking a wxString, returning wxString
    template<typename F>
    static wxString WithDefaultPath
-   (Operation op, const wxString &defaultPath, F function)
+   (Operation op, const FilePath &defaultPath, F function)
    {
       auto path = defaultPath;
       if (path.empty())
@@ -102,8 +110,10 @@ public:
    static wxString
    SelectFile(Operation op,   // op matters only when default_path is empty
               const wxString& message,
-                const wxString& default_path,
-                const wxString& default_filename,
+                const FilePath& default_path,
+                const FilePath& default_filename,
+                // empty, or one extension, or multiple extensions joined with
+                // '|', extensions including the leading dot:
                 const wxString& default_extension,
                 const wxString& wildcard,
                 int flags,

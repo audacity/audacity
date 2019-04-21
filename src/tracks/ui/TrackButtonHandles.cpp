@@ -12,10 +12,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackButtonHandles.h"
 
 #include "../../HitTestResult.h"
+#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
+#include "../../commands/CommandManager.h"
 
 MinimizeButtonHandle::MinimizeButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
@@ -34,9 +36,9 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
-      pTrack->SetMinimized(!pTrack->GetMinimized());
-      if (pTrack->GetLink())
-         pTrack->GetLink()->SetMinimized(pTrack->GetMinimized());
+      bool wasMinimized = pTrack->GetMinimized();
+      for (auto channel : TrackList::Channels(pTrack.get()))
+         channel->SetMinimized(!wasMinimized);
       pProject->ModifyState(true);
 
       // Redraw all tracks when any one of them expands or contracts
@@ -72,6 +74,60 @@ UIHandlePtr MinimizeButtonHandle::HitTest
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+SelectButtonHandle::SelectButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect }
+{}
+
+SelectButtonHandle::~SelectButtonHandle()
+{
+}
+
+UIHandle::Result SelectButtonHandle::CommitChanges
+(const wxMouseEvent &event, AudacityProject *pProject, wxWindow*)
+{
+   using namespace RefreshCode;
+
+   auto pTrack = mpTrack.lock();
+   if (pTrack)
+   {
+      const bool unsafe = pProject->IsAudioActive();
+      SelectActions::DoListSelection(*pProject,
+         pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
+//    return RefreshAll ;
+   }
+
+   return RefreshNone;
+}
+
+wxString SelectButtonHandle::Tip(const wxMouseState &) const
+{
+   auto pTrack = GetTrack();
+#if defined(__WXMAC__)
+   return pTrack->GetSelected() ? _("Command+Click to Unselect") : _("Select track");
+#else
+   return pTrack->GetSelected() ? _("Ctrl+Click to Unselect") : _("Select track");
+#endif
+}
+
+UIHandlePtr SelectButtonHandle::HitTest
+(std::weak_ptr<SelectButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
+{
+   wxRect buttonRect;
+   TrackInfo::GetSelectButtonRect(rect, buttonRect);
+
+   if (buttonRect.Contains(state.m_x, state.m_y)) {
+      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto result = std::make_shared<SelectButtonHandle>( pTrack, buttonRect );
+      result = AssignUIHandlePtr(holder, result);
+      return result;
+   }
+   else
+      return {};
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 CloseButtonHandle::CloseButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
@@ -94,7 +150,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
       pProject->StopIfPaused();
       if (!pProject->IsAudioActive()) {
          // This pushes an undo item:
-         pProject->RemoveTrack(pTrack.get());
+         TrackActions::DoRemoveTrack(*pProject, pTrack.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

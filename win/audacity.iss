@@ -128,6 +128,7 @@ Source: ".\release\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Source: ".\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: ".\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: ".\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
+Source: ".\release\modules\mod-script-pipe.dll"; DestDir: "{app}\modules\"; Flags: ignoreversion
 
 [Icons]
 Name: "{commonprograms}\DarkAudacity"; Filename: "{app}\darkaudacity.exe"
@@ -256,7 +257,7 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 ;Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
 ;Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
 ;Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
-;Name: "vi"; MessagesFile: "{#Get('Vietnamese.isl')}"
+;Name: "vi"; MessagesFile: "{#Get('Vietnamese.islu')}"
 ;Name: "zh_CN"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
 ;Name: "zh_TW"; MessagesFile: "{#Get('ChineseTraditional.isl')}"
 

@@ -10,14 +10,13 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "EditCursorOverlay.h"
-#include "../../Experimental.h"
 
 #include "../../AColor.h"
-#include "../../widgets/Ruler.h"
+#include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
-#include "../../TrackPanelCell.h"
-#include "../../TrackPanelCellIterator.h"
+#include "../../Track.h"
 #include "../../TrackPanelAx.h"
+#include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
 
 #include <wx/dc.h>
@@ -39,18 +38,9 @@ EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
 {
 }
 
-EditCursorOverlay::~EditCursorOverlay()
-{
-   if (mIsMaster && mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if (ruler)
-         ruler->RemoveOverlay(mPartner.get());
-   }
-}
-
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
-   const SelectedRegion &selection = mProject->GetSelection();
+   const auto &selection = mProject->GetViewInfo().selectedRegion;
    if (!selection.isPoint()) {
       mCursorTime = -1.0;
       mNewCursorX = -1;
@@ -76,8 +66,8 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (mIsMaster && !mPartner) {
       auto ruler = mProject->GetRulerPanel();
       if (ruler) {
-         mPartner = std::make_unique<EditCursorOverlay>(mProject, false);
-         ruler->AddOverlay(mPartner.get());
+         mPartner = std::make_shared<EditCursorOverlay>(mProject, false);
+         ruler->AddOverlay( mPartner );
       }
    }
 
@@ -90,7 +80,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    const bool
    onScreen = between_incexc(viewInfo.h,
                              mCursorTime,
-                             mProject->GetScreenEndTime());
+                             mProject->GetTrackPanel()->GetScreenEndTime());
 
    if (!onScreen)
       return;
@@ -100,21 +90,19 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       AColor::CursorColor(&dc);
 
       // Draw cursor in all selected tracks
-      for ( const auto &data : tp->Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
+      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+         const auto pTrack = dynamic_cast<Track*>(&cell);
          if (!pTrack)
-            continue;
+            return;
          if (pTrack->GetSelected() ||
              mProject->GetTrackPanel()->GetAx().IsFocused(pTrack))
          {
-            const wxRect &rect = data.second;
             // AColor::Line includes both endpoints so use GetBottom()
             AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
             // ^^^ The whole point of this routine.
 
          }
-      }
+      } );
    }
    else if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);

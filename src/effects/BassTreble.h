@@ -12,18 +12,14 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include <wx/event.h>
-#include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
-#include <wx/checkbox.h>
-
 #include "Effect.h"
 
+class wxSlider;
+class wxCheckBox;
+class wxTextCtrl;
 class ShuttleGui;
 
-#define BASSTREBLE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Bass and Treble") }
+#define BASSTREBLE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Bass and Treble") }
 
 class EffectBassTrebleState
 {
@@ -45,9 +41,9 @@ public:
    EffectBassTreble();
    virtual ~EffectBassTreble();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

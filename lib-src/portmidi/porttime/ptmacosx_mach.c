@@ -14,6 +14,7 @@
 #include "sys/time.h"
 #include "pthread.h"
 
+#undef NSEC_PER_MSEC
 #define NSEC_PER_MSEC 1000000
 #define THREAD_IMPORTANCE 30
 

@@ -15,7 +15,7 @@ import time
 def ntrack_stereo() :
     loadStereoTrack()
     # A stereo track, with its name on the track    
-    capture( 'AutoTracks002.png', 'First_Track' )
+    capture( 'AutoTracks002.png', 'FirstTrack' )
     # A stereo track
     do( 'Select: Track=0' )
     do( 'SetTrack: Height=80')
@@ -50,7 +50,7 @@ def ntrack_pinned() :
 
 def ntrack_punch():
     loadMonoTracks(2)
-    do( 'AddLabelTrack' )
+    #do( 'NewLabelTrack' )
 
     #create the end result
     do('Select: Track=1 Start=50 End=70')
@@ -63,7 +63,7 @@ def ntrack_punch():
     do( 'Select: Track=0' )
     #show a messed up original...
     do( 'Distortion' )
-    do( 'WahWah' )
+    do( 'Wahwah' )
     
     do( 'Select: Track=2 Start=40 End=80' )
     do( 'Duplicate' )
@@ -85,7 +85,7 @@ def ntrack_punch():
     do( 'Select: Track=1 Start=40 End=80' )
 
     #work backwards from the end result...
-    capture( 'Punch-in tracks002.png', 'All_Tracks' )
+    capture( 'Punch-in tracks002.png', 'AllTracks' )
     do( 'Select: Track=3 Start=40 End=80' )
     do( 'RemoveTracks')
     do( 'Select: Track=1' )

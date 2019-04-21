@@ -21,7 +21,6 @@
 #define __AUDACITY_MIX__
 
 #include "MemoryX.h"
-#include <wx/string.h>
 #include "SampleFormat.h"
 #include <vector>
 
@@ -49,7 +48,8 @@ class WaveTrackCache;
 void MixAndRender(TrackList * tracks, TrackFactory *factory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
-                  std::unique_ptr<WaveTrack> &uLeft, std::unique_ptr<WaveTrack> &uRight);
+                  std::shared_ptr<WaveTrack> &uLeft,
+                  std::shared_ptr<WaveTrack> &uRight);
 
 void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
                 samplePtr src,
@@ -131,7 +131,7 @@ class AUDACITY_DLL_API Mixer {
 
    /// Reposition processing to absolute time next time
    /// Process() is called.
-   void Reposition(double t);
+   void Reposition(double t, bool bSkipping = false);
 
    // Used in scrubbing.
    void SetTimesAndSpeed(double t0, double t1, double speed);

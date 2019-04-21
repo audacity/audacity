@@ -25,12 +25,16 @@
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "ToolManager.h"
+
+#include "../Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
 #include <wx/app.h>
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/frame.h>
@@ -38,6 +42,7 @@
 #include <wx/intl.h>
 #include <wx/region.h>
 #include <wx/settings.h>
+#include <wx/sizer.h>
 #include <wx/sysopt.h>
 #include <wx/timer.h>
 #include <wx/utils.h>
@@ -49,7 +54,6 @@
 
 #include "../AudacityApp.h"
 
-#include "ToolManager.h"
 #include "ControlToolBar.h"
 #include "DeviceToolBar.h"
 #include "EditToolBar.h"
@@ -73,8 +77,6 @@
 #include "../widgets/ASlider.h"
 #include "../widgets/Meter.h"
 #include "../widgets/Grabber.h"
-
-#include "../Experimental.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolFrame

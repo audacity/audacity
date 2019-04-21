@@ -26,7 +26,7 @@
 #include "Prefs.h"
 #include "TranslatableStringArray.h"
 #include "Internat.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 
 #include <soxr.h>
 
@@ -52,7 +52,7 @@ Resample::~Resample()
 }
 
 //////////
-static const IdentInterfaceSymbol methodNames[] = {
+static const EnumValueSymbol methodNames[] = {
    { wxT("LowQuality"), XO("Low Quality (Fastest)") },
    { wxT("MediumQuality"), XO("Medium Quality") },
    { wxT("HighQuality"), XO("High Quality") },
@@ -82,7 +82,7 @@ static const int intChoicesMethod[] = {
 
 static_assert( WXSIZEOF(intChoicesMethod) == numMethods, "size mismatch" );
 
-EncodedEnumSetting Resample::FastMethodSetting{
+EnumSetting Resample::FastMethodSetting{
    fastMethodKey,
    methodNames, numMethods,
    fastMethodDefault,
@@ -91,7 +91,7 @@ EncodedEnumSetting Resample::FastMethodSetting{
    oldFastMethodKey
 };
 
-EncodedEnumSetting Resample::BestMethodSetting
+EnumSetting Resample::BestMethodSetting
 {
    bestMethodKey,
    methodNames, numMethods,

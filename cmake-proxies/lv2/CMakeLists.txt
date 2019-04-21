@@ -3,7 +3,7 @@ set( TARGET lv2 )
 set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
 project( ${TARGET} )
 
-set( SOURCES 
+set( SOURCES
 #${LIB_SRC_DIRECTORY}lv2/sord/src/sordmm_test.cpp
 #${LIB_SRC_DIRECTORY}lv2/suil/src/gtk2_in_qt4.cpp
 #${LIB_SRC_DIRECTORY}lv2/suil/src/qt4_in_gtk2.cpp
@@ -67,17 +67,19 @@ ${LIB_SRC_DIRECTORY}lv2/suil/src/suil_instance.c
 
 )
 # This defines the #define on both Windows and Linux.
-add_definitions( 
+add_definitions(
 -D_LIB
--Dsnprintf=_snprintf
 -Dinline=__inline # Not needed in non CMake version.
 -DHAVE_FMAX
 -DLILV_INTERNAL
 -D_DEBUG
  )
+if( NOT MSVC OR MSVC_VERSION LESS 1900 )
+    add_definitions(-Dsnprintf=_snprintf)
+endif()
 add_library( ${TARGET} STATIC ${SOURCES})
 add_compile_options(/TP)
-target_include_directories( ${TARGET} PRIVATE 
+target_include_directories( ${TARGET} PRIVATE
 ${TARGET_SOURCE}/windows
 ${TARGET_SOURCE}/sord/src
 ${TARGET_SOURCE}/lilv

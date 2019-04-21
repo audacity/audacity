@@ -44,8 +44,10 @@
 #include <wx/dynlib.h>
 #include <wx/filename.h>
 #include <wx/scopeguard.h>
+#include <wx/sizer.h>
 #include <wx/tokenzr.h>
 #include <wx/modalhook.h>
+#include <wx/filectrl.h>
 
 #include "../FileDialog.h"
 

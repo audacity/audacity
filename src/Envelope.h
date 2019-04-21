@@ -15,14 +15,10 @@
 #include <algorithm>
 #include <vector>
 
-#include <wx/brush.h>
-#include <wx/pen.h>
-
 #include "xml/XMLTagHandler.h"
 #include "Internat.h"
 
 class wxRect;
-class wxDC;
 class wxMouseEvent;
 class wxTextFile;
 
@@ -119,7 +115,7 @@ public:
 
    void DrawPoints(
       TrackPanelDrawingContext &context,
-      const wxRect & r, const ZoomInfo &zoomInfo,
+      const wxRect & r,
       bool dB, double dBRange,
       float zoomMin, float zoomMax, bool mirrored) const;
 

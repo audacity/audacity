@@ -12,19 +12,13 @@
 #define _DIRMANAGER_
 
 #include "MemoryX.h"
-#include <wx/list.h>
-#include <wx/string.h>
-#include <wx/filename.h>
-#include <wx/hashmap.h>
-#include <wx/utils.h>
 
 #include "audacity/Types.h"
 #include "xml/XMLTagHandler.h"
-#include "wxFileNameWrapper.h"
 
 #include <unordered_map>
 
-class wxHashTable;
+class wxFileNameWrapper;
 class BlockArray;
 class BlockFile;
 
@@ -59,13 +53,34 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    static void SetTempDir(const wxString &_temp) { globaltemp = _temp; }
 
+   class ProjectSetter
+   {
+   public:
+      ProjectSetter(
+         DirManager &dirManager,
+         FilePath& newProjPath,  // assigns it if empty
+         const FilePath& newProjName, const bool bCreate, bool moving);
+      ~ProjectSetter();
+
+      bool Ok();
+      void Commit();
+
+   private:
+      struct Impl;
+      std::unique_ptr<Impl> mpImpl;
+   };
+
    // Returns true on success.
    // If SetProject is told NOT to create the directory
    // but it doesn't already exist, SetProject fails and returns false.
-   bool SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate);
+   // This function simply creates a ProjectSetter and commits it if successful.
+   // Using ProjectSetter directly allows separation of those steps.
+   bool SetProject(
+      FilePath& newProjPath, // assigns it if empty
+      const FilePath& newProjName, const bool bCreate);
 
-   wxString GetProjectDataDir();
-   wxString GetProjectName();
+   FilePath GetProjectDataDir();
+   FilePath GetProjectName();
 
    wxLongLong GetFreeDiskSpace();
 
@@ -76,15 +91,15 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
                                  bool allowDeferredWrite = false);
 
    BlockFilePtr
-      NewAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+      NewAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel);
 
    BlockFilePtr
-      NewODAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+      NewODAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel);
 
    BlockFilePtr
-      NewODDecodeBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
+      NewODDecodeBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel, int decodeType);
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
@@ -107,7 +122,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    void SaveBlockFile(BlockFile * f, wxTextFile * out);
 #endif
 
-   std::pair<bool, wxString> CopyToNewProjectDirectory(BlockFile *f);
+   std::pair<bool, FilePath>
+      LinkOrCopyToNewProjectDirectory(BlockFile *f, bool &link);
 
    bool EnsureSafeFilename(const wxFileName &fName);
 
@@ -132,7 +148,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // program is exited normally.
    static void CleanTempDir();
    static void CleanDir(
-      const wxString &path, 
+      const FilePath &path, 
       const wxString &dirSpec, 
       const wxString &fileSpec, 
       const wxString &msg,
@@ -154,8 +170,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
          BlockHash& missingAUHash);                // missing data (.au) blockfiles
    // Find .au and .auf files that are not in the project.
    void FindOrphanBlockFiles(
-         const wxArrayString& filePathArray,       // input: all files in project directory
-         wxArrayString& orphanFilePathArray);      // output: orphan files
+         const FilePaths &filePathArray,       // input: all files in project directory
+         FilePaths &orphanFilePathArray);      // output: orphan files
 
 
    // Remove all orphaned blockfiles without user interaction. This is
@@ -166,7 +182,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Get directory where data files are in. Note that projects are normally
    // not interested in this information, but it is important for the
    // auto-save functionality
-   wxString GetDataFilesDir() const;
+   FilePath GetDataFilesDir() const;
 
    // This should only be used by the auto save functionality
    void SetLocalTempDir(const wxString &path);
@@ -208,13 +224,13 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    void BalanceFileAdd(int);
    int BalanceMidAdd(int, int);
 
-   wxString projName;
-   wxString projPath;
-   wxString projFull;
+   FilePath projName;
+   FilePath projPath;
+   FilePath projFull;
 
    wxString lastProject;
 
-   wxArrayString aliasList;
+   FilePaths aliasList;
 
    BlockArray *mLoadingTarget;
    unsigned mLoadingTargetIdx;

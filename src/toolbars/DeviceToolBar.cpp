@@ -14,11 +14,13 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "DeviceToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
 #include <wx/choice.h>
@@ -27,6 +29,7 @@
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
+#include <wx/stattext.h>
 #include <wx/tooltip.h>
 #endif
 
@@ -240,7 +243,7 @@ void DeviceToolBar::UpdatePrefs()
 
    devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
-   if (sourceName == wxT(""))
+   if (sourceName.empty())
       desc = devName;
    else
       desc = devName + wxT(": ") + sourceName;
@@ -270,7 +273,7 @@ void DeviceToolBar::UpdatePrefs()
 
    devName = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/PlaybackSource"), wxT(""));
-   if (sourceName == wxT(""))
+   if (sourceName.empty())
       desc = devName;
    else
       desc = devName + wxT(": ") + sourceName;
@@ -304,7 +307,7 @@ void DeviceToolBar::UpdatePrefs()
    if (newChannels > 0 && oldChannels != newChannels)
       mInputChannels->SetSelection(newChannels - 1);
 
-   if (hostName != wxT("") && mHost->GetStringSelection() != hostName)
+   if (!hostName.empty() && mHost->GetStringSelection() != hostName)
       mHost->SetStringSelection(hostName);
 
    RegenerateTooltips();
@@ -510,16 +513,16 @@ void DeviceToolBar::FillHosts()
    const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
    // go over our lists add the host to the list if it isn't there yet
    for (i = 0; i < inMaps.size(); i++)
-      if (hosts.Index(inMaps[i].hostString) == wxNOT_FOUND)
-         hosts.Add(inMaps[i].hostString);
+      if ( ! make_iterator_range( hosts ).contains( inMaps[i].hostString ) )
+         hosts.push_back(inMaps[i].hostString);
    for (i = 0; i < outMaps.size(); i++)
-      if (hosts.Index(outMaps[i].hostString) == wxNOT_FOUND)
-         hosts.Add(outMaps[i].hostString);
+      if ( ! make_iterator_range( hosts ).contains( outMaps[i].hostString ) )
+         hosts.push_back(outMaps[i].hostString);
 
    mHost->Clear();
    mHost->Append(hosts);
 
-   if (hosts.GetCount() == 0)
+   if (hosts.size() == 0)
       mHost->Enable(false);
 
    mHost->InvalidateBestSize();
@@ -577,7 +580,7 @@ void DeviceToolBar::FillHostDevices()
    for (i = 0; i < inMaps.size(); i++) {
       if (foundHostIndex == inMaps[i].hostIndex) {
          mInput->Append(MakeDeviceSourceString(&inMaps[i]));
-         if (host == wxT("")) {
+         if (host.empty()) {
             host = inMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
             mHost->SetStringSelection(host);
@@ -592,7 +595,7 @@ void DeviceToolBar::FillHostDevices()
    for (i = 0; i < outMaps.size(); i++) {
       if (foundHostIndex == outMaps[i].hostIndex) {
          mOutput->Append(MakeDeviceSourceString(&outMaps[i]));
-         if (host == wxT("")) {
+         if (host.empty()) {
             host = outMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
             gPrefs->Flush();
@@ -810,7 +813,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    }
 
 #if USE_PORTMIXER
-   wxArrayString inputSources = combo->GetStrings();
+   wxArrayStringEx inputSources = combo->GetStrings();
 
    wxDialogWrapper dlg(nullptr, wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
@@ -822,8 +825,8 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
      S.StartHorizontalLay(wxCENTER, false);
       {
          c = S.AddChoice(combo->GetName(),
-                         combo->GetStringSelection(),
-                         &inputSources);
+                         inputSources,
+                         combo->GetSelection());
       }
       S.EndHorizontalLay();
    }

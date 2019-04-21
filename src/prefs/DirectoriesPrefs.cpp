@@ -16,6 +16,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "DirectoriesPrefs.h"
 
 #include <math.h>
 
@@ -36,7 +37,6 @@
 #include "../Internat.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
-#include "DirectoriesPrefs.h"
 
 enum {
    TempDirID = 1000,
@@ -59,6 +59,22 @@ DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent, wxWindowID winid)
 
 DirectoriesPrefs::~DirectoriesPrefs()
 {
+}
+
+
+ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol()
+{
+   return DIRECTORIES_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString DirectoriesPrefs::GetDescription()
+{
+   return _("Preferences for Directories");
+}
+
+wxString DirectoriesPrefs::HelpPageName()
+{
+   return "Directories_Preferences";
 }
 
 /// Creates the dialog and its contents.
@@ -145,7 +161,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
                     _("Choose a location to place the temporary directory"),
                     oldTempDir );
    int retval = dlog.ShowModal();
-   if (retval != wxID_CANCEL && dlog.GetPath() != wxT("")) {
+   if (retval != wxID_CANCEL && !dlog.GetPath().empty()) {
       wxFileName tmpDirPath;
       tmpDirPath.AssignDir(dlog.GetPath());
 
@@ -162,15 +178,15 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 #else
       newDirName = wxT(".audacity_temp");
 #endif
-      wxArrayString dirsInPath = tmpDirPath.GetDirs();
+      auto dirsInPath = tmpDirPath.GetDirs();
 
       // If the default temp dir or user's pref dir don't end in '/' they cause
       // wxFileName's == operator to construct a wxFileName representing a file
       // (that doesn't exist) -- hence the constructor calls
       if (tmpDirPath != wxFileName(wxGetApp().defaultTempDir, wxT("")) &&
             tmpDirPath != wxFileName(mTempDir->GetValue(), wxT("")) &&
-            (dirsInPath.GetCount() == 0 ||
-             dirsInPath[dirsInPath.GetCount()-1] != newDirName))
+            (dirsInPath.size() == 0 ||
+             dirsInPath[dirsInPath.size()-1] != newDirName))
       {
          tmpDirPath.AppendDir(newDirName);
       }
@@ -269,11 +285,6 @@ bool DirectoriesPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString DirectoriesPrefs::HelpPageName()
-{
-   return "Directories_Preferences";
 }
 
 PrefsPanel *DirectoriesPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

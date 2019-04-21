@@ -30,6 +30,8 @@ struct ClipMoveState {
    TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
+   int mMouseClickX{};
+
    void clear()
    {
       capturedClip = nullptr;
@@ -38,6 +40,7 @@ struct ClipMoveState {
       hSlideAmount = 0;
       capturedClipArray.clear();
       snapLeft = snapRight = -1;
+      mMouseClickX = 0;
    }
 };
 
@@ -64,6 +67,14 @@ public:
    // A utility function also used by menu commands
    static void DoSlideHorizontal
       ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
+
+   // Try to move clips from one WaveTrack to another, before also moving
+   // by some horizontal amount, which may be slightly adjusted to fit the
+   // destination tracks.
+   static bool DoSlideVertical
+      ( ViewInfo &viewInfo, wxCoord xx,
+        ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
+        Track &dstTrack, double &desiredSlideAmount );
 
    static UIHandlePtr HitAnywhere
       (std::weak_ptr<TimeShiftHandle> &holder,
@@ -107,8 +118,6 @@ private:
    bool mSlideUpDownOnly{};
 
    bool mSnapPreferRightEdge{};
-
-   int mMouseClickX{};
 
    // Handles snapping the selection boundaries or track boundaries to
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight

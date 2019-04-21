@@ -19,8 +19,9 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
-#include "../Experimental.h"
 #include "RecordingPrefs.h"
+
+#include "../Experimental.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
@@ -31,7 +32,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Experimental.h"
 #include "../Internat.h"
 
 #include "../widgets/Warning.h"
@@ -56,6 +56,21 @@ RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
 
 RecordingPrefs::~RecordingPrefs()
 {
+}
+
+ComponentInterfaceSymbol RecordingPrefs::GetSymbol()
+{
+   return RECORDING_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString RecordingPrefs::GetDescription()
+{
+   return _("Preferences for Recording");
+}
+
+wxString RecordingPrefs::HelpPageName()
+{
+   return "Recording_Preferences";
 }
 
 void RecordingPrefs::Populate()
@@ -288,11 +303,6 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
 {
    mUseCustomTrackName = !mUseCustomTrackName;
    mToggleCustomName->Enable(mUseCustomTrackName);
-}
-
-wxString RecordingPrefs::HelpPageName()
-{
-   return "Recording_Preferences";
 }
 
 PrefsPanel *RecordingPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

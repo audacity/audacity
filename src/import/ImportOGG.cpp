@@ -28,7 +28,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ImportOGG.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -43,12 +43,12 @@
 #include "../Internat.h"
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
+#include "../widgets/ProgressDialog.h"
 
 
 #define DESC _("Ogg Vorbis files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("ogg")
 };
 
@@ -61,7 +61,7 @@ void GetOGGImportPlugin(ImportPluginList &importPluginList,
 {
    unusableImportPluginList.push_back(
       std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+         (DESC, FileExtensions( exts.begin(), exts.end() ) )
    );
 }
 
@@ -86,7 +86,7 @@ class OggImportPlugin final : public ImportPlugin
 {
 public:
    OggImportPlugin()
-   :  ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 
@@ -94,14 +94,14 @@ public:
 
    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
    wxString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 };
 
 
 class OggImportFileHandle final : public ImportFileHandle
 {
 public:
-   OggImportFileHandle(const wxString & filename,
+   OggImportFileHandle(const FilePath & filename,
                        std::unique_ptr<wxFFile> &&file,
                        std::unique_ptr<OggVorbis_File> &&vorbisFile)
    :  ImportFileHandle(filename),
@@ -115,7 +115,7 @@ public:
       {
          wxString strinfo;
          strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,mVorbisFile->vi[i].version,mVorbisFile->vi[i].channels,mVorbisFile->vi[i].rate);
-         mStreamInfo.Add(strinfo);
+         mStreamInfo.push_back(strinfo);
          mStreamUsage[i] = 0;
       }
 
@@ -155,7 +155,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    wxArrayString   mStreamInfo;
-   std::list<TrackHolders> mChannels;
+   std::list<NewChannelGroup> mChannels;
 
    sampleFormat   mFormat;
 };
@@ -171,7 +171,7 @@ wxString OggImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const FilePath &filename)
 {
    // Suppress some compiler warnings about unused global variables in the library header
    wxUnusedVar(OV_CALLBACKS_DEFAULT);
@@ -228,7 +228,8 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+ProgressResult OggImportFileHandle::Import(
+   TrackFactory *trackFactory, TrackHolders &outTracks,
    Tags *tags)
 {
    outTracks.clear();
@@ -258,27 +259,8 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
       link.resize(vi->channels);
 
-      int c = -1;
-      for (auto &channel : link) {
-         ++c;
-
+      for (auto &channel : link)
          channel = trackFactory->NewWaveTrack(mFormat, vi->rate);
-
-         if (vi->channels == 2) {
-            switch (c) {
-            case 0:
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-               break;
-            case 1:
-               channel->SetChannel(Track::RightChannel);
-               break;
-            }
-         }
-         else {
-            channel->SetChannel(Track::MonoChannel);
-         }
-      }
    }
 
    /* The number of bytes to get from the codec in each run */
@@ -374,10 +356,9 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
    for (auto &link : mChannels)
    {
-      for (auto &channel : link) {
+      for (auto &channel : link)
          channel->Flush();
-         outTracks.push_back(std::move(channel));
-      }
+      outTracks.push_back(std::move(link));
    }
 
    //\todo { Extract comments from each stream? }
@@ -389,7 +370,7 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
          wxString value = comment.AfterFirst(wxT('='));
          if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
             long val;
-            if (value.Length() == 4 && value.ToLong(&val)) {
+            if (value.length() == 4 && value.ToLong(&val)) {
                name = TAG_YEAR;
             }
          }

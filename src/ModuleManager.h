@@ -12,15 +12,14 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include <wx/dynlib.h>
-
 #include "MemoryX.h"
 #include <map>
 #include <vector>
 
 #include "audacity/ModuleInterface.h"
-#include "PluginManager.h"
 
+class wxArrayString;
+class wxDynamicLibrary;
 class CommandHandler;
 
 wxWindow *  MakeHijackPanel();
@@ -48,7 +47,7 @@ typedef int (*fnModuleDispatch)(ModuleDispatchTypes type);
 class Module
 {
 public:
-   Module(const wxString & name);
+   Module(const FilePath & name);
    virtual ~Module();
 
    bool Load();
@@ -57,7 +56,7 @@ public:
    void * GetSymbol(const wxString &name);
 
 private:
-   wxString mName;
+   FilePath mName;
    std::unique_ptr<wxDynamicLibrary> mLib;
    fnModuleDispatch mDispatch;
 };
@@ -73,6 +72,7 @@ using ModuleInterfaceHandle = std::unique_ptr<
 typedef std::map<wxString, ModuleMain *> ModuleMainMap;
 typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
+using PluginIDs = wxArrayString;
 
 class ModuleManager final : public ModuleManagerInterface
 {
@@ -96,18 +96,18 @@ public:
    bool DiscoverProviders();
 
    // Seems we don't currently use FindAllPlugins
-   void FindAllPlugins(PluginIDList & providers, wxArrayString & paths);
+   void FindAllPlugins(PluginIDs & providers, PluginPaths & paths);
 
-   wxArrayString FindPluginsForProvider(const PluginID & provider, const wxString & path);
-   bool RegisterEffectPlugin(const PluginID & provider, const wxString & path,
+   PluginPaths FindPluginsForProvider(const PluginID & provider, const PluginPath & path);
+   bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
                        wxString &errMsg);
 
-   IdentInterface *CreateProviderInstance(const PluginID & provider, const wxString & path);
-   IdentInterface *CreateInstance(const PluginID & provider, const wxString & path);
-   void DeleteInstance(const PluginID & provider, IdentInterface *instance);
+   ComponentInterface *CreateProviderInstance(const PluginID & provider, const PluginPath & path);
+   ComponentInterface *CreateInstance(const PluginID & provider, const PluginPath & path);
+   void DeleteInstance(const PluginID & provider, ComponentInterface *instance);
 
-   bool IsProviderValid(const PluginID & provider, const wxString & path);
-   bool IsPluginValid(const PluginID & provider, const wxString & path, bool bFast);
+   bool IsProviderValid(const PluginID & provider, const PluginPath & path);
+   bool IsPluginValid(const PluginID & provider, const PluginPath & path, bool bFast);
 
 private:
    // I'm a singleton class
@@ -115,7 +115,7 @@ private:
    ~ModuleManager();
 
    void InitializeBuiltins();
-   ModuleInterface *LoadModule(const wxString & path);
+   ModuleInterface *LoadModule(const PluginPath & path);
 
 private:
    friend ModuleInterfaceDeleter;

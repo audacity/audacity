@@ -14,9 +14,10 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 
-#include "../../Audacity.h"
+#include "../../Audacity.h" // for USE_* macros
 
 #if defined(USE_LV2)
+#include "LoadLV2.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -25,8 +26,6 @@ Functions that find and load all LV2 plugins on the system.
 
 #include <wx/dynlib.h>
 #include <wx/filename.h>
-#include <wx/hashmap.h>
-#include <wx/list.h>
 #include <wx/log.h>
 #include <wx/string.h>
 
@@ -40,8 +39,6 @@ Functions that find and load all LV2 plugins on the system.
 #include "lv2/lv2plug.in/ns/ext/port-props/port-props.h"
 #include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"
 #include "lv2/lv2plug.in/ns/ext/presets/presets.h"
-
-#include "LoadLV2.h"
 
 #include <unordered_map>
 
@@ -90,20 +87,20 @@ LV2EffectsModule::~LV2EffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
-wxString LV2EffectsModule::GetPath()
+PluginPath LV2EffectsModule::GetPath()
 {
    return mPath;
 }
 
-IdentInterfaceSymbol LV2EffectsModule::GetSymbol()
+ComponentInterfaceSymbol LV2EffectsModule::GetSymbol()
 {
    return XO("LV2 Effects");
 }
 
-IdentInterfaceSymbol LV2EffectsModule::GetVendor()
+VendorSymbol LV2EffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -181,7 +178,7 @@ bool LV2EffectsModule::Initialize()
    wxString pathVar;
    wxGetEnv(wxT("LV2_PATH"), &pathVar);
 
-   if (pathVar.IsEmpty())
+   if (pathVar.empty())
    {
       pathVar = newVar.Mid(1);
    }
@@ -215,13 +212,13 @@ bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
    return false;
 }
 
-wxArrayString LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    // Retrieve data about all LV2 plugins
    const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
 
    // Iterate over all plugins retrieve their URI
-   wxArrayString plugins;
+   PluginPaths plugins;
    LILV_FOREACH(plugins, i, plugs)
    {
       const LilvPlugin *plug = lilv_plugins_get(plugs, i);
@@ -233,14 +230,14 @@ wxArrayString LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSE
          continue;
       }
 
-      plugins.Add(LilvString(lilv_plugin_get_uri(plug)));
+      plugins.push_back(LilvString(lilv_plugin_get_uri(plug)));
    }
 
    return plugins;
 }
 
 unsigned LV2EffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -260,14 +257,14 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool LV2EffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
    return GetPlugin(path) != NULL;
 }
 
-IdentInterface *LV2EffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *LV2EffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    const LilvPlugin *plug = GetPlugin(path);
@@ -280,7 +277,7 @@ IdentInterface *LV2EffectsModule::CreateInstance(const wxString & path)
    return safenew LV2Effect(plug);
 }
 
-void LV2EffectsModule::DeleteInstance(IdentInterface *instance)
+void LV2EffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < LV2Effect > {
       dynamic_cast<LV2Effect *>(instance)
@@ -291,7 +288,7 @@ void LV2EffectsModule::DeleteInstance(IdentInterface *instance)
 // LV2EffectsModule implementation
 // ============================================================================
 
-const LilvPlugin *LV2EffectsModule::GetPlugin(const wxString & path)
+const LilvPlugin *LV2EffectsModule::GetPlugin(const PluginPath & path)
 {
    LilvNode *uri = lilv_new_uri(gWorld, path.ToUTF8());
    if (!uri)

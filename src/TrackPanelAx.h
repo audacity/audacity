@@ -11,16 +11,19 @@
 #ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
-#include <wx/window.h>
-#include <wx/panel.h>
+#include <memory>
+
+#include <wx/setup.h> // for wxUSE_* macros
+
+#include <wx/string.h> // member variable
 
 #if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
-#include "widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h" // to inherit
 #endif
 
-#include "Track.h"
-#include "TrackPanel.h"
+
+class Track;
+class TrackPanel;
 
 class TrackPanelAx final
 #if wxUSE_ACCESSIBILITY

@@ -24,12 +24,18 @@ in which buttons can be placed.
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
+#include "ToolBar.h"
+
+#include "../Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #ifndef WX_PRECOMP
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
 #include <wx/image.h>
@@ -40,9 +46,7 @@ in which buttons can be placed.
 #include <wx/window.h>
 #endif  /*  */
 
-#include "ToolBar.h"
 #include "ToolDock.h"
-#include "../Experimental.h"
 
 #include "../AllThemeResources.h"
 #include "../AColor.h"
@@ -50,6 +54,7 @@ in which buttons can be placed.
 #include "../Project.h"
 #include "../Theme.h"
 #include "../commands/Keyboard.h"
+#include "../commands/CommandManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 #include "../Prefs.h"
@@ -63,6 +68,9 @@ in which buttons can be placed.
 //
 #define RWIDTH 4
 
+/// \brief a wxWindow that provides the resizer for a toolbar on the 
+/// right hand side.  Responsible for drawing the resizer appearance, 
+/// resizing mouse events and constraining the resizing.
 class ToolBarResizer final : public wxWindow
 {
 public:
@@ -876,6 +884,7 @@ void ToolBar::OnErase( wxEraseEvent & WXUNUSED(event) )
 //
 void ToolBar::OnPaint( wxPaintEvent & event )
 {
+   (void)event;// compiler food.
    //wxPaintDC dc( (wxWindow *) event.GetEventObject() );
    wxPaintDC dc( this );
    // Start with a clean background

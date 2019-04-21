@@ -17,9 +17,10 @@
 #include "../Audacity.h"
 #include "TracksBehaviorsPrefs.h"
 
+#include "../Experimental.h"
+
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Experimental.h"
 #include "../Internat.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
@@ -33,6 +34,21 @@ TracksBehaviorsPrefs::~TracksBehaviorsPrefs()
 {
 }
 
+ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol()
+{
+   return TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString TracksBehaviorsPrefs::GetDescription()
+{
+   return _("Preferences for TracksBehaviors");
+}
+
+wxString TracksBehaviorsPrefs::HelpPageName()
+{
+   return "Tracks_Behaviors_Preferences";
+}
+
 const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
 {
    static auto string = wxT("/GUI/ScrollBeyondZero");
@@ -41,13 +57,13 @@ const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
 
 void TracksBehaviorsPrefs::Populate()
 {
-   mSoloCodes.Add(wxT("Simple"));
-   mSoloCodes.Add(wxT("Multi"));
-   mSoloCodes.Add(wxT("None"));
+   mSoloCodes.push_back(wxT("Simple"));
+   mSoloCodes.push_back(wxT("Multi"));
+   mSoloCodes.push_back(wxT("None"));
 
-   mSoloChoices.Add(_("Simple"));
-   mSoloChoices.Add(_("Multi-track"));
-   mSoloChoices.Add(_("None"));
+   mSoloChoices.push_back(_("Simple"));
+   mSoloChoices.push_back(_("Multi-track"));
+   mSoloChoices.push_back(_("None"));
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -63,8 +79,8 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      /* i18n-hint: auto-select makes a selection if there was none.*/
-      S.TieCheckBox(_("A&uto-select, if selection required"),
+      /* i18n-hint: 'select all audio' makes a selection if there was none.*/
+      S.TieCheckBox(_("&Select all audio, if selection required"),
                     wxT("/GUI/SelectAllOnNone"),
                     false);
       /* i18n-hint: auto-move moves clips out the way if necessary.*/
@@ -92,7 +108,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
-                    true);
+                    false);
       S.TieCheckBox(_("Use dialog for the &name of a new label"),
                     wxT("/GUI/DialogForNameNewLabel"),
                     false);
@@ -127,11 +143,6 @@ bool TracksBehaviorsPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString TracksBehaviorsPrefs::HelpPageName()
-{
-   return "Tracks_Behaviors_Preferences";
 }
 
 TracksBehaviorsPrefsFactory::TracksBehaviorsPrefsFactory()

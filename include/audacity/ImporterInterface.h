@@ -44,7 +44,7 @@
 
 #include "audacity/Types.h"
 #include "audacity/ConfigInterface.h"
-#include "audacity/IdentInterface.h"
+#include "audacity/ComponentInterface.h"
 
 // ============================================================================
 //
@@ -54,7 +54,7 @@
 
 class ImporterHostInterface;
 class ImporterClientInterface;
-class ImporterInterface : public IdentInterface
+class ImporterInterface : public ComponentInterface
 {
 public:
    virtual ~ImporterInterface() {};
@@ -72,7 +72,7 @@ public:
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
-   virtual wxArrayString GetSupportedExtensions() = 0;
+   virtual FileExtensions GetSupportedExtensions() = 0;
    virtual bool SupportsExtension(const wxString & extension) = 0;
 
    // Create the client that will be used to import a file.

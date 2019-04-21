@@ -40,19 +40,20 @@
 */
 
 #include "Audacity.h"
+#include "FFT.h"
+
 #include "Internat.h"
 
-#include "FFT.h"
 #include "MemoryX.h"
 #include "SampleFormat.h"
 
+#include <wx/wxcrtvararg.h>
 #include <wx/intl.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
 #include "RealFFTf.h"
-#include "Experimental.h"
 
 static ArraysOf<int> gFFTBitTable;
 static const size_t MaxFastBits = 16;
@@ -343,7 +344,7 @@ const wxChar *WindowFuncName(int whichFunction)
    case eWinFuncHamming:
       return wxT("Hamming");
    case eWinFuncHanning:
-      return wxT("Hanning");
+      return wxT("Hann");
    case eWinFuncBlackman:
       return wxT("Blackman");
    case eWinFuncBlackmanHarris:
@@ -404,7 +405,7 @@ void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, flo
       break;
    case eWinFuncHanning:
    {
-      // Hanning
+      // Hann
       const double multiplier = 2 * M_PI / NumSamples;
       static const double coeff0 = 0.5, coeff1 = -0.5;
       for (int ii = 0; ii < NumSamples; ++ii)
@@ -585,6 +586,8 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       // There are deltas at the ends
       const double multiplier = 2 * M_PI / NumSamples;
       static const double coeff0 = 0.54, coeff1 = -0.46 * multiplier;
+      // TODO This code should be more explicit about the precision it intends.
+      // For now we get C4305 warnings, truncation from 'const double' to 'float' 
       in[0] *= coeff0;
       if (!extraSample)
          --NumSamples;
@@ -599,7 +602,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       break;
    case eWinFuncHanning:
    {
-      // Hanning
+      // Hann
       const double multiplier = 2 * M_PI / NumSamples;
       const double coeff1 = -0.5 * multiplier;
       for (int ii = 0; ii < (int)NumSamples; ++ii)

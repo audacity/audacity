@@ -30,9 +30,11 @@
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/slider.h>
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
@@ -73,9 +75,9 @@ EffectClickRemoval::~EffectClickRemoval()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectClickRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
 {
    return CLICKREMOVAL_PLUGIN_SYMBOL;
 }
@@ -172,10 +174,8 @@ bool EffectClickRemoval::Process()
    bool bGoodResult = true;
    mbDidSomething = false;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -193,7 +193,6 @@ bool EffectClickRemoval::Process()
          }
       }
 
-      track = (WaveTrack *) iter.Next();
       count++;
    }
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.

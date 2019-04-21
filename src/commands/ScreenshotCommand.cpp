@@ -19,15 +19,18 @@ small calculations of rectangles.
 
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
+
 #include "CommandTargets.h"
 #include "../Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
+#include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/bitmap.h>
 #include <wx/valgen.h>
 
+#include "../AdornedRulerPanel.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../toolbars/ToolManager.h"
@@ -40,13 +43,14 @@ small calculations of rectangles.
 #include "../toolbars/SelectionBar.h"
 #include "../toolbars/ToolsToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
-#include "../widgets/Ruler.h"
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
+#include "CommandManager.h"
 
 
-static const IdentInterfaceSymbol
+static const EnumValueSymbol
 kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 {
    { XO("Window") },
@@ -84,7 +88,7 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 };
 
 
-static const IdentInterfaceSymbol
+static const EnumValueSymbol
 kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
    // These are acceptable dual purpose internal/visible names
@@ -97,22 +101,22 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
    S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
-   S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
+   S.DefineEnum(                           mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
+   S.Define(                               mbBringToTop, wxT("ToTop"), true );
    return true;
 };
 
 void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto whats = LocalizedStrings(kCaptureWhatStrings, nCaptureWhats);
-   auto backs = LocalizedStrings(kBackgroundStrings, nBackgrounds);
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.TieTextBox(  _("Path:"), mPath);
-      S.TieChoice(   _("Capture What:"), mWhat, &whats);
-      S.TieChoice(   _("Background:"), mBack, &backs);
+      S.TieChoice(   _("Capture What:"),
+         mWhat, LocalizedStrings(kCaptureWhatStrings, nCaptureWhats));
+      S.TieChoice(   _("Background:"),
+         mBack, LocalizedStrings(kBackgroundStrings, nBackgrounds));
       S.TieCheckBox( _("Bring To Top:"), mbBringToTop);
    }
    S.EndMultiColumn();
@@ -347,7 +351,7 @@ void ExploreMenu(
       return;
 
    wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.GetCount();
+   size_t lcnt = list.size();
    wxMenuItem * item;
    wxString Label;
    wxString Accel;
@@ -441,7 +445,7 @@ void ScreenshotCommand::CapturePreferences(
       SetIdleHandler( IdleHandler );
       gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
       gPrefs->Flush();
-      wxString Command = "Preferences";
+      CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
       if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
@@ -464,7 +468,7 @@ void ScreenshotCommand::CaptureEffects(
 #define CAPTURE_NYQUIST_TOO
    // Commented out the effects that don't have dialogs.
    // Also any problematic ones, 
-   const wxString EffectNames[] = {
+   CaptureCommands( context, {
 #ifdef TRICKY_CAPTURE
       //"Contrast...", // renamed
       "ContrastAnalyser",
@@ -541,9 +545,7 @@ void ScreenshotCommand::CaptureEffects(
       "Silence Finder...",
       "Sound Finder...",
 #endif
-   };
-   wxArrayString Commands( sizeof(EffectNames)/sizeof(EffectNames[0]), EffectNames );
-   CaptureCommands( context, Commands );
+   } );
 }
 
 void ScreenshotCommand::CaptureScriptables( 
@@ -554,7 +556,7 @@ void ScreenshotCommand::CaptureScriptables(
    (void)&FileName;//compiler food.
    (void)&context;
 
-   const wxString ScriptablesNames[] = {
+   CaptureCommands( context, {
       "SelectTime",
       "SelectFrequencies",
       "SelectTracks",
@@ -580,16 +582,13 @@ void ScreenshotCommand::CaptureScriptables(
       "Drag",
       "CompareAudio",
       "Screenshot",
-   };
-   
-   wxArrayString Commands( sizeof(ScriptablesNames)/sizeof(ScriptablesNames[0]), ScriptablesNames );
-   CaptureCommands( context, Commands );
+   } );
 
 }
 
 
 void ScreenshotCommand::CaptureCommands( 
-   const CommandContext & context, wxArrayString & Commands ){
+   const CommandContext & context, const wxArrayStringEx & Commands ){
    AudacityProject * pProject = context.GetProject();
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;
@@ -602,7 +601,7 @@ void ScreenshotCommand::CaptureCommands(
 #endif
    mpShooter = this;
 
-   for( size_t i=0;i<Commands.GetCount();i++){
+   for( size_t i=0;i<Commands.size();i++){
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
       Str = Commands[i];
@@ -749,7 +748,7 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       // This rectangle omits the focus ring about the track, and
       // also within that, a narrow black border with a "shadow" below and
       // to the right
-      wxRect rect = panel.FindTrackRect( &t, false );
+      wxRect rect = panel.FindTrackRect( &t );
 
       // Enlarge horizontally.
       // PRL:  perhaps it's one pixel too much each side, including some gray
@@ -777,26 +776,20 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       return rect;
    };
 
-   TrackListIterator iter(pProj->GetTracks());
    int count = 0;
-   for (auto t = iter.First(); t; t = iter.Next()) {
+   for (auto t : pProj->GetTracks()->Leaders()) {
       count +=  1;
       if( count > n )
       {
          wxRect r =  FindRectangle( *panel, *t );
          return r;
       }
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
-      }
    }
    return wxRect( 0,0,0,0);
 }
 
 wxString ScreenshotCommand::WindowFileName(AudacityProject * proj, wxTopLevelWindow *w){
-   if (w != proj && w->GetTitle() != wxT("")) {
+   if (w != proj && !w->GetTitle().empty()) {
       mFileName = MakeFileName(mFilePath,
          kCaptureWhatStrings[ mCaptureMode ].Translation() +
             (wxT("-") + w->GetTitle() + wxT("-")));

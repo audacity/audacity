@@ -18,12 +18,15 @@
 
 #include <math.h>
 
+#include <wx/choice.h>
 #include <wx/intl.h>
+#include <wx/slider.h>
 
 #include "../LabelTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Resample.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -103,9 +106,9 @@ EffectChangeSpeed::~EffectChangeSpeed()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangeSpeed::GetSymbol()
+ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol()
 {
    return CHANGESPEED_PLUGIN_SYMBOL;
 }
@@ -224,33 +227,28 @@ bool EffectChangeSpeed::Process()
    // Similar to EffectSoundTouch::Process()
 
    // Iterate over each track.
-   // Track::All is needed because this effect needs to introduce
+   // All needed because this effect needs to introduce
    // silence in the sync-lock group tracks to keep sync
-   CopyInputTracks(Track::All); // Set up mOutputTracks.
+   CopyInputTracks(true); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   TrackListIterator iter(mOutputTracks.get());
-   Track* t;
    mCurTrackNum = 0;
    mMaxNewLength = 0.0;
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
-   t = iter.First();
-   while (t != NULL)
-   {
-      if (t->GetKind() == Track::Label) {
-         if (t->GetSelected() || t->IsSyncLockSelected())
+   mOutputTracks->Any().VisitWhile( bGoodResult,
+      [&](LabelTrack *lt) {
+         if (lt->GetSelected() || lt->IsSyncLockSelected())
          {
-            if (!ProcessLabelTrack(static_cast<LabelTrack*>(t))) {
+            if (!ProcessLabelTrack(lt))
                bGoodResult = false;
-               break;
-            }
          }
-      }
-      else if (t->GetKind() == Track::Wave && t->GetSelected())
-      {
-         WaveTrack *pOutWaveTrack = (WaveTrack*)t;
+      },
+      [&](WaveTrack *pOutWaveTrack, const Track::Fallthrough &fallthrough) {
+         if (!pOutWaveTrack->GetSelected())
+            return fallthrough();
+
          //Get start and end times from track
          mCurT0 = pOutWaveTrack->GetStartTime();
          mCurT1 = pOutWaveTrack->GetEndTime();
@@ -268,21 +266,15 @@ bool EffectChangeSpeed::Process()
 
             //ProcessOne() (implemented below) processes a single track
             if (!ProcessOne(pOutWaveTrack, start, end))
-            {
                bGoodResult = false;
-               break;
-            }
          }
          mCurTrackNum++;
+      },
+      [&](Track *t) {
+         if (t->IsSyncLockSelected())
+            t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
-      else if (t->IsSyncLockSelected())
-      {
-         t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
-      }
-
-      //Iterate to the next track
-      t=iter.Next();
-   }
+   );
 
    if (bGoodResult)
       ReplaceProcessedTracks(bGoodResult);
@@ -347,26 +339,26 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
          wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
 
-         wxArrayString vinylChoices;
+         wxArrayStringEx vinylChoices;
          for (int i = 0; i < nVinyl; i++)
          {
             if (i == kVinyl_NA)
             {
-               vinylChoices.Add(wxGetTranslation(kVinylStrings[i]));
+               vinylChoices.push_back(wxGetTranslation(kVinylStrings[i]));
             }
             else
             {
-               vinylChoices.Add(kVinylStrings[i]);
+               vinylChoices.push_back(kVinylStrings[i]);
             }
          }
 
          mpChoice_FromVinyl =
-            S.Id(ID_FromVinyl).AddChoice(_("from"), wxT(""), &vinylChoices);
+            S.Id(ID_FromVinyl).AddChoice(_("from"), vinylChoices);
          mpChoice_FromVinyl->SetName(_("From rpm"));
          mpChoice_FromVinyl->SetSizeHints(100, -1);
 
          mpChoice_ToVinyl =
-            S.Id(ID_ToVinyl).AddChoice(_("to"), wxT(""), &vinylChoices);
+            S.Id(ID_ToVinyl).AddChoice(_("to"), vinylChoices);
          mpChoice_ToVinyl->SetName(_("To rpm"));
          mpChoice_ToVinyl->SetSizeHints(100, -1);
       }

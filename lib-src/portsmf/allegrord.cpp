@@ -39,7 +39,7 @@ public:
     long parse_int(string &field);
     int find_real_in(string &field, int n);
     double parse_real(string &field);
-    void parse_error(string &field, long offset, char *message);
+    void parse_error(string &field, long offset, const char *message);
     double parse_dur(string &field, double base);
     double parse_after_dur(double dur, string &field, int n, double base);
     double parse_loud(string &field);
@@ -116,19 +116,19 @@ Alg_parameters_ptr Alg_reader::process_attributes(
     if (attributes) {
         Alg_parameters_ptr a;
         bool in_seconds = seq->get_units_are_seconds();
-        if (a = Alg_parameters::remove_key(&attributes, "tempor")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "tempor"))) {
             double tempo = a->parm.r;
             seq->insert_tempo(tempo, seq->get_time_map()->time_to_beat(time));
         }
-        if (a = Alg_parameters::remove_key(&attributes, "beatr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "beatr"))) {
             double beat = a->parm.r;
             seq->insert_beat(time, beat);
         }
-        if (a = Alg_parameters::remove_key(&attributes, "timesig_numr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "timesig_numr"))) {
             tsnum = a->parm.r;
             ts_flag = true;
         }
-        if (a = Alg_parameters::remove_key(&attributes, "timesig_denr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "timesig_denr"))) {
             tsden = a->parm.r;
             ts_flag = true;
         }
@@ -422,11 +422,11 @@ bool Alg_reader::parse()
 long Alg_reader::parse_chan(string &field)
 {
     const char *int_string = field.c_str() + 1;
-    char *msg = "Integer or - expected";
+    const char *msg = "Integer or - expected";
     const char *p = int_string;
     char c;
     // check that all chars in int_string are digits or '-':
-    while (c = *p++) {
+    while ((c = *p++)) {
         if (!isdigit(c) && c != '-') {
             parse_error(field, p - field.c_str() - 1, msg);
             return 0;
@@ -449,11 +449,11 @@ long Alg_reader::parse_chan(string &field)
 long Alg_reader::parse_int(string &field)
 {
     const char *int_string = field.c_str() + 1;
-    char *msg = "Integer expected";
+    const char *msg = "Integer expected";
     const char *p = int_string;
     char c;
     // check that all chars in int_string are digits:
-    while (c = *p++) {
+    while ((c = *p++)) {
         if (!isdigit(c)) {
             parse_error(field, p - field.c_str() - 1, msg);
             return 0;
@@ -491,7 +491,7 @@ int Alg_reader::find_real_in(string &field, int n)
 
 double Alg_reader::parse_real(string &field)
 {
-    char *msg = "Real expected";
+    const char *msg = "Real expected";
     int last = find_real_in(field, 1);
     string real_string = field.substr(1, last - 1);
     if (last <= 1 || last < (int) field.length()) {
@@ -502,7 +502,7 @@ double Alg_reader::parse_real(string &field)
 }
 
 
-void Alg_reader::parse_error(string &field, long offset, char *message)
+void Alg_reader::parse_error(string &field, long offset, const char *message)
 {
     int position = line_parser.pos - field.length() + offset;
     error_flag = true;
@@ -520,9 +520,9 @@ double duration_lookup[] = { 0.25, 0.5, 1.0, 2.0, 4.0 };
 
 double Alg_reader::parse_dur(string &field, double base)
 {
-    char *msg = "Duration expected";
-    char *durs = "SIQHW";
-    char *p;
+    const char *msg = "Duration expected";
+    const char *durs = "SIQHW";
+    const char *p;
     int last;
     double dur;
     if (field.length() < 2) {
@@ -535,7 +535,7 @@ double Alg_reader::parse_dur(string &field, double base)
         // convert dur from seconds to beats
         dur = seq->get_time_map()->time_to_beat(base + dur) - 
               seq->get_time_map()->time_to_beat(base);
-    } else if (p = strchr(durs, toupper(field[1]))) {
+    } else if ((p = strchr(durs, toupper(field[1])))) {
         dur = duration_lookup[p - durs];
         last = 2;
     } else {
@@ -578,7 +578,7 @@ double Alg_reader::parse_after_dur(double dur, string &field,
 }
 
 struct loud_lookup_struct {
-    char *str;
+    const char *str;
     int val;
 } loud_lookup[] = { {"FFF", 127}, {"FF", 120}, {"F", 110}, {"MF", 100}, 
                     {"MP", 90}, {"P", 80}, {"PP", 70}, {"PPP", 60}, 
@@ -587,7 +587,7 @@ struct loud_lookup_struct {
 
 double Alg_reader::parse_loud(string &field)
 {
-    char *msg = "Loudness expected";
+    const char *msg = "Loudness expected";
     if (isdigit(field[1])) {
         return parse_int(field);
     } else {
@@ -613,14 +613,14 @@ int key_lookup[] = {21, 23, 12, 14, 16, 17, 19};
 //
 long Alg_reader::parse_key(string &field)
 {
-    char *msg = "Pitch expected";
-    char *pitches = "ABCDEFG";
-    char *p;
+    const char *msg = "Pitch expected";
+    const char *pitches = "ABCDEFG";
+    const char *p;
     if (isdigit(field[1])) {
         // This routine would not have been called if field = "P<number>"
         // so it must be "K<number>" so <number> must be an integer.
         return parse_int(field);
-    } else if (p = strchr(pitches, toupper(field[1]))) {
+    } else if ((p = strchr(pitches, toupper(field[1])))) {
         long key = key_lookup[p - pitches];
         key = parse_after_key(key, field, 2);
         return key;

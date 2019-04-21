@@ -15,11 +15,9 @@
 #include <Carbon/Carbon.h>
 #endif
 
-#include <wx/osx/private.h>
+#include <wx/osx/private.h> // to inherit wxWidgetCocoaImpl
 
-#include <wx/control.h>
-
-#include "aeffectx.h"
+#include "VSTControl.h"
 
 class VSTControlImpl final : public wxWidgetCocoaImpl
 {

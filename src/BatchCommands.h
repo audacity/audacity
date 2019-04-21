@@ -13,13 +13,14 @@
 #define __AUDACITY_BATCH_COMMANDS_DIALOG__
 
 #include <wx/defs.h>
-#include <wx/string.h>
 
 #include "export/Export.h"
 
+class wxArrayString;
 class Effect;
 class CommandContext;
 class AudacityProject;
+class wxArrayStringEx;
 
 class MacroCommandsCatalog {
 public:
@@ -35,7 +36,7 @@ public:
    // binary search
    Entries::const_iterator ByFriendlyName( const wxString &friendlyName ) const;
    // linear search
-   Entries::const_iterator ByCommandId( const wxString &commandId ) const;
+   Entries::const_iterator ByCommandId( const CommandID &commandId ) const;
 
    // Lookup by position as sorted by friendly name
    const Entry &operator[] ( size_t index ) const { return mCommands[index]; }
@@ -55,25 +56,26 @@ class MacroCommands final {
    MacroCommands();
  public:
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
-      const wxString & filename = wxT(""));
+      const wxString & filename = {});
    bool ApplyCommand( const wxString &friendlyCommand,
-      const wxString & command, const wxString & params,
+      const CommandID & command, const wxString & params,
       CommandContext const * pContext=NULL );
    bool ApplyCommandInBatchMode( const wxString &friendlyCommand,
-      const wxString & command, const wxString &params,
+      const CommandID & command, const wxString &params,
       CommandContext const * pContext = NULL);
    bool ApplySpecialCommand(
       int iCommand, const wxString &friendlyCommand,
-      const wxString & command, const wxString & params);
+      const CommandID & command, const wxString & params);
    bool ApplyEffectCommand(
       const PluginID & ID, const wxString &friendlyCommand,
-      const wxString & command,
+      const CommandID & command,
       const wxString & params, const CommandContext & Context);
    bool ReportAndSkip( const wxString & friendlyCommand, const wxString & params );
    void AbortBatch();
 
    // Utility functions for the special commands.
-   static wxString BuildCleanFileName(const wxString &fileName, const wxString &extension);
+   static wxString BuildCleanFileName(const FilePath &fileName,
+      const FileExtension &extension);
    bool WriteMp3File( const wxString & Name, int bitrate );
    double GetEndTime();
    static bool IsMono();
@@ -81,11 +83,11 @@ class MacroCommands final {
    // These commands do not depend on the command list.
    static void MigrateLegacyChains();
    static wxArrayString GetNames();
-   static wxArrayString GetNamesOfDefaultMacros();
+   static wxArrayStringEx GetNamesOfDefaultMacros();
 
-   static wxString GetCurrentParamsFor(const wxString & command);
-   static wxString PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent);
-   static wxString PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent);
+   static wxString GetCurrentParamsFor(const CommandID & command);
+   static wxString PromptForParamsFor(const CommandID & command, const wxString & params, wxWindow *parent);
+   static wxString PromptForPresetFor(const CommandID & command, const wxString & params, wxWindow *parent);
 
    // These commands do depend on the command list.
    void ResetMacro();
@@ -97,10 +99,11 @@ class MacroCommands final {
    bool DeleteMacro(const wxString & name);
    bool RenameMacro(const wxString & oldmacro, const wxString & newmacro);
 
-   void AddToMacro(const wxString & command, int before = -1);
-   void AddToMacro(const wxString & command, const wxString & params, int before = -1);
+   void AddToMacro(const CommandID & command, int before = -1);
+   void AddToMacro(const CommandID & command, const wxString & params, int before = -1);
+
    void DeleteFromMacro(int index);
-   wxString GetCommand(int index);
+   CommandID GetCommand(int index);
    wxString GetParams(int index);
    int GetCount();
    wxString GetMessage(){ return mMessage;};
@@ -111,7 +114,7 @@ class MacroCommands final {
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
 
-   wxArrayString mCommandMacro;
+   CommandIDs mCommandMacro;
    wxArrayString mParamsMacro;
    bool mAbort;
    wxString mMessage;

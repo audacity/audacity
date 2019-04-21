@@ -15,9 +15,10 @@
 
 #include "../Audacity.h"
 #include "BatchEvalCommand.h"
+
 #include "CommandContext.h"
 
-IdentInterfaceSymbol BatchEvalCommandType::BuildName()
+ComponentInterfaceSymbol BatchEvalCommandType::BuildName()
 {
    return { wxT("BatchCommand"), XO("Batch Command") };
 }
@@ -45,7 +46,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    MacroCommandsCatalog catalog(&context.project);
 
    wxString macroName = GetString(wxT("MacroName"));
-   if (macroName != wxT(""))
+   if (!macroName.empty())
    {
       MacroCommands batch;
       batch.ReadMacro(macroName);
@@ -64,7 +65,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    bool bResult = Batch.ApplyCommandInBatchMode(friendly, cmdName, cmdParams, &context);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();
-   if( !Message.IsEmpty() )
+   if( !Message.empty() )
       context.Status( Message );
    return bResult;
 }

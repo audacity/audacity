@@ -16,14 +16,15 @@
 #ifndef __AUDACITY_LINKINGHTMLWINDOW__
 #define __AUDACITY_LINKINGHTMLWINDOW__
 
-#include <wx/html/htmlwin.h>
-#include <wx/frame.h>
-
-#include "HtmlWindow.h"
-#include "wxPanelWrapper.h"
+#include "HtmlWindow.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
+
+/// \brief An HtmlWindow that handles linked clicked - usually the
+/// link will go to our own local copy of the manual, but it could
+/// launch a new browser window.
 class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 {
  public:
@@ -36,6 +37,8 @@ class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 
 };
 
+
+/// Adds some event handling to an HtmlWindow
 class BrowserDialog /* not final */ : public wxDialogWrapper
 {
 public:

@@ -28,7 +28,7 @@
    Also allows the curve to be specified with a series of 'graphic EQ'
    sliders.
 
-   The filter is applied using overlap/add of Hanning windows.
+   The filter is applied using overlap/add of Hann windows.
 
    Clone of the FFT Filter effect, no longer part of Audacity.
 
@@ -55,19 +55,26 @@
 #include "../Audacity.h"
 #include "Equalization.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 #include <vector>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/bitmap.h>
 #include <wx/button.h>
 #include <wx/brush.h>
 #include <wx/button.h>  // not really needed here
+#include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/event.h>
+#include <wx/listctrl.h>
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>
+#include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
 #include <wx/textdlg.h>
@@ -75,12 +82,13 @@
 #include <wx/filefn.h>
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
+#include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/tooltip.h>
 #include <wx/utils.h>
 
-#include "../Experimental.h"
 #include "../AColor.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../PlatformCompatibility.h"
 #include "../FileNames.h"
@@ -90,12 +98,18 @@
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../TrackArtist.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../float_cast.h"
+
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
 
 #include "FileDialog.h"
 
@@ -144,7 +158,7 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
+static const EnumValueSymbol kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -209,11 +223,14 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
 #endif
 END_EVENT_TABLE()
 
-EffectEqualization::EffectEqualization()
+EffectEqualization::EffectEqualization(int Options)
    : mFFTBuffer{ windowSize }
    , mFilterFuncR{ windowSize }
    , mFilterFuncI{ windowSize }
 {
+   mOptions = Options;
+   mGraphic = NULL;
+   mDraw = NULL;
    mCurve = NULL;
    mPanel = NULL;
 
@@ -280,10 +297,14 @@ EffectEqualization::~EffectEqualization()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectEqualization::GetSymbol()
+ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
+   if( mOptions == kEqOptionGraphic )
+      return GRAPHICEQ_PLUGIN_SYMBOL;
+   if( mOptions == kEqOptionCurve )
+      return FILTERCURVE_PLUGIN_SYMBOL;
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
@@ -356,6 +377,11 @@ bool EffectEqualization::LoadFactoryDefaults()
    mDrawMode = DEF_DrawMode;
    mDrawGrid = DEF_DrawGrid;
 
+   if( mOptions == kEqOptionCurve)
+      mDrawMode = true;
+   if( mOptions == kEqOptionGraphic)
+      mDrawMode = false;
+
    return Effect::LoadFactoryDefaults();
 }
 
@@ -366,7 +392,7 @@ bool EffectEqualization::ValidateUI()
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
 
-   if (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
+   if (mDisallowCustom && mCurveName == wxT("unnamed"))
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
@@ -408,9 +434,20 @@ bool EffectEqualization::ValidateUI()
 
 // Effect implementation
 
-bool EffectEqualization::Startup()
+wxString EffectEqualization::GetPrefsPrefix()
 {
    wxString base = wxT("/Effects/Equalization/");
+   if( mOptions == kEqOptionGraphic )
+      base = wxT("/Effects/GraphicEq/");
+   else if( mOptions == kEqOptionCurve )
+      base = wxT("/Effects/FilterCurve/");
+   return base;
+}
+
+
+bool EffectEqualization::Startup()
+{
+   wxString base = GetPrefsPrefix();
 
    // Migrate settings from 2.1.0 or before
 
@@ -471,23 +508,20 @@ bool EffectEqualization::Init()
 {
    int selcount = 0;
    double rate = 0.0;
-   TrackListIterator iter(GetActiveProject()->GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         WaveTrack *track = (WaveTrack *)t;
-         if (selcount==0) {
-            rate = track->GetRate();
+
+   auto trackRange =
+      GetActiveProject()->GetTracks()->Selected< const WaveTrack >();
+   if (trackRange) {
+      rate = (*(trackRange.first++)) -> GetRate();
+      ++selcount;
+
+      for (auto track : trackRange) {
+         if (track->GetRate() != rate) {
+            Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
+            return(false);
          }
-         else {
-            if (track->GetRate() != rate) {
-               Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
-               return(false);
-            }
-         }
-         selcount++;
+         ++selcount;
       }
-      t = iter.Next();
    }
 
    mHiFreq = rate / 2.0;
@@ -532,10 +566,8 @@ bool EffectEqualization::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -553,7 +585,6 @@ bool EffectEqualization::Process()
          }
       }
 
-      track = (WaveTrack *) iter.Next();
       count++;
    }
 
@@ -588,8 +619,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    LoadCurves();
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   const auto t = *inputTracks()->Any< const WaveTrack >().first;
    mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
    mLoFreq = loFreqI;
 
@@ -735,28 +765,30 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          // ROWS 4:
          // -------------------------------------------------------------------
-
          S.AddSpace(5, 5);
 
-         S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         if( mOptions == kEqLegacy )
          {
-            S.AddPrompt(_("&EQ Type:"));
-         }
-         S.EndHorizontalLay();
+            S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+            {
+               S.AddPrompt(_("&EQ Type:"));
+            }
+            S.EndHorizontalLay();
 
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
-         {
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
             {
-               mDraw = S.Id(ID_Draw).AddRadioButton(_("&Draw"));
-               mDraw->SetName(_("Draw Curves"));
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+               {
+                  mDraw = S.Id(ID_Draw).AddRadioButton(_("&Draw"));
+                  mDraw->SetName(_("Draw Curves"));
 
-               mGraphic = S.Id(ID_Graphic).AddRadioButtonToGroup(_("&Graphic"));
-               mGraphic->SetName(_("Graphic EQ"));
+                  mGraphic = S.Id(ID_Graphic).AddRadioButtonToGroup(_("&Graphic"));
+                  mGraphic->SetName(_("Graphic EQ"));
+               }
+               S.EndHorizontalLay();
             }
             S.EndHorizontalLay();
          }
-         S.EndHorizontalLay();
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
@@ -768,9 +800,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                auto interpolations =
                   LocalizedStrings(kInterpStrings, nInterpolations);
-               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &interpolations);
+               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, interpolations, 0 );
                mInterpChoice->SetName(_("Interpolation type"));
-               mInterpChoice->SetSelection(0);
             }
             S.EndHorizontalLay();
 
@@ -778,7 +809,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrL = S.GetSizer();
 
-               mLinFreq = S.Id(ID_Linear).AddCheckBox(_("Li&near Frequency Scale"), wxT("false"));
+               mLinFreq = S.Id(ID_Linear).AddCheckBox(_("Li&near Frequency Scale"), false);
                mLinFreq->SetName(_("Linear Frequency Scale"));
             }
             S.EndHorizontalLay();
@@ -823,39 +854,40 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          // ROW 5:
          // -------------------------------------------------------------------
-
-         S.AddSpace(5, 5);
-
-         S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         {
-            S.AddPrompt(_("&Select Curve:"));
-         }
-         S.EndHorizontalLay();
-
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
-         {
-            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+         if( mOptions == kEqLegacy ){
+            S.AddSpace(5, 5);
+            S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
             {
-               wxArrayString curves;
-               for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
-               {
-                  curves.Add(mCurves[ i ].Name);
-               }
-
-               mCurve = S.Id(ID_Curve).AddChoice( {}, wxT(""), &curves);
-               mCurve->SetName(_("Select Curve"));
+               S.AddPrompt(_("&Select Curve:"));
             }
             S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+            {
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+               {
+                  wxArrayStringEx curves;
+                  for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
+                  {
+                     curves.push_back(mCurves[ i ].Name);
+                  }
+
+                  mCurve = S.Id(ID_Curve).AddChoice( {}, curves );
+                  mCurve->SetName(_("Select Curve"));
+               }
+               S.EndHorizontalLay();
+            }
+            S.EndHorizontalLay();
+
+            S.Id(ID_Manage).AddButton(_("S&ave/Manage Curves..."));
          }
-         S.EndHorizontalLay();
-         S.Id(ID_Manage).AddButton(_("S&ave/Manage Curves..."));
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
             S.Id(ID_Clear).AddButton(_("Fla&tten"));
             S.Id(ID_Invert).AddButton(_("&Invert"));
 
-            mGridOnOff = S.Id(ID_Grid).AddCheckBox(_("Show g&rid lines"), wxT("false"));
+            mGridOnOff = S.Id(ID_Grid).AddCheckBox(_("Show g&rid lines"), false);
             mGridOnOff->SetName(_("Show grid lines"));
          }
          S.EndHorizontalLay();
@@ -968,17 +1000,25 @@ bool EffectEqualization::TransferDataToWindow()
    // Set graphic interpolation mode
    mInterpChoice->SetSelection(mInterp);
 
+   // Override draw mode, if we're not displaying the radio buttons.
+   if( mOptions == kEqOptionCurve)
+      mDrawMode = true;
+   if( mOptions == kEqOptionGraphic)
+      mDrawMode = false;
+
    // Set Graphic (Fader) or Draw mode
    if (mDrawMode)
    {
-      mDraw->SetValue(true);
+      if( mDraw )
+         mDraw->SetValue(true);
       szrV->Show(szrG,false);    // eq sliders
       szrH->Show(szrI,false);    // interpolation choice
       szrH->Show(szrL,true);     // linear freq checkbox
    }
    else
    {
-      mGraphic->SetValue(true);
+      if( mGraphic) 
+         mGraphic->SetValue(true);
       UpdateGraphic();
    }
 
@@ -1348,11 +1388,11 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    // MJS:  I don't know what the above means, or if I have broken it.
    wxFileName fn;
 
-   if(fileName == wxT("")) {
+   if(fileName.empty()) {
       // Check if presets are up to date.
       wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
-      wxString eqCurvesInstalledVersion = wxT("");
-      gPrefs->Read(wxT("/Effects/Equalization/PresetVersion"), &eqCurvesInstalledVersion, wxT(""));
+      wxString eqCurvesInstalledVersion;
+      gPrefs->Read(GetPrefsPrefix() + "PresetVersion", &eqCurvesInstalledVersion, wxT(""));
 
       bool needUpdate = (eqCurvesCurrentVersion != eqCurvesInstalledVersion);
 
@@ -1535,7 +1575,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    // Write current EqCurve version number
    // TODO: Probably better if we used pluginregistry.cfg
    wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
-   gPrefs->Write(wxT("/Effects/Equalization/PresetVersion"), eqCurvesCurrentVersion);
+   gPrefs->Write(GetPrefsPrefix()+"PresetVersion", eqCurvesCurrentVersion);
    gPrefs->Flush();
 
    return;
@@ -1574,7 +1614,7 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
 void EffectEqualization::SaveCurves(const wxString &fileName)
 {
    wxFileName fn;
-   if( fileName == wxT(""))
+   if( fileName.empty() )
    {
       // Construct default curve filename
       //
@@ -2115,22 +2155,27 @@ void EffectEqualization::LayoutEQSliders()
 
 void EffectEqualization::UpdateCurves()
 {
+
    // Reload the curve names
-   mCurve->Clear();
+   if( mCurve ) 
+      mCurve->Clear();
    bool selectedCurveExists = false;
    for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
-      if (mCurveName == mCurve)
+      if (mCurveName == mCurves[ i ].Name)
          selectedCurveExists = true;
-      mCurve->Append(mCurves[ i ].Name);
+      if( mCurve ) 
+         mCurve->Append(mCurves[ i ].Name);
    }
    // In rare circumstances, mCurveName may not exist (bug 1891)
    if (!selectedCurveExists)
       mCurveName = mCurves[ (int)mCurves.size() - 1 ].Name;
-   mCurve->SetStringSelection(mCurveName);
-
+   if( mCurve ) 
+      mCurve->SetStringSelection(mCurveName);
+   
    // Allow the control to resize
-   mCurve->SetSizeHints(-1, -1);
+   if( mCurve ) 
+      mCurve->SetSizeHints(-1, -1);
 
    // Set initial curve
    setCurve( mCurveName );
@@ -2636,7 +2681,8 @@ void EffectEqualization::OnSlider(wxCommandEvent & event)
 
 void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mGraphic->GetValue())
+   bool bIsGraphic = !mDrawMode;
+   if (bIsGraphic)
    {
       GraphicEQ(mLogEnvelope.get());
       EnvelopeUpdated();
@@ -2646,16 +2692,14 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnDrawMode(wxCommandEvent & WXUNUSED(event))
 {
-   UpdateDraw();
-
    mDrawMode = true;
+   UpdateDraw();
 }
 
 void EffectEqualization::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
 {
-   UpdateGraphic();
-
    mDrawMode = false;
+   UpdateGraphic();
 }
 
 void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
@@ -3054,11 +3098,18 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    }
 
    memDC.SetPen(*wxBLACK_PEN);
-   if( mEffect->mDraw->GetValue() )
+   if( mEffect->mDrawMode )
    {
-      TrackPanelDrawingContext context{ memDC, {}, {} };
+      ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
+
+      // Back pointer to TrackPanel won't be needed in the one drawing
+      // function we use here
+      TrackArtist artist( nullptr );
+
+      artist.pZoomInfo = &zoomInfo;
+      TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
       mEffect->mEnvelope->DrawPoints(
-         context, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
+         context, mEnvRect, false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax, false);
    }
 
@@ -3298,11 +3349,12 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
    int curve = 0;
 
    // Setup list of characters that aren't allowed
-   wxArrayString exclude;
-   exclude.Add( wxT("<") );
-   exclude.Add( wxT(">") );
-   exclude.Add( wxT("'") );
-   exclude.Add( wxT("\"") );
+   wxArrayStringEx exclude{
+      wxT("<") ,
+      wxT(">") ,
+      wxT("'") ,
+      wxT("\"") ,
+   };
 
    // Get the first one to be renamed
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
@@ -3337,7 +3389,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          for( curve = 0; curve < numCurves; curve++ )
          {
             wxString temp = mEditCurves[ curve ].Name;
-            if( name.IsSameAs( mEditCurves[ curve ].Name )) // case sensitive
+            if( name ==  mEditCurves[ curve ].Name ) // case sensitive
             {
                bad = true;
                if( curve == item )  // trying to rename a curve with the same name
@@ -3356,7 +3408,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
                }
             }
          }
-         if( name == wxT("") || name == wxT("unnamed") )
+         if( name.empty() || name == wxT("unnamed") )
             bad = true;
       }
 
@@ -3443,7 +3495,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    }
 
    if(highlight == -1)
-      PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
+      PopulateList(mEditCurves.size()-1);   // set 'unnamed' as the selected curve
    else
       PopulateList(highlight);   // user said 'No' to deletion
 #else // 'DELETE all N' code
@@ -3488,7 +3540,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
-   wxString fileName = wxT("");
+   wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
    else
@@ -3508,7 +3560,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
-   wxString fileName = wxT("");
+   wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
    else
@@ -3609,199 +3661,4 @@ void EditCurvesDialog::OnListSelectionChange( wxListEvent & )
    for (auto id : ids)
       FindWindowById(id, this)->Enable(enable);
 }
-
-#if wxUSE_ACCESSIBILITY
-
-SliderAx::SliderAx(wxWindow * window, const wxString &fmt) :
-WindowAccessible( window )
-{
-   mParent = window;
-   mFmt = fmt;
-}
-
-SliderAx::~SliderAx()
-{
-}
-
-// Retrieves the address of an IDispatch interface for the specified child.
-// All objects must support this property.
-wxAccStatus SliderAx::GetChild( int childId, wxAccessible** child )
-{
-   if( childId == wxACC_SELF )
-   {
-      *child = this;
-   }
-   else
-   {
-      *child = NULL;
-   }
-
-   return wxACC_OK;
-}
-
-// Gets the number of children.
-wxAccStatus SliderAx::GetChildCount(int* childCount)
-{
-   *childCount = 3;
-
-   return wxACC_OK;
-}
-
-// Gets the default action for this object (0) or > 0 (the action for a child).
-// Return wxACC_OK even if there is no action. actionName is the action, or the empty
-// string if there is no action.
-// The retrieved string describes the action that is performed on an object,
-// not what the object does as a result. For example, a toolbar button that prints
-// a document has a default action of "Press" rather than "Prints the current document."
-wxAccStatus SliderAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
-{
-   actionName->Clear();
-
-   return wxACC_OK;
-}
-
-// Returns the description for this object or a child.
-wxAccStatus SliderAx::GetDescription( int WXUNUSED(childId), wxString *description )
-{
-   description->Clear();
-
-   return wxACC_OK;
-}
-
-// Gets the window with the keyboard focus.
-// If childId is 0 and child is NULL, no object in
-// this subhierarchy has the focus.
-// If this object has the focus, child should be 'this'.
-wxAccStatus SliderAx::GetFocus(int* childId, wxAccessible** child)
-{
-   *childId = 0;
-   *child = this;
-
-   return wxACC_OK;
-}
-
-// Returns help text for this object or a child, similar to tooltip text.
-wxAccStatus SliderAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
-{
-   helpText->Clear();
-
-   return wxACC_OK;
-}
-
-// Returns the keyboard shortcut for this object or child.
-// Return e.g. ALT+K
-wxAccStatus SliderAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
-{
-   shortcut->Clear();
-
-   return wxACC_OK;
-}
-
-// Returns the rectangle for this object (id = 0) or a child element (id > 0).
-// rect is in screen coordinates.
-wxAccStatus SliderAx::GetLocation( wxRect& rect, int WXUNUSED(elementId) )
-{
-   wxSlider *s = wxDynamicCast( GetWindow(), wxSlider );
-
-   rect = s->GetRect();
-   rect.SetPosition( s->GetParent()->ClientToScreen( rect.GetPosition() ) );
-
-   return wxACC_OK;
-}
-
-// Gets the name of the specified object.
-wxAccStatus SliderAx::GetName(int WXUNUSED(childId), wxString* name)
-{
-   wxSlider *s = wxDynamicCast( GetWindow(), wxSlider );
-
-   *name = s->GetName();
-
-   return wxACC_OK;
-}
-
-// Returns a role constant.
-wxAccStatus SliderAx::GetRole(int childId, wxAccRole* role)
-{
-   switch( childId )
-   {
-   case 0:
-      *role = wxROLE_SYSTEM_SLIDER;
-      break;
-
-   case 1:
-   case 3:
-      *role = wxROLE_SYSTEM_PUSHBUTTON;
-      break;
-
-   case 2:
-      *role = wxROLE_SYSTEM_INDICATOR;
-      break;
-   }
-
-   return wxACC_OK;
-}
-
-// Gets a variant representing the selected children
-// of this object.
-// Acceptable values:
-// - a null variant (IsNull() returns TRUE)
-// - a list variant (GetType() == wxT("list"))
-// - an integer representing the selected child element,
-//   or 0 if this object is selected (GetType() == wxT("long"))
-// - a "void*" pointer to a wxAccessible child object
-wxAccStatus SliderAx::GetSelections( wxVariant * WXUNUSED(selections) )
-{
-   return wxACC_NOT_IMPLEMENTED;
-}
-
-// Returns a state constant.
-wxAccStatus SliderAx::GetState(int childId, long* state)
-{
-   wxSlider *s = wxDynamicCast( GetWindow(), wxSlider );
-
-   switch( childId )
-   {
-   case 0:
-      *state = wxACC_STATE_SYSTEM_FOCUSABLE;
-      break;
-
-   case 1:
-      if( s->GetValue() == s->GetMin() )
-      {
-         *state = wxACC_STATE_SYSTEM_INVISIBLE;
-      }
-      break;
-
-   case 3:
-      if( s->GetValue() == s->GetMax() )
-      {
-         *state = wxACC_STATE_SYSTEM_INVISIBLE;
-      }
-      break;
-   }
-
-   // Do not use mSliderIsFocused is not set until after this method
-   // is called.
-   *state |= ( s == wxWindow::FindFocus() ? wxACC_STATE_SYSTEM_FOCUSED : 0 );
-
-   return wxACC_OK;
-}
-
-// Returns a localized string representing the value for the object
-// or child.
-wxAccStatus SliderAx::GetValue(int childId, wxString* strValue)
-{
-   wxSlider *s = wxDynamicCast( GetWindow(), wxSlider );
-
-   if( childId == 0 )
-   {
-      strValue->Printf( mFmt, s->GetValue() );
-
-      return wxACC_OK;
-   }
-
-   return wxACC_NOT_SUPPORTED;
-}
-
-#endif
 

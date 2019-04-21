@@ -13,23 +13,20 @@
 #ifndef __AUDACITY_TRANSCRIPTION_TOOLBAR__
 #define __AUDACITY_TRANSCRIPTION_TOOLBAR__
 
-#include "ToolBar.h"
 #include "../Experimental.h"
 
+#include "ToolBar.h"
+
 #include "../MemoryX.h"
-#include <wx/brush.h>
-#include <wx/pen.h>
+#include <wx/brush.h> // member variable
 
 #include "audacity/Types.h"
 #include "../Theme.h"
 
-class wxBitmap;
-class wxBrush;
 class wxChoice;
 class wxCommandEvent;
 class wxImage;
 class wxKeyEvent;
-class wxPen;
 
 class AButton;
 class ASlider;
@@ -151,12 +148,10 @@ class TranscriptionToolBar final : public ToolBar {
    wxChoice *mKeyTypeChoice;
 #endif
 
-   wxBrush mBackgroundBrush;
-   wxPen mBackgroundPen;
    int mBackgroundWidth;
    int mBackgroundHeight;
 
-   std::unique_ptr<TimeTrack> mTimeTrack;
+   std::shared_ptr<TimeTrack> mTimeTrack;
 
  public:
 

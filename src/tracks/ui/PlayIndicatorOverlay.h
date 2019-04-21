@@ -11,9 +11,9 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_PLAY_INDICATOR_OVERLAY__
 #define __AUDACITY_PLAY_INDICATOR_OVERLAY__
 
-#include <wx/event.h>
+#include <wx/event.h> // to inherit
 #include "../../MemoryX.h"
-#include "../../widgets/Overlay.h"
+#include "../../widgets/Overlay.h" // to inherit
 
 class AudacityProject;
 
@@ -46,12 +46,11 @@ class PlayIndicatorOverlay final : public PlayIndicatorOverlayBase
 {
 public:
    PlayIndicatorOverlay(AudacityProject *project);
-   virtual ~PlayIndicatorOverlay();
 
 private:
    void OnTimer(wxCommandEvent &event);
 
-   std::unique_ptr<PlayIndicatorOverlayBase> mPartner;
+   std::shared_ptr<PlayIndicatorOverlayBase> mPartner;
 };
 
 #endif

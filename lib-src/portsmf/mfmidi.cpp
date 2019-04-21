@@ -35,7 +35,7 @@ void Midifile_reader::midifile()
     while (ntrks-- > 0 && !midifile_error) readtrack();
 }
 
-int Midifile_reader::readmt(char *s, int skip)
+int Midifile_reader::readmt(const char *s, int skip)
     /* read through the "MThd" or "MTrk" header string */
     /* if skip == 1, we attempt to skip initial garbage. */
 {
@@ -44,7 +44,7 @@ int Midifile_reader::readmt(char *s, int skip)
     char b[4];
     char buff[32];
     int c;
-    char *errmsg = "expecting ";
+    const char *errmsg = "expecting ";
 
     retry:
     while ( nread<4 ) {
@@ -414,7 +414,7 @@ int Midifile_reader::read16bit()
     return to16bit(c1,c2);
 }
 
-void Midifile_reader::mferror(char *s)
+void Midifile_reader::mferror(const char *s)
 {
     Mf_error(s);
     midifile_error = 1;

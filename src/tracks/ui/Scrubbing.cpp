@@ -10,10 +10,14 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "Scrubbing.h"
+
 #include "../../Experimental.h"
+
 #include <functional>
 
+#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
+#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
@@ -29,14 +33,17 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/TranscriptionToolBar.h"
 #endif
 
-#include "../../widgets/Ruler.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"
+#include "../../commands/CommandManager.h"
+
 
 #include <algorithm>
 
 #include <wx/app.h>
 #include <wx/dc.h>
+#include <wx/dcclient.h>
+#include <wx/menu.h>
 
 // Yet another experimental scrub would drag the track under a
 // stationary play head
@@ -229,7 +236,7 @@ Scrubber::~Scrubber()
 
 namespace {
    const struct MenuItem {
-      wxString name;
+      CommandID name;
       wxString label;
       wxString status;
       CommandFlag flags;
@@ -255,7 +262,7 @@ namespace {
 
       { wxT("ToggleScrubRuler"),            XO("Scrub &Ruler"),   wxT(""),
          AlwaysEnabledFlag,
-         &Scrubber::OnToggleScrubRuler, true,    &Scrubber::ShowsBar,
+         &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,
       },
    };
 
@@ -344,7 +351,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          );
          if (time1 != time0) {
             if (busy) {
-               auto position = mScrubStartPosition;
+               position = mScrubStartPosition;
                ctb->StopPlaying();
                mScrubStartPosition = position;
             }
@@ -617,7 +624,7 @@ void Scrubber::ContinueScrubbingUI()
       // Dragging scrub can stop with mouse up
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      mProject->DoPlayStopSelect(true, bShift);
+      TransportActions::DoPlayStopSelect(*mProject, true, bShift);
       wxCommandEvent evt;
       mProject->GetControlToolBar()->OnStop(evt);
       return;
@@ -683,7 +690,7 @@ void Scrubber::StopScrubbing()
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      mProject->DoPlayStopSelect(true, bShift);
+      TransportActions::DoPlayStopSelect(*mProject, true, bShift);
    }
 
    mScrubStartPosition = -1;
@@ -786,7 +793,8 @@ bool Scrubber::ShouldDrawScrubSpeed()
 double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
    ViewInfo &viewInfo = mProject->GetViewInfo();
-   const double screen = mProject->GetScreenEndTime() - viewInfo.h;
+   const double screen =
+      mProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
       (viewInfo, mMaxSpeed, screen, time);
 }
@@ -1104,7 +1112,8 @@ const wxString &Scrubber::GetUntranslatedStateString() const
    static wxString empty;
 
    if (IsSpeedPlaying()) {
-      return XO("Playing at Speed");
+      static wxString result = XO("Playing at Speed");
+      return result;
    }
    else if (HasMark()) {
       auto &item = FindMenuItem(Seeks() || TemporarilySeeks());
@@ -1117,7 +1126,6 @@ const wxString &Scrubber::GetUntranslatedStateString() const
 wxString Scrubber::StatusMessageForWave() const
 {
    wxString result;
-   result = "";
 
    if(  Seeks() )
       result = _("Move mouse pointer to Seek");
@@ -1151,29 +1159,26 @@ bool Scrubber::CanScrub() const
 static CommandHandlerObject &findme(AudacityProject &project)
 { return project.GetScrubber(); }
 
-void Scrubber::AddMenuItems()
+MenuTable::BaseItemPtr Scrubber::Menu()
 {
-   auto cm = mProject->GetCommandManager();
+   using Options = CommandManager::Options;
 
-   cm->BeginSubMenu(_("Scru&bbing"));
+   MenuTable::BaseItemPtrs ptrs;
    for (const auto &item : menuItems) {
-      if (item.StatusTest)
-         cm->AddCheck(item.name, wxGetTranslation(item.label),
-                      // No menu items yet have dialogs
-                      false,
-                      findme, static_cast<CommandFunctorPointer>(item.memFn),
-                      false,
-                      item.flags, item.flags);
-      else
-         // The start item
-         cm->AddItem(item.name, wxGetTranslation(item.label),
-                     // No menu items yet have dialogs
-                     false,
-                     findme, static_cast<CommandFunctorPointer>(item.memFn),
-                     item.flags, item.flags);
+      ptrs.push_back( MenuTable::Command( item.name, wxGetTranslation(item.label),
+          // No menu items yet have dialogs
+          false,
+          findme, static_cast<CommandFunctorPointer>(item.memFn),
+          item.flags,
+          item.StatusTest
+             ? // a checkmark item
+               Options{}.CheckState( (this->*item.StatusTest)() )
+             : // not a checkmark item
+               Options{}
+      ) );
    }
-   cm->EndSubMenu();
-   CheckMenuItems();
+
+   return MenuTable::Menu( _("Scru&bbing"), std::move( ptrs ) );
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)

@@ -100,6 +100,8 @@ audacity_SOURCES = \
 	AboutDialog.h \
 	AColor.cpp \
 	AColor.h \
+	AdornedRulerPanel.cpp \
+	AdornedRulerPanel.h \
 	AllThemeResources.h \
 	Audacity.h \
 	AudacityApp.cpp \
@@ -249,7 +251,6 @@ audacity_SOURCES = \
 	TrackPanelAx.cpp \
 	TrackPanelAx.h \
 	TrackPanelCell.h \
-	TrackPanelCellIterator.h \
 	TrackPanelDrawingContext.h \
 	TrackPanelListener.h \
 	TrackPanelMouseEvent.h \
@@ -296,6 +297,7 @@ audacity_SOURCES = \
 	commands/CommandHandler.h \
 	commands/CommandManager.cpp \
 	commands/CommandManager.h \
+	commands/CommandManagerWindowClasses.h \
 	commands/CommandMisc.h \
 	commands/CommandSignature.cpp \
 	commands/CommandSignature.h \
@@ -478,6 +480,20 @@ audacity_SOURCES = \
 	import/MultiFormatReader.h \
 	import/SpecPowerMeter.cpp \
 	import/SpecPowerMeter.h \
+	menus/ClipMenus.cpp \
+	menus/EditMenus.cpp \
+	menus/ExtraMenus.cpp \
+	menus/FileMenus.cpp \
+	menus/HelpMenus.cpp \
+	menus/LabelMenus.cpp \
+	menus/NavigationMenus.cpp \
+	menus/PluginMenus.cpp \
+	menus/SelectMenus.cpp \
+	menus/ToolbarMenus.cpp \
+	menus/TrackMenus.cpp \
+	menus/TransportMenus.cpp \
+	menus/ViewMenus.cpp \
+	menus/WindowMenus.cpp \
 	ondemand/ODComputeSummaryTask.cpp \
 	ondemand/ODComputeSummaryTask.h \
 	ondemand/ODDecodeFFmpegTask.cpp \

@@ -18,9 +18,12 @@
 
 
 #include "../Audacity.h"
+#include "MeterToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
 #include <wx/event.h>
@@ -30,7 +33,6 @@
 
 #include <wx/gbsizer.h>
 
-#include "MeterToolBar.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../Project.h"

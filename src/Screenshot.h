@@ -21,7 +21,7 @@
 
 #include "Audacity.h"
 
-#include "wx/defs.h"
+#include <wx/defs.h>
 
 void OpenScreenshotTools();
 void CloseScreenshotTools();

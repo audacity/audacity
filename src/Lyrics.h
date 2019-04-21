@@ -15,15 +15,19 @@
 #include "Audacity.h"
 
 #include <vector>
-#include <wx/textctrl.h>
-#include "widgets/wxPanelWrapper.h"
+#include <wx/textctrl.h> // to inherit
+#include "commands/CommandManagerWindowClasses.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
+class AudacityProject;
 class LabelTrack;
 
 
 #define LYRICS_DEFAULT_WIDTH 608
 #define LYRICS_DEFAULT_HEIGHT 280
 
+/// \brief used in LyricsPanel, a Syllable gives positional information to
+/// be used with the bouncing ball effect.
 struct Syllable {
    Syllable() = default;
    Syllable( const Syllable& ) = default;
@@ -49,7 +53,7 @@ class HighlightTextCtrl final : public wxTextCtrl
 public:
    HighlightTextCtrl(LyricsPanel* parent,
                      wxWindowID id,
-                     const wxString& value = wxT(""),
+                     const wxString& value = {},
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
    virtual ~HighlightTextCtrl() {};
@@ -68,7 +72,9 @@ private:
 \brief LyricsPanel is a panel that paints the bouncing
 ball and the lyrics text.
 *******************************************************************/
-class LyricsPanel final : public wxPanelWrapper
+class LyricsPanel final
+   : public wxPanelWrapper
+   , public NonKeystrokeInterceptingWindow
 {
    DECLARE_DYNAMIC_CLASS(LyricsPanel)
 
@@ -80,13 +86,10 @@ class LyricsPanel final : public wxPanelWrapper
 
  public:
    LyricsPanel(wxWindow* parent, wxWindowID id,
+          AudacityProject *project,
           const wxPoint& pos = wxDefaultPosition,
           const wxSize& size = wxDefaultSize);
    virtual ~LyricsPanel();
-
-   void Clear();
-   void AddLabels(const LabelTrack *pLT);
-   void Finish(double finalT);
 
    int FindSyllable(long startChar); // Find the syllable whose char0 <= startChar <= char1.
    int GetCurrentSyllableIndex() { return mCurrentSyllable; };
@@ -97,6 +100,9 @@ class LyricsPanel final : public wxPanelWrapper
    void SetLyricsStyle(const LyricsStyle newLyricsStyle);
 
    void Update(double t);
+   void UpdateLyrics(wxEvent &e);
+   void OnShow(wxShowEvent& e);
+   void OnStartStop(wxCommandEvent &e);
 
    //
    // Event handlers
@@ -116,6 +122,10 @@ class LyricsPanel final : public wxPanelWrapper
    void HandleLayout();
 
 private:
+   void Clear();
+   void AddLabels(const LabelTrack *pLT);
+   void Finish(double finalT);
+
    void Add(double t, const wxString &syllable, wxString &highlightText);
 
    unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
@@ -145,6 +155,9 @@ private:
 
    int            mTextHeight; // only for drawn text
    bool           mMeasurementsDone; // only for drawn text
+
+   wxWeakRef<AudacityProject> mProject;
+   bool           mDelayedUpdate{ false };
 
    DECLARE_EVENT_TABLE()
 };

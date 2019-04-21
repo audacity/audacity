@@ -8,11 +8,12 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-
+#include "../../../../Audacity.h" // for USE_* macros
 #ifdef USE_MIDI
-
 #include "../../../../NoteTrack.h"
+
+#include "../../../../Experimental.h"
+
 #include "NoteTrackControls.h"
 #include "NoteTrackVRulerControls.h"
 
@@ -41,13 +42,13 @@ std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackControls> NoteTrack::GetControls()
+std::shared_ptr<TrackControls> NoteTrack::DoGetControls()
 {
-   return std::make_shared<NoteTrackControls>( Pointer( this ) );
+   return std::make_shared<NoteTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> NoteTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> NoteTrack::DoGetVRulerControls()
 {
-   return std::make_shared<NoteTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<NoteTrackVRulerControls>( SharedPointer() );
 }
 #endif

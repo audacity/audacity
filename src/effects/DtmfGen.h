@@ -14,18 +14,16 @@
 #ifndef __AUDACITY_EFFECT_DTMF__
 #define __AUDACITY_EFFECT_DTMF__
 
-#include <wx/event.h>
-#include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
 
+class wxSlider;
+class wxStaticText;
+class wxTextCtrl;
 class ShuttleGui;
 
-#define DTMFTONES_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("DTMF Tones") }
+#define DTMFTONES_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("DTMF Tones") }
 
 class EffectDtmf final : public Effect
 {
@@ -33,9 +31,9 @@ public:
    EffectDtmf();
    virtual ~EffectDtmf();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

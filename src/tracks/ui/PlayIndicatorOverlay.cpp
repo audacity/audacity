@@ -12,12 +12,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "PlayIndicatorOverlay.h"
 
 #include "../../AColor.h"
+#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
-#include "../../TrackPanelCell.h"
-#include "../../TrackPanelCellIterator.h"
-#include "../../widgets/Ruler.h"
 #include "Scrubbing.h"
 
 #include <wx/dc.h>
@@ -82,27 +80,23 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(mIsMaster);
 
       // Draw indicator in all visible tracks
-      for ( const auto &data : tp->Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
-         if (!pTrack)
-            continue;
-
-         // Don't draw the indicator in label tracks
-         if (pTrack->GetKind() == Track::Label)
-         {
-            continue;
-         }
-
-         // Draw the NEW indicator in its NEW location
-         // AColor::Line includes both endpoints so use GetBottom()
-         const wxRect &rect = data.second;
-         AColor::Line(dc,
-                      mLastIndicatorX,
-                      rect.GetTop(),
-                      mLastIndicatorX,
-                      rect.GetBottom());
-      }
+      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+         const auto pTrack = dynamic_cast<Track*>(&cell);
+         if (pTrack) pTrack->TypeSwitch(
+            [](LabelTrack *) {
+               // Don't draw the indicator in label tracks
+            },
+            [&](Track *) {
+               // Draw the NEW indicator in its NEW location
+               // AColor::Line includes both endpoints so use GetBottom()
+               AColor::Line(dc,
+                            mLastIndicatorX,
+                            rect.GetTop(),
+                            mLastIndicatorX,
+                            rect.GetBottom());
+            }
+         );
+      } );
    }
    else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
@@ -116,18 +110,9 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-                     &PlayIndicatorOverlay::OnTimer,
-                     this);
-}
-
-PlayIndicatorOverlay::~PlayIndicatorOverlay()
-{
-   if (mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if(ruler)
-         ruler->RemoveOverlay(mPartner.get());
-   }
+   mProject->GetPlaybackScroller().Bind(EVT_TRACK_PANEL_TIMER,
+      &PlayIndicatorOverlay::OnTimer,
+      this);
 }
 
 void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
@@ -139,8 +124,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    if (!mPartner) {
       auto ruler = mProject->GetRulerPanel();
       if (ruler) {
-         mPartner = std::make_unique<PlayIndicatorOverlayBase>(mProject, false);
-         ruler->AddOverlay(mPartner.get());
+         mPartner = std::make_shared<PlayIndicatorOverlayBase>(mProject, false);
+         ruler->AddOverlay( mPartner );
       }
    }
 
@@ -176,7 +161,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
-         mProject->GetScreenEndTime() + tolerance);
+         mProject->GetTrackPanel()->GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
       mProject->TP_DisplaySelection();
@@ -205,7 +190,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
                            playPos,
-                           mProject->GetScreenEndTime());
+                           mProject->GetTrackPanel()->GetScreenEndTime());
          }
       }
 

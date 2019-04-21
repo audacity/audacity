@@ -10,7 +10,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../Audacity.h"
 #include "LabelTextHandle.h"
+
 #include "../../../Experimental.h"
+
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../Project.h"
@@ -82,39 +84,25 @@ UIHandle::Result LabelTextHandle::Click
 
    mSelectedRegion = viewInfo.selectedRegion;
    pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
-   wxASSERT(pLT->IsSelected());
+   wxASSERT(pLT->HasSelection());
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label
 
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-
       //do nothing if at least one other track is selected
-      bool done = false;
-      while (!done && t) {
-         if (t->GetSelected() && t != pLT.get())
-            done = true;
-         t = iter.Next();
-      }
+      bool done = tracks->Selected().any_of(
+         [&](const Track *pTrack){ return pTrack != pLT.get(); }
+      );
 
       if (!done) {
          //otherwise, select all tracks
-         t = iter.First();
-         while (t)
-         {
-            selectionState.SelectTrack
-               ( *pProject->GetTracks(), *t, true, true,
-                 pProject->GetMixerBoard() );
-            t = iter.Next();
-         }
+         for (auto t : tracks->Any())
+            selectionState.SelectTrack( *t, true, true );
       }
 
       // Do this after, for its effect on TrackPanel's memory of last selected
       // track (which affects shift-click actions)
-      selectionState.SelectTrack
-         ( *pProject->GetTracks(), *pLT, true, true,
-           pProject->GetMixerBoard() );
+      selectionState.SelectTrack( *pLT, true, true );
    }
 
    // PRL: bug1659 -- make selection change undo correctly

@@ -13,17 +13,14 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
-#include <wx/arrstr.h>
-#include <wx/string.h>
-
 #include "../widgets/NumericTextCtrl.h"
 
 #include "Effect.h"
 
 class ShuttleGui;
 
-#define CHIRP_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Chirp") }
-#define TONE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Tone") }
+#define CHIRP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Chirp") }
+#define TONE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tone") }
 
 class EffectToneGen final : public Effect
 {
@@ -31,9 +28,9 @@ public:
    EffectToneGen(bool isChirp);
    virtual ~EffectToneGen();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

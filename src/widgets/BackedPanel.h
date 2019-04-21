@@ -10,9 +10,13 @@
 #define __AUDACITY_BACKED_PANEL__
 
 #include "../MemoryX.h"
-#include <wx/dcmemory.h>
-#include "wxPanelWrapper.h"
+#include <wx/dcmemory.h> // member variable
+#include "wxPanelWrapper.h" // to inherit
 
+
+/// \brief BackedPanel is for a panel that consists of a bitmap with something drawn
+/// over it.  It supports efficient repainting when the overlays change and
+/// recreation of the bitmap when the panel size is changed.
 class AUDACITY_DLL_API BackedPanel /* not final */ : public wxPanelWrapper {
 public:
    BackedPanel(wxWindow * parent, wxWindowID id,
@@ -23,15 +27,10 @@ public:
    ~BackedPanel();
 
    wxDC &GetBackingDC();
-
    wxDC &GetBackingDCForRepaint();
-
    void ResizeBacking();
-
    void RepairBitmap(wxDC &dc, wxCoord x, wxCoord y, wxCoord width, wxCoord height);
-
    void DisplayBitmap(wxDC &dc);
-
    void OnSize(wxSizeEvent & event);
 
 private:

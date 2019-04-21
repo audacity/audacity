@@ -5,7 +5,7 @@
 
 Pipe Client may be used as a command-line script to send commands to
 Audacity via the mod-script-pipe interface, or loaded as a module.
-Requires Python 2.7 or later. Python 3 recommended.
+Requires Python 2.7 or later. Python 3 strongly recommended.
 
 ======================
 Command Line Interface

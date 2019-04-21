@@ -13,7 +13,6 @@
 
 #include "MemoryX.h"
 #include <vector>
-#include <wx/string.h>
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
@@ -110,11 +109,11 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Append(samplePtr buffer, sampleFormat format, size_t len,
                XMLWriter* blockFileLog=NULL);
    void Delete(sampleCount start, sampleCount len);
-   void AppendAlias(const wxString &fullPath,
+   void AppendAlias(const FilePath &fullPath,
                     sampleCount start,
                     size_t len, int channel, bool useOD);
 
-   void AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.

@@ -22,8 +22,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ImportFLAC.h"
+
+#include "../Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -43,15 +45,13 @@
 
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
-
-#include "../Experimental.h"
+#include "../widgets/ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
 
 #define DESC _("FLAC files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("flac"),
    wxT("flc")
 };
@@ -63,7 +63,7 @@ void GetFLACImportPlugin(ImportPluginList &importPluginList,
 {
    unusableImportPluginList.push_back(
       std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
+         (DESC, FileExtensions( exts.begin(), exts.end() ) )
    );
 }
 
@@ -133,7 +133,7 @@ class FLACImportPlugin final : public ImportPlugin
 {
  public:
    FLACImportPlugin():
-      ImportPlugin(wxArrayString(WXSIZEOF(exts), exts))
+   ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
    {
    }
 
@@ -141,7 +141,7 @@ class FLACImportPlugin final : public ImportPlugin
 
    wxString GetPluginStringID() override { return wxT("libflac"); }
    wxString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename)  override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename)  override;
 };
 
 
@@ -149,7 +149,7 @@ class FLACImportFileHandle final : public ImportFileHandle
 {
    friend class MyFLACFile;
 public:
-   FLACImportFileHandle(const wxString & name);
+   FLACImportFileHandle(const FilePath & name);
    ~FLACImportFileHandle();
 
    bool Init();
@@ -181,7 +181,7 @@ private:
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
    ProgressResult        mUpdateResult;
-   TrackHolders          mChannels;
+   NewChannelGroup       mChannels;
    std::unique_ptr<ODDecodeFlacTask> mDecoderTask;
 };
 
@@ -192,7 +192,7 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
    {
       case FLAC__METADATA_TYPE_VORBIS_COMMENT:
          for (FLAC__uint32 i = 0; i < metadata->data.vorbis_comment.num_comments; i++) {
-            mComments.Add(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
+            mComments.push_back(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
          }
       break;
 
@@ -303,7 +303,7 @@ wxString FLACImportPlugin::GetPluginFormatDescription()
 }
 
 
-std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const FilePath &filename)
 {
    // First check if it really is a FLAC file
 
@@ -345,7 +345,7 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filenam
 }
 
 
-FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
+FLACImportFileHandle::FLACImportFileHandle(const FilePath & name)
 :  ImportFileHandle(name),
    mSamplesDone(0),
    mStreamInfoDone(false),
@@ -454,26 +454,11 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
    mChannels.resize(mNumChannels);
 
-   auto iter = mChannels.begin();
-   for (size_t c = 0; c < mNumChannels; ++iter, ++c) {
-      *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
-
-      if (mNumChannels == 2) {
-         switch (c) {
-         case 0:
-            iter->get()->SetChannel(Track::LeftChannel);
-            iter->get()->SetLinked(true);
-            break;
-         case 1:
-            iter->get()->SetChannel(Track::RightChannel);
-            break;
-         }
-      }
-      else {
-         iter->get()->SetChannel(Track::MonoChannel);
-      }
+   {
+      auto iter = mChannels.begin();
+      for (size_t c = 0; c < mNumChannels; ++iter, ++c)
+         *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
    }
-
 
 //Start OD
    bool useOD = false;
@@ -536,19 +521,20 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
       return mUpdateResult;
    }
 
-   for (const auto &channel : mChannels) {
+   for (const auto &channel : mChannels)
       channel->Flush();
-   }
-   outTracks.swap(mChannels);
+
+   if (!mChannels.empty())
+      outTracks.push_back(std::move(mChannels));
 
    tags->Clear();
-   size_t cnt = mFile->mComments.GetCount();
+   size_t cnt = mFile->mComments.size();
    for (size_t c = 0; c < cnt; c++) {
       wxString name = mFile->mComments[c].BeforeFirst(wxT('='));
       wxString value = mFile->mComments[c].AfterFirst(wxT('='));
       if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
          long val;
-         if (value.Length() == 4 && value.ToLong(&val)) {
+         if (value.length() == 4 && value.ToLong(&val)) {
             name = TAG_YEAR;
          }
       }

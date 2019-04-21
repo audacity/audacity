@@ -12,15 +12,11 @@
 #define __AUDACITY_SPLASH_DLG__
 
 #include "MemoryX.h"
-#include <wx/dialog.h>
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
-class wxBoxSizer;
-class wxStaticBitmap;
 class wxBitmap;
 class ShuttleGui;
 class AudacityProject;
-class wxCheckbox;
 class HtmlWindow;
 
 class SplashDialog final : public wxDialogWrapper {

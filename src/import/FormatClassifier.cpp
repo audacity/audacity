@@ -34,36 +34,20 @@ FormatClassifier::FormatClassifier(const char* filename) :
    mReader(filename),
    mMeter(cSiglen)
 {
-   FormatClassT fClass;
-
    // Define the classification classes
-   fClass.endian = MachineEndianness::Little;
-   fClass.format = MultiFormatReader::Int8;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Int16;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Int32;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Uint8;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Float;
-   mClasses.push_back(fClass);   
-   fClass.format = MultiFormatReader::Double;
-   mClasses.push_back(fClass);
-
-   fClass.endian = MachineEndianness::Big;
-   fClass.format = MultiFormatReader::Int8;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Int16;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Int32;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Uint8;
-   mClasses.push_back(fClass);
-   fClass.format = MultiFormatReader::Float;
-   mClasses.push_back(fClass);   
-   fClass.format = MultiFormatReader::Double;
-   mClasses.push_back(fClass);
+   for ( auto endianness : {
+      MachineEndianness::Little,
+      MachineEndianness::Big,
+   } )
+      for ( auto format : {
+         MultiFormatReader::Int8,
+         MultiFormatReader::Int16,
+         MultiFormatReader::Int32,
+         MultiFormatReader::Uint8,
+         MultiFormatReader::Float,
+         MultiFormatReader::Double,
+      } )
+         mClasses.push_back( { format, endianness } );
 
    // Build feature vectors
    mMonoFeat = Floats{ mClasses.size() };

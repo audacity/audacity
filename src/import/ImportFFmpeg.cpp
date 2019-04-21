@@ -20,8 +20,10 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"    // needed before FFmpeg.h
+#include "../Audacity.h"    // needed before FFmpeg.h // for USE_* macros
 #include "ImportFFmpeg.h"
+
+#include "../Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -33,16 +35,15 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
-#include "../Experimental.h"
 #include "../MemoryX.h"
+#include "../widgets/ProgressDialog.h"
 
 
 #define DESC _("FFmpeg-compatible files")
 
 //TODO: remove non-audio extensions
 #if defined(USE_FFMPEG)
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("4xm"),
    wxT("MTV"),
    wxT("roq"),
@@ -173,10 +174,9 @@ class FFmpegImportPlugin final : public ImportPlugin
 {
 public:
    FFmpegImportPlugin():
-      ImportPlugin(wxArrayString(WXSIZEOF(exts),exts))
-      {
-
-      }
+      ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
+   {
+   }
 
    ~FFmpegImportPlugin() { }
 
@@ -184,7 +184,7 @@ public:
    wxString GetPluginFormatDescription() override;
 
    ///! Probes the file and opens it if appropriate
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -192,7 +192,7 @@ class FFmpegImportFileHandle final : public ImportFileHandle
 {
 
 public:
-   FFmpegImportFileHandle(const wxString & name);
+   FFmpegImportFileHandle(const FilePath & name);
    ~FFmpegImportFileHandle();
 
    ///! Format initialization
@@ -273,8 +273,11 @@ private:
 
    bool                  mCancelled;     //!< True if importing was canceled by user
    bool                  mStopped;       //!< True if importing was stopped by user
-   wxString              mName;
-   std::list<TrackHolders> mChannels;     //!< 2-dimentional array of WaveTrack's. First dimention - streams, second - channels of a stream. Length is mNumStreams
+   FilePath              mName;
+   TrackHolders mChannels;               //!< 2-dimensional array of WaveTrack's.
+                                         //!< First dimension - streams,
+                                         //!< second - channels of a stream.
+                                         //!< Length is mNumStreams
 #ifdef EXPERIMENTAL_OD_FFMPEG
    bool                  mUsingOD;
 #endif
@@ -294,7 +297,7 @@ wxString FFmpegImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const FilePath &filename)
 {
    auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
 
@@ -337,7 +340,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
 }
 
 
-FFmpegImportFileHandle::FFmpegImportFileHandle(const wxString & name)
+FFmpegImportFileHandle::FFmpegImportFileHandle(const FilePath & name)
 :  ImportFileHandle(name)
 {
    PickFFmpegLibs();
@@ -436,7 +439,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
          else
             duration = mFormatContext->duration / AV_TIME_BASE;
-         wxString bitrate = wxT("");
+         wxString bitrate;
          if (sc->m_codecCtx->bit_rate > 0)
             bitrate.Printf(wxT("%d"),(int)sc->m_codecCtx->bit_rate);
          else
@@ -450,7 +453,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          }
          strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),
                         sc->m_stream->id,codec->name,lang,bitrate,(int)sc->m_stream->codec->channels,(int)duration);
-         mStreamInfo.Add(strinfo);
+         mStreamInfo.push_back(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing
@@ -520,31 +523,8 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       // There is a possibility that number of channels will change over time, but we do not have WaveTracks for NEW channels. Remember the number of channels and stick to it.
       sc->m_initialchannels = sc->m_stream->codec->channels;
       stream.resize(sc->m_stream->codec->channels);
-      int c = -1;
       for (auto &channel : stream)
-      {
-         ++c;
-
          channel = trackFactory->NewWaveTrack(sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
-
-         if (sc->m_stream->codec->channels == 2)
-         {
-            switch (c)
-            {
-            case 0:
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-               break;
-            case 1:
-               channel->SetChannel(Track::RightChannel);
-               break;
-            }
-         }
-         else
-         {
-            channel->SetChannel(Track::MonoChannel);
-         }
-      }
    }
 
    // Handles the start_time by creating silence. This may or may not be correct.
@@ -688,13 +668,10 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
    for (auto &stream : mChannels)
-   {
       for(auto &channel : stream)
-      {
          channel->Flush();
-         outTracks.push_back(std::move(channel));
-      }
-   }
+
+   outTracks.swap(mChannels);
 
    // Save metadata
    WriteMetadata(tags);

@@ -18,10 +18,13 @@
 #include "Reverb.h"
 
 #include <wx/arrstr.h>
+#include <wx/checkbox.h>
 #include <wx/intl.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
 
-#include "../Audacity.h"
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -128,9 +131,9 @@ EffectReverb::~EffectReverb()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectReverb::GetSymbol()
+ComponentInterfaceSymbol EffectReverb::GetSymbol()
 {
    return REVERB_PLUGIN_SYMBOL;
 }
@@ -326,13 +329,13 @@ bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-wxArrayString EffectReverb::GetFactoryPresets()
+RegistryPaths EffectReverb::GetFactoryPresets()
 {
-   wxArrayString names;
+   RegistryPaths names;
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.Add(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back(wxGetTranslation(FactoryPresets[i].name));
    }
 
    return names;
@@ -410,7 +413,7 @@ bool EffectReverb::Startup()
          gPrefs->Read(path + wxT("WetOnly"), &mParams.mWetOnly, DEF_WetOnly);
          gPrefs->Read(path + wxT("name"), &name, wxEmptyString);
       
-         if (!name.IsEmpty())
+         if (!name.empty())
          {
             name.Prepend(wxT(" - "));
          }
@@ -458,7 +461,7 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyC = S.Id(ID_WetOnly).
-         AddCheckBox(_("Wet O&nly"), DEF_WetOnly ? wxT("true") : wxT("false"));
+         AddCheckBox(_("Wet O&nly"), DEF_WetOnly);
    }
    S.EndHorizontalLay();
 
@@ -541,7 +544,7 @@ void EffectReverb::SetTitle(const wxString & name)
 {
    wxString title(_("Reverb"));
 
-   if (!name.IsEmpty())
+   if (!name.empty())
    {
       title += wxT(": ") + name;
    }

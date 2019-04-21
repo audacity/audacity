@@ -12,6 +12,8 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "EffectRack.h"
+
 #include "../Experimental.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -19,7 +21,6 @@
 #include "../MemoryX.h"
 #include "../UndoManager.h"
 
-#include <wx/access.h>
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
@@ -35,8 +36,8 @@
 #include <wx/tglbtn.h>
 
 #include "EffectManager.h"
-#include "EffectRack.h"
 #include "../commands/CommandContext.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 
@@ -305,9 +306,9 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!project->DoEffect(mEffects[i]->GetID(),
-                                *project,
-                           AudacityProject::OnEffectFlags::kConfigured))
+         if (!PluginActions::DoEffect(mEffects[i]->GetID(),
+                           *project,
+                           PluginActions::kConfigured))
             // If any effect fails (or throws), then stop.
             return;
       }
@@ -394,7 +395,7 @@ void EffectRack::OnDown(wxCommandEvent & evt)
 
    evt.Skip();
 
-   size_t index = GetEffectIndex(btn);
+   int index = GetEffectIndex(btn);
    if (index < 0 || index == (mMainSizer->GetChildren().GetCount() / NUMCOLS) - 1)
    {
       return;
@@ -459,7 +460,7 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
    UpdateActive();
 }
 
-wxBitmap EffectRack::CreateBitmap(const char *xpm[], bool up, bool pusher)
+wxBitmap EffectRack::CreateBitmap(const char *const xpm[], bool up, bool pusher)
 {
    wxMemoryDC dc;
    wxBitmap pic(xpm);

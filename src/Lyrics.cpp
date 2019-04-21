@@ -9,16 +9,21 @@
 
 **********************************************************************/
 
+#include "Lyrics.h"
+
 #include <math.h>
 
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/dcmemory.h>
 #include <wx/mimetype.h>
 
-#include "Lyrics.h"
+#include "AudioIO.h"
 #include "Internat.h"
 #include "Project.h" // for GetActiveProject
 #include "LabelTrack.h"
+#include "commands/CommandManager.h"
+#include "UndoManager.h"
 
 
 BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl)
@@ -27,11 +32,11 @@ END_EVENT_TABLE()
 
 HighlightTextCtrl::HighlightTextCtrl(LyricsPanel* parent,
                                        wxWindowID id,
-                                       const wxString& value /*= ""*/,
+                                       const wxString& value /* = {} */,
                                        const wxPoint& pos /*= wxDefaultPosition*/,
                                        const wxSize& size /*= wxDefaultSize*/)
 : wxTextCtrl(parent, id, // wxWindow* parent, wxWindowID id,
-               value, // const wxString& value = "",
+               value, // const wxString& value = {},
                pos, // const wxPoint& pos = wxDefaultPosition,
                size, // const wxSize& size = wxDefaultSize,
                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | wxTE_AUTO_URL | wxTE_NOHIDESEL), //v | wxHSCROLL)
@@ -52,9 +57,11 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
       {
          Syllable* pCurSyl = mLyricsPanel->GetSyllable(nNewSyl);
          AudacityProject* pProj = GetActiveProject();
-         pProj->SetSel0(pCurSyl->t);
+         auto &selectedRegion = pProj->GetViewInfo().selectedRegion;
+         selectedRegion.setT0( pCurSyl->t );
 
-         //v Should probably select to end as in AudacityProject::OnSelectCursorEnd,
+         //v Should probably select to end as in
+         // SelectActions::Handler::OnSelectCursorEnd,
          // but better to generalize that in AudacityProject methods.
          pProj->mViewInfo.selectedRegion.setT1(pCurSyl->t);
       }
@@ -78,10 +85,12 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(LyricsPanel, wxPanel)
 
 LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
+               AudacityProject *project,
                const wxPoint& pos /*= wxDefaultPosition*/,
-               const wxSize& size /*= wxDefaultSize*/):
+               const wxSize& size /*= wxDefaultSize*/) :
    wxPanelWrapper(parent, id, pos, size, wxWANTS_CHARS),
    mWidth(size.x), mHeight(size.y)
+   , mProject(project)
 {
    mKaraokeHeight = mHeight;
    mLyricsStyle = kBouncingBallLyrics; // default
@@ -91,7 +100,7 @@ LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
 
    mHighlightTextCtrl =
       safenew HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
-                              wxT(""), // const wxString& value = wxT(""),
+                              wxT(""), // const wxString& value = {},
                               wxPoint(0, 0), // const wxPoint& pos = wxDefaultPosition,
                               size); // const wxSize& size = wxDefaultSize
    this->SetHighlightFont();
@@ -107,6 +116,16 @@ LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
       wxSizeEvent dummyEvent;
       OnSize(dummyEvent);
    #endif
+
+   parent->Bind(wxEVT_SHOW, &LyricsPanel::OnShow, this);
+
+   auto undoManager = project->GetUndoManager();
+   undoManager->Bind(EVT_UNDO_PUSHED, &LyricsPanel::UpdateLyrics, this);
+   undoManager->Bind(EVT_UNDO_MODIFIED, &LyricsPanel::UpdateLyrics, this);
+   undoManager->Bind(EVT_UNDO_RESET, &LyricsPanel::UpdateLyrics, this);
+
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK, &LyricsPanel::OnStartStop, this);
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE, &LyricsPanel::OnStartStop, this);
 }
 
 LyricsPanel::~LyricsPanel()
@@ -153,7 +172,7 @@ void LyricsPanel::Add(double t, const wxString &syllable, wxString &highlightTex
          // same time.
          prevSyllable.text += syllable;
          prevSyllable.textWithSpace += syllable;
-         prevSyllable.char1 += syllable.Length();
+         prevSyllable.char1 += syllable.length();
          return;
       }
    }
@@ -163,21 +182,21 @@ void LyricsPanel::Add(double t, const wxString &syllable, wxString &highlightTex
    thisSyllable.t = t;
    thisSyllable.text = syllable;
 
-   thisSyllable.char0 = mText.Length();
+   thisSyllable.char0 = mText.length();
 
    // Put a space between syllables unless the previous one
    // ended in a hyphen
    if (i > 0 &&
-         // mSyllables[i-1].text.Length() > 0 &&
+         // mSyllables[i-1].text.length() > 0 &&
          mSyllables[i - 1].text.Right(1) != wxT("-"))
       thisSyllable.textWithSpace = wxT(" ") + syllable;
    else
       thisSyllable.textWithSpace = syllable;
 
    mText += thisSyllable.textWithSpace;
-   thisSyllable.char1 = mText.Length();
+   thisSyllable.char1 = mText.length();
 
-   int nTextLen = thisSyllable.textWithSpace.Length();
+   int nTextLen = thisSyllable.textWithSpace.length();
    if ((nTextLen > 0) && (thisSyllable.textWithSpace.Right(1) == wxT("_")))
       highlightText += (thisSyllable.textWithSpace.Left(nTextLen - 1) + wxT("\n"));
    else
@@ -421,7 +440,8 @@ void LyricsPanel::Update(double t)
       // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -DBL_MAX if !IsStreamActive().
       // In that case, use the selection start time.
       AudacityProject* pProj = GetActiveProject();
-      mT = pProj->GetSel0();
+      const auto &selectedRegion = pProj->GetViewInfo().selectedRegion;
+      mT = selectedRegion.t0();
    }
    else
       mT = t;
@@ -452,6 +472,56 @@ void LyricsPanel::Update(double t)
 
       //v Too much flicker:   mHighlightTextCtrl->ShowPosition(mSyllables[i].char0);
    }
+}
+
+void LyricsPanel::UpdateLyrics(wxEvent &e)
+{
+   e.Skip();
+
+   // It's crucial to not do that repopulating during playback.
+   if (gAudioIO->IsStreamActive()) {
+      mDelayedUpdate = true;
+      return;
+   }
+
+   Clear();
+
+   if (!mProject)
+      return;
+
+   // Lyrics come from only the first label track.
+   auto pLabelTrack = *mProject->GetTracks()->Any< const LabelTrack >().begin();
+   if (!pLabelTrack)
+      return;
+
+   // The code that updates the lyrics is rather expensive when there
+   // are a lot of labels.
+   // So - bail out early if the lyrics window is not visible.
+   // We will later force an update when the lyrics window is made visible.
+   auto parent = dynamic_cast<wxFrame*>(GetParent());
+   if( !(parent && parent->IsVisible()) )
+      return;
+
+   AddLabels(pLabelTrack);
+   Finish(pLabelTrack->GetEndTime());
+   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   Update(selectedRegion.t0());
+}
+
+void LyricsPanel::OnStartStop(wxCommandEvent &e)
+{
+   e.Skip();
+   if ( !e.GetInt() && mDelayedUpdate ) {
+      mDelayedUpdate = false;
+      UpdateLyrics( e );
+   }
+}
+
+void LyricsPanel::OnShow(wxShowEvent &e)
+{
+   e.Skip();
+   if (e.IsShown())
+      UpdateLyrics(e);
 }
 
 void LyricsPanel::OnKeyEvent(wxKeyEvent & event)
@@ -566,8 +636,8 @@ void LyricsPanel::HandlePaint_BouncingBall(wxDC &dc)
       }
 
       wxString text = mSyllables[i].text;
-      if (text.Length() > 0 && text.Right(1) == wxT("_")) {
-         text = text.Left(text.Length() - 1);
+      if (text.length() > 0 && text.Right(1) == wxT("_")) {
+         text = text.Left(text.length() - 1);
       }
 
       dc.DrawText(text,

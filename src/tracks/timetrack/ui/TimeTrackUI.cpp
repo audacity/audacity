@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../../TimeTrack.h"
+
 #include "TimeTrackControls.h"
 #include "TimeTrackVRulerControls.h"
 
@@ -23,19 +24,19 @@ std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
  const AudacityProject *pProject, int, bool)
 {
    std::vector<UIHandlePtr> results;
-   auto result = EnvelopeHandle::TimeTrackHitTest
-      ( mEnvelopeHandle, st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
+   auto result = EnvelopeHandle::TimeTrackHitTest(
+      mEnvelopeHandle, st.state, st.rect, pProject, SharedPointer<TimeTrack>() );
    if (result)
       results.push_back(result);
    return results;
 }
 
-std::shared_ptr<TrackControls> TimeTrack::GetControls()
+std::shared_ptr<TrackControls> TimeTrack::DoGetControls()
 {
-   return std::make_shared<TimeTrackControls>( Pointer( this ) );
+   return std::make_shared<TimeTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> TimeTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> TimeTrack::DoGetVRulerControls()
 {
-   return std::make_shared<TimeTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<TimeTrackVRulerControls>( SharedPointer() );
 }

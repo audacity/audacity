@@ -27,9 +27,13 @@ with changes in the SelectionBar.
 
 
 #include "../Audacity.h"
+#include "SelectionBar.h"
+#include "SelectionBarListener.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
 #include <wx/button.h>
@@ -44,9 +48,6 @@ with changes in the SelectionBar.
 #endif
 #include <wx/statline.h>
 
-
-#include "SelectionBarListener.h"
-#include "SelectionBar.h"
 
 #include "../widgets/AButton.h"
 #include "../AudioIO.h"
@@ -138,14 +139,14 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
    auStaticText * pTitle = safenew auStaticText(this, Title );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.Length() == 1 ) ? 0:5);
+   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.length() == 1 ) ? 0:5);
    return pTitle;
 }
 
 
 NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * pSizer ){
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
-      : NumericFormatId{};
+      : NumericFormatSymbol{};
    auto pCtrl = safenew NumericTextCtrl(
       this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
@@ -250,7 +251,7 @@ void SelectionBar::Populate()
    // the control that gets the focus events.  So we have to find the
    // textctrl.
    wxWindowList kids = mRateBox->GetChildren();
-   for (unsigned int i = 0; i < kids.GetCount(); i++) {
+   for (unsigned int i = 0; i < kids.size(); i++) {
       wxClassInfo *ci = kids[i]->GetClassInfo();
       if (ci->IsKindOf(CLASSINFO(wxTextCtrl))) {
          mRateText = kids[i];
@@ -373,7 +374,7 @@ void SelectionBar::RegenerateTooltips()
    auto formatName =
       mListener
          ? mListener->AS_GetSelectionFormat()
-         : NumericFormatId{};
+         : NumericFormatSymbol{};
    mSnapTo->SetToolTip(
       wxString::Format(
          _("Snap Clicks/Selections to %s"), formatName.Translation() ));
@@ -546,7 +547,7 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
       wxString Format = ( (id!=mDrive1) && (id!=mDrive2 ) ) ? _("%s - driven") : "%s";
       wxString Title= wxString::Format( Format, Temp );
       // i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
-      wxString VoiceOverText = wxString::Format(_("Selection %s.  %s won't change."), Temp, Text[fixed]);
+      wxString VoiceOverText = wxString::Format(_("Selection %s. %s won't change."), Temp, Text[fixed]);
       if( *Ctrls[i] ){
          (*Ctrls[i])->SetName( Temp );
       }
@@ -645,7 +646,7 @@ void SelectionBar::SetSnapTo(int snap)
    mSnapTo->SetSelection(snap);
 }
 
-void SelectionBar::SetSelectionFormat(const NumericFormatId & format)
+void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
 {
    mStartTime->SetFormatString(mStartTime->GetBuiltinFormat(format));
 

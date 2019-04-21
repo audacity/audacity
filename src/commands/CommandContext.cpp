@@ -21,6 +21,8 @@ messaging from a command back to its invoker.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "CommandContext.h"
+
 #include "Command.h"
 #include <map>
 #include <wx/string.h>
@@ -35,8 +37,6 @@ messaging from a command back to its invoker.
 #include "CommandTargets.h"
 #include "CommandDirectory.h"
 
-//#include "CommandContext.h"
-#include "CommandContext.h"
 #include "../Project.h"
 
 CommandContext::CommandContext(
@@ -65,6 +65,8 @@ CommandContext::CommandContext(
       , parameter{ CommandParameter{}}
 {
 }
+
+CommandContext::~CommandContext() = default;
 
 void CommandContext::Status( const wxString & message, bool bFlush ) const
 {

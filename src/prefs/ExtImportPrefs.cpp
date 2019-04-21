@@ -21,10 +21,10 @@
 #include <wx/listctrl.h>
 #include <wx/dnd.h>
 
-#include "../Audacity.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/Grid.h"
 
 #define EXTIMPORT_MIME_SUPPORT 0
 
@@ -68,6 +68,21 @@ ExtImportPrefs::ExtImportPrefs(wxWindow * parent, wxWindowID winid)
 
 ExtImportPrefs::~ExtImportPrefs()
 {
+}
+
+ComponentInterfaceSymbol ExtImportPrefs::GetSymbol()
+{
+   return EXT_IMPORT_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ExtImportPrefs::GetDescription()
+{
+   return _("Preferences for ExtImport");
+}
+
+wxString ExtImportPrefs::HelpPageName()
+{
+   return "Extended_Import_Preferences";
 }
 
 /// Creates the dialog and its contents.
@@ -439,7 +454,7 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
    PluginList->DeleteAllItems();
 
    int fcount;
-   fcount = item->filters.Count();
+   fcount = item->filters.size();
    int shift = 0;
    for (int i = 0; i < fcount; i++)
    {
@@ -493,19 +508,19 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
    switch (col)
    {
    case 0:
-      item->extensions.Clear();
+      item->extensions.clear();
       break;
    case 1:
-      item->mime_types.Clear();
+      item->mime_types.clear();
       break;
    }
 
-   for (size_t i = 0; i < vals.Count(); i++)
+   for (size_t i = 0; i < vals.size(); i++)
    {
 
       wxString trimmed = vals[i];
       trimmed.Trim().Trim(false);
-      if (trimmed.Cmp(vals[i]) != 0)
+      if (trimmed != vals[i])
       {
          if (!askedAboutSpaces)
          {
@@ -529,17 +544,17 @@ Audacity to trim spaces for you?"
       switch (col)
       {
       case 0:
-         item->extensions.Add (trimmed);
+         item->extensions.push_back(trimmed);
          break;
       case 1:
-         item->mime_types.Add (trimmed);
+         item->mime_types.push_back(trimmed);
          break;
       }
    }
    if (fixSpaces == wxYES)
    {
       wxString vals_as_string;
-      for (size_t i = 0; i < vals.Count(); i++)
+      for (size_t i = 0; i < vals.size(); i++)
       {
          if (i > 0)
             vals_as_string.Append (wxT(":"));
@@ -554,19 +569,19 @@ Audacity to trim spaces for you?"
 void ExtImportPrefs::AddItemToTable (int index, const ExtImportItem *item)
 {
    wxString extensions, mime_types;
-   if (item->extensions.Count() > 0)
+   if (item->extensions.size() > 0)
    {
       extensions.Append (item->extensions[0]);
-      for (unsigned int i = 1; i < item->extensions.Count(); i++)
+      for (unsigned int i = 1; i < item->extensions.size(); i++)
       {
          extensions.Append (wxT(":"));
          extensions.Append (item->extensions[i]);
       }
    }
-   if (item->mime_types.Count() > 0)
+   if (item->mime_types.size() > 0)
    {
       mime_types.Append (item->mime_types[0]);
-      for (unsigned int i = 1; i < item->mime_types.Count(); i++)
+      for (unsigned int i = 1; i < item->mime_types.size(); i++)
       {
          mime_types.Append (wxT(":"));
          mime_types.Append (item->mime_types[i]);
@@ -672,11 +687,6 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    }
 
    event.Skip();
-}
-
-wxString ExtImportPrefs::HelpPageName()
-{
-   return "Extended_Import_Preferences";
 }
 
 ExtImportPrefsDropTarget::ExtImportPrefsDropTarget(wxDataObject *dataObject)

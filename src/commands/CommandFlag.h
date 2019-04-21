@@ -58,7 +58,7 @@ enum CommandFlag : unsigned long long
    AudioTracksSelectedFlag = 0x2000000000ULL,
    NoAutoSelect            = 0x4000000000ULL, // jkc
 
-   NoFlagsSpecifed        = ~0ULL
+   NoFlagsSpecified        = ~0ULL
 };
 
 // Prevent accidental misuse with narrower types
@@ -115,18 +115,18 @@ CommandFlag operator ^ (int, CommandFlag) PROHIBITED;
 
 // Supply the bitwise operations
 
-inline CommandFlag operator ~ (CommandFlag flag)
+inline constexpr CommandFlag operator ~ (CommandFlag flag)
 {
    return static_cast<CommandFlag>( ~ static_cast<unsigned long long> (flag) );
 }
-inline CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
+inline constexpr CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
 {
    return static_cast<CommandFlag> (
       static_cast<unsigned long long>(lhs) &
       static_cast<unsigned long long>(rhs)
    );
 }
-inline CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
+inline constexpr CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
 {
    return static_cast<CommandFlag> (
       static_cast<unsigned long long>(lhs) |

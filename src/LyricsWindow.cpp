@@ -46,7 +46,7 @@ const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 LyricsWindow::LyricsWindow(AudacityProject *parent):
    wxFrame(parent, -1,
             wxString::Format(_("Audacity Karaoke%s"),
-                              ((parent->GetName() == wxEmptyString) ?
+                              ((parent->GetName().empty()) ?
                                  wxT("") :
                                  wxString::Format(
                                    wxT(" - %s"),
@@ -114,9 +114,8 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //
    //pToolBar->Realize();
 
-   mLyricsPanel = safenew LyricsPanel(this, -1, panelPos, panelSize);
+   mLyricsPanel = safenew LyricsPanel(this, -1, parent, panelPos, panelSize);
    RTL_WORKAROUND(mLyricsPanel);
-
 
    //vvv Highlight style is broken in ported version.
    //switch (mLyricsPanel->GetLyricsStyle())
@@ -159,7 +158,8 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
    else
    {
       // Reset lyrics display.
-      GetLyricsPanel()->Update(mProject->GetSel0());
+      const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+      GetLyricsPanel()->Update(selectedRegion.t0());
    }
 
    // Let other listeners get the notification

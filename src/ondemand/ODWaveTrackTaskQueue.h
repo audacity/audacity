@@ -25,7 +25,7 @@ tasks associated with a WaveTrack.
 #include "../MemoryX.h"
 #include <vector>
 #include "ODTaskThread.h"
-#include <wx/wx.h>
+class Track;
 class WaveTrack;
 class ODTask;
 /// A class representing a modular task to be used with the On-Demand structures.
@@ -52,7 +52,7 @@ class ODWaveTrackTaskQueue final
    void DemandTrackUpdate(WaveTrack* track, double seconds);
 
    ///replaces all instances of a WaveTrack within this task with another.
-   void ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack);
+   void ReplaceWaveTrack(Track *oldTrack, Track *newTrack);
 
    //if the wavetrack is in this queue, and is not the only wavetrack, clones the tasks and schedules it.
    void MakeWaveTrackIndependent(WaveTrack* track);

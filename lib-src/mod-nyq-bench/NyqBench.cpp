@@ -14,6 +14,7 @@
 #include <wx/filedlg.h>
 #include <wx/font.h>
 #include <wx/fontdlg.h>
+#include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
@@ -24,6 +25,7 @@
 
 #include "AudioIO.h"
 #include "LabelTrack.h"
+#include "Menus.h"
 #include "ModuleManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -192,12 +194,12 @@ extern "C"
 
             c->SetCurrentMenu(pMenu);
             c->AddSeparator();
-            c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
             c->AddItem(wxT("NyqBench"),
                _("&Nyquist Workbench..."),
                true,
                findme,
-               static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench));
+               static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
+               AudioIONotBusyFlag);
 
             c->ClearCurrentMenu();
          }
@@ -1402,7 +1404,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      p->DoEffect(ID, CommandContext(*p), 0);
+      PluginActions::DoEffect(ID, CommandContext(*p), 0);
 
       mRunning = false;
       UpdateWindowUI();
@@ -1632,7 +1634,7 @@ bool NyqBench::Validate()
 {
    if (mScript->GetLastPosition() > 0 && mScript->IsModified()) {
       int ans;
-      ans = AudacityMessageBox(_("Code has been modified.  Are you sure?"),
+      ans = AudacityMessageBox(_("Code has been modified. Are you sure?"),
                          _("Warning"),
                          wxYES_NO | wxICON_QUESTION,
                          this);

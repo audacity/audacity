@@ -14,6 +14,16 @@
 /* --------------------------------------------------------------------------*/
 
 #include "../MemoryX.h"
+
+#define MODE_SET           0
+#define MODE_VBR           1
+#define MODE_ABR           2
+#define MODE_CBR           3
+
+#if defined(__WXMSW__) || defined(__WXMAC__)
+#define MP3_EXPORT_BUILT_IN 1
+#endif
+
 class ExportPlugin;
 class wxString;
 class wxWindow;

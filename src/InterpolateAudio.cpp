@@ -8,12 +8,13 @@
 
 **********************************************************************/
 
+#include "InterpolateAudio.h"
+
 #include <math.h>
 #include <stdlib.h>
 
 #include <wx/defs.h>
 
-#include "InterpolateAudio.h"
 #include "Matrix.h"
 #include "SampleFormat.h"
 

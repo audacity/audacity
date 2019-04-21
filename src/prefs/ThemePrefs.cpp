@@ -29,13 +29,13 @@ Provides:
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "ThemePrefs.h"
 
 #include <wx/wxprec.h>
 #include "../Prefs.h"
 #include "../Theme.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "ThemePrefs.h"
 #include "../AColor.h"
 
 enum eThemePrefsIds {
@@ -70,6 +70,21 @@ ThemePrefs::~ThemePrefs(void)
 {
 }
 
+ComponentInterfaceSymbol ThemePrefs::GetSymbol()
+{
+   return THEME_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ThemePrefs::GetDescription()
+{
+   return _("Preferences for Theme");
+}
+
+wxString ThemePrefs::HelpPageName()
+{
+   return "Theme_Preferences";
+}
+
 /// Creates the dialog and its contents.
 void ThemePrefs::Populate()
 {
@@ -98,7 +113,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef __WXDEBUG__
       S.AddFixedText(
-         _("This is a debug version of Audacity, with an extra button, 'Output Sourcery'.  This will save a\nC version of the image cache that can be compiled in as a default.")
+         _("This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
          );
 #endif
 

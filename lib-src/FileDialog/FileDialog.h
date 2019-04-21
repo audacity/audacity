@@ -17,9 +17,7 @@ custom controls.
 #ifndef _FILEDIALOG_H_
 #define _FILEDIALOG_H_
 
-#include <wx/defs.h>
-#include <wx/filectrl.h>
-#include <wx/filedlg.h>
+#include <wx/filedlg.h> // to inherit
 
 #ifndef AUDACITY_DLL_API
 #define AUDACITY_DLL_API

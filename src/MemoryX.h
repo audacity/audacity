@@ -123,11 +123,14 @@ public:
    }
 };
 
-/*
- * ArraysOf<X>
- * This simplifies arrays of arrays, each array separately allocated with NEW[]
- * But it might be better to use std::Array<ArrayOf<X>, N> for some small constant N
- * Or use just one array when sub-arrays have a common size and are not large.
+/**
+  \class ArrayOf
+
+  ArraysOf<X>
+
+  \brief This simplifies arrays of arrays, each array separately allocated with NEW[]
+  But it might be better to use std::Array<ArrayOf<X>, N> for some small constant N
+  Or use just one array when sub-arrays have a common size and are not large.
  */
 template<typename X>
 class ArraysOf : public ArrayOf<ArrayOf<X>>
@@ -181,12 +184,17 @@ public:
    }
 };
 
-/*
- * template class Maybe<X>
- * Can be used for monomorphic objects that are stack-allocable, but only conditionally constructed.
- * You might also use it as a member.
- * Initialize with create(), then use like a smart pointer,
- * with *, ->, get(), reset(), or in if()
+/**
+  \class Maybe
+  \brief Like a smart pointer, allows for object to not exist (nullptr)
+
+  template class Maybe<X>
+  Can be used for monomorphic objects that are stack-allocable, but only conditionally constructed.
+  You might also use it as a member.
+  Initialize with create(), then use like a smart pointer,
+  with *, ->, get(), reset(), or in if()
+
+  Like std::optional of C++17 but with other member naming conventions
  */
 
 // Placement-NEW is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
@@ -195,6 +203,7 @@ public:
 #undef new
 #endif
 #endif
+
 
 template<typename X>
 class Maybe {
@@ -238,11 +247,11 @@ public:
       return *this;
    }
 
-   // Make an object in the buffer, passing constructor arguments,
-   // but destroying any previous object first
-   // Note that if constructor throws, we remain in a consistent
-   // NULL state -- giving exception safety but only weakly
-   // (previous value was lost if present)
+   /// Make an object in the buffer, passing constructor arguments,
+   /// but destroying any previous object first
+   /// Note that if constructor throws, we remain in a consistent
+   /// NULL state -- giving exception safety but only weakly
+   /// (previous value was lost if present)
    template<typename... Args>
    void create(Args&&... args)
    {
@@ -260,7 +269,7 @@ public:
 
    // Pointer-like operators
 
-   // Dereference, with the usual bad consequences if NULL
+   /// Dereference, with the usual bad consequences if NULL
    X &operator* () const
    {
       return *pp;
@@ -313,49 +322,49 @@ private:
 #ifdef _DEBUG
 #ifdef _MSC_VER
 #undef THIS_FILE
-static char*THIS_FILE = __FILE__;
+static const char THIS_FILE[] = __FILE__;
 #define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
 #endif
 #endif
 
-/*
- * A deleter for pointers obtained with malloc
+/**
+  A deleter for pointers obtained with malloc
  */
 struct freer { void operator() (void *p) const { free(p); } };
 
-/*
- * A useful alias for holding the result of malloc
+/**
+  A useful alias for holding the result of malloc
  */
 template< typename T >
 using MallocPtr = std::unique_ptr< T, freer >;
 
-/*
- * A useful alias for holding the result of strup and similar
+/**
+  A useful alias for holding the result of strup and similar
  */
 template <typename Character = char>
 using MallocString = std::unique_ptr< Character[], freer >;
 
-/*
- * A deleter class to supply the second template parameter of unique_ptr for
- * classes like wxWindow that should be sent a message called Destroy rather
- * than be deleted directly
+/**
+  \brief A deleter class to supply the second template parameter of unique_ptr for
+  classes like wxWindow that should be sent a message called Destroy rather
+  than be deleted directly
  */
 template <typename T>
 struct Destroyer {
    void operator () (T *p) const { if (p) p->Destroy(); }
 };
 
-/*
- * a convenience for using Destroyer
+/**
+  \brief a convenience for using Destroyer
  */
 template <typename T>
 using Destroy_ptr = std::unique_ptr<T, Destroyer<T>>;
 
-/*
- * "finally" as in The C++ Programming Language, 4th ed., p. 358
- * Useful for defining ad-hoc RAII actions.
- * typical usage:
- * auto cleanup = finally([&]{ ... code; ... });
+/**
+  \brief "finally" as in The C++ Programming Language, 4th ed., p. 358
+  Useful for defining ad-hoc RAII actions.
+  typical usage:
+  auto cleanup = finally([&]{ ... code; ... });
  */
 
 // Construct this from any copyable function object, such as a lambda
@@ -366,8 +375,8 @@ struct Final_action {
    F clean;
 };
 
-// Function template with type deduction lets you construct Final_action
-// without typing any angle brackets
+/// \brief Function template with type deduction lets you construct Final_action
+/// without typing any angle brackets
 template <typename F>
 Final_action<F> finally (F f)
 {
@@ -377,8 +386,8 @@ Final_action<F> finally (F f)
 #include <wx/utils.h> // for wxMin, wxMax
 #include <algorithm>
 
-/*
- * Set a variable temporarily in a scope
+/**
+  \brief Structure used by ValueRestorer 
  */
 template< typename T >
 struct RestoreValue {
@@ -386,6 +395,10 @@ struct RestoreValue {
    void operator () ( T *p ) const { if (p) *p = oldValue; }
 };
 
+
+/**
+  \brief Set a variable temporarily in a scope
+  */
 template< typename T >
 class ValueRestorer : public std::unique_ptr< T, RestoreValue<T> >
 {
@@ -408,7 +421,7 @@ public:
    }
 };
 
-// inline functions provide convenient parameter type deduction
+/// inline functions provide convenient parameter type deduction
 template< typename T >
 ValueRestorer< T > valueRestorer( T& var )
 { return ValueRestorer< T >{ var }; }
@@ -417,8 +430,21 @@ template< typename T >
 ValueRestorer< T > valueRestorer( T& var, const T& newValue )
 { return ValueRestorer< T >{ var, newValue }; }
 
-/*
- * A convenience for use with range-for
+/**
+  \brief A convenience for defining iterators that return rvalue types, so that
+  they cooperate correctly with stl algorithms and std::reverse_iterator
+ */
+template< typename Value, typename Category = std::forward_iterator_tag >
+using ValueIterator = std::iterator<
+   Category, const Value, ptrdiff_t,
+   // void pointer type so that operator -> is disabled
+   void,
+   // make "reference type" really the same as the value type
+   const Value
+>;
+
+/**
+  \brief A convenience for use with range-for
  */
 template <typename Iterator>
 struct IteratorRange : public std::pair<Iterator, Iterator> {
@@ -552,8 +578,7 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    R max( Unary unary_op = {} ) const
    {
       return this->accumulate(
-         -std::numeric_limits< R >::max(),
-         // std::numeric_limits< R >::lowest(), // TODO C++11
+         std::numeric_limits< R >::lowest(),
          (const R&(*)(const R&, const R&)) std::max,
          unary_op
       );
@@ -612,96 +637,6 @@ make_iterator_range( const Container &container )
    return { container.begin(), container.end() };
 }
 
-/*
- * Transform an iterator sequence, as another iterator sequence
- */
-template <
-   typename Result,
-   typename Iterator
->
-class transform_iterator
-   : public std::iterator<
-      typename std::iterator_traits<Iterator>::iterator_category,
-      const Result
-   >
-{
-   // This takes a function on iterators themselves, not on the
-   // dereference of those iterators, in case you ever need the generality.
-   using Function = std::function< Result( const Iterator& ) >;
-
-private:
-   Iterator mIterator;
-   Function mFunction;
-
-public:
-   transform_iterator(const Iterator &iterator, const Function &function)
-      : mIterator( iterator )
-      , mFunction( function )
-   {}
-
-   transform_iterator &operator ++ ()
-      { ++this->mIterator; return *this; }
-   transform_iterator operator ++ (int)
-      { auto copy{*this}; ++this->mIterator; return copy; }
-   transform_iterator &operator -- ()
-      { --this->mIterator; return *this; }
-   transform_iterator operator -- (int)
-      { auto copy{*this}; --this->mIterator; return copy; }
-
-   typename transform_iterator::reference operator * ()
-      { return this->mFunction(this->mIterator); }
-
-   friend inline bool operator == (
-      const transform_iterator &a, const transform_iterator &b)
-      { return a.mIterator == b.mIterator; }
-   friend inline bool operator != (
-      const transform_iterator &a, const transform_iterator &b)
-      { return !(a == b); }
-};
-
-template <
-   typename Iterator,
-   typename Function
->
-transform_iterator<
-   decltype( std::declval<Function>() ( std::declval<Iterator>() ) ),
-   Iterator
->
-make_transform_iterator(const Iterator &iterator, Function function)
-{
-   return { iterator, function };
-}
-
-template < typename Function, typename Iterator > struct value_transformer
-{
-   // Adapts a function on values to a function on iterators.
-   Function function;
-
-   auto operator () (const Iterator &iterator)
-      -> decltype( function( *iterator ) ) const
-   { return this->function( *iterator ); }
-};
-
-template <
-   typename Function,
-   typename Iterator
->
-using value_transform_iterator = transform_iterator<
-   decltype( std::declval<Function>()( *std::declval<Iterator>() ) ),
-   Iterator
->;
-
-template <
-   typename Function,
-   typename Iterator
->
-value_transform_iterator< Function, Iterator >
-make_value_transform_iterator(const Iterator &iterator, Function function)
-{
-   using NewFunction = value_transformer<Function, Iterator>;
-   return { iterator, NewFunction{ function } };
-}
-
 #if !wxCHECK_VERSION(3, 1, 0)
 // For using std::unordered_map on wxString
 namespace std
@@ -717,5 +652,78 @@ namespace std
    };
 }
 #endif
+
+// A utility function building a container of results
+template< typename Container, typename Iterator, typename Function >
+Container transform_range( Iterator first, Iterator last, Function &&fn )
+{
+   Container result;
+   std::transform( first, last, std::back_inserter( result ), fn );
+   return result;
+}
+// A utility function, often constructing a vector from another vector
+template< typename OutContainer, typename InContainer, typename Function >
+OutContainer transform_container( InContainer &inContainer, Function &&fn )
+{
+   return transform_range<OutContainer>(
+      inContainer.begin(), inContainer.end(), fn );
+}
+
+// Extend wxArrayString with move operations and construction and insertion from
+// std::initializer_list
+class wxArrayStringEx : public wxArrayString
+{
+public:
+   using wxArrayString::wxArrayString;
+   wxArrayStringEx() = default;
+
+   template< typename Iterator >
+   wxArrayStringEx( Iterator start, Iterator finish )
+   {
+      this->reserve( std::distance( start, finish ) );
+      while( start != finish )
+         this->push_back( *start++ );
+   }
+
+   template< typename T >
+   wxArrayStringEx( std::initializer_list< T > items )
+   {
+      this->reserve( this->size() + items.size() );
+      for ( const auto &item : items )
+         this->push_back( item );
+   }
+
+   // The move operations can take arguments of the base class wxArrayString
+   wxArrayStringEx( wxArrayString &&other )
+   {
+      swap( other );
+   }
+
+   wxArrayStringEx &operator= ( wxArrayString &&other )
+   {
+      if ( this != &other ) {
+         clear();
+         swap( other );
+      }
+      return *this;
+   }
+
+   using wxArrayString::insert;
+
+   template< typename T >
+   iterator insert( const_iterator pos, std::initializer_list< T > items )
+   {
+      const auto index = pos - ((const wxArrayString*)this)->begin();
+      this->wxArrayString::Insert( {}, index, items.size() );
+      auto result = this->begin() + index, iter = result;
+      for ( auto pItem = items.begin(), pEnd = items.end();
+         pItem != pEnd;
+         ++pItem, ++iter
+      ) {
+         *iter = *pItem;
+      }
+      return result;
+   }
+};
 
 #endif // __AUDACITY_MEMORY_X_H__

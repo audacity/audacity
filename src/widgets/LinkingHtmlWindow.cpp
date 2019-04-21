@@ -13,18 +13,19 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+#include "LinkingHtmlWindow.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "../Audacity.h"
-
 #include <wx/mimetype.h>
 #include <wx/filename.h>
+#include <wx/frame.h>
 #include <wx/uri.h>
 #include <wx/settings.h>
 #include <wx/log.h>
 
-#include "LinkingHtmlWindow.h"
 #include "../HelpText.h"
 #include "../FileNames.h"
 #include "../Prefs.h"

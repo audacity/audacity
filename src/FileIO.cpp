@@ -9,13 +9,12 @@
 **********************************************************************/
 
 #include "Audacity.h"
+#include "FileIO.h"
 
 #include <wx/defs.h>
 #include <wx/crt.h>
 #include <wx/filename.h>
 #include <wx/wfstream.h>
-
-#include "FileIO.h"
 
 FileIO::FileIO(const wxString & name, FileIOMode mode)
 : mName(name),

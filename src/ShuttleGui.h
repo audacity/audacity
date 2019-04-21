@@ -18,16 +18,15 @@
 
 #include <vector>
 #include "MemoryX.h"
-#include <wx/grid.h>
-#include <wx/sizer.h>
-#include <wx/string.h>
 
 #include "WrappedType.h"
 
 // For ShuttleGuiGetDefinitions.
 #include "commands/CommandTargets.h"
 
-class EnumSetting;
+class ChoiceSetting;
+
+class wxArrayStringEx;
 
 
 const int nMaxNestedSizers = 20;
@@ -58,7 +57,6 @@ class wxStaticText;
 class wxTreeCtrl;
 class wxTextCtrl;
 class wxSlider;
-class wxTreeListCtrl;
 class wxNotebook;
 typedef wxWindow wxNotebookPage;  // so far, any window can be a page
 class wxButton;
@@ -67,6 +65,7 @@ class wxRadioButton;
 class wxBitmap;
 class wxPanel;
 class wxSizer;
+class wxSizerItem;
 class wxStaticBox;
 class wxMenuBar;
 class wxMenu;
@@ -103,14 +102,14 @@ public:
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
-   wxListBox * AddListBox(const wxArrayString * pChoices, long style = 0);
+   wxListBox * AddListBox(const wxArrayStringEx &choices, long style = 0);
    wxListCtrl * AddListControl();
    wxListCtrl * AddListControlReportMode();
    wxGrid * AddGrid();
-   wxCheckBox * AddCheckBox( const wxString &Prompt, const wxString &Selected);
-   wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, const wxString &Selected);
-   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices, long style = 0 );
-   wxChoice   * AddChoice( const wxString &Prompt, const wxString &Selected, const wxArrayString * pChoices );
+   wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
+   wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
+   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style = 0 );
+   wxChoice   * AddChoice( const wxString &Prompt, const wxArrayStringEx &choices, int Selected = -1 );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
    void AddIcon( wxBitmap * pBmp);
@@ -158,8 +157,8 @@ public:
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
 
    bool DoStep( int iStep );
-   int TranslateToIndex( const wxString &Value, const wxArrayString &Choices );
-   wxString TranslateFromIndex( const int nIn, const wxArrayString &Choices );
+   int TranslateToIndex( const wxString &Value, const wxArrayStringEx &Choices );
+   wxString TranslateFromIndex( const int nIn, const wxArrayStringEx &Choices );
    int TranslateToIndex( const int Value, const std::vector<int> &Choices );
    int TranslateFromIndex( const int nIn, const std::vector<int> &Choices );
 
@@ -172,19 +171,17 @@ public:
    wxTextCtrl * TieTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
-   wxTextCtrl * TieNumericTextBox( const wxString &Caption, wxString & Value, const int nChars=0);
-   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Selected, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars=0);
    wxTextCtrl * TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
    wxCheckBox * TieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
-   wxCheckBox * TieCheckBox( const wxString &Prompt, const wxString &Selected );
    wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
 
-   wxChoice * TieChoice( const wxString &Prompt, WrappedType & WrappedRef, const wxArrayString * pChoices );
-   wxChoice * TieChoice( const wxString &Prompt, wxString &Selected, const wxArrayString * pChoices );
-   wxChoice * TieChoice( const wxString &Prompt, int &Selected, const wxArrayString * pChoices );
+   wxChoice * TieChoice( const wxString &Prompt, WrappedType & WrappedRef, const wxArrayStringEx &choices );
+   wxChoice * TieChoice( const wxString &Prompt, wxString &Selected, const wxArrayStringEx &choices );
+   wxChoice * TieChoice( const wxString &Prompt, int &Selected, const wxArrayStringEx &choices );
 
    wxSlider * TieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSlider * TieSlider( const wxString &Prompt, int &pos, const int max, const int min = 0);
@@ -216,14 +213,14 @@ public:
    // This one is defined in terms of the next and not virtual
    virtual wxChoice *TieChoice(
       const wxString &Prompt,
-      EnumSetting &enumSetting );
+      ChoiceSetting &choiceSetting );
 
    virtual wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
-      const wxArrayString &Choices,
-      const wxArrayString & InternalChoices );
+      const wxArrayStringEx &Choices,
+      const wxArrayStringEx & InternalChoices );
 
    // This overload of TieChoice should no longer be used in Preferences!
    // Some uses do remain in export settings dialogs.
@@ -231,7 +228,7 @@ public:
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
-      const wxArrayString & Choices,
+      const wxArrayStringEx & Choices,
       const std::vector<int> & InternalChoices );
 
    // This overload presents what is really a numerical setting as a choice among
@@ -245,20 +242,10 @@ public:
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
-      const wxArrayString & Choices,
+      const wxArrayStringEx & Choices,
       const std::vector<int> & InternalChoices );
 
    virtual wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const int nChars);
-   virtual wxTextCtrl * TieTextBox(
-      const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
-      const int nChars);
-   virtual wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
@@ -316,9 +303,9 @@ protected:
    long Style( long Style );
 
 private:
-   void SetSizeHints( const wxArrayString & items );
+   void SetSizeHints( const wxArrayStringEx & items );
 public:
-   static void SetSizeHints( wxWindow *window, const wxArrayString & items );
+   static void SetSizeHints( wxWindow *window, const wxArrayStringEx & items );
 
 protected:
    wxWindow * mpLastWind;
@@ -335,7 +322,7 @@ protected:
    wxString mSettingName; /// The setting controlled by a group.
    int mRadioCount;       /// The index of this radio item.  -1 for none.
 
-   WrappedType mRadioValue;  /// The wrapped value associated with the active radio button.
+   Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    wxString mRadioValueString; /// Unwrapped string value.
    int mRadioValueInt;         /// Unwrapped integer value.
 
@@ -371,7 +358,8 @@ extern void SetIfCreated( wxStaticText *&Var, wxStaticText * Val );
 class GuiWaveTrack;
 class AttachableScrollBar;
 class ViewInfo;
-#include <wx/scrolbar.h>  // to get wxSB_HORIZONTAL
+
+#include <wx/defs.h>  // to get wxSB_HORIZONTAL
 
 // CreateStdButtonSizer defs...should probably move to widgets subdir
 enum
@@ -447,35 +435,25 @@ public:
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
-      const wxArrayString &Choices,
-      const wxArrayString & InternalChoices ) override;
+      const wxArrayStringEx &Choices,
+      const wxArrayStringEx & InternalChoices ) override;
 
    // An assertion will be violated if this override is reached!
    wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
-      const wxArrayString & Choices,
+      const wxArrayStringEx & Choices,
       const std::vector<int> & InternalChoices) override;
 
    wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
-      const wxArrayString & Choices,
+      const wxArrayStringEx & Choices,
       const std::vector<int> & InternalChoices) override;
 
    wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const int nChars) override;
-   wxTextCtrl * TieTextBox(
-      const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
-      const int nChars) override;
-   wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,

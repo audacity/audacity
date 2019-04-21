@@ -56,14 +56,16 @@ but little else.
 #define __AUDACITY_IMPORTER__
 
 #include "../Audacity.h"
-#include "../Internat.h"
-#include <wx/filename.h>
-#include "../MemoryX.h"
 
-#include "../widgets/ProgressDialog.h"
+#include "audacity/Types.h"
+#include "../Internat.h"
+#include "../MemoryX.h"
 
 #include "ImportRaw.h" // defines TrackHolders
 
+class wxArrayString;
+class ProgressDialog;
+enum class ProgressResult : unsigned;
 class TrackFactory;
 class Track;
 class Tags;
@@ -87,12 +89,12 @@ public:
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
-   virtual wxArrayString GetSupportedExtensions()
+   virtual FileExtensions GetSupportedExtensions()
    {
       return mExtensions;
    }
 
-   bool SupportsExtension(const wxString &extension)
+   bool SupportsExtension(const FileExtension &extension)
    {
       // Case-insensitive check if extension is supported
       return mExtensions.Index(extension, false) != wxNOT_FOUND;
@@ -101,44 +103,31 @@ public:
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
    // state.
-   virtual std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) = 0;
+   virtual std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) = 0;
 
    virtual ~ImportPlugin() { }
 
 protected:
 
-   ImportPlugin(wxArrayString supportedExtensions):
-      mExtensions(supportedExtensions)
+   ImportPlugin(FileExtensions supportedExtensions):
+      mExtensions( std::move( supportedExtensions ) )
    {
    }
 
-   wxArrayString mExtensions;
+   const FileExtensions mExtensions;
 };
 
 
 class ImportFileHandle /* not final */
 {
 public:
-   ImportFileHandle(const wxString & filename)
-   :  mFilename(filename),
-   mProgress{}
-   {
-   }
+   ImportFileHandle(const FilePath & filename);
 
-   virtual ~ImportFileHandle()
-   {
-   }
+   virtual ~ImportFileHandle();
 
    // The importer should call this to create the progress dialog and
    // identify the filename being imported.
-   void CreateProgress()
-   {
-      wxFileName ff(mFilename);
-      wxString title;
-
-      title.Printf(_("Importing %s"), GetFileDescription());
-      mProgress.create(title, ff.GetFullName());
-   }
+   void CreateProgress();
 
    // This is similar to GetImporterDescription, but if possible the
    // importer will return a more specific description of the
@@ -157,6 +146,8 @@ public:
    // The given Tags structure may also be modified.
    // In case of errors or exceptions, it is not necessary to leave outTracks
    // or tags unmodified.
+   // If resulting outTracks is not empty,
+   // then each member of it must be a nonempty vector.
    virtual ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
                       Tags *tags) = 0;
 
@@ -170,8 +161,8 @@ public:
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;
 
 protected:
-   wxString mFilename;
-   Maybe<ProgressDialog> mProgress;
+   FilePath mFilename;
+   std::unique_ptr<ProgressDialog> mProgress;
 };
 
 
@@ -179,9 +170,10 @@ protected:
 class UnusableImportPlugin
 {
 public:
-   UnusableImportPlugin(const wxString &formatName, wxArrayString extensions):
+   UnusableImportPlugin(
+      const wxString &formatName, FileExtensions extensions):
       mFormatName(formatName),
-      mExtensions(extensions)
+      mExtensions( std::move( extensions ) )
    {
    }
 
@@ -197,7 +189,7 @@ public:
 
 private:
    wxString mFormatName;
-   wxArrayString mExtensions;
+   const FileExtensions mExtensions;
 };
 
 #endif

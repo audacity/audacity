@@ -11,31 +11,23 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include <wx/button.h>
-#include <wx/datetime.h>
-#include <wx/dialog.h>
-#include <wx/filename.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
-#include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/textbuf.h>
-#include <wx/textctrl.h>
-#include <wx/tokenzr.h>
-
 #include "../Effect.h"
 
 #include "nyx.h"
+
+class wxArrayString;
+class wxFileName;
+class wxCheckBox;
+class wxTextCtrl;
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
-#define NYQUISTEFFECTS_FAMILY ( IdentInterfaceSymbol{ XO("Nyquist") } )
+#define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
 
-#define NYQUIST_EFFECTS_PROMPT_ID wxT("Nyquist Effects Prompt")
-#define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Prompt")
+#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 enum NyqControlType
@@ -64,7 +56,7 @@ public:
    wxString var;
    wxString name;
    wxString label;
-   std::vector<IdentInterfaceSymbol> choices;
+   std::vector<EnumValueSymbol> choices;
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -85,11 +77,11 @@ public:
    NyquistEffect(const wxString &fName);
    virtual ~NyquistEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   PluginPath GetPath() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
    
@@ -100,7 +92,7 @@ public:
 
    EffectType GetType() override;
    EffectType GetClassification() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
@@ -146,11 +138,11 @@ private:
    bool IsOk();
    const wxString &InitializationError() const { return mInitError; }
 
-   static wxArrayString GetNyquistSearchPath();
+   static FilePaths GetNyquistSearchPath();
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   static std::vector<IdentInterfaceSymbol> ParseChoice(const wxString & text);
+   static std::vector<EnumValueSymbol> ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,
@@ -198,7 +190,7 @@ private:
    void OnTime(wxCommandEvent & evt);
    void OnFileButton(wxCommandEvent & evt);
 
-   void resolveFilePath(wxString & path, wxString extension = "");
+   void resolveFilePath(wxString & path, wxString extension = {});
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 

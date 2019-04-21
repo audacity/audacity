@@ -59,7 +59,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ExportMP3.h"
 
 #include <wx/app.h>
@@ -92,6 +92,7 @@
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include "Export.h"
 
@@ -104,11 +105,6 @@
 //----------------------------------------------------------------------------
 // ExportMP3Options
 //----------------------------------------------------------------------------
-
-#define MODE_SET           0
-#define MODE_VBR           1
-#define MODE_ABR           2
-#define MODE_CBR           3
 
 #define CHANNEL_JOINT      0
 #define CHANNEL_STEREO     1
@@ -419,7 +415,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   }
                   S.EndRadioButtonGroup();
 
-                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono? wxT("true") : wxT("false"));
+                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono);
                }
                S.EndTwoColumn();
             }
@@ -541,7 +537,7 @@ wxArrayString ExportMP3Options::GetNames(CHOICES *choices, int count)
    wxArrayString names;
 
    for (int i = 0; i < count; i++) {
-      names.Add(choices[i].name);
+      names.push_back(choices[i].name);
    }
 
    return names;
@@ -620,7 +616,7 @@ public:
          S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(0);
          {
-            if (mLibPath.GetFullPath().IsEmpty()) {
+            if (mLibPath.GetFullPath().empty()) {
                /* i18n-hint: There is a  button to the right of the arrow.*/
                text.Printf(_("To find %s, click here -->"), mName);
                mPathText = S.AddTextBox( {}, text, 0);
@@ -664,7 +660,7 @@ public:
                                    mType,
                                    wxFD_OPEN | wxRESIZE_BORDER,
                                    this);
-      if (!path.IsEmpty()) {
+      if (!path.empty()) {
          mLibPath = path;
          mPathText->SetValue(path);
       }
@@ -823,6 +819,8 @@ public:
 
    /* initialize the library interface */
    bool InitLibrary(wxString libpath);
+   bool InitLibraryInternal();
+   bool InitLibraryExternal(wxString libpath);
    void FreeLibrary();
 
    /* get library info */
@@ -852,6 +850,7 @@ public:
    bool PutInfoTag(wxFFile & f, wxFileOffset off);
 
 private:
+   bool mLibIsExternal;
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    wxString mLibPath;
@@ -917,6 +916,17 @@ private:
 
 MP3Exporter::MP3Exporter()
 {
+// We could use #defines rather than this variable.
+// The idea of the variable is that if we wanted, we could allow
+// a dynamic override of the library, e.g. with a newer faster version,
+// or to fix CVEs in the underlying librray.
+// for now though the 'variable' is a constant.
+#ifdef MP3_EXPORT_BUILT_IN
+   mLibIsExternal = false;
+#else
+   mLibIsExternal = true;
+#endif
+
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    mLibraryLoaded = false;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
@@ -948,7 +958,7 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
    wxString path;
    wxString name;
 
-   if (!mLibPath.IsEmpty()) {
+   if (!mLibPath.empty()) {
       wxFileName fn = mLibPath;
       path = fn.GetPath();
       name = fn.GetFullName();
@@ -980,6 +990,7 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
 
 bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 {
+
    if (ValidLibraryLoaded()) {
       FreeLibrary();
       mLibraryLoaded = false;
@@ -989,8 +1000,13 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    mBladeVersion.Empty();
 #endif
 
+   if( !mLibIsExternal ){
+      mLibraryLoaded = InitLibraryInternal();
+      return mLibraryLoaded;
+   }
+
    // First try loading it from a previously located path
-   if (!mLibPath.IsEmpty()) {
+   if (!mLibPath.empty()) {
       wxLogMessage(wxT("Attempting to load LAME from previously defined path"));
       mLibraryLoaded = InitLibrary(mLibPath);
    }
@@ -1021,7 +1037,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    // Oh well, just give up
    if (!ValidLibraryLoaded()) {
 #if defined(__WXMSW__)
-      if (askuser && !mBladeVersion.IsEmpty()) {
+      if (askuser && !mBladeVersion.empty()) {
          AudacityMessageBox(mBladeVersion);
       }
 #endif
@@ -1064,6 +1080,64 @@ void MP3Exporter::SetChannel(int mode)
 }
 
 bool MP3Exporter::InitLibrary(wxString libpath)
+{
+   return mLibIsExternal ? InitLibraryExternal(libpath) : InitLibraryInternal();
+}
+
+bool MP3Exporter::InitLibraryInternal()
+{
+   wxLogMessage(wxT("Using internal LAME"));
+
+// The global ::lame_something symbols only exist if LAME is built in.
+// So we don't reference them unless they are.
+#ifdef MP3_EXPORT_BUILT_IN 
+
+   lame_init = ::lame_init;
+   get_lame_version = ::get_lame_version;
+   lame_init_params = ::lame_init_params;
+   lame_encode_buffer = ::lame_encode_buffer;
+   lame_encode_buffer_interleaved = ::lame_encode_buffer_interleaved;
+   lame_encode_flush = ::lame_encode_flush;
+   lame_close = ::lame_close;
+
+   lame_set_in_samplerate = ::lame_set_in_samplerate;
+   lame_set_out_samplerate = ::lame_set_out_samplerate;
+   lame_set_num_channels = ::lame_set_num_channels;
+   lame_set_quality = ::lame_set_quality;
+   lame_set_brate = ::lame_set_brate;
+   lame_set_VBR = ::lame_set_VBR;
+   lame_set_VBR_q = ::lame_set_VBR_q;
+   lame_set_VBR_min_bitrate_kbps = ::lame_set_VBR_min_bitrate_kbps;
+   lame_set_mode = ::lame_set_mode;
+   lame_set_preset = ::lame_set_preset;
+   lame_set_error_protection = ::lame_set_error_protection;
+   lame_set_disable_reservoir = ::lame_set_disable_reservoir;
+   lame_set_padding_type = ::lame_set_padding_type;
+   lame_set_bWriteVbrTag = ::lame_set_bWriteVbrTag;
+
+   // These are optional
+   //lame_get_lametag_frame = ::lame_get_lametag_frame;
+   lame_get_lametag_frame = NULL;
+   lame_mp3_tags_fid = ::lame_mp3_tags_fid;
+
+#if defined(__WXMSW__)
+   //beWriteInfoTag = ::beWriteInfoTag;
+   //beVersion = ::beVersion;
+   beWriteInfoTag = NULL;
+   beVersion = NULL;
+#endif
+
+   mGF = lame_init();
+   if (mGF == NULL) {
+      return false;
+   }
+#endif
+
+   return true;
+}
+
+
+bool MP3Exporter::InitLibraryExternal(wxString libpath)
 {
    wxLogMessage(wxT("Loading LAME from %s"), libpath);
 
@@ -1159,7 +1233,7 @@ bool MP3Exporter::InitLibrary(wxString libpath)
          be_version v;
          beVersion(&v);
 
-         mBladeVersion.Printf(_("You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of the LAME MP3 library."),
+         mBladeVersion.Printf(_("You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of 'LAME for Audacity'."),
                               v.byMajorVersion,
                               v.byMinorVersion,
                               AUDACITY_VERSION,
@@ -1473,11 +1547,15 @@ wxString MP3Exporter::GetLibraryPath()
 
 wxString MP3Exporter::GetLibraryName()
 {
+   if (sizeof(void*) == 8)
+      return wxT("libmp3lame64bit.dylib");
    return wxT("libmp3lame.dylib");
 }
 
 wxString MP3Exporter::GetLibraryTypeString()
 {
+   if (sizeof(void*) == 8)
+      return wxString(_("Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
    return wxString(_("Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
 }
 
@@ -1620,7 +1698,7 @@ private:
    int FindValue(CHOICES *choices, int cnt, int needle, int def);
    wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
-   id3_length_t AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+   unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -1764,7 +1842,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    }
 
    // Verify sample rate
-   if (FindName(sampRates, WXSIZEOF(sampRates), rate).IsEmpty() ||
+   if (FindName(sampRates, WXSIZEOF(sampRates), rate).empty() ||
       (rate < lowrate) || (rate > highrate)) {
       rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
@@ -1802,7 +1880,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    ArrayOf<char> id3buffer;
    bool endOfFile;
-   id3_length_t id3len = AddTags(project, id3buffer, &endOfFile, metadata);
+   unsigned long id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
       if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
@@ -1991,10 +2069,10 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format.  "), rate);
+               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format. "), rate);
             }
             else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format.  "), rate, bitrate);
+               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "), rate, bitrate);
             }
 
             text += _("You may resample to one of the rates below.");
@@ -2002,27 +2080,27 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          }
          S.EndHorizontalLay();
 
-         wxArrayString choices;
-         wxString selected = wxT("");
+         wxArrayStringEx choices;
+         int selected = -1;
          for (size_t i = 0; i < WXSIZEOF(sampRates); i++) {
             int label = sampRates[i].label;
             if (label >= lowrate && label <= highrate) {
-               choices.Add(sampRates[i].name);
+               choices.push_back(sampRates[i].name);
                if (label <= rate) {
-                  selected = sampRates[i].name;
+                  selected = i;
                }
             }
          }
 
-         if (selected.IsEmpty()) {
-            selected = choices[0];
+         if (selected == -1) {
+            selected = 0;
          }
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 selected,
-                                 &choices);
+                                 choices,
+                                 selected);
          }
          S.EndHorizontalLay();
       }
@@ -2052,7 +2130,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
 // returns buffer len; caller frees
-id3_length_t ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
+unsigned long ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };
@@ -2101,7 +2179,7 @@ id3_length_t ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char
 
    *endOfFile = false;
 
-   id3_length_t len;
+   unsigned long len;
 
    len = id3_tag_render(tp.get(), 0);
    buffer.reinit(len);
@@ -2180,6 +2258,11 @@ wxString GetMP3Version(wxWindow *parent, bool prompt)
    if (exporter.LoadLibrary(parent, prompt ? MP3Exporter::Yes : MP3Exporter::No)) {
 #endif // DISABLE_DYNAMIC_LOADING_LAME
       versionString = exporter.GetLibraryVersion();
+#ifdef MP3_EXPORT_BUILT_IN
+      versionString += " ";
+      versionString += _("(Built-in)");
+#endif
+
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    }
 #endif // DISABLE_DYNAMIC_LOADING_LAME

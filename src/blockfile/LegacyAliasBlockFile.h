@@ -35,7 +35,7 @@ class LegacyAliasBlockFile final : public PCMAliasBlockFile
    BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
    void Recover() override;
 
-   static BlockFilePtr BuildFromXML(const wxString &projDir, const wxChar **attrs);
+   static BlockFilePtr BuildFromXML(const FilePath &projDir, const wxChar **attrs);
 };
 
 #endif

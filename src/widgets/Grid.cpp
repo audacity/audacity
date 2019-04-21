@@ -14,6 +14,9 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Grid.h"
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/defs.h>
 #include <wx/choice.h>
@@ -23,13 +26,102 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
-#include "Grid.h"
 #include "NumericTextCtrl.h"
 #include "../SelectedRegion.h"
 #include "../Internat.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+
+/**********************************************************************//**
+\class GridAx
+\brief wxAccessible object providing grid information for Grid.
+**************************************************************************/
+class GridAx final : public WindowAccessible
+{
+
+ public:
+
+   GridAx(Grid *grid);
+
+   void SetCurrentCell(int row, int col);
+   void TableUpdated();
+   bool GetRowCol(int childId, int & row, int & col);
+
+   // Retrieves the address of an IDispatch interface for the specified child.
+   // All objects must support this property.
+   wxAccStatus GetChild(int childId, wxAccessible **child) override;
+
+   // Gets the number of children.
+   wxAccStatus GetChildCount(int *childCount) override;
+
+   // Gets the default action for this object (0) or > 0 (the action for a child).
+   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
+   // string if there is no action.
+   // The retrieved string describes the action that is performed on an object,
+   // not what the object does as a result. For example, a toolbar button that prints
+   // a document has a default action of "Press" rather than "Prints the current document."
+   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
+
+   // Returns the description for this object or a child.
+   wxAccStatus GetDescription(int childId, wxString *description) override;
+
+   // Gets the window with the keyboard focus.
+   // If childId is 0 and child is NULL, no object in
+   // this subhierarchy has the focus.
+   // If this object has the focus, child should be 'this'.
+   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
+
+   // Returns help text for this object or a child, similar to tooltip text.
+   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
+
+   // Returns the keyboard shortcut for this object or child.
+   // Return e.g. ALT+K
+   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
+
+   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
+   // rect is in screen coordinates.
+   wxAccStatus GetLocation(wxRect & rect, int elementId) override;
+
+   // Gets the name of the specified object.
+   wxAccStatus GetName(int childId, wxString *name) override;
+
+   // Gets the parent, or NULL.
+   wxAccStatus GetParent(wxAccessible **parent) override;
+
+   // Returns a role constant.
+   wxAccStatus GetRole(int childId, wxAccRole *role) override;
+
+   // Gets a variant representing the selected children
+   // of this object.
+   // Acceptable values:
+   // - a null variant (IsNull() returns TRUE)
+   // - a list variant (GetType() == wxT("list"))
+   // - an integer representing the selected child element,
+   //   or 0 if this object is selected (GetType() == wxT("long"))
+   // - a "void*" pointer to a wxAccessible child object
+   wxAccStatus GetSelections(wxVariant *selections) override;
+
+   // Returns a state constant.
+   wxAccStatus GetState(int childId, long* state) override;
+
+   // Returns a localized string representing the value for the object
+   // or child.
+   wxAccStatus GetValue(int childId, wxString* strValue) override;
+
+#if defined(__WXMAC__)
+   // Selects the object or child.
+   wxAccStatus Select(int childId, wxAccSelectionFlags selectFlags) override;
+#endif
+
+   Grid *mGrid;
+   int mLastId;
+
+};
+#endif
+
 NumericEditor::NumericEditor
-   (NumericConverter::Type type, const NumericFormatId &format, double rate)
+   (NumericConverter::Type type, const NumericFormatSymbol &format, double rate)
 {
    mType = type;
    mFormat = format;
@@ -131,7 +223,7 @@ wxString NumericEditor::GetValue() const
    return wxString::Format(wxT("%g"), GetNumericTextControl()->GetValue());
 }
 
-NumericFormatId NumericEditor::GetFormat() const
+NumericFormatSymbol NumericEditor::GetFormat() const
 {
    return mFormat;
 }
@@ -141,7 +233,7 @@ double NumericEditor::GetRate() const
    return mRate;
 }
 
-void NumericEditor::SetFormat(const NumericFormatId &format)
+void NumericEditor::SetFormat(const NumericFormatSymbol &format)
 {
    mFormat = format;
 }
@@ -255,9 +347,9 @@ wxGridCellRenderer *NumericRenderer::Clone() const
 ChoiceEditor::ChoiceEditor(size_t count, const wxString choices[])
 {
    if (count) {
-      mChoices.Alloc(count);
+      mChoices.reserve(count);
       for (size_t n = 0; n < count; n++) {
-         mChoices.Add(choices[n]);
+         mChoices.push_back(choices[n]);
       }
    }
 }
@@ -311,7 +403,7 @@ void ChoiceEditor::BeginEdit(int row, int col, wxGrid* grid)
 
    Choice()->Clear();
    Choice()->Append(mChoices);
-   Choice()->SetSelection(mChoices.Index(mOld));
+   Choice()->SetSelection( make_iterator_range( mChoices ).index( mOld ) );
    Choice()->SetFocus();
 }
 
@@ -332,7 +424,7 @@ bool ChoiceEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col),
    int sel = Choice()->GetSelection();
 
    // This can happen if the wxChoice control is displayed and the list of choices get changed
-   if ((sel < 0) || (sel >= (int)(mChoices.GetCount())))
+   if ((sel < 0) || (sel >= (int)(mChoices.size())))
    {
       return false;
    }
@@ -356,7 +448,7 @@ void ChoiceEditor::ApplyEdit(int row, int col, wxGrid *grid)
 
 void ChoiceEditor::Reset()
 {
-   Choice()->SetSelection(mChoices.Index(mOld));
+   Choice()->SetSelection( make_iterator_range( mChoices ).index( mOld ) );
 }
 
 void ChoiceEditor::SetChoices(const wxArrayString &choices)
@@ -707,7 +799,7 @@ wxAccStatus GridAx::GetChildCount(int *childCount)
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus GridAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -715,7 +807,7 @@ wxAccStatus GridAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName
 // Returns the description for this object or a child.
 wxAccStatus GridAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -723,7 +815,7 @@ wxAccStatus GridAx::GetDescription(int WXUNUSED(childId), wxString *description)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus GridAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -732,7 +824,7 @@ wxAccStatus GridAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 // Return e.g. ALT+K
 wxAccStatus GridAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -766,7 +858,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
    if (GetRowCol(childId, row, col)) {
       wxString n = mGrid->GetColLabelValue(col);
       wxString v = mGrid->GetCellValue(row, col);
-      if (v.IsEmpty()) {
+      if (v.empty()) {
          v = _("Empty");
       }
 
@@ -857,7 +949,10 @@ wxAccStatus GridAx::GetState(int childId, long *state)
            wxACC_STATE_SYSTEM_SELECTED;
 
       if (mGrid->IsReadOnly(row, col)) {
-         flag = wxACC_STATE_SYSTEM_UNAVAILABLE;
+         // It would be more logical to also include the state
+         // wxACC_STATE_SYSTEM_FOCUSABLE, but this causes Window-Eyes to 
+         // no longer read the cell as disabled
+         flag = wxACC_STATE_SYSTEM_UNAVAILABLE | wxACC_STATE_SYSTEM_FOCUSED;
       }
 #endif
 
@@ -888,7 +983,7 @@ wxAccStatus GridAx::GetValue(int childId, wxString *strValue)
 wxAccStatus GridAx::GetValue(int WXUNUSED(childId), wxString *strValue)
 #endif
 {
-   strValue->Clear();
+   strValue->clear();
 
 #if defined(__WXMSW__)
    return wxACC_OK;
@@ -923,9 +1018,17 @@ wxAccStatus GridAx::Select(int childId, wxAccSelectionFlags selectFlags)
 // If childId is 0 and child is NULL, no object in
 // this subhierarchy has the focus.
 // If this object has the focus, child should be 'this'.
-wxAccStatus GridAx::GetFocus(int * WXUNUSED(childId), wxAccessible **child)
+wxAccStatus GridAx::GetFocus(int * childId, wxAccessible **child)
 {
-   *child = this;
+   if (mGrid == wxWindow::FindFocus()) {
+      if (mGrid->GetNumberRows() * mGrid->GetNumberCols() == 0) {
+         *child = this;
+      }
+      else {
+         *childId = mGrid->GetGridCursorRow()*mGrid->GetNumberCols() +
+            mGrid->GetGridCursorCol() + 1;
+      }
+   }
 
    return wxACC_OK;
 }

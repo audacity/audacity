@@ -12,15 +12,17 @@
 #ifndef __AUDACITY_INTERNAT__
 #define __AUDACITY_INTERNAT__
 
-#include <wx/arrstr.h>
-#include <wx/string.h>
+#include "Audacity.h"
+
 #include <wx/longlong.h>
 
 #include <algorithm>
 
 #ifndef IN_RC
-#include "Audacity.h"
+#include "audacity/Types.h"
 
+class wxArrayString;
+class wxArrayStringEx;
 class wxString;
 
 extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
@@ -179,9 +181,9 @@ private:
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
 
-class IdentInterfaceSymbol;
-wxArrayString LocalizedStrings(
-   const IdentInterfaceSymbol strings[], size_t nStrings);
+class ComponentInterfaceSymbol;
+wxArrayStringEx LocalizedStrings(
+   const EnumValueSymbol strings[], size_t nStrings);
 
 // This object pairs an internal string, maybe empty, with a translated string.
 // Any internal string may be written to configuration or other files and,
@@ -194,7 +196,9 @@ class TranslatedInternalString
 {
 public:
 
-   TranslatedInternalString() = default;
+   using ID = CommandID;
+
+   TranslatedInternalString() =  default;
 
    // One-argument constructor from a msgid
    explicit TranslatedInternalString( const wxString &internal )
@@ -202,22 +206,21 @@ public:
    {}
 
    // Two-argument version, when translated does not derive from internal
-   TranslatedInternalString( const wxString &internal,
+   TranslatedInternalString( const ID &internal,
                              const wxString &translated )
    : mInternal{ internal }, mTranslated{ translated }
    {}
 
-   const wxString &Internal() const { return mInternal; }
+   const ID &Internal() const { return mInternal; }
    const wxString Translated() const 
    {  
       wxString Temp = mTranslated;
       Temp.Replace( "&","" );
       return Temp;
    }
-   const wxString &TranslatedForMenu() const { return mTranslated; }
 
 private:
-   wxString mInternal;
+   ID mInternal;
    wxString mTranslated;
 };
 

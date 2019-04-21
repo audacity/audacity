@@ -22,8 +22,8 @@
 **********************************************************************/
 
 #include "../../Audacity.h"
-#include <AudioUnit/AudioUnit.h>
-#include <AudioUnit/AudioComponent.h>
+#include "AUControl.h"
+
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioUnit/AUCocoaUIView.h>
 #include <CoreAudioKit/CoreAudioKit.h>
@@ -32,7 +32,6 @@
 #include <AudioUnit/AudioUnitCarbonView.h>
 #endif
 
-#include "AUControl.h"
 #include "../../MemoryX.h"
 
 @interface AUView : NSView
@@ -173,12 +172,20 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
 #endif
    }
 
-   if (!mView && !mHIView)
+   if (!mView
+#if !defined(_LP64)
+       && !mHIView
+#endif
+       )
    {
       CreateGeneric();
    }
 
-   if (!mView && !mHIView)
+   if (!mView
+#if !defined(_LP64)
+       && !mHIView
+#endif
+       )
    {
       return false;
    }
@@ -186,10 +193,12 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
    // wxWidgets takes ownership so safenew
    SetPeer(safenew AUControlImpl(this, mAUView));
 
+#if !defined(_LP64)
    if (mHIView)
    {
       CreateCarbonOverlay();
    }
+#endif
 
    // Must get the size again since SetPeer() could cause it to change
    SetInitialSize(GetMinSize());

@@ -12,17 +12,14 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include <wx/checkbox.h>
-#include <wx/event.h>
-#include <wx/slider.h>
-#include <wx/spinctrl.h>
-#include <wx/string.h>
-
 #include "Effect.h"
 
+class wxCheckBox;
+class wxSlider;
+class wxSpinCtrl;
 class ShuttleGui;
 
-#define REVERB_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Reverb") }
+#define REVERB_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Reverb") }
 
 struct Reverb_priv_t;
 
@@ -46,9 +43,9 @@ public:
       bool mWetOnly;
    };
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -66,7 +63,7 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
-   wxArrayString GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
 
    // Effect implementation
@@ -79,7 +76,7 @@ public:
 private:
    // EffectReverb implementation
 
-   void SetTitle(const wxString & name = wxT(""));
+   void SetTitle(const wxString & name = {});
 
 #define SpinSliderHandlers(n) \
    void On ## n ## Slider(wxCommandEvent & evt); \

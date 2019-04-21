@@ -23,25 +23,6 @@ fi
 
 max=${min/./}0
 ver="-DMAC_OS_X_VERSION_MAX_ALLOWED=${max} -mmacosx-version-min=${min}"
-arch='-arch i386'
-
-std=''
-stdlib='-stdlib=libstdc++'
-if [ ${max} -gt 1060 ]
-then
-   std='-std=c++1z'
-   stdlib='-stdlib=libc++'
-fi
-
-export CPPFLAGS="${ver}"
-export CFLAGS1="$arch ${ver} -isysroot $sdk"
-export CXXFLAGS1="$arch ${ver} -isysroot $sdk ${std} ${stdlib}"
-export LDFLAGS1="$arch ${ver} -syslibroot,$sdk ${std} ${stdlib}"
-
-# Make sure our flags are included
-export CC="gcc $CFLAGS1"
-export CXX="g++ $CXXFLAGS1"
-export LD="g++ $LDFLAGS1"
 
 # Build a specific configuration
 function bld
@@ -51,7 +32,12 @@ function bld
    pushd "${1}"
    shift
 
-   ../configure --enable-macosx-arch=i386 \
+   arch_option="--enable-macosx-arch=${1}"
+   prefix_option="--prefix=/usr/local/${1}"
+   shift
+
+   ../configure ${prefix_option} \
+                ${arch_option} \
                 --with-expat=builtin \
                 --with-zlib=builtin \
                 --with-regex=builtin \
@@ -74,10 +60,33 @@ function inst
    popd
 }
 
-# Build all configurations
-bld bld_debug --enable-debug=yes --enable-shared=yes --with-flavour=debug
-bld bld_release --enable-debug=no --enable-shared=yes --with-flavour=release
+for architecture in 'i386' 'x86_64'; do {
+   std=''
+   stdlib='-stdlib=libstdc++'
+   if [ ${max} -gt 1060 ]
+   then
+      std='-std=c++1z'
+      stdlib='-stdlib=libc++'
+   fi
 
-# Install all configurations
-inst bld_debug
-inst bld_release
+   arch="-arch ${architecture}"
+   export CPPFLAGS="${ver}"
+   export CFLAGS1="${arch} ${ver} -isysroot $sdk"
+   export CXXFLAGS1="${arch} ${ver} -isysroot $sdk ${std} ${stdlib}"
+   export LDFLAGS1="${arch} ${ver} -syslibroot,$sdk ${std} ${stdlib}"
+
+   # Make sure our flags are included
+   export CC="gcc $CFLAGS1"
+   export CXX="g++ $CXXFLAGS1"
+   export LD="g++ $LDFLAGS1"
+
+   # Build all configurations
+   debug_dir="bld_debug_${architecture}"
+   release_dir="bld_release_${architecture}"
+   bld ${debug_dir} ${architecture} --enable-debug=yes --enable-shared=yes --with-flavour=debug
+   bld ${release_dir} ${architecture} --enable-debug=no --enable-shared=yes --with-flavour=release
+
+   # Install all configurations
+   inst ${debug_dir}
+   inst ${release_dir}
+}; done # loop over architectures

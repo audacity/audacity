@@ -11,7 +11,6 @@
 
 class Track;
 class TrackList;
-class MixerBoard;
 class ViewInfo;
 #include "MemoryX.h"
 #include <vector>
@@ -21,21 +20,19 @@ class SelectionState
 {
 public:
    static void SelectTrackLength
-      ( TrackList &tracks, ViewInfo &viewInfo, Track &track, bool syncLocked );
+      ( ViewInfo &viewInfo, Track &track, bool syncLocked );
 
-   void SelectTrack
-      ( TrackList &tracks, Track &track,
-        bool selected, bool updateLastPicked, MixerBoard *pMixerBoard );
+   void SelectTrack(
+      Track &track, bool selected, bool updateLastPicked );
    // Inclusive range of tracks, the limits specified in either order:
    void SelectRangeOfTracks
-      ( TrackList &tracks, Track &sTrack, Track &eTrack,
-        MixerBoard *pMixerBoard );
-   void SelectNone( TrackList &tracks, MixerBoard *pMixerBoard );
+      ( TrackList &tracks, Track &sTrack, Track &eTrack );
+   void SelectNone( TrackList &tracks );
    void ChangeSelectionOnShiftClick
-      ( TrackList &tracks, Track &track, MixerBoard *pMixerBoard );
+      ( TrackList &tracks, Track &track );
    void HandleListSelection
       ( TrackList &tracks, ViewInfo &viewInfo, Track &track,
-        bool shift, bool ctrl, bool syncLocked, MixerBoard *pMixerBoard );
+        bool shift, bool ctrl, bool syncLocked );
 
 private:
    friend class SelectionStateChanger;

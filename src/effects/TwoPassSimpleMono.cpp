@@ -19,7 +19,6 @@ doing the second pass over all selected tracks.
 
 
 #include "../Audacity.h"
-
 #include "TwoPassSimpleMono.h"
 
 #include "../WaveTrack.h"
@@ -47,10 +46,8 @@ bool EffectTwoPassSimpleMono::Process()
 bool EffectTwoPassSimpleMono::ProcessPass()
 {
    //Iterate over each track
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    mCurTrackNum = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       //Get start and end times from track
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
@@ -85,8 +82,6 @@ bool EffectTwoPassSimpleMono::ProcessPass()
             return false;
       }
 
-      //Iterate to the next track
-      track = (WaveTrack *) iter.Next();
       mCurTrackNum++;
    }
 

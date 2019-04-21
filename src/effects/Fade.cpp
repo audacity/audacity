@@ -14,10 +14,9 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "Fade.h"
 
 #include <wx/intl.h>
-
-#include "Fade.h"
 
 EffectFade::EffectFade(bool fadeIn)
 {
@@ -28,9 +27,9 @@ EffectFade::~EffectFade()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectFade::GetSymbol()
+ComponentInterfaceSymbol EffectFade::GetSymbol()
 {
    return mFadeIn
       ? FADEIN_PLUGIN_SYMBOL

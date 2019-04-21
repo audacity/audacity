@@ -43,7 +43,11 @@ a certain criterion. This is a base validator which allows anything.
 #ifndef __VALIDATORS__
 #define __VALIDATORS__
 
+class wxArrayString;
+
 #include "../MemoryX.h"
+
+#include <wx/variant.h> // member variable
 
 class Validator /* not final */
 {
@@ -98,7 +102,7 @@ private:
 public:
    void AddOption(const wxString &option)
    {
-      mOptions.Add(option);
+      mOptions.push_back(option);
    }
    void AddOptions(const wxArrayString &options)
    {
@@ -107,12 +111,12 @@ public:
    bool Validate(const wxVariant &v) override
    {
       SetConverted(v);
-      return (mOptions.Index(v.GetString()) != wxNOT_FOUND);
+      return make_iterator_range( mOptions ).contains( v.GetString() );
    }
    wxString GetDescription() const override
    {
       wxString desc = wxT("one of: ");
-      int optionCount = mOptions.GetCount();
+      int optionCount = mOptions.size();
       int i = 0;
       for (i = 0; i+1 < optionCount; ++i)
       {
@@ -159,14 +163,14 @@ public:
       if (!v.Convert(&val))
          return false;
       SetConverted(val);
-      for(size_t i=0; i != val.Len(); i++)
+      for(size_t i=0; i != val.length(); i++)
          if( val[i] != '0' && val[i] != '1' && val[i] != 'x' && val[i] != 'X')
             return false;
       return true;
    }
    wxString GetDescription() const override
    {
-      return wxT("0X101XX101...etc.  where 0=false, 1=true, and X=don't care.  Numbering starts at leftmost = track 0");
+      return wxT("0X101XX101...etc. where 0=false, 1=true, and X=don't care. Numbering starts at leftmost = track 0");
    }
    Holder GetClone() const override
    {

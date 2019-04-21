@@ -13,13 +13,14 @@
 
 *//*******************************************************************/
 
+#include "XMLFileReader.h"
+
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
 
 #include <string.h>
 
-#include "XMLFileReader.h"
 #include "../Internat.h"
 
 XMLFileReader::XMLFileReader()
@@ -29,7 +30,6 @@ XMLFileReader::XMLFileReader()
    XML_SetElementHandler(mParser, startElement, endElement);
    XML_SetCharacterDataHandler(mParser, charHandler);
    mBaseHandler = NULL;
-   mErrorStr = wxT("");
    mHandler.reserve(128);
 }
 
@@ -39,7 +39,7 @@ XMLFileReader::~XMLFileReader()
 }
 
 bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
-                          const wxString &fname)
+                          const FilePath &fname)
 {
    wxFFile theXMLFile(fname, wxT("rb"));
    if (!theXMLFile.IsOpened()) {

@@ -7,7 +7,7 @@
  *
  */
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ODDecodeFlacTask.h"
 
 #include "../Prefs.h"
@@ -15,6 +15,7 @@
 #include <wx/utils.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
+#include <wx/wx.h>
 
 #ifdef USE_LIBID3TAG
 extern "C" {
@@ -50,7 +51,7 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
    {
       case FLAC__METADATA_TYPE_VORBIS_COMMENT:
          for (FLAC__uint32 i = 0; i < metadata->data.vorbis_comment.num_comments; i++) {
-            mComments.Add(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
+            mComments.push_back(UTF8CTOWX((char *)metadata->data.vorbis_comment.comments[i].entry));
          }
       break;
 

@@ -11,6 +11,10 @@ Paul Licameli
 #ifndef __AUDACITY_WXFILENAMEWRAPPER__
 #define __AUDACITY_WXFILENAMEWRAPPER__
 
+class wxArrayString;
+
+#include <wx/filename.h> // to inherit
+
 // The wxFileName does not have a move constructor.
 // So add one to it, so that it passes around by value more quickly.
 class wxFileNameWrapper : public wxFileName

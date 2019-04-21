@@ -38,10 +38,14 @@
 
 *//******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "Meter.h"
 
+#include "../Experimental.h"
+
 #include <algorithm>
+#include <wx/setup.h> // for wxUSE_* macros
+#include <wx/wxcrtvararg.h>
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
@@ -71,13 +75,90 @@
 
 #include "../Theme.h"
 #include "../AllThemeResources.h"
-#include "../Experimental.h"
 #include "../widgets/valnum.h"
 #include "../prefs/DevicePrefs.h"
 #include "../toolbars/ToolManager.h"
 
 
 //IMPLEMENT_DYNAMIC_CLASS( MeterPanel, ASlider );
+
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+
+class MeterAx final : public WindowAccessible
+{
+public:
+   MeterAx(wxWindow * window);
+
+   virtual ~ MeterAx();
+
+   // Performs the default action. childId is 0 (the action for this object)
+   // or > 0 (the action for a child).
+   // Return wxACC_NOT_SUPPORTED if there is no default action for this
+   // window (e.g. an edit control).
+   wxAccStatus DoDefaultAction(int childId) override;
+
+   // Retrieves the address of an IDispatch interface for the specified child.
+   // All objects must support this property.
+   wxAccStatus GetChild(int childId, wxAccessible** child) override;
+
+   // Gets the number of children.
+   wxAccStatus GetChildCount(int* childCount) override;
+
+   // Gets the default action for this object (0) or > 0 (the action for a child).
+   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
+   // string if there is no action.
+   // The retrieved string describes the action that is performed on an object,
+   // not what the object does as a result. For example, a toolbar button that prints
+   // a document has a default action of "Press" rather than "Prints the current document."
+   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
+
+   // Returns the description for this object or a child.
+   wxAccStatus GetDescription(int childId, wxString *description) override;
+
+   // Gets the window with the keyboard focus.
+   // If childId is 0 and child is NULL, no object in
+   // this subhierarchy has the focus.
+   // If this object has the focus, child should be 'this'.
+   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
+
+   // Returns help text for this object or a child, similar to tooltip text.
+   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
+
+   // Returns the keyboard shortcut for this object or child.
+   // Return e.g. ALT+K
+   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
+
+   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
+   // rect is in screen coordinates.
+   wxAccStatus GetLocation(wxRect& rect, int elementId) override;
+
+   // Gets the name of the specified object.
+   wxAccStatus GetName(int childId, wxString *name) override;
+
+   // Returns a role constant.
+   wxAccStatus GetRole(int childId, wxAccRole *role) override;
+
+   // Gets a variant representing the selected children
+   // of this object.
+   // Acceptable values:
+   // - a null variant (IsNull() returns TRUE)
+   // - a list variant (GetType() == wxT("list"))
+   // - an integer representing the selected child element,
+   //   or 0 if this object is selected (GetType() == wxT("long"))
+   // - a "void*" pointer to a wxAccessible child object
+   wxAccStatus GetSelections(wxVariant *selections) override;
+
+   // Returns a state constant.
+   wxAccStatus GetState(int childId, long* state) override;
+
+   // Returns a localized string representing the value for the object
+   // or child.
+   wxAccStatus GetValue(int childId, wxString* strValue) override;
+
+};
+
+#endif // wxUSE_ACCESSIBILITY
 
 static const long MIN_REFRESH_RATE = 1;
 static const long MAX_REFRESH_RATE = 100;
@@ -595,13 +676,13 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                {
                   // 2 pixel spacing between the LEDs
                   if( (i%7)<2 ){
-                     dc.DrawLine( i+r.x, r.y, i+r.x, r.y+r.height );
+                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
                   } else {
                      // The LEDs have triangular ends.  
                      // This code shapes the ends.
                      int j = abs( (i%7)-4);
-                     dc.DrawLine( i+r.x, r.y, i+r.x, r.y+j +1);
-                     dc.DrawLine( i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
+                     AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
                   }
                }
             }
@@ -651,14 +732,15 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    if( mIsInput && !mActive )
    {
       destDC.SetFont( GetFont() );
-      wxArrayString texts;
 
-      texts.Add( _("Click to Start Monitoring") );
-      texts.Add( _("Click for Monitoring") );
-      texts.Add( _("Click to Start") );
-      texts.Add( _("Click") );
+      wxArrayStringEx texts{
+         _("Click to Start Monitoring") ,
+         _("Click for Monitoring") ,
+         _("Click to Start") ,
+         _("Click") ,
+      };
 
-      for( size_t i = 0, cnt = texts.GetCount(); i < cnt; i++ )
+      for( size_t i = 0, cnt = texts.size(); i < cnt; i++ )
       {
          wxString Text = wxT(" ") + texts[i] + wxT(" ");
          wxSize Siz = destDC.GetTextExtent( Text );
@@ -2181,11 +2263,12 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
             pMan->UpdatePrefs();
          }
       }
-
-      wxArrayString style;
-      style.Add(wxT("AutomaticStereo"));
-      style.Add(wxT("HorizontalStereo"));
-      style.Add(wxT("VerticalStereo"));
+   
+      wxArrayStringEx style{
+         wxT("AutomaticStereo") ,
+         wxT("HorizontalStereo") ,
+         wxT("VerticalStereo") ,
+      };
 
       int s = 0;
       s = automatic->GetValue() ? 0 : s;
@@ -2299,7 +2382,7 @@ wxAccStatus MeterAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionNam
 // Returns the description for this object or a child.
 wxAccStatus MeterAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
    return wxACC_NOT_SUPPORTED;
 }
 
@@ -2317,7 +2400,7 @@ wxAccStatus MeterAx::GetFocus(int* childId, wxAccessible** child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus MeterAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-   helpText->Clear();
+   helpText->clear();
    return wxACC_NOT_SUPPORTED;
 }
 
@@ -2325,7 +2408,7 @@ wxAccStatus MeterAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 // Return e.g. ALT+K
 wxAccStatus MeterAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
    return wxACC_OK;
 }
 
@@ -2353,10 +2436,10 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
    else
    {
       *name = m->GetName();
-      if (name->IsEmpty())
+      if (name->empty())
          *name = m->GetLabel();
 
-      if (name->IsEmpty())
+      if (name->empty())
          *name = _("Meter");
 
       if (m->mMonitoring)

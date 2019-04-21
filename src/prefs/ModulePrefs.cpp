@@ -16,13 +16,13 @@ with names like mnod-script-pipe that add NEW features.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "ModulePrefs.h"
 
 #include <wx/defs.h>
 #include <wx/filename.h>
 
 #include "../ShuttleGui.h"
 
-#include "ModulePrefs.h"
 #include "../Prefs.h"
 #include "../Internat.h"
 
@@ -39,6 +39,21 @@ ModulePrefs::~ModulePrefs()
 {
 }
 
+ComponentInterfaceSymbol ModulePrefs::GetSymbol()
+{
+   return MODULE_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ModulePrefs::GetDescription()
+{
+   return _("Preferences for Module");
+}
+
+wxString ModulePrefs::HelpPageName()
+{
+   return "Modules_Preferences";
+}
+
 void ModulePrefs::GetAllModuleStatuses(){
    wxString str;
    long dummy;
@@ -52,9 +67,9 @@ void ModulePrefs::GetAllModuleStatuses(){
 
    // TODO: On an Audacity upgrade we should (?) actually untick modules.
    // The old modules might be still around, and we do not want to use them.
-   mModules.Clear();
+   mModules.clear();
    mStatuses.clear();
-   mPaths.Clear();
+   mPaths.clear();
 
 
    // Iterate through all Modules listed in prefs.
@@ -66,15 +81,15 @@ void ModulePrefs::GetAllModuleStatuses(){
       gPrefs->Read( str, &iStatus, kModuleDisabled );
       wxString fname;
       gPrefs->Read( wxString( wxT("/ModulePath/") ) + str, &fname, wxEmptyString );
-      if( fname != wxEmptyString && wxFileExists( fname ) ){
+      if( !fname.empty() && wxFileExists( fname ) ){
          if( iStatus > kModuleNew ){
             iStatus = kModuleNew;
             gPrefs->Write( str, iStatus );
          }
          //wxLogDebug( wxT("Entry: %s Value: %i"), str, iStatus );
-         mModules.Add( str );
+         mModules.push_back( str );
          mStatuses.push_back( iStatus );
-         mPaths.Add( fname );
+         mPaths.push_back( fname );
       }
       bCont = gPrefs->GetNextEntry(str, dummy);
    }
@@ -95,13 +110,6 @@ void ModulePrefs::Populate()
 
 void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString StatusChoices;
-   StatusChoices.Add( _("Disabled" ) );
-   StatusChoices.Add( _("Enabled" ) );
-   StatusChoices.Add( _("Ask" ) );
-   StatusChoices.Add( _("Failed" ) );
-   StatusChoices.Add( _("New" ) );
-
    S.SetBorder(2);
    S.StartScroller();
 
@@ -115,11 +123,20 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       {
         S.StartMultiColumn( 2 );
         int i;
-        for(i=0;i<(int)mModules.GetCount();i++)
-           S.TieChoice( mModules[i], mStatuses[i], &StatusChoices );
+        for(i=0;i<(int)mModules.size();i++)
+           S.TieChoice( mModules[i],
+              mStatuses[i],
+              {
+                 _("Disabled" ) ,
+                 _("Enabled" ) ,
+                 _("Ask" ) ,
+                 _("Failed" ) ,
+                 _("New" ) ,
+              }
+           );
         S.EndMultiColumn();
       }
-      if( mModules.GetCount() < 1 )
+      if( mModules.size() < 1 )
       {
         S.AddFixedText( _("No modules were found") );
       }
@@ -133,14 +150,14 @@ bool ModulePrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    int i;
-   for(i=0;i<(int)mPaths.GetCount();i++)
+   for(i=0;i<(int)mPaths.size();i++)
       SetModuleStatus( mPaths[i], mStatuses[i] );
    return true;
 }
 
 
 // static function that tells us about a module.
-int ModulePrefs::GetModuleStatus(const wxString &fname){
+int ModulePrefs::GetModuleStatus(const FilePath &fname){
    // Default status is NEW module, and we will ask once.
    int iStatus = kModuleNew;
 
@@ -154,18 +171,13 @@ int ModulePrefs::GetModuleStatus(const wxString &fname){
    return iStatus;
 }
 
-void ModulePrefs::SetModuleStatus(const wxString &fname, int iStatus){
+void ModulePrefs::SetModuleStatus(const FilePath &fname, int iStatus){
    wxString ShortName = wxFileName( fname ).GetName();
    wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, iStatus );
    PrefName = wxString( wxT("/ModulePath/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, fname );
    gPrefs->Flush();
-}
-
-wxString ModulePrefs::HelpPageName()
-{
-   return "Modules_Preferences";
 }
 
 PrefsPanel *ModulePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

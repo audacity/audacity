@@ -18,7 +18,6 @@ include_directories(${top_dir}/lib-src/FileDialog/win)
 include_directories(${top_dir}/lib-src/ffmpeg)
 include_directories(${top_dir}/lib-src/ffmpeg/win32)
 include_directories(${top_dir}/lib-src/lib-widget-extra)
-include_directories(${top_dir}/lib-src/libflac/include)
 include_directories(${top_dir}/lib-src/libid3tag) #for id3tag.h
 include_directories(${top_dir}/lib-src/libmad/msvc++)
 include_directories(${top_dir}/lib-src/libmad)
@@ -30,14 +29,12 @@ include_directories(${top_dir}/lib-src/libsoxr/src) #really?  Src?
 include_directories(${top_dir}/lib-src/libvamp)
 include_directories(${top_dir}/lib-src/libvorbis/include)
 include_directories(${top_dir}/lib-src/lib-widget-extra)
-include_directories(${top_dir}/lib-src/portaudio-v19/include)
 include_directories(${top_dir}/lib-src/portmixer/include)
 include_directories(${top_dir}/lib-src/portsmf)
 include_directories(${top_dir}/lib-src/sbsms/include)
 include_directories(${top_dir}/lib-src/soundtouch/include)
 include_directories(${top_dir}/lib-src/twolame/libtwolame)
 include_directories(${top_dir}/lib-src/portmidi/pm_common)
-include_directories(${top_dir}/lib-src/portmidi/pm_win)
 include_directories(${top_dir}/lib-src/portmidi/porttime)
 include_directories(${top_dir}/lib-src/lv2/lilv)
 include_directories(${top_dir}/lib-src/lv2/lv2)
@@ -59,7 +56,6 @@ include_directories(${top_dir}/lib-src/lame)
 add_definitions( -D_CRT_SECURE_NO_WARNINGS )
 
 add_definitions( -DBUILDING_AUDACITY )
-add_definitions( -DFLAC__NO_DLL )
 add_definitions( -DXML_STATIC )
 add_definitions( -D__STDC_CONSTANT_MACROS )
 add_definitions( -DWXINTL_NO_GETTEXT_MACRO )
@@ -493,13 +489,15 @@ add_executable( Audacity ${SOURCE} )
 message( STATUS "link directory is: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug" )
 message( STATUS "wxWidgets libraries in: ${wxWidgets_LIBRARIES}" )
 
-target_link_libraries(Audacity 
+target_link_libraries(Audacity
 ${wxWidgets_LIBRARIES}
-expat.lib
-FileDialog.lib
-libsndfile.lib
-libsoxr.lib
-portaudio-v19.lib
+expat
+FileDialog
+FLACXX-static
+libsndfile
+libsoxr
+portmixer
+portmidi-static
 )
 if(MSVC)
     set_property(TARGET Audacity APPEND PROPERTY LINK_FLAGS "/SUBSYSTEM:WINDOWS /LIBPATH:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")

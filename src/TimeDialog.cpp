@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "TimeDialog.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -22,7 +23,6 @@
 
 #include "widgets/NumericTextCtrl.h"
 #include "ShuttleGui.h"
-#include "TimeDialog.h"
 
 BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)
@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
                        const wxString &title,
-                       const NumericFormatId &format,
+                       const NumericFormatSymbol &format,
                        double rate,
                        double time,
                        const wxString &prompt)
@@ -55,7 +55,7 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
       {
          mTimeCtrl = safenew
             NumericTextCtrl(
-               this, wxID_ANY,
+               S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
                          mFormat,
                          mTime,
@@ -99,7 +99,7 @@ const double TimeDialog::GetTimeValue()
    return mTime;
 }
 
-void TimeDialog::SetFormatString(const NumericFormatId &formatString)
+void TimeDialog::SetFormatString(const NumericFormatSymbol &formatString)
 {
    mFormat = formatString;
    TransferDataToWindow();

@@ -22,6 +22,7 @@ but it will probably work fine if you use it on a high level.
 
 #include "Audacity.h"
 #include "Profiler.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <wx/crt.h>

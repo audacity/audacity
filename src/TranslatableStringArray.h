@@ -11,10 +11,9 @@ Paul Licameli
 #ifndef __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 #define __AUDACITY_TRANSLATABLE_STRING_ARRAY__
 
-#include <wx/app.h>
-#include <wx/event.h>
+#include <wx/app.h> // used in inline function template
 
-class wxArrayString;
+class wxArrayStringEx;
 
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
@@ -64,6 +63,6 @@ protected:
    ArrayType mContents;
 };
 
-typedef TranslatableArray<wxArrayString> TranslatableStringArray;
+typedef TranslatableArray<wxArrayStringEx> TranslatableStringArray;
 
 #endif

@@ -21,15 +21,13 @@ around to NEW positions.
 *//**********************************************************************/
 
 #include "../Audacity.h"
+#include "Grabber.h"
 
 #include <wx/defs.h>
 #include <wx/dcclient.h>
 #include <wx/event.h>
 #include <wx/intl.h>
 #include <wx/window.h>
-
-#include "Grabber.h"
-#include "../Experimental.h"
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"

@@ -15,10 +15,12 @@ Paul Licameli
 
 #include "../Audacity.h"
 #include "WaveformPrefs.h"
+
 #include "GUIPrefs.h"
 #include "GUISettings.h"
 
 #include <wx/checkbox.h>
+#include <wx/choice.h>
 
 #include "../Project.h"
 
@@ -50,6 +52,21 @@ WaveformPrefs::~WaveformPrefs()
 {
 }
 
+ComponentInterfaceSymbol WaveformPrefs::GetSymbol()
+{
+   return WAVEFORM_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString WaveformPrefs::GetDescription()
+{
+   return _("Preferences for Waveforms");
+}
+
+wxString WaveformPrefs::HelpPageName()
+{
+   return "Waveform_Preferences";
+}
+
 enum {
    ID_DEFAULTS = 10001,
 
@@ -59,8 +76,6 @@ enum {
 
 void WaveformPrefs::Populate()
 {
-   mScaleChoices = WaveformSettings::GetScaleNames();
-
    // Reuse the same choices and codes as for Interface prefs
    GUIPrefs::GetRangeChoices(&mRangeChoices, &mRangeCodes);
 
@@ -93,12 +108,12 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
             mScaleChoice =
                S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
                   mTempSettings.scaleType,
-                  &mScaleChoices);
+                  WaveformSettings::GetScaleNames());
 
             mRangeChoice =
                S.Id(ID_RANGE).TieChoice(_("Waveform dB &range") + wxString(wxT(":")),
                mTempSettings.dBRange,
-               &mRangeChoices);
+               mRangeChoices);
          }
          S.EndTwoColumn();
       }
@@ -140,12 +155,6 @@ bool WaveformPrefs::Commit()
 {
    const bool isOpenPage = this->IsShown();
 
-   const auto partner =
-      mWt ?
-            // Assume linked track is wave or null
-            static_cast<WaveTrack*>(mWt->GetLink())
-          : nullptr;
-
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
@@ -153,18 +162,13 @@ bool WaveformPrefs::Commit()
    WaveformSettings::Globals::Get().SavePrefs();
 
    if (mWt) {
-      if (mDefaulted) {
-         mWt->SetWaveformSettings({});
-         if (partner)
-            partner->SetWaveformSettings({});
-      }
-      else {
-         WaveformSettings *pSettings =
-            &mWt->GetIndependentWaveformSettings();
-         *pSettings = mTempSettings;
-         if (partner) {
-            pSettings = &partner->GetIndependentWaveformSettings();
-            *pSettings = mTempSettings;
+      for (auto channel : TrackList::Channels(mWt)) {
+         if (mDefaulted)
+            channel->SetWaveformSettings({});
+         else {
+            WaveformSettings &settings =
+               channel->GetIndependentWaveformSettings();
+            settings = mTempSettings;
          }
       }
    }
@@ -179,9 +183,8 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToEnumeratedDBRange();
 
    if (mWt && isOpenPage) {
-      mWt->SetDisplay(WaveTrack::Waveform);
-      if (partner)
-         partner->SetDisplay(WaveTrack::Waveform);
+      for (auto channel : TrackList::Channels(mWt))
+         channel->SetDisplay(WaveTrack::Waveform);
    }
 
    if (isOpenPage) {

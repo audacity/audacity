@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity_mk\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2003-06-23 11:40+0200\n"
 "Last-Translator: Ilija Iliev <strumjan@mol.net.mk>\n"
 "Language-Team: macedonian <mk@li.org>\n"
@@ -32,10 +32,11 @@ msgid "Please choose an existing file."
 msgstr ""
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -229,7 +230,7 @@ msgid "No matches found"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+msgid "Code has been modified. Are you sure?"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -289,7 +290,7 @@ msgstr "Копирај"
 msgid "Copy to clipboard"
 msgstr "Сечи во амбар"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Сечи"
@@ -299,7 +300,7 @@ msgstr "Сечи"
 msgid "Cut to clipboard"
 msgstr "Сечи во амбар"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Залепи"
@@ -319,7 +320,7 @@ msgstr ""
 msgid "Clear selection"
 msgstr "Тивка селекција"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 #, fuzzy
 msgid "Select All"
 msgstr "Означи"
@@ -590,7 +591,7 @@ msgid ""
 msgstr ""
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Аudacity прва употреба"
@@ -724,6 +725,127 @@ msgstr ""
 msgid "GPL License"
 msgstr ""
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Кликни и пушти за да наместиш релативна големина на стерео нумерите."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "Снимање"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Seek"
+msgstr "Кликни и пушти за уредување семплови"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Scrub"
+msgstr "Кликни и пушти за предименизионирање на нумерата."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release to stop seeking."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Quick-Play disabled"
+msgstr " (откажана)"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to unpin"
+msgstr "Скокни до почеток"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to pin"
+msgstr "Скокни до почеток"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable dragging selection"
+msgstr "Тивка селекција"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable dragging selection"
+msgstr "Тивка селекција"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr ""
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -787,12 +909,12 @@ msgid "Audacity is starting up..."
 msgstr "Аudacity прва употреба"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Нов"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Отвори..."
 
@@ -800,7 +922,7 @@ msgstr "&Отвори..."
 msgid "Open &Recent..."
 msgstr ""
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "З&а Audacity..."
 
@@ -808,7 +930,7 @@ msgstr "З&а Audacity..."
 msgid "&Preferences..."
 msgstr ""
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Датотека"
 
@@ -941,8 +1063,8 @@ msgstr ""
 msgid "Cl&ear"
 msgstr ""
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Затвори"
 
@@ -1003,6 +1125,189 @@ msgstr ""
 
 #: src/AudioIO.cpp
 msgid "Out of memory!"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "No devices found\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Device ID: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Device name: %s\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "Име..."
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "Десен канал"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "Плејбек"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Внесено '%s'"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Плејбек"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "Неможно да се пронајде"
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "Плејбек"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "Плејбек"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "Плејбек"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Снимање"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Плејбек"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
 msgstr ""
 
 #: src/AudioIO.cpp
@@ -1205,10 +1510,6 @@ msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr ""
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1221,8 +1522,9 @@ msgid "Export recording"
 msgstr "Снимање"
 
 #: src/BatchCommands.cpp
+#, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 
@@ -1753,7 +2055,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr ""
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Прогрес"
@@ -1774,13 +2077,13 @@ msgid "Cleaning up temporary files"
 msgstr ""
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr ""
-
-#: src/DirManager.cpp
 #, fuzzy
 msgid "Cleaning up after failed save"
 msgstr "Неможно да се отвори проектот."
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr ""
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2084,6 +2387,7 @@ msgid "To find '%s', click here -->"
 msgstr ""
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr ""
 
@@ -2105,14 +2409,10 @@ msgid "Where is '%s'?"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr ""
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr ""
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2121,8 +2421,12 @@ msgid ""
 "to download or locate the FFmpeg libraries."
 msgstr ""
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
+msgstr ""
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
 msgstr ""
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
@@ -2181,7 +2485,7 @@ msgstr "LOF грешка"
 msgid "Error (file may not have been written): %s"
 msgstr "Грешка (датотеката можеби не е снимена): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Спектар"
 
@@ -2218,7 +2522,7 @@ msgstr "Log фрекфенција"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr ""
 
@@ -2283,9 +2587,9 @@ msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "За цртање на спектар сите селектирани нумери треба да се со иста рата."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "Премногу аудио се селектирани.  Само првите %.1f секунди од аудиото ќе бидат "
@@ -2331,8 +2635,8 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Експорт спектар податоци како:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Неможно да запишам во датотеката:"
@@ -2605,7 +2909,8 @@ msgid "Track"
 msgstr ""
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label"
 msgstr "Наслови нумера"
@@ -2640,17 +2945,17 @@ msgstr ""
 msgid "Press F2 or double click to edit cell contents."
 msgstr ""
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Select a text file containing labels"
 msgstr "Означи текст датотека што содржи наслови..."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Текст датотеки (*.txt)|*.txt|сите датотеки (*.*)|*.*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "Неможно да ја отворам датотеката: \"%s\""
@@ -2659,7 +2964,7 @@ msgstr "Неможно да ја отворам датотеката: \"%s\""
 msgid "No labels to export."
 msgstr ""
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Експорт наслов како:"
 
@@ -2689,22 +2994,22 @@ msgstr "Даден наслов"
 msgid "Label Edit"
 msgstr ""
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Даден наслов"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "С&ечи"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Копирај"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Залепи"
 
@@ -2721,6 +3026,22 @@ msgstr "Delete копче"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr ""
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Име..."
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Даден наслов"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2764,2553 +3085,31 @@ msgid "Audacity Karaoke%s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Сними проект"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "Зачувај го проектот к&ако..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "Зачувај го проектот к&ако..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Save Compressed Copy of Project..."
-msgstr "Зачувај го проектот к&ако..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export"
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as MP&3"
-msgstr "Внесено '%s'"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &WAV"
-msgstr "Експорт наслов како:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &OGG"
-msgstr "Внесено '%s'"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export Audio..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export &Multiple..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pa&ge Setup..."
-msgstr "Смени брзина..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr ""
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "&Уреди"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Врати"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Redo"
-msgstr "Врати"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Бриши"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr ""
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr ""
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr ""
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Labels"
-msgstr "Наслови нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Edit Labels..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "Дај наслов на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "Дај наслов на селекција"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "La&beled Audio"
-msgstr "Снимање"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Наслови нумера"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "Означи"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-msgid "Label Split Cut"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Label Split Delete"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "Тишина"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "Наслови нумера"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "Наслови нумера"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "Наслови нумера"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr ""
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr ""
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-#, fuzzy
-msgid "&All"
-msgstr "Означи &се"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "Изборни алатки"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "Постави формат на селекција"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "Постави формат на селекција"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "Селекција на почеток"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "Селекција на крај"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "Селекција на крај"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "Име на нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&tore Selection"
-msgstr "Постави формат на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Retrieve Selectio&n"
-msgstr "Постави формат на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&pectral"
-msgstr "Спектар"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Постави формат на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "Фрекфенција (Hz):"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "Линиска фрекфенција"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "Означи"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "Означи"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "Селекција на почеток"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "Означи"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Поглед"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom"
-msgstr "Зум"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "Зум &во"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "Зум &нормален"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "Зум &од"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "Зум во &селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Zoom &Toggle"
-msgstr "Зум алатка"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&rack Size"
-msgstr "Име на нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Fit to Width"
-msgstr "&Во прозорец"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sk&ip to"
-msgstr "Скокни до крај"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Sta&rt"
-msgstr "Селекција на почеток"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection En&d"
-msgstr "Покажувач на крај од селекцијата"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&Историја"
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Reset Toolb&ars"
-msgstr "Алатки"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording Meter Toolbar"
-msgstr "Снимање"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Playback Meter Toolbar"
-msgstr "Плејбек"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Плејбек"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b Toolbar"
-msgstr "Алатки"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Spe&ctral Selection Toolbar"
-msgstr "Изборни алатки"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Show Clipping (on/off)"
-msgstr "Не дозволувај преку"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "Ladspa ефект поставки"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "Применет фазер"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Снимање"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Append Record"
-msgstr "Снимај"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Record &New Track"
-msgstr "&Тргни нумери"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor to"
-msgstr "Покажувач лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Star&t"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "Име на нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &Start"
-msgstr "Име на нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "Име на нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &End"
-msgstr "Обележи нумера"
-
-#: src/Menus.cpp
-msgid "Cursor to Prev Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Next Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Project Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "Создаден нов проект"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Transport &Options"
-msgstr "Ladspa ефект поставки"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Label Track"
-msgstr "Наслови нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Time Track"
-msgstr "Временска нумера"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "Подели стерео нумера"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "&Тргни нумери"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Unmute All Tracks"
-msgstr "Временска нумера"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "Лев"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Left"
-msgstr "Лев"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "Десен"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Right"
-msgstr "Десен"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "Центар"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Center"
-msgstr "Центар"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Align End to End"
-msgstr "Порамни крај со крај на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align &Together"
-msgstr "Порамни ги нумерите меѓусебно"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to &Cursor/Selection Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to Selection &End"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to Selection En&d"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Sele&ction and Tracks"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&ort Tracks"
-msgstr "Обележи нумера"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "By &Start Time"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "Име..."
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&Генерирај"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Effe&ct"
-msgstr "&Ефект"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Repeat %s"
-msgstr "&Врати"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "&Анализа"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&ools"
-msgstr "Алатки"
-
-#: src/Menus.cpp
-msgid "&Macros..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "Применет фазер"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "Име..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "Означи"
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "Почни &брзинар..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Simulate Recording Errors"
-msgstr "Снимање"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Window"
-msgstr "прозорец"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr ""
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr ""
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr ""
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &One Second"
-msgstr "Свири една секунда"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "Свири една секунда"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &Before Selection Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Af&ter Selection Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Be&fore Selection End"
-msgstr "Свири една секунда"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Aft&er Selection End"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before a&nd After Selection Start"
-msgstr "Порамни крај со почеток на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before an&d After Selection End"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection Tool"
-msgstr "Изборни алатки"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Envelope Tool"
-msgstr "Крива алатки"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Draw Tool"
-msgstr "Цртачки алатки"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "Зум алатка"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Time Shift Tool"
-msgstr "Временска алатка"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Multi Tool"
-msgstr "Мулти алатки"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Next Tool"
-msgstr "Мулти алатки"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Снимање"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Снимање"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Снимање"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "Delete копче"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "Delete копче"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Плејбек"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Loop Play-at-Speed"
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "Плејбек"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr ""
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Смени висина"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Смени висина"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Смени го името на нумерата во:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Смени висина"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection"
-msgstr "Изборни алатки"
-
-#: src/Menus.cpp
-msgid "Snap-To &Off"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Snap-To &Nearest"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Snap-To &Prior"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to &Start"
-msgstr "Селекција на почеток"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to En&d"
-msgstr "Селекција на крај"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Left"
-msgstr "Селекција извлечи лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Right"
-msgstr "Селекција извлечи десно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "Селекција извлечи лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Селекција извлечи десно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract L&eft"
-msgstr "Селекција збиј лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract R&ight"
-msgstr "Селекција збиј десно"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Previous Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Next Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &First Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Last Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Toggle Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Toggle Focuse&d Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor"
-msgstr "Покажувач лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Left"
-msgstr "Покажувач лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Right"
-msgstr "Покажувач десно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Sh&ort Jump Left"
-msgstr "Покажувач лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Shor&t Jump Right"
-msgstr "Покажувач десно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long J&ump Left"
-msgstr "Покажувач лево"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long Ju&mp Right"
-msgstr "Покажувач десно"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Clip Rig&ht"
-msgstr "Покажувач десно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Track"
-msgstr "Обележи нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "Мрдни нумера удолу"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "Мрдни нумера удолу"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Означи"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Фрекфенција (Hz):"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Означи"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "Име на нумера"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "Аudacity поставки"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "Аudacity поставки"
-
-#: src/Menus.cpp
-msgid "Set Clip..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Крива"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Зачувај го проектот к&ако..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Select..."
-msgstr "Означи"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "Обележи нумера"
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "Постави од-до..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "&Помош"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Import..."
-msgstr "Внеси"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Export..."
-msgstr "Експорт на нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "Зачувај го проектот к&ако..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Зачувај го проектот к&ако..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "Одбери..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Збивач..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-msgid "Screenshot (short format)..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Full Screen (on/off)"
-msgstr ""
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-msgid "Minimize All Projects"
-msgstr ""
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Помош"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Аudacity прва употреба"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&Помош"
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Plug-in %d to %d"
-msgstr "Додавки %i за %i"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr ""
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr ""
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&Врати %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Врати"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&Врати %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr ""
-
-#: src/Menus.cpp
+#: src/Menus.cpp src/menus/EditMenus.cpp
 #, fuzzy
-msgid "no label track"
-msgstr "Создаден нов наслов на нумера"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no labels in label track"
-msgstr "Создаден нов наслов на нумера"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr ""
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Временска алатка"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr ""
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "Мрднато '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "Мрдни нумера угоре"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "Мрдни нумера удолу"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "Мрдни нумера удолу"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "Мрднато '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "Мрднато '%s' %s"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "Мрдни нумера удолу"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "labels.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Нема наслови за експортирање."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr ""
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export Selected Audio"
-msgstr "Локација:"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Ништо за врати"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Ништо за повтори"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Сечи во амбар"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Залепено од амбар"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Стивни ја селекцијата за %.2f секунди од %.2f"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Стивни ја селекцијата за %.2f секунди од %.2f"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Тишина"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Удвоено"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Duplicate"
-msgstr "Удвоено"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr ""
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr ""
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr ""
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr ""
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr ""
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Silence Labeled Audio"
-msgstr "Тивка селекција"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr ""
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr ""
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr ""
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Подели"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr ""
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Анализа на фрекфенции"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Внесени наслови од '%s'"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Import Labels"
-msgstr "Внеси нас&лови..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Означи MIDI датотека..."
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Внесено MIDI од '%s'"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Import MIDI"
-msgstr "Внеси &MIDI..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "Одберете која било некомпресирана аудио датотека..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "All files|*"
-msgstr "Сите видови (*.*)|*.*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr ""
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr ""
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr ""
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr ""
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s left"
-msgstr "лево"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s right"
-msgstr "десно"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp
-msgid "start"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "end"
-msgstr ""
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to zero"
-msgstr "Порамнето"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to zero"
-msgstr "Порамнето со нула"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Start"
-msgstr "Порамнето"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to cursor/selection start"
-msgstr "Покажувач на почеток на селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to selection end"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to selection end"
-msgstr "Покажувач на крај од селекцијата"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Порамнето со почеток на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to cursor/selection start"
-msgstr "Порамнето со почеток на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End"
-msgstr "Порамнето"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End"
-msgstr "Порамнето"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to selection end"
-msgstr "Порамнет крај со крај на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to selection end"
-msgstr "Порамнет крај со крај на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to end"
-msgstr "Порамнето"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to end"
-msgstr "Порамни крај со крај на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End to End"
-msgstr "Порамни крај со крај на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End to End"
-msgstr "Порамни крај со крај на селекција"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved together"
-msgstr "Порамнето"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned together"
-msgstr "Порамни ги нумерите меѓусебно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Together"
-msgstr "Порамни ги нумерите меѓусебно"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Together"
-msgstr "Порамни ги нумерите меѓусебно"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New Track"
-msgstr "Обележи нумера"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Создадена нова стерео аудио нумера"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Создаден нов наслов на нумера"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Создадена нова временска нумера"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Timer Recording"
-msgstr "Снимање"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "Име..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "Даден наслов"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "Создадена нова аудио нумера"
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Отстрани аудио нумера/и"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Remove Track"
-msgstr "&Тргни нумери"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr ""
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "Снимено %s"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save device info"
-msgstr "Неможно да се пронајде"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "Неможно да се пронајде"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "Отстрани аудио нумера/и"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "Мрдни нумера угоре"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr ""
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr ""
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr ""
+msgid "&Redo"
+msgstr "Врати"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Микс"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr ""
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5318,7 +3117,7 @@ msgstr ""
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Засилување"
@@ -5335,7 +3134,7 @@ msgid "Musical Instrument"
 msgstr ""
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Панорама"
@@ -5391,8 +3190,7 @@ msgstr ""
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5406,7 +3204,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5571,6 +3369,12 @@ msgstr ""
 msgid "Show:"
 msgstr ""
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&All"
+msgstr "Означи &се"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr ""
@@ -5666,7 +3470,7 @@ msgid "Plug-in already exists"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -5927,7 +3731,7 @@ msgstr ""
 #: src/Project.cpp
 #, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
@@ -6040,16 +3844,6 @@ msgstr "Создаден нов проект"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Избришани %.2f секунди од t=%.2f"
-
-#: src/Project.cpp
-#, fuzzy
-msgid "Delete"
-msgstr "Означи"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr ""
 
@@ -6117,24 +3911,6 @@ msgid "Record"
 msgstr "Снимај"
 
 #: src/Project.cpp
-msgid "Adjusted gain"
-msgstr ""
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr ""
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "Отстранета нумерата '%s.'"
-
-#: src/Project.cpp
-#, fuzzy
-msgid "Track Remove"
-msgstr "Име на нумера"
-
-#: src/Project.cpp
 msgid "Less than 1 minute"
 msgstr ""
 
@@ -6156,6 +3932,14 @@ msgstr[1] ""
 #: src/Project.cpp
 #, c-format
 msgid "%s and %s."
+msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Анализа на фрекфенции"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
 
 #: src/Resample.cpp
@@ -6248,10 +4032,6 @@ msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr ""
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr ""
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr ""
 
@@ -6323,7 +4103,7 @@ msgid "Edit"
 msgstr ""
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr ""
 
@@ -6351,6 +4131,7 @@ msgstr ""
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 #, fuzzy
 msgid "Tracks"
 msgstr "Обележи нумера"
@@ -6419,7 +4200,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr ""
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr ""
 
@@ -6544,6 +4325,10 @@ msgid "Set De&fault"
 msgstr ""
 
 #: src/Tags.cpp
+msgid "Don't show this when exporting audio"
+msgstr ""
+
+#: src/Tags.cpp
 msgid "Edit Genres"
 msgstr ""
 
@@ -6662,7 +4447,7 @@ msgstr ""
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 
 #: src/Theme.cpp
@@ -6840,6 +4625,11 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Timer Recording"
+msgstr "Снимање"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6890,6 +4680,11 @@ msgstr ""
 #, fuzzy
 msgid "Save Project As:"
 msgstr "Зачувај го проектот к&ако..."
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select..."
+msgstr "Означи"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -6950,10 +4745,20 @@ msgstr "Селекција на почеток"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr ""
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 #, fuzzy
 msgid "Recording will commence in:"
 msgstr "Снимање"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -6973,6 +4778,10 @@ msgstr ""
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr ""
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Означи"
 
 #: src/TrackPanel.cpp
 #, fuzzy, c-format
@@ -7000,6 +4809,13 @@ msgstr ""
 
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
+msgstr ""
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
 msgstr ""
 
 #. i18n-hint: This is for screen reader software and indicates that
@@ -7538,6 +5354,7 @@ msgid "Toolbars"
 msgstr "Алатки"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr ""
 
@@ -7600,7 +5417,7 @@ msgstr ""
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Ништо"
 
@@ -7723,10 +5540,6 @@ msgstr "Фрекфенција (Hz):"
 msgid "Select Tracks"
 msgstr "Обележи нумера"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Означи"
-
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -7827,6 +5640,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "Постави рата"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "Големина"
 
@@ -7890,6 +5708,7 @@ msgid "Pan:"
 msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Брановидна форма"
 
@@ -7930,6 +5749,16 @@ msgstr ""
 #, fuzzy
 msgid "VZoom:"
 msgstr "Зум"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "Зум"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "Зум алатка"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8429,6 +6258,11 @@ msgid "You can only measure one track at a time."
 msgstr ""
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "Создадена нова аудио нумера"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8439,11 +6273,6 @@ msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "Создадена нова аудио нумера"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -8510,6 +6339,10 @@ msgstr ""
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr ""
+
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Помош"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9082,6 +6915,16 @@ msgstr "Стандардни краеви"
 msgid "Factory Presets"
 msgstr ""
 
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Import..."
+msgstr "Внеси"
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Export..."
+msgstr "Експорт на нас&лови..."
+
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
 msgstr ""
@@ -9368,7 +7211,7 @@ msgstr ""
 msgid "&Graphic"
 msgstr ""
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr ""
 
@@ -9614,6 +7457,11 @@ msgstr ""
 msgid "Equalization"
 msgstr "Еквилизација"
 
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "Означи"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -9854,30 +7702,34 @@ msgid "&Window types"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
+msgid "Window si&ze"
+msgstr ""
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr ""
 
@@ -9889,20 +7741,20 @@ msgstr ""
 msgid "2048 (default)"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
-msgid "Window si&ze"
+msgid "S&teps per window"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
@@ -9911,10 +7763,6 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "4 (default)"
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
@@ -9996,17 +7844,17 @@ msgstr ""
 
 #: src/effects/Normalize.cpp
 #, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr ""
+
+#: src/effects/Normalize.cpp
+#, c-format
 msgid "Processing: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -10050,7 +7898,7 @@ msgid "Waiting for waveform to finish computing..."
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+msgid "(Maximum 0dB)"
 msgstr ""
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10516,6 +8364,10 @@ msgstr ""
 msgid "Creates audio of zero amplitude"
 msgstr ""
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Тишина"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr ""
@@ -10854,7 +8706,7 @@ msgstr "Подготвувам Ladspa ефект: %s"
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+msgid "This parameter file was saved from %s. Continue?"
 msgstr ""
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -10896,6 +8748,7 @@ msgstr ""
 msgid "Wahwah"
 msgstr "Wahwah"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr ""
@@ -10918,19 +8771,6 @@ msgstr "Неможно да отворам библиотека за MP3 енк�
 #, fuzzy
 msgid "Audio Unit Effect Options"
 msgstr "Ladspa ефект поставки"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "&Генерирај"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -10956,13 +8796,26 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
 msgid "Select &interface"
 msgstr "Селекција збиј лево"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+msgid "Generic"
+msgstr "&Генерирај"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
@@ -10986,10 +8839,15 @@ msgstr ""
 msgid "Location"
 msgstr "Акција"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-msgid "AudioUnit"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
 msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 #, fuzzy
 msgid "LADSPA Effects"
@@ -11021,6 +8879,9 @@ msgstr ""
 msgid "Effect Output"
 msgstr "Ladspa ефект поставки"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 #, fuzzy
 msgid "LADSPA"
@@ -11086,11 +8947,6 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "Применет Nyquist ефект..."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Effects Prompt"
 msgstr "Применет Nyquist ефект..."
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11185,8 +9041,14 @@ msgid "plug-in"
 msgstr "Nyquist јавка"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
-msgstr ""
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist не врати аудио.\n"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist не врати аудио.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -11273,6 +9135,11 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "Снимено %s"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11383,6 +9250,10 @@ msgstr ""
 msgid "Export Audio"
 msgstr "Експорт MP3"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr ""
+
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -11435,7 +9306,7 @@ msgstr ""
 
 #: src/export/Export.cpp
 #, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr ""
 
 #: src/export/Export.cpp
@@ -11642,18 +9513,23 @@ msgstr "Експорт на селектираното аудио како Ogg V
 msgid "Invalid sample rate"
 msgstr ""
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr ""
+
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
@@ -12001,6 +9877,8 @@ msgid ""
 "max - 8"
 msgstr ""
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr ""
@@ -12228,7 +10106,7 @@ msgid "Constant"
 msgstr ""
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Квалитет"
 
@@ -12244,7 +10122,7 @@ msgstr ""
 msgid "Joint Stereo"
 msgstr ""
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr ""
 
@@ -12291,7 +10169,7 @@ msgstr "Каде е %s?"
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 
 #: src/export/ExportMP3.cpp
@@ -12299,6 +10177,15 @@ msgstr ""
 msgid ""
 "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "All Files|*"
+msgstr ""
+"Само lame_enc.dll|lame_enc.dll|динамички врзани библиотеки (*.dll)|*.dll|"
+"сите датотеки (*.*)|*"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
 msgstr ""
 "Само lame_enc.dll|lame_enc.dll|динамички врзани библиотеки (*.dll)|*.dll|"
 "сите датотеки (*.*)|*"
@@ -12378,18 +10265,22 @@ msgstr ""
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
+msgstr ""
+
+#: src/export/ExportMP3.cpp
+msgid "(Built-in)"
 msgstr ""
 
 #: src/export/ExportMultiple.cpp
@@ -12577,6 +10468,23 @@ msgid "Other uncompressed files"
 msgstr ""
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "Грешка при внес"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Неможно да експортирам во овој формат."
 
@@ -12644,9 +10552,11 @@ msgstr ""
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 
 #: src/import/Import.cpp
@@ -12734,6 +10644,11 @@ msgid ""
 "Data."
 msgstr ""
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -12741,6 +10656,11 @@ msgid ""
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
+msgstr ""
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
 msgstr ""
 
 #: src/import/ImportFFmpeg.cpp
@@ -12887,7 +10807,7 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -12909,11 +10829,6 @@ msgstr ""
 
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
-msgstr ""
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
 msgstr ""
 
 #: src/import/ImportQT.cpp
@@ -13014,8 +10929,2512 @@ msgstr "Подготви за внес:"
 msgid "Sample rate:"
 msgstr "Рата на семпл:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr ""
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
+msgstr ""
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s left"
+msgstr "лево"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s right"
+msgstr "десно"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr ""
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Временска алатка"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "Означи"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "Означи"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Prev Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Next Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Clip Rig&ht"
+msgstr "Покажувач десно"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr ""
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Залепено од амбар"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Ништо за врати"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Ништо за повтори"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Сечи во амбар"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "Избришани %.2f секунди од t=%.2f"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete"
+msgstr "Означи"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Удвоено"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Duplicate"
+msgstr "Удвоено"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Стивни ја селекцијата за %.2f секунди од %.2f"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "Стивни ја селекцијата за %.2f секунди од %.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Подели"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "&Уреди"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Бриши"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr ""
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr ""
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr ""
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr ""
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "&Metadata..."
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "Delete копче"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "Delete копче"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Плејбек"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "Плејбек"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "Плејбек"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Снимање"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Снимање"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Снимање"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Смени висина"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Смени висина"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Смени го името на нумерата во:"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Смени висина"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Full Screen (on/off)"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Внесено MIDI од '%s'"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Import MIDI"
+msgstr "Внеси &MIDI..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export Selected Audio"
+msgstr "Локација:"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "labels.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Нема наслови за експортирање."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Внесени наслови од '%s'"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Import Labels"
+msgstr "Внеси нас&лови..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Означи MIDI датотека..."
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select any uncompressed audio file"
+msgstr "Одберете која било некомпресирана аудио датотека..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "All files|*"
+msgstr "Сите видови (*.*)|*.*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Зачувај го проектот к&ако..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr ""
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Сними проект"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "Зачувај го проектот к&ако..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "Зачувај го проектот к&ако..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Save Compressed Copy of Project..."
+msgstr "Зачувај го проектот к&ако..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export"
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as MP&3"
+msgstr "Внесено '%s'"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &WAV"
+msgstr "Експорт наслов како:"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &OGG"
+msgstr "Внесено '%s'"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export Audio..."
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export &Multiple..."
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Pa&ge Setup..."
+msgstr "Смени брзина..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr ""
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Снимено %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Неможно да се пронајде"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&Помош"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Аudacity прва употреба"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Помош"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr ""
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr ""
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr ""
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Silence Labeled Audio"
+msgstr "Тивка селекција"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr ""
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Labels"
+msgstr "Наслови нумера"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Edit Labels..."
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "Дај наслов на селекција"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "Дај наслов на селекција"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "La&beled Audio"
+msgstr "Снимање"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Наслови нумера"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Означи"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Cut"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Delete"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Тишина"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Наслови нумера"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Наслови нумера"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Наслови нумера"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Previous Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Next Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &First Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Last Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "&Toggle Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Toggle Focuse&d Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, fuzzy, c-format
+msgid "Repeat %s"
+msgstr "&Врати"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy, c-format
+msgid "Plug-in %d to %d"
+msgstr "Додавки %i за %i"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Генерирај"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Effe&ct"
+msgstr "&Ефект"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "&Анализа"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "T&ools"
+msgstr "Алатки"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Macros..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "Применет фазер"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "Име..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "Означи"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "Почни &брзинар..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "Снимање"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr ""
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Сите видови (*.*)|*.*"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Означи"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Фрекфенција (Hz):"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Означи"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "Име на нумера"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "Аudacity поставки"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "Аudacity поставки"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Clip..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Крива"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "Експорт на нас&лови..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Зачувај го проектот к&ако..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "Обележи нумера"
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "Постави од-до..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "&Помош"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Зачувај го проектот к&ако..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Зачувај го проектот к&ако..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "Одбери..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Збивач..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+msgid "Screenshot (short format)..."
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr ""
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Изборни алатки"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Постави формат на селекција"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "Постави формат на селекција"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "Селекција на почеток"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "Селекција на крај"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "Име на нумера"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Селекција на крај"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&tore Selection"
+msgstr "Постави формат на селекција"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Retrieve Selectio&n"
+msgstr "Постави формат на селекција"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&pectral"
+msgstr "Спектар"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Постави формат на селекција"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "Фрекфенција (Hz):"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "Линиска фрекфенција"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Селекција на почеток"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "Означи"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Selection"
+msgstr "Изборни алатки"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Off"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Nearest"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Prior"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to &Start"
+msgstr "Селекција на почеток"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to En&d"
+msgstr "Селекција на крај"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Left"
+msgstr "Селекција извлечи лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Right"
+msgstr "Селекција извлечи десно"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "Селекција извлечи лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Селекција извлечи десно"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract L&eft"
+msgstr "Селекција збиј лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract R&ight"
+msgstr "Селекција збиј десно"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor to"
+msgstr "Покажувач лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Star&t"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection En&d"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &Start"
+msgstr "Име на нумера"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "Име на нумера"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &End"
+msgstr "Обележи нумера"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "Име на нумера"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Project Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "Создаден нов проект"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor"
+msgstr "Покажувач лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Left"
+msgstr "Покажувач лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Right"
+msgstr "Покажувач десно"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Sh&ort Jump Left"
+msgstr "Покажувач лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Shor&t Jump Right"
+msgstr "Покажувач десно"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long J&ump Left"
+msgstr "Покажувач лево"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long Ju&mp Right"
+msgstr "Покажувач десно"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr ""
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Reset Toolb&ars"
+msgstr "Алатки"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Recording Meter Toolbar"
+msgstr "Снимање"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Playback Meter Toolbar"
+msgstr "Плејбек"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Плејбек"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Scru&b Toolbar"
+msgstr "Алатки"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr ""
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Spe&ctral Selection Toolbar"
+msgstr "Изборни алатки"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Selection Tool"
+msgstr "Изборни алатки"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Envelope Tool"
+msgstr "Крива алатки"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Draw Tool"
+msgstr "Цртачки алатки"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Zoom Tool"
+msgstr "Зум алатка"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Time Shift Tool"
+msgstr "Временска алатка"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Multi Tool"
+msgstr "Мулти алатки"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr ""
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Next Tool"
+msgstr "Мулти алатки"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr ""
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr ""
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Отстрани аудио нумера/и"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Cursor/Selection Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to Selection &End"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Selection En&d"
+msgstr "Покажувач на крај од селекцијата"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to zero"
+msgstr "Порамнето"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to zero"
+msgstr "Порамнето со нула"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "Порамнето"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to cursor/selection start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to selection end"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Порамнето со почеток на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "Порамнето со почеток на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End"
+msgstr "Порамнето"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End"
+msgstr "Порамнето"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to selection end"
+msgstr "Порамнет крај со крај на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to selection end"
+msgstr "Порамнет крај со крај на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "Порамнето"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "Порамни крај со крај на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "Порамни крај со крај на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "Порамни крај со крај на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "Порамнето"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "Порамни ги нумерите меѓусебно"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "Порамни ги нумерите меѓусебно"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "Порамни ги нумерите меѓусебно"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Отстрани аудио нумера/и"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Remove Track"
+msgstr "&Тргни нумери"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "Отстранета нумерата '%s.'"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Track Remove"
+msgstr "Име на нумера"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "Мрднато '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "Мрдни нумера угоре"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "Мрдни нумера удолу"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "Мрдни нумера удолу"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "Мрднато '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "Мрднато '%s' %s"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "Мрдни нумера удолу"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "New Track"
+msgstr "Обележи нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Создадена нова стерео аудио нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Создаден нов наслов на нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Создадена нова временска нумера"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Label Track"
+msgstr "Наслови нумера"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Time Track"
+msgstr "Временска нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "Подели стерео нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "&Тргни нумери"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Unmute All Tracks"
+msgstr "Временска нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Left"
+msgstr "Лев"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Лев"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Right"
+msgstr "Десен"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Десен"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Center"
+msgstr "Центар"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Центар"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Align End to End"
+msgstr "Порамни крај со крај на селекција"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align &Together"
+msgstr "Порамни ги нумерите меѓусебно"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Sele&ction and Tracks"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "S&ort Tracks"
+msgstr "Обележи нумера"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Start Time"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "Име..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Track"
+msgstr "Обележи нумера"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "Мрдни нумера удолу"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "Мрдни нумера угоре"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "Мрдни нумера удолу"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no label track"
+msgstr "Создаден нов наслов на нумера"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no labels in label track"
+msgstr "Создаден нов наслов на нумера"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Создадена нова аудио нумера"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Создадена нова аудио нумера"
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Ladspa ефект поставки"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Применет фазер"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Снимање"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Append Record"
+msgstr "Снимај"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Record &New Track"
+msgstr "&Тргни нумери"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Transport &Options"
+msgstr "Ladspa ефект поставки"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr ""
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr ""
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &One Second"
+msgstr "Свири една секунда"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "Свири една секунда"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &Before Selection Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Af&ter Selection Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Be&fore Selection End"
+msgstr "Свири една секунда"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Aft&er Selection End"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before a&nd After Selection Start"
+msgstr "Порамни крај со почеток на селекција"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before an&d After Selection End"
+msgstr "Покажувач на крај од селекцијата"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Плејбек"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Плејбек"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Loop Play-at-Speed"
+msgstr "Плејбек"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Плејбек"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Плејбек"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "Плејбек"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Поглед"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Zoom"
+msgstr "Зум"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "Зум &во"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "Зум &нормален"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "Зум &од"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "Зум во &селекција"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Zoom &Toggle"
+msgstr "Зум алатка"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Ladspa ефект поставки"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "T&rack Size"
+msgstr "Име на нумера"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Fit to Width"
+msgstr "&Во прозорец"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Sk&ip to"
+msgstr "Скокни до крај"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection Sta&rt"
+msgstr "Селекција на почеток"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "Покажувач на почеток на селекцијата"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "Покажувач на крај од селекцијата"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&Историја"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Show Clipping (on/off)"
+msgstr "Не дозволувај преку"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr ""
+
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Window"
+msgstr "прозорец"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr ""
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr ""
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+msgid "Minimize All Projects"
 msgstr ""
 
 #: src/ondemand/ODComputeSummaryTask.h
@@ -13028,12 +13447,17 @@ msgstr ""
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgid "%s %2.0f%% complete. Click to change task focal point."
+msgstr ""
+
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
+msgid "Batch"
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp
-msgid "Batch"
-msgstr ""
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "Аudacity поставки"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13046,6 +13470,11 @@ msgstr ""
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr ""
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "Аudacity поставки"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13062,7 +13491,7 @@ msgid "Using:"
 msgstr ""
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Плејбек"
 
@@ -13071,7 +13500,8 @@ msgid "&Device:"
 msgstr ""
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Снимање"
 
@@ -13120,9 +13550,13 @@ msgid "2 (Stereo)"
 msgstr "2 (Стерео)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Именици"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Preferences for Directories"
+msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13198,11 +13632,47 @@ msgid "Temp Directory Update"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "Аudacity поставки"
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "&Ефект"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "Nyquist јавка"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Vamp"
+msgstr ""
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -13264,6 +13734,11 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "Аudacity поставки"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13332,6 +13807,16 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "Внеси"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "Аudacity поставки"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -13446,8 +13931,16 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
@@ -13496,10 +13989,19 @@ msgstr ""
 msgid "&Beats"
 msgstr "&Врати"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Клавијатура"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "Аudacity поставки"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -13618,11 +14120,21 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "Комбинација на типки"
+
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Аudacity поставки"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "LAME MP3 Export Library"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -13630,15 +14142,11 @@ msgid "MP3 Library Version:"
 msgstr "Верзија на MP3 библиотека:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
+msgid "LAME MP3 Library:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -13679,10 +14187,19 @@ msgid ""
 "Do you still want to locate them manually?"
 msgstr ""
 
+#: src/prefs/LibraryPrefs.h
+msgid "Library"
+msgstr ""
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr ""
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "Аudacity поставки"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -13700,17 +14217,18 @@ msgstr ""
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr ""
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr ""
+#, fuzzy
+msgid "Preferences for Module"
+msgstr "Аudacity поставки"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -13741,16 +14259,33 @@ msgstr ""
 "се превклучи."
 
 #: src/prefs/ModulePrefs.cpp
+msgid "Ask"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
+msgstr ""
+
+#: src/prefs/ModulePrefs.h
+msgid "Module"
 msgstr ""
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr ""
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Глушец"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "Аudacity поставки"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -13959,6 +14494,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Брановидна форма (dB)"
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "Аudacity поставки"
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr ""
 
@@ -13997,6 +14537,10 @@ msgid "&Vari-Speed Play"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
 msgstr ""
 
@@ -14013,9 +14557,14 @@ msgid "Preferences: "
 msgstr ""
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr ""
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "Аudacity поставки"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14052,6 +14601,11 @@ msgstr "Триаголник"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "Аглесто"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "Аudacity поставки"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14096,6 +14650,11 @@ msgstr ""
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "Аudacity поставки"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -14278,16 +14837,9 @@ msgid "Spectrograms"
 msgstr "Спектрограм"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr ""
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "1024 - default"
-msgstr ""
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr ""
+#, fuzzy
+msgid "Preferences for Spectrum"
+msgstr "Аudacity поставки"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14339,6 +14891,22 @@ msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "1024 - default"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
 msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
@@ -14425,9 +14993,14 @@ msgstr ""
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr ""
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "Аudacity поставки"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -14452,7 +15025,7 @@ msgstr ""
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 
@@ -14490,8 +15063,12 @@ msgid "Load Files"
 msgstr ""
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "Preferences for TracksBehaviors"
 msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14504,8 +15081,9 @@ msgid "Multi-track"
 msgstr "Мулти"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
-msgstr ""
+#, fuzzy
+msgid "&Select all audio, if selection required"
+msgstr "Порамнето со крај на селекција"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14620,9 +15198,15 @@ msgid "4 Pixels per Sample"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Max Zoom"
 msgstr "Зум"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "Аudacity поставки"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -14680,9 +15264,14 @@ msgstr ""
 msgid "Preset 2:"
 msgstr ""
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr ""
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "Аudacity поставки"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -14721,6 +15310,11 @@ msgstr ""
 #, fuzzy
 msgid "Waveforms"
 msgstr "Брановидна форма"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "Аudacity поставки"
 
 #: src/prefs/WaveformPrefs.cpp
 #, fuzzy
@@ -15061,9 +15655,9 @@ msgstr ""
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
-msgstr ""
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
+msgstr "Означи MIDI датотека..."
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -15176,11 +15770,13 @@ msgid "Face size"
 msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Up &Octave"
 msgstr "Октава угоре"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Down Octa&ve"
 msgstr "Октава удолу"
@@ -15444,7 +16040,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Моно"
 
@@ -15728,6 +16324,20 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "Командна акција"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "Обележи нумера"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
 msgid "Open menu..."
 msgstr "&Отвори..."
 
@@ -15893,6 +16503,47 @@ msgstr ""
 msgid "Help on the Internet"
 msgstr ""
 
+#: src/widgets/HelpSystem.cpp
+msgid "Do you have these problems?"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Микс"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Quick Fixes"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Ништо за врати"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "Мрдни нумера угоре"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "Неможно да се отвори проектот."
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Снимање"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
@@ -16012,7 +16663,7 @@ msgstr ""
 msgid "Show Log for Details"
 msgstr ""
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr ""
 
@@ -16354,127 +17005,6 @@ msgstr ""
 msgid "Confirm Close"
 msgstr ""
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Кликни и пушти за да наместиш релативна големина на стерео нумерите."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "Снимање"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Seek"
-msgstr "Кликни и пушти за уредување семплови"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Scrub"
-msgstr "Кликни и пушти за предименизионирање на нумерата."
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Quick-Play disabled"
-msgstr " (откажана)"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to unpin"
-msgstr "Скокни до почеток"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to pin"
-msgstr "Скокни до почеток"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable dragging selection"
-msgstr "Тивка селекција"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable dragging selection"
-msgstr "Тивка селекција"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr ""
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr ""
@@ -16583,10 +17113,11 @@ msgstr ""
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -16886,6 +17417,11 @@ msgid "S-Curve Out"
 msgstr "Мрдни нумера удолу"
 
 #: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Грешка"
+
+#: plug-ins/adjustable-fade.ny
 #, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr ""
@@ -16900,13 +17436,8 @@ msgstr ""
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "Грешка"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17088,31 +17619,6 @@ msgstr "Број на уредувања:"
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "Грешка"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17121,9 +17627,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Создаден нов наслов на нумера"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Наслови нумера"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17143,6 +17656,11 @@ msgstr "Број на уредувања:"
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "Должина (секунди):     од"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "Должина (секунди):     од"
 
 #: plug-ins/equalabel.ny
@@ -17188,6 +17706,46 @@ msgstr ""
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "Комбинација на типки"
+
+#: plug-ins/equalabel.ny
+msgid "Details"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Warnings only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Даден наслов"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Внеси нас&лови..."
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~aRegion length = ~a seconds."
 msgstr ""
 
 #: plug-ins/highpass.ny
@@ -17342,6 +17900,53 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "Nyquist јавка"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "Означи MIDI датотека..."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Грешка (датотеката можеби не е снимена): %s"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr ""
 
 #: plug-ins/pluck.ny
@@ -17541,16 +18146,6 @@ msgstr ""
 #, fuzzy
 msgid "Amplitude (0 - 1)"
 msgstr "Амплитуда (0-1)"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "Лев"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "Десен"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
@@ -18228,6 +18823,26 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Применет Nyquist ефект..."
+
+#, fuzzy
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "Неможно да се пронајде"
+
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "Грешка"
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "Лев"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "Десен"
+
+#, fuzzy
 #~ msgid "Tra&nscription Toolbar"
 #~ msgstr "Изборни алатки"
 
@@ -18471,9 +19086,6 @@ msgstr ""
 #~ msgid "Version"
 #~ msgstr "Обраќање"
 
-#~ msgid "Key Combination"
-#~ msgstr "Комбинација на типки"
-
 #~ msgid "Size"
 #~ msgstr "Големина"
 
@@ -18531,10 +19143,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "R&ight Channel"
 #~ msgstr "Десен канал"
-
-#, fuzzy
-#~ msgid "&Rate"
-#~ msgstr "Постави рата"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"

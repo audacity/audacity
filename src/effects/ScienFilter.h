@@ -13,25 +13,21 @@ Vaughan Johnson (Preview)
 #ifndef __AUDACITY_EFFECT_SCIENFILTER__
 #define __AUDACITY_EFFECT_SCIENFILTER__
 
-#include <wx/arrstr.h>
-#include <wx/bitmap.h>
-#include <wx/choice.h>
-#include <wx/event.h>
-#include <wx/panel.h>
-#include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-#include <wx/window.h>
+#include <wx/setup.h> // for wxUSE_* macros
 
-#include "../widgets/Ruler.h"
 #include "Biquad.h"
 
 #include "Effect.h"
 
+class wxBitmap;
+class wxChoice;
+class wxSlider;
+class wxStaticText;
 class wxTextCtrl;
+class RulerPanel;
 class ShuttleGui;
 
-#define CLASSICFILTERS_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Classic Filters") }
+#define CLASSICFILTERS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Classic Filters") }
 
 class EffectScienFilterPanel;
 
@@ -41,9 +37,9 @@ public:
    EffectScienFilter();
    virtual ~EffectScienFilter();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -176,13 +172,5 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
-
-#if wxUSE_ACCESSIBILITY
-
-// ScienceFilter and Equalisation effects both need SliderAx class.
-// For now it is declared and defined in Equalisation effect.
-// TODO: Move it to its own file.
-
-#endif // wxUSE_ACCESSIBILITY
 
 #endif

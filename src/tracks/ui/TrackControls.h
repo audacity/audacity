@@ -20,6 +20,7 @@ class Track;
 class CloseButtonHandle;
 class MenuButtonHandle;
 class MinimizeButtonHandle;
+class SelectButtonHandle;
 class TrackSelectHandle;
 
 class TrackControls /* not final */ : public CommonTrackPanelCell
@@ -29,8 +30,6 @@ public:
    TrackControls( std::shared_ptr<Track> pTrack );
 
    virtual ~TrackControls() = 0;
-
-   std::shared_ptr<Track> FindTrack() override;
 
    // This is passed to the InitMenu() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:
@@ -43,6 +42,8 @@ public:
    };
 
 protected:
+   std::shared_ptr<Track> DoFindTrack() override;
+
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
    virtual std::vector<UIHandlePtr> HitTest
@@ -60,6 +61,7 @@ protected:
    std::weak_ptr<CloseButtonHandle> mCloseHandle;
    std::weak_ptr<MenuButtonHandle> mMenuHandle;
    std::weak_ptr<MinimizeButtonHandle> mMinimizeHandle;
+   std::weak_ptr<SelectButtonHandle> mSelectButtonHandle;
    std::weak_ptr<TrackSelectHandle> mSelectHandle;
 };
 

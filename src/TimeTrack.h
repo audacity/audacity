@@ -12,13 +12,10 @@
 #define __AUDACITY_TIMETRACK__
 
 #include "Track.h"
-#include <wx/brush.h>
-#include <wx/pen.h>
 
 #include <algorithm>
 
 class wxRect;
-class wxDC;
 class Envelope;
 class Ruler;
 class ZoomInfo;
@@ -57,9 +54,6 @@ class TimeTrack final : public Track {
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
-   // Identifying the type of track
-   int GetKind() const override { return Time; }
-
    // TimeTrack parameters
 
    double GetOffset() const override { return 0.0; }
@@ -69,8 +63,7 @@ class TimeTrack final : public Track {
    double GetEndTime() const override { return 0.0; }
 
    void Draw
-      (TrackPanelDrawingContext &context,
-       const wxRect & r, const ZoomInfo &zoomInfo) const;
+      ( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
    // XMLTagHandler callback methods for loading and saving
 
@@ -138,6 +131,9 @@ class TimeTrack final : public Track {
    void testMe();
 
  private:
+   // Identifying the type of track
+   TrackKind GetKind() const override { return TrackKind::Time; }
+
    const ZoomInfo  *const mZoomInfo;
    std::unique_ptr<Envelope> mEnvelope;
    std::unique_ptr<Ruler> mRuler;
@@ -161,8 +157,8 @@ class TimeTrack final : public Track {
    friend class TrackFactory;
 
 protected:
-   std::shared_ptr<TrackControls> GetControls() override;
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
+   std::shared_ptr<TrackControls> DoGetControls() override;
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 

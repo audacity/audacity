@@ -114,6 +114,8 @@ dox/
 *.ipch
 *.opensdf
 *.vcxproj.user
+*.sbr
+*.bsc
 
 # Precompiled Headers
 *.gch
@@ -200,3 +202,4 @@ win/resetPrefs.txt
 win/xaudacity.ico
 *.sublime-project
 *.sublime-workspace
+/tests/results/*.png

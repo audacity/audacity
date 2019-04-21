@@ -15,15 +15,19 @@
 
 #include "Audacity.h"
 #include "TimeTrack.h"
+
 #include "Experimental.h"
 
 #include <cfloat>
+#include <wx/wxcrtvararg.h>
+#include <wx/dc.h>
 #include <wx/intl.h>
 #include "AColor.h"
 #include "widgets/Ruler.h"
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "TrackArtist.h"
 #include "Internat.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -32,9 +36,9 @@
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
-std::unique_ptr<TimeTrack> TrackFactory::NewTimeTrack()
+std::shared_ptr<TimeTrack> TrackFactory::NewTimeTrack()
 {
-   return std::make_unique<TimeTrack>(mDirManager, mZoomInfo);
+   return std::make_shared<TimeTrack>(mDirManager, mZoomInfo);
 }
 
 TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const ZoomInfo *zoomInfo):
@@ -107,8 +111,7 @@ Track::Holder TimeTrack::Cut( double t0, double t1 )
 
 Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
 {
-   auto result = std::make_unique<TimeTrack>( *this, &t0, &t1 );
-   return Track::Holder{ std::move( result ) };
+   return std::make_shared<TimeTrack>( *this, &t0, &t1 );
 }
 
 void TimeTrack::Clear(double t0, double t1)
@@ -119,13 +122,16 @@ void TimeTrack::Clear(double t0, double t1)
 
 void TimeTrack::Paste(double t, const Track * src)
 {
-   if (src->GetKind() != Track::Time)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
+      auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+      mEnvelope->PasteEnvelope
+         (t, tt->mEnvelope.get(), sampleTime);
+      return true;
+   } );
 
-   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
-   mEnvelope->PasteEnvelope
-      (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
+   if (! bOk )
+      // THROW_INCONSISTENCY_EXCEPTION // ?
+      (void)0;// intentionally do nothing.
 }
 
 void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
@@ -139,7 +145,7 @@ void TimeTrack::InsertSilence(double t, double len)
 
 Track::Holder TimeTrack::Duplicate() const
 {
-   return std::make_unique<TimeTrack>(*this);
+   return std::make_shared<TimeTrack>(*this);
 }
 
 bool TimeTrack::GetInterpolateLog() const
@@ -262,9 +268,12 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 #include "tracks/ui/EnvelopeHandle.h"
 
 void TimeTrack::Draw
-(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo) const
+( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());

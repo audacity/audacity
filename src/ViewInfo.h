@@ -12,7 +12,7 @@
 #define __AUDACITY_VIEWINFO__
 
 #include <vector>
-#include <wx/event.h>
+#include <wx/event.h> // inherit wxEvtHandler
 #include "SelectedRegion.h"
 #include "MemoryX.h"
 
@@ -85,12 +85,14 @@ public:
    static double GetDefaultZoom()
    { return 44100.0 / 512.0; }
 
-   // There is NO GetZoom()!
-   // Use TimeToPosition and PositionToTime and OffsetTimeByPixels!
 
    // Limits zoom to certain bounds
    void SetZoom(double pixelsPerSecond);
-   double GetZoom();
+
+   // This function should not be used to convert positions to times and back
+   // Use TimeToPosition and PositionToTime and OffsetTimeByPixels instead
+   double GetZoom() const;
+
    static double GetMaxZoom( );
    static double GetMinZoom( );
 

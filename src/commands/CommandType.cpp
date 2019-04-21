@@ -19,6 +19,7 @@ Also acts as a factory.
 
 #include "../Audacity.h"
 #include "CommandType.h"
+
 #include "CommandMisc.h"
 #include "CommandSignature.h"
 #include <wx/string.h>
@@ -31,7 +32,7 @@ OldStyleCommandType::~OldStyleCommandType()
 {
 }
 
-IdentInterfaceSymbol OldStyleCommandType::GetSymbol()
+ComponentInterfaceSymbol OldStyleCommandType::GetSymbol()
 {
    if (mSymbol.empty())
       mSymbol = BuildName();

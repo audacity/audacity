@@ -30,12 +30,16 @@
 #include <math.h>
 
 #include <wx/brush.h>
+#include <wx/checkbox.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
 
 #include "../AColor.h"
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../float_cast.h"
 #include "../widgets/Ruler.h"
@@ -94,9 +98,9 @@ EffectCompressor::~EffectCompressor()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectCompressor::GetSymbol()
+ComponentInterfaceSymbol EffectCompressor::GetSymbol()
 {
    return COMPRESSOR_PLUGIN_SYMBOL;
 }
@@ -288,9 +292,9 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    {
       /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
       mGainCheckBox = S.AddCheckBox(_("Make-up gain for 0 dB after compressing"),
-                                    DEF_Normalize ? wxT("true") : wxT("false"));
+                                    DEF_Normalize);
       mPeakCheckBox = S.AddCheckBox(_("Compress based on Peaks"),
-                                    DEF_UsePeak ? wxT("true") : wxT("false"));
+                                    DEF_UsePeak);
    }
    S.EndHorizontalLay();
 }
@@ -362,14 +366,9 @@ bool EffectCompressor::InitPass1()
       DisableSecondPass();
 
    // Find the maximum block length required for any track
-   size_t maxlen = 0;
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *track = (WaveTrack *) iter.First();
-   while (track) {
-      maxlen = std::max(maxlen, track->GetMaxBlockSize());
-      //Iterate to the next track
-      track = (WaveTrack *) iter.Next();
-   }
+   size_t maxlen = inputTracks()->Selected< const WaveTrack >().max(
+      &WaveTrack::GetMaxBlockSize
+   );
    mFollow1.reset();
    mFollow2.reset();
    // Allocate buffers for the envelope

@@ -23,12 +23,12 @@
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/defs.h>
-#include <wx/evtloop.h>
-#include <wx/gauge.h>
-#include <wx/stattext.h>
-#include <wx/utils.h>
+#include <wx/evtloop.h> // member variable
 
-#include "wxPanelWrapper.h"
+#include "wxPanelWrapper.h" // to inherit
+
+class wxGauge;
+class wxStaticText;
 
 enum class ProgressResult : unsigned
 {
@@ -60,9 +60,9 @@ public:
 
    // Display a simple message.
    ProgressDialog(const wxString & title,
-                  const wxString & message = wxEmptyString,
+                  const wxString & message = {},
                   int flags = pdlgDefaultFlags,
-                  const wxString & sRemainingLabelText = wxEmptyString);
+                  const wxString & sRemainingLabelText = {});
 
    using MessageColumn = std::vector< wxString >;
    using MessageTable = std::vector< MessageColumn >;
@@ -76,15 +76,15 @@ protected:
    ProgressDialog(const wxString & title,
                   const MessageTable & columns,
                   int flags = pdlgDefaultFlags,
-                  const wxString & sRemainingLabelText = wxEmptyString);
+                  const wxString & sRemainingLabelText = {});
 
 public:
    virtual ~ProgressDialog();
 
    bool Create(const wxString & title,
-               const wxString & message = wxEmptyString,
+               const wxString & message = {},
                int flags = pdlgDefaultFlags,
-               const wxString & sRemainingLabelText = wxEmptyString);
+               const wxString & sRemainingLabelText = {});
 
    void Reinit();
 
@@ -92,16 +92,16 @@ protected:
    bool Create(const wxString & title,
                const MessageTable & columns,
                int flags = pdlgDefaultFlags,
-               const wxString & sRemainingLabelText = wxEmptyString);
+               const wxString & sRemainingLabelText = {});
 
 public:
-   ProgressResult Update(int value, const wxString & message = wxEmptyString);
-   ProgressResult Update(double current, const wxString & message = wxEmptyString);
-   ProgressResult Update(double current, double total, const wxString & message = wxEmptyString);
-   ProgressResult Update(wxULongLong_t current, wxULongLong_t total, const wxString & message = wxEmptyString);
-   ProgressResult Update(wxLongLong current, wxLongLong total, const wxString & message = wxEmptyString);
-   ProgressResult Update(wxLongLong_t current, wxLongLong_t total, const wxString & message = wxEmptyString);
-   ProgressResult Update(int current, int total, const wxString & message = wxEmptyString);
+   ProgressResult Update(int value, const wxString & message = {});
+   ProgressResult Update(double current, const wxString & message = {});
+   ProgressResult Update(double current, double total, const wxString & message = {});
+   ProgressResult Update(wxULongLong_t current, wxULongLong_t total, const wxString & message = {});
+   ProgressResult Update(wxLongLong current, wxLongLong total, const wxString & message = {});
+   ProgressResult Update(wxLongLong_t current, wxLongLong_t total, const wxString & message = {});
+   ProgressResult Update(int current, int total, const wxString & message = {});
    void SetMessage(const wxString & message);
 
 protected:
@@ -160,7 +160,7 @@ public:
                        const wxString &title,
                        const MessageTable & columns,
                        int flags = pdlgDefaultFlags,
-                       const wxString & sRemainingLabelText = wxEmptyString);
+                       const wxString & sRemainingLabelText = {});
 
    // Oh no, there is an inherited nullary "Update" in wxDialog!
    // Choose another name then...

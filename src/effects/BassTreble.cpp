@@ -17,15 +17,20 @@
 #include "../Audacity.h"
 #include "BassTreble.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 #include <algorithm>
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
+#include <wx/slider.h>
 
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -77,9 +82,9 @@ EffectBassTreble::~EffectBassTreble()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectBassTreble::GetSymbol()
+ComponentInterfaceSymbol EffectBassTreble::GetSymbol()
 {
    return BASSTREBLE_PLUGIN_SYMBOL;
 }
@@ -268,7 +273,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       {
          // Link checkbox
          mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("&Link Volume control to Tone controls"),
-                                          DEF_Link ? wxT("true") : wxT("false"));
+                                          DEF_Link);
       }
       S.EndMultiColumn();
    }

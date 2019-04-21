@@ -11,10 +11,9 @@
 #ifndef __AUDACITY_LEGACY_BLOCKFILE__
 #define __AUDACITY_LEGACY_BLOCKFILE__
 
-#include <wx/string.h>
-#include <wx/filename.h>
-
 #include "../BlockFile.h"
+
+class wxFileName;
 
 void ComputeLegacySummaryInfo(const wxFileName &fileName,
                               size_t summaryLen,
@@ -60,7 +59,7 @@ class LegacyBlockFile final : public BlockFile {
    DiskByteCount GetSpaceUsage() const override;
    void Recover() override;
 
-   static BlockFilePtr BuildFromXML(const wxString &dir, const wxChar **attrs,
+   static BlockFilePtr BuildFromXML(const FilePath &dir, const wxChar **attrs,
                                   size_t len,
                                   sampleFormat format);
 

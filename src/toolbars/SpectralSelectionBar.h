@@ -14,14 +14,12 @@ Paul Licameli
 #include <wx/defs.h>
 
 #include "ToolBar.h"
+#include "../widgets/NumericTextCtrl.h"
 
-class wxBitmap;
-class wxCheckBox;
 class wxChoice;
 class wxComboBox;
 class wxCommandEvent;
 class wxDC;
-class wxRadioButton;
 class wxSizeEvent;
 
 class SpectralSelectionBarListener;
@@ -42,8 +40,8 @@ public:
    void UpdatePrefs() override;
 
    void SetFrequencies(double bottom, double top);
-   void SetFrequencySelectionFormatName(const NumericFormatId & formatName);
-   void SetBandwidthSelectionFormatName(const NumericFormatId & formatName);
+   void SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName);
+   void SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName);
    void SetListener(SpectralSelectionBarListener *l);
 
    void RegenerateTooltips() override {};

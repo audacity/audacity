@@ -8,10 +8,10 @@
 
 **********************************************************************/
 
+#include "VSTControlGTK.h"
+
 #include <wx/dynlib.h>
 #include <wx/sizer.h>
-
-#include "VSTControl.h"
 
 #if 0
 static int trappedErrorCode = 0;

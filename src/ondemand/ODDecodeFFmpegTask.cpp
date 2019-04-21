@@ -9,7 +9,10 @@
 
 ******************************************************************/
 
-#include "../Audacity.h"   // needed before FFmpeg.h
+#include "../Audacity.h"   // needed before FFmpeg.h // for USE_* macros
+#include "ODDecodeFFmpegTask.h"
+
+#include "../Experimental.h"
 
 #include <wx/wxprec.h>
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -17,8 +20,6 @@
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
 #endif
-
-#include "../Experimental.h"
 
 #ifdef USE_FFMPEG
 #ifdef EXPERIMENTAL_OD_FFMPEG
@@ -31,7 +32,6 @@
 
 
 extern FFmpegLibs *FFmpegLibsInst();
-#include "ODDecodeFFmpegTask.h"
 
 
 #define ODFFMPEG_SEEKING_TEST_UNKNOWN 0
@@ -79,7 +79,7 @@ public:
    ///However it doesn't do anything because ImportFFMpeg does all that for us.
    bool ReadHeader() override {return true;}
 
-   bool SeekingAllowed() ;
+   bool SeekingAllowed() override;
 
 private:
    void InsertCache(std::unique_ptr<FFMpegDecodeCache> &&cache);
@@ -109,22 +109,15 @@ private:
    int                  mStreamIndex;
 };
 
-auto ODDecodeFFmpegTask::FromList(const std::list<TrackHolders> &channels) -> Streams
+auto ODDecodeFFmpegTask::FromList( const TrackHolders &channels ) -> Streams
 {
-   Streams streams;
-   streams.reserve(channels.size());
-   using namespace std;
-   transform(channels.begin(), channels.end(), back_inserter(streams),
-      [](const TrackHolders &holders) {
-         Channels channels;
-         channels.reserve(holders.size());
-         transform(holders.begin(), holders.end(), back_inserter(channels),
-            mem_fn(&TrackHolders::value_type::get)
-         );
-         return channels;
+   // Convert array of array of unique_ptr to array of array of bare pointers
+   return transform_container<Streams>( channels,
+      [](const NewChannelGroup &holders) {
+         return transform_container<Channels>( holders,
+            std::mem_fn(&NewChannelGroup::value_type::get) );
       }
    );
-   return streams;
 }
 
 //------ ODDecodeFFmpegTask definitions
@@ -327,12 +320,11 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          mCurrentPos = start+len +1;
          while(numAttempts++ < kMaxSeekRewindAttempts && mCurrentPos > start) {
             //we want to move slightly before the start of the block file, but not too far ahead
-            targetts =
+            targetts = std::max( 0.0,
                (start - kDecodeSampleAllowance * numAttempts / kMaxSeekRewindAttempts)
                   .as_long_long() *
-               ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ));
-            if(targetts<0)
-               targetts=0;
+               ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ))
+            );
 
             //wxPrintf("attempting seek to %llu, attempts %d\n", targetts, numAttempts);
             if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){

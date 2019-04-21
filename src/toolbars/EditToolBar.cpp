@@ -34,8 +34,12 @@
 #include "../Audacity.h"
 #include "EditToolBar.h"
 
+#include "../Experimental.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
 #include <wx/event.h>
@@ -49,6 +53,7 @@
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../Internat.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
@@ -56,8 +61,8 @@
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 
-#include "../Experimental.h"
 #include "../commands/CommandContext.h"
+#include "../commands/CommandManager.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
@@ -223,7 +228,7 @@ void EditToolBar::EnableDisableButtons()
 
 static const struct Entry {
    int tool;
-   wxString commandName;
+   CommandID commandName;
    wxString untranslatedLabel;
 } EditToolbarButtonList[] = {
    { ETBCutID,      wxT("Cut"),         XO("Cut")  },
@@ -299,9 +304,9 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    CommandManager* cm = p->GetCommandManager();
    if (!cm) return;
 
-   auto flags = p->GetUpdateFlags();
+   auto flags = GetMenuManager(*p).GetUpdateFlags(*p);
    const CommandContext context( *GetActiveProject() );
-   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecifed);
+   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecified);
 }
 
 

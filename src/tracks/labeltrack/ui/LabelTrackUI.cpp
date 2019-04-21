@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../../LabelTrack.h"
+
 #include "LabelTrackControls.h"
 #include "LabelDefaultClickHandle.h"
 #include "LabelTrackVRulerControls.h"
@@ -30,24 +31,24 @@ std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
    const wxMouseState &state = st.state;
 
    result = LabelGlyphHandle::HitTest(
-      mGlyphHandle, state, Pointer<LabelTrack>(this), st.rect);
+      mGlyphHandle, state, SharedPointer<LabelTrack>(), st.rect);
    if (result)
       results.push_back(result);
 
    result = LabelTextHandle::HitTest(
-      mTextHandle, state, Pointer<LabelTrack>(this));
+      mTextHandle, state, SharedPointer<LabelTrack>());
    if (result)
       results.push_back(result);
 
    return results;
 }
 
-std::shared_ptr<TrackControls> LabelTrack::GetControls()
+std::shared_ptr<TrackControls> LabelTrack::DoGetControls()
 {
-   return std::make_shared<LabelTrackControls>( Pointer( this ) );
+   return std::make_shared<LabelTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> LabelTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> LabelTrack::DoGetVRulerControls()
 {
-   return std::make_shared<LabelTrackVRulerControls>( Pointer( this ) );
+   return std::make_shared<LabelTrackVRulerControls>( SharedPointer() );
 }

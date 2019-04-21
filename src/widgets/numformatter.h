@@ -14,7 +14,11 @@
 #ifndef _WIDGETS_NUMFORMATTER_H_
 #define _WIDGETS_NUMFORMATTER_H_
 
-#include <wx/string.h>
+#include <cstddef> // for size_t
+#include <wx/chartype.h> // for typedef wxChar
+#include <wx/longlong.h>
+
+class wxString;
 
 #define HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 

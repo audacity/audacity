@@ -20,12 +20,12 @@ whether they are warnings or just useful information/tips.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "WarningsPrefs.h"
 
 #include <wx/defs.h>
 
 #include "../ShuttleGui.h"
 
-#include "WarningsPrefs.h"
 #include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +38,21 @@ WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)
 
 WarningsPrefs::~WarningsPrefs()
 {
+}
+
+ComponentInterfaceSymbol WarningsPrefs::GetSymbol()
+{
+   return WARNINGS_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString WarningsPrefs::GetDescription()
+{
+   return _("Preferences for Warnings");
+}
+
+wxString WarningsPrefs::HelpPageName()
+{
+   return "Warnings_Preferences";
 }
 
 void WarningsPrefs::Populate()
@@ -102,11 +117,6 @@ bool WarningsPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString WarningsPrefs::HelpPageName()
-{
-   return "Warnings_Preferences";
 }
 
 PrefsPanel *WarningsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

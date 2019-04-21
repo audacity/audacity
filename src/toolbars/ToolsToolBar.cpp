@@ -38,6 +38,8 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #ifndef WX_PRECOMP
 #include <wx/defs.h>
 #include <wx/event.h>
@@ -54,8 +56,6 @@
 #include "../Project.h"
 #include "../tracks/ui/Scrubbing.h"
 #include "../Theme.h"
-
-#include "../Experimental.h"
 
 #include "../widgets/AButton.h"
 
@@ -126,7 +126,7 @@ void ToolsToolBar::RegenerateTooltips()
 
    static const struct Entry {
       int tool;
-      wxString commandName;
+      CommandID commandName;
       wxString untranslatedLabel;
    } table[] = {
       { selectTool,   wxT("SelectTool"),    XO("Selection Tool")  },

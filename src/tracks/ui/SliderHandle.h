@@ -13,7 +13,6 @@ Paul Licameli
 
 #include "../../MemoryX.h"
 #include "../../UIHandle.h"
-#include <wx/gdicmn.h>
 
 class wxMouseEvent;
 class LWSlider;

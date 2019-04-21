@@ -18,7 +18,9 @@
 #include "../Audacity.h"
 #include "QualityPrefs.h"
 
+#include <wx/choice.h>
 #include <wx/defs.h>
+#include <wx/textctrl.h>
 
 #include "../AudioIO.h"
 #include "../Dither.h"
@@ -32,7 +34,7 @@
 
 //////////
 
-static const IdentInterfaceSymbol choicesFormat[] = {
+static const EnumValueSymbol choicesFormat[] = {
    { wxT("Format16Bit"), XO("16-bit") },
    { wxT("Format24Bit"), XO("24-bit") },
    { wxT("Format32BitFloat"), XO("32-bit float") }
@@ -47,7 +49,7 @@ static_assert( nChoicesFormat == WXSIZEOF(intChoicesFormat), "size mismatch" );
 
 static const size_t defaultChoiceFormat = 2; // floatSample
 
-static EncodedEnumSetting formatSetting{
+static EnumSetting formatSetting{
    wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
    choicesFormat, nChoicesFormat, defaultChoiceFormat,
    
@@ -56,7 +58,7 @@ static EncodedEnumSetting formatSetting{
 };
 
 //////////
-static const IdentInterfaceSymbol choicesDither[] = {
+static const EnumValueSymbol choicesDither[] = {
    { XO("None") },
    { XO("Rectangle") },
    { XO("Triangle") },
@@ -76,7 +78,7 @@ static_assert(
 
 static const size_t defaultFastDither = 0; // none
 
-static EncodedEnumSetting fastDitherSetting{
+static EnumSetting fastDitherSetting{
    wxT("Quality/DitherAlgorithmChoice"),
    choicesDither, nChoicesDither, defaultFastDither,
    intChoicesDither,
@@ -85,7 +87,7 @@ static EncodedEnumSetting fastDitherSetting{
 
 static const size_t defaultBestDither = 3; // shaped
 
-static EncodedEnumSetting bestDitherSetting{
+static EnumSetting bestDitherSetting{
    wxT("Quality/HQDitherAlgorithmChoice"),
    choicesDither, nChoicesDither, defaultBestDither,
 
@@ -109,13 +111,28 @@ QualityPrefs::~QualityPrefs()
 {
 }
 
+ComponentInterfaceSymbol QualityPrefs::GetSymbol()
+{
+   return QUALITY_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString QualityPrefs::GetDescription()
+{
+   return _("Preferences for Quality");
+}
+
+wxString QualityPrefs::HelpPageName()
+{
+   return "Quality_Preferences";
+}
+
 void QualityPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
    GetNamesAndLabels();
    gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
                 &mOtherSampleRateValue,
-                44100);
+                AudioIO::GetOptimalSupportedSampleRate());
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -152,10 +169,10 @@ void QualityPrefs::GetNamesAndLabels()
    for (int i = 0; i < AudioIO::NumStandardRates; i++) {
       int iRate = AudioIO::StandardRates[i];
       mSampleRateLabels.push_back(iRate);
-      mSampleRateNames.Add(wxString::Format(wxT("%i Hz"), iRate));
+      mSampleRateNames.push_back(wxString::Format(wxT("%i Hz"), iRate));
    }
 
-   mSampleRateNames.Add(_("Other..."));
+   mSampleRateNames.push_back(_("Other..."));
 
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
@@ -176,7 +193,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             // If the value in Prefs isn't in the list, then we want
             // the last item, 'Other...' to be shown.
-            S.SetNoMatchSelector(mSampleRateNames.GetCount() - 1);
+            S.SetNoMatchSelector(mSampleRateNames.size() - 1);
             // First the choice...
             // We make sure it uses the ID we want, so that we get changes
             S.Id(ID_SAMPLE_RATE_CHOICE);
@@ -258,11 +275,6 @@ bool QualityPrefs::Commit()
    InitDitherers();
 
    return true;
-}
-
-wxString QualityPrefs::HelpPageName()
-{
-   return "Quality_Preferences";
 }
 
 PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

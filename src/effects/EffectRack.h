@@ -18,17 +18,15 @@
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
-#include <wx/access.h>
-#include <wx/bmpbuttn.h>
 #include <wx/defs.h>
-#include <wx/frame.h>
-#include <wx/image.h>
-#include <wx/panel.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/timer.h>
+#include <wx/frame.h> // to inherit
+#include <wx/timer.h> // member variable
 
 #include "EffectManager.h"
+
+class wxFlexGridSizer;
+class wxPanel;
+class wxStaticText;
 
 class EffectRack final : public wxFrame
 {
@@ -40,7 +38,7 @@ public:
 
 private:
 
-   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
+   wxBitmap CreateBitmap(const char *const xpm[], bool up, bool pusher);
    int GetEffectIndex(wxWindow *win);
    void MoveRowUp(int row);
    void UpdateActive();

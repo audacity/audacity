@@ -41,11 +41,13 @@ AliasedFile s.
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/filename.h>
-#include <wx/hashmap.h>
+#include <wx/listctrl.h>
+#include <wx/menu.h>
 #include <wx/progdlg.h>
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/stattext.h>
 
 #include "BlockFile.h"
 #include "DirManager.h"
@@ -57,6 +59,7 @@ AliasedFile s.
 #include "WaveTrack.h"
 #include "WaveClip.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/ProgressDialog.h"
 
 #include <unordered_map>
 
@@ -73,21 +76,13 @@ using BoolBlockFileHash = std::unordered_map<BlockFile *, bool>;
 static void GetAllSeqBlocks(AudacityProject *project,
                             BlockPtrArray *outBlocks)
 {
-   TrackList *tracks = project->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         for(const auto &clip : waveTrack->GetAllClips()) {
-            Sequence *sequence = clip->GetSequence();
-            BlockArray &blocks = sequence->GetBlockArray();
-            int i;
-            for (i = 0; i < (int)blocks.size(); i++)
-               outBlocks->push_back(&blocks[i]);
-         }
+   for (auto waveTrack : project->GetTracks()->Any< WaveTrack >()) {
+      for(const auto &clip : waveTrack->GetAllClips()) {
+         Sequence *sequence = clip->GetSequence();
+         BlockArray &blocks = sequence->GetBlockArray();
+         for (size_t i = 0; i < blocks.size(); i++)
+            outBlocks->push_back(&blocks[i]);
       }
-      t = iter.Next();
    }
 }
 
@@ -394,16 +389,19 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       {
          S.StartHorizontalLay(wxALIGN_LEFT,0);
          {
-            wxArrayString choices;
-            /*i18n-hint: One of the choices of what you want Audacity to do when
-            * Audacity finds a project depends on another file.*/
-            choices.Add(_("Ask me"));
-            choices.Add(_("Always copy all files (safest)"));
-            choices.Add(_("Never copy any files"));
+            wxArrayStringEx choices{
+               /*i18n-hint: One of the choices of what you want Audacity to do when
+               * Audacity finds a project depends on another file.*/
+               _("Ask me") ,
+               _("Always copy all files (safest)") ,
+               _("Never copy any files") ,
+            };
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
                   _("Whenever a project depends on other files:"),
-                  _("Ask me"), &choices);
+                  choices,
+                  0 // "Ask me"
+               );
          }
          S.EndHorizontalLay();
       } else
@@ -539,7 +537,7 @@ void DependencyDialog::OnRightClick( wxListEvent& event)
 void DependencyDialog::OnCopyToClipboard( wxCommandEvent& evt )
 {
    static_cast<void>(evt);
-   wxString Files = "";
+   wxString Files;
    for (const auto &aliasedFile : mAliasedFiles) {
       const wxFileName & fileName = aliasedFile.mFileName;
       wxLongLong byteCount = (aliasedFile.mByteCount * 124) / 100;

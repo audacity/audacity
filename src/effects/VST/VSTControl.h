@@ -11,8 +11,7 @@
 #ifndef AUDACITY_VSTCONTROL_H
 #define AUDACITY_VSTCONTROL_H
 
-#include <wx/control.h>
-#include <wx/panel.h>
+#include <wx/control.h> // to inherit
 
 #include "aeffectx.h"
 
@@ -53,13 +52,5 @@ protected:
    wxWindow *mParent;
    VSTEffectLink *mLink;
 };
-
-#if defined(__WXOSX__)
-#include "VSTControlOSX.h"
-#elif defined(__WXMSW__)
-#include "VSTControlMSW.h"
-#elif defined(__WXGTK__)
-#include "VSTControlGTK.h"
-#endif
 
 #endif

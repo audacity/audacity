@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2008-06-26 15:07+0700\n"
 "Last-Translator: Nguyen Dinh Trung <nguyendinhtrung141@gmail.com>\n"
 "Language-Team: \n"
@@ -29,10 +29,11 @@ msgid "Please choose an existing file."
 msgstr "Xin hãy chọn một hành động cần thực thi"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -232,7 +233,7 @@ msgid "No matches found"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+msgid "Code has been modified. Are you sure?"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -293,7 +294,7 @@ msgstr "Chép"
 msgid "Copy to clipboard"
 msgstr "Cắt vào bảng kẹp tạm"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Cắt"
@@ -303,7 +304,7 @@ msgstr "Cắt"
 msgid "Cut to clipboard"
 msgstr "Cắt vào bảng kẹp tạm"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Dán"
@@ -324,7 +325,7 @@ msgstr "&Xoá"
 msgid "Clear selection"
 msgstr "Thay vùng chọn bằng khoảng lặng"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 #, fuzzy
 msgid "Select All"
 msgstr "Chọn"
@@ -603,7 +604,7 @@ msgid ""
 msgstr ""
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Thanh công cụ %s của Audacity"
@@ -740,6 +741,131 @@ msgstr "Thư mục thiết lập:"
 msgid "GPL License"
 msgstr "Giấy phép GPL"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Click và rê chuột để điều chỉnh kích cỡ tương đối của dải âm stereo."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "Kết thúc thu âm"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Seek"
+msgstr "Nhấn và rê chuột để chỉnh sửa các mẫu"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Scrub"
+msgstr "Click và rê chuột để điều chỉnh kích cỡ dải âm."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release to stop seeking."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Quick-Play disabled"
+msgstr " (không cho)"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to unpin"
+msgstr "Dừng đo"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to pin"
+msgstr "Nhảy về đầu"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable dragging selection"
+msgstr "Thay vùng chọn bằng khoảng lặng"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable dragging selection"
+msgstr "Cho phép &rê cạnh trái và phải của vùng chọn"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Do not scroll while playing"
+msgstr "Cập nhật giao diện &khi đang phát"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Update display while playing"
+msgstr "Cập nhật giao diện &khi đang phát"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable Scrub Ruler"
+msgstr "Tắt bộ đo"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable Scrub Ruler"
+msgstr "Bật bộ đo"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -803,12 +929,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity đang hoạt động từ trước..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Mới"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Mở..."
 
@@ -816,7 +942,7 @@ msgstr "&Mở..."
 msgid "Open &Recent..."
 msgstr ""
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&Thông tin về Audacity..."
 
@@ -824,7 +950,7 @@ msgstr "&Thông tin về Audacity..."
 msgid "&Preferences..."
 msgstr "&Tuỳ thích..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Tập tin"
 
@@ -968,8 +1094,8 @@ msgstr "&Lưu..."
 msgid "Cl&ear"
 msgstr ""
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Đóng"
 
@@ -1027,6 +1153,189 @@ msgstr "Lỗi khi mở thiết bị âm thanh"
 
 #: src/AudioIO.cpp
 msgid "Out of memory!"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "No devices found\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "Không nghe trước được"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "Thiết bị"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "Thiết bị"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "Tên"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "Phát lại"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Tốc độ lấy mẫu"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Tốc độ phát lại"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "Không mở được tập tin thể loại."
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "Thu âm"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "Phát lại"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "Phát lại"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "Phát lại"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Kết thúc thu âm"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Tốc độ phát lại"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
 msgstr ""
 
 #: src/AudioIO.cpp
@@ -1239,10 +1548,6 @@ msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr ""
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1255,8 +1560,9 @@ msgid "Export recording"
 msgstr "Thu âm"
 
 #: src/BatchCommands.cpp
+#, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 
@@ -1801,7 +2107,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Kiểm tra sự phụ thuộc"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Đang tiến hành"
@@ -1822,13 +2129,13 @@ msgid "Cleaning up temporary files"
 msgstr "Xoá các tập tin tạm thời"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Đang lưu các dữ liệu của dự án"
-
-#: src/DirManager.cpp
 #, fuzzy
 msgid "Cleaning up after failed save"
 msgstr "Xoá các tập tin tạm thời"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Đang lưu các dữ liệu của dự án"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2134,6 +2441,7 @@ msgid "To find '%s', click here -->"
 msgstr ""
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Duyệt..."
 
@@ -2155,14 +2463,10 @@ msgid "Where is '%s'?"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr ""
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr ""
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2171,8 +2475,12 @@ msgid ""
 "to download or locate the FFmpeg libraries."
 msgstr ""
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
+msgstr ""
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
 msgstr ""
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
@@ -2237,7 +2545,7 @@ msgstr "Lỗi LOF"
 msgid "Error (file may not have been written): %s"
 msgstr "Lỗi (có thể chưa ghi tập tin): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Phổ"
 
@@ -2274,7 +2582,7 @@ msgstr "Tần số logarit"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2340,9 +2648,9 @@ msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "Để vẽ phổ, tất cả các dải được chọn phải có cùng tốc độ lấy mẫu"
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
 "Bạn chọn quá nhiều dữ liệu. Audacity sẽ chỉ phân tích %.1f giây đầu tiên của "
@@ -2388,8 +2696,8 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Xuất dữ liệu phổ thành:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Không thể ghi vào tập tin:"
@@ -2665,7 +2973,8 @@ msgid "Track"
 msgstr "Dải âm"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Nhãn"
 
@@ -2699,17 +3008,17 @@ msgstr "Mới..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "Nhấn F2 hoặc nhắp đúp chuột để sửa nội dung ô..."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Select a text file containing labels"
 msgstr "Chọn một tập tin văn bản chứa các nhãn..."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Tập tin văn bản (*.txt)|*.txt|Tất cả (*.*)|*.*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "Không thể mở tập tin: \"%s\""
@@ -2718,7 +3027,7 @@ msgstr "Không thể mở tập tin: \"%s\""
 msgid "No labels to export."
 msgstr "Chưa có nhãn để có thể xuất ra."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Xuất nhãn thành:"
 
@@ -2746,22 +3055,22 @@ msgstr "Đã sửa lại nhãn"
 msgid "Label Edit"
 msgstr "Chỉnh sửa nhãn"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Đã thêm nhãn"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "Cắ&t"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Chép"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Dán"
 
@@ -2778,6 +3087,22 @@ msgstr "Xoá Nhãn"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Đã sửa nhãn"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Tên"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Đã thêm nhãn"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2821,2604 +3146,31 @@ msgid "Audacity Karaoke%s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Lưu Dự án"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "Lưu &như dự án mới..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "Lưu &như dự án mới..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Save Compressed Copy of Project..."
-msgstr "Lưu &như dự án mới..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export"
-msgstr "Xuất"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as MP&3"
-msgstr "Xuất"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &WAV"
-msgstr "Xuất nhãn thành:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export as &OGG"
-msgstr "Xuất"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Export Audio..."
-msgstr "&Xuất..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Expo&rt Selected Audio..."
-msgstr "Xuất phầ&n chọn..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "Xuất &nhãn..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Xuất ra &nhiều tập tin"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "&Xuất..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&Nhập"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "Âm t&hanh..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Nhãn..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&Dữ liệu thô..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Thiết lập tran&g"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&In ấn..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "Th&oát"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "Chỉnh &Sửa"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Hoãn lại"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "&Làm lại"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Xoá"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "N&hân đôi"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr ""
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "Ch&ia và Cắt"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "Chia &và Xoá"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tri&m Audio"
-msgstr "Thu &gọn"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr ""
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "Phâ&n chia"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "Chia và tạo &mới"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "&Ghép nối"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Labels"
-msgstr "Các nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Edit Labels..."
-msgstr "&Sửa nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "Thêm nhãn ở vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "Thêm nhãn từ vị trí &phát lại"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "La&beled Audio"
-msgstr "Đã thu âm"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Chỉnh sửa nhãn"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&Cắt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "Chia và xoá"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "Chia và Cắt"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "Chi&a và cắt"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "Chia và xoá"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "Chia &và Xoá"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "Im lặng"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "Nhãn"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "Ché&p"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "Chỉnh sửa nhãn"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "Phâ&n chia"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "Chỉnh sửa nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Me&tadata..."
-msgstr "Sửa dữ liệu đặc tả"
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr ""
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr ""
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&Tất"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "Vùng chọn"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Không gì hết"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "&Dải âm"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Sync-Locked"
-msgstr "Chọn âm thanh"
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "R&egion"
-msgstr "&Lưu vùng"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "Đặt điểm chọn và phát"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "Bên &trái vị trí phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "Đặt điểm chọn và phát"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "Bên &phải vị trí phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "Từ đầu đến c&on trỏ"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "Từ đầu đến c&on trỏ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "Con &trỏ đến hết"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "Con &trỏ đến hết"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "Chọn đến hết"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "Từ đầu đến c&on trỏ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&tore Selection"
-msgstr "Vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Retrieve Selectio&n"
-msgstr "Vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&pectral"
-msgstr "Phổ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "Tần số (Hz)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "Tần số tuyến tính"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "Công cụ trước"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Previo&us Clip"
-msgstr "Công cụ trước"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "Công cụ kế"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "N&ext Clip"
-msgstr "Công cụ kế"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "Chọn về đầu"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "Tìm điểm biên độ bằng &không"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "At &Zero Crossings"
-msgstr "Tìm điểm biên độ bằng &không"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Xem"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom"
-msgstr "Thu phóng"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "Phóng &To"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "Đúng &Cỡ"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "Thu &Nhỏ"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "Vừ&a vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Zoom &Toggle"
-msgstr "Công cụ thu phóng"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&rack Size"
-msgstr "Tên bài hát"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Fit to Width"
-msgstr "&Vừa cửa sổ"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "&Gộp các dải âm lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "E&xpand Collapsed Tracks"
-msgstr "&Bung các dải âm ra"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sk&ip to"
-msgstr "Chuyển về cuối"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Sta&rt"
-msgstr "Bắt đầu vùng chọn:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection En&d"
-msgstr "Kết thúc vùng chọn"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "Đã &làm..."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr ""
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Reset Toolb&ars"
-msgstr "Thiết &lập lại"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "&Công cụ"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording Meter Toolbar"
-msgstr "Bộ đo thu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Playback Meter Toolbar"
-msgstr "Bộ đo phát"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "&Trộn tiếng"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "Chỉnh &sửa"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Tốc độ phát"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b Toolbar"
-msgstr "Chỉnh &sửa"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "&Thiết bị"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "&Vùng chọn"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Spe&ctral Selection Toolbar"
-msgstr "&Vùng chọn"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Show Clipping (on/off)"
-msgstr "Hiện &ghim tín hiệu"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "Tốc độ phát"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "Phát"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play/Stop and &Set Cursor"
-msgstr "Phát/Dừng và đặt con trỏ"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Thu âm"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Append Record"
-msgstr "Thu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Record &New Track"
-msgstr "&Xoá Dải âm"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor to"
-msgstr "Con trỏ sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Star&t"
-msgstr "Bắt đầu vùng chọn:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "Con &trỏ đến hết"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &Start"
-msgstr "đến đầ&u dải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "Con &trỏ đến hết"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track &End"
-msgstr "đến &cuối dải"
-
-#: src/Menus.cpp
-msgid "Cursor to Prev Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Next Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "Tần số của dự án (Hz):"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Project Start"
-msgstr "Tần số của dự án (Hz):"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "Con &trỏ đến hết"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Project E&nd"
-msgstr "Tính phụ thuộc của dự án"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&Khoá"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&Mở khoá"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Transport &Options"
-msgstr "Tốc độ phát"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "Di chuyển dải âm"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "Dải &stereo"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&Nhãn cho dải âm"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "Dải &thời gian"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "Chuyển Stereo thành Mono"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "Trộn và &Diễn tả"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix and Render to Ne&w Track"
-msgstr "Trộn và Diễn tả sang Dải mới"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "&Lấy mẫu lại..."
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "&Xoá Dải âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute"
-msgstr "Tắt/bật âm thanh của dải hiện hành"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "&Tắt tiếng mọi dải âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Unmute All Tracks"
-msgstr "&Bật tiếng mọi dải âm"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "Trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Left"
-msgstr "Trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "Phải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Right"
-msgstr "Phải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "Giữa"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Center"
-msgstr "Giữa"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Align End to End"
-msgstr "Xếp đuôi về &cuối vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align &Together"
-msgstr "Xếp các dải âm &cùng nhau"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to &Zero"
-msgstr "Từ đầu đến c&on trỏ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to &Cursor/Selection Start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Start to Selection &End"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to Cu&rsor/Selection Start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to Selection En&d"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "Đã di chuyển đoạn âm thanh tới dải khác"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Sele&ction and Tracks"
-msgstr "Đã di chuyển đoạn âm thanh tới dải khác"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "S&ort Tracks"
-msgstr "&Dải âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sort by Time"
-msgstr "Sắp xếp theo thời gian"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "Thời gian bắt đầu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Sort by Name"
-msgstr "Sắp xếp theo tên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "Tên"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "Tạo â&m"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "&Hiệu ứng"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Lặp lại %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "&Phân tích"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Vẽ phổ tần số..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "T&ools"
-msgstr "Công cụ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&Nhãn..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "Áp dụng %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "&Lưu..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Công cụ chụp ảnh màn hình..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Kiểm thử..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Simulate Recording Errors"
-msgstr "Thu âm"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Window"
-msgstr "cửa sổ"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr ""
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr ""
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr ""
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &One Second"
-msgstr "Phát đúng 1 giây"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "Phát đến vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play &Before Selection Start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Af&ter Selection Start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Be&fore Selection End"
-msgstr "Phát đến vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Aft&er Selection End"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before a&nd After Selection Start"
-msgstr "Xếp đuôi về đầ&u vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play Before an&d After Selection End"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview"
-msgstr "Phát Cắt Xem trước"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection Tool"
-msgstr "Công cụ chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Envelope Tool"
-msgstr "Công cụ biên độ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Draw Tool"
-msgstr "Công cụ vẽ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "Công cụ thu phóng"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Time Shift Tool"
-msgstr "Công cụ di chuyển"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Multi Tool"
-msgstr "Đa năng"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Previous Tool"
-msgstr "Công cụ trước"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Next Tool"
-msgstr "Công cụ kế"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mi&xer"
-msgstr "&Trộn tiếng"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "Phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "Phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Kết thúc thu âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Kết thúc thu âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Kết thúc thu âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "Xoá"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "Xoá2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Tốc độ phát"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Tốc độ phát"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Loop Play-at-Speed"
-msgstr "Tốc độ phát"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Phát Cắt Xem trước"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "Phát lại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Previous Label"
-msgstr "Chuyển lên dải trên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move to &Next Label"
-msgstr "Chuyển xuống dải dưới"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "De&vice"
-msgstr "Thiết bị"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Thay đổi độ cao của âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Thay đổi độ cao của âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Đang đưa âm thanh vào bộ đệm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Thay đổi độ cao của âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Selection"
-msgstr "Vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "Tắt chế độ dính"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "Bật chế độ dính"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "Dính tới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to &Start"
-msgstr "Chọn về đầu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection to En&d"
-msgstr "Chọn đến hết"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Left"
-msgstr "Vùng chọn nới sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Extend &Right"
-msgstr "Vùng chọn nới sang phải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "Đặt (hoặc Nới) Vùng chọn sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Đặt (hoặc Nới) Vùng chọn sang phải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract L&eft"
-msgstr "Co bên trái Vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Selection Contract R&ight"
-msgstr "Co bên phải vùng chọn"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Chuyển xuống dải dưới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Previous Track"
-msgstr "Chuyển lên dải trên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Next Track"
-msgstr "Chuyển xuống dải dưới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &First Track"
-msgstr "Chuyển xuống dải dưới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to &Last Track"
-msgstr "Chuyển xuống dải dưới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to P&revious and Select"
-msgstr "Chuyển lên dải trên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focus to N&ext and Select"
-msgstr "Chuyển xuống dải dưới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Toggle Focused Track"
-msgstr "Chọn/thôi chọn dải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Toggle Focuse&d Track"
-msgstr "Chọn/thôi chọn dải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Cursor"
-msgstr "Con trỏ sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Left"
-msgstr "Con trỏ sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor &Right"
-msgstr "Con trỏ sang phải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Sh&ort Jump Left"
-msgstr "Con trỏ sang trái đoạn ngắn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Shor&t Jump Right"
-msgstr "Con trỏ sang phải đoạn ngắn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long J&ump Left"
-msgstr "Con trỏ sang trái đoạn dài"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor Long Ju&mp Right"
-msgstr "Con trỏ sang phải đoạn dài"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Clip Rig&ht"
-msgstr "Đang Ghim"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Track"
-msgstr "&Dải âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "Thay đổi cân bằng trái/phải của dải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "Dịch cân bằng sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "Dịch cân bằng sang phải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "Thay đổi độ khuếch đại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "Tăng độ khuếch đại biên độ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "Giảm độ khuếch đại"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "Mở trình đơn trên dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "Tắt/bật âm thanh của dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "Bật/tắt chế độ Solo của dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "Đóng dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "Đóng dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "Đóng dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "Đóng dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "Chuyển dải xuống dưới"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Tần số (Hz)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "đến đầ&u dải"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "Tuỳ thích..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "Tuỳ thích..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "Công cụ kế"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Đường bao biên độ"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&Sửa nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Lưu &như dự án mới..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Select..."
-msgstr "Chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "&Dải âm"
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "&Lấy mẫu lại..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "Trợ giúp"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Import..."
-msgstr "&Nhập..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-#, fuzzy
-msgid "Export..."
-msgstr "&Xuất..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "Lưu &như dự án mới..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Lưu &như dự án mới..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "Chọn..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Bộ nén tiếng..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&Công cụ chụp ảnh màn hình..."
-
-#: src/Menus.cpp
-msgid "&Full Screen (on/off)"
-msgstr ""
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "&Chuẩn hoá mọi dải âm trong dự án"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "Trợ &giúp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Getting Started"
-msgstr "Bắt đầu vùng chọn:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Thanh công cụ %s của Audacity"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "Trợ &giúp"
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Diagnostics"
-msgstr "\t-test (chạy chẩn đoán lỗi)"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "&Kiểm tra phụ thuộc..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Check for Updates..."
-msgstr "&Kiểm tra phụ thuộc..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Plug-in %d to %d"
-msgstr "Trình bổ sung %i đến %i"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Mở gần đây"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr ""
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&Huỷ %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Hoãn lại"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&Làm lại %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Sắp xếp dải âm theo thời gian"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "Sắp xếp dải âm theo tên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no label track"
-msgstr "Tạo nhãn mới cho dải"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no label track at or below focused track"
-msgstr "Dịch cân bằng sang trái"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "no labels in label track"
-msgstr "Tạo nhãn mới cho dải"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Time shifted clips to the left"
-msgstr "Đã dịch dải/đoạn sang %s %.02f giây"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Di chuyển mốc thời gian"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Không thể xoá dải âm đang hoạt động"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "Đã di chuyển '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "Đưa dải lên trên"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "Chuyển dải xuống dưới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "Chuyển dải xuống dưới"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "Đã di chuyển '%s' %s"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "Đã di chuyển '%s' %s"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "Đưa dải lên trên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "Chuyển dải xuống dưới"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "labels.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Không có nhãn dải âm nào để xuất"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr ""
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Export Selected Audio"
-msgstr "Xuất phầ&n chọn..."
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Không thể huỷ bước"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Không thể làm lại"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Cắt vào bảng kẹp tạm"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Chia rồi cắt vào bảng kẹp tạm"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Chia và Cắt"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Không thể chép âm thanh stereo sang dải mono."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Đã dán từ bảng kẹp tạm"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Đã dán văn bản từ bảng kẹp tạm"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Đã tạo khoảng lặng dài %.2f giây tại %.2f vào dải hiện hành"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Trim Audio"
-msgstr "Đang ghi âm"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Đã chia và xoá %.2f giây tại t=%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Chia và xoá"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Đã ghép nối %.2f giây tại t=%.2f"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Ghép nối"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Đã tạo khoảng lặng dài %.2f giây tại %.2f vào dải hiện hành"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Im lặng"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Đã nhân đôi"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Nhân đôi"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Cắt các vùng có nhãn vào trong bảng kẹp tạm"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cut Labeled Audio"
-msgstr "Cắt nhãn"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Chia Cắt vùng có nhãn vào bảng kẹp tạm"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Cut Labeled Audio"
-msgstr "Chia Cắt Nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Đã chép vùng có nhãn vào bảng kẹp tạm"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Copy Labeled Audio"
-msgstr "Chép Nhãn"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Deleted labeled audio regions"
-msgstr "Đã xoá vùng có nhãn"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Labeled Audio"
-msgstr "Đã xoá vùng có nhãn"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Deleted labeled audio regions"
-msgstr "Đã Chia và Xoá vùng có nhãn"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Delete Labeled Audio"
-msgstr "Chia và Xoá Nhãn"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Silenced labeled audio regions"
-msgstr "Vùng có nhãn trở thành khoảng lặng"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Silence Labeled Audio"
-msgstr "Vùng có nhãn trở thành khoảng lặng"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split labeled audio (points or regions)"
-msgstr "Đã chia vùng có nhãn"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Split Labeled Audio"
-msgstr "Đã chia vùng có nhãn"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Joined labeled audio (points or regions)"
-msgstr "Đã ghép nối vùng có nhãn"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Join Labeled Audio"
-msgstr "Đã ghép nối vùng có nhãn"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detached labeled audio regions"
-msgstr "Đã xoá vùng có nhãn"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Detach Labeled Audio"
-msgstr "Đã xoá vùng có nhãn"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Chia"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Phần chia tạo thành dải mới"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Chia mới"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Bộ phân tích tần số"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Nhập nhãn từ '%s'"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Nhập nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Chọn một tập tin MIDI..."
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Đã nhập MIDI từ '%s'"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "Nhập MIDI"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "Chọn tập tin âm thanh không nén..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "All files|*"
-msgstr "Tất cả (*)|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-#, fuzzy
-msgid "Edit Metadata Tags"
-msgstr "Sửa các thẻ Dữ liệu đặc tả"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Metadata Tags"
-msgstr "Sửa các thẻ Dữ liệu đặc tả"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "Đã diễn tả tất cả các âm thanh trên dải '%s'"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Diễn tả"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "Đã trộn và diễn tả %d dải thành một dải stereo mới"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "Đã trộn và diễn tả %d dải thành một dải mono mới"
-
-#: src/Menus.cpp src/Mix.cpp
-#, fuzzy
-msgid "Mix and Render"
-msgstr "&Trộn và Diễn tả"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Dải %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s left"
-msgstr "trái"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "%s right"
-msgstr "phải"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "start"
-msgstr "Bắt đầu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "end"
-msgstr "Kết thúc"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to zero"
-msgstr "Đã xếp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to zero"
-msgstr "Xếp tại thời điểm không"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Start"
-msgstr "Đã xếp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Start"
-msgstr "Bắt đầu vùng chọn:"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to cursor/selection start"
-msgstr "đến đầu vùn&g chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved start to selection end"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned start to selection end"
-msgstr "đến cuố&i vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Xếp tại đầu vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to cursor/selection start"
-msgstr "Xếp tại đầu vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End"
-msgstr "Đã xếp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End"
-msgstr "Xếp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to selection end"
-msgstr "Xếp đuôi tại cuối vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to selection end"
-msgstr "Xếp đuôi tại cuối vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved end to end"
-msgstr "Đã xếp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned end to end"
-msgstr "Xếp đuôi về &cuối vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move End to End"
-msgstr "Xếp đuôi về &cuối vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align End to End"
-msgstr "Xếp đuôi về &cuối vùng chọn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned/Moved together"
-msgstr "Đã xếp"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Aligned together"
-msgstr "Xếp các dải âm &cùng nhau"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align/Move Together"
-msgstr "Xếp các dải âm &cùng nhau"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Align Together"
-msgstr "Xếp các dải âm &cùng nhau"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Dải âm mới"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Tạo dải âm stereo mới"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Tạo nhãn mới cho dải"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Tạo dải thời gian mới"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Timer Recording"
-msgstr "Thu âm"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "Tên"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "Đã thêm nhãn"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "Tạo dải âm mới"
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Đã sửa nhãn"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Đã xoá bỏ dải âm"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "Xoá bỏ dải âm"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr ""
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "&Lưu..."
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save device info"
-msgstr "Không thể lưu tập tin thể loại"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Unable to save MIDI device info"
-msgstr "Không thể lưu tập tin thể loại"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "Đã thay đổi tốc độ lấy mẫu cho dải âm"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "Dải âm"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Đổi tốc độ lấy mẫu"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Tốc độ lấy mẫu mới (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "Giá trị bạn nhập không hợp lệ"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "Đang lấy mẫu lại cho dải âm %d"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Đã thay đổi tốc độ lấy mẫu cho dải âm"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "Đổi tốc độ lấy mẫu cho dải âm"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&Làm lại"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Trộn"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix and Render"
+msgstr "&Trộn và Diễn tả"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5426,7 +3178,7 @@ msgstr "Trộn và diễn tả dải âm"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Độ khuếch đại"
@@ -5443,7 +3195,7 @@ msgid "Musical Instrument"
 msgstr ""
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Cân bằng trái/phải"
@@ -5497,8 +3249,7 @@ msgstr ""
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5512,7 +3263,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -5679,6 +3430,11 @@ msgstr ""
 msgid "Show:"
 msgstr ""
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Tất"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr ""
@@ -5775,7 +3531,7 @@ msgid "Plug-in already exists"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -6044,7 +3800,7 @@ msgstr ""
 #: src/Project.cpp
 #, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
@@ -6157,15 +3913,6 @@ msgid "Created new project"
 msgstr "Tạo dự án mới"
 
 #: src/Project.cpp
-#, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Đã xoá %.2f giây tại t=%.2f"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Xoá"
-
-#: src/Project.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Dung lượng trống trên đĩa còn đủ để thu %d phút."
@@ -6233,23 +3980,6 @@ msgid "Record"
 msgstr "Thu"
 
 #: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Đã điều chỉnh độ khuếch đại"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Đã điều chỉnh cân bằng trái/phải"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "Đã xoá dải '%s'"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "Xoá bỏ dải âm"
-
-#: src/Project.cpp
 msgid "Less than 1 minute"
 msgstr ""
 
@@ -6271,6 +4001,14 @@ msgstr[1] ""
 #: src/Project.cpp
 #, c-format
 msgid "%s and %s."
+msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Bộ phân tích tần số"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
 
 #: src/Resample.cpp
@@ -6364,10 +4102,6 @@ msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr ""
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr "Không chọn"
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr ""
 
@@ -6439,7 +4173,7 @@ msgid "Edit"
 msgstr ""
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Thiết bị"
 
@@ -6468,6 +4202,7 @@ msgstr ""
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "Các Dải âm"
 
@@ -6535,7 +4270,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr ""
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Trợ giúp"
 
@@ -6659,6 +4394,11 @@ msgstr "&Nạp..."
 #: src/Tags.cpp
 msgid "Set De&fault"
 msgstr ""
+
+#: src/Tags.cpp
+#, fuzzy
+msgid "Don't show this when exporting audio"
+msgstr "Không hiện cảnh báo này nữa"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -6799,7 +4539,7 @@ msgstr ""
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Tất cả các tập tin cần thiết:\n"
 "  %s\n"
@@ -6986,6 +4726,11 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Timer Recording"
+msgstr "Thu âm"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7039,6 +4784,11 @@ msgstr ""
 #, fuzzy
 msgid "Save Project As:"
 msgstr "Lưu &như dự án mới..."
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select..."
+msgstr "Chọn"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7102,10 +4852,20 @@ msgstr "Chọn về đầu"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr ""
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 #, fuzzy
 msgid "Recording will commence in:"
 msgstr "Kết thúc thu âm"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -7126,6 +4886,10 @@ msgstr "Bộ thu âm định thời của Audacity"
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr ""
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Chọn"
 
 #: src/TrackPanel.cpp
 #, fuzzy, c-format
@@ -7154,6 +4918,13 @@ msgstr ""
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "Đồ thị âm thanh"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Dải %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7702,6 +5473,7 @@ msgid "Toolbars"
 msgstr "Công cụ"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr ""
 
@@ -7765,7 +5537,7 @@ msgstr "Trắng"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Không có gì"
 
@@ -7893,10 +5665,6 @@ msgstr "Tần số (Hz)"
 msgid "Select Tracks"
 msgstr "&Dải âm"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Chọn"
-
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -7998,6 +5766,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "Đặt tốc độ lấy mẫu"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "Kích thước"
 
@@ -8061,6 +5834,7 @@ msgid "Pan:"
 msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Dạng sóng"
 
@@ -8101,6 +5875,16 @@ msgstr ""
 #, fuzzy
 msgid "VZoom:"
 msgstr "Thu phóng"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "Thu phóng"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "Công cụ thu phóng"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8611,6 +6395,11 @@ msgid "You can only measure one track at a time."
 msgstr ""
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "Tạo dải âm mới"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8621,11 +6410,6 @@ msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "Tạo dải âm mới"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -8693,6 +6477,10 @@ msgstr "Thiết lập lại"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr ""
+
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "Trợ &giúp"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9277,6 +7065,16 @@ msgstr "Mặc đị&nh"
 msgid "Factory Presets"
 msgstr ""
 
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Import..."
+msgstr "&Nhập..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Export..."
+msgstr "&Xuất..."
+
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
 msgstr "Tuỳ chọn..."
@@ -9577,7 +7375,7 @@ msgstr "Vẽ cung"
 msgid "&Graphic"
 msgstr "EQ đồ hoạ"
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr "EQ đồ hoạ"
 
@@ -9824,6 +7622,11 @@ msgstr ""
 #: src/effects/Equalization.h
 msgid "Equalization"
 msgstr "Cân bằng tần số"
+
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "Thiết lập sẵn"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -10079,33 +7882,38 @@ msgid "&Window types"
 msgstr "Loại cửa sổ:"
 
 #: src/effects/NoiseReduction.cpp
+#, fuzzy
+msgid "Window si&ze"
+msgstr "Loại cửa sổ:"
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 #, fuzzy
 msgid "16"
 msgstr "1"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 #, fuzzy
 msgid "32"
 msgstr "2"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 #, fuzzy
 msgid "64"
 msgstr "4"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr ""
 
@@ -10118,22 +7926,21 @@ msgstr ""
 msgid "2048 (default)"
 msgstr "256 - mặc định"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "Window si&ze"
-msgstr "Loại cửa sổ:"
+msgid "S&teps per window"
+msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
@@ -10143,10 +7950,6 @@ msgstr "2"
 #, fuzzy
 msgid "4 (default)"
 msgstr "Mặc định"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -10231,6 +8034,11 @@ msgid "Analyzing first track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr ""
+
+#: src/effects/Normalize.cpp
 #, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "Đang tự uốn..."
@@ -10238,11 +8046,6 @@ msgstr "Đang tự uốn..."
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -10287,7 +8090,7 @@ msgid "Waiting for waveform to finish computing..."
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+msgid "(Maximum 0dB)"
 msgstr ""
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10767,6 +8570,10 @@ msgstr ""
 msgid "Creates audio of zero amplitude"
 msgstr ""
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Im lặng"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr ""
@@ -11108,7 +8915,7 @@ msgstr "Đang áp dụng hiệu ứng: %s"
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+msgid "This parameter file was saved from %s. Continue?"
 msgstr ""
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11150,6 +8957,7 @@ msgstr ""
 msgid "Wahwah"
 msgstr "Wahwah"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr ""
@@ -11172,19 +8980,6 @@ msgstr "Không mở được thư viện mã hoá MP3!"
 #, fuzzy
 msgid "Audio Unit Effect Options"
 msgstr "Thiết lập hiệu ứng"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "Tạo â&m"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -11210,13 +9005,26 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
 msgid "Select &interface"
 msgstr "Thiết bị đầu vào"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+msgid "Generic"
+msgstr "Tạo â&m"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
@@ -11240,11 +9048,15 @@ msgstr ""
 msgid "Location"
 msgstr "Hành động"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
-msgid "AudioUnit"
-msgstr "Tập tin âm thanh"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
+msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 #, fuzzy
 msgid "LADSPA Effects"
@@ -11276,6 +9088,9 @@ msgstr ""
 msgid "Effect Output"
 msgstr "Thiết lập hiệu ứng"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 #, fuzzy
 msgid "LADSPA"
@@ -11342,11 +9157,6 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "Đang áp dụng hiệu ứng Nyquist..."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Effects Prompt"
 msgstr "Đang áp dụng hiệu ứng Nyquist..."
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11439,7 +9249,13 @@ msgid "plug-in"
 msgstr "Đầu ra Nyquist:"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Giá trị Nyquist trả về:"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
 msgstr "Giá trị Nyquist trả về:"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -11528,6 +9344,11 @@ msgstr ""
 #, fuzzy
 msgid "&Load"
 msgstr "&Nạp..."
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "&Lưu..."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11638,6 +9459,11 @@ msgstr ""
 msgid "Export Audio"
 msgstr "Xuất tập tin"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Edit Metadata Tags"
+msgstr "Sửa các thẻ Dữ liệu đặc tả"
+
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -11695,8 +9521,8 @@ msgid ""
 msgstr ""
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "Đã tồn tại tập tin \"%s\". Có thay thế không?"
 
 #: src/export/Export.cpp
@@ -11908,19 +9734,28 @@ msgstr "Đang xuất âm thanh đã chọn ra %s"
 msgid "Invalid sample rate"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: src/export/ExportFFmpeg.cpp
-#, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
-msgstr ""
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Đổi tốc độ lấy mẫu"
 
 #: src/export/ExportFFmpeg.cpp
-#, c-format
+#, fuzzy, c-format
+msgid ""
+"The project sample rate (%d) is not supported by the current output\n"
+"file format. "
+msgstr ""
+"định dạng MP3 không hỗ trợ\n"
+"Tốc độ lấy mẫu của dự án (%d). "
+
+#: src/export/ExportFFmpeg.cpp
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
+"Định dạng MP3 không hỗ trợ\n"
+"Tốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -12267,6 +10102,8 @@ msgid ""
 "max - 8"
 msgstr ""
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr ""
@@ -12494,7 +10331,7 @@ msgid "Constant"
 msgstr "Không đổi"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Chất lượng"
 
@@ -12510,7 +10347,7 @@ msgstr "Chế độ kênh:"
 msgid "Joint Stereo"
 msgstr "Stereo chung"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Stereo"
 
@@ -12559,7 +10396,7 @@ msgstr "%s ở đâu thế?"
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 
 #: src/export/ExportMP3.cpp
@@ -12570,6 +10407,15 @@ msgid ""
 msgstr ""
 "Chỉ lame_enc.dll|lame_enc.dll|Thư viện liên kết động (*.dll)|*.dll|Mọi tập "
 "tin (*.*)|*"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr ""
+"Chỉ libmp3lame.dylib|libmp3lame.dylib|Thư viện động (*.dylib)|*.dylib|Mọi "
+"tập tin (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -12644,25 +10490,29 @@ msgid "Error %ld returned from MP3 encoder"
 msgstr "Gặp %ld lỗi khi mã hoá MP3"
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "định dạng MP3 không hỗ trợ\n"
 "Tốc độ lấy mẫu của dự án (%d). "
 
 #: src/export/ExportMP3.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "Định dạng MP3 không hỗ trợ\n"
 "Tốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
+msgstr ""
+
+#: src/export/ExportMP3.cpp
+msgid "(Built-in)"
 msgstr ""
 
 #: src/export/ExportMultiple.cpp
@@ -12849,6 +10699,23 @@ msgid "Other uncompressed files"
 msgstr ""
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "Có lỗi khi nhập"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Không xuất được dữ liệu ra định dạng này."
 
@@ -12925,11 +10792,13 @@ msgstr ""
 "Bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
 
 #: src/import/Import.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 "\"%s\" là một tập tin Advanced Audio Coding.\n"
 "Audacity không thể mở loại tập tin này.\n"
@@ -13047,6 +10916,11 @@ msgid ""
 "Data."
 msgstr ""
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -13054,6 +10928,11 @@ msgid ""
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
+msgstr ""
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
 msgstr ""
 
 #: src/import/ImportFFmpeg.cpp
@@ -13202,7 +11081,7 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13224,11 +11103,6 @@ msgstr ""
 
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
-msgstr ""
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
 msgstr ""
 
 #: src/import/ImportQT.cpp
@@ -13327,9 +11201,2562 @@ msgstr "Số lượng cần nhập:"
 msgid "Sample rate:"
 msgstr "Tốc độ lấy mẫu:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&Nhập"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr ""
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s left"
+msgstr "trái"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, fuzzy, c-format
+msgid "%s right"
+msgstr "phải"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "start"
+msgstr "Bắt đầu"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "end"
+msgstr "Kết thúc"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Time shifted clips to the left"
+msgstr "Đã dịch dải/đoạn sang %s %.02f giây"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Di chuyển mốc thời gian"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Previo&us Clip"
+msgstr "Công cụ trước"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "Công cụ trước"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "N&ext Clip"
+msgstr "Công cụ kế"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "Công cụ kế"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Prev Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Next Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Clip Rig&ht"
+msgstr "Đang Ghim"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Đã dán văn bản từ bảng kẹp tạm"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Đã dán từ bảng kẹp tạm"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Không thể huỷ bước"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Không thể làm lại"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Cắt vào bảng kẹp tạm"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "Đã xoá %.2f giây tại t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Xoá"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "Không thể chép âm thanh stereo sang dải mono."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Đã nhân đôi"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Nhân đôi"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Chia rồi cắt vào bảng kẹp tạm"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Chia và Cắt"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "Đã chia và xoá %.2f giây tại t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Chia và xoá"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Đã tạo khoảng lặng dài %.2f giây tại %.2f vào dải hiện hành"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "Đã tạo khoảng lặng dài %.2f giây tại %.2f vào dải hiện hành"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Trim Audio"
+msgstr "Đang ghi âm"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Chia"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Phần chia tạo thành dải mới"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Chia mới"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "Đã ghép nối %.2f giây tại t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Ghép nối"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Metadata Tags"
+msgstr "Sửa các thẻ Dữ liệu đặc tả"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "Chỉnh &Sửa"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Xoá"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "N&hân đôi"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr ""
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "Ch&ia và Cắt"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "Chia &và Xoá"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Tri&m Audio"
+msgstr "Thu &gọn"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "Phâ&n chia"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "Chia và tạo &mới"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "&Ghép nối"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "Sửa dữ liệu đặc tả"
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr ""
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "Xoá"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "Xoá2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Mi&xer"
+msgstr "&Trộn tiếng"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Phát lại"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "Phát lại"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "Phát lại"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Kết thúc thu âm"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Kết thúc thu âm"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Kết thúc thu âm"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "De&vice"
+msgstr "Thiết bị"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Thay đổi độ cao của âm"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Thay đổi độ cao của âm"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Đang đưa âm thanh vào bộ đệm"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Thay đổi độ cao của âm"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Full Screen (on/off)"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Đã nhập MIDI từ '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "Nhập MIDI"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export Selected Audio"
+msgstr "Xuất phầ&n chọn..."
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "labels.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Không có nhãn dải âm nào để xuất"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Tạo dải âm mới"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Tạo dải âm mới"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Nhập nhãn từ '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Nhập nhãn"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Chọn một tập tin MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Select any uncompressed audio file"
+msgstr "Chọn tập tin âm thanh không nén..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "All files|*"
+msgstr "Tất cả (*)|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Lưu mới..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Mở gần đây"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Lưu Dự án"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "Lưu &như dự án mới..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "Lưu &như dự án mới..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Save Compressed Copy of Project..."
+msgstr "Lưu &như dự án mới..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export"
+msgstr "Xuất"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as MP&3"
+msgstr "Xuất"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &WAV"
+msgstr "Xuất nhãn thành:"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as &OGG"
+msgstr "Xuất"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Export Audio..."
+msgstr "&Xuất..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Expo&rt Selected Audio..."
+msgstr "Xuất phầ&n chọn..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "Xuất &nhãn..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Xuất ra &nhiều tập tin"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "&Xuất..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "Âm t&hanh..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Nhãn..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&Dữ liệu thô..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "Thiết lập tran&g"
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&In ấn..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "Th&oát"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Đã lưu %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Không thể xoá bỏ '%s'"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "Trợ &giúp"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Getting Started"
+msgstr "Bắt đầu vùng chọn:"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Thanh công cụ %s của Audacity"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "Trợ &giúp"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Diagnostics"
+msgstr "\t-test (chạy chẩn đoán lỗi)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "&Kiểm tra phụ thuộc..."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Check for Updates..."
+msgstr "&Kiểm tra phụ thuộc..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr ""
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Cắt các vùng có nhãn vào trong bảng kẹp tạm"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Cut Labeled Audio"
+msgstr "Cắt nhãn"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Deleted labeled audio regions"
+msgstr "Đã xoá vùng có nhãn"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Delete Labeled Audio"
+msgstr "Đã xoá vùng có nhãn"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Chia Cắt vùng có nhãn vào bảng kẹp tạm"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Cut Labeled Audio"
+msgstr "Chia Cắt Nhãn"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Deleted labeled audio regions"
+msgstr "Đã Chia và Xoá vùng có nhãn"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Delete Labeled Audio"
+msgstr "Chia và Xoá Nhãn"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Silenced labeled audio regions"
+msgstr "Vùng có nhãn trở thành khoảng lặng"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Silence Labeled Audio"
+msgstr "Vùng có nhãn trở thành khoảng lặng"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Đã chép vùng có nhãn vào bảng kẹp tạm"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Copy Labeled Audio"
+msgstr "Chép Nhãn"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split labeled audio (points or regions)"
+msgstr "Đã chia vùng có nhãn"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Split Labeled Audio"
+msgstr "Đã chia vùng có nhãn"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Joined labeled audio (points or regions)"
+msgstr "Đã ghép nối vùng có nhãn"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Join Labeled Audio"
+msgstr "Đã ghép nối vùng có nhãn"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Detached labeled audio regions"
+msgstr "Đã xoá vùng có nhãn"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Detach Labeled Audio"
+msgstr "Đã xoá vùng có nhãn"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Labels"
+msgstr "Các nhãn"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Edit Labels..."
+msgstr "&Sửa nhãn"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "Thêm nhãn ở vùng chọn"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "Thêm nhãn từ vị trí &phát lại"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "La&beled Audio"
+msgstr "Đã thu âm"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&Cắt"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Chỉnh sửa nhãn"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Chia và xoá"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "Chi&a và cắt"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Chia và Cắt"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "Chia &và Xoá"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Chia và xoá"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Im lặng"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "Ché&p"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Nhãn"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "Phâ&n chia"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Chỉnh sửa nhãn"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Chỉnh sửa nhãn"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr ""
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Chuyển xuống dải dưới"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Previous Track"
+msgstr "Chuyển lên dải trên"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Next Track"
+msgstr "Chuyển xuống dải dưới"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &First Track"
+msgstr "Chuyển xuống dải dưới"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to &Last Track"
+msgstr "Chuyển xuống dải dưới"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to P&revious and Select"
+msgstr "Chuyển lên dải trên"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Focus to N&ext and Select"
+msgstr "Chuyển xuống dải dưới"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "&Toggle Focused Track"
+msgstr "Chọn/thôi chọn dải"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Toggle Focuse&d Track"
+msgstr "Chọn/thôi chọn dải"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Lặp lại %s"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy, c-format
+msgid "Plug-in %d to %d"
+msgstr "Trình bổ sung %i đến %i"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "Tạo â&m"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "&Hiệu ứng"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "&Phân tích"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Vẽ phổ tần số..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "T&ools"
+msgstr "Công cụ"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Nhãn..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "Áp dụng %s"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&Lưu..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Công cụ chụp ảnh màn hình..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Kiểm thử..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "Thu âm"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr ""
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Biến thiên"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Chọn"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Tần số (Hz)"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Chọn"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "đến đầ&u dải"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "Tuỳ thích..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "Tuỳ thích..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "Công cụ kế"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Đường bao biên độ"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Sửa nhãn"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Lưu &như dự án mới..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "&Dải âm"
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "&Lấy mẫu lại..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Trợ giúp"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Lưu &như dự án mới..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Lưu &như dự án mới..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "Chọn..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Bộ nén tiếng..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Công cụ chụp ảnh màn hình..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr ""
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Không gì hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Vùng chọn"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "&Dải âm"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Sync-Locked"
+msgstr "Chọn âm thanh"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "R&egion"
+msgstr "&Lưu vùng"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "Bên &trái vị trí phát lại"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Đặt điểm chọn và phát"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "Bên &phải vị trí phát lại"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "Đặt điểm chọn và phát"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "Từ đầu đến c&on trỏ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "Từ đầu đến c&on trỏ"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "Con &trỏ đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "Con &trỏ đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "Từ đầu đến c&on trỏ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Chọn đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&tore Selection"
+msgstr "Vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Retrieve Selectio&n"
+msgstr "Vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "S&pectral"
+msgstr "Phổ"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "Tần số (Hz)"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "Tần số tuyến tính"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Chọn về đầu"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "At &Zero Crossings"
+msgstr "Tìm điểm biên độ bằng &không"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "Tìm điểm biên độ bằng &không"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Selection"
+msgstr "Vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "Tắt chế độ dính"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "Bật chế độ dính"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "Dính tới"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to &Start"
+msgstr "Chọn về đầu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection to En&d"
+msgstr "Chọn đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Left"
+msgstr "Vùng chọn nới sang trái"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Extend &Right"
+msgstr "Vùng chọn nới sang phải"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "Đặt (hoặc Nới) Vùng chọn sang trái"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Đặt (hoặc Nới) Vùng chọn sang phải"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract L&eft"
+msgstr "Co bên trái Vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Contract R&ight"
+msgstr "Co bên phải vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor to"
+msgstr "Con trỏ sang trái"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Selection Star&t"
+msgstr "Bắt đầu vùng chọn:"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection En&d"
+msgstr "Kết thúc vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "đến cuố&i vùng chọn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &Start"
+msgstr "đến đầ&u dải"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "Con &trỏ đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track &End"
+msgstr "đến &cuối dải"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "Con &trỏ đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Project Start"
+msgstr "Tần số của dự án (Hz):"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "Tần số của dự án (Hz):"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Project E&nd"
+msgstr "Tính phụ thuộc của dự án"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "Con &trỏ đến hết"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "&Cursor"
+msgstr "Con trỏ sang trái"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Left"
+msgstr "Con trỏ sang trái"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor &Right"
+msgstr "Con trỏ sang phải"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Sh&ort Jump Left"
+msgstr "Con trỏ sang trái đoạn ngắn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Shor&t Jump Right"
+msgstr "Con trỏ sang phải đoạn ngắn"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long J&ump Left"
+msgstr "Con trỏ sang trái đoạn dài"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor Long Ju&mp Right"
+msgstr "Con trỏ sang phải đoạn dài"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr ""
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr ""
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Reset Toolb&ars"
+msgstr "Thiết &lập lại"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "&Công cụ"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Recording Meter Toolbar"
+msgstr "Bộ đo thu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Playback Meter Toolbar"
+msgstr "Bộ đo phát"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "&Trộn tiếng"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "Chỉnh &sửa"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Tốc độ phát"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Scru&b Toolbar"
+msgstr "Chỉnh &sửa"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "&Thiết bị"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "&Vùng chọn"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Spe&ctral Selection Toolbar"
+msgstr "&Vùng chọn"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Selection Tool"
+msgstr "Công cụ chọn"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Envelope Tool"
+msgstr "Công cụ biên độ"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Draw Tool"
+msgstr "Công cụ vẽ"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Zoom Tool"
+msgstr "Công cụ thu phóng"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Time Shift Tool"
+msgstr "Công cụ di chuyển"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Multi Tool"
+msgstr "Đa năng"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Previous Tool"
+msgstr "Công cụ trước"
+
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "&Next Tool"
+msgstr "Công cụ kế"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "Đã diễn tả tất cả các âm thanh trên dải '%s'"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Diễn tả"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "Đã trộn và diễn tả %d dải thành một dải stereo mới"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "Đã trộn và diễn tả %d dải thành một dải mono mới"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Đã thay đổi tốc độ lấy mẫu cho dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Zero"
+msgstr "Từ đầu đến c&on trỏ"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to &Cursor/Selection Start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Start to Selection &End"
+msgstr "đến cuố&i vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Cu&rsor/Selection Start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "End to Selection En&d"
+msgstr "đến cuố&i vùng chọn"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to zero"
+msgstr "Đã xếp"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to zero"
+msgstr "Xếp tại thời điểm không"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "Đã xếp"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "Bắt đầu vùng chọn:"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to cursor/selection start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
+msgstr "đến cuố&i vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned start to selection end"
+msgstr "đến cuố&i vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Xếp tại đầu vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "Xếp tại đầu vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End"
+msgstr "Đã xếp"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End"
+msgstr "Xếp"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to selection end"
+msgstr "Xếp đuôi tại cuối vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to selection end"
+msgstr "Xếp đuôi tại cuối vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "Đã xếp"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "Xếp đuôi về &cuối vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "Xếp đuôi về &cuối vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "Xếp đuôi về &cuối vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "Đã xếp"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "Xếp các dải âm &cùng nhau"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "Xếp các dải âm &cùng nhau"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "Xếp các dải âm &cùng nhau"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Đã điều chỉnh độ khuếch đại"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Đã điều chỉnh cân bằng trái/phải"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Đã xoá bỏ dải âm"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "Xoá bỏ dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "Đã xoá dải '%s'"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "Xoá bỏ dải âm"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "Đã di chuyển '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "Đưa dải lên trên"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "Chuyển dải xuống dưới"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "Chuyển dải xuống dưới"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "Đã di chuyển '%s' %s"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "Đã di chuyển '%s' %s"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "Đưa dải lên trên"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "Chuyển dải xuống dưới"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Tạo dải âm mới"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Dải âm mới"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Tạo dải âm stereo mới"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Tạo nhãn mới cho dải"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Tạo dải thời gian mới"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Tốc độ lấy mẫu mới (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "Giá trị bạn nhập không hợp lệ"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "Đang lấy mẫu lại cho dải âm %d"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Đã thay đổi tốc độ lấy mẫu cho dải âm"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "Đổi tốc độ lấy mẫu cho dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Tạo dải âm mới"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Sắp xếp dải âm theo thời gian"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Sort by Time"
+msgstr "Sắp xếp theo thời gian"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "Sắp xếp dải âm theo tên"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Sort by Name"
+msgstr "Sắp xếp theo tên"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Không thể xoá dải âm đang hoạt động"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "Di chuyển dải âm"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "Dải &stereo"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&Nhãn cho dải âm"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "Dải &thời gian"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "Chuyển Stereo thành Mono"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "Trộn và &Diễn tả"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix and Render to Ne&w Track"
+msgstr "Trộn và Diễn tả sang Dải mới"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "&Lấy mẫu lại..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "&Xoá Dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute"
+msgstr "Tắt/bật âm thanh của dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "&Tắt tiếng mọi dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Unmute All Tracks"
+msgstr "&Bật tiếng mọi dải âm"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Left"
+msgstr "Trái"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Trái"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Right"
+msgstr "Phải"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Phải"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Center"
+msgstr "Giữa"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Giữa"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Align End to End"
+msgstr "Xếp đuôi về &cuối vùng chọn"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Align &Together"
+msgstr "Xếp các dải âm &cùng nhau"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "Đã di chuyển đoạn âm thanh tới dải khác"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Sele&ction and Tracks"
+msgstr "Đã di chuyển đoạn âm thanh tới dải khác"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "S&ort Tracks"
+msgstr "&Dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "Thời gian bắt đầu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "Tên"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr ""
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Track"
+msgstr "&Dải âm"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "Thay đổi cân bằng trái/phải của dải"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "Dịch cân bằng sang trái"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "Dịch cân bằng sang phải"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "Thay đổi độ khuếch đại"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "Tăng độ khuếch đại biên độ"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "Giảm độ khuếch đại"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "Mở trình đơn trên dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "Tắt/bật âm thanh của dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "Bật/tắt chế độ Solo của dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "Đóng dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "Đóng dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "Đóng dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "Đóng dải hiện hành"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "Chuyển dải xuống dưới"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no label track"
+msgstr "Tạo nhãn mới cho dải"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no label track at or below focused track"
+msgstr "Dịch cân bằng sang trái"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "no labels in label track"
+msgstr "Tạo nhãn mới cho dải"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Tạo dải âm mới"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Tạo dải âm mới"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Tạo dải âm mới"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Tạo dải âm mới"
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Tốc độ phát"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Phát"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play/Stop and &Set Cursor"
+msgstr "Phát/Dừng và đặt con trỏ"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Thu âm"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Append Record"
+msgstr "Thu"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Record &New Track"
+msgstr "&Xoá Dải âm"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&Khoá"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&Mở khoá"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Transport &Options"
+msgstr "Tốc độ phát"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr ""
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr ""
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &One Second"
+msgstr "Phát đúng 1 giây"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "Phát đến vùng chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play &Before Selection Start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Af&ter Selection Start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Be&fore Selection End"
+msgstr "Phát đến vùng chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Aft&er Selection End"
+msgstr "đến cuố&i vùng chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before a&nd After Selection Start"
+msgstr "Xếp đuôi về đầ&u vùng chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play Before an&d After Selection End"
+msgstr "đến cuố&i vùng chọn"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview"
+msgstr "Phát Cắt Xem trước"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Tốc độ phát"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Tốc độ phát"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Loop Play-at-Speed"
+msgstr "Tốc độ phát"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Phát Cắt Xem trước"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Phát lại"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Phát lại"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "Phát lại"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Previous Label"
+msgstr "Chuyển lên dải trên"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Move to &Next Label"
+msgstr "Chuyển xuống dải dưới"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Xem"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Zoom"
+msgstr "Thu phóng"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "Phóng &To"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "Đúng &Cỡ"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "Thu &Nhỏ"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "Vừ&a vùng chọn"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Zoom &Toggle"
+msgstr "Công cụ thu phóng"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Tuỳ chọn nâng cao cho bộ Trộn"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "T&rack Size"
+msgstr "Tên bài hát"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Fit to Width"
+msgstr "&Vừa cửa sổ"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "&Gộp các dải âm lại"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "E&xpand Collapsed Tracks"
+msgstr "&Bung các dải âm ra"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Sk&ip to"
+msgstr "Chuyển về cuối"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Selection Sta&rt"
+msgstr "Bắt đầu vùng chọn:"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "đến đầu vùn&g chọn"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "đến cuố&i vùng chọn"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "Đã &làm..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "&Show Clipping (on/off)"
+msgstr "Hiện &ghim tín hiệu"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr ""
+
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "&Window"
+msgstr "cửa sổ"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr ""
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr ""
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "&Chuẩn hoá mọi dải âm trong dự án"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13341,12 +13768,17 @@ msgstr ""
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 
-#: src/prefs/BatchPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Lệnh Gộp"
+
+#: src/prefs/BatchPrefs.cpp
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13359,6 +13791,11 @@ msgstr "Không áp &dụng hiệu ứng trong chế độ lệnh gộp"
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr ""
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "Tuỳ thích..."
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13375,7 +13812,7 @@ msgid "Using:"
 msgstr "Dùng:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Phát lại"
 
@@ -13385,7 +13822,8 @@ msgid "&Device:"
 msgstr "Thiết bị"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Thu âm"
 
@@ -13435,9 +13873,13 @@ msgid "2 (Stereo)"
 msgstr "2 (Stereo)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Thư mục"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Preferences for Directories"
+msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13512,11 +13954,47 @@ msgid "Temp Directory Update"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "Tuỳ thích..."
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "&Hiệu ứng"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "Nyquist"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Vamp"
+msgstr ""
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -13579,6 +14057,11 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13647,6 +14130,16 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "Nhập"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -13763,9 +14256,17 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "Nhập / Xuất"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -13817,10 +14318,19 @@ msgstr "giây"
 msgid "&Beats"
 msgstr "Lặp lại"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Bàn phím"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -13941,11 +14451,22 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "Tổ hợp phím"
+
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Tuỳ thích..."
+
+#: src/prefs/LibraryPrefs.cpp
+#, fuzzy
+msgid "LAME MP3 Export Library"
 msgstr "Thư viện mã hoá MP3"
 
 #: src/prefs/LibraryPrefs.cpp
@@ -13953,16 +14474,12 @@ msgid "MP3 Library Version:"
 msgstr "Thư viện MP3 phiên bản:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
-msgstr "Thư viện MP3:"
+msgid "LAME MP3 Library:"
+msgstr "Thư viện LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
 msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Thư viện LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -14002,10 +14519,20 @@ msgid ""
 "Do you still want to locate them manually?"
 msgstr ""
 
+#: src/prefs/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Thư viện MP3:"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr ""
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -14023,18 +14550,18 @@ msgstr ""
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
-msgid "Ask"
-msgstr "Hỏi tôi trước"
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr ""
+msgid "Preferences for Module"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -14064,16 +14591,34 @@ msgstr ""
 "Việc chuyển đổi thư mục tạm thời sẽ có hiệu lực từ lần chạy sau của Audacity"
 
 #: src/prefs/ModulePrefs.cpp
+#, fuzzy
+msgid "Ask"
+msgstr "Hỏi tôi trước"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
+msgstr ""
+
+#: src/prefs/ModulePrefs.h
+msgid "Module"
 msgstr ""
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr ""
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Chuột"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14283,6 +14828,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Dạng sóng (dB)"
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "Tuỳ thích..."
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr "Nghe thử hiệu ứng"
 
@@ -14323,6 +14873,10 @@ msgid "&Vari-Speed Play"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
 msgstr ""
 
@@ -14339,9 +14893,14 @@ msgid "Preferences: "
 msgstr ""
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr ""
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "Phục hồi dự án"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14381,6 +14940,11 @@ msgstr "Tam giác"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "Có hình dạng"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14427,6 +14991,11 @@ msgstr "Bộ chuyển đổi tốc độ lấy mẫu"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -14610,17 +15179,9 @@ msgid "Spectrograms"
 msgstr "Ảnh phổ"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr "8 - hầu hết băng rộng"
-
-#: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
-msgid "1024 - default"
-msgstr "256 - mặc định"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr "32768 - hầu hết băng hẹp"
+msgid "Preferences for Spectrum"
+msgstr "Tuỳ thích..."
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14676,6 +15237,23 @@ msgstr "Thuật toán:"
 #, fuzzy
 msgid "Window &size:"
 msgstr "Loại cửa sổ:"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr "8 - hầu hết băng rộng"
+
+#: src/prefs/SpectrumPrefs.cpp
+#, fuzzy
+msgid "1024 - default"
+msgstr "256 - mặc định"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
+msgstr "32768 - hầu hết băng hẹp"
 
 #: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
@@ -14762,9 +15340,14 @@ msgstr ""
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr "Sắc thái giao diện"
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -14803,7 +15386,7 @@ msgstr ""
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 
@@ -14841,9 +15424,14 @@ msgid "Load Files"
 msgstr "Nạp tập tin"
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 #, fuzzy
 msgid "Tracks Behaviors"
+msgstr "Hành vi"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Preferences for TracksBehaviors"
 msgstr "Hành vi"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14856,8 +15444,9 @@ msgid "Multi-track"
 msgstr "Nhiều"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
-msgstr ""
+#, fuzzy
+msgid "&Select all audio, if selection required"
+msgstr "Xếp tại cuối vùng chọn"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14980,9 +15569,15 @@ msgid "4 Pixels per Sample"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Max Zoom"
 msgstr "Thu phóng"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -15042,9 +15637,14 @@ msgstr "Thiết lập sẵn"
 msgid "Preset 2:"
 msgstr "Thiết lập sẵn"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr ""
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -15083,6 +15683,11 @@ msgstr ""
 #, fuzzy
 msgid "Waveforms"
 msgstr "Dạng sóng"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "Tuỳ thích..."
 
 #: src/prefs/WaveformPrefs.cpp
 #, fuzzy
@@ -15426,9 +16031,9 @@ msgstr ""
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
-msgstr ""
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
+msgstr "Chọn một tập tin MIDI..."
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -15542,11 +16147,13 @@ msgid "Face size"
 msgstr "Kích thước"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Up &Octave"
 msgstr "Tăng 1 bát độ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Down Octa&ve"
 msgstr "Giảm 1 bát độ"
@@ -15812,7 +16419,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -16095,6 +16702,20 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "&Lệnh"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "&Dải âm"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
 msgid "Open menu..."
 msgstr "&Mở..."
 
@@ -16260,6 +16881,49 @@ msgstr "Lùi"
 msgid "Help on the Internet"
 msgstr "Trợ giúp từ Internet"
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "Bạn có muốn lưu các thay đổi không?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Trộn"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "Tập tin QuickTime"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Không thể huỷ bước"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "Đóng dải hiện hành"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "Không mở được tập tin dự án"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Bắt đầu thu âm"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
@@ -16387,7 +17051,7 @@ msgstr ""
 msgid "Show Log for Details"
 msgstr ""
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr ""
 
@@ -16740,131 +17404,6 @@ msgstr "Bạn chắc mình muốn xoá %s chứ?"
 msgid "Confirm Close"
 msgstr "Xác nhận"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Click và rê chuột để điều chỉnh kích cỡ tương đối của dải âm stereo."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "Kết thúc thu âm"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Seek"
-msgstr "Nhấn và rê chuột để chỉnh sửa các mẫu"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Scrub"
-msgstr "Click và rê chuột để điều chỉnh kích cỡ dải âm."
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Quick-Play disabled"
-msgstr " (không cho)"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to unpin"
-msgstr "Dừng đo"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to pin"
-msgstr "Nhảy về đầu"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable dragging selection"
-msgstr "Thay vùng chọn bằng khoảng lặng"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable dragging selection"
-msgstr "Cho phép &rê cạnh trái và phải của vùng chọn"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Do not scroll while playing"
-msgstr "Cập nhật giao diện &khi đang phát"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Update display while playing"
-msgstr "Cập nhật giao diện &khi đang phát"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable Scrub Ruler"
-msgstr "Tắt bộ đo"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable Scrub Ruler"
-msgstr "Bật bộ đo"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Không hiện cảnh báo này nữa"
@@ -16976,10 +17515,11 @@ msgstr ""
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -17281,6 +17821,11 @@ msgid "S-Curve Out"
 msgstr "Chuyển &xuống dưới"
 
 #: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Lỗi"
+
+#: plug-ins/adjustable-fade.ny
 #, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr ""
@@ -17295,13 +17840,8 @@ msgstr ""
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "Lỗi"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17488,31 +18028,6 @@ msgstr "Số lần lặp lại:"
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "Lỗi"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17521,9 +18036,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Chia tập tin dựa trên:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Chỉnh sửa nhãn"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17543,6 +18065,11 @@ msgstr "Số lần lặp lại:"
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "Độ dài (giây)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "Độ dài (giây)"
 
 #: plug-ins/equalabel.ny
@@ -17588,6 +18115,47 @@ msgstr ""
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "Tổ hợp phím"
+
+#: plug-ins/equalabel.ny
+msgid "Details"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "Cảnh báo"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Ghép nối nhãn"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Ghép nối nhãn"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~aRegion length = ~a seconds."
 msgstr ""
 
 #: plug-ins/highpass.ny
@@ -17742,6 +18310,53 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "Đầu ra Nyquist:"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "Chọn một tập tin MIDI..."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Lỗi (có thể chưa ghi tập tin): %s"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr ""
 
 #: plug-ins/pluck.ny
@@ -17943,16 +18558,6 @@ msgstr ""
 #, fuzzy
 msgid "Amplitude (0 - 1)"
 msgstr "Biên độ (0-1)"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "Trái"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "Phải"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
@@ -18633,6 +19238,37 @@ msgstr "Tần số (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "false"
+#~ msgstr "Không chọn"
+
+#, fuzzy
+#~ msgid "AudioUnit"
+#~ msgstr "Tập tin âm thanh"
+
+#, fuzzy
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Đang áp dụng hiệu ứng Nyquist..."
+
+#, fuzzy
+#~ msgid "Unable to save device info"
+#~ msgstr "Không thể lưu tập tin thể loại"
+
+#, fuzzy
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "Không thể lưu tập tin thể loại"
+
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "Lỗi"
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "Trái"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "Phải"
+
 #~ msgid "Latency problem"
 #~ msgstr "Lỗi do trễ thời gian"
 
@@ -19068,9 +19704,6 @@ msgstr ""
 #~ msgid "Version"
 #~ msgstr "Đang đảo ngược"
 
-#~ msgid "Key Combination"
-#~ msgstr "Tổ hợp phím"
-
 #~ msgid ""
 #~ "The keyboard shortcut '%s' is already assigned to:\n"
 #~ "\n"
@@ -19131,10 +19764,6 @@ msgstr ""
 
 #~ msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
 #~ msgstr "Tự chọn chế độ trộn (vd để x&uất ra tập tin hỗ trợ âm thanh 5.1)"
-
-#, fuzzy
-#~ msgid "Device:"
-#~ msgstr "Thiết bị"
 
 #, fuzzy
 #~ msgid "&Length of preview:"
@@ -19223,10 +19852,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "R&ight Channel"
 #~ msgstr "Kênh phải"
-
-#, fuzzy
-#~ msgid "&Rate"
-#~ msgstr "Đặt tốc độ lấy mẫu"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"
@@ -19800,9 +20425,6 @@ msgstr ""
 
 #~ msgid "Silence Labels"
 #~ msgstr "Nhãn thành khoảng lặng"
-
-#~ msgid "Join Labels"
-#~ msgstr "Ghép nối nhãn"
 
 #~ msgid "Edit the metadata tags"
 #~ msgstr "Sửa các thẻ dữ liệu đặc tả"

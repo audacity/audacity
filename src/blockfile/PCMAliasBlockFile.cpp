@@ -13,7 +13,7 @@
 
 #include <wx/file.h>
 #include <wx/utils.h>
-#include <wx/wxchar.h>
+#include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 
 #include <sndfile.h>
@@ -142,7 +142,7 @@ BlockFilePtr PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
       if (!wxStricmp(attr, wxT("summaryfile")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
             XMLValueChecker::IsGoodFileString(strValue) &&
-            (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
+            (strValue.length() + 1 + dm.GetProjectDataDir().length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(summaryFileName, strValue, false))
             // Make sure summaryFileName is back to uninitialized state so we can detect problem later.

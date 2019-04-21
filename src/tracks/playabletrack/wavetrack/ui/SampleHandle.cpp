@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Audacity.h"
 #include "SampleHandle.h"
+
 #include "../../../../Experimental.h"
 
 #include <algorithm>
@@ -115,7 +116,9 @@ UIHandlePtr SampleHandle::HitTest
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   WaveTrack *wavetrack = pTrack.get();
+   /// method that tells us if the mouse event landed on an
+   /// editable sample
+   const auto wavetrack = pTrack.get();
 
    const int displayType = wavetrack->GetDisplay();
    if (WaveTrack::Waveform != displayType)
@@ -173,12 +176,8 @@ namespace {
    ///  @return true if we can edit the samples, false otherwise.
    bool IsSampleEditingPossible
       (const wxMouseEvent &event,
-       const wxRect &rect, const ViewInfo &viewInfo, Track *pTrack, int width)
+       const wxRect &rect, const ViewInfo &viewInfo, WaveTrack *wt, int width)
    {
-      if (pTrack->GetKind() != Track::Wave)
-         return false;
-      WaveTrack *wt = static_cast<WaveTrack*>(pTrack);
-
       //Get out of here if we shouldn't be drawing right now:
       //If we aren't displaying the waveform, Display a message dialog
       const int display = wt->GetDisplay();

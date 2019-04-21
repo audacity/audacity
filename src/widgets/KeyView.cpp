@@ -12,7 +12,9 @@
 *//*********************************************************************/
 
 #include "../Audacity.h"
+#include "KeyView.h"
 
+#include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/settings.h>
 #include <wx/vlbox.h>
@@ -21,10 +23,111 @@
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
 #include "../commands/Keyboard.h"
-#include "KeyView.h"
 
 #include <wx/dc.h>
+#include <wx/menu.h>
 #include "../Internat.h"
+
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+
+// ----------------------------------------------------------------------------
+// KeyViewAx
+//
+// wxAccessible object providing information for KeyView.
+// ----------------------------------------------------------------------------
+
+class KeyViewAx final : public WindowAccessible
+{
+public:
+
+   KeyViewAx(KeyView *view);
+
+   void SetCurrentLine(int row);
+   void ListUpdated();
+   bool LineToId(int line, int & childId);
+   bool IdToLine(int childId, int & line);
+
+   // Can return either a child object, or an integer
+   // representing the child element, starting from 1.
+   wxAccStatus HitTest(const wxPoint & pt, int *childId, wxAccessible **childObject) override;
+
+   // Retrieves the address of an IDispatch interface for the specified child.
+   // All objects must support this property.
+   wxAccStatus GetChild(int childId, wxAccessible **child) override;
+
+   // Gets the number of children.
+   wxAccStatus GetChildCount(int *childCount) override;
+
+   // Gets the default action for this object (0) or > 0 (the action for a child).
+   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
+   // string if there is no action.
+   // The retrieved string describes the action that is performed on an object,
+   // not what the object does as a result. For example, a toolbar button that prints
+   // a document has a default action of "Press" rather than "Prints the current document."
+   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
+
+   // Returns the description for this object or a child.
+   wxAccStatus GetDescription(int childId, wxString *description) override;
+
+   // Gets the window with the keyboard focus.
+   // If childId is 0 and child is NULL, no object in
+   // this subhierarchy has the focus.
+   // If this object has the focus, child should be 'this'.
+   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
+
+   // Returns help text for this object or a child, similar to tooltip text.
+   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
+
+   // Returns the keyboard shortcut for this object or child.
+   // Return e.g. ALT+K
+   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
+
+   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
+   // rect is in screen coordinates.
+   wxAccStatus GetLocation(wxRect & rect, int elementId) override;
+
+   // Navigates from fromId to toId/toObject.
+   wxAccStatus Navigate(wxNavDir navDir, int fromId,
+                                int *toId, wxAccessible **toObject) override;
+
+   // Gets the name of the specified object.
+   wxAccStatus GetName(int childId, wxString *name) override;
+
+   // Gets the parent, or NULL.
+   wxAccStatus GetParent(wxAccessible **parent) override;
+
+   // Returns a role constant.
+   wxAccStatus GetRole(int childId, wxAccRole *role) override;
+
+   // Gets a variant representing the selected children
+   // of this object.
+   // Acceptable values:
+   // - a null variant (IsNull() returns TRUE)
+   // - a list variant (GetType() == wxT("list"))
+   // - an integer representing the selected child element,
+   //   or 0 if this object is selected (GetType() == wxT("long"))
+   // - a "void*" pointer to a wxAccessible child object
+   wxAccStatus GetSelections(wxVariant *selections) override;
+
+   // Returns a state constant.
+   wxAccStatus GetState(int childId, long *state) override;
+
+   // Returns a localized string representing the value for the object
+   // or child.
+   wxAccStatus GetValue(int childId, wxString *strValue) override;
+
+#if defined(__WXMAC__)
+   // Selects the object or child.
+   wxAccStatus Select(int childId, wxAccSelectionFlags selectFlags) override;
+#endif
+
+private:
+   KeyView *mView;
+   int mLastId;
+};
+
+#endif
 
 // Various drawing constants
 #define KV_BITMAP_SIZE 16
@@ -130,7 +233,7 @@ KeyView::GetFullLabel(int index) const
    wxString label = node.label;
 
    // Prepend the prefix if available
-   if (!node.prefix.IsEmpty())
+   if (!node.prefix.empty())
    {
       label = node.prefix + wxT(" - ") + label;
    }
@@ -142,7 +245,7 @@ KeyView::GetFullLabel(int index) const
 // Returns the index for the given name
 //
 int
-KeyView::GetIndexByName(const wxString & name) const
+KeyView::GetIndexByName(const CommandID & name) const
 {
    int cnt = (int) mNodes.size();
 
@@ -161,14 +264,14 @@ KeyView::GetIndexByName(const wxString & name) const
 //
 // Returns the command manager name for the given index
 //
-wxString
+CommandID
 KeyView::GetName(int index) const
 {
    // Make sure index is valid
    if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
-      return wxEmptyString;
+      return {};
    }
 
    return mNodes[index].name;
@@ -177,7 +280,7 @@ KeyView::GetName(int index) const
 //
 // Returns the command manager index for the given key combination
 //
-wxString
+CommandID
 KeyView::GetNameByKey(const NormalizedKeyString & key) const
 {
    int cnt = (int) mNodes.size();
@@ -191,7 +294,7 @@ KeyView::GetNameByKey(const NormalizedKeyString & key) const
       }
    }
 
-   return wxEmptyString;
+   return {};
 }
 
 //
@@ -292,7 +395,7 @@ KeyView::SetKey(int index, const NormalizedKeyString & key)
 // Sets the key for the given name
 //
 bool
-KeyView::SetKeyByName(const wxString & name, const NormalizedKeyString & key)
+KeyView::SetKeyByName(const CommandID & name, const NormalizedKeyString & key)
 {
    int index = GetIndexByName(name);
 
@@ -462,7 +565,7 @@ KeyView::RecalcExtents()
 
          // Prepend prefix for view types other than tree
          wxString label = node.label;
-         if (mViewType != ViewByTree && !node.prefix.IsEmpty())
+         if (mViewType != ViewByTree && !node.prefix.empty())
          {
             label = node.prefix + wxT(" - ") + label;
          }
@@ -518,7 +621,7 @@ KeyView::UpdateHScroll()
 // Process a NEW set of bindings
 //
 void
-KeyView::RefreshBindings(const wxArrayString & names,
+KeyView::RefreshBindings(const CommandIDs & names,
                          const wxArrayString & categories,
                          const wxArrayString & prefixes,
                          const wxArrayString & labels,
@@ -542,10 +645,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
    bool inpfx = false;
 
    // Examine all names...all arrays passed have the same indexes
-   int cnt = (int) names.GetCount();
+   int cnt = (int) names.size();
    for (int i = 0; i < cnt; i++)
    {
-      wxString name = names[i];
+      auto name = names[i];
       int x, y;
 
       // Remove any menu code from the category and prefix
@@ -582,12 +685,12 @@ KeyView::RefreshBindings(const wxArrayString & names,
          lastcat = cat;
 
          // Add a NEW category node
-         if (cat != wxEmptyString)
+         if (!cat.empty())
          {
             KeyNode node;
 
             // Fill in the node info
-            node.name = wxEmptyString;    // don't associate branches with a command
+            node.name = CommandID{};    // don't associate branches with a command
             node.category = cat;
             node.prefix = pfx;
             node.label = cat;
@@ -622,12 +725,12 @@ KeyView::RefreshBindings(const wxArrayString & names,
          lastpfx = pfx;
 
          // Add a NEW prefix node
-         if (pfx != wxEmptyString)
+         if (!pfx.empty())
          {
             KeyNode node;
 
             // Fill in the node info
-            node.name = wxEmptyString;    // don't associate branches with a command
+            node.name = CommandID{};    // don't associate branches with a command
             node.category = cat;
             node.prefix = pfx;
             node.label = pfx;
@@ -682,7 +785,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
       // Prepend prefix for all view types to determine maximum
       // column widths
       wxString label = node.label;
-      if (!node.prefix.IsEmpty())
+      if (!node.prefix.empty())
       {
          label = node.prefix + wxT(" - ") + label;
       }
@@ -695,7 +798,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
 
 #if 0
    // For debugging
-   for (int j = 0; j < mNodes.GetCount(); j++)
+   for (int j = 0; j < mNodes.size(); j++)
    {
       KeyNode & node = mNodes[j];
       wxLogDebug(wxT("NODE line %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d name %s STR %s | %s | %s"),
@@ -737,7 +840,7 @@ KeyView::RefreshLines(bool bSort)
    mLines.clear();
 
    // Process a filter if one is set
-   if (!mFilter.IsEmpty())
+   if (!mFilter.empty())
    {
       // Examine all nodes
       for (int i = 0; i < cnt; i++)
@@ -778,11 +881,11 @@ KeyView::RefreshLines(bool bSort)
          // For the Key View, if the filter is a single character,
          // then it has to be the last character in the searchit string,
          // and be preceded by nothing or +.
-         if ((mViewType == ViewByKey) && 
-               (mFilter.Len() == 1) && 
-               (!mFilter.IsSameAs(searchit.Last()) ||
-                  ((searchit.Len() > 1) && 
-                     ((wxString)(searchit.GetChar(searchit.Len() - 2)) != wxT("+")))))
+         if ((mViewType == ViewByKey) &&
+               (mFilter.length() == 1) &&
+               (mFilter != searchit.Last() ||
+                  ((searchit.length() > 1) &&
+                     ((wxString)(searchit.GetChar(searchit.length() - 2)) != wxT("+")))))
          {
             // Not suitable so continue to next node
             continue;
@@ -918,7 +1021,7 @@ KeyView::RefreshLines(bool bSort)
    if( bSort )
    {
       //To see how many lines are being sorted (and how often).
-      //wxLogDebug("Sorting %i lines for type %i", mLines.GetCount(), mViewType);
+      //wxLogDebug("Sorting %i lines for type %i", mLines.size(), mViewType);
 
       // Speed up the comparison function used in sorting
       // by only translating this string once.
@@ -949,7 +1052,7 @@ KeyView::RefreshLines(bool bSort)
 
 #if 0
    // For debugging
-   for (int j = 0; j < mLines.GetCount(); j++)
+   for (int j = 0; j < mLines.size(); j++)
    {
       KeyNode & node = *mLines[j];
       wxLogDebug(wxT("LINE line %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d name %s STR %s | %s | %s"),
@@ -1102,9 +1205,9 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
    {
       // Non-selected lines get a thin bottom border
       dc.SetPen(wxColour(240, 240, 240));
-      dc.DrawLine(r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetBottom());
+      AColor::Line(dc, r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetBottom());
       if (mViewType == ViewByTree )
-         dc.DrawLine(r2.GetLeft(), r2.GetBottom(), r2.GetRight(), r2.GetBottom());
+         AColor::Line(dc, r2.GetLeft(), r2.GetBottom(), r2.GetRight(), r2.GetBottom());
    }
 }
 
@@ -1175,7 +1278,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       wxCoord x = rect.x + KV_LEFT_MARGIN - mScrollX;
 
       // Prepend prefix if available
-      if (!node->prefix.IsEmpty())
+      if (!node->prefix.empty())
       {
          label = node->prefix + wxT(" - ") + label;
       }
@@ -1230,18 +1333,32 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    // Allow further processing
    event.Skip();
 
-   // Refresh the selected line to pull in any changes while
-   // focus was away...like when setting a NEW key value.  This
-   // will also refresh the visual (highlighted) state.
    if (GetSelection() != wxNOT_FOUND)
    {
+      // Refresh the selected line to pull in any changes while
+      // focus was away...like when setting a NEW key value.  This
+      // will also refresh the visual (highlighted) state.
 	   RefreshRow(GetSelection());
-   }
-
 #if wxUSE_ACCESSIBILITY
-   // Tell accessibility of the change
-   mAx->SetCurrentLine(GetSelection());
+      // Tell accessibility of the change
+      mAx->SetCurrentLine(GetSelection());
 #endif
+   }
+   else
+   {
+      if (mLines.size() > 0)
+      {
+         // if no selection, select first line, if there is one
+         SelectNode(LineToIndex(0));
+      }
+      else
+      {
+#if wxUSE_ACCESSIBILITY
+         // Tell accessibility, since there may have been a change
+         mAx->SetCurrentLine(wxNOT_FOUND);
+#endif
+      }
+   }
 }
 
 //
@@ -1599,13 +1716,13 @@ KeyView::CmpKeyNodeByName(KeyNode *t1, KeyNode *t2)
    wxString k2 = t2->label;
 
    // Prepend prefix if available
-   if (!t1->prefix.IsEmpty())
+   if (!t1->prefix.empty())
    {
       k1 = t1->prefix + wxT(" - ") + k1;
    }
 
    // Prepend prefix if available
-   if (!t2->prefix.IsEmpty())
+   if (!t2->prefix.empty())
    {
       k2 = t2->prefix + wxT(" - ") + k2;
    }
@@ -1633,25 +1750,25 @@ KeyView::CmpKeyNodeByKey(KeyNode *t1, KeyNode *t2)
    wxString k2 = t2->key.Display();
 
    // Left node is unassigned, so prefix it
-   if(k1.IsEmpty())
+   if(k1.empty())
    {
       k1 = wxT("\xff");
    }
 
    // Right node is unassigned, so prefix it
-   if(k2.IsEmpty())
+   if(k2.empty())
    {
       k2 = wxT("\xff");
    }
 
    // Add prefix if available
-   if (!t1->prefix.IsEmpty())
+   if (!t1->prefix.empty())
    {
       k1 += t1->prefix + wxT(" - ");
    }
 
    // Add prefix if available
-   if (!t2->prefix.IsEmpty())
+   if (!t2->prefix.empty())
    {
       k2 += t2->prefix + wxT(" - ");
    }
@@ -1742,7 +1859,7 @@ KeyView::GetValue(int line)
    wxString key = GetKey(index).Display();
 
    // Add the key if it isn't empty
-   if (!key.IsEmpty())
+   if (!key.empty())
    {
       if (mViewType == ViewByKey)
       {
@@ -1933,7 +2050,7 @@ KeyViewAx::GetChildCount(int *childCount)
 wxAccStatus
 KeyViewAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
-   actionName->Clear();
+   actionName->clear();
 
    return wxACC_OK;
 }
@@ -1942,7 +2059,7 @@ KeyViewAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 wxAccStatus
 KeyViewAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   description->Clear();
+   description->clear();
 
    return wxACC_OK;
 }
@@ -1951,7 +2068,7 @@ KeyViewAx::GetDescription(int WXUNUSED(childId), wxString *description)
 wxAccStatus
 KeyViewAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-   helpText->Clear();
+   helpText->clear();
 
    return wxACC_OK;
 }
@@ -1961,7 +2078,7 @@ KeyViewAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 wxAccStatus
 KeyViewAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
-   shortcut->Clear();
+   shortcut->clear();
 
    return wxACC_OK;
 }
@@ -2152,7 +2269,7 @@ KeyViewAx::GetValue(int childId, wxString *strValue)
 {
    int line;
 
-   strValue->Clear();
+   strValue->clear();
 
    if (!IdToLine(childId, line))
    {

@@ -18,10 +18,13 @@
 
 #include "../Audacity.h"
 #include "SetClipCommand.h"
+
 #include "../Project.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
@@ -38,7 +41,7 @@ enum kColours
    nColours
 };
 
-static const IdentInterfaceSymbol kColourStrings[nColours] =
+static const EnumValueSymbol kColourStrings[nColours] =
 {
    { wxT("Color0"), XO("Color 0") },
    { wxT("Color1"), XO("Color 1") },
@@ -58,14 +61,13 @@ bool SetClipCommand::DefineParams( ShuttleParams & S ){
 
 void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto colours = LocalizedStrings( kColourStrings, nColours );
-
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       S.Optional( bHasContainsTime).TieNumericTextBox(  _("At:"),            mContainsTime );
-      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour, &colours );
+      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,
+         LocalizedStrings( kColourStrings, nColours ) );
       S.Optional( bHasT0          ).TieNumericTextBox(  _("Start:"),         mT0 );
    }
    S.EndMultiColumn();
@@ -74,33 +76,29 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 bool SetClipCommand::ApplyInner( const CommandContext & context, Track * t )
 {
    static_cast<void>(context);
-   if( t->GetKind() != Track::Wave) 
-      return true;
-   
    // if no 'At' is specified, then any clip in any selected track will be set.
+   t->TypeSwitch([&](WaveTrack *waveTrack) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
+         WaveClip * pClip = *it;
+         bool bFound =
+            !bHasContainsTime || (
+               ( pClip->GetStartTime() <= mContainsTime ) &&
+               ( pClip->GetEndTime() >= mContainsTime )
+            );
+         if( bFound )
+         {
+            // Inside this IF is where we actually apply the command
 
-   WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-   wxASSERT( waveTrack );
-   WaveClipPointers ptrs( waveTrack->SortedClipArray());
-   for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
-      WaveClip * pClip = *it;
-      bool bFound = 
-         !bHasContainsTime || (
-            ( pClip->GetStartTime() <= mContainsTime ) &&
-            ( pClip->GetEndTime() >= mContainsTime )
-         );
-      if( bFound )
-      {
-         // Inside this IF is where we actually apply the command
+            if( bHasColour )
+               pClip->SetColourIndex(mColour);
+            // No validation of overlap yet.  We assume the user is sensible!
+            if( bHasT0 )
+               pClip->SetOffset(mT0);
+            // \todo Use SetClip to move a clip between tracks too.
 
-         if( bHasColour )
-            pClip->SetColourIndex(mColour);
-         // No validation of overlap yet.  We assume the user is sensible!
-         if( bHasT0 )
-            pClip->SetOffset(mT0);
-         // \todo Use SetClip to move a clip between tracks too.
-
+         }
       }
-   }
+   } );
    return true;
 }

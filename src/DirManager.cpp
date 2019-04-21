@@ -61,12 +61,14 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+#include "Audacity.h" // for __UNIX__
 #include "DirManager.h"
+
 #include "MemoryX.h"
 
 #include <time.h> // to use time() for srand()
 
+#include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/dir.h>
@@ -106,6 +108,7 @@
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/ProgressDialog.h"
 
 #include "ondemand/ODManager.h"
 
@@ -159,8 +162,8 @@ wxMemorySize GetFreeMemory()
 // JKC: Using flag wxDIR_NO_FOLLOW to NOT follow symbolic links.
 // Directories and files inside a project should never be symbolic 
 // links, so if we find one, do not follow it.
-static int RecursivelyEnumerate(wxString dirPath,
-                                  wxArrayString& filePathArray,  // output: all files in dirPath tree
+static int RecursivelyEnumerate(const FilePath &dirPath,
+                                  FilePaths& filePathArray,  // output: all files in dirPath tree
                                   wxString dirspec,
                                   wxString filespec,
                                   bool bFiles, bool bDirs,
@@ -177,13 +180,13 @@ static int RecursivelyEnumerate(wxString dirPath,
 
       // Don't DELETE files from a selective top level, e.g. if handed "projects*" as the
       // directory specifier.
-      if (bFiles && dirspec.IsEmpty() ){
+      if (bFiles && dirspec.empty() ){
          cont= dir.GetFirst(&name, filespec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
          while ( cont ){
-            wxString filepath = dirPath + wxFILE_SEP_PATH + name;
+            FilePath filepath = dirPath + wxFILE_SEP_PATH + name;
 
             count++;
-            filePathArray.Add(filepath);
+            filePathArray.push_back(filepath);
 
             cont = dir.GetNext(&name);
 
@@ -195,7 +198,7 @@ static int RecursivelyEnumerate(wxString dirPath,
 
       cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS | wxDIR_NO_FOLLOW);
       while ( cont ){
-         wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+         FilePath subdirPath = dirPath + wxFILE_SEP_PATH + name;
          count += RecursivelyEnumerate(
                      subdirPath, filePathArray, wxEmptyString,filespec,
                      bFiles, bDirs,
@@ -206,15 +209,15 @@ static int RecursivelyEnumerate(wxString dirPath,
    }
 
    if (bDirs) {
-      filePathArray.Add(dirPath);
+      filePathArray.push_back(dirPath);
       count++;
    }
 
    return count;
 }
 
-static int RecursivelyEnumerateWithProgress(wxString dirPath,
-                                             wxArrayString& filePathArray, // output: all files in dirPath tree
+static int RecursivelyEnumerateWithProgress(const FilePath &dirPath,
+                                             FilePaths& filePathArray, // output: all files in dirPath tree
                                              wxString dirspec,
                                              wxString filespec,
                                              bool bFiles, bool bDirs,
@@ -235,7 +238,7 @@ static int RecursivelyEnumerateWithProgress(wxString dirPath,
    return count;
 }
 
-static int RecursivelyCountSubdirs(wxString dirPath)
+static int RecursivelyCountSubdirs( const FilePath &dirPath )
 {
    bool bContinue;
    int nCount = 0;
@@ -247,7 +250,7 @@ static int RecursivelyCountSubdirs(wxString dirPath)
       while (bContinue)
       {
          nCount++;
-         wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+         FilePath subdirPath = dirPath + wxFILE_SEP_PATH + name;
          nCount += RecursivelyCountSubdirs(subdirPath);
          bContinue = dir.GetNext(&name);
       }
@@ -255,7 +258,7 @@ static int RecursivelyCountSubdirs(wxString dirPath)
    return nCount;
 }
 
-static int RecursivelyRemoveEmptyDirs(wxString dirPath,
+static int RecursivelyRemoveEmptyDirs(const FilePath &dirPath,
                                        int nDirCount = 0,
                                        ProgressDialog* pProgress = NULL)
 {
@@ -270,7 +273,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
          bContinue = dir.GetFirst(&name, wxEmptyString, wxDIR_DIRS);
          while (bContinue)
          {
-            wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+            FilePath subdirPath = dirPath + wxFILE_SEP_PATH + name;
             nCount += RecursivelyRemoveEmptyDirs(subdirPath, nDirCount, pProgress);
             bContinue = dir.GetNext(&name);
          }
@@ -300,7 +303,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
    return nCount;
 }
 
-static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
+static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
                               int flags, const wxChar* message = NULL)
 {
    bool bFiles= (flags & kCleanFiles) != 0;
@@ -313,8 +316,8 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
       progress.create( _("Progress"), message );
 
    auto nn = filePathArray.size();
-   for (unsigned int i = 0; i < nn; i++) {
-      const wxChar *file = filePathArray[i];
+   for ( size_t ii = 0; ii < nn; ++ii ) {
+      const auto &file = filePathArray[ ii ];
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs) {
@@ -351,7 +354,7 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
          }
       }
       if (progress)
-         progress->Update(i + bias, count);
+         progress->Update(ii + bias, count);
    }
 }
 
@@ -423,7 +426,7 @@ DirManager::~DirManager()
    if (numDirManagers == 0) {
       CleanTempDir();
       //::wxRmdir(temp);
-   } else if( projFull.IsEmpty() && !mytemp.IsEmpty()) {
+   } else if( projFull.empty() && !mytemp.empty()) {
       CleanDir(mytemp, wxEmptyString, ".DS_Store", _("Cleaning project temporary files"), kCleanTopDirToo | kCleanDirsOnlyIfEmpty );
    }
 }
@@ -442,7 +445,7 @@ void DirManager::CleanTempDir()
 
 // static
 void DirManager::CleanDir(
-   const wxString &path, 
+   const FilePath &path,
    const wxString &dirSpec, 
    const wxString &fileSpec, 
    const wxString &msg,
@@ -451,7 +454,7 @@ void DirManager::CleanDir(
    if (dontDeleteTempFiles)
       return; // do nothing
 
-   wxArrayString filePathArray, dirPathArray;
+   FilePaths filePathArray, dirPathArray;
 
    int countFiles =
       RecursivelyEnumerate(path, filePathArray, dirSpec, fileSpec, true, false);
@@ -474,171 +477,267 @@ void DirManager::CleanDir(
    RecursivelyRemove(dirPathArray, count, countFiles, flags | kCleanDirs, msg);
 }
 
-bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
-{
-   bool moving = true;
-   wxString oldPath = this->projPath;
-   wxString oldName = this->projName;
-   wxString oldFull = projFull;
-   wxString oldLoc = projFull;
-   if (oldLoc == wxT(""))
-      oldLoc = mytemp;
+namespace {
+   struct PathRestorer {
+      PathRestorer(
+         bool &commitFlag, FilePath &path, FilePath &name, FilePath &full )
+         : committed( commitFlag )
 
-   if (newProjPath == wxT(""))
-      newProjPath = ::wxGetCwd();
+         , projPath( path )
+         , projName( name )
+         , projFull( full )
 
-   this->projPath = newProjPath;
-   this->projName = newProjName;
-   if (newProjPath.Last() == wxFILE_SEP_PATH)
-      this->projFull = newProjPath + newProjName;
-   else
-      this->projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
-
-   wxString cleanupLoc1=oldLoc;
-   wxString cleanupLoc2=projFull;
-
-   bool created = false;
-
-   if (bCreate) {
-      if (!wxDirExists(projFull)) {
-         if (!wxMkdir(projFull)) {
-            this->projFull = oldFull;
-            this->projPath = oldPath;
-            this->projName = oldName;
-            return false;
-         }
-         else
-            created = true;
-      }
-
-      #ifdef __UNIX__
-      chmod(OSFILENAME(projFull), 0775);
-      #endif
-
-      #ifdef __WXMAC__
-      chmod(OSFILENAME(projFull), 0775);
-      #endif
-
-   } else {
-      if (!wxDirExists(projFull)) {
-         this->projFull = oldFull;
-         this->projPath = oldPath;
-         this->projName = oldName;
-         return false;
-      }
-   }
-
-   /* Move all files into this NEW directory.  Files which are
-      "locked" get copied instead of moved.  (This happens when
-      we perform a Save As - the files which belonged to the last
-      saved version of the old project must not be moved,
-      otherwise the old project would not be safe.) */
-
-   int trueTotal = 0;
-
-   {
-      /*i18n-hint: This title appears on a dialog that indicates the progress in doing something.*/
-      ProgressDialog progress(_("Progress"),
-         _("Saving project data files"));
-
-      int total = mBlockFileHash.size();
-
-      bool success = true;
-      int count = 0;
-      wxArrayString newPaths;
-      for (const auto &pair : mBlockFileHash)
+         , oldPath( path )
+         , oldName( name )
+         , oldFull( full )
+      {}
+      
+      ~PathRestorer()
       {
-         wxString newPath;
-         BlockFilePtr b = pair.second.lock();
-         if (b) {
-            // FIXME: TRAP_ERR
-            // JKC: The 'success' variable and recovery strategy looks 
-            // broken/bogus to me.  Would need to be using &= to catch 
-            // failure in one of the copies/moves.  Besides which,
-            // our temporary files are going to be deleted when we exit 
-            // anyway, if saving from temporary to named project.
-
-            if( progress.Update(count, total) != ProgressResult::Success )
-               success = false;
-            else {
-               moving = moving && !b->IsLocked();
-               auto result = CopyToNewProjectDirectory( &*b );
-               success = result.first;
-               newPath = result.second;
-            }
-
-            if (success) {
-               count++;
-            }
-            else
-               break;
-         }
-
-         newPaths.push_back( newPath );
+         if (!committed)
+            projFull = oldFull, projName = oldName, projPath = oldPath;
       }
 
-      // in case there are any nulls
-      trueTotal = count;
+      bool &committed;
+      FilePath &projPath, &projName, &projFull;
+      const FilePath oldPath, oldName, oldFull;
+   };
 
-      if (success) {
-         auto size = newPaths.size();
-         wxASSERT( size == mBlockFileHash.size() );
-
-         // Commit changes to filenames in the BlockFile objects, and removal
-         // of files at old paths, ONLY NOW!  This must be nothrow.
-
-         // This copy-then-delete procedure is needed to make it safe to
-         // attempt save to another storage device, but fail.
-
-         // It has the consequence that saving a project from one part of
-         // the device to another will not succeed unless there is sufficient
-         // space to hold originals and copies at the same time.  Perhaps the
-         // extra cautions are not needed in that case, and the old procedure
-         // of renaming first, and reversing the renamings in case of failure,
-         // could still work safely.
-
-         // But I don't know whether wxWidgets gives us a reliable means to
-         // distinguish that case.
-
-         // I will err on the side of safety and simplicity and follow the
-         // same procedure in all cases.
-
-         size_t ii = 0;
-         for (const auto &pair : mBlockFileHash)
-         {
-            BlockFilePtr b = pair.second.lock();
-
-            if (b) {
-               if (moving || !b->IsLocked()) {
-                  auto result = b->GetFileName();
-                  auto oldPath = result.name.GetFullPath();
-                  if (!oldPath.empty())
-                     wxRemoveFile( oldPath );
-               }
-
-               if (ii < size)
-                  b->SetFileName(
-                     wxFileNameWrapper{ wxFileName{ newPaths[ii] } } );
-            }
-
-            ++ii;
-         }
-      }
-      else {
-         this->projFull = oldFull;
-         this->projPath = oldPath;
-         this->projName = oldName;
-
-         if (created)
-            CleanDir(
-               cleanupLoc2,
+   struct DirCleaner {
+      DirCleaner( bool &commitFlag, const FilePath &path )
+         : committed( commitFlag )
+         , fullPath( path )
+      {}
+      ~DirCleaner()
+      {
+         if (!committed)
+            DirManager::CleanDir(
+               fullPath,
                wxEmptyString,
                wxEmptyString,
                _("Cleaning up after failed save"),
                kCleanTopDirToo);
-
-         return false;
       }
+
+      bool &committed;
+      FilePath fullPath;
+   };
+}
+
+struct DirManager::ProjectSetter::Impl
+{
+   Impl(
+      DirManager &dm,
+      FilePath& newProjPath, const FilePath& newProjName, const bool bCreate,
+      bool moving );
+
+   void Commit();
+
+   DirManager &dirManager;
+   bool committed{ false };
+
+   // RAII object
+   // Save old state of paths in case of failure
+   PathRestorer pathRestorer{
+      committed,
+      dirManager.projPath, dirManager.projName, dirManager.projFull };
+
+   // Another RAII object
+   // Be prepared to un-create directory on failure
+   Maybe<DirCleaner> dirCleaner;
+   
+   // State variables to carry over into Commit()
+   // Remember old path to be cleaned up in case of successful move
+   FilePath oldFull{ dirManager.projFull };
+   FilePaths newPaths;
+   size_t trueTotal{ 0 };
+   bool moving{ true };
+
+   // Make this true only after successful construction
+   bool ok{ false };
+};
+
+DirManager::ProjectSetter::ProjectSetter(
+   DirManager &dirManager,
+   FilePath& newProjPath, const FilePath& newProjName, const bool bCreate,
+   bool moving )
+   : mpImpl{
+      std::make_unique<Impl>( dirManager, newProjPath, newProjName, bCreate,
+      moving )
+   }
+{
+   
+}
+
+DirManager::ProjectSetter::~ProjectSetter()
+{
+}
+
+bool DirManager::ProjectSetter::Ok()
+{
+   return mpImpl->ok;
+}
+
+
+void DirManager::ProjectSetter::Commit()
+{
+   mpImpl->Commit();
+}
+
+DirManager::ProjectSetter::Impl::Impl(
+   DirManager &dm,
+   FilePath& newProjPath, const FilePath& newProjName, const bool bCreate,
+   bool moving_ )
+: dirManager{ dm }
+, moving{ moving_ }
+{
+   // Choose new paths
+   if (newProjPath.empty())
+      newProjPath = ::wxGetCwd();
+
+   dirManager.projPath = newProjPath;
+   dirManager.projName = newProjName;
+   if (newProjPath.Last() == wxFILE_SEP_PATH)
+      dirManager.projFull = newProjPath + newProjName;
+   else
+      dirManager.projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
+
+   // Verify new paths, maybe creating a directory
+   if (bCreate) {
+      if (!wxDirExists(dirManager.projFull) &&
+          !wxMkdir(dirManager.projFull))
+         return;
+
+      #ifdef __UNIX__
+      chmod(OSFILENAME(dirManager.projFull), 0775);
+      #endif
+
+      #ifdef __WXMAC__
+      chmod(OSFILENAME(dirManager.projFull), 0775);
+      #endif
+
+   }
+   else if (!wxDirExists(dirManager.projFull))
+      return;
+
+   // Be prepared to un-create directory on failure
+   if (bCreate)
+      dirCleaner.create( committed, dirManager.projFull );
+
+   /* Hard-link or copy all files into this NEW directory.
+
+      If any files are "locked" then all get copied.  (This happens when
+      we perform a Save As - the files which belonged to the last
+      saved version of the old project must not be removed because of operations
+      on the NEW project, otherwise the old project would not be safe.)
+
+      Copy also happens anyway when hard file links are not possible, as when
+      saving the project for the first time out of temporary storage and onto
+      some other storage device.
+
+      Renaming would also be cheap like hard-linking, but linking is better
+      because it builds up a new tree of files without destroying anything in
+      the old tree.  That destruction can be left to a commit phase which
+      proceeds only when all the building of the new tree has succeeded.
+      */
+
+   /* Bug2059:  Don't deduce whether moving or copying just from the block
+      files, because an empty project, or one that was empty in its last saved
+      state, may have had no block files to lock.
+      Must treat as a copy if any is locked, but may also treat as copy if
+      the constructor argument tells us so.
+      With this change, the empty _data folder of the empty source project
+      will not be deleted in Commit().
+   */
+
+   moving = moving && ! std::any_of(
+      dirManager.mBlockFileHash.begin(), dirManager.mBlockFileHash.end(),
+      []( const BlockHash::value_type &pair ){
+         auto b = pair.second.lock();
+         return b && b->IsLocked();
+      }
+   );
+
+   trueTotal = 0;
+
+   {
+      /* i18n-hint: This title appears on a dialog that indicates the progress
+         in doing something.*/
+      ProgressDialog progress(_("Progress"),
+         _("Saving project data files"));
+
+      int total = dirManager.mBlockFileHash.size();
+
+      bool link = moving;
+      for (const auto &pair : dirManager.mBlockFileHash) {
+         if( progress.Update(newPaths.size(), total) != ProgressResult::Success )
+            return;
+
+         FilePath newPath;
+         if (auto b = pair.second.lock()) {
+            auto result =
+               dirManager.LinkOrCopyToNewProjectDirectory( &*b, link );
+            if (!result.first)
+               return;
+            newPath = result.second;
+            ++trueTotal;
+         }
+         newPaths.push_back( newPath );
+      }
+   }
+
+   ok = true;
+}
+
+void DirManager::ProjectSetter::Impl::Commit()
+{
+   wxASSERT( ok );
+
+   // We have built all of the new file tree.
+   // So cancel the destructor actions of the RAII objects.
+   committed = true;
+
+   auto size = newPaths.size();
+   wxASSERT( size == dirManager.mBlockFileHash.size() );
+
+   // Commit changes to filenames in the BlockFile objects, and removal
+   // of files at old paths, ONLY NOW!  This must be nothrow.
+
+   // This copy-then-delete procedure is needed to make it safe to
+   // attempt save to another storage device, but fail.
+
+   // It has the consequence that saving a project from one part of
+   // the device to another will not succeed unless there is sufficient
+   // space to hold originals and copies at the same time.  Perhaps the
+   // extra cautions are not needed in that case, and the old procedure
+   // of renaming first, and reversing the renamings in case of failure,
+   // could still work safely.
+
+   // But I don't know whether wxWidgets gives us a reliable means to
+   // distinguish that case.
+
+   // I will err on the side of safety and simplicity and follow the
+   // same procedure in all cases.
+
+   size_t ii = 0;
+   for (const auto &pair : dirManager.mBlockFileHash)
+   {
+      BlockFilePtr b = pair.second.lock();
+
+      if (b) {
+         if (moving || !b->IsLocked()) {
+            auto result = b->GetFileName();
+            auto oldPath = result.name.GetFullPath();
+            if (!oldPath.empty())
+               wxRemoveFile( oldPath );
+         }
+
+         if (ii < size)
+            b->SetFileName(
+               wxFileNameWrapper{ wxFileName{ newPaths[ii] } } );
+      }
+
+      ++ii;
    }
 
    // Some subtlety; SetProject is used both to move a temp project
@@ -661,6 +760,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // that we didn't put there, but that Finder may insert into the folders,
       // and mercilessly remove them, in addition to removing the directories.
 
+      auto cleanupLoc1 = oldFull.empty() ? dirManager.mytemp : oldFull;
       CleanDir(
          cleanupLoc1, 
          wxEmptyString, // EmptyString => ALL directories.
@@ -673,15 +773,24 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
    }
+}
+
+bool DirManager::SetProject(
+   FilePath& newProjPath, const FilePath& newProjName, const bool bCreate)
+{
+   ProjectSetter setter{ *this, newProjPath, newProjName, bCreate, true };
+   if (!setter.Ok())
+      return false;
+   setter.Commit();
    return true;
 }
 
-wxString DirManager::GetProjectDataDir()
+FilePath DirManager::GetProjectDataDir()
 {
    return projFull;
 }
 
-wxString DirManager::GetProjectName()
+FilePath DirManager::GetProjectName()
 {
    return projName;
 }
@@ -691,7 +800,7 @@ wxLongLong DirManager::GetFreeDiskSpace()
    wxLongLong freeSpace = -1;
    wxFileName path;
 
-   path.SetPath(projPath.IsEmpty() ? mytemp : projPath);
+   path.SetPath(projPath.empty() ? mytemp : projPath);
 
    // Use the parent directory if the project directory hasn't yet been created
    if (!path.DirExists())
@@ -707,9 +816,9 @@ wxLongLong DirManager::GetFreeDiskSpace()
    return freeSpace;
 }
 
-wxString DirManager::GetDataFilesDir() const
+FilePath DirManager::GetDataFilesDir() const
 {
-   return projFull != wxT("")? projFull: mytemp;
+   return !projFull.empty()? projFull: mytemp;
 }
 
 void DirManager::SetLocalTempDir(const wxString &path)
@@ -925,7 +1034,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
             dirMidPool.erase(midkey);
 
             // DELETE the actual directory
-            wxString dir=(projFull != wxT("")? projFull: mytemp);
+            auto dir = !projFull.empty() ? projFull : mytemp;
             dir += wxFILE_SEP_PATH;
             dir += file.Mid(0,3);
             dir += wxFILE_SEP_PATH;
@@ -945,7 +1054,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
                if(--dirTopPool[topnum]<1){
                   // do *not* erase the hash entry from dirTopPool
                   // *do* DELETE the actual directory
-                  wxString dir=(projFull != wxT("")? projFull: mytemp);
+                  dir=(!projFull.empty()? projFull: mytemp);
                   dir += wxFILE_SEP_PATH;
                   dir += file.Mid(0,3);
                   wxFileName::Rmdir(dir);
@@ -1091,7 +1200,7 @@ BlockFilePtr DirManager::NewSimpleBlockFile(
 }
 
 BlockFilePtr DirManager::NewAliasBlockFile(
-                                 const wxString &aliasedFile, sampleCount aliasStart,
+                                 const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
@@ -1102,13 +1211,13 @@ BlockFilePtr DirManager::NewAliasBlockFile(
        aliasStart, aliasLen, aliasChannel);
 
    mBlockFileHash[fileName]=newBlockFile;
-   aliasList.Add(aliasedFile);
+   aliasList.push_back(aliasedFile);
 
    return newBlockFile;
 }
 
 BlockFilePtr DirManager::NewODAliasBlockFile(
-                                 const wxString &aliasedFile, sampleCount aliasStart,
+                                 const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
@@ -1119,13 +1228,13 @@ BlockFilePtr DirManager::NewODAliasBlockFile(
        aliasStart, aliasLen, aliasChannel);
 
    mBlockFileHash[fileName]=newBlockFile;
-   aliasList.Add(aliasedFile);
+   aliasList.push_back(aliasedFile);
 
    return newBlockFile;
 }
 
 BlockFilePtr DirManager::NewODDecodeBlockFile(
-                                 const wxString &aliasedFile, sampleCount aliasStart,
+                                 const FilePath &aliasedFile, sampleCount aliasStart,
                                  size_t aliasLen, int aliasChannel, int decodeType)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
@@ -1136,7 +1245,7 @@ BlockFilePtr DirManager::NewODDecodeBlockFile(
        aliasStart, aliasLen, aliasChannel, decodeType);
 
    mBlockFileHash[fileName]=newBlockFile;
-   aliasList.Add(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
+   aliasList.push_back(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
                                //I don't immediately see a place where aliased files remove when a file is closed.
 
    return newBlockFile;
@@ -1218,7 +1327,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       b2 = b->Copy(std::move(newFile));
 
       mBlockFileHash[newName] = b2;
-      aliasList.Add(newPath);
+      aliasList.push_back(newPath);
    }
 
    if (!b2)
@@ -1329,16 +1438,17 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
+std::pair<bool, FilePath> DirManager::LinkOrCopyToNewProjectDirectory(
+   BlockFile *f, bool &link )
 {
-   wxString newPath;
+   FilePath newPath;
    auto result = f->GetFileName();
    const auto &oldFileNameRef = result.name;
 
    // Check that this BlockFile corresponds to a file on disk
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case
    //    (!oldFileName.IsOk()) is a more correct check?
-   if (oldFileNameRef.GetName().IsEmpty()) {
+   if (oldFileNameRef.GetName().empty()) {
       return { true, newPath };
    }
 
@@ -1357,7 +1467,12 @@ std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
       bool summaryExisted = f->IsSummaryAvailable();
       auto oldPath = oldFileNameRef.GetFullPath();
       if (summaryExisted) {
-         auto success = FileNames::CopyFile(oldPath, newPath);
+         bool success = false;
+         if (link)
+            success = FileNames::HardLinkFile( oldPath, newPath );
+         if (!success)
+             link = false,
+             success = FileNames::CopyFile( oldPath, newPath );
          if (!success)
             return { false, {} };
       }
@@ -1404,7 +1519,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    // then the file name is A-OK.
 
    const wxString fullPath{fName.GetFullPath()};
-   if (aliasList.Index(fullPath) == wxNOT_FOUND)
+   if ( !make_iterator_range( aliasList ).contains( fullPath ) )
       return true;
 
    /* i18n-hint: 'old' is part of a filename used when a file is renamed. */
@@ -1506,10 +1621,10 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       else
       {
          //point the aliases to the NEW filename.
-         BlockHash::iterator iter = mBlockFileHash.begin();
-         while (iter != mBlockFileHash.end())
+         BlockHash::iterator iter2 = mBlockFileHash.begin();
+         while (iter2 != mBlockFileHash.end())
          {
-            BlockFilePtr b = iter->second.lock();
+            BlockFilePtr b = iter2->second.lock();
             if (b) {
                auto ab = static_cast< AliasBlockFile * > ( &*b );
                auto db = static_cast< ODDecodeBlockFile * > ( &*b );
@@ -1525,13 +1640,14 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                   db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
                }
             }
-            ++iter;
+            ++iter2;
          }
 
       }
 
-      aliasList.Remove(fullPath);
-      aliasList.Add(renamedFullPath);
+      aliasList.erase(
+         std::find( aliasList.begin(), aliasList.end(), fullPath ) );
+      aliasList.push_back(renamedFullPath);
    }
 
    // Success!!!  Either we successfully renamed the file,
@@ -1581,8 +1697,8 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
          nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
    }
 
-   wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   FilePaths filePathArray; // *all* files in the project directory/subdirectories
+   auto dirPath = (!projFull.empty() ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
@@ -1823,10 +1939,10 @@ _("Project check of \"%s\" folder \
    //
    // ORPHAN BLOCKFILES (.au and .auf files that are not in the project.)
    //
-   wxArrayString orphanFilePathArray;     // orphan .au and .auf files
+   FilePaths orphanFilePathArray;     // orphan .au and .auf files
    this->FindOrphanBlockFiles(filePathArray, orphanFilePathArray);
 
-   if ((nResult != FSCKstatus_CLOSE_REQ) && !orphanFilePathArray.IsEmpty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !orphanFilePathArray.empty())
    {
       // In auto-recover mode, leave orphan blockfiles alone.
       // They will be deleted when project is saved the first time.
@@ -1844,7 +1960,7 @@ _("Project check of \"%s\" folder \
 other projects. \
 \nThey are doing no harm and are small.");
          wxString msg;
-         msg.Printf(msgA, this->projName, (int)orphanFilePathArray.GetCount());
+         msg.Printf(msgA, this->projName, (int)orphanFilePathArray.size());
 
          const wxChar *buttons[] =
             {_("Continue without deleting; ignore the extra files this session"),
@@ -1865,8 +1981,8 @@ other projects. \
          // Plus they affect none of the valid tracks, so incorrect to mark them changed,
          // and no need for refresh.
          //    nResult |= FSCKstatus_CHANGED;
-         for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
-            wxRemoveFile(orphanFilePathArray[i]);
+         for ( const auto &orphan : orphanFilePathArray )
+            wxRemoveFile(orphan);
       }
    }
 
@@ -1886,7 +2002,7 @@ other projects. \
          !missingAliasedFileAUFHash.empty() ||
          !missingAUFHash.empty() ||
          !missingAUHash.empty() ||
-         !orphanFilePathArray.IsEmpty())
+         !orphanFilePathArray.empty())
    {
       wxLogWarning(_("Project check found file inconsistencies inspecting the loaded project data."));
       wxLog::FlushActive(); // Flush is modal and will clear the log (both desired).
@@ -1919,7 +2035,7 @@ void DirManager::FindMissingAliasedFiles(
             static_cast< AliasBlockFile* > ( &*b )->GetAliasedFileName();
             wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
             // wxEmptyString can happen if user already chose to "replace... with silence".
-            if ((aliasedFileFullPath != wxEmptyString) &&
+            if ((!aliasedFileFullPath.empty()) &&
                 !aliasedFileName.FileExists())
             {
                missingAliasedFileAUFHash[key] = b;
@@ -1978,6 +2094,8 @@ void DirManager::FindMissingAUs(
    {
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second.lock();
+      // TODO key can be empty in doing a ProjectFSK
+      // In which case MakeFilePath will fail.  Bail out?
       if (b) {
          if (!b->IsAlias())
          {
@@ -1999,12 +2117,12 @@ void DirManager::FindMissingAUs(
 
 // Find .au and .auf files that are not in the project.
 void DirManager::FindOrphanBlockFiles(
-      const wxArrayString& filePathArray,       // input: all files in project directory
-      wxArrayString& orphanFilePathArray)       // output: orphan files
+      const FilePaths &filePathArray,       // input: all files in project directory
+      FilePaths &orphanFilePathArray)       // output: orphan files
 {
    DirManager *clipboardDM = NULL;
 
-   for (size_t i = 0; i < filePathArray.GetCount(); i++)
+   for (size_t i = 0; i < filePathArray.size(); i++)
    {
       const wxFileName &fullname = filePathArray[i];
       wxString basename = fullname.GetName();
@@ -2012,15 +2130,14 @@ void DirManager::FindOrphanBlockFiles(
       if ((mBlockFileHash.find(basename) == mBlockFileHash.end()) && // is orphan
             // Consider only Audacity data files.
             // Specifically, ignore <branding> JPG and <import> OGG ("Save Compressed Copy").
-            (ext.IsSameAs(wxT("au")) ||
-               ext.IsSameAs(wxT("auf"))))
+            (ext.IsSameAs(wxT("au"), false) ||
+               ext.IsSameAs(wxT("auf"), false)))
       {
          if (!clipboardDM) {
             TrackList *clipTracks = AudacityProject::GetClipboardTracks();
 
             if (clipTracks) {
-               TrackListIterator clipIter(clipTracks);
-               Track *track = clipIter.First();
+               auto track = *clipTracks->Any().first;
                if (track)
                   clipboardDM = track->GetDirManager().get();
             }
@@ -2028,18 +2145,18 @@ void DirManager::FindOrphanBlockFiles(
 
          // Ignore it if it exists in the clipboard (from a previously closed project)
          if (!(clipboardDM && clipboardDM->ContainsBlockFile(basename)))
-            orphanFilePathArray.Add(fullname.GetFullPath());
+            orphanFilePathArray.push_back(fullname.GetFullPath());
       }
    }
-   for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
-      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i]);
+   for ( const auto &orphan : orphanFilePathArray )
+      wxLogWarning(_("Orphan block file: '%s'"), orphan);
 }
 
 
 void DirManager::RemoveOrphanBlockfiles()
 {
-   wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   FilePaths filePathArray; // *all* files in the project directory/subdirectories
+   auto dirPath = (!projFull.empty() ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
@@ -2049,14 +2166,14 @@ void DirManager::RemoveOrphanBlockfiles()
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
       _("Inspecting project file data"));
 
-   wxArrayString orphanFilePathArray;
+   FilePaths orphanFilePathArray;
    this->FindOrphanBlockFiles(
             filePathArray,          // input: all files in project directory tree
             orphanFilePathArray);   // output: orphan files
 
    // Remove all orphan blockfiles.
-   for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
-      wxRemoveFile(orphanFilePathArray[i]);
+   for ( const auto &orphan : orphanFilePathArray )
+      wxRemoveFile(orphan);
 }
 
 void DirManager::FillBlockfilesCache()

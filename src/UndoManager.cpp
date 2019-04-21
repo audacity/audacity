@@ -21,6 +21,7 @@ UndoManager
 
 
 #include "Audacity.h"
+#include "UndoManager.h"
 
 #include <wx/hashset.h>
 
@@ -29,14 +30,18 @@ UndoManager
 #include "Internat.h"
 #include "Project.h"
 #include "Sequence.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
 #include "Tags.h"
 
-#include "UndoManager.h"
 
 #include <unordered_set>
+
+wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
 using ConstBlockFilePtr = const BlockFile*;
 using Set = std::unordered_set<ConstBlockFilePtr>;
@@ -78,9 +83,7 @@ namespace {
       SpaceArray::value_type result = 0;
 
       //TIMER_START( "CalculateSpaceUsage", space_calc );
-      TrackListOfKindIterator iter(Track::Wave);
-      WaveTrack *wt = (WaveTrack *) iter.First(tracks);
-      while (wt)
+      for (auto wt : tracks->Any< WaveTrack >())
       {
          // Scan all clips within current track
          for(const auto &clip : wt->GetAllClips())
@@ -104,8 +107,6 @@ namespace {
                   seen->insert( &*file );
             }
          }
-
-         wt = (WaveTrack *) iter.Next();
       }
 
       return result;
@@ -249,6 +250,9 @@ void UndoManager::ModifyState(const TrackList * l,
 
    stack[current]->state.selectedRegion = selectedRegion;
    SonifyEndModifyState();
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );
 }
 
 void UndoManager::PushState(const TrackList * l,
@@ -302,10 +306,12 @@ void UndoManager::PushState(const TrackList * l,
    }
 
    lastAction = longDescription;
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PUSHED } );
 }
 
-const UndoState &UndoManager::SetStateTo
-   (unsigned int n, SelectedRegion *selectedRegion)
+void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 {
    n -= 1;
 
@@ -313,35 +319,35 @@ const UndoState &UndoManager::SetStateTo
 
    current = n;
 
-   *selectedRegion = stack[current]->state.selectedRegion;
-
    lastAction = wxT("");
    mayConsolidate = false;
 
-   return stack[current]->state;
+   consumer( stack[current]->state );
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
 }
 
-const UndoState &UndoManager::Undo(SelectedRegion *selectedRegion)
+void UndoManager::Undo(const Consumer &consumer)
 {
    wxASSERT(UndoAvailable());
 
    current--;
 
-   *selectedRegion = stack[current]->state.selectedRegion;
-
    lastAction = wxT("");
    mayConsolidate = false;
 
-   return stack[current]->state;
+   consumer( stack[current]->state );
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
 }
 
-const UndoState &UndoManager::Redo(SelectedRegion *selectedRegion)
+void UndoManager::Redo(const Consumer &consumer)
 {
    wxASSERT(RedoAvailable());
 
    current++;
-
-   *selectedRegion = stack[current]->state.selectedRegion;
 
    /*
    if (!RedoAvailable()) {
@@ -359,7 +365,10 @@ const UndoState &UndoManager::Redo(SelectedRegion *selectedRegion)
    lastAction = wxT("");
    mayConsolidate = false;
 
-   return stack[current]->state;
+   consumer( stack[current]->state );
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
 }
 
 bool UndoManager::UnsavedChanges()
@@ -376,11 +385,11 @@ void UndoManager::StateSaved()
 // currently unused
 //void UndoManager::Debug()
 //{
-//   for (unsigned int i = 0; i < stack.Count(); i++) {
-//      TrackListIterator iter(stack[i]->tracks);
-//      WaveTrack *t = (WaveTrack *) (iter.First());
-//      wxPrintf(wxT("*%d* %s %f\n"), i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),
-//             t ? t->GetEndTime()-t->GetStartTime() : 0);
+//   for (unsigned int i = 0; i < stack.size(); i++) {
+//      for (auto t : stack[i]->tracks->Any())
+//         wxPrintf(wxT("*%d* %s %f\n"),
+//                  i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),
+//                t ? t->GetEndTime()-t->GetStartTime() : 0);
 //   }
 //}
 

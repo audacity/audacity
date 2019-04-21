@@ -25,7 +25,10 @@ hold information about one contributor to Audacity.
 *//********************************************************************/
 
 
-#include "Audacity.h"
+#include "Audacity.h" // for USE_* macros
+#include "AboutDialog.h"
+
+#include "Experimental.h"
 
 #include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
@@ -35,7 +38,6 @@ hold information about one contributor to Audacity.
 #include <wx/statbmp.h>
 #include <wx/intl.h>
 
-#include "AboutDialog.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "ShuttleGui.h"
@@ -450,7 +452,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // create a html pane in it to put the content in.
    wxString enabled = _("Enabled");
    wxString disabled = _("Disabled");
-   wxString blank = wxT("");
+   wxString blank;
 
    /* this builds up the list of information to go in the window in the string
     * informationStr */
@@ -639,10 +641,14 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // Current date
    AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
    AddBuildinfoRow(&informationStr, _("Commit Id:"), REV_IDENT );
+
+   // Not translated in 2.3.1.
+   wxString bits = (sizeof(void*) == 8) ? ", 64 bits" : "";
+
 #ifdef __WXDEBUG__
-   AddBuildinfoRow(&informationStr, _("Build type:"), _("Debug build"));
+   AddBuildinfoRow(&informationStr, _("Build type:"), wxString(_("Debug build"))+bits );
 #else
-   AddBuildinfoRow(&informationStr, _("Build type:"), _("Release build"));
+   AddBuildinfoRow(&informationStr, _("Build type:"), wxString(_("Release build"))+bits);
 #endif
 
 #ifdef _MSC_FULL_VER
@@ -1012,7 +1018,7 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
 
    // Strip last <br>, if any
    if (s.Right(4) == wxT("<br>"))
-      s = s.Left(s.Length() - 4);
+      s = s.Left(s.length() - 4);
 
    return s;
 }

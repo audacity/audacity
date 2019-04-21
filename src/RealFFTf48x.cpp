@@ -53,8 +53,12 @@
 *  along with this program; if not, write to the Free Software
 *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#include "Audacity.h"
+
+#include "Audacity.h" // for USE_* macros
+#include "RealFFTf48x.h"
+
 #include "Experimental.h"
+
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
 // at the moment these two are mutually exclusive
@@ -69,7 +73,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "RealFFTf.h"
-#include "RealFFTf48x.h"
 #ifdef __WXMSW__
 #pragma warning(disable:4305)
 #else

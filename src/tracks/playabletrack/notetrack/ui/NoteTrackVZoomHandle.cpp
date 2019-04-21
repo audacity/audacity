@@ -8,12 +8,12 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-
+#include "../../../../Audacity.h" // for USE_* macros
 #ifdef USE_MIDI
-
 #include "NoteTrackVZoomHandle.h"
+
 #include "../../../../Experimental.h"
+
 #include "NoteTrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
@@ -147,6 +147,9 @@ HitTestPreview NoteTrackVZoomHandle::Preview
 const int kZoomIn = 6;
 const int kZoomOut = 7;
 const int kZoomReset = 8;
+const int kZoomMax = 9;
+const int kUpOctave = 10;
+const int kDownOctave = 11;
 
 enum {
    OnZoomFitVerticalID = 20000,
@@ -164,6 +167,11 @@ enum {
    // Reserve an ample block of ids for spectrum scale types
    OnFirstSpectrumScaleID,
    OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
+
+   OnZoomMaxID,
+
+   OnUpOctaveID,
+   OnDownOctaveID,
 };
 ///////////////////////////////////////////////////////////////////////////////
 // Table class
@@ -187,6 +195,9 @@ protected:
 // void OnZoomHalfWave(wxCommandEvent&){ OnZoom( kZoomHalfWave );};
    void OnZoomInVertical(wxCommandEvent&){ OnZoom( kZoomIn );};
    void OnZoomOutVertical(wxCommandEvent&){ OnZoom( kZoomOut );};
+   void OnZoomMax(wxCommandEvent&){ OnZoom( kZoomMax );};
+   void OnUpOctave(wxCommandEvent&){ OnZoom( kUpOctave );};
+   void OnDownOctave(wxCommandEvent&){ OnZoom( kDownOctave );};
 
 private:
    void DestroyMenu() override
@@ -195,8 +206,6 @@ private:
    }
 
    virtual void InitMenu(Menu *pMenu, void *pUserData) override;
-
-   void OnWaveformScaleType(wxCommandEvent &evt);
 };
 
 NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
@@ -213,8 +222,7 @@ void NoteTrackVRulerMenuTable::InitMenu(Menu *WXUNUSED(pMenu), void *pUserData)
 void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
    switch( iZoomCode ){
    case kZoomReset:
-      mpData->pTrack->SetBottomNote(0);
-      mpData->pTrack->SetPitchHeight(mpData->rect.height, 1);
+      mpData->pTrack->ZoomAllNotes();
       break;
    case kZoomIn:
       mpData->pTrack->ZoomIn(mpData->rect, mpData->yy);
@@ -222,18 +230,34 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
    case kZoomOut:
       mpData->pTrack->ZoomOut(mpData->rect, mpData->yy);
       break;
-
+   case kZoomMax:
+      mpData->pTrack->ZoomMaxExtent();
+      break;
+   case kUpOctave:
+      mpData->pTrack->ShiftNoteRange(12);
+      break;
+   case kDownOctave:
+      mpData->pTrack->ShiftNoteRange(-12);
+      break;
    }
+   GetActiveProject()->ModifyState(false);
+   using namespace RefreshCode;
+   mpData->result = UpdateVRuler | RefreshAll;
 }
 
 
 BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
 
    POPUP_MENU_ITEM(OnZoomResetID,      _("Zoom Reset\tShift-Right-Click"), OnZoomReset)
+   POPUP_MENU_ITEM(OnZoomMaxID,        _("Max Zoom"), OnZoomMax)
 
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(OnZoomInVerticalID,  _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
    POPUP_MENU_ITEM(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+
+   POPUP_MENU_SEPARATOR()
+   POPUP_MENU_ITEM(OnUpOctaveID,   _("Up &Octave"),   OnUpOctave)
+   POPUP_MENU_ITEM(OnDownOctaveID, _("Down Octa&ve"), OnDownOctave)
 
 END_POPUP_MENU()
 
@@ -298,9 +322,15 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    }
    else if (event.ShiftDown() || event.RightUp()) {
       if (event.ShiftDown() && event.RightUp()) {
-         // Zoom out completely
-         pTrack->SetBottomNote(0);
-         pTrack->SetPitchHeight(evt.rect.height, 1);
+         auto oldBotNote = pTrack->GetBottomNote();
+         auto oldTopNote = pTrack->GetTopNote();
+         // Zoom out to show all notes
+         pTrack->ZoomAllNotes();
+         if (pTrack->GetBottomNote() == oldBotNote &&
+               pTrack->GetTopNote() == oldTopNote) {
+            // However if we are already showing all notes, zoom out further
+            pTrack->ZoomMaxExtent();
+         }
       } else {
          // Zoom out
          pTrack->ZoomOut(evt.rect, mZoomEnd);
@@ -311,7 +341,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    }
 
    mZoomEnd = mZoomStart = 0;
-   pProject->ModifyState(true);
+   pProject->ModifyState(false);
 
    return RefreshAll;
 }

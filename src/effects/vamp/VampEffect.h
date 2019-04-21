@@ -11,23 +11,20 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+#include "../../Audacity.h" // for USE_* macros
 
 #if defined(USE_VAMP)
-
-#include <wx/checkbox.h>
-#include <wx/choice.h>
-#include <wx/event.h>
-#include <wx/slider.h>
-#include <wx/string.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
 
 #include <vamp-hostsdk/PluginLoader.h>
 
 #include "../../SampleFormat.h"
 #include "../Effect.h"
 
+class wxStaticText;
+class wxSlider;
+class wxChoice;
+class wxCheckBox;
+class wxTextCtrl;
 class LabelTrack;
 
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")
@@ -39,23 +36,23 @@ class VampEffect final : public Effect
 {
 public:
    VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
-              const wxString & path,
+              const PluginPath & path,
               int output,
               bool hasParameters);
    virtual ~VampEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   PluginPath GetPath() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
@@ -75,7 +72,7 @@ public:
    bool TransferDataFromWindow() override;
 
 private:
-   // VampEffect implemetation
+   // VampEffect implementation
 
    void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features);
 
@@ -88,7 +85,7 @@ private:
 
 private:
    std::unique_ptr<Vamp::Plugin> mPlugin;
-   wxString mPath;
+   PluginPath mPath;
    int mOutput;
    bool mHasParameters;
 

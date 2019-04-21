@@ -13,16 +13,16 @@ import time
 
 def loadFourColours() :
     loadMonoTracks( 4 )
-    do( 'SelectTrack: Track=0' )
+    do( 'SelectTracks: Track=0' )
     do( 'SetTrack: Name="Claire" Height=60 Color=Color0')
     do( 'SetClip: At=1 Start=25')
-    do( 'SelectTrack: Track=1' )
+    do( 'SelectTracks: Track=1' )
     do( 'SetTrack: Track=1 Name="Ann" Height=60 Color=Color1')
     do( 'SetClip: At=1 Start=15')
-    do( 'SelectTrack: Track=2' )
+    do( 'SelectTracks: Track=2' )
     do( 'SetTrack: Track=2 Name="Bob" Height=60 Color=Color2')
     do( 'SetClip: At=1 Start=20')
-    do( 'SelectTrack: Track=3' )
+    do( 'SelectTracks: Track=3' )
     do( 'SetTrack: Track=3 Name="David" Height=60 Color=Color3')
     do( 'SetClip: At=1 Start=10')
     do( 'Select: TrackCount=100 Mode=Remove' )
@@ -36,19 +36,19 @@ def blockMoves( name ):
     # These are the align commands that move tracks 'en block'.
     loadFourColoursSelected()
     capture( name + '001.png', 'AllTracksPlus' )
-    do( 'Align_StarttoZero' )
+    do( 'Align_StartToZero' )
     capture( name + '002.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_StarttoCursorSelectionStart' )
+    do( 'Align_StartToSelStart' )
     capture( name + '003.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_StarttoSelectionEnd' )
+    do( 'Align_StartToSelEnd' )
     capture( name + '004.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_EndtoCursorSelectionStart' )
+    do( 'Align_EndtoSelStart' )
     capture( name + '005.png', 'AllTracksPlus' )
     loadFourColoursSelected()
-    do( 'Align_EndtoSelectionEnd' )
+    do( 'Align_EndtoSelEnd' )
     capture( name + '006.png', 'AllTracksPlus' )
 
 def track_moves( type ) :
@@ -80,9 +80,9 @@ def arrange_imagesA() :
     capture( 'TrackOrder004.png', 'AllTracks' )
     # Aligning tracks
     do( 'Select: First=0 Last=100 From=0 To=0')
-    do( 'Align_AlignTogether' )
+    do( 'Align_Together' )
     capture( 'TrackAlign001.png', 'AllTracks' )
-    do( 'Align_AlignEndtoEnd' )
+    do( 'Align_EndtoEnd' )
     do( 'FitInWindow' )
     capture( 'TrackAlign002.png', 'AllTracks' )
 
@@ -98,7 +98,7 @@ def arrange_imagesB() :
 #quickTest()
 
 arrange_imagesA()
-#arrange_imagesB()
+arrange_imagesB()
 
 
 

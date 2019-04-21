@@ -17,12 +17,10 @@
 #ifndef __COMMAND__
 #define __COMMAND__
 
-#include <wx/app.h>
 #include "../MemoryX.h"
 
 #include "CommandMisc.h"
 #include "CommandSignature.h"
-#include "CommandTargets.h"
 #include "../commands/AudacityCommand.h"
 
 class AudacityApp;
@@ -35,7 +33,7 @@ class OldStyleCommand /* not final */
 public:
    OldStyleCommand() {};
    virtual ~OldStyleCommand() { }
-   virtual IdentInterfaceSymbol GetSymbol() = 0;
+   virtual ComponentInterfaceSymbol GetSymbol() = 0;
    virtual CommandSignature &GetSignature() = 0;
    virtual bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
    virtual bool Apply()=0;
@@ -57,7 +55,7 @@ public:
       wxASSERT(cmd != NULL);
    }
    virtual ~DecoratedCommand();
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    CommandSignature &GetSignature() override;
    bool SetParameter(const wxString &paramName, const wxVariant &paramValue) override;
 };
@@ -105,7 +103,7 @@ public:
    virtual ~CommandImplementation();
 
    /// An instance method for getting the command name (for consistency)
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
 
    /// Get the signature of the command
    CommandSignature &GetSignature() override;

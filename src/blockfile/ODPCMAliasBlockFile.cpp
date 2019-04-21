@@ -23,7 +23,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 #include <wx/file.h>
 #include <wx/utils.h>
-#include <wx/wxchar.h>
+#include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/thread.h>
 #include <sndfile.h>
@@ -295,7 +295,7 @@ BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **at
       if (!wxStricmp(attr, wxT("summaryfile")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
             XMLValueChecker::IsGoodFileString(strValue) &&
-            (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
+            (strValue.length() + 1 + dm.GetProjectDataDir().length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(summaryFileName, strValue, false))
             // Make sure summaryFileName is back to uninitialized state so we can detect problem later.
@@ -414,7 +414,7 @@ void ODPCMAliasBlockFile::WriteSummary()
       wxPrintf("Unable to write summary data to file: %s", fileNameChar.get());
 
       throw FileException{
-         FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
+         FileException::Cause::Open, wxFileName{ fileNameChar.get() } };
    }
 
    ArrayOf<char> cleanup;

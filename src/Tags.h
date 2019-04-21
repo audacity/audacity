@@ -30,24 +30,21 @@
 #define __AUDACITY_TAGS__
 
 #include "Audacity.h"
-#include "widgets/Grid.h"
+
 #include "xml/XMLTagHandler.h"
 
 #include "MemoryX.h"
 #include <utility>
-#include <wx/hashmap.h>
-#include <wx/notebook.h>
-#include <wx/string.h>
 
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
 
-class wxButton;
-class wxChoice;
+class wxArrayString;
 class wxComboBox;
 class wxGridCellChoiceEditor;
-class wxRadioButton;
+class wxGridCellStringRenderer;
+class wxGridEvent;
 class wxTextCtrl;
 
 class Grid;
@@ -144,6 +141,8 @@ class TagsEditor final : public wxDialogWrapper
 
    void PopulateOrExchange(ShuttleGui & S);
 
+   void OnDontShow( wxCommandEvent & Evt);
+   void OnHelp(wxCommandEvent & Evt);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

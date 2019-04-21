@@ -10,17 +10,17 @@
 *******************************************************************//**
 
 \class BatchPrefs
-\brief A PrefsPanel that builds up a chain of effects in MacroCommands
-
+\brief A probably unused PrefsPanel that in debug builds could offer a 
+setting used in debugging batch (aka macros) processing.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "BatchPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 
-#include "BatchPrefs.h"
 #include "../Languages.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -36,6 +36,21 @@ BatchPrefs::BatchPrefs(wxWindow * parent, wxWindowID winid):
    PrefsPanel(parent, winid, _("Batch"))
 {
    Populate();
+}
+
+ComponentInterfaceSymbol BatchPrefs::GetSymbol()
+{
+   return BATCH_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString BatchPrefs::GetDescription()
+{
+   return _("Preferences for Batch");
+}
+
+wxString BatchPrefs::HelpPageName()
+{
+   return  "Batch_Preferences";
 }
 
 /// Creates the dialog and its contents.

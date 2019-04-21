@@ -43,13 +43,11 @@
 #define __AUDACITY_EFFECTINTERFACE_H__
 
 #include "audacity/Types.h"
-#include "audacity/IdentInterface.h"
+#include "audacity/ComponentInterface.h"
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectAutomationParameters.h" // for command automation
 
-#include <wx/dialog.h>
-
-typedef enum EffectType
+typedef enum EffectType : int
 {
    EffectTypeNone,
    EffectTypeHidden,
@@ -59,46 +57,16 @@ typedef enum EffectType
    EffectTypeTool,
 } EffectType;
 
-using NumericFormatId = IdentInterfaceSymbol;
-class ShuttleParams;
-
-/*************************************************************************************//**
-
-\class ParamsInterface 
-\brief ParamsInterface provides a DefineParameters virtual function, 
-that defines the parameters of the command.
-
-*******************************************************************************************/
-class AUDACITY_DLL_API ParamsInterface  /* not final */ 
-{
-public:
-   virtual ~ParamsInterface() {};
-   // returns true if implemented.
-   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};
-};
-
-/*************************************************************************************//**
-
-\class CommandDefinitionInterface 
-\brief CommandDefinitionInterface is an IdentInterface (to name the command) along with a
-DefineParameters virtual function, that defines the parameters of the command.
-
-*******************************************************************************************/
-class AUDACITY_DLL_API CommandDefinitionInterface  /* not final */ : public IdentInterface, public ParamsInterface
-{
-public:
-   virtual ~CommandDefinitionInterface() {};
-};
 
 /*************************************************************************************//**
 
 \class EffectDefinitionInterface 
 
-\brief EffectDefinitionInterface is a CommandDefinitionInterface that additionally tracks
+\brief EffectDefinitionInterface is a ComponentInterface that additionally tracks
 flag-functions for interactivity, play-preview and whether the effect can run without a GUI.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public IdentInterface, public ParamsInterface
+class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
    virtual ~EffectDefinitionInterface() {};
@@ -108,7 +76,7 @@ public:
    // Classification determines which menu it appears in.
    virtual EffectType GetClassification() { return GetType();};
 
-   virtual IdentInterfaceSymbol GetFamilyId() = 0;
+   virtual EffectFamilySymbol GetFamily() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.
@@ -129,6 +97,7 @@ public:
    virtual bool SupportsAutomation() = 0;
 };
 
+class wxDialog;
 class EffectUIHostInterface;
 class EffectUIClientInterface;
 
@@ -148,7 +117,7 @@ public:
 
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
-   virtual NumericFormatId GetDurationFormat() = 0;
+   virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 
    virtual bool Apply() = 0;
@@ -158,9 +127,9 @@ public:
    virtual wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) = 0;
 
    // Preset handling
-   virtual wxString GetUserPresetsGroup(const wxString & name) = 0;
-   virtual wxString GetCurrentSettingsGroup() = 0;
-   virtual wxString GetFactoryDefaultsGroup() = 0;
+   virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
+   virtual RegistryPath GetCurrentSettingsGroup() = 0;
+   virtual RegistryPath GetFactoryDefaultsGroup() = 0;
 };
 
 /*************************************************************************************//**
@@ -217,10 +186,10 @@ public:
    virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
    virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
 
-   virtual bool LoadUserPreset(const wxString & name) = 0;
-   virtual bool SaveUserPreset(const wxString & name) = 0;
+   virtual bool LoadUserPreset(const RegistryPath & name) = 0;
+   virtual bool SaveUserPreset(const RegistryPath & name) = 0;
 
-   virtual wxArrayString GetFactoryPresets() = 0;
+   virtual RegistryPaths GetFactoryPresets() = 0;
    virtual bool LoadFactoryPreset(int id) = 0;
    virtual bool LoadFactoryDefaults() = 0;
 };
@@ -283,8 +252,8 @@ public:
    virtual ~EffectManagerInterface() {};
 
    virtual void FindFilesInPathList(const wxString & pattern,
-                                    const wxArrayString & pathList,
-                                    wxArrayString & files,
+                                    const FilePaths & pathList,
+                                    FilePaths & files,
                                     int searchFlags) = 0;
 };
 

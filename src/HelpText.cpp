@@ -12,11 +12,14 @@
 \brief Given a key, returns some html.
 *//********************************************************************/
 
+#include "Audacity.h" // for USE_* macros
+#include "HelpText.h"
+
+#include "Experimental.h"
+
 #include <wx/string.h>
 #include <wx/intl.h>
 
-#include "Audacity.h"
-#include "HelpText.h"
 #include "FileNames.h"
 #include "AboutDialog.h"
 #include "AllThemeResources.h"
@@ -307,7 +310,7 @@ wxString HelpText( const wxString & Key )
    wxString Text;
    Text = HelpTextBuiltIn( Key );
 
-   if( !Text.IsEmpty())
+   if( !Text.empty())
       return LinkExpand( Text );
 
    // Perhaps useful for debugging - we'll return key that we didn't find.

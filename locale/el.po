@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
-"PO-Revision-Date: 2018-09-08 17:42+0300\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
+"PO-Revision-Date: 2019-04-19 09:59+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -33,10 +33,11 @@ msgid "Please choose an existing file."
 msgstr "Παρακαλούμε επιλέξτε ένα υπάρχον αρχείο."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -223,7 +224,7 @@ msgid "No matches found"
 msgstr "Δε βρέθηκαν συμφωνίες"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+msgid "Code has been modified. Are you sure?"
 msgstr "Ο κώδικας έχει τροποποιηθεί. Είσαστε βέβαιος;"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -275,7 +276,7 @@ msgstr "Αντιγραφή"
 msgid "Copy to clipboard"
 msgstr "Αντιγραφή στο πρόχειρο"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Αποκοπή"
@@ -284,7 +285,7 @@ msgstr "Αποκοπή"
 msgid "Cut to clipboard"
 msgstr "Αποκοπή στο πρόχειρο"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Επικόλληση"
@@ -302,7 +303,7 @@ msgstr "Καθαρισμός"
 msgid "Clear selection"
 msgstr "Καθαρισμός επιλογής"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Επιλογή όλων"
 
@@ -578,7 +579,7 @@ msgstr ""
 "Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -709,6 +710,118 @@ msgstr "Φάκελος ρυθμίσεων: "
 msgid "GPL License"
 msgstr "Άδεια GPL"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Οι ενέργειες της λωρίδας χρόνου απενεργοποιήθηκαν κατά την εγγραφή"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Πατήστε και σύρετε για να ρυθμίσετε, διπλοπατήστε για επαναφορά"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Record/Play head"
+msgstr "Κεφαλή ηχογράφησης/αναπαραγωγής"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr "Λωρίδα χρόνου"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Seek"
+msgstr "Πάτημα ή μεταφορά για έναρξη αναζήτησης"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "Πάτημα ή μεταφορά για έναρξη τριψίματος"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr "Πάτημα και μετακίνηση για τρίψιμο. Πάτημα και μεταφορά για αναζήτηση."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr "Μετακίνηση για αναζήτηση"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr "Μετακίνηση για τρίψιμο"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release to stop seeking."
+msgstr "Μεταφορά για αναζήτηση. Απελευθέρωση για παύση αναζήτησης."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr "Μεταφορά για αναζήτηση. Απελευθέρωση και μετακίνηση για τρίψιμο."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr "Μετακίνηση για τρίψιμο. Μεταφορά για αναζήτηση."
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "Απενεργοποιημένη η γρήγορη αναπαραγωγή"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr "Ενεργοποιημένη η γρήγορη αναπαραγωγή"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to unpin"
+msgstr "Πάτημα για ξεκαρφίτσωμα"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click to pin"
+msgstr "Πάτημα για καρφίτσωμα"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr "Απενεργοποίηση γρήγορης αναπαραγωγής"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr "Ενεργοποίηση γρήγορης αναπαραγωγής"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable dragging selection"
+msgstr "Απενεργοποίηση επιλογής μεταφοράς"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable dragging selection"
+msgstr "Ενεργοποίηση επιλογής μεταφοράς"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr "Απενεργοποίηση συμβουλών λωρίδας χρόνου"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr "Ενεργοποίηση συμβουλών λωρίδας χρόνου"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr "Να μην κυλάει κατά την αναπαραγωγή"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr "Ενημέρωση εμφάνισης κατά την αναπαραγωγή"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr "Κλείδωμα περιοχής αναπαραγωγής"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr "Ξεκλείδωμα περιοχής αναπαραγωγής"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr "Απενεργοποίηση χάρακα τριψίματος"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr "Ενεργοποίηση χάρακα τριψίματος"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -781,12 +894,12 @@ msgid "Audacity is starting up..."
 msgstr "Εκκίνηση του Audacity ..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Νέο έργο"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Άνοιγμα..."
 
@@ -794,7 +907,7 @@ msgstr "&Άνοιγμα..."
 msgid "Open &Recent..."
 msgstr "Άνοιγμα &προσφάτου..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&Σχετικά με το Audacity..."
 
@@ -802,7 +915,7 @@ msgstr "&Σχετικά με το Audacity..."
 msgid "&Preferences..."
 msgstr "&Προτιμήσεις..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Αρχείο"
 
@@ -922,7 +1035,7 @@ msgstr ""
 "Τα αρχεία έργου του Audacity (.AUP) δεν είναι για την ώρα \n"
 "συσχετισμένα με το Audacity. \n"
 "\n"
-"Να γίνει συσχετισμός τους, έτσι ώστε να ανοίγουν διπλοπατώντας;"
+"Να συσχετισθούν, έτσι ώστε να ανοίγουν διπλοπατώντας;"
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -945,8 +1058,8 @@ msgstr "Απο&θήκευση..."
 msgid "Cl&ear"
 msgstr "Καθ&αρισμός"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Κλείσιμο ανοιχτής εργασίας"
 
@@ -1013,6 +1126,181 @@ msgstr ""
 #: src/AudioIO.cpp
 msgid "Out of memory!"
 msgstr "Η μνήμη εξαντλήθηκε!"
+
+#: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr "Η ροή είναι ενεργή ... αδυναμία συλλογής πληροφοριών.\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Προεπιλεγμένος αριθμός συσκευής ηχογράφησης: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr "Αριθμός προεπιλεγμένης συσκευής αναπαραγωγής: %d\n"
+
+#: src/AudioIO.cpp
+msgid "No devices found\n"
+msgstr "Δεν βρέθηκαν συσκευές\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "Οι πληροφορίες της συσκευής δεν είναι διαθέσιμες για: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Device ID: %d\n"
+msgstr "Αναγνωριστικό συσκευής: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Device name: %s\n"
+msgstr "Όνομα συσκευής: %s\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Host name: %s\n"
+msgstr "Όνομα οικοδεσπότη: %s\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Recording channels: %d\n"
+msgstr "Κανάλια ηχογράφησης: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Playback channels: %d\n"
+msgstr "Κανάλια αναπαραγωγής: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Χαμηλή καθυστέρηση ηχογράφησης: %g\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr "Χαμηλή καθυστέρηση αναπαραγωγής: %g\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Υψηλή καθυστέρηση ηχογράφησης: %g\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr "Υψηλή καθυστέρηση αναπαραγωγής: %g\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+msgid "Supported Rates:\n"
+msgstr "Υποστηριζόμενοι ρυθμοί:\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Επιλεγμένη συσκευής ηχογράφησης: %d - %s\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr "Δεν βρέθηκε συσκευή ηχογράφησης για το '%s'.\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Επιλεγμένη συσκευής αναπαραγωγής: %d - %s\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr "Δεν βρέθηκε συσκευή αναπαραγωγής για το '%s'.\n"
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr "Αδυναμία ελέγχου κοινών ρυθμών δειγμάτων χωρίς και τις δύο συσκευές.\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr "Ελήφθησαν %d κατά το άνοιγμα των συσκευών\n"
+
+#: src/AudioIO.cpp
+msgid "Unable to open Portmixer\n"
+msgstr "Αδύνατο το άνοιγμα Portmixer\n"
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr "Διαθέσιμοι μείκτες:\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr "%d - %s\n"
+
+#: src/AudioIO.cpp
+msgid "Available recording sources:\n"
+msgstr "Διαθέσιμες πηγές ηχογράφησης:\n"
+
+#: src/AudioIO.cpp
+msgid "Available playback volumes:\n"
+msgstr "Διαθέσιμες εντάσεις αναπαραγωγής:\n"
+
+#: src/AudioIO.cpp
+msgid "Recording volume is emulated\n"
+msgstr "Η ένταση ηχογράφησης είναι προσομοιωμένη\n"
+
+#: src/AudioIO.cpp
+msgid "Recording volume is native\n"
+msgstr "Η ένταση ηχογράφησης είναι εγγενής\n"
+
+#: src/AudioIO.cpp
+msgid "Playback volume is emulated\n"
+msgstr "Η ένταση αναπαραγωγής είναι προσομοιωμένη\n"
+
+#: src/AudioIO.cpp
+msgid "Playback volume is native\n"
+msgstr "Η ένταση αναπαραγωγής είναι εγγενής\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "Υποστήριξη της εξόδου: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "Υποστήριξη της εισόδου: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "Ανοίχτηκε το: %d\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Επιλεγμένη συσκευή ηχογράφησης MIDI: %d - %s\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "Δεν βρέθηκε συσκευή ηχογράφησης MIDI για το '%s'.\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Επιλεγμένη συσκευή αναπαραγωγής MIDI: %d - %s\n"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "Δεν βρέθηκε συσκευή αναπαραγωγής MIDI για το '%s'.\n"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -1220,10 +1508,6 @@ msgid "Menu Command (No Parameters)"
 msgstr "Εντολή μενού (χωρίς παραμέτρους)"
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr "καθαρισμένο"
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1237,11 +1521,12 @@ msgid "Export recording"
 msgstr "Εξαγωγή ηχογράφησης"
 
 #: src/BatchCommands.cpp
+#, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
-"Αδυναμία δημιουργίας καταλόγου 'καθαρισμένο'. \n"
+"Αδυναμία δημιουργίας καταλόγου '%s'. \n"
 "Το αρχείο που ήδη υπάρχει δεν είναι κατάλογος"
 
 #: src/BatchCommands.cpp
@@ -1781,7 +2066,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Έλεγχος εξαρτήσεων"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Πρόοδος"
@@ -1804,12 +2090,12 @@ msgid "Cleaning up temporary files"
 msgstr "Καθαρισμός προσωρινών αρχείων"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Αποθήκευση αρχείων δεδομένων του έργου"
-
-#: src/DirManager.cpp
 msgid "Cleaning up after failed save"
 msgstr "Καθαρισμός μετά από αποτυχημένη αποθήκευση"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Αποθήκευση αρχείων δεδομένων του έργου"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2179,6 +2465,7 @@ msgid "To find '%s', click here -->"
 msgstr "Για να βρείτε το '%s', πατήστε εδώ -->"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Αναζήτηση..."
 
@@ -2200,14 +2487,10 @@ msgid "Where is '%s'?"
 msgstr "Πού βρίσκεται το αρχείο '%s';"
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Αποτυχία εύρεσης συμβατών βιβλιοθηκών FFmpeg."
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr "To FFmpeg δεν βρέθηκε"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2221,9 +2504,13 @@ msgstr ""
 "Για να χρησιμοποιήσετε την εισαγωγή FFmpeg, πηγαίνετε στις Προτιμήσεις\n"
 "> Βιβλιοθήκες για να μεταφορτώσετε ή να εντοπίσετε τις βιβλιοθήκες FFmpeg."
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Να μην εμφανιστεί ξανά αυτή η προειδοποίηση"
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
+msgstr "Αποτυχία εύρεσης συμβατών βιβλιοθηκών FFmpeg."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2283,7 +2570,7 @@ msgstr "Σφάλμα αρχείου"
 msgid "Error (file may not have been written): %s"
 msgstr "Σφάλμα (ίσως δεν έχει γίνει εγγραφή του αρχείου): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Φάσμα"
 
@@ -2323,7 +2610,7 @@ msgstr "Λογαριθμική συχνότητα"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2390,11 +2677,11 @@ msgstr ""
 #: src/FreqWindow.cpp
 #, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
-"Έχει επιλεχθεί πολύ μεγάλο μέρος ήχου. Μόνο τα πρώτα  %.1f δευτ. του ήχου θα "
-"αναλυθούν."
+"Έχει επιλεχθεί πολύ μεγάλο μέρος ήχου. Μόνο τα πρώτα %.1f δευτερόλεπτα ήχου "
+"θα αναλυθούν."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -2436,8 +2723,8 @@ msgstr "φάσμασυχνοτήτων.txt"
 msgid "Export Spectral Data As:"
 msgstr "Εξαγωγή δεδομένων φάσματος ως:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Αδύνατη η εγγραφή στο αρχείο: %s"
@@ -2748,7 +3035,8 @@ msgid "Track"
 msgstr "Κομμάτι"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Ετικέτα"
 
@@ -2780,15 +3068,15 @@ msgstr "Νέο..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "Πιέστε F2 ή διπλοπατήστε για να επεξεργαστείτε τα δεδομενα των κελιών."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
 msgstr "Επιλέξτε ένα αρχείο κειμένου που να περιέχει ετικέτες"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Αρχεία κειμένου (*.txt)|*.txt|Όλα τα αρχεία|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, c-format
 msgid "Could not open file: %s"
 msgstr "Αδυναμία ανοίγματος αρχείου: %s"
@@ -2797,7 +3085,7 @@ msgstr "Αδυναμία ανοίγματος αρχείου: %s"
 msgid "No labels to export."
 msgstr "Δεν υπάρχουν ετικέτες για εξαγωγή."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Εξαγωγή ετικετών ως:"
 
@@ -2825,22 +3113,22 @@ msgstr "Τροποποιημένη ετικέτα"
 msgid "Label Edit"
 msgstr "Επεξεργασία ετικέτας"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Προστέθηκε ετικέτα"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "Α&ποκοπή"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Αντιγραφή"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Επικόλληση"
 
@@ -2855,6 +3143,20 @@ msgstr "Διαγραμμένες ετικέτες"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr "Μία ή περισσότερες αποθηκευμένες ετικέτες δεν μπόρεσαν να διαβαστούν."
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Επεξεργασμένες ετικέτες"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: src/LabelTrack.cpp
+msgid "New label"
+msgstr "Νέα ετικέτα"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2900,2334 +3202,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Καρακόε%s του Audacity"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "Χωρίς κατηγορία"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Αποθήκευση έργου"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "&Αποθήκευση έργου ως..."
-
-#: src/Menus.cpp
-msgid "Save Lossless Copy of Project..."
-msgstr "Αποθήκευση μη απωλεστικού αντιγράφου του έργου..."
-
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "Απο&θήκευση συμπιεσμένου αντιγράφου του έργου..."
-
-#: src/Menus.cpp
-msgid "&Export"
-msgstr "Ε&ξαγωγή"
-
-#: src/Menus.cpp
-msgid "Export as MP&3"
-msgstr "Εξαγωγή ως MP&3"
-
-#: src/Menus.cpp
-msgid "Export as &WAV"
-msgstr "Εξαγωγή ως &WAV"
-
-#: src/Menus.cpp
-msgid "Export as &OGG"
-msgstr "Εξαγωγή ως &OGG"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "&Εξαγωγή ήχου..."
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "Ε&ξαγωγή επιλεγμένου ήχου..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "Εξαγωγή &ετικετών..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Εξαγωγή &πολλαπλών..."
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "Εξαγωγή MI&DI..."
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "Εισαγωγή"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "Ή&χος..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Ετικέτες..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "Ανεπεξέργαστα &δεδομένα(Raw)..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Ρύθμιση &σελίδας..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&Εκτύπωση..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "Έ&ξοδος"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "&Επεξεργασία"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Αναίρεση"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "&Ακύρωση αναίρεσης"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Διαγραφή"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "Διπλασιασμός"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "Ειδική α&φαίρεση"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "Διαίρεση-&Αποκοπή"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "Διαίρεση-Δια&γραφή"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "Σίγαση ή&χου"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "&Περικοπή ήχου"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "Ό&ρια αποσπάσματος"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "&Διαίρεση"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "Διαίρεση σε &νέο"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "Έ&νωση"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "Διαχωρισμός όπου υπάρχει σιγή"
-
-#: src/Menus.cpp
-msgid "&Labels"
-msgstr "&Ετικέτες"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "&Επεξεργασία ετικετών..."
-
-#: src/Menus.cpp
-msgid "Add Label at &Selection"
-msgstr "Προσθήκη ετικέτας στην ε&πιλογή"
-
-#: src/Menus.cpp
-msgid "Add Label at &Playback Position"
-msgstr "Προσθήκη ετικέτας στην θέση α&ναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "Επικόλληση κει&μένου σε νέα ετικέτα"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "&Πληκτολόγηση για δημιουργία ετικέτας (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "Ήχος με ε&τικέτα"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Cut"
-msgstr "Αποκοπή ετικέτας"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&Αποκοπή"
-
-#: src/Menus.cpp
-msgid "Label Delete"
-msgstr "Διαγραφή ετικέτας"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-msgid "Label Split Cut"
-msgstr "Διαίρεση-Αποκοπή ετικέτας"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "&Διαίρεση-Αποκοπή"
-
-#: src/Menus.cpp
-msgid "Label Split Delete"
-msgstr "Διαίρεση-Διαγραφή ετικέτας"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "Δ&ιαίρεση-Διαγραφή"
-
-#: src/Menus.cpp
-msgid "Label Silence"
-msgstr "Σίγαση ετικέτας"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "Σίγαση ή&χος"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Copy"
-msgstr "Αντιγραφή ετικέτας"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "&Αντιγραφή"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Split"
-msgstr "Διαίρεση ετικέτας"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "Διαί&ρεση"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Label Join"
-msgstr "Ένωση ετικέτας"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "Με&ταδεδομένα..."
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "Προ&τιμήσεις..."
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "&Επιλογή"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "Ό&λα"
-
-#: src/Menus.cpp
-msgid "Select None"
-msgstr "Επιλογή κανενός"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Τίποτα"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "&Κομμάτια"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "Σε όλα τα &κομμάτια"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr "Επιλογή κλειδωμένου συγχρονισμού"
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr "Σε όλα τα κλειδωμένα με σ&υγχρονισμό κομμάτια"
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr "&Περιοχή"
-
-#: src/Menus.cpp
-msgid "Set Selection Left at Play Position"
-msgstr "Ορισμός επιλογής αριστερά της θέσης αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "Προς τα &αριστερά της θέσης αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Set Selection Right at Play Position"
-msgstr "Ορισμός επιλογής δεξιά της θέσης αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "Προς τα &δεξιά της θέσης αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Select Track Start to Cursor"
-msgstr "Επιλογή της έναρξης κομματιού στον δρομέα"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "Από την έναρ&ξη του κομματιού μέχρι τον δρομέα"
-
-#: src/Menus.cpp
-msgid "Select Cursor to Track End"
-msgstr "Επιλογή δρομέα στο τέλος του κομματιού"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "Δρομέας στο &τέλος του κομματιού"
-
-#: src/Menus.cpp
-msgid "Select Track Start to End"
-msgstr "Επιλογή έναρξης κομματιού στο τέλος"
-
-#: src/Menus.cpp
-msgid "Track Start to En&d"
-msgstr "Έναρξη κομματιού στο &τέλος"
-
-#: src/Menus.cpp
-msgid "S&tore Selection"
-msgstr "Απο&θήκευση επιλογής"
-
-#: src/Menus.cpp
-msgid "Retrieve Selectio&n"
-msgstr "Ανάκτηση επιλο&γής"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "Φασ&ματικός"
-
-#: src/Menus.cpp
-msgid "To&ggle Spectral Selection"
-msgstr "Ε&ναλλαγή φασματικής επιλογής"
-
-#: src/Menus.cpp
-msgid "Next &Higher Peak Frequency"
-msgstr "Επόμενη &υψηλότερη συχνότητα κορυφής"
-
-#: src/Menus.cpp
-msgid "Next &Lower Peak Frequency"
-msgstr "Επόμενη &χαμηλότερη συχνότητα κορυφής"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "Προ&ηγούμενο όριο αποσπάσματος στον δρομέα"
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Δρομέας στο επό&μενο όριο αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "Select Previous Clip"
-msgstr "Επιλογή προηγούμενου αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr "Π&ροηγούμενο απόσπασμα"
-
-#: src/Menus.cpp
-msgid "Select Next Clip"
-msgstr "Επιλογή επόμενου αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr "Ε&πόμενο απόσπασμα"
-
-#: src/Menus.cpp
-msgid "Select Cursor to Stored"
-msgstr "Επιλογή δρομέα για αποθήκευση"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr "Δρομέας στην αποθηκευμένη θέση &δρομέα"
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr "Αποθήκευση &θέσης δρομέα"
-
-#: src/Menus.cpp
-msgid "Select Zero Crossing"
-msgstr "Επιλογή μηδενοδιέλευσης"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr "Σε &μηδενοδιελεύσεις"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Προβολή"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "Ε&στίαση"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "&Μεγέθυνση"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "Προβολή στο &κανονικό"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "&Σμίκρυνση"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "&Μεγέθυνση στο επιλεγμένο"
-
-#: src/Menus.cpp
-msgid "Zoom &Toggle"
-msgstr "Ε&ναλλαγή εστίασης"
-
-#: src/Menus.cpp
-msgid "T&rack Size"
-msgstr "Μέγεθος &κομματιού"
-
-#: src/Menus.cpp
-msgid "&Fit to Width"
-msgstr "&Προσαρμογή στο πλάτος"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr "Προσαρμογή στο ύ&ψος"
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "&Σύμπτυξη όλων των κομματιών"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "Ε&πέκταση όλων των συνεπτυγμένων κομματιών"
-
-#: src/Menus.cpp
-msgid "Sk&ip to"
-msgstr "Με&ταπήδηση σε"
-
-#: src/Menus.cpp
-msgid "Skip to Selection Start"
-msgstr "Στην αρχή της επιλογής"
-
-#: src/Menus.cpp
-msgid "Selection Sta&rt"
-msgstr "Ένα&ρξη επιλογής"
-
-#: src/Menus.cpp
-msgid "Skip to Selection End"
-msgstr "Στο τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Selection En&d"
-msgstr "&Τέλος επιλογής"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&Ιστορικό..."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "&Καραόκε..."
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "Πίνακας μεί&κτη..."
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "&Γραμμές εργαλείων"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Reset Toolb&ars"
-msgstr "Επαναφορά &γραμμών εργαλείων"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "Γραμμή εργαλείων &μεταφοράς"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "Γραμμή εργαλείων των ερ&γαλείων"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "Γραμμή εργαλείων μετρητή &ηχογράφησης"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "Γραμμή εργαλείων μετρητή &αναπαραγωγής"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Γραμμή εργαλείων μεί&κτη"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "Γραμμή εργαλείων επε&ξεργασίας"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Γραμμή εργαλείων αναπαραγωγή-με-ταχύτητα"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "Γραμμή εργαλείων &τριψίματος"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "Γραμμή εργαλείων &συσκευών"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "Γραμμή εργαλείων επι&λογής"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "Γραμμή εργαλείων &φασματικής επιλογής"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr "&Πρόσθετα μενού (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "&Show Clipping (on/off)"
-msgstr "Εμ&φάνιση ψαλιδίσματος (ναι/όχι)"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Εμφάνιση Effects Rack"
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-msgid "Tra&nsport"
-msgstr "Μετα&φορά"
-
-#: src/Menus.cpp
-msgid "Pl&aying"
-msgstr "Α&ναπαραγωγή"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "Α&ναπαραγωγή/Διακοπή"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "Αναπαραγωγή/Διακοπή και &τοποθέτηση δρομέα"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "Αναπαραγωγή με επανάλη&ψη"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&Παύση"
-
-#: src/Menus.cpp
-msgid "&Recording"
-msgstr "Η&χογράφηση"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&Ηχογράφηση"
-
-#: src/Menus.cpp
-msgid "&Append Record"
-msgstr "Π&ροσάρτηση ηχογράφησης"
-
-#: src/Menus.cpp
-msgid "Record &New Track"
-msgstr "Ηχογράφηση &νέου κομματιού"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&Προγραμματισμένη ηχογράφηση..."
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr "Ηχογράφηση σήμανσης και διόρθωσης (Punch and Rol&l)"
-
-#: src/Menus.cpp
-msgid "&Cursor to"
-msgstr "&Δρομέας σε"
-
-#: src/Menus.cpp
-msgid "Cursor to Selection Start"
-msgstr "Ο δρομέας στην αρχή της επιλογής"
-
-#: src/Menus.cpp
-msgid "Selection Star&t"
-msgstr "Έναρξ&η επιλογής"
-
-#: src/Menus.cpp
-msgid "Cursor to Selection End"
-msgstr "Ο δρομέας στο τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Cursor to Track Start"
-msgstr "Ο δρομέας στην έναρξη του κομματιού"
-
-#: src/Menus.cpp
-msgid "Track &Start"
-msgstr "Έναρ&ξη κομματιού"
-
-#: src/Menus.cpp
-msgid "Cursor to Track End"
-msgstr "Ο δρομέας στο τέλος του κομματιού"
-
-#: src/Menus.cpp
-msgid "Track &End"
-msgstr "&Τέλος κομματιού"
-
-#: src/Menus.cpp
-msgid "Cursor to Prev Clip Boundary"
-msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr "Προ&ηγούμενο όριο αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "Cursor to Next Clip Boundary"
-msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr "Επό&μενο όριο αποσπάσματος"
-
-#: src/Menus.cpp
-msgid "Cursor to Project Start"
-msgstr "Ο δρομέας στην αρχή του έργου"
-
-#: src/Menus.cpp
-msgid "&Project Start"
-msgstr "Αρχή έρ&γου"
-
-#: src/Menus.cpp
-msgid "Cursor to Project End"
-msgstr "Ο δρομέας στο τέλος του έργου"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr "Τέ&λος έργου"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "Θέση αναπαραγ&ωγής"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&Κλείδωμα"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&Ξεκλείδωμα"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "Ε&πανασάρωση συσκευών ήχου"
-
-#: src/Menus.cpp
-msgid "Transport &Options"
-msgstr "Ε&ιλογές μεταφοράς"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "Επί&πεδο ενεργοποίησης ήχου..."
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Ηχογράφηση ενερ&γοποιημένου ήχου (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Καρφιτσωμένη &κεφαλή αναπαραγωγής/ηχογράφησης (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "&Προσθήκη ήχου (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "Πλήρης αναπαραγωγή &λογισμικού (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "Α&υτόματη ρύθμιση επιπέδου ηχογράφησης (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "&Νέο"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "&Μονοφωνικό κομμάτι"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&Στερεοφωνικό κομμάτι"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "Κομμάτι &ετικέτας"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "Κομμάτι &χρόνου"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr "Μεί&ξη"
-
-#: src/Menus.cpp
-msgid "Mix Stereo Down to &Mono"
-msgstr "Μίξη του στερεοφωνικού σε &μονοφωνικό"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "Μίξη"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "Μίξη και απόδοση σε &νέο κομμάτι"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "&Επαναδειγματοληψία..."
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "Απο&μάκρυνση των κομματιών"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute"
-msgstr "&Σίγαση/κατάργηση σίγασης"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "&Σίγαση όλων των κομματιών"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "Κατάργηση σίγασης όλων των κομματιών"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr "&Μετατόπιση"
-
-#: src/Menus.cpp
-msgid "Pan Left"
-msgstr "Μετακίνηση αριστερά"
-
-#: src/Menus.cpp
-msgid "&Left"
-msgstr "&Αριστερά"
-
-#: src/Menus.cpp
-msgid "Pan Right"
-msgstr "Μετακίνηση δεξιά"
-
-#: src/Menus.cpp
-msgid "&Right"
-msgstr "&Δεξιά"
-
-#: src/Menus.cpp
-msgid "Pan Center"
-msgstr "Μετακίνηση στο κέντρο"
-
-#: src/Menus.cpp
-msgid "&Center"
-msgstr "&Κέντρο"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "Διαδοχική &στοίχιση"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "Στοίχιση &μαζί"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "Εκκίνηση από το &μηδέν"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Έναρξη στην αρχή &δρομέα/επιλογής"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "Έναρξη στο &τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Λήξη στην αρχή του δ&ρομέα/επιλογής"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "Λήξη στο τέ&λος της επιλογής"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "&Στοίχιση των κομματιών"
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "&Μετακίνηση επιλογής με κομμάτια (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "Move Sele&ction and Tracks"
-msgstr "Μετακίνηση επιλο&γής και κομματιών"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "Συγχρονισμός MIDI με ήχο"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "&Τακτοποίηση των κομματιών"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Ταξινόμηση κατά χρόνο"
-
-#: src/Menus.cpp
-msgid "By &Start Time"
-msgstr "Κατά χρόνο έναρ&ξης"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Ταξινόμηση κατά όνομα"
-
-#: src/Menus.cpp
-msgid "By &Name"
-msgstr "Κατά &όνομα"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "&Κλείδωμα συγχρονισμού των κομματιών (ναι/όχι)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&Δημιουργία"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Προσθήκη / Αφαίρεση προσθέτων..."
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "Ε&φέ"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Επανάληψη %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "Επανάληψη τελευταίου εφέ"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "Ανά&λυση"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "Αντίθεση..."
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Ανάλυση φάσματος..."
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "Ε&ργαλεία"
-
-#: src/Menus.cpp
-msgid "&Macros..."
-msgstr "&Μακροεντολές..."
-
-#: src/Menus.cpp
-msgid "&Apply Macro"
-msgstr "Ε&φαρμογή μακροεντολής"
-
-#: src/Menus.cpp
-msgid "&Palette..."
-msgstr "&Παλέτα..."
-
-#: src/Menus.cpp
-msgid "&Screenshot..."
-msgstr "&Στιγμιότυπο..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Εκτέλεση μέτρησης απόδοσης..."
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "Προσομοίωση σφαλμάτων ηχογράφησης"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "Ανίχνευση ανοδικών διακοπών"
-
-#  i18n-hint: This refers to a "window function", used in the
-#  Frequency analyze dialog box.
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "&Παράθυρο"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "Ε&λαχιστοποίηση"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "Με&ταφορά όλων εμπρός"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr "Ε&πιπρόσθετα"
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "&Μεταφορά"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "Αν&απαραγωγή"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr "Δια&κοπή"
-
-#: src/Menus.cpp
-msgid "Play &One Second"
-msgstr "Αναπαραγωγή ε&νός δευτερολέπτου"
-
-#: src/Menus.cpp
-msgid "Play to &Selection"
-msgstr "Αναπαραγωγή στην επι&λογή"
-
-#: src/Menus.cpp
-msgid "Play &Before Selection Start"
-msgstr "Αναπαραγωγή &πριν την αρχή της επιλογής"
-
-#: src/Menus.cpp
-msgid "Play Af&ter Selection Start"
-msgstr "Αναπαραγωγή &μετά την αρχή της επιλογής"
-
-#: src/Menus.cpp
-msgid "Play Be&fore Selection End"
-msgstr "Αναπαραγωγή π&ριν το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Play Aft&er Selection End"
-msgstr "Αναπαραγωγή με&τά το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Play Before a&nd After Selection Start"
-msgstr "Αναπαραγωγή πριν &και μετά την αρχή της επιλογής"
-
-#: src/Menus.cpp
-msgid "Play Before an&d After Selection End"
-msgstr "Αναπαραγωγή πριν κ&αι μετά το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr "Προεπισκόπηση α&ποκοπής αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "&Selection Tool"
-msgstr "Εργαλείο ε&πιλογής"
-
-#: src/Menus.cpp
-msgid "&Envelope Tool"
-msgstr "Εργαλείο &περιβάλλουσας"
-
-#: src/Menus.cpp
-msgid "&Draw Tool"
-msgstr "Εργαλείο σ&χεδίασης"
-
-#: src/Menus.cpp
-msgid "&Zoom Tool"
-msgstr "Εργαλείο ε&στίασης"
-
-#: src/Menus.cpp
-msgid "&Time Shift Tool"
-msgstr "Εργαλείο &χρονικής μετατόπισης"
-
-#: src/Menus.cpp
-msgid "&Multi Tool"
-msgstr "Πολ&υεργαλείο"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr "Προ&ηγούμενο εργαλείο"
-
-#: src/Menus.cpp
-msgid "&Next Tool"
-msgstr "Ε&πόμενο εργαλείο"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr "Μεί&κτης"
-
-#: src/Menus.cpp
-msgid "Ad&just Playback Volume..."
-msgstr "Ρύ&θμιση έντασης αναπαραγωγής..."
-
-#: src/Menus.cpp
-msgid "&Increase Playback Volume"
-msgstr "Αύ&ξηση έντασης αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "&Decrease Playback Volume"
-msgstr "Μεί&ωση έντασης αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Adj&ust Recording Volume..."
-msgstr "Ρύ&θμιση έντασης ηχογράφησης..."
-
-#: src/Menus.cpp
-msgid "I&ncrease Recording Volume"
-msgstr "Αύξ&ηση έντασης ηχογράφησης"
-
-#: src/Menus.cpp
-msgid "D&ecrease Recording Volume"
-msgstr "Μείω&ση έντασης ηχογράφησης"
-
-#: src/Menus.cpp
-msgid "&Delete Key"
-msgstr "Πλήκτρο &διαγραφής"
-
-#: src/Menus.cpp
-msgid "Delete Key&2"
-msgstr "Πλήκτρο διαγραφής&2"
-
-#: src/Menus.cpp
-msgid "&Play-at-Speed"
-msgstr "Α&ναπαραγωγή-με-ταχύτητα"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Κανονική α&ναπαραγωγή-με-ταχύτητα"
-
-#: src/Menus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "Αναπαραγωγή με επανάλη&ψη σε ταχύτητα"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Προεπισκόπησης απο&κοπής αναπαραγωγής σε ταχύτητα"
-
-#: src/Menus.cpp
-msgid "Ad&just Playback Speed..."
-msgstr "Ρύθμ&ιση ταχύτητας αναπαραγωγής..."
-
-#: src/Menus.cpp
-msgid "&Increase Playback Speed"
-msgstr "Αύ&ξηση ταχύτητας αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "&Decrease Playback Speed"
-msgstr "Μεί&ωση ταχύτητας αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr "Μετακίνηση στην προ&ηγούμενη ετικέτα"
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr "Μετακίνηση στην επό&μενη ετικέτα"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "Ανα&ζήτηση"
-
-#: src/Menus.cpp
-msgid "Short Seek &Left During Playback"
-msgstr "Σύντομη αναζήτηση α&ριστερά κατά τη διάρκεια της αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Short Seek &Right During Playback"
-msgstr "Σύντομη αναζήτηση &δεξιά κατά τη διάρκεια της αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Long Seek Le&ft During Playback"
-msgstr "Μεγάλη αναζήτηση αρι&στερά κατά τη διάρκεια της αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "Long Seek Rig&ht During Playback"
-msgstr "Μεγάλη αναζήτηση δε&ξιά κατά τη διάρκεια της αναπαραγωγής"
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr "Συ&σκευή"
-
-#: src/Menus.cpp
-msgid "Change &Recording Device..."
-msgstr "Αλλαγή &συσκευής ηχογράφησης..."
-
-#: src/Menus.cpp
-msgid "Change &Playback Device..."
-msgstr "Αλλαγή συσκευής α&ναπαραγωγής..."
-
-#: src/Menus.cpp
-msgid "Change Audio &Host..."
-msgstr "Αλλαγή &δέκτη ήχου..."
-
-#: src/Menus.cpp
-msgid "Change Recording Cha&nnels..."
-msgstr "Αλλαγή κα&ναλιών ηχογράφησης..."
-
-#: src/Menus.cpp
-msgid "&Selection"
-msgstr "&Επιλογή"
-
-#: src/Menus.cpp
-msgid "Snap-To &Off"
-msgstr "Προσκόλληση σε α&νενεργό"
-
-#: src/Menus.cpp
-msgid "Snap-To &Nearest"
-msgstr "Προσκόλληση στο πιο &κοντινό"
-
-#: src/Menus.cpp
-msgid "Snap-To &Prior"
-msgstr "Προσκόλληση στο προ&ηγούμενο"
-
-#: src/Menus.cpp
-msgid "Selection to &Start"
-msgstr "Επιλογή για έναρ&ξη"
-
-#: src/Menus.cpp
-msgid "Selection to En&d"
-msgstr "Επιλογή για &τέλος"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Left"
-msgstr "Επέκταση επιλογής αρ&ιστερά"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Right"
-msgstr "Επέκταση επιλογής &δεξιά"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "Ορισμός (ή επέκταση) αρι&στερής επιλογής"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Ορισμός (ή επέκταση) δεξ&ιάς επιλογής"
-
-#: src/Menus.cpp
-msgid "Selection Contract L&eft"
-msgstr "Σύμπτυξη επιλογής α&ριστερά"
-
-#: src/Menus.cpp
-msgid "Selection Contract R&ight"
-msgstr "Σύμπτυξη επιλογής δ&εξιά"
-
-#: src/Menus.cpp
-msgid "Move Backward Through Active Windows"
-msgstr "Μετακίνηση προς τα πίσω μέσω ενεργών παραθύρων"
-
-#: src/Menus.cpp
-msgid "Move Forward Through Active Windows"
-msgstr "Μετακίνηση προς τα εμπρός μέσω ενεργών παραθύρων"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr "Ε&στίαση"
-
-#: src/Menus.cpp
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Μετακίνηση &πίσω από τις γραμμές εργαλείων σε κομμάτια"
-
-#: src/Menus.cpp
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Μετακίνηση &μπροστά από τις γραμμές εργαλείων σε κομμάτια"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Previous Track"
-msgstr "Μετακίνηση της εστίασης στο προ&ηγούμενο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Next Track"
-msgstr "Μετακίνηση της εστίασης στο επό&μενο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Move Focus to &First Track"
-msgstr "Μετακίνηση της εστίασης στο &πρώτο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Last Track"
-msgstr "Μετακίνηση της εστίασης στο &τελευταίο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr "Μετακίνηση της εστίασης στο προη&γούμενο και επιλογή"
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr "Μετακίνηση της εστίασης στο επόμε&νο και επιλογή"
-
-#: src/Menus.cpp
-msgid "&Toggle Focused Track"
-msgstr "Ενα&λλαγή εστιασμένου κομματιού"
-
-#: src/Menus.cpp
-msgid "Toggle Focuse&d Track"
-msgstr "Εναλλαγή εστιασ&μένου κομματιού"
-
-#: src/Menus.cpp
-msgid "&Cursor"
-msgstr "&Δρομέας"
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr "Δρομέας α&ριστερά"
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr "Δρομέας &δεξιά"
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr "&Σύντομο άλμα αριστερά δρομέα"
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr "Σύ&ντομο άλμα δεξιά δομέα"
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr "Μεγάλο ά&λμα αριστερά δρομέα"
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr "Μεγάλο άλ&μα δεξιά δρομέα"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr "Απόσπασμα αρ&ιστερά"
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr "Απόσπασμα δ&εξιά"
-
-#: src/Menus.cpp
-msgid "&Track"
-msgstr "&Κομμάτι"
-
-#: src/Menus.cpp
-msgid "Change P&an on Focused Track..."
-msgstr "Αλλαγή &μετακίνηση στο εστιασμένο κομμάτι..."
-
-#: src/Menus.cpp
-msgid "Pan &Left on Focused Track"
-msgstr "Μετακίνηση α&ριστερά στο εστιασμένο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Pan &Right on Focused Track"
-msgstr "Μετακίνηση &δεξιά στο εστιασμένο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Change Gai&n on Focused Track..."
-msgstr "Αλλαγή απολα&βής στο εστιασμένο κομμάτι..."
-
-#: src/Menus.cpp
-msgid "&Increase Gain on Focused Track"
-msgstr "Αύ&ξηση απολαβής στο εστιασμένο κομμάτι"
-
-#: src/Menus.cpp
-msgid "&Decrease Gain on Focused Track"
-msgstr "&Μείωση απολαβής στο εστιασμένο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Op&en Menu on Focused Track..."
-msgstr "Άνοι&γμα μενού στο εστιασμένο κομμάτι..."
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute Focused Track"
-msgstr "Σί&γαση/κατάργηση σίγασης εστιασμένου κομματιού"
-
-#: src/Menus.cpp
-msgid "&Solo/Unsolo Focused Track"
-msgstr "&Μονωδία(σόλο)/Κατάργηση μονωδίας εστιασμένου κομματιού"
-
-#: src/Menus.cpp
-msgid "&Close Focused Track"
-msgstr "&Κλείσιμο εστιασμένου κομματιού"
-
-#: src/Menus.cpp
-msgid "Move Focused Track U&p"
-msgstr "Μετακίνηση εστιασμένου κομματιού προς τα &πάνω"
-
-#: src/Menus.cpp
-msgid "Move Focused Track Do&wn"
-msgstr "Μετακίνηση εστιασμένου κομματιού προς τα &κάτω"
-
-#: src/Menus.cpp
-msgid "Move Focused Track to T&op"
-msgstr "Μετακίνηση εστιασμένου κομματιού στην κορ&υφή"
-
-#: src/Menus.cpp
-msgid "Move Focused Track to &Bottom"
-msgstr "Μετακίνηση εστιασμένου κομματιού στον πυ&θμένα"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-msgid "&Scriptables I"
-msgstr "&Επεκτάσιμο Ι"
-
-#: src/Menus.cpp
-msgid "Select Time..."
-msgstr "Επιλογή χρόνου..."
-
-#: src/Menus.cpp
-msgid "Select Frequencies..."
-msgstr "Επιλογή συχνοτήτων..."
-
-#: src/Menus.cpp
-msgid "Select Tracks..."
-msgstr "Επιλογή κομματιών..."
-
-#: src/Menus.cpp
-msgid "Set Track Status..."
-msgstr "Ορισμός κατάστασης κομματιού..."
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr "Ορισμός ήχου κομματιού..."
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr "Ορισμός οπτικών κομματιού..."
-
-#: src/Menus.cpp
-msgid "Get Preference..."
-msgstr "Λήψη προτίμησης..."
-
-#: src/Menus.cpp
-msgid "Set Preference..."
-msgstr "Ορισμός προτίμησης..."
-
-#: src/Menus.cpp
-msgid "Set Clip..."
-msgstr "Ορισμός αποσπάσματος..."
-
-#: src/Menus.cpp
-msgid "Set Envelope..."
-msgstr "Ορισμός καμπύλης ακουστότητας..."
-
-#: src/Menus.cpp
-msgid "Set Label..."
-msgstr "Ορισμός ετικέτας..."
-
-#: src/Menus.cpp
-msgid "Set Project..."
-msgstr "Ορισμός έργου..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr "Με δυνατότητα δέσμης ενεργειών (Scripta&bles) II"
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Επιλογή..."
-
-#: src/Menus.cpp
-msgid "Set Track..."
-msgstr "Ορισμός κομματιού..."
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr "Λήψη πληροφοριών..."
-
-#: src/Menus.cpp
-msgid "Message..."
-msgstr "Μήνυμα..."
-
-#: src/Menus.cpp
-msgid "Help..."
-msgstr "Βοήθεια..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Εισαγωγή..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Εξαγωγή..."
-
-#: src/Menus.cpp
-msgid "Open Project..."
-msgstr "Άνοιγμα έργου..."
-
-#: src/Menus.cpp
-msgid "Save Project..."
-msgstr "Αποθήκευση έργου..."
-
-#: src/Menus.cpp
-msgid "Move Mouse..."
-msgstr "Μετακίνηση ποντικιού..."
-
-#: src/Menus.cpp
-msgid "Compare Audio..."
-msgstr "Σύγκριση ήχου..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-msgid "Screenshot (short format)..."
-msgstr "Στιγμιότυπο (σύντομη μορφή)..."
-
-#: src/Menus.cpp
-msgid "&Full Screen (on/off)"
-msgstr "&Πλήρης οθόνη (ναι/όχι)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-msgid "Minimize All Projects"
-msgstr "Ελαχιστοποίηση όλων των έργων"
-
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Βοήθεια"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "&Ξεκίνημα"
-
-#: src/Menus.cpp
-msgid "Audacity &Manual"
-msgstr "Εγ&χειρίδιο του Audacity"
-
-#: src/Menus.cpp
-msgid "&Quick Help..."
-msgstr "&Γρήγορη βοήθεια..."
-
-#: src/Menus.cpp
-msgid "&Manual..."
-msgstr "Εγ&χειρίδιο..."
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "&Διαγνωστικά"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "Πληροφορίες των συσκευών ή&χου..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "Πληροφορίες συσκευής &MIDI..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "Εμφάνιση &ημερολογίου..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Δημιουργία δεδομένων υποστήριξης..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Έ&λεγχος εξαρτήσεων..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "Έ&λεγχος για ενημερώσεις..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "Άγνωστο"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "Πρόσθετο %d σε %d"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Άνοιγμα πρόσφατου"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "Πρόσφατα αρχεία"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&Αναίρεση %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Αναίρεση"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "&Ακύρωση αναίρεσης %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Κομμάτια ταξινομημένα κατά χρόνο"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "Κομμάτια ταξινομημένα κατά όνομα"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "χωρίς κομμάτι ετικέτας"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "χωρίς κομμάτι ετικέτας στο εστιασμένο κομμάτι ή από κάτω"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "χωρίς ετικέτες στο κομμάτι ετικέτας"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr "Αποσπάσματα μετατοπισμένου χρόνου δεξιά"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr "Αποσπάσματα μετατοπισμένου χρόνου αριστερά"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Χρονική μετατόπιση"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr "το απόσπασμα δεν μετακινήθηκε"
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "Ορισμός αριστερού ορίου επιλογής"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "Θέση"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "Ορισμός δεξιού ορίου επιλογής"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Αδύνατη η διαγραφή κομματιού με ενεργό ήχο"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Top"
-msgstr "Μετακινήθηκε το '%s' στην κορυφή"
-
-#: src/Menus.cpp
-msgid "Move Track to Top"
-msgstr "Μετακίνηση κομματιού στην κορυφή"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "Το '%s' μετακινήθηκε στο τέλος"
-
-#: src/Menus.cpp
-msgid "Move Track to Bottom"
-msgstr "Μετακίνηση κομματιού στο τέλος"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Up"
-msgstr "Το '%s' μετακινήθηκε επάνω"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Down"
-msgstr "Το '%s' μετακινήθηκε κάτω"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-msgid "Move Track Up"
-msgstr "Μετακίνηση κομματιού προς τα επάνω"
-
-#: src/Menus.cpp
-msgid "Move Track Down"
-msgstr "Μετακίνηση κομματιού προς τα κάτω"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "ετικέτες.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Δεν υπάρχουν κομμάτια ετικέτας για εξαγωγή."
-
-#: src/Menus.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Παρακαλούμε, επιλέξτε μόνο ένα κομμάτι νότας την φορά."
-
-#: src/Menus.cpp
-msgid "Please select a Note Track."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι νότας."
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "Εξαγωγή MIDI ως:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "Αρχείο MIDI (*.mid)|*.mid|Αρχείο Allegro (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Έχετε επιλέξει ένα όνομα αρχείου με μια μη αναγνωρίσιμη επέκταση αρχείου.\n"
-"Θέλετε να συνεχίσετε;"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "Εξαγωγή MIDI"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "Εξαγωγή επιλεγμένου ήχου"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Τίποτα για αναίρεση"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Τίποτα για επαναφορά"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Αποκοπή στο πρόχειρο"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Διαίρεση-Αποκοπή στο πρόχειρο"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Διαίρεση-Αποκοπή"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "Η επικόλληση ενός τύπου κομματιού σε ένα άλλο δεν επιτρέπεται."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr ""
-"Δεν επιτρέπεται η αντιγραφή από στερεοφωνικό ήχο σε μονοφωνικό κομμάτι."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Επικόλληση από το πρόχειρο"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Επικολλημένο κείμενο από το πρόχειρο"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "Επικόλληση κειμένου στη νέα ετικέτα"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr ""
-"Περικοπή επιλεγμένων κομματιών ήχου από %.2f δευτερόλεπτα σε %.2f "
-"δευτερόλεπτα"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "Περικοπή ήχου"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Διαίρεση-διαγράφηκαν %.2f δευτερόλεπτα στο t=%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Διαίρεση-Διαγραφή"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "Αποσπάστηκαν %.2f δευτερόλεπτα στο t=%.2f"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "Απόσπαση"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Ενώθηκαν %.2f δευτερόλεπτα στο t=%.2f"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Ένωση"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Επιλεγμένα κομμάτια σε σίγαση για %.2f δευτερόλεπτα στο %.2f"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Σιγή"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Έχει δημιουργηθεί αντίγραφο"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Δημιουργία αντιγράφου"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Αποκοπή περιοχών ήχου με ετικέτα στο πρόχειρο"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "Αποκοπή ήχου με ετικέτα"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Διαίρεση-Διαγραφή περιοχών ήχου με ετικέτα στο πρόχειρο"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Διαίρεση-Αποκοπή ήχου με ετικέτα"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Αντιγραφή των περιοχών ήχου με ετικέτα στο πρόχειρο"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "Αντιγραφή ήχου με ετικέτα"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "Διαγράφηκαν περιοχές ήχου με ετικέτα"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "Διαγραφή ήχου με ετικέτα"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "Διαιρέθηκαν-Διαγράφηκαν περιοχές ήχου με ετικέτα"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "Διαίρεση-Διαγραφή ήχου με ετικέτα"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "Έγινε σίγαση σε περιοχές ήχου με ετικέτα"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "Σίγαση ήχου με ετικέτα"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "Διαίρεση ήχου με ετικέτα (σημείων ή περιοχών)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "Διαίρεση ήχου με ετικέτα"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "Ένωση ήχου με ετικέτα (σημεία ή περιοχές)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "Ένωση ήχου με ετικέτα"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "Αποσπάστηκαν οι περιοχές ήχου με ετικέτα"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "Απόσπαση ήχου με ετικέτα"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Διαχωρισμός"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Διαίρεση σε νέο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Διαίρεση σε νέο"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr "εικονικήΣυμβολοσειράΕπιλογήςΑποσπάσματος"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] "%d από %d απόσπασμα του %s"
-msgstr[1] "%d από %d αποσπάσματα του %s"
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr "%s, %s"
-
-#: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Ανάλυση συχνότητας"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Ανάλυση αντίθεσης (συμφωνία με WCAG 2)"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Εισήχθησαν ετικέτες από το '%s'"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Εισαγωγή ετικετών"
-
-#: src/Menus.cpp
-msgid "Select a MIDI file"
-msgstr "Επιλέξτε αρχείο MIDI"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"Αρχεία MIDI και Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Αρχεία MIDI "
-"(*.mid;*.midi)|*.mid;*.midi|Αρχεία Allegro (*.gro)|*.gro|Όλα τα αρχεία|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Εισήχθη MIDI από '%s'"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "Εισαγωγή MIDI"
-
-#: src/Menus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Επιλέξτε αρχείο ασυμπίεστου ήχου"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "Όλα τα αρχεία|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Επεξεργασία των ετικετών μεταδεδομένων"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "Ετικέτες μεταδεδομένων"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "Αποδόθηκαν όλοι οι ήχοι στο κομμάτι '%s'"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Απόδοση"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr ""
-"Αναμείχθηκαν και αποδόθηκαν %d κομμάτια σε ένα νέο στερεοφωνικό κομμάτι"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "Αναμείχθηκαν και αποδόθηκαν %d κομμάτια σε ένα νέο μονοφωνικό κομμάτι"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "Μείξη και απόδοση"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Κομμάτι %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s left"
-msgstr "το %s αριστερά"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s right"
-msgstr "το %s δεξιά"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr "εικονικήΣυμβολοσειράΜηνύματοςΟρίωνΑποσπάσματος"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] "%s του %d στο απόσπασμα %d του %s"
-msgstr[1] "%s του %d στα αποσπάσματα %d του %s"
-
-#: src/Menus.cpp
-msgid "start"
-msgstr "αρχή"
-
-#: src/Menus.cpp
-msgid "end"
-msgstr "τέλος"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr "εικονικήΓραμματοσειράΜεγάλουΜηνύματοςΟρίωνΑποσπάσματος"
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] "%s του %d και του %s %d από το απόσπασμα %d του %s"
-msgstr[1] "%s του %d και %s του %d από τα %d αποσπάσματα του %s"
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-msgid "Aligned/Moved start to zero"
-msgstr "Στοιχίστηκε/Μετακινήθηκε η αρχή στο μηδέν"
-
-#: src/Menus.cpp
-msgid "Aligned start to zero"
-msgstr "Στοιχίστηκε η αρχή στο μηδέν"
-
-#: src/Menus.cpp
-msgid "Align/Move Start"
-msgstr "Στοίχιση/Μετακίνηση αρχής"
-
-#: src/Menus.cpp
-msgid "Align Start"
-msgstr "Στοίχιση αρχής"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Στοιχίστηκε/Μετακινήθηκε η αρχή στην αρχή του δρομέα/επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned start to cursor/selection start"
-msgstr "Στοίχιση αρχής στην αρχή του δρομέα/της επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to selection end"
-msgstr "Στοιχίστηκε/μετακινήθηκε η αρχή με το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned start to selection end"
-msgstr "Στοιχίστηκε η αρχή με το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Στοιχίστηκε/μετακινήθηκε το τέλος με την αρχή του δρομέα/της επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned end to cursor/selection start"
-msgstr "Στοιχίστηκε το τέλος με την αρχή του δρομέα/της επιλογής"
-
-#: src/Menus.cpp
-msgid "Align/Move End"
-msgstr "Στοίχιση/μετακίνηση τέλους"
-
-#: src/Menus.cpp
-msgid "Align End"
-msgstr "Στοίχιση τέλους"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to selection end"
-msgstr "Στοιχίστηκε/μετακινήθηκε το τέλος με το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned end to selection end"
-msgstr "Στοιχίστηκε το τέλος με το τέλος της επιλογής"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to end"
-msgstr "Στοιχίστηκε/μετακινήθηκε διαδοχικά"
-
-#: src/Menus.cpp
-msgid "Aligned end to end"
-msgstr "Στοιχίστηκε διαδοχικά"
-
-#: src/Menus.cpp
-msgid "Align/Move End to End"
-msgstr "Διαδοχική στοίχιση/μετακίνηση"
-
-#: src/Menus.cpp
-msgid "Align End to End"
-msgstr "Διαδοχική στοίχιση"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved together"
-msgstr "Στοιχίστηκαν/Μετακινήθηκαν ταυτόχρονα"
-
-#: src/Menus.cpp
-msgid "Aligned together"
-msgstr "Στοιχίστηκαν ταυτόχρονα"
-
-#: src/Menus.cpp
-msgid "Align/Move Together"
-msgstr "Ταυτόχρονη στοίχιση/μετακίνηση"
-
-#: src/Menus.cpp
-msgid "Align Together"
-msgstr "Ταυτόχρονη στοίχιση"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "Συγχρονισμός MIDI και κομματιών ήχου"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Ολοκληρώθηκε η στοίχιση: MIDI από %.2f μέχρι %.2f δευτερόλεπτα, ήχος από "
-"%.2f μέχρι %.2f δευτερόλεπτα."
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "Συγχρονισμός MIDI με ήχο"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Σφάλμα στοίχισης: η είσοδος υπερβολικά σύντομη: MIDI από %.2f μέχρι %.2f "
-"δευτερόλεπτα, ήχος από %.2f μέχρι %.2f δευτερόλεπτα."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "Αναφέρθηκε εσωτερικό σφάλμα κατά τη διαδικασία στοίχισης."
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Δημιουργήθηκε νέο κομμάτι ήχου"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Νέο κομμάτι"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Δημιουργήθηκε νέο κομμάτι στερεοφωνικού ήχου"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Δημιουργήθηκε νέο κομμάτι ετικέτας"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Αυτή η έκδοση του Audacity επιτρέπει μόνο ένα κομμάτι χρόνου σε κάθε "
-"παράθυρο έργου."
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Δημιουργήθηκε νέο κομμάτι χρόνου"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-"Η ηχογράφηση με χρονοδιακόπτη δεν μπορεί να χρησιμοποιηθεί με περισσότερα "
-"από ένα ανοικτά έργα.\n"
-"\n"
-"Παρακαλούμε, κλείστε οποιοδήποτε επιπλέον έργο και ξαναπροσπαθήστε."
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "Ηχογράφηση με χρονοδιακόπτη"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-"Η ηχογράφηση με χρονοδιακόπτη δεν μπορεί να χρησιμοποιηθεί εώ έχετε "
-"αναποθήκευτες αλλαγές.\n"
-"\n"
-"Παρακαλούμε, αποθηκεύστε ή κλείστε αυτό το έργο και ξαναδοκιμάστε."
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-msgid "Name:"
-msgstr "Όνομα:"
-
-#: src/Menus.cpp
-msgid "New label"
-msgstr "Νέα ετικέτα"
-
-#: src/Menus.cpp
-msgid "Please select in a mono track."
-msgstr "Παρακαλούμε, επιλέξτε μονοφωνικό κομμάτι."
-
-#: src/Menus.cpp
-msgid "Please select in a stereo track."
-msgstr "Παρακαλούμε, επιλέξτε στερεοφωνικό κομμάτι."
-
-#: src/Menus.cpp
-#, c-format
-msgid "Please select at least %d channels."
-msgstr "Παρακαλούμε, επιλέξτε τουλάχιστον %d κανάλια."
-
-#: src/Menus.cpp
-msgid "Please select a time within a clip."
-msgstr "Παρακαλούμε, επιλέξτε κάποιον χρόνο μες το απόσπασμα."
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Επεξεργασμένες ετικέτες"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Απομακρύνθηκαν κομμάτια ήχου"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "Απομάκρυνση κομματιού"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "Πληροφορίες των συσκευών ήχου"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "Απο&θήκευση"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "Αποθήκευση πληροφοριών συσκευής"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "Αδύνατη η αποθήκευση πληροφοριών συσκευής"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr "Πληροφορίες συσκευής MIDI"
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr "Αποθήκευση πληροφοριών συσκευής MIDI"
-
-#: src/Menus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "Αδύνατη η αποθήκευση πληροφοριών συσκευής MIDI"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-msgid "Panned audio track(s)"
-msgstr "Μετακινημένα κομμάτια ήχου"
-
-#: src/Menus.cpp
-msgid "Pan Track"
-msgstr "Μετακίνηση κομματιού"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Αδύνατο το κλείδωμα περιοχής πέρα από\n"
-"το τέλος του έργου."
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Επαναδειγματοληψία"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Νέος ρυθμός δειγματοληψίας (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "Η τιμή που εισήγαγες δεν είναι έγκυρη"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "Επαναδειγματοληψία κομματιού %d"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Κομμάτια ήχου με επαναδειγματοληψία"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "Επαναδειγματοληψία κομματιού"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&Ακύρωση αναίρεσης"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Μίξη"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Μείξη και απόδοση"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5236,7 +3234,7 @@ msgstr "Μίξη κομματιών"
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Απολαβή"
@@ -5253,7 +3251,7 @@ msgid "Musical Instrument"
 msgstr "Μουσικό όργανο"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Μετατόπιση"
@@ -5309,9 +3307,8 @@ msgstr "Το άρθρωμα είναι ακατάλληλο"
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
-msgstr "Το άρθρωμα %s δεν παρέχει μια συμβολοσειρά έκδοσης. Δεν θα φορτωθεί."
+msgid "The module %s does not provide a version string. It will not be loaded."
+msgstr "Το άρθρωμα %s δεν παρέχει συμβολοσειρά έκδοσης. Δεν θα φορτωθεί."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -5327,7 +3324,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr ""
 "Το άρθρωμα %s ταιριάζει με την έκδοση %s του Audacity. Δεν θα φορτωθεί."
 
@@ -5495,6 +3492,11 @@ msgstr ""
 msgid "Show:"
 msgstr "Εμφάνιση:"
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "Ό&λα"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Εμφάνιση όλων"
@@ -5591,7 +3593,7 @@ msgid "Plug-in already exists"
 msgstr "Το πρόσθετο υπάρχει ήδη"
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "Το αρχείο του προσθέτου χρησιμοποιείται. Αποτυχία αντικατάστασης"
 
 #: src/PluginManager.cpp
@@ -5887,12 +3889,12 @@ msgstr "Σφάλμα κατά την αποθήκευση του έργου"
 #: src/Project.cpp
 #, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "Αδύνατη η αποθήκευση του έργου. Δεν βρέθηκε η διαδρομή. Δοκιμάστε να "
-"δημιουργήσετε έναν κατάλογο \"%s\" πριν να\n"
-"αποθηκεύσετε το έργο με αυτό το όνομα."
+"δημιουργήσετε\n"
+"έναν κατάλογο \"%s\" πριν να αποθηκεύσετε το έργο με αυτό το όνομα."
 
 #: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -6039,15 +4041,6 @@ msgstr "Δημιουργήθηκε νέο έργο"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Διαγραμμένο %.2f δευτ. σε t=%.2f"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Διαγραφή"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Χώρος δίσκου που απομένει για ηχογράφηση: %s"
 
@@ -6123,23 +4116,6 @@ msgid "Record"
 msgstr "Ηχογράφηση"
 
 #: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Ρύθμιση απολαβής"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Ρύθμιση μετατόπισης"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "Απομακρύνθηκε το κομμάτι '%s.'"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "Απομάκρυνση κομματιού"
-
-#: src/Project.cpp
 msgid "Less than 1 minute"
 msgstr "Λιγότερο από 1 λεπτό"
 
@@ -6162,6 +4138,14 @@ msgstr[1] "%d λεπτά"
 #, c-format
 msgid "%s and %s."
 msgstr "%s και %s."
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Ανάλυση συχνότητας"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Ανάλυση αντίθεσης (συμφωνία με WCAG 2)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -6192,7 +4176,7 @@ msgstr "PCM 24 δυαδικών"
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
-msgstr "αριθμός κινητής υποδιαστολής 32 δυαδικών"
+msgstr "κιν υποδ 32-bit"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -6250,10 +4234,6 @@ msgstr "Καταγραφή πλήρους οθόνης"
 msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr ""
 "Αναμονή 5 δευτερολέπτων και καταγραφή του πιο μπροστινού παραθύρου/διαλόγου"
-
-#: src/Screenshot.cpp
-msgid "false"
-msgstr "ψευδές"
 
 #: src/Screenshot.cpp
 msgid "Capture part of a project window"
@@ -6323,7 +4303,7 @@ msgid "Edit"
 msgstr "Επεξεργασία"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Συσκευή"
 
@@ -6351,6 +4331,7 @@ msgstr "Χάρακας"
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "Κομμάτια"
 
@@ -6421,7 +4402,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Προειδοποίηση - Περικόπτεται το υπερμεγέθες αρχείο μπλοκ"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Βοήθεια"
 
@@ -6542,6 +4523,10 @@ msgstr "&Φόρτωση..."
 #: src/Tags.cpp
 msgid "Set De&fault"
 msgstr "Ορισμός πρ&οεπιλογής"
+
+#: src/Tags.cpp
+msgid "Don't show this when exporting audio"
+msgstr "Να μην εμφανιστεί αυτό κατά την εξαγωγή ήχου"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -6688,7 +4673,7 @@ msgstr ""
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Μερικά από τα απαιτούμενα αρχεία στο:\n"
 "  %s\n"
@@ -6893,6 +4878,10 @@ msgstr ""
 "\n"
 "Το '%s' ακυρώθηκε επειδή η ηχογράφηση σταμάτησε."
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "Ηχογράφηση με χρονοδιακόπτη"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6942,6 +4931,10 @@ msgstr "Να ενεργοποιηθεί η α&υτόματη αποθήκευσ�
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "Αποθήκευση έργου ως:"
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "Επιλογή..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -6996,9 +4989,19 @@ msgstr "Προγραμματισμένο να σταματήσει στο:"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Προγραμματισμένη ηχογράφηση - Αναμονή για την έναρξη"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "Η ηχογράφηση θα ξεκινήσει σε:"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr "το %s σε:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -7016,6 +5019,10 @@ msgstr "Ηχογράφηση με χρονοδιακόπτη στο Audacity - �
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr "(πλήκτρο Esc για ακύρωση)"
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Επιλογή"
 
 #: src/TrackPanel.cpp
 #, c-format
@@ -7044,6 +5051,13 @@ msgstr "Στερεοφωνικό, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "ΠροβολήΚομματιού"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Κομμάτι %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7565,6 +5579,7 @@ msgid "Toolbars"
 msgstr "Γραμμές εργαλείων"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr "Εφέ"
 
@@ -7618,7 +5633,7 @@ msgstr "Λευκό"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Κανένα"
 
@@ -7729,10 +5744,6 @@ msgstr "Επιλογή συχνοτήτων"
 msgid "Select Tracks"
 msgstr "Επιλογή κομματιών"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Επιλογή"
-
 #: src/commands/SelectCommand.h
 msgid "Selects a time range."
 msgstr "Επιλέγει διάστημα χρόνου."
@@ -7822,6 +5833,10 @@ msgid "Sets various values for a label."
 msgstr "Ορίζει διάφορες τιμές για ετικέτα."
 
 #: src/commands/SetProjectCommand.cpp
+msgid "Rate:"
+msgstr "Ρυθμός:"
+
+#: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
 msgstr "Αλλαγή μεγέθους:"
 
@@ -7879,6 +5894,7 @@ msgid "Pan:"
 msgstr "Μετακίνηση:"
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Κυματομορφή"
 
@@ -7915,6 +5931,14 @@ msgstr "Κλίμακα:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "VZoom:"
 msgstr "Κατακόρυφη εστίαση:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "VZoom Top:"
+msgstr "Επάνω κατακόρυφη εστίαση:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "VZoom Bottom:"
+msgstr "Κάτω Κατακόρυφη εστίαση:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -8404,6 +6428,10 @@ msgid "You can only measure one track at a time."
 msgstr "Μπορείτε να μετρήσετε μόνο ένα κομμάτι την φορά."
 
 #: src/effects/Contrast.cpp
+msgid "Please select an audio track."
+msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι ήχου."
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8418,10 +6446,6 @@ msgid ""
 msgstr ""
 "Δεν υπάρχει τίποτα να μετρηθεί.\n"
 "Παρακαλούμε επιλέξτε μια ενότητα ενός κομματιού."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι ήχου."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -8488,6 +6512,10 @@ msgstr "Ε&παναφορά"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr "&Διαφορά:"
+
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Βοήθεια"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9042,6 +7070,14 @@ msgstr "Προεπιλογές"
 msgid "Factory Presets"
 msgstr "Προεπιλογές εργοστασίου"
 
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "Εισαγωγή..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "Εξαγωγή..."
+
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
 msgstr "Επιλογές..."
@@ -9342,7 +7378,7 @@ msgstr "Σχεδίαση καμπυλών"
 msgid "&Graphic"
 msgstr "&Γραφική"
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr "Γραφική εξισορρόπηση"
 
@@ -9590,6 +7626,10 @@ msgstr "Δεν εξήχθη καμία καμπύλη."
 #: src/effects/Equalization.h
 msgid "Equalization"
 msgstr "Εξισορρόπηση"
+
+#: src/effects/Equalization.h
+msgid "Filter Curve"
+msgstr "Φιλτράρισμα καμπύλης"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -9844,30 +7884,34 @@ msgid "&Window types"
 msgstr "&Τύποι παραθύρου"
 
 #: src/effects/NoiseReduction.cpp
+msgid "Window si&ze"
+msgstr "&Μέγεθος παραθύρου"
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr "8"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr "16"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr "32"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr "64"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr "128"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr "256"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr "512"
 
@@ -9879,21 +7923,21 @@ msgstr "1024"
 msgid "2048 (default)"
 msgstr "2048 (προεπιλογή)"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr "4096"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr "8192"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
-msgid "Window si&ze"
-msgstr "&Μέγεθος παραθύρου"
+msgid "S&teps per window"
+msgstr "&Βήματα ανά παράθυρο"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
@@ -9902,10 +7946,6 @@ msgstr "2"
 #: src/effects/NoiseReduction.cpp
 msgid "4 (default)"
 msgstr "4 (προεπιλογή)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr "&Βήματα ανά παράθυρο"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -9989,6 +8029,11 @@ msgstr "Αναλύεται το πρώτο κομμάτι του στερεοφ�
 
 #: src/effects/Normalize.cpp
 #, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Αναλύεται το δεύτερο κομμάτι του στερεοφωνικού ζεύγους: %s"
+
+#: src/effects/Normalize.cpp
+#, c-format
 msgid "Processing: %s"
 msgstr "Επεξεργασία: %s"
 
@@ -9996,11 +8041,6 @@ msgstr "Επεξεργασία: %s"
 #, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "Ανεξάρτητη επεξεργασία στερεοφωνικών καναλιών: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Αναλύεται το δεύτερο κομμάτι του στερεοφωνικού ζεύγους: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
@@ -10041,8 +8081,8 @@ msgid "Waiting for waveform to finish computing..."
 msgstr "Αναμονή ώστε η κυματομορφή να τελειώσει τον υπολογισμό..."
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
-msgstr ".  Μέγιστο 0dB."
+msgid "(Maximum 0dB)"
+msgstr "(Μέγιστο 0dB)"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
@@ -10514,6 +8554,10 @@ msgstr "%.3f"
 msgid "Creates audio of zero amplitude"
 msgstr "Δημιουργεί ήχο μηδενικού πλάτους"
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Σιγή"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr "Μετατροπή στερεοφωνικών κομματιών σε μονοφωνικό"
@@ -10854,7 +8898,7 @@ msgstr "Σφάλμα αποθήκευσης των προεπιλογών εφέ
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+msgid "This parameter file was saved from %s. Continue?"
 msgstr "Αυτό το αρχείο παραμέτρων αποθηκεύτηκε από το %s. Να συνεχιστεί;"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -10895,6 +8939,7 @@ msgstr "Μετατόπιση συχνότητας Wah σε ποσοστό"
 msgid "Wahwah"
 msgstr "Wahwah"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr "Εφέ μονάδας ήχου"
@@ -10914,18 +8959,6 @@ msgstr "Αδυναμία αρχικοποίησης συστατικού"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
 msgstr "Επιλογές εφέ μονάδας ήχου"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr "Πλήρες"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Generic"
-msgstr "Γενικό"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr "Βασικό"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -10956,12 +8989,24 @@ msgstr ""
 "παρεχόμενου συστήματος."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
-msgstr " Επιλέξτε \"Βασικό\" για μια βασική διεπαφή μόνο κειμένου. "
+msgid " Select \"Basic\" for a basic text-only interface."
+msgstr " Επιλέξτε \"Βασικό\" για μια βασική διεπαφή μόνο κειμένου."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
 msgstr "Επιλογή &διεπαφής"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr "Πλήρες"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Generic"
+msgstr "Γενικό"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr "Βασικό"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
@@ -10983,10 +9028,15 @@ msgstr "Εισαγωγή προεπιλογών μονάδας ήχου"
 msgid "Location"
 msgstr "Τοποθεσία"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-msgid "AudioUnit"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
 msgstr "Μονάδα ήχου"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "Εφέ LADSPA"
@@ -11017,6 +9067,9 @@ msgstr "δεν δουλεύει για όλα τα εφέ LADSPA."
 msgid "Effect Output"
 msgstr "Έξοδος εφέ"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr "LADSPA"
@@ -11085,10 +9138,6 @@ msgstr "Παρέχει υποστήριξη στα εφέ Nyquist για το Au
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "Εφαρμογή εφέ Nyquist..."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Effects Prompt"
-msgstr "Προτροπή εφέ Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -11186,8 +9235,14 @@ msgid "plug-in"
 msgstr "πρόσθετο"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
-msgstr "Το Nyquist επέστρεψε την τιμή:"
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Το Nyquist επέστρεψε την τιμή: %f"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Το Nyquist επέστρεψε την τιμή: %d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -11285,6 +9340,10 @@ msgstr "&Χρήση της παλιάς σύνταξης (έκδοση 3)."
 msgid "&Load"
 msgstr "&Φόρτωση"
 
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "Απο&θήκευση"
+
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Current program has been modified.\n"
@@ -11375,7 +9434,7 @@ msgstr "Συγνώμη, αποτυχία φόρτωσης του προσθέτ�
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, Vamp Plug-in failed to initialize."
-msgstr "Συγνώμη, αποτυχία αρχικοποίησης του προσθέτου Vamp"
+msgstr "Συγνώμη, αποτυχία αρχικοποίησης του προσθέτου Vamp."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Plugin Settings"
@@ -11398,6 +9457,10 @@ msgstr "Καμία επιλογή ειδικής μορφής"
 #: src/export/Export.cpp
 msgid "Export Audio"
 msgstr "Εξαγωγή ήχου"
+
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Επεξεργασία των ετικετών μεταδεδομένων"
 
 #: src/export/Export.cpp
 msgid "Exported Tags"
@@ -11465,7 +9528,7 @@ msgstr ""
 
 #: src/export/Export.cpp
 #, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr "Ένα αρχείο με το όνομα \"%s\" υπάρχει ήδη.  Να αντικατασταθεί;"
 
 #: src/export/Export.cpp
@@ -11569,7 +9632,7 @@ msgid ""
 "You can configure it at Preferences > Libraries."
 msgstr ""
 "Κατάλληλα ρυθμισμένο FFmpeg απαιτείται για να συνεχίσετε.\n"
-"Μπορείτε να το ρυθμίστε στο Προτιμήσεις > Βιβλιοθήκες"
+"Μπορείτε να το ρυθμίστε στο Προτιμήσεις > Βιβλιοθήκες."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11693,28 +9756,33 @@ msgstr "Εξαγωγή του ήχου ως %s"
 msgid "Invalid sample rate"
 msgstr "Μη αποδεκτός ρυθμός δειγματοληψίας"
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Επαναδειγματοληψία"
+
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Ο ρυθμός δειγματοληψίας του έργου (%d) δεν υποστηρίζεται από την\n"
-"τρέχουσα μορφή αρχείου εξόδου."
+"τρέχουσα μορφή αρχείου εξόδου. "
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 "Ο ρυθμός δειγματοληψίας του έργου (%d) και ο συνδυασμός ρυθμού\n"
-"δυαδικών (%d kbps) δεν υποστηρίζεται από την τρέχουσα μορφή αρχείου εξόδου."
+"δυαδικών (%d kbps) δεν υποστηρίζεται από την τρέχουσα μορφή αρχείου εξόδου. "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
 msgstr ""
-"Μπορείτε να κάνετε επαναδειγματοληψία με έναν από τους παρακάτω ρυθμούς"
+"Μπορείτε να κάνετε επαναδειγματοληψία με έναν από τους παρακάτω ρυθμούς."
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Sample Rates"
@@ -11852,7 +9920,7 @@ msgstr "Εξαγωγή προεπιλογών"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Codec:"
-msgstr "Κωδικοποιητής"
+msgstr "Κωδικοποιητής:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -11860,7 +9928,7 @@ msgid ""
 "compatible with all codecs."
 msgstr ""
 "Δεν είναι όλες οι μορφές συμβατές. Ούτε είναι όλοι οι συνδιασμοί των "
-"επιλογών συμβατοί με όλους τους κωδικοποιητές"
+"επιλογών συμβατοί με όλους τους κωδικοποιητές."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -12122,6 +10190,8 @@ msgstr ""
 "ελάχιστο - 0\n"
 "μέγιστο - 8"
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr "Χρήση LPC"
@@ -12356,7 +10426,7 @@ msgid "Constant"
 msgstr "Σταθερή"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Ποιότητα"
 
@@ -12372,7 +10442,7 @@ msgstr "Λειτουργία καναλιού:"
 msgid "Joint Stereo"
 msgstr "Συνδυασμένο στερεοφωνικό"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Στέρεο"
 
@@ -12422,11 +10492,11 @@ msgstr "Πού βρίσκεται το %s?"
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "Συνδέεστε στο lame_enc.dll v%d.%d. Αυτή η έκδοση δεν είναι συμβατή με το "
 "Audacity %d.%d.%d.\n"
-"Παρακαλούμε μεταφορτώστε την τελευταία έκδοση της βιβλιοθήκης MP3 LAME."
+"Παρακαλούμε μεταφορτώστε την τελευταία έκδοση του 'LAME for Audacity'."
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -12435,6 +10505,14 @@ msgid ""
 msgstr ""
 "Μόνο lame_enc.dll|lame_enc.dll|Δυναμικά συνδεμένες βιβλιοθήκες (*.dll)|*.dll|"
 "Όλα τα αρχεία|*"
+
+#: src/export/ExportMP3.cpp
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr ""
+"Μόνο libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|Όλα τα αρχεία (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -12512,24 +10590,28 @@ msgstr "Επιστράφηκε σφάλμα %ld από κωδικοποιητή 
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 "Ο ρυθμός δειγματοληψίας του έργου (%d) δεν υποστηρίζεται από\n"
-"τη μορφή αρχείου MP3."
+"τη μορφή αρχείου MP3. "
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 "Ο ρυθμός δειγματοληψίας του έργου (%d) και ο συνδυασμός ρυθμού δυαδικών (%d "
-"kbps) δεν υποστηρίζεται από τη μορφή\n"
-"αρχείου MP3."
+"kbps)\n"
+"δεν υποστηρίζεται από τη μορφή αρχείου MP3. "
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "Η βιβλιοθήκη εξαγωγής MP3 δεν βρέθηκε"
+
+#: src/export/ExportMP3.cpp
+msgid "(Built-in)"
+msgstr "(Ενσωματωμένο)"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -12722,6 +10804,27 @@ msgid "Other uncompressed files"
 msgstr "Άλλα μη συμπιεσμένα αρχεία"
 
 #: src/export/ExportPCM.cpp
+msgid "Error Exporting"
+msgstr "Σφάλμα εξαγωγής"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+"Προσπαθήσατε να εξάγετε ένα αρχείο WAV που μπορεί να είναι μεγαλύτερο από "
+"4GB.\n"
+"Το Audacity δεν μπορεί να το κάνει αυτό, η εξαγωγή εγκαταλείφθηκε."
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+"Το εξαγόμενο αρχείο σας WAV έχει περικοπεί επειδή το Audacity\n"
+"δεν μπορεί να εξάγει αρχεία WAV μεγαλύτερα από 4GB."
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Αδύνατη η εξαγωγή ακουστικού σήματος σε αυτή τη μορφή."
 
@@ -12810,13 +10913,17 @@ msgstr ""
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 "Το \"%s\" είναι ένα προχωρημένο αρχείο κωδικοποίησης ήχου.\n"
-"Το Audacity δεν μπορεί να ανοίξει αυτόν τον τύπο αρχείων.\n"
-"Πρέπει να το μετατρέψετε σε μια υποστηριζόμενη μορφή ήχου, όπως WAV ή AIFF."
+"Χωρίς την προαιρετική βιβλιοθήκη FFmpeg, το Audacity δεν μπορεί να ανοίξει "
+"αυτόν τον τύπο αρχείων.\n"
+"Αλλιώς, πρέπει να το μετατρέψετε σε μια υποστηριζόμενη μορφή ήχου, όπως WAV "
+"ή AIFF."
 
 #: src/import/Import.cpp
 #, c-format
@@ -12941,6 +11048,11 @@ msgstr ""
 "Δοκιμάστε να εγκαταστήσετε το FFmpeg. Για ασυμπίεστα αρχεία, δοκιμάστε "
 "επίσης Αρχείο > Εισαγωγή > Ακατέργαστα δεδομένα."
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -12953,6 +11065,11 @@ msgstr ""
 "Οι εισαγωγείς που υποτίθεται ότι υποστηρίζουν τέτοια αρχεία είναι:\n"
 "%s,\n"
 "αλλά κανένα τους δεν κατάλαβε αυτή τη μορφή του αρχείου."
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "Εισαγωγή %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -12972,7 +11089,7 @@ msgstr "Αρχεία FLAC"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer-compatible files"
-msgstr "αρχεία συμβατά με GStreamer"
+msgstr "Αρχεία συμβατά με GStreamer"
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to add decoder to pipeline"
@@ -13048,7 +11165,7 @@ msgstr "Αδυναμία ανοίγματος του αρχείου :%s Εσφα
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s."
-msgstr "Αδυναμία ανοίγματος αρχείου %s"
+msgstr "Αδυναμία ανοίγματος του αρχείου %s."
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -13113,7 +11230,7 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13145,11 +11262,6 @@ msgstr "Διαβάστε τα αρχεία ά&μεσα από το αρχικό 
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 "Να μην ξαναειδοποιηθώ και να χρησιμοποιείται πάντα η παραπάνω επιλογή μου"
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "Εισαγωγή %s"
 
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
@@ -13255,9 +11367,2299 @@ msgstr "Μέγεθος προς εισαγωγή:"
 msgid "Sample rate:"
 msgstr "Ρυθμός δειγματοληψίας:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "Εισαγωγή"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr "Εσφαλμένο μέγεθος δεδομένων"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s left"
+msgstr "το %s αριστερά"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s right"
+msgstr "το %s δεξιά"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr "εικονικήΣυμβολοσειράΜηνύματοςΟρίωνΑποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] "%s του %d στο απόσπασμα %d του %s"
+msgstr[1] "%s του %d στα αποσπάσματα %d του %s"
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr "αρχή"
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr "τέλος"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr "εικονικήΓραμματοσειράΜεγάλουΜηνύματοςΟρίωνΑποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] "%s του %d και του %s %d από το απόσπασμα %d του %s"
+msgstr[1] "%s του %d και %s του %d από τα %d αποσπάσματα του %s"
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr "εικονικήΣυμβολοσειράΕπιλογήςΑποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] "%d από %d απόσπασμα του %s"
+msgstr[1] "%d από %d αποσπάσματα του %s"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr "Αποσπάσματα μετατοπισμένου χρόνου δεξιά"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr "Αποσπάσματα μετατοπισμένου χρόνου αριστερά"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Χρονική μετατόπιση"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr "το απόσπασμα δεν μετακινήθηκε"
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "Ό&ρια αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr "Προ&ηγούμενο όριο αποσπάσματος στον δρομέα"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr "Δρομέας στο επό&μενο όριο αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr "Π&ροηγούμενο απόσπασμα"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Previous Clip"
+msgstr "Επιλογή προηγούμενου αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr "Ε&πόμενο απόσπασμα"
+
+#: src/menus/ClipMenus.cpp
+msgid "Select Next Clip"
+msgstr "Επιλογή επόμενου αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr "Προ&ηγούμενο όριο αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr "Επό&μενο όριο αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Next Clip Boundary"
+msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr "Απόσπασμα αρ&ιστερά"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr "Απόσπασμα δ&εξιά"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Επικολλημένο κείμενο από το πρόχειρο"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Επικόλληση από το πρόχειρο"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Τίποτα για αναίρεση"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Τίποτα για επαναφορά"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Αποκοπή στο πρόχειρο"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "Διαγραμμένο %.2f δευτ. σε t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "Η επικόλληση ενός τύπου κομματιού σε ένα άλλο δεν επιτρέπεται."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr ""
+"Δεν επιτρέπεται η αντιγραφή από στερεοφωνικό ήχο σε μονοφωνικό κομμάτι."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Έχει δημιουργηθεί αντίγραφο"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Δημιουργία αντιγράφου"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Διαίρεση-Αποκοπή στο πρόχειρο"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Διαίρεση-Αποκοπή"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "Διαίρεση-διαγράφηκαν %.2f δευτερόλεπτα στο t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Διαίρεση-Διαγραφή"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Επιλεγμένα κομμάτια σε σίγαση για %.2f δευτερόλεπτα στο %.2f"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr ""
+"Περικοπή επιλεγμένων κομματιών ήχου από %.2f δευτερόλεπτα σε %.2f "
+"δευτερόλεπτα"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "Περικοπή ήχου"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Διαχωρισμός"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Διαίρεση σε νέο κομμάτι"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Διαίρεση σε νέο"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "Ενώθηκαν %.2f δευτερόλεπτα στο t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Ένωση"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "Αποσπάστηκαν %.2f δευτερόλεπτα στο t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "Απόσπαση"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "Ετικέτες μεταδεδομένων"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "&Επεξεργασία"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Διαγραφή"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "Διπλασιασμός"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "Ειδική α&φαίρεση"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "Διαίρεση-&Αποκοπή"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "Διαίρεση-Δια&γραφή"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "Σίγαση ή&χου"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "&Περικοπή ήχου"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "&Διαίρεση"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "Διαίρεση σε &νέο"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "Έ&νωση"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "Διαχωρισμός όπου υπάρχει σιγή"
+
+#: src/menus/EditMenus.cpp
+msgid "&Metadata..."
+msgstr "&Μεταδεδομένα..."
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "Προ&τιμήσεις..."
+
+#: src/menus/EditMenus.cpp
+msgid "&Delete Key"
+msgstr "Πλήκτρο &διαγραφής"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete Key&2"
+msgstr "Πλήκτρο διαγραφής&2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr "Ε&πιπρόσθετα"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr "Μεί&κτης"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ad&just Playback Volume..."
+msgstr "Ρύ&θμιση έντασης αναπαραγωγής..."
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Increase Playback Volume"
+msgstr "Αύ&ξηση έντασης αναπαραγωγής"
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Decrease Playback Volume"
+msgstr "Μεί&ωση έντασης αναπαραγωγής"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Adj&ust Recording Volume..."
+msgstr "Ρύ&θμιση έντασης ηχογράφησης..."
+
+#: src/menus/ExtraMenus.cpp
+msgid "I&ncrease Recording Volume"
+msgstr "Αύξ&ηση έντασης ηχογράφησης"
+
+#: src/menus/ExtraMenus.cpp
+msgid "D&ecrease Recording Volume"
+msgstr "Μείω&ση έντασης ηχογράφησης"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr "Συ&σκευή"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change &Recording Device..."
+msgstr "Αλλαγή &συσκευής ηχογράφησης..."
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change &Playback Device..."
+msgstr "Αλλαγή συσκευής α&ναπαραγωγής..."
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change Audio &Host..."
+msgstr "Αλλαγή &δέκτη ήχου..."
+
+#: src/menus/ExtraMenus.cpp
+msgid "Change Recording Cha&nnels..."
+msgstr "Αλλαγή κα&ναλιών ηχογράφησης..."
+
+#: src/menus/ExtraMenus.cpp
+msgid "&Full Screen (on/off)"
+msgstr "&Πλήρης οθόνη (ναι/όχι)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Εισήχθη MIDI από '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "Εισαγωγή MIDI"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "Εξαγωγή επιλεγμένου ήχου"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "ετικέτες.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Δεν υπάρχουν κομμάτια ετικέτας για εξαγωγή."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Παρακαλούμε, επιλέξτε μόνο ένα κομμάτι νότας την φορά."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select a Note Track."
+msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι νότας."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "Εξαγωγή MIDI ως:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "Αρχείο MIDI (*.mid)|*.mid|Αρχείο Allegro (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Έχετε επιλέξει ένα όνομα αρχείου με μια μη αναγνωρίσιμη επέκταση αρχείου.\n"
+"Θέλετε να συνεχίσετε;"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "Εξαγωγή MIDI"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Εισήχθησαν ετικέτες από το '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Εισαγωγή ετικετών"
+
+#: src/menus/FileMenus.cpp
+msgid "Select a MIDI file"
+msgstr "Επιλέξτε αρχείο MIDI"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"Αρχεία MIDI και Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Αρχεία MIDI "
+"(*.mid;*.midi)|*.mid;*.midi|Αρχεία Allegro (*.gro)|*.gro|Όλα τα αρχεία|*"
+
+#: src/menus/FileMenus.cpp
+msgid "Select any uncompressed audio file"
+msgstr "Επιλέξτε αρχείο ασυμπίεστου ήχου"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "Όλα τα αρχεία|*"
+
+#: src/menus/FileMenus.cpp
+msgid "&Dangerous Reset..."
+msgstr "&Επικίνδυνη επαναφορά..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Άνοιγμα πρόσφατου"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "Πρόσφατα αρχεία"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Αποθήκευση έργου"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "&Αποθήκευση έργου ως..."
+
+#: src/menus/FileMenus.cpp
+msgid "Save Lossless Copy of Project..."
+msgstr "Αποθήκευση μη απωλεστικού αντιγράφου του έργου..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "Απο&θήκευση συμπιεσμένου αντιγράφου του έργου..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Export"
+msgstr "Ε&ξαγωγή"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as MP&3"
+msgstr "Εξαγωγή ως MP&3"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &WAV"
+msgstr "Εξαγωγή ως &WAV"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &OGG"
+msgstr "Εξαγωγή ως &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "&Εξαγωγή ήχου..."
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Ε&ξαγωγή επιλεγμένου ήχου..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "Εξαγωγή &ετικετών..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Εξαγωγή &πολλαπλών..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "Εξαγωγή MI&DI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "Ή&χος..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Ετικέτες..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "Ανεπεξέργαστα &δεδομένα(Raw)..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "Ρύθμιση &σελίδας..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&Εκτύπωση..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "Έ&ξοδος"
+
+#: src/menus/HelpMenus.cpp
+#, c-format
+msgid "Save %s"
+msgstr "Αποθήκευση του %s"
+
+#: src/menus/HelpMenus.cpp
+#, c-format
+msgid "Unable to save %s"
+msgstr "Αδύνατη η αποθήκευση του %s"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "Πληροφορίες των συσκευών ήχου"
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr "Πληροφορίες συσκευής MIDI"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Quick Fix..."
+msgstr "&Γρήγορη διόρθωση..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr "&Ξεκίνημα"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Manual"
+msgstr "Εγ&χειρίδιο του Audacity"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Quick Help..."
+msgstr "&Γρήγορη βοήθεια..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Manual..."
+msgstr "Εγ&χειρίδιο..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr "&Διαγνωστικά"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "Πληροφορίες των συσκευών ή&χου..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr "Πληροφορίες συσκευής &MIDI..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "Εμφάνιση &ημερολογίου..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Δημιουργία δεδομένων υποστήριξης..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "Έ&λεγχος εξαρτήσεων..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "Έ&λεγχος για ενημερώσεις..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "Επικόλληση κειμένου στη νέα ετικέτα"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Αποκοπή περιοχών ήχου με ετικέτα στο πρόχειρο"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "Αποκοπή ήχου με ετικέτα"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "Διαγράφηκαν περιοχές ήχου με ετικέτα"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "Διαγραφή ήχου με ετικέτα"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Διαίρεση-Διαγραφή περιοχών ήχου με ετικέτα στο πρόχειρο"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "Διαίρεση-Αποκοπή ήχου με ετικέτα"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "Διαιρέθηκαν-Διαγράφηκαν περιοχές ήχου με ετικέτα"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "Διαίρεση-Διαγραφή ήχου με ετικέτα"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "Έγινε σίγαση σε περιοχές ήχου με ετικέτα"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "Σίγαση ήχου με ετικέτα"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Αντιγραφή των περιοχών ήχου με ετικέτα στο πρόχειρο"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "Αντιγραφή ήχου με ετικέτα"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "Διαίρεση ήχου με ετικέτα (σημείων ή περιοχών)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "Διαίρεση ήχου με ετικέτα"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "Ένωση ήχου με ετικέτα (σημεία ή περιοχές)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "Ένωση ήχου με ετικέτα"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "Αποσπάστηκαν οι περιοχές ήχου με ετικέτα"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "Απόσπαση ήχου με ετικέτα"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Labels"
+msgstr "&Ετικέτες"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "&Επεξεργασία ετικετών..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Add Label at &Selection"
+msgstr "Προσθήκη ετικέτας στην ε&πιλογή"
+
+#: src/menus/LabelMenus.cpp
+msgid "Add Label at &Playback Position"
+msgstr "Προσθήκη ετικέτας στην θέση α&ναπαραγωγής"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "Επικόλληση κει&μένου σε νέα ετικέτα"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "&Πληκτολόγηση για δημιουργία ετικέτας (ναι/όχι)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "Ήχος με ε&τικέτα"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&Αποκοπή"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Cut"
+msgstr "Αποκοπή ετικέτας"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Delete"
+msgstr "Διαγραφή ετικέτας"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "&Διαίρεση-Αποκοπή"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Cut"
+msgstr "Διαίρεση-Αποκοπή ετικέτας"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "Δ&ιαίρεση-Διαγραφή"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split Delete"
+msgstr "Διαίρεση-Διαγραφή ετικέτας"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "Σίγαση ή&χος"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Silence"
+msgstr "Σίγαση ετικέτας"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "&Αντιγραφή"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Copy"
+msgstr "Αντιγραφή ετικέτας"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "Διαί&ρεση"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Split"
+msgstr "Διαίρεση ετικέτας"
+
+#: src/menus/LabelMenus.cpp
+msgid "Label Join"
+msgstr "Ένωση ετικέτας"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Backward Through Active Windows"
+msgstr "Μετακίνηση προς τα πίσω μέσω ενεργών παραθύρων"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Forward Through Active Windows"
+msgstr "Μετακίνηση προς τα εμπρός μέσω ενεργών παραθύρων"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr "Ε&στίαση"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "Μετακίνηση &πίσω από τις γραμμές εργαλείων σε κομμάτια"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Μετακίνηση &μπροστά από τις γραμμές εργαλείων σε κομμάτια"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Previous Track"
+msgstr "Μετακίνηση της εστίασης στο προ&ηγούμενο κομμάτι"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Next Track"
+msgstr "Μετακίνηση της εστίασης στο επό&μενο κομμάτι"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &First Track"
+msgstr "Μετακίνηση της εστίασης στο &πρώτο κομμάτι"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Last Track"
+msgstr "Μετακίνηση της εστίασης στο &τελευταίο κομμάτι"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr "Μετακίνηση της εστίασης στο προη&γούμενο και επιλογή"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr "Μετακίνηση της εστίασης στο επόμε&νο και επιλογή"
+
+#: src/menus/NavigationMenus.cpp
+msgid "&Toggle Focused Track"
+msgstr "Ενα&λλαγή εστιασμένου κομματιού"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Toggle Focuse&d Track"
+msgstr "Εναλλαγή εστιασ&μένου κομματιού"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "Χωρίς κατηγορία"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Επανάληψη %s"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "Πρόσθετο %d σε %d"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Δημιουργία"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "Προσθήκη / Αφαίρεση προσθέτων..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "Επανάληψη τελευταίου εφέ"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "Ε&φέ"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "Ανά&λυση"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "Αντίθεση..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Ανάλυση φάσματος..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+msgid "T&ools"
+msgstr "Ε&ργαλεία"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Macros..."
+msgstr "&Μακροεντολές..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Apply Macro"
+msgstr "Ε&φαρμογή μακροεντολής"
+
+#: src/menus/PluginMenus.cpp
+msgid "Palette..."
+msgstr "Παλέτα..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Screenshot..."
+msgstr "&Στιγμιότυπο..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Εκτέλεση μέτρησης απόδοσης..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Simulate Recording Errors"
+msgstr "Προσομοίωση σφαλμάτων ηχογράφησης"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Ανίχνευση ανοδικών διακοπών"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+msgid "Script&ables I"
+msgstr "&Προγραμματιζόμενο Ι"
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Time..."
+msgstr "Επιλογή χρόνου..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Frequencies..."
+msgstr "Επιλογή συχνοτήτων..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Select Tracks..."
+msgstr "Επιλογή κομματιών..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Status..."
+msgstr "Ορισμός κατάστασης κομματιού..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr "Ορισμός ήχου κομματιού..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr "Ορισμός οπτικών κομματιού..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Preference..."
+msgstr "Λήψη προτίμησης..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Preference..."
+msgstr "Ορισμός προτίμησης..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Clip..."
+msgstr "Ορισμός αποσπάσματος..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Envelope..."
+msgstr "Ορισμός καμπύλης ακουστότητας..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Label..."
+msgstr "Ορισμός ετικέτας..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Project..."
+msgstr "Ορισμός έργου..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr "Με δυνατότητα δέσμης ενεργειών (Scripta&bles) II"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track..."
+msgstr "Ορισμός κομματιού..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr "Λήψη πληροφοριών..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Message..."
+msgstr "Μήνυμα..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Help..."
+msgstr "Βοήθεια..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Open Project..."
+msgstr "Άνοιγμα έργου..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Save Project..."
+msgstr "Αποθήκευση έργου..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Move Mouse..."
+msgstr "Μετακίνηση ποντικιού..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Compare Audio..."
+msgstr "Σύγκριση ήχου..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+msgid "Screenshot (short format)..."
+msgstr "Στιγμιότυπο (σύντομη μορφή)..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "Ορισμός αριστερού ορίου επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "Θέση"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "Ορισμός δεξιού ορίου επιλογής"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "&Επιλογή"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Τίποτα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select None"
+msgstr "Επιλογή κανενός"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "&Κομμάτια"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "Σε όλα τα &κομμάτια"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr "Σε όλα τα κλειδωμένα με σ&υγχρονισμό κομμάτια"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr "Επιλογή κλειδωμένου συγχρονισμού"
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr "&Περιοχή"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "Προς τα &αριστερά της θέσης αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Selection Left at Play Position"
+msgstr "Ορισμός επιλογής αριστερά της θέσης αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "Προς τα &δεξιά της θέσης αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Selection Right at Play Position"
+msgstr "Ορισμός επιλογής δεξιά της θέσης αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "Από την έναρ&ξη του κομματιού μέχρι τον δρομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Track Start to Cursor"
+msgstr "Επιλογή της έναρξης κομματιού στον δρομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "Δρομέας στο &τέλος του κομματιού"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Cursor to Track End"
+msgstr "Επιλογή δρομέα στο τέλος του κομματιού"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track Start to En&d"
+msgstr "Έναρξη κομματιού στο &τέλος"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Track Start to End"
+msgstr "Επιλογή έναρξης κομματιού στο τέλος"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&tore Selection"
+msgstr "Απο&θήκευση επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Retrieve Selectio&n"
+msgstr "Ανάκτηση επιλο&γής"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "Φασ&ματικός"
+
+#: src/menus/SelectMenus.cpp
+msgid "To&ggle Spectral Selection"
+msgstr "Ε&ναλλαγή φασματικής επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Higher Peak Frequency"
+msgstr "Επόμενη &υψηλότερη συχνότητα κορυφής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Lower Peak Frequency"
+msgstr "Επόμενη &χαμηλότερη συχνότητα κορυφής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr "Δρομέας στην αποθηκευμένη θέση &δρομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Cursor to Stored"
+msgstr "Επιλογή δρομέα για αποθήκευση"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr "Αποθήκευση &θέσης δρομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr "Σε &μηδενοδιελεύσεις"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Zero Crossing"
+msgstr "Επιλογή μηδενοδιέλευσης"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Selection"
+msgstr "&Επιλογή"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Off"
+msgstr "Προσκόλληση σε α&νενεργό"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Nearest"
+msgstr "Προσκόλληση στο πιο &κοντινό"
+
+#: src/menus/SelectMenus.cpp
+msgid "Snap-To &Prior"
+msgstr "Προσκόλληση στο προ&ηγούμενο"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to &Start"
+msgstr "Επιλογή για έναρ&ξη"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to En&d"
+msgstr "Επιλογή για &τέλος"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Left"
+msgstr "Επέκταση επιλογής αρ&ιστερά"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Right"
+msgstr "Επέκταση επιλογής &δεξιά"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "Ορισμός (ή επέκταση) αρι&στερής επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Ορισμός (ή επέκταση) δεξ&ιάς επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract L&eft"
+msgstr "Σύμπτυξη επιλογής α&ριστερά"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract R&ight"
+msgstr "Σύμπτυξη επιλογής δ&εξιά"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor to"
+msgstr "&Δρομέας σε"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Star&t"
+msgstr "Έναρξ&η επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Selection Start"
+msgstr "Ο δρομέας στην αρχή της επιλογής"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+msgid "Selection En&d"
+msgstr "&Τέλος επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Selection End"
+msgstr "Ο δρομέας στο τέλος της επιλογής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start"
+msgstr "Έναρ&ξη κομματιού"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track Start"
+msgstr "Ο δρομέας στην έναρξη του κομματιού"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &End"
+msgstr "&Τέλος κομματιού"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track End"
+msgstr "Ο δρομέας στο τέλος του κομματιού"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Project Start"
+msgstr "Αρχή έρ&γου"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Project Start"
+msgstr "Ο δρομέας στην αρχή του έργου"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr "Τέ&λος έργου"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Project End"
+msgstr "Ο δρομέας στο τέλος του έργου"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor"
+msgstr "&Δρομέας"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr "Δρομέας α&ριστερά"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr "Δρομέας &δεξιά"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr "&Σύντομο άλμα αριστερά δρομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr "Σύ&ντομο άλμα δεξιά δομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr "Μεγάλο ά&λμα αριστερά δρομέα"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr "Μεγάλο άλ&μα δεξιά δρομέα"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "Ανα&ζήτηση"
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Left During Playback"
+msgstr "Σύντομη αναζήτηση α&ριστερά κατά τη διάρκεια της αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Short Seek &Right During Playback"
+msgstr "Σύντομη αναζήτηση &δεξιά κατά τη διάρκεια της αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Le&ft During Playback"
+msgstr "Μεγάλη αναζήτηση αρι&στερά κατά τη διάρκεια της αναπαραγωγής"
+
+#: src/menus/SelectMenus.cpp
+msgid "Long Seek Rig&ht During Playback"
+msgstr "Μεγάλη αναζήτηση δε&ξιά κατά τη διάρκεια της αναπαραγωγής"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "&Γραμμές εργαλείων"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+msgid "Reset Toolb&ars"
+msgstr "Επαναφορά &γραμμών εργαλείων"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "Γραμμή εργαλείων &μεταφοράς"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "Γραμμή εργαλείων των ερ&γαλείων"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "Γραμμή εργαλείων μετρητή &ηχογράφησης"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "Γραμμή εργαλείων μετρητή &αναπαραγωγής"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "Γραμμή εργαλείων μεί&κτη"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "Γραμμή εργαλείων επε&ξεργασίας"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Γραμμή εργαλείων αναπαραγωγή-με-ταχύτητα"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "Γραμμή εργαλείων &τριψίματος"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "Γραμμή εργαλείων &συσκευών"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "Γραμμή εργαλείων επι&λογής"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "Γραμμή εργαλείων &φασματικής επιλογής"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Tool"
+msgstr "Εργαλείο ε&πιλογής"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Envelope Tool"
+msgstr "Εργαλείο &περιβάλλουσας"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Draw Tool"
+msgstr "Εργαλείο σ&χεδίασης"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Zoom Tool"
+msgstr "Εργαλείο ε&στίασης"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Time Shift Tool"
+msgstr "Εργαλείο &χρονικής μετατόπισης"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Multi Tool"
+msgstr "Πολ&υεργαλείο"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr "Προ&ηγούμενο εργαλείο"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Next Tool"
+msgstr "Ε&πόμενο εργαλείο"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "Αποδόθηκαν όλοι οι ήχοι στο κομμάτι '%s'"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Απόδοση"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr ""
+"Αναμείχθηκαν και αποδόθηκαν %d κομμάτια σε ένα νέο στερεοφωνικό κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "Αναμείχθηκαν και αποδόθηκαν %d κομμάτια σε ένα νέο μονοφωνικό κομμάτι"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+msgid "Panned audio track(s)"
+msgstr "Μετακινημένα κομμάτια ήχου"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Track"
+msgstr "Μετακίνηση κομματιού"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Εκκίνηση από το &μηδέν"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Έναρξη στην αρχή &δρομέα/επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Έναρξη στο &τέλος της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Λήξη στην αρχή του δ&ρομέα/επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Λήξη στο τέ&λος της επιλογής"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to zero"
+msgstr "Στοιχίστηκε/Μετακινήθηκε η αρχή στο μηδέν"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to zero"
+msgstr "Στοιχίστηκε η αρχή στο μηδέν"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Start"
+msgstr "Στοίχιση/Μετακίνηση αρχής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Start"
+msgstr "Στοίχιση αρχής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "Στοιχίστηκε/Μετακινήθηκε η αρχή στην αρχή του δρομέα/επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to cursor/selection start"
+msgstr "Στοίχιση αρχής στην αρχή του δρομέα/της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to selection end"
+msgstr "Στοιχίστηκε/μετακινήθηκε η αρχή με το τέλος της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to selection end"
+msgstr "Στοιχίστηκε η αρχή με το τέλος της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Στοιχίστηκε/μετακινήθηκε το τέλος με την αρχή του δρομέα/της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to cursor/selection start"
+msgstr "Στοιχίστηκε το τέλος με την αρχή του δρομέα/της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End"
+msgstr "Στοίχιση/μετακίνηση τέλους"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End"
+msgstr "Στοίχιση τέλους"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to selection end"
+msgstr "Στοιχίστηκε/μετακινήθηκε το τέλος με το τέλος της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to selection end"
+msgstr "Στοιχίστηκε το τέλος με το τέλος της επιλογής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to end"
+msgstr "Στοιχίστηκε/μετακινήθηκε διαδοχικά"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to end"
+msgstr "Στοιχίστηκε διαδοχικά"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End to End"
+msgstr "Διαδοχική στοίχιση/μετακίνηση"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End to End"
+msgstr "Διαδοχική στοίχιση"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved together"
+msgstr "Στοιχίστηκαν/Μετακινήθηκαν ταυτόχρονα"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned together"
+msgstr "Στοιχίστηκαν ταυτόχρονα"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Together"
+msgstr "Ταυτόχρονη στοίχιση/μετακίνηση"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Together"
+msgstr "Ταυτόχρονη στοίχιση"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "Συγχρονισμός MIDI με ήχο"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "Συγχρονισμός MIDI και κομματιών ήχου"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Ρύθμιση απολαβής"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Ρύθμιση μετατόπισης"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Απομακρύνθηκαν κομμάτια ήχου"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "Απομάκρυνση κομματιού"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "Απομακρύνθηκε το κομμάτι '%s.'"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "Απομάκρυνση κομματιού"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Top"
+msgstr "Μετακινήθηκε το '%s' στην κορυφή"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Top"
+msgstr "Μετακίνηση κομματιού στην κορυφή"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "Το '%s' μετακινήθηκε στο τέλος"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Bottom"
+msgstr "Μετακίνηση κομματιού στο τέλος"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Up"
+msgstr "Το '%s' μετακινήθηκε επάνω"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Down"
+msgstr "Το '%s' μετακινήθηκε κάτω"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Up"
+msgstr "Μετακίνηση κομματιού προς τα επάνω"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Down"
+msgstr "Μετακίνηση κομματιού προς τα κάτω"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Δημιουργήθηκε νέο κομμάτι ήχου"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Νέο κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Δημιουργήθηκε νέο κομμάτι στερεοφωνικού ήχου"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Δημιουργήθηκε νέο κομμάτι ετικέτας"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Αυτή η έκδοση του Audacity επιτρέπει μόνο ένα κομμάτι χρόνου σε κάθε "
+"παράθυρο έργου."
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Δημιουργήθηκε νέο κομμάτι χρόνου"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Νέος ρυθμός δειγματοληψίας (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "Η τιμή που εισήγαγες δεν είναι έγκυρη"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "Επαναδειγματοληψία κομματιού %d"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Κομμάτια ήχου με επαναδειγματοληψία"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "Επαναδειγματοληψία κομματιού"
+
+#: src/menus/TrackMenus.cpp
+msgid "Please select at least one audio track and one MIDI track."
+msgstr ""
+"Παρακαλούμε, επιλέξτε τουλάχιστον ένα κομμάτι ήχου και ένα κομμάτι MIDI."
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Ολοκληρώθηκε η στοίχιση: MIDI από %.2f μέχρι %.2f δευτερόλεπτα, ήχος από "
+"%.2f μέχρι %.2f δευτερόλεπτα."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "Συγχρονισμός MIDI με ήχο"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Σφάλμα στοίχισης: η είσοδος υπερβολικά σύντομη: MIDI από %.2f μέχρι %.2f "
+"δευτερόλεπτα, ήχος από %.2f μέχρι %.2f δευτερόλεπτα."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "Αναφέρθηκε εσωτερικό σφάλμα κατά τη διαδικασία στοίχισης."
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Κομμάτια ταξινομημένα κατά χρόνο"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "Ταξινόμηση κατά χρόνο"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "Κομμάτια ταξινομημένα κατά όνομα"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "Ταξινόμηση κατά όνομα"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Αδύνατη η διαγραφή κομματιού με ενεργό ήχο"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "&Νέο"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "&Μονοφωνικό κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&Στερεοφωνικό κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "Κομμάτι &ετικέτας"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "Κομμάτι &χρόνου"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr "Μεί&ξη"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix Stereo Down to &Mono"
+msgstr "Μίξη του στερεοφωνικού σε &μονοφωνικό"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "Μίξη"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "Μίξη και απόδοση σε &νέο κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "&Επαναδειγματοληψία..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "Απο&μάκρυνση των κομματιών"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "&Σίγαση/κατάργηση σίγασης"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "&Σίγαση όλων των κομματιών"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "Κατάργηση σίγασης όλων των κομματιών"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "&Μετατόπιση"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "&Αριστερά"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Left"
+msgstr "Μετακίνηση αριστερά"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "&Δεξιά"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Right"
+msgstr "Μετακίνηση δεξιά"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "&Κέντρο"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Center"
+msgstr "Μετακίνηση στο κέντρο"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "&Στοίχιση των κομματιών"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "Διαδοχική &στοίχιση"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "Στοίχιση &μαζί"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "&Μετακίνηση επιλογής με κομμάτια (ναι/όχι)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "Μετακίνηση επιλο&γής και κομματιών"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "&Τακτοποίηση των κομματιών"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Start Time"
+msgstr "Κατά χρόνο έναρ&ξης"
+
+#: src/menus/TrackMenus.cpp
+msgid "By &Name"
+msgstr "Κατά &όνομα"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "&Κλείδωμα συγχρονισμού των κομματιών (ναι/όχι)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Track"
+msgstr "&Κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "Change P&an on Focused Track..."
+msgstr "Αλλαγή &μετακίνηση στο εστιασμένο κομμάτι..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan &Left on Focused Track"
+msgstr "Μετακίνηση α&ριστερά στο εστιασμένο κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan &Right on Focused Track"
+msgstr "Μετακίνηση &δεξιά στο εστιασμένο κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "Change Gai&n on Focused Track..."
+msgstr "Αλλαγή απολα&βής στο εστιασμένο κομμάτι..."
+
+#: src/menus/TrackMenus.cpp
+msgid "&Increase Gain on Focused Track"
+msgstr "Αύ&ξηση απολαβής στο εστιασμένο κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Decrease Gain on Focused Track"
+msgstr "&Μείωση απολαβής στο εστιασμένο κομμάτι"
+
+#: src/menus/TrackMenus.cpp
+msgid "Op&en Menu on Focused Track..."
+msgstr "Άνοι&γμα μενού στο εστιασμένο κομμάτι..."
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute Focused Track"
+msgstr "Σί&γαση/κατάργηση σίγασης εστιασμένου κομματιού"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Solo/Unsolo Focused Track"
+msgstr "&Μονωδία(σόλο)/Κατάργηση μονωδίας εστιασμένου κομματιού"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Close Focused Track"
+msgstr "&Κλείσιμο εστιασμένου κομματιού"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track U&p"
+msgstr "Μετακίνηση εστιασμένου κομματιού προς τα &πάνω"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track Do&wn"
+msgstr "Μετακίνηση εστιασμένου κομματιού προς τα &κάτω"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track to T&op"
+msgstr "Μετακίνηση εστιασμένου κομματιού στην κορ&υφή"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Focused Track to &Bottom"
+msgstr "Μετακίνηση εστιασμένου κομματιού στον πυ&θμένα"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "χωρίς κομμάτι ετικέτας"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "χωρίς κομμάτι ετικέτας στο εστιασμένο κομμάτι ή από κάτω"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "χωρίς ετικέτες στο κομμάτι ετικέτας"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Αδύνατο το κλείδωμα περιοχής πέρα από\n"
+"το τέλος του έργου."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+"Η ηχογράφηση με χρονοδιακόπτη δεν μπορεί να χρησιμοποιηθεί με περισσότερα "
+"από ένα ανοικτά έργα.\n"
+"\n"
+"Παρακαλούμε, κλείστε οποιοδήποτε επιπλέον έργο και ξαναπροσπαθήστε."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+"Η ηχογράφηση με χρονοδιακόπτη δεν μπορεί να χρησιμοποιηθεί εώ έχετε "
+"αναποθήκευτες αλλαγές.\n"
+"\n"
+"Παρακαλούμε, αποθηκεύστε ή κλείστε αυτό το έργο και ξαναδοκιμάστε."
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select in a mono track."
+msgstr "Παρακαλούμε, επιλέξτε μονοφωνικό κομμάτι."
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select in a stereo track."
+msgstr "Παρακαλούμε, επιλέξτε στερεοφωνικό κομμάτι."
+
+#: src/menus/TransportMenus.cpp
+#, c-format
+msgid "Please select at least %d channels."
+msgstr "Παρακαλούμε, επιλέξτε τουλάχιστον %d κανάλια."
+
+#: src/menus/TransportMenus.cpp
+msgid "Please select a time within a clip."
+msgstr "Παρακαλούμε, επιλέξτε κάποιον χρόνο μες το απόσπασμα."
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+msgid "Tra&nsport"
+msgstr "Μετα&φορά"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pl&aying"
+msgstr "Α&ναπαραγωγή"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "Α&ναπαραγωγή/Διακοπή"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "Αναπαραγωγή/Διακοπή και &τοποθέτηση δρομέα"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "Αναπαραγωγή με επανάλη&ψη"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&Παύση"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Recording"
+msgstr "Η&χογράφηση"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&Ηχογράφηση"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Append Record"
+msgstr "Π&ροσάρτηση ηχογράφησης"
+
+#: src/menus/TransportMenus.cpp
+msgid "Record &New Track"
+msgstr "Ηχογράφηση &νέου κομματιού"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&Προγραμματισμένη ηχογράφηση..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr "Ηχογράφηση σήμανσης και διόρθωσης (Punch and Rol&l)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "Θέση αναπαραγ&ωγής"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&Κλείδωμα"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&Ξεκλείδωμα"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "Ε&πανασάρωση συσκευών ήχου"
+
+#: src/menus/TransportMenus.cpp
+msgid "Transport &Options"
+msgstr "Ε&ιλογές μεταφοράς"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "Επί&πεδο ενεργοποίησης ήχου..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "Ηχογράφηση ενερ&γοποιημένου ήχου (ναι/όχι)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "Καρφιτσωμένη &κεφαλή αναπαραγωγής/ηχογράφησης (ναι/όχι)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "&Προσθήκη ήχου (ναι/όχι)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "Πλήρης αναπαραγωγή &λογισμικού (ναι/όχι)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "Α&υτόματη ρύθμιση επιπέδου ηχογράφησης (ναι/όχι)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "&Μεταφορά"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "Αν&απαραγωγή"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr "Δια&κοπή"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &One Second"
+msgstr "Αναπαραγωγή ε&νός δευτερολέπτου"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play to &Selection"
+msgstr "Αναπαραγωγή στην επι&λογή"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &Before Selection Start"
+msgstr "Αναπαραγωγή &πριν την αρχή της επιλογής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Af&ter Selection Start"
+msgstr "Αναπαραγωγή &μετά την αρχή της επιλογής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Be&fore Selection End"
+msgstr "Αναπαραγωγή π&ριν το τέλος της επιλογής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Aft&er Selection End"
+msgstr "Αναπαραγωγή με&τά το τέλος της επιλογής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before a&nd After Selection Start"
+msgstr "Αναπαραγωγή πριν &και μετά την αρχή της επιλογής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before an&d After Selection End"
+msgstr "Αναπαραγωγή πριν κ&αι μετά το τέλος της επιλογής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr "Προεπισκόπηση α&ποκοπής αναπαραγωγής"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Play-at-Speed"
+msgstr "Α&ναπαραγωγή-με-ταχύτητα"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Κανονική α&ναπαραγωγή-με-ταχύτητα"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play-at-Speed"
+msgstr "Αναπαραγωγή με επανάλη&ψη σε ταχύτητα"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Προεπισκόπησης απο&κοπής αναπαραγωγής σε ταχύτητα"
+
+#: src/menus/TransportMenus.cpp
+msgid "Ad&just Playback Speed..."
+msgstr "Ρύθμ&ιση ταχύτητας αναπαραγωγής..."
+
+#: src/menus/TransportMenus.cpp
+msgid "&Increase Playback Speed"
+msgstr "Αύ&ξηση ταχύτητας αναπαραγωγής"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Decrease Playback Speed"
+msgstr "Μεί&ωση ταχύτητας αναπαραγωγής"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr "Μετακίνηση στην προ&ηγούμενη ετικέτα"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr "Μετακίνηση στην επό&μενη ετικέτα"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Προβολή"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "Ε&στίαση"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "&Μεγέθυνση"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "Προβολή στο &κανονικό"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "&Σμίκρυνση"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "&Μεγέθυνση στο επιλεγμένο"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Toggle"
+msgstr "Ε&ναλλαγή εστίασης"
+
+#: src/menus/ViewMenus.cpp
+msgid "Advanced &Vertical Zooming"
+msgstr "Προχωρημένη &κάθετη εστίαση"
+
+#: src/menus/ViewMenus.cpp
+msgid "T&rack Size"
+msgstr "Μέγεθος &κομματιού"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Fit to Width"
+msgstr "&Προσαρμογή στο πλάτος"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr "Προσαρμογή στο ύ&ψος"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "&Σύμπτυξη όλων των κομματιών"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "Ε&πέκταση όλων των συνεπτυγμένων κομματιών"
+
+#: src/menus/ViewMenus.cpp
+msgid "Sk&ip to"
+msgstr "Με&ταπήδηση σε"
+
+#: src/menus/ViewMenus.cpp
+msgid "Selection Sta&rt"
+msgstr "Ένα&ρξη επιλογής"
+
+#: src/menus/ViewMenus.cpp
+msgid "Skip to Selection Start"
+msgstr "Στην αρχή της επιλογής"
+
+#: src/menus/ViewMenus.cpp
+msgid "Skip to Selection End"
+msgstr "Στο τέλος της επιλογής"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&Ιστορικό..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "&Καραόκε..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "Πίνακας μεί&κτη..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr "&Πρόσθετα μενού (ναι/όχι)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Show Clipping (on/off)"
+msgstr "Εμ&φάνιση ψαλιδίσματος (ναι/όχι)"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Εμφάνιση Effects Rack"
+
+#  i18n-hint: This refers to a "window function", used in the
+#  Frequency analyze dialog box.
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "&Παράθυρο"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "Ε&λαχιστοποίηση"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "Με&ταφορά όλων εμπρός"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+msgid "Minimize All Projects"
+msgstr "Ελαχιστοποίηση όλων των έργων"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13269,13 +13671,17 @@ msgstr "Αποκωδικοποιείται η κυματομορφή"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 "Ολοκληρώθηκε το %s %2.0f%%. Πατήστε για να αλλάξετε εργασία εστιακού σημείου."
 
-#: src/prefs/BatchPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Ομαδική"
+
+#: src/prefs/BatchPrefs.cpp
+msgid "Preferences for Batch"
+msgstr "Προτιμήσεις δέσμης"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13288,6 +13694,10 @@ msgstr "Να μην εφαρμόζονται εφέ σε κατάσταση δέ
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr "Συσκευές"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Preferences for Device"
+msgstr "Προτιμήσεις συσκευής"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13304,7 +13714,7 @@ msgid "Using:"
 msgstr "Χρησιμοποιεί:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Αναπαραγωγή"
 
@@ -13313,7 +13723,8 @@ msgid "&Device:"
 msgstr "&Συσκευή:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Ηχογράφηση"
 
@@ -13359,9 +13770,13 @@ msgid "2 (Stereo)"
 msgstr "2 (Στέρεο)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Φάκελοι"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Preferences for Directories"
+msgstr "Προτιμήσεις καταλόγων"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13369,7 +13784,7 @@ msgstr "Κατάλογος προσωρινών αρχείων"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Location:"
-msgstr "&Τοποθεσία"
+msgstr "&Τοποθεσία:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Free Space:"
@@ -13441,12 +13856,45 @@ msgid "Temp Directory Update"
 msgstr "Ενημέρωση καταλόγου Temp"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "Preferences for Effects"
+msgstr "Προτιμήσεις εφέ"
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr "Ενεργοποίηση εφέ"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
-msgstr "Μονάδα ήχου"
+msgid "&LADSPA"
+msgstr "&LADSPA"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr "LV&2"
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+msgid "N&yquist"
+msgstr "N&yquist"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Vamp"
+msgstr "&Vamp"
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
+msgstr "V&ST"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -13506,6 +13954,10 @@ msgstr "&Χρησιμοποιήστε SSE/SSE2/.../AVX"
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr "Επεκταμένη εισαγωγή"
+
+#: src/prefs/ExtImportPrefs.cpp
+msgid "Preferences for ExtImport"
+msgstr "Προτιμήσεις εξωτερικής εισαγωγής"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13578,6 +14030,14 @@ msgstr "Επιθυμείτε σίγουρα την διαγραφή του επ�
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr "Επιβεβαίωση διαγραφής κανόνα"
+
+#: src/prefs/ExtImportPrefs.h
+msgid "Ext Import"
+msgstr "Εξωτερική εισαγωγή"
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Preferences for GUI"
+msgstr "Προτιμήσεις γραφικής διεπαφής"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -13692,9 +14152,17 @@ msgstr "Α&νάμειξη θέματος συστήματος και Audacity"
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Χρήση κυρίως διατάξεων αριστερά-προς-τα-δεξιά σε γλώσσες RTL"
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr "Γραφική διεπαφή"
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "Εισαγωγή / Εξαγωγή"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
+msgstr "Προτιμήσεις εισαγωγών/εξαγωγών"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
@@ -13740,10 +14208,18 @@ msgstr "&Δευτερόλεπτα"
 msgid "&Beats"
 msgstr "&Κτύποι (Beats)"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr "ΕΙΣΑΓΩΓΗ ΕΞΑΓΩΓΗ"
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Πληκτρολόγιο"
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Preferences for KeyConfig"
+msgstr "Προτιμήσεις ρυθμίσεων πληκτρολογίου"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -13862,37 +14338,41 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 "Η συντόμευση πληκτρολογίου '%s' έχει ήδη εκχωρηθεί στο:\n"
 "\n"
-"       '%s'\n"
+"\t'%s'\n"
 "\n"
-"Πατήστε Εντάξει για να εκχωρήσετε τη συντόμευση στο\n"
+"Πατήστε Εντάξει για να αποδώσετε τη συντόμευση στο\n"
 "\n"
-"        '%s'\n"
+"\t'%s'\n"
 "\n"
-"Αλλιώς, πατήστε άκυρο."
+"Αλλιώς, πατήστε Ακύρωση."
+
+#: src/prefs/KeyConfigPrefs.h
+msgid "Key Config"
+msgstr "Ρυθμίσεις πληκτρολογίου"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
-msgstr "Βιβλιοθήκη εξαγωγής MP3"
+msgid "Preferences for Library"
+msgstr "Προτιμήσεις βιβλιοθήκης"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "LAME MP3 Export Library"
+msgstr "Βιβλιοθήκη εξαγωγής LAME MP3"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Library Version:"
 msgstr "Έκδοση MP3 βιβλιοθήκης:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
-msgstr "Βιβλιοθήκη MP3:"
+msgid "LAME MP3 Library:"
+msgstr "Βιβλιοθήκη LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
 msgstr "&Εντοπισμός..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Βιβλιοθήκη LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -13934,10 +14414,18 @@ msgstr ""
 "Το Audacity έχει ανιχνεύσει αυτόματα έγκυρες βιβλιοθήκες FFmpeg.\n"
 "Θέλετε ακόμα να τις εντοπίσετε χειροκίνητα;"
 
+#: src/prefs/LibraryPrefs.h
+msgid "Library"
+msgstr "Βιβλιοθήκη"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr "Συσκευές MIDI"
+
+#: src/prefs/MidiIOPrefs.cpp
+msgid "Preferences for MidiIO"
+msgstr "Προτιμήσεις εισόδου-εξόδου Midi"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -13955,17 +14443,17 @@ msgstr "Χωρίς διεπαφές MIDI"
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr "Ο λανθάνων χρόνος συνθέτη MIDI πρέπει να είναι ακέραιος"
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr "Είσοδος-έξοδος Midi"
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Αρθρώματα"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Ερώτηση"
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr "Αποτυχία"
+msgid "Preferences for Module"
+msgstr "Προτιμήσεις για άρθρωμα"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -14000,16 +14488,32 @@ msgstr ""
 "Οι αλλαγές σε αυτές τις ρυθμίσεις θα γίνουν μόνο το Audacity ξεκινήσει."
 
 #: src/prefs/ModulePrefs.cpp
+msgid "Ask"
+msgstr "Ερώτηση"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr "Αποτυχία"
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
 msgstr "Δεν βρέθηκαν αρθρώματα"
+
+#: src/prefs/ModulePrefs.h
+msgid "Module"
+msgstr "Άρθρωμα"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr "Ctrl"
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Ποντίκι"
+
+#: src/prefs/MousePrefs.cpp
+msgid "Preferences for Mouse"
+msgstr "Προτιμήσεις για ποντίκι"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14209,6 +14713,10 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Περιοχή σε (dB) κυματομορφής κάθετης κλίμακας"
 
 #: src/prefs/PlaybackPrefs.cpp
+msgid "Preferences for Playback"
+msgstr "Προτιμήσεις για αναπαραγωγή"
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr "Προεπισκόπηση των εφέ"
 
@@ -14246,6 +14754,10 @@ msgid "&Vari-Speed Play"
 msgstr "Αναπαραγωγή με &μεταβλητή ταχύτητα"
 
 #: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
+msgstr "&Μικροεξασθενίσεις"
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
 msgstr "Πάντα &ξεκαρφιτσωμένο τρίψιμο"
 
@@ -14262,9 +14774,13 @@ msgid "Preferences: "
 msgstr "Προτιμήσεις: "
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr "Έργα"
+
+#: src/prefs/ProjectsPrefs.cpp
+msgid "Preferences for Projects"
+msgstr "Προτιμήσεις έργων"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14301,6 +14817,10 @@ msgstr "Τρίγωνο"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "Μορφοποιημένο"
+
+#: src/prefs/QualityPrefs.cpp
+msgid "Preferences for Quality"
+msgstr "Προτιμήσεις για"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14343,6 +14863,10 @@ msgstr "Μετατρο&πέας ρυθμού δειγματοληψίας:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Πρό&σμιξη:"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Preferences for Recording"
+msgstr "Προτιμήσεις ηχογράφησης"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -14432,7 +14956,7 @@ msgstr "ms (χρόνος μιας ανάλυσης)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Number of consecutive analysis:"
-msgstr "αριθμός διαδοχικών αναλύσεων:"
+msgstr "Αριθμός διαδοχικών αναλύσεων:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "0 means endless"
@@ -14518,16 +15042,8 @@ msgid "Spectrograms"
 msgstr "Φασματογραφήματα"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr "8 - πιο ευρυζωνικό"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "1024 - default"
-msgstr "1024 - προεπιλογή"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr "32768 - περισσότερο περιορισμένη ζώνη"
+msgid "Preferences for Spectrum"
+msgstr "Προτιμήσεις φάσματος"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14577,6 +15093,22 @@ msgstr "Α&λγόριθμος"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
 msgstr "&Μέγεθος παραθύρου:"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr "8 - πιο ευρυζωνικό"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "1024 - default"
+msgstr "1024 - προεπιλογή"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr "2048"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
+msgstr "32768 - περισσότερο περιορισμένη ζώνη"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &type:"
@@ -14659,9 +15191,13 @@ msgstr "Ο μέγιστος αριθμός από νότες πρέπει να �
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr "Θέμα"
+
+#: src/prefs/ThemePrefs.cpp
+msgid "Preferences for Theme"
+msgstr "Προτιμήσεις θέματος"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -14698,7 +15234,7 @@ msgstr ""
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "Αυτή είναι έκδοση αποσφαλμάτωσης του Audacity, με ένα πρόσθετο πλήκτρο, "
@@ -14742,9 +15278,13 @@ msgid "Load Files"
 msgstr "Φόρτωμα αρχείων"
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
 msgstr "Συμπεριφορές κομματιών"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "Preferences for TracksBehaviors"
+msgstr "Προτιμήσεις συμπεριφοράς κομματιών"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Simple"
@@ -14755,8 +15295,8 @@ msgid "Multi-track"
 msgstr "Πολυκάναλος"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
-msgstr "Α&υτόματη επιλογή, εάν απαιτείται επιλογή"
+msgid "&Select all audio, if selection required"
+msgstr "Ε&πιλογή όλου του ήχου, εάν απαιτείται επιλογή"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14867,8 +15407,13 @@ msgid "4 Pixels per Sample"
 msgstr "4 εικονοστοιχεία ανά δείγμα"
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Max Zoom"
 msgstr "Μέγιστη εστίαση"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Preferences for Tracks"
+msgstr "Προτιμήσεις κομματιών"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -14923,9 +15468,13 @@ msgstr "Προεπιλογή 1:"
 msgid "Preset 2:"
 msgstr "Προεπιλογή 2:"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr "Προειδοποιήσεις"
+
+#: src/prefs/WarningsPrefs.cpp
+msgid "Preferences for Warnings"
+msgstr "Προτιμήσεις προειδοποιήσεων"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -14965,6 +15514,10 @@ msgstr "&Εισαγωγή μη συμπιεσμένων αρχείων ακου�
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
 msgstr "Κυματομορφές"
+
+#: src/prefs/WaveformPrefs.cpp
+msgid "Preferences for Waveforms"
+msgstr "Προτιμήσεις κυματομορφών"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range"
@@ -15271,8 +15824,8 @@ msgstr "%s - οδηγούμενο"
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
 #, c-format
-msgid "Selection %s.  %s won't change."
-msgstr "Επιλογή %s. Το %s δεν θα αλλάξει."
+msgid "Selection %s. %s won't change."
+msgstr "Επιλογή του %s. Το %s δεν θα αλλάξει."
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -15377,10 +15930,12 @@ msgid "Face size"
 msgstr "Μέγεθος γραμματοσειράς"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Up &Octave"
 msgstr "Πάνω &οκτάβα"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Down Octa&ve"
 msgstr "Κάτω ο&κτάβα"
 
@@ -15627,7 +16182,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr "Σταματήγστε πρώτα τον ήχο"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Μονό"
 
@@ -15891,6 +16446,18 @@ msgid "Collapse"
 msgstr "Σύμπτυξη"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Command+Click to Unselect"
+msgstr "Εντολή+πάτημα για αποεπιλογή"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Select track"
+msgstr "Επιλογή κομματιού"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr "Ctrl+πάτημα για αποεπιλογή"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
 msgstr "Άνοιγμα μενού..."
 
@@ -16050,6 +16617,42 @@ msgstr "Προς τα πίσω"
 msgid "Help on the Internet"
 msgstr "Βοήθεια στο ίντερνετ"
 
+#: src/widgets/HelpSystem.cpp
+msgid "Do you have these problems?"
+msgstr "Έχετε αυτά τα προβλήματα;"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fix"
+msgstr "Διόρθωση"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Quick Fixes"
+msgstr "Γρήγορες ρυθμίσεις"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Nothing to do"
+msgstr "Δεν υπάρχει τίποτα να γίνει"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr "Δεν βρέθηκαν γρήγορα, ευκολοεπιλύσιμα προβλήματα"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Clocks on the Tracks"
+msgstr "Ρολόγια στα κομμάτια"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Can't select precisely"
+msgstr "Αδύνατη η ακριβής επιλογή"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Recording stops and starts"
+msgstr "Η ηχογράφηση σταματά και ξεκινά"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr "Διορθώθηκε"
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr "Μενού"
@@ -16166,7 +16769,7 @@ msgstr " Αποκομμένο "
 msgid "Show Log for Details"
 msgstr "Εμφάνιση ημερολογίου για λεπτομέρειες"
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr "Παρακαλούμε, επιλέξτε μια ενέργεια"
 
@@ -16507,118 +17110,6 @@ msgstr "Είστε σίγουροι ότι θέλετε να κλείσετε;"
 msgid "Confirm Close"
 msgstr "Επιβεβαίωση κλεισίματος"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Οι ενέργειες της λωρίδας χρόνου απενεργοποιήθηκαν κατά την εγγραφή"
-
-#: src/widgets/Ruler.cpp
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Πατήστε και σύρετε για να ρυθμίσετε, διπλοπατήστε για επαναφορά"
-
-#: src/widgets/Ruler.cpp
-msgid "Record/Play head"
-msgstr "Κεφαλή ηχογράφησης/αναπαραγωγής"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr "Λωρίδα χρόνου"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Seek"
-msgstr "Πάτημα ή μεταφορά για έναρξη αναζήτησης"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "Πάτημα ή μεταφορά για έναρξη τριψίματος"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Πάτημα και μετακίνηση για τρίψιμο. Πάτημα και μεταφορά για αναζήτηση."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr "Μετακίνηση για αναζήτηση"
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr "Μετακίνηση για τρίψιμο"
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr "Μεταφορά για αναζήτηση. Απελευθέρωση για παύση αναζήτησης."
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr "Μεταφορά για αναζήτηση. Απελευθέρωση και μετακίνηση για τρίψιμο."
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr "Μετακίνηση για τρίψιμο. Μεταφορά για αναζήτηση."
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "Απενεργοποιημένη η γρήγορη αναπαραγωγή"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr "Ενεργοποιημένη η γρήγορη αναπαραγωγή"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to unpin"
-msgstr "Πάτημα για ξεκαρφίτσωμα"
-
-#: src/widgets/Ruler.cpp
-msgid "Click to pin"
-msgstr "Πάτημα για καρφίτσωμα"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr "Απενεργοποίηση γρήγορης αναπαραγωγής"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr "Ενεργοποίηση γρήγορης αναπαραγωγής"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable dragging selection"
-msgstr "Απενεργοποίηση επιλογής μεταφοράς"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable dragging selection"
-msgstr "Ενεργοποίηση επιλογής μεταφοράς"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr "Απενεργοποίηση συμβουλών λωρίδας χρόνου"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr "Ενεργοποίηση συμβουλών λωρίδας χρόνου"
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr "Να μην κυλάει κατά την αναπαραγωγή"
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr "Ενημέρωση εμφάνισης κατά την αναπαραγωγή"
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr "Κλείδωμα περιοχής αναπαραγωγής"
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr "Ξεκλείδωμα περιοχής αναπαραγωγής"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr "Απενεργοποίηση χάρακα τριψίματος"
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr "Ενεργοποίηση χάρακα τριψίματος"
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Να μην εμφανιστεί ξανά"
@@ -16723,10 +17214,11 @@ msgstr "Alex S. Brown"
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr "Εκδόθηκε με τους όρους της Γενικής Δημόσιας Άδειας GNU, έκδοσης 2"
 
@@ -16740,7 +17232,7 @@ msgstr "Ελάχιστη διάρκεια σιγής [δευτερόλεπτα]"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Label placement [seconds before silence ends]"
-msgstr "τοποθέτηση ετικέτας [δευτερόλεπτα πριν τον τερματισμό της σιωπής]"
+msgstr "Τοποθέτηση ετικέτας [δευτερόλεπτα πριν τον τερματισμό της σιωπής]"
 
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
@@ -16933,7 +17425,7 @@ msgstr "Εξασθένηση"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve Up"
-msgstr "Καμπύλη s προς τα πάνω "
+msgstr "Καμπύλη s προς τα πάνω"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve Down"
@@ -17022,6 +17514,11 @@ msgstr "Έξοδος καμπύλης S"
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
+msgid "Error~%~%"
+msgstr "Σφάλμα~%~%"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr "~aΟι τιμές ποσοστού δεν μπορούν να είναι αρνητικές."
 
@@ -17035,16 +17532,11 @@ msgstr "~aΟι τιμές ποσοστού δεν μπορούν να είναι
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
 "τιμές ~adB δεν μπορεί να είναι μεγαλύτερες από +100 dB.~%~%~\n"
 "                                 Υπόδειξη: 6 dB διπλασιάζουν το πλάτος~%~\n"
-"                                 t-6 dB υποδιπλασιάζουν το πλάτος."
-
-#: plug-ins/adjustable-fade.ny
-#, lisp-format
-msgid "Error~%~%"
-msgstr "Σφάλμα~%~%"
+"                                 \t-6 dB υποδιπλασιάζουν το πλάτος."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -17212,32 +17704,6 @@ msgstr "Αριθμός αντηχήσεων"
 msgid "Allow duration to change"
 msgstr "Να επιτρέπεται αλλαγή της διάρκειας"
 
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Ο αριθμός των αντηχήσεων '~a' εκτός έγκυρης περιοχής 1 έως 50.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "Τονικό ύψος '~a' εκτός έγκυρης περιοχής -12 έως +12 ημιτόνια.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-"Ο χρόνος καθυστέρησης '~a' εκτός έγκυρης περιοχής 0 έως 10 δευτερόλεπτα.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "Το επίπεδο καθυστέρησης '~a' εκτός έγκυρης περιοχής -30 έως +6 dB.~%~a"
-
-#: plug-ins/delay.ny
-#, lisp-format
-msgid "Error.~%~a"
-msgstr "Σφάλμα.~%~a"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "Ετικέτες κανονικού διαστήματος"
@@ -17246,9 +17712,14 @@ msgstr "Ετικέτες κανονικού διαστήματος"
 msgid "Adding equally-spaced labels to the label track..."
 msgstr "Προσθήκη ισαπεχουσών ετικετών στο κομμάτι ετικέτας..."
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr "Χρησιμοποιήστε 'Αριθμός ετικετών' Ή 'Απόσταση ετικετών'"
+msgid "Create labels based on"
+msgstr "Δημιουργία ετικετών με βάση το"
+
+#: plug-ins/equalabel.ny
+msgid "Number & Interval"
+msgstr "Αριθμός & διάστημα"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -17265,6 +17736,10 @@ msgstr "Αριθμός εικετών"
 #: plug-ins/equalabel.ny
 msgid "Label interval (seconds)"
 msgstr "Διάστημα ετικέτας(δευτ.)"
+
+#: plug-ins/equalabel.ny
+msgid "Length of label region (seconds)"
+msgstr "Διάρκεια της περιοχής ετικέτας (δευτερόλεπτα)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -17309,6 +17784,43 @@ msgstr "3 (Μετά την ετικέτα)"
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
 msgstr "Έναρξη αρίθμησης από"
+
+#: plug-ins/equalabel.ny
+msgid "Message on completion"
+msgstr "Μήνυμα ολοκλήρωσης"
+
+#: plug-ins/equalabel.ny
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: plug-ins/equalabel.ny
+msgid "Warnings only"
+msgstr "Μόνο προειδοποιήσεις"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr "Προειδοποίηση: Επικάλυψη ετικετών περιοχής.~%"
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+msgid "region labels"
+msgstr "ετικέτες περιοχής"
+
+#: plug-ins/equalabel.ny
+msgid "point labels"
+msgstr "ετικέτες σημείων"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr "~a~a ~a σε διαστήματα των ~a δευτερολέπτων.~%"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~aRegion length = ~a seconds."
+msgstr "~aΜήκος περιοχής = ~a δευτερόλεπτα."
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
@@ -17459,6 +17971,54 @@ msgstr ""
 "δειγματοληψίας του κομματιού.~%~%~\n"
 "                 Ο ρυθμός δειγματοληψίας του κομματιού είναι ~a Hz.~%~\n"
 "                 Η συχνότητα πρέπει να είναι μικρότερη από ~a Hz."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "Nyquist Plug-in Installer"
+msgstr "Εγκαταστάτης προσθέτου Nyquist"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "Select plug-in file"
+msgstr "Επιλογή αρχείου προσθέτου"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr "Σφάλμα.Το ~%~s δεν βρέθηκε ή δεν μπορεί να διαβαστεί.~%"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr "Σφάλμα. Το ~%~s δεν είναι υποστηριζόμενο πρόσθετο.~%"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr "Σφάλμα. Το ~%~s δεν είναι έγκυρο πρόσθετο Nyquist.~%"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr "Σφάλμα. Το ~%~s είναι ήδη εγκατεστημένο.~%"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Σφάλμα.Το ~%~s δεν μπορεί να εγγραφεί.~%"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+"Το ~s εγκαταστάθηκε στο:~%\"~a\"~%~%~\n"
+"            Χρησιμοποιήστε τον διαχειριστή προσθέτων για να ενεργοποιήσετε "
+"το εφέ."
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
+msgstr "Αυτό το πρόσθετο απαιτεί Audacity 2.3.1 ή μεταγενέστερο."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
@@ -17645,14 +18205,6 @@ msgstr "Ποσότητα θορύβου στη μείξη (ποσοστό)"
 #: plug-ins/rissetdrum.ny
 msgid "Amplitude (0 - 1)"
 msgstr "Πλάτος (0-1)"
-
-#: plug-ins/rms.ny
-msgid "Left"
-msgstr "Αριστερά"
-
-#: plug-ins/rms.ny
-msgid "Right"
-msgstr "Δεξιά"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
@@ -18369,6 +18921,60 @@ msgstr "Συχνότητα βελονών ραντάρ (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
+#~ msgid "cleaned"
+#~ msgstr "καθαρισμένο"
+
+#~ msgid "false"
+#~ msgstr "ψευδές"
+
+#~ msgid "AudioUnit"
+#~ msgstr "Μονάδα ήχου"
+
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Προτροπή εφέ Nyquist"
+
+#~ msgid "Save Device Info"
+#~ msgstr "Αποθήκευση πληροφοριών συσκευής"
+
+#~ msgid "Unable to save device info"
+#~ msgstr "Αδύνατη η αποθήκευση πληροφοριών συσκευής"
+
+#~ msgid "Save MIDI Device Info"
+#~ msgstr "Αποθήκευση πληροφοριών συσκευής MIDI"
+
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "Αδύνατη η αποθήκευση πληροφοριών συσκευής MIDI"
+
+#~ msgid "MP3 Library:"
+#~ msgstr "Βιβλιοθήκη MP3:"
+
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "Ο αριθμός των αντηχήσεων '~a' εκτός έγκυρης περιοχής 1 έως 50.~%~a"
+
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr "Τονικό ύψος '~a' εκτός έγκυρης περιοχής -12 έως +12 ημιτόνια.~%~a"
+
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr ""
+#~ "Ο χρόνος καθυστέρησης '~a' εκτός έγκυρης περιοχής 0 έως 10 δευτερόλεπτα.~"
+#~ "%~a"
+
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr ""
+#~ "Το επίπεδο καθυστέρησης '~a' εκτός έγκυρης περιοχής -30 έως +6 dB.~%~a"
+
+#~ msgid "Error.~%~a"
+#~ msgstr "Σφάλμα.~%~a"
+
+#~ msgid "Use 'Number of labels' OR 'Label interval'"
+#~ msgstr "Χρησιμοποιήστε 'Αριθμός ετικετών' Ή 'Απόσταση ετικετών'"
+
+#~ msgid "Left"
+#~ msgstr "Αριστερά"
+
+#~ msgid "Right"
+#~ msgstr "Δεξιά"
+
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
 #~ "before zero.\n"
@@ -18586,9 +19192,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid "to Top"
 #~ msgstr "στην κορυφή"
-
-#~ msgid "to Bottom"
-#~ msgstr "στον πυθμένα"
 
 #~ msgid "Down"
 #~ msgstr "Κάτω"
@@ -19004,9 +19607,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgid "C&ategory:"
 #~ msgstr "Κ&ατηγορία:"
 
-#~ msgid "Key Combination"
-#~ msgstr "Συνδυασμός πλήκτρων"
-
 #~ msgid ""
 #~ "The keyboard shortcut '%s' is already assigned to:\n"
 #~ "\n"
@@ -19133,9 +19733,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid "Host:"
 #~ msgstr "&Οικοδεσπότης:"
-
-#~ msgid "Device:"
-#~ msgstr "Συσκευή:"
 
 #~ msgid "&Length of preview:"
 #~ msgstr "&Χρόνος της προεπισκόπησης:"
@@ -19301,10 +19898,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgid "R&ight Channel"
 #~ msgstr "Δεξί κανάλι"
 
-#, fuzzy
-#~ msgid "&Rate"
-#~ msgstr "Ορισμός ρυθμού δειγματοληψίας"
-
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "Σύρετε το κομμάτι κάθετα για να αλλάξετε την σειρά των κομματιών."
 
@@ -19325,9 +19918,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid "Length (seconds):"
 #~ msgstr "Διάρκεια (δευτ.):"
-
-#~ msgid "From length in seconds"
-#~ msgstr "Από διάρκεια σε δευτερόλεπτα"
 
 #, fuzzy
 #~ msgid "No wave tracks exist."
@@ -20358,9 +20948,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #, fuzzy
 #~ msgid "Silence Labels"
 #~ msgstr "Τονισμένες ετι&κέτες"
-
-#~ msgid "Join Labels"
-#~ msgstr "Ένωση Ετικετών"
 
 #~ msgid "Edit the metadata tags"
 #~ msgstr "Επεξεργασία των tag μεταδεδομένων"

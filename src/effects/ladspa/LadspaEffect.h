@@ -14,7 +14,7 @@ class wxTextCtrl;
 class wxCheckBox;
 
 #include "../../MemoryX.h"
-#include <wx/dialog.h>
+#include <wx/dynlib.h> // member variable
 
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"
@@ -26,7 +26,7 @@ class wxCheckBox;
 #include "../../SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
-/* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+/* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
    (Application programming interface)
  */
 #define LADSPAEFFECTS_FAMILY XO("LADSPA")
@@ -47,18 +47,18 @@ public:
    LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   PluginPath GetPath() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -103,10 +103,10 @@ public:
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
-   bool LoadUserPreset(const wxString & name) override;
-   bool SaveUserPreset(const wxString & name) override;
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
 
-   wxArrayString GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -132,8 +132,8 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(const wxString & group);
-   bool SaveParameters(const wxString & group);
+   bool LoadParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group);
 
    LADSPA_Handle InitInstance(float sampleRate);
    void FreeInstance(LADSPA_Handle handle);
@@ -209,11 +209,11 @@ public:
    LadspaEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~LadspaEffectsModule();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   PluginPath GetPath() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
@@ -222,24 +222,24 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   wxArrayString FileExtensions() override;
-   wxString InstallPath() override;
+   FileExtensions GetFileExtensions() override;
+   FilePath InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   wxArrayString FindPluginPaths(PluginManagerInterface & pm) override;
+   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
-      const wxString & path, wxString &errMsg,
+      const PluginPath & path, wxString &errMsg,
       const RegistrationCallback &callback)
          override;
 
-   bool IsPluginValid(const wxString & path, bool bFast) override;
+   bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   IdentInterface *CreateInstance(const wxString & path) override;
-   void DeleteInstance(IdentInterface *instance) override;
+   ComponentInterface *CreateInstance(const PluginPath & path) override;
+   void DeleteInstance(ComponentInterface *instance) override;
 
    // LadspaEffectModule implementation
 
-   wxArrayString GetSearchPaths();
+   FilePaths GetSearchPaths();
 
 private:
    ModuleManagerInterface *mModMan;

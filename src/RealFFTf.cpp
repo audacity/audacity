@@ -37,15 +37,17 @@
 */
 
 #include "Audacity.h"
+#include "RealFFTf.h"
+
+#include "Experimental.h"
+
 #include <vector>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "Experimental.h"
 
 #include <wx/thread.h>
 
-#include "RealFFTf.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "RealFFTf48x.h"
 #endif

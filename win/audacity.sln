@@ -1,11 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audacity\Audacity.vcxproj", "{1D64095C-F936-4FCF-B609-56E9DDF941FA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856} = {A939AAF8-44F1-4CE7-9DD0-7A6E99814856}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundtouch", "Projects\soundtouch\soundtouch.vcxproj", "{EC3F5835-C486-4970-8A6B-A0700F4B3637}"
 EndProject
@@ -58,6 +55,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod-script-pipe", "Projects\mod-script-pipe\mod-script-pipe.vcxproj", "{D41CD691-F111-4D68-B0C1-C90E7DB07454}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod-nyq-bench", "Projects\mod-nyq-bench\mod-nyq-bench.vcxproj", "{876BE9ED-1F80-47B6-A34A-1766A6639763}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmp3lame", "Projects\libmp3lame\libmp3lame.vcxproj", "{20536101-3B0E-43EF-94F9-080D595DAC57}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpg123", "Projects\libmpg123\libmpg123.vcxproj", "{E2DAB91A-8248-4625-8A85-2C2C2A390DD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -163,9 +164,19 @@ Global
 		{5FF83E0C-1973-4559-94C3-311C9D0E051B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5FF83E0C-1973-4559-94C3-311C9D0E051B}.Release|Win32.ActiveCfg = Release|Win32
 		{D41CD691-F111-4D68-B0C1-C90E7DB07454}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D41CD691-F111-4D68-B0C1-C90E7DB07454}.Debug|Win32.Build.0 = Debug|Win32
 		{D41CD691-F111-4D68-B0C1-C90E7DB07454}.Release|Win32.ActiveCfg = Release|Win32
+		{D41CD691-F111-4D68-B0C1-C90E7DB07454}.Release|Win32.Build.0 = Release|Win32
 		{876BE9ED-1F80-47B6-A34A-1766A6639763}.Debug|Win32.ActiveCfg = Debug|Win32
 		{876BE9ED-1F80-47B6-A34A-1766A6639763}.Release|Win32.ActiveCfg = Release|Win32
+		{20536101-3B0E-43EF-94F9-080D595DAC57}.Debug|Win32.ActiveCfg = Debug|Win32
+		{20536101-3B0E-43EF-94F9-080D595DAC57}.Debug|Win32.Build.0 = Debug|Win32
+		{20536101-3B0E-43EF-94F9-080D595DAC57}.Release|Win32.ActiveCfg = Release|Win32
+		{20536101-3B0E-43EF-94F9-080D595DAC57}.Release|Win32.Build.0 = Release|Win32
+		{E2DAB91A-8248-4625-8A85-2C2C2A390DD8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2DAB91A-8248-4625-8A85-2C2C2A390DD8}.Debug|Win32.Build.0 = Debug|Win32
+		{E2DAB91A-8248-4625-8A85-2C2C2A390DD8}.Release|Win32.ActiveCfg = Release|Win32
+		{E2DAB91A-8248-4625-8A85-2C2C2A390DD8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

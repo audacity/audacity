@@ -13,15 +13,15 @@ exec( open("docimages_core.py" ).read() )
 def track_image1and8() :
     loadMonoTracks(1)
     # A mono track complete with ruler
-    capture( 'AutoTracks001.png', 'First_Track_Plus' )
+    capture( 'AutoTracks001.png', 'FirstTrackPlus' )
     # Mono with arrow at start.
     do( 'SetClip: Clip=0 Start=-4.0')
-    capture( 'AutoTracks008.png', 'First_Track' )
+    capture( 'AutoTracks008.png', 'FirstTrack' )
 
 def track_image2and6() :
     makeStereoTracks(1)
     # A stereo track, with its name on the track    
-    capture( 'AutoTracks002.png', 'First_Track' )
+    capture( 'AutoTracks002.png', 'FirstTrack' )
     # A stereo track, with different sized channels
     do( 'Select: Track=0 TrackCount=0.5' );
     do( 'SetTrack: Height=80')

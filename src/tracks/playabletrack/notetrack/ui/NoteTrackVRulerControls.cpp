@@ -8,11 +8,11 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
+#include "../../../../Audacity.h" // for USE_* macros
 
 #ifdef USE_MIDI
-
 #include "NoteTrackVRulerControls.h"
+
 #include "NoteTrackVZoomHandle.h"
 
 #include "../../../../HitTestResult.h"
@@ -64,10 +64,10 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
    const auto pTrack = FindTrack();
    if (!pTrack)
       return RefreshNone;
-   wxASSERT(pTrack->GetKind() == Track::Note);
-   auto steps = evt.steps;
 
+   auto steps = evt.steps;
    const auto nt = static_cast<NoteTrack*>(pTrack.get());
+
    if (event.CmdDown() && !event.ShiftDown()) {
       if (steps > 0)
          nt->ZoomIn(evt.rect, evt.event.m_y);
@@ -76,12 +76,12 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
    } else if (!event.CmdDown() && event.ShiftDown()) {
       // Scroll some fixed number of notes, independent of zoom level or track height:
       static const int movement = 6; // 6 semitones is half an octave
-      nt->SetBottomNote(nt->GetBottomNote() + (int) (steps * movement));
+      nt->ShiftNoteRange((int) (steps * movement));
    } else {
       return RefreshNone;
    }
 
-   pProject->ModifyState(true);
+   pProject->ModifyState(false);
 
    return RefreshCell | UpdateVRuler;
 }

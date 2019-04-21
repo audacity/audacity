@@ -30,6 +30,7 @@
 #include "../AllThemeResources.h"
 #include "../Internat.h"
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../widgets/valnum.h"
@@ -100,9 +101,9 @@ EffectAutoDuck::~EffectAutoDuck()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectAutoDuck::GetSymbol()
+ComponentInterfaceSymbol EffectAutoDuck::GetSymbol()
 {
    return AUTODUCK_PLUGIN_SYMBOL;
 }
@@ -209,42 +210,37 @@ bool EffectAutoDuck::Init()
 {
    mControlTrack = NULL;
 
-   TrackListIterator iter(inputTracks());
-   Track *t = iter.First();
-
    bool lastWasSelectedWaveTrack = false;
    const WaveTrack *controlTrackCandidate = NULL;
 
-   while(t)
+   for (auto t : inputTracks()->Any())
    {
-      if (lastWasSelectedWaveTrack && !t->GetSelected() &&
-          t->GetKind() == Track::Wave)
-      {
+      if (lastWasSelectedWaveTrack && !t->GetSelected()) {
          // This could be the control track, so remember it
-         controlTrackCandidate = (WaveTrack*)t;
+         controlTrackCandidate = track_cast<const WaveTrack *>(t);
       }
 
       lastWasSelectedWaveTrack = false;
 
-      if (t->GetSelected())
-      {
-         if (t->GetKind() == Track::Wave)
-         {
-            lastWasSelectedWaveTrack = true;
-         }
-         else
-         {
-            Effect::MessageBox(
-               _("You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
-               /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-                * of the audio automatically when there is sound on another track.  Not as
-                * in 'Donald-Duck'!*/
-               wxICON_ERROR);
+      if (t->GetSelected()) {
+         bool ok = t->TypeSwitch<bool>(
+            [&](const WaveTrack *) {
+               lastWasSelectedWaveTrack = true;
+               return true;
+            },
+            [&](const Track *) {
+               Effect::MessageBox(
+                  _("You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
+                  /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+                   * of the audio automatically when there is sound on another track.  Not as
+                   * in 'Donald-Duck'!*/
+                  wxICON_ERROR);
+               return false;
+            }
+         );
+         if (!ok)
             return false;
-         }
       }
-
-      t = iter.Next();
    }
 
    if (!controlTrackCandidate)
@@ -394,19 +390,15 @@ bool EffectAutoDuck::Process()
    if (!cancel)
    {
       CopyInputTracks(); // Set up mOutputTracks.
-      SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-      Track *iterTrack = iter.First();
 
       int trackNum = 0;
 
-      while (iterTrack)
+      for( auto iterTrack : mOutputTracks->Selected< WaveTrack >() )
       {
-         WaveTrack* t = (WaveTrack*)iterTrack;
-
          for (size_t i = 0; i < regions.size(); i++)
          {
             const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNum, t, region.t0, region.t1))
+            if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1))
             {
                cancel = true;
                break;
@@ -416,7 +408,6 @@ bool EffectAutoDuck::Process()
          if (cancel)
             break;
 
-         iterTrack = iter.Next();
          trackNum++;
       }
    }
@@ -725,7 +716,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       points[5].x = clientWidth - 10;
       points[5].y = DUCK_AMOUNT_START;
 
-      dc.DrawLines(6, points);
+      AColor::Lines(dc, 6, points);
 
       dc.SetPen(wxPen(*wxBLACK, 1, wxPENSTYLE_DOT));
 

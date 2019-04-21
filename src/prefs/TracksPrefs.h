@@ -15,20 +15,22 @@
 
 //#include <wx/defs.h>
 
-//#include <wx/arrstr.h>
-//#include <wx/window.h>
-
 #include <vector>
 #include "PrefsPanel.h"
 #include "../WaveTrack.h"
 
 class ShuttleGui;
 
+#define TRACKS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tracks") }
+
 class TracksPrefs final : public PrefsPanel
 {
  public:
    TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+
    bool Commit() override;
    wxString HelpPageName() override;
 
@@ -52,6 +54,7 @@ class TracksPrefs final : public PrefsPanel
    static int iPreferencePinned;
 };
 
+/// A PrefsPanelFactory that creates one TracksPrefs panel.
 class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:

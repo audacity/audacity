@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ExportPCM.h"
 
 #include <wx/defs.h>
@@ -36,6 +36,7 @@
 #include "../Track.h"
 #include "../ondemand/ODManager.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include "Export.h"
 
@@ -116,8 +117,8 @@ private:
 
 private:
 
-   wxArrayString mHeaderNames;
-   wxArrayString mEncodingNames;
+   wxArrayStringEx mHeaderNames;
+   wxArrayStringEx mEncodingNames;
    wxChoice *mHeaderChoice;
    wxChoice *mEncodingChoice;
    int mHeaderFromChoice;
@@ -147,7 +148,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 
    mHeaderFromChoice = 0;
    for (int i = 0, num = sf_num_headers(); i < num; i++) {
-      mHeaderNames.Add(sf_header_index_name(i));
+      mHeaderNames.push_back(sf_header_index_name(i));
       if ((format & SF_FORMAT_TYPEMASK) == (int)sf_header_index_to_type(i))
          mHeaderFromChoice = i;
    }
@@ -159,7 +160,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
       bool valid = ValidatePair(fmt);
       if (valid)
       {
-         mEncodingNames.Add(sf_encoding_index_name(i));
+         mEncodingNames.push_back(sf_encoding_index_name(i));
          mEncodingFormats.push_back(enc);
          if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
             mEncodingFromChoice = sel;
@@ -191,12 +192,12 @@ void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol(1);
             mHeaderChoice = S.Id(ID_HEADER_CHOICE)
                .AddChoice(_("Header:"),
-                          mHeaderNames[mHeaderFromChoice],
-                          &mHeaderNames);
+                          mHeaderNames,
+                          mHeaderFromChoice);
             mEncodingChoice = S.Id(ID_ENCODING_CHOICE)
                .AddChoice(_("Encoding:"),
-                          mEncodingNames[mEncodingFromChoice],
-                          &mEncodingNames);
+                          mEncodingNames,
+                          mEncodingFromChoice);
          }
          S.EndMultiColumn();
       }
@@ -235,7 +236,7 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    if( format == SF_FORMAT_AIFF )
       format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
 
-   mEncodingNames.Clear();
+   mEncodingNames.clear();
    mEncodingChoice->Clear();
    mEncodingFormats.clear();
    int sel = wxNOT_FOUND;
@@ -253,15 +254,15 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    int num = sf_num_encodings();
    for (i = 0; i < num; i++)
    {
-      int enc = sf_encoding_index_to_subtype(i);
-      int fmt = format | enc;
+      int encSubtype = sf_encoding_index_to_subtype(i);
+      int fmt = format | encSubtype;
       bool valid  = ValidatePair(fmt);
       if (valid)
       {
          const auto name = sf_encoding_index_name(i);
-         mEncodingNames.Add(name);
+         mEncodingNames.push_back(name);
          mEncodingChoice->Append(name);
-         mEncodingFormats.push_back(enc);
+         mEncodingFormats.push_back(encSubtype);
          for (j = 0; j < sfnum; j++)
          {
             int enc = sfs[j];
@@ -340,11 +341,11 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
    // optional
-   wxString GetExtension(int index) override;
+   FileExtension GetExtension(int index) override;
    bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
-
+   void ReportTooBigError(wxWindow * pParent);
    ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
    bool AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
@@ -384,16 +385,34 @@ ExportPCM::ExportPCM()
    SetFormat(wxT("LIBSNDFILE"), format);
    SetCanMetaData(true, format);
    SetDescription(_("Other uncompressed files"), format);
-   wxArrayString allext = sf_get_all_extensions();
+   auto allext = sf_get_all_extensions();
    wxString wavext = sf_header_extension(SF_FORMAT_WAV);   // get WAV ext.
 #if defined(wxMSW)
    // On Windows make sure WAV is at the beginning of the list of all possible
    // extensions for this format
-   allext.Remove(wavext);
-   allext.Insert(wavext, 0);
+   allext.erase( std::find( allext.begin(), allext.end(), wavext ) );
+   allext.insert(allext.begin(), wavext);
 #endif
    SetExtensions(allext, format);
    SetMaxChannels(255, format);
+}
+
+// Bug 2057
+// This function is not yet called anywhere.
+// It is provided to get the translation strings.
+// We can hook it in properly whilst translation happens.
+void ExportPCM::ReportTooBigError(wxWindow * pParent)
+{
+
+   ShowErrorDialog(pParent, _("Error Exporting"),
+                  _("You have attempted to Export a WAV file which would be greater than 4GB.\n"
+                    "Audacity cannot do this, the Export was abandoned."),
+                  wxT("Error_wav_too_big"));
+
+   ShowErrorDialog(pParent, _("Error Exporting"),
+                  _("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+                    "files bigger than 4GB."),
+                  wxT("Error_wav_truncated"));
 }
 
 /**
@@ -890,7 +909,7 @@ wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
    return ExportPlugin::OptionsCreate(parent, format);
 }
 
-wxString ExportPCM::GetExtension(int index)
+FileExtension ExportPCM::GetExtension(int index)
 {
    if (index == WXSIZEOF(kFormats)) {
       // get extension libsndfile thinks is correct for currently selected format

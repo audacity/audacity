@@ -17,9 +17,9 @@
 #define __COMMANDMISC__
 
 #include <map>
-#include <wx/string.h>
-#include <wx/variant.h>
 #include "Validators.h"
+
+class wxVariant;
 class OldStyleCommandType;
 
 // Map from parameter name to the value of the parameter

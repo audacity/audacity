@@ -12,16 +12,16 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 
 #if USE_SOUNDTOUCH
+#include "SoundTouchEffect.h"
 
 #include <math.h>
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
-#include "SoundTouchEffect.h"
 #include "TimeWarper.h"
 #include "../NoteTrack.h"
 
@@ -82,40 +82,32 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
    }
 
    //Iterate over each track
-   // Needs Track::All for sync-lock grouping.
-   this->CopyInputTracks(Track::All);
+   // Needs all for sync-lock grouping.
+   this->CopyInputTracks(true);
    bool bGoodResult = true;
 
-   TrackListIterator iter(mOutputTracks.get());
-   Track* t;
    mCurTrackNum = 0;
    m_maxNewLength = 0.0;
 
-   t = iter.First();
-   while (t != NULL) {
-      if (t->GetKind() == Track::Label &&
-            (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
-      {
-         if (!ProcessLabelTrack(static_cast<LabelTrack*>(t), warper))
-         {
+   mOutputTracks->Leaders().VisitWhile( bGoodResult,
+      [&]( LabelTrack *lt, const Track::Fallthrough &fallthrough ) {
+         if ( !(lt->GetSelected() || (mustSync && lt->IsSyncLockSelected())) )
+            return fallthrough();
+         if (!ProcessLabelTrack(lt, warper))
             bGoodResult = false;
-            break;
-         }
-      }
+      },
 #ifdef USE_MIDI
-      else if (t->GetKind() == Track::Note &&
-               (t->GetSelected() || (mustSync && t->IsSyncLockSelected())))
-      {
-         if (!ProcessNoteTrack(static_cast<NoteTrack*>(t), warper))
-         {
+      [&]( NoteTrack *nt, const Track::Fallthrough &fallthrough ) {
+         if ( !(nt->GetSelected() || (mustSync && nt->IsSyncLockSelected())) )
+            return fallthrough();
+         if (!ProcessNoteTrack(nt, warper))
             bGoodResult = false;
-            break;
-         }
-      }
+      },
 #endif
-      else if (t->GetKind() == Track::Wave && t->GetSelected())
-      {
-         WaveTrack* leftTrack = (WaveTrack*)t;
+      [&]( WaveTrack *leftTrack, const Track::Fallthrough &fallthrough ) {
+         if (!leftTrack->GetSelected())
+            return fallthrough();
+
          //Get start and end times from track
          mCurT0 = leftTrack->GetStartTime();
          mCurT1 = leftTrack->GetEndTime();
@@ -128,10 +120,13 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
 
-            if (leftTrack->GetLinked()) {
+            // TODO: more-than-two-channels
+            auto channels = TrackList::Channels(leftTrack);
+            auto rightTrack = (channels.size() > 1)
+               ? * ++ channels.first
+               : nullptr;
+            if ( rightTrack ) {
                double t;
-               // Assume linked track is wave
-               WaveTrack* rightTrack = static_cast<WaveTrack*>(iter.Next());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();
@@ -150,10 +145,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
 
                //ProcessStereo() (implemented below) processes a stereo track
                if (!ProcessStereo(leftTrack, rightTrack, start, end, warper))
-               {
                   bGoodResult = false;
-                  break;
-               }
                mCurTrackNum++; // Increment for rightTrack, too.
             } else {
                //Transform the marker timepoints to samples
@@ -165,21 +157,17 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
 
                //ProcessOne() (implemented below) processes a single track
                if (!ProcessOne(leftTrack, start, end, warper))
-               {
                   bGoodResult = false;
-                  break;
-               }
             }
          }
          mCurTrackNum++;
+      },
+      [&]( Track *t ) {
+         if (mustSync && t->IsSyncLockSelected()) {
+            t->SyncLockAdjust(mT1, warper.Warp(mT1));
+         }
       }
-      else if (mustSync && t->IsSyncLockSelected()) {
-         t->SyncLockAdjust(mT1, warper.Warp(mT1));
-      }
-
-      //Iterate to the next track
-      t = iter.Next();
-   }
+   );
 
    if (bGoodResult)
       ReplaceProcessedTracks(bGoodResult);

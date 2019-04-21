@@ -18,19 +18,23 @@ text or binary format to a file.
 
 *//********************************************************************/
 
-#include "AutoRecovery.h"
 #include "Audacity.h"
+#include "AutoRecovery.h"
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
+#include "Project.h"
 #include "Sequence.h"
 #include "ShuttleGui.h"
 
+#include <wx/evtloop.h>
 #include <wx/wxprec.h>
 #include <wx/filefn.h>
+#include <wx/listctrl.h>
 #include <wx/dir.h>
 #include <wx/dialog.h>
 #include <wx/app.h>
 
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "widgets/ErrorDialog.h"
 
@@ -172,11 +176,11 @@ static bool HaveFilesToRecover()
 
 static bool RemoveAllAutoSaveFiles()
 {
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       if (!wxRemoveFile(files[i]))
       {
@@ -204,11 +208,11 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    // Open a project window for each auto save file
    wxString filename;
 
-   wxArrayString files;
+   FilePaths files;
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
 
-   for (unsigned int i = 0; i < files.GetCount(); i++)
+   for (unsigned int i = 0; i < files.size(); i++)
    {
       AudacityProject* proj{};
       if (*pproj)
@@ -511,7 +515,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
    mBuffer.PutC(FT_String);
    WriteName(name);
 
-   int len = value.Length() * sizeof(wxChar);
+   int len = value.length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
    mBuffer.Write(value.wx_str(), len);
@@ -579,7 +583,7 @@ void AutoSaveFile::WriteData(const wxString & value)
 {
    mBuffer.PutC(FT_Data);
 
-   int len = value.Length() * sizeof(wxChar);
+   int len = value.length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
    mBuffer.Write(value.wx_str(), len);
@@ -589,7 +593,7 @@ void AutoSaveFile::Write(const wxString & value)
 {
    mBuffer.PutC(FT_Raw);
 
-   int len = value.Length() * sizeof(wxChar);
+   int len = value.length() * sizeof(wxChar);
 
    mBuffer.Write(&len, sizeof(len));
    mBuffer.Write(value.wx_str(), len);
@@ -648,8 +652,8 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
 
 void AutoSaveFile::WriteName(const wxString & name)
 {
-   wxASSERT(name.Length() * sizeof(wxChar) <= SHRT_MAX);
-   short len = name.Length() * sizeof(wxChar);
+   wxASSERT(name.length() * sizeof(wxChar) <= SHRT_MAX);
+   short len = name.length() * sizeof(wxChar);
    short id;
 
    if (mNames.count(name))
@@ -677,7 +681,7 @@ bool AutoSaveFile::IsEmpty() const
    return mBuffer.GetLength() == 0;
 }
 
-bool AutoSaveFile::Decode(const wxString & fileName)
+bool AutoSaveFile::Decode(const FilePath & fileName)
 {
    char ident[sizeof(AutoSaveIdent)];
    size_t len = strlen(AutoSaveIdent);

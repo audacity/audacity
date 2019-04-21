@@ -13,15 +13,16 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "ImportQT.h"
+
 #include "ImportPlugin.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #define DESC _("QuickTime files")
 
-static const wxChar *exts[] =
-{
+static const auto exts = {
    wxT("aif"),
    wxT("aifc"),
    wxT("aiff"),
@@ -40,10 +41,15 @@ static const wxChar *exts[] =
 void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
-   unusableImportPluginList.push_back(
-      std::make_unique<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts))
-   );
+// Bug 2068: misleading error message about QuickTime  
+// In 64 bit versions we cannot compile in (obsolete) QuickTime
+// So don't register the QuickTime extensions, so ensuring we never report
+// "This version of Audacity was not compiled with QuickTime files support"  
+// When attempting to import MP4 files.
+//   unusableImportPluginList.push_back(
+//      std::make_unique<UnusableImportPlugin>(DESC,
+//         FileExtensions( exts.begin(), exts.end() ) )
+//   );
 }
 
 #else /* USE_QUICKTIME */
@@ -82,7 +88,7 @@ class QTImportPlugin final : public ImportPlugin
 {
  public:
    QTImportPlugin()
-   :  ImportPlugin(wxArrayString(WXSIZEOF(exts), exts)),
+   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) ),
       mInitialized(false)
    {
       OSErr err = noErr;
@@ -336,7 +342,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                (sizeof(AudioBuffer) * numchan))) };
       abl->mNumberBuffers = numchan;
    
-      TrackHolders channels{ numchan };
+      NewChannelGroup channels{ numchan };
 
       const auto size = sizeof(float) * bufsize;
       ArraysOf<unsigned char> holders{ numchan, size };
@@ -352,16 +358,6 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          channel = trackFactory->NewWaveTrack( format );
          channel->SetRate( desc.mSampleRate );
-   
-         if (numchan == 2) {
-            if (c == 0) {
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-            }
-            else if (c == 1) {
-               channel->SetChannel(Track::RightChannel);
-            }
-         }
       }
    
       do {
@@ -395,11 +391,10 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
       res = (updateResult == ProgressResult::Success && err == noErr);
    
       if (res) {
-         for (const auto &channel: channels) {
+         for (auto &channel: channels)
             channel->Flush();
-         }
-   
-         outTracks.swap(channels);
+         if (!channels.empty())
+            outTracks.push_back(std::move(channels));
       }
 
       //
@@ -522,7 +517,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       if (err != noErr)
          continue;
 
-      wxString v = wxT("");
+      wxString v;
 
       switch (dataType)
       {
@@ -537,7 +532,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
          break;
       }
 
-      if (!v.IsEmpty()) {
+      if (!v.empty()) {
          tags->SetTag(names[i].name, v);
       }
    }

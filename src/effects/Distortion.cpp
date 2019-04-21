@@ -19,6 +19,8 @@
 #include "../Audacity.h"
 #include "Distortion.h"
 
+#include "../Experimental.h"
+
 #include <cmath>
 #include <algorithm>
 #define _USE_MATH_DEFINES
@@ -31,12 +33,16 @@
 #define M_PI_2 1.57079632679489661923132169163975 
 #endif
 
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/valgen.h>
 #include <wx/log.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
 
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../TranslatableStringArray.h"
@@ -57,7 +63,7 @@ enum kTableType
    nTableTypes
 };
 
-static const IdentInterfaceSymbol kTableTypeStrings[nTableTypes] =
+static const EnumValueSymbol kTableTypeStrings[nTableTypes] =
 {
    { XO("Hard Clipping") },
    { XO("Soft Clipping") },
@@ -188,9 +194,9 @@ EffectDistortion::~EffectDistortion()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectDistortion::GetSymbol()
+ComponentInterfaceSymbol EffectDistortion::GetSymbol()
 {
    return DISTORTION_PLUGIN_SYMBOL;
 }
@@ -326,13 +332,13 @@ bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-wxArrayString EffectDistortion::GetFactoryPresets()
+RegistryPaths EffectDistortion::GetFactoryPresets()
 {
-   wxArrayString names;
+   RegistryPaths names;
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.Add(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back(wxGetTranslation(FactoryPresets[i].name));
    }
 
    return names;
@@ -367,12 +373,12 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(4, wxCENTER);
       {
          auto tableTypes = LocalizedStrings(kTableTypeStrings, nTableTypes);
-         mTypeChoiceCtrl = S.Id(ID_Type).AddChoice(_("Distortion type:"), wxT(""), &tableTypes);
+         mTypeChoiceCtrl = S.Id(ID_Type).AddChoice(_("Distortion type:"), tableTypes);
          mTypeChoiceCtrl->SetValidator(wxGenericValidator(&mParams.mTableChoiceIndx));
          S.SetSizeHints(-1, -1);
 
          mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(_("DC blocking filter"),
-                                       DEF_DCBlock ? wxT("true") : wxT("false"));
+                                       DEF_DCBlock);
       }
       S.EndMultiColumn();
       S.AddSpace(0, 10);
@@ -937,13 +943,13 @@ void EffectDistortion::UpdateControl(control id, bool enabled, wxString name)
 void EffectDistortion::UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled)
 {
    if (enabled) {
-      if (textCtrl->GetValue() == wxEmptyString)
+      if (textCtrl->GetValue().empty())
          textCtrl->SetValue(string);
       else
          string = textCtrl->GetValue();
    }
    else {
-      if (textCtrl->GetValue() != wxEmptyString)
+      if (!textCtrl->GetValue().empty())
          string = textCtrl->GetValue();
       textCtrl->SetValue(wxT(""));
    }

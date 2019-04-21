@@ -11,17 +11,15 @@
 #ifndef __AUDACITY_AUTORECOVERY__
 #define __AUDACITY_AUTORECOVERY__
 
-#include "Project.h"
-
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
 
-#include <wx/debug.h>
-#include <wx/ffile.h>
-#include <wx/hashmap.h>
-#include <wx/mstream.h>
+#include <wx/mstream.h> // member variables
 
 #include <unordered_map>
+
+class wxFFile;
+class AudacityProject;
 
 //
 // Show auto recovery dialog if there are projects to recover. Should be
@@ -105,7 +103,7 @@ public:
 
    bool IsEmpty() const;
 
-   bool Decode(const wxString & fileName);
+   bool Decode(const FilePath & fileName);
 
 private:
    void WriteName(const wxString & name);

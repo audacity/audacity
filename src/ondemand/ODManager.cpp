@@ -16,6 +16,7 @@ ODTask requests and internals.
 
 #include "../Audacity.h"
 #include "ODManager.h"
+
 #include "ODTask.h"
 #include "ODTaskThread.h"
 #include "ODWaveTrackTaskQueue.h"
@@ -381,12 +382,12 @@ void ODManager::RemoveWaveTrack(WaveTrack* track)
 }
 
 ///replace the wavetrack whose wavecache the gui watches for updates
-void ODManager::ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack)
+void ODManager::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
 {
    mQueuesMutex.Lock();
    for(unsigned int i=0;i<mQueues.size();i++)
    {
-      mQueues[i]->ReplaceWaveTrack(oldTrack,newTrack);
+      mQueues[i]->ReplaceWaveTrack( oldTrack, newTrack );
    }
    mQueuesMutex.Unlock();
 }

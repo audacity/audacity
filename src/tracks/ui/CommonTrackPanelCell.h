@@ -31,9 +31,13 @@ public:
    HitTestPreview DefaultPreview
       (const TrackPanelMouseState &, const AudacityProject *) override;
 
-   virtual std::shared_ptr<Track> FindTrack() = 0;
+   std::shared_ptr<Track> FindTrack() { return DoFindTrack(); }
+   std::shared_ptr<const Track> FindTrack() const
+      { return const_cast<CommonTrackPanelCell*>(this)->DoFindTrack(); }
 
 protected:
+   virtual std::shared_ptr<Track> DoFindTrack() = 0;
+
    unsigned HandleWheelRotation
       (const TrackPanelMouseEvent &event,
       AudacityProject *pProject) override;

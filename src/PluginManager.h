@@ -12,8 +12,6 @@
 #define __AUDACITY_PLUGINMANAGER_H__
 
 #include <wx/defs.h>
-#include <wx/fileconf.h>
-#include <wx/string.h>
 
 #include "MemoryX.h"
 #include <map>
@@ -22,6 +20,8 @@
 #include "audacity/ImporterInterface.h"
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
+
+class wxArrayString;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -48,8 +48,8 @@ public:
    virtual ~PluginDescriptor();
 
    bool IsInstantiated() const;
-   IdentInterface *GetInstance();
-   void SetInstance(IdentInterface *instance);
+   ComponentInterface *GetInstance();
+   void SetInstance(ComponentInterface *instance);
 
    PluginType GetPluginType() const;
    void SetPluginType(PluginType type);
@@ -59,8 +59,8 @@ public:
    // These return untranslated strings
    const wxString & GetID() const;
    const wxString & GetProviderID() const;
-   const wxString & GetPath() const;
-   const IdentInterfaceSymbol & GetSymbol() const;
+   const PluginPath & GetPath() const;
+   const ComponentInterfaceSymbol & GetSymbol() const;
 
    wxString GetUntranslatedVersion() const;
    // There is no translated version
@@ -73,8 +73,8 @@ public:
    // These should be passed an untranslated value
    void SetID(const PluginID & ID);
    void SetProviderID(const PluginID & providerID);
-   void SetPath(const wxString & path);
-   void SetSymbol(const IdentInterfaceSymbol & symbol);
+   void SetPath(const PluginPath & path);
+   void SetSymbol(const ComponentInterfaceSymbol & symbol);
 
    // These should be passed an untranslated value wrapped in XO() so
    // the value will still be extracted for translation
@@ -90,7 +90,7 @@ public:
    // (Use Effect::GetFamilyName instead)
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
-   wxString GetEffectFamilyId() const;
+   wxString GetEffectFamily() const;
 
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
@@ -100,7 +100,7 @@ public:
    bool IsEffectAutomatable() const;
 
    // "family" should be an untranslated string wrapped in wxT()
-   void SetEffectFamilyId(const wxString & family);
+   void SetEffectFamily(const wxString & family);
    void SetEffectType(EffectType type);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
@@ -112,11 +112,11 @@ public:
 
    const wxString & GetImporterIdentifier() const;
    const wxString & GetImporterFilterDescription() const;
-   const wxArrayString & GetImporterExtensions() const;
+   const FileExtensions & GetImporterExtensions() const;
 
    void SetImporterIdentifier(const wxString & identifier);
    void SetImporterFilterDescription(const wxString & filterDesc);
-   void SetImporterExtensions(const wxArrayString & extensions);
+   void SetImporterExtensions(FileExtensions extensions);
 
 private:
 
@@ -127,13 +127,13 @@ private:
    // Among other purposes, PluginDescriptor acts as the resouce handle,
    // or smart pointer, to a resource created in a plugin library, and is responsible
    // for a cleanup of this pointer.
-   IdentInterface *mInstance;
+   ComponentInterface *mInstance;
 
    PluginType mPluginType;
 
    wxString mID;
-   wxString mPath;
-   IdentInterfaceSymbol mSymbol;
+   PluginPath mPath;
+   ComponentInterfaceSymbol mSymbol;
    wxString mVersion;
    wxString mVendor;
    wxString mProviderID;
@@ -154,7 +154,7 @@ private:
 
    wxString mImporterIdentifier;
    wxString mImporterFilterDesc;
-   wxArrayString mImporterExtensions;
+   FileExtensions mImporterExtensions;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,7 +165,7 @@ private:
 
 typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
-typedef wxArrayString PluginIDList;
+typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
@@ -175,53 +175,53 @@ public:
 
    // PluginManagerInterface implementation
 
-   bool IsPluginRegistered(const wxString & path) override;
+   bool IsPluginRegistered(const PluginPath &path) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command);
+   const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
    const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) override;
 
    void FindFilesInPathList(const wxString & pattern,
-                                    const wxArrayString & pathList,
-                                    wxArrayString & files,
+                                    const FilePaths & pathList,
+                                    FilePaths & files,
                                     bool directories = false) override;
 
-   bool HasSharedConfigGroup(const PluginID & ID, const wxString & group) /* not override */;
-   bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups) override;
+   bool HasSharedConfigGroup(const PluginID & ID, const RegistryPath & group) /* not override */;
+   bool GetSharedConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths &subgroups) override;
 
-   bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T("")) override;
-   bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval = 0) override;
-   bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) override;
-   bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
-   bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
+   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = _T("")) override;
+   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
+   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
+   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
+   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
 
-   bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) override;
-   bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) override;
-   bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) override;
-   bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) override;
-   bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) override;
+   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
+   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value) override;
+   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value) override;
+   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value) override;
+   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value) override;
 
-   bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group) override;
-   bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key) override;
+   bool RemoveSharedConfigSubgroup(const PluginID & ID, const RegistryPath & group) override;
+   bool RemoveSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key) override;
 
-   bool HasPrivateConfigGroup(const PluginID & ID, const wxString & group) /* not override */;
-   bool GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups) override;
+   bool HasPrivateConfigGroup(const PluginID & ID, const RegistryPath & group) /* not override */;
+   bool GetPrivateConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths &subgroups) override;
 
-   bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T("")) override;
-   bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval = 0) override;
-   bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false) override;
-   bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval = 0.0) override;
-   bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval = 0.0) override;
+   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = _T("")) override;
+   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
+   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
+   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
+   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
 
-   bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value) override;
+   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
+   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value) override;
+   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value) override;
+   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value) override;
+   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value) override;
 
-   bool RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group) override;
-   bool RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key) override;
+   bool RemovePrivateConfigSubgroup(const PluginID & ID, const RegistryPath & group) override;
+   bool RemovePrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key) override;
 
    // PluginManager implementation
 
@@ -233,7 +233,7 @@ public:
    static PluginManager & Get();
 
    static PluginID GetID(ModuleInterface *module);
-   static PluginID GetID(CommandDefinitionInterface *command);
+   static PluginID GetID(ComponentInterface *command);
    static PluginID GetID(EffectDefinitionInterface *effect);
    static PluginID GetID(ImporterInterface *importer);
 
@@ -253,8 +253,8 @@ public:
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
-   const IdentInterfaceSymbol & GetSymbol(const PluginID & ID);
-   IdentInterface *GetInstance(const PluginID & ID);
+   const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
+   ComponentInterface *GetInstance(const PluginID & ID);
 
    void CheckForUpdates(bool bFast = false);
 
@@ -273,31 +273,31 @@ private:
    void Save();
    void SaveGroup(wxFileConfig *pRegistry, PluginType type);
 
-   PluginDescriptor & CreatePlugin(const PluginID & id, IdentInterface *ident, PluginType type);
+   PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
 
    wxFileConfig *GetSettings();
 
-   bool HasGroup(const wxString & group);
-   bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
+   bool HasGroup(const RegistryPath & group);
+   bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
 
-   bool GetConfig(const wxString & key, wxString & value, const wxString & defval = L"");
-   bool GetConfig(const wxString & key, int & value, int defval = 0);
-   bool GetConfig(const wxString & key, bool & value, bool defval = false);
-   bool GetConfig(const wxString & key, float & value, float defval = 0.0);
-   bool GetConfig(const wxString & key, double & value, double defval = 0.0);
+   bool GetConfig(const RegistryPath & key, wxString & value, const wxString & defval = L"");
+   bool GetConfig(const RegistryPath & key, int & value, int defval = 0);
+   bool GetConfig(const RegistryPath & key, bool & value, bool defval = false);
+   bool GetConfig(const RegistryPath & key, float & value, float defval = 0.0);
+   bool GetConfig(const RegistryPath & key, double & value, double defval = 0.0);
 
-   bool SetConfig(const wxString & key, const wxString & value);
-   bool SetConfig(const wxString & key, const int & value);
-   bool SetConfig(const wxString & key, const bool & value);
-   bool SetConfig(const wxString & key, const float & value);
-   bool SetConfig(const wxString & key, const double & value);
+   bool SetConfig(const RegistryPath & key, const wxString & value);
+   bool SetConfig(const RegistryPath & key, const int & value);
+   bool SetConfig(const RegistryPath & key, const bool & value);
+   bool SetConfig(const RegistryPath & key, const float & value);
+   bool SetConfig(const RegistryPath & key, const double & value);
 
    /* Return values are keys for lookup in a config file */
-   wxString SettingsPath(const PluginID & ID, bool shared);
-   wxString SharedGroup(const PluginID & ID, const wxString & group);
-   wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
-   wxString PrivateGroup(const PluginID & ID, const wxString & group);
-   wxString PrivateKey(const PluginID & ID, const wxString & group, const wxString & key);
+   RegistryPath SettingsPath(const PluginID & ID, bool shared);
+   RegistryPath SharedGroup(const PluginID & ID, const RegistryPath & group);
+   RegistryPath SharedKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key);
+   RegistryPath PrivateGroup(const PluginID & ID, const RegistryPath & group);
+   RegistryPath PrivateKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key);
 
    // The PluginID must be kept unique.  Since the wxFileConfig class does not preserve
    // case, we use base64 encoding.

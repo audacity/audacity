@@ -73,14 +73,22 @@ def quickTest() :
 def setup() :
     global path
     global sample_path
+    global result_path
     global sample
     global sample2
     global postfix
     postfix = ''
-    path = 'C:\\Users\\James Crook\\'
-    sample_path ='C:\\Users\\James Crook\\Music\\'
-    sample ='C:\\Users\\James Crook\\Music\\The Poodle Podcast.wav'
-    sample2 ='C:\\Users\\James Crook\\Music\\PoodlePodStereo.wav'
+    path = os.path.abspath(__file__);
+    
+    path = os.path.dirname( path )
+    path = os.path.dirname( path )
+    path = os.path.dirname( path )
+    path = os.path.join( path, 'tests' )
+    result_path = os.path.join( path, 'results' )
+    sample_path = os.path.join( path, 'samples' )
+    sample      = os.path.join( sample_path, 'FifeAndDrums.wav' )
+    sample2     = os.path.join( sample_path, 'FifeAndDrumsStereo.wav' )
+   
     startPipes()
     do( 'SetProject: X=10 Y=10 Width=910 Height=800' )
 
@@ -92,15 +100,15 @@ def makeWayForTracks(  ) :
     do( 'RemoveTracks' )
 
 def capture( name, what ) :
-    global path
+    global result_path
     global postfix
     name = name.split( '.png' )[0] + postfix + '.png' 
-    do( 'Screenshot: Path="'+path+name+'" CaptureWhat=' + what )
+    do( 'Screenshot: Path="'+os.path.join( result_path, name) +'" CaptureWhat=' + what )
 
 def loadExample( name ):
     global sample_path
     makeWayForTracks( )
-    do( 'Import2: Filename="'+sample_path+name+'"' )
+    do( 'Import2: Filename="'+os.path.join( sample_path, name)+'"' )
     do( 'Select: Start=0 End=0')
     do( 'FitInWindow' )
 

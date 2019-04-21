@@ -15,11 +15,11 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 
 #ifdef USE_LIBVORBIS
-
 #include "ExportOGG.h"
+
 #include "Export.h"
 
 #include <wx/log.h>
@@ -37,6 +37,7 @@
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions

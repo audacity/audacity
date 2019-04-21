@@ -9,8 +9,9 @@
 #ifndef __AUDACITY_OVERLAY_PANEL__
 #define __AUDACITY_OVERLAY_PANEL__
 
+#include <memory>
 #include <vector>
-#include "BackedPanel.h"
+#include "BackedPanel.h" // to inherit
 
 class Overlay;
 
@@ -22,13 +23,11 @@ public:
                 // default as for wxPanel:
                 long style = wxTAB_TRAVERSAL | wxNO_BORDER);
 
-   // Registers and unregisters overlay objects.
+   // Registers overlay objects.
    // The sequence in which they were registered is the sequence in
    // which they are painted.
    // OverlayPanel is not responsible for their memory management.
-   void AddOverlay(Overlay *pOverlay);
-   // Returns true if the overlay was found
-   bool RemoveOverlay(Overlay *pOverlay);
+   void AddOverlay( const std::weak_ptr<Overlay> &pOverlay );
    void ClearOverlays();
 
    // Erases and redraws to the client area the overlays that have
@@ -41,7 +40,8 @@ public:
    void DrawOverlays(bool repaint_all, wxDC *pDC = nullptr);
    
 private:
-   std::vector<Overlay*> mOverlays;
+   void Compress();
+   std::vector< std::weak_ptr<Overlay> > mOverlays;
    
    
    DECLARE_EVENT_TABLE()

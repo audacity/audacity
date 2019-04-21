@@ -18,10 +18,12 @@
 
 #include "../Audacity.h"
 #include "DragCommand.h"
+
 #include "../Project.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
@@ -38,7 +40,7 @@ enum kCoordTypes
    nCoordTypes
 };
 
-static const IdentInterfaceSymbol kCoordTypeStrings[nCoordTypes] =
+static const EnumValueSymbol kCoordTypeStrings[nCoordTypes] =
 {
    { XO("Panel") },
    { wxT("App"),    XO("Application") },
@@ -60,8 +62,6 @@ bool DragCommand::DefineParams( ShuttleParams & S ){
 
 void DragCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto coords = LocalizedStrings( kCoordTypeStrings, nCoordTypes );
-
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
@@ -73,7 +73,8 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasFromY      ).TieNumericTextBox(  _("From Y:"),      mFromY );
       S.Optional( bHasToX        ).TieNumericTextBox(  _("To X:"),        mToX );
       S.Optional( bHasToY        ).TieNumericTextBox(  _("To Y:"),        mToY );
-      S.Optional( bHasRelativeTo ).TieChoice(          _("Relative To:"), mRelativeTo, &coords );
+      S.Optional( bHasRelativeTo ).TieChoice(          _("Relative To:"), mRelativeTo,
+         LocalizedStrings( kCoordTypeStrings, nCoordTypes ) );
    }
    S.EndMultiColumn();
 }

@@ -28,11 +28,13 @@
 #include <wx/checkbox.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
+#include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
 #include <wx/log.h>
 
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -78,9 +80,9 @@ EffectAmplify::~EffectAmplify()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectAmplify::GetSymbol()
+ComponentInterfaceSymbol EffectAmplify::GetSymbol()
 {
    return AMPLIFY_PLUGIN_SYMBOL;
 }
@@ -180,11 +182,9 @@ bool EffectAmplify::Init()
 {
    mPeak = 0.0;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-
-   for (Track *t = iter.First(); t; t = iter.Next())
+   for (auto t : inputTracks()->Selected< const WaveTrack >())
    {
-      auto pair = ((WaveTrack *)t)->GetMinMax(mT0, mT1); // may throw
+      auto pair = t->GetMinMax(mT0, mT1); // may throw
       const float min = pair.first, max = pair.second;
       float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
 
@@ -269,7 +269,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Clipping
       S.StartHorizontalLay(wxCENTER);
       {
-         mClip = S.Id(ID_Clip).AddCheckBox(_("Allow clipping"), wxT("false"));
+         mClip = S.Id(ID_Clip).AddCheckBox(_("Allow clipping"), false);
          if (IsBatchProcessing())
          {
             mClip->Enable(false);

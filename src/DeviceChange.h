@@ -11,7 +11,8 @@
 #ifndef __AUDACITY_DEVICECHANGE_H__
 #define __AUDACITY_DEVICECHANGE_H__
 
-#include "Audacity.h"
+#include "Audacity.h" // for HAVE_LIBUDEV_H
+
 #include "Experimental.h"
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
@@ -24,8 +25,7 @@
 
 #if defined(HAVE_DEVICE_CHANGE)
 
-#include <wx/event.h>
-#include <wx/timer.h>
+#include <wx/timer.h> // member variable
 
 class DeviceChangeInterface /* not final */
 {

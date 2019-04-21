@@ -26,9 +26,10 @@
 *//**********************************************************************/
 
 #include "Audacity.h"
+#include "WrappedType.h"
+
 #include <wx/wxprec.h>
 #include "Internat.h"
-#include "WrappedType.h"
 
 /// @return true iff the wrapped type is a string.
 bool WrappedType::IsString()
@@ -64,15 +65,6 @@ bool WrappedType::ValuesMatch( const WrappedType & W )
       break;
    }
    return false;
-}
-
-void WrappedType::Init()
-{
-   eWrappedType = eWrappedNotSet;
-   mpStr = NULL;
-   mpInt = NULL;
-   mpDouble = NULL;
-   mpBool = NULL;
 }
 
 void WrappedType::WriteToAsWrappedType( const WrappedType & W )
@@ -114,7 +106,7 @@ wxString WrappedType::ReadAsString()
       return wxString::Format(wxT("%i"),*mpInt );
       break;
    case eWrappedDouble:
-      return wxString::Format(wxT("%g"),*mpDouble );
+      return wxString::Format(wxT("%.8g"),*mpDouble );
       break;
    case eWrappedBool:
       return (* mpBool) ? wxT("true") : wxT("false" );
@@ -272,7 +264,7 @@ void WrappedType::WriteToAsDouble( const double InDouble)
    switch( eWrappedType )
    {
    case eWrappedString:
-      *mpStr = wxString::Format( wxT("%g"), InDouble );
+      *mpStr = wxString::Format( wxT("%.8g"), InDouble );
       break;
    case eWrappedInt:
       *mpInt = (int)InDouble;

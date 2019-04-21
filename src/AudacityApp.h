@@ -15,26 +15,24 @@
 #define __AUDACITY_APP__
 
 #include "Audacity.h"
+#include "audacity/Types.h"
 
-#include "MemoryX.h"
-#include <wx/app.h>
-#include <wx/cmdline.h>
-#include <wx/dir.h>
-#include <wx/event.h>
-#include <wx/docview.h>
-#include <wx/intl.h>
-#include <wx/snglinst.h>
-#include <wx/log.h>
-#include <wx/socket.h>
-#include <wx/timer.h>
-
-#include "widgets/FileHistory.h"
-#include "ondemand/ODTaskThread.h"
 #include "Experimental.h"
 
+#include "MemoryX.h"
+#include <wx/app.h> // to inherit
+#include <wx/dir.h> // for wxDIR_FILES
+#include <wx/timer.h> // member variable
+
+#include "ondemand/ODTaskThread.h"
+
 #if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h>
+#include <wx/debugrpt.h> // for wxDebugReport::Context
 #endif
+
+class wxSingleInstanceChecker;
+class wxSocketEvent;
+class wxSocketServer;
 
 class IPCServ;
 class Importer;
@@ -42,6 +40,7 @@ class CommandHandler;
 class AppCommandEvent;
 class AudacityLogger;
 class AudacityProject;
+class FileHistory;
 
 void SaveWindowSize();
 
@@ -49,6 +48,11 @@ void QuitAudacity(bool bForce);
 void QuitAudacity();
 
 extern bool gIsQuitting;
+
+// An event emitted by the application whenever the global clipboard's
+// contents change.
+wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+                          EVT_CLIPBOARD_CHANGE, wxCommandEvent);
 
 // Asynchronous open
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
@@ -67,8 +71,17 @@ class AudacityApp final : public wxApp {
 
    int FilterEvent(wxEvent & event) override;
 
+   // If no input language given, defaults first to choice in preferences, then
+   // to system language.
    // Returns the language actually used which is not lang if lang cannot be found.
-   wxString InitLang( const wxString & lang );
+   wxString InitLang( wxString lang = {} );
+
+   // If no input language given, defaults to system language.
+   // Returns the language actually used which is not lang if lang cannot be found.
+   wxString SetLang( const wxString & lang );
+
+   // Returns the last language code that was set
+   wxString GetLang() const;
 
    // These are currently only used on Mac OS, where it's
    // possible to have a menu bar but no windows open.  It doesn't
@@ -86,7 +99,7 @@ class AudacityApp final : public wxApp {
    void OnMRUClear(wxCommandEvent &event);
    void OnMRUFile(wxCommandEvent &event);
    // Backend for above - returns true for success, false for failure
-   bool MRUOpen(const wxString &fileName);
+   bool MRUOpen(const FilePath &fileName);
    // A wrapper of the above that does not throw
    bool SafeMRUOpen(const wxString &fileName);
 
@@ -135,24 +148,24 @@ class AudacityApp final : public wxApp {
     * directories can be specified using the AUDACITY_PATH environment
     * variable.  On Windows or Mac OS, this will include the directory
     * which contains the Audacity program. */
-   wxArrayString audacityPathList;
+   FilePaths audacityPathList;
 
    /** \brief Default temp directory */
    wxString defaultTempDir;
 
    // Useful functions for working with search paths
-   static void AddUniquePathToPathList(const wxString &path,
-                                       wxArrayString &pathList);
+   static void AddUniquePathToPathList(const FilePath &path,
+                                       FilePaths &pathList);
    static void AddMultiPathsToPathList(const wxString &multiPathString,
-                                       wxArrayString &pathList);
+                                       FilePaths &pathList);
    static void FindFilesInPathList(const wxString & pattern,
-                                   const wxArrayString & pathList,
-                                   wxArrayString &results,
+                                   const FilePaths & pathList,
+                                   FilePaths &results,
                                    int flags = wxDIR_FILES);
    static bool IsTempDirectoryNameOK( const wxString & Name );
 
    FileHistory *GetRecentFiles() {return mRecentFiles.get();}
-   void AddFileToHistory(const wxString & name);
+   void AddFileToHistory(const FilePath & name);
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
 

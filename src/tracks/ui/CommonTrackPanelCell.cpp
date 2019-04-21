@@ -10,9 +10,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "CommonTrackPanelCell.h"
-#include "Scrubbing.h"
 
 #include "../../Experimental.h"
+
+#include "Scrubbing.h"
+
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
@@ -85,7 +87,8 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
 
       // Scrubbing? Expand or contract about the center, ignoring mouse position
       if (scrubber.IsScrollScrubbing())
-         center_h = viewInfo.h + (pProject->GetScreenEndTime() - viewInfo.h) / 2.0;
+         center_h = viewInfo.h +
+            (pProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h) / 2.0;
       // Zooming out? Focus on mouse.
       else if( steps <= 0 )
          center_h = mouse_h;

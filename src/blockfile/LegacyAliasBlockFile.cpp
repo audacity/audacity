@@ -12,7 +12,7 @@
 #include "LegacyAliasBlockFile.h"
 
 #include <wx/utils.h>
-#include <wx/wxchar.h>
+#include <wx/wxcrtvararg.h>
 
 #include <sndfile.h>
 
@@ -83,7 +83,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
-BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs)
+BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const FilePath &projDir, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper aliasFileName;

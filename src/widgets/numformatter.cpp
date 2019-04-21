@@ -15,8 +15,13 @@
 // headers
 // ----------------------------------------------------------------------------
 
+#include "../Audacity.h"
+#include "numformatter.h"
+
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -28,8 +33,6 @@
 #endif
 
 
-#include "../Audacity.h"
-#include "numformatter.h"
 #include "../Internat.h"
 #include <wx/intl.h>
 
@@ -74,7 +77,7 @@ bool NumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
    struct lconv *info = localeconv();
    wxString s = info ? wxString::FromUTF8(info->thousands_sep) : wxT("");
 
-   if (s.IsEmpty())
+   if (s.empty())
    {
       return false;
    }

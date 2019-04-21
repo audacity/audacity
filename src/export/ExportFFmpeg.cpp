@@ -19,7 +19,9 @@ function.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact
+#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+#include "ExportFFmpeg.h"
+
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
 #include <wx/choice.h>
@@ -41,9 +43,9 @@ function.
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #include "Export.h"
-#include "ExportFFmpeg.h"
 
 #include "ExportFFmpegDialogs.h"
 
@@ -806,13 +808,13 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
    }
 
    // Read raw audio samples out of the FIFO in nAudioFrameSizeOut byte-sized groups to encode.
-   while ((ret = av_fifo_size(mEncAudioFifo.get())) >= nAudioFrameSizeOut)
+   while ( av_fifo_size(mEncAudioFifo.get()) >= nAudioFrameSizeOut)
    {
       ret = av_fifo_generic_read(mEncAudioFifo.get(), mEncAudioFifoOutBuf.get(), nAudioFrameSizeOut, NULL);
 
       AVPacketEx pkt;
 
-      int ret= encode_audio(mEncAudioCodecCtx.get(),
+      ret= encode_audio(mEncAudioCodecCtx.get(),
          &pkt,                          // out
          mEncAudioFifoOutBuf.get(), // in
          default_frame_size);
@@ -1008,10 +1010,10 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the current output\nfile format.  "), rate);
+               text.Printf(_("The project sample rate (%d) is not supported by the current output\nfile format. "), rate);
             }
             else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format.  "), rate, bitrate/1024);
+               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "), rate, bitrate/1024);
             }
 
             text += _("You may resample to one of the rates below.");
@@ -1019,32 +1021,30 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          }
          S.EndHorizontalLay();
 
-         wxArrayString choices;
-         wxString selected = wxT("");
+         wxArrayStringEx choices;
+         int selected = -1;
          for (int i = 0; sampRates[i] > 0; i++)
          {
             int label = sampRates[i];
             if (label >= lowrate && label <= highrate)
             {
                wxString name = wxString::Format(wxT("%d"),label);
-               choices.Add(name);
+               choices.push_back(name);
                if (label <= rate)
                {
-                  selected = name;
+                  selected = i;
                }
             }
          }
 
-         if (selected.IsEmpty())
-         {
-            selected = choices[0];
-         }
+         if (selected == -1)
+            selected = 0;
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 selected,
-                                 &choices);
+                                 choices,
+                                 selected);
          }
          S.EndHorizontalLay();
       }

@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../Track.h"
+
 #include "../../TrackPanelMouseEvent.h"
 #include "TrackControls.h"
 #include "TrackVRulerControls.h"
@@ -53,7 +54,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // Sliding applies in more than one track type.
    if ( !isMultiTool && currentTool == slideTool ) {
       result = TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, Pointer(this), false);
+         mTimeShiftHandle, SharedPointer(), false);
       if (result)
          results.push_back(result);
    }
@@ -70,7 +71,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // Finally, default of all is adjustment of the selection box.
    if ( isMultiTool || currentTool == selectTool ) {
       result = SelectHandle::HitTest(
-         mSelectHandle, st, pProject, Pointer(this));
+         mSelectHandle, st, pProject, SharedPointer());
       if (result)
          results.push_back(result);
    }
@@ -78,20 +79,35 @@ std::vector<UIHandlePtr> Track::HitTest
    return results;
 }
 
-std::shared_ptr<TrackPanelCell> Track::GetTrackControl()
+std::shared_ptr<TrackPanelCell> Track::ContextMenuDelegate()
+{
+   return FindTrack()->GetTrackControl();
+}
+
+std::shared_ptr<TrackControls> Track::GetTrackControl()
 {
    if (!mpControls)
       // create on demand
-      mpControls = GetControls();
+      mpControls = DoGetControls();
    return mpControls;
 }
 
-std::shared_ptr<TrackPanelCell> Track::GetVRulerControl()
+std::shared_ptr<const TrackControls> Track::GetTrackControl() const
+{
+   return const_cast< Track* >( this )->GetTrackControl();
+}
+
+std::shared_ptr<TrackVRulerControls> Track::GetVRulerControl()
 {
    if (!mpVRulerContols)
       // create on demand
-      mpVRulerContols = GetVRulerControls();
+      mpVRulerContols = DoGetVRulerControls();
    return mpVRulerContols;
+}
+
+std::shared_ptr<const TrackVRulerControls> Track::GetVRulerControl() const
+{
+   return const_cast< Track* >( this )->GetVRulerControl();
 }
 
 #include "../../TrackPanelResizeHandle.h"
@@ -99,6 +115,6 @@ std::shared_ptr<TrackPanelCell> Track::GetResizer()
 {
    if (!mpResizer)
       // create on demand
-      mpResizer = std::make_shared<TrackPanelResizerCell>( Pointer( this ) );
+      mpResizer = std::make_shared<TrackPanelResizerCell>( SharedPointer() );
    return mpResizer;
 }

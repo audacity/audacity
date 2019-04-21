@@ -18,7 +18,6 @@
 
 #include "ToolBar.h"
 #include "../Theme.h"
-#include "../Experimental.h"
 
 class wxCommandEvent;
 class wxDC;
@@ -71,7 +70,7 @@ private:
 
 public:
 
-   DECLARE_CLASS(EditToolBar)
+   DECLARE_CLASS(ScrubbingToolBar)
    DECLARE_EVENT_TABLE()
 };
 

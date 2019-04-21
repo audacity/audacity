@@ -22,7 +22,8 @@
 **********************************************************************/
 
 #include "../../Audacity.h"
-#include "VSTControl.h"
+#include "VSTControlOSX.h"
+
 #include "../../MemoryX.h"
 
 @interface VSTView : NSView
@@ -109,7 +110,11 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
    }
 #endif
 
-   if (!mView && !mHIView)
+   if (!mView
+#if !defined(_LP64)
+       && !mHIView
+#endif
+       )
    {
       return false;
    }

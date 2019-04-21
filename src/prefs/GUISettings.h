@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-GUIPrefs.h
+GUISettings.h
 
 Paul Licameli
    Moved a constant here from Envelope.h where it did not belong

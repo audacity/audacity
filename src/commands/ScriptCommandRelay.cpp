@@ -20,6 +20,7 @@ code out of ModuleManager.
 *//*******************************************************************/
 
 #include "ScriptCommandRelay.h"
+
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"
@@ -107,7 +108,6 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
       CommandBuilder builder(*pIn);
       if (builder.WasValid())
       {
-         AudacityProject *project = GetActiveProject();
          OldStyleCommandPointer cmd = builder.GetCommand();
          AppCommandEvent ev;
          ev.SetCommand(cmd);

@@ -13,14 +13,16 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/grid.h>
-#include <wx/string.h>
 
 #include "Internat.h"
-#include "widgets/Grid.h"
-#include "widgets/wxPanelWrapper.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
+#include "audacity/ComponentInterface.h" // member variable
 
+class wxArrayString;
+class wxGridEvent;
+class ChoiceEditor;
+class Grid;
+class NumericEditor;
 class TrackFactory;
 class TrackList;
 class RowData;
@@ -48,8 +50,8 @@ class LabelDialog final : public wxDialogWrapper
 
                ViewInfo &viewinfo,
                double rate,
-               const NumericFormatId & format,
-               const NumericFormatId &freqFormat);
+               const NumericFormatSymbol & format,
+               const NumericFormatSymbol &freqFormat);
    ~LabelDialog();
 
     bool Show(bool show = true) override;
@@ -106,7 +108,7 @@ class LabelDialog final : public wxDialogWrapper
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
    double mRate;
-   NumericFormatId mFormat, mFreqFormat;
+   NumericFormatSymbol mFormat, mFreqFormat;
 
    int mInitialRow;
 

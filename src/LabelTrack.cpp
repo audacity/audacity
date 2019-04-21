@@ -28,9 +28,11 @@ for drawing different aspects of the label and its text box.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+#include "Audacity.h" // for HAVE_GTK
 #include "LabelTrack.h"
+
 #include "Experimental.h"
+
 #include "TrackPanel.h"
 
 #include <stdio.h>
@@ -47,6 +49,7 @@ for drawing different aspects of the label and its text box.
 #include <wx/event.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/menu.h>
 #include <wx/pen.h>
 #include <wx/string.h>
 #include <wx/textfile.h>
@@ -56,6 +59,7 @@ for drawing different aspects of the label and its text box.
 #include "AudioIO.h"
 #include "DirManager.h"
 #include "Internat.h"
+#include "Menus.h"
 #include "Prefs.h"
 #include "RefreshCode.h"
 #include "Theme.h"
@@ -98,7 +102,7 @@ int LabelTrack::mFontHeight=-1;
 
 LabelTrack::Holder TrackFactory::NewLabelTrack()
 {
-   return std::make_unique<LabelTrack>(mDirManager);
+   return std::make_shared<LabelTrack>(mDirManager);
 }
 
 LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
@@ -285,7 +289,7 @@ void LabelTrack::RestoreFlags( const Flags& flags )
 wxFont LabelTrack::GetFont(const wxString &faceName, int size)
 {
    wxFontEncoding encoding;
-   if (faceName == wxT(""))
+   if (faceName.empty())
       encoding = wxFONTENCODING_DEFAULT;
    else
       encoding = wxFONTENCODING_SYSTEM;
@@ -473,7 +477,10 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
    // allowed to be obscured by the text].
    const int xExtra= (3 * mIconWidth)/2;
 
+   bool bAvoidName = false;
    const int nRows = wxMin((r.height / yRowHeight) + 1, MAX_NUM_ROWS);
+   if( nRows > 2 )
+      bAvoidName = gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
    // Initially none of the rows have been used.
    // So set a value that is less than any valid value.
    {
@@ -498,6 +505,7 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
       // (This is to encourage merging of adjacent label boundaries).
       while( (iRow<nRowsUsed) && (xUsed[iRow] != x ))
          iRow++;
+
       // IF we didn't find one THEN
       // find any row that can take a span starting at x.
       if( iRow >= nRowsUsed )
@@ -509,6 +517,21 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
       // IF we found such a row THEN record a valid position.
       if( iRow<nRows )
       {
+         // Logic to ameliorate case where first label is under the 
+         // (on track) track name.  For later labels it does not matter
+         // as we can scroll left or right and/or zoom.
+         // A possible alternative idea would be to (instead) increase the 
+         // translucency of the track name, when the mouse is inside it.
+         if( (i==0 ) && (iRow==0) && bAvoidName ){
+            // reserve some space in first row.
+            // reserve max of 200px or t1, or text box right edge.
+            const int x2 = zoomInfo.TimeToPosition(0.0, r.x) + 200;
+            xUsed[iRow]=x+labelStruct.width+xExtra;
+            if( xUsed[iRow] < x1 ) xUsed[iRow]=x1;
+            if( xUsed[iRow] < x2 ) xUsed[iRow]=x2;
+            iRow=1;
+         }
+
          // Possibly update the number of rows actually used.
          if( iRow >= nRowsUsed )
             nRowsUsed=iRow+1;
@@ -781,11 +804,12 @@ namespace {
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrack::Draw
-(TrackPanelDrawingContext &context, const wxRect & r,
- const SelectedRegion &selectedRegion,
- const ZoomInfo &zoomInfo) const
+( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    auto pHit = findHit();
 
    if(msFont.Ok())
@@ -794,9 +818,9 @@ void LabelTrack::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   TrackArtist::DrawBackgroundWithSelection(&dc, r, this,
-         AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-         selectedRegion, zoomInfo);
+   TrackArt::DrawBackgroundWithSelection( context, r, this,
+      AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
+      ( GetSelected() || IsSyncLockSelected() ) );
 
    wxCoord textWidth, textHeight;
 
@@ -1012,7 +1036,7 @@ bool LabelTrack::CutSelectedText()
       left = text.Left(init);
 
    // get right-remaining text
-   if (cur < (int)text.Length())
+   if (cur < (int)text.length())
       right = text.Mid(cur);
 
    // set title to the combination of the two remainders
@@ -1026,7 +1050,7 @@ bool LabelTrack::CutSelectedText()
    }
 
    // set cursor positions
-   mInitialCursorPos = mCurrentCursorPos = left.Length();
+   mInitialCursorPos = mCurrentCursorPos = left.length();
    return true;
 }
 
@@ -1080,7 +1104,7 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
       }
 
       // Convert control characters to blanks
-      for (int i = 0; i < (int)text.Length(); i++) {
+      for (int i = 0; i < (int)text.length(); i++) {
          if (wxIscntrl(text[i])) {
             text[i] = wxT(' ');
          }
@@ -1093,11 +1117,11 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
    if (init > cur)
       std::swap(init, cur);
    left = title.Left(init);
-   if (cur < (int)title.Length())
+   if (cur < (int)title.length())
       right = title.Mid(cur);
 
    title = left + text + right;
-   mInitialCursorPos =  mCurrentCursorPos = left.Length() + text.Length();
+   mInitialCursorPos =  mCurrentCursorPos = left.length() + text.length();
    return true;
 }
 
@@ -1140,7 +1164,7 @@ double LabelTrack::GetEndTime() const
 
 Track::Holder LabelTrack::Duplicate() const
 {
-   return std::make_unique<LabelTrack>( *this );
+   return std::make_shared<LabelTrack>( *this );
 }
 
 void LabelTrack::SetSelected(bool s)
@@ -1679,20 +1703,6 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
             // Actually this might be right or middle down
             mRightDragging = true;
 
-         // reset the highlight indicator
-         wxRect highlightedRect;
-         {
-            int xpos1, xpos2;
-            CalcHighlightXs(&xpos1, &xpos2);
-
-            wxASSERT(mFontHeight >= 0); // should have been set up while drawing
-            // the rectangle of highlighted area
-            highlightedRect = {
-               xpos1, labelStruct.y - mFontHeight / 2,
-               (int)(xpos2 - xpos1 + 0.5), mFontHeight
-            };
-         }
-
          // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
          if (evt.MiddleDown()) {
@@ -1739,7 +1749,7 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
    }
    else {
       bool typeToCreateLabel;
-      gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, true);
+      gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, false);
       if (IsGoodLabelFirstKey(event) && typeToCreateLabel) {
          AudacityProject * pProj = GetActiveProject();
 
@@ -1863,7 +1873,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_BACK:
          {
-            int len = title.Length();
+            int len = title.length();
 
             //IF the label is not blank THEN get rid of a letter or letters according to cursor position
             if (len > 0)
@@ -1875,7 +1885,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                {
                   // DELETE one letter
                   if (mCurrentCursorPos > 0) {
-                     title.Remove(mCurrentCursorPos-1, 1);
+                     title.erase(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
                   }
                }
@@ -1893,7 +1903,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
       case WXK_DELETE:
       case WXK_NUMPAD_DELETE:
          {
-            int len = title.Length();
+            int len = title.length();
 
             //If the label is not blank get rid of a letter according to cursor position
             if (len > 0)
@@ -1905,7 +1915,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                {
                   // DELETE one letter
                   if (mCurrentCursorPos < len) {
-                     title.Remove(mCurrentCursorPos, 1);
+                     title.erase(mCurrentCursorPos, 1);
                   }
                }
             }
@@ -1970,10 +1980,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_ESCAPE:
          if (mRestoreFocus >= 0) {
-            TrackListIterator iter(GetActiveProject()->GetTracks());
-            Track *track = iter.First();
-            while (track && mRestoreFocus--)
-               track = iter.Next();
+            auto track = *GetActiveProject()->GetTracks()->Any()
+               .begin().advance(mRestoreFocus);
             if (track)
                GetActiveProject()->GetTrackPanel()->SetFocusedTrack(track);
             mRestoreFocus = -1;
@@ -1992,7 +2000,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          mSelIndex = (mSelIndex + (int)mLabels.size()) % (int)mLabels.size();    // wrap round if necessary
          {
             LabelStruct &newLabel = mLabels[mSelIndex];
-            mCurrentCursorPos = newLabel.title.Length();
+            mCurrentCursorPos = newLabel.title.length();
             mInitialCursorPos = mCurrentCursorPos;
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
             newSel = newLabel.selectedRegion;
@@ -2040,7 +2048,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
             if (mSelIndex >= 0 && mSelIndex < len) {
                const auto &labelStruct = mLabels[mSelIndex];
-               mCurrentCursorPos = labelStruct.title.Length();
+               mCurrentCursorPos = labelStruct.title.length();
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
@@ -2100,10 +2108,12 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       }
       bool useDialog;
       AudacityProject *p = GetActiveProject();
-      gPrefs->Read(wxT("/Gui/DialogForNameNewLabel"), &useDialog, false);
+      gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
       if (useDialog) {
          wxString title;
-         if (p->DialogForLabelName(charCode, title) == wxID_CANCEL) {
+         if (DialogForLabelName(
+            *p, p->mViewInfo.selectedRegion, charCode, title) ==
+             wxID_CANCEL) {
             return false;
          }
          SetSelected(true);
@@ -2157,6 +2167,11 @@ void LabelTrack::ShowContextMenu()
 {
    wxWindow *parent = wxWindow::FindFocus();
 
+   // Bug 2044.  parent can be nullptr after a context switch.
+   if( !parent )
+      parent = GetActiveProject();
+
+   if( parent )
    {
       wxMenu menu;
       menu.Bind(wxEVT_MENU, &LabelTrack::OnContextMenu, this);
@@ -2195,6 +2210,7 @@ void LabelTrack::ShowContextMenu()
 void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 {
    AudacityProject *p = GetActiveProject();
+   auto &selectedRegion = p->GetViewInfo().selectedRegion;
 
    switch (evt.GetId())
    {
@@ -2215,7 +2231,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 
    /// paste selected text if paste menu item is selected
    case OnPasteSelectedTextID:
-      if (PasteSelectedText(p->GetSel0(), p->GetSel1()))
+      if (PasteSelectedText(selectedRegion.t0(), selectedRegion.t1()))
       {
          p->PushState(_("Modified Label"),
                       _("Label Edit"),
@@ -2225,7 +2241,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 
    /// DELETE selected label
    case OnDeleteSelectedLabelID: {
-      int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
+      int ndx = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
       if (ndx != -1)
       {
          DeleteLabel(ndx);
@@ -2237,9 +2253,9 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       break;
 
    case OnEditSelectedLabelID: {
-      int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
+      int ndx = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
       if (ndx != -1)
-         p->DoEditLabels(this, ndx);
+         DoEditLabels(*p, this, ndx);
    }
       break;
    }
@@ -2260,11 +2276,11 @@ void LabelTrack::RemoveSelectedText()
    if (init > 0)
       left = title.Left(init);
 
-   if (cur < (int)title.Length())
+   if (cur < (int)title.length())
       right = title.Mid(cur);
 
    title = left + right;
-   mInitialCursorPos = mCurrentCursorPos = left.Length();
+   mInitialCursorPos = mCurrentCursorPos = left.length();
 }
 
 void LabelTrack::Unselect()
@@ -2272,7 +2288,7 @@ void LabelTrack::Unselect()
    mSelIndex = -1;
 }
 
-bool LabelTrack::IsSelected() const
+bool LabelTrack::HasSelection() const
 {
    return (mSelIndex >= 0 && mSelIndex < (int)mLabels.size());
 }
@@ -2496,7 +2512,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
-   auto tmp = std::make_unique<LabelTrack>(GetDirManager());
+   auto tmp = std::make_shared<LabelTrack>(GetDirManager());
    const auto lt = static_cast<LabelTrack*>(tmp.get());
 
    for (auto &labelStruct: mLabels) {
@@ -2541,49 +2557,53 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   // This std::move is needed to "upcast" the pointer type
-   return std::move(tmp);
+   return tmp;
 }
 
 
 bool LabelTrack::PasteOver(double t, const Track * src)
 {
-   if (src->GetKind() != Track::Label)
+   auto result = src->TypeSwitch< bool >( [&](const LabelTrack *sl) {
+      int len = mLabels.size();
+      int pos = 0;
+
+      while (pos < len && mLabels[pos].getT0() < t)
+         pos++;
+
+      for (auto &labelStruct: sl->mLabels) {
+         LabelStruct l {
+            labelStruct.selectedRegion,
+            labelStruct.getT0() + t,
+            labelStruct.getT1() + t,
+            labelStruct.title
+         };
+         mLabels.insert(mLabels.begin() + pos++, l);
+      }
+
+      return true;
+   } );
+
+   if (! result )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return false;
+      (void)0;// intentionally do nothing
 
-   int len = mLabels.size();
-   int pos = 0;
-
-   while (pos < len && mLabels[pos].getT0() < t)
-      pos++;
-
-   auto sl = static_cast<const LabelTrack *>(src);
-   for (auto &labelStruct: sl->mLabels) {
-      LabelStruct l {
-         labelStruct.selectedRegion,
-         labelStruct.getT0() + t,
-         labelStruct.getT1() + t,
-         labelStruct.title
-      };
-      mLabels.insert(mLabels.begin() + pos++, l);
-   }
-
-   return true;
+   return result;
 }
 
 void LabelTrack::Paste(double t, const Track *src)
 {
-   if (src->GetKind() != Track::Label)
+   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack *lt) {
+      double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
+
+      ShiftLabelsOnInsert(shiftAmt, t);
+      PasteOver(t, src);
+
+      return true;
+   } );
+
+   if ( !bOk )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
-
-   LabelTrack *lt = (LabelTrack *)src;
-
-   double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
-
-   ShiftLabelsOnInsert(shiftAmt, t);
-   PasteOver(t, src);
+      (void)0;// intentionally do nothing
 }
 
 // This repeats the labels in a time interval a specified number of times.
@@ -3047,4 +3067,76 @@ int LabelTrack::FindNextLabel(const SelectedRegion& currentRegion)
 
    miLastLabel = i;
    return i;
+}
+
+#include "LabelDialog.h"
+
+void LabelTrack::DoEditLabels
+(AudacityProject &project, LabelTrack *lt, int index)
+{
+   auto format = project.GetSelectionFormat(),
+      freqFormat = project.GetFrequencySelectionFormatName();
+   auto tracks = project.GetTracks();
+   auto trackFactory = project.GetTrackFactory();
+   auto rate = project.GetRate();
+   auto &viewInfo = project.GetViewInfo();
+
+   LabelDialog dlg(&project, *trackFactory, tracks,
+                   lt, index,
+                   viewInfo, rate,
+                   format, freqFormat);
+#ifdef __WXGTK__
+   dlg.Raise();
+#endif
+
+   if (dlg.ShowModal() == wxID_OK) {
+      project.PushState(_("Edited labels"), _("Label"));
+      project.RedrawProject();
+   }
+}
+
+int LabelTrack::DialogForLabelName(
+   AudacityProject &project,
+   const SelectedRegion& region, const wxString& initialValue, wxString& value)
+{
+   auto trackPanel = project.GetTrackPanel();
+   auto &viewInfo = project.GetViewInfo();
+
+   wxPoint position =
+      trackPanel->FindTrackRect(trackPanel->GetFocusedTrack()).GetBottomLeft();
+   // The start of the text in the text box will be roughly in line with the label's position
+   // if it's a point label, or the start of its region if it's a region label.
+   position.x += trackPanel->GetLabelWidth()
+      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
+      -40;
+   position.y += 2;  // just below the bottom of the track
+   position = trackPanel->ClientToScreen(position);
+   AudacityTextEntryDialog dialog{ &project,
+      _("Name:"),
+      _("New label"),
+      initialValue,
+      wxOK | wxCANCEL,
+      position };
+
+   // keep the dialog within Audacity's window, so that the dialog is always fully visible
+   wxRect dialogScreenRect = dialog.GetScreenRect();
+   wxRect projScreenRect = project.GetScreenRect();
+   wxPoint max = projScreenRect.GetBottomRight() + wxPoint{ -dialogScreenRect.width, -dialogScreenRect.height };
+   if (dialogScreenRect.x > max.x) {
+      position.x = max.x;
+      dialog.Move(position);
+   }
+   if (dialogScreenRect.y > max.y) {
+      position.y = max.y;
+      dialog.Move(position);
+   }
+
+   dialog.SetInsertionPointEnd();      // because, by default, initial text is selected
+   int status = dialog.ShowModal();
+   if (status != wxID_CANCEL) {
+      value = dialog.GetValue();
+      value.Trim(true).Trim(false);
+   }
+
+   return status;
 }

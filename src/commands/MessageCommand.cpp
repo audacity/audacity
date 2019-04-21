@@ -15,8 +15,10 @@
 
 #include "../Audacity.h"
 #include "MessageCommand.h"
+
 #include "CommandType.h"
 #include "CommandContext.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 
 bool MessageCommand::DefineParams( ShuttleParams & S ){

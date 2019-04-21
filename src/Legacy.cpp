@@ -27,6 +27,7 @@ On failure the old version is put back in place.
 
 
 #include "Audacity.h"
+#include "Legacy.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +41,6 @@ On failure the old version is put back in place.
 #include <wx/textfile.h>
 
 #include "Internat.h"
-#include "Legacy.h"
 #include "widgets/ErrorDialog.h"
 #include "xml/XMLWriter.h"
 

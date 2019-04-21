@@ -27,8 +27,6 @@ public:
 
    virtual ~TrackVRulerControls() = 0;
 
-   std::shared_ptr<Track> FindTrack() override;
-
    // Define a default hit test method, just for message and cursor
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
@@ -39,6 +37,8 @@ public:
         int zoomStart, int zoomEnd);
 
 protected:
+   std::shared_ptr<Track> DoFindTrack() override;
+
    Track *GetTrack() const;
 
    std::weak_ptr<Track> mwTrack;

@@ -20,8 +20,9 @@ This class now lists
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
 #include "GetInfoCommand.h"
+
 #include "../Project.h"
 #include "CommandManager.h"
 #include "../effects/EffectManager.h"
@@ -29,6 +30,7 @@ This class now lists
 #include "../widgets/OverlayPanel.h"
 #include "../TrackPanel.h"
 #include "../Track.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../Envelope.h"
@@ -40,7 +42,11 @@ This class now lists
 #include "CommandContext.h"
 
 #include "../prefs/PrefsDialog.h"
+#include "../Shuttle.h"
+#include "../PluginManager.h"
 #include "../ShuttleGui.h"
+
+#include <wx/menu.h>
 
 enum {
    kCommands,
@@ -55,7 +61,7 @@ enum {
    nTypes
 };
 
-static const IdentInterfaceSymbol kTypes[nTypes] =
+static const EnumValueSymbol kTypes[nTypes] =
 {
    { XO("Commands") },
    //{ wxT("CommandsPlus"), XO("Commands Plus") },
@@ -75,7 +81,7 @@ enum {
    nFormats
 };
 
-static const IdentInterfaceSymbol kFormats[nFormats] =
+static const EnumValueSymbol kFormats[nFormats] =
 {
    // These are acceptable dual purpose internal/visible names
    
@@ -96,14 +102,14 @@ bool GetInfoCommand::DefineParams( ShuttleParams & S ){
 
 void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto types = LocalizedStrings( kTypes, nTypes );
-   auto formats = LocalizedStrings( kFormats, nFormats );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Type:"), mInfoType, &types);
-      S.TieChoice( _("Format:"), mFormat, &formats);
+      S.TieChoice( _("Type:"),
+         mInfoType, LocalizedStrings( kTypes, nTypes ));
+      S.TieChoice( _("Format:"),
+         mFormat, LocalizedStrings( kFormats, nFormats ));
    }
    S.EndMultiColumn();
 }
@@ -205,7 +211,7 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
       while (plug)
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
-         if (!command.IsEmpty()){
+         if (!command.empty()){
             em.GetCommandDefinition( plug->GetID(), context, flags );
          }
          plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand );
@@ -248,12 +254,9 @@ bool GetInfoCommand::SendBoxes(const CommandContext &context)
 bool GetInfoCommand::SendTracks(const CommandContext & context)
 {
    TrackList *projTracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(projTracks);
-   Track *trk = iter.First();
    context.StartArray();
-   while (trk)
+   for (auto trk : projTracks->Leaders())
    {
-
       TrackPanel *panel = context.GetProject()->GetTrackPanel();
       Track * fTrack = panel->GetFocusedTrack();
 
@@ -261,26 +264,35 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddItem( trk->GetName(), "name" );
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
-      //JKC: Possibly add these two later...
-      //context.AddItem( trk->GetKind(), "kind" );
+      //JKC: Possibly add later...
       //context.AddItem( trk->GetHeight(), "height" );
-      auto t = dynamic_cast<WaveTrack*>( trk );
-      if( t )
-      {
+      trk->TypeSwitch( [&] (const WaveTrack* t ) {
+         float vzmin, vzmax;
+         t->GetDisplayBounds(&vzmin, &vzmax);
+         context.AddItem( "wave", "kind" );
          context.AddItem( t->GetStartTime(), "start" );
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
          context.AddItem( t->GetGain() , "gain");
-         context.AddItem( t->GetLinked() ? 2:1, "channels");
+         context.AddItem( TrackList::Channels(t).size(), "channels");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
+         context.AddItem( vzmin, "VZoomMin");
+         context.AddItem( vzmax, "VZoomMax");
+      },
+#if defined(USE_MIDI)
+      [&](const NoteTrack *) {
+         context.AddItem( "note", "kind" );
+      },
+#endif
+      [&](const LabelTrack *) {
+         context.AddItem( "label", "kind" );
+      },
+      [&](const TimeTrack *) {
+         context.AddItem( "time", "kind" );
       }
+      );
       context.EndStruct();
-      // Skip second tracks of stereo...
-      if( trk->GetLinked() )
-         trk= iter.Next();
-      if( trk )
-         trk=iter.Next();
    }
    context.EndArray();
    return true;
@@ -289,28 +301,18 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
 bool GetInfoCommand::SendClips(const CommandContext &context)
 {
    TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int i=0;
    context.StartArray();
-   while (t) {
-      if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         WaveClipPointers ptrs( waveTrack->SortedClipArray());
-         for(WaveClip * pClip : ptrs ) {
-            context.StartStruct();
-            context.AddItem( (double)i, "track" );
-            context.AddItem( pClip->GetStartTime(), "start" );
-            context.AddItem( pClip->GetEndTime(), "end" );
-            context.AddItem( pClip->GetColourIndex(), "color" );
-            context.EndStruct();
-         }
+   for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(WaveClip * pClip : ptrs ) {
+         context.StartStruct();
+         context.AddItem( (double)i, "track" );
+         context.AddItem( pClip->GetStartTime(), "start" );
+         context.AddItem( pClip->GetEndTime(), "end" );
+         context.AddItem( pClip->GetColourIndex(), "color" );
+         context.EndStruct();
       }
-      // Skip second tracks of stereo...
-      if( t->GetLinked() )
-         t= iter.Next();
-      if( t )
-         t=iter.Next();
       i++;
    }
    context.EndArray();
@@ -321,43 +323,33 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
 bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 {
    TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int i=0;
    int j=0;
    context.StartArray();
-   while (t) {
-      if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         WaveClipPointers ptrs( waveTrack->SortedClipArray());
-         for(WaveClip * pClip : ptrs ) {
-            context.StartStruct();
-            context.AddItem( (double)i, "track" );
-            context.AddItem( (double)j, "clip" );
-            context.AddItem( pClip->GetStartTime(), "start" );
-            Envelope * pEnv = pClip->GetEnvelope();
-            context.StartField( "points" );
-            context.StartArray();
-            double offset = pEnv->mOffset;
-            for( size_t k=0;k<pEnv->mEnv.size(); k++)
-            {
-               context.StartStruct( );
-               context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
-               context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
-               context.EndStruct();
-            }
-            context.EndArray();
-            context.EndField();
-            context.AddItem( pClip->GetEndTime(), "end" );
+   for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(WaveClip * pClip : ptrs ) {
+         context.StartStruct();
+         context.AddItem( (double)i, "track" );
+         context.AddItem( (double)j, "clip" );
+         context.AddItem( pClip->GetStartTime(), "start" );
+         Envelope * pEnv = pClip->GetEnvelope();
+         context.StartField( "points" );
+         context.StartArray();
+         double offset = pEnv->mOffset;
+         for( size_t k=0;k<pEnv->mEnv.size(); k++)
+         {
+            context.StartStruct( );
+            context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
+            context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
             context.EndStruct();
-            j++;
          }
+         context.EndArray();
+         context.EndField();
+         context.AddItem( pClip->GetEndTime(), "end" );
+         context.EndStruct();
+         j++;
       }
-      // Skip second tracks of stereo...
-      if( t->GetLinked() )
-         t= iter.Next();
-      if( t )
-         t=iter.Next();
    }
    context.EndArray();
 
@@ -368,48 +360,37 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 bool GetInfoCommand::SendLabels(const CommandContext &context)
 {
    TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int i=0;
    context.StartArray();
-   while (t) {
-      if (t->GetKind() == Track::Label) {
-         LabelTrack *labelTrack = static_cast<LabelTrack*>(t);
-         if( labelTrack )
-         {
-
+   for (auto t : tracks->Leaders()) {
+      t->TypeSwitch( [&](LabelTrack *labelTrack) {
 #ifdef VERBOSE_LABELS_FORMATTING
-            for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
-               const auto &label = labelTrack->mLabels[nn];
-               context.StartStruct();
-               context.AddItem( (double)i, "track" );
-               context.AddItem( label.getT0(), "start" );
-               context.AddItem( label.getT1(), "end" );
-               context.AddItem( label.title, "text" );
-               context.EndStruct();
-            }
-#else
-            context.AddItem( (double)i ); // Track number.
-            context.StartArray();
-            for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
-               const auto &label = labelTrack->mLabels[nn];
-               context.StartArray();
-               context.AddItem( label.getT0() ); // start
-               context.AddItem( label.getT1() ); // end
-               context.AddItem( label.title ); //text.
-               context.EndArray();
-            }
-            context.EndArray();
-#endif
+         for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
+            const auto &label = labelTrack->mLabels[nn];
+            context.StartStruct();
+            context.AddItem( (double)i, "track" );
+            context.AddItem( label.getT0(), "start" );
+            context.AddItem( label.getT1(), "end" );
+            context.AddItem( label.title, "text" );
+            context.EndStruct();
          }
-      }
-      // Skip second tracks of stereo...
-      // This has no effect on label tracks themselves, which are never stereo
-      // but is needed for per track rather than per channel numbering.  
-      if( t->GetLinked() )
-         t= iter.Next();
-      if( t )
-         t=iter.Next();
+#else
+         context.StartArray();
+         context.AddItem( (double)i ); // Track number.
+         context.StartArray();
+         for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
+            const auto &label = labelTrack->mLabels[nn];
+            context.StartArray();
+            context.AddItem( label.getT0() ); // start
+            context.AddItem( label.getT1() ); // end
+            context.AddItem( label.title ); //text.
+            context.EndArray();
+         }
+         context.EndArray();
+         context.EndArray();
+#endif
+      } );
+      // Per track numbering counts all tracks
       i++;
    }
    context.EndArray();
@@ -432,11 +413,11 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
    CommandManager * pMan = context.GetProject()->GetCommandManager();
 
    wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.GetCount();
+   size_t lcnt = list.size();
    wxMenuItem * item;
    wxString Label;
    wxString Accel;
-   wxString Name;
+   CommandID Name;
 
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       item = list.Item(lndx)->GetData();
@@ -460,7 +441,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       context.AddItem( flags, "flags" );
       context.AddItem( Label, "label" );
       context.AddItem( Accel, "accel" );
-      if( !Name.IsEmpty() )
+      if( !Name.empty() )
          context.AddItem( Name, "id" );// It is called Scripting ID outside Audacity.
       context.EndStruct();
 
@@ -506,8 +487,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 
    wxRect trackRect = pWin->GetRect();
 
-   VisibleTrackIterator iter(pProj);
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   for (auto t : pProj->GetTracks()->Any() + IsVisibleTrack{ pProj }) {
       trackRect.y = t->GetY() - pTP->mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
@@ -598,7 +578,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       return;
    }
    wxWindowList list = pWin->GetChildren();
-   size_t lcnt = list.GetCount();
+   size_t lcnt = list.size();
 
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       wxWindow * item = list[lndx];
@@ -613,7 +593,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       // Ignore anonymous panels.
       if( Name == "panel"  )
          continue;
-      if( Name.IsEmpty() )
+      if( Name.empty() )
          Name = wxString("*") + item->GetToolTipText();
 
       context.StartStruct();

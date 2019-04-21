@@ -25,7 +25,6 @@ ShuttleGui.
 #include <algorithm>
 
 #include <wx/defs.h>
-#include <wx/hashmap.h>
 #include <wx/sizer.h>
 #include <wx/stockitem.h>
 #include <wx/string.h>
@@ -42,6 +41,7 @@ ShuttleGui.
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../toolbars/ControlToolBar.h"
@@ -56,7 +56,6 @@ ShuttleGui.
 
 #include "../commands/CommandTargets.h"
 
-#include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
 #include <unordered_map>
@@ -79,8 +78,8 @@ AudacityCommand::~AudacityCommand()
 }
 
 
-wxString AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
-IdentInterfaceSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
+PluginPath AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
+VendorSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
 wxString AudacityCommand::GetVersion(){     return AUDACITY_VERSION_STRING;}
 
 
@@ -185,7 +184,7 @@ bool AudacityCommand::SetAutomationParameters(const wxString & parms)
    return TransferDataToWindow();
 }
 
-bool AudacityCommand::DoAudacityCommand(wxWindow *parent, 
+bool AudacityCommand::DoAudacityCommand(wxWindow *parent,
                       const CommandContext & context,
                       bool shouldPrompt /* = true */)
 {
@@ -272,7 +271,7 @@ AudacityCommandDialog::AudacityCommandDialog(wxWindow * parent,
    wxASSERT( pCommand );
    mpCommand = pCommand;
    mAdditionalButtons = additionalButtons |eCancelButton;
-   if( !pCommand->ManualPage().IsEmpty() )
+   if( !pCommand->ManualPage().empty() )
       mAdditionalButtons |= eHelpButton;
 }
 

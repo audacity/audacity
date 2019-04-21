@@ -15,23 +15,16 @@
 #ifndef __AUDACITY_TIME_TEXT_CTRL__
 #define __AUDACITY_TIME_TEXT_CTRL__
 
-#include "../MemoryX.h"
-#include "../../include/audacity/IdentInterface.h"
-#include <vector>
-#include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/panel.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
-
 #include "../Audacity.h"
-#include "../Internat.h"
 
-#if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
-#include "WindowAccessible.h"
-#endif
+#include "../MemoryX.h"
+#include "../../include/audacity/ComponentInterface.h"
+#include <vector>
+#include <wx/setup.h> // for wxUSE_* macros
+#include <wx/defs.h>
+#include <wx/control.h> // to inherit
+
+#include "../Internat.h"
 
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and
@@ -50,8 +43,6 @@ class NumericField;
 
 class DigitInfo;
 
-using NumericFormatId = IdentInterfaceSymbol;
-
 class NumericConverter /* not final */
 {
 public:
@@ -62,16 +53,16 @@ public:
       BANDWIDTH,
    };
 
-   static NumericFormatId DefaultSelectionFormat();
-   static NumericFormatId TimeAndSampleFormat();
-   static NumericFormatId SecondsFormat();
-   static NumericFormatId HundredthsFormat();
-   static NumericFormatId HertzFormat();
+   static NumericFormatSymbol DefaultSelectionFormat();
+   static NumericFormatSymbol TimeAndSampleFormat();
+   static NumericFormatSymbol SecondsFormat();
+   static NumericFormatSymbol HundredthsFormat();
+   static NumericFormatSymbol HertzFormat();
    
-   static NumericFormatId LookupFormat( Type type, const wxString& id);
+   static NumericFormatSymbol LookupFormat( Type type, const wxString& id);
 
    NumericConverter(Type type,
-                    const NumericFormatId & formatName = {},
+                    const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
 
@@ -88,11 +79,11 @@ public:
    virtual void ControlsToValue();
 
 private:
-   void ParseFormatString(const wxString & format);
+   void ParseFormatString(const wxString & untranslatedFormat);
 
 public:
    void PrintDebugInfo();
-   void SetFormatName(const NumericFormatId & formatName);
+   void SetFormatName(const NumericFormatSymbol & formatName);
    void SetFormatString(const wxString & formatString);
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -108,9 +99,9 @@ public:
    int GetFormatIndex();
 
    int GetNumBuiltins();
-   NumericFormatId GetBuiltinName(const int index);
+   NumericFormatSymbol GetBuiltinName(const int index);
    wxString GetBuiltinFormat(const int index);
-   wxString GetBuiltinFormat(const NumericFormatId & name);
+   wxString GetBuiltinFormat(const NumericFormatSymbol & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -185,7 +176,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    NumericTextCtrl(wxWindow *parent, wxWindowID winid,
                    NumericConverter::Type type,
-                   const NumericFormatId &formatName = {},
+                   const NumericFormatSymbol &formatName = {},
                    double value = 0.0,
                    double sampleRate = 44100,
                    const Options &options = {},
@@ -201,7 +192,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
    void SetFormatString(const wxString & formatString);
-   void SetFormatName(const NumericFormatId & formatName);
+   void SetFormatName(const NumericFormatSymbol & formatName);
 
    void SetFieldFocus(int /* digit */);
 
@@ -276,86 +267,5 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
-
-#if wxUSE_ACCESSIBILITY
-
-class NumericTextCtrlAx final : public WindowAccessible
-{
-public:
-   NumericTextCtrlAx(NumericTextCtrl * ctrl);
-
-   virtual ~ NumericTextCtrlAx();
-
-   // Performs the default action. childId is 0 (the action for this object)
-   // or > 0 (the action for a child).
-   // Return wxACC_NOT_SUPPORTED if there is no default action for this
-   // window (e.g. an edit control).
-   wxAccStatus DoDefaultAction(int childId) override;
-
-   // Retrieves the address of an IDispatch interface for the specified child.
-   // All objects must support this property.
-   wxAccStatus GetChild(int childId, wxAccessible **child) override;
-
-   // Gets the number of children.
-   wxAccStatus GetChildCount(int *childCount) override;
-
-   // Gets the default action for this object (0) or > 0 (the action for a child).
-   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
-   // string if there is no action.
-   // The retrieved string describes the action that is performed on an object,
-   // not what the object does as a result. For example, a toolbar button that prints
-   // a document has a default action of "Press" rather than "Prints the current document."
-   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
-
-   // Returns the description for this object or a child.
-   wxAccStatus GetDescription(int childId, wxString *description) override;
-
-   // Gets the window with the keyboard focus.
-   // If childId is 0 and child is NULL, no object in
-   // this subhierarchy has the focus.
-   // If this object has the focus, child should be 'this'.
-   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
-
-   // Returns help text for this object or a child, similar to tooltip text.
-   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
-
-   // Returns the keyboard shortcut for this object or child.
-   // Return e.g. ALT+K
-   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
-
-   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
-   // rect is in screen coordinates.
-   wxAccStatus GetLocation(wxRect & rect, int elementId) override;
-
-   // Gets the name of the specified object.
-   wxAccStatus GetName(int childId, wxString *name) override;
-
-   // Returns a role constant.
-   wxAccStatus GetRole(int childId, wxAccRole *role) override;
-
-   // Gets a variant representing the selected children
-   // of this object.
-   // Acceptable values:
-   // - a null variant (IsNull() returns TRUE)
-   // - a list variant (GetType() == wxT("list"))
-   // - an integer representing the selected child element,
-   //   or 0 if this object is selected (GetType() == wxT("long"))
-   // - a "void*" pointer to a wxAccessible child object
-   wxAccStatus GetSelections(wxVariant *selections) override;
-
-   // Returns a state constant.
-   wxAccStatus GetState(int childId, long *state) override;
-
-   // Returns a localized string representing the value for the object
-   // or child.
-   wxAccStatus GetValue(int childId, wxString *strValue) override;
-
-private:
-   NumericTextCtrl *mCtrl;
-   int mLastField;
-   int mLastDigit;
-};
-
-#endif // wxUSE_ACCESSIBILITY
 
 #endif // __AUDACITY_TIME_TEXT_CTRL__

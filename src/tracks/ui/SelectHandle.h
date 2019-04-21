@@ -18,8 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../MemoryX.h"
 #include <vector>
 
-#include <wx/gdicmn.h>
-
 class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;

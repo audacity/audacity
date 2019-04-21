@@ -17,11 +17,6 @@
 #ifndef __AUDACITY_EFFECT_TRUNC_SILENCE__
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
-#include <wx/arrstr.h>
-#include <wx/event.h>
-#include <wx/list.h>
-#include <wx/string.h>
-
 #include "Effect.h"
 
 class ShuttleGui;
@@ -29,7 +24,7 @@ class wxChoice;
 class wxTextCtrl;
 class wxCheckBox;
 
-#define TRUNCATESILENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Truncate Silence") }
+#define TRUNCATESILENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Truncate Silence") }
 
 class RegionList;
 
@@ -39,9 +34,9 @@ public:
    EffectTruncSilence();
    virtual ~EffectTruncSilence();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -90,7 +85,8 @@ private:
    bool ProcessIndependently();
    bool ProcessAll();
    bool FindSilences
-      (RegionList &silences, TrackList *list, Track *firstTrack, Track *lastTrack);
+      (RegionList &silences, const TrackList *list,
+       const Track *firstTrack, const Track *lastTrack);
    bool DoRemoval
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);

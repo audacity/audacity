@@ -15,14 +15,8 @@
 #include "../Experimental.h"
 
 #include <vector>
-#include <wx/choice.h>
-#include <wx/dialog.h>
-#include <wx/event.h>
-#include <wx/listbox.h>
-#include <wx/string.h>
 
 #include "audacity/EffectInterface.h"
-#include "../PluginManager.h"
 #include "Effect.h"
 
 #include <unordered_map>
@@ -89,9 +83,9 @@ public:
                          bool shouldPrompt  = true );
 
    // Renamed from 'Effect' to 'Command' prior to moving out of this class.
-   IdentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
+   ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
    wxString GetCommandName(const PluginID & ID); // translated
-   wxString GetCommandIdentifier(const PluginID & ID);
+   CommandID GetCommandIdentifier(const PluginID & ID);
    wxString GetCommandDescription(const PluginID & ID);
    wxString GetCommandUrl(const PluginID & ID);
    wxString GetCommandTip(const PluginID & ID);
@@ -148,7 +142,7 @@ public:
    void ShowRack();
 #endif
 
-   const PluginID & GetEffectByIdentifier(const wxString & strTarget);
+   const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
 private:
    /** Return an effect by its ID. */

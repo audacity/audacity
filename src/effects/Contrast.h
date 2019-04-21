@@ -9,10 +9,9 @@
 #ifndef __AUDACITY_CONTRAST_DIALOG__
 #define __AUDACITY_CONTRAST_DIALOG__
 
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
 class wxButton;
-class wxSizer;
 class wxString;
 class wxTextCtrl;
 

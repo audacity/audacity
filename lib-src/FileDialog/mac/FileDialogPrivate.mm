@@ -27,21 +27,22 @@
 #include "FileDialog.h"
 
 #ifndef WX_PRECOMP
-    #include "wx/msgdlg.h"
-    #include "wx/app.h"
-    #include "wx/sizer.h"
-    #include "wx/stattext.h"
-    #include "wx/choice.h"
+    #include <wx/msgdlg.h>
+    #include <wx/app.h>
+    #include <wx/sizer.h>
+    #include <wx/stattext.h>
+    #include <wx/choice.h>
 #endif
 
-#include "wx/clipbrd.h"
-#include "wx/filename.h"
-#include "wx/tokenzr.h"
-#include "wx/evtloop.h"
+#include <wx/clipbrd.h>
+#include <wx/filectrl.h>
+#include <wx/filename.h>
+#include <wx/tokenzr.h>
+#include <wx/evtloop.h>
 
-#include "wx/osx/private.h"
-#include "wx/sysopt.h"
-#include "wx/modalhook.h"
+#include <wx/osx/private.h>
+#include <wx/sysopt.h>
+#include <wx/modalhook.h>
 
 #include <mach-o/dyld.h>
 
@@ -159,8 +160,8 @@ void FileDialog::Create(
 {
     FileDialogBase::Create(parent, message, defaultDir, defaultFileName, wildCard, style, pos, sz, name);
 
-    m_sheetDelegate = [[ModalDialogDelegate alloc] init];
-    [(ModalDialogDelegate*)m_sheetDelegate setImplementation: this];
+//    m_sheetDelegate = [[ModalDialogDelegate alloc] init];
+//    [(ModalDialogDelegate*)m_sheetDelegate setImplementation: this];
 }
 
 FileDialog::~FileDialog()
@@ -316,7 +317,7 @@ void FileDialog::ShowWindowModal()
         
         NSWindow* nativeParent = parentWindow->GetWXWindow();
         [sPanel beginSheetForDirectory:dir.AsNSString() file:file.AsNSString()
-            modalForWindow: nativeParent modalDelegate: m_sheetDelegate
+            modalForWindow: nativeParent modalDelegate: nil // m_sheetDelegate
             didEndSelector: @selector(sheetDidEnd:returnCode:contextInfo:)
             contextInfo: nil];
     }
@@ -336,7 +337,7 @@ void FileDialog::ShowWindowModal()
         NSWindow* nativeParent = parentWindow->GetWXWindow();
         [oPanel beginSheetForDirectory:dir.AsNSString() file:file.AsNSString()
             types: types modalForWindow: nativeParent
-            modalDelegate: m_sheetDelegate
+            modalDelegate: nil // m_sheetDelegate
             didEndSelector: @selector(sheetDidEnd:returnCode:contextInfo:)
             contextInfo: nil];
     }

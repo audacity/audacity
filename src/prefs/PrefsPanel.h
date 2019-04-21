@@ -9,10 +9,9 @@
 *******************************************************************//**
 
 \class PrefsPanel
-\brief Used within the PrefsDialog, classes derived from this class
-include AudioIOPrefs, BatchPrefs, DirectoriesPrefs, FileFormatPrefs,
-GUIPrefs, KeyConfigPrefs, MousePrefs, QualityPrefs, SpectrumPrefs and
-ThemePrefs.
+\brief Base class for a panel in the PrefsDialog.  Classes derived from 
+this class include BatchPrefs, DirectoriesPrefs, GUIPrefs, KeyConfigPrefs, 
+MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 
   The interface works like this: Each panel in the preferences dialog
   must derive from PrefsPanel. You must override Apply() with code
@@ -20,19 +19,27 @@ ThemePrefs.
   global preferences object gPrefs, and instructing the applicable parts
   of the program to re-read the preference options.
 
-  To actually add a the NEW panel, edit the PrefsDialog constructor
+  To actually add the new panel, edit the PrefsDialog constructor
   to append the panel to its list of panels.
+
+*******************************************************************//**
+
+\class PrefsPanelFactory
+\brief Base class for factories such as GUIPrefsFactory that produce a
+PrefsPanel.
 
 *//*******************************************************************/
 
 #ifndef __AUDACITY_PREFS_PANEL__
 #define __AUDACITY_PREFS_PANEL__
 
-#include <wx/window.h>
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "../include/audacity/ComponentInterface.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8
+
+#define BUILTIN_PREFS_PANEL_PREFIX wxT("Built-in PrefsPanel: ")
 
 /* these are spacing guidelines: ie. radio buttons should have a 5 pixel
  * border on each side */
@@ -42,7 +49,7 @@ ThemePrefs.
 
 class ShuttleGui;
 
-class PrefsPanel /* not final */ : public wxPanelWrapper
+class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
 {
  public:
    PrefsPanel(wxWindow * parent, wxWindowID winid, const wxString &title)
@@ -57,6 +64,15 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    // NEW virtuals
    virtual void Preview() {} // Make tentative changes
    virtual bool Commit() = 0; // used to be called "Apply"
+
+
+   virtual PluginPath GetPath();
+   virtual VendorSymbol GetVendor();
+   virtual wxString GetVersion();
+
+   //virtual ComponentInterfaceSymbol GetSymbol();
+   //virtual wxString GetDescription();
+
 
    // If it returns True, the Preview button is added below the panel
    // Default returns false

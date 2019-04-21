@@ -32,7 +32,7 @@
 
 */
 
-#include "../Audacity.h"
+#include "../Audacity.h"// for USE_* macros
 #include "ExportMP2.h"
 
 #ifdef USE_LIBTWOLAME
@@ -56,6 +56,7 @@
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/ProgressDialog.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -93,7 +94,7 @@ public:
    bool TransferDataFromWindow() override;
 
 private:
-   wxArrayString mBitRateNames;
+   wxArrayStringEx mBitRateNames;
    std::vector<int> mBitRateLabels;
 };
 
@@ -104,7 +105,7 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
 {
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
    {
-      mBitRateNames.Add(wxString::Format(_("%i kbps"),iBitrates[i]));
+      mBitRateNames.push_back(wxString::Format(_("%i kbps"),iBitrates[i]));
       mBitRateLabels.push_back(iBitrates[i]);
    }
 

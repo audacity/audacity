@@ -21,16 +21,16 @@
 #ifndef __AUDACITY_SPECTRUM_PREFS__
 #define __AUDACITY_SPECTRUM_PREFS__
 
-#include <wx/defs.h>
-#include <wx/string.h>
-#include <wx/window.h>
-
 #include "../Experimental.h"
+
+#include <wx/defs.h>
+
 #include "../WaveTrack.h"
 
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
 
+class wxArrayStringEx;
 class wxChoice;
 class wxCheckBox;
 class wxTextCtrl;
@@ -39,11 +39,16 @@ class ShuttleGui;
 class SpectrogramSettings;
 class WaveTrack;
 
+#define SPECTRUM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Spectrum") }
+
 class SpectrumPrefs final : public PrefsPanel
 {
  public:
    SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~SpectrumPrefs();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+
    void Preview() override;
    bool Commit() override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -73,19 +78,15 @@ class SpectrumPrefs final : public PrefsPanel
    wxTextCtrl *mRange;
    wxTextCtrl *mFrequencyGain;
 
-   wxArrayString mSizeChoices;
-
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    int mZeroPaddingChoice;
    wxChoice *mZeroPaddingChoiceCtrl;
-   wxArrayString mZeroPaddingChoices;
+   wxArrayStringEx mZeroPaddingChoices;
 #endif
 
-   wxArrayString mTypeChoices;
-   wxArrayString mScaleChoices;
+   wxArrayStringEx mTypeChoices;
 
    wxChoice *mAlgorithmChoice;
-   wxArrayString mAlgorithmChoices;
 
 
 #ifdef EXPERIMENTAL_FIND_NOTES
@@ -104,6 +105,7 @@ class SpectrumPrefs final : public PrefsPanel
    bool mCommitted{};
 };
 
+/// A PrefsPanelFactory that creates one SpectrumPrefs panel.
 class SpectrumPrefsFactory final : public PrefsPanelFactory
 {
 public:

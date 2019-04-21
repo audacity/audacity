@@ -21,6 +21,9 @@ most commonly asked questions about Audacity.
 
 
 #include "Audacity.h"
+#include "SplashDialog.h"
+
+#include "Experimental.h"
 
 #include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
@@ -31,7 +34,6 @@ most commonly asked questions about Audacity.
 #include <wx/intl.h>
 #include <wx/image.h>
 
-#include "SplashDialog.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "ShuttleGui.h"
@@ -132,7 +134,7 @@ void SplashDialog::Populate( ShuttleGui & S )
    S.SetStretchyCol( 1 );// Column 1 is stretchy...
    {
       S.SetBorder( 5 );
-      S.Id( DontShowID).AddCheckBox( _("Don't show this again at start up"), bShow ? wxT("false") : wxT("true") );
+      S.Id( DontShowID).AddCheckBox( _("Don't show this again at start up"), !bShow );
       wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK);
       ok->SetDefault();
       S.SetBorder( 5 );

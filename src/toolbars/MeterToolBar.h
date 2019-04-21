@@ -15,13 +15,13 @@
 #define __AUDACITY_METER_TOOLBAR__
 
 #include "ToolBar.h"
-#include "../Project.h"
 
 class wxDC;
 class wxGridBagSizer;
 class wxSizeEvent;
 class wxWindow;
 
+class AudacityProject;
 class MeterPanel;
 
 

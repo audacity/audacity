@@ -20,6 +20,10 @@ and on Mac OS X for the filesystem.
 
 *//*******************************************************************/
 
+#include "Internat.h"
+
+#include "Experimental.h"
+
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
@@ -27,11 +31,9 @@ and on Mac OS X for the filesystem.
 #include <locale.h>
 #include <math.h> // for pow()
 
-#include "Experimental.h"
 #include "FileNames.h"
 #include "widgets/ErrorDialog.h"
-#include "Internat.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -103,14 +105,14 @@ void Internat::Init()
    auto forbid = wxFileName::GetForbiddenChars(format);
 
    for(auto cc: forbid)
-      exclude.Add(wxString{ cc });
+      exclude.push_back(wxString{ cc });
 
    // The path separators may not be forbidden, so add them
    auto separators = wxFileName::GetPathSeparators(format);
 
    for(auto cc: separators) {
       if (forbid.Find(cc) == wxNOT_FOUND)
-         exclude.Add(wxString{ cc });
+         exclude.push_back(wxString{ cc });
    }
 }
 
@@ -163,7 +165,7 @@ wxString Internat::ToDisplayString(double numberToConvert,
       if (result.Find(decSep) != -1)
       {
          // Strip trailing zeros, but leave one, and decimal separator.
-         int pos = result.Length() - 1;
+         int pos = result.length() - 1;
          while ((pos > 1) &&
                   (result.GetChar(pos) == wxT('0')) &&
                   (result.GetChar(pos - 1) != decSep))
@@ -290,8 +292,8 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
 wxString Internat::StripAccelerators(const wxString &s)
 {
    wxString result;
-   result.Alloc(s.Length());
-   for(size_t i = 0; i < s.Length(); i++) {
+   result.reserve(s.length());
+   for(size_t i = 0; i < s.length(); i++) {
       if (s[i] == '\t')
          break;
       if (s[i] != '&' && s[i] != '.')
@@ -300,11 +302,11 @@ wxString Internat::StripAccelerators(const wxString &s)
    return result;
 }
 
-wxArrayString LocalizedStrings(
-   const IdentInterfaceSymbol strings[], size_t nStrings)
+wxArrayStringEx LocalizedStrings(
+   const EnumValueSymbol strings[], size_t nStrings)
 {
-   wxArrayString results;
-   std::transform( strings, strings + nStrings, std::back_inserter(results),
-                   std::mem_fn( &IdentInterfaceSymbol::Translation ) );
-   return results;
+   return transform_range<wxArrayStringEx>(
+      strings, strings + nStrings,
+      std::mem_fn( &EnumValueSymbol::Translation )
+   );
 }

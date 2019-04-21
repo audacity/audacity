@@ -9,6 +9,7 @@ Paul Licameli
 **********************************************************************/
 
 #include "ViewInfo.h"
+
 #include "Experimental.h"
 
 #include <algorithm>
@@ -88,9 +89,9 @@ bool ZoomInfo::ZoomOutAvailable() const
    return zoom > gMinZoom;
 }
 
-double ZoomInfo::GetZoom( ){ return zoom;};
-double ZoomInfo::GetMaxZoom( ){ return gMaxZoom;};
-double ZoomInfo::GetMinZoom( ){ return gMinZoom;};
+double ZoomInfo::GetZoom( ) const { return zoom;};
+double ZoomInfo::GetMaxZoom( ) { return gMaxZoom;};
+double ZoomInfo::GetMinZoom( ) { return gMinZoom;};
 
 void ZoomInfo::SetZoom(double pixelsPerSecond)
 {
@@ -205,4 +206,6 @@ void ViewInfo::OnTimer(wxCommandEvent &event)
 {
    mRecentStreamTime = gAudioIO->GetStreamTime();
    event.Skip();
+   // Propagate the message to other listeners bound to this
+   this->ProcessEvent( event );
 }

@@ -38,10 +38,16 @@ a graph for EffectScienFilter.
 #include <math.h>
 #include <float.h>
 
+#include <wx/setup.h> // for wxUSE_* macros
+
 #include <wx/brush.h>
+#include <wx/choice.h>
+#include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
 #include <wx/settings.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
 #include <wx/utils.h>
 #include <wx/valgen.h>
 
@@ -50,13 +56,14 @@ a graph for EffectScienFilter.
 #include "../PlatformCompatibility.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/ErrorDialog.h"
-
-#include "Equalization.h" // For SliderAx
+#include "../widgets/Ruler.h"
+#include "../widgets/WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
@@ -86,7 +93,7 @@ enum kTypes
    nTypes
 };
 
-static const IdentInterfaceSymbol kTypeStrings[nTypes] =
+static const EnumValueSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -103,7 +110,7 @@ enum kSubTypes
    nSubTypes
 };
 
-static const IdentInterfaceSymbol kSubTypeStrings[nSubTypes] =
+static const EnumValueSymbol kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
@@ -178,9 +185,9 @@ EffectScienFilter::~EffectScienFilter()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectScienFilter::GetSymbol()
+ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
 {
    return CLASSICFILTERS_PLUGIN_SYMBOL;
 }
@@ -336,30 +343,28 @@ bool EffectScienFilter::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   auto trackRange = inputTracks()->Selected< const WaveTrack >();
 
-   mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
-
-   while (t)
    {
-      if (t->GetSelected())
+      auto t = *trackRange.begin();
+      mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+   }
+
+   for (auto t : trackRange)
+   {
+      if (selcount == 0)
       {
-         if (selcount == 0)
-         {
-            rate = t->GetRate();
-         }
-         else
-         {
-            if (t->GetRate() != rate)
-            {
-               Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
-               return false;
-            }
-         }
-         selcount++;
+         rate = t->GetRate();
       }
-      t = (WaveTrack *) iter.Next();
+      else
+      {
+         if (t->GetRate() != rate)
+         {
+            Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
+            return false;
+         }
+      }
+      selcount++;
    }
 
    return true;
@@ -464,17 +469,18 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
          auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
-         mFilterTypeCtl = S.Id(ID_Type).AddChoice(_("&Filter Type:"), wxT(""), &typeChoices);
+         mFilterTypeCtl = S.Id(ID_Type)
+            .AddChoice(_("&Filter Type:"), typeChoices);
          mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
          S.SetSizeHints(-1, -1);
 
-         wxArrayString orders;
+         wxArrayStringEx orders;
          for (int i = 1; i <= 10; i++)
          {
-            orders.Add(wxString::Format(wxT("%d"), i));
+            orders.push_back(wxString::Format(wxT("%d"), i));
          }
          /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
-         mFilterOrderCtl = S.Id(ID_Order).AddChoice(_("O&rder:"), wxT(""), &orders);
+         mFilterOrderCtl = S.Id(ID_Order).AddChoice(_("O&rder:"), orders);
          mFilterOrderCtl->SetValidator(wxGenericValidator(&mOrderIndex));
          S.SetSizeHints(-1, -1);
          S.AddSpace(1, 1);
@@ -491,7 +497,8 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          wxASSERT(nSubTypes == WXSIZEOF(kSubTypeStrings));
 
          auto subTypeChoices = LocalizedStrings(kSubTypeStrings, nSubTypes);
-         mFilterSubTypeCtl = S.Id(ID_SubType).AddChoice(_("&Subtype:"), wxT(""), &subTypeChoices);
+         mFilterSubTypeCtl = S.Id(ID_SubType)
+            .AddChoice(_("&Subtype:"), subTypeChoices);
          mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
          S.SetSizeHints(-1, -1);
       
@@ -666,8 +673,8 @@ bool EffectScienFilter::CalcFilter()
             fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
          for (int iPair = 1; iPair <= mOrder/2; iPair++)
          {
-            float fSPoleX = fC * cos (PI - iPair * PI / mOrder);
-            float fSPoleY = fC * sin (PI - iPair * PI / mOrder);
+            fSPoleX = fC * cos (PI - iPair * PI / mOrder);
+            fSPoleY = fC * sin (PI - iPair * PI / mOrder);
             BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
             mpBiquad[iPair].fNumerCoeffs [0] = 1;
             if (mFilterSubtype == kLowPass)		// LOWPASS

@@ -13,16 +13,13 @@
 #define __AUDACITY_BLOCKFILE__
 
 #include "MemoryX.h"
-#include <wx/string.h>
-#include <wx/ffile.h>
-#include <wx/filename.h>
 
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
 
 #include "SampleFormat.h"
 
-#include "wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h" // member variable
 
 #include "ondemand/ODTaskThread.h"
 

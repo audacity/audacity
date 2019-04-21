@@ -1,6 +1,7 @@
+#!/bin/sh
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
 for path in ../lib-src/FileDialog ../lib-src/mod-script* ../lib-src/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
-sed -r 's/\.\.\///g' |\
+sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
 --directory=.. \
@@ -13,8 +14,8 @@ xargs xgettext \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L C -o audacity.pot 
 echo ";; Adding nyquist files to audacity.pot"
-for path in ../plug-ins ; do find $path -name \*.ny ; done | LANG=c sort | \
-sed -r 's/\.\.\///g' |\
+for path in ../plug-ins ; do find $path -name \*.ny -not -name rms.ny; done | LANG=c sort | \
+sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
 --directory=.. \
@@ -36,5 +37,5 @@ done
 echo ""
 echo ";;Translation updated"
 echo ""
-head --lines=11 audacity.pot | tail --lines=3
+head -n 11 audacity.pot | tail -n 3
 wc -l audacity.pot

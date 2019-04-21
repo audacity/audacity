@@ -9,12 +9,10 @@
 
 **********************************************************************/
 
-#include "Experimental.h"
-
 #ifndef __AUDACITY_LYRICS_WINDOW__
 #define __AUDACITY_LYRICS_WINDOW__
 
-#include <wx/frame.h>
+#include <wx/frame.h> // to inherit
 
 class AudacityProject;
 class LyricsPanel;

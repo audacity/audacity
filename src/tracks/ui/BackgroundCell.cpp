@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
+#include "../../Track.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UIHandle.h"
 
@@ -50,8 +51,7 @@ public:
       // AS: If the user clicked outside all tracks, make nothing
       //  selected.
       if ((event.ButtonDown() || event.ButtonDClick())) {
-         pProject->GetSelectionState().SelectNone
-            ( *pProject->GetTracks(), pProject->GetMixerBoard() );
+         pProject->GetSelectionState().SelectNone( *pProject->GetTracks() );
          result |= RefreshAll;
       }
 
@@ -91,7 +91,7 @@ std::vector<UIHandlePtr> BackgroundCell::HitTest
    return results;
 }
 
-std::shared_ptr<Track> BackgroundCell::FindTrack()
+std::shared_ptr<Track> BackgroundCell::DoFindTrack()
 {
    return {};
 }

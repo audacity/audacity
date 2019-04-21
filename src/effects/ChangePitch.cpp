@@ -27,10 +27,15 @@ the pitch without changing the tempo.
 #include <float.h>
 #include <math.h>
 
+#include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/intl.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
 #include <wx/valtext.h>
 
 #include "../PitchName.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../Spectrum.h"
 #include "../WaveTrack.h"
@@ -127,9 +132,9 @@ EffectChangePitch::~EffectChangePitch()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangePitch::GetSymbol()
+ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
 {
    return CHANGEPITCH_PLUGIN_SYMBOL;
 }
@@ -215,6 +220,10 @@ bool EffectChangePitch::Process()
    else
 #endif
    {
+      // Macros save m_dPercentChange and not m_dSemitonesChange, so we must
+      // ensure that m_dSemitonesChange is set.
+      Calc_SemitonesChange_fromPercentChange();
+
       mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
       IdentityTimeWarper warper;
       mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
@@ -244,9 +253,9 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
-   wxArrayString pitch;
+   wxArrayStringEx pitch;
    for (int ii = 0; ii < 12; ++ii)
-      pitch.Add( PitchName( ii, PitchNameChoice::Both ) );
+      pitch.push_back( PitchName( ii, PitchNameChoice::Both ) );
 
    S.SetBorder(5);
 
@@ -266,7 +275,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(6, wxALIGN_CENTER); // 6 controls, because each AddChoice adds a wxStaticText and a wxChoice.
          {
-            m_pChoice_FromPitch = S.Id(ID_FromPitch).AddChoice(_("from"), wxT(""), &pitch);
+            m_pChoice_FromPitch = S.Id(ID_FromPitch).AddChoice(_("from"), pitch);
             m_pChoice_FromPitch->SetName(_("from"));
             m_pChoice_FromPitch->SetSizeHints(80, -1);
 
@@ -274,7 +283,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
             m_pSpin_FromOctave->SetName(_("from Octave"));
             m_pSpin_FromOctave->SetSizeHints(50, -1);
 
-            m_pChoice_ToPitch = S.Id(ID_ToPitch).AddChoice(_("to"), wxT(""), &pitch);
+            m_pChoice_ToPitch = S.Id(ID_ToPitch).AddChoice(_("to"), pitch);
             m_pChoice_ToPitch->SetName(_("to"));
             m_pChoice_ToPitch->SetSizeHints(80, -1);
 
@@ -341,7 +350,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mUseSBSMSCheckBox = S.AddCheckBox(_("Use high quality stretching (slow)"),
-                                             mUseSBSMS? wxT("true") : wxT("false"));
+                                             mUseSBSMS);
          mUseSBSMSCheckBox->SetValidator(wxGenericValidator(&mUseSBSMS));
       }
       S.EndMultiColumn();
@@ -349,7 +358,6 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-
    return;
 }
 
@@ -407,10 +415,17 @@ bool EffectChangePitch::TransferDataFromWindow()
 // the selection. Then set some other params accordingly.
 void EffectChangePitch::DeduceFrequencies()
 {
+    auto FirstTrack = [&]()->const WaveTrack *{
+      if( !inputTracks() )
+         return nullptr;
+      return *( inputTracks()->Selected< const WaveTrack >() ).first;
+   };
+
+   m_dStartFrequency = 261.265;// Middle C.
+
    // As a neat trick, attempt to get the frequency of the note at the
    // beginning of the selection.
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *track = (WaveTrack *) iter.First();
+   auto track = FirstTrack();
    if (track) {
       double rate = track->GetRate();
 
@@ -461,7 +476,7 @@ void EffectChangePitch::DeduceFrequencies()
    m_nToOctave = PitchOctave(dToMIDInote);
 
    m_FromFrequency = m_dStartFrequency;
-   Calc_PercentChange();
+   // Calc_PercentChange();  // This will reset m_dPercentChange
    Calc_ToFrequency();
 }
 

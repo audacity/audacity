@@ -12,30 +12,19 @@
 #define __AUDACITY_COMMAND__
 
 #include "../Audacity.h"
+
 #include "../MemoryX.h"
 #include <set>
 
 #include "../MemoryX.h"
-#include <wx/bmpbuttn.h>
 #include <wx/defs.h>
-#include <wx/dynarray.h>
-#include <wx/intl.h>
-#include <wx/string.h>
-#include <wx/tglbtn.h>
-#include <wx/event.h> // for idle event.
 
-class wxCheckBox;
-class wxChoice;
-class wxListBox;
 class wxWindow;
 
-#include "../Experimental.h"
 #include "../SampleFormat.h"
 #include "../SelectedRegion.h"
-#include "../Shuttle.h"
 #include "../Internat.h"
-#include "../widgets/ProgressDialog.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 
 #include "../Track.h"
@@ -51,7 +40,7 @@ class CommandContext;
 
 
 class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
-                                public CommandDefinitionInterface
+                                public ComponentInterface
 {
  public:
    //std::unique_ptr<CommandOutputTargets> mOutput;
@@ -60,16 +49,16 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    AudacityCommand();
    virtual ~AudacityCommand();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    //These four can be defaulted....
-   wxString GetPath() override;
-   IdentInterfaceSymbol GetVendor() override;
+   PluginPath GetPath() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    //  virtual wxString GetFamily();
 
    //These two must be implemented by instances.
-   IdentInterfaceSymbol GetSymbol() override = 0;
+   ComponentInterfaceSymbol GetSymbol() override = 0;
    virtual wxString GetDescription() override
    {wxFAIL_MSG( "Implement a Description for this command");return "FAIL";};
 

@@ -11,10 +11,12 @@
 
 **********************************************************************/
 
-#if USE_SBSMS
-
 #ifndef __AUDACITY_EFFECT_SBSMS__
 #define __AUDACITY_EFFECT_SBSMS__
+
+#include "../Audacity.h" // for USE_* macros
+
+#if USE_SBSMS
 
 #include "Effect.h"
 #include "../../../lib-src/header-substitutes/sbsms.h"
@@ -39,7 +41,7 @@ protected:
    // This supplies the abstract virtual function, but in fact this symbol
    // does not get used:  this class is either a temporary helper, or else
    // GetSymbol() is overridden further in derived classes.
-   IdentInterfaceSymbol GetSymbol() override { return mProxyEffectName; }
+   ComponentInterfaceSymbol GetSymbol() override { return mProxyEffectName; }
 
 private:
    bool ProcessLabelTrack(LabelTrack *track);

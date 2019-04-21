@@ -25,6 +25,8 @@ the general functionality for creating XML in UTF8 encoding.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "XMLWriter.h"
+
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
@@ -32,7 +34,6 @@ the general functionality for creating XML in UTF8 encoding.
 #include <string.h>
 
 #include "../Internat.h"
-#include "XMLWriter.h"
 
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h
@@ -91,7 +92,7 @@ void XMLWriter::StartTag(const wxString &name)
 
    Write(wxString::Format(wxT("<%s"), name));
 
-   mTagstack.Insert(name, 0);
+   mTagstack.insert(mTagstack.begin(), name);
    mHasKids[0] = true;
    mHasKids.insert(mHasKids.begin(), false);
    mDepth++;
@@ -103,7 +104,7 @@ void XMLWriter::EndTag(const wxString &name)
 {
    int i;
 
-   if (mTagstack.GetCount() > 0) {
+   if (mTagstack.size() > 0) {
       if (mTagstack[0] == name) {
          if (mHasKids[1]) {  // There will always be at least 2 at this point
             if (mInTag) {
@@ -119,7 +120,7 @@ void XMLWriter::EndTag(const wxString &name)
          else {
             Write(wxT(">\n"));
          }
-         mTagstack.RemoveAt(0);
+         mTagstack.erase( mTagstack.begin() );
          mHasKids.erase(mHasKids.begin());
       }
    }
@@ -226,7 +227,7 @@ void XMLWriter::WriteSubTree(const wxString &value)
 wxString XMLWriter::XMLEsc(const wxString & s)
 {
    wxString result;
-   int len = s.Length();
+   int len = s.length();
 
    for(int i=0; i<len; i++) {
       wxUChar c = s.GetChar(i);
@@ -294,7 +295,7 @@ wxString XMLWriter::XMLEsc(const wxString & s)
 /// XMLFileWriter class
 ///
 XMLFileWriter::XMLFileWriter
-   ( const wxString &outputPath, const wxString &caption, bool keepBackup )
+   ( const FilePath &outputPath, const wxString &caption, bool keepBackup )
    : mOutputPath{ outputPath }
    , mCaption{ caption }
    , mKeepBackup{ keepBackup }
@@ -349,7 +350,7 @@ void XMLFileWriter::Commit()
 void XMLFileWriter::PreCommit()
 // may throw
 {
-   while (mTagstack.GetCount()) {
+   while (mTagstack.size()) {
       EndTag(mTagstack[0]);
    }
 
@@ -359,7 +360,7 @@ void XMLFileWriter::PreCommit()
 void XMLFileWriter::PostCommit()
 // may throw
 {
-   auto tempPath = GetName();
+   FilePath tempPath = GetName();
    if (mKeepBackup) {
       if (! mBackupFile.Close() ||
           ! wxRenameFile( mOutputPath, mBackupName ) )
@@ -418,7 +419,7 @@ XMLStringWriter::XMLStringWriter(size_t initialSize)
 {
    if (initialSize)
    {
-      Alloc(initialSize);
+      reserve(initialSize);
    }
 }
 

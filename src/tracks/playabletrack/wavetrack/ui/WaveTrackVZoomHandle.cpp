@@ -10,7 +10,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Audacity.h"
 #include "WaveTrackVZoomHandle.h"
+
 #include "../../../../Experimental.h"
+
 #include "WaveTrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
@@ -65,11 +67,12 @@ void WaveTrackVZoomHandle::Enter(bool)
 // the zoomKind and cause a drag-zoom-in.
 void WaveTrackVZoomHandle::DoZoom
    (AudacityProject *pProject,
-    WaveTrack *pTrack, WaveTrack *partner, int ZoomKind,
+    WaveTrack *pTrack, bool allChannels, int ZoomKind,
     const wxRect &rect, int zoomStart, int zoomEnd,
     bool fixedMousePoint)
 {
    static const float ZOOMLIMIT = 0.001f;
+
    int height = rect.height;
    int ypos = rect.y;
 
@@ -77,11 +80,11 @@ void WaveTrackVZoomHandle::DoZoom
    if (zoomEnd < zoomStart)
       std::swap( zoomStart, zoomEnd );
 
-   float min, max, c, minBand = 0;
+   float min, max, minBand = 0;
    const double rate = pTrack->GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
-   const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
+   const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
    NumberScale scale;
    const bool spectral = (pTrack->GetDisplay() == WaveTrack::Spectrum);
    const bool spectrumLinear = spectral &&
@@ -104,8 +107,8 @@ void WaveTrackVZoomHandle::DoZoom
 
    if (spectral) {
       pTrack->GetSpectrumBounds(&min, &max);
-      scale = (settings.GetScale(min, max));
-      const auto fftLength = settings.GetFFTLength();
+      scale = (specSettings.GetScale(min, max));
+      const auto fftLength = specSettings.GetFFTLength();
       const float binSize = rate / fftLength;
       maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
       // JKC:  Following discussions of Bug 1208 I'm allowing zooming in
@@ -117,11 +120,11 @@ void WaveTrackVZoomHandle::DoZoom
    }
    else{
       pTrack->GetDisplayBounds(&min, &max);
-      const WaveformSettings &settings = pTrack->GetWaveformSettings();
-      const bool linear = settings.isLinear();
+      const WaveformSettings &waveSettings = pTrack->GetWaveformSettings();
+      const bool linear = waveSettings.isLinear();
       if( !linear ){
-         top = (LINEAR_TO_DB(2.0) + settings.dBRange) / settings.dBRange;
-         half = (LINEAR_TO_DB(0.5) + settings.dBRange) / settings.dBRange;
+         top = (LINEAR_TO_DB(2.0) + waveSettings.dBRange) / waveSettings.dBRange;
+         half = (LINEAR_TO_DB(0.5) + waveSettings.dBRange) / waveSettings.dBRange;
       }
    }
 
@@ -174,7 +177,7 @@ void WaveTrackVZoomHandle::DoZoom
 
          // Waveform view - allow zooming down to a range of ZOOMLIMIT
          if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
-            c = (min + max) / 2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+            float c = (min + max) / 2;    // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
             min = c - ZOOMLIMIT / 2.0;
             max = c + ZOOMLIMIT / 2.0;
          }
@@ -318,15 +321,13 @@ void WaveTrackVZoomHandle::DoZoom
    }
 
    // Now actually apply the zoom.
-   if (spectral) {
-      pTrack->SetSpectrumBounds(min, max);
-      if (partner)
-         partner->SetSpectrumBounds(min, max);
-   }
-   else {
-      pTrack->SetDisplayBounds(min, max);
-      if (partner)
-         partner->SetDisplayBounds(min, max);
+   for (auto channel : TrackList::Channels(pTrack)) {
+      if (!allChannels && channel != pTrack)
+         continue;
+      if (spectral)
+         channel->SetSpectrumBounds(min, max);
+      else
+         channel->SetDisplayBounds(min, max);
    }
 
    zoomEnd = zoomStart = 0;
@@ -389,10 +390,8 @@ void WaveTrackVRulerMenuTable::InitMenu(Menu *, void *pUserData)
 
 void WaveTrackVRulerMenuTable::OnZoom( int iZoomCode )
 {
-   // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack *>(mpData->pTrack->GetLink());
    WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, partner,
+      (::GetActiveProject(), mpData->pTrack, true,
        iZoomCode, mpData->rect, mpData->yy, mpData->yy, false);
 
    using namespace RefreshCode;
@@ -454,7 +453,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 #if 0
    POPUP_MENU_SEPARATOR()
    {
-      const wxArrayString & names = WaveformSettings::GetScaleNames();
+      const auto & names = WaveformSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
          POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii],
             OnWaveformScaleType);
@@ -467,17 +466,17 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
 {
    WaveTrack *const wt = mpData->pTrack;
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(wt->GetLink());
    const WaveformSettings::ScaleType newScaleType =
       WaveformSettings::ScaleType(
          std::max(0,
             std::min((int)(WaveformSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstWaveformScaleID
       )));
+
    if (wt->GetWaveformSettings().scaleType != newScaleType) {
-      wt->GetIndependentWaveformSettings().scaleType = newScaleType;
-      if (partner)
-         partner->GetIndependentWaveformSettings().scaleType = newScaleType;
+      for (auto channel : TrackList::Channels(wt)) {
+         channel->GetIndependentWaveformSettings().scaleType = newScaleType;
+      }
 
       ::GetActiveProject()->ModifyState(true);
 
@@ -523,7 +522,7 @@ void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
 
    {
-      const wxArrayString & names = SpectrogramSettings::GetScaleNames();
+      const auto & names = SpectrogramSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
          POPUP_MENU_RADIO_ITEM(OnFirstSpectrumScaleID + ii, names[ii],
             OnSpectrumScaleType);
@@ -540,8 +539,7 @@ END_POPUP_MENU()
 void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
 {
    WaveTrack *const wt = mpData->pTrack;
-   // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(wt->GetLink());
+
    const SpectrogramSettings::ScaleType newScaleType =
       SpectrogramSettings::ScaleType(
          std::max(0,
@@ -549,9 +547,8 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
                evt.GetId() - OnFirstSpectrumScaleID
       )));
    if (wt->GetSpectrogramSettings().scaleType != newScaleType) {
-      wt->GetIndependentSpectrogramSettings().scaleType = newScaleType;
-      if (partner)
-         partner->GetIndependentSpectrogramSettings().scaleType = newScaleType;
+      for (auto channel : TrackList::Channels(wt))
+         channel->GetIndependentSpectrogramSettings().scaleType = newScaleType;
 
       ::GetActiveProject()->ModifyState(true);
 
@@ -678,8 +675,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       if( bVZoom ){
          if( shiftDown )
             mZoomStart=mZoomEnd;
-         const auto partner = static_cast<WaveTrack *>(pTrack->GetLink());
-         DoZoom(pProject, pTrack.get(), partner,
+         DoZoom(pProject, pTrack.get(), true,
                 shiftDown ? (rightUp ? kZoom1to1 : kZoomOut)  : kZoomIn,
             mRect, mZoomStart, mZoomEnd, !shiftDown);
       }

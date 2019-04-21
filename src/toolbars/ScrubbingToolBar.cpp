@@ -12,11 +12,14 @@
 
 // Much of this is imitative of EditToolBar.  Should there be a common base
 // class?
+
 #include "../Audacity.h"
 #include "ScrubbingToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
 #include <wx/event.h>
@@ -26,6 +29,7 @@
 #include <wx/tooltip.h>
 #endif
 
+#include "../AdornedRulerPanel.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
@@ -36,11 +40,8 @@
 #include "../Track.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
-#include "../widgets/Ruler.h"
 #include "../tracks/ui/Scrubbing.h"
 #include "../commands/CommandContext.h"
-
-#include "../Experimental.h"
 
 IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 
@@ -136,7 +137,7 @@ void ScrubbingToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    auto fn = [&]
-   (AButton &button, const wxString &label, const wxString &cmd)
+   (AButton &button, const wxString &label, const CommandID &cmd)
    {
       TranslatedInternalString command{ cmd, label };
       ToolBar::SetButtonToolTip( button, &command, 1u );

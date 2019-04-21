@@ -11,19 +11,23 @@ LRN
 #if !defined(__EXPORT_FFMPEG_DIALOGS_H__)
 #define __EXPORT_FFMPEG_DIALOGS_H__
 
+#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+
 #if defined(USE_FFMPEG)
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
-#include <wx/hashmap.h>
-#include <wx/listimpl.cpp>
 #include "../xml/XMLFileReader.h"
 #include "../FileNames.h"
-#include "../widgets/wxPanelWrapper.h"
 
 #include <unordered_map>
 
+class wxArrayStringEx;
+
+class wxArrayString;
+class wxCheckBox;
+class wxStaticText;
+class wxTextCtrl;
 
 /// Identifiers for pre-set export types.
 enum FFmpegExposedFormat
@@ -84,7 +88,7 @@ public:
 
 private:
 
-   wxArrayString mBitRateNames;
+   wxArrayStringEx mBitRateNames;
    std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
@@ -122,7 +126,7 @@ public:
 
 private:
 
-   wxArrayString mBitRateNames;
+   wxArrayStringEx mBitRateNames;
    std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
@@ -145,7 +149,7 @@ public:
 
 private:
 
-   wxArrayString mBitRateNames;
+   wxArrayStringEx mBitRateNames;
    std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
@@ -215,13 +219,13 @@ private:
    wxArrayString mShownFormatLongNames;
    wxArrayString mShownCodecNames;
    wxArrayString mShownCodecLongNames;
-   wxArrayString mFormatNames;
+   wxArrayStringEx mFormatNames;
    wxArrayString mFormatLongNames;
-   wxArrayString mCodecNames;
+   wxArrayStringEx mCodecNames;
    wxArrayString mCodecLongNames;
-   wxArrayString mProfileNames;
+   wxArrayStringEx mProfileNames;
    std::vector<int> mProfileLabels;
-   wxArrayString mPredictionOrderMethodNames;
+   wxArrayStringEx mPredictionOrderMethodNames;
    std::vector<int> mPredictionOrderMethodLabels;
 
    wxChoice *mFormatChoice;
@@ -268,7 +272,7 @@ private:
 
    std::unique_ptr<FFmpegPresets> mPresets;
 
-   wxArrayString mPresetNames;
+   wxArrayStringEx mPresetNames;
 
    /// Finds the format currently selected and returns it's name and description
    void FindSelectedFormat(wxString **name, wxString **longname);

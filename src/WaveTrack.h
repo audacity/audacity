@@ -13,16 +13,13 @@
 
 #include "Track.h"
 #include "SampleFormat.h"
-#include "WaveClip.h"
-#include "Experimental.h"
-#include "widgets/ProgressDialog.h"
 
 #include <vector>
-#include <wx/gdicmn.h>
 #include <wx/longlong.h>
-#include <wx/thread.h>
 
 #include "WaveTrackLocation.h"
+
+class ProgressDialog;
 
 class SpectrogramSettings;
 class WaveformSettings;
@@ -31,6 +28,18 @@ class TimeWarper;
 class CutlineHandle;
 class SampleHandle;
 class EnvelopeHandle;
+
+class Sequence;
+class WaveClip;
+
+// Array of pointers that assume ownership
+using WaveClipHolder = std::shared_ptr< WaveClip >;
+using WaveClipHolders = std::vector < WaveClipHolder >;
+using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+
+// Temporary arrays of mere pointers
+using WaveClipPointers = std::vector < WaveClip* >;
+using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 //
 // Tolerance for merging wave tracks (in seconds)
@@ -53,18 +62,15 @@ struct Region
    }
 };
 
-class Regions : public std::vector < Region > {};
+using Regions = std::vector < Region >;
 
 class Envelope;
 
 class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
-
- private:
+public:
 
    //
    // Constructor / Destructor / Duplicator
-   //
-   // Private since only factories are allowed to construct WaveTracks
    //
 
    WaveTrack(const std::shared_ptr<DirManager> &projDirManager,
@@ -72,14 +78,13 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
              double rate = 0);
    WaveTrack(const WaveTrack &orig);
 
-   void Init(const WaveTrack &orig);
-
-public:
    // overwrite data excluding the sample sequence but including display
    // settings
    void Reinit(const WaveTrack &orig);
 
 private:
+   void Init(const WaveTrack &orig);
+
    Track::Holder Duplicate() const override;
 
    friend class TrackFactory;
@@ -87,7 +92,7 @@ private:
  public:
 
    typedef WaveTrackLocation Location;
-   using Holder = std::unique_ptr<WaveTrack>;
+   using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
 
@@ -98,8 +103,8 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
-   virtual int GetChannelIgnoringPan() const;
-   virtual int GetChannel() const override;
+   virtual ChannelType GetChannelIgnoringPan() const;
+   ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
    /** @brief Get the time at which the first clip in the track starts
@@ -118,8 +123,6 @@ private:
    //
    // Identifying the type of track
    //
-
-   int GetKind() const override { return Wave; }
 
    //
    // WaveTrack parameters
@@ -228,14 +231,14 @@ private:
    /// Flush must be called after last Append
    void Flush();
 
-   void AppendAlias(const wxString &fName, sampleCount start,
+   void AppendAlias(const FilePath &fName, sampleCount start,
                     size_t len, int channel,bool useOD);
 
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
    //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
-   void AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
@@ -374,7 +377,7 @@ private:
    // Get access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.
    class AllClipsIterator
-      : public std::iterator< std::forward_iterator_tag, WaveClip* >
+      : public ValueIterator< WaveClip * >
    {
    public:
       // Constructs an "end" iterator
@@ -394,21 +397,7 @@ private:
             return mStack.back().first->get();
       }
 
-      AllClipsIterator &operator ++ ()
-      {
-         // The unspecified sequence is a post-order, but there is no
-         // promise whether sister nodes are ordered in time.
-         if ( !mStack.empty() ) {
-            auto &pair =  mStack.back();
-            if ( ++pair.first == pair.second ) {
-               mStack.pop_back();
-            }
-            else
-               push( (*pair.first)->GetCutLines() );
-         }
-
-         return *this;
-      }
+      AllClipsIterator &operator ++ ();
 
       // Define == well enough to serve for loop termination test
       friend bool operator ==
@@ -421,15 +410,7 @@ private:
 
    private:
 
-      void push( WaveClipHolders &clips )
-      {
-         auto pClips = &clips;
-         while (!pClips->empty()) {
-            auto first = pClips->begin();
-            mStack.push_back( Pair( first, pClips->end() ) );
-            pClips = &(*first)->GetCutLines();
-         }
-      }
+      void push( WaveClipHolders &clips );
 
       using Iterator = WaveClipHolders::iterator;
       using Pair = std::pair< Iterator, Iterator >;
@@ -642,7 +623,9 @@ private:
    // Protected methods
    //
 
- private:
+private:
+
+   TrackKind GetKind() const override { return TrackKind::Wave; }
 
    //
    // Private variables
@@ -661,8 +644,8 @@ private:
    std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 
 protected:
-   std::shared_ptr<TrackControls> GetControls() override;
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
+   std::shared_ptr<TrackControls> DoGetControls() override;
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,
@@ -687,7 +670,7 @@ public:
    }
    ~WaveTrackCache();
 
-   const WaveTrack *GetTrack() const { return mPTrack.get(); }
+   const std::shared_ptr<const WaveTrack>& GetTrack() const { return mPTrack; }
    void SetTrack(const std::shared_ptr<const WaveTrack> &pTrack);
 
    // Uses fillZero always

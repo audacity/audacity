@@ -15,16 +15,13 @@
 #ifndef __AUDACITY_EFFECT_AMPLIFY__
 #define __AUDACITY_EFFECT_AMPLIFY__
 
-#include <wx/checkbox.h>
-#include <wx/event.h>
-#include <wx/slider.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
-
 #include "Effect.h"
 
-#define AMPLIFY_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Amplify") }
+#define AMPLIFY_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Amplify") }
 
+class wxSlider;
+class wxCheckBox;
+class wxTextCtrl;
 class ShuttleGui;
 
 class EffectAmplify final : public Effect
@@ -33,9 +30,9 @@ public:
    EffectAmplify();
    virtual ~EffectAmplify();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

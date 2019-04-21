@@ -50,9 +50,9 @@ EffectEcho::~EffectEcho()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectEcho::GetSymbol()
+ComponentInterfaceSymbol EffectEcho::GetSymbol()
 {
    return ECHO_PLUGIN_SYMBOL;
 }

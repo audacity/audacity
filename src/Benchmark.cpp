@@ -34,8 +34,10 @@ of the BlockFile system.
 #include <wx/valtext.h>
 #include <wx/intl.h>
 
+#include "DirManager.h"
 #include "ShuttleGui.h"
 #include "Project.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "Sequence.h"
 #include "Prefs.h"
@@ -200,12 +202,12 @@ void BenchmarkDialog::MakeBenchmarkDialog()
 
       //
       item = S.AddCheckBox(_("Show detailed info about each block file"),
-                           wxT("false"));
+                           false);
       item->SetValidator(wxGenericValidator(&mBlockDetail));
 
       //
       item = S.AddCheckBox(_("Show detailed info about each editing operation"),
-                           wxT("false"));
+                           false);
       item->SetValidator(wxGenericValidator(&mEditDetail));
 
       //
@@ -263,7 +265,7 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
                         wxFD_SAVE | wxRESIZE_BORDER,
                         this);
 
-   if (fName == wxT(""))
+   if (fName.empty())
       return;
 
    mText->SaveFile(fName);
@@ -297,11 +299,11 @@ void BenchmarkDialog::HoldPrint(bool hold)
 
 void BenchmarkDialog::FlushPrint()
 {
-   while(mToPrint.Length() > 100) {
+   while(mToPrint.length() > 100) {
       mText->AppendText(mToPrint.Left(100));
-      mToPrint = mToPrint.Right(mToPrint.Length() - 100);
+      mToPrint = mToPrint.Right(mToPrint.length() - 100);
    }
-   if (mToPrint.Length() > 0)
+   if (mToPrint.length() > 0)
       mText->AppendText(mToPrint);
    mToPrint = wxT("");
 }
@@ -491,7 +493,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
 #if 0
    Printf(_("Checking file pointer leaks:\n"));
-   Printf(_("Track # blocks: %d\n"), t->GetBlockArray()->Count());
+   Printf(_("Track # blocks: %d\n"), t->GetBlockArray()->size());
    Printf(_("Disk # blocks: \n"));
    system("ls .audacity_temp/* | wc --lines");
 #endif

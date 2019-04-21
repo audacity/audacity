@@ -11,19 +11,16 @@
 #ifndef __AUDACITY_EXPORT_MULTIPLE__
 #define __AUDACITY_EXPORT_MULTIPLE__
 
-#include <wx/dialog.h>
-#include <wx/string.h>
-#include <wx/listctrl.h>
-#include <wx/simplebook.h>
-
 #include "Export.h"
-#include "../Tags.h"       // we need to know about the Tags class for metadata
-#include "../wxFileNameWrapper.h"
+#include "../wxFileNameWrapper.h" // member variable
 
 class wxButton;
 class wxCheckBox;
 class wxChoice;
+class wxListEvent;
 class wxRadioButton;
+class wxSimplebook;
+class wxStaticText;
 class wxTextCtrl;
 
 class AudacityProject;
@@ -112,7 +109,7 @@ private:
    AudacityProject *mProject;
    TrackList *mTracks;           /**< The list of tracks in the project that is
                                    being exported */
-   LabelTrack *mLabels;
+   const LabelTrack *mLabels;
    int mNumLabels;
    int mNumWaveTracks;
 
@@ -127,7 +124,7 @@ private:
    bool mInitialized;
 
    // List of file actually exported
-   wxArrayString mExported;
+   FilePaths mExported;
 
    wxChoice      *mFormat;    /**< Drop-down list of export formats
                                 (combinations of plug-in and subformat) */
@@ -188,27 +185,6 @@ public:
 private:
    DECLARE_EVENT_TABLE()
 };
-
-
-/** \brief A private class used to store the information needed to do an
-    * export.
-    *
-    * We create a set of these during the interactive phase of the export
-    * cycle, then use them when the actual exports are done. */
-   class ExportKit
-   {
-   public:
-      Tags filetags; /**< The set of metadata to use for the export */
-      wxFileNameWrapper destfile; /**< The file to export to */
-      double t0;           /**< Start time for the export */
-      double t1;           /**< End time for the export */
-      unsigned channels;   /**< Number of channels for ExportMultipleByTrack */
-   };  // end of ExportKit declaration
-   /* we are going to want an set of these kits, and don't know how many until
-    * runtime. I would dearly like to use a std::vector, but it seems that
-    * this isn't done anywhere else in Audacity, presumably for a reason?, so
-    * I'm stuck with wxArrays, which are much harder, as well as non-standard.
-    */
 
 
 #endif

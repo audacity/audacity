@@ -19,7 +19,6 @@ class Alg_seq;
 class NoteTrack;
 class Track;
 class ViewInfo;
-class wxCursor;
 
 class StretchHandle : public UIHandle
 {

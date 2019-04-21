@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../commands/CommandManager.h"
 #include "../../../HitTestResult.h"
+#include "../../../Menus.h"
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
 #include "../../../Track.h"
@@ -33,7 +34,7 @@ UIHandle::Result MuteButtonHandle::CommitChanges
 {
    auto pTrack = mpTrack.lock();
    if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
-      pProject->DoTrackMute(pTrack.get(), event.ShiftDown());
+      TrackActions::DoTrackMute(*pProject, pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }
@@ -89,7 +90,7 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 {
    auto pTrack = mpTrack.lock();
    if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
-      pProject->DoTrackSolo(pTrack.get(), event.ShiftDown());
+      TrackActions::DoTrackSolo(*pProject, pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }

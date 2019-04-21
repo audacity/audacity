@@ -15,7 +15,8 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
+#include "ImportExportPrefs.h"
 
 #include <wx/defs.h>
 #include "../Experimental.h"
@@ -23,7 +24,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "ImportExportPrefs.h"
 #include "../Internat.h"
 
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
@@ -34,6 +34,21 @@ ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
 
 ImportExportPrefs::~ImportExportPrefs()
 {
+}
+
+ComponentInterfaceSymbol ImportExportPrefs::GetSymbol()
+{
+   return IMPORT_EXPORT_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString ImportExportPrefs::GetDescription()
+{
+   return _("Preferences for ImportExport");
+}
+
+wxString ImportExportPrefs::HelpPageName()
+{
+   return "Import_-_Export_Preferences";
 }
 
 /// Creates the dialog and its contents.
@@ -114,11 +129,6 @@ bool ImportExportPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString ImportExportPrefs::HelpPageName()
-{
-   return "Import_-_Export_Preferences";
 }
 
 PrefsPanel *ImportExportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

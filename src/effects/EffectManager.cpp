@@ -19,21 +19,24 @@ effects.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "EffectManager.h"
+
+#include "../Experimental.h"
 
 #include <algorithm>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
 
-#include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 #include "EffectRack.h"
 #endif
 
-#include "EffectManager.h"
+#include "../Shuttle.h"
 #include "../commands/Command.h"
 #include "../commands/CommandContext.h"
+#include "../PluginManager.h"
 
 
 /*******************************************************************************
@@ -142,7 +145,7 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
    return res;
 }
 
-IdentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
+ComponentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
 {
    return PluginManager::Get().GetSymbol(ID);
 }
@@ -156,7 +159,7 @@ wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
    if (effect)
-      return effect->GetFamilyId().Translation();
+      return effect->GetFamily().Translation();
    return {};
 }
 
@@ -168,14 +171,14 @@ wxString EffectManager::GetVendorName(const PluginID & ID)
    return {};
 }
 
-wxString EffectManager::GetCommandIdentifier(const PluginID & ID)
+CommandID EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
    wxString name = PluginManager::Get().GetSymbol(ID).Internal();
 
    // Get rid of leading and trailing white space
    name.Trim(true).Trim(false);
 
-   if (name == wxEmptyString)
+   if (name.empty())
    {
       return name;
    }
@@ -231,7 +234,7 @@ wxString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   ParamsInterface *command;
+   ComponentInterface *command;
    command = GetEffect(ID);
    if( !command )
       command = GetAudacityCommand( ID );
@@ -308,7 +311,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
-      if (parms.IsEmpty())
+      if (parms.empty())
       {
          parms = GetDefaultPreset(ID);
       }
@@ -326,7 +329,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
-      if (parms.IsEmpty())
+      if (parms.empty())
       {
          parms = GetDefaultPreset(ID);
       }
@@ -400,8 +403,8 @@ bool EffectManager::HasPresets(const PluginID & ID)
       return false;
    }
 
-   return effect->GetUserPresets().GetCount() > 0 ||
-          effect->GetFactoryPresets().GetCount() > 0 ||
+   return effect->GetUserPresets().size() > 0 ||
+          effect->GetFactoryPresets().size() > 0 ||
           effect->HasCurrentSettings() ||
           effect->HasFactoryDefaults();
 }
@@ -424,7 +427,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
    }
 
    preset = effect->GetPreset(parent, preset);
-   if (preset.IsEmpty())
+   if (preset.empty())
    {
       return preset;
    }
@@ -456,7 +459,7 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
       preset = Effect::kFactoryDefaultsIdent;
    }
 
-   if (!preset.IsEmpty())
+   if (!preset.empty())
    {
       CommandParameters eap;
 
@@ -751,7 +754,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
-   wxMilliClock_t start = wxGetLocalTimeMillis();
+   wxMilliClock_t start = wxGetUTCTimeMillis();
 
    // Allocate the in/out buffer arrays
    float **ibuf = (float **) alloca(chans * sizeof(float *));
@@ -798,7 +801,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
    }
 
    // Remember the latency
-   mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
+   mRealtimeLatency = (int) (wxGetUTCTimeMillis() - start).GetValue();
 
    mRealtimeLock.Leave();
 
@@ -838,7 +841,7 @@ int EffectManager::GetRealtimeLatency()
 Effect *EffectManager::GetEffect(const PluginID & ID)
 {
    // Must have a "valid" ID
-   if (ID.IsEmpty())
+   if (ID.empty())
    {
       return NULL;
    }
@@ -890,7 +893,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
 AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
 {
    // Must have a "valid" ID
-   if (ID.IsEmpty())
+   if (ID.empty())
    {
       return NULL;
    }
@@ -944,10 +947,10 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
 }
 
 
-const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget)
+const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarget)
 {
    static PluginID empty;
-   if (strTarget == wxEmptyString) // set GetCommandIdentifier to wxT("") to not show an effect in Batch mode
+   if (strTarget.empty()) // set GetCommandIdentifier to wxT("") to not show an effect in Batch mode
    {
       return empty;
    }

@@ -16,19 +16,21 @@
 #ifndef __AUDACITY_TIMERRECORD_DIALOG__
 #define __AUDACITY_TIMERRECORD_DIALOG__
 
-#include <wx/dialog.h>
-#include <wx/textctrl.h>
-#include <wx/datectrl.h>
-#include <wx/calctrl.h>
-#include <wx/timer.h>
-#include <wx/checkbox.h>
+#include <wx/textctrl.h> // to inherit
+#include <wx/timer.h> // member variable
 #include "export/Export.h"
 
+class wxCheckBox;
+class wxChoice;
+class wxDateEvent;
+class wxDatePickerCtrl;
 class wxTimerEvent;
 
 class NumericTextCtrl;
 class ShuttleGui;
 class TimerRecordPathCtrl;
+
+class wxArrayStringEx;
 
 enum TimerRecordCompletedActions {
    TR_ACTION_NOTHING = 0x00000000,
@@ -43,7 +45,7 @@ class TimerRecordPathCtrl final : public wxTextCtrl
    // the text controls to the Tab Order.
 public:
    TimerRecordPathCtrl(wxWindow * parent, wxWindowID id, const wxString &value
-      = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &
+      = {}, const wxPoint &pos = wxDefaultPosition, const wxSize &
       size = wxDefaultSize, long  style = 0, const wxValidator &  validator =
       wxDefaultValidator, const wxString &  name = wxTextCtrlNameStr)
       :wxTextCtrl(parent, id, value, pos, size, style, validator, name) {};
@@ -145,8 +147,7 @@ private:
    bool m_bProjectAlreadySaved;
 
    // Variables for After Timer Recording Option
-   wxString m_sTimerAfterCompleteOption;
-   wxArrayString m_sTimerAfterCompleteOptionsArray;
+   wxArrayStringEx m_sTimerAfterCompleteOptionsArray;
 
    DECLARE_EVENT_TABLE()
 };

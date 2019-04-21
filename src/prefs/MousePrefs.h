@@ -11,19 +11,21 @@
 
 #include <wx/defs.h>
 
-#include <wx/listctrl.h>
-#include <wx/string.h>
-#include <wx/window.h>
-
 #include "PrefsPanel.h"
 
+class wxListCtrl;
 class ShuttleGui;
+
+#define MOUSE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Mouse") }
 
 class MousePrefs final : public PrefsPanel
 {
  public:
    MousePrefs(wxWindow * parent, wxWindowID winid);
    ~MousePrefs();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -34,11 +36,12 @@ class MousePrefs final : public PrefsPanel
    void AddItem(wxString const & buttons,
                 wxString const & tool,
                 wxString const & action,
-                wxString const & comment = wxEmptyString);
+                wxString const & comment = {});
 
    wxListCtrl * mList;
 };
 
+/// A PrefsPanelFactory that creates one MousePrefs panel.
 class MousePrefsFactory final : public PrefsPanelFactory
 {
 public:

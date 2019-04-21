@@ -27,7 +27,7 @@
   but if it were, there would be a significant delay.
 
   The gain controls are applied to the complex FFT of the signal,
-  and then the inverse FFT is applied, followed by a Hanning window;
+  and then the inverse FFT is applied, followed by a Hann window;
   the output signal is then pieced together using overlap/add of
   half the window size.
 
@@ -39,11 +39,11 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "NoiseRemoval.h"
+
 #include "../Experimental.h"
 
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
-
-#include "NoiseRemoval.h"
 
 #include "../WaveTrack.h"
 #include "../Prefs.h"
@@ -108,9 +108,9 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
 {
    return XO("Noise Removal");
 }
@@ -208,10 +208,8 @@ bool EffectNoiseRemoval::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -227,7 +225,6 @@ bool EffectNoiseRemoval::Process()
             break;
          }
       }
-      track = (WaveTrack *) iter.Next();
       count++;
    }
 
@@ -291,7 +288,7 @@ void EffectNoiseRemoval::Initialize()
    mWindow.reinit(mWindowSize);
    mOutOverlapBuffer.reinit(mWindowSize);
 
-   // Create a Hanning window function
+   // Create a Hann window function
    for(size_t i=0; i<mWindowSize; i++)
       mWindow[i] = 0.5 - 0.5 * cos((2.0*M_PI*i) / mWindowSize);
 

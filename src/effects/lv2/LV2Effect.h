@@ -9,19 +9,14 @@
 
 *********************************************************************/
 
-#include "../../Audacity.h"
+#include "../../Audacity.h" // for USE_* macros
 
 #if USE_LV2
 
+class wxArrayString;
+
 #include "../../MemoryX.h"
 #include <vector>
-#include <wx/checkbox.h>
-#include <wx/dialog.h>
-#include <wx/event.h>
-#include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/data-access/data-access.h"
@@ -39,6 +34,9 @@
 #include "LoadLV2.h"
 
 #include <unordered_map>
+
+class wxSlider;
+class wxTextCtrl;
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates
@@ -107,18 +105,18 @@ public:
    LV2Effect(const LilvPlugin *plug);
    virtual ~LV2Effect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   PluginPath GetPath() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -172,10 +170,10 @@ public:
    bool HideUI() override;
    bool CloseUI() override;
 
-   bool LoadUserPreset(const wxString & name) override;
-   bool SaveUserPreset(const wxString & name) override;
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
 
-   wxArrayString GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -192,8 +190,8 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(const wxString & group);
-   bool SaveParameters(const wxString & group);
+   bool LoadParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group);
 
    LilvInstance *InitInstance(float sampleRate);
    void FreeInstance(LilvInstance *handle);
@@ -321,7 +319,7 @@ private:
    ArrayOf<wxTextCtrl*> mFields;
 
    bool mFactoryPresetsLoaded;
-   wxArrayString mFactoryPresetNames;
+   RegistryPaths mFactoryPresetNames;
    wxArrayString mFactoryPresetUris;
 
    DECLARE_EVENT_TABLE()

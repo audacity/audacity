@@ -16,10 +16,14 @@ MP3 and FFmpeg encoding libraries.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Audacity.h" // for USE_* macros
+#include "LibraryPrefs.h"
+
+#include "../Experimental.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>
+#include <wx/stattext.h>
 
 #include "../FFmpeg.h"
 #include "../ShuttleGui.h"
@@ -28,9 +32,6 @@ MP3 and FFmpeg encoding libraries.
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ErrorDialog.h"
 
-#include "LibraryPrefs.h"
-
-#include "../Experimental.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +56,21 @@ LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
 
 LibraryPrefs::~LibraryPrefs()
 {
+}
+
+ComponentInterfaceSymbol LibraryPrefs::GetSymbol()
+{
+   return LIBRARY_PREFS_PLUGIN_SYMBOL;
+}
+
+wxString LibraryPrefs::GetDescription()
+{
+   return _("Preferences for Library");
+}
+
+wxString LibraryPrefs::HelpPageName()
+{
+   return "Libraries_Preferences";
 }
 
 /// Creates the dialog and its contents.
@@ -83,7 +99,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("MP3 Export Library"));
+   S.StartStatic(_("LAME MP3 Export Library"));
    {
       S.StartTwoColumn();
       {
@@ -93,7 +109,10 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          mMP3Version = S.AddVariableText(wxT("9.99"),
                                          true,
                                          wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         S.AddVariableText(_("MP3 Library:"),
+// Old buttons, not needed now that the lib is built-in.
+#ifndef MP3_EXPORT_BUILT_IN
+
+         S.AddVariableText(_("LAME MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          wxButton *locate_button = S.Id(ID_MP3_FIND_BUTTON).AddButton(_("&Locate..."),
@@ -103,6 +122,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          wxButton *download_button = S.Id(ID_MP3_DOWN_BUTTON).AddButton(_("&Download"),
                                             wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
          locate_button->Enable(FALSE);
          download_button->Enable(FALSE);
@@ -110,6 +130,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
         (void)locate_button;
         (void)download_button;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
+#endif
+
       }
       S.EndTwoColumn();
    }
@@ -243,11 +265,6 @@ bool LibraryPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-wxString LibraryPrefs::HelpPageName()
-{
-   return "Libraries_Preferences";
 }
 
 PrefsPanel *LibraryPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)

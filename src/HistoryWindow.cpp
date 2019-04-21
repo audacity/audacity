@@ -17,6 +17,7 @@ undo memory so as to free up space.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "HistoryWindow.h"
 
 #include <wx/app.h>
 #include <wx/defs.h>
@@ -27,13 +28,14 @@ undo memory so as to free up space.
 #include <wx/intl.h>
 #include <wx/listctrl.h>
 #include <wx/settings.h>
+#include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
 #include "AudioIO.h"
+#include "AudacityApp.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
-#include "HistoryWindow.h"
 #include "UndoManager.h"
 #include "Project.h"
 #include "ShuttleGui.h"
@@ -107,7 +109,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             S.AddVariableText( {} )->Hide();
 
             S.AddPrompt(_("&Levels To Discard"));
-            mLevels = safenew wxSpinCtrl(this,
+            mLevels = safenew wxSpinCtrl(S.GetParent(),
                                      ID_LEVELS,
                                      wxT("1"),
                                      wxDefaultPosition,
@@ -154,6 +156,11 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                      &HistoryWindow::OnAudioIO,
                      this);
+
+   wxTheApp->Bind(EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
+   manager->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
+   manager->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
+   manager->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
 }
 
 void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
@@ -168,8 +175,9 @@ void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
    mDiscard->Enable(!mAudioIOBusy);
 }
 
-void HistoryWindow::UpdateDisplay()
+void HistoryWindow::UpdateDisplay(wxEvent& e)
 {
+   e.Skip();
    if(IsShown())
       DoUpdate();
 }

@@ -23,6 +23,7 @@ system by constructing BatchCommandEval objects.
 
 #include "../Audacity.h"
 #include "CommandBuilder.h"
+
 #include "CommandDirectory.h"
 #include "../Shuttle.h"
 #include "BatchEvalCommand.h"
@@ -139,12 +140,12 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
 
    wxString cmdParams(cmdParamsArg);
 
-   while (cmdParams != wxEmptyString)
+   while (!cmdParams.empty())
    {
       cmdParams.Trim(true);
       cmdParams.Trim(false);
       int splitAt = cmdParams.Find(wxT('='));
-      if (splitAt < 0 && cmdParams != wxEmptyString)
+      if (splitAt < 0 && !cmdParams.empty())
       {
          Failure(wxT("Parameter string is missing '='"));
          return;
@@ -159,7 +160,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       // You start and end with a " or a '.
       // There is no escaping in the string.
       cmdParams = cmdParams.Mid(splitAt+1);
-      if( cmdParams.IsEmpty() )
+      if( cmdParams.empty() )
          splitAt =-1;
       else if( cmdParams[0] == '\"' ){
          cmdParams = cmdParams.Mid(1);
@@ -173,7 +174,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
          splitAt = cmdParams.Find(wxT(' '))+1;
       if (splitAt < 1)
       {
-         splitAt = cmdParams.Len();
+         splitAt = cmdParams.length();
       }
       cmdParams = cmdParams.Mid(splitAt);
    }

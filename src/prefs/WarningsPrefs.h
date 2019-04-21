@@ -15,17 +15,20 @@
 
 #include <wx/defs.h>
 
-#include <wx/window.h>
-
 #include "PrefsPanel.h"
 
 class ShuttleGui;
+
+#define WARNINGS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Warnings") }
 
 class WarningsPrefs final : public PrefsPanel
 {
  public:
    WarningsPrefs(wxWindow * parent, wxWindowID winid);
    ~WarningsPrefs();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+
    bool Commit() override;
    wxString HelpPageName() override;
 
@@ -34,6 +37,7 @@ class WarningsPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 };
 
+/// A PrefsPanelFactory that creates one WarningPrefs panel.
 class WarningsPrefsFactory final : public PrefsPanelFactory
 {
 public:

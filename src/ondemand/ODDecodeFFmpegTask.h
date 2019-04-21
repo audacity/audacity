@@ -9,17 +9,23 @@
 
 ******************************************************************/
 
+#ifndef __ODDECODEFFMPEGTASK__
+#define __ODDECODEFFMPEGTASK__
+
 #include "../Experimental.h"
+
 #include "../MemoryX.h"
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
 
-#ifndef __ODDECODEFFMPEGTASK__
-#define __ODDECODEFFMPEGTASK__
-
+#include "../import/ImportRaw.h" // for TrackHolders
 #include <vector>
 #include "ODDecodeTask.h"
 #include "ODTaskThread.h"
+
+struct streamContext;
+using Scs = ArrayOf<std::unique_ptr<streamContext>>;
+using ScsPtr = std::shared_ptr<Scs>;
 
 struct FFmpegContext;
 class ODFileDecoder;
@@ -31,7 +37,7 @@ public:
    using Channels = std::vector < WaveTrack* >;
    using Streams = std::vector < Channels >;
 
-   static Streams FromList(const std::list<TrackHolders> &channels);
+   static Streams FromList( const TrackHolders &channels );
 
    /// Constructs an ODTask
    ODDecodeFFmpegTask(const ScsPtr &scs, Streams &&channels, const std::shared_ptr<FFmpegContext> &context, int streamIndex);

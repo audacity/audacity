@@ -32,6 +32,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
+#include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
@@ -43,8 +44,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 
-
-#include "Track.h"
+#include "WaveTrack.h"
 
 class OldStyleCommandType;
 
@@ -341,14 +341,13 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
             S.Id(IdMainWindowLarge).AddButton(_("Resize Large"));
             /* i18n-hint: Bkgnd is short for background and appears on a small button
              * It is OK to just translate this item as if it said 'Blue' */
-            wxASSERT(p); // To justify safenew
-            mBlue = safenew wxToggleButton(p,
+            mBlue = safenew wxToggleButton(S.GetParent(),
                                        IdToggleBackgroundBlue,
                                        _("Blue Bkgnd"));
             S.AddWindow(mBlue);
             /* i18n-hint: Bkgnd is short for background and appears on a small button
              * It is OK to just translate this item as if it said 'White' */
-            mWhite = safenew wxToggleButton(p,
+            mWhite = safenew wxToggleButton(S.GetParent(),
                                         IdToggleBackgroundWhite,
                                         _("White Bkgnd"));
             S.AddWindow(mWhite);
@@ -373,7 +372,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          {
             mDelayCheckBox = S.Id(IdDelayCheckBox).AddCheckBox
                (_("Wait 5 seconds and capture frontmost window/dialog"),
-                _("false"));
+                false);
          }
          S.EndHorizontalLay();
       }
@@ -545,7 +544,7 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
                     current);
 
    dlog.ShowModal();
-   if (dlog.GetPath() != wxT("")) {
+   if (!dlog.GetPath().empty()) {
       wxFileName tmpDirPath;
       tmpDirPath.AssignDir(dlog.GetPath());
       wxString path = tmpDirPath.GetPath(wxPATH_GET_VOLUME|wxPATH_GET_SEPARATOR);
@@ -707,28 +706,29 @@ void ScreenFrame::OnOneHour(wxCommandEvent & WXUNUSED(event))
 
 void ScreenFrame::SizeTracks(int h)
 {
-   TrackListIterator iter(mContext.GetProject()->GetTracks());
-   for (Track * t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Wave) {
-         if (t->GetLink()) {
-            t->SetHeight(h);
-         }
-         else {
-            t->SetHeight(h*2);
-         }
-      }
+   // h is the height for a channel
+   // Set the height of a mono track twice as high
+
+   // TODO: more-than-two-channels
+   // If there should be more-than-stereo tracks, this makes
+   // each channel as high as for a stereo channel
+
+   auto tracks = mContext.GetProject()->GetTracks();
+   for (auto t : tracks->Leaders<WaveTrack>()) {
+      auto channels = TrackList::Channels(t);
+      auto nChannels = channels.size();
+      auto height = nChannels == 1 ? 2 * h : h;
+      for (auto channel : channels)
+         channel->SetHeight(height);
    }
    mContext.GetProject()->RedrawProject();
 }
 
 void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   TrackListIterator iter(mContext.GetProject()->GetTracks());
-   for (Track * t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Wave) {
-         t->SetHeight(t->GetMinimizedHeight());
-      }
-   }
+   for (auto t : mContext.GetProject()->GetTracks()->Any<WaveTrack>())
+      t->SetHeight(t->GetMinimizedHeight());
+
    mContext.GetProject()->RedrawProject();
 }
 

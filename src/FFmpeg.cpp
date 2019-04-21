@@ -17,17 +17,19 @@ License: GPL v2.  See License.txt.
 // Store function pointers here when including FFmpeg.h
 #define DEFINE_FFMPEG_POINTERS
 
-#include "Audacity.h"   // for config*.h
+#include "Audacity.h"   // for config*.h // for USE_* macros
 #include "FFmpeg.h"
+
 #include "FileNames.h"
 #include "Internat.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 
+#include <wx/checkbox.h>
+#include <wx/dynlib.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
-
-#include "Experimental.h"
+#include <wx/log.h>
 
 #if !defined(USE_FFMPEG)
 /// FFmpeg support may or may not be compiled in,
@@ -211,7 +213,7 @@ int ufile_close(AVIOContext *pb)
 }
 
 // Open a file with a (possibly) Unicode filename
-int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
+int ufile_fopen(AVIOContext **s, const FilePath & name, int flags)
 {
    wxFile::OpenMode mode;
 
@@ -250,7 +252,7 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 
 // Detect type of input file and open it if recognized. Routine
 // based on the av_open_input_file() libavformat function.
-int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, wxString & name)
+int ufile_fopen_input(std::unique_ptr<FFmpegContext> &context_ptr, FilePath & name)
 {
    context_ptr.reset();
    auto context = std::make_unique<FFmpegContext>();
@@ -482,7 +484,7 @@ public:
          S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(0);
          {
-            if (mLibPath.GetFullPath().IsEmpty()) {
+            if (mLibPath.GetFullPath().empty()) {
                text.Printf(_("To find '%s', click here -->"), mName);
                mPathText = S.AddTextBox( {}, text, 0);
             }
@@ -523,7 +525,7 @@ public:
          mType,
          wxFD_OPEN | wxRESIZE_BORDER,
          this);
-      if (!path.IsEmpty()) {
+      if (!path.empty()) {
          mLibPath = path;
          mPathText->SetValue(path);
       }
@@ -562,6 +564,54 @@ END_EVENT_TABLE()
 // FFmpegNotFoundDialog
 //----------------------------------------------------------------------------
 
+FFmpegNotFoundDialog::FFmpegNotFoundDialog(wxWindow *parent)
+   :  wxDialogWrapper(parent, wxID_ANY, wxString(_("FFmpeg not found")))
+{
+   SetName(GetTitle());
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+}
+
+void FFmpegNotFoundDialog::PopulateOrExchange(ShuttleGui & S)
+{
+   wxString text;
+
+   S.SetBorder(10);
+   S.StartVerticalLay(true);
+   {
+      S.AddFixedText(_(
+"Audacity attempted to use FFmpeg to import an audio file,\n\
+but the libraries were not found.\n\n\
+To use FFmpeg import, go to Preferences > Libraries\n\
+to download or locate the FFmpeg libraries."
+      ));
+
+      int dontShowDlg = 0;
+      gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
+      mDontShow = S.AddCheckBox(_("Do not show this warning again"),dontShowDlg);
+
+      S.AddStandardButtons(eOkButton);
+   }
+   S.EndVerticalLay();
+
+   Layout();
+   Fit();
+   SetMinSize(GetSize());
+   Center();
+
+   return;
+}
+
+void FFmpegNotFoundDialog::OnOk(wxCommandEvent & WXUNUSED(event))
+{
+   if (mDontShow->GetValue())
+   {
+      gPrefs->Write(wxT("/FFmpeg/NotFoundDontShow"),1);
+      gPrefs->Flush();
+   }
+   this->EndModal(0);
+}
+
 BEGIN_EVENT_TABLE(FFmpegNotFoundDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, FFmpegNotFoundDialog::OnOk)
 END_EVENT_TABLE()
@@ -591,16 +641,17 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    wxString path;
    wxString name;
 
+   // If we're looking for the lib, use the standard name, as the
+   // configured name is not found.
+   name = GetLibAVFormatName();
    wxLogMessage(wxT("Looking for FFmpeg libraries..."));
-   if (!mLibAVFormatPath.IsEmpty()) {
+   if (!mLibAVFormatPath.empty()) {
       wxLogMessage(wxT("mLibAVFormatPath ('%s') is not empty."), mLibAVFormatPath);
       const wxFileName fn{ mLibAVFormatPath };
       path = fn.GetPath();
-      name = fn.GetFullName();
    }
    else {
       path = GetLibAVFormatPath();
-      name = GetLibAVFormatName();
       wxLogMessage(wxT("mLibAVFormatPath is empty, starting with path '%s', name '%s'."),
                   path, name);
    }
@@ -644,13 +695,13 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    }
 
    // First try loading it from a previously located path
-   if (!mLibAVFormatPath.IsEmpty()) {
+   if (!mLibAVFormatPath.empty()) {
       wxLogMessage(wxT("mLibAVFormatPath ('%s') is not empty. Loading from it."),mLibAVFormatPath);
       mLibsLoaded = InitLibs(mLibAVFormatPath,showerr);
    }
 
    // If not successful, try loading it from default path
-   if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
+   if (!mLibsLoaded && !GetLibAVFormatPath().empty()) {
       const wxFileName fn{ GetLibAVFormatPath(), GetLibAVFormatName() };
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from default path, '%s'."), path);
@@ -662,7 +713,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
 
 #if defined(__WXMAC__)
    // If not successful, try loading it from legacy path
-   if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
+   if (!mLibsLoaded && !GetLibAVFormatPath().empty()) {
       const wxFileName fn{wxT("/usr/local/lib/audacity"), GetLibAVFormatName()};
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from legacy path, '%s'."), path);
@@ -781,8 +832,8 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    if (!gotError) {
       avutil_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
       avcodec_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
-      if (avutil_filename.GetFullPath().IsSameAs(nameFull)) {
-         if (avcodec_filename.GetFullPath().IsSameAs(nameFull)) {
+      if (avutil_filename.GetFullPath() == nameFull) {
+         if (avcodec_filename.GetFullPath() == nameFull) {
             util = avformat.get();
             codec = avformat.get();
          }

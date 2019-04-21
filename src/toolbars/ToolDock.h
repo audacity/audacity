@@ -114,7 +114,7 @@ public:
    // This iterator visits the nodes of the forest in pre-order, and at each
    // stop, reports its Place
    class Iterator
-      : public std::iterator<std::forward_iterator_tag, Place>
+      : public ValueIterator<Place>
    {
    public:
       const Place &operator * () const { return mPlace; }

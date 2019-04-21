@@ -19,16 +19,22 @@
 #include "../Audacity.h" // for rint from configwin.h
 #include "Normalize.h"
 
+#include "../Experimental.h"
+
 #include <math.h>
 
+#include <wx/checkbox.h>
 #include <wx/intl.h>
+#include <wx/stattext.h>
 #include <wx/valgen.h>
 
 #include "../Internat.h"
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ProgressDialog.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
@@ -65,9 +71,9 @@ EffectNormalize::~EffectNormalize()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNormalize::GetSymbol()
+ComponentInterfaceSymbol EffectNormalize::GetSymbol()
 {
    return NORMALIZE_PLUGIN_SYMBOL;
 }
@@ -219,10 +225,6 @@ bool EffectNormalize::Process()
    //Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
-   WaveTrack *prevTrack;
-   prevTrack = track;
    double progress = 0;
    wxString topMsg;
    if(mDC && mGain)
@@ -234,8 +236,10 @@ bool EffectNormalize::Process()
    else if(!mDC && !mGain)
       topMsg = _("Not doing anything...\n");   // shouldn't get here
 
-   while (track) {
+   for ( auto track : mOutputTracks->Selected< WaveTrack >()
+            + ( mStereoInd ? &Track::Any : &Track::IsLeader ) ) {
       //Get start and end times from track
+      // PRL:  No accounting for multiple channels?
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
 
@@ -244,120 +248,106 @@ bool EffectNormalize::Process()
       mCurT0 = mT0 < trackStart? trackStart: mT0;
       mCurT1 = mT1 > trackEnd? trackEnd: mT1;
 
+      auto range = mStereoInd
+         ? TrackList::SingletonRange(track)
+         : TrackList::Channels(track);
+
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
-         wxString msg;
-         auto trackName = track->GetName();
+         wxString trackName = track->GetName();
 
-         if(!track->GetLinked() || mStereoInd)
-            msg =
-               topMsg + wxString::Format( _("Analyzing: %s"), trackName );
+         float extent;
+#ifdef EXPERIMENTAL_R128_NORM
+         if (mUseLoudness)
+            // Loudness: use sum of both tracks.
+            // As a result, stereo tracks appear about 3 LUFS louder,
+            // as specified.
+            extent = 0;
          else
-            msg =
-               topMsg + wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName );
-         float offset, extent;
-         bGoodResult = AnalyseTrack(track, msg, progress, offset, extent);
-         if (!bGoodResult )
-             break;
-         if(!track->GetLinked() || mStereoInd) {
+#endif
+            // Will compute a maximum
+            extent = std::numeric_limits<float>::lowest();
+         std::vector<float> offsets;
+
+         wxString msg;
+         if (range.size() == 1)
             // mono or 'stereo tracks independently'
-            if( (extent > 0) && mGain )
-            {
-               mMult = ratio / extent;
+            msg = topMsg +
+               wxString::Format( _("Analyzing: %s"), trackName );
+         else
+            msg = topMsg +
+               // TODO: more-than-two-channels-message
+               wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName);
+         
+         // Analysis loop over channels collects offsets and extent
+         for (auto channel : range) {
+            float offset = 0;
+            float extent2 = 0;
+            bGoodResult =
+               AnalyseTrack( channel, msg, progress, offset, extent2 );
+            if ( ! bGoodResult )
+               goto break2;
 #ifdef EXPERIMENTAL_R128_NORM
-               if(mUseLoudness) {
-                  // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-                  mMult /= 0.8529037031;
-                  // LUFS are related to square values so the multiplier must be the root.
-                  mMult = sqrt(ratio / extent);
-               }
-#endif
-            }
+            if (mUseLoudness)
+               extent += extent2;
             else
-               mMult = 1.0;
-
-            msg =
-               topMsg + wxString::Format( _("Processing: %s"), trackName );
-
-            if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
-               msg =
-                  topMsg + wxString::Format( _("Processing stereo channels independently: %s"), trackName );
-
-            if (!ProcessOne(track, msg, progress, offset))
-            {
-               bGoodResult = false;
-               break;
-            }
+#endif
+               extent = std::max( extent, extent2 );
+            offsets.push_back(offset);
+            // TODO: more-than-two-channels-message
+            msg = topMsg +
+               wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
          }
-         else {
-            // we have a linked stereo track
-            // so we need to find it's min, max and offset
-            // as they are needed to calc the multiplier for both tracks
 
-            track = (WaveTrack *) iter.Next();  // get the next one
-            msg =
-               topMsg + wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
-
-            float offset2, extent2;
-            bGoodResult = AnalyseTrack(track, msg, progress, offset2, extent2);
-            if ( !bGoodResult )
-                break;
-
+         // Compute the multiplier using extent
+         if( (extent > 0) && mGain ) {
+            mMult = ratio / extent;
 #ifdef EXPERIMENTAL_R128_NORM
-            if (mUseLoudness) {
-               // Loudness: use sum of both tracks.
-               // As a result, stereo tracks appear about 3 LUFS louder, as specified.
-               extent = extent + extent2;
+            if(mUseLoudness) {
+               // PRL:  See commit 9cbb67a for the origin of the next line,
+               // which has no effect because mMult is again overwritten.  What
+               // was the intent?
+
                // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-               extent *= 0.8529037031;
+               mMult /= 0.8529037031;
+               // LUFS are related to square values so the multiplier must be the root.
+               mMult = sqrt(ratio / extent);
             }
-            else {
-               // Peak: use maximum of both tracks.
-               extent = fmax(extent, extent2);
-            }
-#else
-            // Peak: use maximum of both tracks.
-            extent = fmax(extent, extent2);
 #endif
+         }
+         else
+            mMult = 1.0;
 
-            if( (extent > 0) && mGain )
-            {
-               mMult = ratio / extent; // we need to use this for both linked tracks
-#ifdef EXPERIMENTAL_R128_NORM
-               if(mUseLoudness) {
-                  // LUFS are related to square values so the multiplier must be the root.
-                  mMult = sqrt(mMult);
-               }
-#endif
-            }
+         if (range.size() == 1) {
+            if (TrackList::Channels(track).size() == 1)
+               // really mono
+               msg = topMsg +
+                  wxString::Format( _("Processing: %s"), trackName );
             else
-               mMult = 1.0;
+               //'stereo tracks independently'
+               // TODO: more-than-two-channels-message
+               msg = topMsg +
+                  wxString::Format( _("Processing stereo channels independently: %s"), trackName);
+         }
+         else
+            msg = topMsg +
+               // TODO: more-than-two-channels-message
+               wxString::Format( _("Processing first track of stereo pair: %s"), trackName);
 
-            track = (WaveTrack *) iter.Prev();  // go back to the first linked one
-            msg =
-               topMsg + wxString::Format( _("Processing first track of stereo pair: %s"), trackName );
-
-            if (!ProcessOne(track, msg, progress, offset))
-            {
-               bGoodResult = false;
-               break;
-            }
-            track = (WaveTrack *) iter.Next();  // go to the second linked one
-            msg =
-               topMsg + wxString::Format( _("Processing second track of stereo pair: %s"), trackName );
-
-            if (!ProcessOne(track, msg, progress, offset2))
-            {
-               bGoodResult = false;
-               break;
-            }
+         // Use multiplier in the second, processing loop over channels
+         auto pOffset = offsets.begin();
+         for (auto channel : range) {
+            if (false ==
+                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)) )
+               goto break2;
+            // TODO: more-than-two-channels-message
+            msg = topMsg +
+               wxString::Format( _("Processing second track of stereo pair: %s"), trackName);
          }
       }
-
-      //Iterate to the next track
-      prevTrack = track;
-      track = (WaveTrack *) iter.Next();
    }
+
+   break2:
 
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
@@ -374,7 +364,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
          S.StartVerticalLay(false);
          {
             mDCCheckBox = S.AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
-                                        mDC ? wxT("true") : wxT("false"));
+                                        mDC);
             mDCCheckBox->SetValidator(wxGenericValidator(&mDC));
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
@@ -385,13 +375,13 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                wxString prompt1 = _("Normalize peak amplitude to");
 #ifdef EXPERIMENTAL_R128_NORM
                wxString prompt2 = _("Normalize loudness to");
-               wxString longerPrompt = ((prompt1.Length() > prompt2.Length()) ? prompt1 : prompt2) + "   ";
+               wxString longerPrompt = ((prompt1.length() > prompt2.length()) ? prompt1 : prompt2) + "   ";
 #else
                wxString longerPrompt = prompt1 + "   ";
 #endif
                // Now make the checkbox.
                mGainCheckBox = S.AddCheckBox(longerPrompt,
-                                             mGain ? wxT("true") : wxT("false"));
+                                             mGain);
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
@@ -410,11 +400,11 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
 #ifdef EXPERIMENTAL_R128_NORM
             mUseLoudnessCheckBox = S.AddCheckBox(_("Use loudness instead of peak amplitude"),
-                                                 mUseLoudness ? wxT("true") : wxT("false"));
+                                                 mUseLoudness);
             mUseLoudnessCheckBox->SetValidator(wxGenericValidator(&mGUIUseLoudness));
 #endif
             mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
-                                               mStereoInd ? wxT("true") : wxT("false"));
+                                               mStereoInd);
             mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
          }
          S.EndVerticalLay();
@@ -770,7 +760,7 @@ void EffectNormalize::UpdateUI()
 
    if (!mUIParent->TransferDataFromWindow())
    {
-      mWarning->SetLabel(_(".  Maximum 0dB."));
+      mWarning->SetLabel(_("(Maximum 0dB)"));
       EnableApply(false);
       return;
    }

@@ -18,6 +18,7 @@
 #include "../Audacity.h" // for USE_SOUNDTOUCH
 
 #if USE_SOUNDTOUCH
+#include "ChangeTempo.h"
 
 #if USE_SBSMS
 #include "../../../lib-src/header-substitutes/sbsms.h"
@@ -27,12 +28,13 @@
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/checkbox.h>
+#include <wx/slider.h>
 
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
-
-#include "ChangeTempo.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h
 // and configunix.h, so get rid of them before including,
@@ -104,9 +106,9 @@ EffectChangeTempo::~EffectChangeTempo()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangeTempo::GetSymbol()
+ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
 {
    return CHANGETEMPO_PLUGIN_SYMBOL;
 }
@@ -299,7 +301,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mUseSBSMSCheckBox = S.AddCheckBox(_("Use high quality stretching (slow)"),
-                                             mUseSBSMS? wxT("true") : wxT("false"));
+                                             mUseSBSMS);
          mUseSBSMSCheckBox->SetValidator(wxGenericValidator(&mUseSBSMS));
       }
       S.EndMultiColumn();

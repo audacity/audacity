@@ -16,6 +16,9 @@ Provides thread-safe logging based on the wxWidgets log facility.
 
 #include "Audacity.h" // This should always be included first
 #include "AudacityLogger.h"
+
+#include "Experimental.h"
+
 #include "FileNames.h"
 #include "ShuttleGui.h"
 
@@ -26,7 +29,6 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/settings.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
-#include "Experimental.h"
 #include "widgets/ErrorDialog.h"
 #include "Internat.h"
 
@@ -71,7 +73,7 @@ void AudacityLogger::DoLogText(const wxString & str)
       wxMutexGuiEnter();
    }
 
-   if (mBuffer.IsEmpty()) {
+   if (mBuffer.empty()) {
       wxString stamp;
 
       TimeStamp(&stamp);
@@ -240,7 +242,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                         mFrame.get());
 
-   if (fName == wxEmptyString) {
+   if (fName.empty()) {
       return;
    }
 

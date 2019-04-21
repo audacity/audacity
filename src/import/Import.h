@@ -13,14 +13,14 @@
 
 #include "ImportRaw.h" // defines TrackHolders
 #include "ImportForwards.h"
+#include "audacity/Types.h"
 #include <vector>
-#include <wx/arrstr.h>
-#include <wx/string.h>
-#include <wx/listbox.h>
-#include <wx/tokenzr.h>
+#include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
-#include "../widgets/wxPanelWrapper.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
+class wxArrayString;
+class wxListBox;
 class Tags;
 class TrackFactory;
 class Track;
@@ -32,11 +32,12 @@ typedef bool (*progress_callback_t)( void *userData, float percent );
 class Format {
 public:
    wxString formatName;
-   wxArrayString formatExtensions;
+   FileExtensions formatExtensions;
 
-   Format(const wxString &_formatName, const wxArrayString &_formatExtensions):
+   Format(const wxString &_formatName,
+      FileExtensions _formatExtensions):
       formatName(_formatName),
-      formatExtensions(_formatExtensions)
+      formatExtensions( std::move( _formatExtensions ) )
    {
    }
 };
@@ -136,10 +137,10 @@ public:
     */
     std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
-   static bool IsMidi(const wxString &fName);
+   static bool IsMidi(const FilePath &fName);
 
    // if false, the import failed and errorMessage will be set.
-   bool Import(const wxString &fName,
+   bool Import(const FilePath &fName,
               TrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,

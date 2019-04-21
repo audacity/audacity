@@ -19,7 +19,13 @@ selected command.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "BatchCommandDialog.h"
 
+#ifdef __WXMSW__
+    #include  <wx/ownerdrw.h>
+#endif
+
+//
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -36,7 +42,6 @@ selected command.
 
 
 #include "Project.h"
-#include "BatchCommandDialog.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "BatchCommands.h"
@@ -174,7 +179,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
-   mEditParams->Enable(!ID.IsEmpty());
+   mEditParams->Enable(!ID.empty());
    mUsePreset->Enable(em.HasPresets(ID));
 
    if ( command.name.Translated() == mCommand->GetValue() )
@@ -185,7 +190,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
    mInternalCommandName = command.name.Internal();
 
    wxString params = MacroCommands::GetCurrentParamsFor(mInternalCommandName);
-   if (params.IsEmpty())
+   if (params.empty())
    {
       params = em.GetDefaultPreset(ID);
    }
@@ -198,7 +203,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
 
 void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mInternalCommandName;
+   auto command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
    params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
@@ -209,7 +214,7 @@ void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mInternalCommandName;
+   auto command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
    wxString preset = MacroCommands::PromptForPresetFor(command, params, this).Trim();
@@ -218,7 +223,7 @@ void MacroCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
    mParameters->Refresh();
 }
 
-void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
+void MacroCommandDialog::SetCommandAndParams(const CommandID &Command, const wxString &Params)
 {
    auto iter = mCatalog.ByCommandId( Command );
 
@@ -240,7 +245,7 @@ void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxSt
 
       // If ID is empty, then the effect wasn't found, in which case, the user must have
       // selected one of the "special" commands.
-      mEditParams->Enable(!ID.IsEmpty());
+      mEditParams->Enable(!ID.empty());
       mUsePreset->Enable(em.HasPresets(ID));
    }
 }

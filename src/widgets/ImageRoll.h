@@ -13,11 +13,9 @@
 #define __AUDACITY_IMAGE_ROLL__
 
 #include <vector>
-#include <wx/dc.h>
-#include <wx/dcclient.h>
+// #include <wx/dc.h> // for enum wxRasterOperationMode
 #include <wx/defs.h>
-#include <wx/version.h>
-#include "wxPanelWrapper.h"
+#include "wxPanelWrapper.h" // to inherit
 
 #if !wxCHECK_VERSION(3,0,0)
 #define wxRasterOperationMode int
@@ -47,7 +45,8 @@ class ImageRoll
    wxSize GetMaxSize() const { return mMaxSize; }
 
    void Draw(wxDC &dc, wxRect rect,
-             wxRasterOperationMode logicalFunc = wxCOPY);
+             int /* wxRasterOperationMode */ logicalFunc);
+   void Draw(wxDC &dc, wxRect rect); // default logicalFunc to wxCOPY
 
    static ImageArray SplitH(const wxImage &src, wxColour magicColor);
    static ImageArray SplitV(const wxImage &src, wxColour magicColor);
@@ -55,7 +54,8 @@ class ImageRoll
  protected:
 
    void DrawBitmap(wxDC &dc, wxBitmap &bitmap,
-                   int x, int y, wxRasterOperationMode logicalFunc = wxCOPY);
+                   int x, int y,
+                   int /* wxRasterOperationMode */ logicalFunc);
 
    void Init(RollType type, const wxImage &src, wxColour magicColor);
 
@@ -80,7 +80,7 @@ class ImageRollPanel final : public wxPanelWrapper
                   const wxSize& size = wxDefaultSize,
                   long style = wxTAB_TRAVERSAL);
 
-   void SetLogicalFunction(wxRasterOperationMode func);
+   void SetLogicalFunction(int /*wxRasterOperationMode*/ func);
 
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
@@ -88,7 +88,7 @@ class ImageRollPanel final : public wxPanelWrapper
  protected:
    //ImageRoll mImageRoll;
 
-   wxRasterOperationMode mLogicalFunction;
+   int /*wxRasterOperationMode*/ mLogicalFunction;
 
    DECLARE_EVENT_TABLE()
 

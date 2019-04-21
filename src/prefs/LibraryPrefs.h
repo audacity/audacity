@@ -15,18 +15,21 @@
 
 #include <wx/defs.h>
 
-#include <wx/stattext.h>
-#include <wx/window.h>
-
 #include "PrefsPanel.h"
 
+class wxStaticText;
 class ShuttleGui;
+
+#define LIBRARY_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Library") }
 
 class LibraryPrefs final : public PrefsPanel
 {
  public:
    LibraryPrefs(wxWindow * parent, wxWindowID winid);
    ~LibraryPrefs();
+   ComponentInterfaceSymbol GetSymbol() override;
+   wxString GetDescription() override;
+
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -47,6 +50,7 @@ class LibraryPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+/// A PrefsPanelFactory that creates one LibraryPrefs panel.
 class LibraryPrefsFactory final : public PrefsPanelFactory
 {
 public:

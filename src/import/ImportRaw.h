@@ -21,7 +21,10 @@ class wxWindow;
 
 #include <vector>
 
-using TrackHolders = std::vector<std::unique_ptr<WaveTrack>>;
+// Newly constructed WaveTracks that are not yet owned by a TrackList
+// are held in unique_ptr not shared_ptr
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+using TrackHolders = std::vector< NewChannelGroup >;
 
 
 void ImportRaw(wxWindow *parent, const wxString &fileName,

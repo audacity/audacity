@@ -8,6 +8,7 @@
 
 #include "Audacity.h"
 #include "FileException.h"
+
 #include "Internat.h"
 #include "Prefs.h"
 

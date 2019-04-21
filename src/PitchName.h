@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_PITCHNAME__
 #define __AUDACITY_PITCHNAME__
 
-#include <wx/wx.h>
+class wxString;
 
 // FreqToMIDInote takes a frequency in Hz (exponential scale relative to
 // alphabetic pitch names) and returns a pitch ID number (linear

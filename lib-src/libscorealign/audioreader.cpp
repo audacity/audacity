@@ -90,7 +90,6 @@ void Audio_reader::calculate_parameters(Scorealign &sa, bool verbose)
 
     // this is stored back in a field in sa as well as here in the reader
     frame_count= (int) ceil(((float) pcm_frames / hop_samples + 1)); 	
-    this->frame_count = frame_count;
     temp_data = ALLOC(float, samples_per_frame);
     memset(temp_data, 0, samples_per_frame * sizeof(temp_data[0]));
     assert(temp_data);

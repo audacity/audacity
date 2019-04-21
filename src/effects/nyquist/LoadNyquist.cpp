@@ -9,12 +9,12 @@
 **********************************************************************/
 
 #include "../../AudacityApp.h"
+#include "LoadNyquist.h"
 
 #include <wx/log.h>
 
 #include "Nyquist.h"
 
-#include "LoadNyquist.h"
 #include "../../FileNames.h"
 
 // ============================================================================
@@ -33,6 +33,7 @@ const static wxChar *kShippedEffects[] =
    wxT("limiter.ny"),
    wxT("lowpass.ny"),
    wxT("notch.ny"),
+   wxT("nyquist-plug-in-installer.ny"),
    wxT("pluck.ny"),
    wxT("rhythmtrack.ny"),
    wxT("rissetdrum.ny"),
@@ -89,24 +90,24 @@ NyquistEffectsModule::NyquistEffectsModule(ModuleManagerInterface *moduleManager
 
 NyquistEffectsModule::~NyquistEffectsModule()
 {
-   mPath.Clear();
+   mPath.clear();
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
-wxString NyquistEffectsModule::GetPath()
+PluginPath NyquistEffectsModule::GetPath()
 {
    return mPath;
 }
 
-IdentInterfaceSymbol NyquistEffectsModule::GetSymbol()
+ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
 {
    return XO("Nyquist Effects");
 }
 
-IdentInterfaceSymbol NyquistEffectsModule::GetVendor()
+VendorSymbol NyquistEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -128,9 +129,9 @@ wxString NyquistEffectsModule::GetDescription()
 
 bool NyquistEffectsModule::Initialize()
 {
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
+   const auto &audacityPathList = wxGetApp().audacityPathList;
 
-   for (size_t i = 0, cnt = audacityPathList.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = audacityPathList.size(); i < cnt; i++)
    {
       wxFileName name(audacityPathList[i], wxT(""));
       name.AppendDir(wxT("nyquist"));
@@ -155,14 +156,12 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
-wxArrayString NyquistEffectsModule::FileExtensions()
+FileExtensions NyquistEffectsModule::GetFileExtensions()
 {
-   static const wxString ext[] = { _T("ny") };
-   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
-   return result;
+   return {{ _T("ny") }};
 }
 
-wxString NyquistEffectsModule::InstallPath()
+FilePath NyquistEffectsModule::InstallPath()
 {
    return FileNames::PlugInDir();
 }
@@ -171,31 +170,22 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
-   wxArrayString files;
+   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   FilePaths files;
    wxString ignoredErrMsg;
 
-#if 0
-   if (!pm.IsPluginRegistered(NYQUIST_EFFECTS_PROMPT_ID))
+   if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
    {
       // No checking of error ?
-      DiscoverPluginsAtPath(NYQUIST_EFFECTS_PROMPT_ID, ignoredErrMsg,
-         PluginManagerInterface::DefaultRegistrationCallback);
-   }
-#endif
-
-   if (!pm.IsPluginRegistered(NYQUIST_TOOLS_PROMPT_ID))
-   {
-      // No checking of error ?
-      DiscoverPluginsAtPath(NYQUIST_TOOLS_PROMPT_ID, ignoredErrMsg,
+      DiscoverPluginsAtPath(NYQUIST_PROMPT_ID, ignoredErrMsg,
          PluginManagerInterface::DefaultRegistrationCallback);
    }
 
    for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
    {
-      files.Clear();
+      files.clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
-      for (size_t j = 0, cnt = files.GetCount(); j < cnt; j++)
+      for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
          if (!pm.IsPluginRegistered(files[j]))
          {
@@ -210,25 +200,24 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
-   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
-   wxArrayString files;
+   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   FilePaths files;
 
-   // Add the Nyquist prompt effect and tool.
-   //files.Add(NYQUIST_EFFECTS_PROMPT_ID);
-   files.Add(NYQUIST_TOOLS_PROMPT_ID);
+   // Add the Nyquist prompt
+   files.push_back(NYQUIST_PROMPT_ID);
    
    // Load .ny plug-ins
    pm.FindFilesInPathList(wxT("*.ny"), pathList, files);
    // LLL:  Works for all platform with NEW plugin support (dups are removed)
    pm.FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
 
-   return files;
+   return { files.begin(), files.end() };
 }
 
 unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
-   const wxString & path, wxString &errMsg,
+   const PluginPath & path, wxString &errMsg,
    const RegistrationCallback &callback)
 {
    errMsg.clear();
@@ -244,18 +233,18 @@ unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
+bool NyquistEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    // Ignores bFast parameter, since checking file exists is fast enough for
    // the small number of Nyquist plug-ins that we have.
    static_cast<void>(bFast);
-   if((path == NYQUIST_EFFECTS_PROMPT_ID) ||  (path == NYQUIST_TOOLS_PROMPT_ID))
+   if(path == NYQUIST_PROMPT_ID)
       return true;
 
    return wxFileName::FileExists(path);
 }
 
-IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *NyquistEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    auto effect = std::make_unique<NyquistEffect>(path);
@@ -268,7 +257,7 @@ IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
    return NULL;
 }
 
-void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
+void NyquistEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < NyquistEffect > {
       dynamic_cast<NyquistEffect *>(instance)

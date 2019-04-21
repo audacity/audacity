@@ -22,11 +22,10 @@
 
 #include "../MemoryX.h"
 #include "../SampleFormat.h"
-#include <wx/dialog.h>
-#include <wx/slider.h>
 
 class wxButton;
 class wxSizer;
+class wxSlider;
 class wxString;
 
 class Envelope;
@@ -37,7 +36,7 @@ class wxTextCtrl;
 
 #include "../RealFFTf.h"
 
-#define NOISEREMOVAL_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Noise Removal") }
+#define NOISEREMOVAL_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Noise Removal") }
 
 class EffectNoiseRemoval final : public Effect
 {
@@ -45,9 +44,9 @@ public:
    EffectNoiseRemoval();
    virtual ~EffectNoiseRemoval();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

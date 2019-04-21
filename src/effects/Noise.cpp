@@ -24,6 +24,7 @@
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
+#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -35,7 +36,7 @@ enum kTypes
    nTypes
 };
 
-static const IdentInterfaceSymbol kTypeStrings[nTypes] =
+static const EnumValueSymbol kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("White") },
@@ -67,9 +68,9 @@ EffectNoise::~EffectNoise()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNoise::GetSymbol()
+ComponentInterfaceSymbol EffectNoise::GetSymbol()
 {
    return NOISE_PLUGIN_SYMBOL;
 }
@@ -224,7 +225,8 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxCENTER);
    {
       auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
-      S.AddChoice(_("Noise type:"), wxT(""), &typeChoices)->SetValidator(wxGenericValidator(&mType));
+      S.AddChoice(_("Noise type:"), typeChoices)
+         ->SetValidator(wxGenericValidator(&mType));
 
       FloatingPointValidator<double> vldAmp(6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldAmp.SetRange(MIN_Amp, MAX_Amp);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vertimas 1,0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2019-04-18 18:13+0100\n"
 "PO-Revision-Date: 2018-03-29 22:12+0100\n"
 "Last-Translator: Zygimantus <zygimantus@gmail.com>\n"
 "Language-Team: Sharunas <Sharunas55387@hotmail.com>\n"
@@ -34,10 +34,11 @@ msgid "Please choose an existing file."
 msgstr "Prašome pasirinkti jau egzistuojantį failą."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
@@ -223,7 +224,8 @@ msgid "No matches found"
 msgstr "Nebuvo rasta atitikmenų"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified.  Are you sure?"
+#, fuzzy
+msgid "Code has been modified. Are you sure?"
 msgstr "Kodas buvo koreguotas. Ar jūs tuo užtikrintas?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
@@ -275,7 +277,7 @@ msgstr "Kopijuoti"
 msgid "Copy to clipboard"
 msgstr "Kopijuoti į iškarpinę"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Iškirpti"
@@ -284,7 +286,7 @@ msgstr "Iškirpti"
 msgid "Cut to clipboard"
 msgstr "Iškirpti į iškarpinę"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Įklijuoti"
@@ -302,7 +304,7 @@ msgstr "Išvalyti"
 msgid "Clear selection"
 msgstr "Išvalyti pasirinktus"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Pasirinkti viską"
 
@@ -590,7 +592,7 @@ msgstr ""
 "kurio savininkas yra: Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -721,6 +723,125 @@ msgstr "Nustatymu aplankas: "
 msgid "GPL License"
 msgstr "GPL Licenzija"
 
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline actions disabled during recording"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Spauskite ir temkite santykiniam stereo takelio dydižiui pakeisti."
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "Įrašinėjimo pabaiga:"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Timeline"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click or drag to begin Seek"
+msgstr "Temti ir mesti pavyzdžių redagavimui"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click or drag to begin Scrub"
+msgstr "Paspausti ir tempti norint pradėti Gramdymą"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Click & move to Scrub. Click & drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Seek"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release to stop seeking."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Drag to Seek. Release and move to Scrub."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Move to Scrub. Drag to Seek."
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play disabled"
+msgstr "Quick-Play išjungtas"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Quick-Play enabled"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to unpin"
+msgstr "Perkelti į Pradžią"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click to pin"
+msgstr "Perkelti į Pradžią"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Quick-Play"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Disable dragging selection"
+msgstr "Paversti apibraukimą tyla"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Enable dragging selection"
+msgstr "Paversti apibraukimą tyla"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Timeline Tooltips"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Do not scroll while playing"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Update display while playing"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Lock Play Region"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Unlock Play Region"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Disable Scrub Ruler"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+msgid "Enable Scrub Ruler"
+msgstr ""
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -793,12 +914,12 @@ msgid "Audacity is starting up..."
 msgstr "Audacity įsijungia..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Naujas"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Atidaryti..."
 
@@ -806,7 +927,7 @@ msgstr "&Atidaryti..."
 msgid "Open &Recent..."
 msgstr "Atidaryti &Nesenai atidarytus..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
 msgstr "&Apie Audacity..."
 
@@ -814,7 +935,7 @@ msgstr "&Apie Audacity..."
 msgid "&Preferences..."
 msgstr "&Nuostatos..."
 
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Failas"
 
@@ -953,8 +1074,8 @@ msgstr "&Išsaugoti..."
 msgid "Cl&ear"
 msgstr "Iš&valyti"
 
-#: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
-#: src/effects/Contrast.cpp
+#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Uždaryti"
 
@@ -1017,6 +1138,190 @@ msgstr ""
 #: src/AudioIO.cpp
 msgid "Out of memory!"
 msgstr "Neužtenka atminties!"
+
+#: src/AudioIO.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Įrašymas"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "No devices found\n"
+msgstr "Nebuvo rasta atitikmenų"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "Peržiūra negalima"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "Įvesties Matuoklis"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "Įvesties Matuoklis"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "Pavadinimas: %s"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "Dešinysis kanalas"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "Atkūrimas"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Įrašinėjimo pabaiga:"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Įrašinėjimo pabaiga:"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Eksportuoti"
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Įrašymas"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Atkūrimas"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "Nepavyksta atidaryti žanro failo."
+
+#: src/AudioIO.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "%d - %s\n"
+msgstr "Iškirpti: %d - %d \n"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "Simuliuoti Įrašų Klaidas"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "Atkūrimas"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "Įrašymas"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "Įrašymas"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "Atkūrimas"
+
+#: src/AudioIO.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "Atkūrimas"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Įrašymas"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Atkūrimas"
+
+#: src/AudioIO.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
 
 #: src/AudioIO.cpp
 msgid ""
@@ -1226,10 +1531,6 @@ msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
-msgid "cleaned"
-msgstr "išvalyta"
-
-#: src/BatchCommands.cpp
 #, c-format
 msgid ""
 "Export recording to %s\n"
@@ -1243,8 +1544,9 @@ msgid "Export recording"
 msgstr "Eksportuoti įrašą"
 
 #: src/BatchCommands.cpp
+#, fuzzy, c-format
 msgid ""
-"Cannot create directory 'cleaned'. \n"
+"Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
 "Nepavyko sukurti vietos 'išvalyta'.\n"
@@ -1801,7 +2103,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Priklausomumo Patikra"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
 #: src/DirManager.cpp
 msgid "Progress"
 msgstr "Progresas"
@@ -1823,12 +2126,12 @@ msgid "Cleaning up temporary files"
 msgstr "Valomi laikinieji failai"
 
 #: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Saugojami projekto duomenų failai"
-
-#: src/DirManager.cpp
 msgid "Cleaning up after failed save"
 msgstr "Valoma po nepavykusio saugojimo"
+
+#: src/DirManager.cpp
+msgid "Saving project data files"
+msgstr "Saugojami projekto duomenų failai"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2201,6 +2504,7 @@ msgid "To find '%s', click here -->"
 msgstr "Norint rasti '%s', spausti čia -->"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Naršyti..."
 
@@ -2222,14 +2526,10 @@ msgid "Where is '%s'?"
 msgstr "Kur yra '%s'?"
 
 #: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Nepavyko rasti tinkamų FFmpeg bibliotekų."
-
-#: src/FFmpeg.h
 msgid "FFmpeg not found"
 msgstr "FFmpeg nerastas"
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2243,9 +2543,13 @@ msgstr ""
 "Norint naudoti FFmpeg importavimui eikite į Nuostatos > Bibliotekos\n"
 "norint parsisiųsti arba surasti FFmpeg bibliotekas."
 
-#: src/FFmpeg.h
+#: src/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Daugiau nerodyti šio įspėjimo"
+
+#: src/FFmpeg.cpp
+msgid "Failed to find compatible FFmpeg libraries."
+msgstr "Nepavyko rasti tinkamų FFmpeg bibliotekų."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2304,7 +2608,7 @@ msgstr "Failo Klaida"
 msgid "Error (file may not have been written): %s"
 msgstr "Klaida (failas gali būti neįrašytas): %s"
 
-#: src/FreqWindow.cpp
+#: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektras"
 
@@ -2344,7 +2648,7 @@ msgstr "Log dažnis"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2410,9 +2714,9 @@ msgstr ""
 "dažnio."
 
 #: src/FreqWindow.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Too much audio was selected.  Only the first %.1f seconds of audio will be "
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr "Per daug audio pasirinkta. Tik %.1f sekundės bus išanalizuotos."
 
@@ -2456,8 +2760,8 @@ msgstr "spektras.txt"
 msgid "Export Spectral Data As:"
 msgstr "Eksportuoti Spektro Duomenis Kaip:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
-#: src/effects/Contrast.cpp
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Couldn't write to file: %s"
 msgstr "Negali rašyti į failą: %s"
@@ -2768,7 +3072,8 @@ msgid "Track"
 msgstr "Takelis"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
+#: plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Pavadinimas"
 
@@ -2800,15 +3105,15 @@ msgstr "Naujas..."
 msgid "Press F2 or double click to edit cell contents."
 msgstr "Spauskite F2 arba du kartus spustelėkite norint redaguoti stulpelį"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
 msgstr "Pasirinkite tekstinį failą kuriame yra etiketės"
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Tekstiniai failai (*.txt)|*.txt|Visi failai|*"
 
-#: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
+#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
 #, c-format
 msgid "Could not open file: %s"
 msgstr "Nepavyko atidaryti failo: %s"
@@ -2817,7 +3122,7 @@ msgstr "Nepavyko atidaryti failo: %s"
 msgid "No labels to export."
 msgstr "Nerasta etikečių eksportavimui."
 
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
 msgstr "Eksportuoti Etiketes Kaip:"
 
@@ -2845,22 +3150,22 @@ msgstr "Pakeistas Pavadinimas"
 msgid "Label Edit"
 msgstr "Pavadinimo Redagavimas"
 
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
 msgid "Added label"
 msgstr "Pridėtas pavadinimas"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "Cu&t"
 msgstr "Iškirp&t"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Copy"
 msgstr "&Kopijuoti"
 
 #. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelTrack.cpp src/menus/EditMenus.cpp
 msgid "&Paste"
 msgstr "&Įdėti"
 
@@ -2875,6 +3180,22 @@ msgstr "Ištrinta Etiketė"
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr "Vienos arba daugiau išsaugotų etikečių nepavyksta skaityti."
+
+#: src/LabelTrack.cpp
+msgid "Edited labels"
+msgstr "Pakeistos etiketės"
+
+#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Pavadinimas"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Pridėtas pavadinimas"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2920,2459 +3241,30 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity Karaokė%s"
 
 #: src/Menus.cpp
-msgid "Uncategorized"
-msgstr "Be kategorijos"
-
-#: src/Menus.cpp
-msgid "&Save Project"
-msgstr "&Išsaugoti projektą"
-
-#: src/Menus.cpp
-msgid "Save Project &As..."
-msgstr "Išsaugoti Projektą &Kaip..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Lossless Copy of Project..."
-msgstr "&Išsaugoti Suspaustą Projekto Kopiją..."
-
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "&Išsaugoti Suspaustą Projekto Kopiją..."
-
-#: src/Menus.cpp
-msgid "&Export"
-msgstr "&Eksportuoti"
-
-#: src/Menus.cpp
-msgid "Export as MP&3"
-msgstr "Eksportuoti kaip MP&3"
-
-#: src/Menus.cpp
-msgid "Export as &WAV"
-msgstr "Eksportuoti kaip &WAV"
-
-#: src/Menus.cpp
-msgid "Export as &OGG"
-msgstr "Eksportuoti kaip &OGG"
-
-#: src/Menus.cpp
-msgid "&Export Audio..."
-msgstr "&Eksportuoti Garsą..."
-
-#: src/Menus.cpp
-msgid "Expo&rt Selected Audio..."
-msgstr "Eksportuo&ti Pasirinktą Garsą..."
-
-#: src/Menus.cpp
-msgid "Export &Labels..."
-msgstr "Eksportuoti &Etiketes..."
-
-#: src/Menus.cpp
-msgid "Export &Multiple..."
-msgstr "Eksportuoti &Daugybinį..."
-
-#: src/Menus.cpp
-msgid "Export MI&DI..."
-msgstr "Eksportuoti MI&DI"
-
-#: src/Menus.cpp src/import/ImportRaw.cpp
-msgid "&Import"
-msgstr "&Importuoti"
-
-#: src/Menus.cpp
-msgid "&Audio..."
-msgstr "&Garsas..."
-
-#: src/Menus.cpp
-msgid "&Labels..."
-msgstr "&Etiketės..."
-
-#: src/Menus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/Menus.cpp
-msgid "&Raw Data..."
-msgstr "&Raw Duomenys..."
-
-#: src/Menus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Pu&slapio Paruošimas..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "&Print..."
-msgstr "&Spausdinti..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Menus.cpp
-msgid "E&xit"
-msgstr "I&šeiti"
-
-#: src/Menus.cpp
-msgid "&Edit"
-msgstr "R&edaguoti"
-
-#: src/Menus.cpp
-msgid "&Undo"
-msgstr "&Atšaukti"
-
-#: src/Menus.cpp
-msgid "&Redo"
-msgstr "Sug&rąžinti"
-
-#: src/Menus.cpp
-msgid "&Delete"
-msgstr "&Trinti"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Duplic&ate"
-msgstr "Duplik&atas"
-
-#: src/Menus.cpp
-msgid "R&emove Special"
-msgstr "P&anaikinti Specialų"
-
-#. i18n-hint: (verb) Do a special kind of cut
-#: src/Menus.cpp
-msgid "Spl&it Cut"
-msgstr "Praskiriant&i ir Iškirpti"
-
-#. i18n-hint: (verb) Do a special kind of DELETE
-#: src/Menus.cpp
-msgid "Split D&elete"
-msgstr "Praskirti ir I&štrinti"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Audi&o"
-msgstr "Nutildyti Gars&ą"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Tri&m Audio"
-msgstr "Apkarpyt&i Garsą"
-
-#: src/Menus.cpp
-msgid "Clip B&oundaries"
-msgstr "Apkarpyti R&ibas"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "Sp&lit"
-msgstr "Praski&rti"
-
-#: src/Menus.cpp
-msgid "Split Ne&w"
-msgstr "Praskirti Nauj&ą"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Join"
-msgstr "&Prijungti"
-
-#: src/Menus.cpp
-msgid "Detac&h at Silences"
-msgstr "Atskirt&i per Tylą"
-
-#: src/Menus.cpp
-msgid "&Labels"
-msgstr "&Etiketės"
-
-#: src/Menus.cpp
-msgid "&Edit Labels..."
-msgstr "&Redaguoti Etiketes..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Selection"
-msgstr "Pridėti Etiketę &Pasirinkime"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Add Label at &Playback Position"
-msgstr "Pridėti Etiketė &Atsuktoje Pozicijoje"
-
-#: src/Menus.cpp
-msgid "Paste Te&xt to New Label"
-msgstr "Įklijuoti Te&kstą Naujoje Etiketėje"
-
-#: src/Menus.cpp
-msgid "&Type to Create a Label (on/off)"
-msgstr "&Rašykite norint Sukurti Etiketę (įjungta/išjungta)"
-
-#: src/Menus.cpp
-msgid "La&beled Audio"
-msgstr "Garsas su Et&ikete"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Pavadinimo Redagavimas"
-
-#: src/Menus.cpp
-msgid "&Cut"
-msgstr "&Iškirpti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Delete"
-msgstr "Praskirti ir Ištrinti"
-
-#. i18n-hint: (verb) A special way to cut out a piece of audio
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Cut"
-msgstr "Praskirti ir iškirpti"
-
-#: src/Menus.cpp
-msgid "&Split Cut"
-msgstr "&Praskirti ir iškirpti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "Praskirti ir Ištrinti"
-
-#: src/Menus.cpp
-msgid "Sp&lit Delete"
-msgstr "Pra&skirti ir Ištrinti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Silence"
-msgstr "Tyla"
-
-#: src/Menus.cpp
-msgid "Silence &Audio"
-msgstr "Tyla &Garsas"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Copy"
-msgstr "Pavadinimas"
-
-#: src/Menus.cpp
-msgid "Co&py"
-msgstr "Ko&pijuoti"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Split"
-msgstr "Pavadinimo Redagavimas"
-
-#: src/Menus.cpp
-msgid "Spli&t"
-msgstr "Pra&skirti"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Label Join"
-msgstr "Pavadinimo Redagavimas"
-
-#: src/Menus.cpp
-msgid "Me&tadata..."
-msgstr "Meta&duomenys"
-
-#: src/Menus.cpp
-msgid "Pre&ferences..."
-msgstr "Nuo&statos"
-
-#. i18n-hint: (verb) It's an item on a menu.
-#: src/Menus.cpp
-msgid "&Select"
-msgstr "&Pasirinkti"
-
-#. i18n-hint: Radio button to show all effects
-#: src/Menus.cpp src/PluginManager.cpp
-msgid "&All"
-msgstr "&Viską"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select None"
-msgstr "Pasirinkimas Įjungtas"
-
-#: src/Menus.cpp
-msgid "&None"
-msgstr "&Nieko"
-
-#: src/Menus.cpp
-msgid "&Tracks"
-msgstr "&Takeliai"
-
-#: src/Menus.cpp
-msgid "In All &Tracks"
-msgstr "Visuose &Takeliuose"
-
-#: src/Menus.cpp
-msgid "Select Sync-Locked"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "In All &Sync-Locked Tracks"
-msgstr "Visuose &Sinchronizuotai Užrakintuose Takeliuose"
-
-#: src/Menus.cpp
-msgid "R&egion"
-msgstr "Re&gionas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Left at Play Position"
-msgstr "&Kairėje Atsukimo Vietoje"
-
-#: src/Menus.cpp
-msgid "&Left at Playback Position"
-msgstr "&Kairėje Atsukimo Vietoje"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Selection Right at Play Position"
-msgstr "&Dešinėje Atsukimo Vietoje"
-
-#: src/Menus.cpp
-msgid "&Right at Playback Position"
-msgstr "&Dešinėje Atsukimo Vietoje"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to Cursor"
-msgstr "Sekti &Pradėti žymeklį"
-
-#: src/Menus.cpp
-msgid "Track &Start to Cursor"
-msgstr "Sekti &Pradėti žymeklį"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Track End"
-msgstr "Žymeklį ties Takelio &Pabaiga"
-
-#: src/Menus.cpp
-msgid "Cursor to Track &End"
-msgstr "Žymeklį ties Takelio &Pabaiga"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Track Start to End"
-msgstr "Apibraukti iki Pabaigos"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Track Start to En&d"
-msgstr "Sekti &Pradėti žymeklį"
-
-#: src/Menus.cpp
-msgid "S&tore Selection"
-msgstr "Tal&pinti Pasirinkimą"
-
-#: src/Menus.cpp
-msgid "Retrieve Selectio&n"
-msgstr "Grąžinti Pasirinkim&ą"
-
-#: src/Menus.cpp
-msgid "S&pectral"
-msgstr "S&pektras"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Nu&statyti Pasirinkimo Spektrą"
-
-#: src/Menus.cpp
-msgid "Next &Higher Peak Frequency"
-msgstr "Sekantis &Didesnio Aukščio Dažnis"
-
-#: src/Menus.cpp
-msgid "Next &Lower Peak Frequency"
-msgstr "Sekantis &Žemesnio Aukščio Dažnis"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Previous Clip"
-msgstr "Praeit&as Apkarpymas"
-
-#: src/Menus.cpp
-msgid "Previo&us Clip"
-msgstr "Praeit&as Apkarpymas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Next Clip"
-msgstr "Sekant&is Apkarpymas"
-
-#: src/Menus.cpp
-msgid "N&ext Clip"
-msgstr "Sekant&is Apkarpymas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Cursor to Stored"
-msgstr "Apibraukti iki Pradžios"
-
-#: src/Menus.cpp
-msgid "Cursor to Stored &Cursor Position"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Store Cursor Pos&ition"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Zero Crossing"
-msgstr "&Nuliniuose Susikirtimuose"
-
-#: src/Menus.cpp
-msgid "At &Zero Crossings"
-msgstr "&Nuliniuose Susikirtimuose"
-
-#: src/Menus.cpp
-msgid "&View"
-msgstr "&Vaizdas"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/Menus.cpp
-msgid "&Zoom"
-msgstr "&Mastelis"
-
-#: src/Menus.cpp
-msgid "Zoom &In"
-msgstr "Pr&iartinti"
-
-#: src/Menus.cpp
-msgid "Zoom &Normal"
-msgstr "&Normaliai priartinti"
-
-#: src/Menus.cpp
-msgid "Zoom &Out"
-msgstr "&Atitraukti"
-
-#: src/Menus.cpp
-msgid "&Zoom to Selection"
-msgstr "&Priartinti į Pasirinkimą"
-
-#: src/Menus.cpp
-msgid "Zoom &Toggle"
-msgstr "Priartinti &Nustatyti"
-
-#: src/Menus.cpp
-msgid "T&rack Size"
-msgstr "T&akelio Dydis"
-
-#: src/Menus.cpp
-msgid "&Fit to Width"
-msgstr "&Pritaikyti pločiui"
-
-#: src/Menus.cpp
-msgid "Fit to &Height"
-msgstr "Pritaikyti &Aukščiui"
-
-#: src/Menus.cpp
-msgid "&Collapse All Tracks"
-msgstr "&Sugriauti visus Takelius"
-
-#: src/Menus.cpp
-msgid "E&xpand Collapsed Tracks"
-msgstr "Pa&didinti Sugriautus Takelius"
-
-#: src/Menus.cpp
-msgid "Sk&ip to"
-msgstr "Pra&leisti iki"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection Start"
-msgstr "į Apibraukimo Pradžią"
-
-#: src/Menus.cpp
-msgid "Selection Sta&rt"
-msgstr "Pasirinkimo Pra&džia"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Skip to Selection End"
-msgstr "į Apibraukimo Pabaigą"
-
-#: src/Menus.cpp
-msgid "Selection En&d"
-msgstr "Parinkties Pabaig&a"
-
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: src/Menus.cpp
-msgid "&History..."
-msgstr "&Istorija..."
-
-#: src/Menus.cpp
-msgid "&Karaoke..."
-msgstr "&Karaokė..."
-
-#: src/Menus.cpp
-msgid "&Mixer Board..."
-msgstr "&Miksavimo Lenta..."
-
-#: src/Menus.cpp
-msgid "&Toolbars"
-msgstr "&Įrankių juostos"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Reset Toolb&ars"
-msgstr "Perkrauti Įrankių Juost&as"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: src/Menus.cpp
-msgid "&Transport Toolbar"
-msgstr "&Transportuoti Įrankių juostą"
-
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: src/Menus.cpp
-msgid "T&ools Toolbar"
-msgstr "Į&rankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
-#: src/Menus.cpp
-msgid "&Recording Meter Toolbar"
-msgstr "&Įrašymų Matavimo Įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
-#: src/Menus.cpp
-msgid "&Playback Meter Toolbar"
-msgstr "&Grojimo Matavimo Įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-#. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: src/Menus.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Mi&ksavimo Įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: src/Menus.cpp
-msgid "&Edit Toolbar"
-msgstr "&Redaguoti Įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pla&y-at-Speed Toolbar"
-msgstr "Gro&ti tokiu Greičiu"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
-#: src/Menus.cpp
-msgid "Scru&b Toolbar"
-msgstr "Gram&dymo Įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: src/Menus.cpp
-msgid "&Device Toolbar"
-msgstr "&Prietaisų įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
-#: src/Menus.cpp
-msgid "&Selection Toolbar"
-msgstr "&Pasirinkimo Įrankių Juosta"
-
-#. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
-#: src/Menus.cpp
-msgid "Spe&ctral Selection Toolbar"
-msgstr "Spe&ktro Pasirinkimo Įrankių Juosta"
-
-#: src/Menus.cpp
-msgid "&Extra Menus (on/off)"
-msgstr "&Papildomi Meniu (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "&Show Clipping (on/off)"
-msgstr "&Rodyti Apkarpymą (Įjungta/Išjungta)"
-
-#: src/Menus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
-
-#. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Tra&nsport"
-msgstr "Transportuoti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pl&aying"
-msgstr "Pritaikomas Fazeris"
-
-#. i18n-hint: (verb) Start or Stop audio playback
-#: src/Menus.cpp
-msgid "Pl&ay/Stop"
-msgstr "Gr&oti/Stabdyti"
-
-#: src/Menus.cpp
-msgid "Play/Stop and &Set Cursor"
-msgstr "Groti/Stabdyti ir &Nustatyti Žymeklį"
-
-#: src/Menus.cpp
-msgid "&Loop Play"
-msgstr "&Ciklinis Grojimas"
-
-#: src/Menus.cpp
-msgid "&Pause"
-msgstr "&Pauzė"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Recording"
-msgstr "Įrašymas"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "&Record"
-msgstr "&Įrašyti"
-
-#: src/Menus.cpp
-msgid "&Append Record"
-msgstr "&Prijungti Įrašą"
-
-#: src/Menus.cpp
-msgid "Record &New Track"
-msgstr "Įrašyti &Naują Takelį"
-
-#: src/Menus.cpp
-msgid "&Timer Record..."
-msgstr "&Laikmačio Įrašinėjimas..."
-
-#: src/Menus.cpp
-msgid "Punch and Rol&l Record"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Cursor to"
-msgstr "&Žymeklį ties"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection Start"
-msgstr "į Apibraukimo Pradžią"
-
-#: src/Menus.cpp
-msgid "Selection Star&t"
-msgstr "Pasirinkties Pradži&a"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Selection End"
-msgstr "į Apibraukimo Pabaigą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track Start"
-msgstr "Žymeklį ties Takelio &Pabaiga"
-
-#: src/Menus.cpp
-msgid "Track &Start"
-msgstr "Takelio &Pradžia"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Track End"
-msgstr "Žymeklį ties Takelio &Pabaiga"
-
-#: src/Menus.cpp
-msgid "Track &End"
-msgstr "Takelio &Pabaiga"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Prev Clip Boundary"
-msgstr "Praeit&os Iškarpos Riba"
-
-#: src/Menus.cpp
-msgid "Pre&vious Clip Boundary"
-msgstr "Praeit&os Iškarpos Riba"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Next Clip Boundary"
-msgstr "Sek&ančios Iškarpos Riba"
-
-#: src/Menus.cpp
-msgid "Ne&xt Clip Boundary"
-msgstr "Sek&ančios Iškarpos Riba"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project Start"
-msgstr "&Projekto Pradžia"
-
-#: src/Menus.cpp
-msgid "&Project Start"
-msgstr "&Projekto Pradžia"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Cursor to Project End"
-msgstr "Žymeklį ties Takelio &Pabaiga"
-
-#: src/Menus.cpp
-msgid "Project E&nd"
-msgstr "Projekto Pa&baiga"
-
-#: src/Menus.cpp
-msgid "Pla&y Region"
-msgstr "Gro&jimo Regijonas"
-
-#: src/Menus.cpp
-msgid "&Lock"
-msgstr "&Užrakinti"
-
-#: src/Menus.cpp
-msgid "&Unlock"
-msgstr "&Atrakinti"
-
-#: src/Menus.cpp
-msgid "R&escan Audio Devices"
-msgstr "Per&skenuoti Garso Prietaisus"
-
-#: src/Menus.cpp
-msgid "Transport &Options"
-msgstr "Transportas &Nustatymai"
-
-#: src/Menus.cpp
-msgid "Sound Activation Le&vel..."
-msgstr "Garso Aktyvacijos Ly&gis..."
-
-#: src/Menus.cpp
-msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Garsu Ak&tyvuojamas Įrašinėjimas (Įjungtas/Išjungtas)"
-
-#: src/Menus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Privertas Grojimas/Įrašymas &Antraštė (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "&Overdub (on/off)"
-msgstr "&Įrašinėjimas ant viršaus (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "So&ftware Playthrough (on/off)"
-msgstr "Pro&gramos Pergrojimas (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "Auto&matinis Įrašo Garsumo Nustatymas (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "Add &New"
-msgstr "Pridėti &Nauja"
-
-#: src/Menus.cpp
-msgid "&Mono Track"
-msgstr "&Mono Takelis"
-
-#: src/Menus.cpp
-msgid "&Stereo Track"
-msgstr "&Stereo Takelis"
-
-#: src/Menus.cpp
-msgid "&Label Track"
-msgstr "&Etiketės Takelis"
-
-#: src/Menus.cpp
-msgid "&Time Track"
-msgstr "&Laiko Takelis"
-
-#: src/Menus.cpp
-msgid "Mi&x"
-msgstr "Mi&ksavimas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Mix Stereo Down to &Mono"
-msgstr "Suskaldyti Stereo į &Mono"
-
-#: src/Menus.cpp
-msgid "Mi&x and Render"
-msgstr "Suskal&dyti ir Apdoroti"
-
-#: src/Menus.cpp
-msgid "Mix and Render to Ne&w Track"
-msgstr "Suskaldyti ir Apdoroti į Na&ują Takelį"
-
-#: src/Menus.cpp
-msgid "&Resample..."
-msgstr "&Peršablonuoti..."
-
-#: src/Menus.cpp
-msgid "Remo&ve Tracks"
-msgstr "P&ašalinti Takelius"
-
-#: src/Menus.cpp
-msgid "M&ute/Unmute"
-msgstr "Užtildyti/Atitildyti"
-
-#: src/Menus.cpp
-msgid "&Mute All Tracks"
-msgstr "&Užtildyti Visus Takelius"
-
-#: src/Menus.cpp
-msgid "&Unmute All Tracks"
-msgstr "&Atitildyti Visus Takelius"
-
-#: src/Menus.cpp
-msgid "&Pan"
-msgstr "&Kreiptis"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Left"
-msgstr "Kairysis "
-
-#: src/Menus.cpp
-msgid "&Left"
-msgstr "&Kairė"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Right"
-msgstr "Dešinė "
-
-#: src/Menus.cpp
-msgid "&Right"
-msgstr "&Dešinė"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Center"
-msgstr "Centrinis"
-
-#: src/Menus.cpp
-msgid "&Center"
-msgstr "&Centras"
-
-#: src/Menus.cpp
-msgid "&Align End to End"
-msgstr "&Išlyginti Pabaiga su Pabaiga"
-
-#: src/Menus.cpp
-msgid "Align &Together"
-msgstr "Išlyginti &Kartu"
-
-#: src/Menus.cpp
-msgid "Start to &Zero"
-msgstr "Pradėti su &Nuliu"
-
-#: src/Menus.cpp
-msgid "Start to &Cursor/Selection Start"
-msgstr "Pradėti su &Žymeklio/Pasirinkimo Pradžia"
-
-#: src/Menus.cpp
-msgid "Start to Selection &End"
-msgstr "Pradėti su Pasirinkimo &Pabaiga"
-
-#: src/Menus.cpp
-msgid "End to Cu&rsor/Selection Start"
-msgstr "Pabaigti su Žymeklio/Pasirinkimo Pradžia"
-
-#: src/Menus.cpp
-msgid "End to Selection En&d"
-msgstr "Pabaigti su Pasirinkimo Pabaiga"
-
-#: src/Menus.cpp
-msgid "&Align Tracks"
-msgstr "&Išlyginti Takelius"
-
-#: src/Menus.cpp
-msgid "&Move Selection with Tracks (on/off)"
-msgstr "&Perkelti Pasirinkimą su Takeliais (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "Move Sele&ction and Tracks"
-msgstr "Perkelti Pasirinkimą ir Takelius"
-
-#: src/Menus.cpp
-msgid "Synchronize MIDI with Audio"
-msgstr "Sinchronizuoti MIDI su Garsu"
-
-#: src/Menus.cpp
-msgid "S&ort Tracks"
-msgstr "Iš&rikiuoti Takelius"
-
-#: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Rūšiuoti pagal Laiką"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Start Time"
-msgstr "pagal &Pradžios laiką"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Rūšiuoti pagal Pavadinimą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "By &Name"
-msgstr "pagal &Pavadinimą"
-
-#: src/Menus.cpp
-msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Sinchronizuoti &Užrakinti Takelius (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-msgid "&Generate"
-msgstr "&Generuoti"
-
-#: src/Menus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Pridėti / Išimti Papildinius..."
-
-#: src/Menus.cpp
-msgid "Effe&ct"
-msgstr "Efe&ktai"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/Menus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Kartoti %s"
-
-#: src/Menus.cpp
-msgid "Repeat Last Effect"
-msgstr "Kartoti Paskutinį Efektą"
-
-#: src/Menus.cpp
-msgid "&Analyze"
-msgstr "&Analizuoti"
-
-#: src/Menus.cpp
-msgid "Contrast..."
-msgstr "Kontrastas..."
-
-#: src/Menus.cpp
-msgid "Plot Spectrum..."
-msgstr "Spektras..."
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "Į&rankiai"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&Etiketės..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "&Panaudoti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Palette..."
-msgstr "&Išsaugoti..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Ekrano išsaugojimo Įrankiai..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Paleisti Bandymą..."
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "Simuliuoti Įrašų Klaidas"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "Rasti Pasrovio Išmetimus"
-
-#  i18n-hint: This refers to a "window function", used in the
-#  Frequency analyze dialog box.
-#  i18n-hint: This refers to a "window function", used in the
-#: src/Menus.cpp
-msgid "&Window"
-msgstr "&Langas"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/Menus.cpp
-msgid "&Minimize"
-msgstr "&Sumažinti"
-
-#: src/Menus.cpp
-msgid "&Bring All to Front"
-msgstr "&Perkelti Visus į Priekį"
-
-#. i18n-hint: Extra is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext&ra"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "T&ransport"
-msgstr "T&ransportuoti"
-
-#. i18n-hint: (verb) Start playing audio
-#: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "Gr&oti"
-
-#. i18n-hint: (verb) Stop playing audio
-#: src/Menus.cpp
-msgid "Sto&p"
-msgstr "Stab&dyti"
-
-#: src/Menus.cpp
-msgid "Play &One Second"
-msgstr "Pagroti &Vieną Sekundę"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Play to &Selection"
-msgstr "Pagroti iki &Pasirinkimo"
-
-#: src/Menus.cpp
-msgid "Play &Before Selection Start"
-msgstr "Pagroti &Prieš Pasirinkimo Pradžią"
-
-#: src/Menus.cpp
-msgid "Play Af&ter Selection Start"
-msgstr "Pagroti P&o Pasirinkimo Pradžios"
-
-#: src/Menus.cpp
-msgid "Play Be&fore Selection End"
-msgstr "Pagroti Pri&eš Pasirinkimo Pabaigą"
-
-#: src/Menus.cpp
-msgid "Play Aft&er Selection End"
-msgstr "Pagroti P&o Pasirinkimo Pabaigos"
-
-#: src/Menus.cpp
-msgid "Play Before a&nd After Selection Start"
-msgstr "Pagroti Prieš i&r Po Pasirinkimo Pradžios"
-
-#: src/Menus.cpp
-msgid "Play Before an&d After Selection End"
-msgstr "Pagroti Prieš i&r Po Pasirinkimo Pabaigos"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview"
-msgstr "Groti Iški&rpimo Peržvalga"
-
-#: src/Menus.cpp
-msgid "&Selection Tool"
-msgstr "&Pasirinkimo Įrankis"
-
-#: src/Menus.cpp
-msgid "&Envelope Tool"
-msgstr "&Vokinis Įrankis"
-
-#: src/Menus.cpp
-msgid "&Draw Tool"
-msgstr "&Piešimo Įrankis"
-
-#: src/Menus.cpp
-msgid "&Zoom Tool"
-msgstr "&Priartinimo Įrankis"
-
-#: src/Menus.cpp
-msgid "&Time Shift Tool"
-msgstr "&Laiko Keitimo Įrankis"
-
-#: src/Menus.cpp
-msgid "&Multi Tool"
-msgstr "&Multi Įrankis"
-
-#: src/Menus.cpp
-msgid "&Previous Tool"
-msgstr "&Praeitas Įrankis"
-
-#: src/Menus.cpp
-msgid "&Next Tool"
-msgstr "&Sekantis Įrankis"
-
-#: src/Menus.cpp
-msgid "Mi&xer"
-msgstr "Mik&seris"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Tai&syti grojimo garsą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "&Padidinti grojimo garsą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "&Sumažinti grojimo garsą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Tai&syti įrašinėjimo garsą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Pa&didinti įrašinėjimo garsą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Su&mažinti įrašinėjimo garsą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Delete Key"
-msgstr "&Trynimo Mygtukas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Delete Key&2"
-msgstr "Trynimo Mygtukas&2"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Gro&ti tokiu Greičiu"
-
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Gro&ti tokiu Greičiu"
-
-#: src/Menus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "&Ciklinti grojimą tokiu Greičiu"
-
-#: src/Menus.cpp
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Groti Iškir&pti peržvalga tokiu greičiu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Tai&syti grojimo greitį"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "&Padidinti grojimo greitį"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "&Sumažinti grojimo greitį"
-
-#: src/Menus.cpp
-msgid "Move to &Previous Label"
-msgstr "Perkelti į &Praeita Etiketę"
-
-#: src/Menus.cpp
-msgid "Move to &Next Label"
-msgstr "Perkelti į &Sekančią Etiketę"
-
-#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "Ieš&koti"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Left During Playback"
-msgstr "Trumpai ieškoti &kairę grojimo metu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Short Seek &Right During Playback"
-msgstr "Trumpai ieškoti &dešinę grojimo metu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Le&ft During Playback"
-msgstr "Ilgai ieškoti kai&rę grojimo metu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Long Seek Rig&ht During Playback"
-msgstr "Ilgai ieškoti deši&nę grojimo metu"
-
-#: src/Menus.cpp
-msgid "De&vice"
-msgstr "Prie&taisas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Keisti &Įrašinėjimo prietaisą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Keisti &grojimo prietaisą"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Pakeisti garso &šeimininką"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Keisti įrašinėjimo kana&lus"
-
-#: src/Menus.cpp
-msgid "&Selection"
-msgstr "&Pasirinkimas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Off"
-msgstr "&Papildomi Meniu (Įjungta/Išjungta)"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Nearest"
-msgstr "Perlaužti į &Artimiausią"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Snap-To &Prior"
-msgstr "Perlaužti į &Paskutinį"
-
-#: src/Menus.cpp
-msgid "Selection to &Start"
-msgstr "Pasirinkimą į &Pradžią"
-
-#: src/Menus.cpp
-msgid "Selection to En&d"
-msgstr "Pasirinkimą į Pa&baigą"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Left"
-msgstr "Pasirinkimą išplėsti į &Kairę"
-
-#: src/Menus.cpp
-msgid "Selection Extend &Right"
-msgstr "Pasirinkimą išplėsti į &Dešinę"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Le&ft Selection"
-msgstr "Nustatyti (arba išplėsti) Kai&rį Pasirinkimą"
-
-#: src/Menus.cpp
-msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Nustatyti (arba išplėsti) Deši&nį Pasirinkimą"
-
-#: src/Menus.cpp
-msgid "Selection Contract L&eft"
-msgstr "Pasirinkimą Sutraukti į K&airę"
-
-#: src/Menus.cpp
-msgid "Selection Contract R&ight"
-msgstr "Pasirinkimą Sutraukti į D&ešinę"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Backward Through Active Windows"
-msgstr "Judėti atbulai per aktyvius langus"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Forward Through Active Windows"
-msgstr "Judėti į priekį per aktyvius langus"
-
-#: src/Menus.cpp
-msgid "F&ocus"
-msgstr "Fo&kusavimas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Judėti &atgal iš įrankių juostos į takelius"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Judėti į pr&iekį iš įrankių juostos į takelius"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Previous Track"
-msgstr "Perkelti Fokusavimą į &Praeitą Takelį"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Next Track"
-msgstr "Perkelti Fokusavimą į &Sekantį Takelį"
-
-#: src/Menus.cpp
-msgid "Move Focus to &First Track"
-msgstr "Perkelti Fokusavimą į &Pirmą Takelį"
-
-#: src/Menus.cpp
-msgid "Move Focus to &Last Track"
-msgstr "Perkelti Fokusavimą į &Paskutinį Takelį"
-
-#: src/Menus.cpp
-msgid "Move Focus to P&revious and Select"
-msgstr "Perkelti Fokusavimą į Pr&aeita ir Pasirinkti"
-
-#: src/Menus.cpp
-msgid "Move Focus to N&ext and Select"
-msgstr "Perkelti Fokusavimą į Se&kantį ir Pasirinkti"
-
-#: src/Menus.cpp
-msgid "&Toggle Focused Track"
-msgstr "&Nustatyti Sufokusuotą Takelį"
-
-#: src/Menus.cpp
-msgid "Toggle Focuse&d Track"
-msgstr "Nustatyti Foku&suotą Takelį"
-
-#: src/Menus.cpp
-msgid "&Cursor"
-msgstr "&Žymeklis"
-
-#: src/Menus.cpp
-msgid "Cursor &Left"
-msgstr "Žymeklis &Kairę"
-
-#: src/Menus.cpp
-msgid "Cursor &Right"
-msgstr "Žymeklį į &Dešinę"
-
-#: src/Menus.cpp
-msgid "Cursor Sh&ort Jump Left"
-msgstr "Žymeklį Tru&putį į Kairę"
-
-#: src/Menus.cpp
-msgid "Cursor Shor&t Jump Right"
-msgstr "Žymeklį Tru&putį į Dešinę"
-
-#: src/Menus.cpp
-msgid "Cursor Long J&ump Left"
-msgstr "Žymeklį Daug&iau į Kairę"
-
-#: src/Menus.cpp
-msgid "Cursor Long Ju&mp Right"
-msgstr "Žymeklį Daug&iau į Dešinę"
-
-#: src/Menus.cpp
-msgid "Clip L&eft"
-msgstr "Atkarpą į K&airę"
-
-#: src/Menus.cpp
-msgid "Clip Rig&ht"
-msgstr "Atkarpą į De&šinę"
-
-#: src/Menus.cpp
-msgid "&Track"
-msgstr "&Takelis"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change P&an on Focused Track..."
-msgstr "Perkelti posli&nkį ties fokusuotu takeliu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Left on Focused Track"
-msgstr "Paslinkti į &kairę ties fokusuotu takeliu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan &Right on Focused Track"
-msgstr "Paslinkti į "
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Change Gai&n on Focused Track..."
-msgstr "Pakeisti ga&in ties fokusuotu takeliu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Increase Gain on Focused Track"
-msgstr "&Padidinti gain ties fokusuotu takeliu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Decrease Gain on Focused Track"
-msgstr "&Pamažinti gain ties fokusuotu takeliu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Op&en Menu on Focused Track..."
-msgstr "Ati&daryti meniu ties fokusuotu takeliu"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "M&ute/Unmute Focused Track"
-msgstr "Užtild&yti/Atitildyti fokusuotą takelį"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Solo/Unsolo Focused Track"
-msgstr "&Solo/Unsolo fokusuotą takelį"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Close Focused Track"
-msgstr "&Uždaryti fokusuotą takelį"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track U&p"
-msgstr "Pakelti fokusuotą takelį į vir&šų"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track Do&wn"
-msgstr "Nuleisti fokusuotą takelį į apa&čią"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to T&op"
-msgstr "Perkelti fokusuotą takelį į patį v&iršų"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Focused Track to &Bottom"
-msgstr "Perkelti fokusuotą takelį į pačią &apačią"
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Scriptables I"
-msgstr "Skriptas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Pasirinkti..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Dažniai"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Pasirinkti..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "Takelio &Pradžia"
-
-#: src/Menus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "&Nuostatos..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "&Nuostatos..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "Sekant&is Apkarpymas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Amplitudė"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&Redaguoti Etiketes..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Išsaugoti Projektą &Kaip..."
-
-#: src/Menus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Pasirinkti..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "Iš&rikiuoti Takelius"
-
-#: src/Menus.cpp
-msgid "Get Info..."
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "Pranešimas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "Pagalba"
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Importuoti..."
-
-#: src/Menus.cpp src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Eksportuoti..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "Atidaryti &Nesenai atidarytus..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Išsaugoti Projektą &Kaip..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "Pasirinkti..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Kompresorius..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/Menus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&Ekrano išsaugojimo Įrankiai..."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Full Screen (on/off)"
-msgstr "&Pilnas ekranas (Įjungta/Išjungta)"
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
-#: src/Menus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "Sumažinti visus projektus"
-
-#  i18n-hint: The name of the Help menu
-#  i18n-hint: The name of the Help menu
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Pagalba"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "&Pradedantiesiems"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Audacity"
-
-#  i18n-hint: The name of the Help menu
-#  i18n-hint: The name of the Help menu
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Quick Help..."
-msgstr "&Greitoji Pagalba"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Manual..."
-msgstr "&Žinynas"
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "&Diagnostika"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "Gar&so Prietaiso Informacija..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "&MIDI Prietaiso Informacija..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "Rodyti &Registrą..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Generuoti Paramos Duomenis..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Tikrint&i Priklausomybes..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "&Tikrinti ar yra Atnaujinimų..."
-
-#: src/Menus.cpp
-msgid "Unknown"
-msgstr "Nežinomas"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
-msgstr "Papildinį iš %d į %d"
-
-#. i18n-hint: This is the name of the menu item on Mac OS X only
-#: src/Menus.cpp
-msgid "Open Recent"
-msgstr "Atidaryti Nesenai naudotus failus"
-
-#. i18n-hint: This is the name of the menu item on Windows and Linux
-#: src/Menus.cpp
-msgid "Recent &Files"
-msgstr "Nesenai Naudoti &Failai"
-
-#: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
 msgstr "&Atšaukti %s"
+
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Atšaukti"
 
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
 msgstr "Sug&rąžinti %s"
 
-#: src/Menus.cpp
-msgid "Tracks sorted by time"
-msgstr "Takelis išrikiuotas pagal laiką"
-
-#: src/Menus.cpp
-msgid "Tracks sorted by name"
-msgstr "Takeliai rūšiuoti pagal pavadinimą"
-
-#: src/Menus.cpp
-msgid "no label track"
-msgstr "takelis be etiketės"
-
-#: src/Menus.cpp
-msgid "no label track at or below focused track"
-msgstr "takelis be etiketės fokusuotame takelyje arba po juo"
-
-#: src/Menus.cpp
-msgid "no labels in label track"
-msgstr "nėra etikečių, etikečių takelyje"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the right"
-msgstr "Laikas perkėlė iškarpas į dešinę"
-
-#: src/Menus.cpp
-msgid "Time shifted clips to the left"
-msgstr "Laikas perkėlė iškarpas į kairę"
-
-#: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "Time-Shift"
-msgstr "Laiko-Perkėlimas"
-
-#: src/Menus.cpp
-msgid "clip not moved"
-msgstr "Iškarpa nebuvo perkelta"
-
-#: src/Menus.cpp
-msgid "Set Left Selection Boundary"
-msgstr "Nustatykit Kairę Pasirinkimo Ribą"
-
-#: src/Menus.cpp
-msgid "Position"
-msgstr "Pozicija"
-
-#: src/Menus.cpp
-msgid "Set Right Selection Boundary"
-msgstr "Nustatykit Dešinę Pasirinkimo Ribą"
-
-#: src/Menus.cpp
-msgid "Can't delete track with active audio"
-msgstr "Nepavyko ištrinti takelio su aktyviais garsais"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Top"
-msgstr "Perkeltas '%s' į viršų"
-
-#: src/Menus.cpp
-msgid "Move Track to Top"
-msgstr "Perkeltas Takelį į Viršų"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "Perkeltas '%s' į apačią"
-
-#: src/Menus.cpp
-msgid "Move Track to Bottom"
-msgstr "Perkelti Takelį į Apačią"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Up"
-msgstr "Perkeltas '%s' į Viršų"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Moved '%s' Down"
-msgstr "Perkeltas '%s' į Apačią"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/Menus.cpp
-msgid "Move Track Up"
-msgstr "Perkelti Takelį į Viršų"
-
-#: src/Menus.cpp
-msgid "Move Track Down"
-msgstr "Nuleisti Takelį į Apačią"
-
-#. i18n-hint: filename containing exported text from label tracks
-#: src/Menus.cpp
-msgid "labels.txt"
-msgstr "etiketės.txt"
-
-#: src/Menus.cpp
-msgid "There are no label tracks to export."
-msgstr "Nėra etikečių takelių eksportavimui."
-
-#: src/Menus.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Prašome pasirinkti tik po vieną Natos Takelį."
-
-#: src/Menus.cpp
-msgid "Please select a Note Track."
-msgstr "Prašome pasirinkti Natos Takelį."
-
-#: src/Menus.cpp
-msgid "Export MIDI As:"
-msgstr "Eksportuoti MIDI Kaip:"
-
-#: src/Menus.cpp
-msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-msgstr "MIDI failas (*.mid)|*.mid|Allegro failas (*.gro)|*.gro"
-
-#: src/Menus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Jūs pasirinkote failo pavadinimą be failo pratęsimo kategorijos.\n"
-"Ar norite tęsti?"
-
-#: src/Menus.cpp
-msgid "Export MIDI"
-msgstr "Eksportuoti MIDI"
-
-#: src/Menus.cpp
-msgid "Export Selected Audio"
-msgstr "Eksportuoti Pasirinktą Garsą"
-
-#: src/Menus.cpp
-msgid "Nothing to undo"
-msgstr "Nėra ko atšaukti"
-
-#: src/Menus.cpp
-msgid "Nothing to redo"
-msgstr "Nėra ko sugrąžinti"
-
-#: src/Menus.cpp
-msgid "Cut to the clipboard"
-msgstr "Iškirpti į iškarpinę"
-
-#: src/Menus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Praskirti ir iškirpti į iškarpinę"
-
-#: src/Menus.cpp
-msgid "Split Cut"
-msgstr "Praskirti ir iškirpti"
-
-#: src/Menus.cpp
-msgid "Pasting one type of track into another is not allowed."
-msgstr "Įklijuoti viena takelio tipą į kitą takelį nėra leidžiama."
-
-#: src/Menus.cpp
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Kopijuoti stereo garsą į mono takelį nėra galima."
-
-#: src/Menus.cpp
-msgid "Pasted from the clipboard"
-msgstr "Įklijuota iš iškarpinės"
-
-#: src/Menus.cpp
-msgid "Pasted text from the clipboard"
-msgstr "Įklijuotas tekstas iš iškarpinės"
-
-#: src/Menus.cpp
-msgid "Paste Text to New Label"
-msgstr "Įklijuoti Tekstą į Nauja Etiketę"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr ""
-"Apkarpykite pasirinktus garso takelius iš %.2f sekundžių į %.2f sekundžių"
-
-#: src/Menus.cpp
-msgid "Trim Audio"
-msgstr "Apkarpyti Garsą"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Praskirti ir ištrinti %.2f sekundėm t=%.2f"
-
-#: src/Menus.cpp
-msgid "Split Delete"
-msgstr "Praskirti ir Ištrinti"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Detached %.2f seconds at t=%.2f"
-msgstr "Atkabinta %.2f sekundėm t=%.2f"
-
-#: src/Menus.cpp
-msgid "Detach"
-msgstr "Atkabinti"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Prijungta %.2f sekundėm t=%.2f"
-
-#: src/Menus.cpp
-msgid "Join"
-msgstr "Prijungti"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Nutildyti pasirinkti takeliai %.2f sekundėm %.2f ruože"
-
-#: src/Menus.cpp src/effects/Silence.h
-msgid "Silence"
-msgstr "Tyla"
-
-#: src/Menus.cpp
-msgid "Duplicated"
-msgstr "Dublikuota"
-
-#: src/Menus.cpp
-msgid "Duplicate"
-msgstr "Dublikuoti"
-
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
-#: src/Menus.cpp
-msgid "Cut labeled audio regions to clipboard"
-msgstr "Iškirpti etikete pažymėtus garso regionus į iškarpinę"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Cut Labeled Audio"
-msgstr "Iškirpti Etikete pažymėtą Garsą"
-
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Praskirti ir iškirpti etikete pažymėtus garso regionus į iškarpinę"
-
-#. i18n-hint: (verb) Do a special kind of cut on the labels
-#: src/Menus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Praskirti ir Iškirpti Etikete Pažymėtą Garsą"
-
-#: src/Menus.cpp
-msgid "Copied labeled audio regions to clipboard"
-msgstr "Nukopijuota etikete pažymėti garso regionai į iškarpinę"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Copy Labeled Audio"
-msgstr "Kopijuoti Etikete Pažymėtą Garsą"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
-#: src/Menus.cpp
-msgid "Deleted labeled audio regions"
-msgstr "Ištrinti etikete pažymėtus garso regionus"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Delete Labeled Audio"
-msgstr "Ištrinti Etikete Pažymėtą Garsą"
-
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
-#: src/Menus.cpp
-msgid "Split Deleted labeled audio regions"
-msgstr "Praskirti ir Ištrinti etikete pažymėtus garso regionus"
-
-#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
-#: src/Menus.cpp
-msgid "Split Delete Labeled Audio"
-msgstr "Praskirti ir Ištrinti Etikete Pažymėtą Garsą"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silenced labeled audio regions"
-msgstr "Nutildyti etikete pažymėti garso regionai"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Silence Labeled Audio"
-msgstr "Nutildyti Etikete pažymėtą garsą"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
-#: src/Menus.cpp
-msgid "Split labeled audio (points or regions)"
-msgstr "Praskirti etikete pažymėtą garsą (taškais arba regionais)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Split Labeled Audio"
-msgstr "Praskirti Etikete Pažymėtą Garsą"
-
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
-#: src/Menus.cpp
-msgid "Joined labeled audio (points or regions)"
-msgstr "Prijungti etikete pažymėtą garsą (taškais arba regionais)"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Join Labeled Audio"
-msgstr "Prijungti Etikete Pažymėtą Garsą"
-
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
-#. Audacity has done.
-#: src/Menus.cpp
-msgid "Detached labeled audio regions"
-msgstr "Atskirti etikete pažymėti garso regionai"
-
-#. i18n-hint: (verb)
-#: src/Menus.cpp
-msgid "Detach Labeled Audio"
-msgstr "Atskirti Etikete Pažymėtą Garsą"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "Split"
-msgstr "Praskirti"
-
-#: src/Menus.cpp
-msgid "Split to new track"
-msgstr "Praskirti į naują takelį"
-
-#: src/Menus.cpp
-msgid "Split New"
-msgstr "Praskirti Naują"
-
-#. i18n-hint: in the string after this one,
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
-#: src/Menus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: src/Menus.cpp src/import/Import.cpp
-#, c-format
-msgid "%s, %s"
-msgstr "%s, %s"
-
-#: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Dažnio Analizė"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Kontrasto Analizė (WCAG 2 sutikimas)"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported labels from '%s'"
-msgstr "Importuoti pavadinimai iš '%s'"
-
-#: src/Menus.cpp
-msgid "Import Labels"
-msgstr "Importuoti Pavadinimus"
-
-#: src/Menus.cpp
-msgid "Select a MIDI file"
-msgstr "Pasirinkti MIDI failą"
-
-#: src/Menus.cpp
-msgid ""
-"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-msgstr ""
-"MIDI ir Alegro failai (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI failai (*."
-"mid;*.midi)|*.mid;*.midi|Alegro failai(*.gro)|*.gro|Visi failai|*"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Importuota MIDI iš '%s'"
-
-#: src/Menus.cpp
-msgid "Import MIDI"
-msgstr "Importuoti MIDI"
-
-#: src/Menus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Pasirinkite bet kurį nesuspaustą garso failą"
-
-#: src/Menus.cpp
-msgid "All files|*"
-msgstr "Visi failai|*"
-
-#: src/Menus.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "Edit Metadata Tags"
-msgstr "Redaguoti Metaduomenų Etiketes"
-
-#: src/Menus.cpp
-msgid "Metadata Tags"
-msgstr "Metaduomenų Etiketės"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Rendered all audio in track '%s'"
-msgstr "Pakrauti visi garsai takelyje '%s'"
-
-#. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
-#: src/Menus.cpp
-msgid "Render"
-msgstr "Pakrauti"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "Sumiksuoti ir pakrauti %d takeliai į viena naują stereo takelį"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "Sumiksuoti ir pakrauti %d takeliai į viena naują mono takelį"
-
-#: src/Menus.cpp src/Mix.cpp
-msgid "Mix and Render"
-msgstr "Miksuoti ir Pakrauti"
-
-#. i18n-hint: compose a name identifying an unnamed track by number
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/Menus.cpp src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Takelis %d"
-
-#. i18n-hint: given the name of a track, specify its left channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s left"
-msgstr "%s kairė"
-
-#. i18n-hint: given the name of a track, specify its right channel
-#: src/Menus.cpp
-#, c-format
-msgid "%s right"
-msgstr "%s dešinė"
-
-#. i18n-hint: in the string after this one,
-#. First %s is replaced with the noun "start" or "end"
-#. identifying one end of a clip,
-#. first number gives the position of that clip in a sequence
-#. of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: src/Menus.cpp
-msgid "start"
-msgstr "pradžia"
-
-#: src/Menus.cpp
-msgid "end"
-msgstr "pabaiga"
-
-#. i18n-hint: in the string after this one,
-#. First two %s are each replaced with the noun "start"
-#. or with "end", identifying and end of a clip,
-#. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
-#. last number counts all clips,
-#. and the last string is the name of the track containing the clips.
-#.
-#: src/Menus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#. i18n-hint: In this and similar messages describing editing actions,
-#. the starting or ending points of tracks are re-"aligned" to other
-#. times, and the time selection may be "moved" too.  The first
-#. noun -- "start" in this example -- is the object of a verb (not of
-#. an implied preposition "from").
-#: src/Menus.cpp
-msgid "Aligned/Moved start to zero"
-msgstr "Išlyginta/Perkelta pradžia į nulį"
-
-#: src/Menus.cpp
-msgid "Aligned start to zero"
-msgstr "Išlyginta pradžia į nulį"
-
-#: src/Menus.cpp
-msgid "Align/Move Start"
-msgstr "Išlyginti/Perkelti Pradžią"
-
-#: src/Menus.cpp
-msgid "Align Start"
-msgstr "Lyginti Pradžią"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Lyginta/Perkelta pradžia i žymeklio/pasirinkimo pradžią"
-
-#: src/Menus.cpp
-msgid "Aligned start to cursor/selection start"
-msgstr "Lyginta pradžia su žymeklio/pasirinkimo pradžia"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved start to selection end"
-msgstr "Lyginta/Perkelta pradžia į pasirinkimo pabaigą"
-
-#: src/Menus.cpp
-msgid "Aligned start to selection end"
-msgstr "Lyginta pradžia su pasirinkimo pabaiga"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to cursor/selection start"
-msgstr "Išlyginta/Perkelta pabaiga į žymeklio/pasirinkimo pradžią"
-
-#: src/Menus.cpp
-msgid "Aligned end to cursor/selection start"
-msgstr "Išlyginta pabaiga su žymeklio/pasirinkimo pradžią"
-
-#: src/Menus.cpp
-msgid "Align/Move End"
-msgstr "Išlyginti/Perkelti Pabaigą"
-
-#: src/Menus.cpp
-msgid "Align End"
-msgstr "Išlyginti Pabaigą"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to selection end"
-msgstr "Išlyginta/Perkelta pabaiga į pasirinkimo pabaigą"
-
-#: src/Menus.cpp
-msgid "Aligned end to selection end"
-msgstr "Išlyginta pabaiga su pasirinkimo pabaiga"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved end to end"
-msgstr "Išlyginta/Perkelta pabaiga į pabaigą"
-
-#: src/Menus.cpp
-msgid "Aligned end to end"
-msgstr "Išlyginta pabaiga su pabaiga"
-
-#: src/Menus.cpp
-msgid "Align/Move End to End"
-msgstr "Išlyginti/Perkelti Pabaigą į Pabaigą"
-
-#: src/Menus.cpp
-msgid "Align End to End"
-msgstr "Išlyginti Pabaigą su Pabaiga"
-
-#: src/Menus.cpp
-msgid "Aligned/Moved together"
-msgstr "Išlyginta/Perkelta kartu"
-
-#: src/Menus.cpp
-msgid "Aligned together"
-msgstr "Išlyginta kartu"
-
-#: src/Menus.cpp
-msgid "Align/Move Together"
-msgstr "Išlyginti/Perkelti Kartu"
-
-#: src/Menus.cpp
-msgid "Align Together"
-msgstr "Išlyginti Kartu"
-
-#: src/Menus.cpp
-msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "Sinchronizuojami MIDI ir Garso Takeliai"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Išlyginimas baigtas: MIDI nuo %.2f iki %.2f sekundžių, Garsas nuo %.2f iki "
-"%.2f sekundžių."
-
-#: src/Menus.cpp
-msgid "Sync MIDI with Audio"
-msgstr "Sinchronizuoti MIDI su Garsu"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Išlyginimo klaida: įvestis per trumpa: MIDI nuo %.2f iki %.2f sekundžių, "
-"Garsas nuo %.2f iki %.2f sekundžių."
-
-#: src/Menus.cpp
-msgid "Internal error reported by alignment process."
-msgstr "Vidinė klaida pranešta išlyginimo proceso."
-
-#: src/Menus.cpp
-msgid "Created new audio track"
-msgstr "Sukurtas naujas audio takelis"
-
-#: src/Menus.cpp
-msgid "New Track"
-msgstr "Naujas Takelis"
-
-#: src/Menus.cpp
-msgid "Created new stereo audio track"
-msgstr "Sukurtas naujas stereo audio takelis"
-
-#: src/Menus.cpp
-msgid "Created new label track"
-msgstr "Sukurtas naujas pavadinimo takelis"
-
-#: src/Menus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Ši Audacity versija leidžia tik viena laiko takelį per vieną projekto langą."
-
-#: src/Menus.cpp
-msgid "Created new time track"
-msgstr "Sukurtas naujas laiko takelis"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-"Laikmačio Įrašinėjimas negali būti naudojamas su daugiau nei vienu atviru "
-"projektu.\n"
-"\n"
-"Prašome uždaryti visus kitus projektus ir bandyti dar kartą."
-
-#: src/Menus.cpp src/TimerRecordDialog.cpp
-msgid "Timer Recording"
-msgstr "Laikmačio Įrašinėjimas"
-
-#: src/Menus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-"Laikmačio Įrašinėjimas negali būti naudojamas kol turite neišsaugotų "
-"pokyčių.\n"
-"\n"
-"Prašome išsaugoti arba uždaryti ši projektą ir bandyti dar kartą."
-
-#: src/Menus.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "Pavadinimas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "New label"
-msgstr "Pridėtas pavadinimas"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a mono track."
-msgstr "Prašome pasirinkti garso takelį."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select in a stereo track."
-msgstr "Prašome pasirinkti garso takelį."
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Please select at least %d channels."
-msgstr "Prašome pasirinkti garso takelį."
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Please select a time within a clip."
-msgstr "Prašome pasirinkti Natos Takelį."
-
-#: src/Menus.cpp
-msgid "Edited labels"
-msgstr "Pakeistos etiketės"
-
-#: src/Menus.cpp
-msgid "Removed audio track(s)"
-msgstr "Pašalinti takeliai(-is)"
-
-#: src/Menus.cpp
-msgid "Remove Track"
-msgstr "Pašalinti takelį"
-
-#: src/Menus.cpp
-msgid "Audio Device Info"
-msgstr "Garso Prietaiso Informacija"
-
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "&Save"
-msgstr "&Išsaugoti"
-
-#: src/Menus.cpp
-msgid "Save Device Info"
-msgstr "Saugojimo Prietaiso Informacija"
-
-#: src/Menus.cpp
-msgid "Unable to save device info"
-msgstr "Nepavyksta išsaugoti prietaiso informacijos"
-
-#: src/Menus.cpp
-msgid "MIDI Device Info"
-msgstr "MIDI Prietaiso Informacija"
-
-#: src/Menus.cpp
-msgid "Save MIDI Device Info"
-msgstr "Išsaugoti MIDI Prietaiso Informaciją"
-
-#: src/Menus.cpp
-msgid "Unable to save MIDI device info"
-msgstr "Nepavyksta Išsaugoti MIDI prietaiso informacijos"
-
-#. i18n-hint: One or more audio tracks have been panned
-#: src/Menus.cpp
-#, fuzzy
-msgid "Panned audio track(s)"
-msgstr "Peršablonuotas garso takelis"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "Pan Track"
-msgstr "Takelis"
-
-#: src/Menus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Neįmanoma prirakinti regiono toliau nei\n"
-"projekto pabaigoje."
-
-#: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
-msgid "Resample"
-msgstr "Peršablonuot"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "New sample rate (Hz):"
-msgstr "Naujas šablono dažnis (Hz):"
-
-#: src/Menus.cpp src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "The entered value is invalid"
-msgstr "Įvesta vertė yra netinkama"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Resampling track %d"
-msgstr "Peršablonuojamas takelis %d"
-
-#: src/Menus.cpp
-msgid "Resampled audio track(s)"
-msgstr "Peršablonuotas garso takelis"
-
-#: src/Menus.cpp
-msgid "Resample Track"
-msgstr "Peršablonuoti Takeli"
+#: src/Menus.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "Sug&rąžinti"
 
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Sujungti"
+
+#: src/Mix.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Miksuoti ir Pakrauti"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
@@ -5382,7 +3274,7 @@ msgstr "Miksuojami ir kraunami takeliai"
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "Gain"
@@ -5401,7 +3293,7 @@ msgstr "Muzikos Instrumentas"
 #  i18n-hint: Title of the Pan slider, used to move the sound left or right stereoscopically
 #  i18n-hint: Title of the Pan slider, used to move the sound left or right stereoscopically
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/Project.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Balansas"
@@ -5456,9 +3348,8 @@ msgid "Module Unsuitable"
 msgstr "Netinkamas Modulis"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module %s does not provide a version string.  It will not be loaded."
+#, fuzzy, c-format
+msgid "The module %s does not provide a version string. It will not be loaded."
 msgstr "%s modulis nesuteikia versijos linijos.  Nebus pakrauta."
 
 #: src/ModuleManager.cpp
@@ -5473,9 +3364,9 @@ msgstr ""
 "Nebus pakrauta."
 
 #: src/ModuleManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"The module %s is matched with Audacity version %s.  It will not be loaded."
+"The module %s is matched with Audacity version %s. It will not be loaded."
 msgstr "%s modulis vienodintas su Audacity versija %s.  Nebus pakrauta."
 
 #: src/ModuleManager.cpp
@@ -5643,6 +3534,11 @@ msgstr ""
 msgid "Show:"
 msgstr "Rodyti:"
 
+#. i18n-hint: Radio button to show all effects
+#: src/PluginManager.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Viską"
+
 #: src/PluginManager.cpp
 msgid "Show all"
 msgstr "Rodyti viską"
@@ -5739,7 +3635,8 @@ msgid "Plug-in already exists"
 msgstr "Papildinys jau egzistuoja"
 
 #: src/PluginManager.cpp
-msgid "Plug-in file is in use.  Failed to overwrite"
+#, fuzzy
+msgid "Plug-in file is in use. Failed to overwrite"
 msgstr "Papildinys faile jau yra naudojamas.  Nepavyko perrašyti"
 
 #: src/PluginManager.cpp
@@ -6031,9 +3928,9 @@ msgid "Error Saving Project"
 msgstr "Klaida Saugojant Projektą"
 
 #: src/Project.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Could not save project. Path not found.  Try creating \n"
+"Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 "Nepavyko išsaugoti projekto. Vieta nebuvo rasta.  Bandykite sukurti \n"
@@ -6185,15 +4082,6 @@ msgstr "Sukurtas naujas projektas"
 
 #: src/Project.cpp
 #, c-format
-msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Ištrinta %.2f sekundės t=%.2f`e"
-
-#: src/Project.cpp
-msgid "Delete"
-msgstr "Ištrinti"
-
-#: src/Project.cpp
-#, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Tiek liko vietos diske įrašinėjimui: %s"
 
@@ -6271,23 +4159,6 @@ msgid "Record"
 msgstr "Įrašyti"
 
 #: src/Project.cpp
-msgid "Adjusted gain"
-msgstr "Palygintas gain"
-
-#: src/Project.cpp
-msgid "Adjusted Pan"
-msgstr "Palygintas Pan"
-
-#: src/Project.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "Pašalintas takelis '%s.'"
-
-#: src/Project.cpp
-msgid "Track Remove"
-msgstr "Takelį Pašalini"
-
-#: src/Project.cpp
 msgid "Less than 1 minute"
 msgstr "Mažiau nei 1 minutė"
 
@@ -6312,6 +4183,14 @@ msgstr[2] "%d minučių"
 #, c-format
 msgid "%s and %s."
 msgstr "%s ir %s."
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Dažnio Analizė"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Kontrasto Analizė (WCAG 2 sutikimas)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -6401,10 +4280,6 @@ msgid "Wait 5 seconds and capture frontmost window/dialog"
 msgstr "Palaukti 5 sekundes ir pagauti viršiausią langa/dialogą"
 
 #: src/Screenshot.cpp
-msgid "false"
-msgstr "neteisingai"
-
-#: src/Screenshot.cpp
 msgid "Capture part of a project window"
 msgstr "Pagauti dalį projekto lango"
 
@@ -6473,7 +4348,7 @@ msgid "Edit"
 msgstr "Redaguoti"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/DeviceToolBar.cpp
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Prietaisas"
 
@@ -6501,6 +4376,7 @@ msgstr "Liniuotė"
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
 #: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
 msgid "Tracks"
 msgstr "Takeliai"
 
@@ -6570,7 +4446,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Įspėjimas - Trumpinamas Per ilgas Bloko Failas"
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
 msgid "Help"
 msgstr "Pagalba"
 
@@ -6691,6 +4567,11 @@ msgstr "&Užkrauti..."
 #: src/Tags.cpp
 msgid "Set De&fault"
 msgstr "Nustatyti numaty&tus nustatymus"
+
+#: src/Tags.cpp
+#, fuzzy
+msgid "Don't show this when exporting audio"
+msgstr "Daugiau nerodyti šio perspėjimo"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -6831,11 +4712,11 @@ msgstr ""
 "  %s."
 
 #: src/Theme.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Some required files in:\n"
 "  %s\n"
-"were already present.  Overwrite?"
+"were already present. Overwrite?"
 msgstr ""
 "Kai kurie reikalaujami failai:\n"
 "  %s.\n"
@@ -7040,6 +4921,10 @@ msgstr ""
 "\n"
 "'%s' buvo atšauktas nes įrašinėjimas buvo nutrauktas."
 
+#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+msgid "Timer Recording"
+msgstr "Laikmačio Įrašinėjimas"
+
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -7089,6 +4974,10 @@ msgstr "Ar norite įjungti &Automatini Saugojimą?"
 #: src/TimerRecordDialog.cpp
 msgid "Save Project As:"
 msgstr "Išsaugoti Projektą Kaip:"
+
+#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+msgid "Select..."
+msgstr "Pasirinkti..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -7143,9 +5032,19 @@ msgstr "Planuota sustoti šiuo metu:"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity Laikmačio Įrašas - Laukiama kol Prasidės"
 
+#. i18n-hint: "in" means after a duration of time,
+#. which is shown below this string
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
 msgstr "Įrašinėjimas prasidės po:"
+
+#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. or "Shutdown system", and
+#. "in" means after a duration of time, shown below this string
+#: src/TimerRecordDialog.cpp
+#, c-format
+msgid "%s in:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -7163,6 +5062,10 @@ msgstr "Audacity Laikmačio Įrašas - Liaukiama"
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
 msgstr "(Esc norint atšaukti)"
+
+#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Pasirinkti"
 
 #: src/TrackPanel.cpp
 #, c-format
@@ -7191,6 +5094,13 @@ msgstr "Stereo, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "Takelio Peržiūra"
+
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: compose a name identifying an unnamed track by number
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Takelis %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -7756,6 +5666,7 @@ msgid "Toolbars"
 msgstr "&Įrankių juostos"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+#: src/prefs/EffectsPrefs.h
 msgid "Effects"
 msgstr ""
 
@@ -7819,7 +5730,7 @@ msgstr "Baltas"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/sample-data-export.ny
+#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Nieko"
 
@@ -7950,10 +5861,6 @@ msgstr "Dažniai"
 msgid "Select Tracks"
 msgstr "Iš&rikiuoti Takelius"
 
-#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Pasirinkti"
-
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -8055,6 +5962,11 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 #, fuzzy
+msgid "Rate:"
+msgstr "Nustatyti tempą"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
 msgid "Resize:"
 msgstr "Keisti dydį į Mažą"
 
@@ -8121,6 +6033,7 @@ msgid "Pan:"
 msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.h
 msgid "Waveform"
 msgstr "Bangos Forma"
 
@@ -8161,6 +6074,16 @@ msgstr "Skalė"
 #, fuzzy
 msgid "VZoom:"
 msgstr "Keist Mastelį"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Top:"
+msgstr "Keist Mastelį"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom Bottom:"
+msgstr "Priartinimo įrankis"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -8658,6 +6581,10 @@ msgid "You can only measure one track at a time."
 msgstr "Galite matuoti tik vieną takelį vienu metu."
 
 #: src/effects/Contrast.cpp
+msgid "Please select an audio track."
+msgstr "Prašome pasirinkti garso takelį."
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8672,10 +6599,6 @@ msgid ""
 msgstr ""
 "Nera ko matuoti.\n"
 "Prašome pasirinkti takelio gabalą."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Prašome pasirinkti garso takelį."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -8742,6 +6665,12 @@ msgstr "Per&krauti"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr "&Skirtumas:"
+
+#  i18n-hint: The name of the Help menu
+#  i18n-hint: The name of the Help menu
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
+msgid "&Help"
+msgstr "&Pagalba"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9297,6 +7226,14 @@ msgstr "Išankstiniai nustatymai"
 msgid "Factory Presets"
 msgstr "Fabriko Nuostatos"
 
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Import..."
+msgstr "Importuoti..."
+
+#: src/effects/Effect.cpp src/menus/PluginMenus.cpp
+msgid "Export..."
+msgstr "Eksportuoti..."
+
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
 msgstr "Nustatymai..."
@@ -9595,7 +7532,7 @@ msgstr ""
 msgid "&Graphic"
 msgstr ""
 
-#: src/effects/Equalization.cpp
+#: src/effects/Equalization.cpp src/effects/Equalization.h
 msgid "Graphic EQ"
 msgstr ""
 
@@ -9840,6 +7777,11 @@ msgstr ""
 msgid "Equalization"
 msgstr "Sulyginimas"
 
+#: src/effects/Equalization.h
+#, fuzzy
+msgid "Filter Curve"
+msgstr "Pasirinkti"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -10079,30 +8021,34 @@ msgid "&Window types"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
+msgid "Window si&ze"
+msgstr ""
+
+#: src/effects/NoiseReduction.cpp
 msgid "8"
 msgstr "8"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
 msgstr "16"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
 msgstr "32"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
 msgstr "64"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
 msgstr "128"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
 msgstr "256"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
 msgstr "512"
 
@@ -10115,20 +8061,20 @@ msgstr "1024"
 msgid "2048 (default)"
 msgstr "256 - įprastas"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
 msgstr "4096"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
 msgstr "8192"
 
-#: src/effects/NoiseReduction.cpp
+#: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
 msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
-msgid "Window si&ze"
+msgid "S&teps per window"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
@@ -10139,10 +8085,6 @@ msgstr "2"
 #, fuzzy
 msgid "4 (default)"
 msgstr "256 - įprastas"
-
-#: src/effects/NoiseReduction.cpp
-msgid "S&teps per window"
-msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -10222,17 +8164,17 @@ msgstr ""
 
 #: src/effects/Normalize.cpp
 #, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr ""
+
+#: src/effects/Normalize.cpp
+#, c-format
 msgid "Processing: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -10277,7 +8219,7 @@ msgid "Waiting for waveform to finish computing..."
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid ".  Maximum 0dB."
+msgid "(Maximum 0dB)"
 msgstr ""
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
@@ -10741,6 +8683,10 @@ msgstr ""
 msgid "Creates audio of zero amplitude"
 msgstr ""
 
+#: src/effects/Silence.h src/menus/EditMenus.cpp
+msgid "Silence"
+msgstr "Tyla"
+
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
 msgstr ""
@@ -11073,7 +9019,7 @@ msgstr "Vykdomas Efektas: %s"
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-msgid "This parameter file was saved from %s.  Continue?"
+msgid "This parameter file was saved from %s. Continue?"
 msgstr ""
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
@@ -11115,6 +9061,7 @@ msgstr ""
 msgid "Wahwah"
 msgstr "VachVach"
 
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
 msgstr ""
@@ -11135,19 +9082,6 @@ msgstr "Nepavyko inicijuoti komponento"
 #, fuzzy
 msgid "Audio Unit Effect Options"
 msgstr "Efektų nustatymai"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "&Generuoti"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -11173,13 +9107,26 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for a basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
 msgid "Select &interface"
 msgstr "Sumažinti apibraukimą į dešinę"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+msgid "Generic"
+msgstr "&Generuoti"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+msgid "Basic"
+msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
@@ -11203,11 +9150,15 @@ msgstr ""
 msgid "Location"
 msgstr "Veiksmas"
 
-#: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
-msgid "AudioUnit"
-msgstr "Garso Failas"
+#. i18n-hint: the name of an Apple audio software protocol
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+msgid "Audio Unit"
+msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 #, fuzzy
 msgid "LADSPA Effects"
@@ -11239,6 +9190,9 @@ msgstr ""
 msgid "Effect Output"
 msgstr "Efektų nustatymai"
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 #, fuzzy
 msgid "LADSPA"
@@ -11304,11 +9258,6 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "Priimamas Nyquist Efektas..."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Effects Prompt"
-msgstr "Nyquist Efektai"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -11399,8 +9348,14 @@ msgid "plug-in"
 msgstr "papildinys"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned the value:"
-msgstr ""
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist Negrąžino audio.\n"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist Negrąžino audio.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -11485,6 +9440,10 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Išsaugoti"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -11595,6 +9554,10 @@ msgstr ""
 msgid "Export Audio"
 msgstr "Daugialypis Eksportavimas"
 
+#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
+msgid "Edit Metadata Tags"
+msgstr "Redaguoti Metaduomenų Etiketes"
+
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -11646,9 +9609,12 @@ msgid ""
 msgstr ""
 
 #: src/export/Export.cpp
-#, c-format
-msgid "A file named \"%s\" already exists.  Replace?"
+#, fuzzy, c-format
+msgid "A file named \"%s\" already exists. Replace?"
 msgstr ""
+"Nuostata jau egzistuoja.\n"
+"\n"
+"Pakeisti?"
 
 #: src/export/Export.cpp
 #, fuzzy
@@ -11858,18 +9824,23 @@ msgstr "Pasirinktas Audio eksportuojamas kaip Ogg Vorbis"
 msgid "Invalid sample rate"
 msgstr ""
 
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
+#: src/menus/TrackMenus.cpp
+msgid "Resample"
+msgstr "Peršablonuot"
+
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
-"file format.  "
+"file format. "
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the current output file format.  "
+"supported by the current output file format. "
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
@@ -12217,6 +10188,8 @@ msgid ""
 "max - 8"
 msgstr ""
 
+#. i18n-hint:  Abbreviates "Linear Predictive Coding",
+#. but this text needs to be kept very short
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Use LPC"
 msgstr ""
@@ -12444,7 +10417,7 @@ msgid "Constant"
 msgstr ""
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kokybė"
 
@@ -12460,7 +10433,7 @@ msgstr ""
 msgid "Joint Stereo"
 msgstr ""
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr ""
 
@@ -12510,7 +10483,7 @@ msgstr "Kur galėčiau rasi  %s?"
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
 "Audacity %d.%d.%d.\n"
-"Please download the latest version of the LAME MP3 library."
+"Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 
 #: src/export/ExportMP3.cpp
@@ -12521,6 +10494,13 @@ msgid ""
 msgstr ""
 "Tik lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "Visi Failai (*.*)|*"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid ""
+"Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
+"*.dylib|All Files (*)|*"
+msgstr "Dinaminės Bibliotekos (*.dylib)|*.dylib|Visi Failai (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -12597,19 +10577,24 @@ msgstr ""
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
-"file format.  "
+"file format. "
 msgstr ""
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
-"supported by the MP3 file format.  "
+"supported by the MP3 file format. "
 msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr ""
+
+#: src/export/ExportMP3.cpp
+#, fuzzy
+msgid "(Built-in)"
+msgstr "Paruoštas naudojimui"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -12792,6 +10777,23 @@ msgid "Other uncompressed files"
 msgstr ""
 
 #: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "Error Exporting"
+msgstr "Klaida Importuojant"
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV file which would be greater than 4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid ""
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Negaliu eksportuoti audio šiuo formatu."
 
@@ -12859,9 +10861,11 @@ msgstr ""
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
-"Audacity cannot open this type of file. \n"
-"You need to convert it to a supported audio format, such as WAV or AIFF."
+"\"%s\" is an Advanced Audio Coding file.\n"
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 
 #: src/import/Import.cpp
@@ -12949,6 +10953,11 @@ msgid ""
 "Data."
 msgstr ""
 
+#: src/import/Import.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -12956,6 +10965,11 @@ msgid ""
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
+msgstr ""
+
+#: src/import/Import.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
 msgstr ""
 
 #: src/import/ImportFFmpeg.cpp
@@ -13110,7 +11124,7 @@ msgstr ""
 #: src/import/ImportPCM.cpp
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
-"immediately.  This is less safe than copying in, because you must retain the "
+"immediately. This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and "
 "locations of any files that you are reading directly.\n"
@@ -13132,11 +11146,6 @@ msgstr ""
 
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"
-msgstr ""
-
-#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
 msgstr ""
 
 #: src/import/ImportQT.cpp
@@ -13247,9 +11256,2426 @@ msgstr "Importavimo kiekis:"
 msgid "Sample rate:"
 msgstr "Modelio dažnis:"
 
+#: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
+msgid "&Import"
+msgstr "&Importuoti"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
 msgstr ""
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s left"
+msgstr "%s kairė"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s right"
+msgstr "%s dešinė"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "start"
+msgstr "pradžia"
+
+#: src/menus/ClipMenus.cpp
+msgid "end"
+msgstr "pabaiga"
+
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the
+#. clips.
+#.
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
+#: src/menus/ClipMenus.cpp
+msgid "dummyStringOnSelectClip"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the right"
+msgstr "Laikas perkėlė iškarpas į dešinę"
+
+#: src/menus/ClipMenus.cpp
+msgid "Time shifted clips to the left"
+msgstr "Laikas perkėlė iškarpas į kairę"
+
+#: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Time-Shift"
+msgstr "Laiko-Perkėlimas"
+
+#: src/menus/ClipMenus.cpp
+msgid "clip not moved"
+msgstr "Iškarpa nebuvo perkelta"
+
+#: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
+msgid "Clip B&oundaries"
+msgstr "Apkarpyti R&ibas"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary to Cursor"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Cursor to Ne&xt Clip Boundary"
+msgstr ""
+
+#: src/menus/ClipMenus.cpp
+msgid "Previo&us Clip"
+msgstr "Praeit&as Apkarpymas"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "Praeit&as Apkarpymas"
+
+#: src/menus/ClipMenus.cpp
+msgid "N&ext Clip"
+msgstr "Sekant&is Apkarpymas"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "Sekant&is Apkarpymas"
+
+#: src/menus/ClipMenus.cpp
+msgid "Pre&vious Clip Boundary"
+msgstr "Praeit&os Iškarpos Riba"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Praeit&os Iškarpos Riba"
+
+#: src/menus/ClipMenus.cpp
+msgid "Ne&xt Clip Boundary"
+msgstr "Sek&ančios Iškarpos Riba"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "Sek&ančios Iškarpos Riba"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip L&eft"
+msgstr "Atkarpą į K&airę"
+
+#: src/menus/ClipMenus.cpp
+msgid "Clip Rig&ht"
+msgstr "Atkarpą į De&šinę"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasted text from the clipboard"
+msgstr "Įklijuotas tekstas iš iškarpinės"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Pasted from the clipboard"
+msgstr "Įklijuota iš iškarpinės"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to undo"
+msgstr "Nėra ko atšaukti"
+
+#: src/menus/EditMenus.cpp
+msgid "Nothing to redo"
+msgstr "Nėra ko sugrąžinti"
+
+#: src/menus/EditMenus.cpp
+msgid "Cut to the clipboard"
+msgstr "Iškirpti į iškarpinę"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Deleted %.2f seconds at t=%.2f"
+msgstr "Ištrinta %.2f sekundės t=%.2f`e"
+
+#: src/menus/EditMenus.cpp
+msgid "Delete"
+msgstr "Ištrinti"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting one type of track into another is not allowed."
+msgstr "Įklijuoti viena takelio tipą į kitą takelį nėra leidžiama."
+
+#: src/menus/EditMenus.cpp
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "Kopijuoti stereo garsą į mono takelį nėra galima."
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicated"
+msgstr "Dublikuota"
+
+#: src/menus/EditMenus.cpp
+msgid "Duplicate"
+msgstr "Dublikuoti"
+
+#: src/menus/EditMenus.cpp
+msgid "Split-cut to the clipboard"
+msgstr "Praskirti ir iškirpti į iškarpinę"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Cut"
+msgstr "Praskirti ir iškirpti"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Split-deleted %.2f seconds at t=%.2f"
+msgstr "Praskirti ir ištrinti %.2f sekundėm t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Delete"
+msgstr "Praskirti ir Ištrinti"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Silenced selected tracks for %.2f seconds at %.2f"
+msgstr "Nutildyti pasirinkti takeliai %.2f sekundėm %.2f ruože"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr ""
+"Apkarpykite pasirinktus garso takelius iš %.2f sekundžių į %.2f sekundžių"
+
+#: src/menus/EditMenus.cpp
+msgid "Trim Audio"
+msgstr "Apkarpyti Garsą"
+
+#: src/menus/EditMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Split"
+msgstr "Praskirti"
+
+#: src/menus/EditMenus.cpp
+msgid "Split to new track"
+msgstr "Praskirti į naują takelį"
+
+#: src/menus/EditMenus.cpp
+msgid "Split New"
+msgstr "Praskirti Naują"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Joined %.2f seconds at t=%.2f"
+msgstr "Prijungta %.2f sekundėm t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Join"
+msgstr "Prijungti"
+
+#: src/menus/EditMenus.cpp
+#, c-format
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr "Atkabinta %.2f sekundėm t=%.2f"
+
+#: src/menus/EditMenus.cpp
+msgid "Detach"
+msgstr "Atkabinti"
+
+#: src/menus/EditMenus.cpp
+msgid "Metadata Tags"
+msgstr "Metaduomenų Etiketės"
+
+#: src/menus/EditMenus.cpp
+msgid "&Edit"
+msgstr "R&edaguoti"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Delete"
+msgstr "&Trinti"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Duplic&ate"
+msgstr "Duplik&atas"
+
+#: src/menus/EditMenus.cpp
+msgid "R&emove Special"
+msgstr "P&anaikinti Specialų"
+
+#. i18n-hint: (verb) Do a special kind of cut
+#: src/menus/EditMenus.cpp
+msgid "Spl&it Cut"
+msgstr "Praskiriant&i ir Iškirpti"
+
+#. i18n-hint: (verb) Do a special kind of DELETE
+#: src/menus/EditMenus.cpp
+msgid "Split D&elete"
+msgstr "Praskirti ir I&štrinti"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Silence Audi&o"
+msgstr "Nutildyti Gars&ą"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp
+msgid "Tri&m Audio"
+msgstr "Apkarpyt&i Garsą"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/EditMenus.cpp
+msgid "Sp&lit"
+msgstr "Praski&rti"
+
+#: src/menus/EditMenus.cpp
+msgid "Split Ne&w"
+msgstr "Praskirti Nauj&ą"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "&Join"
+msgstr "&Prijungti"
+
+#: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
+msgid "Detac&h at Silences"
+msgstr "Atskirt&i per Tylą"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Metadata..."
+msgstr "Meta&duomenys"
+
+#: src/menus/EditMenus.cpp
+msgid "Pre&ferences..."
+msgstr "Nuo&statos"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "&Delete Key"
+msgstr "&Trynimo Mygtukas"
+
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Delete Key&2"
+msgstr "Trynimo Mygtukas&2"
+
+#: src/menus/ExtraMenus.cpp
+msgid "Ext&ra"
+msgstr ""
+
+#: src/menus/ExtraMenus.cpp
+msgid "Mi&xer"
+msgstr "Mik&seris"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Tai&syti grojimo garsą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "&Padidinti grojimo garsą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "&Sumažinti grojimo garsą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Tai&syti įrašinėjimo garsą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Pa&didinti įrašinėjimo garsą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Su&mažinti įrašinėjimo garsą"
+
+#: src/menus/ExtraMenus.cpp
+msgid "De&vice"
+msgstr "Prie&taisas"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Keisti &Įrašinėjimo prietaisą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Keisti &grojimo prietaisą"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Pakeisti garso &šeimininką"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Keisti įrašinėjimo kana&lus"
+
+#: src/menus/ExtraMenus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
+msgstr "&Pilnas ekranas (Įjungta/Išjungta)"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Importuota MIDI iš '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import MIDI"
+msgstr "Importuoti MIDI"
+
+#: src/menus/FileMenus.cpp
+msgid "Export Selected Audio"
+msgstr "Eksportuoti Pasirinktą Garsą"
+
+#. i18n-hint: filename containing exported text from label tracks
+#: src/menus/FileMenus.cpp
+msgid "labels.txt"
+msgstr "etiketės.txt"
+
+#: src/menus/FileMenus.cpp
+msgid "There are no label tracks to export."
+msgstr "Nėra etikečių takelių eksportavimui."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Prašome pasirinkti tik po vieną Natos Takelį."
+
+#: src/menus/FileMenus.cpp
+msgid "Please select a Note Track."
+msgstr "Prašome pasirinkti Natos Takelį."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI As:"
+msgstr "Eksportuoti MIDI Kaip:"
+
+#: src/menus/FileMenus.cpp
+msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
+msgstr "MIDI failas (*.mid)|*.mid|Allegro failas (*.gro)|*.gro"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Jūs pasirinkote failo pavadinimą be failo pratęsimo kategorijos.\n"
+"Ar norite tęsti?"
+
+#: src/menus/FileMenus.cpp
+msgid "Export MIDI"
+msgstr "Eksportuoti MIDI"
+
+#: src/menus/FileMenus.cpp
+#, c-format
+msgid "Imported labels from '%s'"
+msgstr "Importuoti pavadinimai iš '%s'"
+
+#: src/menus/FileMenus.cpp
+msgid "Import Labels"
+msgstr "Importuoti Pavadinimus"
+
+#: src/menus/FileMenus.cpp
+msgid "Select a MIDI file"
+msgstr "Pasirinkti MIDI failą"
+
+#: src/menus/FileMenus.cpp
+msgid ""
+"MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+msgstr ""
+"MIDI ir Alegro failai (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI failai (*."
+"mid;*.midi)|*.mid;*.midi|Alegro failai(*.gro)|*.gro|Visi failai|*"
+
+#: src/menus/FileMenus.cpp
+msgid "Select any uncompressed audio file"
+msgstr "Pasirinkite bet kurį nesuspaustą garso failą"
+
+#: src/menus/FileMenus.cpp
+msgid "All files|*"
+msgstr "Visi failai|*"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "&Dangerous Reset..."
+msgstr "Išsaugoti išankstinę nuostatą..."
+
+#. i18n-hint: This is the name of the menu item on Mac OS X only
+#: src/menus/FileMenus.cpp
+msgid "Open Recent"
+msgstr "Atidaryti Nesenai naudotus failus"
+
+#. i18n-hint: This is the name of the menu item on Windows and Linux
+#: src/menus/FileMenus.cpp
+msgid "Recent &Files"
+msgstr "Nesenai Naudoti &Failai"
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Project"
+msgstr "&Išsaugoti projektą"
+
+#: src/menus/FileMenus.cpp
+msgid "Save Project &As..."
+msgstr "Išsaugoti Projektą &Kaip..."
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "&Išsaugoti Suspaustą Projekto Kopiją..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "&Išsaugoti Suspaustą Projekto Kopiją..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Export"
+msgstr "&Eksportuoti"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as MP&3"
+msgstr "Eksportuoti kaip MP&3"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &WAV"
+msgstr "Eksportuoti kaip &WAV"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as &OGG"
+msgstr "Eksportuoti kaip &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "&Export Audio..."
+msgstr "&Eksportuoti Garsą..."
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Eksportuo&ti Pasirinktą Garsą..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Labels..."
+msgstr "Eksportuoti &Etiketes..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export &Multiple..."
+msgstr "Eksportuoti &Daugybinį..."
+
+#: src/menus/FileMenus.cpp
+msgid "Export MI&DI..."
+msgstr "Eksportuoti MI&DI"
+
+#: src/menus/FileMenus.cpp
+msgid "&Audio..."
+msgstr "&Garsas..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Labels..."
+msgstr "&Etiketės..."
+
+#: src/menus/FileMenus.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+#: src/menus/FileMenus.cpp
+msgid "&Raw Data..."
+msgstr "&Raw Duomenys..."
+
+#: src/menus/FileMenus.cpp
+msgid "Pa&ge Setup..."
+msgstr "Pu&slapio Paruošimas..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "&Print..."
+msgstr "&Spausdinti..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/menus/FileMenus.cpp
+msgid "E&xit"
+msgstr "I&šeiti"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Išsaugotas %s"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Neįmanoma pašalinti '%s'."
+
+#: src/menus/HelpMenus.cpp
+msgid "Audio Device Info"
+msgstr "Garso Prietaiso Informacija"
+
+#: src/menus/HelpMenus.cpp
+msgid "MIDI Device Info"
+msgstr "MIDI Prietaiso Informacija"
+
+#  i18n-hint: The name of the Help menu
+#  i18n-hint: The name of the Help menu
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Fix..."
+msgstr "&Greitoji Pagalba"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Getting Started"
+msgstr "&Pradedantiesiems"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity"
+
+#  i18n-hint: The name of the Help menu
+#  i18n-hint: The name of the Help menu
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Greitoji Pagalba"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "&Žinynas"
+
+#: src/menus/HelpMenus.cpp
+msgid "&Diagnostics"
+msgstr "&Diagnostika"
+
+#: src/menus/HelpMenus.cpp
+msgid "Au&dio Device Info..."
+msgstr "Gar&so Prietaiso Informacija..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&MIDI Device Info..."
+msgstr "&MIDI Prietaiso Informacija..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "Rodyti &Registrą..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Generuoti Paramos Duomenis..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "Tikrint&i Priklausomybes..."
+
+#: src/menus/HelpMenus.cpp
+msgid "&Check for Updates..."
+msgstr "&Tikrinti ar yra Atnaujinimų..."
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Text to New Label"
+msgstr "Įklijuoti Tekstą į Nauja Etiketę"
+
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
+#: src/menus/LabelMenus.cpp
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Iškirpti etikete pažymėtus garso regionus į iškarpinę"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Cut Labeled Audio"
+msgstr "Iškirpti Etikete pažymėtą Garsą"
+
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Deleted labeled audio regions"
+msgstr "Ištrinti etikete pažymėtus garso regionus"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Delete Labeled Audio"
+msgstr "Ištrinti Etikete Pažymėtą Garsą"
+
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Praskirti ir iškirpti etikete pažymėtus garso regionus į iškarpinę"
+
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: src/menus/LabelMenus.cpp
+msgid "Split Cut Labeled Audio"
+msgstr "Praskirti ir Iškirpti Etikete Pažymėtą Garsą"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. the labeled audio regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Deleted labeled audio regions"
+msgstr "Praskirti ir Ištrinti etikete pažymėtus garso regionus"
+
+#. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
+#. regions
+#: src/menus/LabelMenus.cpp
+msgid "Split Delete Labeled Audio"
+msgstr "Praskirti ir Ištrinti Etikete Pažymėtą Garsą"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silenced labeled audio regions"
+msgstr "Nutildyti etikete pažymėti garso regionai"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Silence Labeled Audio"
+msgstr "Nutildyti Etikete pažymėtą garsą"
+
+#: src/menus/LabelMenus.cpp
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Nukopijuota etikete pažymėti garso regionai į iškarpinę"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Copy Labeled Audio"
+msgstr "Kopijuoti Etikete Pažymėtą Garsą"
+
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. audio (a point or a region)
+#: src/menus/LabelMenus.cpp
+msgid "Split labeled audio (points or regions)"
+msgstr "Praskirti etikete pažymėtą garsą (taškais arba regionais)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Split Labeled Audio"
+msgstr "Praskirti Etikete Pažymėtą Garsą"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
+#: src/menus/LabelMenus.cpp
+msgid "Joined labeled audio (points or regions)"
+msgstr "Prijungti etikete pažymėtą garsą (taškais arba regionais)"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Join Labeled Audio"
+msgstr "Prijungti Etikete Pažymėtą Garsą"
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: src/menus/LabelMenus.cpp
+msgid "Detached labeled audio regions"
+msgstr "Atskirti etikete pažymėti garso regionai"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Detach Labeled Audio"
+msgstr "Atskirti Etikete Pažymėtą Garsą"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Labels"
+msgstr "&Etiketės"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Edit Labels..."
+msgstr "&Redaguoti Etiketes..."
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Selection"
+msgstr "Pridėti Etiketę &Pasirinkime"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Add Label at &Playback Position"
+msgstr "Pridėti Etiketė &Atsuktoje Pozicijoje"
+
+#: src/menus/LabelMenus.cpp
+msgid "Paste Te&xt to New Label"
+msgstr "Įklijuoti Te&kstą Naujoje Etiketėje"
+
+#: src/menus/LabelMenus.cpp
+msgid "&Type to Create a Label (on/off)"
+msgstr "&Rašykite norint Sukurti Etiketę (įjungta/išjungta)"
+
+#: src/menus/LabelMenus.cpp
+msgid "La&beled Audio"
+msgstr "Garsas su Et&ikete"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "&Cut"
+msgstr "&Iškirpti"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Pavadinimo Redagavimas"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Praskirti ir Ištrinti"
+
+#. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/menus/LabelMenus.cpp
+msgid "&Split Cut"
+msgstr "&Praskirti ir iškirpti"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Praskirti ir iškirpti"
+
+#: src/menus/LabelMenus.cpp
+msgid "Sp&lit Delete"
+msgstr "Pra&skirti ir Ištrinti"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Praskirti ir Ištrinti"
+
+#: src/menus/LabelMenus.cpp
+msgid "Silence &Audio"
+msgstr "Tyla &Garsas"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Tyla"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Co&py"
+msgstr "Ko&pijuoti"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Pavadinimas"
+
+#. i18n-hint: (verb)
+#: src/menus/LabelMenus.cpp
+msgid "Spli&t"
+msgstr "Pra&skirti"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Pavadinimo Redagavimas"
+
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Pavadinimo Redagavimas"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Backward Through Active Windows"
+msgstr "Judėti atbulai per aktyvius langus"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move Forward Through Active Windows"
+msgstr "Judėti į priekį per aktyvius langus"
+
+#: src/menus/NavigationMenus.cpp
+msgid "F&ocus"
+msgstr "Fo&kusavimas"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
+msgstr "Judėti &atgal iš įrankių juostos į takelius"
+
+#: src/menus/NavigationMenus.cpp
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
+msgstr "Judėti į pr&iekį iš įrankių juostos į takelius"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Previous Track"
+msgstr "Perkelti Fokusavimą į &Praeitą Takelį"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Next Track"
+msgstr "Perkelti Fokusavimą į &Sekantį Takelį"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &First Track"
+msgstr "Perkelti Fokusavimą į &Pirmą Takelį"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to &Last Track"
+msgstr "Perkelti Fokusavimą į &Paskutinį Takelį"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to P&revious and Select"
+msgstr "Perkelti Fokusavimą į Pr&aeita ir Pasirinkti"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Move Focus to N&ext and Select"
+msgstr "Perkelti Fokusavimą į Se&kantį ir Pasirinkti"
+
+#: src/menus/NavigationMenus.cpp
+msgid "&Toggle Focused Track"
+msgstr "&Nustatyti Sufokusuotą Takelį"
+
+#: src/menus/NavigationMenus.cpp
+msgid "Toggle Focuse&d Track"
+msgstr "Nustatyti Foku&suotą Takelį"
+
+#: src/menus/PluginMenus.cpp
+msgid "Uncategorized"
+msgstr "Be kategorijos"
+
+#: src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Nežinomas"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Kartoti %s"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Plug-in %d to %d"
+msgstr "Papildinį iš %d į %d"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Generuoti"
+
+#: src/menus/PluginMenus.cpp
+msgid "Add / Remove Plug-ins..."
+msgstr "Pridėti / Išimti Papildinius..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Effect"
+msgstr "Kartoti Paskutinį Efektą"
+
+#: src/menus/PluginMenus.cpp
+msgid "Effe&ct"
+msgstr "Efe&ktai"
+
+#: src/menus/PluginMenus.cpp
+msgid "&Analyze"
+msgstr "&Analizuoti"
+
+#: src/menus/PluginMenus.cpp
+msgid "Contrast..."
+msgstr "Kontrastas..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Plot Spectrum..."
+msgstr "Spektras..."
+
+#: src/menus/PluginMenus.cpp src/menus/ToolbarMenus.cpp
+msgid "T&ools"
+msgstr "Į&rankiai"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Etiketės..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "&Panaudoti"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&Išsaugoti..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Ekrano išsaugojimo Įrankiai..."
+
+#: src/menus/PluginMenus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Paleisti Bandymą..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Simulate Recording Errors"
+msgstr "Simuliuoti Įrašų Klaidas"
+
+#: src/menus/PluginMenus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Rasti Pasrovio Išmetimus"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Skriptas"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Pasirinkti..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Dažniai"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Pasirinkti..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "Takelio &Pradžia"
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "&Nuostatos..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "&Nuostatos..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "Sekant&is Apkarpymas"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Amplitudė"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Redaguoti Etiketes..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Išsaugoti Projektą &Kaip..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "Iš&rikiuoti Takelius"
+
+#: src/menus/PluginMenus.cpp
+msgid "Get Info..."
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "Pranešimas"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Pagalba"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Atidaryti &Nesenai atidarytus..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Išsaugoti Projektą &Kaip..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "Pasirinkti..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Kompresorius..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Ekrano išsaugojimo Įrankiai..."
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Left Selection Boundary"
+msgstr "Nustatykit Kairę Pasirinkimo Ribą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Position"
+msgstr "Pozicija"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set Right Selection Boundary"
+msgstr "Nustatykit Dešinę Pasirinkimo Ribą"
+
+#. i18n-hint: (verb) It's an item on a menu.
+#: src/menus/SelectMenus.cpp
+msgid "&Select"
+msgstr "&Pasirinkti"
+
+#: src/menus/SelectMenus.cpp
+msgid "&None"
+msgstr "&Nieko"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Pasirinkimas Įjungtas"
+
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+msgid "&Tracks"
+msgstr "&Takeliai"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Tracks"
+msgstr "Visuose &Takeliuose"
+
+#: src/menus/SelectMenus.cpp
+msgid "In All &Sync-Locked Tracks"
+msgstr "Visuose &Sinchronizuotai Užrakintuose Takeliuose"
+
+#: src/menus/SelectMenus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "R&egion"
+msgstr "Re&gionas"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Left at Playback Position"
+msgstr "&Kairėje Atsukimo Vietoje"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "&Kairėje Atsukimo Vietoje"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Right at Playback Position"
+msgstr "&Dešinėje Atsukimo Vietoje"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "&Dešinėje Atsukimo Vietoje"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start to Cursor"
+msgstr "Sekti &Pradėti žymeklį"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "Sekti &Pradėti žymeklį"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Track &End"
+msgstr "Žymeklį ties Takelio &Pabaiga"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "Žymeklį ties Takelio &Pabaiga"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "Sekti &Pradėti žymeklį"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Apibraukti iki Pabaigos"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&tore Selection"
+msgstr "Tal&pinti Pasirinkimą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Retrieve Selectio&n"
+msgstr "Grąžinti Pasirinkim&ą"
+
+#: src/menus/SelectMenus.cpp
+msgid "S&pectral"
+msgstr "S&pektras"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Nu&statyti Pasirinkimo Spektrą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Higher Peak Frequency"
+msgstr "Sekantis &Didesnio Aukščio Dažnis"
+
+#: src/menus/SelectMenus.cpp
+msgid "Next &Lower Peak Frequency"
+msgstr "Sekantis &Žemesnio Aukščio Dažnis"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor to Stored &Cursor Position"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Apibraukti iki Pradžios"
+
+#: src/menus/SelectMenus.cpp
+msgid "Store Cursor Pos&ition"
+msgstr ""
+
+#: src/menus/SelectMenus.cpp
+msgid "At &Zero Crossings"
+msgstr "&Nuliniuose Susikirtimuose"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "&Nuliniuose Susikirtimuose"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Selection"
+msgstr "&Pasirinkimas"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Off"
+msgstr "&Papildomi Meniu (Įjungta/Išjungta)"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Nearest"
+msgstr "Perlaužti į &Artimiausią"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Snap-To &Prior"
+msgstr "Perlaužti į &Paskutinį"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to &Start"
+msgstr "Pasirinkimą į &Pradžią"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection to En&d"
+msgstr "Pasirinkimą į Pa&baigą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Left"
+msgstr "Pasirinkimą išplėsti į &Kairę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Extend &Right"
+msgstr "Pasirinkimą išplėsti į &Dešinę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Le&ft Selection"
+msgstr "Nustatyti (arba išplėsti) Kai&rį Pasirinkimą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Set (or Extend) Rig&ht Selection"
+msgstr "Nustatyti (arba išplėsti) Deši&nį Pasirinkimą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract L&eft"
+msgstr "Pasirinkimą Sutraukti į K&airę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Contract R&ight"
+msgstr "Pasirinkimą Sutraukti į D&ešinę"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor to"
+msgstr "&Žymeklį ties"
+
+#: src/menus/SelectMenus.cpp
+msgid "Selection Star&t"
+msgstr "Pasirinkties Pradži&a"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "į Apibraukimo Pradžią"
+
+#: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
+msgid "Selection En&d"
+msgstr "Parinkties Pabaig&a"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "į Apibraukimo Pabaigą"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &Start"
+msgstr "Takelio &Pradžia"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "Žymeklį ties Takelio &Pabaiga"
+
+#: src/menus/SelectMenus.cpp
+msgid "Track &End"
+msgstr "Takelio &Pabaiga"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "Žymeklį ties Takelio &Pabaiga"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Project Start"
+msgstr "&Projekto Pradžia"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "&Projekto Pradžia"
+
+#: src/menus/SelectMenus.cpp
+msgid "Project E&nd"
+msgstr "Projekto Pa&baiga"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "Žymeklį ties Takelio &Pabaiga"
+
+#: src/menus/SelectMenus.cpp
+msgid "&Cursor"
+msgstr "&Žymeklis"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Left"
+msgstr "Žymeklis &Kairę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor &Right"
+msgstr "Žymeklį į &Dešinę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Sh&ort Jump Left"
+msgstr "Žymeklį Tru&putį į Kairę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Shor&t Jump Right"
+msgstr "Žymeklį Tru&putį į Dešinę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long J&ump Left"
+msgstr "Žymeklį Daug&iau į Kairę"
+
+#: src/menus/SelectMenus.cpp
+msgid "Cursor Long Ju&mp Right"
+msgstr "Žymeklį Daug&iau į Dešinę"
+
+#: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "Ieš&koti"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Left During Playback"
+msgstr "Trumpai ieškoti &kairę grojimo metu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Short Seek &Right During Playback"
+msgstr "Trumpai ieškoti &dešinę grojimo metu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
+msgstr "Ilgai ieškoti kai&rę grojimo metu"
+
+#: src/menus/SelectMenus.cpp
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
+msgstr "Ilgai ieškoti deši&nę grojimo metu"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Toolbars"
+msgstr "&Įrankių juostos"
+
+#. i18n-hint: (verb)
+#: src/menus/ToolbarMenus.cpp
+msgid "Reset Toolb&ars"
+msgstr "Perkrauti Įrankių Juost&as"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the big buttons on it (play record etc)
+#: src/menus/ToolbarMenus.cpp
+msgid "&Transport Toolbar"
+msgstr "&Transportuoti Įrankių juostą"
+
+#. i18n-hint: Clicking this menu item shows a toolbar
+#. that has some tools in it
+#: src/menus/ToolbarMenus.cpp
+msgid "T&ools Toolbar"
+msgstr "Į&rankių Juosta"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the recording level meters
+#: src/menus/ToolbarMenus.cpp
+msgid "&Recording Meter Toolbar"
+msgstr "&Įrašymų Matavimo Įrankių Juosta"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the playback level meter
+#: src/menus/ToolbarMenus.cpp
+msgid "&Playback Meter Toolbar"
+msgstr "&Grojimo Matavimo Įrankių Juosta"
+
+#. i18nhint: Clicking this menu item shows the toolbar
+#. which has sound level meters
+#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. with the mixer
+#: src/menus/ToolbarMenus.cpp
+msgid "Mi&xer Toolbar"
+msgstr "Mi&ksavimo Įrankių Juosta"
+
+#. i18n-hint: Clicking this menu item shows the toolbar for editing
+#: src/menus/ToolbarMenus.cpp
+msgid "&Edit Toolbar"
+msgstr "&Redaguoti Įrankių Juosta"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for transcription (currently just vary play speed)
+#: src/menus/ToolbarMenus.cpp
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Gro&ti tokiu Greičiu"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that enables Scrub or Seek playback and Scrub Ruler
+#: src/menus/ToolbarMenus.cpp
+msgid "Scru&b Toolbar"
+msgstr "Gram&dymo Įrankių Juosta"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages devices
+#: src/menus/ToolbarMenus.cpp
+msgid "&Device Toolbar"
+msgstr "&Prietaisų įrankių Juosta"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Toolbar"
+msgstr "&Pasirinkimo Įrankių Juosta"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "Spe&ctral Selection Toolbar"
+msgstr "Spe&ktro Pasirinkimo Įrankių Juosta"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Selection Tool"
+msgstr "&Pasirinkimo Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Envelope Tool"
+msgstr "&Vokinis Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Draw Tool"
+msgstr "&Piešimo Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Zoom Tool"
+msgstr "&Priartinimo Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Time Shift Tool"
+msgstr "&Laiko Keitimo Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Multi Tool"
+msgstr "&Multi Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Previous Tool"
+msgstr "&Praeitas Įrankis"
+
+#: src/menus/ToolbarMenus.cpp
+msgid "&Next Tool"
+msgstr "&Sekantis Įrankis"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Rendered all audio in track '%s'"
+msgstr "Pakrauti visi garsai takelyje '%s'"
+
+#. i18n-hint: Convert the audio into a more usable form, so apply
+#. * panning and amplification and write to some external file.
+#: src/menus/TrackMenus.cpp
+msgid "Render"
+msgstr "Pakrauti"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new stereo track"
+msgstr "Sumiksuoti ir pakrauti %d takeliai į viena naują stereo takelį"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Mixed and rendered %d tracks into one new mono track"
+msgstr "Sumiksuoti ir pakrauti %d takeliai į viena naują mono takelį"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Peršablonuotas garso takelis"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Zero"
+msgstr "Pradėti su &Nuliu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to &Cursor/Selection Start"
+msgstr "Pradėti su &Žymeklio/Pasirinkimo Pradžia"
+
+#: src/menus/TrackMenus.cpp
+msgid "Start to Selection &End"
+msgstr "Pradėti su Pasirinkimo &Pabaiga"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Pabaigti su Žymeklio/Pasirinkimo Pradžia"
+
+#: src/menus/TrackMenus.cpp
+msgid "End to Selection En&d"
+msgstr "Pabaigti su Pasirinkimo Pabaiga"
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to zero"
+msgstr "Išlyginta/Perkelta pradžia į nulį"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to zero"
+msgstr "Išlyginta pradžia į nulį"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Start"
+msgstr "Išlyginti/Perkelti Pradžią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Start"
+msgstr "Lyginti Pradžią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "Lyginta/Perkelta pradžia i žymeklio/pasirinkimo pradžią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to cursor/selection start"
+msgstr "Lyginta pradžia su žymeklio/pasirinkimo pradžia"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved start to selection end"
+msgstr "Lyginta/Perkelta pradžia į pasirinkimo pabaigą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned start to selection end"
+msgstr "Lyginta pradžia su pasirinkimo pabaiga"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "Išlyginta/Perkelta pabaiga į žymeklio/pasirinkimo pradžią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to cursor/selection start"
+msgstr "Išlyginta pabaiga su žymeklio/pasirinkimo pradžią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End"
+msgstr "Išlyginti/Perkelti Pabaigą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End"
+msgstr "Išlyginti Pabaigą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to selection end"
+msgstr "Išlyginta/Perkelta pabaiga į pasirinkimo pabaigą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to selection end"
+msgstr "Išlyginta pabaiga su pasirinkimo pabaiga"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved end to end"
+msgstr "Išlyginta/Perkelta pabaiga į pabaigą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned end to end"
+msgstr "Išlyginta pabaiga su pabaiga"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move End to End"
+msgstr "Išlyginti/Perkelti Pabaigą į Pabaigą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align End to End"
+msgstr "Išlyginti Pabaigą su Pabaiga"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned/Moved together"
+msgstr "Išlyginta/Perkelta kartu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Aligned together"
+msgstr "Išlyginta kartu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align/Move Together"
+msgstr "Išlyginti/Perkelti Kartu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align Together"
+msgstr "Išlyginti Kartu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronize MIDI with Audio"
+msgstr "Sinchronizuoti MIDI su Garsu"
+
+#: src/menus/TrackMenus.cpp
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr "Sinchronizuojami MIDI ir Garso Takeliai"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted gain"
+msgstr "Palygintas gain"
+
+#: src/menus/TrackMenus.cpp
+msgid "Adjusted Pan"
+msgstr "Palygintas Pan"
+
+#: src/menus/TrackMenus.cpp
+msgid "Removed audio track(s)"
+msgstr "Pašalinti takeliai(-is)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Remove Track"
+msgstr "Pašalinti takelį"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "Pašalintas takelis '%s.'"
+
+#: src/menus/TrackMenus.cpp
+msgid "Track Remove"
+msgstr "Takelį Pašalini"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Top"
+msgstr "Perkeltas '%s' į viršų"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Top"
+msgstr "Perkeltas Takelį į Viršų"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "Perkeltas '%s' į apačią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track to Bottom"
+msgstr "Perkelti Takelį į Apačią"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Up"
+msgstr "Perkeltas '%s' į Viršų"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Moved '%s' Down"
+msgstr "Perkeltas '%s' į Apačią"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Up"
+msgstr "Perkelti Takelį į Viršų"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Track Down"
+msgstr "Nuleisti Takelį į Apačią"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new audio track"
+msgstr "Sukurtas naujas audio takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "New Track"
+msgstr "Naujas Takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new stereo audio track"
+msgstr "Sukurtas naujas stereo audio takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new label track"
+msgstr "Sukurtas naujas pavadinimo takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Ši Audacity versija leidžia tik viena laiko takelį per vieną projekto langą."
+
+#: src/menus/TrackMenus.cpp
+msgid "Created new time track"
+msgstr "Sukurtas naujas laiko takelis"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "New sample rate (Hz):"
+msgstr "Naujas šablono dažnis (Hz):"
+
+#: src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "The entered value is invalid"
+msgstr "Įvesta vertė yra netinkama"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid "Resampling track %d"
+msgstr "Peršablonuojamas takelis %d"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resampled audio track(s)"
+msgstr "Peršablonuotas garso takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "Resample Track"
+msgstr "Peršablonuoti Takeli"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Please select at least one audio track and one MIDI track."
+msgstr "Prašome pasirinkti garso takelį."
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Išlyginimas baigtas: MIDI nuo %.2f iki %.2f sekundžių, Garsas nuo %.2f iki "
+"%.2f sekundžių."
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync MIDI with Audio"
+msgstr "Sinchronizuoti MIDI su Garsu"
+
+#: src/menus/TrackMenus.cpp
+#, c-format
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Išlyginimo klaida: įvestis per trumpa: MIDI nuo %.2f iki %.2f sekundžių, "
+"Garsas nuo %.2f iki %.2f sekundžių."
+
+#: src/menus/TrackMenus.cpp
+msgid "Internal error reported by alignment process."
+msgstr "Vidinė klaida pranešta išlyginimo proceso."
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by time"
+msgstr "Takelis išrikiuotas pagal laiką"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Time"
+msgstr "Rūšiuoti pagal Laiką"
+
+#: src/menus/TrackMenus.cpp
+msgid "Tracks sorted by name"
+msgstr "Takeliai rūšiuoti pagal pavadinimą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sort by Name"
+msgstr "Rūšiuoti pagal Pavadinimą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Can't delete track with active audio"
+msgstr "Nepavyko ištrinti takelio su aktyviais garsais"
+
+#: src/menus/TrackMenus.cpp
+msgid "Add &New"
+msgstr "Pridėti &Nauja"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mono Track"
+msgstr "&Mono Takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Stereo Track"
+msgstr "&Stereo Takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Label Track"
+msgstr "&Etiketės Takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Time Track"
+msgstr "&Laiko Takelis"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x"
+msgstr "Mi&ksavimas"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
+msgstr "Suskaldyti Stereo į &Mono"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mi&x and Render"
+msgstr "Suskal&dyti ir Apdoroti"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mix and Render to Ne&w Track"
+msgstr "Suskaldyti ir Apdoroti į Na&ują Takelį"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Resample..."
+msgstr "&Peršablonuoti..."
+
+#: src/menus/TrackMenus.cpp
+msgid "Remo&ve Tracks"
+msgstr "P&ašalinti Takelius"
+
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "Užtildyti/Atitildyti"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "&Užtildyti Visus Takelius"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "&Atitildyti Visus Takelius"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "&Kreiptis"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "&Kairė"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Kairysis "
+
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "&Dešinė"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Dešinė "
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "&Centras"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Centrinis"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "&Išlyginti Takelius"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "&Išlyginti Pabaiga su Pabaiga"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "Išlyginti &Kartu"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks (on/off)"
+msgstr "&Perkelti Pasirinkimą su Takeliais (Įjungta/Išjungta)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "Perkelti Pasirinkimą ir Takelius"
+
+#: src/menus/TrackMenus.cpp
+msgid "S&ort Tracks"
+msgstr "Iš&rikiuoti Takelius"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Start Time"
+msgstr "pagal &Pradžios laiką"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "By &Name"
+msgstr "pagal &Pavadinimą"
+
+#: src/menus/TrackMenus.cpp
+msgid "Sync-&Lock Tracks (on/off)"
+msgstr "Sinchronizuoti &Užrakinti Takelius (Įjungta/Išjungta)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Track"
+msgstr "&Takelis"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change P&an on Focused Track..."
+msgstr "Perkelti posli&nkį ties fokusuotu takeliu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Left on Focused Track"
+msgstr "Paslinkti į &kairę ties fokusuotu takeliu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Pan &Right on Focused Track"
+msgstr "Paslinkti į "
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
+msgstr "Pakeisti ga&in ties fokusuotu takeliu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
+msgstr "&Padidinti gain ties fokusuotu takeliu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
+msgstr "&Pamažinti gain ties fokusuotu takeliu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
+msgstr "Ati&daryti meniu ties fokusuotu takeliu"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
+msgstr "Užtild&yti/Atitildyti fokusuotą takelį"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
+msgstr "&Solo/Unsolo fokusuotą takelį"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "&Close Focused Track"
+msgstr "&Uždaryti fokusuotą takelį"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track U&p"
+msgstr "Pakelti fokusuotą takelį į vir&šų"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track Do&wn"
+msgstr "Nuleisti fokusuotą takelį į apa&čią"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to T&op"
+msgstr "Perkelti fokusuotą takelį į patį v&iršų"
+
+#: src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
+msgstr "Perkelti fokusuotą takelį į pačią &apačią"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track"
+msgstr "takelis be etiketės"
+
+#: src/menus/TransportMenus.cpp
+msgid "no label track at or below focused track"
+msgstr "takelis be etiketės fokusuotame takelyje arba po juo"
+
+#: src/menus/TransportMenus.cpp
+msgid "no labels in label track"
+msgstr "nėra etikečių, etikečių takelyje"
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Neįmanoma prirakinti regiono toliau nei\n"
+"projekto pabaigoje."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+"Laikmačio Įrašinėjimas negali būti naudojamas su daugiau nei vienu atviru "
+"projektu.\n"
+"\n"
+"Prašome uždaryti visus kitus projektus ir bandyti dar kartą."
+
+#: src/menus/TransportMenus.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+"Laikmačio Įrašinėjimas negali būti naudojamas kol turite neišsaugotų "
+"pokyčių.\n"
+"\n"
+"Prašome išsaugoti arba uždaryti ši projektą ir bandyti dar kartą."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Prašome pasirinkti garso takelį."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Prašome pasirinkti garso takelį."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Prašome pasirinkti garso takelį."
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Prašome pasirinkti Natos Takelį."
+
+#. i18n-hint: 'Transport' is the name given to the set of controls that
+#. play, record, pause etc.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Transportuoti"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Pritaikomas Fazeris"
+
+#. i18n-hint: (verb) Start or Stop audio playback
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay/Stop"
+msgstr "Gr&oti/Stabdyti"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play/Stop and &Set Cursor"
+msgstr "Groti/Stabdyti ir &Nustatyti Žymeklį"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play"
+msgstr "&Ciklinis Grojimas"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Pause"
+msgstr "&Pauzė"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Įrašymas"
+
+#. i18n-hint: (verb)
+#: src/menus/TransportMenus.cpp
+msgid "&Record"
+msgstr "&Įrašyti"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Append Record"
+msgstr "&Prijungti Įrašą"
+
+#: src/menus/TransportMenus.cpp
+msgid "Record &New Track"
+msgstr "Įrašyti &Naują Takelį"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Timer Record..."
+msgstr "&Laikmačio Įrašinėjimas..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Pla&y Region"
+msgstr "Gro&jimo Regijonas"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Lock"
+msgstr "&Užrakinti"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Unlock"
+msgstr "&Atrakinti"
+
+#: src/menus/TransportMenus.cpp
+msgid "R&escan Audio Devices"
+msgstr "Per&skenuoti Garso Prietaisus"
+
+#: src/menus/TransportMenus.cpp
+msgid "Transport &Options"
+msgstr "Transportas &Nustatymai"
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound Activation Le&vel..."
+msgstr "Garso Aktyvacijos Ly&gis..."
+
+#: src/menus/TransportMenus.cpp
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "Garsu Ak&tyvuojamas Įrašinėjimas (Įjungtas/Išjungtas)"
+
+#: src/menus/TransportMenus.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr "Privertas Grojimas/Įrašymas &Antraštė (Įjungta/Išjungta)"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Overdub (on/off)"
+msgstr "&Įrašinėjimas ant viršaus (Įjungta/Išjungta)"
+
+#: src/menus/TransportMenus.cpp
+msgid "So&ftware Playthrough (on/off)"
+msgstr "Pro&gramos Pergrojimas (Įjungta/Išjungta)"
+
+#: src/menus/TransportMenus.cpp
+msgid "A&utomated Recording Level Adjustment (on/off)"
+msgstr "Auto&matinis Įrašo Garsumo Nustatymas (Įjungta/Išjungta)"
+
+#: src/menus/TransportMenus.cpp
+msgid "T&ransport"
+msgstr "T&ransportuoti"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Pl&ay"
+msgstr "Gr&oti"
+
+#. i18n-hint: (verb) Stop playing audio
+#: src/menus/TransportMenus.cpp
+msgid "Sto&p"
+msgstr "Stab&dyti"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &One Second"
+msgstr "Pagroti &Vieną Sekundę"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Play to &Selection"
+msgstr "Pagroti iki &Pasirinkimo"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play &Before Selection Start"
+msgstr "Pagroti &Prieš Pasirinkimo Pradžią"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Af&ter Selection Start"
+msgstr "Pagroti P&o Pasirinkimo Pradžios"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Be&fore Selection End"
+msgstr "Pagroti Pri&eš Pasirinkimo Pabaigą"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Aft&er Selection End"
+msgstr "Pagroti P&o Pasirinkimo Pabaigos"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before a&nd After Selection Start"
+msgstr "Pagroti Prieš i&r Po Pasirinkimo Pradžios"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play Before an&d After Selection End"
+msgstr "Pagroti Prieš i&r Po Pasirinkimo Pabaigos"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview"
+msgstr "Groti Iški&rpimo Peržvalga"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Gro&ti tokiu Greičiu"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
+msgstr "Gro&ti tokiu Greičiu"
+
+#: src/menus/TransportMenus.cpp
+msgid "&Loop Play-at-Speed"
+msgstr "&Ciklinti grojimą tokiu Greičiu"
+
+#: src/menus/TransportMenus.cpp
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Groti Iškir&pti peržvalga tokiu greičiu"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Tai&syti grojimo greitį"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "&Padidinti grojimo greitį"
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "&Sumažinti grojimo greitį"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Previous Label"
+msgstr "Perkelti į &Praeita Etiketę"
+
+#: src/menus/TransportMenus.cpp
+msgid "Move to &Next Label"
+msgstr "Perkelti į &Sekančią Etiketę"
+
+#: src/menus/ViewMenus.cpp
+msgid "&View"
+msgstr "&Vaizdas"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) full sized
+#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+msgid "&Zoom"
+msgstr "&Mastelis"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &In"
+msgstr "Pr&iartinti"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Normal"
+msgstr "&Normaliai priartinti"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Out"
+msgstr "&Atitraukti"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Zoom to Selection"
+msgstr "&Priartinti į Pasirinkimą"
+
+#: src/menus/ViewMenus.cpp
+msgid "Zoom &Toggle"
+msgstr "Priartinti &Nustatyti"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Advanced &Vertical Zooming"
+msgstr "Efektų nustatymai"
+
+#: src/menus/ViewMenus.cpp
+msgid "T&rack Size"
+msgstr "T&akelio Dydis"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Fit to Width"
+msgstr "&Pritaikyti pločiui"
+
+#: src/menus/ViewMenus.cpp
+msgid "Fit to &Height"
+msgstr "Pritaikyti &Aukščiui"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Collapse All Tracks"
+msgstr "&Sugriauti visus Takelius"
+
+#: src/menus/ViewMenus.cpp
+msgid "E&xpand Collapsed Tracks"
+msgstr "Pa&didinti Sugriautus Takelius"
+
+#: src/menus/ViewMenus.cpp
+msgid "Sk&ip to"
+msgstr "Pra&leisti iki"
+
+#: src/menus/ViewMenus.cpp
+msgid "Selection Sta&rt"
+msgstr "Pasirinkimo Pra&džia"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "į Apibraukimo Pradžią"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "į Apibraukimo Pabaigą"
+
+#. i18n-hint: Clicking this menu item shows the various editing steps
+#. that have been taken.
+#: src/menus/ViewMenus.cpp
+msgid "&History..."
+msgstr "&Istorija..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Karaoke..."
+msgstr "&Karaokė..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Mixer Board..."
+msgstr "&Miksavimo Lenta..."
+
+#: src/menus/ViewMenus.cpp
+msgid "&Extra Menus (on/off)"
+msgstr "&Papildomi Meniu (Įjungta/Išjungta)"
+
+#: src/menus/ViewMenus.cpp
+msgid "&Show Clipping (on/off)"
+msgstr "&Rodyti Apkarpymą (Įjungta/Išjungta)"
+
+#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr ""
+
+#  i18n-hint: This refers to a "window function", used in the
+#  Frequency analyze dialog box.
+#  i18n-hint: This refers to a "window function", used in the
+#: src/menus/WindowMenus.cpp
+msgid "&Window"
+msgstr "&Langas"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
+#. * window) shrink to an icon on the dock
+#: src/menus/WindowMenus.cpp
+msgid "&Minimize"
+msgstr "&Sumažinti"
+
+#. i18n-hint: Standard Macintosh Window menu item:  Make all project
+#. * windows un-hidden
+#: src/menus/WindowMenus.cpp
+msgid "&Bring All to Front"
+msgstr "&Perkelti Visus į Priekį"
+
+#. i18n-hint: Shrink all project windows to icons on the Macintosh
+#. tooldock
+#: src/menus/WindowMenus.cpp
+#, fuzzy
+msgid "Minimize All Projects"
+msgstr "Sumažinti visus projektus"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -13261,12 +13687,17 @@ msgstr ""
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgid "%s %2.0f%% complete. Click to change task focal point."
+msgstr ""
+
+#: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
+msgid "Batch"
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp
-msgid "Batch"
-msgstr ""
+#, fuzzy
+msgid "Preferences for Batch"
+msgstr "&Nuostatos..."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -13279,6 +13710,11 @@ msgstr ""
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
 msgstr ""
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Preferences for Device"
+msgstr "&Nuostatos..."
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -13295,7 +13731,7 @@ msgid "Using:"
 msgstr ""
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
 msgid "Playback"
 msgstr "Atkūrimas"
 
@@ -13304,7 +13740,8 @@ msgid "&Device:"
 msgstr "&Prietaisas:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Įrašymas"
 
@@ -13351,9 +13788,13 @@ msgid "2 (Stereo)"
 msgstr "2 (Stereo)"
 
 #. i18n-hint:  Directories, also called folders, in computer file systems
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Vietos"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Preferences for Directories"
+msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13427,11 +13868,47 @@ msgid "Temp Directory Update"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Effects"
+msgstr "&Nuostatos..."
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
 msgstr ""
 
+#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+#. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
-msgid "Audio Unit"
+#, fuzzy
+msgid "&LADSPA"
+msgstr "Efe&ktai"
+
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/prefs/EffectsPrefs.cpp
+msgid "LV&2"
+msgstr ""
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "N&yquist"
+msgstr "Nyquist"
+
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Vamp"
+msgstr ""
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/prefs/EffectsPrefs.cpp
+msgid "V&ST"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -13493,6 +13970,11 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.cpp
+#, fuzzy
+msgid "Preferences for ExtImport"
+msgstr "&Nuostatos..."
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -13561,6 +14043,16 @@ msgstr ""
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rule deletion confirmation"
 msgstr ""
+
+#: src/prefs/ExtImportPrefs.h
+#, fuzzy
+msgid "Ext Import"
+msgstr "Importuoti"
+
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgid "Preferences for GUI"
+msgstr "&Nuostatos..."
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -13677,8 +14169,16 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.h
+msgid "GUI"
+msgstr ""
+
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Preferences for ImportExport"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
@@ -13727,10 +14227,19 @@ msgstr ""
 msgid "&Beats"
 msgstr "Kartoti"
 
+#: src/prefs/ImportExportPrefs.h
+msgid "IMPORT EXPORT"
+msgstr ""
+
 #. i18n-hint: as in computer keyboard (not musical!)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard"
 msgstr "Klaviatūra"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "Preferences for KeyConfig"
+msgstr "&Nuostatos..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -13847,11 +14356,21 @@ msgid ""
 "\n"
 "\t'%s'\n"
 "\n"
-"instead.  Otherwise, click Cancel."
+"instead. Otherwise, click Cancel."
 msgstr ""
 
+#: src/prefs/KeyConfigPrefs.h
+#, fuzzy
+msgid "Key Config"
+msgstr "Klavišų Kombinacija"
+
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Export Library"
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "&Nuostatos..."
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "LAME MP3 Export Library"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -13859,15 +14378,11 @@ msgid "MP3 Library Version:"
 msgstr "MP3 Bibliotekos Versija:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library:"
+msgid "LAME MP3 Library:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -13908,10 +14423,20 @@ msgid ""
 "Do you still want to locate them manually?"
 msgstr ""
 
+#: src/prefs/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Bibliotekos"
+
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Devices"
 msgstr ""
+
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgid "Preferences for MidiIO"
+msgstr "&Nuostatos..."
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -13929,17 +14454,18 @@ msgstr ""
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
+#: src/prefs/MidiIOPrefs.h
+msgid "Midi IO"
+msgstr ""
+
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr ""
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Failed"
-msgstr ""
+#, fuzzy
+msgid "Preferences for Module"
+msgstr "&Nuostatos..."
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
@@ -13967,16 +14493,33 @@ msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr "Pokyčiai šioms nuostatoms įsigalios tik kai Audacity bus įjungta."
 
 #: src/prefs/ModulePrefs.cpp
+msgid "Ask"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Failed"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
+msgstr ""
+
+#: src/prefs/ModulePrefs.h
+msgid "Module"
 msgstr ""
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
 msgstr ""
 
-#: src/prefs/MousePrefs.cpp
+#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
 msgstr "Pelė"
+
+#: src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Preferences for Mouse"
+msgstr "&Nuostatos..."
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse Bindings (default values, not configurable)"
@@ -14184,6 +14727,11 @@ msgid "Vertical Scale Waveform (dB) range"
 msgstr "Bangos Forma (dB)"
 
 #: src/prefs/PlaybackPrefs.cpp
+#, fuzzy
+msgid "Preferences for Playback"
+msgstr "&Nuostatos..."
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
 msgstr ""
 
@@ -14222,6 +14770,10 @@ msgid "&Vari-Speed Play"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
+msgid "&Micro-fades"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
 msgstr ""
 
@@ -14238,9 +14790,14 @@ msgid "Preferences: "
 msgstr ""
 
 #. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp
+#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
 msgstr ""
+
+#: src/prefs/ProjectsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Projects"
+msgstr "Grąžinti Projektus"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "When saving a project that depends on other audio files"
@@ -14279,6 +14836,11 @@ msgstr "Trikampis"
 #: src/prefs/QualityPrefs.cpp
 msgid "Shaped"
 msgstr "Formuotas"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "Preferences for Quality"
+msgstr "&Nuostatos..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -14323,6 +14885,11 @@ msgstr ""
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Preferences for Recording"
+msgstr "&Nuostatos..."
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
@@ -14504,17 +15071,9 @@ msgid "Spectrograms"
 msgstr "Spektograma"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "8 - most wideband"
-msgstr ""
-
-#: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
-msgid "1024 - default"
-msgstr "256 - įprastas"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "32768 - most narrowband"
-msgstr ""
+msgid "Preferences for Spectrum"
+msgstr "&Nuostatos..."
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
@@ -14566,6 +15125,23 @@ msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "8 - most wideband"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+#, fuzzy
+msgid "1024 - default"
+msgstr "256 - įprastas"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "2048"
+msgstr ""
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "32768 - most narrowband"
 msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
@@ -14652,9 +15228,14 @@ msgstr ""
 #. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
-#: src/prefs/ThemePrefs.cpp
+#: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
 msgstr ""
+
+#: src/prefs/ThemePrefs.cpp
+#, fuzzy
+msgid "Preferences for Theme"
+msgstr "&Nuostatos..."
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -14679,7 +15260,7 @@ msgstr ""
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
-"Sourcery'.  This will save a\n"
+"Sourcery'. This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 
@@ -14717,8 +15298,12 @@ msgid "Load Files"
 msgstr ""
 
 #. i18n-hint: two nouns
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "Preferences for TracksBehaviors"
 msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14731,8 +15316,9 @@ msgid "Multi-track"
 msgstr "Multi"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "A&uto-select, if selection required"
-msgstr ""
+#, fuzzy
+msgid "&Select all audio, if selection required"
+msgstr "Perkelta prie apibraukimo pabaigos"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -14851,9 +15437,15 @@ msgid "4 Pixels per Sample"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Max Zoom"
 msgstr "Keist Mastelį"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preferences for Tracks"
+msgstr "&Nuostatos..."
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -14912,9 +15504,14 @@ msgstr "Pirmo failo vardas:"
 msgid "Preset 2:"
 msgstr "Pirmo failo vardas:"
 
-#: src/prefs/WarningsPrefs.cpp
+#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
 msgstr ""
+
+#: src/prefs/WarningsPrefs.cpp
+#, fuzzy
+msgid "Preferences for Warnings"
+msgstr "&Nuostatos..."
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -14953,6 +15550,11 @@ msgstr ""
 #, fuzzy
 msgid "Waveforms"
 msgstr "Bangos Forma"
+
+#: src/prefs/WaveformPrefs.cpp
+#, fuzzy
+msgid "Preferences for Waveforms"
+msgstr "&Nuostatos..."
 
 #: src/prefs/WaveformPrefs.cpp
 #, fuzzy
@@ -15287,9 +15889,9 @@ msgstr ""
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Selection %s.  %s won't change."
-msgstr ""
+#, fuzzy, c-format
+msgid "Selection %s. %s won't change."
+msgstr "Pasirinkti failą"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -15400,11 +16002,13 @@ msgid "Face size"
 msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Up &Octave"
 msgstr "Oktava Aukščiau"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Down Octa&ve"
 msgstr "Oktava žemiau"
@@ -15664,7 +16268,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -15942,6 +16546,20 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
+msgid "Command+Click to Unselect"
+msgstr "Komandos Veiksmas"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Select track"
+msgstr "Iš&rikiuoti Takelius"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Ctrl+Click to Unselect"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
 msgid "Open menu..."
 msgstr "&Atidaryti..."
 
@@ -16110,6 +16728,48 @@ msgstr ""
 msgid "Help on the Internet"
 msgstr ""
 
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "Ar norite išsaugoti pokyčius?"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "Sujungti"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Quick Fixes"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Nėra ko atšaukti"
+
+#: src/widgets/HelpSystem.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "&Uždaryti fokusuotą takelį"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "Nepavyksta atidaryti projekto failo"
+
+#: src/widgets/HelpSystem.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "Įrašinėjimo pradžia:"
+
+#: src/widgets/HelpSystem.cpp
+msgid "Fixed"
+msgstr ""
+
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
@@ -16230,7 +16890,7 @@ msgstr ""
 msgid "Show Log for Details"
 msgstr ""
 
-#: src/widgets/MultiDialog.h
+#: src/widgets/MultiDialog.cpp
 msgid "Please select an action"
 msgstr ""
 
@@ -16574,125 +17234,6 @@ msgstr "Ar tikrai norite uždaryti?"
 msgid "Confirm Close"
 msgstr "Patvirtinti"
 
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click and drag to adjust, double-click to reset"
-msgstr "Spauskite ir temkite santykiniam stereo takelio dydižiui pakeisti."
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Record/Play head"
-msgstr "Įrašinėjimo pabaiga:"
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click or drag to begin Seek"
-msgstr "Temti ir mesti pavyzdžių redagavimui"
-
-#: src/widgets/Ruler.cpp
-msgid "Click or drag to begin Scrub"
-msgstr "Paspausti ir tempti norint pradėti Gramdymą"
-
-#: src/widgets/Ruler.cpp
-msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Seek"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release to stop seeking."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Drag to Seek.  Release and move to Scrub."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Move to Scrub. Drag to Seek."
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play disabled"
-msgstr "Quick-Play išjungtas"
-
-#: src/widgets/Ruler.cpp
-msgid "Quick-Play enabled"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to unpin"
-msgstr "Perkelti į Pradžią"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Click to pin"
-msgstr "Perkelti į Pradžią"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Quick-Play"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Disable dragging selection"
-msgstr "Paversti apibraukimą tyla"
-
-#: src/widgets/Ruler.cpp
-#, fuzzy
-msgid "Enable dragging selection"
-msgstr "Paversti apibraukimą tyla"
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Timeline Tooltips"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Do not scroll while playing"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Update display while playing"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Lock Play Region"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Unlock Play Region"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Disable Scrub Ruler"
-msgstr ""
-
-#: src/widgets/Ruler.cpp
-msgid "Enable Scrub Ruler"
-msgstr ""
-
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Daugiau nerodyti šio perspėjimo"
@@ -16801,10 +17342,11 @@ msgstr ""
 #: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -17109,6 +17651,11 @@ msgid "S-Curve Out"
 msgstr "Kreivė egzistuoja"
 
 #: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Klaida"
+
+#: plug-ins/adjustable-fade.ny
 #, lisp-format
 msgid "~aPercentage values cannot be negative."
 msgstr ""
@@ -17123,13 +17670,8 @@ msgstr ""
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 \t-6 dB halves the amplitude."
 msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
-msgid "Error~%~%"
-msgstr "Klaida"
 
 #: plug-ins/beat.ny
 #, fuzzy
@@ -17316,31 +17858,6 @@ msgstr "Kartojimų skaičius"
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
-
-#: plug-ins/delay.ny
-#, fuzzy, lisp-format
-msgid "Error.~%~a"
-msgstr "Klaida"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -17349,9 +17866,16 @@ msgstr ""
 msgid "Adding equally-spaced labels to the label track..."
 msgstr ""
 
+#. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+#, fuzzy
+msgid "Create labels based on"
+msgstr "Išskirstyti failus pagal:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number & Interval"
+msgstr "Pavadinimo Redagavimas"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17371,6 +17895,11 @@ msgstr "Redagavimų skaičius:"
 #: plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label interval (seconds)"
+msgstr "Ilgis (sekundėmis)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Length of label region (seconds)"
 msgstr "Ilgis (sekundėmis)"
 
 #: plug-ins/equalabel.ny
@@ -17416,6 +17945,48 @@ msgstr ""
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Message on completion"
+msgstr "Klavišų Kombinacija"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Details"
+msgstr "Atkabinti"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Warnings only"
+msgstr "Perspėjimas"
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "Warning: Overlapping region labels.~%"
+msgstr ""
+
+#. i18n-hint:  Type of label
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "region labels"
+msgstr "Pridėtas pavadinimas"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "point labels"
+msgstr "Pakeistos etiketės"
+
+#. i18n-hint:  Number of labels produced at specified intervals.
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~a~a ~a at intervals of ~a seconds.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
+msgid "~aRegion length = ~a seconds."
 msgstr ""
 
 #: plug-ins/highpass.ny
@@ -17571,6 +18142,53 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Nyquist Plug-in Installer"
+msgstr "Nyquist papildiniai"
+
+#. i18n-hint: "Browse..." is text on a button that launches a file browser.
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Select plug-in file"
+msgstr "Pasirinkti failą"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s not found or cannot be read.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a supported plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid "Error.~%~s is already installed.~%"
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~s cannot be written.~%"
+msgstr "Klaida (failas gali būti neįrašytas): %s"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, lisp-format
+msgid ""
+"~s installed to:~%\"~a\"~%~%~\n"
+"            Use the Plug-in Manager to enable the effect."
+msgstr ""
+
+#: plug-ins/nyquist-plug-in-installer.ny
+msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr ""
 
 #: plug-ins/pluck.ny
@@ -17774,16 +18392,6 @@ msgstr ""
 #, fuzzy
 msgid "Amplitude (0 - 1)"
 msgstr "Amplitudė (0-1):"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "&Kairė"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "&Dešinė"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
@@ -18464,6 +19072,60 @@ msgstr "LFO Dažnis (Hz):"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "cleaned"
+#~ msgstr "išvalyta"
+
+#~ msgid "false"
+#~ msgstr "neteisingai"
+
+#, fuzzy
+#~ msgid "AudioUnit"
+#~ msgstr "Garso Failas"
+
+#, fuzzy
+#~ msgid "Nyquist Effects Prompt"
+#~ msgstr "Nyquist Efektai"
+
+#~ msgid "Save Device Info"
+#~ msgstr "Saugojimo Prietaiso Informacija"
+
+#~ msgid "Unable to save device info"
+#~ msgstr "Nepavyksta išsaugoti prietaiso informacijos"
+
+#~ msgid "Save MIDI Device Info"
+#~ msgstr "Išsaugoti MIDI Prietaiso Informaciją"
+
+#~ msgid "Unable to save MIDI device info"
+#~ msgstr "Nepavyksta Išsaugoti MIDI prietaiso informacijos"
+
+#, fuzzy
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
+
+#, fuzzy
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
+
+#, fuzzy
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
+
+#, fuzzy
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr "Koregavimų skaičius turi būti tarp 1 - 10000."
+
+#, fuzzy
+#~ msgid "Error.~%~a"
+#~ msgstr "Klaida"
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "&Kairė"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "&Dešinė"
+
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
 #~ "before zero.\n"
@@ -18836,9 +19498,6 @@ msgstr ""
 #~ msgid "Version"
 #~ msgstr "Reversuoju"
 
-#~ msgid "Key Combination"
-#~ msgstr "Klavišų Kombinacija"
-
 #~ msgid "Size"
 #~ msgstr "Dydis"
 
@@ -18882,10 +19541,6 @@ msgstr ""
 #~ msgstr "Pirma turite pasirinkti takelį."
 
 #, fuzzy
-#~ msgid "Device:"
-#~ msgstr "Įvesties Matuoklis"
-
-#, fuzzy
 #~ msgid "Add &Track Number"
 #~ msgstr "Takelio Numeris:"
 
@@ -18903,10 +19558,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "R&ight Channel"
 #~ msgstr "Dešinysis kanalas"
-
-#, fuzzy
-#~ msgid "&Rate"
-#~ msgstr "Nustatyti tempą"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"
