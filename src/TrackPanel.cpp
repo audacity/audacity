@@ -2048,8 +2048,39 @@ void TrackPanel::DrawShadow( wxDC * dc, const wxRect & rect )
 
 namespace {
 
-// Helper classes to implement the subdivision of TrackPanel area for
-// CellularPanel
+/*
+
+  The following classes define the subdivision of the area of the TrackPanel
+  into cells with differing reponses to mouse, keyboard, and scroll wheel
+  events.
+  
+  The classes defining the less inclusive areas are earlier, while those
+  defining ever larger hierarchical groupings of cells are later.
+
+  To describe that subdivision again, informally, and top-down:
+
+  Firstly subtract margin areas, on the left and right, that do not interact.
+
+  Secondly subtract a noninterative margin above the first track, and an area
+  below all tracks that causes deselection of all tracks if you click it.
+  (One or both of those areas might be vertically scrolled off-screen, though.)
+  Divide what remains into areas corresponding to the several tracks.
+
+  Thirdly, for each track, subtract an area below, which you can click and drag
+  to resize the track vertically.
+
+  Fourthly, subtract an area at the left, which contains the track controls,
+  such as the menu and delete and minimize buttons, and others appropriate
+  to the track subtype.
+
+  Fifthly, divide what remains into the vertically stacked channels, if there
+  are more than one, alternating with separators, which can be clicked to
+  resize the channel views.
+  
+  Lastly, split the area for each channel into a vertical ruler, and an area
+  that displays the channel's own contents.
+
+*/
 
 struct EmptyCell final : CommonTrackPanelCell {
    std::vector< UIHandlePtr > HitTest(
