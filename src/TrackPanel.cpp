@@ -337,14 +337,22 @@ void TrackPanel::ApplyUpdatedTheme()
 }
 
 
+wxSize TrackPanel::GetTracksUsableArea() const
+{
+   auto size = GetSize();
+   return {
+      std::max( 0, size.GetWidth() - ( GetLeftOffset() + kRightMargin ) ),
+      size.GetHeight()
+   };
+}
+
 void TrackPanel::GetTracksUsableArea(int *width, int *height) const
 {
-   GetSize(width, height);
-   if (width) {
-      *width -= GetLeftOffset();
-      *width -= kRightMargin;
-      *width = std::max(0, *width);
-   }
+   auto size = GetTracksUsableArea();
+   if (width)
+      *width = size.GetWidth();
+   if (height)
+      *height = size.GetHeight();
 }
 
 /// Gets the pointer to the AudacityProject that
@@ -2862,7 +2870,7 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
    : mPanelRect {
         wxPoint{ 0, project->mViewInfo.vpos },
-        project->GetTPTracksUsableArea()
+        project->GetTrackPanel()->GetTracksUsableArea()
      }
 {}
 

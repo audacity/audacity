@@ -441,11 +441,6 @@ public:
    double PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
-   // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
-   // TrackPanel access
-   wxSize GetTPTracksUsableArea() /* not override */;
-   void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
-
    // TrackPanel callback methods, overrides of TrackPanelListener
    void TP_DisplaySelection() override;
    void TP_DisplayStatusMessage(const wxString &msg) override;
