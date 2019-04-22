@@ -1358,8 +1358,8 @@
 		65326F482253DA5F00844F28 /* xmm_quantize_sub.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F1C2253DA5F00844F28 /* xmm_quantize_sub.c */; };
 		65326F492253DA5F00844F28 /* version.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326F1D2253DA5F00844F28 /* version.c */; };
 		65326F4A2253DA5F00844F28 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326F1E2253DA5F00844F28 /* version.h */; };
-		6563A80A2257AD77001CB678 /* liblibmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65326E9E2253D2BE00844F28 /* liblibmp3lame.a */; };
-		6563A80B2257AD77001CB678 /* liblibmpg123.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65326EA72253D68900844F28 /* liblibmpg123.a */; };
+		6563A80A2257AD77001CB678 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65326E9E2253D2BE00844F28 /* libmp3lame.a */; };
+		6563A80B2257AD77001CB678 /* libmpg123.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65326EA72253D68900844F28 /* libmpg123.a */; };
 		656854742258B372005FC068 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAC2253D70900844F28 /* config.h */; };
 		656854752258B483005FC068 /* encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EE42253DA5F00844F28 /* encoder.h */; };
 		659B26C5207501970039894A /* WindowAccessible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 659B26C3207501970039894A /* WindowAccessible.cpp */; };
@@ -3318,8 +3318,8 @@
 		5EF3E661203FE73C006C6882 /* DragCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragCommand.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
-		65326E9E2253D2BE00844F28 /* liblibmp3lame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = liblibmp3lame.a; path = libmp3lame.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		65326EA72253D68900844F28 /* liblibmpg123.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = liblibmpg123.a; path = libmpg123.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		65326E9E2253D2BE00844F28 /* libmp3lame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmp3lame.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		65326EA72253D68900844F28 /* libmpg123.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmpg123.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA92253D70900844F28 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		65326EAA2253D70900844F28 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
 		65326EAB2253D70900844F28 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
@@ -3538,8 +3538,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6563A80A2257AD77001CB678 /* liblibmp3lame.a in Frameworks */,
-				6563A80B2257AD77001CB678 /* liblibmpg123.a in Frameworks */,
+				6563A80A2257AD77001CB678 /* libmp3lame.a in Frameworks */,
+				6563A80B2257AD77001CB678 /* libmpg123.a in Frameworks */,
 				17C99D560989710D0041B1BC /* libvorbis.a in Frameworks */,
 				17C99D58098971380041B1BC /* libportsmf.a in Frameworks */,
 				17C99D5A098971390041B1BC /* libid3tag.a in Frameworks */,
@@ -4262,8 +4262,8 @@
 				EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */,
 				286229B0181CE4B600E1AD1A /* liblv2.a */,
 				28FADDEF1833C3C500BA4141 /* libexpat.a */,
-				65326E9E2253D2BE00844F28 /* liblibmp3lame.a */,
-				65326EA72253D68900844F28 /* liblibmpg123.a */,
+				65326E9E2253D2BE00844F28 /* libmp3lame.a */,
+				65326EA72253D68900844F28 /* libmpg123.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -7508,7 +7508,7 @@
 			);
 			name = libmp3lame;
 			productName = libsndfile;
-			productReference = 65326E9E2253D2BE00844F28 /* liblibmp3lame.a */;
+			productReference = 65326E9E2253D2BE00844F28 /* libmp3lame.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		65326E9F2253D68900844F28 /* libmpg123 */ = {
@@ -7524,7 +7524,7 @@
 			);
 			name = libmpg123;
 			productName = libsndfile;
-			productReference = 65326EA72253D68900844F28 /* liblibmpg123.a */;
+			productReference = 65326EA72253D68900844F28 /* libmpg123.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		ED15212F163C227C00451B5F /* libsoxr */ = {
