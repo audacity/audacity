@@ -419,7 +419,7 @@ ReservedCommandFlag::ReservedCommandFlag(
    Options().emplace_back( options );
 }
 
-CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
+CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
 {
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,

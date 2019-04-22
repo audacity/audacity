@@ -79,7 +79,7 @@ public:
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags( bool checkActive = false );
+   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
    void UpdatePrefs() override;
 
    // Command Handling
