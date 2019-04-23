@@ -384,8 +384,6 @@ public:
    void OnTimer(wxTimerEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);
-   void OnODTaskUpdate(wxCommandEvent & event);
-   void OnODTaskComplete(wxCommandEvent & event);
 
    void HandleResize();
    void UpdateLayout();

@@ -1098,8 +1098,6 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, AudacityProject::OnOpenAudioFile)
    EVT_COMMAND(wxID_ANY, EVT_TOOLBAR_UPDATED, AudacityProject::OnToolBarUpdate)
    //mchinen:multithreaded calls - may not be threadsafe with CommandEvent: may have to change.
-   EVT_COMMAND(wxID_ANY, EVT_ODTASK_UPDATE, AudacityProject::OnODTaskUpdate)
-   EVT_COMMAND(wxID_ANY, EVT_ODTASK_COMPLETE, AudacityProject::OnODTaskComplete)
 END_EVENT_TABLE()
 
 AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
@@ -2379,22 +2377,6 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
    HandleResize();
 
    event.Skip(false);             /* No need to propagate any further */
-}
-
-///Handles the redrawing necessary for tasks as they partially update in the background.
-void AudacityProject::OnODTaskUpdate(wxCommandEvent & WXUNUSED(event))
-{
-   //todo: add track data to the event - check to see if the project contains it before redrawing.
-   if(mTrackPanel)
-      mTrackPanel->Refresh(false);
-
-}
-
-//redraws the task and does other book keeping after the task is complete.
-void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
-{
-  if(mTrackPanel)
-      mTrackPanel->Refresh(false);
 }
 
 void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
