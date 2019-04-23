@@ -5707,11 +5707,3 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
 }
-
-// Stop playing or recording, if paused.
-void AudacityProject::StopIfPaused()
-{
-   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
-   if( flags & PausedFlag )
-      TransportActions::DoStop(*this);
-}

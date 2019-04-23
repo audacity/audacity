@@ -134,6 +134,7 @@ void DoZoomFitV( AudacityProject &project );
 
 /// Namespace for functions for Transport menu
 namespace TransportActions {
+void StopIfPaused( AudacityProject &project );
 bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
 void DoPlayStopSelect( AudacityProject &project );
 void DoStop( AudacityProject & );

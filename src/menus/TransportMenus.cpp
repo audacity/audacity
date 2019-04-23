@@ -193,6 +193,14 @@ namespace TransportActions {
 
 // exported helper functions
 
+// Stop playing or recording, if paused.
+void StopIfPaused( AudacityProject &project )
+{
+   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   if( flags & PausedFlag )
+      DoStop( project );
+}
+
 bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
 {

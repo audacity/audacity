@@ -401,7 +401,6 @@ public:
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
    void RefreshCursor();
-   void StopIfPaused();
    void Zoom(double level);
    void ZoomBy(double multiplier);
    void Rewind(bool shift);

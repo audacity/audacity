@@ -1305,7 +1305,7 @@ void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
 
    AudacityProject *p = GetActiveProject();
    if (p) {
-      p->StopIfPaused();
+      TransportActions::StopIfPaused( *p );
       p->Rewind(mRewind->WasShiftDown());
    }
 }
@@ -1318,7 +1318,7 @@ void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
    AudacityProject *p = GetActiveProject();
 
    if (p) {
-      p->StopIfPaused();
+      TransportActions::StopIfPaused( *p );
       p->SkipEnd(mFF->WasShiftDown());
    }
 }
