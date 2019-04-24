@@ -39,7 +39,6 @@ class CommandHandler;
 class AppCommandEvent;
 class AudacityLogger;
 class AudacityProject;
-class FileHistory;
 
 void SaveWindowSize();
 
@@ -155,8 +154,6 @@ class AudacityApp final : public wxApp {
                                    int flags = wxDIR_FILES);
    static bool IsTempDirectoryNameOK( const wxString & Name );
 
-   FileHistory *GetRecentFiles() {return mRecentFiles.get();}
-   void AddFileToHistory(const FilePath & name);
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
 
@@ -181,7 +178,6 @@ class AudacityApp final : public wxApp {
 
  private:
    std::unique_ptr<CommandHandler> mCmdHandler;
-   std::unique_ptr<FileHistory> mRecentFiles;
 
    std::unique_ptr<wxLocale> mLocale;
 

@@ -722,10 +722,6 @@ void AudacityApp::MacNewFile()
 
 #endif //__WXMAC__
 
-#define ID_RECENT_CLEAR 6100
-#define ID_RECENT_FIRST 6101
-#define ID_RECENT_LAST  6112
-
 // IPC communication
 #define ID_IPC_SERVER   6200
 #define ID_IPC_SOCKET   6201
@@ -752,8 +748,9 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
 #endif
 
    // Recent file event handlers.
-   EVT_MENU(ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
-   EVT_MENU_RANGE(ID_RECENT_FIRST, ID_RECENT_LAST, AudacityApp::OnMRUFile)
+   EVT_MENU(FileHistory::ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
+   EVT_MENU_RANGE(FileHistory::ID_RECENT_FIRST, FileHistory::ID_RECENT_LAST,
+      AudacityApp::OnMRUFile)
 
    // Handle AppCommandEvents (usually from a script)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
@@ -820,15 +817,16 @@ bool AudacityApp::SafeMRUOpen(const wxString &fullPathStr)
 
 void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 {
-   mRecentFiles->Clear();
+   FileHistory::Global().Clear();
 }
 
 //vvv Basically, anything from Recent Files is treated as a .aup, until proven otherwise,
 // then it tries to Import(). Very questionable handling, imo.
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
-   int n = event.GetId() - ID_RECENT_FIRST;
-   const auto &fullPathStr = mRecentFiles->GetHistoryFile(n);
+   int n = event.GetId() - FileHistory::ID_RECENT_FIRST;
+   auto &history = FileHistory::Global();
+   const auto &fullPathStr = history.GetHistoryFile(n);
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
@@ -839,7 +837,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
    if (!AudacityProject::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
-      mRecentFiles->RemoveFileFromHistory(n);
+      history.RemoveFileFromHistory(n);
 }
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
@@ -1445,10 +1443,6 @@ bool AudacityApp::OnInit()
    this->AssociateFileTypes();
 #endif
 
-   // TODO - read the number of files to store in history from preferences
-   mRecentFiles = std::make_unique<FileHistory>(ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR);
-   mRecentFiles->Load(*gPrefs, wxT("RecentFiles"));
-
    theTheme.EnsureInitialised();
 
    // AColor depends on theTheme.
@@ -1592,8 +1586,9 @@ bool AudacityApp::OnInit()
          wxMenuBar::MacSetCommonMenuBar(menuBar.release());
       }
 
-      mRecentFiles->UseMenu(recentMenu);
-      mRecentFiles->AddFilesToMenu(recentMenu);
+      auto &recentFiles = FileHistory::Global();
+      recentFiles.UseMenu(recentMenu);
+      recentFiles.AddFilesToMenu(recentMenu);
 
       SetExitOnFrameDelete(false);
 
@@ -2185,11 +2180,6 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
    }
 }
 
-void AudacityApp::AddFileToHistory(const FilePath & name)
-{
-   mRecentFiles->AddFileToHistory(name);
-}
-
 int AudacityApp::OnExit()
 {
    gIsQuitting = true;
@@ -2212,7 +2202,7 @@ int AudacityApp::OnExit()
       }
    }
 
-   mRecentFiles->Save(*gPrefs, wxT("RecentFiles"));
+   FileHistory::Global().Save(*gPrefs, wxT("RecentFiles"));
 
    FinishPreferences();
 

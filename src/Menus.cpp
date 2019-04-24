@@ -31,7 +31,6 @@
 #include "Experimental.h"
 
 #include "AdornedRulerPanel.h"
-#include "AudacityApp.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
 #include "LabelTrack.h"
@@ -538,7 +537,7 @@ CommandFlag MenuManager::GetUpdateFlags
       }
    }
 
-   if (wxGetApp().GetRecentFiles()->GetCount() > 0)
+   if (FileHistory::Global().GetCount() > 0)
       flags |= HaveRecentFiles;
 
    if (project.IsSyncLocked())

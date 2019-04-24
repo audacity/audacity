@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class FileHistory
-\brief Similar to FileHistory, but customized to our needs.
+\brief Similar to wxFileHistory, but customized to our needs.
 
 *//*******************************************************************/
 
@@ -21,6 +21,9 @@
 #include <wx/menu.h>
 
 #include "../Internat.h"
+#include "../Prefs.h"
+
+#include <mutex>
 
 FileHistory::FileHistory(size_t maxfiles, wxWindowID base)
 {
@@ -30,6 +33,19 @@ FileHistory::FileHistory(size_t maxfiles, wxWindowID base)
 
 FileHistory::~FileHistory()
 {
+}
+
+FileHistory &FileHistory::Global()
+{
+   // TODO - read the number of files to store in history from preferences
+   static FileHistory history{
+      ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR };
+   static std::once_flag flag;
+   std::call_once( flag, [&]{
+      history.Load(*gPrefs, wxT("RecentFiles"));
+   });
+
+   return history;
 }
 
 // File history management

@@ -95,6 +95,7 @@ scroll information.  It also has some status flags.
 
 #include "AdornedRulerPanel.h"
 #include "Clipboard.h"
+#include "widgets/FileHistory.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
 #include "AutoRecovery.h"
@@ -3129,9 +3130,8 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       // else any asynch calls into the blockfile code will not have
       // finished logging errors (if any) before the call to ProjectFSCK()
 
-      if (addtohistory) {
-         wxGetApp().AddFileToHistory(fileName);
-      }
+      if (addtohistory)
+         FileHistory::Global().AddFileToHistory(fileName);
    }
 
    // Use a finally block here, because there are calls to Save() below which
@@ -4293,7 +4293,7 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
       if (!success)
          return false;
 
-      wxGetApp().AddFileToHistory(fileName);
+      FileHistory::Global().AddFileToHistory(fileName);
 
       // no more errors, commit
       cleanup.release();
@@ -4372,7 +4372,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy);
 
    if (success && addToHistory) {
-      wxGetApp().AddFileToHistory(mFileName);
+      FileHistory::Global().AddFileToHistory(mFileName);
    }
    if (!success || bWantSaveCopy) // bWantSaveCopy doesn't actually change current project.
    {
@@ -4542,7 +4542,7 @@ will be irreversibly overwritten."), fName, fName);
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy, bLossless);
 
    if (success) {
-      wxGetApp().AddFileToHistory(mFileName);
+      FileHistory::Global().AddFileToHistory(mFileName);
       if( !bHasPath )
       {
          gPrefs->Write( wxT("/SaveAs/Path"), filename.GetPath());
@@ -5354,7 +5354,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    bSuccess = DoSave(true, false);
 
    if (bSuccess) {
-      wxGetApp().AddFileToHistory(mFileName);
+      FileHistory::Global().AddFileToHistory(mFileName);
       mbLoadedFromAup = true;
       SetProjectTitle();
    }
