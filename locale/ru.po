@@ -13,9 +13,9 @@
 # Дмитрий Шатера <mr.bobsans@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity\n"
+"Project-Id-Version: audacity 2.3.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-04-18 18:13+0100\n"
+"POT-Creation-Date: 2019-04-24 19:44+0100\n"
 "PO-Revision-Date: 2019-04-22 09:41+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: \n"
@@ -854,14 +854,14 @@ msgid ""
 "of the missing files."
 msgstr ""
 "Не удалось найти ни одного внешнего аудиофайла.\n"
-"Они могут быть перемещены, удалены, или диск, на котором они сохранены, "
-"не подключён к системе.\n"
+"Они могут быть перемещены, удалены, или диск, на котором они сохранены, не "
+"подключён к системе.\n"
 "Звуковые данные файлов, которые не найдены, будут заменены тишиной.\n"
 "Первый обнаруженный отсутствующий файл:\n"
 "%s\n"
 "Могут отсутствовать и другие файлы. Выберите в меню: \n"
-"Справка > Диагностика > Проверка зависимостей, чтобы "
-"просмотреть список расположения отсутствующих файлов."
+"Справка > Диагностика > Проверка зависимостей, чтобы просмотреть список "
+"расположения отсутствующих файлов."
 
 #: src/AudacityApp.cpp
 msgid "Files Missing"
@@ -934,8 +934,8 @@ msgid ""
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Программе не удалось найти безопасное место для хранения временных файлов.\n"
-"Audacity нужно место, где программы для автоудаления файлов не " 
-"удалят временные файлы.\n"
+"Audacity нужно место, где программы для автоудаления файлов не удалят "
+"временные файлы.\n"
 "Задайте соответствующий каталог в диалоге параметров программы."
 
 #: src/AudacityApp.cpp
@@ -951,8 +951,8 @@ msgid ""
 "Audacity is now going to exit. Please launch Audacity again to use the new "
 "temporary directory."
 msgstr ""
-"Audacity готовится к завершению. Для использования нового временного каталога "
-"запустите программу повторно."
+"Audacity готовится к завершению. Для использования нового временного "
+"каталога запустите программу повторно."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1309,8 +1309,8 @@ msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
 msgstr ""
-"Авторегулировка уровня записи остановлена. Оптимизировать его "
-"невозможно. Он всё ещё слишком высок."
+"Авторегулировка уровня записи остановлена. Оптимизировать его невозможно. Он "
+"всё ещё слишком высок."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1322,8 +1322,8 @@ msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
-"Авторегулировка уровня записи остановлена. Оптимизировать его "
-"невозможно. Он всё ещё слишком низок."
+"Авторегулировка уровня записи остановлена. Оптимизировать его невозможно. Он "
+"всё ещё слишком низок."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -4035,7 +4035,7 @@ msgstr "Реальная частота: %d Гц"
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence audio sample data from the
+#. Dropout is a loss of a short sequence of audio sample data from the
 #. recording
 #: src/Project.cpp
 msgid "Dropouts"
@@ -5002,7 +5002,7 @@ msgstr "Стерео, 999999 Гц"
 msgid "TrackView"
 msgstr "Вид трека"
 
-#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: The %d is replaced by the number of the track.
 #. i18n-hint: compose a name identifying an unnamed track by number
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -10378,8 +10378,8 @@ msgid ""
 "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "All Files|*"
 msgstr ""
-"Тоько lame_enc.dll|lame_enc.dll|Динамически связанные библиотеки (*.dll)"
-"|*.dll|All Files|*"
+"Тоько lame_enc.dll|lame_enc.dll|Динамически связанные библиотеки (*.dll)|*."
+"dll|All Files|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10394,8 +10394,8 @@ msgid ""
 "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|"
 "All Files (*)|*"
 msgstr ""
-"Только libmp3lame.dylib|libmp3lame.dylib|Динамические библиотеки (*.dylib)|"
-"*.dylib|dll|Все файлы|*"
+"Только libmp3lame.dylib|libmp3lame.dylib|Динамические библиотеки (*.dylib)|*."
+"dylib|dll|Все файлы|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -12570,10 +12570,6 @@ msgstr "Ин&дикатор уровня записи"
 msgid "&Playback Meter Toolbar"
 msgstr "Инд&икатор уровня проигрывания"
 
-#. i18nhint: Clicking this menu item shows the toolbar
-#. which has sound level meters
-#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
-#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the mixer
 #: src/menus/ToolbarMenus.cpp

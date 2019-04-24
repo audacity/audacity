@@ -1,9 +1,9 @@
 # Miguel Anxo Bouzada <mbouzada@gmail.com>, 2012, 2013, 2014, 2015.
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.0.0\n"
+"Project-Id-Version: audacity 2.3.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-04-18 18:13+0100\n"
+"POT-Creation-Date: 2019-04-24 19:44+0100\n"
 "PO-Revision-Date: 2015-02-20 17:07-0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -4216,7 +4216,7 @@ msgstr "Frecuencia actual: %d"
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence audio sample data from the
+#. Dropout is a loss of a short sequence of audio sample data from the
 #. recording
 #: src/Project.cpp
 msgid "Dropouts"
@@ -5193,7 +5193,7 @@ msgstr "Estéreo, 999999Hz"
 msgid "TrackView"
 msgstr "Vista de pista"
 
-#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: The %d is replaced by the number of the track.
 #. i18n-hint: compose a name identifying an unnamed track by number
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -13160,10 +13160,6 @@ msgstr "Barra de ferramentas de medición de g&ravación"
 msgid "&Playback Meter Toolbar"
 msgstr "Barra de ferramentas de medición de re&produción"
 
-#. i18nhint: Clicking this menu item shows the toolbar
-#. which has sound level meters
-#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
-#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the mixer
 #: src/menus/ToolbarMenus.cpp
