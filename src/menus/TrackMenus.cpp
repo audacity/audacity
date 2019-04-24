@@ -43,7 +43,7 @@ void DoMixAndRender
    auto defaultFormat = project.GetDefaultFormat();
    auto trackPanel = project.GetTrackPanel();
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
 
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(

@@ -33,7 +33,7 @@ void DoExport
 
    Exporter e;
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
    double t0 = 0.0;
    double t1 = tracks->GetEndTime();
 
@@ -231,7 +231,7 @@ void OnExportSelection(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    Exporter e;
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
    e.SetFileDialogTitle( _("Export Selected Audio") );
    e.Process(&project, true, selectedRegion.t0(),
       selectedRegion.t1());
@@ -303,7 +303,7 @@ void OnExportMultiple(const CommandContext &context)
    auto &project = context.project;
    ExportMultiple em(&project);
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
    em.ShowModal();
 }
 
@@ -396,7 +396,7 @@ void OnImport(const CommandContext &context)
 
    // An import trigger for the alias missing dialog might not be intuitive, but
    // this serves to track the file if the users zooms in and such.
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
 
    wxArrayString selectedFiles = project.ShowOpenDialog(wxT(""));
    if (selectedFiles.size() == 0) {

@@ -2058,7 +2058,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    // Enable warning popups for unfound aliased blockfiles.
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
 
    commit = true;
    return mStreamToken;

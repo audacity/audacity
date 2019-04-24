@@ -1023,7 +1023,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mStatusBar->SetName(wxT("status_line"));     // not localized
    mProjectNo = mProjectCounter++; // Bug 322
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
    // MM: We don't need to Ref() here because it start with refcount=1
@@ -1434,12 +1434,12 @@ void AudacityProject::UpdatePrefs()
 
 void AudacityProject::SetMissingAliasFileDialog(wxDialog *dialog)
 {
-   mAliasMissingWarningDialog = dialog;
+   mMissingAliasFilesWarningDialog = dialog;
 }
 
 wxDialog *AudacityProject::GetMissingAliasFileDialog()
 {
-   return mAliasMissingWarningDialog;
+   return mMissingAliasFilesWarningDialog;
 }
 
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
@@ -5278,7 +5278,7 @@ bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, i
 {
    Exporter e;
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
    return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
 }
 

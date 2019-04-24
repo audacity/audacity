@@ -628,7 +628,7 @@ private:
    Destroy_ptr<ContrastDialog> mContrastDialog;
 
    // dialog for missing alias warnings
-   wxDialog            *mAliasMissingWarningDialog{};
+   wxDialog            *mMissingAliasFilesWarningDialog{};
 
    bool mShownOnce{ false };
 

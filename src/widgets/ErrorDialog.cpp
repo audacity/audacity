@@ -14,7 +14,7 @@
 
 *//*****************************************************************//**
 
-\class AliasedFileMissingDialog
+\class MissingAliasFileDialog
 \brief Special case of ErrorDialog for reporting missing alias files.
 
 *//********************************************************************/
@@ -42,15 +42,15 @@
 #include "HelpSystem.h"
 
 // special case for alias missing dialog because we keep track of if it exists.
-class AliasedFileMissingDialog final : public ErrorDialog
+class MissingAliasFileDialog final : public ErrorDialog
 {
    public:
-   AliasedFileMissingDialog(AudacityProject *parent,
+   MissingAliasFileDialog(AudacityProject *parent,
       const wxString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
       const bool Close = true, const bool modal = true);
-   virtual ~AliasedFileMissingDialog();
+   virtual ~MissingAliasFileDialog();
 };
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
@@ -59,7 +59,7 @@ BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 
-AliasedFileMissingDialog::AliasedFileMissingDialog(AudacityProject *parent,
+MissingAliasFileDialog::MissingAliasFileDialog(AudacityProject *parent,
       const wxString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
@@ -69,7 +69,7 @@ ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
    parent->SetMissingAliasFileDialog(this);
 }
 
-AliasedFileMissingDialog::~AliasedFileMissingDialog()
+MissingAliasFileDialog::~MissingAliasFileDialog()
 {
    ((AudacityProject*)GetParent())->SetMissingAliasFileDialog(NULL);
 }
@@ -202,14 +202,14 @@ void ShowModelessErrorDialog(wxWindow *parent,
    // but in practice Destroy() in OnOK does that
 }
 
-void ShowAliasMissingDialog(AudacityProject *parent,
+void ShowMissingAliasFilesDialog(AudacityProject *parent,
                             const wxString &dlogTitle,
                             const wxString &message,
                             const wxString &helpPage,
                             const bool Close)
 {
    wxASSERT(parent); // to justify safenew
-   ErrorDialog *dlog = safenew AliasedFileMissingDialog(parent, dlogTitle, message, helpPage, Close, false);
+   ErrorDialog *dlog = safenew MissingAliasFileDialog(parent, dlogTitle, message, helpPage, Close, false);
    // Don't center because in many cases (effect, export, etc) there will be a progress bar in the center that blocks this.
    // instead put it just above or on the top of the project.
    wxPoint point;

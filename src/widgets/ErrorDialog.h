@@ -57,7 +57,7 @@ void ShowModelessErrorDialog(wxWindow *parent,
                      bool Close = true);
 
 /// Displays a custom modeless error dialog for aliased file errors
-void ShowAliasMissingDialog(AudacityProject *parent,
+void ShowMissingAliasFilesDialog(AudacityProject *parent,
                      const wxString &dlogTitle,
                      const wxString &message,
                      const wxString &helpPage,

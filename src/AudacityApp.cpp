@@ -881,7 +881,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
    }
 
    // Check if a warning for missing aliased files should be displayed
-   if (ShouldShowMissingAliasedFileWarning()) {
+   if (ShouldShowMissingAliasFilesWarning()) {
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
       //size_t numProjects = gAudacityProjects.size();
@@ -914,16 +914,16 @@ locations of the missing files."), missingFileName);
          if (offendingProject->GetMissingAliasFileDialog()) {
             offendingProject->GetMissingAliasFileDialog()->Raise();
          } else {
-            ShowAliasMissingDialog(offendingProject.get(), _("Files Missing"),
+            ShowMissingAliasFilesDialog(offendingProject.get(), _("Files Missing"),
                                    errorMessage, wxT(""), true);
          }
       }
       // Only show this warning once per event (playback/menu item/etc).
-      SetMissingAliasedFileWarningShouldShow(false);
+      SetMissingAliasFilesWarningShouldShow(false);
    }
 }
 
-void AudacityApp::MarkAliasedFilesMissingWarning(const AliasBlockFile *b)
+void AudacityApp::MarkMissingAliasFilesWarning(const AliasBlockFile *b)
 {
    ODLocker locker { &m_LastMissingBlockFileLock };
    if (b) {
@@ -945,24 +945,24 @@ void AudacityApp::MarkAliasedFilesMissingWarning(const AliasBlockFile *b)
       m_LastMissingBlockFilePath = wxString{};
 }
 
-void AudacityApp::SetMissingAliasedFileWarningShouldShow(bool b)
+void AudacityApp::SetMissingAliasFilesWarningShouldShow(bool b)
 {
    // Note that this is can be called by both the main thread and other threads.
    // I don't believe we need a mutex because we are checking zero vs non-zero,
    // and the setting from other threads will always be non-zero (true), and the
    // setting from the main thread is always false.
-   m_aliasMissingWarningShouldShow = b;
+   m_missingAliasFilesWarningShouldShow = b;
    // reset the warnings as they were probably marked by a previous run
-   if (m_aliasMissingWarningShouldShow) {
-      MarkAliasedFilesMissingWarning( nullptr );
+   if (m_missingAliasFilesWarningShouldShow) {
+      MarkMissingAliasFilesWarning( nullptr );
    }
 }
 
-bool AudacityApp::ShouldShowMissingAliasedFileWarning()
+bool AudacityApp::ShouldShowMissingAliasFilesWarning()
 {
    ODLocker locker { &m_LastMissingBlockFileLock };
    auto ptr = m_LastMissingBlockFileProject.lock();
-   return ptr && m_aliasMissingWarningShouldShow;
+   return ptr && m_missingAliasFilesWarningShouldShow;
 }
 
 AudacityLogger *AudacityApp::GetLogger()
@@ -1284,7 +1284,7 @@ bool AudacityApp::OnInit()
 
    mLocale = NULL;
 
-   m_aliasMissingWarningShouldShow = true;
+   m_missingAliasFilesWarningShouldShow = true;
 
 #if defined(__WXMAC__)
    // Disable window animation

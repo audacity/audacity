@@ -537,8 +537,8 @@ size_t BlockFile::CommonReadData(
 
          if (pAliasFile) {
             // Set a marker to display an error message for the silence
-            if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
-               wxGetApp().MarkAliasedFilesMissingWarning(pAliasFile);
+            if (!wxGetApp().ShouldShowMissingAliasFilesWarning())
+               wxGetApp().MarkMissingAliasFilesWarning(pAliasFile);
          }
       }
    }

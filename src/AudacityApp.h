@@ -106,18 +106,18 @@ class AudacityApp final : public wxApp {
    /** \brief Mark playback as having missing aliased blockfiles
      *
      * Playback will continue, but the missing files will be silenced
-     * ShouldShowMissingAliasedFileWarning can be called to determine
+     * ShouldShowMissingAliasFilesWarning can be called to determine
      * if the user should be notified
      */
-   void MarkAliasedFilesMissingWarning(const AliasBlockFile *b);
+   void MarkMissingAliasFilesWarning(const AliasBlockFile *b);
 
    /** \brief Changes the behavior of missing aliased blockfiles warnings
      */
-   void SetMissingAliasedFileWarningShouldShow(bool b);
+   void SetMissingAliasFilesWarningShouldShow(bool b);
 
    /** \brief Returns true if the user should be notified of missing alias warnings
      */
-   bool ShouldShowMissingAliasedFileWarning();
+   bool ShouldShowMissingAliasFilesWarning();
 
    #ifdef __WXMAC__
     // In response to Apple Events
@@ -185,7 +185,7 @@ class AudacityApp final : public wxApp {
 
    wxTimer mTimer;
 
-   bool                 m_aliasMissingWarningShouldShow;
+   bool                 m_missingAliasFilesWarningShouldShow;
    std::weak_ptr< AudacityProject > m_LastMissingBlockFileProject;
    wxString             m_LastMissingBlockFilePath;
 

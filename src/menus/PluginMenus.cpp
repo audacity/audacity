@@ -412,7 +412,7 @@ bool DoEffect(
       project.SelectAllIfNone();
    }
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
 
    auto nTracksOriginally = project.GetTrackCount();
    wxWindow *focus = wxWindow::FindFocus();
