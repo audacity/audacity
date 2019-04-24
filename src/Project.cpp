@@ -5337,14 +5337,6 @@ void AudacityProject::SetSyncLock(bool flag)
    }
 }
 
-bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
-{
-   Exporter e;
-
-   MissingAliasFilesDialog::SetShouldShow(true);
-   return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
-}
-
 int AudacityProject::GetOpenProjectCount() {
    return gAudacityProjects.size();
 }

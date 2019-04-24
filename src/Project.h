@@ -347,7 +347,6 @@ public:
 
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
-   bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
    static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
