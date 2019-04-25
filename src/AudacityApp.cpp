@@ -245,7 +245,6 @@ It handles initialization and termination by subclassing wxApp.
 /// Custom events
 ////////////////////////////////////////////////////////////
 
-DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
 wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 #if 0

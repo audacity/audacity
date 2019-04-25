@@ -943,6 +943,13 @@ enum {
 };
 
 
+// PRL:  This event type definition used to be in AudacityApp.h, which created
+// a bad compilation dependency.  The event was never emitted anywhere.  I
+// preserve it and its handler here but I move it to remove the dependency.
+// Asynchronous open
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
+DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
+
 BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_MENU(wxID_ANY, AudacityProject::OnMenu)
    EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)

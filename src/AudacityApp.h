@@ -48,9 +48,6 @@ void QuitAudacity();
 
 extern bool gIsQuitting;
 
-// Asynchronous open
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
-
 class BlockFile;
 class AliasBlockFile;
 
