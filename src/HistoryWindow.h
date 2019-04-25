@@ -28,6 +28,8 @@ class HistoryWindow final : public wxDialogWrapper {
    HistoryWindow(AudacityProject * parent, UndoManager *manager);
 
    void UpdateDisplay(wxEvent &e);
+   
+   bool Show( bool show = true ) override;
 
  private:
    void OnAudioIO(wxCommandEvent & evt);
