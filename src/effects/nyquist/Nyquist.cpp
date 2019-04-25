@@ -54,7 +54,6 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "../EffectManager.h"
-#include "../../AudacityApp.h"
 #include "../../DirManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
@@ -70,6 +69,7 @@ effects from this one class.
 #include "../../widgets/ErrorDialog.h"
 #include "../../Prefs.h"
 #include "../../wxFileNameWrapper.h"
+#include "../../prefs/GUIPrefs.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/ProgressDialog.h"
@@ -655,7 +655,7 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-      lang = (lang.empty())? wxGetApp().SetLang(lang) : lang;
+      lang = (lang.empty())? GUIPrefs::SetLang(lang) : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());

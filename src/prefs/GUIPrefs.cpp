@@ -22,9 +22,10 @@
 
 #include "../Experimental.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 
-#include "../AudacityApp.h"
+#include "../FileNames.h"
 #include "../Languages.h"
 #include "../Theme.h"
 #include "../Prefs.h"
@@ -34,6 +35,10 @@
 
 #include "ThemePrefs.h"
 #include "../AColor.h"
+#include "../TranslatableStringArray.h"
+#include "../widgets/ErrorDialog.h"
+
+wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
@@ -256,7 +261,7 @@ bool GUIPrefs::Commit()
 
    // If language has changed, we want to change it now, not on the next reboot.
    wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-   wxString usedLang = wxGetApp().SetLang(lang);
+   wxString usedLang = SetLang(lang);
    // Bug 1523: Previously didn't check no-language (=System Language)
    if (!(lang.empty()) && (lang != usedLang)) {
       // lang was not usable and is not system language.  We got overridden.
@@ -265,6 +270,99 @@ bool GUIPrefs::Commit()
    }
 
    return true;
+}
+
+wxString GUIPrefs::InitLang( wxString langCode )
+{
+   if ( langCode.empty() )
+      langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
+
+   // Use the system default language if one wasn't specified or if the user selected System.
+   if (langCode.empty())
+   {
+      langCode = GetSystemLanguageCode();
+   }
+
+   // Initialize the language
+   return SetLang(langCode);
+}
+
+static std::unique_ptr<wxLocale> sLocale;
+
+wxString GUIPrefs::SetLang( const wxString & lang )
+{
+   wxString result = lang;
+
+   sLocale.reset();
+
+#if defined(__WXMAC__)
+   // This should be reviewed again during the wx3 conversion.
+
+   // On OSX, if the LANG environment variable isn't set when
+   // using a language like Japanese, an assertion will trigger
+   // because conversion to Japanese from "?" doesn't return a
+   // valid length, so make OSX happy by defining/overriding
+   // the LANG environment variable with U.S. English for now.
+   wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
+#endif
+
+   const wxLanguageInfo *info = NULL;
+   if (!lang.empty()) {
+      info = wxLocale::FindLanguageInfo(lang);
+      if (!info)
+         ::AudacityMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
+   }
+   if (!info)
+   {
+      result = GetSystemLanguageCode();
+      info = wxLocale::FindLanguageInfo(result);
+      if (!info)
+         return result;
+   }
+   sLocale = std::make_unique<wxLocale>(info->Language);
+
+   for( const auto &path : FileNames::AudacityPathList() )
+      sLocale->AddCatalogLookupPathPrefix( path );
+
+   // LL:  Must add the wxWidgets catalog manually since the search
+   //      paths were not set up when mLocale was created.  The
+   //      catalogs are search in LIFO order, so add wxstd first.
+   sLocale->AddCatalog(wxT("wxstd"));
+
+// AUDACITY_NAME is legitimately used on some *nix configurations.
+#ifdef AUDACITY_NAME
+   sLocale->AddCatalog(wxT(AUDACITY_NAME));
+#else
+   sLocale->AddCatalog(IPC_APPL);
+#endif
+
+   // Initialize internationalisation (number formats etc.)
+   //
+   // This must go _after_ creating the wxLocale instance because
+   // creating the wxLocale instance sets the application-wide locale.
+
+   Internat::Init();
+
+   // Notify listeners of language changes
+   {
+      wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
+      wxTheApp->ProcessEvent(evt);
+   }
+
+   // PRL: Moved this, do it only after language intialized
+   // Unused strings that we want to be translated, even though
+   // we're not using them yet...
+   wxString future1 = _("Master Gain Control");
+
+   return result;
+}
+
+wxString GUIPrefs::GetLang()
+{
+   if (sLocale)
+      return sLocale->GetSysName();
+   else
+      return {};
 }
 
 PrefsPanel::Factory

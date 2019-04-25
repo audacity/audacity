@@ -59,18 +59,6 @@ class AudacityApp final : public wxApp {
 
    int FilterEvent(wxEvent & event) override;
 
-   // If no input language given, defaults first to choice in preferences, then
-   // to system language.
-   // Returns the language actually used which is not lang if lang cannot be found.
-   wxString InitLang( wxString lang = {} );
-
-   // If no input language given, defaults to system language.
-   // Returns the language actually used which is not lang if lang cannot be found.
-   wxString SetLang( const wxString & lang );
-
-   // Returns the last language code that was set
-   wxString GetLang() const;
-
    // These are currently only used on Mac OS, where it's
    // possible to have a menu bar but no windows open.  It doesn't
    // hurt any other platforms, though.
@@ -130,8 +118,6 @@ class AudacityApp final : public wxApp {
 
  private:
    std::unique_ptr<CommandHandler> mCmdHandler;
-
-   std::unique_ptr<wxLocale> mLocale;
 
    std::unique_ptr<wxSingleInstanceChecker> mChecker;
 

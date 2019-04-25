@@ -26,8 +26,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <vld.h>
 #endif
 
-#include "TranslatableStringArray.h"
-
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
@@ -99,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ondemand/ODManager.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
+#include "prefs/GUIPrefs.h"
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileHistory.h"
 
@@ -244,8 +243,6 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 /// Custom events
 ////////////////////////////////////////////////////////////
-
-wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 #if 0
 #ifdef __WXGTK__
@@ -941,97 +938,6 @@ wxLanguageInfo userLangs[] =
 };
 #endif
 
-wxString AudacityApp::InitLang( wxString langCode )
-{
-   if ( langCode.empty() )
-      langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
-
-   // Use the system default language if one wasn't specified or if the user selected System.
-   if (langCode.empty())
-   {
-      langCode = GetSystemLanguageCode();
-   }
-
-   // Initialize the language
-   return SetLang(langCode);
-}
-
-wxString AudacityApp::SetLang( const wxString & lang )
-{
-   wxString result = lang;
-
-   mLocale.reset();
-
-#if defined(__WXMAC__)
-   // This should be reviewed again during the wx3 conversion.
-
-   // On OSX, if the LANG environment variable isn't set when
-   // using a language like Japanese, an assertion will trigger
-   // because conversion to Japanese from "?" doesn't return a
-   // valid length, so make OSX happy by defining/overriding
-   // the LANG environment variable with U.S. English for now.
-   wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
-#endif
-
-   const wxLanguageInfo *info = NULL;
-   if (!lang.empty()) {
-      info = wxLocale::FindLanguageInfo(lang);
-      if (!info)
-         ::AudacityMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
-   }
-   if (!info)
-   {
-      result = GetSystemLanguageCode();
-      info = wxLocale::FindLanguageInfo(result);
-      if (!info)
-         return result;
-   }
-   mLocale = std::make_unique<wxLocale>(info->Language);
-
-   for( const auto &path : FileNames::AudacityPathList() )
-      mLocale->AddCatalogLookupPathPrefix( path );
-
-   // LL:  Must add the wxWidgets catalog manually since the search
-   //      paths were not set up when mLocale was created.  The
-   //      catalogs are search in LIFO order, so add wxstd first.
-   mLocale->AddCatalog(wxT("wxstd"));
-
-// AUDACITY_NAME is legitimately used on some *nix configurations.
-#ifdef AUDACITY_NAME
-   mLocale->AddCatalog(wxT(AUDACITY_NAME));
-#else
-   mLocale->AddCatalog(IPC_APPL);
-#endif
-
-   // Initialize internationalisation (number formats etc.)
-   //
-   // This must go _after_ creating the wxLocale instance because
-   // creating the wxLocale instance sets the application-wide locale.
-
-   Internat::Init();
-
-   // Notify listeners of language changes
-   {
-      wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
-      ProcessEvent(evt);
-   }
-
-   // PRL: Moved this, do it only after language intialized
-   // Unused strings that we want to be translated, even though
-   // we're not using them yet...
-   wxString future1 = _("Master Gain Control");
-
-   return result;
-}
-
-wxString AudacityApp::GetLang() const
-{
-   if (mLocale)
-      return mLocale->GetSysName();
-   else
-      return {};
-}
-
 void AudacityApp::OnFatalException()
 {
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -1112,9 +1018,9 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
 
    if (ctx == wxDebugReport::Context_Current)
    {
-      auto saveLang = GetLang();
-      InitLang( wxT("en") );
-      auto cleanup = finally( [&]{ InitLang( saveLang ); } );
+      auto saveLang = GUIPrefs::GetLang();
+      GUIPrefs::InitLang( wxT("en") );
+      auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
 
       rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1234,8 +1140,6 @@ bool AudacityApp::OnInit()
    // http://docs.wxwidgets.org/3.0/classwx_log.html#a2525bf54fa3f31dc50e6e3cd8651e71d
    std::unique_ptr < wxLog >
       { wxLog::SetActiveTarget(safenew AudacityLogger) }; // DELETE old
-
-   mLocale = NULL;
 
 #if defined(__WXMAC__)
    // Disable window animation

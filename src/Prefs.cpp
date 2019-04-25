@@ -60,10 +60,10 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "Languages.h"
 
+#include "prefs/GUIPrefs.h"
 #include "widgets/ErrorDialog.h"
 
 std::unique_ptr<AudacityPrefs> ugPrefs {};
@@ -216,7 +216,7 @@ void InitPreferences()
       }
    }
 
-   langCode = wxGetApp().InitLang( langCode );
+   langCode = GUIPrefs::InitLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
