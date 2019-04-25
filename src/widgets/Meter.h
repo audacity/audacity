@@ -255,7 +255,7 @@ class MeterPanel final : public ASlider
 
    Style     mStyle;
    Style     mDesiredStyle;
-   bool      mGradient;
+   int       mGradient;
    bool      mDB;
    int       mDBRange;
    bool      mDecay;

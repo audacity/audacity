@@ -227,7 +227,7 @@ bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
    if (len + 1 >= (int)(mBufferSize))
       return false;
 
-   //wxLogDebug(wxT("Put: %s"), msg.toString();
+   //wxLogDebug(wxT("Put: %s"), msg.toString());
 
    mBuffer[mEnd] = msg;
    mEnd = (mEnd+1)%mBufferSize;
@@ -341,7 +341,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mHeight(size.y),
    mIsInput(isInput),
    mDesiredStyle(style),
-   mGradient(true),
+   mGradient(1),
    mDB(true),
    mDBRange(ENV_DB_RANGE),
    mDecay(true),
@@ -495,7 +495,17 @@ void MeterPanel::UpdatePrefs()
    mMeterRefreshRate =
       std::max(MIN_REFRESH_RATE, std::min(MAX_REFRESH_RATE,
          gPrefs->Read(Key(wxT("RefreshRate")), 30)));
-   mGradient = gPrefs->Read(Key(wxT("Bars")), wxT("Gradient")) == wxT("Gradient");
+
+   wxString temp = gPrefs->Read(Key(wxT("Bars")), 
+#ifdef EXPERIMENTAL_DA
+      wxT("LED")
+#else
+      wxT("Gradient")
+#endif
+   );
+   mGradient = (temp== wxT("Gradient"))?1:0;
+   if( temp=="LED" )
+      mGradient=2;
    mDB = gPrefs->Read(Key(wxT("Type")), wxT("dB")) == wxT("dB");
    mMeterDisabled = gPrefs->Read(Key(wxT("Disabled")), (long)0);
 
@@ -611,7 +621,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          // Cache bar rect
          wxRect r = mBar[i].r;
    
-         if (mGradient)
+         if (mGradient>0)
          {
             // Calculate the size of the two gradiant segments of the meter
             double gradw;
@@ -662,13 +672,14 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                r.SetRight(mBar[i].r.GetRight());
                dc.GradientFillLinear(r, yellow, red);
             }
-#ifdef EXPERIMENTAL_METER_LED_STYLE
-            if (!mBar[i].vert)
+//#ifdef EXPERIMENTAL_METER_LED_STYLE
+            if ((mGradient>1) && !mBar[i].vert)
             {
                wxRect r = mBar[i].r;
-               wxPen BackgroundPen;
-               BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
-               dc.SetPen( BackgroundPen );
+//               wxPen BackgroundPen;
+//               BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
+//               dc.SetPen( BackgroundPen );
+               AColor::TrackPanelBackground( &dc, false );
                int i;
                for(i=0;i<r.width;i++)
                {
@@ -684,7 +695,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                   }
                }
             }
-#endif
+//#endif
          }
       }
       mRuler.SetTickColour( clrText );
@@ -1768,7 +1779,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
    dc.SetPen(*wxTRANSPARENT_PEN);
    dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
 
-   if (mGradient)
+   if (mGradient>0)
    {
       // Map the predrawn bitmap into the source DC
       wxMemoryDC srcDC;
@@ -2143,6 +2154,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxTextCtrl *rate;
    wxRadioButton *gradient;
    wxRadioButton *rms;
+   wxRadioButton *led;
    wxRadioButton *db;
    wxRadioButton *linear;
    wxRadioButton *automatic;
@@ -2193,11 +2205,15 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
            {
               gradient = S.AddRadioButton(_("Gradient"));
               gradient->SetName(_("Gradient"));
-              gradient->SetValue(mGradient);
+              gradient->SetValue(mGradient==1);
 
               rms = S.AddRadioButtonToGroup(_("RMS"));
               rms->SetName(_("RMS"));
-              rms->SetValue(!mGradient);
+              rms->SetValue(mGradient==0);
+
+              led = S.AddRadioButtonToGroup(_("LED"));
+              led->SetName(_("LED"));
+              led->SetValue(mGradient==2);
            }
            S.EndVerticalLay();
         }
@@ -2271,10 +2287,21 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
       int s = 0;
       s = automatic->GetValue() ? 0 : s;
       s = horizontal->GetValue() ? 1 : s;
-      s = vertical->GetValue() ? 2 : s;
+      s = vertical->GetValue() ? 2 : s; 
+
+      wxArrayStringEx style2{
+         wxT("RMS") ,
+         wxT("Gradient") ,
+         wxT("LED") ,
+      };
+
+      int t=2;
+      t = rms->GetValue() ? 0 : t;
+      t = gradient->GetValue() ? 1 : t;
+      t = led->GetValue() ? 2 : t;
 
       gPrefs->Write(Key(wxT("Style")), style[s]);
-      gPrefs->Write(Key(wxT("Bars")), gradient->GetValue() ? wxT("Gradient") : wxT("RMS"));
+      gPrefs->Write(Key(wxT("Bars")), style2[t]);
       gPrefs->Write(Key(wxT("Type")), db->GetValue() ? wxT("dB") : wxT("Linear"));
       gPrefs->Write(Key(wxT("RefreshRate")), rate->GetValue());
 
