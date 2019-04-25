@@ -18,7 +18,6 @@
 
 #include <sndfile.h>
 
-#include "../AudacityApp.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../MemoryX.h"

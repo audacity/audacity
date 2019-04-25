@@ -44,7 +44,6 @@
 #include "audacity/Types.h"
 
 #include "AColor.h"
-#include "AudacityApp.h"
 #include "AudioIO.h"
 #include "BlockFile.h"
 #include "Diags.h"

@@ -24,7 +24,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include <wx/filedlg.h>
 #include <wx/textfile.h>
 
-#include "AudacityApp.h"
 #include "Project.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"

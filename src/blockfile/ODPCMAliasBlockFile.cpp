@@ -28,7 +28,6 @@ The summary is eventually computed and written to a file in a background thread.
 #include <wx/thread.h>
 #include <sndfile.h>
 
-#include "../AudacityApp.h"
 #include "PCMAliasBlockFile.h"
 #include "../DirManager.h"
 #include "../FileFormats.h"
