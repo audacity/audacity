@@ -36,7 +36,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/docview.h>
 #include <wx/event.h>
 #include <wx/ipc.h>
-#include <wx/log.h>
 #include <wx/window.h>
 #include <wx/intl.h>
 #include <wx/menu.h>
@@ -989,8 +988,8 @@ wxString AudacityApp::SetLang( const wxString & lang )
    }
    mLocale = std::make_unique<wxLocale>(info->Language);
 
-   for(unsigned int i=0; i<audacityPathList.size(); i++)
-      mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
+   for( const auto &path : FileNames::AudacityPathList() )
+      mLocale->AddCatalogLookupPathPrefix( path );
 
    // LL:  Must add the wxWidgets catalog manually since the search
    //      paths were not set up when mLocale was created.  The
@@ -1266,6 +1265,7 @@ bool AudacityApp::OnInit()
    //
    // Paths: set search path and temp dir path
    //
+   FilePaths audacityPathList;
 
 #ifdef __WXGTK__
    /* Search path (for plug-ins, translations etc) is (in this order):
@@ -1294,36 +1294,36 @@ bool AudacityApp::OnInit()
    wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
 #endif
    if (!pathVar.empty())
-      AddMultiPathsToPathList(pathVar, audacityPathList);
-   AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
+      FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
+   FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
 #ifdef AUDACITY_NAME
-   AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
       home, wxT(AUDACITY_NAME)),
       audacityPathList);
-   AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
       audacityPathList);
-   AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/%s"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/%s"),
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
       audacityPathList);
 #else //AUDACITY_NAME
-   AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
       home),
       audacityPathList);
-   AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
-   AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/audacity"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/audacity"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
 #endif //AUDACITY_NAME
 
-   AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
 
-   AddUniquePathToPathList(wxString::Format(wxT("./locale")),
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("./locale")),
       audacityPathList);
 
 #endif //__WXGTK__
@@ -1346,8 +1346,8 @@ bool AudacityApp::OnInit()
 #ifdef __WXMSW__
    // On Windows, the path to the Audacity program is in argv[0]
    wxString progPath = wxPathOnly(argv[0]);
-   AddUniquePathToPathList(progPath, audacityPathList);
-   AddUniquePathToPathList(progPath + wxT("\\Languages"), audacityPathList);
+   FileNames::AddUniquePathToPathList(progPath, audacityPathList);
+   FileNames::AddUniquePathToPathList(progPath + wxT("\\Languages"), audacityPathList);
 
    // See bug #1271 for explanation of location
    tmpDirLoc = FileNames::MkDir(wxStandardPaths::Get().GetUserLocalDataDir());
@@ -1359,14 +1359,16 @@ bool AudacityApp::OnInit()
    // On Mac OS X, the path to the Audacity program is in argv[0]
    wxString progPath = wxPathOnly(argv[0]);
 
-   AddUniquePathToPathList(progPath, audacityPathList);
+   FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // If Audacity is a "bundle" package, then the root directory is
    // the great-great-grandparent of the directory containing the executable.
-   //AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
+   //FileNames::AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
 
    // These allow for searching the "bundle"
-   AddUniquePathToPathList(progPath + wxT("/../"), audacityPathList);
-   AddUniquePathToPathList(progPath + wxT("/../Resources"), audacityPathList);
+   FileNames::AddUniquePathToPathList(
+      progPath + wxT("/../"), audacityPathList);
+   FileNames::AddUniquePathToPathList(
+      progPath + wxT("/../Resources"), audacityPathList);
 
    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
    // wrong because it would get cleared out on a reboot.
@@ -1378,6 +1380,8 @@ bool AudacityApp::OnInit()
    //   tmpDirLoc,
    //   wxGetUserId() ) );
 #endif //__WXMAC__
+
+   FileNames::SetAudacityPathList( std::move( audacityPathList ) );
 
    // Define languanges for which we have translations, but that are not yet
    // supported by wxWidgets.
@@ -2019,54 +2023,6 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
       return parser;
 
    return{};
-}
-
-// static
-void AudacityApp::AddUniquePathToPathList(const FilePath &pathArg,
-                                          FilePaths &pathList)
-{
-   wxFileName pathNorm = pathArg;
-   pathNorm.Normalize();
-   const wxString newpath{ pathNorm.GetFullPath() };
-
-   for(unsigned int i=0; i<pathList.size(); i++) {
-      if (wxFileName(newpath) == wxFileName(pathList[i]))
-         return;
-   }
-
-   pathList.push_back(newpath);
-}
-
-// static
-void AudacityApp::AddMultiPathsToPathList(const wxString &multiPathStringArg,
-                                          FilePaths &pathList)
-{
-   wxString multiPathString(multiPathStringArg);
-   while (!multiPathString.empty()) {
-      wxString onePath = multiPathString.BeforeFirst(wxPATH_SEP[0]);
-      multiPathString = multiPathString.AfterFirst(wxPATH_SEP[0]);
-      AddUniquePathToPathList(onePath, pathList);
-   }
-}
-
-// static
-void AudacityApp::FindFilesInPathList(const wxString & pattern,
-                                      const FilePaths & pathList,
-                                      FilePaths & results,
-                                      int flags)
-{
-   wxLogNull nolog;
-
-   if (pattern.empty()) {
-      return;
-   }
-
-   wxFileName ff;
-
-   for(size_t i = 0; i < pathList.size(); i++) {
-      ff = pathList[i] + wxFILE_SEP_PATH + pattern;
-      wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
-   }
 }
 
 void AudacityApp::OnQueryEndSession(wxCloseEvent & event)

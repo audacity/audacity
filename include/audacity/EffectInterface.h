@@ -98,6 +98,7 @@ public:
 };
 
 class wxDialog;
+class wxWindow;
 class EffectUIHostInterface;
 class EffectUIClientInterface;
 

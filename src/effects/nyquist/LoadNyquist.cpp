@@ -8,7 +8,6 @@
 
 **********************************************************************/
 
-#include "../../AudacityApp.h"
 #include "LoadNyquist.h"
 
 #include <wx/log.h>
@@ -129,7 +128,7 @@ wxString NyquistEffectsModule::GetDescription()
 
 bool NyquistEffectsModule::Initialize()
 {
-   const auto &audacityPathList = wxGetApp().audacityPathList;
+   const auto &audacityPathList = FileNames::AudacityPathList();
 
    for (size_t i = 0, cnt = audacityPathList.size(); i < cnt; i++)
    {

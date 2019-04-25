@@ -20,7 +20,6 @@
 #include "Experimental.h"
 
 #include <wx/app.h> // to inherit
-#include <wx/dir.h> // for wxDIR_FILES
 #include <wx/timer.h> // member variable
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -112,26 +111,6 @@ class AudacityApp final : public wxApp {
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
     void AssociateFileTypes();
    #endif
-
-   /** \brief A list of directories that should be searched for Audacity files
-    * (plug-ins, help files, etc.).
-    *
-    * On Unix this will include the directory Audacity was installed into,
-    * plus the current user's .audacity-data/Plug-Ins directory.  Additional
-    * directories can be specified using the AUDACITY_PATH environment
-    * variable.  On Windows or Mac OS, this will include the directory
-    * which contains the Audacity program. */
-   FilePaths audacityPathList;
-
-   // Useful functions for working with search paths
-   static void AddUniquePathToPathList(const FilePath &path,
-                                       FilePaths &pathList);
-   static void AddMultiPathsToPathList(const wxString &multiPathString,
-                                       FilePaths &pathList);
-   static void FindFilesInPathList(const wxString & pattern,
-                                   const FilePaths & pathList,
-                                   FilePaths &results,
-                                   int flags = wxDIR_FILES);
 
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}

@@ -519,3 +519,65 @@ bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
 #endif
    return !(NameCanonical.StartsWith( BadPath ));
 }
+
+static FilePaths sAudacityPathList;
+
+const FilePaths &FileNames::AudacityPathList()
+{
+   return sAudacityPathList;
+}
+
+void FileNames::SetAudacityPathList( FilePaths list )
+{
+   sAudacityPathList = std::move( list );
+}
+
+// static
+void FileNames::AddUniquePathToPathList(const FilePath &pathArg,
+                                          FilePaths &pathList)
+{
+   wxFileNameWrapper pathNorm { pathArg };
+   pathNorm.Normalize();
+   const wxString newpath{ pathNorm.GetFullPath() };
+
+   for(const auto &path : pathList) {
+      if (pathNorm == wxFileNameWrapper{ path })
+         return;
+   }
+
+   pathList.push_back(newpath);
+}
+
+// static
+void FileNames::AddMultiPathsToPathList(const wxString &multiPathStringArg,
+                                          FilePaths &pathList)
+{
+   wxString multiPathString(multiPathStringArg);
+   while (!multiPathString.empty()) {
+      wxString onePath = multiPathString.BeforeFirst(wxPATH_SEP[0]);
+      multiPathString = multiPathString.AfterFirst(wxPATH_SEP[0]);
+      AddUniquePathToPathList(onePath, pathList);
+   }
+}
+
+#include <wx/log.h>
+
+// static
+void FileNames::FindFilesInPathList(const wxString & pattern,
+                                      const FilePaths & pathList,
+                                      FilePaths & results,
+                                      int flags)
+{
+   wxLogNull nolog;
+
+   if (pattern.empty()) {
+      return;
+   }
+
+   wxFileNameWrapper ff;
+
+   for(size_t i = 0; i < pathList.size(); i++) {
+      ff = pathList[i] + wxFILE_SEP_PATH + pattern;
+      wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
+   }
+}
