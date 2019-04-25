@@ -1088,6 +1088,9 @@
     <ClCompile Include="..\..\..\src\CellularPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Clipboard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp">
       <Filter>src\menus</Filter>
     </ClCompile>
@@ -2207,6 +2210,9 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\CellularPanel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Clipboard.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">

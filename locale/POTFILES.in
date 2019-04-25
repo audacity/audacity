@@ -56,6 +56,8 @@ src/BlockFile.cpp
 src/BlockFile.h
 src/CellularPanel.cpp
 src/CellularPanel.h
+src/Clipboard.cpp
+src/Clipboard.h
 src/ClassicThemeAsCeeCode.h
 src/CrossFade.cpp
 src/CrossFade.h

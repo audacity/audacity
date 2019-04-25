@@ -137,6 +137,7 @@
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
     <ClCompile Include="..\..\..\src\CellularPanel.cpp" />
+    <ClCompile Include="..\..\..\src\Clipboard.cpp" />
     <ClCompile Include="..\..\..\src\commands\AudacityCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandContext.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp" />
@@ -496,6 +497,7 @@
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
     <ClInclude Include="..\..\..\src\CellularPanel.h" />
+    <ClInclude Include="..\..\..\src\Clipboard.h" />
     <ClInclude Include="..\..\..\src\commands\AudacityCommand.h" />
     <ClInclude Include="..\..\..\src\commands\CommandContext.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />

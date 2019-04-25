@@ -33,7 +33,7 @@ undo memory so as to free up space.
 #include <wx/textctrl.h>
 
 #include "AudioIO.h"
-#include "AudacityApp.h"
+#include "Clipboard.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
@@ -155,7 +155,8 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
                      &HistoryWindow::OnAudioIO,
                      this);
 
-   wxTheApp->Bind(EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
+   Clipboard::Get().Bind(
+      EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
    manager->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
    manager->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
    manager->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
@@ -263,8 +264,7 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
 
 void HistoryWindow::OnDiscardClipboard(wxCommandEvent & WXUNUSED(event))
 {
-   AudacityProject::ClearClipboard();
-   DoUpdate();
+   Clipboard::Get().Clear();
 }
 
 void HistoryWindow::OnItemSelected(wxListEvent &event)

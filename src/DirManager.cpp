@@ -87,6 +87,7 @@
 #endif
 
 #include "AudacityApp.h"
+#include "Clipboard.h"
 #include "FileNames.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
@@ -2124,13 +2125,11 @@ void DirManager::FindOrphanBlockFiles(
                ext.IsSameAs(wxT("auf"), false)))
       {
          if (!clipboardDM) {
-            TrackList *clipTracks = AudacityProject::GetClipboardTracks();
+            auto &clipTracks = Clipboard::Get().GetTracks();
 
-            if (clipTracks) {
-               auto track = *clipTracks->Any().first;
-               if (track)
-                  clipboardDM = track->GetDirManager().get();
-            }
+            auto track = *clipTracks.Any().first;
+            if (track)
+               clipboardDM = track->GetDirManager().get();
          }
 
          // Ignore it if it exists in the clipboard (from a previously closed project)

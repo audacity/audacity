@@ -73,6 +73,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "AColor.h"
 #include "AudioIO.h"
 #include "Benchmark.h"
+#include "Clipboard.h"
 #include "DirManager.h"
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
@@ -244,8 +245,6 @@ It handles initialization and termination by subclassing wxApp.
 /// Custom events
 ////////////////////////////////////////////////////////////
 
-wxDEFINE_EVENT( EVT_CLIPBOARD_CHANGE, wxCommandEvent);
-
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
 wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
@@ -290,7 +289,7 @@ void QuitAudacity(bool bForce)
    if (gAudacityProjects.empty())
    {
 #ifdef __WXMAC__
-      AudacityProject::DeleteClipboard();
+      Clipboard::Get().Clear();
 #endif
    }
    else

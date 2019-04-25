@@ -33,6 +33,7 @@
 #include "AdornedRulerPanel.h"
 #include "AudacityApp.h"
 #include "AudioIO.h"
+#include "Clipboard.h"
 #include "LabelTrack.h"
 #include "ModuleManager.h"
 #ifdef USE_MIDI
@@ -491,7 +492,7 @@ CommandFlag MenuManager::GetUpdateFlags
 #endif
    );
 
-   if((AudacityProject::msClipT1 - AudacityProject::msClipT0) > 0.0)
+   if( Clipboard::Get().Duration() > 0 )
       flags |= ClipboardFlag;
 
    auto &undoManager = *project.GetUndoManager();

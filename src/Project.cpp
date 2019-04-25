@@ -94,6 +94,7 @@ scroll information.  It also has some status flags.
 #endif
 
 #include "AdornedRulerPanel.h"
+#include "Clipboard.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
 #include "AutoRecovery.h"
@@ -170,10 +171,6 @@ scroll information.  It also has some status flags.
 #include "widgets/WindowAccessible.h"
 #endif
 
-std::shared_ptr<TrackList> AudacityProject::msClipboard{ TrackList::Create() };
-double AudacityProject::msClipT0 = 0.0;
-double AudacityProject::msClipT1 = 0.0;
-AudacityProject *AudacityProject::msClipProject = NULL;
 ODLock &AudacityProject::AllProjectDeleteMutex()
 {
    static ODLock theMutex;
@@ -2567,10 +2564,10 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    quitOnClose = !mMenuClose;
 #endif
 
-   // DanH: If we're definitely about to quit, DELETE the clipboard.
+   // DanH: If we're definitely about to quit, clear the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
    if ((gAudacityProjects.size() == 1) && (quitOnClose || gIsQuitting))
-      DeleteClipboard();
+      Clipboard::Get().Clear();
 
    // JKC: For Win98 and Linux do not detach the menu bar.
    // We want wxWidgets to clean it up for us.
@@ -4692,32 +4689,6 @@ void AudacityProject::SetStateTo(unsigned int n)
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
-}
-
-//
-// Clipboard methods
-//
-
-//static
-TrackList *AudacityProject::GetClipboardTracks()
-{
-   return msClipboard.get();
-}
-
-//static
-void AudacityProject::DeleteClipboard()
-{
-   msClipboard.reset();
-}
-
-void AudacityProject::ClearClipboard()
-{
-   msClipT0 = 0.0;
-   msClipT1 = 0.0;
-   msClipProject = NULL;
-   if (msClipboard) {
-      msClipboard->Clear();
-   }
 }
 
 // Utility function called by other zoom methods

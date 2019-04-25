@@ -381,10 +381,7 @@ public:
    void ZoomOutByFactor( double ZoomFactor );
 
    // Other commands
-   static TrackList *GetClipboardTracks();
-   static void ClearClipboard();
-   static void DeleteClipboard();
-
+   
    int GetProjectNumber(){ return mProjectNo;};
    static int CountUnnamed();
    static void RefreshAllTitles(bool bShowProjectNumbers );
@@ -583,13 +580,6 @@ public:
    std::shared_ptr<TrackList> mLastSavedTracks;
 
 public:
-   // Clipboard (static because it is shared by all projects)
-   static std::shared_ptr<TrackList> msClipboard;
-   static AudacityProject *msClipProject;
-
-   static double msClipT0;
-   static double msClipT1;
-
    ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    //shared by all projects
    static ODLock &AllProjectDeleteMutex();

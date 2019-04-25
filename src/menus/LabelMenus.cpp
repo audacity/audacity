@@ -1,5 +1,5 @@
-#include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
 #include "../AudioIO.h"
+#include "../Clipboard.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Prefs.h"
@@ -164,7 +164,7 @@ using EditDestFunction = std::shared_ptr<Track> (WaveTrack::*)(double, double);
 //Functions copy the edited regions to clipboard, possibly in multiple tracks
 //This probably should not be called if *action() changes the timeline, because
 // the copy needs to happen by track, and the timeline change by group.
-void EditClipboardByLabel(
+void EditClipboardByLabel( AudacityProject &project,
    TrackList &tracks, const SelectedRegion &selectedRegion,
    EditDestFunction action )
 {
@@ -178,7 +178,8 @@ void EditClipboardByLabel(
    // apply only on the selected track
    const bool allTracks = (tracks.Selected< WaveTrack >()).empty();
 
-   AudacityProject::ClearClipboard();
+   auto &clipboard = Clipboard::Get();
+   clipboard.Clear();
 
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
@@ -231,11 +232,8 @@ void EditClipboardByLabel(
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
-   newClipboard.Swap(*AudacityProject::msClipboard);
-   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
-
-   AudacityProject::msClipT0 = regions.front().start;
-   AudacityProject::msClipT1 = regions.back().end;
+   clipboard.Assign( std::move( newClipboard ),
+      regions.front().start, regions.back().end, &project );
 }
 
 }
@@ -363,15 +361,14 @@ void OnCutLabels(const CommandContext &context)
 
    // Because of grouping the copy may need to operate on different tracks than
    // the clear, so we do these actions separately.
-   EditClipboardByLabel( tracks, selectedRegion, &WaveTrack::CopyNonconst );
+   EditClipboardByLabel( project,
+      tracks, selectedRegion, &WaveTrack::CopyNonconst );
 
    if( gPrefs->Read( wxT( "/GUI/EnableCutLines" ), ( long )0 ) )
       EditByLabel(
          tracks, selectedRegion, &WaveTrack::ClearAndAddCutLine, true );
    else
       EditByLabel( tracks, selectedRegion, &WaveTrack::Clear, true );
-
-   AudacityProject::msClipProject = &project;
 
    selectedRegion.collapseToT0();
 
@@ -416,9 +413,8 @@ void OnSplitCutLabels(const CommandContext &context)
    if( selectedRegion.isPoint() )
       return;
 
-   EditClipboardByLabel( tracks, selectedRegion, &WaveTrack::SplitCut );
-
-   AudacityProject::msClipProject = &project;
+   EditClipboardByLabel( project,
+      tracks, selectedRegion, &WaveTrack::SplitCut );
 
    project.PushState(
       /* i18n-hint: (verb) Audacity has just split cut the labeled audio
@@ -483,9 +479,8 @@ void OnCopyLabels(const CommandContext &context)
    if( selectedRegion.isPoint() )
       return;
 
-   EditClipboardByLabel( tracks, selectedRegion, &WaveTrack::CopyNonconst );
-
-   AudacityProject::msClipProject = &project;
+   EditClipboardByLabel( project,
+      tracks, selectedRegion, &WaveTrack::CopyNonconst );
 
    project.PushState( _( "Copied labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/

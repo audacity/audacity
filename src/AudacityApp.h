@@ -48,11 +48,6 @@ void QuitAudacity();
 
 extern bool gIsQuitting;
 
-// An event emitted by the application whenever the global clipboard's
-// contents change.
-wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
-                          EVT_CLIPBOARD_CHANGE, wxCommandEvent);
-
 // Asynchronous open
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
 
