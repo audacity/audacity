@@ -58,6 +58,26 @@ public:
                long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE,
                const wxMBConv& conv = wxConvAuto());
    bool GetEditClipsCanMove();
+
+   // Set and Get values of the version major/minor/micro keys in audacity.cfg when Audacity first opens
+   void SetVersionKeysInit( int major, int minor, int micro)
+   {
+      mVersionMajorKeyInit = major;
+      mVersionMinorKeyInit = minor;
+      mVersionMicroKeyInit = micro;
+   }
+   void GetVersionKeysInit( int& major, int& minor, int& micro) const
+   {
+      major = mVersionMajorKeyInit;
+      minor = mVersionMinorKeyInit;
+      micro = mVersionMicroKeyInit;
+   }
+
+   // values of the version major/minor/micro keys in audacity.cfg
+   // when Audacity first opens
+   int mVersionMajorKeyInit{};
+   int mVersionMinorKeyInit{};
+   int mVersionMicroKeyInit{};
 };
 
 /// Packages a table of user-visible choices each with an internal code string,
