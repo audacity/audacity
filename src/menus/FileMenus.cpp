@@ -1,10 +1,10 @@
 #include "../Audacity.h" // for USE_* macros
 #include "../Experimental.h"
 
-#include "../AudacityApp.h"
 #include "../BatchCommands.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
+#include "../MissingAliasFileDialog.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Printing.h"
@@ -33,7 +33,7 @@ void DoExport
 
    Exporter e;
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
    double t1 = tracks->GetEndTime();
 
@@ -231,7 +231,7 @@ void OnExportSelection(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    Exporter e;
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    e.SetFileDialogTitle( _("Export Selected Audio") );
    e.Process(&project, true, selectedRegion.t0(),
       selectedRegion.t1());
@@ -303,7 +303,7 @@ void OnExportMultiple(const CommandContext &context)
    auto &project = context.project;
    ExportMultiple em(&project);
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    em.ShowModal();
 }
 
@@ -396,7 +396,7 @@ void OnImport(const CommandContext &context)
 
    // An import trigger for the alias missing dialog might not be intuitive, but
    // this serves to track the file if the users zooms in and such.
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    wxArrayString selectedFiles = project.ShowOpenDialog(wxT(""));
    if (selectedFiles.size() == 0) {

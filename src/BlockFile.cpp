@@ -53,7 +53,7 @@ out.
 #include "sndfile.h"
 #include "FileException.h"
 #include "FileFormats.h"
-#include "AudacityApp.h"
+#include "MissingAliasFileDialog.h"
 
 // msmeyer: Define this to add debug output via wxPrintf()
 //#define DEBUG_BLOCKFILE
@@ -537,8 +537,8 @@ size_t BlockFile::CommonReadData(
 
          if (pAliasFile) {
             // Set a marker to display an error message for the silence
-            if (!wxGetApp().ShouldShowMissingAliasFilesWarning())
-               wxGetApp().MarkMissingAliasFilesWarning(pAliasFile);
+            if (!MissingAliasFilesDialog::ShouldShow())
+               MissingAliasFilesDialog::Mark(pAliasFile);
          }
       }
    }

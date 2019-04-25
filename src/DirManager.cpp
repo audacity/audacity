@@ -68,7 +68,6 @@
 
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
-#include <wx/app.h>
 #include <wx/dir.h>
 #include <wx/log.h>
 #include <wx/filefn.h>
@@ -86,7 +85,6 @@
 #include <sys/stat.h>
 #endif
 
-#include "AudacityApp.h"
 #include "Clipboard.h"
 #include "FileNames.h"
 #include "blockfile/LegacyBlockFile.h"
@@ -95,6 +93,7 @@
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "InconsistencyException.h"
+#include "MissingAliasFileDialog.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "Sequence.h"
@@ -1702,7 +1701,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    //
    // MISSING ALIASED AUDIO FILES
    //
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(false);
+   MissingAliasFilesDialog::SetShouldShow(false);
    BlockHash missingAliasFilesAUFHash;   // (.auf) AliasBlockFiles whose aliased files are missing
    BlockHash missingAliasFilesPathHash;  // full paths of missing aliased files
    this->FindMissingAliasFiles(missingAliasFilesAUFHash, missingAliasFilesPathHash);
@@ -2006,7 +2005,7 @@ other projects. \
             wxOK  | wxICON_EXCLAMATION);
    }
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    return nResult;
 }
 

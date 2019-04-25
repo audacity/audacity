@@ -23,11 +23,11 @@
 #include <wx/dir.h> // for wxDIR_FILES
 #include <wx/timer.h> // member variable
 
-#include "ondemand/ODTaskThread.h"
-
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h> // for wxDebugReport::Context
 #endif
+
+#include "MemoryX.h"
 
 class wxSingleInstanceChecker;
 class wxSocketEvent;
@@ -47,7 +47,6 @@ void QuitAudacity();
 
 extern bool gIsQuitting;
 
-class BlockFile;
 class AliasBlockFile;
 
 class AudacityApp final : public wxApp {
@@ -102,22 +101,6 @@ class AudacityApp final : public wxApp {
    // IPC communication
    void OnServerEvent(wxSocketEvent & evt);
    void OnSocketEvent(wxSocketEvent & evt);
-
-   /** \brief Mark playback as having missing aliased blockfiles
-     *
-     * Playback will continue, but the missing files will be silenced
-     * ShouldShowMissingAliasFilesWarning can be called to determine
-     * if the user should be notified
-     */
-   void MarkMissingAliasFilesWarning(const AliasBlockFile *b);
-
-   /** \brief Changes the behavior of missing aliased blockfiles warnings
-     */
-   void SetMissingAliasFilesWarningShouldShow(bool b);
-
-   /** \brief Returns true if the user should be notified of missing alias warnings
-     */
-   bool ShouldShowMissingAliasFilesWarning();
 
    #ifdef __WXMAC__
     // In response to Apple Events
@@ -184,12 +167,6 @@ class AudacityApp final : public wxApp {
    std::unique_ptr<wxSingleInstanceChecker> mChecker;
 
    wxTimer mTimer;
-
-   bool                 m_missingAliasFilesWarningShouldShow;
-   std::weak_ptr< AudacityProject > m_LastMissingBlockFileProject;
-   wxString             m_LastMissingBlockFilePath;
-
-   ODLock               m_LastMissingBlockFileLock;
 
    void InitCommandHandler();
 

@@ -113,6 +113,7 @@ scroll information.  It also has some status flags.
 #include "Legacy.h"
 #include "LyricsWindow.h"
 #include "Menus.h"
+#include "MissingAliasFileDialog.h"
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
@@ -1023,7 +1024,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mStatusBar->SetName(wxT("status_line"));     // not localized
    mProjectNo = mProjectCounter++; // Bug 322
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
    // MM: We don't need to Ref() here because it start with refcount=1
@@ -5278,7 +5279,7 @@ bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, i
 {
    Exporter e;
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
 }
 

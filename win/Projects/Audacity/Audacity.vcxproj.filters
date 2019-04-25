@@ -221,6 +221,9 @@
     <ClCompile Include="..\..\..\src\Menus.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MissingAliasFileDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\Mix.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1259,6 +1262,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Menus.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MissingAliasFileDialog.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Mix.h">

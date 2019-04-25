@@ -1,12 +1,12 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
-#include "../AudacityApp.h"
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../FreqWindow.h"
 #include "../Menus.h"
+#include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -412,7 +412,7 @@ bool DoEffect(
       project.SelectAllIfNone();
    }
 
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    auto nTracksOriginally = project.GetTrackCount();
    wxWindow *focus = wxWindow::FindFocus();

@@ -312,7 +312,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
 	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
 	MacroMagic.h Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h \
-	Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
 	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
@@ -648,9 +649,10 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-LangChoice.$(OBJEXT) audacity-Languages.$(OBJEXT) \
 	audacity-Legacy.$(OBJEXT) audacity-Lyrics.$(OBJEXT) \
 	audacity-LyricsWindow.$(OBJEXT) audacity-Matrix.$(OBJEXT) \
-	audacity-Menus.$(OBJEXT) audacity-Mix.$(OBJEXT) \
-	audacity-MixerBoard.$(OBJEXT) audacity-ModuleManager.$(OBJEXT) \
-	audacity-PitchName.$(OBJEXT) \
+	audacity-Menus.$(OBJEXT) \
+	audacity-MissingAliasFileDialog.$(OBJEXT) \
+	audacity-Mix.$(OBJEXT) audacity-MixerBoard.$(OBJEXT) \
+	audacity-ModuleManager.$(OBJEXT) audacity-PitchName.$(OBJEXT) \
 	audacity-PlatformCompatibility.$(OBJEXT) \
 	audacity-PluginManager.$(OBJEXT) audacity-Printing.$(OBJEXT) \
 	audacity-Profiler.$(OBJEXT) audacity-Project.$(OBJEXT) \
@@ -1243,7 +1245,6 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -1362,7 +1363,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
 	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
 	MacroMagic.h Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h \
-	Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
 	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
@@ -2522,6 +2524,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LyricsWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Matrix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Menus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-MissingAliasFileDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Mix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-MixerBoard.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ModuleManager.Po@am__quote@
@@ -3763,6 +3766,20 @@ audacity-Menus.obj: Menus.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Menus.cpp' object='audacity-Menus.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Menus.obj `if test -f 'Menus.cpp'; then $(CYGPATH_W) 'Menus.cpp'; else $(CYGPATH_W) '$(srcdir)/Menus.cpp'; fi`
+
+audacity-MissingAliasFileDialog.o: MissingAliasFileDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-MissingAliasFileDialog.o -MD -MP -MF $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo -c -o audacity-MissingAliasFileDialog.o `test -f 'MissingAliasFileDialog.cpp' || echo '$(srcdir)/'`MissingAliasFileDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo $(DEPDIR)/audacity-MissingAliasFileDialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='MissingAliasFileDialog.cpp' object='audacity-MissingAliasFileDialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-MissingAliasFileDialog.o `test -f 'MissingAliasFileDialog.cpp' || echo '$(srcdir)/'`MissingAliasFileDialog.cpp
+
+audacity-MissingAliasFileDialog.obj: MissingAliasFileDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-MissingAliasFileDialog.obj -MD -MP -MF $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo -c -o audacity-MissingAliasFileDialog.obj `if test -f 'MissingAliasFileDialog.cpp'; then $(CYGPATH_W) 'MissingAliasFileDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/MissingAliasFileDialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo $(DEPDIR)/audacity-MissingAliasFileDialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='MissingAliasFileDialog.cpp' object='audacity-MissingAliasFileDialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-MissingAliasFileDialog.obj `if test -f 'MissingAliasFileDialog.cpp'; then $(CYGPATH_W) 'MissingAliasFileDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/MissingAliasFileDialog.cpp'; fi`
 
 audacity-Mix.o: Mix.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Mix.o -MD -MP -MF $(DEPDIR)/audacity-Mix.Tpo -c -o audacity-Mix.o `test -f 'Mix.cpp' || echo '$(srcdir)/'`Mix.cpp

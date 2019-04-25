@@ -127,6 +127,8 @@ src/MemoryX.h
 src/Menus.cpp
 src/Menus.h
 src/MenusMac.cpp
+src/MissingAliasFileDialog.cpp
+src/MissingAliasFileDialog.h
 src/Mix.cpp
 src/Mix.h
 src/MixerBoard.cpp

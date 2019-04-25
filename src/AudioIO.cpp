@@ -438,6 +438,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "portmixer.h"
 #endif
 
+#include <wx/app.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
@@ -447,7 +448,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 
-#include "AudacityApp.h"
+#include "MissingAliasFileDialog.h"
 #include "Mix.h"
 #include "Resample.h"
 #include "RingBuffer.h"
@@ -2058,7 +2059,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    // Enable warning popups for unfound aliased blockfiles.
-   wxGetApp().SetMissingAliasFilesWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    commit = true;
    return mStreamToken;

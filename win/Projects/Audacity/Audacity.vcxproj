@@ -202,6 +202,7 @@
     <ClCompile Include="..\..\..\src\menus\TransportMenus.cpp" />
     <ClCompile Include="..\..\..\src\menus\ViewMenus.cpp" />
     <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp" />
+    <ClCompile Include="..\..\..\src\MissingAliasFileDialog.cpp" />
     <ClCompile Include="..\..\..\src\Mix.cpp" />
     <ClCompile Include="..\..\..\src\MixerBoard.cpp" />
     <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp" />
@@ -625,6 +626,7 @@
     <ClInclude Include="..\..\..\src\MacroMagic.h" />
     <ClInclude Include="..\..\..\src\Matrix.h" />
     <ClInclude Include="..\..\..\src\Menus.h" />
+    <ClInclude Include="..\..\..\src\MissingAliasFileDialog.h" />
     <ClInclude Include="..\..\..\src\Mix.h" />
     <ClInclude Include="..\..\..\src\MixerBoard.h" />
     <ClInclude Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.h" />

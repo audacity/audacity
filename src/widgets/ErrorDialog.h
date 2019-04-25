@@ -18,6 +18,8 @@
 #include <wx/msgdlg.h> // to inherit
 #include "wxPanelWrapper.h" // to inherit
 
+class AliasBlockFile;
+
 class AudacityProject;
 
 class ErrorDialog /* not final */ : public wxDialogWrapper
@@ -55,13 +57,6 @@ void ShowModelessErrorDialog(wxWindow *parent,
                      const wxString &message,
                      const wxString &helpPage,
                      bool Close = true);
-
-/// Displays a custom modeless error dialog for aliased file errors
-void ShowMissingAliasFilesDialog(AudacityProject *parent,
-                     const wxString &dlogTitle,
-                     const wxString &message,
-                     const wxString &helpPage,
-                     const bool Close = true);
 
 extern wxString AudacityMessageBoxCaptionStr();
 
