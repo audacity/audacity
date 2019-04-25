@@ -20,9 +20,7 @@
   This class, which is a child of Toolbar, creates the
   window containing the Transport (rewind/play/stop/record/ff)
   buttons. The window can be embedded within a
-  normal project window, or within a ToolbarFrame that is
-  managed by a global ToolBarStub called
-  gControlToolBarStub.
+  normal project window, or within a ToolBarFrame.
 
   All of the controls in this window were custom-written for
   Audacity - they are not native controls on any platform -
@@ -59,7 +57,6 @@
 #include <wx/datetime.h>
 
 #include "TranscriptionToolBar.h"
-#include "MeterToolBar.h"
 
 #include "../AColor.h"
 #include "../AdornedRulerPanel.h"

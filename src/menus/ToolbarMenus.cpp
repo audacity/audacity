@@ -277,12 +277,14 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
       /* i18n-hint: Clicking this menu item shows the toolbar
          with the playback level meter*/
       Command( wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
-         FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff ),
+         FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff )
 
       /* --i18nhint: Clicking this menu item shows the toolbar
          which has sound level meters*/
       //Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
       //   FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
+
+         ,
 
       /* i18n-hint: Clicking this menu item shows the toolbar
          with the mixer*/

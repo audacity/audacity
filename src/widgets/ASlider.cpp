@@ -217,7 +217,11 @@ wxSize TipPanel::GetSize() const
 
 void TipPanel::SetPos(const wxPoint & pos)
 {
+#if defined(__WXGTK__)
+   SetSize(pos.x, pos.y, wxDefaultCoord, wxDefaultCoord);
+#else
    SetSize(pos.x, pos.y, mWidth, mHeight);
+#endif
 }
 
 void TipPanel::SetLabel(const wxString & label)

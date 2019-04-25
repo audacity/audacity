@@ -1291,10 +1291,10 @@ bool Effect::DoEffect(wxWindow *parent,
 
 bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
 {
-   // Ensure no net effect on the selected region
-   ValueRestorer< SelectedRegion > cleanup{ *mpSelectedRegion };
+   SelectedRegion region{ mT0, mT1 };
+
    return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
-      mpSelectedRegion, shouldPrompt );
+      &region, shouldPrompt );
 }
 
 // All legacy effects should have this overridden

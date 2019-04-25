@@ -18,9 +18,7 @@
   This class, which is a child of Toolbar, creates the
   window containing the tool selection (ibeam, envelope,
   move, zoom). The window can be embedded within a
-  normal project window, or within a ToolbarFrame that is
-  managed by a global ToolBarStub called
-  gToolsToolBarStub.
+  normal project window, or within a ToolBarFrame.
 
   All of the controls in this window were custom-written for
   Audacity - they are not native controls on any platform -
@@ -47,8 +45,6 @@
 #include <wx/sizer.h>
 #endif
 #include <wx/tooltip.h>
-
-#include "MeterToolBar.h"
 
 #include "../Prefs.h"
 #include "../AllThemeResources.h"

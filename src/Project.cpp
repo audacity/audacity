@@ -157,8 +157,6 @@ scroll information.  It also has some status flags.
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/DeviceToolBar.h"
-#include "toolbars/EditToolBar.h"
-#include "toolbars/MeterToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/ScrubbingToolBar.h"
 #include "toolbars/SelectionBar.h"
@@ -4840,14 +4838,6 @@ DeviceToolBar *AudacityProject::GetDeviceToolBar()
            NULL);
 }
 
-EditToolBar *AudacityProject::GetEditToolBar()
-{
-   return (EditToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(EditBarID) :
-           NULL);
-}
-
 MixerToolBar *AudacityProject::GetMixerToolBar()
 {
    return (MixerToolBar *)
@@ -5240,7 +5230,7 @@ void AudacityProject::OnAudioIOStopRecording()
          /* i18n-hint:  A name given to a track, appearing as its menu button.
           The translation should be short or else it will not display well.
           At most, about 11 Latin characters.
-          Dropout is a loss of a short sequence audio sample data from the
+          Dropout is a loss of a short sequence of audio sample data from the
           recording */
          pTrack->SetName(_("Dropouts"));
          long counter = 1;

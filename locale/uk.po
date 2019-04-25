@@ -7,9 +7,9 @@
 # Yuri Chornoivan <yurchor@ukr.net>, 2010-2018, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity\n"
+"Project-Id-Version: audacity 2.3.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-04-18 18:13+0100\n"
+"POT-Creation-Date: 2019-04-24 19:44+0100\n"
 "PO-Revision-Date: 2019-04-19 15:54+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -17,10 +17,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11"
-" ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 >"
-" 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n %"
-" 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Lokalize 19.03.70\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -4085,7 +4085,7 @@ msgstr "Фактична частота %d"
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence audio sample data from the
+#. Dropout is a loss of a short sequence of audio sample data from the
 #. recording
 #: src/Project.cpp
 msgid "Dropouts"
@@ -5055,7 +5055,7 @@ msgstr "Стерео, 999999Гц"
 msgid "TrackView"
 msgstr "ПереглядДоріжки"
 
-#. i18n-hint: The %d is replaced by th enumber of the track.
+#. i18n-hint: The %d is replaced by the number of the track.
 #. i18n-hint: compose a name identifying an unnamed track by number
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -10488,9 +10488,8 @@ msgid ""
 "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|"
 "*.dylib|All Files (*)|*"
 msgstr ""
-"лише libmp3lame64bit.dylib|libmp3lame64bit.dylib|динамічні бібліотеки"
-" (*.dylib)|"
-"*.dylib|усі файли (*)|*"
+"лише libmp3lame64bit.dylib|libmp3lame64bit.dylib|динамічні бібліотеки (*."
+"dylib)|*.dylib|усі файли (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid ""
@@ -10799,8 +10798,8 @@ msgid ""
 "Your exported WAV file has been truncated as Audacity cannot export WAV\n"
 "files bigger than 4GB."
 msgstr ""
-"Експортований вами файл WAV було обрізано, оскільки Audacity не може"
-" експортувати\n"
+"Експортований вами файл WAV було обрізано, оскільки Audacity не може "
+"експортувати\n"
 "файли WAV, розмір яких перевищує 4 ГБ."
 
 #: src/export/ExportPCM.cpp
@@ -10897,7 +10896,8 @@ msgid ""
 "or AIFF."
 msgstr ""
 "«%s» є файлом вдосконаленого аудіокодування (AAC). \n"
-"Без додаткової бібліотеки FFmpeg Audacity не може відкривати цей тип файлів.\n"
+"Без додаткової бібліотеки FFmpeg Audacity не може відкривати цей тип "
+"файлів.\n"
 "Слід перетворити цей файл на файл підтримуваного аудіоформату, зокрема WAV "
 "або AIFF."
 
@@ -12699,10 +12699,6 @@ msgstr "Панель індикаторів &запису"
 msgid "&Playback Meter Toolbar"
 msgstr "Панель індикаторів &відтворення"
 
-#. i18nhint: Clicking this menu item shows the toolbar
-#. which has sound level meters
-#. Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
-#. FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the mixer
 #: src/menus/ToolbarMenus.cpp
