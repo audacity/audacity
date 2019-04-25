@@ -78,18 +78,18 @@ UndoManager::~UndoManager()
 
 namespace {
    SpaceArray::value_type
-   CalculateUsage(TrackList *tracks, Set *seen)
+   CalculateUsage(const TrackList &tracks, Set *seen)
    {
       SpaceArray::value_type result = 0;
 
       //TIMER_START( "CalculateSpaceUsage", space_calc );
-      for (auto wt : tracks->Any< WaveTrack >())
+      for (auto wt : tracks.Any< const WaveTrack >())
       {
          // Scan all clips within current track
          for(const auto &clip : wt->GetAllClips())
          {
             // Scan all blockfiles within current clip
-            BlockArray *blocks = clip->GetSequenceBlockArray();
+            auto blocks = clip->GetSequenceBlockArray();
             for (const auto &block : *blocks)
             {
                const auto &file = block.f;
@@ -137,12 +137,12 @@ void UndoManager::CalculateSpaceUsage()
    for (size_t nn = stack.size(); nn--;)
    {
       // Scan all tracks at current level
-      auto tracks = stack[nn]->state.tracks.get();
+      auto &tracks = *stack[nn]->state.tracks;
       space[nn] = CalculateUsage(tracks, &seen);
    }
 
-   mClipboardSpaceUsage = CalculateUsage
-      (AudacityProject::GetClipboardTracks(), nullptr);
+   mClipboardSpaceUsage = CalculateUsage(
+      *AudacityProject::GetClipboardTracks(), nullptr);
 
    //TIMER_STOP( space_calc );
 }

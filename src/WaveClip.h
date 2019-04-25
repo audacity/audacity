@@ -238,6 +238,7 @@ public:
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
    BlockArray* GetSequenceBlockArray();
+   const BlockArray* GetSequenceBlockArray() const;
 
    // Get low-level access to the sequence. Whenever possible, don't use this,
    // but use more high-level functions inside WaveClip (or add them if you
