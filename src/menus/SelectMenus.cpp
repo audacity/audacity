@@ -484,6 +484,24 @@ namespace SelectActions {
 
 // exported helper functions
 
+void SelectNone( AudacityProject &project )
+{
+   for (auto t : project.GetTracks()->Any())
+      t->SetSelected(false);
+
+   project.GetTrackPanel()->Refresh(false);
+}
+
+// Select the full time range, if no
+// time range is selected.
+void SelectAllIfNone( AudacityProject &project )
+{
+   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   if(!(flags & TracksSelectedFlag) ||
+      (project.GetViewInfo().selectedRegion.isPoint()))
+      DoSelectAllAudio( project );
+}
+
 void DoListSelection
 (AudacityProject &project, Track *t, bool shift, bool ctrl, bool modifyState)
 {
@@ -549,7 +567,7 @@ void OnSelectNone(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    selectedRegion.collapseToT0();
-   project.SelectNone();
+   SelectNone( project );
    project.ModifyState(false);
 }
 

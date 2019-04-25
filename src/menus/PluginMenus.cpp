@@ -412,7 +412,7 @@ bool DoEffect(
    if (flags & kConfigured)
    {
       TransportActions::DoStop(project);
-      project.SelectAllIfNone();
+      SelectActions::SelectAllIfNone( project );
    }
 
    MissingAliasFilesDialog::SetShouldShow(true);

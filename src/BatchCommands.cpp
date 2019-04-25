@@ -729,7 +729,7 @@ bool MacroCommands::ApplyEffectCommand(
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
    if( plug->GetPluginType() != PluginTypeAudacityCommand )
-      project->SelectAllIfNone();
+      SelectActions::SelectAllIfNone( *project );
 
    bool res = false;
 

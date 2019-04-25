@@ -4281,9 +4281,10 @@ std::vector< std::shared_ptr< Track > >
 AudacityProject::AddImportedTracks(const FilePath &fileName,
                                    TrackHolders &&newTracks)
 {
+   auto &project = *this;
    std::vector< std::shared_ptr< Track > > results;
 
-   SelectNone();
+   SelectActions::SelectNone( project );
 
    bool initiallyEmpty = mTracks->empty();
    double newRate = 0;
@@ -4393,6 +4394,7 @@ void AudacityProject::ZoomAfterImport(Track *pTrack)
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
+   auto &project = *this;
    TrackHolders newTracks;
    wxString errorMessage;
 
@@ -4447,9 +4449,9 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {
       //TODO: All we want is a SelectAll()
-      SelectNone();
-      SelectAllIfNone();
-      const CommandContext context( *this);
+      SelectActions::SelectNone( project );
+      SelectActions::SelectAllIfNone( project );
+      const CommandContext context( project );
       PluginActions::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
@@ -5616,14 +5618,6 @@ ContrastDialog *AudacityProject::GetContrastDialog(bool create)
    return mContrastDialog.get();
 }
 
-void AudacityProject::SelectNone()
-{
-   for (auto t : GetTracks()->Any())
-      t->SetSelected(false);
-
-   mTrackPanel->Refresh(false);
-}
-
 void AudacityProject::ZoomInByFactor( double ZoomFactor )
 {
    // LLL: Handling positioning differently when audio is
@@ -5712,16 +5706,6 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
-}
-
-// Select the full time range, if no
-// time range is selected.
-void AudacityProject::SelectAllIfNone()
-{
-   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
-   if(!(flags & TracksSelectedFlag) ||
-      (mViewInfo.selectedRegion.isPoint()))
-      SelectActions::DoSelectAllAudio(*this);
 }
 
 // Stop playing or recording, if paused.
