@@ -32,8 +32,8 @@
 #include <wx/filename.h>
 #include <wx/utils.h>
 
+#include "../FileNames.h"
 #include "../Prefs.h"
-#include "../AudacityApp.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
 
@@ -147,14 +147,15 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
 void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 {
-   wxString oldTempDir = gPrefs->Read(wxT("/Directories/TempDir"), wxGetApp().defaultTempDir);
+   wxString oldTempDir =
+      gPrefs->Read(wxT("/Directories/TempDir"), FileNames::DefaultTempDir());
 
    // Because we went through InitTempDir() during initialisation,
    // the old temp directory name in prefs should already be OK.  Just in case there is 
    // some way we hadn't thought of for it to be not OK, 
    // we avoid prompting with it in that case and use the suggested default instead.
-   if( !AudacityApp::IsTempDirectoryNameOK( oldTempDir ) )
-      oldTempDir = wxGetApp().defaultTempDir;
+   if( !FileNames::IsTempDirectoryNameOK( oldTempDir ) )
+      oldTempDir = FileNames::DefaultTempDir();
 
    wxDirDialogWrapper dlog(this,
                     _("Choose a location to place the temporary directory"),
@@ -182,7 +183,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
       // If the default temp dir or user's pref dir don't end in '/' they cause
       // wxFileName's == operator to construct a wxFileName representing a file
       // (that doesn't exist) -- hence the constructor calls
-      if (tmpDirPath != wxFileName(wxGetApp().defaultTempDir, wxT("")) &&
+      if (tmpDirPath != wxFileName(FileNames::DefaultTempDir(), wxT("")) &&
             tmpDirPath != wxFileName(mTempDir->GetValue(), wxT("")) &&
             (dirsInPath.size() == 0 ||
              dirsInPath[dirsInPath.size()-1] != newDirName))
@@ -225,7 +226,7 @@ bool DirectoriesPrefs::Validate()
    tempDir.SetPath(mTempDir->GetValue());
 
    wxString path{tempDir.GetPath()};
-   if( !AudacityApp::IsTempDirectoryNameOK( path ) ) {
+   if( !FileNames::IsTempDirectoryNameOK( path ) ) {
       AudacityMessageBox(
          wxString::Format(_("Directory %s is not suitable (at risk of being cleaned out)"),
                            path),

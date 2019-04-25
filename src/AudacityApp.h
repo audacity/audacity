@@ -123,9 +123,6 @@ class AudacityApp final : public wxApp {
     * which contains the Audacity program. */
    FilePaths audacityPathList;
 
-   /** \brief Default temp directory */
-   wxString defaultTempDir;
-
    // Useful functions for working with search paths
    static void AddUniquePathToPathList(const FilePath &path,
                                        FilePaths &pathList);
@@ -135,7 +132,6 @@ class AudacityApp final : public wxApp {
                                    const FilePaths & pathList,
                                    FilePaths &results,
                                    int flags = wxDIR_FILES);
-   static bool IsTempDirectoryNameOK( const wxString & Name );
 
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}

@@ -36,6 +36,10 @@ public:
    static wxString MkDir(const wxString &Str);
    static wxString TempDir();
 
+   static const FilePath &DefaultTempDir();
+   static void SetDefaultTempDir( const FilePath &tempDir );
+   static bool IsTempDirectoryNameOK( const FilePath & Name );
+
    // originally an ExportMultiple method. Append suffix if newName appears in otherNames.
    static void MakeNameUnique(
       FilePaths &otherNames, wxFileName &newName);

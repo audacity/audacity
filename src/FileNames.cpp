@@ -475,3 +475,47 @@ FileNames::SelectFile(Operation op,
             wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
    });
 }
+
+/** \brief Default temp directory */
+static FilePath sDefaultTempDir;
+
+const FilePath &FileNames::DefaultTempDir()
+{
+   return sDefaultTempDir;
+}
+
+void FileNames::SetDefaultTempDir( const FilePath &tempDir )
+{
+   sDefaultTempDir = tempDir;
+}
+
+// We now disallow temp directory name that puts it where cleaner apps will
+// try to clean out the files.  
+bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
+{
+   if( Name.empty() )
+      return false;
+
+   wxFileName tmpFile;
+   tmpFile.AssignTempFileName(wxT("nn"));
+   // use Long Path to expand out any abbreviated long substrings.
+   wxString BadPath = tmpFile.GetLongPath();
+   ::wxRemoveFile(tmpFile.GetFullPath());
+
+#ifdef __WXMAC__
+   // This test is to fix bug 1220 on a 1.x to 2.x to 2.1.3 upgrade.
+   // It is less permissive than we could be as it stops a path
+   // with this string ANYWHERE within it rather than excluding just
+   // the paths that the earlier Audacities used to create.
+   if( Name.Contains( "/tmp/") )
+      return false;
+   BadPath = BadPath.BeforeLast( '/' ) + "/";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "/";
+#else
+   BadPath = BadPath.BeforeLast( '\\' ) + "\\";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
+#endif
+   return !(NameCanonical.StartsWith( BadPath ));
+}
