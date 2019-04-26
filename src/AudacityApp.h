@@ -39,8 +39,6 @@ class AppCommandEvent;
 class AudacityLogger;
 class AudacityProject;
 
-void SaveWindowSize();
-
 void QuitAudacity(bool bForce);
 void QuitAudacity();
 
@@ -98,9 +96,6 @@ class AudacityApp final : public wxApp {
     void AssociateFileTypes();
    #endif
 
-   bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
-   void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
-
    AudacityLogger *GetLogger();
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -127,8 +122,6 @@ class AudacityApp final : public wxApp {
    bool CreateSingleInstanceChecker(const wxString &dir);
 
    std::unique_ptr<wxCmdLineParser> ParseCommandLine();
-
-   bool mWindowRectAlreadySaved;
 
 #if defined(__WXMSW__)
    std::unique_ptr<IPCServ> mIPCServ;

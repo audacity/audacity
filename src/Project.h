@@ -157,11 +157,14 @@ public:
    // But if return is false, that means the user cancelled close of at least
    // one un-saved project.
    static bool Close( bool force = false );
+   static void SaveWindowSize();
 
    static bool Closing() { return sbClosing; }
+   static void Reset() { sbWindowRectAlreadySaved = false; }
 
 private:
    static bool sbClosing;
+   static bool sbWindowRectAlreadySaved;
 };
 
 class EffectPlugs;

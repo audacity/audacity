@@ -292,7 +292,6 @@ void QuitAudacity(bool bForce)
    else
 /*end+*/
    {
-      SaveWindowSize();
       bool closedAll = AllProjects::Close( bForce );
       if ( !closedAll )
       {
@@ -327,84 +326,6 @@ void QuitAudacity(bool bForce)
 void QuitAudacity()
 {
    QuitAudacity(false);
-}
-
-void SaveWindowSize()
-{
-   if (wxGetApp().GetWindowRectAlreadySaved())
-   {
-      return;
-   }
-   bool validWindowForSaveWindowSize = FALSE;
-   AudacityProject * validProject = NULL;
-   bool foundIconizedProject = FALSE;
-   size_t numProjects = gAudacityProjects.size();
-   for (size_t i = 0; i < numProjects; i++)
-   {
-      if (!gAudacityProjects[i]->IsIconized()) {
-         validWindowForSaveWindowSize = TRUE;
-         validProject = gAudacityProjects[i].get();
-         i = numProjects;
-      }
-      else
-         foundIconizedProject =  TRUE;
-
-   }
-   if (validWindowForSaveWindowSize)
-   {
-      wxRect windowRect = validProject->GetRect();
-      wxRect normalRect = validProject->GetNormalizedWindowState();
-      bool wndMaximized = validProject->IsMaximized();
-      gPrefs->Write(wxT("/Window/X"), windowRect.GetX());
-      gPrefs->Write(wxT("/Window/Y"), windowRect.GetY());
-      gPrefs->Write(wxT("/Window/Width"), windowRect.GetWidth());
-      gPrefs->Write(wxT("/Window/Height"), windowRect.GetHeight());
-      gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
-      gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
-      gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
-      gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
-      gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
-      gPrefs->Write(wxT("/Window/Iconized"), FALSE);
-   }
-   else
-   {
-      if (foundIconizedProject) {
-         validProject = gAudacityProjects[0].get();
-         bool wndMaximized = validProject->IsMaximized();
-         wxRect normalRect = validProject->GetNormalizedWindowState();
-         // store only the normal rectangle because the itemized rectangle
-         // makes no sense for an opening project window
-         gPrefs->Write(wxT("/Window/X"), normalRect.GetX());
-         gPrefs->Write(wxT("/Window/Y"), normalRect.GetY());
-         gPrefs->Write(wxT("/Window/Width"), normalRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Height"), normalRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
-         gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
-         gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
-         gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Iconized"), TRUE);
-      }
-      else {
-         // this would be a very strange case that might possibly occur on the Mac
-         // Audacity would have to be running with no projects open
-         // in this case we are going to write only the default values
-         wxRect defWndRect;
-         GetDefaultWindowRect(&defWndRect);
-         gPrefs->Write(wxT("/Window/X"), defWndRect.GetX());
-         gPrefs->Write(wxT("/Window/Y"), defWndRect.GetY());
-         gPrefs->Write(wxT("/Window/Width"), defWndRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Height"), defWndRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Maximized"), FALSE);
-         gPrefs->Write(wxT("/Window/Normal_X"), defWndRect.GetX());
-         gPrefs->Write(wxT("/Window/Normal_Y"), defWndRect.GetY());
-         gPrefs->Write(wxT("/Window/Normal_Width"), defWndRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Normal_Height"), defWndRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Iconized"), FALSE);
-      }
-   }
-   gPrefs->Flush();
-   wxGetApp().SetWindowRectAlreadySaved(TRUE);
 }
 
 #if defined(__WXGTK__) && defined(HAVE_GTK)
@@ -1531,8 +1452,6 @@ bool AudacityApp::OnInit()
    gInited = true;
 
    ModuleManager::Get().Dispatch(AppInitialized);
-
-   mWindowRectAlreadySaved = FALSE;
 
    mTimer.SetOwner(this, kAudacityAppTimerID);
    mTimer.Start(200);
