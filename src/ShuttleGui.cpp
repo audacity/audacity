@@ -401,6 +401,12 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
       Style( 0 ) );
 
    pChoice->SetSizeHints( 180,-1);// Use -1 for 'default size' - Platform specific.
+#ifdef __WXMAC__
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
+#endif
    pChoice->SetName(wxStripMenuCodes(Prompt));
    if ( Selected >= 0 && Selected < choices.size() )
       pChoice->SetSelection( Selected );
