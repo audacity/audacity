@@ -165,8 +165,9 @@ void OnAbout(const CommandContext &context)
 {
 #ifdef __WXMAC__
    // Modeless dialog, consistent with other Mac applications
-   wxCommandEvent dummy;
-   wxGetApp().OnMenuAbout(dummy);
+   // Simulate the application Exit menu item
+   wxCommandEvent evt{ wxEVT_MENU, wxID_ABOUT };
+   wxTheApp->AddPendingEvent( evt );
 #else
    auto &project = context.project;
 
