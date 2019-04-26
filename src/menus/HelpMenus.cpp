@@ -75,14 +75,6 @@ namespace HelpActions {
 
 // exported helper functions
 
-void DoShowLog( AudacityProject & )
-{
-   AudacityLogger *logger = wxGetApp().GetLogger();
-   if (logger) {
-      logger->Show();
-   }
-}
-
 void DoHelpWelcome( AudacityProject &project )
 {
    SplashDialog::Show2( &project );
@@ -135,7 +127,10 @@ void OnMidiDeviceInfo(const CommandContext &context)
 
 void OnShowLog( const CommandContext &context )
 {
-   DoShowLog( context.project );
+   auto logger = AudacityLogger::Get();
+   if (logger) {
+      logger->Show();
+   }
 }
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)

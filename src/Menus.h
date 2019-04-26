@@ -180,7 +180,6 @@ bool DoAudacityCommand(
 /// Namespace for functions for Help menu
 namespace HelpActions {
 void DoHelpWelcome( AudacityProject & );
-void DoShowLog( AudacityProject& );
 }
 
 #endif

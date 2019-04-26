@@ -36,7 +36,6 @@ class IPCServ;
 class Importer;
 class CommandHandler;
 class AppCommandEvent;
-class AudacityLogger;
 class AudacityProject;
 
 class AliasBlockFile;
@@ -92,8 +91,6 @@ class AudacityApp final : public wxApp {
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
     void AssociateFileTypes();
    #endif
-
-   AudacityLogger *GetLogger();
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
    void GenerateCrashReport(wxDebugReport::Context ctx);

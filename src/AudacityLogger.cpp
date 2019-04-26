@@ -22,6 +22,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include "FileNames.h"
 #include "ShuttleGui.h"
 
+#include <mutex>
 #include <wx/filedlg.h>
 #include <wx/log.h>
 #include <wx/frame.h>
@@ -49,6 +50,22 @@ enum
    LoggerID_Clear,
    LoggerID_Close
 };
+
+AudacityLogger *AudacityLogger::Get()
+{
+   static std::once_flag flag;
+   std::call_once( flag, []{
+      // wxWidgets will clean up the logger for the main thread, so we can say
+      // safenew.  See:
+      // http://docs.wxwidgets.org/3.0/classwx_log.html#a2525bf54fa3f31dc50e6e3cd8651e71d
+      std::unique_ptr < wxLog > // DELETE any previous logger
+         { wxLog::SetActiveTarget(safenew AudacityLogger) };
+   } );
+
+   // Use dynamic_cast so that we get a NULL ptr in case our logger
+   // is no longer the target.
+   return dynamic_cast<AudacityLogger *>(wxLog::GetActiveTarget());
+}
 
 AudacityLogger::AudacityLogger()
 :  wxEvtHandler(),

@@ -831,13 +831,6 @@ locations of the missing files."), missingFileName);
    }
 }
 
-AudacityLogger *AudacityApp::GetLogger()
-{
-   // Use dynamic_cast so that we get a NULL ptr if we haven't yet
-   // setup our logger.
-   return dynamic_cast<AudacityLogger *>(wxLog::GetActiveTarget());
-}
-
 #if defined(__WXMSW__)
 #define WL(lang, sublang) (lang), (sublang),
 #else
@@ -944,7 +937,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
 #endif
    }
 
-   AudacityLogger *logger = GetLogger();
+   auto logger = AudacityLogger::Get();
    if (logger)
    {
       rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Audacity Log"));
@@ -1051,11 +1044,8 @@ bool AudacityApp::OnInit()
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
 
-   // wxWidgets will clean up the logger for the main thread, so we can say
-   // safenew.  See:
-   // http://docs.wxwidgets.org/3.0/classwx_log.html#a2525bf54fa3f31dc50e6e3cd8651e71d
-   std::unique_ptr < wxLog >
-      { wxLog::SetActiveTarget(safenew AudacityLogger) }; // DELETE old
+   // cause initialization of wxWidgets' global logger target
+   (void) AudacityLogger::Get();
 
 #if defined(__WXMAC__)
    // Disable window animation
