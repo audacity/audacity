@@ -44,8 +44,6 @@ void SaveWindowSize();
 void QuitAudacity(bool bForce);
 void QuitAudacity();
 
-extern bool gIsQuitting;
-
 class AliasBlockFile;
 
 class AudacityApp final : public wxApp {

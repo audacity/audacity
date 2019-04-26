@@ -173,6 +173,28 @@ scroll information.  It also has some status flags.
 #include "widgets/WindowAccessible.h"
 #endif
 
+bool AllProjects::sbClosing = false;
+
+bool AllProjects::Close( bool force )
+{
+   ValueRestorer<bool> cleanup{ sbClosing, true };
+   while (gAudacityProjects.size())
+   {
+      // Closing the project has global side-effect
+      // of deletion from gAudacityProjects
+      if ( force )
+      {
+         gAudacityProjects[0]->Close(true);
+      }
+      else
+      {
+         if (!gAudacityProjects[0]->Close())
+            return false;
+      }
+   }
+   return true;
+}
+
 ODLock &AudacityProject::AllProjectDeleteMutex()
 {
    static ODLock theMutex;
@@ -2575,7 +2597,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // DanH: If we're definitely about to quit, clear the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
-   if ((gAudacityProjects.size() == 1) && (quitOnClose || gIsQuitting))
+   if ((gAudacityProjects.size() == 1) &&
+      (quitOnClose || AllProjects::Closing()))
       Clipboard::Get().Clear();
 
    // JKC: For Win98 and Linux do not detach the menu bar.
@@ -2677,7 +2700,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->SetListener(gActiveProject);
    }
 
-   if (gAudacityProjects.empty() && !gIsQuitting) {
+   if (gAudacityProjects.empty() && !AllProjects::Closing()) {
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {

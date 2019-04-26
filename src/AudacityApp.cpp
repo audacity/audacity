@@ -264,10 +264,11 @@ static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg
 #endif
 
 static bool gInited = false;
-bool gIsQuitting = false;
+static bool gIsQuitting = false;
 
 void QuitAudacity(bool bForce)
 {
+   // guard against recursion
    if (gIsQuitting)
       return;
 
@@ -292,22 +293,11 @@ void QuitAudacity(bool bForce)
 /*end+*/
    {
       SaveWindowSize();
-      while (gAudacityProjects.size())
+      bool closedAll = AllProjects::Close( bForce );
+      if ( !closedAll )
       {
-         // Closing the project has global side-effect
-         // of deletion from gAudacityProjects
-         if (bForce)
-         {
-            gAudacityProjects[0]->Close(true);
-         }
-         else
-         {
-            if (!gAudacityProjects[0]->Close())
-            {
-               gIsQuitting = false;
-               return;
-            }
-         }
+         gIsQuitting = false;
+         return;
       }
    }
 
@@ -1949,19 +1939,12 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
 
    // Try to close each open window.  If the user hits Cancel
    // in a Save Changes dialog, don't continue.
-   if (!gAudacityProjects.empty()) {
-      while (gAudacityProjects.size()) {
-         // Closing the project has side-effect of
-         // deletion from gAudacityProjects
-         if (force) {
-            gAudacityProjects[0]->Close(true);
-         }
-         else if (!gAudacityProjects[0]->Close()) {
-            gIsQuitting = false;
-            event.Veto();
-            break;
-         }
-      }
+   gIsQuitting = true;
+   bool closedAll = AllProjects::Close( force );
+   if ( !closedAll )
+   {
+      gIsQuitting = false;
+      event.Veto();
    }
 }
 

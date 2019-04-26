@@ -150,6 +150,20 @@ class ImportXMLTagHandler final : public XMLTagHandler
    AudacityProject* mProject;
 };
 
+class AllProjects
+{
+public:
+   // Return true if all projects do close (always so if force == true)
+   // But if return is false, that means the user cancelled close of at least
+   // one un-saved project.
+   static bool Close( bool force = false );
+
+   static bool Closing() { return sbClosing; }
+
+private:
+   static bool sbClosing;
+};
+
 class EffectPlugs;
 class CommandContext;
 class CommandManager;
