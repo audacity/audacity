@@ -25,7 +25,6 @@
 
 #include "sndfile.h"
 
-#include "../AudacityApp.h" // for error reporting top level window.
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../MemoryX.h"
@@ -520,7 +519,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       // Test for 4 Gibibytes, rather than 4 Gigabytes
       if( byteCount > 4.295e9)
       {
-         ReportTooBigError( wxGetApp().GetTopWindow() );
+         ReportTooBigError( wxTheApp->GetTopWindow() );
          return ProgressResult::Failed;
       }
 

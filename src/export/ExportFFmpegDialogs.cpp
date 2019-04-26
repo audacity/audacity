@@ -64,7 +64,6 @@
 #include "../Tags.h"
 #include "../TranslatableStringArray.h"
 #include "../widgets/ErrorDialog.h"
-#include "../AudacityApp.h"
 
 #include "Export.h"
 
@@ -471,7 +470,7 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
       }
    }
    DropFFmpegLibs();
-   auto pWin = wxGetApp().GetTopWindow();
+   auto pWin = wxTheApp->GetTopWindow();
    ExportFFmpegOptions od(pWin);
    od.ShowModal();
 }

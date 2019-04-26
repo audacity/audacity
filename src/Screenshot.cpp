@@ -39,7 +39,6 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/tglbtn.h>
 #include <wx/window.h>
 
-#include "AudacityApp.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
@@ -114,7 +113,7 @@ ScreenFramePtr mFrame;
 void OpenScreenshotTools()
 {
    if (!mFrame) {
-      auto parent = wxGetApp().GetTopWindow();
+      auto parent = wxTheApp->GetTopWindow();
       if (!parent) {
          wxASSERT(false);
          return;

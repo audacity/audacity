@@ -215,7 +215,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 MenuTable::BaseItemPtr HelpMenu( AudacityProject & )
 {
 #ifdef __WXMAC__
-      wxGetApp().s_macHelpMenuTitleName = _("&Help");
+      wxApp::s_macHelpMenuTitleName = _("&Help");
 #endif
 
    using namespace MenuTable;

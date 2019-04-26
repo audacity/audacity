@@ -2593,7 +2593,7 @@ void AudioIO::StopStream()
       while( mAudioThreadShouldCallFillBuffersOnce )
       {
          // LLL:  Experienced recursive yield here...once.
-         wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
+         wxTheApp->Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
          wxMilliSleep( 50 );
       }
 
