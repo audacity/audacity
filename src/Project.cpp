@@ -1060,7 +1060,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mBandwidthSelectionFormatName( NumericTextCtrl::LookupFormat(
          NumericConverter::BANDWIDTH,
          gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) ) )
-     , mCommandManager( std::make_unique<CommandManager>() )
 {
    auto &project = *this;
    auto &window = project;
@@ -2373,7 +2372,9 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
       return;
    }
 #endif
-   bool handled = GetCommandManager()->HandleMenuID(
+   auto &project = *this;
+   auto &commandManager = CommandManager::Get( project );
+   bool handled = commandManager.HandleMenuID(
       event.GetId(), GetMenuManager(*this).GetUpdateFlags(*this),
       NoFlagsSpecified);
 

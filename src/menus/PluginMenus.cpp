@@ -399,7 +399,7 @@ bool DoEffect(
    auto trackFactory = project.GetTrackFactory();
    auto rate = project.GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
@@ -475,7 +475,7 @@ bool DoEffect(
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
          lastEffectDesc.Printf(_("Repeat %s"), shortDesc);
-         commandManager->Modify(wxT("RepeatLastEffect"), lastEffectDesc);
+         commandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
       }
    }
 
@@ -645,20 +645,20 @@ void OnBenchmark(const CommandContext &context)
 void OnSimulateRecordingErrors(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool &setting = gAudioIO->mSimulateRecordingErrors;
-   commandManager->Check(wxT("SimulateRecordingErrors"), !setting);
+   commandManager.Check(wxT("SimulateRecordingErrors"), !setting);
    setting = !setting;
 }
 
 void OnDetectUpstreamDropouts(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool &setting = gAudioIO->mDetectUpstreamDropouts;
-   commandManager->Check(wxT("DetectUpstreamDropouts"), !setting);
+   commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
    setting = !setting;
 }
 

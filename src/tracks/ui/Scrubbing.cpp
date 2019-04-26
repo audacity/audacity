@@ -1145,8 +1145,8 @@ std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
 bool Scrubber::CanScrub() const
 {
    // Return the enabled state for the menu item that really launches the scrub or seek.
-   auto cm = mProject->GetCommandManager();
-   return cm->GetEnabled(menuItems[ 0 ].name);
+   auto &cm = CommandManager::Get( *mProject );
+   return cm.GetEnabled(menuItems[ 0 ].name);
 }
 
 // To supply the "finder" argument
@@ -1178,9 +1178,9 @@ MenuTable::BaseItemPtr Scrubber::Menu()
 void Scrubber::PopulatePopupMenu(wxMenu &menu)
 {
    int id = CMD_ID;
-   auto cm = mProject->GetCommandManager();
+   auto &cm = CommandManager::Get( *mProject );
    for (const auto &item : menuItems) {
-      if (cm->GetEnabled(item.name)) {
+      if (cm.GetEnabled(item.name)) {
          auto test = item.StatusTest;
          menu.Append(id, wxGetTranslation(item.label), wxString{},
                      test ? wxITEM_CHECK : wxITEM_NORMAL);
@@ -1193,11 +1193,11 @@ void Scrubber::PopulatePopupMenu(wxMenu &menu)
 
 void Scrubber::CheckMenuItems()
 {
-   auto cm = mProject->GetCommandManager();
+   auto &cm = CommandManager::Get( *mProject );
    for (const auto &item : menuItems) {
       auto test = item.StatusTest;
       if (test)
-         cm->Check(item.name, (this->*test)());
+         cm.Check(item.name, (this->*test)());
    }
 }
 

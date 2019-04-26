@@ -258,12 +258,12 @@ void OnZoomFitV(const CommandContext &context)
 void OnAdvancedVZoom(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool checked = !gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L);
    gPrefs->Write(wxT("/GUI/VerticalZooming"), checked);
    gPrefs->Flush();
-   commandManager->Check(wxT("AdvancedVZoom"), checked);
+   commandManager.Check(wxT("AdvancedVZoom"), checked);
    MenuCreator::RebuildAllMenuBars();
 }
 
@@ -350,25 +350,25 @@ void OnMixerBoard(const CommandContext &context)
 void OnShowExtraMenus(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool checked = !gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L);
    gPrefs->Write(wxT("/GUI/ShowExtraMenus"), checked);
    gPrefs->Flush();
-   commandManager->Check(wxT("ShowExtraMenus"), checked);
+   commandManager.Check(wxT("ShowExtraMenus"), checked);
    MenuCreator::RebuildAllMenuBars();
 }
 
 void OnShowClipping(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
    bool checked = !gPrefs->Read(wxT("/GUI/ShowClipping"), 0L);
    gPrefs->Write(wxT("/GUI/ShowClipping"), checked);
    gPrefs->Flush();
-   commandManager->Check(wxT("ShowClipping"), checked);
+   commandManager.Check(wxT("ShowClipping"), checked);
 
    wxTheApp->AddPendingEvent(wxCommandEvent{
       EVT_PREFS_UPDATE, ShowClippingPrefsID() });

@@ -906,7 +906,7 @@ HitTestPreview SelectHandle::Preview
          // Look up the current key binding for Preferences.
          // (Don't assume it's the default!)
          auto keyStr =
-            pProject->GetCommandManager()->GetKeyFromName(wxT("Preferences"))
+            CommandManager::Get( *pProject ).GetKeyFromName(wxT("Preferences"))
             .Display( true );
          if (keyStr.empty())
             // No keyboard preference defined for opening Preferences dialog

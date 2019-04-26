@@ -528,7 +528,8 @@ void LyricsPanel::OnShow(wxShowEvent &e)
 void LyricsPanel::OnKeyEvent(wxKeyEvent & event)
 {
    AudacityProject *project = GetActiveProject();
-   project->GetCommandManager()->FilterKeyEvent(project, event, true);
+   auto &commandManager = CommandManager::Get( *project );
+   commandManager.FilterKeyEvent(project, event, true);
    event.Skip();
 }
 

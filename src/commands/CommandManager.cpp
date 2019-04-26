@@ -152,6 +152,23 @@ SubMenuListEntry::~SubMenuListEntry()
 }
 
 ///
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) {
+      return std::make_unique<CommandManager>();
+   }
+};
+
+CommandManager &CommandManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< CommandManager >( key );
+}
+
+const CommandManager &CommandManager::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+///
 ///  Standard Constructor
 ///
 CommandManager::CommandManager():
@@ -1642,8 +1659,8 @@ static struct InstallHandlers
       KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
          // Capture handler window didn't want it, so ask the CommandManager.
          AudacityProject *project = GetActiveProject();
-         CommandManager *manager = project->GetCommandManager();
-         return manager && manager->FilterKeyEvent(project, key);
+         auto &manager = CommandManager::Get( *project );
+         return manager.FilterKeyEvent(project, key);
       } );
    }
 } installHandlers;

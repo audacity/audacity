@@ -122,11 +122,11 @@ void OnAudioHost(const CommandContext &context)
 void OnFullScreen(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool bChecked = !project.wxTopLevelWindow::IsFullScreen();
    project.wxTopLevelWindow::ShowFullScreen(bChecked);
-   commandManager->Check(wxT("FullScreenOnOff"), bChecked);
+   commandManager.Check(wxT("FullScreenOnOff"), bChecked);
 }
 
 }; // struct Handler
