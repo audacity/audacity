@@ -39,9 +39,6 @@ class AppCommandEvent;
 class AudacityLogger;
 class AudacityProject;
 
-void QuitAudacity(bool bForce);
-void QuitAudacity();
-
 class AliasBlockFile;
 
 class AudacityApp final : public wxApp {

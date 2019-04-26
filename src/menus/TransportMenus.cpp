@@ -457,7 +457,11 @@ void OnTimerRecord(const CommandContext &context)
          // No action required
          break;
       case POST_TIMER_RECORD_CLOSE:
-         wxTheApp->CallAfter( []{ QuitAudacity(); } );
+         wxTheApp->CallAfter( []{
+            // Simulate the application Exit menu item
+            wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
+            wxTheApp->AddPendingEvent( evt );
+         } );
          break;
       case POST_TIMER_RECORD_RESTART:
          // Restart System

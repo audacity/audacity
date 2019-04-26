@@ -266,7 +266,7 @@ static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg
 static bool gInited = false;
 static bool gIsQuitting = false;
 
-void QuitAudacity(bool bForce)
+static void QuitAudacity(bool bForce)
 {
    // guard against recursion
    if (gIsQuitting)
@@ -323,7 +323,7 @@ void QuitAudacity(bool bForce)
    }
 }
 
-void QuitAudacity()
+static void QuitAudacity()
 {
    QuitAudacity(false);
 }
@@ -647,8 +647,13 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_MENU(wxID_OPEN, AudacityApp::OnMenuOpen)
    EVT_MENU(wxID_ABOUT, AudacityApp::OnMenuAbout)
    EVT_MENU(wxID_PREFERENCES, AudacityApp::OnMenuPreferences)
-   EVT_MENU(wxID_EXIT, AudacityApp::OnMenuExit)
 #endif
+
+   // Associate the handler with the menu id on all operating systems, even
+   // if they don't have an application menu bar like in macOS, so that
+   // other parts of the program can send the application a shut-down
+   // event
+   EVT_MENU(wxID_EXIT, AudacityApp::OnMenuExit)
 
 #ifndef __WXMSW__
    EVT_SOCKET(ID_IPC_SERVER, AudacityApp::OnServerEvent)

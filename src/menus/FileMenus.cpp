@@ -542,7 +542,9 @@ void OnPrint(const CommandContext &context)
 
 void OnExit(const CommandContext &WXUNUSED(context) )
 {
-   QuitAudacity();
+   // Simulate the application Exit menu item
+   wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
+   wxTheApp->AddPendingEvent( evt );
 }
 
 }; // struct Handler

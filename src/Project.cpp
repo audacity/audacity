@@ -2784,7 +2784,9 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
-         QuitAudacity();
+         // Simulate the application Exit menu item
+         wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
+         wxTheApp->AddPendingEvent( evt );
       }
       else {
          AllProjects::Reset();
