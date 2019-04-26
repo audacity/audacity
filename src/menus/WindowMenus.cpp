@@ -7,7 +7,6 @@
 
 #ifdef __WXMAC__
 
-#include "../AudacityApp.h"
 #include "../Menus.h"
 #include "../Project.h"
 #include "../commands/CommandContext.h"
@@ -159,15 +158,6 @@ MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
 
 #undef XXO
 #undef FN
-
-// One more Objective C++ function for another class scope, kept in this file
-
-void AudacityApp::MacActivateApp()
-{
-   id app = [NSApplication sharedApplication];
-   if ( [app respondsToSelector:@selector(activateIgnoringOtherApps:)] )
-      [app activateIgnoringOtherApps:YES];
-}
 
 #else
 

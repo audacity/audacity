@@ -1292,6 +1292,7 @@
 		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
 		5EFEAD9E22723E390077DFF6 /* Clipboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */; };
+		5EFEADA02273382D0077DFF6 /* AudacityApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */; };
 		65326EC72253D70900844F28 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EAA2253D70900844F28 /* common.c */; };
 		65326EC82253D70900844F28 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAB2253D70900844F28 /* common.h */; };
 		65326EC92253D70900844F28 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAC2253D70900844F28 /* config.h */; };
@@ -3324,6 +3325,7 @@
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
 		5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clipboard.cpp; sourceTree = "<group>"; };
 		5EFEAD9D22723E390077DFF6 /* Clipboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clipboard.h; sourceTree = "<group>"; };
+		5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudacityApp.mm; sourceTree = "<group>"; };
 		65326E9E2253D2BE00844F28 /* libmp3lame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmp3lame.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA72253D68900844F28 /* libmpg123.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmpg123.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA92253D70900844F28 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
@@ -4489,6 +4491,7 @@
 				2844163A1B82D6BC0000574D /* WaveTrackLocation.h */,
 				28FC1AFA0A47762C00A188AE /* WrappedType.h */,
 				5ED18DB71CC290AB00FAFE95 /* wxFileNameWrapper.h */,
+				5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */,
 				1790AFDC09883BFD008A330A /* blockfile */,
 				174D9025098C78AF00D5909F /* commands */,
 				1790AFFD09883BFD008A330A /* effects */,
@@ -8233,6 +8236,7 @@
 				5E15125C1DB000DC00702E29 /* LabelTrackVRulerControls.cpp in Sources */,
 				1790B12509883BFD008A330A /* SimpleBlockFile.cpp in Sources */,
 				1790B12609883BFD008A330A /* BlockFile.cpp in Sources */,
+				5EFEADA02273382D0077DFF6 /* AudacityApp.mm in Sources */,
 				1790B12A09883BFD008A330A /* CrossFade.cpp in Sources */,
 				1790B12B09883BFD008A330A /* DirManager.cpp in Sources */,
 				1790B12C09883BFD008A330A /* Dither.cpp in Sources */,
