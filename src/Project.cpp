@@ -3046,6 +3046,92 @@ AudacityProject *AudacityProject::OpenProject(
    return pProject;
 }
 
+auto AudacityProject::ReadProjectFile( const FilePath &fileName )
+  -> ReadProjectResults
+{
+   mFileName = fileName;
+   mbLoadedFromAup = true;
+
+   mRecoveryAutoSaveDataDir = wxT("");
+   mIsRecovered = false;
+
+   SetProjectTitle();
+
+   const wxString autoSaveExt = wxT("autosave");
+   if ( wxFileNameWrapper{ mFileName }.GetExt() == autoSaveExt )
+   {
+      AutoSaveFile asf;
+      if (!asf.Decode(fileName))
+      {
+         auto message = AutoSaveFile::FailureMessage( fileName );
+         AudacityMessageBox(
+            message,
+            _("Error decoding file"),
+            wxOK | wxCENTRE, this);
+         // Important: Prevent deleting any temporary files!
+         DirManager::SetDontDeleteTempFiles();
+         return { true };
+      }
+   }
+
+   ///
+   /// Parse project file
+   ///
+
+   XMLFileReader xmlFile;
+
+   // 'Lossless copy' projects have dependencies. We need to always copy-in
+   // these dependencies when converting to a normal project.
+   wxString oldAction =
+      gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   bool oldAsk =
+      gPrefs->ReadBool(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
+   if (oldAction != wxT("copy"))
+      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   if (oldAsk)
+      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
+   gPrefs->Flush();
+
+   auto cleanup = finally( [&] {
+      // and restore old settings if necessary.
+      if (oldAction != wxT("copy"))
+         gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), oldAction);
+      if (oldAsk)
+         gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
+      gPrefs->Flush();
+   } );
+
+   bool bParseSuccess = xmlFile.Parse(this, fileName);
+   
+   bool err = false;
+
+   if (bParseSuccess) {
+      // By making a duplicate set of pointers to the existing blocks
+      // on disk, we add one to their reference count, guaranteeing
+      // that their reference counts will never reach zero and thus
+      // the version saved on disk will be preserved until the
+      // user selects Save().
+
+      mLastSavedTracks = TrackList::Create();
+
+      for (auto t : GetTracks()->Any()) {
+         if (t->GetErrorOpening())
+         {
+            wxLogWarning(
+               wxT("Track %s had error reading clip values from project file."),
+               t->GetName());
+            err = true;
+         }
+
+         err = ( !t->LinkConsistencyCheck() ) || err;
+
+         mLastSavedTracks->Add(t->Duplicate());
+      }
+   }
+
+   return { false, bParseSuccess, err, xmlFile.GetErrorStr() };
+}
+
 // FIXME:? TRAP_ERR This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
 void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
@@ -3160,85 +3246,18 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       return;
    }
 
-   ///
-   /// Parse project file
-   ///
+   auto results = ReadProjectFile( fileName );
+   if ( results.decodeError )
+      return;
 
-   mFileName = fileName;
-   mbLoadedFromAup = true;
-
-   mRecoveryAutoSaveDataDir = wxT("");
-   mIsRecovered = false;
-
-   SetProjectTitle();
-
-   const wxString autoSaveExt = wxT(".autosave");
-   if (mFileName.length() >= autoSaveExt.length() &&
-       mFileName.Right(autoSaveExt.length()) == autoSaveExt)
-   {
-      AutoSaveFile asf;
-      if (!asf.Decode(fileName))
-      {
-         auto message = AutoSaveFile::FailureMessage( fileName );
-         AudacityMessageBox(
-            message,
-            _("Error decoding file"),
-            wxOK | wxCENTRE, this);
-         // Important: Prevent deleting any temporary files!
-         DirManager::SetDontDeleteTempFiles();
-         return;
-      }
-   }
-
-   XMLFileReader xmlFile;
-
-   // 'Lossless copy' projects have dependencies. We need to always copy-in
-   // these dependencies when converting to a normal project.
-   wxString oldAction = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
-   bool oldAsk = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
-   if (oldAction != wxT("copy"))
-      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
-   if (oldAsk)
-      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
-   gPrefs->Flush();
-
-   bool bParseSuccess = xmlFile.Parse(this, fileName);
-
-   // and restore old settings if necessary.
-   if (oldAction != wxT("copy"))
-      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), oldAction);
-   if (oldAsk)
-      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
-   gPrefs->Flush();
+   const bool bParseSuccess = results.parseSuccess;
+   const wxString &errorStr = results.errorString;
+   const bool err = results.trackError;
 
    // Clean up now unused recording recovery handler if any
    mRecordingRecoveryHandler.reset();
 
-   bool err = false;
-
    if (bParseSuccess) {
-      // By making a duplicate set of pointers to the existing blocks
-      // on disk, we add one to their reference count, guaranteeing
-      // that their reference counts will never reach zero and thus
-      // the version saved on disk will be preserved until the
-      // user selects Save().
-
-      mLastSavedTracks = TrackList::Create();
-
-      for (auto t : GetTracks()->Any()) {
-         if (t->GetErrorOpening())
-         {
-            wxLogWarning(
-               wxT("Track %s had error reading clip values from project file."),
-               t->GetName());
-            err = true;
-         }
-
-         err = ( !t->LinkConsistencyCheck() ) || err;
-
-         mLastSavedTracks->Add(t->Duplicate());
-      }
-
       InitialState();
       mTrackPanel->SetFocusedTrack(*GetTracks()->Any().begin());
       HandleResize();
@@ -3363,9 +3382,8 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       mFileName = wxT("");
       SetProjectTitle();
 
-      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, xmlFile.GetErrorStr());
+      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, errorStr);
 
-      wxString errorStr = xmlFile.GetErrorStr();
       wxString url = wxT("FAQ:Errors_on_opening_or_recovering_an_Audacity_project");
 
       // Certain errors have dedicated help.

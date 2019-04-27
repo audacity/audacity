@@ -282,6 +282,15 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
       AudacityProject *pProject,
       const FilePath &fileNameArg, bool addtohistory = true);
 
+   struct ReadProjectResults
+   {
+      bool decodeError;
+      bool parseSuccess;
+      bool trackError;
+      wxString errorString;
+   };
+   ReadProjectResults ReadProjectFile( const FilePath &fileName );
+
    void OpenFile(const FilePath &fileName, bool addtohistory = true);
 
 private:
