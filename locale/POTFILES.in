@@ -61,6 +61,8 @@ src/Clipboard.h
 src/CrashReport.cpp
 src/CrashReport.h
 src/ClassicThemeAsCeeCode.h
+src/ClientData.h
+src/ClientDataHelpers.h
 src/CrossFade.cpp
 src/CrossFade.h
 src/DarkThemeAsCeeCode.h

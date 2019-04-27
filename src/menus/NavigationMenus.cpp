@@ -301,6 +301,7 @@ namespace NavigationActions {
 
 struct Handler
    : CommandHandlerObject // MUST be the first base class!
+   , ClientData::Base
    , PrefsListener
 {
 
@@ -539,12 +540,12 @@ Handler()
 
 // Handler is stateful.  Needs a factory registered with
 // AudacityProject.
-static const AudacityProject::RegisteredAttachedObjectFactory factory{ []{
-   return std::make_unique< NavigationActions::Handler >();
-} };
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) {
+      return std::make_unique< NavigationActions::Handler >(); } };
+
 static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
-   return static_cast<NavigationActions::Handler&>(
-      project.GetAttachedObject(factory));
+   return project.AttachedObjects::Get< NavigationActions::Handler >( key );
 };
 
 // Menu definitions

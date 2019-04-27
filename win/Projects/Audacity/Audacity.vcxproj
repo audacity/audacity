@@ -505,6 +505,8 @@
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
     <ClInclude Include="..\..\..\src\CellularPanel.h" />
     <ClInclude Include="..\..\..\src\Clipboard.h" />
+    <ClInclude Include="..\..\..\src\ClientData.h" />
+    <ClInclude Include="..\..\..\src\ClientDataHelpers.h" />
     <ClInclude Include="..\..\..\src\CrashReport.h" />
     <ClInclude Include="..\..\..\src\commands\AudacityCommand.h" />
     <ClInclude Include="..\..\..\src\commands\CommandContext.h" />

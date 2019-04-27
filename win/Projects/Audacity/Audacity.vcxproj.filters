@@ -2251,6 +2251,12 @@
     <ClInclude Include="..\..\..\src\Clipboard.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ClientData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ClientDataHelpers.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\CrashReport.h">
       <Filter>src</Filter>
     </ClInclude>

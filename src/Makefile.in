@@ -297,29 +297,30 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
 	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
 	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CellularPanel.cpp CellularPanel.h Clipboard.cpp Clipboard.h \
-	CrashReport.cpp CrashReport.h Dependencies.cpp Dependencies.h \
-	DeviceChange.cpp DeviceChange.h DeviceManager.cpp \
-	DeviceManager.h Diags.cpp Diags.h Envelope.cpp Envelope.h \
-	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
-	FileException.cpp FileException.h FileIO.cpp FileIO.h \
-	FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
-	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
-	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
-	ImageManipulation.h InconsistencyException.cpp \
-	InconsistencyException.h InterpolateAudio.cpp \
-	InterpolateAudio.h KeyboardCapture.cpp KeyboardCapture.h \
-	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
-	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
-	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
-	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h MemoryX.h \
-	Menus.cpp Menus.h MissingAliasFileDialog.cpp \
-	MissingAliasFileDialog.h Mix.cpp Mix.h MixerBoard.cpp \
-	MixerBoard.h ModuleManager.cpp ModuleManager.h NumberScale.h \
-	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
-	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
-	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
-	Project.h ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
+	CellularPanel.cpp CellularPanel.h ClientData.h \
+	ClientDataHelpers.h Clipboard.cpp Clipboard.h CrashReport.cpp \
+	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
+	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
+	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
+	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
+	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
+	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
+	ImageManipulation.cpp ImageManipulation.h \
+	InconsistencyException.cpp InconsistencyException.h \
+	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
+	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
+	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
+	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
+	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
+	Matrix.h MemoryX.h Menus.cpp Menus.h \
+	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
+	PlatformCompatibility.cpp PlatformCompatibility.h \
+	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
+	Profiler.cpp Profiler.h Project.cpp Project.h \
+	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
 	ProjectFSCK.cpp ProjectFSCK.h RealFFTf.cpp RealFFTf.h \
 	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
 	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
@@ -1358,29 +1359,30 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
 	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
 	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CellularPanel.cpp CellularPanel.h Clipboard.cpp Clipboard.h \
-	CrashReport.cpp CrashReport.h Dependencies.cpp Dependencies.h \
-	DeviceChange.cpp DeviceChange.h DeviceManager.cpp \
-	DeviceManager.h Diags.cpp Diags.h Envelope.cpp Envelope.h \
-	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
-	FileException.cpp FileException.h FileIO.cpp FileIO.h \
-	FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
-	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
-	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
-	ImageManipulation.h InconsistencyException.cpp \
-	InconsistencyException.h InterpolateAudio.cpp \
-	InterpolateAudio.h KeyboardCapture.cpp KeyboardCapture.h \
-	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
-	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
-	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
-	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h MemoryX.h \
-	Menus.cpp Menus.h MissingAliasFileDialog.cpp \
-	MissingAliasFileDialog.h Mix.cpp Mix.h MixerBoard.cpp \
-	MixerBoard.h ModuleManager.cpp ModuleManager.h NumberScale.h \
-	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
-	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
-	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
-	Project.h ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
+	CellularPanel.cpp CellularPanel.h ClientData.h \
+	ClientDataHelpers.h Clipboard.cpp Clipboard.h CrashReport.cpp \
+	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
+	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
+	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
+	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
+	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
+	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
+	ImageManipulation.cpp ImageManipulation.h \
+	InconsistencyException.cpp InconsistencyException.h \
+	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
+	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
+	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
+	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
+	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
+	Matrix.h MemoryX.h Menus.cpp Menus.h \
+	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
+	PlatformCompatibility.cpp PlatformCompatibility.h \
+	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
+	Profiler.cpp Profiler.h Project.cpp Project.h \
+	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
 	ProjectFSCK.cpp ProjectFSCK.h RealFFTf.cpp RealFFTf.h \
 	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
 	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
