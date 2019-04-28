@@ -38,6 +38,7 @@ small calculations of rectangles.
 #include "../Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "../Track.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 

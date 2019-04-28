@@ -23,6 +23,7 @@
 #include "LabelTrack.h"
 #include "commands/CommandManager.h"
 #include "UndoManager.h"
+#include "ViewInfo.h"
 
 
 BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl)
@@ -56,13 +57,13 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
       {
          Syllable* pCurSyl = mLyricsPanel->GetSyllable(nNewSyl);
          AudacityProject* pProj = GetActiveProject();
-         auto &selectedRegion = pProj->GetViewInfo().selectedRegion;
+         auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
          selectedRegion.setT0( pCurSyl->t );
 
          //v Should probably select to end as in
          // SelectActions::Handler::OnSelectCursorEnd,
          // but better to generalize that in AudacityProject methods.
-         pProj->mViewInfo.selectedRegion.setT1(pCurSyl->t);
+         selectedRegion.setT1( pCurSyl->t );
       }
    }
 
@@ -439,7 +440,7 @@ void LyricsPanel::Update(double t)
       // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -DBL_MAX if !IsStreamActive().
       // In that case, use the selection start time.
       AudacityProject* pProj = GetActiveProject();
-      const auto &selectedRegion = pProj->GetViewInfo().selectedRegion;
+      const auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
       mT = selectedRegion.t0();
    }
    else
@@ -504,7 +505,7 @@ void LyricsPanel::UpdateLyrics(wxEvent &e)
 
    AddLabels(pLabelTrack);
    Finish(pLabelTrack->GetEndTime());
-   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   const auto &selectedRegion = ViewInfo::Get( *mProject ).selectedRegion;
    Update(selectedRegion.t0());
 }
 

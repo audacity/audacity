@@ -2,6 +2,7 @@
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -372,7 +373,7 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
 
 void DoSelectClipBoundary(AudacityProject &project, bool next)
 {
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    std::vector<FoundClipBoundary> results;
@@ -557,7 +558,7 @@ int FindClips
 
 void DoSelectClip(AudacityProject &project, bool next)
 {
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    std::vector<FoundClip> results;
@@ -604,7 +605,7 @@ void DoSelectClip(AudacityProject &project, bool next)
 void DoCursorClipBoundary
 (AudacityProject &project, bool next)
 {
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    std::vector<FoundClipBoundary> results;
@@ -698,7 +699,7 @@ void DoClipLeftOrRight
    }
 
    auto &panel = *project.GetTrackPanel();
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
    auto &tracks = TrackList::Get( project );
    auto isSyncLocked = project.IsSyncLocked();

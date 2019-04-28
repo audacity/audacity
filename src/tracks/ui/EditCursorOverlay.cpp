@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h" //
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 
 #include <wx/dc.h>
 
@@ -44,15 +45,15 @@ unsigned EditCursorOverlay::SequenceNumber() const
 
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
-   const auto &selection = mProject->GetViewInfo().selectedRegion;
+   const auto &selection = ViewInfo::Get( *mProject ).selectedRegion;
    if (!selection.isPoint()) {
       mCursorTime = -1.0;
       mNewCursorX = -1;
    }
    else {
       mCursorTime = selection.t0();
-      mNewCursorX = mProject->GetZoomInfo().TimeToPosition
-         (mCursorTime, mProject->GetTrackPanel()->GetLeftOffset());
+      mNewCursorX = ZoomInfo::Get( *mProject ).TimeToPosition(
+         mCursorTime, mProject->GetTrackPanel()->GetLeftOffset());
    }
 
    // Excessive height in case of the ruler, but it matters little.
@@ -79,7 +80,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (mLastCursorX == -1)
       return;
 
-   const ZoomInfo &viewInfo = mProject->GetZoomInfo();
+   const auto &viewInfo = ZoomInfo::Get( *mProject );
 
    const bool
    onScreen = between_incexc(viewInfo.h,

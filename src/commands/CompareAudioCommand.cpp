@@ -21,7 +21,7 @@ threshold of difference in two selected tracks
 #include "../Audacity.h"
 #include "CompareAudioCommand.h"
 
-#include "../Project.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 
 
@@ -61,8 +61,9 @@ void CompareAudioCommand::PopulateOrExchange(ShuttleGui & S)
 bool CompareAudioCommand::GetSelection(const CommandContext &context, AudacityProject &proj)
 {
    // Get the selected time interval
-   mT0 = proj.mViewInfo.selectedRegion.t0();
-   mT1 = proj.mViewInfo.selectedRegion.t1();
+   auto &selectedRegion = ViewInfo::Get( proj ).selectedRegion;
+   mT0 = selectedRegion.t0();
+   mT1 = selectedRegion.t1();
    if (mT0 >= mT1)
    {
       context.Error(wxT("There is no selection!"));

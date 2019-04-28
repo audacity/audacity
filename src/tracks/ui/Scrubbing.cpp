@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
@@ -333,7 +334,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
       wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
-         const ViewInfo &viewInfo = mProject->GetViewInfo();
+         auto &viewInfo = ViewInfo::Get( *mProject );
          TrackPanel *const trackPanel = mProject->GetTrackPanel();
          ControlToolBar * const ctb = mProject->GetControlToolBar();
          double maxTime = TrackList::Get( *mProject ).GetEndTime();
@@ -548,7 +549,7 @@ void Scrubber::ContinueScrubbingPoll()
       const wxMouseState state(::wxGetMouseState());
       const auto trackPanel = mProject->GetTrackPanel();
       const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
-      const auto &viewInfo = mProject->GetViewInfo();
+      auto &viewInfo = ViewInfo::Get( *mProject );
 #ifdef DRAG_SCRUB
       if (mDragging && mSmoothScrollingScrub) {
          const auto lastTime = gAudioIO->GetLastScrubTime();
@@ -779,7 +780,7 @@ bool Scrubber::ShouldDrawScrubSpeed()
 
 double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
-   ViewInfo &viewInfo = mProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *mProject );
    const double screen =
       mProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
@@ -970,8 +971,9 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       const double maxScrubSpeed = GetScrubber().GetMaxScrubSpeed();
       const double speed =
          scrubber.IsScrollScrubbing()
-         ? scrubber.FindScrubSpeed
-            (seeking, mProject->GetViewInfo().PositionToTime(position.x, trackPanel->GetLeftOffset()))
+         ? scrubber.FindScrubSpeed( seeking,
+             ViewInfo::Get( *mProject )
+                .PositionToTime(position.x, trackPanel->GetLeftOffset()))
          : maxScrubSpeed;
 
       const wxChar *format =

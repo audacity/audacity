@@ -14,6 +14,7 @@
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -154,7 +155,7 @@ void DoAlign
 (AudacityProject &project, int index, bool moveSel)
 {
    auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    wxString action;
    wxString shortAction;

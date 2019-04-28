@@ -30,6 +30,7 @@ This class now lists
 #include "../widgets/Overlay.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../Envelope.h"

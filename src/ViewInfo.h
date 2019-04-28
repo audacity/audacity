@@ -13,12 +13,11 @@
 
 #include <vector>
 #include <wx/event.h> // inherit wxEvtHandler
+#include "ClientData.h"
 #include "SelectedRegion.h"
 #include "MemoryX.h"
 #include "Prefs.h"
 
-
-class Track;
 
 #ifdef __GNUC__
 #define CONST
@@ -26,15 +25,21 @@ class Track;
 #define CONST const
 #endif
 
+class AudacityProject;
+
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
 // and for computing conversions between track times and pixel positions.
 class AUDACITY_DLL_API ZoomInfo /* not final */
    // Note that ViewInfo inherits from ZoomInfo but there are no virtual functions.
    // That's okay if we pass always by reference and never copy, suffering "slicing."
-: protected PrefsListener
+   : public ClientData::Base
+   , protected PrefsListener
 {
 public:
+   static ZoomInfo &Get( AudacityProject &project );
+   static const ZoomInfo &Get( const AudacityProject &project );
+
    ZoomInfo(double start, double pixelsPerSecond);
    ~ZoomInfo();
 
@@ -146,6 +151,9 @@ class AUDACITY_DLL_API ViewInfo final
    : public wxEvtHandler, public ZoomInfo
 {
 public:
+   static ViewInfo &Get( AudacityProject &project );
+   static const ViewInfo &Get( const AudacityProject &project );
+
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
    static int UpdateScrollPrefsID();

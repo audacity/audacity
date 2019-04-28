@@ -18,6 +18,7 @@
 #include "ImportExportCommands.h"
 
 #include "../Project.h"
+#include "../ViewInfo.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -66,8 +67,9 @@ void ExportCommand::PopulateOrExchange(ShuttleGui & S)
 bool ExportCommand::Apply(const CommandContext & context)
 {
    double t0, t1;
-   t0 = context.project.mViewInfo.selectedRegion.t0();
-   t1 = context.project.mViewInfo.selectedRegion.t1();
+   auto &selectedRegion = ViewInfo::Get( context.project ).selectedRegion;
+   t0 = selectedRegion.t0();
+   t1 = selectedRegion.t1();
 
    // Find the extension and check it's valid
    int splitAt = mFileName.Find(wxUniChar('.'), true);

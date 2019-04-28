@@ -100,6 +100,7 @@
 #include "../Project.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"

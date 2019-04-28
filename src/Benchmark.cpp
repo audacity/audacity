@@ -41,6 +41,7 @@ of the BlockFile system.
 #include "WaveTrack.h"
 #include "Sequence.h"
 #include "Prefs.h"
+#include "ViewInfo.h"
 
 #include "FileNames.h"
 #include "widgets/AudacityMessageBox.h"

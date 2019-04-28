@@ -63,6 +63,7 @@ effects from this one class.
 #include "../../Project.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
+#include "../../ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
@@ -930,7 +931,7 @@ finish:
       // Selection is to be set to whatever it is in the project.
       AudacityProject *project = GetActiveProject();
       if (project) {
-         auto &selectedRegion = project->GetViewInfo().selectedRegion;
+         auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
          mT0 = selectedRegion.t0();
          mT1 = selectedRegion.t1();
       }

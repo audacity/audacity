@@ -15,6 +15,7 @@
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "ViewInfo.h"
 
 #include <wx/radiobut.h>
 #include <wx/toolbar.h>
@@ -158,7 +159,7 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
    else
    {
       // Reset lyrics display.
-      const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+      const auto &selectedRegion = ViewInfo::Get( *mProject ).selectedRegion;
       GetLyricsPanel()->Update(selectedRegion.t0());
    }
 

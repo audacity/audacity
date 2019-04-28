@@ -18,9 +18,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/gdicmn.h>
 
 #include "../../HitTestResult.h"
-#include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
+#include "../../ViewInfo.h"
 #include "../../../images/Cursors.h"
 
 ///  This class takes care of our different zoom
@@ -126,7 +126,7 @@ UIHandle::Result ZoomHandle::Release
  wxWindow *)
 {
    const wxMouseEvent &event = evt.event;
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
    if (mZoomEnd < mZoomStart)
       std::swap(mZoomStart, mZoomEnd);
 

@@ -9,6 +9,7 @@
 #include "../Project.h"
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../NoteTrack.h"
 #include "../commands/CommandContext.h"
@@ -24,7 +25,7 @@ void DoSelectTimeAndTracks
 {
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
       selectedRegion.setTimes(
@@ -46,7 +47,7 @@ void DoSelectTimeAndAudioTracks
 {
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
       selectedRegion.setTimes(
@@ -67,7 +68,7 @@ void DoSelectTimeAndAudioTracks
 void DoNextPeakFrequency(AudacityProject &project, bool up)
 {
    auto &tracks = TrackList::Get( project );
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
    // Find the first selected wave track that is in a spectrogram view.
@@ -225,7 +226,7 @@ double GridMove
 (AudacityProject &project, double t, int minPix)
 {
    auto rate = project.GetRate();
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto format = project.GetSelectionFormat();
 
    NumericConverter nc(NumericConverter::TIME, format, t, rate);
@@ -250,7 +251,7 @@ double OffsetTime
 (AudacityProject &project,
  double t, double offset, TimeUnit timeUnit, int snapToTime)
 {
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
 
     if (timeUnit == TIME_UNIT_SECONDS)
         return t + offset; // snapping is currently ignored for non-pixel moves
@@ -265,7 +266,7 @@ double OffsetTime
 void MoveWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit)
 {
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &tracks = TrackList::Get( project );
    auto ruler = project.GetRulerPanel();
@@ -318,7 +319,7 @@ void SeekWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit,
 SelectionOperation operation)
 {
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &tracks = TrackList::Get( project );
 
@@ -416,7 +417,7 @@ void DoCursorMove(
 
 void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 {
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &tracks = TrackList::Get( project );
 
@@ -496,9 +497,10 @@ void SelectNone( AudacityProject &project )
 // time range is selected.
 void SelectAllIfNone( AudacityProject &project )
 {
+   auto &viewInfo = ViewInfo::Get( project );
    auto flags = GetMenuManager( project ).GetUpdateFlags( project );
    if(!(flags & TracksSelectedFlag) ||
-      (project.GetViewInfo().selectedRegion.isPoint()))
+      viewInfo.selectedRegion.isPoint())
       DoSelectAllAudio( project );
 }
 
@@ -508,7 +510,7 @@ void DoListSelection
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectionState = project.GetSelectionState();
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto isSyncLocked = project.IsSyncLocked();
 
    selectionState.HandleListSelection(
@@ -540,7 +542,7 @@ void DoSelectAllAudio(AudacityProject &project)
 void DoSelectSomething(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    bool bTime = selectedRegion.isPoint();
    bool bTracks = tracks.Selected().empty();
@@ -565,7 +567,7 @@ void OnSelectAll(const CommandContext &context)
 void OnSelectNone(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    selectedRegion.collapseToT0();
    SelectNone( project );
@@ -604,7 +606,7 @@ void OnSetLeftSelection(const CommandContext &context)
 {
    auto &project = context.project;
    auto token = project.GetAudioIOToken();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    bool bSelChanged = false;
@@ -642,7 +644,7 @@ void OnSetRightSelection(const CommandContext &context)
 {
    auto &project = context.project;
    auto token = project.GetAudioIOToken();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    bool bSelChanged = false;
@@ -681,7 +683,7 @@ void OnSelectStartCursor(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
@@ -707,7 +709,7 @@ void OnSelectCursorEnd(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
@@ -731,7 +733,7 @@ void OnSelectCursorEnd(const CommandContext &context)
 void OnSelectTrackStartToEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
@@ -754,7 +756,7 @@ SelectedRegion mRegionSave{};
 void OnSelectionSave(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    mRegionSave = selectedRegion;
 }
@@ -762,7 +764,7 @@ void OnSelectionSave(const CommandContext &context)
 void OnSelectionRestore(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    if ((mRegionSave.t0() == 0.0) &&
@@ -786,7 +788,7 @@ void OnToggleSpectralSelection(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    const double f0 = selectedRegion.f0();
    const double f1 = selectedRegion.f1();
@@ -828,7 +830,7 @@ void OnSelectCursorStoredCursor(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto isAudioActive = project.IsAudioActive();
 
    if (mCursorPositionHasBeenStored) {
@@ -847,7 +849,7 @@ void OnSelectCursorStoredCursor(const CommandContext &context)
 void OnCursorPositionStore(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto isAudioActive = project.IsAudioActive();
 
    mCursorPositionStored =
@@ -858,7 +860,7 @@ void OnCursorPositionStore(const CommandContext &context)
 void OnZeroCrossing(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto trackPanel = project.GetTrackPanel();
 
    const double t0 = NearestZeroCrossing(project, selectedRegion.t0());
@@ -953,7 +955,7 @@ void OnCursorSelStart(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    selectedRegion.collapseToT0();
    project.ModifyState(false);
@@ -965,7 +967,7 @@ void OnCursorSelEnd(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    selectedRegion.collapseToT1();
    project.ModifyState(false);
@@ -978,7 +980,7 @@ void OnCursorTrackStart(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
@@ -1005,7 +1007,7 @@ void OnCursorTrackEnd(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 

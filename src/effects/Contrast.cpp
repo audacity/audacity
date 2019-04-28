@@ -17,6 +17,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
+#include "../ViewInfo.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -114,8 +115,9 @@ bool ContrastDialog::GetDB(float &dB)
 void ContrastDialog::SetStartAndEndTime()
 {
    AudacityProject *p = GetActiveProject();
-   mT0 = p->mViewInfo.selectedRegion.t0();
-   mT1 = p->mViewInfo.selectedRegion.t1();
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+   mT0 = selectedRegion.t0();
+   mT1 = selectedRegion.t1();
 }
 
 
@@ -345,10 +347,11 @@ void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
    if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
-      mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
-      mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
+      mForegroundStartT->SetValue(selectedRegion.t0());
+      mForegroundEndT->SetValue(selectedRegion.t1());
    }
 
    SetStartAndEndTime();
@@ -360,10 +363,11 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
    if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
-      mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
-      mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
+      mBackgroundStartT->SetValue(selectedRegion.t0());
+      mBackgroundEndT->SetValue(selectedRegion.t1());
    }
 
    SetStartAndEndTime();

@@ -24,6 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
+#include "../../ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../ondemand/ODManager.h"
@@ -383,7 +384,7 @@ UIHandlePtr SelectHandle::HitTest
       oldUseSnap = old->mUseSnap;
    }
 
-   const ViewInfo &viewInfo = pProject->GetViewInfo();
+   const auto &viewInfo = ViewInfo::Get( *pProject );
    auto result = std::make_shared<SelectHandle>(
       pTrack, oldUseSnap, TrackList::Get( *pProject ), st, viewInfo );
 
@@ -489,7 +490,7 @@ void SelectHandle::SetUseSnap(bool use)
    if (IsClicked()) {
       // Readjust the moving selection end
       AssignSelection(
-         ::GetActiveProject()->GetViewInfo(),
+         ViewInfo::Get( *::GetActiveProject() ),
          mUseSnap ? mSnapEnd.outTime : mSnapEnd.timeSnappedTime,
          nullptr);
       mChangeHighlight |= RefreshCode::UpdateSelection;
@@ -527,7 +528,7 @@ UIHandle::Result SelectHandle::Click
    wxMouseEvent &event = evt.event;
    const auto sTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    const auto pTrack = sTrack.get();
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
@@ -784,7 +785,7 @@ UIHandle::Result SelectHandle::Drag
 {
    using namespace RefreshCode;
 
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
    const wxMouseEvent &event = evt.event;
 
    int x = mAutoScrolling ? mMostRecentX : event.m_x;
@@ -891,7 +892,7 @@ HitTestPreview SelectHandle::Preview
    else {
       // Choose one of many cursors for mouse-over
 
-      const ViewInfo &viewInfo = pProject->GetViewInfo();
+      auto &viewInfo = ViewInfo::Get( *pProject );
 
       auto &state = st.state;
       auto time = mUseSnap ? mSnapStart.outTime : mSnapStart.timeSnappedTime;
@@ -998,7 +999,7 @@ UIHandle::Result SelectHandle::Release
 UIHandle::Result SelectHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
-   pProject->GetViewInfo().selectedRegion = mInitialSelection;
+   ViewInfo::Get( *pProject ).selectedRegion = mInitialSelection;
 
    return RefreshCode::RefreshAll;
 }
@@ -1112,7 +1113,7 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
 /// Reset our selection markers.
 void SelectHandle::StartSelection( AudacityProject *pProject )
 {
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
    mSelStartValid = true;
 
    viewInfo.selectedRegion.setTimes(mSelStart, mSelStart);

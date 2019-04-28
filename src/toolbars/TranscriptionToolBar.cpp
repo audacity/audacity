@@ -39,6 +39,7 @@
 #include "../KeyboardCapture.h"
 #include "../Project.h"
 #include "../TimeTrack.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
@@ -403,7 +404,7 @@ void TranscriptionToolBar::GetSamples(
    //First, get the current selection. It is part of the mViewInfo, which is
    //part of the project
 
-   const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+   const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
    double start = selectedRegion.t0();
    double end = selectedRegion.t1();
 

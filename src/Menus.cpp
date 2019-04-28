@@ -42,6 +42,7 @@
 #include "Project.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
+#include "ViewInfo.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "prefs/TracksPrefs.h"
@@ -427,7 +428,7 @@ CommandFlag MenuManager::GetUpdateFlags
       return flags;
    }
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    if (!selectedRegion.isPoint())
@@ -506,10 +507,10 @@ CommandFlag MenuManager::GetUpdateFlags
    if (project.RedoAvailable())
       flags |= RedoAvailableFlag;
 
-   if (project.GetViewInfo().ZoomInAvailable() && (flags & TracksExistFlag))
+   if (ViewInfo::Get( project ).ZoomInAvailable() && (flags & TracksExistFlag))
       flags |= ZoomInAvailableFlag;
 
-   if (project.GetViewInfo().ZoomOutAvailable() && (flags & TracksExistFlag))
+   if (ViewInfo::Get( project ).ZoomOutAvailable() && (flags & TracksExistFlag))
       flags |= ZoomOutAvailableFlag;
 
    // TextClipFlag is currently unused (Jan 2017, 2.1.3 alpha)

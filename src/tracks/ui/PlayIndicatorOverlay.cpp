@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 #include "Scrubbing.h"
 #include "../../toolbars/ControlToolBar.h"
 
@@ -153,7 +154,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       }
    }
    else {
-      ViewInfo &viewInfo = mProject->GetViewInfo();
+      const auto &viewInfo = ViewInfo::Get( *mProject );
 
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;

@@ -37,6 +37,7 @@
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UIHandle.h"
+#include "ViewInfo.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
@@ -202,7 +203,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
        && (!project->GetScrubber().IsScrubbing() || project->GetScrubber().IsSpeedPlaying()))
       mNewQPIndicatorPos = -1;
    else {
-      const auto &selectedRegion = project->GetViewInfo().selectedRegion;
+      const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
       double latestEnd =
          std::max(ruler->mTracks->GetEndTime(), selectedRegion.t1());
       if (ruler->mQuickPlayPos >= latestEnd)
@@ -1245,7 +1246,7 @@ auto AdornedRulerPanel::QPHandle::Click
          mParent->mPlayRegionLock =     mParent->mProject->IsPlayRegionLocked();
 
          // Save old selection, in case drag of selection is cancelled
-         mOldSelection = pProject->GetViewInfo().selectedRegion;
+         mOldSelection = ViewInfo::Get( *pProject ).selectedRegion;
 
          mParent->HandleQPClick( event.event, mX );
          mParent->HandleQPDrag( event.event, mX );
@@ -1479,7 +1480,8 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
-   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   const auto &selectedRegion = viewInfo.selectedRegion;
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
@@ -1528,7 +1530,7 @@ auto AdornedRulerPanel::QPHandle::Cancel
 
    if (mClicked == Button::Left) {
       if( mParent ) {
-         pProject->GetViewInfo().selectedRegion = mOldSelection;
+         ViewInfo::Get( *pProject ).selectedRegion = mOldSelection;
          mParent->mMouseEventState = mesNone;
          mParent->SetPlayRegion(
             mParent->mOldPlayRegionStart, mParent->mOldPlayRegionEnd);
@@ -1548,7 +1550,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
 {
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
-   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   auto &viewInfo = ViewInfo::Get( *mProject );
+   const auto &selectedRegion = viewInfo.selectedRegion;
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
@@ -1768,8 +1771,10 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
 
 void AdornedRulerPanel::DragSelection()
 {
-   mViewInfo->selectedRegion.setT0(mPlayRegionStart, false);
-   mViewInfo->selectedRegion.setT1(mPlayRegionEnd, true);
+   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   auto &selectedRegion = viewInfo.selectedRegion;
+   selectedRegion.setT0(mPlayRegionStart, false);
+   selectedRegion.setT1(mPlayRegionEnd, true);
 }
 
 void AdornedRulerPanel::HandleSnapping()

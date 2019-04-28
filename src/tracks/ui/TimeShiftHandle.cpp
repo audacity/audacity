@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/ToolsToolBar.h"
 #include "../../UndoManager.h"
 #include "../../WaveClip.h"
+#include "../../ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
@@ -358,7 +359,7 @@ UIHandle::Result TimeShiftHandle::Click
 
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
-   const ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
    if (!pTrack)
@@ -677,7 +678,7 @@ UIHandle::Result TimeShiftHandle::Drag
    }
 
    const wxMouseEvent &event = evt.event;
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    Track *track = dynamic_cast<Track*>(evt.pCell.get());
 

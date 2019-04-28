@@ -19,8 +19,8 @@
 #include "../Audacity.h"
 #include "SetLabelCommand.h"
 
-#include "../Project.h"
 #include "../TrackPanel.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../Shuttle.h"
@@ -68,6 +68,7 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    //wxString mode = GetString(wxT("Type"));
    AudacityProject * p = &context.project;
    auto &tracks = TrackList::Get( *p );
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
    LabelStruct * pLabel = NULL;
    int i=0;
    int nn=0;
@@ -107,7 +108,7 @@ bool SetLabelCommand::Apply(const CommandContext & context)
          labelTrack->mSelIndex = nn-1;
          double t0 = pLabel->selectedRegion.t0();
          double t1 = pLabel->selectedRegion.t1();
-         p->mViewInfo.selectedRegion.setTimes( t0, t1);
+         selectedRegion.setTimes( t0, t1);
       }
       else if( labelTrack->mSelIndex == (nn-1) )
          labelTrack->mSelIndex = -1;

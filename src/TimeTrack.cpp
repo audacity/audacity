@@ -29,6 +29,7 @@
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "TrackArtist.h"
+#include "ViewInfo.h"
 #include "AllThemeResources.h"
 
 //TODO-MB: are these sensible values?

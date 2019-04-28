@@ -12,6 +12,7 @@
 #include "../Project.h"
 #include "../Screenshot.h"
 #include "../TrackPanel.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -397,7 +398,7 @@ bool DoEffect(
    auto trackPanel = project.GetTrackPanel();
    auto trackFactory = project.GetTrackFactory();
    auto rate = project.GetRate();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto commandManager = project.GetCommandManager();
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);

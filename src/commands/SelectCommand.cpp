@@ -40,6 +40,7 @@ explicitly code all three.
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../effects/Effect.h"
+#include "../ViewInfo.h"
 #include "CommandContext.h"
 
 
@@ -102,7 +103,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    double t0;
    double t1;
 
-   const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
    switch( bHasRelativeSpec ? mRelativeTo : 0 ){
    default:
    case 0: //project start
@@ -131,7 +132,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       break;
    }
 
-   p->mViewInfo.selectedRegion.setTimes( t0, t1);
+   selectedRegion.setTimes( t0, t1 );
    return true;
 }
 

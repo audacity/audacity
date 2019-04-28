@@ -17,12 +17,25 @@ Paul Licameli
 #include "AudioIO.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
+#include "Project.h"
+#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "xml/XMLWriter.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "xml/XMLWriter.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
 static const double gMinZoom = 0.001;
+}
+
+ZoomInfo &ZoomInfo::Get( AudacityProject &project )
+{
+   return ViewInfo::Get( project );
+}
+
+const ZoomInfo &ZoomInfo::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
 }
 
 ZoomInfo::ZoomInfo(double start, double pixelsPerSecond)
@@ -128,6 +141,27 @@ void ZoomInfo::FindIntervals
    if (origin < rightmost)
       results.push_back(Interval(rightmost, 0, false));
    wxASSERT(!results.empty() && results[0].position == origin);
+}
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   []( AudacityProject &project ) {
+      auto result =
+         std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());
+      project.Bind(EVT_TRACK_PANEL_TIMER,
+         &ViewInfo::OnTimer,
+         result.get());
+      return std::move( result );
+   }
+};
+
+ViewInfo &ViewInfo::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< ViewInfo >( key );
+}
+
+const ViewInfo &ViewInfo::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
 }
 
 ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
