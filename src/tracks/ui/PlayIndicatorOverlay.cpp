@@ -115,6 +115,14 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(false);
 }
 
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< PlayIndicatorOverlay >( &parent );
+     parent.GetTrackPanel()->AddOverlay( result );
+     return result;
+   }
+};
+
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {

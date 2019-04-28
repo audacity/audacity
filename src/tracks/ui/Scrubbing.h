@@ -216,7 +216,10 @@ private:
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events
-class ScrubbingOverlay final : public wxEvtHandler, public Overlay
+class ScrubbingOverlay final
+   : public wxEvtHandler
+   , public Overlay
+   , public ClientData::Base
 {
 public:
    ScrubbingOverlay(AudacityProject *project);

@@ -29,6 +29,14 @@ namespace {
    }
 }
 
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< EditCursorOverlay >( &parent );
+     parent.GetTrackPanel()->AddOverlay( result );
+     return result;
+   }
+};
+
 EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
    : mProject(project)
    , mIsMaster(isMaster)

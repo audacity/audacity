@@ -55,7 +55,6 @@ class AudacityProject;
 class AutoSaveFile;
 class Importer;
 class ODLock;
-class Overlay;
 class RecordingRecoveryHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
@@ -648,15 +647,6 @@ public:
 
 private:
    bool mbInitializingScrollbar{ false };
-
-   // TrackPanelOverlay objects
-   std::shared_ptr<Overlay>
-      mIndicatorOverlay, mCursorOverlay;
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   std::shared_ptr<Overlay> mScrubOverlay;
-private:
-#endif
 
 public:
    class PlaybackScroller final : public wxEvtHandler

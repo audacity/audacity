@@ -882,6 +882,14 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
 ///////////////////////////////////////////////////////////////////////////////
 // class ScrubbingOverlay is responsible for drawing the speed numbers
 
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< ScrubbingOverlay >( &parent );
+     parent.GetTrackPanel()->AddOverlay( result );
+     return result;
+   }
+};
+
 ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
    : mProject(project)
    , mLastScrubRect()

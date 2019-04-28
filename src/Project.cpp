@@ -161,8 +161,6 @@ scroll information.  It also has some status flags.
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
-#include "tracks/ui/EditCursorOverlay.h"
-#include "tracks/ui/PlayIndicatorOverlay.h"
 #include "tracks/ui/Scrubbing.h"
 
 #include "commands/ScriptCommandRelay.h"
@@ -1228,23 +1226,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              this,
                                              mRuler);
    }
- 
-   mCursorOverlay = std::make_shared<EditCursorOverlay>(this);
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   mScrubOverlay = std::make_shared<ScrubbingOverlay>(this);
-#endif
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
-
-   mIndicatorOverlay = std::make_shared<PlayIndicatorOverlay>(this);
-   
-   // Add the overlays
-   mTrackPanel->AddOverlay( mIndicatorOverlay );
-   mTrackPanel->AddOverlay( mCursorOverlay );
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   mTrackPanel->AddOverlay( mScrubOverlay );
-#endif
 
    MenuManager::Get( project ).CreateMenusAndCommands( project );
 
