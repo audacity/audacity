@@ -130,6 +130,8 @@ public:
 private:
    AdornedRulerPanel *GetRuler() const;
 
+   unsigned SequenceNumber() const override;
+
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
@@ -159,6 +161,7 @@ public:
    QuickPlayIndicatorOverlay(AudacityProject *project);
 
 private:
+   unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
@@ -229,6 +232,12 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
    }
 }
 
+unsigned
+AdornedRulerPanel::QuickPlayRulerOverlay::SequenceNumber() const
+{
+   return 30;
+}
+
 std::pair<wxRect, bool>
 AdornedRulerPanel::QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
 {
@@ -282,6 +291,12 @@ AdornedRulerPanel::QuickPlayIndicatorOverlay::QuickPlayIndicatorOverlay(
    AudacityProject *project)
    : mProject(project)
 {
+}
+
+unsigned
+AdornedRulerPanel::QuickPlayIndicatorOverlay::SequenceNumber() const
+{
+   return 30;
 }
 
 std::pair<wxRect, bool>

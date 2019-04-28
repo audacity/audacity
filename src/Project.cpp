@@ -1310,7 +1310,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       &ViewInfo::OnTimer,
       &mViewInfo);
 
-   // Add the overlays, in the sequence in which they will be painted
+   // Add the overlays
    mTrackPanel->AddOverlay( mIndicatorOverlay );
    mTrackPanel->AddOverlay( mCursorOverlay );
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC

@@ -42,6 +42,11 @@ PlayIndicatorOverlayBase::~PlayIndicatorOverlayBase()
 {
 }
 
+unsigned PlayIndicatorOverlayBase::SequenceNumber() const
+{
+   return 10;
+}
+
 std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 {
    auto width = mIsMaster ? 1 : IndicatorMediumWidth;

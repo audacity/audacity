@@ -886,6 +886,11 @@ ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
       this);
 }
 
+unsigned ScrubbingOverlay::SequenceNumber() const
+{
+   return 40;
+}
+
 std::pair<wxRect, bool> ScrubbingOverlay::DoGetRectangle(wxSize)
 {
    wxRect rect(mLastScrubRect);
