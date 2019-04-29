@@ -332,7 +332,7 @@ void WaveTrackVZoomHandle::DoZoom
 
    zoomEnd = zoomStart = 0;
    if( pProject )
-      pProject->ModifyState(true);
+      ProjectManager::Get( *pProject ).ModifyState(true);
 }
 
 enum {
@@ -478,7 +478,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
          channel->GetIndependentWaveformSettings().scaleType = newScaleType;
       }
 
-      ::GetActiveProject()->ModifyState(true);
+      ProjectManager::Get( *::GetActiveProject() ).ModifyState(true);
 
       using namespace RefreshCode;
       mpData->result = UpdateVRuler | RefreshAll;
@@ -550,7 +550,7 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
       for (auto channel : TrackList::Channels(wt))
          channel->GetIndependentSpectrogramSettings().scaleType = newScaleType;
 
-      ::GetActiveProject()->ModifyState(true);
+      ProjectManager::Get( *::GetActiveProject() ).ModifyState(true);
 
       using namespace RefreshCode;
       mpData->result = UpdateVRuler | RefreshAll;

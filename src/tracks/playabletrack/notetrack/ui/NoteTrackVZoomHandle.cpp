@@ -240,7 +240,7 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       mpData->pTrack->ShiftNoteRange(-12);
       break;
    }
-   GetActiveProject()->ModifyState(false);
+   ProjectManager::Get( *GetActiveProject() ).ModifyState(false);
    using namespace RefreshCode;
    mpData->result = UpdateVRuler | RefreshAll;
 }
@@ -341,7 +341,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    }
 
    mZoomEnd = mZoomStart = 0;
-   pProject->ModifyState(false);
+   ProjectManager::Get( *pProject ).ModifyState(false);
 
    return RefreshAll;
 }

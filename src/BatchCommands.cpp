@@ -842,7 +842,7 @@ bool MacroCommands::ApplyMacro(
       if (!res) {
          if(proj) {
             // Macro failed or was cancelled; revert to the previous state
-            proj->RollbackState();
+            ProjectManager::Get( *proj ).RollbackState();
          }
       }
    } );
@@ -888,7 +888,7 @@ bool MacroCommands::ApplyMacro(
    if (!proj)
       return false;
    if( MacroReentryCount <= 1 )
-      proj->PushState(longDesc, shortDesc);
+      ProjectManager::Get( *proj ).PushState(longDesc, shortDesc);
    return true;
 }
 

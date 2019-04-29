@@ -84,6 +84,7 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
 void DoPrevTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
+   auto &projectManager = ProjectManager::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectionState = SelectionState::Get( project );
@@ -94,7 +95,7 @@ void DoPrevTrack(
       t = *tracks.Any().rbegin();
       trackPanel.SetFocusedTrack( t );
       trackPanel.EnsureVisible( t );
-      project.ModifyState(false);
+      projectManager.ModifyState(false);
       return;
    }
 
@@ -126,7 +127,7 @@ void DoPrevTrack(
             ( *t, false, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
          trackPanel.EnsureVisible( p );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
       if( tSelected && !pSelected )
@@ -135,7 +136,7 @@ void DoPrevTrack(
             ( *p, true, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
          trackPanel.EnsureVisible( p );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
       if( !tSelected && pSelected )
@@ -144,7 +145,7 @@ void DoPrevTrack(
             ( *p, false, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
          trackPanel.EnsureVisible( p );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
       if( !tSelected && !pSelected )
@@ -153,7 +154,7 @@ void DoPrevTrack(
             ( *t, true, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
          trackPanel.EnsureVisible( p );
-          project.ModifyState(false);
+          projectManager.ModifyState(false);
          return;
       }
    }
@@ -169,7 +170,7 @@ void DoPrevTrack(
             p = * range.rbegin(); // null if range is empty
             trackPanel.SetFocusedTrack( p );   // Wrap to the last track
             trackPanel.EnsureVisible( p );
-             project.ModifyState(false);
+             projectManager.ModifyState(false);
             return;
          }
          else
@@ -182,7 +183,7 @@ void DoPrevTrack(
       {
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
          trackPanel.EnsureVisible( p );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
    }
@@ -194,6 +195,7 @@ void DoPrevTrack(
 void DoNextTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
+   auto &projectManager = ProjectManager::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectionState = SelectionState::Get( project );
@@ -204,7 +206,7 @@ void DoNextTrack(
       t = *tracks.Any().begin();
       trackPanel.SetFocusedTrack( t );
       trackPanel.EnsureVisible( t );
-      project.ModifyState(false);
+      projectManager.ModifyState(false);
       return;
    }
 
@@ -230,7 +232,7 @@ void DoNextTrack(
             ( *t, false, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
          trackPanel.EnsureVisible( n );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
       if( tSelected && !nSelected )
@@ -239,7 +241,7 @@ void DoNextTrack(
             ( *n, true, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
          trackPanel.EnsureVisible( n );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
       if( !tSelected && nSelected )
@@ -248,7 +250,7 @@ void DoNextTrack(
             ( *n, false, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
          trackPanel.EnsureVisible( n );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
       if( !tSelected && !nSelected )
@@ -257,7 +259,7 @@ void DoNextTrack(
             ( *t, true, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
          trackPanel.EnsureVisible( n );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
    }
@@ -272,7 +274,7 @@ void DoNextTrack(
             n = *tracks.Any().begin();
             trackPanel.SetFocusedTrack( n );   // Wrap to the first track
             trackPanel.EnsureVisible( n );
-            project.ModifyState(false);
+            projectManager.ModifyState(false);
             return;
          }
          else
@@ -285,7 +287,7 @@ void DoNextTrack(
       {
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
          trackPanel.EnsureVisible( n );
-         project.ModifyState(false);
+         projectManager.ModifyState(false);
          return;
       }
    }
@@ -470,7 +472,7 @@ void OnFirstTrack(const CommandContext &context)
    if (t != f)
    {
       trackPanel.SetFocusedTrack(f);
-      project.ModifyState(false);
+      ProjectManager::Get( project ).ModifyState(false);
    }
    trackPanel.EnsureVisible(f);
 }
@@ -489,7 +491,7 @@ void OnLastTrack(const CommandContext &context)
    if (t != l)
    {
       trackPanel.SetFocusedTrack(l);
-      project.ModifyState(false);
+      ProjectManager::Get( project ).ModifyState(false);
    }
    trackPanel.EnsureVisible(l);
 }
@@ -521,7 +523,7 @@ void OnToggle(const CommandContext &context)
    selectionState.SelectTrack
       ( *t, !t->GetSelected(), true );
    trackPanel.EnsureVisible( t );
-   project.ModifyState(false);
+   ProjectManager::Get( project ).ModifyState(false);
 
    trackPanel.GetAx().Updated();
 

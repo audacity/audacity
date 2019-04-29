@@ -41,7 +41,7 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 }
 
 bool ImportCommand::Apply(const CommandContext & context){
-   return context.project.Import(mFileName);
+   return ProjectManager::Get( context.project ).Import(mFileName);
 }
 
 

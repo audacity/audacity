@@ -186,7 +186,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    else
       return RefreshNone;
 
-   pProject->ModifyState(true);
+   ProjectManager::Get( *pProject ).ModifyState(true);
 
    return RefreshCell | UpdateVRuler;
 }

@@ -385,7 +385,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
           * audio file. TODO: Some sort of message here? */
 
 #endif // USE_MIDI
-         mProject = AudacityProject::OpenProject( mProject, targetfile );
+         mProject = ProjectManager::OpenProject( mProject, targetfile );
 
       // Set tok to right after filename
       temptok2.SetString(targettoken);
@@ -440,7 +440,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
 
                // Amend the undo transaction made by import
-               mProject->ModifyState(false);
+               ProjectManager::Get( *mProject ).ModifyState(false);
             } // end of converting "offset" argument
             else
             {
@@ -484,7 +484,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (doSomething)
       // Amend last undo state
-      mProject->ModifyState(false);
+      ProjectManager::Get( *mProject ).ModifyState(false);
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()

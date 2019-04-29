@@ -180,7 +180,7 @@ UIHandle::Result TrackSelectHandle::Release
    wxASSERT( mpTrack );
    if (mRearrangeCount != 0) {
       AudacityProject *const project = ::GetActiveProject();
-      project->PushState(
+      ProjectManager::Get( *project ).PushState(
          wxString::Format(
             /* i18n-hint: will substitute name of track for %s */
             ( mRearrangeCount < 0 ? _("Moved '%s' up") : _("Moved '%s' down") ),
@@ -199,7 +199,7 @@ UIHandle::Result TrackSelectHandle::Release
 
 UIHandle::Result TrackSelectHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    // Bug 1677
    mpTrack.reset();
    return RefreshCode::RefreshAll;

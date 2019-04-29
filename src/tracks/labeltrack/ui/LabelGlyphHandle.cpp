@@ -141,7 +141,7 @@ UIHandle::Result LabelGlyphHandle::Release
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (mpLT->HandleGlyphDragRelease
           (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
-      pProject->PushState(_("Modified Label"),
+      ProjectManager::Get( *pProject ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
@@ -152,7 +152,7 @@ UIHandle::Result LabelGlyphHandle::Release
 
 UIHandle::Result LabelGlyphHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    auto result = LabelDefaultClickHandle::Cancel( pProject );
    return result | RefreshCode::RefreshAll;
 }

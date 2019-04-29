@@ -835,7 +835,7 @@ UIHandle::Result TimeShiftHandle::Release
          fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   pProject->PushState(msg, _("Time-Shift"),
+   ProjectManager::Get( *pProject ).PushState(msg, _("Time-Shift"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
 
    return result | FixScrollbars;
@@ -843,7 +843,7 @@ UIHandle::Result TimeShiftHandle::Release
 
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshAll;
 }
 

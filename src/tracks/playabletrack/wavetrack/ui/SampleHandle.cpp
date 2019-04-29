@@ -434,7 +434,7 @@ UIHandle::Result SampleHandle::Release
    //*************************************************
    //On up-click, send the state to the undo stack
    mClickedTrack.reset();       //Set this to NULL so it will catch improper drag events.
-   pProject->PushState(_("Moved Samples"),
+   ProjectManager::Get( *pProject ).PushState(_("Moved Samples"),
       _("Sample Edit"),
       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
 
@@ -444,7 +444,7 @@ UIHandle::Result SampleHandle::Release
 
 UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    mClickedTrack.reset();
    return RefreshCode::RefreshCell;
 }

@@ -48,11 +48,12 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    if(mFileName.empty())
    {
       auto project = &context.project;
-      AudacityProject::OpenFiles(project);
+      ProjectManager::OpenFiles(project);
    }
    else
    {
-      context.project.OpenFile(mFileName, mbAddToHistory);
+      ProjectManager::Get( context.project )
+         .OpenFile(mFileName, mbAddToHistory);
    }
    const auto &newFileName = context.project.GetFileName();
 

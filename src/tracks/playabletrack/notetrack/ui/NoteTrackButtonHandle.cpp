@@ -102,7 +102,7 @@ UIHandle::Result NoteTrackButtonHandle::Release
    if (pTrack->LabelClick(mRect, event.m_x, event.m_y,
       event.Button(wxMOUSE_BTN_RIGHT))) {
       // No undo items needed??
-      pProject->ModifyState(false);
+      ProjectManager::Get( *pProject ).ModifyState(false);
       return RefreshAll;
    }
    return RefreshNone;

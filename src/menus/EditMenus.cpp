@@ -49,7 +49,8 @@ bool DoPasteText(AudacityProject &project)
          if (pLabelTrack->PasteSelectedText(selectedRegion.t0(),
                                             selectedRegion.t1()))
          {
-            project.PushState(_("Pasted text from the clipboard"), _("Paste"));
+            ProjectManager::Get( project )
+               .PushState(_("Pasted text from the clipboard"), _("Paste"));
 
             // Make sure caret is in view
             int x;
@@ -148,7 +149,8 @@ bool DoPasteNothingSelected(AudacityProject &project)
                 // half a sample earlier
          quantT1 - quantT0);
 
-      project.PushState(_("Pasted from the clipboard"), _("Paste"));
+      ProjectManager::Get( project )
+         .PushState(_("Pasted from the clipboard"), _("Paste"));
 
       window.RedrawProject();
 
@@ -216,7 +218,7 @@ bool DoEditMetadata
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );
-         project.PushState(title, shortUndoDescription);
+         ProjectManager::Get( project ).PushState(title, shortUndoDescription);
       }
       bool bShowInFuture;
       gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
@@ -233,7 +235,7 @@ void DoUndo(AudacityProject &project)
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   if (!project.UndoAvailable()) {
+   if (!ProjectManager::Get( project ).UndoAvailable()) {
       AudacityMessageBox(_("Nothing to undo"));
       return;
    }
@@ -244,7 +246,8 @@ void DoUndo(AudacityProject &project)
    }
 
    undoManager.Undo(
-      [&]( const UndoState &state ){ project.PopState( state ); } );
+      [&]( const UndoState &state ){
+         ProjectManager::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
 
@@ -269,7 +272,7 @@ void OnRedo(const CommandContext &context)
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   if (!project.RedoAvailable()) {
+   if (!ProjectManager::Get( project ).RedoAvailable()) {
       AudacityMessageBox(_("Nothing to redo"));
       return;
    }
@@ -279,7 +282,8 @@ void OnRedo(const CommandContext &context)
    }
 
    undoManager.Redo(
-      [&]( const UndoState &state ){ project.PopState( state ); } );
+      [&]( const UndoState &state ){
+         ProjectManager::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
 
@@ -366,7 +370,7 @@ void OnCut(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   project.PushState(_("Cut to the clipboard"), _("Cut"));
+   ProjectManager::Get( project ).PushState(_("Cut to the clipboard"), _("Cut"));
 
    // Bug 1663
    //mRuler->ClearPlayRegion();
@@ -392,7 +396,7 @@ void OnDelete(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   project.PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
+   ProjectManager::Get( project ).PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
                               seconds,
                               selectedRegion.t0()),
              _("Delete"));
@@ -692,7 +696,8 @@ void OnPaste(const CommandContext &context)
    {
       selectedRegion.setT1( t0 + clipboard.Duration() );
 
-      project.PushState(_("Pasted from the clipboard"), _("Paste"));
+      ProjectManager::Get( project )
+         .PushState(_("Pasted from the clipboard"), _("Paste"));
 
       window.RedrawProject();
 
@@ -724,7 +729,7 @@ void OnDuplicate(const CommandContext &context)
          break;
    }
 
-   project.PushState(_("Duplicated"), _("Duplicate"));
+   ProjectManager::Get( project ).PushState(_("Duplicated"), _("Duplicate"));
 
    window.RedrawProject();
 }
@@ -766,7 +771,7 @@ void OnSplitCut(const CommandContext &context)
    clipboard.Assign( std::move( newClipboard ),
       selectedRegion.t0(), selectedRegion.t1(), &project );
 
-   project.PushState(_("Split-cut to the clipboard"), _("Split Cut"));
+   ProjectManager::Get( project ).PushState(_("Split-cut to the clipboard"), _("Split Cut"));
 
    window.RedrawProject();
 }
@@ -789,7 +794,7 @@ void OnSplitDelete(const CommandContext &context)
       }
    );
 
-   project.PushState(
+   ProjectManager::Get( project ).PushState(
       wxString::Format(_("Split-deleted %.2f seconds at t=%.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -808,7 +813,7 @@ void OnSilence(const CommandContext &context)
    for ( auto n : tracks.Selected< AudioTrack >() )
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
-   project.PushState(
+   ProjectManager::Get( project ).PushState(
       wxString::Format(_("Silenced selected tracks for %.2f seconds at %.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -841,7 +846,7 @@ void OnTrim(const CommandContext &context)
       }
    );
 
-   project.PushState(
+   ProjectManager::Get( project ).PushState(
       wxString::Format(
          _("Trim selected audio tracks from %.2f seconds to %.2f seconds"),
          selectedRegion.t0(), selectedRegion.t1()),
@@ -863,7 +868,7 @@ void OnSplit(const CommandContext &context)
    for (auto wt : tracks.Selected< WaveTrack >())
       wt->Split( sel0, sel1 );
 
-   project.PushState(_("Split"), _("Split"));
+   ProjectManager::Get( project ).PushState(_("Split"), _("Split"));
    trackPanel.Refresh(false);
 #if 0
 //ANSWER-ME: Do we need to keep this commented out OnSplit() code?
@@ -963,7 +968,8 @@ void OnSplitNew(const CommandContext &context)
          break;
    }
 
-   project.PushState(_("Split to new track"), _("Split New"));
+   ProjectManager::Get( project )
+      .PushState(_("Split to new track"), _("Split New"));
 
    window.RedrawProject();
 }
@@ -979,7 +985,7 @@ void OnJoin(const CommandContext &context)
       wt->Join(selectedRegion.t0(),
                selectedRegion.t1());
 
-   project.PushState(
+   ProjectManager::Get( project ).PushState(
       wxString::Format(_("Joined %.2f seconds at t=%.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -999,7 +1005,7 @@ void OnDisjoin(const CommandContext &context)
       wt->Disjoin(selectedRegion.t0(),
                   selectedRegion.t1());
 
-   project.PushState(
+   ProjectManager::Get( project ).PushState(
       wxString::Format(_("Detached %.2f seconds at t=%.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),

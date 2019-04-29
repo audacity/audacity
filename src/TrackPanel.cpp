@@ -610,7 +610,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 {
-   GetProject()->ModifyState(bWantsAutoSave);
+   ProjectManager::Get( *GetProject() ).ModifyState(bWantsAutoSave);
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()

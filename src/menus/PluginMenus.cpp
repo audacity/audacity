@@ -493,7 +493,7 @@ bool DoEffect(
    {
       wxString shortDesc = em.GetCommandName(ID);
       wxString longDesc = em.GetCommandDescription(ID);
-      project.PushState(longDesc, shortDesc);
+      ProjectManager::Get( project ).PushState(longDesc, shortDesc);
    }
 
    if (!(flags & kDontRepeatLast))

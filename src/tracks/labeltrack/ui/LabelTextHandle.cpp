@@ -110,7 +110,7 @@ UIHandle::Result LabelTextHandle::Click
    // PRL: bug1659 -- make selection change undo correctly
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (!unsafe)
-      pProject->ModifyState(false);
+      ProjectManager::Get( *pProject ).ModifyState(false);
 
    return result | RefreshCode::RefreshCell | RefreshCode::UpdateSelection;
 }

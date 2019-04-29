@@ -221,7 +221,8 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
          for (auto channel : TrackList::Channels(pTrack))
             channel->SetName(newName);
 
-         proj->PushState(wxString::Format(_("Renamed '%s' to '%s'"),
+         ProjectManager::Get( *proj )
+            .PushState(wxString::Format(_("Renamed '%s' to '%s'"),
             oldName,
             newName),
             _("Name Change"));

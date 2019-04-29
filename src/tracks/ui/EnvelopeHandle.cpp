@@ -287,7 +287,7 @@ UIHandle::Result EnvelopeHandle::Release
 
    const bool needUpdate = ForwardEventToEnvelopes(event, viewInfo);
 
-   pProject->PushState(
+   ProjectManager::Get( *pProject ).PushState(
       /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
       _("Adjusted envelope."),
       /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
@@ -302,7 +302,7 @@ UIHandle::Result EnvelopeHandle::Release
 
 UIHandle::Result EnvelopeHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    mEnvelopeEditors.clear();
    return RefreshCode::RefreshCell;
 }

@@ -104,7 +104,8 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          AudacityProject *const project = ::GetActiveProject();
          pTrack->SetRangeLower((double)lower / 100.0);
          pTrack->SetRangeUpper((double)upper / 100.0);
-         project->PushState(wxString::Format(_("Set range to '%ld' - '%ld'"),
+         ProjectManager::Get( *project )
+            .PushState(wxString::Format(_("Set range to '%ld' - '%ld'"),
             lower,
             upper),
             /* i18n-hint: (verb)*/
@@ -119,7 +120,8 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(false);
    AudacityProject *const project = ::GetActiveProject();
-   project->PushState(_("Set time track display to linear"), _("Set Display"));
+   ProjectManager::Get( *project )
+      .PushState(_("Set time track display to linear"), _("Set Display"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | UpdateVRuler;
@@ -130,7 +132,8 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(true);
    AudacityProject *const project = ::GetActiveProject();
-   project->PushState(_("Set time track display to logarithmic"), _("Set Display"));
+   ProjectManager::Get( *project )
+      .PushState(_("Set time track display to logarithmic"), _("Set Display"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | UpdateVRuler;
@@ -142,11 +145,13 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
    AudacityProject *const project = ::GetActiveProject();
    if (pTrack->GetInterpolateLog()) {
       pTrack->SetInterpolateLog(false);
-      project->PushState(_("Set time track interpolation to linear"), _("Set Interpolation"));
+      ProjectManager::Get( *project )
+         .PushState(_("Set time track interpolation to linear"), _("Set Interpolation"));
    }
    else {
       pTrack->SetInterpolateLog(true);
-      project->PushState(_("Set time track interpolation to logarithmic"), _("Set Interpolation"));
+      ProjectManager::Get( *project ).
+         PushState(_("Set time track interpolation to logarithmic"), _("Set Interpolation"));
    }
    mpData->result = RefreshCode::RefreshAll;
 }
