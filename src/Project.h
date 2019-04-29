@@ -56,6 +56,7 @@ class Importer;
 class ODLock;
 class Overlay;
 class RecordingRecoveryHandler;
+namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
 class Tags;
 
@@ -233,7 +234,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const std::shared_ptr<DirManager> &GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
-   const Tags *GetTags();
+   Tags *GetTags();
+   const Tags *GetTags() const;
    void SetTags( const std::shared_ptr<Tags> &tags );
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
@@ -791,6 +793,12 @@ public:
 
 private:
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+
+   // Declared in this class so that they can have access to private members
+   static XMLTagHandler *RecordingRecoveryFactory( AudacityProject &project );
+   static ProjectFileIORegistry::Entry sRecoveryFactory;
+   static XMLTagHandler *ImportHandlerFactory( AudacityProject &project );
+   static ProjectFileIORegistry::Entry sImportHandlerFactory;
 
 public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }

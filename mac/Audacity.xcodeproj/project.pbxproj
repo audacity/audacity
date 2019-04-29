@@ -1224,6 +1224,7 @@
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
 		5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */; };
 		5E18CFF322931D3D00E75250 /* AudacityMessageBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E18CFF222931D3D00E75250 /* AudacityMessageBox.cpp */; };
+		5E18CFF02291C31000E75250 /* ProjectFileIORegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */; };
 		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A09F217FA2430068E082 /* EditMenus.cpp */; };
@@ -3198,6 +3199,8 @@
 		5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LanguageNames.txt; path = ../locale/LanguageNames.txt; sourceTree = "<group>"; };
 		5E18CFF122931CA900E75250 /* AudacityMessageBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityMessageBox.h; sourceTree = "<group>"; };
 		5E18CFF222931D3D00E75250 /* AudacityMessageBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityMessageBox.cpp; sourceTree = "<group>"; };
+		5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectFileIORegistry.cpp; sourceTree = "<group>"; };
+		5E18CFEF2291C31000E75250 /* ProjectFileIORegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectFileIORegistry.h; sourceTree = "<group>"; };
 		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
@@ -4353,6 +4356,7 @@
 				1790B0CE09883BFD008A330A /* Printing.cpp */,
 				186CCEA30E523C8E00659159 /* Profiler.cpp */,
 				1790B0D009883BFD008A330A /* Project.cpp */,
+				5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */,
 				5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */,
 				28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */,
 				EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */,
@@ -4465,6 +4469,7 @@
 				1790B0CF09883BFD008A330A /* Printing.h */,
 				186CCEA20E523C8D00659159 /* Profiler.h */,
 				1790B0D109883BFD008A330A /* Project.h */,
+				5E18CFEF2291C31000E75250 /* ProjectFileIORegistry.h */,
 				5ECF728B228B307E007F2A35 /* ProjectFSCK.h */,
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
@@ -8422,6 +8427,7 @@
 				2897F6F00AB3DB5A003C20C5 /* ControlToolBar.cpp in Sources */,
 				2897F6F10AB3DB5A003C20C5 /* EditToolBar.cpp in Sources */,
 				2897F6F20AB3DB5A003C20C5 /* MeterToolBar.cpp in Sources */,
+				5E18CFF02291C31000E75250 /* ProjectFileIORegistry.cpp in Sources */,
 				2897F6F30AB3DB5A003C20C5 /* MixerToolBar.cpp in Sources */,
 				2897F6F40AB3DB5A003C20C5 /* SelectionBar.cpp in Sources */,
 				2897F6F50AB3DB5A003C20C5 /* ToolBar.cpp in Sources */,

@@ -221,6 +221,7 @@
     <ClCompile Include="..\..\..\src\Printing.cpp" />
     <ClCompile Include="..\..\..\src\Profiler.cpp" />
     <ClCompile Include="..\..\..\src\Project.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
@@ -645,6 +646,7 @@
     <ClInclude Include="..\..\..\src\Printing.h" />
     <ClInclude Include="..\..\..\src\Profiler.h" />
     <ClInclude Include="..\..\..\src\Project.h" />
+    <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h" />
     <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />

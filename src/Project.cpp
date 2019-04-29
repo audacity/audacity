@@ -51,6 +51,8 @@ scroll information.  It also has some status flags.
 #include "Audacity.h" // for USE_* macros
 #include "Project.h"
 
+#include "ProjectFileIORegistry.h"
+
 #include "Experimental.h"
 
 #include <stdio.h>
@@ -582,6 +584,20 @@ private:
 
 #endif
 
+
+XMLTagHandler *
+AudacityProject::ImportHandlerFactory( AudacityProject &project ) {
+   auto &ptr = project.mImportXMLTagHandler;
+   if (!ptr)
+      ptr =
+         std::make_unique<ImportXMLTagHandler>( &project );
+   return ptr.get();
+}
+
+ProjectFileIORegistry::Entry
+AudacityProject::sImportHandlerFactory{
+   wxT("import"), ImportHandlerFactory
+};
 
 bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
@@ -1614,7 +1630,12 @@ bool AudacityProject::IsAudioActive() const
       gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
-const Tags *AudacityProject::GetTags()
+Tags *AudacityProject::GetTags()
+{
+   return mTags.get();
+}
+
+const Tags *AudacityProject::GetTags() const
 {
    return mTags.get();
 }
@@ -2744,8 +2765,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    mTags.reset();
 
-   mImportXMLTagHandler.reset();
-
    // Delete all the tracks to free up memory and DirManager references.
    mTracks->Clear();
    mTracks.reset();
@@ -3132,6 +3151,20 @@ auto AudacityProject::ReadProjectFile( const FilePath &fileName )
    return { false, bParseSuccess, err, xmlFile.GetErrorStr() };
 }
 
+XMLTagHandler *
+AudacityProject::RecordingRecoveryFactory( AudacityProject &project ) {
+   auto &ptr = project.mRecordingRecoveryHandler;
+   if (!ptr)
+      ptr =
+         std::make_unique<RecordingRecoveryHandler>( &project );
+   return ptr.get();
+}
+
+ProjectFileIORegistry::Entry
+AudacityProject::sRecoveryFactory{
+   wxT("recordingrecovery"), RecordingRecoveryFactory
+};
+
 // FIXME:? TRAP_ERR This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
 void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
@@ -3246,16 +3279,21 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       return;
    }
 
+   // The handlers may be created during ReadProjectFile and are not needed
+   // after this function exits.
+   auto cleanupHandlers = finally( [this]{
+      mImportXMLTagHandler.reset();
+      mRecordingRecoveryHandler.reset();
+   } );
+
    auto results = ReadProjectFile( fileName );
+
    if ( results.decodeError )
       return;
 
    const bool bParseSuccess = results.parseSuccess;
    const wxString &errorStr = results.errorString;
    const bool err = results.trackError;
-
-   // Clean up now unused recording recovery handler if any
-   mRecordingRecoveryHandler.reset();
 
    if (bParseSuccess) {
       InitialState();
@@ -3278,9 +3316,6 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       ODManager::UnmarkLoadedODFlag();
 
       if (! closed ) {
-         // Shouldn't need it any more.
-         mImportXMLTagHandler.reset();
-
          if ( bParseSuccess ) {
             // This is a no-fail:
             GetDirManager()->FillBlockfilesCache();
@@ -3730,45 +3765,11 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
 {
-   if (!wxStrcmp(tag, wxT("tags"))) {
-      return mTags.get();
-   }
+   auto fn = ProjectFileIORegistry::Lookup( tag );
+   if (fn)
+      return fn( *this );
 
-   // Note that TrackList::Add includes assignment of unique in-session TrackId
-   // to a reloaded track, though no promise that it equals the id it originally
-   // had
-
-   if (!wxStrcmp(tag, wxT("wavetrack"))) {
-      return mTracks->Add(mTrackFactory->NewWaveTrack());
-   }
-
-   #ifdef USE_MIDI
-   if (!wxStrcmp(tag, wxT("notetrack"))) {
-      return mTracks->Add(mTrackFactory->NewNoteTrack());
-   }
-   #endif // USE_MIDI
-
-   if (!wxStrcmp(tag, wxT("labeltrack"))) {
-      return mTracks->Add(mTrackFactory->NewLabelTrack());
-   }
-
-   if (!wxStrcmp(tag, wxT("timetrack"))) {
-      return mTracks->Add(mTrackFactory->NewTimeTrack());
-   }
-
-   if (!wxStrcmp(tag, wxT("recordingrecovery"))) {
-      if (!mRecordingRecoveryHandler)
-         mRecordingRecoveryHandler = std::make_unique<RecordingRecoveryHandler>(this);
-      return mRecordingRecoveryHandler.get();
-   }
-
-   if (!wxStrcmp(tag, wxT("import"))) {
-      if (!mImportXMLTagHandler)
-         mImportXMLTagHandler = std::make_unique<ImportXMLTagHandler>(this);
-      return mImportXMLTagHandler.get();
-   }
-
-   return NULL;
+   return nullptr;
 }
 
 void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile) const

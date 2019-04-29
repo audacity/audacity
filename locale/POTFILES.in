@@ -156,6 +156,8 @@ src/Profiler.cpp
 src/Profiler.h
 src/Project.cpp
 src/Project.h
+src/ProjectFileIORegistry.cpp
+src/ProjectFileIORegistry.h
 src/ProjectFSCK.cpp
 src/ProjectFSCK.h
 src/RealFFTf.cpp

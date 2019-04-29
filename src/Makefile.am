@@ -207,6 +207,8 @@ audacity_SOURCES = \
 	Profiler.h \
 	Project.cpp \
 	Project.h \
+	ProjectFileIORegistry.cpp \
+	ProjectFileIORegistry.h \
 	ProjectFSCK.cpp \
 	ProjectFSCK.h \
 	RealFFTf.cpp \
