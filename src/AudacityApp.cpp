@@ -1520,7 +1520,7 @@ bool AudacityApp::OnInit()
       }
       else
       {
-         wxPrintf(_("Decoding failed\n"));
+         wxPrintf( AutoSaveFile::FailureMessage( fileName ) );
       }
       exit(1);
    }
