@@ -536,7 +536,7 @@ void OnPageSetup(const CommandContext &context)
 void OnPrint(const CommandContext &context)
 {
    auto &project = context.project;
-   auto name = project.GetName();
+   auto name = project.GetProjectName();
    auto tracks = project.GetTracks();
    HandlePrint(&project, name, tracks, *project.GetTrackPanel());
 }

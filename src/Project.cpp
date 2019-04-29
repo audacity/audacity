@@ -1523,7 +1523,7 @@ void AudacityProject::SetTags( const std::shared_ptr<Tags> &tags )
    mTags = tags;
 }
 
-wxString AudacityProject::GetName()
+wxString AudacityProject::GetProjectName() const
 {
    wxString name = wxFileNameFromPath(mFileName);
 
@@ -1538,7 +1538,7 @@ wxString AudacityProject::GetName()
 // Pass a number in to show project number, or -1 not to.
 void AudacityProject::SetProjectTitle( int number)
 {
-   wxString name = GetName();
+   wxString name = GetProjectName();
 
    // If we are showing project numbers, then we also explicitly show "<untitled>" if there
    // is none.
@@ -2166,7 +2166,7 @@ int AudacityProject::CountUnnamed()
    int j = 0;
    for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
       if ( gAudacityProjects[i] )
-         if ( gAudacityProjects[i]->GetName().empty() )
+         if ( gAudacityProjects[i]->GetProjectName().empty() )
             j++;
    }
    return j;
@@ -2461,7 +2461,7 @@ public:
       p->Raise(); // May help identifying the window on Mac
 
       // Construct this projects name and number.
-      sProjName = p->GetName();
+      sProjName = p->GetProjectName();
       if (sProjName.empty()){
          sProjName = _("<untitled>");
          UnnamedCount=AudacityProject::CountUnnamed();
@@ -3504,7 +3504,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // international characters (such as capital 'A' with an umlaut.)
             if (!mDirManager->SetProject(projPath, projName, false))
             {
-               projName = GetName() + wxT("_data");
+               projName = GetProjectName() + wxT("_data");
                if (!mDirManager->SetProject(projPath, projName, false)) {
                   AudacityMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
                                              projName),
@@ -5049,21 +5049,6 @@ void AudacityProject::TP_DisplaySelection()
       (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());
 #endif
 
-}
-
-
-// TrackPanel access
-
-wxSize AudacityProject::GetTPTracksUsableArea()
-{
-   wxSize s;
-   mTrackPanel->GetTracksUsableArea(&s.x, &s.y);
-   return s;
-}
-
-void AudacityProject::RefreshTPTrack(Track* pTrk, bool refreshbacking /*= true*/)
-{
-   mTrackPanel->RefreshTrack(pTrk, refreshbacking);
 }
 
 

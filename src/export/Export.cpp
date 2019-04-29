@@ -562,7 +562,7 @@ bool Exporter::GetFilename()
 
 //Bug 1304: Set a default path if none was given.  For Export.
    mFilename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
-   mFilename.SetName(mProject->GetName());
+   mFilename.SetName(mProject->GetProjectName());
    if (mFilename.GetName().empty())
       mFilename.SetName(_("untitled"));
    while (true) {

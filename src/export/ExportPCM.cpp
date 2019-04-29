@@ -403,16 +403,28 @@ ExportPCM::ExportPCM()
 // We can hook it in properly whilst translation happens.
 void ExportPCM::ReportTooBigError(wxWindow * pParent)
 {
+   //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
+   wxString message = 
+      _("You have attempted to Export a WAV file which would be greater than 4GB.\n"
+      "Audacity cannot do this, the Export was abandoned.");
+   if( message == 
+      "You have attempted to Export a WAV file which would be greater than 4GB.\n"
+      "Audacity cannot do this, the Export was abandoned.")
+   {
+      message.Replace( "WAV", "WAV or AIFF");
+   }
 
-   ShowErrorDialog(pParent, _("Error Exporting"),
-                  _("You have attempted to Export a WAV file which would be greater than 4GB.\n"
-                    "Audacity cannot do this, the Export was abandoned."),
-                  wxT("Error_wav_too_big"));
+   ShowErrorDialog(pParent, _("Error Exporting"), message,
+                  wxT("Size_limits_for_WAV_and_AIFF_files"));
 
+// This alternative error dialog was to cover the possibility we could not 
+// compute the size in advance.
+#if 0
    ShowErrorDialog(pParent, _("Error Exporting"),
                   _("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
                     "files bigger than 4GB."),
-                  wxT("Error_wav_truncated"));
+                  wxT("Size_limits_for_WAV_files"));
+#endif
 }
 
 /**
@@ -508,6 +520,16 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          format = floatSample;
       else
          format = int16Sample;
+
+      float sampleCount = (float)(t1-t0)*rate*info.channels;
+      // floatSamples are always 4 byte, even if processor uses more.
+      float byteCount = sampleCount * ((format==int16Sample)?2:4);
+      // Test for 4 Gibibytes, rather than 4 Gigabytes
+      if( byteCount > 4.295e9)
+      {
+         ReportTooBigError( wxTheApp->GetTopWindow() );
+         return ProgressResult::Failed;
+      }
 
       size_t maxBlockLen = 44100 * 5;
 

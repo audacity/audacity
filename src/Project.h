@@ -221,7 +221,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
-   wxString GetName();
+   wxString GetProjectName() const;
    const std::shared_ptr<DirManager> &GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
@@ -443,11 +443,6 @@ public:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
    double PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
-
-   // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
-   // TrackPanel access
-   wxSize GetTPTracksUsableArea() /* not override */;
-   void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
    // TrackPanel callback methods, overrides of TrackPanelListener
    void TP_DisplaySelection() override;

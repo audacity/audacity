@@ -284,6 +284,8 @@ class AUDACITY_DLL_API TrackPanel final
 
    int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   wxSize GetTracksUsableArea() const;
+
    // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
    // Either argument may be NULL
    void GetTracksUsableArea(int *width, int *height) const;

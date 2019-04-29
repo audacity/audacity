@@ -215,7 +215,7 @@ int ExportMultiple::ShowModal()
 
 void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
 {
-   wxString name = mProject->GetName();
+   wxString name = mProject->GetProjectName();
    wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
 
    wxArrayStringEx formats;

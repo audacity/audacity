@@ -404,7 +404,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
 void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
 {
    if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
-      // Still in inner looop
+      // Still in inner loop
       return;
 
    WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
@@ -467,21 +467,21 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
 
 enum FieldTypes
 {
-   FT_StartTag,      // type, ID, name
-   FT_EndTag,        // type, ID, name
-   FT_String,        // type, ID, name, string length, string
+   FT_StartTag,      // type, ID
+   FT_EndTag,        // type, ID
+   FT_String,        // type, ID, string length, string
    FT_Int,           // type, ID, value
    FT_Bool,          // type, ID, value
    FT_Long,          // type, ID, value
    FT_LongLong,      // type, ID, value
    FT_SizeT,         // type, ID, value
-   FT_Float,         // type, ID, value
-   FT_Double,        // type, ID, value
+   FT_Float,         // type, ID, value, digits
+   FT_Double,        // type, ID, value, digits
    FT_Data,          // type, string length, string
    FT_Raw,           // type, string length, string
    FT_Push,          // type only
    FT_Pop,           // type only
-   FT_Name           // type, name length, name
+   FT_Name           // type, ID, name length, name
 };
 
 AutoSaveFile::AutoSaveFile(size_t allocSize)
