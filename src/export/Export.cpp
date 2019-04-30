@@ -1356,7 +1356,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          mChannelsText = safenew wxStaticText(this, -1, label);
          horSizer->Add(mChannelsText, 0, wxALIGN_LEFT | wxALL, 5);
 
-         wxSlider *channels = safenew wxSlider(this, ID_SLIDER_CHANNEL,
+         wxSlider *channels = safenew wxSliderWrapper(this, ID_SLIDER_CHANNEL,
             mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
             wxDefaultPosition, wxSize(300, -1));
          channels->SetName(label);

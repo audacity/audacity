@@ -1714,7 +1714,7 @@ bool LV2Effect::BuildPlain()
                      gridSizer->Add(1, 1, 0);
                   }
 
-                  mSliders[p] = safenew wxSlider(w, ID_Sliders + p,
+                  mSliders[p] = safenew wxSliderWrapper(w, ID_Sliders + p,
                      0, 0, 1000,
                      wxDefaultPosition,
                      wxSize(150, -1));

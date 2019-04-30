@@ -515,6 +515,15 @@ wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
    return pRad;
 }
 
+#ifdef __WXMAC__
+void wxSliderWrapper::SetFocus()
+{
+   // bypassing the override in wxCompositeWindow<wxSliderBase> which ends up
+   // doing nothing
+   return wxSliderBase::SetFocus();
+}
+#endif
+
 wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, int Min)
 {
    HandleOptionality( Prompt );
@@ -523,7 +532,7 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSlider);
    wxSlider * pSlider;
-   mpWind = pSlider = safenew wxSlider(GetParent(), miId,
+   mpWind = pSlider = safenew wxSliderWrapper(GetParent(), miId,
       pos, Min, Max,
       wxDefaultPosition, wxDefaultSize,
       Style( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
