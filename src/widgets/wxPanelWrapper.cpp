@@ -9,7 +9,10 @@
 #include "../Audacity.h"
 #include "wxPanelWrapper.h"
 
+#ifdef __WXMAC__
 #include <wx/grid.h>
+#include <wx/radiobut.h>
+#endif
 
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
@@ -26,6 +29,9 @@ void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
          event.Skip();
          return;
       }
+      else if (dynamic_cast<wxRadioButton*>(focus))
+         // Bug 2104, don't get trapped in radio button cycle
+         event.Skip();
       focus->Navigate(
          event.ShiftDown()
          ? wxNavigationKeyEvent::IsBackward
