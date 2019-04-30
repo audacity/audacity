@@ -52,6 +52,7 @@
 
 #include "../FileFormats.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
@@ -278,7 +279,7 @@ static wxString AskCopyOrEdit()
 
       vbox->Add(message, 1, wxALL | wxEXPAND, 10);
 
-      wxStaticBox *box = safenew wxStaticBox(&dialog, -1, _("Choose an import method"));
+      wxStaticBox *box = safenew wxStaticBoxWrapper(&dialog, -1, _("Choose an import method"));
       box->SetName(box->GetLabel());
 
       wxRadioButton *aliasRadio;

@@ -783,8 +783,6 @@ wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
    return mpMenu;
 }
 
-
-
 /// Starts a static box around a number of controls.
 ///  @param Str   The text of the title for the box.
 ///  @param iProp The resizing proportion value.
@@ -795,7 +793,7 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return NULL;
-   wxStaticBox * pBox = safenew wxStaticBox(GetParent(), miId,
+   wxStaticBox * pBox = safenew wxStaticBoxWrapper(GetParent(), miId,
       Str );
    pBox->SetLabel( Str );
    pBox->SetName(wxStripMenuCodes(Str));
