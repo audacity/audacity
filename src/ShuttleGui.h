@@ -78,6 +78,21 @@ class Shuttle;
 class WrappedType;
 
 #ifdef __WXMAC__
+
+#include <wx/statbox.h> // to inherit
+
+class wxStaticBoxWrapper
+   : public wxStaticBox // inherit to get access to m_container
+{
+public:
+   template< typename... Args >
+   wxStaticBoxWrapper( Args &&...args )
+      : wxStaticBox( std::forward<Args>(args)... )
+   {
+      m_container.EnableSelfFocus();
+   }
+};
+
 /// Fix a defect in TAB key navigation to sliders, known to happen in wxWidgets
 /// 3.1.1 and maybe in earlier versions
 class wxSliderWrapper : public wxSlider
@@ -87,6 +102,7 @@ public:
    void SetFocus() override;
 };
 #else
+using wxStaticBoxWrapper = wxStaticBox;
 using wxSliderWrapper = wxSlider;
 #endif
 
