@@ -17,6 +17,7 @@
 #include "Audacity.h"
 
 #include <vector>
+#include <wx/slider.h> // to inherit
 #include "MemoryX.h"
 
 #include "WrappedType.h"
@@ -75,6 +76,19 @@ class wxGrid;
 class Shuttle;
 
 class WrappedType;
+
+#ifdef __WXMAC__
+/// Fix a defect in TAB key navigation to sliders, known to happen in wxWidgets
+/// 3.1.1 and maybe in earlier versions
+class wxSliderWrapper : public wxSlider
+{
+public:
+   using wxSlider::wxSlider;
+   void SetFocus() override;
+};
+#else
+using wxSliderWrapper = wxSlider;
+#endif
 
 class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {

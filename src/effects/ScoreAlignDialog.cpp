@@ -83,7 +83,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
 
    //wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
    //wxButton *cancel = safenew wxButton(this, wxID_CANCEL, _("Cancel"));
-   //wxSlider *sl = safenew wxSlider(this, ID_SLIDER, 0, 0, 100,
+   //wxSlider *sl = safenew wxSliderWrapper(this, ID_SLIDER, 0, 0, 100,
    //                     wxDefaultPosition, wxSize(20, 124),
    //                     wxSL_HORIZONTAL);
 
