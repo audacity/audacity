@@ -440,6 +440,11 @@ long mixer_process(void *mixer, float **buffer, long n)
 
 #endif // EXPERIMENTAL_SCOREALIGN
 
+enum{
+   kAudacitySortByTime = (1 << 1),
+   kAudacitySortByName = (1 << 2),
+};
+
 //sort based on flags.  see Project.h for sort flags
 void DoSortTracks( AudacityProject &project, int flags )
 {

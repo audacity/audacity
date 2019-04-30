@@ -670,13 +670,6 @@ private:
    void SetTimerRecordCancelled(){mTimerRecordCanceled=true;}
    void ResetTimerRecordCancelled(){mTimerRecordCanceled=false;}
 
-   //sort method used by OnSortName and OnSortTime
-   //currently only supported flags are kAudacitySortByName and kAudacitySortByName
-   //in the future we might have 0x01 as sort ascending and we can bit or it
-#define kAudacitySortByTime (1 << 1)
-#define kAudacitySortByName (1 << 2)
-   void SortTracks(int flags);
-
  private:
    int  mAudioIOToken{ -1 };
 
@@ -740,9 +733,6 @@ private:
 
    // See explanation in OnCloseWindow
    bool mIsBeingDeleted{ false };
-
-   // CommandManager needs to use private methods
-   friend class CommandManager;
 
    // TrackPanelOverlay objects
    std::shared_ptr<Overlay>
