@@ -14,11 +14,16 @@
 #include "Project.h"
 #include "widgets/ErrorDialog.h"
 
+namespace {
+   using wxDialogRef = wxWeakRef< wxDialog >;
+   std::vector< wxDialogRef > sDialogs;
+}
+
 // special case for alias missing dialog because we keep track of if it exists.
 class MissingAliasFileDialog final : public ErrorDialog
 {
    public:
-   MissingAliasFileDialog(AudacityProject *parent,
+   MissingAliasFileDialog(wxWindow *parent,
       const wxString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
@@ -27,20 +32,23 @@ class MissingAliasFileDialog final : public ErrorDialog
 };
 
 
-MissingAliasFileDialog::MissingAliasFileDialog(AudacityProject *parent,
+MissingAliasFileDialog::MissingAliasFileDialog(wxWindow *parent,
       const wxString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
       const bool Close, const bool modal):
 ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
 {
-   parent->SetMissingAliasFileDialog(this);
+   sDialogs.push_back( this );
 }
 
 MissingAliasFileDialog::~MissingAliasFileDialog()
 {
-   static_cast<AudacityProject *>(GetParent())
-      ->SetMissingAliasFileDialog( nullptr );
+   auto begin = sDialogs.begin(), end = sDialogs.end(),
+      newEnd = std::remove_if( begin, end,
+         [&]( const wxDialogRef &ref ){
+            return ref == this; } );
+   sDialogs.erase( newEnd, end );
 }
 
 namespace MissingAliasFilesDialog {
@@ -82,6 +90,17 @@ namespace MissingAliasFilesDialog {
       // but in practice Destroy() in OnOK does that
    }
    
+   wxDialog *Find( const AudacityProject &project )
+   {
+      auto begin = sDialogs.begin(), end = sDialogs.end(),
+         iter = std::find_if( begin, end,
+            [&]( const wxDialogRef &ref ){
+               return ref && ref->GetParent() == &project; } );
+      if (iter != end)
+         return *iter;
+      return nullptr;
+   }
+
    void Mark(const AliasBlockFile *b)
    {
       Lock lock{ m_LastMissingBlockFileLock };

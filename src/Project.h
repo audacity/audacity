@@ -341,15 +341,6 @@ public:
    bool GetNormalizeOnLoad() { return mNormalizeOnLoad; } //lda
    void SetNormalizeOnLoad(bool flag) { mNormalizeOnLoad = flag; } //lda
 
-   /** \brief Sets the wxDialog that is being displayed
-     * Used by the custom dialog warning constructor and destructor
-     */
-   void SetMissingAliasFileDialog(wxDialog *dialog);
-
-   /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
-     */
-   wxDialog *GetMissingAliasFileDialog();
-
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
    bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
@@ -644,9 +635,6 @@ private:
 
    Destroy_ptr<FreqWindow> mFreqWindow;
    Destroy_ptr<ContrastDialog> mContrastDialog;
-
-   // dialog for missing alias warnings
-   wxDialog            *mMissingAliasFilesWarningDialog{};
 
    bool mShownOnce{ false };
 

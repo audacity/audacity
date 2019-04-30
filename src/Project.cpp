@@ -1548,16 +1548,6 @@ void AudacityProject::UpdatePrefs()
    }
 }
 
-void AudacityProject::SetMissingAliasFileDialog(wxDialog *dialog)
-{
-   mMissingAliasFilesWarningDialog = dialog;
-}
-
-wxDialog *AudacityProject::GetMissingAliasFileDialog()
-{
-   return mMissingAliasFilesWarningDialog;
-}
-
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
 {
    FixScrollbars();

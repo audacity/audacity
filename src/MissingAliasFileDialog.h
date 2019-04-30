@@ -37,6 +37,8 @@ void Show(AudacityProject *parent,
                      const wxString &helpPage,
                      const bool Close = true);
 
+wxDialog *Find( const AudacityProject &project );
+
 }
 
 #endif
