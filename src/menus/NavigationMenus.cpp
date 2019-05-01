@@ -27,8 +27,8 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
    auto temp2 = ASlider::TemporarilyAllowFocus();
    auto temp3 = MeterPanel::TemporarilyAllowFocus();
 
-   auto toolManager = project.GetToolManager();
-   auto botDock = toolManager->GetBotDock();
+   auto &toolManager = ToolManager::Get( project );
+   auto botDock = toolManager.GetBotDock();
 
 
    // Define the set of windows we rotate among.
@@ -67,7 +67,7 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
       wxWindow *toFocus = begin[idx2];
       bool bIsAnEmptyDock=false;
       if( idx2 != 1 )
-         bIsAnEmptyDock = ((idx2==0) ? toolManager->GetTopDock() : botDock)->
+         bIsAnEmptyDock = ((idx2==0) ? toolManager.GetTopDock() : botDock)->
          GetChildren().GetCount() < 1;
 
       // Skip docks that are empty (Bug 1564).

@@ -37,54 +37,54 @@ struct Handler : CommandHandlerObject {
 void OnResetToolBars(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->Reset();
+   toolManager.Reset();
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowTransportToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide(TransportBarID);
+   toolManager.ShowHide(TransportBarID);
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowToolsToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( ToolsBarID );
+   toolManager.ShowHide( ToolsBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowRecordMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   if( !toolManager->IsVisible( RecordMeterBarID ) )
+   if( !toolManager.IsVisible( RecordMeterBarID ) )
    {
-      toolManager->Expose( MeterBarID, false );
+      toolManager.Expose( MeterBarID, false );
    }
-   toolManager->ShowHide( RecordMeterBarID );
+   toolManager.ShowHide( RecordMeterBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowPlayMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   if( !toolManager->IsVisible( PlayMeterBarID ) )
+   if( !toolManager.IsVisible( PlayMeterBarID ) )
    {
-      toolManager->Expose( MeterBarID, false );
+      toolManager.Expose( MeterBarID, false );
    }
 
-   toolManager->ShowHide( PlayMeterBarID );
+   toolManager.ShowHide( PlayMeterBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
@@ -92,14 +92,14 @@ void OnShowPlayMeterToolBar(const CommandContext &context)
 void OnShowMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   if( !toolManager->IsVisible( MeterBarID ) )
+   if( !toolManager.IsVisible( MeterBarID ) )
    {
-      toolManager->Expose( PlayMeterBarID, false );
-      toolManager->Expose( RecordMeterBarID, false );
+      toolManager.Expose( PlayMeterBarID, false );
+      toolManager.Expose( RecordMeterBarID, false );
    }
-   toolManager->ShowHide( MeterBarID );
+   toolManager.ShowHide( MeterBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 #endif
@@ -107,54 +107,54 @@ void OnShowMeterToolBar(const CommandContext &context)
 void OnShowMixerToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( MixerBarID );
+   toolManager.ShowHide( MixerBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowEditToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( EditBarID );
+   toolManager.ShowHide( EditBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowTranscriptionToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( TranscriptionBarID );
+   toolManager.ShowHide( TranscriptionBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowScrubbingToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( ScrubbingBarID );
+   toolManager.ShowHide( ScrubbingBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowDeviceToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( DeviceBarID );
+   toolManager.ShowHide( DeviceBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
 void OnShowSelectionToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( SelectionBarID );
+   toolManager.ShowHide( SelectionBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
@@ -162,9 +162,9 @@ void OnShowSelectionToolBar(const CommandContext &context)
 void OnShowSpectralSelectionToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( SpectralSelectionBarID );
+   toolManager.ShowHide( SpectralSelectionBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 #endif

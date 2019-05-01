@@ -365,8 +365,8 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 {
    wxWindow *w = wxWindow::FindFocus();
 
-   while (w && project.GetToolManager() && project.GetTrackPanel()) {
-      if (w == project.GetToolManager()->GetTopDock()) {
+   while (w && project.GetTrackPanel()) {
+      if (w == ToolManager::Get( project ).GetTopDock()) {
          return TopDockHasFocus;
       }
 
@@ -376,7 +376,7 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
       if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {
          return TrackPanelHasFocus;
       }
-      if (w == project.GetToolManager()->GetBotDock()) {
+      if (w == ToolManager::Get( project ).GetBotDock()) {
          return BotDockHasFocus;
       }
 
@@ -571,43 +571,42 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
 {
    // Refreshes can occur during shutdown and the toolmanager may already
    // be deleted, so protect against it.
-   auto toolManager = project.GetToolManager();
-   if (!toolManager) {
-      return;
-   }
+   auto &toolManager = ToolManager::Get( project );
 
    auto &commandManager = CommandManager::Get( project );
 
    commandManager.Check(wxT("ShowScrubbingTB"),
-                         toolManager->IsVisible(ScrubbingBarID));
+                         toolManager.IsVisible(ScrubbingBarID));
    commandManager.Check(wxT("ShowDeviceTB"),
-                         toolManager->IsVisible(DeviceBarID));
+                         toolManager.IsVisible(DeviceBarID));
    commandManager.Check(wxT("ShowEditTB"),
-                         toolManager->IsVisible(EditBarID));
+                         toolManager.IsVisible(EditBarID));
    commandManager.Check(wxT("ShowMeterTB"),
-                         toolManager->IsVisible(MeterBarID));
+                         toolManager.IsVisible(MeterBarID));
    commandManager.Check(wxT("ShowRecordMeterTB"),
-                         toolManager->IsVisible(RecordMeterBarID));
+                         toolManager.IsVisible(RecordMeterBarID));
    commandManager.Check(wxT("ShowPlayMeterTB"),
-                         toolManager->IsVisible(PlayMeterBarID));
+                         toolManager.IsVisible(PlayMeterBarID));
    commandManager.Check(wxT("ShowMixerTB"),
-                         toolManager->IsVisible(MixerBarID));
+                         toolManager.IsVisible(MixerBarID));
    commandManager.Check(wxT("ShowSelectionTB"),
-                         toolManager->IsVisible(SelectionBarID));
+                         toolManager.IsVisible(SelectionBarID));
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    commandManager.Check(wxT("ShowSpectralSelectionTB"),
-                         toolManager->IsVisible(SpectralSelectionBarID));
+                         toolManager.IsVisible(SpectralSelectionBarID));
 #endif
    commandManager.Check(wxT("ShowToolsTB"),
-                         toolManager->IsVisible(ToolsBarID));
+                         toolManager.IsVisible(ToolsBarID));
    commandManager.Check(wxT("ShowTranscriptionTB"),
-                         toolManager->IsVisible(TranscriptionBarID));
+                         toolManager.IsVisible(TranscriptionBarID));
    commandManager.Check(wxT("ShowTransportTB"),
-                         toolManager->IsVisible(TransportBarID));
+                         toolManager.IsVisible(TransportBarID));
 
    // Now, go through each toolbar, and call EnableDisableButtons()
    for (int i = 0; i < ToolBarCount; i++) {
-      toolManager->GetToolBar(i)->EnableDisableButtons();
+      auto bar = toolManager.GetToolBar(i);
+      if (bar)
+         bar->EnableDisableButtons();
    }
 
    // These don't really belong here, but it's easier and especially so for

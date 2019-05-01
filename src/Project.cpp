@@ -700,7 +700,7 @@ AudacityProject *CreateNewAudacityProject()
 
    // Okay, GetActiveProject() is ready. Now we can get its CommandManager,
    // and add the shortcut keys to the tooltips.
-   p->GetToolManager()->RegenerateTooltips();
+   ToolManager::Get( *p ).RegenerateTooltips();
 
    ModuleManager::Get().Dispatch(ProjectInitialized);
 
@@ -1138,12 +1138,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the ToolDock
    //
-   mToolManager = std::make_unique<ToolManager>( this, mTopPanel );
    GetSelectionBar()->SetListener(this);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetListener(this);
 #endif
-   mToolManager->LayoutToolBars();
+   ToolManager::Get( project ).LayoutToolBars();
 
    //
    // Create the horizontal ruler
@@ -1199,7 +1198,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      ubs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
+      ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
       ubs->Add(mRuler, 0, wxEXPAND);
       mTopPanel->SetSizer(ubs.release());
    }
@@ -1210,7 +1209,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       bs = ubs.get();
       bs->Add(mTopPanel, 0, wxEXPAND | wxALIGN_TOP);
       bs->Add(pPage, 1, wxEXPAND);
-      bs->Add(mToolManager->GetBotDock(), 0, wxEXPAND);
+      bs->Add( ToolManager::Get( project ).GetBotDock(), 0, wxEXPAND );
       SetAutoLayout(true);
       SetSizer(ubs.release());
    }
@@ -1480,10 +1479,12 @@ void AudacityProject::RefreshCursor()
 void AudacityProject::OnThemeChange(wxCommandEvent& evt)
 {
    evt.Skip();
+   auto &project = *this;
    ApplyUpdatedTheme();
+   auto &toolManager = ToolManager::Get( project );
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
-      ToolBar *pToolBar = GetToolManager()->GetToolBar(ii);
+      ToolBar *pToolBar = toolManager.GetToolBar(ii);
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
@@ -2120,11 +2121,14 @@ void AudacityProject::UpdateLayout()
    if (!mTrackPanel)
       return;
 
+   auto &project = *this;
+   auto &toolManager = ToolManager::Get( project );
+
    // 1. Layout panel, to get widths of the docks.
    Layout();
    // 2. Layout toolbars to pack the toolbars correctly in docks which 
    // are now the correct width.
-   mToolManager->LayoutToolBars();
+   toolManager.LayoutToolBars();
    // 3. Layout panel, to resize docks, in particular reducing the height 
    // of any empty docks, or increasing the height of docks that need it.
    Layout();
@@ -2138,7 +2142,7 @@ void AudacityProject::UpdateLayout()
 
    // Retrieve position of bottom dock to use as the size of the bottom
    // third of the window
-   wxPoint sbpos = ClientToScreen(mToolManager->GetBotDock()->GetPosition());
+   wxPoint sbpos = ClientToScreen(toolManager.GetBotDock()->GetPosition());
 
    // The "+ 50" is the minimum height of the TrackPanel
    SetSizeHints(250, (mainsz.y - sbpos.y) + tppos.y + 50, 20000, 20000);
@@ -2385,6 +2389,8 @@ void AudacityProject::MacShowUndockedToolbars(bool show)
 
 void AudacityProject::OnActivate(wxActivateEvent & event)
 {
+   auto &project = *this;
+
    // Activate events can fire during window teardown, so just
    // ignore them.
    if (IsBeingDeleted()) {
@@ -2411,8 +2417,9 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
 #endif
    }
    else {
+      auto &toolManager = ToolManager::Get( project );
       SetActiveProject(this);
-      if ( ! GetToolManager()->RestoreFocus() ) {
+      if ( ! toolManager.RestoreFocus() ) {
          if (mTrackPanel) {
             mTrackPanel->SetFocus();
          }
@@ -2632,9 +2639,9 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       mTrackPanel = NULL;              // Make sure this gets set...see HandleResize()
    }
 
-   // Delete the tool manager before the children since it needs
+   // Finalize the tool manager before the children since it needs
    // to save the state of the toolbars.
-   mToolManager.reset();
+   ToolManager::Get( project ).Destroy();
 
    DestroyChildren();
 
@@ -4846,82 +4853,71 @@ void AudacityProject::SkipEnd(bool shift)
 }
 
 
+namespace {
+   template<typename ToolBar>
+   ToolBar *DoGetToolBar( AudacityProject &project, int type )
+   {
+      auto &toolManager = ToolManager::Get( project );
+      return static_cast<ToolBar *>( toolManager.GetToolBar( type ) );
+   }
+
+   template<typename ToolBar>
+   const ToolBar *DoGetToolBar( const AudacityProject &project, int type )
+   {
+      return DoGetToolBar<ToolBar>(
+         const_cast<AudacityProject&>( project ), type );
+   }
+}
+
 ////////////////////////////////////////////////////////////
 //  This fetches a pointer to the Transport Toolbar.  It may
 //  either be docked or floating out in the open.
 ////////////////////////////////////////////////////////////
 ControlToolBar *AudacityProject::GetControlToolBar()
 {
-   return (ControlToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(TransportBarID) :
-           NULL);
+   return DoGetToolBar< ControlToolBar >( *this, TransportBarID );
 }
 
 DeviceToolBar *AudacityProject::GetDeviceToolBar()
 {
-   return (DeviceToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(DeviceBarID) :
-           NULL);
+   return DoGetToolBar< DeviceToolBar >( *this, DeviceBarID );
 }
 
 MixerToolBar *AudacityProject::GetMixerToolBar()
 {
-   return (MixerToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(MixerBarID) :
-           NULL);
+   return DoGetToolBar< MixerToolBar >( *this, MixerBarID );
 }
 
 ScrubbingToolBar *AudacityProject::GetScrubbingToolBar()
 {
-   return dynamic_cast<ScrubbingToolBar*>
-   (mToolManager ?
-    mToolManager->GetToolBar(ScrubbingBarID) :
-    nullptr);
+   return DoGetToolBar< ScrubbingToolBar >( *this, ScrubbingBarID );
 }
 
 SelectionBar *AudacityProject::GetSelectionBar()
 {
-   return (SelectionBar *)
-      (mToolManager ?
-      mToolManager->GetToolBar(SelectionBarID) :
-      NULL);
+   return DoGetToolBar< SelectionBar >( *this, SelectionBarID );
 }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 SpectralSelectionBar *AudacityProject::GetSpectralSelectionBar()
 {
-   return static_cast<SpectralSelectionBar*>(
-      (mToolManager ?
-      mToolManager->GetToolBar(SpectralSelectionBarID) :
-      NULL));
+   return DoGetToolBar< SpectralSelectionBar >( *this, SpectralSelectionBarID );
 }
 #endif
 
 ToolsToolBar *AudacityProject::GetToolsToolBar()
 {
-   return (ToolsToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(ToolsBarID) :
-           NULL);
+   return DoGetToolBar< ToolsToolBar >( *this, ToolsBarID );
 }
 
 const ToolsToolBar *AudacityProject::GetToolsToolBar() const
 {
-   return (ToolsToolBar *)
-      (mToolManager ?
-      mToolManager->GetToolBar(ToolsBarID) :
-      NULL);
+   return DoGetToolBar< const ToolsToolBar >( *this, ToolsBarID );
 }
 
 TranscriptionToolBar *AudacityProject::GetTranscriptionToolBar()
 {
-   return (TranscriptionToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(TranscriptionBarID) :
-           NULL);
+   return DoGetToolBar< TranscriptionToolBar >( *this, TranscriptionBarID );
 }
 
 MeterPanel *AudacityProject::GetPlaybackMeter()

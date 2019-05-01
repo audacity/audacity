@@ -1080,7 +1080,8 @@ void Scrubber::OnSeek(const CommandContext&)
 void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
    mProject->GetRulerPanel()->OnToggleScrubRuler();
-   const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
+   const auto toolbar =
+      ToolManager::Get( *mProject ).GetToolBar( ScrubbingBarID );
    toolbar->EnableDisableButtons();
    CheckMenuItems();
 }

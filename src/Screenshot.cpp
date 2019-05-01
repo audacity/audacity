@@ -285,7 +285,7 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // because we've switched monitor mid play.
    // Bug 383 - Resetting the toolbars is not wanted.
    // Any that are invisible will be amde visible as/when needed.
-   //mContext.GetProject()->GetToolManager()->Reset();
+   //ToolManager::Get( mContext.project ).Reset();
    Center();
 }
 
@@ -568,7 +568,7 @@ void ScreenFrame::SizeMainWindow(int w, int h)
    mContext.project.Maximize(false);
    mContext.project.SetSize(16, 16 + top, w, h);
    //Bug383 - Toolbar Resets not wanted.
-   //mContext.GetProject()->GetToolManager()->Reset();
+   //ToolManager::Get( mContext.project ).Reset();
 }
 
 void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
