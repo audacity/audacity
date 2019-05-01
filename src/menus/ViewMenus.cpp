@@ -8,6 +8,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../TrackPanel.h"
+#include "../UndoManager.h"
 #include "../ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -22,6 +23,25 @@
 
 // private helper classes and functions
 namespace {
+
+AudacityProject::AttachedWindows::RegisteredFactory sMixerBoardKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      return safenew MixerBoardFrame( &parent );
+   }
+};
+
+AudacityProject::AttachedWindows::RegisteredFactory sHistoryWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &undoManager = UndoManager::Get( parent );
+      return safenew HistoryWindow( &parent, &undoManager );
+   }
+};
+
+AudacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      return safenew LyricsWindow( &parent );
+   }
+};
 
 double GetZoomOfSelection( const AudacityProject &project )
 {
@@ -323,7 +343,7 @@ void OnHistory(const CommandContext &context)
 {
    auto &project = context.project;
 
-   auto historyWindow = project.GetHistoryWindow(true);
+   auto historyWindow = &project.AttachedWindows::Get( sHistoryWindowKey );
    historyWindow->Show();
    historyWindow->Raise();
 }
@@ -332,7 +352,7 @@ void OnKaraoke(const CommandContext &context)
 {
    auto &project = context.project;
 
-   auto lyricsWindow = project.GetLyricsWindow(true);
+   auto lyricsWindow = &project.AttachedWindows::Get( sLyricsWindowKey );
    lyricsWindow->Show();
    lyricsWindow->Raise();
 }
@@ -341,7 +361,7 @@ void OnMixerBoard(const CommandContext &context)
 {
    auto &project = context.project;
 
-   auto mixerBoardFrame = project.GetMixerBoardFrame(true);
+   auto mixerBoardFrame = &project.AttachedWindows::Get( sMixerBoardKey );
    mixerBoardFrame->Show();
    mixerBoardFrame->Raise();
    mixerBoardFrame->SetFocus();

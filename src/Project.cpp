@@ -98,22 +98,17 @@ scroll information.  It also has some status flags.
 #include "AdornedRulerPanel.h"
 #include "Clipboard.h"
 #include "widgets/FileHistory.h"
-#include "FreqWindow.h"
-#include "effects/Contrast.h"
 #include "AutoRecovery.h"
 #include "AColor.h"
 #include "AudioIO.h"
-#include "BatchProcessDialog.h"
 #include "Dependencies.h"
 #include "Diags.h"
-#include "HistoryWindow.h"
+#include "export/Export.h"
 #include "InconsistencyException.h"
-#include "MixerBoard.h"
 #include "import/Import.h"
 #include "KeyboardCapture.h"
 #include "LabelTrack.h"
 #include "Legacy.h"
-#include "LyricsWindow.h"
 #include "Menus.h"
 #include "MissingAliasFileDialog.h"
 #include "Mix.h"
@@ -1352,6 +1347,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
 
    AttachedObjects::BuildAll();
+   // But not for the attached windows.  They get built only on demand, such as
+   // from menu items.
 }
 
 AudacityProject::~AudacityProject()
@@ -2479,14 +2476,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       return;
    }
 
-   // TODO: consider postponing these steps until after the possible veto
-   // below:  closing the two analysis dialogs, and stopping audio streams.
-   // Streams can be for play, recording, or monitoring.  But maybe it still
-   // makes sense to stop any recording before putting up the dialog.
-
-   mFreqWindow.reset();
-   mContrastDialog.reset();
-
    // Check to see if we were playing or recording
    // audio, and if so, make sure Audio I/O is completely finished.
    // The main point of this is to properly push the state
@@ -2589,16 +2578,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // SetMenuBar(NULL);
 
    projectFileIO.CloseLock();
-
-   // Get rid of the history window
-   // LL:  Destroy it before the TrackPanel and ToolBars since they
-   //      may/will get additional wxEVT_PAINT events since window
-   //      destruction may be queued.  This seems to only be a problem
-   //      on the Mac.
-   if (mHistoryWindow) {
-      mHistoryWindow->Destroy();
-      mHistoryWindow = NULL;
-   }
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
@@ -5505,64 +5484,6 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          viewInfo.h = std::max(0.0, viewInfo.h);
       trackPanel->Refresh(false);
    }
-}
-
-LyricsWindow* AudacityProject::GetLyricsWindow(bool create)
-{
-   if (create && !mLyricsWindow)
-      mLyricsWindow = safenew LyricsWindow{ this };
-   return mLyricsWindow;
-}
-
-MixerBoardFrame* AudacityProject::GetMixerBoardFrame(bool create)
-{
-   if (create && !mMixerBoardFrame)
-      mMixerBoardFrame = safenew MixerBoardFrame{ this };
-   return mMixerBoardFrame;
-}
-
-HistoryWindow *AudacityProject::GetHistoryWindow(bool create)
-{
-   auto &project = *this;
-   auto &undoManager = UndoManager::Get( project );
-   if (create && !mHistoryWindow)
-      mHistoryWindow = safenew HistoryWindow{ this, &undoManager };
-   return mHistoryWindow;
-}
-
-MacrosWindow *AudacityProject::GetMacrosWindow(bool bExpanded, bool create)
-{
-   if (create && !mMacrosWindow)
-      mMacrosWindow = safenew MacrosWindow{ this, bExpanded };
-
-   if (mMacrosWindow) {
-      mMacrosWindow->Show();
-      mMacrosWindow->Raise();
-      mMacrosWindow->UpdateDisplay( bExpanded );
-   }
-   return mMacrosWindow;
-}
-
-FreqWindow *AudacityProject::GetFreqWindow(bool create)
-{
-   if (create && !mFreqWindow)
-      mFreqWindow.reset( safenew FreqWindow{
-         this, -1, _("Frequency Analysis"),
-         wxPoint{ 150, 150 }
-      } );
-   return mFreqWindow.get();
-}
-
-ContrastDialog *AudacityProject::GetContrastDialog(bool create)
-{
-   // All of this goes away when the Contrast Dialog is converted to a module
-   if(create && !mContrastDialog)
-      mContrastDialog.reset( safenew ContrastDialog{
-         this, -1, _("Contrast Analysis (WCAG 2 compliance)"),
-         wxPoint{ 150, 150 }
-      } );
-
-   return mContrastDialog.get();
 }
 
 void AudacityProject::ZoomInByFactor( double ZoomFactor )
