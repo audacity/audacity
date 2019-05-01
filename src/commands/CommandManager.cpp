@@ -255,9 +255,29 @@ public:
             return Event_Skip;
          }
 
+         auto &eventAsKey = static_cast<wxKeyEvent &>( event );
+
+#ifdef __WXMAC__
+         // wxButton::SetDefault() alone doesn't cause correct event routing
+         // of key-down to the button when a text entry or combo has focus,
+         // but we can intercept wxEVT_CHAR_HOOK here and do it
+         if ( type == wxEVT_CHAR_HOOK &&
+            eventAsKey.GetKeyCode() == WXK_RETURN ) {
+            if (auto top =
+               dynamic_cast< wxTopLevelWindow* >(
+                  wxGetTopLevelParent( wxWindow::FindFocus() ) ) ) {
+               if ( auto button =
+                  dynamic_cast<wxButton*>( top->GetDefaultItem() ) ) {
+                  wxCommandEvent newEvent{ wxEVT_BUTTON, button->GetId() };
+                  button->GetEventHandler()->AddPendingEvent( newEvent );
+                  return Event_Processed;
+               }
+            }
+         }
+#endif
          // Make a copy of the event and (possibly) make it look like a key down
          // event.
-         wxKeyEvent key = (wxKeyEvent &) event;
+         wxKeyEvent key = eventAsKey;
          if (type == wxEVT_CHAR_HOOK)
          {
             key.SetEventType(wxEVT_KEY_DOWN);
