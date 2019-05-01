@@ -484,14 +484,11 @@ enum FieldTypes
    FT_Name           // type, ID, name length, name
 };
 
-wxString AutoSaveFile::FailureMessage( const FilePath &filePath )
+wxString AutoSaveFile::FailureMessage( const FilePath &/*filePath*/ )
 {
-   return wxString::Format(
-_("Could not decode crash recovery file: %s\n\n\
-This file was saved by a version of Audacity built for a different processor architecture. \
-Try running that version of Audacity to recover its contents."),
-      filePath
-   );
+   return 
+_("This recovery file was saved by Audacity 2.3.0 or before.\n"
+   "You need to run that version of Audacity to recover the project." );
 }
 
 AutoSaveFile::AutoSaveFile(size_t allocSize)
