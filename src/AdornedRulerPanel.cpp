@@ -920,6 +920,14 @@ namespace {
 
 void AdornedRulerPanel::UpdatePrefs()
 {
+   if (mNeedButtonUpdate) {
+      // Visit this block once only in the lifetime of this panel
+      mNeedButtonUpdate = false;
+      // Do this first time setting of button status texts
+      // when we are sure the CommandManager is initialized.
+      ReCreateButtons();
+   }
+
    // Update button texts for language change
    UpdateButtonStates();
 
@@ -1102,16 +1110,6 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   if (mNeedButtonUpdate) {
-      // Visit this block once only in the lifetime of this panel
-      mNeedButtonUpdate = false;
-      // Do this first time setting of button status texts
-      // when we are sure the CommandManager is initialized.
-      ReCreateButtons();
-      // Sends a resize event, which will cause a second paint.
-      UpdatePrefs();
-   }
-
    wxPaintDC dc(this);
 
    auto &backDC = GetBackingDCForRepaint();

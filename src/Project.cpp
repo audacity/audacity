@@ -1174,8 +1174,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mMenuManager = std::make_unique<MenuManager>();
 
-   UpdatePrefs();
-
    mLockPlayRegion = false;
 
    // Make sure valgrind sees mIsSyncLocked is initialized, even
@@ -1303,8 +1301,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                              this,
                                              mRuler);
    }
-   mTrackPanel->UpdatePrefs();
-
+ 
    mCursorOverlay = std::make_shared<EditCursorOverlay>(this);
 
    mBackgroundCell = std::make_shared<BackgroundCell>(this);
@@ -1441,6 +1438,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mTimer = std::make_unique<wxTimer>(this, AudacityProjectTimerID);
    RestartTimer();
 
+   UpdatePrefs();
+
 #if wxUSE_DRAG_AND_DROP
    // We can import now, so become a drag target
 //   SetDropTarget(safenew AudacityDropTarget(this));
@@ -1541,19 +1540,11 @@ void AudacityProject::UpdatePrefs()
 
    GetMenuManager(*this).UpdatePrefs();
 
-   if (mTrackPanel) {
-      mTrackPanel->UpdatePrefs();
-   }
+   mTrackPanel->UpdatePrefs();
+   mToolManager->UpdatePrefs();
+   mRuler->UpdatePrefs();
    if (mMixerBoard)
       mMixerBoard->UpdatePrefs();
-
-   if (mToolManager) {
-      mToolManager->UpdatePrefs();
-   }
-
-   if (mRuler) {
-      mRuler->UpdatePrefs();
-   }
 }
 
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
