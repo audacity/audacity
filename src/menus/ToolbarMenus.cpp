@@ -40,7 +40,7 @@ void OnResetToolBars(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.Reset();
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowTransportToolBar(const CommandContext &context)
@@ -49,7 +49,7 @@ void OnShowTransportToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide(TransportBarID);
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowToolsToolBar(const CommandContext &context)
@@ -58,7 +58,7 @@ void OnShowToolsToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( ToolsBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowRecordMeterToolBar(const CommandContext &context)
@@ -71,7 +71,7 @@ void OnShowRecordMeterToolBar(const CommandContext &context)
       toolManager.Expose( MeterBarID, false );
    }
    toolManager.ShowHide( RecordMeterBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowPlayMeterToolBar(const CommandContext &context)
@@ -85,7 +85,7 @@ void OnShowPlayMeterToolBar(const CommandContext &context)
    }
 
    toolManager.ShowHide( PlayMeterBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 #if 0
@@ -100,7 +100,7 @@ void OnShowMeterToolBar(const CommandContext &context)
       toolManager.Expose( RecordMeterBarID, false );
    }
    toolManager.ShowHide( MeterBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 #endif
 
@@ -110,7 +110,7 @@ void OnShowMixerToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( MixerBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowEditToolBar(const CommandContext &context)
@@ -119,7 +119,7 @@ void OnShowEditToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( EditBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowTranscriptionToolBar(const CommandContext &context)
@@ -128,7 +128,7 @@ void OnShowTranscriptionToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( TranscriptionBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowScrubbingToolBar(const CommandContext &context)
@@ -137,7 +137,7 @@ void OnShowScrubbingToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( ScrubbingBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowDeviceToolBar(const CommandContext &context)
@@ -146,7 +146,7 @@ void OnShowDeviceToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( DeviceBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowSelectionToolBar(const CommandContext &context)
@@ -155,7 +155,7 @@ void OnShowSelectionToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( SelectionBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -165,7 +165,7 @@ void OnShowSpectralSelectionToolBar(const CommandContext &context)
    auto &toolManager = ToolManager::Get( project );
 
    toolManager.ShowHide( SpectralSelectionBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 #endif
 

@@ -1156,7 +1156,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   auto flags = GetMenuManager(*project).GetUpdateFlags(*project);
+   auto flags = MenuManager::Get(*project).GetUpdateFlags(*project);
 
    wxKeyEvent temp = evt;
 
@@ -1248,7 +1248,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
       bool allowed =
-         GetMenuManager(*proj).ReportIfActionNotAllowed( *proj,
+         MenuManager::Get(*proj).ReportIfActionNotAllowed( *proj,
             NiceName, flags, entry->flags, combinedMask );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).

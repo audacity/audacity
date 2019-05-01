@@ -180,7 +180,7 @@ void DoReloadPreferences( AudacityProject &project )
    for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       AudacityProject *p = gAudacityProjects[i].get();
 
-      GetMenuManager(*p).RebuildMenuBar(*p);
+      MenuManager::Get(*p).RebuildMenuBar(*p);
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:
@@ -1018,7 +1018,7 @@ void OnPreferences(const CommandContext &context)
    for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       AudacityProject *p = gAudacityProjects[i].get();
 
-      GetMenuManager(*p).RebuildMenuBar(*p);
+      MenuManager::Get(*p).RebuildMenuBar(*p);
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:

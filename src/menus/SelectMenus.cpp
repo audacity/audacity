@@ -499,7 +499,7 @@ void SelectNone( AudacityProject &project )
 void SelectAllIfNone( AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
-   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   auto flags = MenuManager::Get( project ).GetUpdateFlags( project );
    if(!(flags & TracksSelectedFlag) ||
       viewInfo.selectedRegion.isPoint())
       DoSelectAllAudio( project );

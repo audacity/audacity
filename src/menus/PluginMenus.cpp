@@ -432,7 +432,7 @@ bool DoEffect(
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         GetMenuManager(project).UpdateMenus(project, false);
+         MenuManager::Get(project).UpdateMenus(project, false);
       }
 
    } );
@@ -470,7 +470,7 @@ bool DoEffect(
       // or analyze effects.
       if (type == EffectTypeProcess) {
          wxString shortDesc = em.GetCommandName(ID);
-         GetMenuManager(project).mLastEffect = ID;
+         MenuManager::Get(project).mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
@@ -575,7 +575,7 @@ void OnManageEffects(const CommandContext &context)
 
 void OnRepeatLastEffect(const CommandContext &context)
 {
-   auto lastEffect = GetMenuManager(context.project).mLastEffect;
+   auto lastEffect = MenuManager::Get(context.project).mLastEffect;
    if (!lastEffect.empty())
    {
       DoEffect( lastEffect, context, kConfigured );
@@ -878,7 +878,7 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
-   const auto &lastEffect = GetMenuManager(project).mLastEffect;
+   const auto &lastEffect = MenuManager::Get(project).mLastEffect;
    wxString buildMenuLabel;
    if (!lastEffect.empty()) {
       buildMenuLabel.Printf(_("Repeat %s"),
