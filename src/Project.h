@@ -675,6 +675,8 @@ private:
 
 public:
    bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
+   bool IsBeingDeleted() const { return mIsDeleting; }
+   void SetIsBeingDeleted() { mIsDeleting = true; }
 private:
 
    bool mIsSyncLocked;
@@ -716,9 +718,6 @@ public:
 
 private:
    bool mbInitializingScrollbar{ false };
-
-   // See explanation in OnCloseWindow
-   bool mIsBeingDeleted{ false };
 
    // TrackPanelOverlay objects
    std::shared_ptr<Overlay>

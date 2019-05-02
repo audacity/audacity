@@ -2494,7 +2494,7 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
 {
    // Activate events can fire during window teardown, so just
    // ignore them.
-   if (mIsDeleting) {
+   if (IsBeingDeleted()) {
       return;
    }
 
@@ -2580,12 +2580,13 @@ public:
 //     and/or attempts to DELETE objects twice.
 void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
+   auto &window = *this;
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
    // wxEVT_QUERY_END_SESSION, so we have to protect against multiple
    // entries.  This is a hack until the whole application termination
    // process can be reviewed and reworked.  (See bug #964 for ways
    // to exercise the bug that instigated this hack.)
-   if (mIsBeingDeleted)
+   if (window.IsBeingDeleted())
    {
       event.Skip();
       return;
@@ -2683,7 +2684,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //     its size change.
    AllProjects::SaveWindowSize();
 
-   mIsDeleting = true;
+   window.SetIsBeingDeleted();
 
    // Mac: we never quit as the result of a close.
    // Other systems: we quit only when the close is the result of an external
@@ -2817,9 +2818,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // Destroys this
    pSelf.reset();
    mRuler = nullptr;
-
-   mIsBeingDeleted = true;
-
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
