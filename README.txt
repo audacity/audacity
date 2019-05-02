@@ -28,12 +28,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.3.1
+Version 2.3.2
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.3.0
+2.  Changes since version 2.3.1
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -63,37 +63,41 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.3.0: 
+2. Changes since version 2.3.1: 
 
 Improvements
 
- * Audacity now supports 64 bit Mac.
+ * Audacity now includes the LAME mp3 encoder. Previously, due to now expired
+   patents, you had to download it separately.
+ * There is a new 'Select' button in the track panel to select the whole 
+   track.
+ * Audacity mod-script-pipe for driving Audacity from Python now comes with
+   Audacity and can be enabled via preferences.
  * Options and preferences:
-   * Microfades are now an opt-in feature. They were always on in 2.3.0.
-   * The advanced vertical zooming option is now available in the View->Zoom 
-     menu.
- * Regular interval labels now support range labels.
+   * Type to Create a Label is now off by default.
+ * A plug-in installer for Nyquist now provides a file browser for 
+   selecting '.NY' files to install.
+
 
 See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.1
 
 
 Bug Fixes
 
- Over 20 bugs in 2.3.0 fixed, including:
+ Over 20 bugs in 2.3.1 fixed, including:
 
- * A crashing bug on Linux that made Audacity 2.3.0. unsuitable for Linux.
- * Crash on Mac when right clicking on label.
- * Problems with Change Pitch, including not remembering parameter values.
+ * Audacity 2.3.1 would crash if append-recording to a collapsed track.
+ * Many accessibility bugs on macOS fixed
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.1
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.2
 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.3.1:
+3. Known Issues in 2.3.2:
 
-For known issues in 2.3.1 please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_2.3.1/Issues 
+For known issues in 2.3.2 please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_2.3.2/Issues 
 
 
 -------------------------------------------------------------------------------
