@@ -2553,7 +2553,10 @@ public:
 //     and/or attempts to DELETE objects twice.
 void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
-   auto &window = *this;
+   auto &project = *this;
+   auto &projectFileIO = project;
+   auto &window = project;
+
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
    // wxEVT_QUERY_END_SESSION, so we have to protect against multiple
    // entries.  This is a hack until the whole application termination
@@ -2680,17 +2683,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
-   // Lock all blocks in all tracks of the last saved version, so that
-   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
-   // in memory.  After it's locked, DELETE the data structure so that
-   // there's no memory leak.
-   if (mLastSavedTracks) {
-      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
-         wt->CloseLock();
-
-      mLastSavedTracks->Clear(); // sends an event
-      mLastSavedTracks.reset();
-   }
+   projectFileIO.CloseLock();
 
    // Get rid of the history window
    // LL:  Destroy it before the TrackPanel and ToolBars since they
@@ -5341,8 +5334,10 @@ bool AudacityProject::IsProjectSaved() {
 
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
-   SelectActions::DoSelectAll(*this);
-   TrackActions::DoRemoveTracks(*this);
+   auto &project = *this;
+
+   SelectActions::DoSelectAll( project );
+   TrackActions::DoRemoveTracks( project );
    // A new DirManager.
    mDirManager = DirManager::Create();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
@@ -5352,13 +5347,7 @@ void AudacityProject::ResetProjectToEmpty() {
    // the blockfiles aren't deleted on disk when we DELETE the blockfiles
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
-   if (mLastSavedTracks) {
-      for (auto t : mLastSavedTracks->Any<WaveTrack>())
-         t->CloseLock();
-
-      mLastSavedTracks->Clear(); // sends an event
-      mLastSavedTracks.reset();
-   }
+   project.CloseLock();
 
    //mLastSavedTracks = TrackList::Create();
    mFileName = "";
@@ -5671,4 +5660,19 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
+}
+
+void AudacityProject::CloseLock()
+{
+   // Lock all blocks in all tracks of the last saved version, so that
+   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
+   // in memory.  After it's locked, DELETE the data structure so that
+   // there's no memory leak.
+   if (mLastSavedTracks) {
+      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
+         wt->CloseLock();
+
+      mLastSavedTracks->Clear();
+      mLastSavedTracks.reset();
+   }
 }

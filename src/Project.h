@@ -316,6 +316,8 @@ public:
    AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
+   void CloseLock();
+
    bool Save();
    bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
    bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false, bool addToHistory = true);
