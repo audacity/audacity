@@ -352,6 +352,7 @@ public:
    static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
+   void ResetProjectFileIO();
 
    // Routine to estimate how many minutes of recording time are left on disk
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);

@@ -5335,6 +5335,7 @@ bool AudacityProject::IsProjectSaved() {
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
    auto &project = *this;
+   auto &projectFileIO = project;
 
    SelectActions::DoSelectAll( project );
    TrackActions::DoRemoveTracks( project );
@@ -5342,20 +5343,26 @@ void AudacityProject::ResetProjectToEmpty() {
    mDirManager = DirManager::Create();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
 
+   projectFileIO.ResetProjectFileIO();
+
+   mDirty = false;
+   GetUndoManager()->ClearStates();
+}
+
+void AudacityProject::ResetProjectFileIO()
+{
    // mLastSavedTrack code copied from OnCloseWindow.
    // Lock all blocks in all tracks of the last saved version, so that
    // the blockfiles aren't deleted on disk when we DELETE the blockfiles
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
-   project.CloseLock();
+   CloseLock();
 
    //mLastSavedTracks = TrackList::Create();
    mFileName = "";
    mIsRecovered = false;
    mbLoadedFromAup = false;
    SetProjectTitle();
-   mDirty = false;
-   GetUndoManager()->ClearStates();
 }
 
 bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
