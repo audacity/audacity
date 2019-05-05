@@ -26,6 +26,8 @@ AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([autotools/m4])
 dnl set up automake
 AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
+dnl Grant access to ${host_os}
+AC_CANONICAL_HOST
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
 AM_MAINTAINER_MODE([disable])
@@ -116,6 +118,23 @@ AC_CHECK_HEADERS([stdlib.h string.h])
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
+
+dnl Select target system files
+have_SYS_WIN=no
+have_SYS_UNIX=no
+
+case "$host_os" in
+*mingw*)
+   have_SYS_WIN=yes
+   ;;
+
+*)
+   have_SYS_UNIX=yes
+   ;;
+esac
+
+AM_CONDITIONAL([HAVE_SYS_WIN], [test "$have_SYS_WIN" = yes])
+AM_CONDITIONAL([HAVE_SYS_UNIX], [test "$have_SYS_UNIX" = yes])
 
 AC_CONFIG_FILES([Makefile])
 
