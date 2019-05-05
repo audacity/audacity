@@ -370,16 +370,6 @@ public:
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
-// JKC and here is a factory function which just does 'NEW' in standard Audacity.
-   // Precondition: parent != NULL
-   static TrackPanel *(*FactoryFunction)(wxWindow * parent,
-              wxWindowID id,
-              const wxPoint & pos,
-              const wxSize & size,
-              const std::shared_ptr<TrackList> &tracks,
-              ViewInfo * viewInfo,
-              TrackPanelListener * listener,
-              AdornedRulerPanel * ruler);
 
 protected:
    void DrawTracks(wxDC * dc);

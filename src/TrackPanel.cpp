@@ -2772,40 +2772,6 @@ void TrackInfo::UpdatePrefs( wxWindow *pParent )
    } while (textWidth >= allowableWidth);
 }
 
-static TrackPanel * TrackPanelFactory(wxWindow * parent,
-   wxWindowID id,
-   const wxPoint & pos,
-   const wxSize & size,
-   const std::shared_ptr<TrackList> &tracks,
-   ViewInfo * viewInfo,
-   TrackPanelListener * listener,
-   AdornedRulerPanel * ruler)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew TrackPanel(
-      parent,
-      id,
-      pos,
-      size,
-      tracks,
-      viewInfo,
-      listener,
-      ruler);
-}
-
-
-// Declare the static factory function.
-// We defined it in the class.
-TrackPanel *(*TrackPanel::FactoryFunction)(
-              wxWindow * parent,
-              wxWindowID id,
-              const wxPoint & pos,
-              const wxSize & size,
-              const std::shared_ptr<TrackList> &tracks,
-              ViewInfo * viewInfo,
-              TrackPanelListener * listener,
-              AdornedRulerPanel * ruler) = TrackPanelFactory;
-
 TrackPanelNode::TrackPanelNode()
 {
 }

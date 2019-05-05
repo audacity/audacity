@@ -1281,9 +1281,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    }
    bs->Layout();
 
-   // The right hand side translates to NEW TrackPanel(...) in normal
-   // Audacity without additional DLLs.
-   mTrackPanel = TrackPanel::FactoryFunction(pPage,
+   wxASSERT( pPage ); // to justify safenew
+   mTrackPanel = safenew TrackPanel(pPage,
                                              TrackPanelID,
                                              wxDefaultPosition,
                                              wxDefaultSize,
