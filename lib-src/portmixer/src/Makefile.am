@@ -31,6 +31,7 @@ endif
 
 if USE_WIN_COMMON
 libportmixer_la_SOURCES += px_win_common.c px_win_endpoint.c
+libportmixer_la_LIBADD += -lole32
 endif
 
 EXTRA_DIST = \
