@@ -32,6 +32,8 @@ AM_INIT_AUTOMAKE([-Wall foreign])
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
 AM_MAINTAINER_MODE([enabled])
+dnl Grant access to ${host_os}
+AC_CANONICAL_HOST
 
 dnl -------------------------------------------------------
 dnl Checks for programs.
@@ -121,8 +123,32 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
-dnl PMALSA indicates that portmidi should be built with alsa support (needed)
-AC_DEFINE(PMALSA, 1)
+dnl Select required support for portmidi
+have_PMWIN=no
+have_PMALSA=no
+
+case "$host_os" in
+*mingw* | *cygwin*)
+   have_PMWIN=yes
+   ;;
+
+*)
+   dnl PMALSA indicates that portmidi should be built with alsa support (needed)
+   have_PMALSA=yes
+   ;;
+esac
+
+AM_CONDITIONAL([PM_AM_WIN], [test "$have_PMWIN" = yes])
+if [[ $have_PMWIN = "yes" ]] ; then
+   AC_MSG_NOTICE([Including support for Windows])
+   AC_DEFINE(PMWIN)
+fi
+
+AM_CONDITIONAL([PM_AM_ALSA], [test "$have_PWALSA" = yes])
+if [[ $have_PMALSA = "yes" ]] ; then
+   AC_MSG_NOTICE([Including support for ALSA])
+   AC_DEFINE(PMALSA)
+fi
 
 AC_CONFIG_FILES([Makefile portmidi.pc portmidi-uninstalled.pc])
 
