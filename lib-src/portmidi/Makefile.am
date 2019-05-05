@@ -11,11 +11,22 @@ lib_LIBRARIES = libportmidi_s.a
 
 # define the source files to use
 libportmidi_s_a_SOURCES = pm_common/portmidi.c \
-	pm_common/pmutil.c \
+	pm_common/pmutil.c
+
+if PM_AM_ALSA
+libportmidi_s_a_SOURCES += \
 	porttime/ptlinux.c \
 	pm_linux/pmlinuxalsa.c \
 	pm_linux/pmlinux.c \
 	pm_linux/finddefault.c
+endif
+
+if PM_AM_WIN
+libportmidi_s_a_SOURCES += \
+	porttime/ptwinmm.c \
+	pm_win/pmwin.c \
+	pm_win/pmwinmm.c
+endif
 
 # and the header files for the library. At the moment these go into the include
 # directory directly, it would be much better to have them in a subdirectory
