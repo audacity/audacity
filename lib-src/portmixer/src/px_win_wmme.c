@@ -37,6 +37,7 @@
  */
 
 #include <windows.h>
+#include <limits.h>
 
 #include "portaudio.h"
 #include "pa_win_wmme.h"
