@@ -587,14 +587,13 @@ case "${host_os}" in
       fi
       ;;
 
-   cygwin*)
+   mingw*)
       dnl Windows/CygWin configuration
       LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm"
       CONFIGHEADER="configwin.h"
-
-      AC_DEFINE(__CYGWIN__,1,[We're using cygwin])
-      dnl ' (end endless string in vim)
-      AC_DEFINE(_FILE_OFFSET_BITS,32,[Placeholder for large file support])
+      CFLAGS="${CFLAGS} -DUNICODE -D_UNICODE"
+      CXXFLAGS="${CXXFLAGS} -DUNICODE -D_UNICODE"
+      AC_DEFINE(__MINGW__,1,[We're using MinGW])
       ;;
 
    *)
@@ -718,13 +717,20 @@ if [[ "$use_vst" = "yes" ]] ; then
 fi
 
 case "${host_os}" in
-   cygwin*)
+   mingw*)
       AC_CONFIG_HEADER(src/configwin.h:src/configtemplate.h)
+      VST_IMPLEMENTATION="win"
       ;;
    *)
       AC_CONFIG_HEADER(src/configunix.h:src/configtemplate.h)
+      VST_IMPLEMENTATION="gtk"
       ;;
 esac
+
+AM_CONDITIONAL([VST_GTK], test "$VST_IMPLEMENTATION" = "gtk")
+AM_CONDITIONAL([VST_WIN], test "$VST_IMPLEMENTATION" = "win")
+
+echo "VST implementation: $VST_IMPLEMENTATION"
 
 # process Makefile.in's to generate Makefiles
 AC_CONFIG_FILES([
