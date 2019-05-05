@@ -870,9 +870,22 @@ audacity_SOURCES += \
 	effects/VST/aeffectx.h \
 	effects/VST/VSTEffect.cpp \
 	effects/VST/VSTEffect.h \
+	$(NULL)
+
+if VST_GTK
+audacity_SOURCES += \
 	effects/VST/VSTControlGTK.cpp \
 	effects/VST/VSTControlGTK.h \
 	$(NULL)
+endif
+
+if VST_WIN
+audacity_SOURCES += \
+	effects/VST/VSTControlMSW.cpp \
+	effects/VST/VSTControlMSW.h \
+	$(NULL)
+endif
+
 endif
 
 # TODO: Check *.cpp and *.h files if they are needed.
