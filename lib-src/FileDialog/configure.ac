@@ -110,8 +110,8 @@ case "${host_os}" in
       IMPLEMENTATION="mac"
    ;;
 
-   cygwin*)
-      dnl Windows/CygWin configuration
+   mingw*)
+      dnl Windows/MinGW configuration
       IMPLEMENTATION="win"
    ;;
 
