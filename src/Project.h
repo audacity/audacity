@@ -191,6 +191,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
 
+   // Next available ID for sub-windows
+   int NextWindowID();
+
    using AttachedObject = PrefsListener;
    using AttachedObjectFactory =
       std::function< std::unique_ptr<AttachedObject>() >;
@@ -327,6 +330,7 @@ public:
    bool GetDirty() { return mDirty; }
    void SetProjectTitle( int number =-1);
 
+   wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
    const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
@@ -614,6 +618,7 @@ private:
    TrackPanel *mTrackPanel{};
    SelectionState mSelectionState{};
    std::unique_ptr<TrackFactory> mTrackFactory{};
+   wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
    wxScrollBar *mVsbar;
@@ -622,6 +627,8 @@ public:
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
 
 private:
+   int mNextWindowID;
+
    bool mAutoScrolling{ false };
    bool mActive{ true };
    bool mIconized;

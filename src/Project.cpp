@@ -1061,8 +1061,14 @@ enum {
 
    HSBarID,
    VSBarID,
-   TrackPanelID
+
+   NextID,
 };
+
+int AudacityProject::NextWindowID()
+{
+   return mNextWindowID++;
+}
 
 
 // PRL:  This event type definition used to be in AudacityApp.h, which created
@@ -1116,6 +1122,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mUndoManager(std::make_unique<UndoManager>())
      , mCommandManager( std::make_unique<CommandManager>() )
 {
+   auto &window = *this;
+
+   mNextWindowID = NextID;
+
    if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate())) {
       // The default given above can vary with host/devices. So unless there is an entry for
       // the default sample rate in audacity.cfg, Audacity can open with a rate which is different
@@ -1215,7 +1225,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the horizontal ruler
    //
-   mRuler = safenew AdornedRulerPanel( this, mTopPanel,
+   mRuler = safenew AdornedRulerPanel( this, window.GetTopPanel(),
       wxID_ANY,
       wxDefaultPosition,
       wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
@@ -1262,6 +1272,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    pPage->SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
 
+   mMainPage = pPage;
+
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
@@ -1281,15 +1293,18 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    }
    bs->Layout();
 
-   wxASSERT( pPage ); // to justify safenew
-   mTrackPanel = safenew TrackPanel(pPage,
-                                             TrackPanelID,
+   {
+   auto mainPage = window.GetMainPage();
+   wxASSERT( mainPage ); // to justify safenew
+   mTrackPanel = safenew TrackPanel(mainPage,
+                                             window.NextWindowID(),
                                              wxDefaultPosition,
                                              wxDefaultSize,
                                              mTracks,
                                              &mViewInfo,
                                              this,
                                              mRuler);
+   }
    mTrackPanel->UpdatePrefs();
 
    mCursorOverlay = std::make_shared<EditCursorOverlay>(this);
