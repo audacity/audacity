@@ -38,6 +38,7 @@
 
 #include <windows.h>
 #include <tchar.h>
+#include <limits.h>
 
 #include "portaudio.h"
 
