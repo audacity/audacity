@@ -295,11 +295,12 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
       //   FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
 
          ,
-
+#ifndef EXPERIMENTAL_DA
       /* i18n-hint: Clicking this menu item shows the toolbar
          with the mixer*/
       Command( wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"),
          FN(OnShowMixerToolBar), AlwaysEnabledFlag, checkOff ),
+#endif
       /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
       Command( wxT("ShowEditTB"), XXO("&Edit Toolbar"),
          FN(OnShowEditToolBar), AlwaysEnabledFlag, checkOff ),
@@ -311,10 +312,12 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
          that enables Scrub or Seek playback and Scrub Ruler*/
       Command( wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"),
          FN(OnShowScrubbingToolBar), AlwaysEnabledFlag, checkOff ),
+#ifndef EXPERIMENTAL_DA
       /* i18n-hint: Clicking this menu item shows the toolbar
          that manages devices*/
       Command( wxT("ShowDeviceTB"), XXO("&Device Toolbar"),
          FN(OnShowDeviceToolBar), AlwaysEnabledFlag, checkOff ),
+#endif
       /* i18n-hint: Clicking this menu item shows the big toolbar
          for the time of the cursor, e.g. playing or recording*/
       Command( wxT("ShowTimeTB"), XXO("&Time Toolbar"),

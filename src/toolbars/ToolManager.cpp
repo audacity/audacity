@@ -713,6 +713,7 @@ void ToolManager::ReadConfig()
          defaultDock = BotDockID;
       if( ndx == MeterBarID )
          bShownByDefault = false;
+
       if( ndx == ScrubbingBarID )
          bShownByDefault = false;
 
@@ -750,6 +751,14 @@ void ToolManager::ReadConfig()
          pLegacy,
          bar, show[ ndx ], bShownByDefault)
       && found;
+
+#ifdef EXPERIMENTAL_DA
+      // These are now combined in the meter toolbar
+      if( ndx == MixerBarID )
+         show[ ndx ] = false;
+      if( ndx == DeviceBarID )
+         show[ ndx ] = false;
+#endif
 
       gPrefs->Read( wxT("X"), &x, -1 );
       gPrefs->Read( wxT("Y"), &y, -1 );
