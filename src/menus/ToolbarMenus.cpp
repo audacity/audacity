@@ -280,6 +280,8 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
          that has some tools in it*/
       Command( wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
          FN(OnShowToolsToolBar), AlwaysEnabledFlag, checkOff ),
+
+#ifndef EXPERIMENTAL_DA
       /* i18n-hint: Clicking this menu item shows the toolbar
          with the recording level meters*/
       Command( wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
@@ -288,6 +290,16 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
          with the playback level meter*/
       Command( wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
          FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff )
+#else
+      /* i18n-hint: Clicking this menu item shows the toolbar
+         with the recording level meters and level adjuster*/
+      Command( wxT("ShowRecordMeterTB"), XXO("&Recording Toolbar"),
+         FN(OnShowRecordMeterToolBar), AlwaysEnabledFlag, checkOff ),
+      /* i18n-hint: Clicking this menu item shows the toolbar
+         with the playback level meter and level adjuster*/
+      Command( wxT("ShowPlayMeterTB"), XXO("&Playback Toolbar"),
+         FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff )
+#endif
 
       /* --i18nhint: Clicking this menu item shows the toolbar
          which has sound level meters*/
