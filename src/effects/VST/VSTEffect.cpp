@@ -2909,7 +2909,7 @@ void VSTEffect::BuildPlain()
                wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
             gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-            mSliders[i] = safenew wxSlider(scroller,
+            mSliders[i] = safenew wxSliderWrapper(scroller,
                ID_Sliders + i,
                0,
                0,

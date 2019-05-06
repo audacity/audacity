@@ -3094,10 +3094,13 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       AutoSaveFile asf;
       if (!asf.Decode(fileName))
       {
+         auto message = AutoSaveFile::FailureMessage( fileName );
          AudacityMessageBox(
-            wxString::Format( _("Could not decode file: %s"), fileName ),
+            message,
             _("Error decoding file"),
             wxOK | wxCENTRE, this);
+         // Important: Prevent deleting any temporary files!
+         DirManager::SetDontDeleteTempFiles();
          return;
       }
    }

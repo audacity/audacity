@@ -515,6 +515,15 @@ wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
    return pRad;
 }
 
+#ifdef __WXMAC__
+void wxSliderWrapper::SetFocus()
+{
+   // bypassing the override in wxCompositeWindow<wxSliderBase> which ends up
+   // doing nothing
+   return wxSliderBase::SetFocus();
+}
+#endif
+
 wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, int Min)
 {
    HandleOptionality( Prompt );
@@ -523,7 +532,7 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSlider);
    wxSlider * pSlider;
-   mpWind = pSlider = safenew wxSlider(GetParent(), miId,
+   mpWind = pSlider = safenew wxSliderWrapper(GetParent(), miId,
       pos, Min, Max,
       wxDefaultPosition, wxDefaultSize,
       Style( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
@@ -774,8 +783,6 @@ wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
    return mpMenu;
 }
 
-
-
 /// Starts a static box around a number of controls.
 ///  @param Str   The text of the title for the box.
 ///  @param iProp The resizing proportion value.
@@ -786,7 +793,7 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return NULL;
-   wxStaticBox * pBox = safenew wxStaticBox(GetParent(), miId,
+   wxStaticBox * pBox = safenew wxStaticBoxWrapper(GetParent(), miId,
       Str );
    pBox->SetLabel( Str );
    pBox->SetName(wxStripMenuCodes(Str));

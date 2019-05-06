@@ -484,6 +484,13 @@ enum FieldTypes
    FT_Name           // type, ID, name length, name
 };
 
+wxString AutoSaveFile::FailureMessage( const FilePath &/*filePath*/ )
+{
+   return 
+_("This recovery file was saved by Audacity 2.3.0 or before.\n"
+   "You need to run that version of Audacity to recover the project." );
+}
+
 AutoSaveFile::AutoSaveFile(size_t allocSize)
 {
    mAllocSize = allocSize;
@@ -766,9 +773,16 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
       std::vector<IdMap> mIdStack;
 
       mIds.clear();
+   
+      struct Error{};
+      auto Lookup = [&mIds]( short id ) -> const wxString & {
+         auto iter = mIds.find( id );
+         if ( iter == mIds.end() )
+            throw Error{};
+         return iter->second;
+      };
 
-      while ( !in.Eof() )
-      {
+      try { while ( !in.Eof() ) {
          short id;
 
          switch (in.GetC())
@@ -804,7 +818,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
             {
                in.Read(&id, sizeof(id));
 
-               out.StartTag(mIds[id]);
+               out.StartTag(Lookup(id));
             }
             break;
 
@@ -812,7 +826,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
             {
                in.Read(&id, sizeof(id));
 
-               out.EndTag(mIds[id]);
+               out.EndTag(Lookup(id));
             }
             break;
 
@@ -825,7 +839,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                WxChars val{ len / sizeof(wxChar) };
                in.Read(val.get(), len);
 
-               out.WriteAttr(mIds[id], wxString(val.get(), len / sizeof(wxChar)));
+               out.WriteAttr(Lookup(id), wxString(val.get(), len / sizeof(wxChar)));
             }
             break;
 
@@ -838,7 +852,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&val, sizeof(val));
                in.Read(&dig, sizeof(dig));
 
-               out.WriteAttr(mIds[id], val, dig);
+               out.WriteAttr(Lookup(id), val, dig);
             }
             break;
 
@@ -851,7 +865,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&val, sizeof(val));
                in.Read(&dig, sizeof(dig));
 
-               out.WriteAttr(mIds[id], val, dig);
+               out.WriteAttr(Lookup(id), val, dig);
             }
             break;
 
@@ -862,7 +876,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&id, sizeof(id));
                in.Read(&val, sizeof(val));
 
-               out.WriteAttr(mIds[id], val);
+               out.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -873,7 +887,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&id, sizeof(id));
                in.Read(&val, sizeof(val));
 
-               out.WriteAttr(mIds[id], val);
+               out.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -884,7 +898,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&id, sizeof(id));
                in.Read(&val, sizeof(val));
 
-               out.WriteAttr(mIds[id], val);
+               out.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -895,7 +909,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&id, sizeof(id));
                in.Read(&val, sizeof(val));
 
-               out.WriteAttr(mIds[id], val);
+               out.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -906,7 +920,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                in.Read(&id, sizeof(id));
                in.Read(&val, sizeof(val));
 
-               out.WriteAttr(mIds[id], val);
+               out.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -938,6 +952,11 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
                wxASSERT(true);
             break;
          }
+      } }
+      catch( const Error & )
+      {
+         // return before committing, so we do not overwrite the recovery file!
+         return false;
       }
 
       out.Commit();

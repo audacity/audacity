@@ -1,7 +1,28 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
 
-Changes in version 2.3.0
+
+Changes in version 2.3.1: 
+
+Improvements
+
+    * Audacity now supports 64 bit Mac.
+    * Options and preferences:
+        * Microfades are now an opt-in feature. They were always on in 2.3.0.
+        * The advanced vertical zooming option is now available in the 
+          View->Zoom menu.
+    * Regular interval labels now support range labels.
+
+Bug Fixes
+
+ Over 20 bugs in 2.3.0 fixed, including:
+
+    * A crashing bug on Linux that made Audacity 2.3.0. unsuitable for Linux.
+    * Crash on Mac when right clicking on label.
+    * Problems with Change Pitch, including not remembering parameter values.
+
+
+Changes in version 2.3.0:
 
 Improvements
 
@@ -80,6 +101,7 @@ Improvements
       spelling of these languages is shown with accented and special characters. 
 
 Bug Fixes
+
    * Multiple use of "Save As" to the existing open project can result in data 
      corruption/loss
    * Crash undoing during record, using Discard button of History window
