@@ -69,6 +69,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartScroller();
 
 #ifndef EXPERIMENTAL_DA
+// DA always copies.  Using a reference is dangerous. 
    S.StartStatic(_("When importing audio files"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));

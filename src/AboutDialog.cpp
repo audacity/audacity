@@ -554,9 +554,9 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
 #ifdef EXPERIMENTAL_DA
-   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Audacity Extras"), enabled);
 #else
-   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Audacity Extras"), disabled);
 #endif
 
    # if USE_NYQUIST

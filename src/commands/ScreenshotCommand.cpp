@@ -832,6 +832,8 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       break;
    case kselectionbar:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), SelectionBarID, mFileName);
+   case kselectiontimebar:
+      return CaptureToolbar(context, context.GetProject()->GetToolManager(), TimeBarID, mFileName);
    case kspectralselection:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), SpectralSelectionBarID, mFileName);
    case ktools:

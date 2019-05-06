@@ -89,6 +89,7 @@ void OnShowPlayMeterToolBar(const CommandContext &context)
 }
 
 #if 0
+// Combined Meter Toolbar
 void OnShowMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
@@ -155,6 +156,15 @@ void OnShowSelectionToolBar(const CommandContext &context)
    auto toolManager = project.GetToolManager();
 
    toolManager->ShowHide( SelectionBarID );
+   GetMenuManager(project).ModifyToolbarMenus(project);
+}
+
+void OnShowTimeToolBar(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto toolManager = project.GetToolManager();
+
+   toolManager->ShowHide( TimeBarID );
    GetMenuManager(project).ModifyToolbarMenus(project);
 }
 
@@ -305,6 +315,10 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
          that manages devices*/
       Command( wxT("ShowDeviceTB"), XXO("&Device Toolbar"),
          FN(OnShowDeviceToolBar), AlwaysEnabledFlag, checkOff ),
+      /* i18n-hint: Clicking this menu item shows the big toolbar
+         for the time of the cursor, e.g. playing or recording*/
+      Command( wxT("ShowTimeTB"), XXO("&Time Toolbar"),
+         FN(OnShowTimeToolBar), AlwaysEnabledFlag, checkOff ),
       /* i18n-hint: Clicking this menu item shows the toolbar
          for selecting a time range of audio*/
       Command( wxT("ShowSelectionTB"), XXO("&Selection Toolbar"),

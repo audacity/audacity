@@ -479,15 +479,16 @@ static struct DefaultConfigEntry {
    { ToolsBarID,             TransportBarID,         NoBarID                },
    { RecordMeterBarID,       ToolsBarID,             NoBarID                },
    { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
-   { MixerBarID,             PlayMeterBarID,         NoBarID                },
-   { EditBarID,              MixerBarID,             NoBarID                },
 
 // DA: Transcription Toolbar not docked, by default.
 #ifdef EXPERIMENTAL_DA
-   { TranscriptionBarID,     NoBarID,                NoBarID                },
+   { MixerBarID,             NoBarID,         NoBarID                },
+   { EditBarID,              PlayMeterBarID,             NoBarID                },
 #else
-   { TranscriptionBarID,     EditBarID,              NoBarID                },
+   { MixerBarID,             PlayMeterBarID,         NoBarID                },
+   { EditBarID,              MixerBarID,             NoBarID                },
 #endif
+   { TranscriptionBarID,     EditBarID,              NoBarID                },
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
@@ -566,16 +567,17 @@ void ToolManager::Reset()
 #endif
 
       // Hide some bars.
-      if( ndx == MeterBarID
+      if( 
+         ndx == ScrubbingBarID
+         || ndx == MeterBarID // combined meter
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          || ndx == SpectralSelectionBarID
 #endif
-         || ndx == ScrubbingBarID
 // DA: Hides three more toolbars.
 #ifdef EXPERIMENTAL_DA
          || ndx == DeviceBarID
          || ndx == TranscriptionBarID
-        // || ndx == SelectionBarID
+         || ndx == MixerBarID
 #endif
          )
          expose = false;

@@ -595,6 +595,8 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
                          toolManager->IsVisible(PlayMeterBarID));
    commandManager.Check(wxT("ShowMixerTB"),
                          toolManager->IsVisible(MixerBarID));
+   commandManager.Check(wxT("ShowTimeTB"),
+                         toolManager->IsVisible(TimeBarID));
    commandManager.Check(wxT("ShowSelectionTB"),
                          toolManager->IsVisible(SelectionBarID));
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING

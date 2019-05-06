@@ -1298,10 +1298,6 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
    else if(( missingFlags & TimeSelectedFlag ) || (missingFlags &CutCopyAvailableFlag )){
       title = _("No Audio Selected");
-#ifdef EXPERIMENTAL_DA
-      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      reason = wxString::Format( _("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio."), Name );
-#else
 #ifdef __WXMAC__
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
       reason = wxString::Format( _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
@@ -1315,7 +1311,6 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
       // No need to explain what a help button is for.
       // "\n\nClick the Help button to learn more about selection methods."
       ), Name );
-#endif
 #endif
       helpPage = "Selecting_Audio_-_the_basics";
    }

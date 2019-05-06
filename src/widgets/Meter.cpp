@@ -737,7 +737,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 #endif
 
+#ifndef EXPERIMENTAL_METER_SLIDERS
    // Let the user know they can click to start monitoring
+   // It's not compatible with having the sliders there too.
    if( mIsInput && !mActive )
    {
       destDC.SetFont( GetFont() );
@@ -796,30 +798,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
             }
          }
       }
-   }
-
-#if 0 
-   //def EXPERIMENTAL_METER_SLIDERS
-   wxOrientation orientation = mBar[0].vert ? wxVERTICAL : wxHORIZONTAL;
-   int x = (mBar[1].r.GetRight() + mBar[0].r.GetLeft())/2;
-   int y = (mBar[1].r.GetBottom() + mBar[0].r.GetTop())/2;
-   bool bHighlited = GetClientRect().Contains(
-      ScreenToClient( ::wxGetMousePosition() ) );
-   wxBitmap &Bmp = theTheme.Bitmap( 
-      (orientation==wxHORIZONTAL) ?
-         (bHighlited ? bmpSliderThumbHilited : bmpSliderThumb) :
-         (bHighlited ? bmpSliderThumbRotatedHilited : bmpSliderThumbRotated) );
-   x -= Bmp.GetWidth()/2;
-   y -= Bmp.GetHeight()/2;
-
-   if (orientation == wxHORIZONTAL)
-   {
-      destDC.DrawBitmap( Bmp , x,y, true);
-   }
-   else
-   {
-      // TODO: Don't use pixel-count hack in positioning.  
-      destDC.DrawBitmap( Bmp, x,y, true);
    }
 #endif
 

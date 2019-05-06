@@ -963,8 +963,11 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
 
       Separator(),
 
+#ifndef EXPERIMENTAL_DA
+// DA: Does not provide fancy screenshot tool or benchmarker
       Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
          FN(OnScreenshot), AudioIONotBusyFlag ),
+
 
 // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
 // as they used to in 1.3.x
@@ -974,8 +977,8 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
       Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
          FN(OnBenchmark), AudioIONotBusyFlag ),
 //#endif
-
       Separator(),
+#endif
 
       Items( PopulateEffectsMenu(
          EffectTypeTool,

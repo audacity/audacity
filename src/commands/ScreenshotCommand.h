@@ -53,6 +53,9 @@ public:
       kscriptables,
       kpreferences,
       kselectionbar,
+#ifdef EXPERIMENTAL_DA
+      kselectiontimebar,
+#endif  
       kspectralselection,
       ktools,
       ktransport,

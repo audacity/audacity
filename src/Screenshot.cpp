@@ -192,7 +192,7 @@ enum
   
    IdCaptureSelectionBar,
 #ifdef EXPERIMENTAL_DA
-//   IdCaptureTimeBar,  // TODO
+   IdCaptureTimeBar,
 #endif  
    IdCaptureSpectralSelection,
    IdCaptureTools,
@@ -618,6 +618,9 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
    IdCaptureFullScreen,
   
    IdCaptureSelectionBar,
+#ifdef EXPERIMENTAL_DA
+   IdCaptureTimeBar,
+#endif  
    IdCaptureSpectralSelection,
    IdCaptureTools,
    IdCaptureTransport,
@@ -649,6 +652,9 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
       ScreenshotCommand::kwindowplus,
       ScreenshotCommand::kfullscreen,
       ScreenshotCommand::kselectionbar,
+#ifdef EXPERIMENTAL_DA
+      ScreenshotCommand::kselectiontimebar,
+#endif
       ScreenshotCommand::kspectralselection,
       ScreenshotCommand::ktools,
       ScreenshotCommand::ktransport,
