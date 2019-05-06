@@ -542,7 +542,6 @@ public:
 
  private:
 
-   void OnCapture(wxCommandEvent & evt);
    void OnThemeChange(wxCommandEvent & evt);
    void InitialState();
 
@@ -710,14 +709,6 @@ public:
 
 private:
    bool mbInitializingScrollbar{ false };
-
-   // Flag that we're recoding.
-   bool mIsCapturing{ false };
-
-public:
-   bool IsCapturing() const { return mIsCapturing; }
-
-private:
 
    // See explanation in OnCloseWindow
    bool mIsBeingDeleted{ false };

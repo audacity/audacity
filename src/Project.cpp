@@ -1438,10 +1438,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mTrackPanel->SetDropTarget(safenew DropTarget(this));
 #endif
 
-   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &AudacityProject::OnCapture,
-                     this);
-
    wxTheApp->Bind(EVT_THEME_CHANGE, &AudacityProject::OnThemeChange, this);
 
 #ifdef EXPERIMENTAL_DA2
@@ -1565,16 +1561,6 @@ void AudacityProject::RefreshCursor()
    mTrackPanel->HandleCursorForPresentMouseState();
 }
 
-void AudacityProject::OnCapture(wxCommandEvent& evt)
-{
-   evt.Skip();
-
-   if (evt.GetInt() != 0)
-      mIsCapturing = true;
-   else
-      mIsCapturing = false;
-}
-
 void AudacityProject::OnThemeChange(wxCommandEvent& evt)
 {
    evt.Skip();
@@ -1587,7 +1573,6 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
    }
    GetRulerPanel()->ReCreateButtons();
 }
-
 
 const std::shared_ptr<DirManager> &AudacityProject::GetDirManager()
 {

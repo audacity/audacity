@@ -548,7 +548,7 @@ CommandFlag MenuManager::GetUpdateFlags
    if (!EffectManager::Get().RealtimeIsActive())
       flags |= IsRealtimeNotActiveFlag;
 
-      if (!project.IsCapturing())
+   if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
       flags |= CaptureNotBusyFlag;
 
    ControlToolBar *bar = project.GetControlToolBar();
