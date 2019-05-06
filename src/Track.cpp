@@ -569,6 +569,20 @@ wxDEFINE_EVENT(EVT_TRACKLIST_DELETION, TrackListEvent);
 // same value as in the default constructed TrackId:
 long TrackList::sCounter = -1;
 
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) { return TrackList::Create(); }
+};
+
+TrackList &TrackList::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< TrackList >( key );
+}
+
+const TrackList &TrackList::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
 TrackList::TrackList()
 :  wxEvtHandler()
 {

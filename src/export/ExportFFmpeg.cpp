@@ -39,6 +39,7 @@ function.
 #include "../Mix.h"
 #include "../Project.h"
 #include "../Tags.h"
+#include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -871,7 +872,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
       return ProgressResult::Cancelled;
    }
    mName = fName;
-   const TrackList *tracks = project->GetTracks();
+   const auto &tracks = TrackList::Get( *project );
    bool ret = true;
 
    if (mSubFormat >= FMT_LAST) {
@@ -895,9 +896,9 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    size_t pcmBufferSize = 1024;
 
    const WaveTrackConstArray waveTracks =
-      tracks->GetWaveTrackConstArray(selectionOnly, false);
+      tracks.GetWaveTrackConstArray(selectionOnly, false);
    auto mixer = CreateMixer(waveTracks,
-      tracks->GetTimeTrack(),
+      tracks.GetTimeTrack(),
       t0, t1,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, true, mixerSpec);

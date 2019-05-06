@@ -34,6 +34,7 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../Track.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -426,12 +427,12 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    os->Write(&header, sizeof(wav_header));
 
    // Mix 'em up
-   const TrackList *tracks = project->GetTracks();
+   const auto &tracks = TrackList::Get( *project );
    const WaveTrackConstArray waveTracks =
-      tracks->GetWaveTrackConstArray(selectionOnly, false);
+      tracks.GetWaveTrackConstArray(selectionOnly, false);
    auto mixer = CreateMixer(
                             waveTracks,
-                            tracks->GetTimeTrack(),
+                            tracks.GetTimeTrack(),
                             t0,
                             t1,
                             channels,

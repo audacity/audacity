@@ -708,8 +708,8 @@ void ScreenFrame::SizeTracks(int h)
    // If there should be more-than-stereo tracks, this makes
    // each channel as high as for a stereo channel
 
-   auto tracks = mContext.project.GetTracks();
-   for (auto t : tracks->Leaders<WaveTrack>()) {
+   auto &tracks = TrackList::Get( mContext.project );
+   for (auto t : tracks.Leaders<WaveTrack>()) {
       auto channels = TrackList::Channels(t);
       auto nChannels = channels.size();
       auto height = nChannels == 1 ? 2 * h : h;
@@ -721,7 +721,7 @@ void ScreenFrame::SizeTracks(int h)
 
 void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : mContext.project.GetTracks()->Any<WaveTrack>())
+   for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>())
       t->SetHeight(t->GetMinimizedHeight());
 
    mContext.project.RedrawProject();

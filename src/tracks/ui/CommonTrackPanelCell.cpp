@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Project.h"
 #include "../../RefreshCode.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
 
@@ -36,7 +37,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
 {
    using namespace RefreshCode;
 
-   if (pProject->GetTracks()->empty())
+   if ( TrackList::Get( *pProject ).empty() )
       // Scrolling and Zoom in and out commands are disabled when there are no tracks.
       // This should be disabled too for consistency.  Otherwise
       // you do see changes in the time ruler.
@@ -106,7 +107,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
       xx = viewInfo.TimeToPosition(center_h, trackLeftEdge);
 
       // Time corresponding to last (most far right) audio.
-      double audioEndTime = pProject->GetTracks()->GetEndTime();
+      double audioEndTime = TrackList::Get( *pProject ).GetEndTime();
 
 // Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
 #if 0

@@ -583,7 +583,7 @@ void FreqWindow::GetAudio()
 
    int selcount = 0;
    bool warning = false;
-   for (auto track : p->GetTracks()->Selected< const WaveTrack >()) {
+   for (auto track : TrackList::Get( *p ).Selected< const WaveTrack >()) {
       if (selcount==0) {
          mRate = track->GetRate();
          auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());

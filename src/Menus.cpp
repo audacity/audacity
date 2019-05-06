@@ -433,8 +433,8 @@ CommandFlag MenuManager::GetUpdateFlags
    if (!selectedRegion.isPoint())
       flags |= TimeSelectedFlag;
 
-   auto tracks = project.GetTracks();
-   auto trackRange = tracks->Any();
+   auto &tracks = TrackList::Get( project );
+   auto trackRange = tracks.Any();
    if ( trackRange )
       flags |= TracksExistFlag;
    trackRange.Visit(

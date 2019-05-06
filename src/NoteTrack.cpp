@@ -108,7 +108,7 @@ static ProjectFileIORegistry::Entry registerFactory{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
       auto &trackFactory = *project.GetTrackFactory();
-      auto &tracks = *project.GetTracks();
+      auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewNoteTrack());
    }
 };

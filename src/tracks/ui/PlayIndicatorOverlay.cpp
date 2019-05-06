@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "Scrubbing.h"
 #include "../../toolbars/ControlToolBar.h"

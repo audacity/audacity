@@ -175,7 +175,7 @@ void ODTask::DoSome(float amountWork)
 
 bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
 {
-   for (auto tr : proj->GetTracks()->Any<const WaveTrack>())
+   for (auto tr : TrackList::Get( *proj ).Any<const WaveTrack>())
    {
       //go over all tracks in the project
       //look inside our task's track list for one that matches this projects one.

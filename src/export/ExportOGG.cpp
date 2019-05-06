@@ -34,6 +34,7 @@
 #include "../ShuttleGui.h"
 
 #include "../Tags.h"
+#include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -170,7 +171,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                        int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
-   const TrackList *tracks = project->GetTracks();
+   const auto &tracks = TrackList::Get( *project );
    double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
@@ -274,10 +275,10 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    }
 
    const WaveTrackConstArray waveTracks =
-      tracks->GetWaveTrackConstArray(selectionOnly, false);
+      tracks.GetWaveTrackConstArray(selectionOnly, false);
    {
       auto mixer = CreateMixer(waveTracks,
-         tracks->GetTimeTrack(),
+         tracks.GetTimeTrack(),
          t0, t1,
          numChannels, SAMPLES_PER_RUN, false,
          rate, floatSample, true, mixerSpec);

@@ -489,7 +489,8 @@ void LyricsPanel::UpdateLyrics(wxEvent &e)
       return;
 
    // Lyrics come from only the first label track.
-   auto pLabelTrack = *mProject->GetTracks()->Any< const LabelTrack >().begin();
+   auto pLabelTrack =
+      *TrackList::Get( *mProject ).Any< const LabelTrack >().begin();
    if (!pLabelTrack)
       return;
 

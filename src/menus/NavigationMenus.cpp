@@ -3,6 +3,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../commands/CommandContext.h"
@@ -83,13 +84,13 @@ void DoPrevTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &selectionState = project.GetSelectionState();
 
    Track* t = trackPanel->GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
    {
-      t = *tracks->Any().rbegin();
+      t = *tracks.Any().rbegin();
       trackPanel->SetFocusedTrack( t );
       trackPanel->EnsureVisible( t );
       project.ModifyState(false);
@@ -101,14 +102,14 @@ void DoPrevTrack(
    bool pSelected = false;
    if( shift )
    {
-      p = * -- tracks->FindLeader( t ); // Get previous track
+      p = * -- tracks.FindLeader( t ); // Get previous track
       if( p == NULL )   // On first track
       {
          // JKC: wxBell() is probably for accessibility, so a blind
          // user knows they were at the top track.
          wxBell();
          if( circularTrackNavigation )
-            p = *tracks->Any().rbegin();
+            p = *tracks.Any().rbegin();
          else
          {
             trackPanel->EnsureVisible( t );
@@ -157,13 +158,13 @@ void DoPrevTrack(
    }
    else
    {
-      p = * -- tracks->FindLeader( t ); // Get previous track
+      p = * -- tracks.FindLeader( t ); // Get previous track
       if( p == NULL )   // On first track so stay there?
       {
          wxBell();
          if( circularTrackNavigation )
          {
-            auto range = tracks->Leaders();
+            auto range = tracks.Leaders();
             p = * range.rbegin(); // null if range is empty
             trackPanel->SetFocusedTrack( p );   // Wrap to the last track
             trackPanel->EnsureVisible( p );
@@ -193,13 +194,13 @@ void DoNextTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &selectionState = project.GetSelectionState();
 
    auto t = trackPanel->GetFocusedTrack();   // Get currently focused track
    if( t == NULL )   // if there isn't one, focus on first
    {
-      t = *tracks->Any().begin();
+      t = *tracks.Any().begin();
       trackPanel->SetFocusedTrack( t );
       trackPanel->EnsureVisible( t );
       project.ModifyState(false);
@@ -208,12 +209,12 @@ void DoNextTrack(
 
    if( shift )
    {
-      auto n = * ++ tracks->FindLeader( t ); // Get next track
+      auto n = * ++ tracks.FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
          if( circularTrackNavigation )
-            n = *tracks->Any().begin();
+            n = *tracks.Any().begin();
          else
          {
             trackPanel->EnsureVisible( t );
@@ -261,13 +262,13 @@ void DoNextTrack(
    }
    else
    {
-      auto n = * ++ tracks->FindLeader( t ); // Get next track
+      auto n = * ++ tracks.FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
          if( circularTrackNavigation )
          {
-            n = *tracks->Any().begin();
+            n = *tracks.Any().begin();
             trackPanel->SetFocusedTrack( n );   // Wrap to the first track
             trackPanel->EnsureVisible( n );
             project.ModifyState(false);
@@ -456,13 +457,13 @@ void OnFirstTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Track *t = trackPanel->GetFocusedTrack();
    if (!t)
       return;
 
-   auto f = *tracks->Any().begin();
+   auto f = *tracks.Any().begin();
    if (t != f)
    {
       trackPanel->SetFocusedTrack(f);
@@ -475,13 +476,13 @@ void OnLastTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Track *t = trackPanel->GetFocusedTrack();
    if (!t)
       return;
 
-   auto l = *tracks->Any().rbegin();
+   auto l = *tracks.Any().rbegin();
    if (t != l)
    {
       trackPanel->SetFocusedTrack(l);

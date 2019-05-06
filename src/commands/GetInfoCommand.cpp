@@ -482,9 +482,9 @@ bool GetInfoCommand::SendBoxes(const CommandContext &context)
 
 bool GetInfoCommand::SendTracks(const CommandContext & context)
 {
-   TrackList *projTracks = context.project.GetTracks();
+   auto &tracks = TrackList::Get( context.project );
    context.StartArray();
-   for (auto trk : projTracks->Leaders())
+   for (auto trk : tracks.Leaders())
    {
       TrackPanel *panel = context.project.GetTrackPanel();
       Track * fTrack = panel->GetFocusedTrack();
@@ -529,10 +529,10 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
 
 bool GetInfoCommand::SendClips(const CommandContext &context)
 {
-   TrackList *tracks = context.project.GetTracks();
+   auto &tracks = TrackList::Get( context.project );
    int i=0;
    context.StartArray();
-   for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
+   for (auto waveTrack : tracks.Leaders<WaveTrack>()) {
       WaveClipPointers ptrs( waveTrack->SortedClipArray());
       for(WaveClip * pClip : ptrs ) {
          context.StartStruct();
@@ -551,11 +551,11 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
 
 bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 {
-   TrackList *tracks = context.project.GetTracks();
+   auto &tracks = TrackList::Get( context.project );
    int i=0;
    int j=0;
    context.StartArray();
-   for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
+   for (auto waveTrack : tracks.Leaders<WaveTrack>()) {
       WaveClipPointers ptrs( waveTrack->SortedClipArray());
       for(WaveClip * pClip : ptrs ) {
          context.StartStruct();
@@ -588,10 +588,10 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 
 bool GetInfoCommand::SendLabels(const CommandContext &context)
 {
-   TrackList *tracks = context.project.GetTracks();
+   auto &tracks = TrackList::Get( context.project );
    int i=0;
    context.StartArray();
-   for (auto t : tracks->Leaders()) {
+   for (auto t : tracks.Leaders()) {
       t->TypeSwitch( [&](LabelTrack *labelTrack) {
 #ifdef VERBOSE_LABELS_FORMATTING
          for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
@@ -718,7 +718,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 
    wxRect trackRect = pWin->GetRect();
 
-   for (auto t : pProj->GetTracks()->Any() + IsVisibleTrack{ pProj }) {
+   for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
       trackRect.y = t->GetY() - pTP->mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 

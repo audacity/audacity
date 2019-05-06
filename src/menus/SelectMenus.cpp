@@ -22,18 +22,17 @@ namespace {
 void DoSelectTimeAndTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    if( bAllTime )
       selectedRegion.setTimes(
-         tracks->GetMinOffset(), tracks->GetEndTime());
+         tracks.GetMinOffset(), tracks.GetEndTime());
 
    if( bAllTracks ) {
-      for (auto t : tracks->Any()){
+      for (auto t : tracks.Any())
          t->SetSelected(true);
-      }
 
       project.ModifyState(false);
       trackPanel->Refresh(false);
@@ -45,19 +44,19 @@ void DoSelectTimeAndTracks
 void DoSelectTimeAndAudioTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    if( bAllTime )
       selectedRegion.setTimes(
-         tracks->GetMinOffset(), tracks->GetEndTime());
+         tracks.GetMinOffset(), tracks.GetEndTime());
 
    if( bAllTracks ) {
       // Unselect all tracks before selecting audio.
-      for (auto t : tracks->Any())
+      for (auto t : tracks.Any())
          t->SetSelected(false);
-      for (auto t : tracks->Any<WaveTrack>())
+      for (auto t : tracks.Any<WaveTrack>())
          t->SetSelected(true);
 
       project.ModifyState(false);
@@ -67,13 +66,13 @@ void DoSelectTimeAndAudioTracks
 
 void DoNextPeakFrequency(AudacityProject &project, bool up)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &viewInfo = project.GetViewInfo();
    auto trackPanel = project.GetTrackPanel();
 
    // Find the first selected wave track that is in a spectrogram view.
    const WaveTrack *pTrack {};
-   for ( auto wt : tracks->Selected< const WaveTrack >() ) {
+   for ( auto wt : tracks.Selected< const WaveTrack >() ) {
       const int display = wt->GetDisplay();
       if (display == WaveTrack::Spectrum) {
          pTrack = wt;
@@ -93,14 +92,14 @@ double NearestZeroCrossing
 (AudacityProject &project, double t0)
 {
    auto rate = project.GetRate();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    // Window is 1/100th of a second.
    auto windowSize = size_t(std::max(1.0, rate / 100));
    Floats dist{ windowSize, true };
 
    int nTracks = 0;
-   for (auto one : tracks->Selected< const WaveTrack >()) {
+   for (auto one : tracks.Selected< const WaveTrack >()) {
       auto oneWindowSize = size_t(std::max(1.0, one->GetRate() / 100));
       Floats oneDist{ oneWindowSize };
       auto s = one->TimeToLongSamples(t0);
@@ -268,14 +267,14 @@ void MoveWhenAudioInactive
 {
    auto &viewInfo = project.GetViewInfo();
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto ruler = project.GetRulerPanel();
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    int snapToTime = project.GetSnapTo();
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max( 
-      tracks->GetEndTime(),
+      tracks.GetEndTime(),
       trackPanel->GetScreenEndTime());
 
    // Move the cursor
@@ -321,7 +320,7 @@ SelectionOperation operation)
 {
    auto &viewInfo = project.GetViewInfo();
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    if( operation == CURSOR_MOVE )
    {
@@ -333,7 +332,7 @@ SelectionOperation operation)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max( 
-      tracks->GetEndTime(),
+      tracks.GetEndTime(),
       trackPanel->GetScreenEndTime());
 
    // Is it t0 or t1 moving?
@@ -419,7 +418,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 {
    auto &viewInfo = project.GetViewInfo();
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    // step is negative, then is moving left.  step positive, moving right.
    // Move the left/right selection boundary, to expand the selection
@@ -454,7 +453,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max( 
-      tracks->GetEndTime(),
+      tracks.GetEndTime(),
       trackPanel->GetScreenEndTime());
 
    double newT = viewInfo.OffsetTimeByPixels( bMoveT0 ? t0 : t1, pixels);
@@ -486,7 +485,8 @@ namespace SelectActions {
 
 void SelectNone( AudacityProject &project )
 {
-   for (auto t : project.GetTracks()->Any())
+   auto &tracks = TrackList::Get( project );
+   for (auto t : tracks.Any())
       t->SetSelected(false);
 
    project.GetTrackPanel()->Refresh(false);
@@ -505,15 +505,15 @@ void SelectAllIfNone( AudacityProject &project )
 void DoListSelection
 (AudacityProject &project, Track *t, bool shift, bool ctrl, bool modifyState)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectionState = project.GetSelectionState();
    auto &viewInfo = project.GetViewInfo();
    auto isSyncLocked = project.IsSyncLocked();
 
-   selectionState.HandleListSelection
-      ( *tracks, viewInfo, *t,
-        shift, ctrl, isSyncLocked );
+   selectionState.HandleListSelection(
+      tracks, viewInfo, *t,
+      shift, ctrl, isSyncLocked );
 
    if (! ctrl )
       trackPanel->SetFocusedTrack(t);
@@ -539,11 +539,11 @@ void DoSelectAllAudio(AudacityProject &project)
 // without this function selecting all tracks.
 void DoSelectSomething(AudacityProject &project)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    bool bTime = selectedRegion.isPoint();
-   bool bTracks = tracks->Selected().empty();
+   bool bTracks = tracks.Selected().empty();
 
    if( bTime || bTracks )
       DoSelectTimeAndTracks( project, bTime, bTracks );
@@ -581,11 +581,11 @@ void OnSelectAllTracks(const CommandContext &context)
 void OnSelectSyncLockSel(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
    bool selected = false;
-   for (auto t : tracks->Any()
+   for (auto t : tracks.Any()
          + &Track::IsSyncLockSelected - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;
@@ -679,13 +679,13 @@ void OnSetRightSelection(const CommandContext &context)
 void OnSelectStartCursor(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto range = tracks->Selected();
+   auto range = tracks.Selected();
    if ( ! range )
       return;
 
@@ -705,13 +705,13 @@ void OnSelectStartCursor(const CommandContext &context)
 void OnSelectCursorEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto range = tracks->Selected();
+   auto range = tracks.Selected();
    if ( ! range )
       return;
 
@@ -732,10 +732,10 @@ void OnSelectTrackStartToEnd(const CommandContext &context)
 {
    auto &project = context.project;
    auto &viewInfo = project.GetViewInfo();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
-   auto range = tracks->Selected();
+   auto range = tracks.Selected();
    double maxEndOffset = range.max( &Track::GetEndTime );
    double minOffset = range.min( &Track::GetStartTime );
 
@@ -976,13 +976,13 @@ void OnCursorSelEnd(const CommandContext &context)
 void OnCursorTrackStart(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto trackRange = tracks->Selected();
+   auto trackRange = tracks.Selected();
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
@@ -1003,13 +1003,13 @@ void OnCursorTrackStart(const CommandContext &context)
 void OnCursorTrackEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto trackRange = tracks->Selected();
+   auto trackRange = tracks.Selected();
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;

@@ -577,7 +577,7 @@ void TrackPanel::ProcessUIHandleResult
 
    // Copy data from the underlying tracks to the pending tracks that are
    // really displayed
-   panel->GetProject()->GetTracks()->UpdatePendingTracks();
+   TrackList::Get( *panel->GetProject() ).UpdatePendingTracks();
 
    using namespace RefreshCode;
 

@@ -336,7 +336,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          const ViewInfo &viewInfo = mProject->GetViewInfo();
          TrackPanel *const trackPanel = mProject->GetTrackPanel();
          ControlToolBar * const ctb = mProject->GetControlToolBar();
-         double maxTime = mProject->GetTracks()->GetEndTime();
+         double maxTime = TrackList::Get( *mProject ).GetEndTime();
          const int leftOffset = trackPanel->GetLeftOffset();
          double time0 = std::min(maxTime,
             viewInfo.PositionToTime(mScrubStartPosition, leftOffset)
@@ -387,7 +387,8 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
 #endif
             mOptions.minTime = 0;
-            mOptions.maxTime = std::max(0.0, mProject->GetTracks()->GetEndTime());
+            mOptions.maxTime =
+               std::max(0.0, TrackList::Get( *mProject ).GetEndTime());
             mOptions.minStutterTime =
 #ifdef DRAG_SCRUB
                mDragging ? 0.0 :
@@ -470,7 +471,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mOptions.maxSpeed = speed +0.01;
 
    if (time1 == time0)
-      time1 = std::max(0.0, mProject->GetTracks()->GetEndTime());
+      time1 = std::max(0.0, TrackList::Get( *mProject ).GetEndTime());
    mOptions.minTime = 0;
    mOptions.maxTime = time1;
    mOptions.minStutterTime = std::max(0.0, MinStutter);

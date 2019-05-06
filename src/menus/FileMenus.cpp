@@ -30,13 +30,13 @@ namespace {
 void DoExport
 (AudacityProject &project, const wxString & Format )
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Exporter e;
 
    MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
-   double t1 = tracks->GetEndTime();
+   double t1 = tracks.GetEndTime();
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired =
@@ -110,7 +110,7 @@ namespace FileActions {
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const FilePath &fileName)
 {
-   auto tracks = pProject->GetTracks();
+   auto &tracks = TrackList::Get( *pProject );
 
    AudacityProject *pNewProject {};
    if ( !pProject )
@@ -123,7 +123,7 @@ AudacityProject *DoImportMIDI(
    if (::ImportMIDI(fileName, newTrack.get())) {
 
       SelectActions::SelectNone( *pProject );
-      auto pTrack = tracks->Add( newTrack );
+      auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
 
       pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
@@ -241,11 +241,11 @@ void OnExportSelection(const CommandContext &context)
 void OnExportLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
-   auto trackRange = tracks->Any<const LabelTrack>();
+   auto trackRange = tracks.Any<const LabelTrack>();
    auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {
@@ -312,11 +312,11 @@ void OnExportMultiple(const CommandContext &context)
 void OnExportMIDI(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    // Make sure that there is
    // exactly one NoteTrack selected.
-   const auto range = tracks->Selected< const NoteTrack >();
+   const auto range = tracks.Selected< const NoteTrack >();
    const auto numNoteTracksSelected = range.size();
 
    if(numNoteTracksSelected > 1) {
@@ -439,7 +439,7 @@ void OnImportLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackFactory = project.GetTrackFactory();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
@@ -470,7 +470,7 @@ void OnImportLabels(const CommandContext &context)
 
       SelectActions::SelectNone( project );
       newTrack->SetSelected(true);
-      tracks->Add( newTrack );
+      tracks.Add( newTrack );
 
       project.PushState(wxString::
                 Format(_("Imported labels from '%s'"), fileName),
@@ -537,8 +537,8 @@ void OnPrint(const CommandContext &context)
 {
    auto &project = context.project;
    auto name = project.GetProjectName();
-   auto tracks = project.GetTracks();
-   HandlePrint(&project, name, tracks, *project.GetTrackPanel());
+   auto &tracks = TrackList::Get( project );
+   HandlePrint(&project, name, &tracks, *project.GetTrackPanel());
 }
 
 void OnExit(const CommandContext &WXUNUSED(context) )

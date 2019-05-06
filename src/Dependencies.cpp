@@ -75,7 +75,7 @@ using BoolBlockFileHash = std::unordered_map<BlockFile *, bool>;
 static void GetAllSeqBlocks(AudacityProject *project,
                             BlockPtrArray *outBlocks)
 {
-   for (auto waveTrack : project->GetTracks()->Any< WaveTrack >()) {
+   for (auto waveTrack : TrackList::Get( *project ).Any< WaveTrack >()) {
       for(const auto &clip : waveTrack->GetAllClips()) {
          Sequence *sequence = clip->GetSequence();
          BlockArray &blocks = sequence->GetBlockArray();

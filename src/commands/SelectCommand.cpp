@@ -98,7 +98,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       mRelativeTo = 0;
 
    AudacityProject * p = &context.project;
-   double end = p->GetTracks()->GetEndTime();
+   double end = TrackList::Get( *p ).GetEndTime();
    double t0;
    double t1;
 
@@ -214,7 +214,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    // Used to invalidate cached selection and tracks.
    Effect::IncEffectCounter();
    int index = 0;
-   TrackList *tracks = context.project.GetTracks();
+   auto &tracks = TrackList::Get( context.project );
 
    // Defaults if no value...
    if( !bHasNumTracks ) 
@@ -226,7 +226,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    double last = mFirstTrack+mNumTracks;
    double first = mFirstTrack;
 
-   for (auto t : tracks->Leaders()) {
+   for (auto t : tracks.Leaders()) {
       auto channels = TrackList::Channels(t);
       double term = 0.0;
       // Add 0.01 so we are free of rounding errors in comparisons.

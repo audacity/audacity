@@ -71,7 +71,7 @@ bool CompareAudioCommand::GetSelection(const CommandContext &context, AudacityPr
 
    // Get the selected tracks and check that there are at least two to
    // compare
-   auto trackRange = proj.GetTracks()->Selected< const WaveTrack >();
+   auto trackRange = TrackList::Get( proj ).Selected< const WaveTrack >();
    mTrack0 = *trackRange.first;
    if (mTrack0 == NULL)
    {

@@ -393,7 +393,7 @@ bool DoEffect(
    const PluginID & ID, const CommandContext &context, unsigned flags )
 {
    AudacityProject &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto trackFactory = project.GetTrackFactory();
    auto rate = project.GetRate();
@@ -417,7 +417,7 @@ bool DoEffect(
 
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   auto nTracksOriginally = project.GetTrackCount();
+   auto nTracksOriginally = tracks.size();
    wxWindow *focus = wxWindow::FindFocus();
    wxWindow *parent = nullptr;
    if (focus != nullptr) {
@@ -438,7 +438,7 @@ bool DoEffect(
 
    int count = 0;
    bool clean = true;
-   for (auto t : tracks->Selected< const WaveTrack >()) {
+   for (auto t : tracks.Selected< const WaveTrack >()) {
       if (t->GetEndTime() != 0.0)
          clean = false;
       count++;
@@ -447,7 +447,7 @@ bool DoEffect(
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, &project, rate,
-      tracks, trackFactory, &selectedRegion,
+      &tracks, trackFactory, &selectedRegion,
       (flags & kConfigured) == 0);
 
    if (!success)
@@ -497,7 +497,7 @@ bool DoEffect(
    // New tracks added?  Scroll them into view so that user sees them.
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
-   if( project.GetTrackCount() > nTracksOriginally ){
+   if( tracks.size() > nTracksOriginally ){
       // 0.0 is min scroll position, 1.0 is max scroll position.
       trackPanel->VerticalScroll( 1.0 );
    }  else {

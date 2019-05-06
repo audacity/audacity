@@ -23,7 +23,6 @@
 #include "Experimental.h"
 
 #include "ClientData.h"
-#include "Track.h"
 #include "Prefs.h"
 #include "SelectionState.h"
 #include "ViewInfo.h"
@@ -39,6 +38,8 @@
 #include <wx/frame.h> // to inherit
 
 #include "import/ImportRaw.h" // defines TrackHolders
+
+#include <xml/XMLTagHandler.h> // to inherit
 
 const int AudacityProjectTimerID = 5200;
 
@@ -176,7 +177,6 @@ class MenuManager;
 using AttachedObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
-
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
@@ -201,9 +201,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    AudioIOStartStreamOptions GetDefaultPlayOptions();
    AudioIOStartStreamOptions GetSpeedPlayOptions();
 
-   TrackList *GetTracks() { return mTracks.get(); }
-   const TrackList *GetTracks() const { return mTracks.get(); }
-   size_t GetTrackCount() const { return GetTracks()->size(); }
    UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
@@ -561,9 +558,6 @@ public:
    // BEFORE doing any editing of it!
    std::shared_ptr<Tags> mTags;
 
-   // List of tracks and display info
-   std::shared_ptr<TrackList> mTracks;
-
    int mSnapTo;
    NumericFormatSymbol mSelectionFormat;
    NumericFormatSymbol mFrequencySelectionFormatName;
@@ -597,7 +591,7 @@ private:
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
    SelectionState mSelectionState{};
-   std::unique_ptr<TrackFactory> mTrackFactory{};
+   std::unique_ptr<TrackFactory> mTrackFactory;
    wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;

@@ -604,7 +604,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
       (display == WaveTrack::Spectrum) && !bAudioBusy);
 
    AudacityProject *const project = ::GetActiveProject();
-   TrackList *const tracks = project->GetTracks();
+   auto &tracks = TrackList::Get( *project );
    bool unsafe = EffectManager::Get().RealtimeIsActive() &&
       project->IsAudioActive();
 
@@ -618,7 +618,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
       mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
       WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
 
-      auto next = * ++ tracks->Find(pTrack2);
+      auto next = * ++ tracks.Find(pTrack2);
 
       if (isMono) {
          const bool canMakeStereo =
@@ -841,15 +841,15 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 {
    AudacityProject *const project = ::GetActiveProject();
-   const auto tracks = project->GetTracks();
+   auto &tracks = TrackList::Get( *project );
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
 
    auto partner = static_cast< WaveTrack * >
-      ( *tracks->Find( pTrack ).advance( 1 ) );
+      ( *tracks.Find( pTrack ).advance( 1 ) );
 
-   tracks->GroupChannels( *pTrack, 2 );
+   tracks.GroupChannels( *pTrack, 2 );
 
    // Set partner's parameters to match target.
    partner->Merge(*pTrack);
@@ -913,7 +913,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       ++nChannels;
    }
 
-   project->GetTracks()->GroupChannels( *pTrack, 1 );
+   TrackList::Get( *project ).GroupChannels( *pTrack, 1 );
    int averageHeight = totalHeight / nChannels;
 
    for (auto channel : channels)
@@ -938,9 +938,9 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 
    SplitStereo(false);
 
-   TrackList *const tracks = project->GetTracks();
-   tracks->MoveUp( partner );
-   tracks->GroupChannels( *partner, 2 );
+   auto &tracks = TrackList::Get( *project );
+   tracks.MoveUp( partner );
+   tracks.GroupChannels( *partner, 2 );
 
    if (hasFocus)
       project->GetTrackPanel()->SetFocusedTrack(partner);

@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../Menus.h"
 #include "../../Project.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
 #include <wx/textdlg.h>
@@ -121,12 +122,12 @@ void TrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
    Track *const pTrack = mpData->pTrack;
 
-   TrackList *const tracks = GetActiveProject()->GetTracks();
+   const auto &tracks = TrackList::Get( *GetActiveProject() );
 
-   pMenu->Enable(OnMoveUpID, tracks->CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveDownID, tracks->CanMoveDown(pTrack));
-   pMenu->Enable(OnMoveTopID, tracks->CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveBottomID, tracks->CanMoveDown(pTrack));
+   pMenu->Enable(OnMoveUpID, tracks.CanMoveUp(pTrack));
+   pMenu->Enable(OnMoveDownID, tracks.CanMoveDown(pTrack));
+   pMenu->Enable(OnMoveTopID, tracks.CanMoveUp(pTrack));
+   pMenu->Enable(OnMoveBottomID, tracks.CanMoveDown(pTrack));
 }
 
 BEGIN_POPUP_MENU(TrackMenuTable)

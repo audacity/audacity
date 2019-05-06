@@ -74,7 +74,7 @@ static ProjectFileIORegistry::Entry registerFactory{
    wxT( "wavetrack" ),
    []( AudacityProject &project ){
       auto &trackFactory = *project.GetTrackFactory();
-      auto &tracks = *project.GetTracks();
+      auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewWaveTrack());
    }
 };

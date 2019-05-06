@@ -479,14 +479,9 @@ double MacroCommands::GetEndTime()
       //AudacityMessageBox( _("No project to process!") );
       return -1.0;
    }
-   TrackList * tracks = project->GetTracks();
-   if( tracks == NULL )
-   {
-      //AudacityMessageBox( _("No tracks to process!") );
-      return -1.0;
-   }
+   auto &tracks = TrackList::Get( *project );
 
-   double endTime = tracks->GetEndTime();
+   double endTime = tracks.GetEndTime();
    return endTime;
 }
 
@@ -499,14 +494,9 @@ bool MacroCommands::IsMono()
       return false;
    }
 
-   TrackList * tracks = project->GetTracks();
-   if( tracks == NULL )
-   {
-      //AudacityMessageBox( _("No tracks to process!") );
-      return false;
-   }
+   auto &tracks = TrackList::Get( *project );
 
-   return ( tracks->Any() - &Track::IsLeader ).empty();
+   return ( tracks.Any() - &Track::IsLeader ).empty();
 }
 
 wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,

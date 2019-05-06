@@ -385,7 +385,7 @@ UIHandlePtr SelectHandle::HitTest
 
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    auto result = std::make_shared<SelectHandle>(
-      pTrack, oldUseSnap, *pProject->GetTracks(), st, viewInfo );
+      pTrack, oldUseSnap, TrackList::Get( *pProject ), st, viewInfo );
 
    result = AssignUIHandlePtr(holder, result);
 
@@ -525,7 +525,7 @@ UIHandle::Result SelectHandle::Click
    using namespace RefreshCode;
 
    wxMouseEvent &event = evt.event;
-   const auto sTrack = pProject->GetTracks()->Lock(mpTrack);
+   const auto sTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    const auto pTrack = sTrack.get();
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
@@ -553,10 +553,10 @@ UIHandle::Result SelectHandle::Click
    
    auto &selectionState = pProject->GetSelectionState();
    if (event.LeftDClick() && !event.ShiftDown()) {
-      TrackList *const trackList = pProject->GetTracks();
+      auto &trackList = TrackList::Get( *pProject );
 
       // Deselect all other tracks and select this one.
-      selectionState.SelectNone( *trackList );
+      selectionState.SelectNone( trackList );
 
       selectionState.SelectTrack( *pTrack, true, true );
 
@@ -584,9 +584,9 @@ UIHandle::Result SelectHandle::Click
 
    mInitialSelection = viewInfo.selectedRegion;
 
-   TrackList *const trackList = pProject->GetTracks();
-   mSelectionStateChanger = std::make_shared< SelectionStateChanger >
-      ( selectionState, *trackList );
+   auto &trackList = TrackList::Get( *pProject );
+   mSelectionStateChanger =
+      std::make_shared< SelectionStateChanger >( selectionState, trackList );
 
    mSelectionBoundary = 0;
 
@@ -599,8 +599,7 @@ UIHandle::Result SelectHandle::Click
    // I. Shift-click adjusts an existing selection
    if (bShiftDown || bCtrlDown) {
       if (bShiftDown)
-         selectionState.ChangeSelectionOnShiftClick
-            ( *trackList, *pTrack );
+         selectionState.ChangeSelectionOnShiftClick( trackList, *pTrack );
       if( bCtrlDown ){
          //Commented out bIsSelected toggles, as in Track Control Panel.
          //bool bIsSelected = pTrack->GetSelected();
@@ -758,7 +757,7 @@ UIHandle::Result SelectHandle::Click
 
    if (startNewSelection) {
       // If we didn't move a selection boundary, start a NEW selection
-      selectionState.SelectNone( *trackList );
+      selectionState.SelectNone( trackList );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height, pTrack);
 #endif
@@ -808,7 +807,7 @@ UIHandle::Result SelectHandle::Drag
    }
 
    // Also fuhggeddaboudit if not in a track.
-   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 
@@ -833,10 +832,10 @@ UIHandle::Result SelectHandle::Drag
          // Handle which tracks are selected
          Track *sTrack = pTrack.get();
          Track *eTrack = clickedTrack.get();
-         auto trackList = pProject->GetTracks();
+         auto &trackList = TrackList::Get( *pProject );
          if ( sTrack && eTrack && !event.ControlDown() ) {
             auto &selectionState = pProject->GetSelectionState();
-            selectionState.SelectRangeOfTracks( *trackList, *sTrack, *eTrack );
+            selectionState.SelectRangeOfTracks( trackList, *sTrack, *eTrack );
          }
 
    #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -847,7 +846,7 @@ UIHandle::Result SelectHandle::Drag
             (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
          else
    #endif
-            if (pProject->GetTracks()->Lock(mFreqSelTrack) == pTrack)
+            if ( TrackList::Get( *pProject ).Lock(mFreqSelTrack) == pTrack )
                AdjustFreqSelection(
                   static_cast<WaveTrack*>(pTrack.get()),
                   viewInfo, y, mRect.y, mRect.height);
@@ -1141,7 +1140,7 @@ void SelectHandle::AdjustSelection
 
    auto pTrack = Track::SharedPointer( track );
    if (!pTrack)
-      pTrack = pProject->GetTracks()->Lock(mpTrack);
+      pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
 
    if (pTrack && mSnapManager.get()) {
       bool rightEdge = (selend > mSelStart);

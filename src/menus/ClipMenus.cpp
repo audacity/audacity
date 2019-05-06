@@ -248,10 +248,10 @@ int FindClipBoundaries
 (AudacityProject &project,
  double time, bool next, std::vector<FoundClipBoundary>& finalResults)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks->Selected< const WaveTrack >() };
+   bool anyWaveTracksSelected{ tracks.Selected< const WaveTrack >() };
 
 
    // first search the tracks individually
@@ -259,7 +259,7 @@ int FindClipBoundaries
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks->Leaders();
+   auto leaders = tracks.Leaders();
    auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;
@@ -481,17 +481,17 @@ int FindClips
 (AudacityProject &project,
  double t0, double t1, bool next, std::vector<FoundClip>& finalResults)
 {
-   const auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks->Selected< const WaveTrack >() };
+   bool anyWaveTracksSelected{ tracks.Selected< const WaveTrack >() };
 
    // first search the tracks individually
 
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks->Leaders();
+   auto leaders = tracks.Leaders();
    auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;
@@ -653,8 +653,8 @@ double DoClipMove
          track->GetSelected() && !selectedRegion.isPoint();
       state.trackExclusions.clear();
 
-      TimeShiftHandle::CreateListOfCapturedClips
-         ( state, viewInfo, *track, trackList, syncLocked, t0 );
+      TimeShiftHandle::CreateListOfCapturedClips(
+         state, viewInfo, *track, trackList, syncLocked, t0 );
 
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = desiredT0 - t0;
@@ -700,12 +700,11 @@ void DoClipLeftOrRight
    auto &panel = *project.GetTrackPanel();
    auto &viewInfo = project.GetViewInfo();
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto isSyncLocked = project.IsSyncLocked();
 
-   auto amount = DoClipMove
-      ( viewInfo, panel.GetFocusedTrack(),
-        *tracks, isSyncLocked, right );
+   auto amount = DoClipMove( viewInfo, panel.GetFocusedTrack(),
+        tracks, isSyncLocked, right );
 
    panel.ScrollIntoView(selectedRegion.t0());
    panel.Refresh(false);

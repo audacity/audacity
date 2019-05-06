@@ -51,7 +51,7 @@ bool ContrastDialog::GetDB(float &dB)
 
    AudacityProject *p = GetActiveProject();
    auto range =
-      p->GetTracks()->SelectedLeaders< const WaveTrack >();
+      TrackList::Get( *p ).SelectedLeaders< const WaveTrack >();
    auto numberSelectedTracks = range.size();
    if (numberSelectedTracks > 1) {
       AudacityMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
@@ -346,7 +346,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
 
-   if( p->GetTracks()->Selected< const WaveTrack >() ) {
+   if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
       mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
       mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }
@@ -361,7 +361,7 @@ void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
 
-   if( p->GetTracks()->Selected< const WaveTrack >() ) {
+   if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
       mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
       mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }

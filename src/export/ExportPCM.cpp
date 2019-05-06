@@ -31,6 +31,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
+#include "../Track.h"
 #include "../ondemand/ODManager.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
@@ -442,7 +443,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                        int subformat)
 {
    double       rate = project->GetRate();
-   const TrackList   *tracks = project->GetTracks();
+   const auto &tracks = TrackList::Get( *project );
    int sf_format;
 
    if (subformat < 0 || static_cast<unsigned int>(subformat) >= WXSIZEOF(kFormats))
@@ -532,11 +533,11 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       size_t maxBlockLen = 44100 * 5;
 
       const WaveTrackConstArray waveTracks =
-      tracks->GetWaveTrackConstArray(selectionOnly, false);
+      tracks.GetWaveTrackConstArray(selectionOnly, false);
       {
          wxASSERT(info.channels >= 0);
          auto mixer = CreateMixer(waveTracks,
-                                  tracks->GetTimeTrack(),
+                                  tracks.GetTimeTrack(),
                                   t0, t1,
                                   info.channels, maxBlockLen, true,
                                   rate, format, true, mixerSpec);

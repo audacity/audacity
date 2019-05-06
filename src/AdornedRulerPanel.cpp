@@ -876,7 +876,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
-   mTracks = project->GetTracks();
+   mTracks = &TrackList::Get( *project );
 
    mIsSnapped = false;
 
