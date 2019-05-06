@@ -665,12 +665,16 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                // Draw the "warning"  segment
                r.SetLeft(r.GetRight() + 1);
                r.SetWidth(floor(gradw));
-               dc.GradientFillLinear(r, green, yellow);
+
+               // if sharp, we have sharp transitions.
+               bool bSharp = (mGradient > 1 );
+
+               dc.GradientFillLinear(r, bSharp ? yellow : green, yellow);
    
                // Draw the "critical" segment
                r.SetLeft(r.GetRight() + 1);
                r.SetRight(mBar[i].r.GetRight());
-               dc.GradientFillLinear(r, yellow, red);
+               dc.GradientFillLinear(r, bSharp ? red: yellow, red);
             }
 //#ifdef EXPERIMENTAL_METER_LED_STYLE
             if ((mGradient>1) && !mBar[i].vert)
@@ -687,10 +691,10 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                   if( (i%7)<2 ){
                      AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
                   } else {
-                     // The LEDs have triangular ends.  
+                     // The LEDs have rounded corners.  
                      // This code shapes the ends.
-                     int j = abs( (i%7)-4);
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
+                     int j = wxMax( 1, abs( (i%7)-4));
+                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j-1);
                      AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
                   }
                }
