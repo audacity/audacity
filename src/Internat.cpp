@@ -58,6 +58,7 @@ AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str2)
       return str2;
    wxString str3 = str2;
    str3.Replace( "Audacity", "DarkAudacity" );
+   str3.Replace( "DarkAudacity &Manual", "Audacity &Manual" );
    str3.Replace( " an DarkAudacity", " a DarkAudacity" );
    // DA also renames sync-lock(ed) as time-lock(ed).
    str3.Replace( "Sync-Lock", "Time-Lock" );
