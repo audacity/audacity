@@ -8,11 +8,11 @@ I welcome feedback on DarkAudacity, suggestions for new or improved features,
 bug reports and patches at:
   james@audacityteam.org .
 
-Audacity is copyright (c) 1999-2017 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2019 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
-The additions and changes to Audacity for DarkAudacity are (c) 2016 by
+The additions and changes to Audacity for DarkAudacity are (c) 2019 by
 James Crook.
 
 The documentation for Audacity is licensed under the Creative Commons
@@ -22,7 +22,7 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-DarkAudacity Version 2.2.0x 
+DarkAudacity Version 2.3.2x 
 
 The x,y, and z suffixes indicate experimental releases.  DarkAudacity releases 
 are cutting edge releases.  Whilst I am careful about the changes I make, if 
@@ -64,10 +64,10 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. DarkAudacity 2.2.0x, changes since earlier versions.
+2. DarkAudacity 2.3.2x, changes since earlier versions.
 
- Many of the changes pioneered in Dark Audacity 2.1.3 have now ben integrated 
- into mainstream Audacity 2.2.0.  Audacity has updated its standard (light) 
+ Many of the changes pioneered in Dark Audacity 2.1.3x have now ben integrated 
+ into mainstream Audacity 2.3.2.  Audacity has updated its standard (light) 
  theme to use much of the new design.  Audacity now offers our dark theme as 
  a new option.  Audacity has reorganised its menus to be more compact.
 
@@ -76,15 +76,17 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
  new features.
 
  Dark Audacity is working well as a way to blaze new trails.  These are
- some key differences between DarkAudacity 2.2.0x and Audacity 2.2.0.
+ some key differences between DarkAudacity 2.3.2x and Audacity 2.3.2.
 
 
  * Interface:  
    * Dark is the default theme.
    * Mute and Solo buttons are stacked rather than side-by-side.
    * Larger cursor position indicator in Selection Toolbar.
+   * Combined Device, Meter and Mixer toolbars into one simpler toolbar.
+   * Option of LED meters (it's the new default).
    * Different Logos.
-   * Clutter on left of track panel removed rtaher tha moved to the bottom.
+   * Clutter on left of track panel removed rather than moved to the bottom.
    
  * Other Changes:   
    * Installer ships without manual; Translations not installed; accessibility 
@@ -93,28 +95,28 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
    
 Bug fixes:
- * 82 bugs we knew about in 2.1.2 addressed, 66 closed, 16 had some residual 
+ * 82 bugs we knew about in 2.1.2x addressed, 66 closed, 16 had some residual 
    problems after the fixes.  These issues included a dramatic slowdown when 
    using Lyrics Window with lots of lyrics (fully fixed), and labels 
    being written at the wrong position in some circumstances (fully fixed). I'm
    not listing all these issues, but this gives an idea of the kind of issue.
  * At least as much work has gone into other issues which we did not know about 
-   when we released 2.1.2.  These were for example caused by work on new 
+   when we released 2.1.2x.  These were for example caused by work on new 
    features, and usually were in those features, or came to light as a result 
    of code review (mostly code review by Paul).
 
  
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.2.0x:
+3. Known Issues in 2.3.2x:
 
 Please see the facebook page for DarkAudacity for discussion of issues.
 
-Many issues that affected Audacity 2.2.0 will affect DarkAudacity 2.2.0x too, 
+Many issues that affect Audacity 2.3.2 will affect DarkAudacity 2.3.2x too, 
 since DarkAudacity and Audacity have a lot of code in common.  Many Audacity 
-2.2.0 issues are listed here:
+2.3.2 issues are listed here:
 
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.2.0#known
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.3.2
 
 
 
