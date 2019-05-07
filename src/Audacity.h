@@ -57,7 +57,7 @@
    #define IS_RELEASE
 #endif
 
-
+#define EXPERIMENTAL_DA
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
@@ -70,8 +70,11 @@
 #elif defined(IS_ALPHA)
    #define AUDACITY_SUFFIX wxT("-alpha-") __TDATE__
 #else
+#ifndef EXPERIMENTAL_DA
    #define AUDACITY_SUFFIX    wxT("") // for a stable release
-   //#define AUDACITY_SUFFIX wxT("x  ") __TDATE__
+#else
+   #define AUDACITY_SUFFIX wxT("x  ") __TDATE__
+#endif
 #endif
 
 #define AUDACITY_MAKESTR( x ) #x
