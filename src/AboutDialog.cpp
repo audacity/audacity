@@ -459,7 +459,9 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr = wxT("<h2><center>");
    informationStr += _("Build Information");
    informationStr += wxT("</center></h2>\n");
+#ifndef EXPERIMENTAL_DA
    informationStr += VerCheckHtml();
+#endif
    // top level heading
    informationStr += wxT("<h3>");
    informationStr += _("File Format Support");
