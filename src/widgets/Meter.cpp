@@ -492,9 +492,13 @@ void MeterPanel::UpdatePrefs()
 {
    mDBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
 
+#ifdef EXPERIMENTAL_DA
+   mMeterRefreshRate = 30;
+#else
    mMeterRefreshRate =
       std::max(MIN_REFRESH_RATE, std::min(MAX_REFRESH_RATE,
          gPrefs->Read(Key(wxT("RefreshRate")), 30)));
+#endif
 
    wxString temp = gPrefs->Read(Key(wxT("Bars")), 
 #ifdef EXPERIMENTAL_DA
@@ -2133,7 +2137,9 @@ void MeterPanel::OnMeterPrefsUpdated(wxCommandEvent & evt)
 
 void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 {
+#ifndef EXPERIMENTAL_DA
    wxTextCtrl *rate;
+#endif
    wxRadioButton *gradient;
    wxRadioButton *rms;
    wxRadioButton *led;
@@ -2161,6 +2167,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
    S.StartVerticalLay();
    {
+#ifndef EXPERIMENTAL_DA
       S.StartStatic(_("Refresh Rate"), 0);
       {
          S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
@@ -2178,6 +2185,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
          S.EndHorizontalLay();
       }
       S.EndStatic();
+#endif
 
       S.StartHorizontalLay();
       {
@@ -2285,7 +2293,9 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
       gPrefs->Write(Key(wxT("Style")), style[s]);
       gPrefs->Write(Key(wxT("Bars")), style2[t]);
       gPrefs->Write(Key(wxT("Type")), db->GetValue() ? wxT("dB") : wxT("Linear"));
+#ifndef EXPERIMENTAL_DA
       gPrefs->Write(Key(wxT("RefreshRate")), rate->GetValue());
+#endif
 
       gPrefs->Flush();
 
