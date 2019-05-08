@@ -780,7 +780,12 @@ wxString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
 
    // Use default formatting
 wxPrintf(wxT("%s\n"), dt.Format());
-   return dt.FormatDate() + wxT(" ") + dt.FormatTime();
+   if (wxDateTime::GetCountry() != wxDateTime::USA){
+      return dt.FormatDate() + wxT(" ") + dt.FormatTime();
+
+   } else {
+      return dt.Format(wxS("%m/%d/%Y")) + wxT(" ") + dt.FormatTime();
+   }
 }
 
 TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID,
