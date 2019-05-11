@@ -59,6 +59,7 @@ greater use in future.
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../WaveTrack.h"
+#include "../commands/Command.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
@@ -75,8 +76,6 @@ greater use in future.
 #if defined(__WXMAC__)
 #include <Cocoa/Cocoa.h>
 #endif
-
-#include "../commands/ScreenshotCommand.h"
 
 #include <unordered_map>
 
@@ -108,6 +107,25 @@ const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
 const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
 
 using t2bHash = std::unordered_map< void*, bool >;
+
+namespace {
+
+Effect::VetoDialogHook &GetVetoDialogHook()
+{
+   static Effect::VetoDialogHook sHook = nullptr;
+   return sHook;
+}
+
+}
+
+auto Effect::SetVetoDialogHook( VetoDialogHook hook )
+   -> VetoDialogHook
+{
+   auto &theHook = GetVetoDialogHook();
+   auto result = theHook;
+   theHook = hook;
+   return result;
+}
 
 Effect::Effect()
 {
@@ -556,7 +574,8 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   if( ScreenshotCommand::MayCapture( mUIDialog ) )
+   auto hook = GetVetoDialogHook();
+   if( hook && hook( mUIDialog ) )
       return false;
 
    if( SupportsRealtime() && !forceModal )

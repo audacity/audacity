@@ -20,6 +20,8 @@ small calculations of rectangles.
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
 
+#include <mutex>
+
 #include "../Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
@@ -31,6 +33,7 @@ small calculations of rectangles.
 
 #include "../AdornedRulerPanel.h"
 #include "../TrackPanel.h"
+#include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
 #include "../Prefs.h"
 #include "../Shuttle.h"
@@ -87,7 +90,19 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 };
 
 
-bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
+ScreenshotCommand::ScreenshotCommand()
+{
+   mbBringToTop=true;
+   mIgnore=NULL;
+   
+   static std::once_flag flag;
+   std::call_once( flag, []{
+      AudacityCommand::SetVetoDialogHook( MayCapture );
+      Effect::SetVetoDialogHook( MayCapture );
+   });
+}
+
+bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
    S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
    S.DefineEnum(                           mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
