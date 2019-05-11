@@ -647,7 +647,6 @@ private:
  public:
    ToolManager *GetToolManager() { return mToolManager.get(); }
    bool mShowSplashScreen;
-   wxString mHelpPref;
    wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.

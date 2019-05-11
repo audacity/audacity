@@ -1473,12 +1473,6 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
-// DA: Default for DA is manual from internet.
-#ifdef EXPERIMENTAL_DA
-   gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("FromInternet") );
-#else
-   gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("Local") );
-#endif
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
    gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
    // Update the old default to the NEW default.
