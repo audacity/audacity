@@ -15,10 +15,10 @@ Paul Licameli
 #include <algorithm>
 
 #include "AudioIO.h"
-#include "Project.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "prefs/TracksBehaviorsPrefs.h"
+#include "xml/XMLWriter.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
