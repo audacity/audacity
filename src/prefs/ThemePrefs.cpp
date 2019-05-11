@@ -170,7 +170,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 void ThemePrefs::OnLoadThemeComponents(wxCommandEvent & WXUNUSED(event))
 {
    theTheme.LoadComponents();
-   theTheme.ApplyUpdatedImages();
+   ApplyUpdatedImages();
 }
 
 /// Save Theme to multiple png files.
@@ -183,7 +183,7 @@ void ThemePrefs::OnSaveThemeComponents(wxCommandEvent & WXUNUSED(event))
 void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 {
    theTheme.ReadImageCache();
-   theTheme.ApplyUpdatedImages();
+   ApplyUpdatedImages();
 }
 
 /// Save Theme to single png file.
@@ -197,7 +197,7 @@ void ThemePrefs::OnSaveThemeCache(wxCommandEvent & WXUNUSED(event))
 void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 {
    theTheme.ReadImageCache( theTheme.GetFallbackThemeType() );
-   theTheme.ApplyUpdatedImages();
+   ApplyUpdatedImages();
 }
 
 /// Save Theme as C source code.
@@ -205,6 +205,26 @@ void ThemePrefs::OnSaveThemeAsCode(wxCommandEvent & WXUNUSED(event))
 {
    theTheme.SaveThemeAsCode();
    theTheme.WriteImageDefs();// bonus - give them the Defs too.
+}
+
+#include "../AdornedRulerPanel.h"
+#include "../toolbars/ToolManager.h"
+
+void ThemePrefs::ApplyUpdatedImages()
+{
+   AColor::ReInit();
+
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+      AudacityProject *p = gAudacityProjects[i].get();
+      p->ApplyUpdatedTheme();
+      for( int ii = 0; ii < ToolBarCount; ++ii )
+      {
+         ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
+         if( pToolBar )
+            pToolBar->ReCreateButtons();
+      }
+      p->GetRulerPanel()->ReCreateButtons();
+   }
 }
 
 /// Update the preferences stored on disk.

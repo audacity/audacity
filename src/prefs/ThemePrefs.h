@@ -33,6 +33,8 @@ class ThemePrefs final : public PrefsPanel
    bool Commit() override;
    wxString HelpPageName() override;
 
+   static void ApplyUpdatedImages();
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S) override;

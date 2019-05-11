@@ -815,7 +815,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    // Reads preference /GUI/Theme
    theTheme.LoadPreferredTheme();
-   theTheme.ApplyUpdatedImages();
+   ThemePrefs::ApplyUpdatedImages();
 
    SavePreferredPage();
 
