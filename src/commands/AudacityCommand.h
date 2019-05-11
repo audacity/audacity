@@ -69,8 +69,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    virtual bool IsBatchProcessing(){ return mIsBatch;}
    virtual void SetBatchProcessing(bool start){ mIsBatch = start;};
    
-   virtual bool Apply(const CommandContext & WXUNUSED(context) ) {return false;}; 
-   virtual bool Apply(); // redirects to the command context version.
+   virtual bool Apply(const CommandContext & WXUNUSED(context) ) {return false;};
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false);
    virtual void SetHostUI(EffectUIHostInterface * WXUNUSED(host)){;};

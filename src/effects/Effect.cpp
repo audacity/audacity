@@ -3322,7 +3322,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    if( mEffect )
       mEffect->Apply();
    if( mCommand )
-      mCommand->Apply();
+      // PRL:  I don't like the global and would rather pass *mProject!
+      // But I am preserving old behavior
+      mCommand->Apply( CommandContext{ *GetActiveProject() } );
 }
 
 void EffectUIHost::DoCancel()

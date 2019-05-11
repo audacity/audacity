@@ -37,7 +37,6 @@ ShuttleGui.
 
 #include "audacity/ConfigInterface.h"
 
-#include "../Project.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ProgressDialog.h"
@@ -86,12 +85,6 @@ PluginPath AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PRE
 VendorSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
 wxString AudacityCommand::GetVersion(){     return AUDACITY_VERSION_STRING;}
 
-
-bool AudacityCommand::Apply() { 
-   AudacityProject * pProj = GetActiveProject();
-   const CommandContext context( *pProj );
-   return Apply( context );
-};
 
 bool AudacityCommand::Init(){
    if( !mNeedsInit )

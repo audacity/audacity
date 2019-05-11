@@ -46,10 +46,6 @@ bool CompareAudioCommand::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool CompareAudioCommand::Apply(){
-   return true;
-}
-
 void CompareAudioCommand::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
