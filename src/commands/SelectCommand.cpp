@@ -85,7 +85,7 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 bool SelectTimeCommand::Apply(const CommandContext & context){
    // Many commands need focus on track panel.
    // No harm in setting it with a scripted select.
-   context.GetProject()->GetTrackPanel()->SetFocus();
+   context.project.GetTrackPanel()->SetFocus();
    if( !bHasT0 && !bHasT1 )
       return true;
 
@@ -97,7 +97,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    if( !bHasRelativeSpec )
       mRelativeTo = 0;
 
-   AudacityProject * p = context.GetProject();
+   AudacityProject * p = &context.project;
    double end = p->GetTracks()->GetEndTime();
    double t0;
    double t1;
@@ -164,7 +164,7 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
    if( !bHasBottom )
       mBottom = 0.0;
 
-   context.GetProject()->SSBL_ModifySpectralSelection(
+   context.project.SSBL_ModifySpectralSelection(
       mBottom, mTop, false);// false for not done.
    return true;
 }
@@ -214,7 +214,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    // Used to invalidate cached selection and tracks.
    Effect::IncEffectCounter();
    int index = 0;
-   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackList *tracks = context.project.GetTracks();
 
    // Defaults if no value...
    if( !bHasNumTracks ) 

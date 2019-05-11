@@ -65,7 +65,7 @@ public:
    ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTargets> &target);
    bool Apply() override;
    bool Apply(const CommandContext &context) override;// Error to use this.
-   std::unique_ptr<CommandContext> mCtx;
+   std::unique_ptr<const CommandContext> mCtx;
 
 };
 

@@ -44,17 +44,17 @@ void OpenProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool OpenProjectCommand::Apply(const CommandContext & context){
 
-   auto oldFileName = context.GetProject()->GetFileName();
+   auto oldFileName = context.project.GetFileName();
    if(mFileName.empty())
    {
-      auto project = context.GetProject();
+      auto project = &context.project;
       AudacityProject::OpenFiles(project);
    }
    else
    {
-      context.GetProject()->OpenFile(mFileName, mbAddToHistory);
+      context.project.OpenFile(mFileName, mbAddToHistory);
    }
-   const auto &newFileName = context.GetProject()->GetFileName();
+   const auto &newFileName = context.project.GetFileName();
 
    // Because Open does not return a success or failure, we have to guess
    // at this point, based on whether the project file name has
@@ -85,7 +85,7 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
 bool SaveProjectCommand::Apply(const CommandContext &context)
 {
    if(mFileName.empty())
-      return context.GetProject()->SaveAs(mbCompress);
+      return context.project.SaveAs(mbCompress);
    else
-      return context.GetProject()->SaveAs(mFileName,mbCompress,mbAddToHistory);
+      return context.project.SaveAs(mFileName,mbCompress,mbAddToHistory);
 }

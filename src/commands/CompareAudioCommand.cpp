@@ -107,7 +107,7 @@ inline int min(int a, int b)
 
 bool CompareAudioCommand::Apply(const CommandContext & context)
 {
-   if (!GetSelection(context, *context.GetProject()))
+   if (!GetSelection(context, context.project))
    {
       return false;
    }

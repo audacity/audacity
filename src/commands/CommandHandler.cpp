@@ -59,5 +59,5 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    wxUnusedVar(result);
 
    // Redraw the project
-   mCurrentContext->GetProject()->RedrawProject();
+   mCurrentContext->project.RedrawProject();
 }

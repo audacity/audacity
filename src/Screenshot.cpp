@@ -95,7 +95,7 @@ class ScreenFrame final : public wxFrame
    wxStatusBar *mStatus;
 
    std::unique_ptr<ScreenshotCommand> mCommand;
-   CommandContext mContext;
+   const CommandContext mContext;
 
    DECLARE_EVENT_TABLE()
 };
@@ -469,7 +469,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
       CentreOnParent();
    }
 
-   SetIcon(mContext.GetProject()->GetIcon());
+   SetIcon(mContext.project.GetIcon());
 }
 
 bool ScreenFrame::ProcessEvent(wxEvent & e)
@@ -564,8 +564,8 @@ void ScreenFrame::SizeMainWindow(int w, int h)
 {
    int top = 20;
 
-   mContext.GetProject()->Maximize(false);
-   mContext.GetProject()->SetSize(16, 16 + top, w, h);
+   mContext.project.Maximize(false);
+   mContext.project.SetSize(16, 16 + top, w, h);
    //Bug383 - Toolbar Resets not wanted.
    //mContext.GetProject()->GetToolManager()->Reset();
 }
@@ -669,9 +669,9 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 void ScreenFrame::TimeZoom(double seconds)
 {
    int width, height;
-   mContext.GetProject()->GetClientSize(&width, &height);
-   mContext.GetProject()->mViewInfo.SetZoom((0.75 * width) / seconds);
-   mContext.GetProject()->RedrawProject();
+   mContext.project.GetClientSize(&width, &height);
+   mContext.project.mViewInfo.SetZoom((0.75 * width) / seconds);
+   mContext.project.RedrawProject();
 }
 
 void ScreenFrame::OnOneSec(wxCommandEvent & WXUNUSED(event))
@@ -708,7 +708,7 @@ void ScreenFrame::SizeTracks(int h)
    // If there should be more-than-stereo tracks, this makes
    // each channel as high as for a stereo channel
 
-   auto tracks = mContext.GetProject()->GetTracks();
+   auto tracks = mContext.project.GetTracks();
    for (auto t : tracks->Leaders<WaveTrack>()) {
       auto channels = TrackList::Channels(t);
       auto nChannels = channels.size();
@@ -716,15 +716,15 @@ void ScreenFrame::SizeTracks(int h)
       for (auto channel : channels)
          channel->SetHeight(height);
    }
-   mContext.GetProject()->RedrawProject();
+   mContext.project.RedrawProject();
 }
 
 void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : mContext.GetProject()->GetTracks()->Any<WaveTrack>())
+   for (auto t : mContext.project.GetTracks()->Any<WaveTrack>())
       t->SetHeight(t->GetMinimizedHeight());
 
-   mContext.GetProject()->RedrawProject();
+   mContext.project.RedrawProject();
 }
 
 void ScreenFrame::OnMedTracks(wxCommandEvent & WXUNUSED(event))

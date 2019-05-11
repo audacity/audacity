@@ -56,6 +56,5 @@ public:
    int index;
    CommandParameter parameter;
    AudacityApp *GetApp() const;
-   AudacityProject *GetProject() const;
 };
 #endif
