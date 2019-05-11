@@ -24,6 +24,7 @@
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
 #include "../commands/CommandContext.h"
+#include "../commands/Command.h"
 
 CommandHandler::CommandHandler()
  : mCurrentContext(std::make_unique<CommandContext>

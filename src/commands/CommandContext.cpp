@@ -30,9 +30,7 @@ messaging from a command back to its invoker.
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
-#include "CommandBuilder.h"
 #include "CommandTargets.h"
-#include "CommandDirectory.h"
 
 CommandContext::CommandContext(
       AudacityProject &p
