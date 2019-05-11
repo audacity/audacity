@@ -9,6 +9,7 @@
 #include "../CrashReport.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
+#include "../HelpText.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
