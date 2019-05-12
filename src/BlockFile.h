@@ -18,6 +18,8 @@
 
 #include "ondemand/ODTaskThread.h"
 
+#include <functional>
+
 class XMLWriter;
 
 class SummaryInfo {
@@ -48,6 +50,14 @@ inline std::shared_ptr< Result > make_blockfile (Args && ... args)
 
 class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  public:
+
+   // Type of function to be called when opening of an alias block file for read
+   // discovers that the other audio file it depends on is absent
+   using MissingAliasFileFoundHook =
+      std::function< void(const AliasBlockFile*) >;
+   // Install a hook, and return the previous hook
+   static MissingAliasFileFoundHook
+      SetMissingAliasFileFound( MissingAliasFileFoundHook hook );
 
    // Constructor / Destructor
 

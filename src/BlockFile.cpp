@@ -53,7 +53,6 @@ out.
 #include "sndfile.h"
 #include "FileException.h"
 #include "FileFormats.h"
-#include "MissingAliasFileDialog.h"
 
 // msmeyer: Define this to add debug output via wxPrintf()
 //#define DEBUG_BLOCKFILE
@@ -479,6 +478,23 @@ bool BlockFile::Read64K(float *buffer,
    return result;
 }
 
+namespace {
+   BlockFile::MissingAliasFileFoundHook &GetMissingAliasFileFound()
+   {
+      static BlockFile::MissingAliasFileFoundHook theHook;
+      return theHook;
+   }
+}
+
+auto BlockFile::SetMissingAliasFileFound( MissingAliasFileFoundHook hook )
+   -> MissingAliasFileFoundHook
+{
+   auto &theHook = GetMissingAliasFileFound();
+   auto result = theHook;
+   theHook = hook;
+   return result;
+}
+
 size_t BlockFile::CommonReadData(
    bool mayThrow,
    const wxFileName &fileName, bool &mSilentLog,
@@ -537,8 +553,9 @@ size_t BlockFile::CommonReadData(
 
          if (pAliasFile) {
             // Set a marker to display an error message for the silence
-            if (!MissingAliasFilesDialog::ShouldShow())
-               MissingAliasFilesDialog::Mark(pAliasFile);
+            auto hook = GetMissingAliasFileFound();
+            if (hook)
+               hook( pAliasFile );
          }
       }
    }

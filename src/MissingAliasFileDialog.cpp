@@ -131,3 +131,12 @@ namespace MissingAliasFilesDialog {
    }
    
 }
+
+// Arrange callback from low levels of block file I/O to detect missing files
+static struct InstallHook{ InstallHook() {
+   auto hook = [](const AliasBlockFile *pAliasFile){
+      if (!MissingAliasFilesDialog::ShouldShow())
+         MissingAliasFilesDialog::Mark(pAliasFile);
+   };
+   BlockFile::SetMissingAliasFileFound( hook );
+} } installHook;
