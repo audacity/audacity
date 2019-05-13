@@ -33,6 +33,7 @@
 #include <wx/listbook.h>
 
 #include <wx/treebook.h>
+#include <wx/treectrl.h>
 
 #include "../AudioIO.h"
 #include "../Project.h"
