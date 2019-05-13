@@ -34,7 +34,7 @@ dnl Require autoconf >= 2.59
 AC_PREREQ([2.59])
 
 dnl Init autoconf
-AC_INIT([audacity], [2.3.0])
+AC_INIT([audacity], [2.3.3])
 dnl Check for existence of Audacity.h
 AC_CONFIG_SRCDIR([src/Audacity.h])
 AC_CONFIG_AUX_DIR([autotools])
