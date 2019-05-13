@@ -165,6 +165,7 @@ scroll information.  It also has some status flags.
 #include "commands/CommandTargets.h"
 #include "commands/CommandType.h"
 
+#include "prefs/ThemePrefs.h"
 #include "prefs/QualityPrefs.h"
 #include "prefs/TracksPrefs.h"
 
@@ -1425,6 +1426,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                      &AudacityProject::OnCapture,
                      this);
 
+   wxTheApp->Bind(EVT_THEME_CHANGE, &AudacityProject::OnThemeChange, this);
+
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
 #endif
@@ -1564,6 +1567,19 @@ void AudacityProject::OnCapture(wxCommandEvent& evt)
       mIsCapturing = true;
    else
       mIsCapturing = false;
+}
+
+void AudacityProject::OnThemeChange(wxCommandEvent& evt)
+{
+   evt.Skip();
+   ApplyUpdatedTheme();
+   for( int ii = 0; ii < ToolBarCount; ++ii )
+   {
+      ToolBar *pToolBar = GetToolManager()->GetToolBar(ii);
+      if( pToolBar )
+         pToolBar->ReCreateButtons();
+   }
+   GetRulerPanel()->ReCreateButtons();
 }
 
 

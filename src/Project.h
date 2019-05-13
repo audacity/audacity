@@ -541,6 +541,7 @@ public:
  private:
 
    void OnCapture(wxCommandEvent & evt);
+   void OnThemeChange(wxCommandEvent & evt);
    void InitialState();
 
  public:

@@ -31,12 +31,14 @@ Provides:
 #include "../Audacity.h"
 #include "ThemePrefs.h"
 
+#include <wx/app.h>
 #include <wx/wxprec.h>
 #include "../Prefs.h"
 #include "../Theme.h"
-#include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../AColor.h"
+
+wxDEFINE_EVENT(EVT_THEME_CHANGE, wxCommandEvent);
 
 enum eThemePrefsIds {
    idLoadThemeCache=7000,
@@ -207,24 +209,12 @@ void ThemePrefs::OnSaveThemeAsCode(wxCommandEvent & WXUNUSED(event))
    theTheme.WriteImageDefs();// bonus - give them the Defs too.
 }
 
-#include "../AdornedRulerPanel.h"
-#include "../toolbars/ToolManager.h"
-
 void ThemePrefs::ApplyUpdatedImages()
 {
    AColor::ReInit();
 
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      AudacityProject *p = gAudacityProjects[i].get();
-      p->ApplyUpdatedTheme();
-      for( int ii = 0; ii < ToolBarCount; ++ii )
-      {
-         ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
-         if( pToolBar )
-            pToolBar->ReCreateButtons();
-      }
-      p->GetRulerPanel()->ReCreateButtons();
-   }
+   wxCommandEvent e{ EVT_THEME_CHANGE };
+   wxTheApp->SafelyProcessEvent( e );
 }
 
 /// Update the preferences stored on disk.
