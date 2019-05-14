@@ -1865,7 +1865,7 @@
 		1707407A0988F1BB008541CC /* libsoundtouch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsoundtouch.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		170740960988F2F7008541CC /* libportmixer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportmixer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		170740D40988F820008541CC /* libvorbis.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libvorbis.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		174D9026098C78AF00D5909F /* CommandManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; indentWidth = 3; path = CommandManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		174D9026098C78AF00D5909F /* CommandManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = CommandManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		174D9027098C78AF00D5909F /* CommandManager.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CommandManager.h; sourceTree = "<group>"; tabWidth = 3; };
 		174D902A098C78AF00D5909F /* Keyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Keyboard.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		174D902B098C78AF00D5909F /* Keyboard.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Keyboard.h; sourceTree = "<group>"; tabWidth = 3; };

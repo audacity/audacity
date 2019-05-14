@@ -68,6 +68,7 @@ is time to refresh some aspect of the screen.
 #include "Experimental.h"
 
 #include "AdornedRulerPanel.h"
+#include "KeyboardCapture.h"
 #include "Project.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
@@ -2294,7 +2295,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
    auto cell = mAx->SetFocus( Track::SharedPointer( t ) ).get();
 
    if (cell) {
-      AudacityProject::CaptureKeyboard(this);
+      KeyboardCapture::Capture(this);
       Refresh( false );
    }
 }

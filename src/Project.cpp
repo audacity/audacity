@@ -108,6 +108,7 @@ scroll information.  It also has some status flags.
 #include "InconsistencyException.h"
 #include "MixerBoard.h"
 #include "import/Import.h"
+#include "KeyboardCapture.h"
 #include "LabelTrack.h"
 #include "Legacy.h"
 #include "LyricsWindow.h"
@@ -303,11 +304,6 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 int AudacityProject::mProjectCounter=0;// global counter.
 
 
-////////////////////////////////////////////////////////////
-/// Custom events
-////////////////////////////////////////////////////////////
-DEFINE_EVENT_TYPE(EVT_CAPTURE_KEY);
-
 //
 // This small template class resembles a try-finally block
 //
@@ -407,7 +403,10 @@ AUDACITY_DLL_API AudacityProject *GetActiveProject()
 
 void SetActiveProject(AudacityProject * project)
 {
-   gActiveProject = project;
+   if ( gActiveProject != project ) {
+      gActiveProject = project;
+      KeyboardCapture::Capture( nullptr );
+   }
    wxTheApp->SetTopWindow(project);
 }
 
@@ -5336,50 +5335,6 @@ void AudacityProject::SetSyncLock(bool flag)
       if (GetTrackPanel())
          GetTrackPanel()->Refresh(false);
    }
-}
-
-// Keyboard capture
-
-// static
-bool AudacityProject::HasKeyboardCapture(const wxWindow *handler)
-{
-   return GetKeyboardCaptureHandler() == handler;
-}
-
-// static
-wxWindow *AudacityProject::GetKeyboardCaptureHandler()
-{
-   AudacityProject *project = GetActiveProject();
-   if (project)
-   {
-      return project->mKeyboardCaptureHandler;
-   }
-
-   return NULL;
-}
-
-// static
-void AudacityProject::CaptureKeyboard(wxWindow *handler)
-{
-   AudacityProject *project = GetActiveProject();
-   if (project)
-   {
-//      wxASSERT(project->mKeyboardCaptureHandler == NULL);
-      project->mKeyboardCaptureHandler = handler;
-   }
-}
-
-// static
-void AudacityProject::ReleaseKeyboard(wxWindow * /* handler */)
-{
-   AudacityProject *project = GetActiveProject();
-   if (project)
-   {
-//      wxASSERT(project->mKeyboardCaptureHandler == handler);
-      project->mKeyboardCaptureHandler = NULL;
-   }
-
-   return;
 }
 
 bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex)
