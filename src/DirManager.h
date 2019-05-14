@@ -68,6 +68,16 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
                                  int flags, const wxChar* message = nullptr);
 
+   // Type of a function that builds a block file, using attributes from XML
+   using BlockFileDeserializer =
+      std::function< BlockFilePtr( DirManager&, const wxChar ** ) >;
+   // Typically a statically declared object,
+   // registers a function for an XML tag
+   struct RegisteredBlockFileDeserializer {
+      RegisteredBlockFileDeserializer(
+         const wxString &tag, BlockFileDeserializer function );
+   };
+
  private:
    // MM: Construct DirManager
    // Don't call this directly but use Create() instead
@@ -162,7 +172,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    {
       mLoadingTarget = loadingTarget;
    }
+   sampleFormat GetLoadingFormat() const { return mLoadingFormat; }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
+   size_t GetLoadingBlockLength() const { return mLoadingBlockLen; }
    void SetLoadingBlockLength(size_t len) { mLoadingBlockLen = len; }
 
    // Note: following affects only the loading of block files when opening a project

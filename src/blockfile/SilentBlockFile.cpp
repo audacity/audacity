@@ -12,6 +12,7 @@
 #include "SilentBlockFile.h"
 
 #include "../FileFormats.h"
+#include "../DirManager.h"
 #include "../xml/XMLTagHandler.h"
 
 SilentBlockFile::SilentBlockFile(size_t sampleLen):
@@ -91,3 +92,9 @@ auto SilentBlockFile::GetSpaceUsage() const -> DiskByteCount
    return 0;
 }
 
+static DirManager::RegisteredBlockFileDeserializer sRegistration {
+   "silentblockfile",
+   []( DirManager &dm, const wxChar **attrs ){
+      return SilentBlockFile::BuildFromXML( dm, attrs );
+   }
+};

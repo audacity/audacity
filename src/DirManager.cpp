@@ -86,9 +86,6 @@
 #endif
 
 #include "FileNames.h"
-#include "blockfile/LegacyBlockFile.h"
-#include "blockfile/LegacyAliasBlockFile.h"
-#include "blockfile/SilentBlockFile.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "InconsistencyException.h"
@@ -97,8 +94,6 @@
 #include "widgets/Warning.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
-
-#include "ondemand/ODManager.h"
 
 #if defined(__WXMAC__)
 #include <mach/mach.h>
@@ -1340,6 +1335,24 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
    return b2;
 }
 
+namespace {
+
+using Deserializers =
+   std::unordered_map< wxString, DirManager::BlockFileDeserializer >;
+Deserializers &GetDeserializers()
+{
+   static Deserializers sDeserializers;
+   return sDeserializers;
+}
+
+}
+
+DirManager::RegisteredBlockFileDeserializer::RegisteredBlockFileDeserializer(
+   const wxString &tag, BlockFileDeserializer function )
+{
+   GetDeserializers()[tag] = function;
+}
+
 bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if( !mLoadingTarget )
@@ -1350,59 +1363,20 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    BlockFilePtr &target = mLoadingTarget();
    mLoadingTarget = nullptr;
    
-   if (!wxStricmp(tag, wxT("silentblockfile"))) {
-      // Silent blocks don't actually have a file associated, so
-      // we don't need to worry about the hash table at all
-      target = SilentBlockFile::BuildFromXML(*this, attrs);
-      return true;
-   }
-   else if ( !wxStricmp(tag, wxT("simpleblockfile")) )
-      pBlockFile = SimpleBlockFile::BuildFromXML(*this, attrs);
-   else if( !wxStricmp(tag, wxT("pcmaliasblockfile")) )
-      pBlockFile = PCMAliasBlockFile::BuildFromXML(*this, attrs);
-   else if( !wxStricmp(tag, wxT("odpcmaliasblockfile")) )
-   {
-      pBlockFile = ODPCMAliasBlockFile::BuildFromXML(*this, attrs);
-      //in the case of loading an OD file, we need to schedule the ODManager to begin OD computing of summary
-      //However, because we don't have access to the track or even the Sequence from this call, we mark a flag
-      //in the ODMan and check it later.
-      ODManager::MarkLoadedODFlag();
-   }
-   else if( !wxStricmp(tag, wxT("oddecodeblockfile")) )
-   {
-      pBlockFile = ODDecodeBlockFile::BuildFromXML(*this, attrs);
-      ODManager::MarkLoadedODFlag();
-   }
-   else if( !wxStricmp(tag, wxT("blockfile")) ||
-            !wxStricmp(tag, wxT("legacyblockfile")) ) {
-      // Support Audacity version 1.1.1 project files
-
-      int i=0;
-      bool alias = false;
-
-      while(attrs[i]) {
-         if (!wxStricmp(attrs[i], wxT("alias"))) {
-            if (wxAtoi(attrs[i+1])==1)
-               alias = true;
-         }
-         i++;
-         if (attrs[i])
-            i++;
-      }
-
-      if (alias)
-         pBlockFile = LegacyAliasBlockFile::BuildFromXML(projFull, attrs);
-      else
-         pBlockFile = LegacyBlockFile::BuildFromXML(projFull, attrs,
-                                                         mLoadingBlockLen,
-                                                         mLoadingFormat);
-   }
-   else
+   auto &table = GetDeserializers();
+   auto iter = table.find( tag );
+   if ( iter == table.end() )
       return false;
+   pBlockFile = iter->second( *this, attrs );
 
    if (!pBlockFile)
       // BuildFromXML failed, or we didn't find a valid blockfile tag.
       return false;
+
+   if (!pBlockFile->GetFileName().name.IsOk())
+     // Silent blocks don't actually have a file associated, so
+     // we don't need to worry about the hash table at all
+     return true;
 
    // Check the length here so we don't have to do it in each BuildFromXML method.
    if ((mMaxSamples != ~size_t(0)) && // is initialized

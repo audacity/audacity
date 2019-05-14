@@ -610,3 +610,10 @@ bool SimpleBlockFile::GetCache()
    return false;
 #endif
 }
+
+static DirManager::RegisteredBlockFileDeserializer sRegistration {
+   "simpleblockfile",
+   []( DirManager &dm, const wxChar **attrs ){
+      return SimpleBlockFile::BuildFromXML( dm, attrs );
+   }
+};
