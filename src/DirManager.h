@@ -67,8 +67,14 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
                                  int flags, const wxChar* message = nullptr);
 
+ private:
    // MM: Construct DirManager
+   // Don't call this directly but use Create() instead
    DirManager();
+
+ public:
+
+   static std::shared_ptr< DirManager > Create();
 
    virtual ~DirManager();
 

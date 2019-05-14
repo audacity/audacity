@@ -85,7 +85,6 @@
 #include <sys/stat.h>
 #endif
 
-#include "Clipboard.h"
 #include "FileNames.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
@@ -356,6 +355,19 @@ wxString DirManager::globaltemp;
 int DirManager::numDirManagers = 0;
 bool DirManager::dontDeleteTempFiles = false;
 
+namespace {
+
+// Global tracking of all outstanding DirManagers
+std::vector< std::weak_ptr< DirManager > > sDirManagers;
+
+}
+
+std::shared_ptr<DirManager> DirManager::Create()
+{
+   auto result = std::shared_ptr< DirManager >( safenew DirManager );
+   sDirManagers.push_back( result );
+   return result;
+}
 
 DirManager::DirManager()
 {
@@ -410,6 +422,13 @@ DirManager::DirManager()
 
 DirManager::~DirManager()
 {
+   auto start = sDirManagers.begin(), finish = sDirManagers.end(),
+      iter = std::remove_if( start, finish,
+         [=]( const std::weak_ptr<DirManager> &ptr ){
+            return ptr.expired() || ptr.lock().get() == this;
+         } );
+   sDirManagers.erase( iter, finish );
+
    numDirManagers--;
    if (numDirManagers == 0) {
       CleanTempDir();
@@ -1744,7 +1763,12 @@ void DirManager::FindOrphanBlockFiles(
       const FilePaths &filePathArray,       // input: all files in project directory
       FilePaths &orphanFilePathArray)       // output: orphan files
 {
-   DirManager *clipboardDM = NULL;
+   std::vector< std::shared_ptr<DirManager> > otherDirManagers;
+   for ( auto &wPtr : sDirManagers ) {
+      auto sPtr = wPtr.lock();
+      if ( sPtr && sPtr.get() != this )
+         otherDirManagers.push_back( sPtr );
+   }
 
    for (size_t i = 0; i < filePathArray.size(); i++)
    {
@@ -1757,17 +1781,15 @@ void DirManager::FindOrphanBlockFiles(
             (ext.IsSameAs(wxT("au"), false) ||
                ext.IsSameAs(wxT("auf"), false)))
       {
-         if (!clipboardDM) {
-            auto &clipTracks = Clipboard::Get().GetTracks();
-
-            auto track = *clipTracks.Any().first;
-            if (track)
-               clipboardDM = track->GetDirManager().get();
-         }
-
          // Ignore it if it exists in the clipboard (from a previously closed project)
-         if (!(clipboardDM && clipboardDM->ContainsBlockFile(basename)))
-            orphanFilePathArray.push_back(fullname.GetFullPath());
+         if ( std::any_of( otherDirManagers.begin(), otherDirManagers.end(),
+            [&]( const std::shared_ptr< DirManager > &ptr ){
+               return ptr->ContainsBlockFile( basename );
+            }
+         ) )
+            continue;
+
+         orphanFilePathArray.push_back(fullname.GetFullPath());
       }
    }
    for ( const auto &orphan : orphanFilePathArray )
