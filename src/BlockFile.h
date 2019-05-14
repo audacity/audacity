@@ -114,6 +114,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual GetFileNameResult GetFileName() const;
    virtual void SetFileName(wxFileNameWrapper &&name);
 
+   // Managing an external file dependency
+   // Default always returns empty
+   virtual const wxFileNameWrapper &GetExternalFileName() const;
+   // Default does nothing (and gives assertion violation in debug)
+   virtual void SetExternalFileName( wxFileNameWrapper &&newName );
+
    size_t GetLength() const { return mLen; }
    void SetLength(size_t newLen) { mLen = newLen; }
 
@@ -278,9 +284,12 @@ class AliasBlockFile /* not final */ : public BlockFile
    //
    // These methods are for advanced use only!
    //
-   const wxFileName &GetAliasedFileName() const { return mAliasedFileName; }
+   const wxFileNameWrapper &GetAliasedFileName() const { return mAliasedFileName; }
    void ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile);
    bool IsAlias() const override { return true; }
+
+   const wxFileNameWrapper &GetExternalFileName() const override;
+   void SetExternalFileName( wxFileNameWrapper &&newName ) override;
 
  protected:
    // Introduce a NEW virtual.

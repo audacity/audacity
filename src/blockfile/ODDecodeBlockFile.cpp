@@ -502,6 +502,18 @@ void ODDecodeBlockFile::UnlockRead() const
    mReadDataMutex.Unlock();
 }
 
+const wxFileNameWrapper &ODDecodeBlockFile::GetExternalFileName() const
+{
+   if ( !IsDataAvailable() )
+      return GetEncodedAudioFilename();
+   return SimpleBlockFile::GetExternalFileName();
+}
+
+void ODDecodeBlockFile::SetExternalFileName( wxFileNameWrapper &&newName )
+{
+   ChangeAudioFile( std::move( newName ) );
+}
+
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().

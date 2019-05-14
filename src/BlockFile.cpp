@@ -133,6 +133,16 @@ void BlockFile::SetFileName(wxFileNameWrapper &&name)
    mFileName=std::move(name);
 }
 
+const wxFileNameWrapper &BlockFile::GetExternalFileName() const
+{
+   static wxFileNameWrapper empty;
+   return empty;
+}
+
+void BlockFile::SetExternalFileName( wxFileNameWrapper && )
+{
+   wxASSERT( false );
+}
 
 /// Marks this BlockFile as "locked."  A locked BlockFile may not
 /// be moved or deleted, only copied.  Locking a BlockFile prevents
@@ -722,6 +732,16 @@ void AliasBlockFile::WriteSummary()
 
 AliasBlockFile::~AliasBlockFile()
 {
+}
+
+const wxFileNameWrapper &AliasBlockFile::GetExternalFileName() const
+{
+   return GetAliasedFileName();
+}
+
+void AliasBlockFile::SetExternalFileName( wxFileNameWrapper &&newName )
+{
+   ChangeAliasedFileName( std::move( newName ) );
 }
 
 /// Read the summary of this alias block from disk.  Since the audio data

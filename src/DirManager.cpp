@@ -1581,25 +1581,11 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    {
       BlockFilePtr b = iter->second.lock();
       if (b) {
-         // don't worry, we don't rely on this cast unless IsAlias is true
-         auto ab = static_cast< AliasBlockFile * > ( &*b );
-
-         // don't worry, we don't rely on this cast unless ISDataAvailable is false
-         // which means that it still needs to access the file.
-         auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-         if (b->IsAlias() && ab->GetAliasedFileName() == fName) {
+         if (fName.IsOk() && b->GetExternalFileName() == fName) {
             needToRename = true;
 
             //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            readLocks.push_back( ab->LockForRead() );
-         }
-         //now for encoded OD blocks  (e.g. flac)
-         else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-            needToRename = true;
-
-            //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            readLocks.push_back( db->LockForRead() );
+            readLocks.push_back( b->LockForRead() );
          }
       }
       ++iter;
@@ -1631,18 +1617,11 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          {
             BlockFilePtr b = iter2->second.lock();
             if (b) {
-               auto ab = static_cast< AliasBlockFile * > ( &*b );
-               auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-               if (b->IsAlias() && ab->GetAliasedFileName() == fName)
-               {
-                  ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
+               if (fName.IsOk() && b->GetExternalFileName() == fName) {
+                  b->SetExternalFileName(wxFileNameWrapper{ renamedFileName });
                   wxPrintf(_("Changed block %s to new alias name\n"),
                            b->GetFileName().name.GetFullName());
 
-               }
-               else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-                  db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
                }
             }
             ++iter2;
