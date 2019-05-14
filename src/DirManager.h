@@ -14,6 +14,7 @@
 #include "audacity/Types.h"
 #include "xml/XMLTagHandler.h"
 
+#include <functional>
 #include <unordered_map>
 
 class wxFileNameWrapper;
@@ -156,10 +157,10 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    bool EnsureSafeFilename(const wxFileName &fName);
 
-   void SetLoadingTarget(BlockArray *pArray, unsigned idx)
+   using LoadingTarget = std::function< BlockFilePtr &() >;
+   void SetLoadingTarget( LoadingTarget loadingTarget )
    {
-      mLoadingTarget = pArray;
-      mLoadingTargetIdx = idx;
+      mLoadingTarget = loadingTarget;
    }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
    void SetLoadingBlockLength(size_t len) { mLoadingBlockLen = len; }
@@ -254,8 +255,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    FilePaths aliasList;
 
-   BlockArray *mLoadingTarget;
-   unsigned mLoadingTargetIdx;
+   LoadingTarget mLoadingTarget;
    sampleFormat mLoadingFormat;
    size_t mLoadingBlockLen;
 

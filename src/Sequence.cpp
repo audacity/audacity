@@ -867,7 +867,9 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       } // while
 
       mBlock.push_back(wb);
-      mDirManager->SetLoadingTarget(&mBlock, mBlock.size() - 1);
+      auto index = mBlock.size() - 1;
+      mDirManager->SetLoadingTarget(
+         [this, index] () -> BlockFilePtr& { return mBlock[index].f; } );
 
       return true;
    }

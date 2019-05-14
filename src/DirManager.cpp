@@ -94,7 +94,6 @@
 #include "InconsistencyException.h"
 #include "Project.h"
 #include "Prefs.h"
-#include "Sequence.h"
 #include "widgets/Warning.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
@@ -397,8 +396,6 @@ DirManager::DirManager()
    projPath = wxT("");
    projName = wxT("");
 
-   mLoadingTarget = NULL;
-   mLoadingTargetIdx = 0;
    mMaxSamples = ~size_t(0);
 
    // toplevel pool hash is fully populated to begin
@@ -1345,12 +1342,13 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
 
 bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   if( mLoadingTarget == NULL )
+   if( !mLoadingTarget )
       return false;
 
    BlockFilePtr pBlockFile {};
 
-   BlockFilePtr &target = mLoadingTarget->at(mLoadingTargetIdx).f;
+   BlockFilePtr &target = mLoadingTarget();
+   mLoadingTarget = nullptr;
    
    if (!wxStricmp(tag, wxT("silentblockfile"))) {
       // Silent blocks don't actually have a file associated, so
