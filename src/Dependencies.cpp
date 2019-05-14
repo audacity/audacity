@@ -124,7 +124,7 @@ void FindDependencies(AudacityProject *project,
          auto aliasBlockFile = static_cast<AliasBlockFile*>( &*f );
          const wxFileName &fileName = aliasBlockFile->GetAliasedFileName();
 
-         // In DirManager::ProjectFSCK(), if the user has chosen to
+         // In ProjectFSCK(), if the user has chosen to
          // "Replace missing audio with silence", the code there puts in an empty wxFileName.
          // Don't count those in dependencies.
          if (!fileName.IsOk())

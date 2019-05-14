@@ -116,6 +116,7 @@ scroll information.  It also has some status flags.
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
+#include "ProjectFSCK.h"
 #include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
@@ -3274,7 +3275,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          // at this point mFileName != fileName, because when opening a
          // recovered file mFileName is faked to point to the original file
          // which has been recovered, not the one in the auto-save folder.
-         GetDirManager()->ProjectFSCK(err, true); // Correct problems in auto-recover mode.
+         ::ProjectFSCK(*GetDirManager(), err, true); // Correct problems in auto-recover mode.
 
          // PushState calls AutoSave(), so no longer need to do so here.
          this->PushState(_("Project was recovered"), _("Recover"));
@@ -3286,7 +3287,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       else
       {
          // This is a regular project, check it and ask user
-         int status = GetDirManager()->ProjectFSCK(err, false);
+         int status = ::ProjectFSCK(*GetDirManager(), err, false);
          if (status & FSCKstatus_CLOSE_REQ)
          {
             // Vaughan, 2010-08-23: Note this did not do a real close.
@@ -3318,7 +3319,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 
             mTrackPanel->Refresh(true);
 
-            // Vaughan, 2010-08-20: This was bogus, as all the actions in DirManager::ProjectFSCK
+            // Vaughan, 2010-08-20: This was bogus, as all the actions in ProjectFSCK
             // that return FSCKstatus_CHANGED cannot be undone.
             //    this->PushState(_("Project checker repaired file"), _("Project Repair"));
 
