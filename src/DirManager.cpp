@@ -85,11 +85,9 @@
 #include <sys/stat.h>
 #endif
 
+#include "BlockFile.h"
 #include "FileNames.h"
-#include "blockfile/ODPCMAliasBlockFile.h"
-#include "blockfile/ODDecodeBlockFile.h"
 #include "InconsistencyException.h"
-#include "Project.h"
 #include "Prefs.h"
 #include "widgets/Warning.h"
 #include "widgets/ErrorDialog.h"
@@ -1182,71 +1180,17 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
    return ret;
 }
 
-BlockFilePtr DirManager::NewSimpleBlockFile(
-                                 samplePtr sampleData, size_t sampleLen,
-                                 sampleFormat format,
-                                 bool allowDeferredWrite)
+BlockFilePtr DirManager::NewBlockFile( const BlockFileFactory &factory )
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
-
-   auto newBlockFile = make_blockfile<SimpleBlockFile>
-      (std::move(filePath), sampleData, sampleLen, format, allowDeferredWrite);
-
+   auto newBlockFile = factory( std::move(filePath) );
    mBlockFileHash[fileName] = newBlockFile;
-
-   return newBlockFile;
-}
-
-BlockFilePtr DirManager::NewAliasBlockFile(
-                                 const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel)
-{
-   wxFileNameWrapper filePath{ MakeBlockFileName() };
-   const wxString fileName = filePath.GetName();
-
-   auto newBlockFile = make_blockfile<PCMAliasBlockFile>
-      (std::move(filePath), wxFileNameWrapper{aliasedFile},
-       aliasStart, aliasLen, aliasChannel);
-
-   mBlockFileHash[fileName]=newBlockFile;
-   aliasList.push_back(aliasedFile);
-
-   return newBlockFile;
-}
-
-BlockFilePtr DirManager::NewODAliasBlockFile(
-                                 const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel)
-{
-   wxFileNameWrapper filePath{ MakeBlockFileName() };
-   const wxString fileName{ filePath.GetName() };
-
-   auto newBlockFile = make_blockfile<ODPCMAliasBlockFile>
-      (std::move(filePath), wxFileNameWrapper{aliasedFile},
-       aliasStart, aliasLen, aliasChannel);
-
-   mBlockFileHash[fileName]=newBlockFile;
-   aliasList.push_back(aliasedFile);
-
-   return newBlockFile;
-}
-
-BlockFilePtr DirManager::NewODDecodeBlockFile(
-                                 const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel, int decodeType)
-{
-   wxFileNameWrapper filePath{ MakeBlockFileName() };
-   const wxString fileName{ filePath.GetName() };
-
-   auto newBlockFile = make_blockfile<ODDecodeBlockFile>
-      (std::move(filePath), wxFileNameWrapper{ aliasedFile },
-       aliasStart, aliasLen, aliasChannel, decodeType);
-
-   mBlockFileHash[fileName]=newBlockFile;
-   aliasList.push_back(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
-                               //I don't immediately see a place where aliased files remove when a file is closed.
-
+   auto &aliasName = newBlockFile->GetExternalFileName();
+   if ( aliasName.IsOk() )
+      //OD TODO: check to see if we need to remove this when done decoding.
+      //I don't immediately see a place where aliased files remove when a file is closed.
+      aliasList.push_back( aliasName.GetFullPath() );
    return newBlockFile;
 }
 

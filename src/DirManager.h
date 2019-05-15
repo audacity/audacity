@@ -124,23 +124,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    wxLongLong GetFreeDiskSpace();
 
-   BlockFilePtr
-      NewSimpleBlockFile(samplePtr sampleData,
-                                 size_t sampleLen,
-                                 sampleFormat format,
-                                 bool allowDeferredWrite = false);
-
-   BlockFilePtr
-      NewAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel);
-
-   BlockFilePtr
-      NewODAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel);
-
-   BlockFilePtr
-      NewODDecodeBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel, int decodeType);
+   using BlockFileFactory = std::function< BlockFilePtr( wxFileNameWrapper ) >;
+   BlockFilePtr NewBlockFile( const BlockFileFactory &factory );
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
    bool ContainsBlockFile(const BlockFile *b) const;

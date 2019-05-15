@@ -457,6 +457,17 @@ namespace {
    {
       return numSamples > wxLL(9223372036854775807);
    }
+
+   BlockFilePtr NewSimpleBlockFile( DirManager &dm,
+                                    samplePtr sampleData, size_t sampleLen,
+                                    sampleFormat format,
+                                    bool allowDeferredWrite = false)
+   {
+      return dm.NewBlockFile( [&]( wxFileNameWrapper filePath ) {
+         return make_blockfile<SimpleBlockFile>(
+            std::move(filePath), sampleData, sampleLen, format, allowDeferredWrite);
+      } );
+   }
 }
 
 void Sequence::Paste(sampleCount s, const Sequence *src)
@@ -549,7 +560,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
            splitPoint, length - splitPoint, true);
 
       auto file =
-         mDirManager->NewSimpleBlockFile(
+         NewSimpleBlockFile( *mDirManager,
             // largerBlockLen is not more than mMaxSamples...
             buffer.ptr(), largerBlockLen.as_size_t(), mSampleFormat);
 
@@ -707,41 +718,6 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    // use STRONG-GUARANTEE
    Paste(s0, &sTrack);
-}
-
-void Sequence::AppendAlias(const FilePath &fullPath,
-                           sampleCount start,
-                           size_t len, int channel, bool useOD)
-// STRONG-GUARANTEE
-{
-   // Quick check to make sure that it doesn't overflow
-   if (Overflows((mNumSamples.as_double()) + ((double)len)))
-      THROW_INCONSISTENCY_EXCEPTION;
-
-   SeqBlock newBlock(
-      useOD?
-         mDirManager->NewODAliasBlockFile(fullPath, start, len, channel):
-         mDirManager->NewAliasBlockFile(fullPath, start, len, channel),
-      mNumSamples
-   );
-   mBlock.push_back(newBlock);
-   mNumSamples += len;
-}
-
-void Sequence::AppendCoded(const FilePath &fName, sampleCount start,
-                            size_t len, int channel, int decodeType)
-// STRONG-GUARANTEE
-{
-   // Quick check to make sure that it doesn't overflow
-   if (Overflows((mNumSamples.as_double()) + ((double)len)))
-      THROW_INCONSISTENCY_EXCEPTION;
-
-   SeqBlock newBlock(
-      mDirManager->NewODDecodeBlockFile(fName, start, len, channel, decodeType),
-      mNumSamples
-   );
-   mBlock.push_back(newBlock);
-   mNumSamples += len;
 }
 
 void Sequence::AppendBlock
@@ -1267,13 +1243,13 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
          else
             ClearSamples(scratch.ptr(), mSampleFormat, bstart, blen);
 
-         block.f = mDirManager->NewSimpleBlockFile(
+         block.f = NewSimpleBlockFile( *mDirManager,
             scratch.ptr(), fileLength, mSampleFormat);
       }
       else {
          // Avoid reading the disk when the replacement is total
          if (useBuffer)
-            block.f = mDirManager->NewSimpleBlockFile(
+            block.f = NewSimpleBlockFile( *mDirManager,
                useBuffer, fileLength, mSampleFormat);
          else
             block.f = make_blockfile<SilentBlockFile>(fileLength);
@@ -1599,7 +1575,7 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
       const auto newLastBlockLen = length + addLen;
 
       SeqBlock newLastBlock(
-         mDirManager->NewSimpleBlockFile(
+         NewSimpleBlockFile( *mDirManager,
             buffer2.ptr(), newLastBlockLen, mSampleFormat,
             blockFileLog != NULL
          ),
@@ -1625,12 +1601,12 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
       const auto addedLen = std::min(idealSamples, len);
       BlockFilePtr pFile;
       if (format == mSampleFormat) {
-         pFile = mDirManager->NewSimpleBlockFile(
+         pFile = NewSimpleBlockFile( *mDirManager,
             buffer, addedLen, mSampleFormat, blockFileLog != NULL);
       }
       else {
          CopySamples(buffer, format, buffer2.ptr(), mSampleFormat, addedLen);
-         pFile = mDirManager->NewSimpleBlockFile(
+         pFile = NewSimpleBlockFile( *mDirManager,
             buffer2.ptr(), addedLen, mSampleFormat, blockFileLog != NULL);
       }
 
@@ -1673,7 +1649,7 @@ void Sequence::Blockify
       int newLen = ((i + 1) * len / num) - offset;
       samplePtr bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
 
-      b.f = mDirManager.NewSimpleBlockFile(bufStart, newLen, mSampleFormat);
+      b.f = NewSimpleBlockFile( mDirManager, bufStart, newLen, mSampleFormat );
 
       list.push_back(b);
    }
@@ -1735,7 +1711,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
            ( pos + len ).as_size_t(), newLen - pos, true);
 
       auto newFile =
-          mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat);
+          NewSimpleBlockFile( *mDirManager, scratch.ptr(), newLen, mSampleFormat );
 
       // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
       // if we modify only one block in place.
@@ -1779,7 +1755,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
          ensureSampleBufferSize(scratch, mSampleFormat, scratchSize, preBufferLen);
          Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen, true);
          auto pFile =
-            mDirManager->NewSimpleBlockFile(scratch.ptr(), preBufferLen, mSampleFormat);
+            NewSimpleBlockFile( *mDirManager, scratch.ptr(), preBufferLen, mSampleFormat );
 
          newBlock.push_back(SeqBlock(pFile, preBlock.start));
       } else {
@@ -1825,7 +1801,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
          auto pos = (start + len - postBlock.start).as_size_t();
          Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen, true);
          auto file =
-            mDirManager->NewSimpleBlockFile(scratch.ptr(), postBufferLen, mSampleFormat);
+            NewSimpleBlockFile( *mDirManager, scratch.ptr(), postBufferLen, mSampleFormat );
 
          newBlock.push_back(SeqBlock(file, start));
       } else {
@@ -2014,6 +1990,23 @@ void Sequence::SetMaxDiskBlockSize(size_t bytes)
 size_t Sequence::GetMaxDiskBlockSize()
 {
    return sMaxDiskBlockSize;
+}
+
+void Sequence::AppendBlockFile( const BlockFileFactory &factory, size_t len )
+// STRONG-GUARANTEE
+{
+   // Quick check to make sure that it doesn't overflow
+   if (Overflows((mNumSamples.as_double()) + ((double)len)))
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   SeqBlock newBlock(
+      mDirManager->NewBlockFile( [&]( wxFileNameWrapper filePath ){
+         return factory( std::move( filePath ), len );
+      } ),
+      mNumSamples
+   );
+   mBlock.push_back(newBlock);
+   mNumSamples += len;
 }
 
 void Sequence::AppendBlockFile(const BlockFilePtr &blockFile)
