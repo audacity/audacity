@@ -25,6 +25,8 @@ other settings.
 #include "../Audacity.h"
 #include "DevicePrefs.h"
 
+#include "RecordingPrefs.h"
+
 #include <wx/defs.h>
 
 #include <wx/choice.h>

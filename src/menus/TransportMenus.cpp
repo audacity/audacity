@@ -13,6 +13,7 @@
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
+#include "../prefs/RecordingPrefs.h"
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"

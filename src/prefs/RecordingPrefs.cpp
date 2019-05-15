@@ -27,7 +27,6 @@
 #include <wx/textctrl.h>
 #include <algorithm>
 
-#include "../AudioIO.h"
 #include "../prefs/GUISettings.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
