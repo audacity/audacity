@@ -27,6 +27,7 @@ The summary is eventually computed and written to a file in a background thread.
 #include <wx/thread.h>
 #include <sndfile.h>
 
+#include "../DirManager.h"
 #include "../FileException.h"
 #include "../FileFormats.h"
 #include "../Internat.h"

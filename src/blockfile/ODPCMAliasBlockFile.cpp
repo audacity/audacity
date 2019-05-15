@@ -30,6 +30,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 #include "../AudacityApp.h"
 #include "PCMAliasBlockFile.h"
+#include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 

@@ -16,7 +16,6 @@
 
 #include "PrefsPanel.h"
 
-#include "../import/Import.h"
 #include "../import/ImportPlugin.h"
 
 class wxButton;
@@ -24,6 +23,7 @@ class wxGridEvent;
 class wxGridRangeSelectEvent;
 class wxListCtrl;
 class wxListEvent;
+class ExtImportItem;
 class ExtImportPrefs;
 class Grid;
 class ShuttleGui;

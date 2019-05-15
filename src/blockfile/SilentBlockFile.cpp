@@ -12,6 +12,8 @@
 #include "SilentBlockFile.h"
 
 #include "../FileFormats.h"
+#include "../xml/XMLTagHandler.h"
+#include "../xml/XMLWriter.h"
 
 SilentBlockFile::SilentBlockFile(size_t sampleLen):
 BlockFile{ wxFileNameWrapper{}, sampleLen }

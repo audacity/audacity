@@ -88,7 +88,6 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../Track.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"

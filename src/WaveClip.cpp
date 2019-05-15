@@ -34,7 +34,6 @@
 #include "Prefs.h"
 #include "Envelope.h"
 #include "Resample.h"
-#include "Project.h"
 #include "WaveTrack.h"
 #include "FFT.h"
 #include "Profiler.h"

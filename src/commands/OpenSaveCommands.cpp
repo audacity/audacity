@@ -17,7 +17,6 @@
 #include "../Audacity.h"
 #include "OpenSaveCommands.h"
 
-#include "../Menus.h"
 #include "../Project.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"

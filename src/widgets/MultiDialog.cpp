@@ -35,7 +35,7 @@ for each problem encountered, since there can be many orphans.
 #include <wx/radiobox.h>
 
 #include "../Menus.h"
-#include "../commands/CommandContext.h"
+#include "wxPanelWrapper.h"
 
 class MultiDialog final : public wxDialogWrapper
 {

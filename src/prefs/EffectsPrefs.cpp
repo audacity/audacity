@@ -26,7 +26,6 @@
 #include <wx/defs.h>
 
 #include "../Languages.h"
-#include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 

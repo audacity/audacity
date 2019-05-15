@@ -23,6 +23,7 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../import/Import.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/Grid.h"
 

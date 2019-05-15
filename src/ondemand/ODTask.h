@@ -28,6 +28,7 @@ in a background thread.
 
 #include "../MemoryX.h"
 #include <vector>
+#include <wx/event.h> // to declare custom event type
 class AudacityProject;
 class Track;
 class WaveTrack;

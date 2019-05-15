@@ -12,7 +12,8 @@
 #define __AUDACITY_PCMALIASBLOCKFILE__
 
 #include "../BlockFile.h"
-#include "../DirManager.h"
+
+class DirManager;
 
 /// An AliasBlockFile that references uncompressed data in an existing file
 class PCMAliasBlockFile /* not final */ : public AliasBlockFile

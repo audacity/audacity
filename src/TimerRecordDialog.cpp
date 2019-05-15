@@ -52,7 +52,6 @@
 #include "widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
-#include "commands/CommandContext.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"

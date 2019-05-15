@@ -22,6 +22,7 @@
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
 #include <wx/utils.h>
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
@@ -36,8 +37,6 @@
 #include "../HelpText.h"
 #include "../Project.h"
 #include "../Prefs.h"
-
-#include "ErrorDialog.h"
 
 #ifdef USE_ALPHA_MANUAL
 const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");

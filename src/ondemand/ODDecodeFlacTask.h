@@ -29,6 +29,7 @@ robust enough to allow all the user changes such as copy/paste, DELETE, and so o
 #define __AUDACITY_ODDecodeFLACTask__
 
 #include <vector>
+#include <wx/ffile.h> // data member
 #include "ODDecodeTask.h"
 #include "ODTaskThread.h"
 

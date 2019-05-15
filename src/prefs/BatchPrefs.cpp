@@ -23,10 +23,7 @@ setting used in debugging batch (aka macros) processing.
 
 #include "../Languages.h"
 #include "../Prefs.h"
-#include "../Project.h"
-#include "../BatchCommandDialog.h"
 #include "../ShuttleGui.h"
-#include "../toolbars/ToolManager.h"
 
 BEGIN_EVENT_TABLE(BatchPrefs, PrefsPanel)
 END_EVENT_TABLE()

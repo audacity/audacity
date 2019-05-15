@@ -33,6 +33,8 @@
 #include "../MemoryX.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
+#include "../xml/XMLTagHandler.h"
+#include "../xml/XMLWriter.h"
 
 #include "sndfile.h"
 

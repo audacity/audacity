@@ -30,7 +30,6 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #include "SimpleBlockFile.h"
 #include "../BlockFile.h"
 #include "../ondemand/ODTaskThread.h"
-#include "../DirManager.h"
 #include "../ondemand/ODDecodeTask.h"
 #include <wx/atomic.h> // member variable
 

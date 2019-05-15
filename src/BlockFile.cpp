@@ -53,6 +53,7 @@ out.
 #include "Internat.h"
 #include "MemoryX.h"
 #include "sndfile.h"
+#include "FileException.h"
 #include "FileFormats.h"
 #include "AudacityApp.h"
 

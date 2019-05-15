@@ -43,7 +43,6 @@ a draggable point type.
 #include <wx/log.h>
 
 #include "AColor.h"
-#include "DirManager.h"
 #include "TrackArtist.h"
 
 static const double VALUE_TOLERANCE = 0.001;
@@ -318,7 +317,6 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 }
 
 #include "TrackPanelDrawingContext.h"
-#include "tracks/ui/EnvelopeHandle.h"
 
 /// TODO: This should probably move to track artist.
 void Envelope::DrawPoints

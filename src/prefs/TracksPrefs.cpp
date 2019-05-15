@@ -27,7 +27,6 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
 
 #include "../Internat.h"
 

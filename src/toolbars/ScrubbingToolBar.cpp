@@ -41,7 +41,6 @@
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 #include "../tracks/ui/Scrubbing.h"
-#include "../commands/CommandContext.h"
 
 IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 
