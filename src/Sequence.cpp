@@ -40,10 +40,10 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
-#include "blockfile/ODDecodeBlockFile.h"
 #include "DirManager.h"
 
 #include "blockfile/SilentBlockFile.h"
+#include "blockfile/SimpleBlockFile.h"
 
 #include "InconsistencyException.h"
 
@@ -739,20 +739,6 @@ void Sequence::AppendBlock
 
    // Don't do a consistency check here because this
    // function gets called in an inner loop.
-}
-
-///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-unsigned int Sequence::GetODFlags()
-{
-   unsigned int ret = 0;
-   for (unsigned int i = 0; i < mBlock.size(); i++) {
-      const auto &file = mBlock[i].f;
-      if(!file->IsDataAvailable())
-         ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
-      else if(!file->IsSummaryAvailable())
-         ret |= ODTask::eODPCMSummary;
-   }
-   return ret;
 }
 
 sampleCount Sequence::GetBlockStart(sampleCount position) const

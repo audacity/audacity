@@ -115,9 +115,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // which supplies it with a file name
    void AppendBlockFile( const BlockFileFactory &factory, size_t len );
 
-   ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags();
-
    // Append a blockfile. The blockfile pointer is then "owned" by the
    // sequence. This function is used by the recording log crash recovery
    // code, but may be useful for other purposes. The blockfile must already
