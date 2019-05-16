@@ -16,8 +16,6 @@
 
 #include <wx/longlong.h>
 
-#include <algorithm>
-
 #ifndef IN_RC
 #include "audacity/Types.h"
 
