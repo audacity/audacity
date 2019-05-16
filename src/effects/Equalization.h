@@ -20,9 +20,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "Effect.h"
-#include "../xml/XMLTagHandler.h"
 #include "../RealFFTf.h"
-#include "../SampleFormat.h"
 
 #define EQUALIZATION_PLUGIN_SYMBOL \
 ComponentInterfaceSymbol{ XO("Equalization") }

@@ -13,7 +13,6 @@ class wxStaticText;
 class wxTextCtrl;
 class wxCheckBox;
 
-#include "../../MemoryX.h"
 #include <wx/dynlib.h> // member variable
 
 #include "audacity/EffectInterface.h"

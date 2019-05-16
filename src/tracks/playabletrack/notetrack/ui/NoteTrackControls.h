@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
 #include "../../../ui/TrackControls.h"
-#include "../../../../MemoryX.h"
 class MuteButtonHandle;
 class SoloButtonHandle;
 class NoteTrackButtonHandle;

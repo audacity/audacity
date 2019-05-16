@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_LABEL_DEFAULT_CLICK_HANDLE__
 
 #include "../../../UIHandle.h"
-#include "../../../MemoryX.h"
 
 class wxMouseEvent;
 class LabelTrack;

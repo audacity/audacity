@@ -12,7 +12,6 @@
 #define __AUDACITY_FORMATCLASSIFIER_H_
 
 #include <vector>
-#include "../SampleFormat.h"
 #include "MultiFormatReader.h"
 #include "SpecPowerMeter.h"
 

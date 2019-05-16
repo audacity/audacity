@@ -18,10 +18,6 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "Audacity.h" // for USE_* macros
 
-#include "MemoryX.h"
-
-#include "Internat.h"
-
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 #if defined(__WXMSW__)

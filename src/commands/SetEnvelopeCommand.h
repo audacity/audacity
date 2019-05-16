@@ -16,8 +16,6 @@
 #ifndef __SET_ENVELOPE_COMMAND__
 #define __SET_ENVELOPE_COMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
 #include "SetTrackInfoCommand.h"
 
 #define SET_ENVELOPE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Envelope") }

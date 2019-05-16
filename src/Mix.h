@@ -20,7 +20,6 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
-#include "MemoryX.h"
 #include "SampleFormat.h"
 #include <vector>
 

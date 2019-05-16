@@ -12,7 +12,6 @@
 #define __AUDACITY_EFFECT_COMPRESSOR__
 
 #include "TwoPassSimpleMono.h"
-#include "../SampleFormat.h"
 
 class wxCheckBox;
 class wxSlider;

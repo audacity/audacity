@@ -15,8 +15,6 @@
 
 #include "Effect.h"
 
-#include "../MemoryX.h"
-
 #define NOISEREDUCTION_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Noise Reduction") }
 
 class EffectNoiseReduction final : public Effect {

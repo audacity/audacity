@@ -33,7 +33,6 @@
 
 #include "xml/XMLTagHandler.h"
 
-#include "MemoryX.h"
 #include <utility>
 
 #include "widgets/wxPanelWrapper.h" // to inherit

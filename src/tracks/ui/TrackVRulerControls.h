@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_TRACK_VRULER_CONTROLS__
 
 #include "CommonTrackPanelCell.h"
-#include "../../MemoryX.h"
 
 class Track;
 class wxDC;

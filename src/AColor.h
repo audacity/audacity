@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_COLOR__
 #define __AUDACITY_COLOR__
 
-#include "MemoryX.h"
+#include <memory>
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variable
 

@@ -19,8 +19,8 @@
 
 #include "portaudio.h"
 
-#include "MemoryX.h"
 #include <atomic>
+#include <memory>
 #include <utility>
 #include <vector>
 #include <wx/atomic.h> // member variable

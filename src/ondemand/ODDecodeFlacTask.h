@@ -31,7 +31,6 @@ robust enough to allow all the user changes such as copy/paste, DELETE, and so o
 #include <vector>
 #include <wx/ffile.h> // data member
 #include "ODDecodeTask.h"
-#include "ODTaskThread.h"
 
 #include "FLAC++/decoder.h"
 
