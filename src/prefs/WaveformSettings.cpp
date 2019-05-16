@@ -24,7 +24,6 @@ Paul Licameli
 
 #include "../Prefs.h"
 #include "../TranslatableStringArray.h"
-#include "../Internat.h"
 
 
 WaveformSettings::Globals::Globals()

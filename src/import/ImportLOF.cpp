@@ -89,7 +89,6 @@
 #include "../Project.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
-#include "../Internat.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 

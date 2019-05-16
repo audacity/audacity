@@ -48,7 +48,6 @@ greater use in future.
 #include "audacity/ConfigInterface.h"
 
 #include "EffectManager.h"
-#include "../AudacityException.h"
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
@@ -71,7 +70,6 @@ greater use in future.
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
-#include "../commands/AudacityCommand.h"
 #include "../commands/CommandContext.h"
 
 #if defined(__WXMAC__)

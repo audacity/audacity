@@ -57,9 +57,7 @@
 #include <FileDialog.h>
 
 #include "../FileFormats.h"
-#include "../Internat.h"
 #include "../Mix.h"
-#include "../Prefs.h"
 #include "../Project.h"
 #include "../Tags.h"
 #include "../TranslatableStringArray.h"

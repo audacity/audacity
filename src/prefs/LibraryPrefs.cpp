@@ -26,7 +26,6 @@ MP3 and FFmpeg encoding libraries.
 #include <wx/stattext.h>
 
 #include "../FFmpeg.h"
-#include "../ShuttleGui.h"
 #include "../export/ExportMP3.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"

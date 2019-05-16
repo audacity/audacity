@@ -68,7 +68,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/msw/registry.h> // for wxRegKey
 #endif
 
-#include "AudacityException.h"
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
 #include "AColor.h"
@@ -80,12 +79,10 @@ It handles initialization and termination by subclassing wxApp.
 #include "effects/Contrast.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
-#include "Internat.h"
 #include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
 #include "PluginManager.h"
-#include "Prefs.h"
 #include "Project.h"
 #include "Screenshot.h"
 #include "Sequence.h"
@@ -99,7 +96,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "FFT.h"
 #include "BlockFile.h"
 #include "ondemand/ODManager.h"
-#include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
 #include "prefs/DirectoriesPrefs.h"
 #include "tracks/ui/Scrubbing.h"

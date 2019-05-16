@@ -23,16 +23,11 @@ messaging from a command back to its invoker.
 #include "../Audacity.h"
 #include "CommandContext.h"
 
-#include "Command.h"
 #include <map>
 #include <wx/string.h>
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
-#include "../AudacityException.h"
-#include "Validators.h"
-#include "CommandType.h"
-#include "CommandMisc.h"
 #include "CommandBuilder.h"
 #include "CommandTargets.h"
 #include "CommandDirectory.h"

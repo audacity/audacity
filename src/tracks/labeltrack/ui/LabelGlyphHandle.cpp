@@ -17,9 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UndoManager.h"
-#include "../../../ViewInfo.h"
-
-#include "../../../MemoryX.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>

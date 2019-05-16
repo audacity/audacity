@@ -32,7 +32,6 @@
 #include <wx/intl.h>
 
 #include "WaveTrack.h"
-#include "Internat.h"
 #include "Prefs.h"
 #include "Resample.h"
 #include "TimeTrack.h"

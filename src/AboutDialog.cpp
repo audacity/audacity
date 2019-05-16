@@ -39,11 +39,9 @@ hold information about one contributor to Audacity.
 #include <wx/intl.h>
 
 #include "FileNames.h"
-#include "Internat.h"
 #include "ShuttleGui.h"
 #include "widgets/LinkingHtmlWindow.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
 
 // DA: Logo for About box.

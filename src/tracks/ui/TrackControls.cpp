@@ -13,16 +13,13 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackButtonHandles.h"
 #include "TrackSelectHandle.h"
-#include "../../HitTestResult.h"
 #include "../../RefreshCode.h"
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
-#include "../../Track.h"
 #include <wx/textdlg.h>
 #include "../../commands/CommandType.h"
-#include "../../commands/Command.h"
 #include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/PopupMenuTable.h"

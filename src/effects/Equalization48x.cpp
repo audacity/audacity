@@ -19,7 +19,6 @@
 #include "../Experimental.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-#include "../MemoryX.h"
 #include "../Project.h"
 #include "Equalization.h"
 #include "../WaveTrack.h"
@@ -39,7 +38,6 @@
 
 #include <math.h>
 
-#include "../RealFFTf.h"
 #include "../RealFFTf48x.h"
 
 #ifndef USE_SSE2

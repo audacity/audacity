@@ -22,7 +22,6 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "../WaveTrack.h"
 #include "../Project.h"
 #include "TimeWarper.h"
-#include "../FileException.h"
 
 enum {
   SBSMSOutBlockSize = 512

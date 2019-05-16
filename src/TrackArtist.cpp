@@ -74,7 +74,6 @@ audio tracks.
 #include "Envelope.h"
 #include "NumberScale.h"
 #include "WaveClip.h"
-#include "WaveTrack.h"
 #include "LabelTrack.h"
 #include "TimeTrack.h"
 #include "Prefs.h"
@@ -86,7 +85,6 @@ audio tracks.
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
-#include "Theme.h"
 #include "AllThemeResources.h"
 #include "TrackPanelDrawingContext.h"
 

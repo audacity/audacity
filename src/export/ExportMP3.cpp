@@ -82,7 +82,6 @@
 
 #include "../FileNames.h"
 #include "../float_cast.h"
-#include "../Internat.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"

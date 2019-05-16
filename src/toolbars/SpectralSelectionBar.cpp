@@ -33,7 +33,6 @@ with changes in the SpectralSelectionBar.
 #include "../Experimental.h"
 
 #include <algorithm>
-#include "../MemoryX.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -57,9 +56,6 @@ with changes in the SpectralSelectionBar.
 #include "../Prefs.h"
 #include "../AllThemeResources.h"
 #include "../SelectedRegion.h"
-#include "../widgets/NumericTextCtrl.h"
-
-#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

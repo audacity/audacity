@@ -38,10 +38,7 @@
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
 
-#include "Export.h"
-
 #include "../DirManager.h"
-#include "../Internat.h"
 #include "../FileFormats.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"

@@ -18,9 +18,7 @@
 
 #include "LegacyBlockFile.h"
 #include "../FileFormats.h"
-#include "../Internat.h"
 #include "../xml/XMLTagHandler.h"
-#include "../xml/XMLWriter.h"
 
 LegacyAliasBlockFile::LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
                                            wxFileNameWrapper &&aliasedFileName,

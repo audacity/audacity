@@ -18,7 +18,6 @@ ODTask requests and internals.
 #include "ODManager.h"
 
 #include "ODTask.h"
-#include "ODTaskThread.h"
 #include "ODWaveTrackTaskQueue.h"
 #include "../Project.h"
 #include <NonGuiThread.h>

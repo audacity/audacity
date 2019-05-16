@@ -82,7 +82,6 @@ CommandManager.  It holds the callback for one command.
 #include "../AudacityHeaders.h"
 #include "CommandManager.h"
 
-#include "CommandManagerWindowClasses.h"
 #include "CommandContext.h"
 
 #include <wx/defs.h>
@@ -94,12 +93,8 @@ CommandManager.  It holds the callback for one command.
 #include <wx/menu.h>
 #include <wx/tokenzr.h>
 
-#include "../AudacityException.h"
 #include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
 
-#include "Keyboard.h"
 #include "../PluginManager.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/LinkingHtmlWindow.h"

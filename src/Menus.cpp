@@ -42,7 +42,6 @@
 #include "Project.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
-#include "WaveTrack.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "prefs/TracksPrefs.h"

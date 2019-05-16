@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackButtonHandle.h"
 
-#include "../../../../HitTestResult.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../Project.h"

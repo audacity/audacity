@@ -18,7 +18,6 @@
 #include "ImportExportCommands.h"
 
 #include "../Project.h"
-#include "../Track.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

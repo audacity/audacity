@@ -45,7 +45,6 @@
 #include "../widgets/Ruler.h"
 
 #include "../WaveTrack.h"
-#include "../Theme.h"
 #include "../AllThemeResources.h"
 
 enum

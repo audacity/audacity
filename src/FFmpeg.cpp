@@ -21,7 +21,6 @@ License: GPL v2.  See License.txt.
 #include "FFmpeg.h"
 
 #include "FileNames.h"
-#include "Internat.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 

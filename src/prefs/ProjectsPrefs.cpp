@@ -25,8 +25,6 @@ handling.
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 ////////////////////////////////////////////////////////////////////////////////
 
 ProjectsPrefs::ProjectsPrefs(wxWindow * parent, wxWindowID winid)

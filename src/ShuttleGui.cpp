@@ -99,9 +99,8 @@ for registering for changes.
 #include "Experimental.h"
 
 #include "Prefs.h"
-#include "Shuttle.h"
+#include "ShuttlePrefs.h"
 
-#include "MemoryX.h"
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wx.h>
 #include <wx/wxprec.h>
@@ -113,8 +112,6 @@ for registering for changes.
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
 #include "../include/audacity/ComponentInterface.h"
-#include "Internat.h"
-#include "WrappedType.h"
 #include "widgets/wxPanelWrapper.h"
 #include "AllThemeResources.h"
 
@@ -2127,9 +2124,7 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 // two files at some later date.
 #include "../extnpanel-src/GuiWaveTrack.h"
 #endif
-#include "./widgets/Ruler.h"
 #include "./widgets/AttachableScrollBar.h"
-#include "ShuttlePrefs.h"
 
 ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
    ShuttleGuiBase( pParent, ShuttleMode )

@@ -48,13 +48,11 @@
 
 #include "Export.h"
 #include "../FileIO.h"
-#include "../Internat.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../Track.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 

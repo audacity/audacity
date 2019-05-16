@@ -39,7 +39,6 @@ undo memory so as to free up space.
 #include "UndoManager.h"
 #include "Project.h"
 #include "ShuttleGui.h"
-#include "Track.h"
 
 enum {
    ID_AVAIL = 1000,

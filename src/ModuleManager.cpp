@@ -30,7 +30,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "AudacityApp.h"
 #include "FileNames.h"
-#include "Internat.h"
 #include "PluginManager.h"
 
 #include "commands/ScriptCommandRelay.h"

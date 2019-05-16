@@ -71,7 +71,6 @@
 #include "../ImageManipulation.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../Theme.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/Meter.h"

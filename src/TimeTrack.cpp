@@ -28,8 +28,6 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "TrackArtist.h"
-#include "Internat.h"
-#include "ViewInfo.h"
 #include "AllThemeResources.h"
 
 //TODO-MB: are these sensible values?

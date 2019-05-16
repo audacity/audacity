@@ -25,8 +25,6 @@ effects from this one class.
 #include "../../Audacity.h"
 #include "LadspaEffect.h"       // This class's header file
 
-#include "ladspa.h"
-
 #include <float.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -49,7 +47,6 @@ effects from this one class.
 #include <wx/version.h>
 
 #include "../../FileNames.h"
-#include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"

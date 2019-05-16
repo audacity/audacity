@@ -34,7 +34,6 @@ effects.
 #endif
 
 #include "../Shuttle.h"
-#include "../commands/Command.h"
 #include "../commands/CommandContext.h"
 #include "../PluginManager.h"
 

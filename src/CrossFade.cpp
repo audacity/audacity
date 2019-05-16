@@ -16,9 +16,6 @@ been abandoned.
 
 #include "CrossFade.h"
 
-#include "SampleFormat.h"
-#include "WaveClip.h"
-
 #include <iostream>
 #include <vector>
 

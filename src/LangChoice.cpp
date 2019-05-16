@@ -27,9 +27,7 @@ of languages for Audacity.
 
 #include "Languages.h"
 #include "ShuttleGui.h"
-#include "widgets/wxPanelWrapper.h"
 #include "widgets/ErrorDialog.h"
-#include "Internat.h"
 
 class LangChoiceDialog final : public wxDialogWrapper {
 public:

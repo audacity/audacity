@@ -29,7 +29,6 @@ Functions that find and load all LV2 plugins on the system.
 #include <wx/log.h>
 #include <wx/string.h>
 
-#include "../../Internat.h"
 #include "../EffectManager.h"
 
 #include "LV2Effect.h"

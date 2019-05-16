@@ -15,7 +15,6 @@ Paul Licameli
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
-#include "../../Track.h"
 #include "../../TrackPanelMouseEvent.h"
 
 SliderHandle::SliderHandle

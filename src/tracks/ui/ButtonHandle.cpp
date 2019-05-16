@@ -11,12 +11,9 @@ Paul Licameli
 #include "../../Audacity.h"
 #include "ButtonHandle.h"
 
-#include "../../MemoryX.h"
-
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
-#include "../../Track.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../ui/TrackControls.h"
 

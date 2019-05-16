@@ -20,7 +20,6 @@
 #include "SetClipCommand.h"
 
 #include "../Project.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"

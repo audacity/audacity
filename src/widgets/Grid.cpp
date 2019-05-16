@@ -26,9 +26,7 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
-#include "NumericTextCtrl.h"
 #include "../SelectedRegion.h"
-#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

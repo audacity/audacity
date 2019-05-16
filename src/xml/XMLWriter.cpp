@@ -33,8 +33,6 @@ the general functionality for creating XML in UTF8 encoding.
 
 #include <string.h>
 
-#include "../Internat.h"
-
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h
 //and wxWidgets-2.8.12/src/expat/lib/asciitab.h

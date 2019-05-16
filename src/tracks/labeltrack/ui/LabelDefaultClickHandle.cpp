@@ -16,7 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
-#include "../../../ViewInfo.h"
 
 LabelDefaultClickHandle::LabelDefaultClickHandle()
 {

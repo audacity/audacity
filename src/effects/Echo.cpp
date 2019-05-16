@@ -30,7 +30,6 @@
 #include "../Shuttle.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
-#include "../SampleFormat.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

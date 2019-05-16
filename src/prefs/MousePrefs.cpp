@@ -43,7 +43,6 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Internat.h"
 
 // The numbers of the columns of the mList.
 enum

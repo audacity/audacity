@@ -65,7 +65,6 @@ array of Ruler::Label.
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../NumberScale.h"
-#include "../Theme.h"
 #include "../TimeTrack.h"
 #include "../ViewInfo.h"
 

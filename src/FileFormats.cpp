@@ -18,7 +18,6 @@ information.
 #include "Audacity.h"
 #include "FileFormats.h"
 
-#include "MemoryX.h"
 #include <wx/arrstr.h>
 #include <wx/intl.h>
 #include "sndfile.h"
@@ -27,8 +26,6 @@ information.
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
 #endif
-
-#include "Internat.h"
 
 //
 // enumerating headers

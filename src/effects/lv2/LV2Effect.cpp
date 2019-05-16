@@ -34,11 +34,8 @@
 #include <wx/intl.h>
 #include <wx/scrolwin.h>
 
-#include "LoadLV2.h"
-#include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/ErrorDialog.h"
 
 #include "lilv/lilv.h"

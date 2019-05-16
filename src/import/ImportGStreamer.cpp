@@ -31,8 +31,6 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #include <wx/log.h>
 
-#include "../MemoryX.h"
-
 #define DESC _("GStreamer-compatible files")
 
 
@@ -48,13 +46,9 @@ Licensed under the GNU General Public License v2 or later
 #endif
 
 // all the includes live here by default
-#include "../AudacityException.h"
-#include "../SampleFormat.h"
 #include "../Tags.h"
-#include "../Internat.h"
 #include "../WaveTrack.h"
 #include "Import.h"
-#include "ImportPlugin.h"
 
 extern "C"
 {

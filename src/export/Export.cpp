@@ -61,7 +61,6 @@
 
 #include "../DirManager.h"
 #include "../FileFormats.h"
-#include "../Internat.h"
 #include "../Menus.h"
 #include "../Mix.h"
 #include "../Prefs.h"

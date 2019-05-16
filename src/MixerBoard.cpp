@@ -25,7 +25,6 @@
 #include <wx/icon.h>
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 
-#include "Theme.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"

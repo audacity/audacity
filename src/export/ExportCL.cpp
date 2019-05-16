@@ -34,13 +34,10 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Internat.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
-
-#include "../Track.h"
 
 
 //----------------------------------------------------------------------------

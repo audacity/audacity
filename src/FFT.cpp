@@ -44,7 +44,6 @@
 
 #include "Internat.h"
 
-#include "MemoryX.h"
 #include "SampleFormat.h"
 
 #include <wx/wxcrtvararg.h>

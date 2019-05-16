@@ -21,7 +21,6 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Internat.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: two nouns */

@@ -78,7 +78,6 @@ void GetQTImportPlugin(ImportPluginList &importPluginList,
 // There's a name collision between our Track and QuickTime's...workaround it
 #undef Track
 
-#include "../Internat.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 

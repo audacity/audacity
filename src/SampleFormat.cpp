@@ -44,7 +44,6 @@
 
 #include "Prefs.h"
 #include "Dither.h"
-#include "Internat.h"
 #include "prefs/QualityPrefs.h"
 
 static DitherType gLowQualityDither = DitherType::none;

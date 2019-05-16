@@ -15,7 +15,6 @@
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
-#include "../../../../HitTestResult.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h" // for TrackInfo

@@ -18,8 +18,6 @@
 
 #include "../Prefs.h"
 
-#include "../MemoryX.h"
-
 #include "EffectManager.h"
 
 #include "Amplify.h"

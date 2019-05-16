@@ -39,11 +39,9 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 
-#include "../AudacityException.h"
 #include "../Prefs.h"
 #include "Import.h"
 #include "ImportPlugin.h"
-#include "../Internat.h"
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"

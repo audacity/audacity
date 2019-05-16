@@ -24,7 +24,6 @@ code out of ModuleManager.
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"
-#include "ResponseQueue.h"
 #include "../Project.h"
 #include "../AudacityApp.h"
 #include <wx/string.h>

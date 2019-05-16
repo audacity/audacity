@@ -20,7 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
-#include "../../TrackPanelCell.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
@@ -32,10 +31,6 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_TRANSCRIPTION_TOOLBAR
 #include "../../toolbars/TranscriptionToolBar.h"
 #endif
-
-#include "../../commands/CommandFunctors.h"
-#include "../../commands/CommandContext.h"
-#include "../../commands/CommandManager.h"
 
 
 #include <algorithm>

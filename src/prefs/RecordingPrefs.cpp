@@ -32,8 +32,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 #include "../widgets/Warning.h"
 
 using std::min;

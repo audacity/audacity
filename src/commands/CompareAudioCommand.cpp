@@ -21,10 +21,8 @@ threshold of difference in two selected tracks
 #include "../Audacity.h"
 #include "CompareAudioCommand.h"
 
-#include "../MemoryX.h"
 #include "../Project.h"
 #include "../WaveTrack.h"
-#include "Command.h"
 
 
 #include <float.h>
@@ -34,7 +32,6 @@ threshold of difference in two selected tracks
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
-#include "../SampleFormat.h"
 #include "CommandContext.h"
 
 extern void RegisterCompareAudio( Registrar & R){

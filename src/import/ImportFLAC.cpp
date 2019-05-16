@@ -39,7 +39,6 @@
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
 
-#include "../AudacityException.h"
 #include "Import.h"
 #include "ImportPlugin.h"
 
@@ -68,8 +67,6 @@ void GetFLACImportPlugin(ImportPluginList &importPluginList,
 }
 
 #else /* USE_LIBFLAC */
-
-#include "../Internat.h"
 
 #include <wx/string.h>
 #include <wx/utils.h>

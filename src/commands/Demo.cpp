@@ -30,8 +30,6 @@ parameters.  It is for development purposes.
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
-#include "../SampleFormat.h"
-#include "../commands/Command.h"
 #include "../commands/CommandContext.h"
 
 bool DemoCommand::DefineParams( ShuttleParams & S ){

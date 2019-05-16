@@ -22,11 +22,9 @@
 #include "../AColor.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
-#include "../commands/Keyboard.h"
 
 #include <wx/dc.h>
 #include <wx/menu.h>
-#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

@@ -81,16 +81,12 @@
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
 
 #include "../../FileNames.h"
-#include "../../Internat.h"
 #include "../../PlatformCompatibility.h"
 #include "../../ShuttleGui.h"
 #include "../../effects/Effect.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/ErrorDialog.h"
 #include "../../xml/XMLFileReader.h"
-#include "../../xml/XMLWriter.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../../widgets/WindowAccessible.h"
@@ -98,7 +94,6 @@
 
 #include "audacity/ConfigInterface.h"
 
-#include "../../MemoryX.h"
 #include <cstring>
 
 // Put this inclusion last.  On Linux it makes some unfortunate pollution of

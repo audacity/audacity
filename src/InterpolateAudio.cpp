@@ -16,7 +16,6 @@
 #include <wx/defs.h>
 
 #include "Matrix.h"
-#include "SampleFormat.h"
 
 static inline int imin(int x, int y)
 {

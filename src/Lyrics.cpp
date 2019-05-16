@@ -19,7 +19,6 @@
 #include <wx/mimetype.h>
 
 #include "AudioIO.h"
-#include "Internat.h"
 #include "Project.h" // for GetActiveProject
 #include "LabelTrack.h"
 #include "commands/CommandManager.h"

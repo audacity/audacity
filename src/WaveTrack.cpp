@@ -40,7 +40,6 @@ Track classes.
 #include <float.h>
 #include <math.h>
 #include <algorithm>
-#include "MemoryX.h"
 
 #include "float_cast.h"
 
@@ -49,7 +48,6 @@ Track classes.
 #include "Spectrum.h"
 
 #include "Project.h"
-#include "Internat.h"
 
 #include "AudioIO.h"
 #include "Prefs.h"

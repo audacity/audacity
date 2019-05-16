@@ -58,10 +58,8 @@ for drawing different aspects of the label and its text box.
 
 #include "AudioIO.h"
 #include "DirManager.h"
-#include "Internat.h"
 #include "Prefs.h"
 #include "RefreshCode.h"
-#include "Theme.h"
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "Project.h"

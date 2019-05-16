@@ -50,8 +50,6 @@ out.
 #include <wx/ffile.h>
 #include <wx/log.h>
 
-#include "Internat.h"
-#include "MemoryX.h"
 #include "sndfile.h"
 #include "FileException.h"
 #include "FileFormats.h"

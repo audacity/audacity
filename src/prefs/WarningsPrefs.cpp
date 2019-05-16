@@ -24,8 +24,6 @@
 
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 ////////////////////////////////////////////////////////////////////////////////
 
 WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)

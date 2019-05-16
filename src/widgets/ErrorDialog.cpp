@@ -37,7 +37,6 @@
 #include "../AllThemeResources.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"
-#include "../Internat.h"
 #include "../Project.h"
 #include "../Prefs.h"
 #include "HelpSystem.h"

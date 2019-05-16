@@ -34,7 +34,6 @@
 
 #include "../Prefs.h"
 #include "../AudacityApp.h"
-#include "../Internat.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
 

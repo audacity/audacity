@@ -42,8 +42,6 @@
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
 
-#include "../../Internat.h"
-
 struct CFReleaser
    { void operator () (const void *p) const { if (p) CFRelease(p); } };
 template <typename T>

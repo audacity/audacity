@@ -44,7 +44,6 @@
 #endif
 
 #include "FileNames.h"
-#include "Internat.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "TranslatableStringArray.h"

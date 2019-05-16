@@ -20,7 +20,6 @@ small calculations of rectangles.
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
 
-#include "CommandTargets.h"
 #include "../Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
@@ -31,10 +30,8 @@ small calculations of rectangles.
 #include <wx/valgen.h>
 
 #include "../AdornedRulerPanel.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../toolbars/ToolManager.h"
-#include "../toolbars/ToolBar.h"
 #include "../Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

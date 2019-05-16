@@ -64,8 +64,6 @@
 #include "Audacity.h" // for __UNIX__
 #include "DirManager.h"
 
-#include "MemoryX.h"
-
 #include <time.h> // to use time() for srand()
 
 #include <wx/wxcrtvararg.h>
@@ -89,19 +87,13 @@
 #endif
 
 #include "AudacityApp.h"
-#include "AudacityException.h"
-#include "BlockFile.h"
-#include "FileException.h"
 #include "FileNames.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
-#include "blockfile/SimpleBlockFile.h"
 #include "blockfile/SilentBlockFile.h"
-#include "blockfile/PCMAliasBlockFile.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "InconsistencyException.h"
-#include "Internat.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "Sequence.h"
@@ -111,8 +103,6 @@
 #include "widgets/ProgressDialog.h"
 
 #include "ondemand/ODManager.h"
-
-#include "Track.h"
 
 #if defined(__WXMAC__)
 #include <mach/mach.h>

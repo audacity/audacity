@@ -51,7 +51,6 @@ AliasedFile s.
 
 #include "BlockFile.h"
 #include "DirManager.h"
-#include "Internat.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Sequence.h"

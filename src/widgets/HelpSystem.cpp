@@ -31,7 +31,6 @@
 
 #include "../FileNames.h"
 #include "LinkingHtmlWindow.h"
-#include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"

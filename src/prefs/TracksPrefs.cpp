@@ -28,8 +28,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 int TracksPrefs::iPreferencePinned = -1;
 
 namespace {

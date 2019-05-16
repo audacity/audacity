@@ -39,8 +39,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "PrefsPanel.h"
-
 #include "BatchPrefs.h"
 #include "DevicePrefs.h"
 #include "DirectoriesPrefs.h"

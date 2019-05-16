@@ -19,7 +19,6 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 
 #include "ODComputeSummaryTask.h"
-#include "../AudacityException.h"
 #include "../blockfile/ODPCMAliasBlockFile.h"
 #include "../Sequence.h"
 #include "../WaveClip.h"

@@ -32,9 +32,7 @@
 
 #include "AColor.h"
 #include "DirManager.h"
-#include "Internat.h"
 #include "Prefs.h"
-#include "effects/TimeWarper.h"
 
 #include "InconsistencyException.h"
 

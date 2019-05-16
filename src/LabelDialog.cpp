@@ -31,12 +31,9 @@
 #include <wx/textdlg.h>
 
 #include "ShuttleGui.h"
-#include "Internat.h"
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ViewInfo.h"
-#include "widgets/NumericTextCtrl.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Grid.h"
 #include "widgets/HelpSystem.h"

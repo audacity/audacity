@@ -28,7 +28,6 @@ with changes in the SelectionBar.
 
 #include "../Audacity.h"
 #include "SelectionBar.h"
-#include "SelectionBarListener.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -55,7 +54,6 @@ with changes in the SelectionBar.
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Snap.h"
-#include "../widgets/NumericTextCtrl.h"
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY

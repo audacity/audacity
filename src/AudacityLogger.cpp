@@ -30,7 +30,6 @@ Provides thread-safe logging based on the wxWidgets log facility.
 
 #include "../images/AudacityLogoAlpha.xpm"
 #include "widgets/ErrorDialog.h"
-#include "Internat.h"
 
 //
 // AudacityLogger class

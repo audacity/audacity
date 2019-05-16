@@ -33,7 +33,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include "Project.h"
 #include "UIHandle.h"
-#include "TrackPanelCell.h"
 #include "TrackPanelMouseEvent.h"
 #include "HitTestResult.h"
 #include "RefreshCode.h"

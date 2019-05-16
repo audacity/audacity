@@ -64,7 +64,6 @@ or ASlider.
 #include "../Project.h"
 #include "../ShuttleGui.h"
 
-#include "../Theme.h"
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY

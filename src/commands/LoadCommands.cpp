@@ -18,14 +18,11 @@ modelled on BuiltinEffectsModule
 
 #include "../Prefs.h"
 
-#include "../MemoryX.h"
-
 #include "../effects/EffectManager.h"
 #include "Demo.h"
 #include "../commands/MessageCommand.h"
 #include "../commands/ScreenshotCommand.h"
 #include "../commands/CompareAudioCommand.h"
-#include "../commands/SetTrackInfoCommand.h"
 #include "../commands/GetTrackInfoCommand.h"
 #include "../commands/SelectCommand.h"
 #include "../commands/PreferenceCommands.h"

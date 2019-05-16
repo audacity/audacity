@@ -22,7 +22,6 @@
 #include "../Audacity.h" // for USE_* macros
 #include "ImportPCM.h"
 
-#include "../Internat.h"
 #include "../Tags.h"
 
 #include <wx/wx.h>

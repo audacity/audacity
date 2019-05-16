@@ -38,21 +38,16 @@
 #include <wx/imaglist.h>
 #include <wx/settings.h>
 
-#include "AudacityException.h"
 #include "ShuttleGui.h"
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "Internat.h"
 #include "commands/CommandManager.h"
 #include "effects/Effect.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
-#include "BatchCommands.h"
-#include "Track.h"
 #include "UndoManager.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
 
 #include "FileDialog.h"

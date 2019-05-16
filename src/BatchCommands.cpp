@@ -28,7 +28,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "FileNames.h"
-#include "Internat.h"
 #include "Menus.h"
 #include "PluginManager.h"
 #include "Prefs.h"
@@ -38,13 +37,10 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "export/ExportOGG.h"
 #include "export/ExportPCM.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
 
-#include "Track.h"
 #include "widgets/ErrorDialog.h"
 
-#include "commands/CommandFunctors.h"
 #include "commands/CommandContext.h"
 
 // KLUDGE: All commands should be on the same footing

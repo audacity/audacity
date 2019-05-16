@@ -24,7 +24,6 @@ with names like mnod-script-pipe that add NEW features.
 #include "../ShuttleGui.h"
 
 #include "../Prefs.h"
-#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

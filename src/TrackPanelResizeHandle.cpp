@@ -11,15 +11,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "Audacity.h"
 #include "TrackPanelResizeHandle.h"
 
-#include "MemoryX.h"
-
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
 #include "HitTestResult.h"
 #include "Project.h"
 #include "RefreshCode.h"
-#include "Track.h"
 #include "TrackPanelMouseEvent.h"
 #include "tracks/ui/TrackControls.h"
 
