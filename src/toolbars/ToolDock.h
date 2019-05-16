@@ -14,7 +14,6 @@
 #define __AUDACITY_TOOLDOCK__
 
 #include <vector>
-#include "../MemoryX.h" // for std::move
 #include <wx/defs.h>
 
 #include "ToolBar.h"

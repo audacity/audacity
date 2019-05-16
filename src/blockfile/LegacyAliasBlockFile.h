@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_LEGACYALIASBLOCKFILE__
 #define __AUDACITY_LEGACYALIASBLOCKFILE__
 
-#include "../BlockFile.h"
 #include "PCMAliasBlockFile.h"
 
 /// An AliasBlockFile that references uncompressed data in an existing file

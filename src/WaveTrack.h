@@ -12,7 +12,6 @@
 #define __AUDACITY_WAVETRACK__
 
 #include "Track.h"
-#include "SampleFormat.h"
 
 #include <vector>
 #include <wx/longlong.h>

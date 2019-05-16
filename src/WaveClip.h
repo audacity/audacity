@@ -14,7 +14,6 @@
 
 #include "Audacity.h"
 
-#include "MemoryX.h"
 #include "SampleFormat.h"
 #include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"

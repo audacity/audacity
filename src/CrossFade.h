@@ -15,7 +15,6 @@
 /// accepts a list of WaveClips and can do a mini-mixing
 /// to produce the desired crossfading
 
-#include "SampleFormat.h"
 #include "WaveClip.h"
 
 

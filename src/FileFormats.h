@@ -102,7 +102,6 @@ extern FileExtensions sf_get_all_extensions();
 wxString sf_normalize_name(const char *name);
 
 // This function wrapper uses a mutex to serialize calls to the SndFile library.
-#include "MemoryX.h"
 #include "ondemand/ODTaskThread.h"
 extern ODLock libSndFileMutex;
 template<typename R, typename F, typename... Args>

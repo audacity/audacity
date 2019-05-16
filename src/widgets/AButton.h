@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_BUTTON__
 #define __AUDACITY_BUTTON__
 
-#include "../MemoryX.h"
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros

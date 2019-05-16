@@ -17,7 +17,6 @@
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-#include "../../SampleFormat.h"
 #include "../Effect.h"
 
 class wxStaticText;

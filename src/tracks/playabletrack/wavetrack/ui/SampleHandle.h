@@ -13,7 +13,6 @@ Paul Licameli
 
 #include "../../../../UIHandle.h"
 #include "audacity/Types.h"
-#include "../../../../MemoryX.h"
 
 class wxMouseEvent;
 class wxMouseState;

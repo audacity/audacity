@@ -11,9 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_CUTLINE_HANDLE__
 #define __AUDACITY_CUTLINE_HANDLE__
 
-#include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
-#include "../../../../MemoryX.h"
 #include "../../../../WaveTrackLocation.h"
 
 class wxMouseEvent;

@@ -14,7 +14,6 @@
 #include <vector>
 #include <wx/defs.h>
 
-#include "Internat.h"
 #include "widgets/wxPanelWrapper.h" // to inherit
 #include "audacity/ComponentInterface.h" // member variable
 

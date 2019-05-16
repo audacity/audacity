@@ -23,10 +23,8 @@ in a background thread.
 #ifndef __AUDACITY_ODTASK__
 #define __AUDACITY_ODTASK__
 
-#include "ODTaskThread.h"
 #include "../BlockFile.h"
 
-#include "../MemoryX.h"
 #include <vector>
 #include <wx/event.h> // to declare custom event type
 class AudacityProject;

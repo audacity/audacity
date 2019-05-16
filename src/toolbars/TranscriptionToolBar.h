@@ -17,11 +17,9 @@
 
 #include "ToolBar.h"
 
-#include "../MemoryX.h"
 #include <wx/brush.h> // member variable
 
 #include "audacity/Types.h"
-#include "../Theme.h"
 
 class wxChoice;
 class wxCommandEvent;

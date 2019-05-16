@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_LABEL_TEXT_HANDLE__
 
 #include "LabelDefaultClickHandle.h"
-#include "../../../MemoryX.h"
 #include "../../../SelectedRegion.h"
 
 class wxMouseState;

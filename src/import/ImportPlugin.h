@@ -59,7 +59,6 @@ but little else.
 
 #include "audacity/Types.h"
 #include "../Internat.h"
-#include "../MemoryX.h"
 
 #include "ImportRaw.h" // defines TrackHolders
 
