@@ -44,10 +44,6 @@ class RecordingPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanelFactory that creates one RecordingPrefs panel.
-class RecordingPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one RecordingPrefs panel.
+extern PrefsPanel::Factory RecordingPrefsFactory;
 #endif

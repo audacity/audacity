@@ -637,22 +637,6 @@ make_iterator_range( const Container &container )
    return { container.begin(), container.end() };
 }
 
-#if !wxCHECK_VERSION(3, 1, 0)
-// For using std::unordered_map on wxString
-namespace std
-{
-   template<typename T> struct hash;
-   template<> struct hash< wxString > {
-      size_t operator () (const wxString &str) const // noexcept
-      {
-         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
-         using Hasher = hash< decltype(stdstr) >;
-         return Hasher{}( stdstr );
-      }
-   };
-}
-#endif
-
 // A utility function building a container of results
 template< typename Container, typename Iterator, typename Function >
 Container transform_range( Iterator first, Iterator last, Function &&fn )

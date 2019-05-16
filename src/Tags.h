@@ -39,6 +39,7 @@
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
+#include "audacity/Types.h"
 
 class wxArrayString;
 class wxComboBox;

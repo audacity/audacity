@@ -207,6 +207,12 @@ void LV2EffectsModule::Terminate()
    return;
 }
 
+const FileExtensions &LV2EffectsModule::GetFileExtensions()
+{
+   static FileExtensions empty;
+   return empty;
+}
+
 bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
    return false;

@@ -228,6 +228,12 @@ void BuiltinCommandsModule::Terminate()
    return;
 }
 
+const FileExtensions &BuiltinCommandsModule::GetFileExtensions()
+{
+   static FileExtensions empty;
+   return empty;
+}
+
 bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    wxString ignoredErrMsg;

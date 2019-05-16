@@ -287,8 +287,11 @@ bool DirectoriesPrefs::Commit()
    return true;
 }
 
-PrefsPanel *DirectoriesPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew DirectoriesPrefs(parent, winid);
+PrefsPanel::Factory
+DirectoriesPrefsFactory() {
+   return [](wxWindow *parent, wxWindowID winid)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew DirectoriesPrefs(parent, winid);
+   };
 }

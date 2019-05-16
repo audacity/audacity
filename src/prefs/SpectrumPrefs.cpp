@@ -575,13 +575,12 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
 
 END_EVENT_TABLE()
 
-SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)
-: mWt(wt)
+PrefsPanel::Factory
+SpectrumPrefsFactory( WaveTrack *wt )
 {
-}
-
-PrefsPanel *SpectrumPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew SpectrumPrefs(parent, winid, mWt);
+   return [=](wxWindow *parent, wxWindowID winid)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew SpectrumPrefs(parent, winid, wt);
+   };
 }

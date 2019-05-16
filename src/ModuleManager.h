@@ -102,7 +102,7 @@ public:
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
                        wxString &errMsg);
 
-   ComponentInterface *CreateProviderInstance(const PluginID & provider, const PluginPath & path);
+   ModuleInterface *CreateProviderInstance(const PluginID & provider, const PluginPath & path);
    ComponentInterface *CreateInstance(const PluginID & provider, const PluginPath & path);
    void DeleteInstance(const PluginID & provider, ComponentInterface *instance);
 

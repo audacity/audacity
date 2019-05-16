@@ -17,6 +17,7 @@
 #include <wx/mstream.h> // member variables
 
 #include <unordered_map>
+#include "audacity/Types.h"
 
 class wxFFile;
 class AudacityProject;

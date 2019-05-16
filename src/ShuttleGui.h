@@ -22,9 +22,6 @@
 
 #include "WrappedType.h"
 
-// For ShuttleGuiGetDefinitions.
-#include "commands/CommandTargets.h"
-
 class ChoiceSetting;
 
 class wxArrayStringEx;
@@ -441,70 +438,6 @@ public:
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
 
    teShuttleMode GetMode() { return  mShuttleMode; };
-};
-
-
-/**************************************************************************//**
-\brief Shuttle that retrieves a JSON format definition of a command's parameters.
-********************************************************************************/
-class ShuttleGuiGetDefinition : public ShuttleGui, public CommandMessageTargetDecorator
-{
-public:
-   ShuttleGuiGetDefinition(wxWindow * pParent,CommandMessageTarget & target );
-   virtual ~ShuttleGuiGetDefinition();
-
-   wxCheckBox * TieCheckBox(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const bool bDefault) override;
-   wxCheckBox * TieCheckBoxOnRight(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const bool bDefault) override;
-   wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const wxArrayStringEx &Choices,
-      const wxArrayStringEx & InternalChoices ) override;
-
-   // An assertion will be violated if this override is reached!
-   wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
-      const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices) override;
-
-   wxChoice * TieNumberAsChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
-      const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices) override;
-
-   wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const int nChars) override;
-   wxTextCtrl * TieNumericTextBox(
-      const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
-      const int nChars) override;
-   wxSlider * TieSlider(
-      const wxString & Prompt,
-      const wxString & SettingName,
-      const int iDefault,
-      const int max,
-      const int min = 0) override;
-   wxSpinCtrl * TieSpinCtrl(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const int Value,
-      const int max,
-      const int min) override;
 };
 
 #endif

@@ -1787,7 +1787,7 @@ bool PluginManager::DropFile(const wxString &fileName)
          continue;
 
       const auto &ff = module->InstallPath();
-      auto extensions = module->GetFileExtensions();
+      const auto &extensions = module->GetFileExtensions();
       if ( !ff.empty() &&
           extensions.Index(src.GetExt(), false) != wxNOT_FOUND ) {
          wxString errMsg;

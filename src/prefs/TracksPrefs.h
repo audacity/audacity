@@ -54,10 +54,6 @@ class TracksPrefs final : public PrefsPanel
    static int iPreferencePinned;
 };
 
-/// A PrefsPanelFactory that creates one TracksPrefs panel.
-class TracksPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one TracksPrefs panel.
+extern PrefsPanel::Factory TracksPrefsFactory;
 #endif

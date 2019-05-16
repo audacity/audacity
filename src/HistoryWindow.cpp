@@ -142,7 +142,6 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
-   DoUpdate();
    mList->SetMinSize(mList->GetSize());
    Fit();
    SetMinSize(GetSize());
@@ -180,6 +179,13 @@ void HistoryWindow::UpdateDisplay(wxEvent& e)
    e.Skip();
    if(IsShown())
       DoUpdate();
+}
+
+bool HistoryWindow::Show( bool show )
+{
+   if ( show && !IsShown())
+      DoUpdate();
+   return wxDialogWrapper::Show();
 }
 
 void HistoryWindow::DoUpdate()

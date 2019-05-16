@@ -247,13 +247,12 @@ EVT_CHOICE(ID_RANGE, WaveformPrefs::OnControl)
 EVT_CHECKBOX(ID_DEFAULTS, WaveformPrefs::OnDefaults)
 END_EVENT_TABLE()
 
-WaveformPrefsFactory::WaveformPrefsFactory(WaveTrack *wt)
-: mWt(wt)
+PrefsPanel::Factory
+WaveformPrefsFactory(WaveTrack *wt)
 {
-}
-
-PrefsPanel *WaveformPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew WaveformPrefs(parent, winid, mWt);
+   return [=](wxWindow *parent, wxWindowID winid)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew WaveformPrefs(parent, winid, wt);
+   };
 }

@@ -416,6 +416,11 @@ BlockArray* WaveClip::GetSequenceBlockArray()
    return &mSequence->GetBlockArray();
 }
 
+const BlockArray* WaveClip::GetSequenceBlockArray() const
+{
+   return &mSequence->GetBlockArray();
+}
+
 double WaveClip::GetStartTime() const
 {
    // JS: mOffset is the minimum value and it is returned; no clipping to 0
