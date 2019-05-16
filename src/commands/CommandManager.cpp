@@ -535,7 +535,8 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
       };
 
       std::vector<NormalizedKeyString> result(
-         strings, strings + sizeof(strings)/sizeof(*strings) );
+         std::begin(strings), std::end(strings)
+      );
       std::sort( result.begin(), result.end() );
       return result;
    }();
@@ -576,7 +577,7 @@ void CommandManager::PurgeData()
 
    mCommandNameHash.clear();
    mCommandKeyHash.clear();
-   mCommandIDHash.clear();
+   mCommandNumericIDHash.clear();
 
    mCurrentMenuName = COMMAND;
    mCurrentID = 17000;
@@ -995,7 +996,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       // the name in prefs is the category name plus the effect name.
       // This feature is not used for built-in effects.
       if (multi)
-         name = wxString::Format(wxT("%s_%s"), name, nameSuffix);
+         name = CommandID{ { name, nameSuffix }, wxT('_') };
 
       // wxMac 2.5 and higher will do special things with the
       // Preferences, Exit (Quit), and About menu items,
@@ -1051,9 +1052,11 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
       // Key from preferences overrides the default key given
       gPrefs->SetPath(wxT("/NewKeys"));
-      if (gPrefs->HasEntry(entry->name)) {
+      // using GET to interpret CommandID as a config path component
+      const auto &path = entry->name.GET();
+      if (gPrefs->HasEntry(path)) {
          entry->key =
-            NormalizedKeyString{ gPrefs->Read(entry->name, entry->key.Raw()) };
+            NormalizedKeyString{ gPrefs->ReadObject(path, entry->key) };
       }
       gPrefs->SetPath(wxT("/"));
 
@@ -1063,7 +1066,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
    // New variable
    CommandListEntry *entry = &*mCommandList.back();
-   mCommandIDHash[entry->id] = entry;
+   mCommandNumericIDHash[entry->id] = entry;
 
 #if defined(__WXDEBUG__)
    prev = mCommandNameHash[entry->name];
@@ -1074,11 +1077,14 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       if( prev->label != entry->label )
       {
          wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name,
+                    // using GET in a log message for devs' eyes only
+                    entry->name.GET(),
                     prev->label.BeforeFirst(wxT('\t')),
                     entry->label.BeforeFirst(wxT('\t')));
          wxFAIL_MSG(wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name,
+                    // using GET in an assertion violation message for devs'
+                    // eyes only
+                    entry->name.GET(),
                     prev->label.BeforeFirst(wxT('\t')),
                     entry->label.BeforeFirst(wxT('\t'))));
       }
@@ -1098,7 +1104,8 @@ wxString CommandManager::GetLabel(const CommandListEntry *entry) const
    wxString label = entry->label;
    if (!entry->key.empty())
    {
-      label += wxT("\t") + entry->key.Raw();
+      // using GET to compose menu item name for wxWidgets
+      label += wxT("\t") + entry->key.GET();
    }
 
    return label;
@@ -1120,7 +1127,8 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          // Dummy accelerator that looks Ok in menus but is non functional.
          // Note the space before the key.
 #ifdef __WXMSW__
-         auto key = entry->key.Raw();
+         // using GET to compose menu item name for wxWidgets
+         auto key = entry->key.GET();
          Accel = wxString("\t ") + key;
          if( key.StartsWith("Left" )) break;
          if( key.StartsWith("Right")) break;
@@ -1149,7 +1157,8 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
 #endif
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
          // Normal accelerator.
-         Accel = wxString("\t") + entry->key.Raw();
+         // using GET to compose menu item name for wxWidgets
+         Accel = wxString("\t") + entry->key.GET();
       }
    } while (false );
    label += Accel;
@@ -1188,15 +1197,16 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
 
          // This menu item is not necessarily in the same menu, because
          // multi-items can be spread across multiple sub menus
-         CommandListEntry *multiEntry = mCommandIDHash[ID];
+         CommandListEntry *multiEntry = mCommandNumericIDHash[ID];
          if (multiEntry) {
             wxMenuItem *item = multiEntry->menu->FindItem(ID);
 
          if (item) {
             item->Enable(enabled);
          } else {
+            // using GET in a log message for devs' eyes only
             wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
-                ID, (const wxChar*)entry->name);
+                ID, entry->name.GET());
          }
          } else {
             wxLogDebug(wxT("Warning: Menu entry with id %i not in hash"), ID);
@@ -1238,8 +1248,9 @@ bool CommandManager::GetEnabled(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry || !entry->menu) {
+      // using GET in a log message for devs' eyes only
       wxLogDebug(wxT("Warning: command doesn't exist: '%s'"),
-                 (const wxChar*)name);
+                 name.GET());
       return false;
    }
    return entry->enabled;
@@ -1550,7 +1561,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 #include "../prefs/KeyConfigPrefs.h"
 bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 {
-   CommandListEntry *entry = mCommandIDHash[id];
+   CommandListEntry *entry = mCommandNumericIDHash[id];
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
    if (::wxGetMouseState().ShiftDown()) {
@@ -1580,7 +1591,11 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
       if (!entry->multi)
       {
          // Testing against labelPrefix too allows us to call Nyquist functions by name.
-         if( Str.IsSameAs( entry->name, false ) || Str.IsSameAs( entry->labelPrefix, false ))
+         if( Str == entry->name ||
+            // PRL:  uh oh, mixing internal string (Str) with user-visible
+            // (labelPrefix, which was initialized from a user-visible
+            // sub-menu name)
+            Str == entry->labelPrefix )
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }
@@ -1588,7 +1603,7 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
       else
       {
          // Handle multis too...
-         if( Str.IsSameAs( entry->name, false ) )
+         if( Str == entry->name )
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }
@@ -1608,7 +1623,7 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str, false))
+      if (em.GetCommandIdentifier(plug->GetID()) == Str)
       {
          return PluginActions::DoEffect(
             plug->GetID(), context,
@@ -1724,9 +1739,9 @@ void CommandManager::GetAllCommandData(
    }
 }
 
-CommandID CommandManager::GetNameFromID(int id)
+CommandID CommandManager::GetNameFromNumericID(int id)
 {
-   CommandListEntry *entry = mCommandIDHash[id];
+   CommandListEntry *entry = mCommandNumericIDHash[id];
    if (!entry)
       return {};
    return entry->name;
@@ -1847,7 +1862,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
       xmlFile.StartTag(wxT("command"));
       xmlFile.WriteAttr(wxT("name"), entry->name);
       xmlFile.WriteAttr(wxT("label"), label);
-      xmlFile.WriteAttr(wxT("key"), entry->key.Raw());
+      xmlFile.WriteAttr(wxT("key"), entry->key);
       xmlFile.EndTag(wxT("command"));
    }
 
@@ -1905,7 +1920,8 @@ void CommandManager::CheckDups()
          if (mCommandList[i]->key == mCommandList[j]->key) {
             wxString msg;
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
-                       mCommandList[i]->key.Raw(),
+                       // using GET to form debug message
+                       mCommandList[i]->key.GET(),
                        mCommandList[i]->label.BeforeFirst(wxT('\t')),
                        mCommandList[j]->label.BeforeFirst(wxT('\t')));
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);
