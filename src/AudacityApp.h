@@ -19,6 +19,7 @@
 
 #include "Experimental.h"
 
+#include "MemoryX.h"
 #include <wx/app.h> // to inherit
 #include <wx/dir.h> // for wxDIR_FILES
 #include <wx/timer.h> // member variable

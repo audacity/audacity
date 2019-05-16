@@ -13,13 +13,16 @@
 
 #include "../Audacity.h"
 
+#include "../MemoryX.h"
 #include <set>
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 #include <wx/event.h> // to inherit
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
+#include "../Internat.h"
 #include "../include/audacity/ComponentInterface.h"
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 

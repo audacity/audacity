@@ -23,6 +23,8 @@ they are kept separate to make things simpler.
 #ifndef __COMMANDDIRECTORY__
 #define __COMMANDDIRECTORY__
 
+#include "../MemoryX.h"
+#include "CommandMisc.h"
 #include "CommandType.h"
 
 class CommandOutputTargets;

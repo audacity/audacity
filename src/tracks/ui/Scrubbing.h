@@ -13,10 +13,12 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 
+#include "../../MemoryX.h"
 #include <vector>
 #include <wx/longlong.h>
 
 #include "../../widgets/Overlay.h" // to inherit
+#include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h" // for MenuTable
 #include "../../../include/audacity/Types.h"

@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_DEVICE_TOOLBAR__
 #define __AUDACITY_DEVICE_TOOLBAR__
 
+#include "../MemoryX.h"
 #include <vector>
 #include "ToolBar.h"
 

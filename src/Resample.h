@@ -14,6 +14,8 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
+
 #include "SampleFormat.h"
 
 class EnumSetting;

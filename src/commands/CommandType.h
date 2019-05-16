@@ -16,7 +16,9 @@
 #ifndef __COMMANDTYPE__
 #define __COMMANDTYPE__
 
+#include "CommandMisc.h"
 #include "CommandSignature.h"
+#include "../MemoryX.h"
 #include "../commands/AudacityCommand.h"
 
 class OldStyleCommand;

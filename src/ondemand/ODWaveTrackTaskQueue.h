@@ -22,6 +22,7 @@ tasks associated with a WaveTrack.
 #ifndef __AUDACITY_ODWAVETRACKTASKQUEUE__
 #define __AUDACITY_ODWAVETRACKTASKQUEUE__
 
+#include "../MemoryX.h"
 #include <vector>
 #include "ODTaskThread.h"
 class Track;

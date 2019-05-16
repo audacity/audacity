@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_EXPANDING_TOOL_BAR__
 #define __AUDACITY_EXPANDING_TOOL_BAR__
 
+#include "../MemoryX.h"
 #include <vector>
 #include <wx/defs.h>
 #include <wx/dragimag.h> // use macros and typedefs in this header
@@ -18,6 +19,7 @@
 #include <wx/minifram.h> // to inherit
 
 #include "ImageRoll.h"
+#include "wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
 

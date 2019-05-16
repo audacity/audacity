@@ -11,10 +11,12 @@
 #ifndef __AUDACITY_SEQUENCE__
 #define __AUDACITY_SEQUENCE__
 
+#include "MemoryX.h"
 #include <vector>
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
+#include "xml/XMLWriter.h"
 #include "ondemand/ODTaskThread.h"
 
 #include "audacity/Types.h"

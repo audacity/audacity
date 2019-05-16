@@ -18,6 +18,7 @@
 #include <vector>
 #include <wx/defs.h>
 #include "widgets/NumericTextCtrl.h"
+#include "Internat.h"
 
 class AudacityProject;
 class Track;

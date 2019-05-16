@@ -14,6 +14,7 @@
 #define __SCREENSHOT_COMMAND__
 
 #include "Command.h"
+#include "../commands/AudacityCommand.h"
 
 #include <wx/colour.h> // member variable
 

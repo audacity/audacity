@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_EXPORT__
 #define __AUDACITY_EXPORT__
 
+#include "../MemoryX.h"
 #include <vector>
 #include <wx/filename.h> // member variable
 #include "../SampleFormat.h"

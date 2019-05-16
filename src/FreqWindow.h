@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_FREQ_WINDOW__
 #define __AUDACITY_FREQ_WINDOW__
 
+#include "MemoryX.h"
 #include <vector>
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit

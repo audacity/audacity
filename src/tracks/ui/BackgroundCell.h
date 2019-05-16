@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_BACKGROUND_CELL__
 
 #include "CommonTrackPanelCell.h"
+#include "../../MemoryX.h"
 
 class AudacityProject;
 

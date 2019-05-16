@@ -14,6 +14,8 @@
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
 
+#include "MemoryX.h"
+
 class ViewInfo;
 class AudacityProject;
 class SnapManager;

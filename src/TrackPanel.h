@@ -14,6 +14,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "Experimental.h"
 
+#include "MemoryX.h"
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros

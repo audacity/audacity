@@ -17,6 +17,9 @@
 #ifndef __COMMAND__
 #define __COMMAND__
 
+#include "../MemoryX.h"
+
+#include "CommandMisc.h"
 #include "CommandSignature.h"
 #include "../commands/AudacityCommand.h"
 

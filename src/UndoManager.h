@@ -49,6 +49,7 @@
 #ifndef __AUDACITY_UNDOMANAGER__
 #define __AUDACITY_UNDOMANAGER__
 
+#include "MemoryX.h"
 #include <vector>
 #include <wx/event.h> // to declare custom event types
 #include "ondemand/ODTaskThread.h"

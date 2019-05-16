@@ -19,6 +19,7 @@
 
 #include "portaudio.h"
 
+#include "MemoryX.h"
 #include <atomic>
 #include <utility>
 #include <vector>

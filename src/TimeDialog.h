@@ -15,6 +15,7 @@
 
 #include "widgets/NumericTextCtrl.h" // for NumericFormatSymbol
 #include "widgets/wxPanelWrapper.h" // to inherit
+#include "Internat.h"
 
 class NumericTextCtrl;
 class ShuttleGui;

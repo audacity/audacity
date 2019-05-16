@@ -16,8 +16,10 @@
 
 #include "../Experimental.h"
 
+#include "../MemoryX.h"
 #include <set>
 
+#include "../MemoryX.h"
 #include <wx/defs.h>
 
 class wxButton;
@@ -29,7 +31,9 @@ class wxWindow;
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectInterface.h"
 
+#include "../SampleFormat.h"
 #include "../SelectedRegion.h"
+#include "../Internat.h"
 
 #include "../Track.h"
 

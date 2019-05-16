@@ -37,6 +37,8 @@ Some of these methods have been overridden only because they used the unsafe wxL
 #define __AUDACITY_ODPCMALIASBLOCKFILE__
 
 #include "PCMAliasBlockFile.h"
+#include "../BlockFile.h"
+#include "../ondemand/ODTaskThread.h"
 
 /// An AliasBlockFile that references uncompressed data in an existing file
 class ODPCMAliasBlockFile final : public PCMAliasBlockFile

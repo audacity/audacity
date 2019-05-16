@@ -14,7 +14,9 @@
 #ifndef __AUDACITY_CONTROL_TOOLBAR__
 #define __AUDACITY_CONTROL_TOOLBAR__
 
+#include "../MemoryX.h"
 #include "ToolBar.h"
+#include "../Theme.h"
 
 class wxBoxSizer;
 class wxCommandEvent;

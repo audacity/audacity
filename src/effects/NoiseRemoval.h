@@ -20,6 +20,9 @@
 
 #include "Effect.h"
 
+#include "../MemoryX.h"
+#include "../SampleFormat.h"
+
 class wxButton;
 class wxSizer;
 class wxSlider;

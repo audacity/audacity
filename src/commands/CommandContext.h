@@ -12,6 +12,7 @@
 #define __AUDACITY_COMMAND_CONTEXT__
 
 #include "audacity/Types.h"
+#include "../MemoryX.h"
 #include "Command.h"
 
 class AudacityProject;

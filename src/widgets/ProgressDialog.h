@@ -20,6 +20,7 @@
 
 #include "../Audacity.h"
 
+#include "../MemoryX.h"
 #include <vector>
 #include <wx/defs.h>
 #include <wx/evtloop.h> // member variable

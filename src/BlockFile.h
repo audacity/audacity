@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_BLOCKFILE__
 #define __AUDACITY_BLOCKFILE__
 
+#include "MemoryX.h"
+
 #include "SampleFormat.h"
 
 #include "wxFileNameWrapper.h" // member variable

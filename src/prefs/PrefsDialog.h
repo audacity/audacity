@@ -15,6 +15,7 @@
 #include <functional>
 #include <vector>
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include "../Internat.h"
 
 class wxTreebook;
 class wxTreeEvent;

@@ -13,6 +13,7 @@
 #ifndef __AUDACITY_SLIDER__
 #define __AUDACITY_SLIDER__
 
+#include "../MemoryX.h"
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/timer.h> // member variable

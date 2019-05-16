@@ -15,6 +15,7 @@
 
 class wxArrayString;
 
+#include "../../MemoryX.h"
 #include <vector>
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"

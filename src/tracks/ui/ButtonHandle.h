@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_BUTTON_HANDLE__
 
 #include "../../UIHandle.h"
+#include "../../MemoryX.h"
 
 class wxMouseEvent;
 class wxMouseState;
