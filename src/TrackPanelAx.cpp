@@ -108,10 +108,13 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 #if wxUSE_ACCESSIBILITY
    if( track )
    {
-      NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
-                   mTrackPanel,
-                   wxOBJID_CLIENT,
-                   mNumFocusedTrack );
+      if (mTrackPanel == wxWindow::FindFocus())
+      {
+         NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
+                      mTrackPanel,
+                      wxOBJID_CLIENT,
+                      mNumFocusedTrack );
+      }
 
       if( track->GetSelected() )
       {
