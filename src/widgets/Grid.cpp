@@ -739,10 +739,12 @@ void GridAx::SetCurrentCell(int row, int col)
                mLastId);
    }
 
-   NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
-               mGrid->GetGridWindow(),
-               wxOBJID_CLIENT,
-               id);
+   if (mGrid == wxWindow::FindFocus()) {
+      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+                  mGrid->GetGridWindow(),
+                  wxOBJID_CLIENT,
+                  id);
+   }
 
    NotifyEvent(wxACC_EVENT_OBJECT_SELECTION,
                mGrid->GetGridWindow(),
