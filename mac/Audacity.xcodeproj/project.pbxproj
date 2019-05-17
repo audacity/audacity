@@ -1293,6 +1293,7 @@
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
 		5EFEAD9E22723E390077DFF6 /* Clipboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */; };
 		5EFEADA02273382D0077DFF6 /* AudacityApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */; };
+		5EFEADA322733DD30077DFF6 /* CrashReport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEADA122733DD30077DFF6 /* CrashReport.cpp */; };
 		65326EC72253D70900844F28 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EAA2253D70900844F28 /* common.c */; };
 		65326EC82253D70900844F28 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAB2253D70900844F28 /* common.h */; };
 		65326EC92253D70900844F28 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAC2253D70900844F28 /* config.h */; };
@@ -3326,6 +3327,8 @@
 		5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clipboard.cpp; sourceTree = "<group>"; };
 		5EFEAD9D22723E390077DFF6 /* Clipboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clipboard.h; sourceTree = "<group>"; };
 		5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudacityApp.mm; sourceTree = "<group>"; };
+		5EFEADA122733DD30077DFF6 /* CrashReport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CrashReport.cpp; sourceTree = "<group>"; };
+		5EFEADA222733DD30077DFF6 /* CrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReport.h; sourceTree = "<group>"; };
 		65326E9E2253D2BE00844F28 /* libmp3lame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmp3lame.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA72253D68900844F28 /* libmpg123.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmpg123.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA92253D70900844F28 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
@@ -4294,6 +4297,7 @@
 				1790AFE809883BFD008A330A /* BlockFile.cpp */,
 				5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */,
 				5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */,
+				5EFEADA122733DD30077DFF6 /* CrashReport.cpp */,
 				1790AFF409883BFD008A330A /* CrossFade.cpp */,
 				2849B4600A7444BE00ECF12D /* Dependencies.cpp */,
 				28D000A31A32920C00367B21 /* DeviceChange.cpp */,
@@ -4393,6 +4397,7 @@
 				5E60AC79214C31B100A82791 /* ClassicThemeAsCeeCode.h */,
 				5EFEAD9D22723E390077DFF6 /* Clipboard.h */,
 				1790AFF009883BFD008A330A /* configtemplate.h */,
+				5EFEADA222733DD30077DFF6 /* CrashReport.h */,
 				1790AFF509883BFD008A330A /* CrossFade.h */,
 				5E60AC7A214C31B100A82791 /* DarkThemeAsCeeCode.h */,
 				2849B4610A7444BE00ECF12D /* Dependencies.h */,
@@ -8509,6 +8514,7 @@
 				28851FAD1027F16500152EE1 /* CommandType.cpp in Sources */,
 				28851FAE1027F16500152EE1 /* CompareAudioCommand.cpp in Sources */,
 				28851FAF1027F16500152EE1 /* GetTrackInfoCommand.cpp in Sources */,
+				5EFEADA322733DD30077DFF6 /* CrashReport.cpp in Sources */,
 				28851FB01027F16500152EE1 /* HelpCommand.cpp in Sources */,
 				28851FB11027F16500152EE1 /* MessageCommand.cpp in Sources */,
 				28851FB21027F16500152EE1 /* SelectCommand.cpp in Sources */,

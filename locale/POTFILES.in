@@ -58,6 +58,8 @@ src/CellularPanel.cpp
 src/CellularPanel.h
 src/Clipboard.cpp
 src/Clipboard.h
+src/CrashReport.cpp
+src/CrashReport.h
 src/ClassicThemeAsCeeCode.h
 src/CrossFade.cpp
 src/CrossFade.h

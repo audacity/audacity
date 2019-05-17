@@ -1094,6 +1094,9 @@
     <ClCompile Include="..\..\..\src\Clipboard.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\CrashReport.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp">
       <Filter>src\menus</Filter>
     </ClCompile>
@@ -2219,6 +2222,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Clipboard.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CrashReport.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">

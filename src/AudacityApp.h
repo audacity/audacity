@@ -92,10 +92,6 @@ class AudacityApp final : public wxApp {
     void AssociateFileTypes();
    #endif
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-   void GenerateCrashReport(wxDebugReport::Context ctx);
-#endif
-
 #ifdef __WXMAC__
 
    void MacActivateApp();

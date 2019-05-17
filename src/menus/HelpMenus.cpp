@@ -4,9 +4,9 @@
 #include <wx/textctrl.h>
 
 #include "../AboutDialog.h"
-#include "../AudacityApp.h"
 #include "../AudacityLogger.h"
 #include "../AudioIO.h"
+#include "../CrashReport.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../Project.h"
@@ -141,7 +141,7 @@ void OnCrashReport(const CommandContext &WXUNUSED(context) )
    char *p = 0;
    *p = 1234;
 #endif
-   wxGetApp().GenerateCrashReport(wxDebugReport::Context_Current);
+   CrashReport::Generate(wxDebugReport::Context_Current);
 }
 #endif
 

@@ -127,6 +127,8 @@ audacity_SOURCES = \
 	CellularPanel.h \
         Clipboard.cpp \
         Clipboard.h \
+        CrashReport.cpp \
+        CrashReport.h \
 	Dependencies.cpp \
 	Dependencies.h \
 	DeviceChange.cpp \
