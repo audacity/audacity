@@ -1,10 +1,10 @@
 #include "../Audacity.h" // for USE_* macros
 #include "../Experimental.h"
 
-#include "../AudacityApp.h"
 #include "../BatchCommands.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
+#include "../MissingAliasFileDialog.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Printing.h"
@@ -33,7 +33,7 @@ void DoExport
 
    Exporter e;
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
    double t1 = tracks->GetEndTime();
 
@@ -81,7 +81,7 @@ void DoExport
    }
    else
    {
-      wxGetApp().AddFileToHistory(filename);
+      FileHistory::Global().AddFileToHistory(filename);
       // We're in batch mode, the file does not exist already.
       // We really can proceed without prompting.
       int nChannels = MacroCommands::IsMono() ? 1 : 2;
@@ -131,7 +131,7 @@ AudacityProject *DoImportMIDI(
       pProject->ZoomAfterImport(pTrack);
       pNewProject = nullptr;
 
-      wxGetApp().AddFileToHistory(fileName);
+      FileHistory::Global().AddFileToHistory(fileName);
 
       return pProject;
    }
@@ -231,7 +231,7 @@ void OnExportSelection(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    Exporter e;
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    e.SetFileDialogTitle( _("Export Selected Audio") );
    e.Process(&project, true, selectedRegion.t0(),
       selectedRegion.t1());
@@ -303,7 +303,7 @@ void OnExportMultiple(const CommandContext &context)
    auto &project = context.project;
    ExportMultiple em(&project);
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    em.ShowModal();
 }
 
@@ -396,7 +396,7 @@ void OnImport(const CommandContext &context)
 
    // An import trigger for the alias missing dialog might not be intuitive, but
    // this serves to track the file if the users zooms in and such.
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    wxArrayString selectedFiles = project.ShowOpenDialog(wxT(""));
    if (selectedFiles.size() == 0) {
@@ -542,7 +542,9 @@ void OnPrint(const CommandContext &context)
 
 void OnExit(const CommandContext &WXUNUSED(context) )
 {
-   QuitAudacity();
+   // Simulate the application Exit menu item
+   wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
+   wxTheApp->AddPendingEvent( evt );
 }
 
 }; // struct Handler
@@ -597,8 +599,9 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
          ,
          Special( [](AudacityProject &, wxMenu &theMenu){
             // Recent Files and Recent Projects menus
-            wxGetApp().GetRecentFiles()->UseMenu( &theMenu );
-            wxGetApp().GetRecentFiles()->AddFilesToMenu( &theMenu );
+            auto &history = FileHistory::Global();
+            history.UseMenu( &theMenu );
+            history.AddFilesToMenu( &theMenu );
 
             wxWeakRef<wxMenu> recentFilesMenu{ &theMenu };
             wxTheApp->CallAfter( [=] {

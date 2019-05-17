@@ -94,10 +94,11 @@ scroll information.  It also has some status flags.
 #endif
 
 #include "AdornedRulerPanel.h"
+#include "Clipboard.h"
+#include "widgets/FileHistory.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
 #include "AutoRecovery.h"
-#include "AudacityApp.h"
 #include "AColor.h"
 #include "AudioIO.h"
 #include "BatchProcessDialog.h"
@@ -111,6 +112,7 @@ scroll information.  It also has some status flags.
 #include "Legacy.h"
 #include "LyricsWindow.h"
 #include "Menus.h"
+#include "MissingAliasFileDialog.h"
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
@@ -170,10 +172,109 @@ scroll information.  It also has some status flags.
 #include "widgets/WindowAccessible.h"
 #endif
 
-std::shared_ptr<TrackList> AudacityProject::msClipboard{ TrackList::Create() };
-double AudacityProject::msClipT0 = 0.0;
-double AudacityProject::msClipT1 = 0.0;
-AudacityProject *AudacityProject::msClipProject = NULL;
+bool AllProjects::sbClosing = false;
+bool AllProjects::sbWindowRectAlreadySaved = false;
+
+bool AllProjects::Close( bool force )
+{
+   ValueRestorer<bool> cleanup{ sbClosing, true };
+   if (gAudacityProjects.size())
+      SaveWindowSize();
+   while (gAudacityProjects.size())
+   {
+      // Closing the project has global side-effect
+      // of deletion from gAudacityProjects
+      if ( force )
+      {
+         gAudacityProjects[0]->Close(true);
+      }
+      else
+      {
+         if (!gAudacityProjects[0]->Close())
+            return false;
+      }
+   }
+   return true;
+}
+
+void AllProjects::SaveWindowSize()
+{
+   if (sbWindowRectAlreadySaved)
+   {
+      return;
+   }
+   bool validWindowForSaveWindowSize = FALSE;
+   AudacityProject * validProject = NULL;
+   bool foundIconizedProject = FALSE;
+   size_t numProjects = gAudacityProjects.size();
+   for (size_t i = 0; i < numProjects; i++)
+   {
+      if (!gAudacityProjects[i]->IsIconized()) {
+         validWindowForSaveWindowSize = TRUE;
+         validProject = gAudacityProjects[i].get();
+         i = numProjects;
+      }
+      else
+         foundIconizedProject =  TRUE;
+
+   }
+   if (validWindowForSaveWindowSize)
+   {
+      wxRect windowRect = validProject->GetRect();
+      wxRect normalRect = validProject->GetNormalizedWindowState();
+      bool wndMaximized = validProject->IsMaximized();
+      gPrefs->Write(wxT("/Window/X"), windowRect.GetX());
+      gPrefs->Write(wxT("/Window/Y"), windowRect.GetY());
+      gPrefs->Write(wxT("/Window/Width"), windowRect.GetWidth());
+      gPrefs->Write(wxT("/Window/Height"), windowRect.GetHeight());
+      gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
+      gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
+      gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
+      gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
+      gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
+      gPrefs->Write(wxT("/Window/Iconized"), FALSE);
+   }
+   else
+   {
+      if (foundIconizedProject) {
+         validProject = gAudacityProjects[0].get();
+         bool wndMaximized = validProject->IsMaximized();
+         wxRect normalRect = validProject->GetNormalizedWindowState();
+         // store only the normal rectangle because the itemized rectangle
+         // makes no sense for an opening project window
+         gPrefs->Write(wxT("/Window/X"), normalRect.GetX());
+         gPrefs->Write(wxT("/Window/Y"), normalRect.GetY());
+         gPrefs->Write(wxT("/Window/Width"), normalRect.GetWidth());
+         gPrefs->Write(wxT("/Window/Height"), normalRect.GetHeight());
+         gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
+         gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
+         gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
+         gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
+         gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
+         gPrefs->Write(wxT("/Window/Iconized"), TRUE);
+      }
+      else {
+         // this would be a very strange case that might possibly occur on the Mac
+         // Audacity would have to be running with no projects open
+         // in this case we are going to write only the default values
+         wxRect defWndRect;
+         GetDefaultWindowRect(&defWndRect);
+         gPrefs->Write(wxT("/Window/X"), defWndRect.GetX());
+         gPrefs->Write(wxT("/Window/Y"), defWndRect.GetY());
+         gPrefs->Write(wxT("/Window/Width"), defWndRect.GetWidth());
+         gPrefs->Write(wxT("/Window/Height"), defWndRect.GetHeight());
+         gPrefs->Write(wxT("/Window/Maximized"), FALSE);
+         gPrefs->Write(wxT("/Window/Normal_X"), defWndRect.GetX());
+         gPrefs->Write(wxT("/Window/Normal_Y"), defWndRect.GetY());
+         gPrefs->Write(wxT("/Window/Normal_Width"), defWndRect.GetWidth());
+         gPrefs->Write(wxT("/Window/Normal_Height"), defWndRect.GetHeight());
+         gPrefs->Write(wxT("/Window/Iconized"), FALSE);
+      }
+   }
+   gPrefs->Flush();
+   sbWindowRectAlreadySaved = true;
+}
+
 ODLock &AudacityProject::AllProjectDeleteMutex()
 {
    static ODLock theMutex;
@@ -946,6 +1047,13 @@ enum {
 };
 
 
+// PRL:  This event type definition used to be in AudacityApp.h, which created
+// a bad compilation dependency.  The event was never emitted anywhere.  I
+// preserve it and its handler here but I move it to remove the dependency.
+// Asynchronous open
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_OPEN_AUDIO_FILE, -1);
+DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
+
 BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_MENU(wxID_ANY, AudacityProject::OnMenu)
    EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)
@@ -1018,7 +1126,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mStatusBar->SetName(wxT("status_line"));     // not localized
    mProjectNo = mProjectCounter++; // Bug 322
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
    // MM: We don't need to Ref() here because it start with refcount=1
@@ -1429,12 +1537,12 @@ void AudacityProject::UpdatePrefs()
 
 void AudacityProject::SetMissingAliasFileDialog(wxDialog *dialog)
 {
-   mAliasMissingWarningDialog = dialog;
+   mMissingAliasFilesWarningDialog = dialog;
 }
 
 wxDialog *AudacityProject::GetMissingAliasFileDialog()
 {
-   return mAliasMissingWarningDialog;
+   return mMissingAliasFilesWarningDialog;
 }
 
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
@@ -2553,7 +2661,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //
    // LL: Save before doing anything else to the window that might make
    //     its size change.
-      SaveWindowSize();
+   AllProjects::SaveWindowSize();
 
    mIsDeleting = true;
 
@@ -2567,10 +2675,11 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    quitOnClose = !mMenuClose;
 #endif
 
-   // DanH: If we're definitely about to quit, DELETE the clipboard.
+   // DanH: If we're definitely about to quit, clear the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
-   if ((gAudacityProjects.size() == 1) && (quitOnClose || gIsQuitting))
-      DeleteClipboard();
+   if ((gAudacityProjects.size() == 1) &&
+      (quitOnClose || AllProjects::Closing()))
+      Clipboard::Get().Clear();
 
    // JKC: For Win98 and Linux do not detach the menu bar.
    // We want wxWidgets to clean it up for us.
@@ -2671,14 +2780,17 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->SetListener(gActiveProject);
    }
 
-   if (gAudacityProjects.empty() && !gIsQuitting) {
+   if (gAudacityProjects.empty() && !AllProjects::Closing()) {
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
-         QuitAudacity();
+         // Simulate the application Exit menu item
+         wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
+         wxTheApp->AddPendingEvent( evt );
       }
       else {
-         wxGetApp().SetWindowRectAlreadySaved(FALSE);
+         AllProjects::Reset();
+         // For non-Mac, always keep at least one project window open
          CreateNewAudacityProject();
       }
 #endif
@@ -3125,9 +3237,8 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       // else any asynch calls into the blockfile code will not have
       // finished logging errors (if any) before the call to ProjectFSCK()
 
-      if (addtohistory) {
-         wxGetApp().AddFileToHistory(fileName);
-      }
+      if (addtohistory)
+         FileHistory::Global().AddFileToHistory(fileName);
    }
 
    // Use a finally block here, because there are calls to Save() below which
@@ -4289,7 +4400,7 @@ bool AudacityProject::Import(const FilePath &fileName, WaveTrackArray* pTrackArr
       if (!success)
          return false;
 
-      wxGetApp().AddFileToHistory(fileName);
+      FileHistory::Global().AddFileToHistory(fileName);
 
       // no more errors, commit
       cleanup.release();
@@ -4368,7 +4479,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy);
 
    if (success && addToHistory) {
-      wxGetApp().AddFileToHistory(mFileName);
+      FileHistory::Global().AddFileToHistory(mFileName);
    }
    if (!success || bWantSaveCopy) // bWantSaveCopy doesn't actually change current project.
    {
@@ -4538,7 +4649,7 @@ will be irreversibly overwritten."), fName, fName);
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy, bLossless);
 
    if (success) {
-      wxGetApp().AddFileToHistory(mFileName);
+      FileHistory::Global().AddFileToHistory(mFileName);
       if( !bHasPath )
       {
          gPrefs->Write( wxT("/SaveAs/Path"), filename.GetPath());
@@ -4692,32 +4803,6 @@ void AudacityProject::SetStateTo(unsigned int n)
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
-}
-
-//
-// Clipboard methods
-//
-
-//static
-TrackList *AudacityProject::GetClipboardTracks()
-{
-   return msClipboard.get();
-}
-
-//static
-void AudacityProject::DeleteClipboard()
-{
-   msClipboard.reset();
-}
-
-void AudacityProject::ClearClipboard()
-{
-   msClipT0 = 0.0;
-   msClipT1 = 0.0;
-   msClipProject = NULL;
-   if (msClipboard) {
-      msClipboard->Clear();
-   }
 }
 
 // Utility function called by other zoom methods
@@ -5300,7 +5385,7 @@ bool AudacityProject::ExportFromTimerRecording(wxFileName fnFile, int iFormat, i
 {
    Exporter e;
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    return e.ProcessFromTimerRecording(this, false, 0.0, mTracks->GetEndTime(), fnFile, iFormat, iSubFormat, iFilterIndex);
 }
 
@@ -5376,7 +5461,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    bSuccess = DoSave(true, false);
 
    if (bSuccess) {
-      wxGetApp().AddFileToHistory(mFileName);
+      FileHistory::Global().AddFileToHistory(mFileName);
       mbLoadedFromAup = true;
       SetProjectTitle();
    }

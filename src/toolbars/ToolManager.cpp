@@ -52,8 +52,6 @@
 #include <wx/minifram.h>
 #include <wx/popupwin.h>
 
-#include "../AudacityApp.h"
-
 #include "ControlToolBar.h"
 #include "DeviceToolBar.h"
 #include "EditToolBar.h"
@@ -672,7 +670,7 @@ void ToolManager::ReadConfig()
    ToolBarConfiguration::Legacy topLegacy, botLegacy;
 
    int vMajor, vMinor, vMicro;
-   wxGetApp().GetVersionKeysInit(vMajor, vMinor, vMicro);
+   gPrefs->GetVersionKeysInit(vMajor, vMinor, vMicro);
    bool useLegacyDock = false;
    // note that vMajor, vMinor, and vMicro will all be zero if either it's a new audacity.cfg file
    // or the version is less than 1.3.13 (when there were no version keys according to the comments in

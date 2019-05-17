@@ -1,6 +1,6 @@
 #include "../Audacity.h" // for USE_* macros
 #include "../AdornedRulerPanel.h"
-#include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
+#include "../Clipboard.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -78,7 +78,8 @@ bool DoPasteNothingSelected(AudacityProject &project)
       return false;
    else
    {
-      auto clipTrackRange = AudacityProject::msClipboard->Any< const Track >();
+      const auto &clipboard = Clipboard::Get();
+      auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
       if (clipTrackRange.empty())
          return true; // nothing to paste
 
@@ -90,7 +91,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
          Track *pNewTrack;
          pClip->TypeSwitch(
             [&](const WaveTrack *wc) {
-               if ((AudacityProject::msClipProject != &project))
+               if ((clipboard.Project() != &project))
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.create(wc);
@@ -136,8 +137,8 @@ bool DoPasteNothingSelected(AudacityProject &project)
       // So do it at the sample rate of the project
       AudacityProject *p = GetActiveProject();
       double projRate = p->GetRate();
-      double quantT0 = QUANTIZED_TIME(AudacityProject::msClipT0, projRate);
-      double quantT1 = QUANTIZED_TIME(AudacityProject::msClipT1, projRate);
+      double quantT0 = QUANTIZED_TIME(clipboard.T0(), projRate);
+      double quantT1 = QUANTIZED_TIME(clipboard.T1(), projRate);
       selectedRegion.setTimes(
          0.0,   // anywhere else and this should be
                 // half a sample earlier
@@ -296,7 +297,8 @@ void OnCut(const CommandContext &context)
       }
    }
 
-   AudacityProject::ClearClipboard();
+   auto &clipboard = Clipboard::Get();
+   clipboard.Clear();
 
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
@@ -318,8 +320,12 @@ void OnCut(const CommandContext &context)
    );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
-   newClipboard.Swap(*AudacityProject::msClipboard);
-   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
+   clipboard.Assign(
+       std::move( newClipboard ),
+       selectedRegion.t0(),
+       selectedRegion.t1(),
+       &project
+   );
 
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
@@ -346,10 +352,6 @@ void OnCut(const CommandContext &context)
                   selectedRegion.t1());
       }
    );
-
-   AudacityProject::msClipT0 = selectedRegion.t0();
-   AudacityProject::msClipT1 = selectedRegion.t1();
-   AudacityProject::msClipProject = &project;
 
    selectedRegion.collapseToT0();
 
@@ -401,7 +403,8 @@ void OnCopy(const CommandContext &context)
       }
    }
 
-   AudacityProject::ClearClipboard();
+   auto &clipboard = Clipboard::Get();
+   clipboard.Clear();
 
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
@@ -413,12 +416,8 @@ void OnCopy(const CommandContext &context)
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
-   newClipboard.Swap(*AudacityProject::msClipboard);
-   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
-
-   AudacityProject::msClipT0 = selectedRegion.t0();
-   AudacityProject::msClipT1 = selectedRegion.t1();
-   AudacityProject::msClipProject = &project;
+   clipboard.Assign( std::move( newClipboard ),
+      selectedRegion.t0(), selectedRegion.t1(), &project );
 
    //Make sure the menus/toolbar states get updated
    trackPanel->Refresh(false);
@@ -441,7 +440,8 @@ void OnPaste(const CommandContext &context)
    if (DoPasteNothingSelected(project))
       return;
 
-   auto clipTrackRange = AudacityProject::msClipboard->Any< const Track >();
+   const auto &clipboard = Clipboard::Get();
+   auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
    if (clipTrackRange.empty())
       return;
 
@@ -492,8 +492,7 @@ void OnPaste(const CommandContext &context)
             {
                // Must perform sync-lock adjustment before incrementing n
                if (n->IsSyncLockSelected()) {
-                  auto newT1 = t0 +
-                     (AudacityProject::msClipT1 - AudacityProject::msClipT0);
+                  auto newT1 = t0 + clipboard.Duration();
                   if (t1 != newT1 && t1 <= n->GetEndTime()) {
                      n->SyncLockAdjust(t1, newT1);
                      bPastedSomething = true;
@@ -554,7 +553,7 @@ void OnPaste(const CommandContext &context)
          n->TypeSwitch(
             [&](WaveTrack *wn){
                const auto wc = static_cast<const WaveTrack *>(c);
-               if (AudacityProject::msClipProject != &project)
+               if (clipboard.Project() != &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.create(wc);
@@ -566,8 +565,7 @@ void OnPaste(const CommandContext &context)
                // a label track.
                ln->Clear(t0, t1);
 
-               ln->ShiftLabelsOnInsert(
-                  AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
+               ln->ShiftLabelsOnInsert( clipboard.Duration(), t0 );
 
                bPastedSomething |= ln->PasteOver(t0, c);
             },
@@ -611,8 +609,7 @@ void OnPaste(const CommandContext &context)
       } // if (n->GetSelected())
       else if (n->IsSyncLockSelected())
       {
-         auto newT1 = t0 +
-            (AudacityProject::msClipT1 - AudacityProject::msClipT0);
+         auto newT1 = t0 + clipboard.Duration();
          if (t1 != newT1 && t1 <= n->GetEndTime()) {
             n->SyncLockAdjust(t1, newT1);
             bPastedSomething = true;
@@ -628,9 +625,9 @@ void OnPaste(const CommandContext &context)
    if ( *pN && ! *pC )
    {
       const auto wc =
-         *AudacityProject::msClipboard->Any< const WaveTrack >().rbegin();
+         *clipboard.GetTracks().Any< const WaveTrack >().rbegin();
       Maybe<WaveTrack::Locker> locker;
-      if (AudacityProject::msClipProject != &project && wc)
+      if (clipboard.Project() != &project && wc)
          // Cause duplication of block files on disk, when copy is
          // between projects
          locker.create(static_cast<const WaveTrack*>(wc));
@@ -647,9 +644,9 @@ void OnPaste(const CommandContext &context)
             else {
                auto tmp = trackFactory->NewWaveTrack(
                   wt->GetSampleFormat(), wt->GetRate());
-               tmp->InsertSilence(0.0,
+               tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?
-                  AudacityProject::msClipT1 - AudacityProject::msClipT0);
+                  clipboard.Duration() );
                tmp->Flush();
 
                bPastedSomething = true;
@@ -665,12 +662,11 @@ void OnPaste(const CommandContext &context)
             // As above, only shift labels if sync-lock is on.
             if (isSyncLocked)
                lt->ShiftLabelsOnInsert(
-                  AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
+                  clipboard.Duration(), t0);
          },
          [&](Track *n) {
             if (n->IsSyncLockSelected())
-               n->SyncLockAdjust(t1, t0 +
-                  AudacityProject::msClipT1 - AudacityProject::msClipT0);
+               n->SyncLockAdjust(t1, t0 + clipboard.Duration() );
          }
       );
    }
@@ -679,8 +675,7 @@ void OnPaste(const CommandContext &context)
 
    if (bPastedSomething)
    {
-      selectedRegion.setT1(
-         t0 + AudacityProject::msClipT1 - AudacityProject::msClipT0);
+      selectedRegion.setT1( t0 + clipboard.Duration() );
 
       project.PushState(_("Pasted from the clipboard"), _("Paste"));
 
@@ -724,7 +719,8 @@ void OnSplitCut(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   AudacityProject::ClearClipboard();
+   auto &clipboard = Clipboard::Get();
+   clipboard.Clear();
 
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
@@ -750,12 +746,8 @@ void OnSplitCut(const CommandContext &context)
    );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
-   newClipboard.Swap(*AudacityProject::msClipboard);
-   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
-
-   AudacityProject::msClipT0 = selectedRegion.t0();
-   AudacityProject::msClipT1 = selectedRegion.t1();
-   AudacityProject::msClipProject = &project;
+   clipboard.Assign( std::move( newClipboard ),
+      selectedRegion.t0(), selectedRegion.t1(), &project );
 
    project.PushState(_("Split-cut to the clipboard"), _("Split Cut"));
 

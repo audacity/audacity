@@ -60,10 +60,10 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "Languages.h"
 
+#include "prefs/GUIPrefs.h"
 #include "widgets/ErrorDialog.h"
 
 std::unique_ptr<AudacityPrefs> ugPrefs {};
@@ -216,7 +216,7 @@ void InitPreferences()
       }
    }
 
-   langCode = wxGetApp().InitLang( langCode );
+   langCode = GUIPrefs::InitLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
@@ -261,7 +261,7 @@ void InitPreferences()
    int vMinor = gPrefs->Read(wxT("/Version/Minor"), (long) 0);
    int vMicro = gPrefs->Read(wxT("/Version/Micro"), (long) 0);
 
-   wxGetApp().SetVersionKeysInit(vMajor, vMinor, vMicro);   // make a note of these initial values
+   gPrefs->SetVersionKeysInit(vMajor, vMinor, vMicro);   // make a note of these initial values
                                                             // for use by ToolManager::ReadConfig()
 
    // These integer version keys were introduced april 4 2011 for 1.3.13

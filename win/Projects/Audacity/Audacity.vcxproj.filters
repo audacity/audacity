@@ -221,6 +221,9 @@
     <ClCompile Include="..\..\..\src\Menus.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MissingAliasFileDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\Mix.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1088,6 +1091,12 @@
     <ClCompile Include="..\..\..\src\CellularPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Clipboard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\CrashReport.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp">
       <Filter>src\menus</Filter>
     </ClCompile>
@@ -1256,6 +1265,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Menus.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MissingAliasFileDialog.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Mix.h">
@@ -2207,6 +2219,12 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\CellularPanel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Clipboard.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CrashReport.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">

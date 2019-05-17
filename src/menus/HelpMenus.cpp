@@ -4,9 +4,9 @@
 #include <wx/textctrl.h>
 
 #include "../AboutDialog.h"
-#include "../AudacityApp.h"
 #include "../AudacityLogger.h"
 #include "../AudioIO.h"
+#include "../CrashReport.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../Project.h"
@@ -75,14 +75,6 @@ namespace HelpActions {
 
 // exported helper functions
 
-void DoShowLog( AudacityProject & )
-{
-   AudacityLogger *logger = wxGetApp().GetLogger();
-   if (logger) {
-      logger->Show();
-   }
-}
-
 void DoHelpWelcome( AudacityProject &project )
 {
    SplashDialog::Show2( &project );
@@ -135,7 +127,10 @@ void OnMidiDeviceInfo(const CommandContext &context)
 
 void OnShowLog( const CommandContext &context )
 {
-   DoShowLog( context.project );
+   auto logger = AudacityLogger::Get();
+   if (logger) {
+      logger->Show();
+   }
 }
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -146,7 +141,7 @@ void OnCrashReport(const CommandContext &WXUNUSED(context) )
    char *p = 0;
    *p = 1234;
 #endif
-   wxGetApp().GenerateCrashReport(wxDebugReport::Context_Current);
+   CrashReport::Generate(wxDebugReport::Context_Current);
 }
 #endif
 
@@ -165,8 +160,9 @@ void OnAbout(const CommandContext &context)
 {
 #ifdef __WXMAC__
    // Modeless dialog, consistent with other Mac applications
-   wxCommandEvent dummy;
-   wxGetApp().OnMenuAbout(dummy);
+   // Simulate the application Exit menu item
+   wxCommandEvent evt{ wxEVT_MENU, wxID_ABOUT };
+   wxTheApp->AddPendingEvent( evt );
 #else
    auto &project = context.project;
 

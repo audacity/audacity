@@ -1,9 +1,9 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
-#include "../AudacityApp.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
+#include "../MissingAliasFileDialog.h"
 #include "../Mix.h"
 
 #include "../Prefs.h"
@@ -43,7 +43,7 @@ void DoMixAndRender
    auto defaultFormat = project.GetDefaultFormat();
    auto trackPanel = project.GetTrackPanel();
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(

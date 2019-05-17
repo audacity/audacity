@@ -125,6 +125,10 @@ audacity_SOURCES = \
 	Benchmark.h \
 	CellularPanel.cpp \
 	CellularPanel.h \
+        Clipboard.cpp \
+        Clipboard.h \
+        CrashReport.cpp \
+        CrashReport.h \
 	Dependencies.cpp \
 	Dependencies.h \
 	DeviceChange.cpp \
@@ -180,6 +184,8 @@ audacity_SOURCES = \
 	MemoryX.h \
 	Menus.cpp \
 	Menus.h \
+	MissingAliasFileDialog.cpp \
+	MissingAliasFileDialog.h \
 	Mix.cpp \
 	Mix.h \
 	MixerBoard.cpp \

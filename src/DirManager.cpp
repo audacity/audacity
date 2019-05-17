@@ -68,7 +68,6 @@
 
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
-#include <wx/app.h>
 #include <wx/dir.h>
 #include <wx/log.h>
 #include <wx/filefn.h>
@@ -86,7 +85,7 @@
 #include <sys/stat.h>
 #endif
 
-#include "AudacityApp.h"
+#include "Clipboard.h"
 #include "FileNames.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
@@ -94,6 +93,7 @@
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "InconsistencyException.h"
+#include "MissingAliasFileDialog.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "Sequence.h"
@@ -1701,12 +1701,12 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    //
    // MISSING ALIASED AUDIO FILES
    //
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(false);
-   BlockHash missingAliasedFileAUFHash;   // (.auf) AliasBlockFiles whose aliased files are missing
-   BlockHash missingAliasedFilePathHash;  // full paths of missing aliased files
-   this->FindMissingAliasedFiles(missingAliasedFileAUFHash, missingAliasedFilePathHash);
+   MissingAliasFilesDialog::SetShouldShow(false);
+   BlockHash missingAliasFilesAUFHash;   // (.auf) AliasBlockFiles whose aliased files are missing
+   BlockHash missingAliasFilesPathHash;  // full paths of missing aliased files
+   this->FindMissingAliasFiles(missingAliasFilesAUFHash, missingAliasFilesPathHash);
 
-   if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAliasedFileAUFHash.empty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAliasFilesAUFHash.empty())
    {
       // In auto-recover mode, we always create silent blocks, and do not ask user.
       // This makes sure the project is complete next time we open it.
@@ -1728,7 +1728,7 @@ _("Project check of \"%s\" folder \
 \nproject in its current state, unless you \"Close \
 \nproject immediately\" on further error alerts.");
          wxString msg;
-         msg.Printf(msgA, this->projName, (long long) missingAliasedFilePathHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAliasFilesPathHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"),
@@ -1743,8 +1743,8 @@ _("Project check of \"%s\" folder \
       else
       {
          // LL:  A progress dialog should probably be used here
-         BlockHash::iterator iter = missingAliasedFileAUFHash.begin();
-         while (iter != missingAliasedFileAUFHash.end())
+         BlockHash::iterator iter = missingAliasFilesAUFHash.begin();
+         while (iter != missingAliasFilesAUFHash.end())
          {
             // This type cast is safe. We checked that it's an alias block file earlier.
             BlockFilePtr b = iter->second.lock();
@@ -1989,7 +1989,7 @@ other projects. \
 
    // Summarize and flush the log.
    if (bForceError ||
-         !missingAliasedFileAUFHash.empty() ||
+         !missingAliasFilesAUFHash.empty() ||
          !missingAUFHash.empty() ||
          !missingAUHash.empty() ||
          !orphanFilePathArray.empty())
@@ -2005,13 +2005,13 @@ other projects. \
             wxOK  | wxICON_EXCLAMATION);
    }
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
    return nResult;
 }
 
-void DirManager::FindMissingAliasedFiles(
-      BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
-      BlockHash& missingAliasedFilePathHash)    // output: full paths of missing aliased files
+void DirManager::FindMissingAliasFiles(
+      BlockHash& missingAliasFilesAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
+      BlockHash& missingAliasFilesPathHash)    // output: full paths of missing aliased files
 {
    BlockHash::iterator iter = mBlockFileHash.begin();
    while (iter != mBlockFileHash.end())
@@ -2028,20 +2028,20 @@ void DirManager::FindMissingAliasedFiles(
             if ((!aliasedFileFullPath.empty()) &&
                 !aliasedFileName.FileExists())
             {
-               missingAliasedFileAUFHash[key] = b;
-               if (missingAliasedFilePathHash.find(aliasedFileFullPath) ==
-                   missingAliasedFilePathHash.end()) // Add it only once.
+               missingAliasFilesAUFHash[key] = b;
+               if (missingAliasFilesPathHash.find(aliasedFileFullPath) ==
+                   missingAliasFilesPathHash.end()) // Add it only once.
                   // Not actually using the block here, just the path,
                   // so set the block to NULL to create the entry.
-                  missingAliasedFilePathHash[aliasedFileFullPath] = {};
+                  missingAliasFilesPathHash[aliasedFileFullPath] = {};
             }
          }
       }
       ++iter;
    }
 
-   iter = missingAliasedFilePathHash.begin();
-   while (iter != missingAliasedFilePathHash.end())
+   iter = missingAliasFilesPathHash.begin();
+   while (iter != missingAliasFilesPathHash.end())
    {
       wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first);
       ++iter;
@@ -2124,13 +2124,11 @@ void DirManager::FindOrphanBlockFiles(
                ext.IsSameAs(wxT("auf"), false)))
       {
          if (!clipboardDM) {
-            TrackList *clipTracks = AudacityProject::GetClipboardTracks();
+            auto &clipTracks = Clipboard::Get().GetTracks();
 
-            if (clipTracks) {
-               auto track = *clipTracks->Any().first;
-               if (track)
-                  clipboardDM = track->GetDirManager().get();
-            }
+            auto track = *clipTracks.Any().first;
+            if (track)
+               clipboardDM = track->GetDirManager().get();
          }
 
          // Ignore it if it exists in the clipboard (from a previously closed project)

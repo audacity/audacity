@@ -56,6 +56,10 @@ src/BlockFile.cpp
 src/BlockFile.h
 src/CellularPanel.cpp
 src/CellularPanel.h
+src/Clipboard.cpp
+src/Clipboard.h
+src/CrashReport.cpp
+src/CrashReport.h
 src/ClassicThemeAsCeeCode.h
 src/CrossFade.cpp
 src/CrossFade.h
@@ -125,6 +129,8 @@ src/MemoryX.h
 src/Menus.cpp
 src/Menus.h
 src/MenusMac.cpp
+src/MissingAliasFileDialog.cpp
+src/MissingAliasFileDialog.h
 src/Mix.cpp
 src/Mix.h
 src/MixerBoard.cpp

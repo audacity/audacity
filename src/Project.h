@@ -150,6 +150,23 @@ class ImportXMLTagHandler final : public XMLTagHandler
    AudacityProject* mProject;
 };
 
+class AllProjects
+{
+public:
+   // Return true if all projects do close (always so if force == true)
+   // But if return is false, that means the user cancelled close of at least
+   // one un-saved project.
+   static bool Close( bool force = false );
+   static void SaveWindowSize();
+
+   static bool Closing() { return sbClosing; }
+   static void Reset() { sbWindowRectAlreadySaved = false; }
+
+private:
+   static bool sbClosing;
+   static bool sbWindowRectAlreadySaved;
+};
+
 class EffectPlugs;
 class CommandContext;
 class CommandManager;
@@ -381,10 +398,7 @@ public:
    void ZoomOutByFactor( double ZoomFactor );
 
    // Other commands
-   static TrackList *GetClipboardTracks();
-   static void ClearClipboard();
-   static void DeleteClipboard();
-
+   
    int GetProjectNumber(){ return mProjectNo;};
    static int CountUnnamed();
    static void RefreshAllTitles(bool bShowProjectNumbers );
@@ -583,13 +597,6 @@ public:
    std::shared_ptr<TrackList> mLastSavedTracks;
 
 public:
-   // Clipboard (static because it is shared by all projects)
-   static std::shared_ptr<TrackList> msClipboard;
-   static AudacityProject *msClipProject;
-
-   static double msClipT0;
-   static double msClipT1;
-
    ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
    //shared by all projects
    static ODLock &AllProjectDeleteMutex();
@@ -638,7 +645,7 @@ private:
    Destroy_ptr<ContrastDialog> mContrastDialog;
 
    // dialog for missing alias warnings
-   wxDialog            *mAliasMissingWarningDialog{};
+   wxDialog            *mMissingAliasFilesWarningDialog{};
 
    bool mShownOnce{ false };
 

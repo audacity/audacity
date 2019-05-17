@@ -159,9 +159,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    //    Too complicated during auto-recover. Just correct problems the "safest" way.
    int ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode);
 
-   void FindMissingAliasedFiles(
-         BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
-         BlockHash& missingAliasedFilePathHash);   // output: full paths of missing aliased files
+   void FindMissingAliasFiles(
+         BlockHash& missingAliasFilesAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
+         BlockHash& missingAliasFilesPathHash);   // output: full paths of missing aliased files
    void FindMissingAUFs(
          BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles
    void FindMissingAUs(

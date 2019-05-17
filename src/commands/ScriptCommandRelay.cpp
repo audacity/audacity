@@ -25,7 +25,7 @@ code out of ModuleManager.
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"
 #include "../Project.h"
-#include "../AudacityApp.h"
+#include <wx/app.h>
 #include <wx/string.h>
 
 // Declare static class members
@@ -110,8 +110,10 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
          OldStyleCommandPointer cmd = builder.GetCommand();
          AppCommandEvent ev;
          ev.SetCommand(cmd);
-         AudacityApp & App = wxGetApp();
-         App.OnReceiveCommand(ev);
+
+         // Use SafelyProcessEvent, which stops exceptions, because this is
+         // expected to be reached from within the XLisp runtime
+         wxTheApp->SafelyProcessEvent( ev );
 
          *pOut = wxEmptyString;
       }

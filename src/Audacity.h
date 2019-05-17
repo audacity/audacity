@@ -109,9 +109,6 @@
 
 class wxWindow;
 
-void QuitAudacity(bool bForce);
-void QuitAudacity();
-
 // Please try to support unlimited path length instead of using PLATFORM_MAX_PATH!
 // Define one constant for maximum path value, so we don't have to do
 // platform-specific conditionals everywhere we want to check it.
