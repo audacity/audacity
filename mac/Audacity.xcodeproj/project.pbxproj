@@ -1274,7 +1274,9 @@
 		5EBD243D1F74C50800132E0A /* eu_ES.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD243C1F74C50800132E0A /* eu_ES.po */; };
 		5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD35851F78D37A0084D13F /* pt_PT.po */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
+		5ECF728722871A4F007F2A35 /* ShuttleGetDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728522871A4F007F2A35 /* ShuttleGetDefinition.cpp */; };
 		5ECF728A22887B3B007F2A35 /* MissingAliasFileDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728822887B3B007F2A35 /* MissingAliasFileDialog.cpp */; };
+		5ECF728D228B307E007F2A35 /* ProjectFSCK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */; };
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
@@ -1294,6 +1296,7 @@
 		5EFEAD9E22723E390077DFF6 /* Clipboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */; };
 		5EFEADA02273382D0077DFF6 /* AudacityApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */; };
 		5EFEADA322733DD30077DFF6 /* CrashReport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEADA122733DD30077DFF6 /* CrashReport.cpp */; };
+		5EFEADA62274C8230077DFF6 /* KeyboardCapture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEADA42274C8230077DFF6 /* KeyboardCapture.cpp */; };
 		65326EC72253D70900844F28 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 65326EAA2253D70900844F28 /* common.c */; };
 		65326EC82253D70900844F28 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAB2253D70900844F28 /* common.h */; };
 		65326EC92253D70900844F28 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 65326EAC2253D70900844F28 /* config.h */; };
@@ -3288,8 +3291,12 @@
 		5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NotYetAvailableException.cpp; sourceTree = "<group>"; };
 		5EC7ED051E101C5C0052CAE2 /* NotYetAvailableException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotYetAvailableException.h; sourceTree = "<group>"; };
 		5ECCE7651DE49834009900E9 /* AudacityException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityException.h; sourceTree = "<group>"; };
+		5ECF728522871A4F007F2A35 /* ShuttleGetDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShuttleGetDefinition.cpp; sourceTree = "<group>"; };
+		5ECF728622871A4F007F2A35 /* ShuttleGetDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShuttleGetDefinition.h; sourceTree = "<group>"; };
 		5ECF728822887B3B007F2A35 /* MissingAliasFileDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MissingAliasFileDialog.cpp; sourceTree = "<group>"; };
 		5ECF728922887B3B007F2A35 /* MissingAliasFileDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MissingAliasFileDialog.h; sourceTree = "<group>"; };
+		5ECF728B228B307E007F2A35 /* ProjectFSCK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectFSCK.h; sourceTree = "<group>"; };
+		5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectFSCK.cpp; sourceTree = "<group>"; };
 		5ED18DB61CC16B1E00FAFE95 /* Reverb_libSoX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reverb_libSoX.h; sourceTree = "<group>"; };
 		5ED18DB71CC290AB00FAFE95 /* wxFileNameWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxFileNameWrapper.h; sourceTree = "<group>"; };
 		5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
@@ -3329,6 +3336,8 @@
 		5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudacityApp.mm; sourceTree = "<group>"; };
 		5EFEADA122733DD30077DFF6 /* CrashReport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CrashReport.cpp; sourceTree = "<group>"; };
 		5EFEADA222733DD30077DFF6 /* CrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReport.h; sourceTree = "<group>"; };
+		5EFEADA42274C8230077DFF6 /* KeyboardCapture.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = KeyboardCapture.cpp; sourceTree = "<group>"; };
+		5EFEADA52274C8230077DFF6 /* KeyboardCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardCapture.h; sourceTree = "<group>"; };
 		65326E9E2253D2BE00844F28 /* libmp3lame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmp3lame.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA72253D68900844F28 /* libmpg123.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmpg123.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		65326EA92253D70900844F28 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
@@ -4319,6 +4328,7 @@
 				5EF958831DEB121800191280 /* InconsistencyException.cpp */,
 				1790B09909883BFD008A330A /* Internat.cpp */,
 				28EBA7FD0A78FAF800C8BB1F /* InterpolateAudio.cpp */,
+				5EFEADA42274C8230077DFF6 /* KeyboardCapture.cpp */,
 				280828530A75E0D0000002EF /* LabelDialog.cpp */,
 				1790B09B09883BFD008A330A /* LabelTrack.cpp */,
 				1790B09F09883BFD008A330A /* LangChoice.cpp */,
@@ -4340,6 +4350,7 @@
 				1790B0CE09883BFD008A330A /* Printing.cpp */,
 				186CCEA30E523C8E00659159 /* Profiler.cpp */,
 				1790B0D009883BFD008A330A /* Project.cpp */,
+				5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */,
 				28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */,
 				EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */,
 				1790B0D209883BFD008A330A /* Resample.cpp */,
@@ -4350,6 +4361,7 @@
 				5E2A19921EED688500217B58 /* SelectionState.cpp */,
 				1790B0DA09883BFD008A330A /* Sequence.cpp */,
 				1790B0DC09883BFD008A330A /* Shuttle.cpp */,
+				5ECF728522871A4F007F2A35 /* ShuttleGetDefinition.cpp */,
 				283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */,
 				288217790A35D8730029AF41 /* ShuttlePrefs.cpp */,
 				282D474A0B9E8D900034BC49 /* Snap.cpp */,
@@ -4424,6 +4436,7 @@
 				5EF958841DEB121800191280 /* InconsistencyException.h */,
 				1790B09A09883BFD008A330A /* Internat.h */,
 				28EBA7FE0A78FAF800C8BB1F /* InterpolateAudio.h */,
+				5EFEADA52274C8230077DFF6 /* KeyboardCapture.h */,
 				280828540A75E0D0000002EF /* LabelDialog.h */,
 				1790B09C09883BFD008A330A /* LabelTrack.h */,
 				1790B0A009883BFD008A330A /* LangChoice.h */,
@@ -4449,6 +4462,7 @@
 				1790B0CF09883BFD008A330A /* Printing.h */,
 				186CCEA20E523C8D00659159 /* Profiler.h */,
 				1790B0D109883BFD008A330A /* Project.h */,
+				5ECF728B228B307E007F2A35 /* ProjectFSCK.h */,
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
 				5E1512391DB000C000702E29 /* RefreshCode.h */,
@@ -4462,6 +4476,7 @@
 				5E2A19931EED688500217B58 /* SelectionState.h */,
 				1790B0DB09883BFD008A330A /* Sequence.h */,
 				1790B0DD09883BFD008A330A /* Shuttle.h */,
+				5ECF728622871A4F007F2A35 /* ShuttleGetDefinition.h */,
 				283A11A70A2C0E15004372C4 /* ShuttleGui.h */,
 				2882177A0A35D8730029AF41 /* ShuttlePrefs.h */,
 				282D474B0B9E8D900034BC49 /* Snap.h */,
@@ -8283,6 +8298,7 @@
 				5E7396711DAFDB9D00BA0A4D /* SelectHandle.cpp in Sources */,
 				1790B15309883BFD008A330A /* TruncSilence.cpp in Sources */,
 				1790B15409883BFD008A330A /* TwoPassSimpleMono.cpp in Sources */,
+				5ECF728722871A4F007F2A35 /* ShuttleGetDefinition.cpp in Sources */,
 				1790B15809883BFD008A330A /* Wahwah.cpp in Sources */,
 				1790B15A09883BFD008A330A /* Envelope.cpp in Sources */,
 				1790B15B09883BFD008A330A /* Export.cpp in Sources */,
@@ -8562,6 +8578,7 @@
 				5EA0182D1EC7B226001F2996 /* WaveTrackVRulerControls.cpp in Sources */,
 				ED85B3DA16A46FC9006DA21D /* hr.po in Sources */,
 				2888495A131B6CF600B59735 /* id.po in Sources */,
+				5EFEADA62274C8230077DFF6 /* KeyboardCapture.cpp in Sources */,
 				2888495B131B6CF600B59735 /* it.po in Sources */,
 				2888495C131B6CF600B59735 /* ja.po in Sources */,
 				2888495D131B6CF600B59735 /* ka.po in Sources */,
@@ -8595,6 +8612,7 @@
 				289D127A1B44D57F00B5B6AA /* VSTControlOSX.mm in Sources */,
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */,
+				5ECF728D228B307E007F2A35 /* ProjectFSCK.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
 				5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
