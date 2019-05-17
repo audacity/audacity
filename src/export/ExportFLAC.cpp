@@ -37,10 +37,8 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
 #include "../Tags.h"
 
-#include "../Track.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 

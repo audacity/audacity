@@ -13,10 +13,9 @@
 #ifndef __AUDACITY_EFFECT_NOISE__
 #define __AUDACITY_EFFECT_NOISE__
 
-#include "../widgets/NumericTextCtrl.h"
-
 #include "Effect.h"
 
+class NumericTextCtrl;
 class ShuttleGui;
 
 #define NOISE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Noise") }

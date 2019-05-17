@@ -12,8 +12,6 @@ Paul Licameli
 
 #include "Experimental.h"
 
-#include "Internat.h"
-
 #include "xml/XMLWriter.h"
 
 const wxChar *SelectedRegion::sDefaultT0Name = wxT("selStart");

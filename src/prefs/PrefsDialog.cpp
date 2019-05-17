@@ -39,8 +39,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "PrefsPanel.h"
-
 #include "BatchPrefs.h"
 #include "DevicePrefs.h"
 #include "DirectoriesPrefs.h"
@@ -487,72 +485,42 @@ PrefsDialog::Factories
 {
    // To do, perhaps:  create this table by registration, without including each PrefsPanel
    // class... and thus allowing a plug-in protocol
-   static DevicePrefsFactory devicePrefsFactory;
-   static PlaybackPrefsFactory playbackPrefsFactory;
-   static RecordingPrefsFactory recordingPrefsFactory;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   static MidiIOPrefsFactory midiIOPrefsFactory;
-#endif
-   static QualityPrefsFactory qualityPrefsFactory;
-   static GUIPrefsFactory guiPrefsFactory;
-   static TracksPrefsFactory tracksPrefsFactory;
-   static ImportExportPrefsFactory importExportPrefsFactory;
-   static ExtImportPrefsFactory extImportPrefsFactory;
-   static ProjectsPrefsFactory projectsPrefsFactory;
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
-   static LibraryPrefsFactory libraryPrefsFactory;
-#endif
-   // static WaveformPrefsFactory waveformPrefsFactory;
-   static TracksBehaviorsPrefsFactory tracksBehaviorsPrefsFactory;
-   static SpectrumPrefsFactory spectrumPrefsFactory;
-   static DirectoriesPrefsFactory directoriesPrefsFactory;
-   static WarningsPrefsFactory warningsPrefsFactory;
-   static EffectsPrefsFactory effectsPrefsFactory;
-#ifdef EXPERIMENTAL_THEME_PREFS
-   static ThemePrefsFactory themePrefsFactory;
-#endif
-   // static BatchPrefsFactory batchPrefsFactory;
-   static KeyConfigPrefsFactory keyConfigPrefsFactory;
-   static MousePrefsFactory mousePrefsFactory;
-#ifdef EXPERIMENTAL_MODULE_PREFS
-   static ModulePrefsFactory modulePrefsFactory;
-#endif
 
    static PrefsNode nodes[] = {
-      &devicePrefsFactory,
-      &playbackPrefsFactory,
-      &recordingPrefsFactory,
+      DevicePrefsFactory,
+      PlaybackPrefsFactory,
+      RecordingPrefsFactory,
 #ifdef EXPERIMENTAL_MIDI_OUT
-      &midiIOPrefsFactory,
+      MidiIOPrefsFactory,
 #endif
-      &qualityPrefsFactory,
-      &guiPrefsFactory,
+      QualityPrefsFactory,
+      GUIPrefsFactory,
 
       // Group other page(s)
-      PrefsNode(&tracksPrefsFactory, 2),
-      // &waveformPrefsFactory,
-      &tracksBehaviorsPrefsFactory,
-      &spectrumPrefsFactory,
+      PrefsNode(TracksPrefsFactory, 2),
+      // WaveformPrefsFactory(),
+      TracksBehaviorsPrefsFactory,
+      SpectrumPrefsFactory(),
 
       // Group one other page
-      PrefsNode(&importExportPrefsFactory, 1),
-      &extImportPrefsFactory,
+      PrefsNode(ImportExportPrefsFactory, 1),
+      ExtImportPrefsFactory,
 
-      &projectsPrefsFactory,
+      ProjectsPrefsFactory,
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
-      &libraryPrefsFactory,
+      LibraryPrefsFactory,
 #endif
-      &directoriesPrefsFactory,
-      &warningsPrefsFactory,
-      &effectsPrefsFactory,
+      DirectoriesPrefsFactory(),
+      WarningsPrefsFactory,
+      EffectsPrefsFactory,
 #ifdef EXPERIMENTAL_THEME_PREFS
-      &themePrefsFactory,
+      ThemePrefsFactory,
 #endif
       // &batchPrefsFactory,
-      &keyConfigPrefsFactory,
-      &mousePrefsFactory,
+      KeyConfigPrefsFactory(),
+      MousePrefsFactory,
 #ifdef EXPERIMENTAL_MODULE_PREFS
-      &modulePrefsFactory,
+      ModulePrefsFactory,
 #endif
    };
 
@@ -601,7 +569,7 @@ PrefsDialog::PrefsDialog
                   it != end; ++it, ++iPage)
                {
                   const PrefsNode &node = *it;
-                  PrefsPanelFactory &factory = *node.pFactory;
+                  const PrefsPanel::Factory &factory = node.factory;
                   wxWindow *const w = factory(mCategories, wxID_ANY);
                   if (stack.empty())
                      // Parameters are: AddPage(page, name, IsSelected, imageId).
@@ -629,7 +597,7 @@ PrefsDialog::PrefsDialog
 
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
-         PrefsPanelFactory &factory = *node.pFactory;
+         const PrefsPanel::Factory &factory = node.factory;
          mUniquePage = factory(this, wxID_ANY);
          wxWindow * uniquePageWindow = S.Prop(1).AddWindow(mUniquePage, wxEXPAND);
          // We're not in the wxTreebook, so add the accelerator here

@@ -37,12 +37,11 @@ other settings.
 
 #include "../../lib-src/portmidi/pm_common/portmidi.h"
 
-#include "../AudioIO.h"
-#include "../Internat.h"
 #include "../Prefs.h"
-#include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../widgets/ErrorDialog.h"
+
+#define DEFAULT_SYNTH_LATENCY 5
 
 enum {
    HostID = 10000,
@@ -299,10 +298,11 @@ bool MidiIOPrefs::Validate()
    return true;
 }
 
-PrefsPanel *MidiIOPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+MidiIOPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew MidiIOPrefs(parent, winid);
-}
+};
 
 #endif

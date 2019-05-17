@@ -65,7 +65,6 @@
 #include "Languages.h"
 
 #include "widgets/ErrorDialog.h"
-#include "Internat.h"
 
 std::unique_ptr<AudacityPrefs> ugPrefs {};
 

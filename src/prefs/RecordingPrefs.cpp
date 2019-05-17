@@ -32,8 +32,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 #include "../widgets/Warning.h"
 
 using std::min;
@@ -305,8 +303,9 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
    mToggleCustomName->Enable(mUseCustomTrackName);
 }
 
-PrefsPanel *RecordingPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+RecordingPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew RecordingPrefs(parent, winid);
-}
+};

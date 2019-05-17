@@ -66,8 +66,6 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../Theme.h"
-#include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
 #include "../widgets/LinkingHtmlWindow.h"

@@ -43,7 +43,6 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Internat.h"
 
 // The numbers of the columns of the mList.
 enum
@@ -218,8 +217,9 @@ bool MousePrefs::Commit()
    return true;
 }
 
-PrefsPanel *MousePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+MousePrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew MousePrefs(parent, winid);
-}
+};

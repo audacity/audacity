@@ -20,7 +20,6 @@
 #include "GetTrackInfoCommand.h"
 
 #include "../Project.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../NoteTrack.h"
 #include "../WaveTrack.h"

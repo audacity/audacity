@@ -26,11 +26,8 @@
 #include <wx/defs.h>
 
 #include "../Languages.h"
-#include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-
-#include "../Internat.h"
 
 EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, _("Effects"))
@@ -201,8 +198,9 @@ bool EffectsPrefs::Commit()
    return true;
 }
 
-PrefsPanel *EffectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+EffectsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew EffectsPrefs(parent, winid);
-}
+};

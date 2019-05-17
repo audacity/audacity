@@ -18,8 +18,6 @@
 
 #include "../Prefs.h"
 
-#include "../MemoryX.h"
-
 #include "EffectManager.h"
 
 #include "Amplify.h"
@@ -291,6 +289,12 @@ void BuiltinEffectsModule::Terminate()
 {
    // Nothing to do here
    return;
+}
+
+const FileExtensions &BuiltinEffectsModule::GetFileExtensions()
+{
+   static FileExtensions empty;
+   return empty;
 }
 
 bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)

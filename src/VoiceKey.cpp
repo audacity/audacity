@@ -32,7 +32,6 @@ or "OFF" point
 
 #include "WaveTrack.h"
 #include "widgets/ErrorDialog.h"
-#include "Internat.h"
 
 using std::cout;
 using std::endl;

@@ -32,10 +32,7 @@
 #include <wx/intl.h>
 
 #include "WaveTrack.h"
-#include "DirManager.h"
-#include "Internat.h"
 #include "Prefs.h"
-#include "Project.h"
 #include "Resample.h"
 #include "TimeTrack.h"
 #include "float_cast.h"

@@ -21,6 +21,7 @@ LRN
 #include "../FileNames.h"
 
 #include <unordered_map>
+#include "audacity/Types.h"
 
 class wxArrayStringEx;
 

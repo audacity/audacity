@@ -28,7 +28,6 @@
 #include <wx/stattext.h>
 #include <wx/valgen.h>
 
-#include "../Internat.h"
 #include "../Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

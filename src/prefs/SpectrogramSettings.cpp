@@ -25,12 +25,10 @@ Paul Licameli
 
 #include "../FFT.h"
 #include "../Prefs.h"
-#include "../RealFFTf.h"
 
 #include <cmath>
 
 #include "../widgets/ErrorDialog.h"
-#include "../Internat.h"
 
 SpectrogramSettings::Globals::Globals()
 {

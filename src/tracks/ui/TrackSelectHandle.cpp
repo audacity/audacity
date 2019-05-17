@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackSelectHandle.h"
 
 #include "TrackControls.h"
-#include "../../HitTestResult.h"
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
@@ -20,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelMouseEvent.h"
 #include "../../WaveTrack.h"
 
-#include "../../MemoryX.h"
 #include <wx/cursor.h>
 #include <wx/translation.h>
 

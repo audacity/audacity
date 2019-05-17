@@ -18,15 +18,9 @@
 
 #include <sndfile.h>
 
-#include "../AudacityApp.h"
 #include "../FileFormats.h"
-#include "../Internat.h"
-#include "../MemoryX.h"
 
-#include "../ondemand/ODManager.h"
-#include "../AudioIO.h"
-
-extern AudioIO *gAudioIO;
+#include "../DirManager.h"
 
 PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&fileName,

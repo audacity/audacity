@@ -24,7 +24,6 @@
 #include "ShuttleGui.h"
 #include "Prefs.h"
 #include "prefs/GUISettings.h"
-#include "Internat.h"
 
 BEGIN_EVENT_TABLE(SoundActivatedRecord, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, SoundActivatedRecord::OnOK)

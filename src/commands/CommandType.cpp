@@ -20,8 +20,6 @@ Also acts as a factory.
 #include "../Audacity.h"
 #include "CommandType.h"
 
-#include "CommandMisc.h"
-#include "CommandSignature.h"
 #include <wx/string.h>
 
 OldStyleCommandType::OldStyleCommandType()

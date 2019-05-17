@@ -51,7 +51,6 @@
 #include "../ImageManipulation.h"
 #include "../Project.h"
 #include "../tracks/ui/Scrubbing.h"
-#include "../Theme.h"
 
 #include "../widgets/AButton.h"
 

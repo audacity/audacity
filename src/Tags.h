@@ -33,12 +33,12 @@
 
 #include "xml/XMLTagHandler.h"
 
-#include "MemoryX.h"
 #include <utility>
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 #include <unordered_map>
+#include "audacity/Types.h"
 
 class wxArrayString;
 class wxComboBox;

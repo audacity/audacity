@@ -29,7 +29,6 @@
 #include "../Audacity.h"
 #include "ProgressDialog.h"
 
-#include "../MemoryX.h"
 #include <algorithm>
 
 #include <wx/defs.h>
@@ -53,7 +52,6 @@
 
 #include "ErrorDialog.h"
 #include "../Prefs.h"
-#include "../Internat.h"
 
 // This really should be a Preferences setting
 static const unsigned char beep[] =

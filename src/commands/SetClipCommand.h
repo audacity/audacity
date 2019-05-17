@@ -16,8 +16,6 @@
 #ifndef __SET_CLIP_COMMAND__
 #define __SET_CLIP_COMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
 #include "SetTrackInfoCommand.h"
 
 #define SET_CLIP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Clip") }

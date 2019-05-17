@@ -12,7 +12,6 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../export/Export.h"
 #include "../export/ExportMultiple.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/FileHistory.h"

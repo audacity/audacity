@@ -29,7 +29,6 @@
 #include "../HelpText.h"
 #include "../FileNames.h"
 #include "../Prefs.h"
-#include "ErrorDialog.h"
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(BrowserDialog, wxDialogWrapper)

@@ -20,13 +20,11 @@
 #include "SetClipCommand.h"
 
 #include "../Project.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "CommandContext.h"
 
 SetClipCommand::SetClipCommand()
 {
@@ -73,9 +71,8 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetClipCommand::ApplyInner( const CommandContext & context, Track * t )
+bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
 {
-   static_cast<void>(context);
    // if no 'At' is specified, then any clip in any selected track will be set.
    t->TypeSwitch([&](WaveTrack *waveTrack) {
       WaveClipPointers ptrs( waveTrack->SortedClipArray());

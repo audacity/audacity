@@ -24,8 +24,6 @@
 
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 ////////////////////////////////////////////////////////////////////////////////
 
 WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)
@@ -106,8 +104,9 @@ bool WarningsPrefs::Commit()
    return true;
 }
 
-PrefsPanel *WarningsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+WarningsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew WarningsPrefs(parent, winid);
-}
+};

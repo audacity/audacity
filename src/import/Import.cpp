@@ -37,7 +37,6 @@ and ImportLOF.cpp.
 
 #include "../Audacity.h" // for USE_* macros
 #include "Import.h"
-#include "ImportPlugin.h"
 
 #include <algorithm>
 
@@ -55,7 +54,6 @@ and ImportLOF.cpp.
 #include "ImportMP3.h"
 #include "ImportOGG.h"
 #include "ImportQT.h"
-#include "ImportRaw.h"
 #include "ImportLOF.h"
 #include "ImportFLAC.h"
 #include "ImportFFmpeg.h"

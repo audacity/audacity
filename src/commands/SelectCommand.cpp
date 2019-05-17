@@ -36,10 +36,10 @@ explicitly code all three.
 #include <float.h>
 
 #include "../Project.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "../effects/Effect.h"
 #include "CommandContext.h"
 
 

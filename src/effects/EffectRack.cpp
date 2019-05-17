@@ -18,7 +18,6 @@
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
-#include "../MemoryX.h"
 #include "../UndoManager.h"
 
 #include <wx/defs.h>
@@ -35,7 +34,6 @@
 #include <wx/timer.h>
 #include <wx/tglbtn.h>
 
-#include "EffectManager.h"
 #include "../commands/CommandContext.h"
 #include "../Menus.h"
 #include "../Prefs.h"

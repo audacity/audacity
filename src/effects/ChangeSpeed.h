@@ -13,13 +13,12 @@
 #ifndef __AUDACITY_EFFECT_CHANGESPEED__
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
-#include "../widgets/NumericTextCtrl.h"
-
 #include "Effect.h"
 
 class wxSlider;
 class wxChoice;
 class wxTextCtrl;
+class NumericTextCtrl;
 class ShuttleGui;
 
 #define CHANGESPEED_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Change Speed") }

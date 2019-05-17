@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectedRegion.h"
 #include "../../Snap.h"
 
-#include "../../MemoryX.h"
 #include <vector>
 
 class SelectionStateChanger;

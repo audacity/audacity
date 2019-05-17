@@ -35,12 +35,10 @@ most commonly asked questions about Audacity.
 #include <wx/image.h>
 
 #include "FileNames.h"
-#include "Internat.h"
 #include "ShuttleGui.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
 #include "Prefs.h"
 #include "HelpText.h"

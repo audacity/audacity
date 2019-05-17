@@ -13,30 +13,27 @@
 
 #include "../Audacity.h"
 
-#include "../MemoryX.h"
 #include <set>
 
-#include "../MemoryX.h"
 #include <wx/defs.h>
+#include <wx/event.h> // to inherit
 
-class wxWindow;
+#include "../widgets/wxPanelWrapper.h" // to inherit
 
-#include "../SampleFormat.h"
-#include "../SelectedRegion.h"
-#include "../Internat.h"
 #include "../include/audacity/ComponentInterface.h"
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 
-#include "../Track.h"
-#include "../effects/Effect.h"
 #include "../Registrar.h"
 
 class ShuttleGui;
 
 #define BUILTIN_GENERIC_COMMAND_PREFIX wxT("Built-in AudacityCommand: ")
 
+class AudacityCommand;
 class AudacityProject;
 class CommandContext;
+class EffectUIHostInterface;
+class ProgressDialog;
 
 
 class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,

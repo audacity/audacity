@@ -13,8 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 
-#include "../../MemoryX.h"
-
 #include "../../Envelope.h"
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
@@ -23,7 +21,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TimeTrack.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 

@@ -21,7 +21,6 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Internat.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: two nouns */
@@ -134,12 +133,9 @@ bool TracksBehaviorsPrefs::Commit()
    return true;
 }
 
-TracksBehaviorsPrefsFactory::TracksBehaviorsPrefsFactory()
-{
-}
-
-PrefsPanel *TracksBehaviorsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+TracksBehaviorsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew TracksBehaviorsPrefs(parent, winid);
-}
+};

@@ -9,7 +9,6 @@
 #ifndef __AUDACITY_COMMAND_FUNCTORS__
 #define __AUDACITY_COMMAND_FUNCTORS__
 
-#include "../MemoryX.h"
 #include "Command.h"
 
 class AudacityProject;

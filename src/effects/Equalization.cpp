@@ -103,7 +103,6 @@
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"
-#include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../float_cast.h"
 

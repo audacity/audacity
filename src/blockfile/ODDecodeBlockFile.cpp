@@ -27,9 +27,8 @@ The summary is eventually computed and written to a file in a background thread.
 #include <wx/thread.h>
 #include <sndfile.h>
 
-#include "../FileException.h"
+#include "../DirManager.h"
 #include "../FileFormats.h"
-#include "../Internat.h"
 #include "NotYetAvailableException.h"
 
 const int bheaderTagLen = 20;

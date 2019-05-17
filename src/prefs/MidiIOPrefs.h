@@ -68,12 +68,8 @@ class MidiIOPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanelFactory that creates one MidiIOPrefs panel.
-class MidiIOPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one MidiIOPrefs panel.
+extern PrefsPanel::Factory MidiIOPrefsFactory;
 #endif
 
 #endif

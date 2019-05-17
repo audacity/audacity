@@ -72,13 +72,11 @@ and in the spectrogram spectral selection.
 #include "ShuttleGui.h"
 #include "AColor.h"
 #include "FFT.h"
-#include "Internat.h"
 #include "PitchName.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "WaveClip.h"
-#include "Theme.h"
 #include "AllThemeResources.h"
 
 #include "FileNames.h"

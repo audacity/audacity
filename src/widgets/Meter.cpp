@@ -70,7 +70,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../widgets/valnum.h"
 

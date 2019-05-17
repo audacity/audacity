@@ -23,7 +23,6 @@
 #include "FileNames.h"
 #include "AboutDialog.h"
 #include "AllThemeResources.h"
-#include "Internat.h"
 
 
 wxString HtmlColourOfIndex( int i ){

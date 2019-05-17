@@ -35,7 +35,6 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
-#include "../MemoryX.h"
 #include "../widgets/ProgressDialog.h"
 
 
@@ -155,7 +154,6 @@ static const auto exts = {
 // all the includes live here by default
 #include "Import.h"
 #include "../Tags.h"
-#include "../Internat.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 

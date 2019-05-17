@@ -84,7 +84,7 @@ public:
    // This function returns nonempty only when that is the case, and lists
    // the possible extensions of such files (an empty string in a nonempty
    // array means any file is a candidate).
-   virtual FileExtensions GetFileExtensions() = 0;
+   virtual const FileExtensions &GetFileExtensions() = 0;
 
    // Returns empty, or else, where to copy a plug-in file or bundle.
    // Drag-and-drop is supported only if GetFileExtensions() returns nonempty and

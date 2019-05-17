@@ -13,8 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Experimental.h"
 
-#include "../../../../MemoryX.h"
-
 #include "../../../../HitTestResult.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
@@ -22,7 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UndoManager.h"
 #include "../../../../WaveTrack.h"
-#include "../../../../WaveTrackLocation.h"
 #include "../../../../../images/Cursors.h"
 
 CutlineHandle::CutlineHandle

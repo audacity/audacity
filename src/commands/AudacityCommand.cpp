@@ -22,6 +22,8 @@ ShuttleGui.
 #include "../Audacity.h"
 #include "AudacityCommand.h"
 
+#include "CommandContext.h"
+
 #include <algorithm>
 
 #include <wx/defs.h>
@@ -35,30 +37,16 @@ ShuttleGui.
 
 #include "audacity/ConfigInterface.h"
 
-#include "../AudacityException.h"
-#include "../AudioIO.h"
-#include "../LabelTrack.h"
-#include "../Mix.h"
-#include "../Prefs.h"
 #include "../Project.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
-#include "../ondemand/ODManager.h"
 #include "../widgets/HelpSystem.h"
-#include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
-#include "../FileNames.h"
-#include "../widgets/HelpSystem.h"
-
-#include "../commands/CommandTargets.h"
 
 #include "../commands/ScreenshotCommand.h"
 
 #include <unordered_map>
-#include "../commands/CommandContext.h"
 
 AudacityCommand::AudacityCommand()
 {

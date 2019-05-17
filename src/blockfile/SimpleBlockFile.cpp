@@ -66,14 +66,12 @@ to get its definition, rather than rolling our own.
 #include <wx/utils.h>
 #include <wx/log.h>
 
-#include "../FileException.h"
+#include "../DirManager.h"
 #include "../Prefs.h"
 
 #include "../FileFormats.h"
 
 #include "sndfile.h"
-#include "../Internat.h"
-#include "../MemoryX.h"
 
 
 static wxUint32 SwapUintEndianess(wxUint32 in)

@@ -94,7 +94,6 @@ scroll information.  It also has some status flags.
 #endif
 
 #include "AdornedRulerPanel.h"
-#include "AudacityException.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
 #include "AutoRecovery.h"
@@ -107,7 +106,6 @@ scroll information.  It also has some status flags.
 #include "HistoryWindow.h"
 #include "InconsistencyException.h"
 #include "MixerBoard.h"
-#include "Internat.h"
 #include "import/Import.h"
 #include "LabelTrack.h"
 #include "Legacy.h"
@@ -122,30 +120,22 @@ scroll information.  It also has some status flags.
 #include "TimeTrack.h"
 #include "TrackPanel.h"
 #include "WaveClip.h"
-#include "WaveTrack.h"
 #include "DirManager.h"
-#include "commands/CommandManager.h"
-#include "effects/Effect.h"
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
-#include "widgets/ASlider.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
 #include "PlatformCompatibility.h"
 #include "effects/EffectManager.h"
-#include "export/Export.h"
 #include "FileNames.h"
-#include "BlockFile.h"
 #include "ondemand/ODManager.h"
-#include "ondemand/ODTask.h"
 #include "ondemand/ODComputeSummaryTask.h"
 #ifdef EXPERIMENTAL_OD_FLAC
 #include "ondemand/ODDecodeFlacTask.h"
 #endif
 #include "ModuleManager.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
 
 #include "FileDialog.h"
@@ -169,9 +159,7 @@ scroll information.  It also has some status flags.
 
 #include "commands/ScriptCommandRelay.h"
 #include "commands/CommandTargets.h"
-#include "commands/Command.h"
 #include "commands/CommandType.h"
-#include "commands/CommandContext.h"
 
 #include "prefs/QualityPrefs.h"
 #include "prefs/TracksPrefs.h"
@@ -207,7 +195,6 @@ const int sbarSpaceWidth = 15;
 const int sbarControlWidth = 15;
 const int sbarExtraLen = 0;
 const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
-#include "Theme.h"
 #include "AllThemeResources.h"
 #endif
 

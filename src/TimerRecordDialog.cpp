@@ -46,13 +46,11 @@
 #include "ShuttleGui.h"
 #include "Menus.h"
 #include "Project.h"
-#include "Internat.h"
 #include "Prefs.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
-#include "commands/CommandContext.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"

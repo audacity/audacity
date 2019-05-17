@@ -34,7 +34,6 @@ effects.
 #endif
 
 #include "../Shuttle.h"
-#include "../commands/Command.h"
 #include "../commands/CommandContext.h"
 #include "../PluginManager.h"
 
@@ -250,7 +249,10 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    // This is capturing the output context into the shuttle.
    ShuttleGetDefinition S(  *context.pOutput.get()->mStatusTarget.get() );
    S.StartStruct();
-   S.AddItem( GetCommandIdentifier( ID ), "id" );
+   // using GET to expose a CommandID to the user!
+   // Macro command details are one place that we do expose Identifier
+   // to (more sophisticated) users
+   S.AddItem( GetCommandIdentifier( ID ).GET(), "id" );
    S.AddItem( GetCommandName( ID ), "name" );
    if( bHasParams ){
       S.StartField( "params" );
@@ -260,6 +262,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
       S.EndField();
    }
    S.AddItem( GetCommandUrl( ID ), "url" );
+   // The tip is a translated string!
    S.AddItem( GetCommandTip( ID ), "tip" );
    S.EndStruct();
 }
@@ -960,7 +963,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
    while (plug)
    {
-      if (GetCommandIdentifier(plug->GetID()).IsSameAs(strTarget, false))
+      if (GetCommandIdentifier(plug->GetID()) == strTarget)
       {
          return plug->GetID();
       }

@@ -33,15 +33,11 @@
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
-#include "../Internat.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../Theme.h"
-#include "../Track.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 #include "../tracks/ui/Scrubbing.h"
-#include "../commands/CommandContext.h"
 
 IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 

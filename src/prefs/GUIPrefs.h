@@ -53,10 +53,6 @@ class GUIPrefs final : public PrefsPanel
    wxArrayStringEx mRangeChoices;
 };
 
-/// A PrefsPanelFactory that creates one GUIPrefs panel.
-class GUIPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one GUIPrefs panel.
+extern PrefsPanel::Factory GUIPrefsFactory;
 #endif

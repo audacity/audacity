@@ -23,8 +23,6 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Internat.h"
-
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid, _("Import / Export"))
 {
@@ -128,8 +126,9 @@ bool ImportExportPrefs::Commit()
    return true;
 }
 
-PrefsPanel *ImportExportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+ImportExportPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ImportExportPrefs(parent, winid);
-}
+};

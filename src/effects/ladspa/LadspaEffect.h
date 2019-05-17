@@ -13,14 +13,14 @@ class wxStaticText;
 class wxTextCtrl;
 class wxCheckBox;
 
-#include "../../MemoryX.h"
+class NumericTextCtrl;
+
 #include <wx/dynlib.h> // member variable
+#include <wx/event.h> // to inherit
 
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
-
-#include "../../widgets/NumericTextCtrl.h"
 
 #include "ladspa.h"
 #include "../../SampleFormat.h"
@@ -222,7 +222,7 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   FileExtensions GetFileExtensions() override;
+   const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;

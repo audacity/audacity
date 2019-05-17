@@ -20,7 +20,6 @@ small calculations of rectangles.
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
 
-#include "CommandTargets.h"
 #include "../Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
@@ -31,10 +30,8 @@ small calculations of rectangles.
 #include <wx/valgen.h>
 
 #include "../AdornedRulerPanel.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../toolbars/ToolManager.h"
-#include "../toolbars/ToolBar.h"
 #include "../Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -441,7 +438,8 @@ void ScreenshotCommand::CapturePreferences(
       const CommandContext projectContext( *pProject );
       if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
-         wxLogDebug("Command %s not found", Command );
+         // using GET in a log message for devs' eyes only
+         wxLogDebug("Command %s not found", Command.GET() );
       }
       // This sleep is not needed, but gives user a chance to see the
       // dialogs as they whizz by.

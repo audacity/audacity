@@ -12,11 +12,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "PlayableTrackButtonHandles.h"
 
 #include "../../../commands/CommandManager.h"
-#include "../../../HitTestResult.h"
 #include "../../../Menus.h"
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
-#include "../../../Track.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 

@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "ZoomHandle.h"
 
 #include <algorithm>
-#include "../../MemoryX.h"
 
 #include <wx/dc.h>
 #include <wx/event.h>
@@ -22,7 +21,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../ViewInfo.h"
 #include "../../../images/Cursors.h"
 
 ///  This class takes care of our different zoom

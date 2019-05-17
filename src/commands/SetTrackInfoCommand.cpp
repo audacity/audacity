@@ -37,7 +37,6 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SetTrackInfoCommand.h"
 
 #include "../Project.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
 #include "../prefs/WaveformSettings.h"

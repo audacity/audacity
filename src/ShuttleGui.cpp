@@ -99,9 +99,8 @@ for registering for changes.
 #include "Experimental.h"
 
 #include "Prefs.h"
-#include "Shuttle.h"
+#include "ShuttlePrefs.h"
 
-#include "MemoryX.h"
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wx.h>
 #include <wx/wxprec.h>
@@ -113,8 +112,6 @@ for registering for changes.
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
 #include "../include/audacity/ComponentInterface.h"
-#include "Internat.h"
-#include "WrappedType.h"
 #include "widgets/wxPanelWrapper.h"
 #include "AllThemeResources.h"
 
@@ -2127,9 +2124,7 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 // two files at some later date.
 #include "../extnpanel-src/GuiWaveTrack.h"
 #endif
-#include "./widgets/Ruler.h"
 #include "./widgets/AttachableScrollBar.h"
-#include "ShuttlePrefs.h"
 
 ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
    ShuttleGuiBase( pParent, ShuttleMode )
@@ -2392,170 +2387,3 @@ void ShuttleGuiBase::SetSizeHints( const wxArrayStringEx & items )
 
    SetSizeHints( mpLastWind, items );
 }
-
-/********************************* GetDefinition ******************************/
-
-ShuttleGuiGetDefinition::ShuttleGuiGetDefinition(
-   wxWindow * pParent,CommandMessageTarget & target )
-: ShuttleGui( pParent, eIsGettingMetadata ),
-  CommandMessageTargetDecorator( target )
-{
-
-}
-ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
-{
-}
-
-wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const bool bDefault) 
-{ 
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "bool", "type" );
-   AddBool( bDefault, "default"  );
-   EndStruct();
-   return ShuttleGui::TieCheckBox( Prompt, SettingName, bDefault );
-}
-wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const bool bDefault) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "bool", "type" );
-   AddBool( bDefault, "default"  );
-   EndStruct();
-   return ShuttleGui::TieCheckBoxOnRight( Prompt, SettingName, bDefault );
-}
-wxChoice * ShuttleGuiGetDefinition::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const wxArrayStringEx &Choices,
-   const wxArrayStringEx & InternalChoices )
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "enum", "type" );
-   AddItem( Default, "default"  );
-   StartField( "enum" );
-   StartArray();
-   for( size_t i=0;i<Choices.size(); i++ )
-      AddItem( InternalChoices[i] );
-   EndArray();
-   EndField();
-   EndStruct();
-   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
-}
-wxChoice * ShuttleGuiGetDefinition::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
-   const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
-{
-   // Should no longer come here!
-   // Choice controls in Preferences that really are exhaustive choices among
-   // non-numerical options must now encode the internal choices as strings,
-   // not numbers.
-   wxASSERT(false);
-
-   // But if we do get here anyway, proceed sub-optimally as before.
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "enum", "type" );
-   AddItem( Default, "default"  );
-   StartField( "enum" );
-   StartArray();
-   for( size_t i=0;i<Choices.size(); i++ )
-      AddItem( Choices[i] );
-   EndArray();
-   EndField();
-   EndStruct();
-   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
-}
-wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
-   const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
-{
-   // Come here for controls that present non-exhaustive choices among some
-   //  numbers, with an associated control that allows arbitrary entry of an
-   // "Other..."
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "number", "type" ); // not "enum" !
-   AddItem( Default, "default"  );
-   EndStruct();
-   return ShuttleGui::TieNumberAsChoice(
-      Prompt, SettingName, Default, Choices, InternalChoices );
-}
-wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const int nChars) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "string", "type" );
-   AddItem( Default, "default"  );
-   EndStruct();
-   return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
-}
-wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
-   const wxString & Prompt,
-   const wxString & SettingName,
-   const double & Default,
-   const int nChars) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "number", "type" );
-   AddItem( Default, "default"  );
-   EndStruct();
-   return ShuttleGui::TieNumericTextBox( Prompt, SettingName, Default, nChars );
-}
-wxSlider * ShuttleGuiGetDefinition::TieSlider(
-   const wxString & Prompt,
-   const wxString & SettingName,
-   const int iDefault,
-   const int max,
-   const int min) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "number", "type" );
-   AddItem( iDefault, "default"  );
-   EndStruct();
-   return ShuttleGui::TieSlider( Prompt, SettingName, iDefault, max, min );
-}
-wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const int Value,
-   const int max,
-   const int min) 
-{
-   StartStruct();
-   AddItem( SettingName, "id" );
-   AddItem( Prompt, "prompt" );
-   AddItem( "number", "type" );
-   AddItem( Value, "default"  );
-   EndStruct();
-   return ShuttleGui::TieSpinCtrl( Prompt, SettingName, Value, max, min );
-}
-

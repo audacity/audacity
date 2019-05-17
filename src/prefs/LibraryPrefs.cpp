@@ -26,7 +26,6 @@ MP3 and FFmpeg encoding libraries.
 #include <wx/stattext.h>
 
 #include "../FFmpeg.h"
-#include "../ShuttleGui.h"
 #include "../export/ExportMP3.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
@@ -267,8 +266,9 @@ bool LibraryPrefs::Commit()
    return true;
 }
 
-PrefsPanel *LibraryPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+LibraryPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew LibraryPrefs(parent, winid);
-}
+};

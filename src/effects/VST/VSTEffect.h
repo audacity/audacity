@@ -17,12 +17,13 @@
 #include "audacity/PluginInterface.h"
 
 #include "../../SampleFormat.h"
-#include "../../widgets/NumericTextCtrl.h"
 #include "../../xml/XMLTagHandler.h"
 
 class wxSizerItem;
 class wxSlider;
 class wxStaticText;
+
+class NumericTextCtrl;
 
 class VSTControl;
 #include "VSTControl.h"
@@ -416,7 +417,7 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   FileExtensions GetFileExtensions() override;
+   const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override;
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;

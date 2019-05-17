@@ -28,7 +28,6 @@ channel.  This collection of functions fills that gap.
 #include <wx/image.h>
 
 #include "AllThemeResources.h"
-#include "Theme.h"
 
 /// This looks at the first pixel in the image, and shifts
 /// the entire image by the vector difference between that

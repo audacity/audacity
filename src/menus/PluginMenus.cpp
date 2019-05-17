@@ -559,7 +559,8 @@ void OnManageGenerators(const CommandContext &context)
 
 void OnEffect(const CommandContext &context)
 {
-   DoEffect(context.parameter, context, 0);
+   // using GET to interpret parameter as a PluginID
+   DoEffect(context.parameter.GET(), context, 0);
 }
 
 void OnManageEffects(const CommandContext &context)
@@ -680,7 +681,8 @@ void OnApplyMacroDirectly(const CommandContext &context )
 
 void OnAudacityCommand(const CommandContext & ctx)
 {
-   wxLogDebug( "Command was: %s", ctx.parameter);
+   // using GET in a log message for devs' eyes only
+   wxLogDebug( "Command was: %s", ctx.parameter.GET());
    // Not configured, so prompt user.
    DoAudacityCommand(EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
       ctx, kNone);

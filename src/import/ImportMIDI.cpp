@@ -21,7 +21,6 @@
 //#include "strparse.h"
 //#include "mfmidi.h"
 
-#include "../Internat.h"
 #include "../NoteTrack.h"
 #include "../widgets/ErrorDialog.h"
 

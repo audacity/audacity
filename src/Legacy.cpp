@@ -40,7 +40,6 @@ On failure the old version is put back in place.
 #include <wx/string.h>
 #include <wx/textfile.h>
 
-#include "Internat.h"
 #include "widgets/ErrorDialog.h"
 #include "xml/XMLWriter.h"
 

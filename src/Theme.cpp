@@ -73,9 +73,7 @@ can't be.
 #include <wx/settings.h>
 
 #include "Project.h"
-#include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "ImageManipulation.h"
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"

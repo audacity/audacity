@@ -38,22 +38,16 @@
 #include <wx/imaglist.h>
 #include <wx/settings.h>
 
-#include "AudacityException.h"
 #include "ShuttleGui.h"
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "Internat.h"
 #include "commands/CommandManager.h"
-#include "commands/CommandContext.h"
 #include "effects/Effect.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
-#include "BatchCommands.h"
-#include "Track.h"
 #include "UndoManager.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
 
 #include "FileDialog.h"
@@ -740,9 +734,9 @@ void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
    auto friendlyName = entry != mCatalog.end()
       ? entry->name.Translated()
       :
-         // Expose an internal name to the user in default of any friendly name
-         // -- AVOID THIS!
-        Action;
+         // uh oh, using GET to expose an internal name to the user!
+         // in default of any better friendly name
+        Action.GET();
 
    int i = mList->GetItemCount();
 

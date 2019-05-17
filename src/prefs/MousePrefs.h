@@ -41,10 +41,6 @@ class MousePrefs final : public PrefsPanel
    wxListCtrl * mList;
 };
 
-/// A PrefsPanelFactory that creates one MousePrefs panel.
-class MousePrefsFactory final : public PrefsPanelFactory
-{
-public:
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-};
+/// A PrefsPanel::Factory that creates one MousePrefs panel.
+extern PrefsPanel::Factory MousePrefsFactory;
 #endif

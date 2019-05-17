@@ -24,7 +24,6 @@ with names like mnod-script-pipe that add NEW features.
 #include "../ShuttleGui.h"
 
 #include "../Prefs.h"
-#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -180,8 +179,9 @@ void ModulePrefs::SetModuleStatus(const FilePath &fname, int iStatus){
    gPrefs->Flush();
 }
 
-PrefsPanel *ModulePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+ModulePrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ModulePrefs(parent, winid);
-}
+};

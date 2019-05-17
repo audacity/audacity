@@ -105,14 +105,8 @@ class SpectrumPrefs final : public PrefsPanel
    bool mCommitted{};
 };
 
-/// A PrefsPanelFactory that creates one SpectrumPrefs panel.
-class SpectrumPrefsFactory final : public PrefsPanelFactory
-{
-public:
-   explicit SpectrumPrefsFactory(WaveTrack *wt = 0);
-   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
-
-private:
-   WaveTrack *const mWt;
-};
+/// A PrefsPanel::Factory that creates one SpectrumPrefs panel.
+/// This factory can be parametrized by a single track, to change settings
+/// non-globally
+extern PrefsPanel::Factory SpectrumPrefsFactory( WaveTrack *wt = 0 );
 #endif

@@ -11,7 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../LabelTrack.h"
 
 #include "LabelTrackControls.h"
-#include "LabelDefaultClickHandle.h"
 #include "LabelTrackVRulerControls.h"
 #include "LabelGlyphHandle.h"
 #include "LabelTextHandle.h"

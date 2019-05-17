@@ -13,9 +13,9 @@
 
 #include <wx/defs.h>
 
-#include "widgets/NumericTextCtrl.h" // for NumericFormatSymbol
+#include "audacity/ComponentInterface.h" // member variable
+
 #include "widgets/wxPanelWrapper.h" // to inherit
-#include "Internat.h"
 
 class NumericTextCtrl;
 class ShuttleGui;

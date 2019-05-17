@@ -26,9 +26,7 @@
 #include "../Dither.h"
 #include "../Prefs.h"
 #include "../Resample.h"
-#include "../SampleFormat.h"
 #include "../ShuttleGui.h"
-#include "../Internat.h"
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 
@@ -277,11 +275,12 @@ bool QualityPrefs::Commit()
    return true;
 }
 
-PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
+PrefsPanel::Factory
+QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
    return safenew QualityPrefs(parent, winid);
-}
+};
 
 sampleFormat QualityPrefs::SampleFormatChoice()
 {

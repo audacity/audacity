@@ -22,11 +22,9 @@
 #include "../AColor.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
-#include "../commands/Keyboard.h"
 
 #include <wx/dc.h>
 #include <wx/menu.h>
-#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -252,7 +250,7 @@ KeyView::GetIndexByName(const CommandID & name) const
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (name.CmpNoCase(mNodes[i].name) == 0)
+      if (name == mNodes[i].name)
       {
          return mNodes[i].index;
       }
@@ -288,7 +286,7 @@ KeyView::GetNameByKey(const NormalizedKeyString & key) const
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.NoCaseEqual( mNodes[i].key))
+      if ( key == mNodes[i].key )
       {
          return mNodes[i].name;
       }
@@ -308,7 +306,7 @@ KeyView::GetIndexByKey(const NormalizedKeyString & key) const
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.NoCaseEqual( mNodes[i].key))
+      if ( key == mNodes[i].key )
       {
          return mNodes[i].index;
       }
@@ -1933,10 +1931,12 @@ KeyViewAx::SetCurrentLine(int line)
       LineToId(line, mLastId);
 
       // Send notifications that the line has focus
-      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
-                  mView,
-                  wxOBJID_CLIENT,
-                  mLastId);
+      if (mView == wxWindow::FindFocus()) {
+         NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+                     mView,
+                     wxOBJID_CLIENT,
+                     mLastId);
+      }
 
       // And is selected
       NotifyEvent(wxACC_EVENT_OBJECT_SELECTION,

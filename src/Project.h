@@ -29,7 +29,6 @@
 
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
-#include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
 

@@ -28,9 +28,6 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #define __AUDACITY_ODDecodeBlockFile__
 
 #include "SimpleBlockFile.h"
-#include "../BlockFile.h"
-#include "../ondemand/ODTaskThread.h"
-#include "../DirManager.h"
 #include "../ondemand/ODDecodeTask.h"
 #include <wx/atomic.h> // member variable
 

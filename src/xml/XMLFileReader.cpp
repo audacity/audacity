@@ -21,8 +21,6 @@
 
 #include <string.h>
 
-#include "../Internat.h"
-
 XMLFileReader::XMLFileReader()
 {
    mParser = XML_ParserCreate(NULL);

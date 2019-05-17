@@ -13,7 +13,6 @@
 #define __AUDACITY_EFFECT_ECHO__
 
 #include "Effect.h"
-#include "../SampleFormat.h"
 
 class ShuttleGui;
 

@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 class NoteTrack;
 
-#include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
 
 ///////////////////////////////////////////////////////////////////////////////

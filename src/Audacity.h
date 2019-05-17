@@ -62,7 +62,7 @@
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
 #define AUDACITY_RELEASE   3
-#define AUDACITY_REVISION  2
+#define AUDACITY_REVISION  3
 #define AUDACITY_MODLEVEL  0
 
 #if defined(IS_BETA)

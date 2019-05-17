@@ -15,7 +15,8 @@
 #define __AUDACITY_SILENT_BLOCKFILE__
 
 #include "../BlockFile.h"
-#include "../DirManager.h"
+
+class DirManager;
 
 /// A BlockFile containing nothing but silence.  Saves disk space.
 class SilentBlockFile final : public BlockFile {

@@ -40,13 +40,9 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
-#include "AudacityException.h"
-
-#include "BlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "DirManager.h"
 
-#include "blockfile/SimpleBlockFile.h"
 #include "blockfile/SilentBlockFile.h"
 
 #include "InconsistencyException.h"

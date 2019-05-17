@@ -16,7 +16,6 @@
 #include <vector>
 
 #include "xml/XMLTagHandler.h"
-#include "Internat.h"
 
 class wxRect;
 class wxMouseEvent;

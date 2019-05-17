@@ -24,6 +24,7 @@ responsible for calling the appropriate callback functions.
 
 #include "MemoryX.h"
 
+class AudacityCommand;
 class LoadableModule;
 class ComponentInterface;
 class Effect;

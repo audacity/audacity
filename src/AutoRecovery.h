@@ -12,11 +12,11 @@
 #define __AUDACITY_AUTORECOVERY__
 
 #include "xml/XMLTagHandler.h"
-#include "xml/XMLWriter.h"
 
 #include <wx/mstream.h> // member variables
 
 #include <unordered_map>
+#include "audacity/Types.h"
 
 class wxFFile;
 class AudacityProject;

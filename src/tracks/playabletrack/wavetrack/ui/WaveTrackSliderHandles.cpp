@@ -11,7 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "../../../../HitTestResult.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h"

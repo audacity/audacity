@@ -24,7 +24,6 @@
 #include "Experimental.h"
 
 #include <math.h>
-#include "MemoryX.h"
 #include <functional>
 #include <vector>
 #include <wx/log.h>
@@ -34,9 +33,7 @@
 #include "Prefs.h"
 #include "Envelope.h"
 #include "Resample.h"
-#include "Project.h"
 #include "WaveTrack.h"
-#include "FFT.h"
 #include "Profiler.h"
 #include "InconsistencyException.h"
 #include "UserException.h"
@@ -413,6 +410,11 @@ void WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
 }
 
 BlockArray* WaveClip::GetSequenceBlockArray()
+{
+   return &mSequence->GetBlockArray();
+}
+
+const BlockArray* WaveClip::GetSequenceBlockArray() const
 {
    return &mSequence->GetBlockArray();
 }

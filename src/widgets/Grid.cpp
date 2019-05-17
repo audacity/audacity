@@ -26,9 +26,7 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
-#include "NumericTextCtrl.h"
 #include "../SelectedRegion.h"
-#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -741,10 +739,12 @@ void GridAx::SetCurrentCell(int row, int col)
                mLastId);
    }
 
-   NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
-               mGrid->GetGridWindow(),
-               wxOBJID_CLIENT,
-               id);
+   if (mGrid == wxWindow::FindFocus()) {
+      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+                  mGrid->GetGridWindow(),
+                  wxOBJID_CLIENT,
+                  id);
+   }
 
    NotifyEvent(wxACC_EVENT_OBJECT_SELECTION,
                mGrid->GetGridWindow(),

@@ -42,8 +42,6 @@
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
 
-#include "../../Internat.h"
-
 struct CFReleaser
    { void operator () (const void *p) const { if (p) CFRelease(p); } };
 template <typename T>
@@ -137,9 +135,10 @@ wxString AudioUnitEffectsModule::GetDescription()
 // ModuleInterface implementation
 // ============================================================================
 
-FileExtensions AudioUnitEffectsModule::GetFileExtensions()
+const FileExtensions &AudioUnitEffectsModule::GetFileExtensions()
 {
-   return {{ _T("au") }};
+   static FileExtensions result{{ _T("au") }};
+   return result;
 }
 
 bool AudioUnitEffectsModule::Initialize()

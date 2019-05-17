@@ -27,6 +27,7 @@ used throughout Audacity into this one place.
 
 #include "MemoryX.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
@@ -388,7 +389,7 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference
 
 #ifdef __WIN32__
    wxFileName defaultPath( wxStandardPaths::Get().GetDocumentsDir(), "" );
-   defaultPath.AppendDir( wxGetApp().GetAppName() );
+   defaultPath.AppendDir( wxTheApp->GetAppName() );
    result.SetPath( gPrefs->Read( preference, defaultPath.GetPath( wxPATH_GET_VOLUME ) ) );
 
    // MJB: Bug 1899 & Bug 2007.  Only create directory if the result is the default path

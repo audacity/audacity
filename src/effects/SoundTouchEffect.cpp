@@ -22,7 +22,6 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
-#include "TimeWarper.h"
 #include "../NoteTrack.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h

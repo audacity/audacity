@@ -17,11 +17,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackSliderHandles.h"
 
 #include "../../../../AudioIO.h"
-#include "../../../../HitTestResult.h"
 #include "../../../../Menus.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../WaveTrack.h"
 #include "../../../../ShuttleGui.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -781,13 +779,10 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    }
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   // WaveformPrefsFactory waveformFactory(pTrack);
-   // TracksBehaviorsPrefsFactory tracksBehaviorsFactory();
-   SpectrumPrefsFactory spectrumFactory(pTrack);
 
    PrefsDialog::Factories factories;
-   // factories.push_back(&waveformFactory);
-   factories.push_back(&spectrumFactory);
+   // factories.push_back(WaveformPrefsFactory( pTrack ));
+   factories.push_back(SpectrumPrefsFactory( pTrack ));
    const int page =
       // (pTrack->GetDisplay() == WaveTrack::Spectrum) ? 1 :
       0;
