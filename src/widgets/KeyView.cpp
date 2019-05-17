@@ -1931,10 +1931,12 @@ KeyViewAx::SetCurrentLine(int line)
       LineToId(line, mLastId);
 
       // Send notifications that the line has focus
-      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
-                  mView,
-                  wxOBJID_CLIENT,
-                  mLastId);
+      if (mView == wxWindow::FindFocus()) {
+         NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+                     mView,
+                     wxOBJID_CLIENT,
+                     mLastId);
+      }
 
       // And is selected
       NotifyEvent(wxACC_EVENT_OBJECT_SELECTION,
