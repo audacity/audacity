@@ -18,6 +18,7 @@
 
 #include "CommandContext.h"
 #include "CommandDirectory.h"
+#include "../Project.h"
 
 static CommandDirectory::RegisterType sRegisterType{
    std::make_unique<BatchEvalCommandType>()
@@ -40,7 +41,7 @@ void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
 
 OldStyleCommandPointer BatchEvalCommandType::Create(std::unique_ptr<CommandOutputTargets> && WXUNUSED(target))
 {
-   return std::make_shared<BatchEvalCommand>(*this);
+   return std::make_shared<BatchEvalCommand>(*GetActiveProject(), *this);
 }
 
 bool BatchEvalCommand::Apply(const CommandContext & context)

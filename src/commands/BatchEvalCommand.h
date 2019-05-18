@@ -26,6 +26,8 @@ to that system.
 #include "CommandType.h"
 #include "../BatchCommands.h"
 
+class AudacityProject;
+
 class BatchEvalCommandType final : public OldStyleCommandType
 {
 public:
@@ -37,8 +39,8 @@ public:
 class BatchEvalCommand final : public CommandImplementation
 {
 public:
-   BatchEvalCommand(OldStyleCommandType &type)
-      : CommandImplementation(type)
+   BatchEvalCommand(AudacityProject &project, OldStyleCommandType &type)
+      : CommandImplementation(project, type)
    { }
 
    virtual ~BatchEvalCommand();

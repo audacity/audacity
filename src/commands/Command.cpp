@@ -79,16 +79,17 @@ classes derived from it.
 #include "Command.h"
 
 #include <map>
+#include <wx/log.h>
 #include <wx/string.h>
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
-#include "CommandBuilder.h"
 #include "CommandTargets.h"
 #include "CommandDirectory.h"
 
 #include "CommandContext.h"
-#include "../Project.h"
+
+#include "../AudacityException.h"
 
 
 
@@ -119,9 +120,10 @@ bool DecoratedCommand::SetParameter(const wxString &paramName,
    return mCommand->SetParameter(paramName, paramValue);
 }
 
-ApplyAndSendResponse::ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTargets> &target)
+ApplyAndSendResponse::ApplyAndSendResponse(
+   const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTargets> &target)
       : DecoratedCommand(cmd),
-       mCtx( std::make_unique<CommandContext>( *GetActiveProject(), std::move(target) ) )
+       mCtx( std::make_unique<CommandContext>( cmd->mProject, std::move(target) ) )
 {
 }
 
@@ -167,8 +169,10 @@ bool ApplyAndSendResponse::Apply()
    return result;
 }
 
-CommandImplementation::CommandImplementation(OldStyleCommandType &type)
-: mType(type),
+CommandImplementation::CommandImplementation(
+  AudacityProject &project, OldStyleCommandType &type)
+:  OldStyleCommand{ project },
+   mType(type),
    mParams(type.GetSignature().GetDefaults()),
    mSetParams()
 {
@@ -257,7 +261,7 @@ CommandSignature &CommandImplementation::GetSignature()
 bool CommandImplementation::SetParameter(const wxString &paramName, const wxVariant &paramValue)
 {
    wxASSERT(!paramValue.IsType(wxT("null")));
-   CommandContext context( * GetActiveProject());
+   CommandContext context( mProject );
    ParamValueMap::iterator iter = mParams.find(paramName);
    if (iter == mParams.end())
    {
