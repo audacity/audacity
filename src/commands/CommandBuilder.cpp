@@ -25,7 +25,7 @@ system by constructing BatchCommandEval objects.
 #include "CommandBuilder.h"
 
 #include "CommandDirectory.h"
-#include "BatchEvalCommand.h"
+#include "Command.h"
 #include "ScriptCommandRelay.h"
 #include "CommandContext.h"
 #include "CommandTargets.h"

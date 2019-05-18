@@ -17,6 +17,11 @@
 #include "BatchEvalCommand.h"
 
 #include "CommandContext.h"
+#include "CommandDirectory.h"
+
+static CommandDirectory::RegisterType sRegisterType{
+   std::make_unique<BatchEvalCommandType>()
+};
 
 ComponentInterfaceSymbol BatchEvalCommandType::BuildName()
 {
