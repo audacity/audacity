@@ -541,6 +541,7 @@ public:
  private:
 
    void OnCapture(wxCommandEvent & evt);
+   void OnThemeChange(wxCommandEvent & evt);
    void InitialState();
 
  public:
@@ -647,7 +648,6 @@ private:
  public:
    ToolManager *GetToolManager() { return mToolManager.get(); }
    bool mShowSplashScreen;
-   wxString mHelpPref;
    wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.

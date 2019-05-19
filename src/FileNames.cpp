@@ -581,3 +581,43 @@ void FileNames::FindFilesInPathList(const wxString & pattern,
       wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
 }
+
+#if defined(__WXMSW__)
+//
+// On Windows, wxString::mb_str() can return a NULL pointer if the
+// conversion to multi-byte fails.  So, based on direction intent,
+// returns a pointer to an empty string or prompts for a NEW name.
+//
+char *FileNames::VerifyFilename(const wxString &s, bool input)
+{
+   static wxCharBuffer buf;
+   wxString name = s;
+
+   if (input) {
+      if ((char *) (const char *)name.mb_str() == NULL) {
+         name = wxEmptyString;
+      }
+   }
+   else {
+      wxFileName ff(name);
+      wxString ext;
+      while ((char *) (const char *)name.mb_str() == NULL) {
+         AudacityMessageBox(_("The specified filename could not be converted due to Unicode character use."));
+
+         ext = ff.GetExt();
+         name = FileNames::SelectFile(FileNames::Operation::_None,
+                             _("Specify New Filename:"),
+                             wxEmptyString,
+                             name,
+                             ext,
+                             wxT("*.") + ext,
+                             wxFD_SAVE | wxRESIZE_BORDER,
+                             wxGetTopLevelParent(NULL));
+      }
+   }
+
+   mFilename = name.mb_str();
+
+   return (char *) (const char *) mFilename;
+}
+#endif

@@ -37,6 +37,9 @@ and get deterministic behaviour.
 
 #include "Dither.h"
 
+#include "Internat.h"
+#include "Prefs.h"
+
 // Erik de Castro Lopo's header file that
 // makes sure that we have lrint and lrintf
 // (Note: this file should be included first)
@@ -392,4 +395,51 @@ inline float Dither::ShapedDither(float sample)
     mBuffer[mPhase] = xe - lrintf(result);
 
     return result;
+}
+
+static const EnumValueSymbol choicesDither[] = {
+   { XO("None") },
+   { XO("Rectangle") },
+   { XO("Triangle") },
+   { XO("Shaped") },
+};
+static const size_t nChoicesDither = WXSIZEOF( choicesDither );
+static const int intChoicesDither[] = {
+   (int) DitherType::none,
+   (int) DitherType::rectangle,
+   (int) DitherType::triangle,
+   (int) DitherType::shaped,
+};
+static_assert(
+   nChoicesDither == WXSIZEOF( intChoicesDither ),
+   "size mismatch"
+);
+
+static const size_t defaultFastDither = 0; // none
+
+EnumSetting Dither::FastSetting{
+   wxT("Quality/DitherAlgorithmChoice"),
+   choicesDither, nChoicesDither, defaultFastDither,
+   intChoicesDither,
+   wxT("Quality/DitherAlgorithm")
+};
+
+static const size_t defaultBestDither = 3; // shaped
+
+EnumSetting Dither::BestSetting{
+   wxT("Quality/HQDitherAlgorithmChoice"),
+   choicesDither, nChoicesDither, defaultBestDither,
+
+   intChoicesDither,
+   wxT("Quality/HQDitherAlgorithm")
+};
+
+DitherType Dither::FastDitherChoice()
+{
+   return (DitherType) FastSetting.ReadInt();
+}
+
+DitherType Dither::BestDitherChoice()
+{
+   return (DitherType) BestSetting.ReadInt();
 }

@@ -56,44 +56,6 @@ static EnumSetting formatSetting{
 };
 
 //////////
-static const EnumValueSymbol choicesDither[] = {
-   { XO("None") },
-   { XO("Rectangle") },
-   { XO("Triangle") },
-   { XO("Shaped") },
-};
-static const size_t nChoicesDither = WXSIZEOF( choicesDither );
-static const int intChoicesDither[] = {
-   (int) DitherType::none,
-   (int) DitherType::rectangle,
-   (int) DitherType::triangle,
-   (int) DitherType::shaped,
-};
-static_assert(
-   nChoicesDither == WXSIZEOF( intChoicesDither ),
-   "size mismatch"
-);
-
-static const size_t defaultFastDither = 0; // none
-
-static EnumSetting fastDitherSetting{
-   wxT("Quality/DitherAlgorithmChoice"),
-   choicesDither, nChoicesDither, defaultFastDither,
-   intChoicesDither,
-   wxT("Quality/DitherAlgorithm")
-};
-
-static const size_t defaultBestDither = 3; // shaped
-
-static EnumSetting bestDitherSetting{
-   wxT("Quality/HQDitherAlgorithmChoice"),
-   choicesDither, nChoicesDither, defaultBestDither,
-
-   intChoicesDither,
-   wxT("Quality/HQDitherAlgorithm")
-};
-
-//////////
 BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
    EVT_CHOICE(ID_SAMPLE_RATE_CHOICE, QualityPrefs::OnSampleRateChoice)
 END_EVENT_TABLE()
@@ -225,7 +187,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
-                     fastDitherSetting);
+                     Dither::FastSetting);
       }
       S.EndMultiColumn();
    }
@@ -240,7 +202,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),
-                     bestDitherSetting);
+                     Dither::BestSetting);
       }
       S.EndMultiColumn();
    }
@@ -285,15 +247,5 @@ QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 sampleFormat QualityPrefs::SampleFormatChoice()
 {
    return (sampleFormat)formatSetting.ReadInt();
-}
-
-DitherType QualityPrefs::FastDitherChoice()
-{
-   return (DitherType) fastDitherSetting.ReadInt();
-}
-
-DitherType QualityPrefs::BestDitherChoice()
-{
-   return (DitherType) bestDitherSetting.ReadInt();
 }
 

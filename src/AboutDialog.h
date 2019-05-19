@@ -14,10 +14,6 @@
 #include <vector>
 #include "widgets/wxPanelWrapper.h" // to inherit
 
-extern const wxString VerCheckArgs();
-extern const wxString VerCheckUrl();
-extern const wxString VerCheckHtml();
-
 class wxStaticBitmap;
 
 class ShuttleGui;
