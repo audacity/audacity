@@ -23,7 +23,16 @@ OverlayPanel::OverlayPanel(wxWindow * parent, wxWindowID id,
 
 void OverlayPanel::AddOverlay( const std::weak_ptr<Overlay> &pOverlay)
 {
-   mOverlays.push_back(pOverlay);
+   if (pOverlay.expired())
+      return;
+   Compress();
+   auto iter = std::lower_bound( mOverlays.begin(), mOverlays.end(),
+      pOverlay.lock()->SequenceNumber(),
+      []( const OverlayPtr &p, unsigned value ) {
+         return p.expired() || p.lock()->SequenceNumber() < value;
+      }
+   );
+   mOverlays.insert(iter, pOverlay);
 }
 
 void OverlayPanel::ClearOverlays()

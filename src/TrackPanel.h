@@ -280,6 +280,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void OnIdle(wxIdleEvent & event);
    void OnTimer(wxTimerEvent& event);
+   void OnODTask(wxCommandEvent &event);
 
    int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
@@ -370,16 +371,6 @@ public:
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
-// JKC and here is a factory function which just does 'NEW' in standard Audacity.
-   // Precondition: parent != NULL
-   static TrackPanel *(*FactoryFunction)(wxWindow * parent,
-              wxWindowID id,
-              const wxPoint & pos,
-              const wxSize & size,
-              const std::shared_ptr<TrackList> &tracks,
-              ViewInfo * viewInfo,
-              TrackPanelListener * listener,
-              AdornedRulerPanel * ruler);
 
 protected:
    void DrawTracks(wxDC * dc);

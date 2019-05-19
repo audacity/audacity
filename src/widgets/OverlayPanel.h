@@ -40,8 +40,10 @@ public:
    void DrawOverlays(bool repaint_all, wxDC *pDC = nullptr);
    
 private:
+   using OverlayPtr = std::weak_ptr<Overlay>;
+
    void Compress();
-   std::vector< std::weak_ptr<Overlay> > mOverlays;
+   std::vector< OverlayPtr > mOverlays;
    
    
    DECLARE_EVENT_TABLE()

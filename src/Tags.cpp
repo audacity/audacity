@@ -45,6 +45,8 @@
 
 #include "FileNames.h"
 #include "Prefs.h"
+#include "Project.h"
+#include "ProjectFileIORegistry.h"
 #include "ShuttleGui.h"
 #include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
@@ -222,6 +224,11 @@ static const wxChar *DefaultGenres[] =
    wxT("Anime"),
    wxT("JPop"),
    wxT("Synthpop")
+};
+
+static ProjectFileIORegistry::Entry registerFactory{
+   wxT( "tags" ),
+   []( AudacityProject &project ){ return project.GetTags(); }
 };
 
 Tags::Tags()

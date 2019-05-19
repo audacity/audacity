@@ -56,6 +56,7 @@ class Importer;
 class ODLock;
 class Overlay;
 class RecordingRecoveryHandler;
+namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
 class Tags;
 
@@ -114,12 +115,6 @@ using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 extern AProjectArray gAudacityProjects;
 
-
-enum class PlayMode : int {
-   normalPlay,
-   oneSecondPlay, // Disables auto-scrolling
-   loopedPlay // Disables auto-scrolling
-};
 
 enum StatusBarField {
    stateStatusBarField = 1,
@@ -190,6 +185,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
 
+   // Next available ID for sub-windows
+   int NextWindowID();
+
    using AttachedObject = PrefsListener;
    using AttachedObjectFactory =
       std::function< std::unique_ptr<AttachedObject>() >;
@@ -233,7 +231,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const std::shared_ptr<DirManager> &GetDirManager();
    TrackFactory *GetTrackFactory();
    AdornedRulerPanel *GetRulerPanel();
-   const Tags *GetTags();
+   Tags *GetTags();
+   const Tags *GetTags() const;
    void SetTags( const std::shared_ptr<Tags> &tags );
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
@@ -282,6 +281,15 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
       AudacityProject *pProject,
       const FilePath &fileNameArg, bool addtohistory = true);
 
+   struct ReadProjectResults
+   {
+      bool decodeError;
+      bool parseSuccess;
+      bool trackError;
+      wxString errorString;
+   };
+   ReadProjectResults ReadProjectFile( const FilePath &fileName );
+
    void OpenFile(const FilePath &fileName, bool addtohistory = true);
 
 private:
@@ -302,6 +310,8 @@ public:
    AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
+   void CloseLock();
+
    bool Save();
    bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
    bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false, bool addToHistory = true);
@@ -316,6 +326,7 @@ public:
    bool GetDirty() { return mDirty; }
    void SetProjectTitle( int number =-1);
 
+   wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
    const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
@@ -330,21 +341,12 @@ public:
    bool GetNormalizeOnLoad() { return mNormalizeOnLoad; } //lda
    void SetNormalizeOnLoad(bool flag) { mNormalizeOnLoad = flag; } //lda
 
-   /** \brief Sets the wxDialog that is being displayed
-     * Used by the custom dialog warning constructor and destructor
-     */
-   void SetMissingAliasFileDialog(wxDialog *dialog);
-
-   /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
-     */
-   wxDialog *GetMissingAliasFileDialog();
-
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
-   bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
    static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
+   void ResetProjectFileIO();
 
    // Routine to estimate how many minutes of recording time are left on disk
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
@@ -378,8 +380,6 @@ public:
    void OnTimer(wxTimerEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);
-   void OnODTaskUpdate(wxCommandEvent & event);
-   void OnODTaskComplete(wxCommandEvent & event);
 
    void HandleResize();
    void UpdateLayout();
@@ -395,9 +395,6 @@ public:
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
    void RefreshCursor();
-   void SelectNone();
-   void SelectAllIfNone();
-   void StopIfPaused();
    void Zoom(double level);
    void ZoomBy(double multiplier);
    void Rewind(bool shift);
@@ -521,7 +518,6 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
-   PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
 
    // Audio IO callback methods
@@ -540,7 +536,6 @@ public:
 
  private:
 
-   void OnCapture(wxCommandEvent & evt);
    void OnThemeChange(wxCommandEvent & evt);
    void InitialState();
 
@@ -613,6 +608,7 @@ private:
    TrackPanel *mTrackPanel{};
    SelectionState mSelectionState{};
    std::unique_ptr<TrackFactory> mTrackFactory{};
+   wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
    wxScrollBar *mVsbar;
@@ -621,6 +617,8 @@ public:
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
 
 private:
+   int mNextWindowID;
+
    bool mAutoScrolling{ false };
    bool mActive{ true };
    bool mIconized;
@@ -633,9 +631,6 @@ private:
 
    Destroy_ptr<FreqWindow> mFreqWindow;
    Destroy_ptr<ContrastDialog> mContrastDialog;
-
-   // dialog for missing alias warnings
-   wxDialog            *mMissingAliasFilesWarningDialog{};
 
    bool mShownOnce{ false };
 
@@ -659,13 +654,6 @@ private:
    void SetTimerRecordCancelled(){mTimerRecordCanceled=true;}
    void ResetTimerRecordCancelled(){mTimerRecordCanceled=false;}
 
-   //sort method used by OnSortName and OnSortTime
-   //currently only supported flags are kAudacitySortByName and kAudacitySortByName
-   //in the future we might have 0x01 as sort ascending and we can bit or it
-#define kAudacitySortByTime (1 << 1)
-#define kAudacitySortByName (1 << 2)
-   void SortTracks(int flags);
-
  private:
    int  mAudioIOToken{ -1 };
 
@@ -677,6 +665,8 @@ private:
 
 public:
    bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
+   bool IsBeingDeleted() const { return mIsDeleting; }
+   void SetIsBeingDeleted() { mIsDeleting = true; }
 private:
 
    bool mIsSyncLocked;
@@ -718,20 +708,6 @@ public:
 
 private:
    bool mbInitializingScrollbar{ false };
-
-   // Flag that we're recoding.
-   bool mIsCapturing{ false };
-
-public:
-   bool IsCapturing() const { return mIsCapturing; }
-
-private:
-
-   // See explanation in OnCloseWindow
-   bool mIsBeingDeleted{ false };
-
-   // CommandManager needs to use private methods
-   friend class CommandManager;
 
    // TrackPanelOverlay objects
    std::shared_ptr<Overlay>
@@ -782,6 +758,12 @@ public:
 
 private:
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+
+   // Declared in this class so that they can have access to private members
+   static XMLTagHandler *RecordingRecoveryFactory( AudacityProject &project );
+   static ProjectFileIORegistry::Entry sRecoveryFactory;
+   static XMLTagHandler *ImportHandlerFactory( AudacityProject &project );
+   static ProjectFileIORegistry::Entry sImportHandlerFactory;
 
 public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }

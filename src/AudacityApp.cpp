@@ -1005,9 +1005,9 @@ Choose Help > Diagnostics > Check Dependencies to view a list of \
 locations of the missing files."), missingFileName);
 
          // if an old dialog exists, raise it if it is
-         if (offendingProject->GetMissingAliasFileDialog()) {
-            offendingProject->GetMissingAliasFileDialog()->Raise();
-         } else {
+         if ( auto dialog = MissingAliasFilesDialog::Find( *offendingProject ) )
+            dialog->Raise();
+         else {
             MissingAliasFilesDialog::Show(offendingProject.get(), _("Files Missing"),
                                    errorMessage, wxT(""), true);
          }

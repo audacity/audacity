@@ -5,6 +5,7 @@
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../MissingAliasFileDialog.h"
+#include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Printing.h"
@@ -121,7 +122,7 @@ AudacityProject *DoImportMIDI(
 
    if (::ImportMIDI(fileName, newTrack.get())) {
 
-      pProject->SelectNone();
+      SelectActions::SelectNone( *pProject );
       auto pTrack = tracks->Add( newTrack );
       pTrack->SetSelected(true);
 
@@ -467,7 +468,7 @@ void OnImportLabels(const CommandContext &context)
 
       newTrack->Import(f);
 
-      project.SelectNone();
+      SelectActions::SelectNone( project );
       newTrack->SetSelected(true);
       tracks->Add( newTrack );
 

@@ -48,6 +48,7 @@ Track classes.
 #include "Spectrum.h"
 
 #include "Project.h"
+#include "ProjectFileIORegistry.h"
 
 #include "AudioIO.h"
 #include "Prefs.h"
@@ -68,6 +69,15 @@ Track classes.
 #include "tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h"
 
 using std::max;
+
+static ProjectFileIORegistry::Entry registerFactory{
+   wxT( "wavetrack" ),
+   []( AudacityProject &project ){
+      auto &trackFactory = *project.GetTrackFactory();
+      auto &tracks = *project.GetTracks();
+      return tracks.Add(trackFactory.NewWaveTrack());
+   }
+};
 
 WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {

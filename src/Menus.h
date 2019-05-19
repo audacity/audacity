@@ -115,6 +115,8 @@ void DoUndo( AudacityProject &project );
 
 /// Namespace for functions for Select menu
 namespace SelectActions {
+void SelectAllIfNone( AudacityProject &project );
+void SelectNone( AudacityProject &project );
 void DoListSelection(
    AudacityProject &project, Track *t,
    bool shift, bool ctrl, bool modifyState );
@@ -132,6 +134,7 @@ void DoZoomFitV( AudacityProject &project );
 
 /// Namespace for functions for Transport menu
 namespace TransportActions {
+void StopIfPaused( AudacityProject &project );
 bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
 void DoPlayStopSelect( AudacityProject &project );
 void DoStop( AudacityProject & );

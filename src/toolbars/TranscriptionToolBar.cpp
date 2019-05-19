@@ -483,18 +483,15 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
       // No need to set cutPreview options.
-      // Due to a rather hacky approach, the appearance is used
-      // to signal use of cutpreview to code below.
       options.timeTrack = mTimeTrack.get();
-      ControlToolBar::PlayAppearance appearance =
-         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
-         : looped ? ControlToolBar::PlayAppearance::Looped
-         : ControlToolBar::PlayAppearance::Straight;
+      auto mode =
+         cutPreview ? PlayMode::cutPreviewPlay
+         : options.playLooped ? PlayMode::loopedPlay
+         : PlayMode::normalPlay;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
             options,
-            PlayMode::normalPlay,
-            appearance);
+            mode);
    }
    else
    {

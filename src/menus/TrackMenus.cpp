@@ -440,6 +440,11 @@ long mixer_process(void *mixer, float **buffer, long n)
 
 #endif // EXPERIMENTAL_SCOREALIGN
 
+enum{
+   kAudacitySortByTime = (1 << 1),
+   kAudacitySortByName = (1 << 2),
+};
+
 //sort based on flags.  see Project.h for sort flags
 void DoSortTracks( AudacityProject &project, int flags )
 {
@@ -797,7 +802,7 @@ void OnNewWaveTrack(const CommandContext &context)
    auto rate = project.GetRate();
 
    auto t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -816,7 +821,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto defaultFormat = project.GetDefaultFormat();
    auto rate = project.GetRate();
 
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    auto left = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
    left->SetSelected(true);
@@ -841,7 +846,7 @@ void OnNewLabelTrack(const CommandContext &context)
 
    auto t = tracks->Add(trackFactory->NewLabelTrack());
 
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -865,7 +870,7 @@ void OnNewTimeTrack(const CommandContext &context)
 
    auto t = tracks->AddToHead(trackFactory->NewTimeTrack());
 
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    t->SetSelected(true);
 

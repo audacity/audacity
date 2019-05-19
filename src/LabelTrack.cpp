@@ -63,6 +63,7 @@ for drawing different aspects of the label and its text box.
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "Project.h"
+#include "ProjectFileIORegistry.h"
 #include "TrackArtist.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
@@ -97,6 +98,15 @@ int LabelTrack::mIconWidth;
 int LabelTrack::mTextHeight;
 
 int LabelTrack::mFontHeight=-1;
+
+static ProjectFileIORegistry::Entry registerFactory{
+   wxT( "labeltrack" ),
+   []( AudacityProject &project ){
+      auto &trackFactory = *project.GetTrackFactory();
+      auto &tracks = *project.GetTracks();
+      return tracks.Add(trackFactory.NewLabelTrack());
+   }
+};
 
 LabelTrack::Holder TrackFactory::NewLabelTrack()
 {

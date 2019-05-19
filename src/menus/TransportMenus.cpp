@@ -193,6 +193,14 @@ namespace TransportActions {
 
 // exported helper functions
 
+// Stop playing or recording, if paused.
+void StopIfPaused( AudacityProject &project )
+{
+   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   if( flags & PausedFlag )
+      DoStop( project );
+}
+
 bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
 {
@@ -699,9 +707,9 @@ void OnPlayOneSecond(const CommandContext &context)
    auto options = project.GetDefaultPlayOptions();
 
    double pos = trackPanel->GetMostRecentXPos();
-   controlToolBar->PlayPlayRegion
-      (SelectedRegion(pos - 0.5, pos + 0.5), options,
-       PlayMode::oneSecondPlay);
+   controlToolBar->PlayPlayRegion(
+      SelectedRegion(pos - 0.5, pos + 0.5), options,
+      PlayMode::oneSecondPlay);
 }
 
 /// The idea for this function (and first implementation)
@@ -751,8 +759,8 @@ void OnPlayToSelection(const CommandContext &context)
    auto controlToolBar = project.GetControlToolBar();
    auto playOptions = project.GetDefaultPlayOptions();
 
-   controlToolBar->PlayPlayRegion
-      (SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
+   controlToolBar->PlayPlayRegion(
+      SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
 }
 
 // The next 4 functions provide a limited version of the

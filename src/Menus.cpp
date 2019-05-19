@@ -548,7 +548,7 @@ CommandFlag MenuManager::GetUpdateFlags
    if (!EffectManager::Get().RealtimeIsActive())
       flags |= IsRealtimeNotActiveFlag;
 
-      if (!project.IsCapturing())
+   if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
       flags |= CaptureNotBusyFlag;
 
    ControlToolBar *bar = project.GetControlToolBar();
@@ -781,7 +781,7 @@ bool MenuManager::TryToMakeActionAllowed
    auto MissingFlags = (~flags & flagsRqd) & mask;
 
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
-      project.StopIfPaused();
+      TransportActions::StopIfPaused( project );
       // Hope this will now reflect stopped audio.
       flags = GetMenuManager(project).GetUpdateFlags(project);
       bAllowed = ((flags & mask) == (flagsRqd & mask));
