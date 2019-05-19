@@ -269,6 +269,10 @@ bool GUIPrefs::Commit()
       gPrefs->Flush();
    }
 
+   // Reads preference /GUI/Theme
+   theTheme.LoadPreferredTheme();
+   ThemePrefs::ApplyUpdatedImages();
+
    return true;
 }
 

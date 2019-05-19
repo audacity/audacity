@@ -68,7 +68,6 @@
 #include "MidiIOPrefs.h"
 #endif
 
-#include "../Theme.h"
 #include "../widgets/HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -812,10 +811,6 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       gPrefs->Write(wxT("/Prefs/Height"), sz.y);
    }
    gPrefs->Flush();
-
-   // Reads preference /GUI/Theme
-   theTheme.LoadPreferredTheme();
-   ThemePrefs::ApplyUpdatedImages();
 
    SavePreferredPage();
 
