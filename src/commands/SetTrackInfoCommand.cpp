@@ -94,7 +94,7 @@ bool SetTrackBase::Apply(const CommandContext & context  )
 {
    long i = 0;// track counter
    long j = 0;// channel counter
-   auto tracks = context.GetProject()->GetTracks();
+   auto tracks = context.project.GetTracks();
    for ( auto t : tracks->Leaders() )
    {
       auto channels = TrackList::Channels(t);
@@ -163,7 +163,7 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
    if( !bIsSecondChannel ){
       if( bHasFocused )
       {
-         TrackPanel *panel = context.GetProject()->GetTrackPanel();
+         TrackPanel *panel = context.project.GetTrackPanel();
          if( bFocused)
             panel->SetFocusedTrack( t );
          else if( t== panel->GetFocusedTrack() )

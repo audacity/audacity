@@ -11,8 +11,8 @@
 #ifndef __AUDACITY_COMMAND_CONTEXT__
 #define __AUDACITY_COMMAND_CONTEXT__
 
+#include <memory>
 #include "audacity/Types.h"
-#include "Command.h"
 
 class AudacityProject;
 class AudacityApp;
@@ -56,6 +56,5 @@ public:
    int index;
    CommandParameter parameter;
    AudacityApp *GetApp() const;
-   AudacityProject *GetProject() const;
 };
 #endif

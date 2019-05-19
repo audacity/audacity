@@ -72,6 +72,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    Effect();
    virtual ~Effect();
 
+   // Type of a registered function that, if it returns true,
+   // causes ShowInterface to return early without making any dialog
+   using VetoDialogHook = bool (*) ( wxDialog* );
+   static VetoDialogHook SetVetoDialogHook( VetoDialogHook hook );
+
    // ComponentInterface implementation
 
    PluginPath GetPath() override;

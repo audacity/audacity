@@ -17,10 +17,6 @@ functions to look up a command by name.
 #include "../Audacity.h"
 #include "CommandDirectory.h"
 
-#include "HelpCommand.h"
-#include "MessageCommand.h"
-#include "BatchEvalCommand.h"
-
 std::unique_ptr<CommandDirectory> CommandDirectory::mInstance;
 
 CommandDirectory::CommandDirectory()
@@ -28,7 +24,8 @@ CommandDirectory::CommandDirectory()
    // Create the command map.
    // First we have commands which return information
    //AddCommand(std::make_unique<MessageCommandType>());
-   AddCommand(std::make_unique<BatchEvalCommandType>());
+
+//   AddCommand(std::make_unique<BatchEvalCommandType>());
 
 
    // Legacy adapter commands that previously was needed to 
@@ -68,24 +65,30 @@ CommandDirectory::~CommandDirectory()
 
 OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName) const
 {
-   CommandMap::const_iterator iter = mCmdMap.find(cmdName);
-   if (iter == mCmdMap.end())
+   auto iter = sCmdMap().find(cmdName);
+   if (iter == sCmdMap().end())
    {
-      return NULL;
+      return nullptr;
    }
    return iter->second.get();
 }
 
-void CommandDirectory::AddCommand(std::unique_ptr<OldStyleCommandType> &&type)
+CommandMap &CommandDirectory::sCmdMap()
+{
+   static CommandMap theMap;
+   return theMap;
+}
+
+void CommandDirectory::AddCommand(std::unique_ptr<OldStyleCommandType> type)
 {
    wxASSERT(type != NULL);
    // Internal string is shown but only in assertion message
    auto cmdName = type->GetSymbol().Internal();
-   wxASSERT_MSG(mCmdMap.find(cmdName) == mCmdMap.end()
+   wxASSERT_MSG(sCmdMap().find(cmdName) == sCmdMap().end()
          , wxT("A command named ") + cmdName
          + wxT(" already exists."));
 
-   mCmdMap[cmdName] = std::move(type);
+   sCmdMap()[cmdName] = std::move(type);
 }
 
 CommandDirectory *CommandDirectory::Get()

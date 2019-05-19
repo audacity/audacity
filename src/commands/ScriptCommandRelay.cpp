@@ -24,8 +24,8 @@ code out of ModuleManager.
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"
-#include "../Project.h"
 #include <wx/app.h>
+#include <wx/window.h>
 #include <wx/string.h>
 
 // Declare static class members
@@ -52,13 +52,16 @@ void ScriptCommandRelay::Run()
 }
 
 /// Send a command to a project, to be applied in that context.
-void ScriptCommandRelay::PostCommand(AudacityProject *project, const OldStyleCommandPointer &cmd)
+void ScriptCommandRelay::PostCommand(
+   wxWindow *pWindow, const OldStyleCommandPointer &cmd)
 {
-   wxASSERT(project != NULL);
+   wxASSERT( pWindow );
    wxASSERT(cmd != NULL);
-   AppCommandEvent ev;
-   ev.SetCommand(cmd);
-   project->GetEventHandler()->AddPendingEvent(ev);
+   if ( pWindow ) {
+      AppCommandEvent ev;
+      ev.SetCommand(cmd);
+      pWindow->GetEventHandler()->AddPendingEvent(ev);
+   }
 }
 
 /// This is the function which actually obeys one command.  Rather than applying
@@ -71,9 +74,8 @@ int ExecCommand(wxString *pIn, wxString *pOut)
       CommandBuilder builder(*pIn);
       if (builder.WasValid())
       {
-         AudacityProject *project = GetActiveProject();
          OldStyleCommandPointer cmd = builder.GetCommand();
-         ScriptCommandRelay::PostCommand(project, cmd);
+         ScriptCommandRelay::PostCommand(wxTheApp->GetTopWindow(), cmd);
 
          *pOut = wxEmptyString;
       }

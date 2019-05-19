@@ -20,6 +20,8 @@ small calculations of rectangles.
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
 
+#include <mutex>
+
 #include "../Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
@@ -31,6 +33,7 @@ small calculations of rectangles.
 
 #include "../AdornedRulerPanel.h"
 #include "../TrackPanel.h"
+#include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
 #include "../Prefs.h"
 #include "../Shuttle.h"
@@ -87,7 +90,19 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 };
 
 
-bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
+ScreenshotCommand::ScreenshotCommand()
+{
+   mbBringToTop=true;
+   mIgnore=NULL;
+   
+   static std::once_flag flag;
+   std::call_once( flag, []{
+      AudacityCommand::SetVetoDialogHook( MayCapture );
+      Effect::SetVetoDialogHook( MayCapture );
+   });
+}
+
+bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
    S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
    S.DefineEnum(                           mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
@@ -579,7 +594,7 @@ void ScreenshotCommand::CaptureScriptables(
 
 void ScreenshotCommand::CaptureCommands( 
    const CommandContext & context, const wxArrayStringEx & Commands ){
-   AudacityProject * pProject = context.GetProject();
+   AudacityProject * pProject = &context.project;
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
@@ -792,16 +807,16 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    GetDerivedParams();
    //Don't reset the toolbars to a known state.
    //We will be capturing variations of them.
-   //context.GetProject()->GetToolManager()->Reset();
+   //context.project.GetToolManager()->Reset();
 
-   wxTopLevelWindow *w = GetFrontWindow(context.GetProject());
+   wxTopLevelWindow *w = GetFrontWindow(&context.project);
    if (!w)
       return false;
 
-   TrackPanel *panel = context.GetProject()->GetTrackPanel();
+   TrackPanel *panel = context.project.GetTrackPanel();
    AdornedRulerPanel *ruler = panel->mRuler;
 
-   int nTracks = context.GetProject()->GetTracks()->size();
+   int nTracks = context.project.GetTracks()->size();
 
    int x1,y1,x2,y2;
    w->ClientToScreen(&x1, &y1);
@@ -811,47 +826,47 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
 
    switch (mCaptureMode) {
    case kwindow:
-      return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetWindowRect(w));
+      return Capture(context,  WindowFileName( &context.project, w ) , w, GetWindowRect(w));
    case kfullwindow:
    case kwindowplus:
-      return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetFullWindowRect(w));
+      return Capture(context,  WindowFileName( &context.project, w ) , w, GetFullWindowRect(w));
    case kfullscreen:
       return Capture(context, mFileName, w,GetScreenRect());
    case ktoolbars:
-      return CaptureDock(context, context.GetProject()->GetToolManager()->GetTopDock(), mFileName);
+      return CaptureDock(context, context.project.GetToolManager()->GetTopDock(), mFileName);
    case kscriptables:
-      CaptureScriptables(context, context.GetProject(), mFileName);
+      CaptureScriptables(context, &context.project, mFileName);
       break;
    case keffects:
-      CaptureEffects(context, context.GetProject(), mFileName);
+      CaptureEffects(context, &context.project, mFileName);
       break;
    case kpreferences:
-      CapturePreferences(context, context.GetProject(), mFileName);
+      CapturePreferences(context, &context.project, mFileName);
       break;
    case kselectionbar:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), SelectionBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), SelectionBarID, mFileName);
    case kspectralselection:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), SpectralSelectionBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), SpectralSelectionBarID, mFileName);
    case ktools:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), ToolsBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), ToolsBarID, mFileName);
    case ktransport:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), TransportBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), TransportBarID, mFileName);
    case kmixer:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), MixerBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), MixerBarID, mFileName);
    case kmeter:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), MeterBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), MeterBarID, mFileName);
    case krecordmeter:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), RecordMeterBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), RecordMeterBarID, mFileName);
    case kplaymeter:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), PlayMeterBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), PlayMeterBarID, mFileName);
    case kedit:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), EditBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), EditBarID, mFileName);
    case kdevice:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), DeviceBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), DeviceBarID, mFileName);
    case ktranscription:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), TranscriptionBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), TranscriptionBarID, mFileName);
    case kscrub:
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), ScrubbingBarID, mFileName);
+      return CaptureToolbar(context, context.project.GetToolManager(), ScrubbingBarID, mFileName);
    case ktrackpanel:
       return Capture(context, mFileName, panel, GetPanelRect(panel));
    case kruler:
@@ -859,9 +874,9 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    case ktracks:
       return Capture(context, mFileName, panel, GetTracksRect(panel));
    case kfirsttrack:
-      return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 0 ) );
+      return Capture(context, mFileName, panel, GetTrackRect( &context.project, panel, 0 ) );
    case ksecondtrack:
-      return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 1 ) );
+      return Capture(context, mFileName, panel, GetTrackRect( &context.project, panel, 1 ) );
    case ktracksplus:
    {  wxRect r = GetTracksRect(panel);
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
@@ -869,36 +884,36 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return Capture(context, mFileName, panel, r);
    }
    case kfirsttrackplus:
-   {  wxRect r = GetTrackRect(context.GetProject(), panel, 0 );
+   {  wxRect r = GetTrackRect(&context.project, panel, 0 );
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
       r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
       return Capture(context, mFileName, panel, r );
    }
    case kfirsttwotracks:
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, 1 ));
+   {  wxRect r = GetTrackRect( &context.project, panel, 0 );
+      r = r.Union( GetTrackRect( &context.project, panel, 1 ));
       return Capture(context, mFileName, panel, r );
    }
    case kfirstthreetracks:
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, 2 ));
+   {  wxRect r = GetTrackRect( &context.project, panel, 0 );
+      r = r.Union( GetTrackRect( &context.project, panel, 2 ));
       return Capture(context, mFileName, panel, r );
    }
    case kfirstfourtracks:
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, 3 ));
+   {  wxRect r = GetTrackRect( &context.project, panel, 0 );
+      r = r.Union( GetTrackRect( &context.project, panel, 3 ));
       return Capture(context, mFileName, panel, r );
    }
    case kalltracks:
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
+   {  wxRect r = GetTrackRect( &context.project, panel, 0 );
+      r = r.Union( GetTrackRect( &context.project, panel, nTracks-1 ));
       return Capture(context, mFileName, panel, r );
    }
    case kalltracksplus:
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
+   {  wxRect r = GetTrackRect( &context.project, panel, 0 );
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
       r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
+      r = r.Union( GetTrackRect( &context.project, panel, nTracks-1 ));
       return Capture(context, mFileName, panel, r );
    }
    default:

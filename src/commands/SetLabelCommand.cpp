@@ -66,8 +66,8 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    // this code could be put in subroutines/reduced.
 
    //wxString mode = GetString(wxT("Type"));
-   AudacityProject * p = context.GetProject();
-   TrackList *tracks = context.GetProject()->GetTracks();
+   AudacityProject * p = &context.project;
+   TrackList *tracks = context.project.GetTracks();
    LabelStruct * pLabel = NULL;
    int i=0;
    int nn=0;

@@ -33,7 +33,6 @@ public:
    wxString GetDescription() override {return _("Compares a range on two tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply() override;
 
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#compare_Audio");};
