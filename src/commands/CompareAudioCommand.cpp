@@ -46,10 +46,6 @@ bool CompareAudioCommand::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool CompareAudioCommand::Apply(){
-   return true;
-}
-
 void CompareAudioCommand::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
@@ -107,7 +103,7 @@ inline int min(int a, int b)
 
 bool CompareAudioCommand::Apply(const CommandContext & context)
 {
-   if (!GetSelection(context, *context.GetProject()))
+   if (!GetSelection(context, context.project))
    {
       return false;
    }

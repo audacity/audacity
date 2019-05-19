@@ -107,6 +107,8 @@ src/Internat.cpp
 src/Internat.h
 src/InterpolateAudio.cpp
 src/InterpolateAudio.h
+src/KeyboardCapture.cpp
+src/KeyboardCapture.h
 src/LabelDialog.cpp
 src/LabelDialog.h
 src/LabelTrack.cpp
@@ -154,6 +156,8 @@ src/Profiler.cpp
 src/Profiler.h
 src/Project.cpp
 src/Project.h
+src/ProjectFSCK.cpp
+src/ProjectFSCK.h
 src/RealFFTf.cpp
 src/RealFFTf.h
 src/RealFFTf48x.cpp
@@ -177,6 +181,8 @@ src/Sequence.cpp
 src/Sequence.h
 src/Shuttle.cpp
 src/Shuttle.h
+src/ShuttleGetDefinition.cpp
+src/ShuttleGetDefinition.h
 src/ShuttleGui.cpp
 src/ShuttleGui.h
 src/ShuttlePrefs.cpp

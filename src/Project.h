@@ -127,11 +127,6 @@ enum StatusBarField {
    rateStatusBarField = 3
 };
 
-////////////////////////////////////////////////////////////
-/// Custom events
-////////////////////////////////////////////////////////////
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
-
 // XML handler for <import> tag
 class ImportXMLTagHandler final : public XMLTagHandler
 {
@@ -361,12 +356,6 @@ public:
    const CommandManager *GetCommandManager() const
       { return mCommandManager.get(); }
 
-   // Keyboard capture
-   static bool HasKeyboardCapture(const wxWindow *handler);
-   static wxWindow *GetKeyboardCaptureHandler();
-   static void CaptureKeyboard(wxWindow *handler);
-   static void ReleaseKeyboard(wxWindow *handler);
-
    void MayStartMonitoring();
 
 
@@ -552,6 +541,7 @@ public:
  private:
 
    void OnCapture(wxCommandEvent & evt);
+   void OnThemeChange(wxCommandEvent & evt);
    void InitialState();
 
  public:
@@ -658,7 +648,6 @@ private:
  public:
    ToolManager *GetToolManager() { return mToolManager.get(); }
    bool mShowSplashScreen;
-   wxString mHelpPref;
    wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
@@ -737,9 +726,6 @@ public:
    bool IsCapturing() const { return mIsCapturing; }
 
 private:
-
-   // Keyboard capture
-   wxWindow *mKeyboardCaptureHandler{};
 
    // See explanation in OnCloseWindow
    bool mIsBeingDeleted{ false };

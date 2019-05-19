@@ -36,6 +36,7 @@
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
+#include "../KeyboardCapture.h"
 #include "../Project.h"
 #include "../TimeTrack.h"
 #include "../WaveTrack.h"
@@ -337,16 +338,7 @@ void TranscriptionToolBar::RegenerateTooltips()
 
 void TranscriptionToolBar::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void TranscriptionToolBar::OnCaptureKey(wxCommandEvent &event)

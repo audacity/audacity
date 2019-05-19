@@ -21,6 +21,15 @@ class ShuttleGui;
 
 #define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Recording") }
 
+#define DEFAULT_LATENCY_DURATION 100.0
+#define DEFAULT_LATENCY_CORRECTION -130.0
+
+#define AUDIO_PRE_ROLL_KEY (wxT("/AudioIO/PreRoll"))
+#define DEFAULT_PRE_ROLL_SECONDS 5.0
+
+#define AUDIO_ROLL_CROSSFADE_KEY (wxT("/AudioIO/Crossfade"))
+#define DEFAULT_ROLL_CROSSFADE_MS 10.0
+
 class RecordingPrefs final : public PrefsPanel
 {
  public:

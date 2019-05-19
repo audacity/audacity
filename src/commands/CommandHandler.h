@@ -25,7 +25,7 @@ class CommandContext;
 class CommandHandler
 {
    private:
-      std::unique_ptr<CommandContext> mCurrentContext;
+      std::unique_ptr<const CommandContext> mCurrentContext;
 
    public:
       CommandHandler();

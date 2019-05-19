@@ -340,10 +340,9 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       const auto &dirManager = mProject->GetDirManager();
       dirManager->SetLoadingFormat(seq->GetSampleFormat());
 
-      BlockArray array;
-      array.resize(1);
-      dirManager->SetLoadingTarget(&array, 0);
-      auto &blockFile = array[0].f;
+      BlockFilePtr blockFile;
+      dirManager->SetLoadingTarget(
+         [&]() -> BlockFilePtr& { return blockFile; } );
 
       if (!dirManager->HandleXMLTag(tag, attrs) || !blockFile)
       {

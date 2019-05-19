@@ -171,7 +171,7 @@ different formats.
 #include "audacity/Types.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"
-#include "../Project.h"
+#include "../KeyboardCapture.h"
 #include "../TranslatableStringArray.h"
 
 #include <algorithm>
@@ -1707,16 +1707,13 @@ void NumericTextCtrl::OnMouse(wxMouseEvent &event)
 
 void NumericTextCtrl::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-      if( mFocusedDigit <=0 )
-         UpdateAutoFocus();
-   }
+   KeyboardCapture::OnFocus( *this, event );
 
-   Refresh(false);
+   if (event.GetEventType() != wxEVT_KILL_FOCUS &&
+       mFocusedDigit <= 0 )
+      UpdateAutoFocus();
+
+   event.Skip( false ); // PRL: not sure why, but preserving old behavior
 }
 
 void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)

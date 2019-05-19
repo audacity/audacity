@@ -26,6 +26,110 @@ ODTask requests and internals.
 #include <wx/thread.h>
 #include <wx/event.h>
 
+#ifdef __WXMAC__
+
+// On Mac OS X, it's better not to use the wxThread class.
+// We use our own implementation based on pthreads instead.
+
+class ODTaskThread {
+ public:
+   typedef int ExitCode;
+   ODTaskThread(ODTask* task);
+   /*ExitCode*/ void Entry();
+   void Create() {}
+   void Delete() {
+      mDestroy = true;
+      pthread_join(mThread, NULL);
+   }
+   bool TestDestroy() { return mDestroy; }
+   void Sleep(int ms) {
+      struct timespec spec;
+      spec.tv_sec = 0;
+      spec.tv_nsec = ms * 1000 * 1000;
+      nanosleep(&spec, NULL);
+   }
+   static void *callback(void *p) {
+      ODTaskThread *th = (ODTaskThread *)p;
+#if defined(__WXMAC__)
+      /*return (void *)*/ th->Entry();
+      return NULL;
+#else
+      return (void *) th->Entry();
+#endif
+   }
+   void Run() {
+      pthread_create(&mThread, NULL, callback, this);
+   }
+
+   ///Specifies the priority the thread will run at.  Currently doesn't work.
+   ///@param priority value from 0 (min priority) to 100 (max priority)
+   void SetPriority(int priority)
+   {
+      mPriority=priority;
+   }
+
+ private:
+   int mPriority;
+   bool mDestroy;
+   pthread_t mThread;
+
+   ODTask* mTask;
+};
+
+#else
+
+class ODTaskThread final : public wxThread
+{
+public:
+   ///Constructs a ODTaskThread
+   ///@param task the task to be launched as an
+   ODTaskThread(ODTask* task);
+
+
+protected:
+   ///Executes a part of the task
+   void* Entry() override;
+   ODTask* mTask;
+
+};
+
+#endif
+
+ODTaskThread::ODTaskThread(ODTask* task)
+#ifndef __WXMAC__
+: wxThread()
+#endif
+{
+   mTask=task;
+#ifdef __WXMAC__
+   mDestroy = false;
+   mThread = NULL;
+#endif
+
+}
+
+#ifdef __WXMAC__
+
+void ODTaskThread::Entry()
+#else
+void *ODTaskThread::Entry()
+
+#endif
+{
+   //TODO: Figure out why this has no effect at all.
+   //wxThread::This()->SetPriority( 40);
+   //Do at least 5 percent of the task
+   mTask->DoSome(0.05f);
+
+   //release the thread count so that the ODManager knows how many active threads are alive.
+   ODManager::Instance()->DecrementCurrentThreads();
+
+
+#ifndef __WXMAC__
+   return NULL;
+#endif
+}
+
 static ODLock gODInitedMutex;
 static bool gManagerCreated=false;
 static bool gPause=false; //to be loaded in and used with Pause/Resume before ODMan init.

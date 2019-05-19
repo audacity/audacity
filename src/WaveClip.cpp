@@ -1448,29 +1448,50 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
    }
 }
 
+#include "blockfile/ODPCMAliasBlockFile.h"
 void WaveClip::AppendAlias(const FilePath &fName, sampleCount start,
                             size_t len, int channel,bool useOD)
 // STRONG-GUARANTEE
 {
    // use STRONG-GUARANTEE
-   mSequence->AppendAlias(fName, start, len, channel,useOD);
+   mSequence->AppendBlockFile(
+      [&]( wxFileNameWrapper filePath, size_t len ) {
+         return useOD
+            ? make_blockfile<ODPCMAliasBlockFile>(
+               std::move(filePath), wxFileNameWrapper{ fName },
+               start, len, channel)
+            : make_blockfile<PCMAliasBlockFile>(
+               std::move(filePath), wxFileNameWrapper{ fName },
+               start, len, channel);
+      },
+      len
+   );
 
    // use NOFAIL-GUARANTEE
    UpdateEnvelopeTrackLen();
    MarkChanged();
 }
 
+#include "blockfile/ODDecodeBlockFile.h"
 void WaveClip::AppendCoded(const FilePath &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
 // STRONG-GUARANTEE
 {
    // use STRONG-GUARANTEE
-   mSequence->AppendCoded(fName, start, len, channel, decodeType);
+   mSequence->AppendBlockFile(
+      [&]( wxFileNameWrapper filePath, size_t len ) {
+         return make_blockfile<ODDecodeBlockFile>(
+            std::move(filePath), wxFileNameWrapper{ fName },
+            start, len, channel, decodeType);
+      },
+      len
+   ) ;
 
    // use NOFAIL-GUARANTEE
    UpdateEnvelopeTrackLen();
    MarkChanged();
 }
+
 
 void WaveClip::Flush()
 // NOFAIL-GUARANTEE that the clip will be in a flushed state.

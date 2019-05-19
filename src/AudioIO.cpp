@@ -461,6 +461,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 #include "effects/EffectManager.h"
 #include "prefs/QualityPrefs.h"
+#include "prefs/RecordingPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
 #include "widgets/ErrorDialog.h"

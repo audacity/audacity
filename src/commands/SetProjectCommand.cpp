@@ -66,7 +66,7 @@ void SetProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetProjectCommand::Apply(const CommandContext & context)
 {
-   AudacityProject * pProj = context.GetProject();
+   AudacityProject * pProj = &context.project;
    if( bHasName )
       pProj->SetLabel(mName);
 

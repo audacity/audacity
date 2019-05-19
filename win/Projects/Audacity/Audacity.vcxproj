@@ -180,6 +180,7 @@
     <ClCompile Include="..\..\..\src\InconsistencyException.cpp" />
     <ClCompile Include="..\..\..\src\Internat.cpp" />
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp" />
+    <ClCompile Include="..\..\..\src\KeyboardCapture.cpp" />
     <ClCompile Include="..\..\..\src\LabelDialog.cpp" />
     <ClCompile Include="..\..\..\src\LabelTrack.cpp" />
     <ClCompile Include="..\..\..\src\LangChoice.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="..\..\..\src\Printing.cpp" />
     <ClCompile Include="..\..\..\src\Profiler.cpp" />
     <ClCompile Include="..\..\..\src\Project.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
     <ClCompile Include="..\..\..\src\Resample.cpp" />
@@ -230,6 +232,7 @@
     <ClCompile Include="..\..\..\src\SelectionState.cpp" />
     <ClCompile Include="..\..\..\src\Sequence.cpp" />
     <ClCompile Include="..\..\..\src\Shuttle.cpp" />
+    <ClCompile Include="..\..\..\src\ShuttleGetDefinition.cpp" />
     <ClCompile Include="..\..\..\src\ShuttleGui.cpp" />
     <ClCompile Include="..\..\..\src\ShuttlePrefs.cpp" />
     <ClCompile Include="..\..\..\src\Snap.cpp" />
@@ -618,6 +621,7 @@
     <ClInclude Include="..\..\..\src\ImageManipulation.h" />
     <ClInclude Include="..\..\..\src\Internat.h" />
     <ClInclude Include="..\..\..\src\InterpolateAudio.h" />
+    <ClCompile Include="..\..\..\src\KeyboardCapture.h" />
     <ClInclude Include="..\..\..\src\LabelDialog.h" />
     <ClInclude Include="..\..\..\src\LabelTrack.h" />
     <ClInclude Include="..\..\..\src\LangChoice.h" />
@@ -640,6 +644,7 @@
     <ClInclude Include="..\..\..\src\Printing.h" />
     <ClInclude Include="..\..\..\src\Profiler.h" />
     <ClInclude Include="..\..\..\src\Project.h" />
+    <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />
     <ClInclude Include="..\..\..\src\RingBuffer.h" />
@@ -647,6 +652,7 @@
     <ClInclude Include="..\..\..\src\Screenshot.h" />
     <ClInclude Include="..\..\..\src\Sequence.h" />
     <ClInclude Include="..\..\..\src\Shuttle.h" />
+    <ClInclude Include="..\..\..\src\ShuttleGetDefinition.h" />
     <ClInclude Include="..\..\..\src\ShuttleGui.h" />
     <ClInclude Include="..\..\..\src\ShuttlePrefs.h" />
     <ClInclude Include="..\..\..\src\Snap.h" />

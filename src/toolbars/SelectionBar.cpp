@@ -29,6 +29,8 @@ with changes in the SelectionBar.
 #include "../Audacity.h"
 #include "SelectionBar.h"
 
+#include "SelectionBarListener.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -51,8 +53,8 @@ with changes in the SelectionBar.
 #include "../widgets/AButton.h"
 #include "../AudioIO.h"
 #include "../AColor.h"
+#include "../KeyboardCapture.h"
 #include "../Prefs.h"
-#include "../Project.h"
 #include "../Snap.h"
 #include "../AllThemeResources.h"
 
@@ -699,15 +701,7 @@ void SelectionBar::UpdateRates()
 
 void SelectionBar::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void SelectionBar::OnCaptureKey(wxCommandEvent &event)

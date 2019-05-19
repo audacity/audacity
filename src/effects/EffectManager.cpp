@@ -33,8 +33,9 @@ effects.
 #include "EffectRack.h"
 #endif
 
-#include "../Shuttle.h"
+#include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
+#include "../commands/Command.h"
 #include "../PluginManager.h"
 
 

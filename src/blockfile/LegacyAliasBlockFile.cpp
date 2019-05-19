@@ -17,6 +17,7 @@
 #include <sndfile.h>
 
 #include "LegacyBlockFile.h"
+#include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../xml/XMLTagHandler.h"
 
@@ -82,7 +83,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
-// as testing will be done in DirManager::ProjectFSCK().
+// as testing will be done in ProjectFSCK().
 BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const FilePath &projDir, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;
@@ -147,3 +148,36 @@ BlockFilePtr LegacyAliasBlockFile::BuildFromXML(const FilePath &projDir, const w
 void LegacyAliasBlockFile::Recover(){
    WriteSummary();
 }
+
+static const auto sFactory = []( DirManager &dm, const wxChar **attrs ){
+
+   // Support Audacity version 1.1.1 project files
+
+   int i=0;
+   bool alias = false;
+
+   while(attrs[i]) {
+      if (!wxStricmp(attrs[i], wxT("alias"))) {
+         if (wxAtoi(attrs[i+1])==1)
+            alias = true;
+      }
+      i++;
+      if (attrs[i])
+         i++;
+   }
+
+   if (alias)
+      return LegacyAliasBlockFile::BuildFromXML(
+         dm.GetProjectDataDir(), attrs);
+   else
+      return LegacyBlockFile::BuildFromXML(dm.GetProjectDataDir(), attrs,
+         dm.GetLoadingBlockLength(),
+         dm.GetLoadingFormat());
+};
+
+static DirManager::RegisteredBlockFileDeserializer sRegistration1 {
+   "blockfile", sFactory
+};
+static DirManager::RegisteredBlockFileDeserializer sRegistration2 {
+   "legacyblockfile", sFactory
+};

@@ -16,4 +16,8 @@ class wxString;
 wxString HelpText( const wxString & Key );
 wxString TitleText( const wxString & Key );
 
+extern const wxString VerCheckArgs();
+extern const wxString VerCheckUrl();
+extern const wxString VerCheckHtml();
+
 #endif

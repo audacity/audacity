@@ -319,9 +319,12 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    std::vector<const PluginDescriptor*> defplugs;
    std::vector<const PluginDescriptor*> optplugs;
 
+   EffectManager & em = EffectManager::Get();
    const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
    while (plug)
    {
+      if( plug->IsInstantiated() && em.IsHidden(plug->GetID()) )
+         continue;
       if ( !plug->IsEnabled() ){
          ;// don't add to menus!
       }

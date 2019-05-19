@@ -56,6 +56,9 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
    bool IsSummaryBeingComputed() override { return false; }
 
+   const wxFileNameWrapper &GetExternalFileName() const override;
+   void SetExternalFileName( wxFileNameWrapper &&newName ) override;
+
    //Calls that rely on summary files need to be overidden
    DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
@@ -138,7 +141,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    ///// Get the name of the file where the audio data for this block is
    /// stored.
-   const wxFileName &GetEncodedAudioFilename()
+   const wxFileNameWrapper &GetEncodedAudioFilename() const
    {
       return mAudioFileName;
    }

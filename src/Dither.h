@@ -10,7 +10,9 @@
 #ifndef __AUDACITY_DITHER_H__
 #define __AUDACITY_DITHER_H__
 
-#include "SampleFormat.h"
+#include "audacity/Types.h" // for samplePtr
+
+class EnumSetting;
 
 
 /// These ditherers are currently available:
@@ -20,6 +22,11 @@ enum DitherType : unsigned {
 class Dither
 {
 public:
+    static DitherType FastDitherChoice();
+    static DitherType BestDitherChoice();
+
+    static EnumSetting FastSetting, BestSetting;
+
     /// Default constructor
     Dither();
 
