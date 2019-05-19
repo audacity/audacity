@@ -164,6 +164,8 @@ audacity_SOURCES = \
 	InconsistencyException.h \
 	InterpolateAudio.cpp \
 	InterpolateAudio.h \
+	KeyboardCapture.cpp \
+	KeyboardCapture.h \
 	LabelDialog.cpp \
 	LabelDialog.h \
 	LabelTrack.cpp \
@@ -205,6 +207,8 @@ audacity_SOURCES = \
 	Profiler.h \
 	Project.cpp \
 	Project.h \
+	ProjectFSCK.cpp \
+	ProjectFSCK.h \
 	RealFFTf.cpp \
 	RealFFTf.h \
 	RealFFTf48x.cpp \
@@ -223,6 +227,8 @@ audacity_SOURCES = \
 	SelectionState.h \
 	Shuttle.cpp \
 	Shuttle.h \
+	ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h \
 	ShuttleGui.cpp \
 	ShuttleGui.h \
 	ShuttlePrefs.cpp \

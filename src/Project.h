@@ -127,11 +127,6 @@ enum StatusBarField {
    rateStatusBarField = 3
 };
 
-////////////////////////////////////////////////////////////
-/// Custom events
-////////////////////////////////////////////////////////////
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
-
 // XML handler for <import> tag
 class ImportXMLTagHandler final : public XMLTagHandler
 {
@@ -360,12 +355,6 @@ public:
       { return mCommandManager.get(); }
    const CommandManager *GetCommandManager() const
       { return mCommandManager.get(); }
-
-   // Keyboard capture
-   static bool HasKeyboardCapture(const wxWindow *handler);
-   static wxWindow *GetKeyboardCaptureHandler();
-   static void CaptureKeyboard(wxWindow *handler);
-   static void ReleaseKeyboard(wxWindow *handler);
 
    void MayStartMonitoring();
 
@@ -737,9 +726,6 @@ public:
    bool IsCapturing() const { return mIsCapturing; }
 
 private:
-
-   // Keyboard capture
-   wxWindow *mKeyboardCaptureHandler{};
 
    // See explanation in OnCloseWindow
    bool mIsBeingDeleted{ false };

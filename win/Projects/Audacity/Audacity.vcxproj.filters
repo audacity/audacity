@@ -194,6 +194,9 @@
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\KeyboardCapture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\LabelDialog.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -257,6 +260,9 @@
     <ClCompile Include="..\..\..\src\Project.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectFSCK.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\RealFFTf.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -276,6 +282,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Shuttle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ShuttleGetDefinition.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ShuttleGui.cpp">
@@ -1237,6 +1246,9 @@
     <ClInclude Include="..\..\..\src\InterpolateAudio.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\..\src\KeyboardCapture.h">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\..\src\LabelDialog.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1303,6 +1315,9 @@
     <ClInclude Include="..\..\..\src\Project.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectFSCK.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\RealFFTf.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1322,6 +1337,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Shuttle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ShuttleGetDefinition.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ShuttleGui.h">

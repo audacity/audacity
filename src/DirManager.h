@@ -19,10 +19,7 @@
 class wxFileNameWrapper;
 class BlockArray;
 class BlockFile;
-
-#define FSCKstatus_CLOSE_REQ 0x1
-#define FSCKstatus_CHANGED   0x2
-#define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
+class ProgressDialog;
 
 using DirHash = std::unordered_map<int, int>;
 
@@ -44,10 +41,38 @@ enum {
 class PROFILE_DLL_API DirManager final : public XMLTagHandler {
  public:
 
+   static int RecursivelyEnumerate(const FilePath &dirPath,
+                                     FilePaths& filePathArray,  // output: all files in dirPath tree
+                                     wxString dirspec,
+                                     wxString filespec,
+                                     bool bFiles, bool bDirs,
+                                     int progress_count = 0,
+                                     int progress_bias = 0,
+                                     ProgressDialog* progress = nullptr);
+
+   static int RecursivelyEnumerateWithProgress(const FilePath &dirPath,
+                                                FilePaths& filePathArray, // output: all files in dirPath tree
+                                                wxString dirspec,
+                                                wxString filespec,
+                                                bool bFiles, bool bDirs,
+                                                int progress_count,
+                                                const wxChar* message);
+
+   static int RecursivelyCountSubdirs( const FilePath &dirPath );
+
+   static int RecursivelyRemoveEmptyDirs(const FilePath &dirPath,
+                                          int nDirCount = 0,
+                                          ProgressDialog* pProgress = nullptr);
+
+   static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
+                                 int flags, const wxChar* message = nullptr);
+
    // MM: Construct DirManager
    DirManager();
 
    virtual ~DirManager();
+
+   size_t NumBlockFiles() const { return mBlockFileHash.size(); }
 
    static void SetTempDir(const wxString &_temp) { globaltemp = _temp; }
 
@@ -151,13 +176,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
       const wxString &fileSpec, 
       const wxString &msg,
       int flags = 0);
-
-   // Check the project for errors and possibly prompt user
-   // bForceError: Always show log error alert even if no errors are found here.
-   //    Important when you know that there are already errors in the log.
-   // bAutoRecoverMode: Do not show any option dialogs for how to deal with errors found here.
-   //    Too complicated during auto-recover. Just correct problems the "safest" way.
-   int ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode);
 
    void FindMissingAliasFiles(
          BlockHash& missingAliasFilesAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing

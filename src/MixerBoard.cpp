@@ -35,6 +35,7 @@
 #include "NoteTrack.h"
 #endif
 
+#include "KeyboardCapture.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
@@ -93,16 +94,7 @@ void MixerTrackSlider::OnMouseEvent(wxMouseEvent &event)
 
 void MixerTrackSlider::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)

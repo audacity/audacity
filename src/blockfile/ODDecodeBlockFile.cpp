@@ -237,7 +237,7 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 /// Also schedules the ODDecodeBlockFile for OD loading.
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
-// as testing will be done in DirManager::ProjectFSCK().
+// as testing will be done in ProjectFSCK().
 BlockFilePtr ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileNameWrapper summaryFileName;

@@ -433,7 +433,7 @@ void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
 
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
-// as testing will be done in DirManager::ProjectFSCK().
+// as testing will be done in ProjectFSCK().
 /// static
 BlockFilePtr SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
