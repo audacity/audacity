@@ -85,22 +85,13 @@
 #include <sys/stat.h>
 #endif
 
-#include "Clipboard.h"
+#include "BlockFile.h"
 #include "FileNames.h"
-#include "blockfile/LegacyBlockFile.h"
-#include "blockfile/LegacyAliasBlockFile.h"
-#include "blockfile/SilentBlockFile.h"
-#include "blockfile/ODPCMAliasBlockFile.h"
-#include "blockfile/ODDecodeBlockFile.h"
 #include "InconsistencyException.h"
-#include "Project.h"
 #include "Prefs.h"
-#include "Sequence.h"
 #include "widgets/Warning.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
-
-#include "ondemand/ODManager.h"
 
 #if defined(__WXMAC__)
 #include <mach/mach.h>
@@ -356,6 +347,19 @@ wxString DirManager::globaltemp;
 int DirManager::numDirManagers = 0;
 bool DirManager::dontDeleteTempFiles = false;
 
+namespace {
+
+// Global tracking of all outstanding DirManagers
+std::vector< std::weak_ptr< DirManager > > sDirManagers;
+
+}
+
+std::shared_ptr<DirManager> DirManager::Create()
+{
+   auto result = std::shared_ptr< DirManager >( safenew DirManager );
+   sDirManagers.push_back( result );
+   return result;
+}
 
 DirManager::DirManager()
 {
@@ -385,8 +389,6 @@ DirManager::DirManager()
    projPath = wxT("");
    projName = wxT("");
 
-   mLoadingTarget = NULL;
-   mLoadingTargetIdx = 0;
    mMaxSamples = ~size_t(0);
 
    // toplevel pool hash is fully populated to begin
@@ -410,6 +412,13 @@ DirManager::DirManager()
 
 DirManager::~DirManager()
 {
+   auto start = sDirManagers.begin(), finish = sDirManagers.end(),
+      iter = std::remove_if( start, finish,
+         [=]( const std::weak_ptr<DirManager> &ptr ){
+            return ptr.expired() || ptr.lock().get() == this;
+         } );
+   sDirManagers.erase( iter, finish );
+
    numDirManagers--;
    if (numDirManagers == 0) {
       CleanTempDir();
@@ -1171,71 +1180,17 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
    return ret;
 }
 
-BlockFilePtr DirManager::NewSimpleBlockFile(
-                                 samplePtr sampleData, size_t sampleLen,
-                                 sampleFormat format,
-                                 bool allowDeferredWrite)
+BlockFilePtr DirManager::NewBlockFile( const BlockFileFactory &factory )
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
-
-   auto newBlockFile = make_blockfile<SimpleBlockFile>
-      (std::move(filePath), sampleData, sampleLen, format, allowDeferredWrite);
-
+   auto newBlockFile = factory( std::move(filePath) );
    mBlockFileHash[fileName] = newBlockFile;
-
-   return newBlockFile;
-}
-
-BlockFilePtr DirManager::NewAliasBlockFile(
-                                 const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel)
-{
-   wxFileNameWrapper filePath{ MakeBlockFileName() };
-   const wxString fileName = filePath.GetName();
-
-   auto newBlockFile = make_blockfile<PCMAliasBlockFile>
-      (std::move(filePath), wxFileNameWrapper{aliasedFile},
-       aliasStart, aliasLen, aliasChannel);
-
-   mBlockFileHash[fileName]=newBlockFile;
-   aliasList.push_back(aliasedFile);
-
-   return newBlockFile;
-}
-
-BlockFilePtr DirManager::NewODAliasBlockFile(
-                                 const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel)
-{
-   wxFileNameWrapper filePath{ MakeBlockFileName() };
-   const wxString fileName{ filePath.GetName() };
-
-   auto newBlockFile = make_blockfile<ODPCMAliasBlockFile>
-      (std::move(filePath), wxFileNameWrapper{aliasedFile},
-       aliasStart, aliasLen, aliasChannel);
-
-   mBlockFileHash[fileName]=newBlockFile;
-   aliasList.push_back(aliasedFile);
-
-   return newBlockFile;
-}
-
-BlockFilePtr DirManager::NewODDecodeBlockFile(
-                                 const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel, int decodeType)
-{
-   wxFileNameWrapper filePath{ MakeBlockFileName() };
-   const wxString fileName{ filePath.GetName() };
-
-   auto newBlockFile = make_blockfile<ODDecodeBlockFile>
-      (std::move(filePath), wxFileNameWrapper{ aliasedFile },
-       aliasStart, aliasLen, aliasChannel, decodeType);
-
-   mBlockFileHash[fileName]=newBlockFile;
-   aliasList.push_back(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
-                               //I don't immediately see a place where aliased files remove when a file is closed.
-
+   auto &aliasName = newBlockFile->GetExternalFileName();
+   if ( aliasName.IsOk() )
+      //OD TODO: check to see if we need to remove this when done decoding.
+      //I don't immediately see a place where aliased files remove when a file is closed.
+      aliasList.push_back( aliasName.GetFullPath() );
    return newBlockFile;
 }
 
@@ -1324,68 +1279,48 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
    return b2;
 }
 
+namespace {
+
+using Deserializers =
+   std::unordered_map< wxString, DirManager::BlockFileDeserializer >;
+Deserializers &GetDeserializers()
+{
+   static Deserializers sDeserializers;
+   return sDeserializers;
+}
+
+}
+
+DirManager::RegisteredBlockFileDeserializer::RegisteredBlockFileDeserializer(
+   const wxString &tag, BlockFileDeserializer function )
+{
+   GetDeserializers()[tag] = function;
+}
+
 bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   if( mLoadingTarget == NULL )
+   if( !mLoadingTarget )
       return false;
 
    BlockFilePtr pBlockFile {};
 
-   BlockFilePtr &target = mLoadingTarget->at(mLoadingTargetIdx).f;
+   BlockFilePtr &target = mLoadingTarget();
+   mLoadingTarget = nullptr;
    
-   if (!wxStricmp(tag, wxT("silentblockfile"))) {
-      // Silent blocks don't actually have a file associated, so
-      // we don't need to worry about the hash table at all
-      target = SilentBlockFile::BuildFromXML(*this, attrs);
-      return true;
-   }
-   else if ( !wxStricmp(tag, wxT("simpleblockfile")) )
-      pBlockFile = SimpleBlockFile::BuildFromXML(*this, attrs);
-   else if( !wxStricmp(tag, wxT("pcmaliasblockfile")) )
-      pBlockFile = PCMAliasBlockFile::BuildFromXML(*this, attrs);
-   else if( !wxStricmp(tag, wxT("odpcmaliasblockfile")) )
-   {
-      pBlockFile = ODPCMAliasBlockFile::BuildFromXML(*this, attrs);
-      //in the case of loading an OD file, we need to schedule the ODManager to begin OD computing of summary
-      //However, because we don't have access to the track or even the Sequence from this call, we mark a flag
-      //in the ODMan and check it later.
-      ODManager::MarkLoadedODFlag();
-   }
-   else if( !wxStricmp(tag, wxT("oddecodeblockfile")) )
-   {
-      pBlockFile = ODDecodeBlockFile::BuildFromXML(*this, attrs);
-      ODManager::MarkLoadedODFlag();
-   }
-   else if( !wxStricmp(tag, wxT("blockfile")) ||
-            !wxStricmp(tag, wxT("legacyblockfile")) ) {
-      // Support Audacity version 1.1.1 project files
-
-      int i=0;
-      bool alias = false;
-
-      while(attrs[i]) {
-         if (!wxStricmp(attrs[i], wxT("alias"))) {
-            if (wxAtoi(attrs[i+1])==1)
-               alias = true;
-         }
-         i++;
-         if (attrs[i])
-            i++;
-      }
-
-      if (alias)
-         pBlockFile = LegacyAliasBlockFile::BuildFromXML(projFull, attrs);
-      else
-         pBlockFile = LegacyBlockFile::BuildFromXML(projFull, attrs,
-                                                         mLoadingBlockLen,
-                                                         mLoadingFormat);
-   }
-   else
+   auto &table = GetDeserializers();
+   auto iter = table.find( tag );
+   if ( iter == table.end() )
       return false;
+   pBlockFile = iter->second( *this, attrs );
 
    if (!pBlockFile)
       // BuildFromXML failed, or we didn't find a valid blockfile tag.
       return false;
+
+   if (!pBlockFile->GetFileName().name.IsOk())
+     // Silent blocks don't actually have a file associated, so
+     // we don't need to worry about the hash table at all
+     return true;
 
    // Check the length here so we don't have to do it in each BuildFromXML method.
    if ((mMaxSamples != ~size_t(0)) && // is initialized
@@ -1564,25 +1499,11 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    {
       BlockFilePtr b = iter->second.lock();
       if (b) {
-         // don't worry, we don't rely on this cast unless IsAlias is true
-         auto ab = static_cast< AliasBlockFile * > ( &*b );
-
-         // don't worry, we don't rely on this cast unless ISDataAvailable is false
-         // which means that it still needs to access the file.
-         auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-         if (b->IsAlias() && ab->GetAliasedFileName() == fName) {
+         if (fName.IsOk() && b->GetExternalFileName() == fName) {
             needToRename = true;
 
             //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            readLocks.push_back( ab->LockForRead() );
-         }
-         //now for encoded OD blocks  (e.g. flac)
-         else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-            needToRename = true;
-
-            //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            readLocks.push_back( db->LockForRead() );
+            readLocks.push_back( b->LockForRead() );
          }
       }
       ++iter;
@@ -1614,18 +1535,11 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          {
             BlockFilePtr b = iter2->second.lock();
             if (b) {
-               auto ab = static_cast< AliasBlockFile * > ( &*b );
-               auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-               if (b->IsAlias() && ab->GetAliasedFileName() == fName)
-               {
-                  ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
+               if (fName.IsOk() && b->GetExternalFileName() == fName) {
+                  b->SetExternalFileName(wxFileNameWrapper{ renamedFileName });
                   wxPrintf(_("Changed block %s to new alias name\n"),
                            b->GetFileName().name.GetFullName());
 
-               }
-               else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-                  db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
                }
             }
             ++iter2;
@@ -1744,7 +1658,12 @@ void DirManager::FindOrphanBlockFiles(
       const FilePaths &filePathArray,       // input: all files in project directory
       FilePaths &orphanFilePathArray)       // output: orphan files
 {
-   DirManager *clipboardDM = NULL;
+   std::vector< std::shared_ptr<DirManager> > otherDirManagers;
+   for ( auto &wPtr : sDirManagers ) {
+      auto sPtr = wPtr.lock();
+      if ( sPtr && sPtr.get() != this )
+         otherDirManagers.push_back( sPtr );
+   }
 
    for (size_t i = 0; i < filePathArray.size(); i++)
    {
@@ -1757,17 +1676,15 @@ void DirManager::FindOrphanBlockFiles(
             (ext.IsSameAs(wxT("au"), false) ||
                ext.IsSameAs(wxT("auf"), false)))
       {
-         if (!clipboardDM) {
-            auto &clipTracks = Clipboard::Get().GetTracks();
-
-            auto track = *clipTracks.Any().first;
-            if (track)
-               clipboardDM = track->GetDirManager().get();
-         }
-
          // Ignore it if it exists in the clipboard (from a previously closed project)
-         if (!(clipboardDM && clipboardDM->ContainsBlockFile(basename)))
-            orphanFilePathArray.push_back(fullname.GetFullPath());
+         if ( std::any_of( otherDirManagers.begin(), otherDirManagers.end(),
+            [&]( const std::shared_ptr< DirManager > &ptr ){
+               return ptr->ContainsBlockFile( basename );
+            }
+         ) )
+            continue;
+
+         orphanFilePathArray.push_back(fullname.GetFullPath());
       }
    }
    for ( const auto &orphan : orphanFilePathArray )

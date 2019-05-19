@@ -1130,8 +1130,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    MissingAliasFilesDialog::SetShouldShow(true);
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
-   // MM: We don't need to Ref() here because it start with refcount=1
-   mDirManager = std::make_shared<DirManager>();
+   mDirManager = DirManager::Create();
 
    mLastSavedTracks.reset();
 
@@ -5371,7 +5370,7 @@ void AudacityProject::ResetProjectToEmpty() {
    SelectActions::DoSelectAll(*this);
    TrackActions::DoRemoveTracks(*this);
    // A new DirManager.
-   mDirManager = std::make_shared<DirManager>();
+   mDirManager = DirManager::Create();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
 
    // mLastSavedTrack code copied from OnCloseWindow.

@@ -14,6 +14,7 @@
 #include "audacity/Types.h"
 #include "xml/XMLTagHandler.h"
 
+#include <functional>
 #include <unordered_map>
 
 class wxFileNameWrapper;
@@ -67,8 +68,24 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
                                  int flags, const wxChar* message = nullptr);
 
+   // Type of a function that builds a block file, using attributes from XML
+   using BlockFileDeserializer =
+      std::function< BlockFilePtr( DirManager&, const wxChar ** ) >;
+   // Typically a statically declared object,
+   // registers a function for an XML tag
+   struct RegisteredBlockFileDeserializer {
+      RegisteredBlockFileDeserializer(
+         const wxString &tag, BlockFileDeserializer function );
+   };
+
+ private:
    // MM: Construct DirManager
+   // Don't call this directly but use Create() instead
    DirManager();
+
+ public:
+
+   static std::shared_ptr< DirManager > Create();
 
    virtual ~DirManager();
 
@@ -107,23 +124,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    wxLongLong GetFreeDiskSpace();
 
-   BlockFilePtr
-      NewSimpleBlockFile(samplePtr sampleData,
-                                 size_t sampleLen,
-                                 sampleFormat format,
-                                 bool allowDeferredWrite = false);
-
-   BlockFilePtr
-      NewAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel);
-
-   BlockFilePtr
-      NewODAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel);
-
-   BlockFilePtr
-      NewODDecodeBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel, int decodeType);
+   using BlockFileFactory = std::function< BlockFilePtr( wxFileNameWrapper ) >;
+   BlockFilePtr NewBlockFile( const BlockFileFactory &factory );
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
    bool ContainsBlockFile(const BlockFile *b) const;
@@ -150,12 +152,14 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    bool EnsureSafeFilename(const wxFileName &fName);
 
-   void SetLoadingTarget(BlockArray *pArray, unsigned idx)
+   using LoadingTarget = std::function< BlockFilePtr &() >;
+   void SetLoadingTarget( LoadingTarget loadingTarget )
    {
-      mLoadingTarget = pArray;
-      mLoadingTargetIdx = idx;
+      mLoadingTarget = loadingTarget;
    }
+   sampleFormat GetLoadingFormat() const { return mLoadingFormat; }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
+   size_t GetLoadingBlockLength() const { return mLoadingBlockLen; }
    void SetLoadingBlockLength(size_t len) { mLoadingBlockLen = len; }
 
    // Note: following affects only the loading of block files when opening a project
@@ -248,8 +252,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    FilePaths aliasList;
 
-   BlockArray *mLoadingTarget;
-   unsigned mLoadingTargetIdx;
+   LoadingTarget mLoadingTarget;
    sampleFormat mLoadingFormat;
    size_t mLoadingBlockLen;
 

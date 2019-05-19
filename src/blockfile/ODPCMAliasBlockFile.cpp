@@ -561,4 +561,15 @@ void ODPCMAliasBlockFile::UnlockRead() const
    mReadDataMutex.Unlock();
 }
 
+static DirManager::RegisteredBlockFileDeserializer sRegistration {
+   "odpcmaliasblockfile",
+   []( DirManager &dm, const wxChar **attrs ){
+      auto result = ODPCMAliasBlockFile::BuildFromXML( dm, attrs );
+      //in the case of loading an OD file, we need to schedule the ODManager to begin OD computing of summary
+      //However, because we don't have access to the track or even the Sequence from this call, we mark a flag
+      //in the ODMan and check it later.
+      ODManager::MarkLoadedODFlag();
+      return result;
+   }
+};
 

@@ -49,7 +49,7 @@ AliasedFile s.
 #include <wx/dataobj.h>
 #include <wx/stattext.h>
 
-#include "BlockFile.h"
+#include "blockfile/SimpleBlockFile.h"
 #include "DirManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -204,11 +204,14 @@ static void RemoveDependencies(AudacityProject *project,
          BlockFilePtr newBlockFile;
          {
             SampleBuffer buffer(len, format);
-            // We tolerate exceptions from NewSimpleBlockFile and so we
-            // can allow exceptions from ReadData too
+            // We tolerate exceptions from NewBlockFile
+            // and so we can allow exceptions from ReadData too
             f->ReadData(buffer.ptr(), format, 0, len);
             newBlockFile =
-               dirManager->NewSimpleBlockFile(buffer.ptr(), len, format);
+               dirManager->NewBlockFile( [&]( wxFileNameWrapper filePath ) {
+                  return make_blockfile<SimpleBlockFile>(
+                     std::move(filePath), buffer.ptr(), len, format);
+               } );
          }
 
          // Update our hash so we know what block files we've done

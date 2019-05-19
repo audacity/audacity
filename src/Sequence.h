@@ -23,6 +23,7 @@ class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
 class DirManager;
+class wxFileNameWrapper;
 
 // This is an internal data structure!  For advanced use only.
 class SeqBlock {
@@ -107,21 +108,18 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Append(samplePtr buffer, sampleFormat format, size_t len,
                XMLWriter* blockFileLog=NULL);
    void Delete(sampleCount start, sampleCount len);
-   void AppendAlias(const FilePath &fullPath,
-                    sampleCount start,
-                    size_t len, int channel, bool useOD);
 
-   void AppendCoded(const FilePath &fName, sampleCount start,
-                            size_t len, int channel, int decodeType);
-
-   ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags();
+   using BlockFileFactory =
+      std::function< BlockFilePtr( wxFileNameWrapper, size_t /* len */ ) >;
+   // An overload of AppendBlockFile that passes the factory to DirManager
+   // which supplies it with a file name
+   void AppendBlockFile( const BlockFileFactory &factory, size_t len );
 
    // Append a blockfile. The blockfile pointer is then "owned" by the
    // sequence. This function is used by the recording log crash recovery
    // code, but may be useful for other purposes. The blockfile must already
    // be registered within the dir manager hash. This is the case
-   // when the blockfile is created using DirManager::NewSimpleBlockFile or
+   // when the blockfile is created using SimpleBlockFile or
    // loaded from an XML file via DirManager::HandleXMLTag
    void AppendBlockFile(const BlockFilePtr &blockFile);
 

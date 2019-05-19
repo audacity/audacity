@@ -200,3 +200,9 @@ void PCMAliasBlockFile::Recover(void)
    WriteSummary();
 }
 
+static DirManager::RegisteredBlockFileDeserializer sRegistration {
+   "pcmaliasblockfile",
+   []( DirManager &dm, const wxChar **attrs ){
+      return PCMAliasBlockFile::BuildFromXML( dm, attrs );
+   }
+};

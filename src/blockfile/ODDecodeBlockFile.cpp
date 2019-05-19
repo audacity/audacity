@@ -29,6 +29,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 #include "../DirManager.h"
 #include "../FileFormats.h"
+#include "../ondemand/ODManager.h"
 #include "NotYetAvailableException.h"
 
 const int bheaderTagLen = 20;
@@ -502,6 +503,18 @@ void ODDecodeBlockFile::UnlockRead() const
    mReadDataMutex.Unlock();
 }
 
+const wxFileNameWrapper &ODDecodeBlockFile::GetExternalFileName() const
+{
+   if ( !IsDataAvailable() )
+      return GetEncodedAudioFilename();
+   return SimpleBlockFile::GetExternalFileName();
+}
+
+void ODDecodeBlockFile::SetExternalFileName( wxFileNameWrapper &&newName )
+{
+   ChangeAudioFile( std::move( newName ) );
+}
+
 /// Modify this block to point at a different file.  This is generally
 /// looked down on, but it is necessary in one case: see
 /// DirManager::EnsureSafeFilename().
@@ -512,3 +525,11 @@ void ODDecodeBlockFile::ChangeAudioFile(wxFileNameWrapper &&newAudioFile)
 
 
 
+static DirManager::RegisteredBlockFileDeserializer sRegistration {
+   "oddecodeblockfile",
+   []( DirManager &dm, const wxChar **attrs ){
+      auto result = ODDecodeBlockFile::BuildFromXML( dm, attrs );
+      ODManager::MarkLoadedODFlag();
+      return result;
+   }
+};
