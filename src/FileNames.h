@@ -149,6 +149,9 @@ public:
     * on Windows */
 #if defined(__WXMSW__)
    static char *VerifyFilename(const wxString &s, bool input = true);
+   
+   // stuff for file name sanitisation
+   static wxCharBuffer mFilename;
 #endif
 
 private:

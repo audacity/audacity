@@ -142,10 +142,7 @@ public:
 private:
    static wxChar mDecimalSeparator;
 
-   // stuff for file name sanitisation
    static wxArrayString exclude;
-
-   static wxCharBuffer mFilename;
 };
 
 #define _NoAcc(X) Internat::StripAccelerators(_(X))

@@ -29,7 +29,7 @@ system by constructing BatchCommandEval objects.
 #include "ScriptCommandRelay.h"
 #include "CommandContext.h"
 #include "CommandTargets.h"
-#include "Shuttle.h"
+#include "../Shuttle.h"
 
 CommandBuilder::CommandBuilder(const wxString &cmdString)
    : mValid(false)

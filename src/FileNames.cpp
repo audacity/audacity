@@ -36,6 +36,7 @@ used throughout Audacity into this one place.
 #include "Internat.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
+#include "widgets/ErrorDialog.h"
 #include "../lib-src/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
@@ -583,6 +584,8 @@ void FileNames::FindFilesInPathList(const wxString & pattern,
 }
 
 #if defined(__WXMSW__)
+wxCharBuffer FileNames::mFilename;
+
 //
 // On Windows, wxString::mb_str() can return a NULL pointer if the
 // conversion to multi-byte fails.  So, based on direction intent,

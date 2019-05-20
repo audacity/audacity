@@ -40,7 +40,6 @@ and on Mac OS X for the filesystem.
 
 wxChar Internat::mDecimalSeparator = wxT('.'); // default
 wxArrayString Internat::exclude;
-wxCharBuffer Internat::mFilename;
 
 // DA: Use tweaked translation mechanism to replace 'Audacity' by 'DarkAudacity'.
 #ifdef EXPERIMENTAL_DA

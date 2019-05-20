@@ -287,6 +287,7 @@ wxString GUIPrefs::InitLang( wxString langCode )
    return SetLang(langCode);
 }
 
+#define IPC_APPL wxT("audacity")
 static std::unique_ptr<wxLocale> sLocale;
 
 wxString GUIPrefs::SetLang( const wxString & lang )
