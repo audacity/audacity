@@ -395,7 +395,7 @@ ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
 }
 
 //
-// Destructer
+// Destructor
 //
 ToolDock::~ToolDock()
 {

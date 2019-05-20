@@ -437,7 +437,7 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 }
 
 //
-// Destructer
+// Destructor
 //
 ToolManager::~ToolManager()
 {
