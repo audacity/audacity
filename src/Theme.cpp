@@ -76,7 +76,8 @@ can't be.
 #include "FileNames.h"
 #include "Prefs.h"
 #include "ImageManipulation.h"
-#include "widgets/ErrorDialog.h"
+#include "Internat.h"
+#include "widgets/AudacityMessageBox.h"
 
 // JKC: First get the MAC specific images.
 // As we've disabled USE_AQUA_THEME, we need to name each file we use.

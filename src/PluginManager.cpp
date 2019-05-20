@@ -47,7 +47,7 @@ for shared and private configs - which need to move out.
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "wxFileNameWrapper.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 
 #include <unordered_map>

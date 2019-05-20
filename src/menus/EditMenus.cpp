@@ -17,7 +17,7 @@
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 // private helper classes and functions
 namespace {

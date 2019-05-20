@@ -169,11 +169,6 @@ void ShowModelessErrorDialog(wxWindow *parent,
    // but in practice Destroy() in OnOK does that
 }
 
-extern wxString AudacityMessageBoxCaptionStr()
-{
-   return _("Message");
-}
-
 void AudacityTextEntryDialog::SetInsertionPointEnd()
 {
    mSetInsertionPointEnd = true;

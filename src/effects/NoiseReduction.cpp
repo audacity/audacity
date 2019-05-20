@@ -49,7 +49,7 @@
 #include "../RealFFTf.h"
 
 #include "../WaveTrack.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
 #include <algorithm>

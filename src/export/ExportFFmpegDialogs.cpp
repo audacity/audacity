@@ -61,7 +61,7 @@
 #include "../Project.h"
 #include "../Tags.h"
 #include "../TranslatableStringArray.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 #include "Export.h"
 

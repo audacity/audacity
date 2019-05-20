@@ -680,6 +680,8 @@ audacity_SOURCES = \
 	widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp \
 	widgets/AttachableScrollBar.h \
+	widgets/AudacityMessageBox.cpp \
+	widgets/AudacityMessageBox.h \
 	widgets/BackedPanel.cpp \
 	widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp \

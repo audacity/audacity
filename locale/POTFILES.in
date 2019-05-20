@@ -701,6 +701,8 @@ src/widgets/ASlider.cpp
 src/widgets/ASlider.h
 src/widgets/AttachableScrollBar.cpp
 src/widgets/AttachableScrollBar.h
+src/widgets/AudacityMessageBox.cpp
+src/widgets/AudacityMessageBox.h
 src/widgets/BackedPanel.cpp
 src/widgets/BackedPanel.h
 src/widgets/ErrorDialog.cpp

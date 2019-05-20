@@ -400,6 +400,7 @@
     <ClCompile Include="..\..\..\src\widgets\AButton.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ASlider.cpp" />
     <ClCompile Include="..\..\..\src\widgets\AttachableScrollBar.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\AudacityMessageBox.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ErrorDialog.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ExpandingToolBar.cpp" />
     <ClCompile Include="..\..\..\src\widgets\FileHistory.cpp" />
@@ -762,6 +763,7 @@
     <ClInclude Include="..\..\..\src\widgets\AButton.h" />
     <ClInclude Include="..\..\..\src\widgets\ASlider.h" />
     <ClInclude Include="..\..\..\src\widgets\AttachableScrollBar.h" />
+    <ClInclude Include="..\..\..\src\widgets\AudacityMessageBox.h" />
     <ClInclude Include="..\..\..\src\widgets\ErrorDialog.h" />
     <ClInclude Include="..\..\..\src\widgets\ExpandingToolBar.h" />
     <ClInclude Include="..\..\..\src\widgets\FileHistory.h" />

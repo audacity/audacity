@@ -39,7 +39,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #include "AllThemeResources.h"
 
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 
 #include "commands/CommandContext.h"
 

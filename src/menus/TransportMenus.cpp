@@ -18,6 +18,7 @@
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../tracks/ui/Scrubbing.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 
 #include <float.h>

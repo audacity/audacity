@@ -36,7 +36,7 @@
 #include "../ShuttleGui.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 

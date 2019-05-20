@@ -464,6 +464,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "prefs/RecordingPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
 

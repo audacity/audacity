@@ -36,7 +36,7 @@ most commonly asked questions about Audacity.
 
 #include "FileNames.h"
 #include "ShuttleGui.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/LinkingHtmlWindow.h"
 
 #include "AllThemeResources.h"

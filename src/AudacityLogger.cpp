@@ -20,6 +20,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include "Experimental.h"
 
 #include "FileNames.h"
+#include "Internat.h"
 #include "ShuttleGui.h"
 
 #include <mutex>
@@ -28,9 +29,10 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/frame.h>
 #include <wx/icon.h>
 #include <wx/settings.h>
+#include <wx/textctrl.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 
 //
 // AudacityLogger class

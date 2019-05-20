@@ -17,7 +17,7 @@
 
 #include "BlockFile.h"
 #include "DirManager.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "Internat.h"
 #include "MemoryX.h"
 #include "MissingAliasFileDialog.h"

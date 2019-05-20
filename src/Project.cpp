@@ -127,6 +127,7 @@ scroll information.  It also has some status flags.
 #include "DirManager.h"
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"

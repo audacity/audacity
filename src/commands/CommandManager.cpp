@@ -96,6 +96,7 @@ CommandManager.  It holds the callback for one command.
 #include "../PluginManager.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/HelpSystem.h"
 

@@ -40,7 +40,7 @@ On failure the old version is put back in place.
 #include <wx/string.h>
 #include <wx/textfile.h>
 
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "xml/XMLWriter.h"
 
 static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)

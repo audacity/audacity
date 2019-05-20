@@ -69,6 +69,7 @@ greater use in future.
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
 #include "../commands/CommandContext.h"

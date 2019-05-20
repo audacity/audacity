@@ -30,7 +30,7 @@ threshold of difference in two selected tracks
 
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 #include "CommandContext.h"
 

@@ -21,7 +21,8 @@ information.
 #include <wx/arrstr.h>
 #include <wx/intl.h>
 #include "sndfile.h"
-#include "widgets/ErrorDialog.h"
+#include "Internat.h"
+#include "widgets/AudacityMessageBox.h"
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher

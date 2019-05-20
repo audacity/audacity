@@ -43,7 +43,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "widgets/MultiDialog.h"
 
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"

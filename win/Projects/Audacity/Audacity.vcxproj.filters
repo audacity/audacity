@@ -602,6 +602,9 @@
     <ClCompile Include="..\..\..\src\widgets\AttachableScrollBar.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\AudacityMessageBox.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\ErrorDialog.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
@@ -1667,6 +1670,9 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\AttachableScrollBar.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\AudacityMessageBox.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\ErrorDialog.h">

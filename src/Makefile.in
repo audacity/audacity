@@ -550,6 +550,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	tracks/ui/ZoomHandle.h widgets/AButton.cpp widgets/AButton.h \
 	widgets/ASlider.cpp widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp widgets/AttachableScrollBar.h \
+	widgets/AudacityMessageBox.cpp widgets/AudacityMessageBox.h \
 	widgets/BackedPanel.cpp widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp widgets/ErrorDialog.h \
 	widgets/ExpandingToolBar.cpp widgets/ExpandingToolBar.h \
@@ -882,6 +883,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	widgets/audacity-AButton.$(OBJEXT) \
 	widgets/audacity-ASlider.$(OBJEXT) \
 	widgets/audacity-AttachableScrollBar.$(OBJEXT) \
+	widgets/audacity-AudacityMessageBox.$(OBJEXT) \
 	widgets/audacity-BackedPanel.$(OBJEXT) \
 	widgets/audacity-ErrorDialog.$(OBJEXT) \
 	widgets/audacity-ExpandingToolBar.$(OBJEXT) \
@@ -1608,6 +1610,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	tracks/ui/ZoomHandle.h widgets/AButton.cpp widgets/AButton.h \
 	widgets/ASlider.cpp widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp widgets/AttachableScrollBar.h \
+	widgets/AudacityMessageBox.cpp widgets/AudacityMessageBox.h \
 	widgets/BackedPanel.cpp widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp widgets/ErrorDialog.h \
 	widgets/ExpandingToolBar.cpp widgets/ExpandingToolBar.h \
@@ -2326,6 +2329,8 @@ widgets/audacity-ASlider.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-AttachableScrollBar.$(OBJEXT):  \
 	widgets/$(am__dirstamp) widgets/$(DEPDIR)/$(am__dirstamp)
+widgets/audacity-AudacityMessageBox.$(OBJEXT):  \
+	widgets/$(am__dirstamp) widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-BackedPanel.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-ErrorDialog.$(OBJEXT): widgets/$(am__dirstamp) \
@@ -2825,6 +2830,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AButton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ASlider.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AttachableScrollBar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AudacityMessageBox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-BackedPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ErrorDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ExpandingToolBar.Po@am__quote@
@@ -7237,6 +7243,20 @@ widgets/audacity-AttachableScrollBar.obj: widgets/AttachableScrollBar.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/AttachableScrollBar.cpp' object='widgets/audacity-AttachableScrollBar.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-AttachableScrollBar.obj `if test -f 'widgets/AttachableScrollBar.cpp'; then $(CYGPATH_W) 'widgets/AttachableScrollBar.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/AttachableScrollBar.cpp'; fi`
+
+widgets/audacity-AudacityMessageBox.o: widgets/AudacityMessageBox.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-AudacityMessageBox.o -MD -MP -MF widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo -c -o widgets/audacity-AudacityMessageBox.o `test -f 'widgets/AudacityMessageBox.cpp' || echo '$(srcdir)/'`widgets/AudacityMessageBox.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo widgets/$(DEPDIR)/audacity-AudacityMessageBox.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/AudacityMessageBox.cpp' object='widgets/audacity-AudacityMessageBox.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-AudacityMessageBox.o `test -f 'widgets/AudacityMessageBox.cpp' || echo '$(srcdir)/'`widgets/AudacityMessageBox.cpp
+
+widgets/audacity-AudacityMessageBox.obj: widgets/AudacityMessageBox.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-AudacityMessageBox.obj -MD -MP -MF widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo -c -o widgets/audacity-AudacityMessageBox.obj `if test -f 'widgets/AudacityMessageBox.cpp'; then $(CYGPATH_W) 'widgets/AudacityMessageBox.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/AudacityMessageBox.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo widgets/$(DEPDIR)/audacity-AudacityMessageBox.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/AudacityMessageBox.cpp' object='widgets/audacity-AudacityMessageBox.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-AudacityMessageBox.obj `if test -f 'widgets/AudacityMessageBox.cpp'; then $(CYGPATH_W) 'widgets/AudacityMessageBox.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/AudacityMessageBox.cpp'; fi`
 
 widgets/audacity-BackedPanel.o: widgets/BackedPanel.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-BackedPanel.o -MD -MP -MF widgets/$(DEPDIR)/audacity-BackedPanel.Tpo -c -o widgets/audacity-BackedPanel.o `test -f 'widgets/BackedPanel.cpp' || echo '$(srcdir)/'`widgets/BackedPanel.cpp

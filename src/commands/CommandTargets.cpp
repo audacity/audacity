@@ -27,8 +27,10 @@ capture the more lengthy output from some commands.
 #include <wx/app.h>
 #include <wx/statusbr.h>
 #include <wx/string.h>
+#include <wx/textctrl.h>
 #include "../ShuttleGui.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/wxPanelWrapper.h"
 
 void CommandMessageTarget::StartArray()
 {

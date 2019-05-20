@@ -20,7 +20,7 @@
 #include "../Theme.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 

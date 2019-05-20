@@ -36,7 +36,7 @@
 #include "ThemePrefs.h"
 #include "../AColor.h"
 #include "../TranslatableStringArray.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 

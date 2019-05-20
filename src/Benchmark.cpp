@@ -43,7 +43,8 @@ of the BlockFile system.
 #include "Prefs.h"
 
 #include "FileNames.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/wxPanelWrapper.h"
 
 class BenchmarkDialog final : public wxDialogWrapper
 {

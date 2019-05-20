@@ -65,6 +65,7 @@ and in the spectrogram spectral selection.
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
 
+#include <wx/textctrl.h>
 #include <wx/textfile.h>
 
 #include <math.h>
@@ -85,7 +86,7 @@ and in the spectrogram spectral selection.
 
 #include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/Ruler.h"
 
 #if wxUSE_ACCESSIBILITY

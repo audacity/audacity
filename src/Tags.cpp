@@ -48,7 +48,7 @@
 #include "ShuttleGui.h"
 #include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
 #include "xml/XMLFileReader.h"
 

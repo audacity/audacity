@@ -57,7 +57,7 @@ AliasedFile s.
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 
 #include <unordered_map>

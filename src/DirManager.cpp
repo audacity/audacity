@@ -90,7 +90,7 @@
 #include "InconsistencyException.h"
 #include "Prefs.h"
 #include "widgets/Warning.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 
 #if defined(__WXMAC__)
