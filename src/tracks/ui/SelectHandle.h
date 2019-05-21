@@ -50,13 +50,13 @@ public:
 
    bool IsClicked() const;
 
-   void SetUseSnap(bool use);
-   void Enter(bool forward, AudacityProject *) override;
+   void SetUseSnap(bool use, AudacityProject *pProject);
+   void Enter(bool forward, AudacityProject *pProject) override;
 
    bool HasSnap() const;
    bool HasEscape() const override;
 
-   bool Escape(AudacityProject *) override;
+   bool Escape(AudacityProject *pProject) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

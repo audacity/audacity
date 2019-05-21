@@ -487,12 +487,12 @@ namespace {
    }
 }
 
-void SelectHandle::Enter(bool, AudacityProject *)
+void SelectHandle::Enter(bool, AudacityProject *project)
 {
-   SetUseSnap(true);
+   SetUseSnap(true, project);
 }
 
-void SelectHandle::SetUseSnap(bool use)
+void SelectHandle::SetUseSnap(bool use, AudacityProject *project)
 {
    mUseSnap = use;
 
@@ -504,7 +504,7 @@ void SelectHandle::SetUseSnap(bool use)
    if (IsClicked()) {
       // Readjust the moving selection end
       AssignSelection(
-         ViewInfo::Get( *::GetActiveProject() ),
+         ViewInfo::Get( *project ),
          mUseSnap ? mSnapEnd.outTime : mSnapEnd.timeSnappedTime,
          nullptr);
    }
@@ -521,10 +521,10 @@ bool SelectHandle::HasEscape() const
    return HasSnap() && mUseSnap;
 }
 
-bool SelectHandle::Escape(AudacityProject *)
+bool SelectHandle::Escape(AudacityProject *project)
 {
    if (SelectHandle::HasEscape()) {
-      SetUseSnap(false);
+      SetUseSnap(false, project);
       return true;
    }
    return false;
