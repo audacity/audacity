@@ -124,7 +124,8 @@ template< typename Container > struct Copyable< Container, DeepCopying >
          // Build then swap for strong exception guarantee
          Copyable temp;
          for ( auto &&p : other ) {
-            temp.push_back( p ? p->Clone() : (decltype( p->Clone() )){} );
+            using Ptr = decltype( p->Clone() );
+            temp.push_back( p ? p->Clone() : Ptr{} );
          }
          this->swap( temp );
       }
