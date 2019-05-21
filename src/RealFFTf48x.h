@@ -3,7 +3,7 @@
 
 #include "MemoryX.h"
 
-#define fft_type float
+using fft_type = float;
 
 int SmallRB(int bits, int numberBits);
 
