@@ -107,6 +107,7 @@ SpectralSelectionBar::~SpectralSelectionBar()
 void SpectralSelectionBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
+   UpdatePrefs();
    mHeight = wxWindowBase::GetSizer()->GetSize().GetHeight();
 }
 
@@ -370,12 +371,14 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    if (type == EVT_FREQUENCYTEXTCTRL_UPDATED) {
       NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
       auto frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
-      mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
+      if (mListener)
+         mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
    }
    else if (mbCenterAndWidth &&
             type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
       auto bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
-      mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
+      if (mListener)
+         mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
    }
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls

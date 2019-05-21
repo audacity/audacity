@@ -68,6 +68,7 @@ ScrubbingToolBar::~ScrubbingToolBar()
 void ScrubbingToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
+   UpdatePrefs();
 }
 
 /// This is a convenience function that allows for button creation in

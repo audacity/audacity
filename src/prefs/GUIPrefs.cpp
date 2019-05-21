@@ -269,6 +269,10 @@ bool GUIPrefs::Commit()
       gPrefs->Flush();
    }
 
+   // Reads preference /GUI/Theme
+   theTheme.LoadPreferredTheme();
+   ThemePrefs::ApplyUpdatedImages();
+
    return true;
 }
 
@@ -364,6 +368,12 @@ wxString GUIPrefs::GetLang()
       return sLocale->GetSysName();
    else
       return {};
+}
+
+int ShowClippingPrefsID()
+{
+   static int value = wxNewId();
+   return value;
 }
 
 PrefsPanel::Factory

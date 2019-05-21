@@ -15,6 +15,7 @@
 #include <wx/event.h> // inherit wxEvtHandler
 #include "SelectedRegion.h"
 #include "MemoryX.h"
+#include "Prefs.h"
 
 
 class Track;
@@ -31,6 +32,7 @@ class Track;
 class AUDACITY_DLL_API ZoomInfo /* not final */
    // Note that ViewInfo inherits from ZoomInfo but there are no virtual functions.
    // That's okay if we pass always by reference and never copy, suffering "slicing."
+: protected PrefsListener
 {
 public:
    ZoomInfo(double start, double pixelsPerSecond);
@@ -40,7 +42,7 @@ public:
    ZoomInfo(const ZoomInfo&) PROHIBITED;
    ZoomInfo& operator= (const ZoomInfo&) PROHIBITED;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
 
    int vpos;                    // vertical scroll pos
 
@@ -146,7 +148,9 @@ class AUDACITY_DLL_API ViewInfo final
 public:
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
-   void UpdatePrefs();
+   static int UpdateScrollPrefsID();
+   void UpdatePrefs() override;
+   void UpdateSelectedPrefs( int id ) override;
 
    double GetBeforeScreenWidth() const
    {

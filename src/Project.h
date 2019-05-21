@@ -23,6 +23,7 @@
 #include "Experimental.h"
 
 #include "Track.h"
+#include "Prefs.h"
 #include "SelectionState.h"
 #include "ViewInfo.h"
 #include "commands/CommandManagerWindowClasses.h"
@@ -171,14 +172,13 @@ class WaveTrack;
 
 class MenuManager;
 
-class PrefsListener;
-
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
                                      public SpectralSelectionBarListener,
                                      public XMLTagHandler,
-                                     public AudioIOListener
+                                     public AudioIOListener,
+                                     private PrefsListener
 {
  public:
    AudacityProject(wxWindow * parent, wxWindowID id,
@@ -188,7 +188,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    // Next available ID for sub-windows
    int NextWindowID();
 
-   using AttachedObject = PrefsListener;
+   using AttachedObject = wxObject;
    using AttachedObjectFactory =
       std::function< std::unique_ptr<AttachedObject>() >;
 
@@ -391,7 +391,7 @@ public:
    int GetProjectNumber(){ return mProjectNo;};
    static int CountUnnamed();
    static void RefreshAllTitles(bool bShowProjectNumbers );
-   void UpdatePrefs();
+   void UpdatePrefs() override;
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
    void RefreshCursor();
@@ -627,7 +627,6 @@ private:
    HistoryWindow *mHistoryWindow{};
    LyricsWindow* mLyricsWindow{};
    MixerBoardFrame* mMixerBoardFrame{};
-   MixerBoard* mMixerBoard{};
 
    Destroy_ptr<FreqWindow> mFreqWindow;
    Destroy_ptr<ContrastDialog> mContrastDialog;

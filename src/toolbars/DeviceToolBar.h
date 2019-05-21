@@ -29,6 +29,7 @@ class DeviceToolBar final : public ToolBar {
    void Create(wxWindow * parent) override;
 
    void UpdatePrefs() override;
+   void UpdateSelectedPrefs( int ) override;
 
    void DeinitChildren();
    void Populate() override;
