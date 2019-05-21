@@ -120,7 +120,7 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
    const bool bDown = (OnDownOctaveID == event.GetId());
    pTrack->ShiftNoteRange((bDown) ? -12 : 12);
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
       .ModifyState(false);
    mpData->result = RefreshCode::RefreshAll;

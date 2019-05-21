@@ -186,7 +186,7 @@ void WaveColorMenuTable::InitMenu(Menu *pMenu)
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
    SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
    for (int i = OnInstrument1ID; i <= OnInstrument4ID; i++) {
       pMenu->Enable(i, !unsafe);
@@ -224,7 +224,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 
    int newWaveColor = id - OnInstrument1ID;
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
 
    for (auto channel : TrackList::Channels(pTrack))
       channel->SetWaveColorIndex(newWaveColor);
@@ -284,7 +284,7 @@ void FormatMenuTable::InitMenu(Menu *pMenu)
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
    SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
    for (int i = On16BitID; i <= OnFloatID; i++) {
       pMenu->Enable(i, !unsafe);
@@ -346,7 +346,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
    if (newFormat == pTrack->GetSampleFormat())
       return; // Nothing to do.
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
 
    for (auto channel : TrackList::Channels(pTrack))
       channel->ConvertToSampleFormat(newFormat);
@@ -407,7 +407,7 @@ void RateMenuTable::InitMenu(Menu *pMenu)
    const auto rateId = IdOfRate((int)pTrack->GetRate());
    SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
    for (int i = OnRate8ID; i <= OnRateOtherID; i++) {
       pMenu->Enable(i, !unsafe);
@@ -454,7 +454,7 @@ int RateMenuTable::IdOfRate(int rate)
 /// another track, that one as well.
 void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 {
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    for (auto channel : TrackList::Channels(pTrack))
       channel->SetRate(rate);
 
@@ -645,7 +645,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu)
          .contains( WaveTrackViewConstants::Spectrum );
    pMenu->Enable(OnSpectrogramSettingsID, hasSpectrum && !bAudioBusy);
 
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
    bool unsafe = RealtimeEffectManager::Get().RealtimeIsActive() &&
       ProjectAudioIO::Get( *project ).IsAudioActive();
@@ -814,7 +814,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
                .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
          }
 
-         AudacityProject *const project = ::GetActiveProject();
+         AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
 
          using namespace RefreshCode;
@@ -873,7 +873,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
 
    if (0 != dialog.ShowModal()) {
       // Redraw
-      AudacityProject *const project = ::GetActiveProject();
+      AudacityProject *const project = &mpData->project;
       ProjectHistory::Get( *project ).ModifyState(true);
       //Bug 1725 Toolbar was left greyed out.
       //This solution is overkill, but does fix the problem and is what the
@@ -908,7 +908,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
       break;
    }
    pTrack->SetChannel(channel);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    /* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
    ProjectHistory::Get( *project )
       .PushState(
@@ -921,7 +921,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
 /// Merge two tracks into one stereo track ??
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 {
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
@@ -983,7 +983,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    auto channels = TrackList::Channels( pTrack );
 
    int totalHeight = 0;
@@ -1017,7 +1017,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 /// Swap the left and right channels of a stero track...
 void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 {
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto channels = TrackList::Channels( pTrack );
@@ -1052,7 +1052,7 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
 {
    SplitStereo(true);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    /* i18n-hint: The string names a track  */
    ProjectHistory::Get( *project ).PushState(
       XO("Split stereo track '%s'").Format( pTrack->GetName() ),
@@ -1067,7 +1067,7 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 {
    SplitStereo(false);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    /* i18n-hint: The string names a track  */
    ProjectHistory::Get( *project ).PushState(
       XO("Split Stereo to Mono '%s'").Format( pTrack->GetName() ),

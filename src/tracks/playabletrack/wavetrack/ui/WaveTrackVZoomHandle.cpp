@@ -44,7 +44,7 @@ void WaveTrackVRulerMenuTable::OnZoom(
    WaveTrackViewConstants::ZoomActions iZoomCode )
 {
    mpData->doZoom(
-      ::GetActiveProject(), mpData->pTrack,
+      &mpData->project, mpData->pTrack,
       iZoomCode, mpData->rect, mpData->yy, mpData->yy, false
    );
 
@@ -115,6 +115,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
        !(event.ShiftDown() || event.CmdDown()))
    {
       WaveTrackVRulerMenuTable::InitMenuData data {
+         *pProject,
          pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
       std::unique_ptr<PopupMenuTable::Menu>

@@ -33,6 +33,7 @@ public:
    struct InitMenuData
    {
    public:
+      AudacityProject &project;
       Track *pTrack;
       wxWindow *pParent;
       unsigned result;

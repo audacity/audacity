@@ -59,6 +59,7 @@ public:
    struct InitMenuData
    {
    public:
+      AudacityProject &project;
       WaveTrack *pTrack;
       wxRect rect;
       unsigned result;
