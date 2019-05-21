@@ -30,7 +30,7 @@ NoteTrackButtonHandle::NoteTrackButtonHandle
 {
 }
 
-void NoteTrackButtonHandle::Enter(bool)
+void NoteTrackButtonHandle::Enter(bool, AudacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

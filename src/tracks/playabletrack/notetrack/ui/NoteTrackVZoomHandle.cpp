@@ -60,7 +60,7 @@ NoteTrackVZoomHandle::NoteTrackVZoomHandle
 {
 }
 
-void NoteTrackVZoomHandle::Enter(bool)
+void NoteTrackVZoomHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

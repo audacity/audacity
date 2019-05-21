@@ -37,7 +37,7 @@ TimeShiftHandle::TimeShiftHandle
 {
 }
 
-void TimeShiftHandle::Enter(bool)
+void TimeShiftHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

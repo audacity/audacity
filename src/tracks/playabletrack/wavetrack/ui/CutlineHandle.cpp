@@ -31,7 +31,7 @@ CutlineHandle::CutlineHandle
 {
 }
 
-void CutlineHandle::Enter(bool)
+void CutlineHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

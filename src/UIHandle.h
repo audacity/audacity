@@ -47,7 +47,7 @@ public:
    // This might put the handle into its first rotated state
    // (or last, if forward is false) or mark itself as needing a highlight.
    // Default does nothing.
-   virtual void Enter(bool forward);
+   virtual void Enter(bool forward, AudacityProject *pProject);
 
    // Tell whether the handle has more than one TAB key rotation state.
    // Default is always false.
@@ -65,7 +65,7 @@ public:
 
    // The handle may change state and mark itself for highlight change.
    // Default does nothing and returns false
-   virtual bool Escape();
+   virtual bool Escape(AudacityProject *pProject);
 
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.

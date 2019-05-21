@@ -68,7 +68,7 @@ LabelGlyphHandle::LabelGlyphHandle
 {
 }
 
-void LabelGlyphHandle::Enter(bool)
+void LabelGlyphHandle::Enter(bool, AudacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

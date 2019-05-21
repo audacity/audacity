@@ -31,7 +31,7 @@ WaveformVZoomHandle::WaveformVZoomHandle(
 
 WaveformVZoomHandle::~WaveformVZoomHandle() = default;
 
-void WaveformVZoomHandle::Enter(bool)
+void WaveformVZoomHandle::Enter( bool, AudacityProject* )
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

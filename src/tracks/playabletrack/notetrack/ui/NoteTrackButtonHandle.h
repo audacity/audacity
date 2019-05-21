@@ -46,7 +46,7 @@ public:
        const NoteTrackButtonHandle &newState);
 
 protected:
-   void Enter(bool forward) override;
+   void Enter(bool forward, AudacityProject *) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

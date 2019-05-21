@@ -43,7 +43,7 @@ public:
    const WaveTrackLocation &GetLocation() { return mLocation; }
    std::shared_ptr<WaveTrack> GetTrack() { return mpTrack; }
 
-   void Enter(bool forward) override;
+   void Enter(bool forward, AudacityProject *) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

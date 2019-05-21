@@ -487,7 +487,7 @@ namespace {
    }
 }
 
-void SelectHandle::Enter(bool)
+void SelectHandle::Enter(bool, AudacityProject *)
 {
    SetUseSnap(true);
 }
@@ -521,7 +521,7 @@ bool SelectHandle::HasEscape() const
    return HasSnap() && mUseSnap;
 }
 
-bool SelectHandle::Escape()
+bool SelectHandle::Escape(AudacityProject *)
 {
    if (SelectHandle::HasEscape()) {
       SetUseSnap(false);
