@@ -190,7 +190,7 @@ void EditClipboardByLabel( AudacityProject &project,
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
-   auto pNewClipboard = TrackList::Create();
+   auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
    //Apply action on wavetracks starting from

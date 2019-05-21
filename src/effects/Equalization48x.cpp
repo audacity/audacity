@@ -339,7 +339,7 @@ bool EffectEqualization48x::TrackCompare()
    SecondIMap.clear();
    SecondOMap.clear();
    
-   auto pSecondOutputTracks = TrackList::Create();
+   auto pSecondOutputTracks = TrackList::Create( nullptr );
    auto &SecondOutputTracks = *pSecondOutputTracks;
 
    for (auto aTrack :

@@ -285,9 +285,9 @@ public:
 
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
-private:
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
 
+private:
    Track *GetLink() const;
    bool GetLinked  () const { return mLinked; }
 
@@ -1141,9 +1141,9 @@ class TrackList final
    TrackList(const TrackList &that) = delete;
    TrackList &operator= (const TrackList&) = delete;
 
-   // Allow move
-   TrackList(TrackList &&that) : TrackList() { Swap(that); }
-   TrackList& operator= (TrackList&&);
+   // No need for move, disallow it
+   TrackList(TrackList &&that) = delete;
+   TrackList& operator= (TrackList&&) = delete;
 
    void clear() = delete;
 
@@ -1153,16 +1153,20 @@ class TrackList final
  
    // Create an empty TrackList
    // Don't call directly -- use Create() instead
-   TrackList();
+   explicit TrackList( AudacityProject *pOwner );
 
    // Create an empty TrackList
-   static std::shared_ptr<TrackList> Create();
+   static std::shared_ptr<TrackList> Create( AudacityProject *pOwner );
 
    // Move is defined in terms of Swap
    void Swap(TrackList &that);
 
    // Destructor
    virtual ~TrackList();
+
+   // Find the owning project, which may be null
+   AudacityProject *GetOwner() { return mOwner; }
+   const AudacityProject *GetOwner() const { return mOwner; }
 
    // Iteration
 
@@ -1561,6 +1565,8 @@ public:
    bool HasPendingTracks() const;
 
 private:
+   AudacityProject *mOwner;
+
    // Need to put pending tracks into a list so that GetLink() works
    ListOfTracks mPendingUpdates;
    // This is in correspondence with mPendingUpdates

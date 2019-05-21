@@ -256,7 +256,7 @@ void OnCut(const CommandContext &context)
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
-   auto pNewClipboard = TrackList::Create();
+   auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
    tracks.Selected().Visit(
@@ -361,7 +361,7 @@ void OnCopy(const CommandContext &context)
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
-   auto pNewClipboard = TrackList::Create();
+   auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
    for (auto n : tracks.Selected()) {
@@ -681,7 +681,7 @@ void OnSplitCut(const CommandContext &context)
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
-   auto pNewClipboard = TrackList::Create();
+   auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
    Track::Holder dest;

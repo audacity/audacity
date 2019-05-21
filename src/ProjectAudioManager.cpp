@@ -767,7 +767,7 @@ void ProjectAudioManager::SetupCutPreviewTracks(double WXUNUSED(playStart), doub
    {
       auto trackRange = TrackList::Get( *p ).Selected< const PlayableTrack >();
       if( !trackRange.empty() ) {
-         auto cutPreviewTracks = TrackList::Create();
+         auto cutPreviewTracks = TrackList::Create( nullptr );
          for (const auto track1 : trackRange) {
             // Duplicate and change tracks
             // Clear has a very small chance of throwing

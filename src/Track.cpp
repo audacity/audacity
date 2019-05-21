@@ -492,7 +492,7 @@ wxDEFINE_EVENT(EVT_TRACKLIST_DELETION, TrackListEvent);
 long TrackList::sCounter = -1;
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   [](AudacityProject&) { return TrackList::Create(); }
+   [](AudacityProject &project) { return TrackList::Create( &project ); }
 };
 
 TrackList &TrackList::Get( AudacityProject &project )
@@ -505,17 +505,19 @@ const TrackList &TrackList::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-TrackList::TrackList()
+TrackList::TrackList( AudacityProject *pOwner )
 :  wxEvtHandler()
+, mOwner{ pOwner }
 {
 }
 
 // Factory function
-std::shared_ptr<TrackList> TrackList::Create()
+std::shared_ptr<TrackList> TrackList::Create( AudacityProject *pOwner )
 {
-   return std::make_shared<TrackList>();
+   return std::make_shared<TrackList>( pOwner );
 }
 
+#if 0
 TrackList &TrackList::operator= (TrackList &&that)
 {
    if (this != &that) {
@@ -524,6 +526,7 @@ TrackList &TrackList::operator= (TrackList &&that)
    }
    return *this;
 }
+#endif
 
 void TrackList::Swap(TrackList &that)
 {

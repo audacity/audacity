@@ -12,7 +12,7 @@
 wxDEFINE_EVENT( EVT_CLIPBOARD_CHANGE, wxCommandEvent);
 
 Clipboard::Clipboard()
-: mTracks { TrackList::Create() }
+: mTracks { TrackList::Create( nullptr ) }
 {
 }
 

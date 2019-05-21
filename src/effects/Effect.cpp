@@ -1983,7 +1983,7 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = TrackList::Create();
+   mOutputTracks = TrackList::Create( nullptr );
 
    auto trackRange = mTracks->Any() +
       [&] (const Track *pTrack) {
@@ -2271,7 +2271,9 @@ void Effect::Preview(bool dryOnly)
    } );
 
    // Build NEW tracklist from rendering tracks
-   auto uTracks = TrackList::Create();
+   // Set the same owning project, so FindProject() can see it within Process()
+   const auto pProject = saveTracks->GetOwner();
+   auto uTracks = TrackList::Create( pProject );
    mTracks = uTracks.get();
 
    // Linear Effect preview optimised by pre-mixing to one track.

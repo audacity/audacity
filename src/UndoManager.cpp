@@ -254,7 +254,7 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.tracks.reset();
 
    // Duplicate
-   auto tracksCopy = TrackList::Create();
+   auto tracksCopy = TrackList::Create( nullptr );
    for (auto t : *l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track
@@ -294,7 +294,7 @@ void UndoManager::PushState(const TrackList * l,
       return;
    }
 
-   auto tracksCopy = TrackList::Create();
+   auto tracksCopy = TrackList::Create( nullptr );
    for (auto t : *l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track

@@ -204,7 +204,7 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
       // the version saved on disk will be preserved until the
       // user selects Save().
 
-      mLastSavedTracks = TrackList::Create();
+      mLastSavedTracks = TrackList::Create( nullptr );
 
       auto &tracks = TrackList::Get( project );
       for (auto t : tracks.Any()) {
@@ -589,7 +589,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
 
       if (mLastSavedTracks)
          mLastSavedTracks->Clear();
-      mLastSavedTracks = TrackList::Create();
+      mLastSavedTracks = TrackList::Create( nullptr );
 
       auto &tracks = TrackList::Get( proj );
       for ( auto t : tracks.Any() ) {
@@ -643,7 +643,7 @@ bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
       // Copy the tracks because we're going to do some state changes before exporting.
       unsigned int numWaveTracks = 0;
 
-   auto ppSavedTrackList = TrackList::Create();
+   auto ppSavedTrackList = TrackList::Create( nullptr );
    auto &pSavedTrackList = *ppSavedTrackList;
 
    auto trackRange = tracks.Any< WaveTrack >();
