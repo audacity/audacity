@@ -93,6 +93,10 @@ class Overlay
 public:
    virtual ~Overlay() = 0;
 
+   ///\brief This number determines an ordering of overlays, so that those
+   /// with higher numbers overpaint those with lower numbers that intersect
+   virtual unsigned SequenceNumber() const = 0;
+
    // nonvirtual wrapper
    std::pair<wxRect, bool> GetRectangle(wxSize size);
 

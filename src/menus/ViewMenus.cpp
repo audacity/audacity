@@ -10,6 +10,7 @@
 #include "../TrackPanel.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
@@ -367,7 +368,10 @@ void OnShowClipping(const CommandContext &context)
    gPrefs->Write(wxT("/GUI/ShowClipping"), checked);
    gPrefs->Flush();
    commandManager->Check(wxT("ShowClipping"), checked);
-   trackPanel->UpdatePrefs();
+
+   wxTheApp->AddPendingEvent(wxCommandEvent{
+      EVT_PREFS_UPDATE, ShowClippingPrefsID() });
+
    trackPanel->Refresh(false);
 }
 

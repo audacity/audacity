@@ -146,6 +146,14 @@ ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
    UpdatePrefs();
 }
 
+void ViewInfo::UpdateSelectedPrefs( int id )
+{
+   if (id == UpdateScrollPrefsID())
+      gPrefs->Read(wxT("/GUI/AutoScroll"), &bUpdateTrackIndicator,
+                   true);
+   ZoomInfo::UpdateSelectedPrefs( id );
+}
+
 void ViewInfo::UpdatePrefs()
 {
    ZoomInfo::UpdatePrefs();
@@ -155,6 +163,8 @@ void ViewInfo::UpdatePrefs()
 #endif
    gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &bAdjustSelectionEdges,
       true);
+
+   UpdateSelectedPrefs( UpdateScrollPrefsID() );
 }
 
 void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime)
@@ -205,4 +215,10 @@ void ViewInfo::OnTimer(wxCommandEvent &event)
    event.Skip();
    // Propagate the message to other listeners bound to this
    this->ProcessEvent( event );
+}
+
+int ViewInfo::UpdateScrollPrefsID()
+{
+   static int value = wxNewId();
+   return value;
 }

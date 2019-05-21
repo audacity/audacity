@@ -54,6 +54,7 @@
 #endif
 
 #include "commands/CommandManager.h"
+#include "toolbars/ControlToolBar.h"
 
 // class MixerTrackSlider
 
@@ -355,8 +356,6 @@ void MixerTrackCluster::UpdatePrefs()
 {
    this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
    mStaticText_TrackName->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
-   if (mMeter)
-      mMeter->UpdatePrefs(); // in case meter range has changed
    HandleResize(); // in case prefs "/GUI/Solo" changed
 }
 #endif
@@ -828,7 +827,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
       //v Even when I implement MixerBoard::OnMouseEvent and call event.Skip()
       // here, MixerBoard::OnMouseEvent never gets called.
       // So, added mProject to MixerBoardScrolledWindow and just directly do what's needed here.
-      mProject->SelectNone();
+      SelectActions::SelectNone( *mProject );
    }
    else
       event.Skip();
@@ -1344,8 +1343,11 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
    if (mProject->IsAudioActive())
    {
-      UpdateMeters(gAudioIO->GetStreamTime(),
-                   (mProject->mLastPlayMode == PlayMode::loopedPlay));
+      UpdateMeters(
+         gAudioIO->GetStreamTime(),
+         (mProject->GetControlToolBar()->GetLastPlayMode()
+            == PlayMode::loopedPlay)
+      );
    }
 
    // Let other listeners get the notification

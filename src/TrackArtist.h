@@ -25,6 +25,7 @@
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variables
 #include "audacity/Types.h"
+#include "Prefs.h"
 
 class wxRect;
 
@@ -157,7 +158,7 @@ namespace TrackArt {
                     const wxRect & rect, int x0, int y0, int cy, bool top);
 }
 
-class AUDACITY_DLL_API TrackArtist {
+class AUDACITY_DLL_API TrackArtist final : private PrefsListener {
 
 public:
    TrackArtist( TrackPanel *parent_ );
@@ -174,7 +175,8 @@ public:
 
    void SetColours(int iColorIndex);
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
+   void UpdateSelectedPrefs( int id ) override;
 
    void UpdateVRuler(const Track *t, const wxRect & rect);
 

@@ -67,4 +67,7 @@ class GUIPrefs final : public PrefsPanel
 
 /// A PrefsPanel::Factory that creates one GUIPrefs panel.
 extern PrefsPanel::Factory GUIPrefsFactory;
+
+int ShowClippingPrefsID();
+
 #endif

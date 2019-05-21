@@ -13,6 +13,7 @@
 #include "audacity/Types.h"
 
 #include <wx/string.h> // member variable
+#include "Prefs.h"
 
 class wxArrayString;
 class AudacityProject;
@@ -32,13 +33,6 @@ enum EffectType : int;
 typedef wxString PluginID;
 typedef wxArrayString PluginIDs;
 
-class PrefsListener
-{
-public:
-   virtual ~PrefsListener();
-   virtual void UpdatePrefs(); // default is no-op
-};
-
 class MenuCreator
 {
 public:
@@ -56,9 +50,11 @@ public:
    PluginID mLastEffect{};
 };
 
-class MenuManager : public MenuCreator
+class MenuManager final : public MenuCreator, private PrefsListener
 {
 public:
+   MenuManager();
+
    static void ModifyUndoMenuItems(AudacityProject &project);
    static void ModifyToolbarMenus(AudacityProject &project);
    // Calls ModifyToolbarMenus() on all projects
@@ -72,7 +68,7 @@ public:
    // inactive project as it is needlessly expensive.
    CommandFlag GetUpdateFlags(
       AudacityProject &project, bool checkActive = false);
-   void UpdatePrefs();
+   void UpdatePrefs() override;
 
    // Command Handling
    bool ReportIfActionNotAllowed(
@@ -115,6 +111,8 @@ void DoUndo( AudacityProject &project );
 
 /// Namespace for functions for Select menu
 namespace SelectActions {
+void SelectAllIfNone( AudacityProject &project );
+void SelectNone( AudacityProject &project );
 void DoListSelection(
    AudacityProject &project, Track *t,
    bool shift, bool ctrl, bool modifyState );
@@ -132,6 +130,7 @@ void DoZoomFitV( AudacityProject &project );
 
 /// Namespace for functions for Transport menu
 namespace TransportActions {
+void StopIfPaused( AudacityProject &project );
 bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
 void DoPlayStopSelect( AudacityProject &project );
 void DoStop( AudacityProject & );

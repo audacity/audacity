@@ -88,6 +88,9 @@ is time to refresh some aspect of the screen.
 #include "NoteTrack.h"
 #endif
 
+#include "ondemand/ODManager.h"
+#include "ondemand/ODTask.h"
+
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolsToolBar.h"
 
@@ -180,6 +183,9 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
     EVT_PAINT(TrackPanel::OnPaint)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
+
+    EVT_COMMAND(wxID_ANY, EVT_ODTASK_UPDATE,   TrackPanel::OnODTask)
+    EVT_COMMAND(wxID_ANY, EVT_ODTASK_COMPLETE, TrackPanel::OnODTask)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -267,6 +273,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                      &TrackPanel::OnPlayback,
                      this);
+
+   UpdatePrefs();
 }
 
 
@@ -313,15 +321,7 @@ wxString TrackPanel::gSoloPref;
 
 void TrackPanel::UpdatePrefs()
 {
-   gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
-      true);
    gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
-
-   mViewInfo->UpdatePrefs();
-
-   if (mTrackArtist) {
-      mTrackArtist->UpdatePrefs();
-   }
 
    // All vertical rulers must be recalculated since the minimum and maximum
    // frequences may have been changed.
@@ -471,6 +471,14 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    }
    if(mTimeCount > 1000)
       mTimeCount = 0;
+}
+
+///Handles the redrawing necessary for tasks as they partially update in the
+///background, or finish.
+void TrackPanel::OnODTask(wxCommandEvent & WXUNUSED(event))
+{
+   //todo: add track data to the event - check to see if the project contains it before redrawing.
+   Refresh(false);
 }
 
 double TrackPanel::GetScreenEndTime() const
@@ -2771,40 +2779,6 @@ void TrackInfo::UpdatePrefs( wxWindow *pParent )
       fontSize--;
    } while (textWidth >= allowableWidth);
 }
-
-static TrackPanel * TrackPanelFactory(wxWindow * parent,
-   wxWindowID id,
-   const wxPoint & pos,
-   const wxSize & size,
-   const std::shared_ptr<TrackList> &tracks,
-   ViewInfo * viewInfo,
-   TrackPanelListener * listener,
-   AdornedRulerPanel * ruler)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew TrackPanel(
-      parent,
-      id,
-      pos,
-      size,
-      tracks,
-      viewInfo,
-      listener,
-      ruler);
-}
-
-
-// Declare the static factory function.
-// We defined it in the class.
-TrackPanel *(*TrackPanel::FactoryFunction)(
-              wxWindow * parent,
-              wxWindowID id,
-              const wxPoint & pos,
-              const wxSize & size,
-              const std::shared_ptr<TrackList> &tracks,
-              ViewInfo * viewInfo,
-              TrackPanelListener * listener,
-              AdornedRulerPanel * ruler) = TrackPanelFactory;
 
 TrackPanelNode::TrackPanelNode()
 {

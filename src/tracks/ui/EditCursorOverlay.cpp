@@ -36,6 +36,11 @@ EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
 {
 }
 
+unsigned EditCursorOverlay::SequenceNumber() const
+{
+   return 20;
+}
+
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
    const auto &selection = mProject->GetViewInfo().selectedRegion;

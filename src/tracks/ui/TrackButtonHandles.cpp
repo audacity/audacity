@@ -145,7 +145,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
-      pProject->StopIfPaused();
+      TransportActions::StopIfPaused( *pProject );
       if (!pProject->IsAudioActive()) {
          // This pushes an undo item:
          TrackActions::DoRemoveTrack(*pProject, pTrack.get());

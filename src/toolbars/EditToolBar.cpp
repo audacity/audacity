@@ -89,6 +89,7 @@ EditToolBar::~EditToolBar()
 void EditToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
+   UpdatePrefs();
 }
 
 void EditToolBar::AddSeparator()

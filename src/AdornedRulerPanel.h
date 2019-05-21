@@ -13,6 +13,7 @@
 
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
+#include "Prefs.h"
 
 class ViewInfo;
 class AudacityProject;
@@ -20,7 +21,9 @@ class SnapManager;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.
-class AUDACITY_DLL_API AdornedRulerPanel final : public CellularPanel
+class AUDACITY_DLL_API AdornedRulerPanel final
+: public CellularPanel
+, private PrefsListener
 {
 public:
    AdornedRulerPanel(AudacityProject *project,
@@ -53,7 +56,7 @@ public:
 
    void InvalidateRuler();
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
    void ReCreateButtons();
 
    void RegenerateTooltips();

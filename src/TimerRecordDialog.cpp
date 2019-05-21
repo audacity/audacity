@@ -45,6 +45,7 @@
 #include "DirManager.h"
 #include "ShuttleGui.h"
 #include "Menus.h"
+#include "MissingAliasFileDialog.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "widgets/NumericTextCtrl.h"
@@ -627,8 +628,12 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
-      bExportOK = pProject->ExportFromTimerRecording(m_fnAutoExportFile, m_iAutoExportFormat,
-                                                     m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
+      Exporter e;
+      MissingAliasFilesDialog::SetShouldShow(true);
+      bExportOK = e.ProcessFromTimerRecording(
+         pProject, false, 0.0, pProject->GetTracks()->GetEndTime(),
+            m_fnAutoExportFile, m_iAutoExportFormat,
+            m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
    }
 
    // Check if we need to override the post recording action

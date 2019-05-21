@@ -130,6 +130,8 @@ public:
 private:
    AdornedRulerPanel *GetRuler() const;
 
+   unsigned SequenceNumber() const override;
+
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
@@ -159,6 +161,7 @@ public:
    QuickPlayIndicatorOverlay(AudacityProject *project);
 
 private:
+   unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
@@ -229,6 +232,12 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
    }
 }
 
+unsigned
+AdornedRulerPanel::QuickPlayRulerOverlay::SequenceNumber() const
+{
+   return 30;
+}
+
 std::pair<wxRect, bool>
 AdornedRulerPanel::QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
 {
@@ -282,6 +291,12 @@ AdornedRulerPanel::QuickPlayIndicatorOverlay::QuickPlayIndicatorOverlay(
    AudacityProject *project)
    : mProject(project)
 {
+}
+
+unsigned
+AdornedRulerPanel::QuickPlayIndicatorOverlay::SequenceNumber() const
+{
+   return 30;
 }
 
 std::pair<wxRect, bool>
@@ -878,6 +893,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                      &AdornedRulerPanel::OnRecordStartStop,
                      this);
+
+   // Delay until after CommandManager has been populated:
+   this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
@@ -905,6 +923,14 @@ namespace {
 
 void AdornedRulerPanel::UpdatePrefs()
 {
+   if (mNeedButtonUpdate) {
+      // Visit this block once only in the lifetime of this panel
+      mNeedButtonUpdate = false;
+      // Do this first time setting of button status texts
+      // when we are sure the CommandManager is initialized.
+      ReCreateButtons();
+   }
+
    // Update button texts for language change
    UpdateButtonStates();
 
@@ -1087,16 +1113,6 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   if (mNeedButtonUpdate) {
-      // Visit this block once only in the lifetime of this panel
-      mNeedButtonUpdate = false;
-      // Do this first time setting of button status texts
-      // when we are sure the CommandManager is initialized.
-      ReCreateButtons();
-      // Sends a resize event, which will cause a second paint.
-      UpdatePrefs();
-   }
-
    wxPaintDC dc(this);
 
    auto &backDC = GetBackingDCForRepaint();
@@ -1574,18 +1590,17 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       else
          options.timeTrack = NULL;
 
-      ControlToolBar::PlayAppearance appearance =
-         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
-         : options.playLooped ? ControlToolBar::PlayAppearance::Looped
-         : ControlToolBar::PlayAppearance::Straight;
+      auto mode =
+         cutPreview ? PlayMode::cutPreviewPlay
+         : options.playLooped ? PlayMode::loopedPlay
+         : PlayMode::normalPlay;
 
       mPlayRegionStart = start;
       mPlayRegionEnd = end;
       Refresh();
 
       ctb->PlayPlayRegion((SelectedRegion(start, end)),
-                          options, PlayMode::normalPlay,
-                          appearance,
+                          options, mode,
                           false,
                           true);
 
@@ -1785,8 +1800,11 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
       gPrefs->Write(wxT("/GUI/AutoScroll"), false);
    else
       gPrefs->Write(wxT("/GUI/AutoScroll"), true);
-   mProject->UpdatePrefs();
+
    gPrefs->Flush();
+
+   wxTheApp->AddPendingEvent(wxCommandEvent{
+      EVT_PREFS_UPDATE, ViewInfo::UpdateScrollPrefsID() });
 }
 
 
