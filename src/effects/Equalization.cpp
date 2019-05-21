@@ -620,7 +620,7 @@ bool EffectEqualization::Init()
    double rate = 0.0;
 
    auto trackRange =
-      TrackList::Get( *GetActiveProject() ).Selected< const WaveTrack >();
+      TrackList::Get( *FindProject() ).Selected< const WaveTrack >();
    if (trackRange) {
       rate = (*(trackRange.first++)) -> GetRate();
       ++selcount;
@@ -739,7 +739,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    mHiFreq =
       (t
          ? t->GetRate()
-         : ProjectSettings::Get( *GetActiveProject() ).GetRate())
+         : ProjectSettings::Get( *FindProject() ).GetRate())
       / 2.0;
    mLoFreq = loFreqI;
 

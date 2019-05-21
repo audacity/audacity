@@ -266,7 +266,7 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, kInterStrings, nInterpolations  );
 
 
-//   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
+//   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
 //   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
 
 
@@ -323,8 +323,8 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
    mInterpolation = Interp;
 
    double freqMax =
-      (GetActiveProject()
-         ? ProjectSettings::Get( *GetActiveProject() ).GetRate()
+      (FindProject()
+         ? ProjectSettings::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
    mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
@@ -373,7 +373,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                      6, &mFrequency[0],
                      NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_StartFreq,
-                     ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
+                     ProjectSettings::Get( *FindProject() ).GetRate() / 2.0
                   )
                   .AddTextBox( {}, wxT(""), 12);
             }
@@ -386,7 +386,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                      6, &mFrequency[1],
                      NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_EndFreq,
-                     ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
+                     ProjectSettings::Get( *FindProject() ).GetRate() / 2.0
                   )
                   .AddTextBox( {}, wxT(""), 12);
             }
@@ -430,7 +430,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          t = S.Validator<FloatingPointValidator<double>>(
                6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Frequency,
-               ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
+               ProjectSettings::Get( *FindProject() ).GetRate() / 2.0
             )
             .AddTextBox(XO("Frequency (Hz):"), wxT(""), 12);
 
