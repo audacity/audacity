@@ -20,7 +20,8 @@
 #include <wx/mimetype.h>
 
 #include "AudioIO.h"
-#include "Project.h" // for GetActiveProject
+#include "Project.h"
+#include "ProjectWindowBase.h"
 #include "LabelTrack.h"
 #include "commands/CommandManager.h"
 #include "UndoManager.h"
@@ -57,7 +58,7 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
       if (nNewSyl != nCurSyl)
       {
          Syllable* pCurSyl = mLyricsPanel->GetSyllable(nNewSyl);
-         AudacityProject* pProj = GetActiveProject();
+         auto pProj = FindProjectFromWindow( this );
          auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
          selectedRegion.setT0( pCurSyl->t );
 
@@ -440,7 +441,7 @@ void LyricsPanel::Update(double t)
    {
       // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -DBL_MAX if !IsStreamActive().
       // In that case, use the selection start time.
-      AudacityProject* pProj = GetActiveProject();
+      auto pProj = FindProjectFromWindow( this );
       const auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
       mT = selectedRegion.t0();
    }
@@ -529,7 +530,7 @@ void LyricsPanel::OnShow(wxShowEvent &e)
 
 void LyricsPanel::OnKeyEvent(wxKeyEvent & event)
 {
-   AudacityProject *project = GetActiveProject();
+   auto project = FindProjectFromWindow( this );
    auto &commandManager = CommandManager::Get( *project );
    commandManager.FilterKeyEvent(project, event, true);
    event.Skip();
