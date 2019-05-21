@@ -533,6 +533,7 @@
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\InconsistencyException.h" />
+    <ClInclude Include="..\..\..\src\KeyboardCapture.h" />
     <ClInclude Include="..\..\..\src\MemoryX.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\NumberScale.h" />
@@ -622,7 +623,6 @@
     <ClInclude Include="..\..\..\src\ImageManipulation.h" />
     <ClInclude Include="..\..\..\src\Internat.h" />
     <ClInclude Include="..\..\..\src\InterpolateAudio.h" />
-    <ClCompile Include="..\..\..\src\KeyboardCapture.h" />
     <ClInclude Include="..\..\..\src\LabelDialog.h" />
     <ClInclude Include="..\..\..\src\LabelTrack.h" />
     <ClInclude Include="..\..\..\src\LangChoice.h" />

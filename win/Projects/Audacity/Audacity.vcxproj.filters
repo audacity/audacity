@@ -1249,9 +1249,6 @@
     <ClInclude Include="..\..\..\src\InterpolateAudio.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\..\src\KeyboardCapture.h">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\..\src\LabelDialog.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -2256,6 +2253,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h">
       <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\KeyboardCapture.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
