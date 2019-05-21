@@ -1029,10 +1029,10 @@ void OnScoreAlign(const CommandContext &context)
                params.mAudioStart, params.mAudioEnd) );
    } else if (result == SA_CANCEL) {
       // wrong way to recover...
-      //GetActiveProject()->OnUndo(); // recover any changes to note track
+      //project.OnUndo(); // recover any changes to note track
       return; // no message when user cancels alignment
    } else {
-      //GetActiveProject()->OnUndo(); // recover any changes to note track
+      //project.OnUndo(); // recover any changes to note track
       AudacityMessageBox( XO("Internal error reported by alignment process.") );
    }
 }

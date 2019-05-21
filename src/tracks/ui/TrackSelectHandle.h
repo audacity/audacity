@@ -59,7 +59,8 @@ private:
    int mMoveDownThreshold {};
    int mRearrangeCount {};
 
-   void CalculateRearrangingThresholds(const wxMouseEvent & event);
+   void CalculateRearrangingThresholds(
+      const wxMouseEvent & event, AudacityProject *project);
 };
 
 #endif
