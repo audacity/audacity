@@ -122,7 +122,8 @@ class QTImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() override { return wxT("quicktime"); }
 
    TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const wxString & Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const wxString & Filename, AudacityProject*) override;
 
    unsigned SequenceNumber() const override;
 
@@ -180,7 +181,8 @@ TranslatableString QTImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(const wxString & Filename)
+std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(
+   const wxString & Filename, AudacityProject*)
 {
    OSErr err;
    FSRef inRef;

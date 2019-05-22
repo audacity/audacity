@@ -22,6 +22,7 @@
 
 class wxArrayString;
 class wxListBox;
+class AudacityProject;
 class Tags;
 class TrackFactory;
 class Track;
@@ -158,7 +159,8 @@ public:
     std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
    // if false, the import failed and errorMessage will be set.
-   bool Import(const FilePath &fName,
+   bool Import( AudacityProject &project,
+              const FilePath &fName,
               TrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,

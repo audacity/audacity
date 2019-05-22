@@ -409,13 +409,14 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 }
 
 // returns number of tracks imported
-bool Importer::Import(const FilePath &fName,
+bool Importer::Import( AudacityProject &project,
+                     const FilePath &fName,
                      TrackFactory *trackFactory,
                      TrackHolders &tracks,
                      Tags *tags,
                      TranslatableString &errorMessage)
 {
-   AudacityProject *pProj = GetActiveProject();
+   AudacityProject *pProj = &project;
    auto cleanup = valueRestorer( pProj->mbBusyImporting, true );
 
    const FileExtension extension{ fName.AfterLast(wxT('.')) };
@@ -589,7 +590,7 @@ bool Importer::Import(const FilePath &fName,
    {
       // Try to open the file with this plugin (probe it)
       wxLogMessage(wxT("Opening with %s"),plugin->GetPluginStringID());
-      auto inFile = plugin->Open(fName);
+      auto inFile = plugin->Open(fName, pProj);
       if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
       {
          wxLogMessage(wxT("Open(%s) succeeded"), fName);

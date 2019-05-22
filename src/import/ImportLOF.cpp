@@ -114,7 +114,8 @@ public:
 
    wxString GetPluginStringID() override { return wxT("lof"); }
    TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const FilePath &Filename, AudacityProject *pProject) override;
 
    unsigned SequenceNumber() const override;
 };
@@ -123,7 +124,8 @@ public:
 class LOFImportFileHandle final : public ImportFileHandle
 {
 public:
-   LOFImportFileHandle(const FilePath & name, std::unique_ptr<wxTextFile> &&file);
+   LOFImportFileHandle( AudacityProject *pProject,
+      const FilePath & name, std::unique_ptr<wxTextFile> &&file);
    ~LOFImportFileHandle();
 
    TranslatableString GetFileDescription() override;
@@ -150,7 +152,7 @@ private:
    std::unique_ptr<wxTextFile> mTextFile;
    wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
-   AudacityProject *mProject{ GetActiveProject() };
+   AudacityProject *mProject{};
 
    // In order to know whether or not to create a NEW window
    bool              windowCalledOnce{ false };
@@ -164,11 +166,12 @@ private:
    double            scrollOffset{ 0 };
 };
 
-LOFImportFileHandle::LOFImportFileHandle
-   (const FilePath & name, std::unique_ptr<wxTextFile> &&file)
-:  ImportFileHandle(name),
-   mTextFile(std::move(file))
+LOFImportFileHandle::LOFImportFileHandle( AudacityProject *pProject,
+   const FilePath & name, std::unique_ptr<wxTextFile> &&file)
+:  ImportFileHandle(name)
+   , mTextFile(std::move(file))
    , mLOFFileName{name}
+   , mProject{ pProject }
 {
 }
 
@@ -177,7 +180,8 @@ TranslatableString LOFImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const FilePath &filename)
+std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(
+   const FilePath &filename, AudacityProject *pProject)
 {
    // Check if it is a binary file
    {
@@ -208,7 +212,8 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(const FilePath &filename
    if (!file->IsOpened())
       return nullptr;
 
-   return std::make_unique<LOFImportFileHandle>(filename, std::move(file));
+   return std::make_unique<LOFImportFileHandle>(
+      pProject, filename, std::move(file));
 }
 
 TranslatableString LOFImportFileHandle::GetFileDescription()

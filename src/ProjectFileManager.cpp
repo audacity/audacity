@@ -1620,7 +1620,7 @@ bool ProjectFileManager::Import(
       auto newTags = oldTags->Duplicate();
       Tags::Set( project, newTags );
 
-      bool success = Importer::Get().Import(fileName,
+      bool success = Importer::Get().Import(project, fileName,
                                             &TrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),
