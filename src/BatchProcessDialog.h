@@ -121,6 +121,8 @@ private:
    void InsertCommandAt(int item);
    bool SaveChanges();
 
+   AudacityProject &mProject;
+
    wxButton *mRemove;
    wxButton *mRename;
    wxButton *mRestore;

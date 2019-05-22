@@ -523,6 +523,7 @@ enum {
 MacrosWindow::MacrosWindow(
    wxWindow * parent, AudacityProject &project, bool bExpanded):
    ApplyMacroDialog(parent, project, true)
+   , mProject{ project }
 {
    mbExpanded = bExpanded;
    auto Title = WindowTitle();
@@ -1063,7 +1064,7 @@ void MacrosWindow::InsertCommandAt(int item)
       return;
    }
 
-   MacroCommandDialog d(this, wxID_ANY);
+   MacroCommandDialog d(this, wxID_ANY, mProject);
 
    if (!d.ShowModal()) {
       Raise();
