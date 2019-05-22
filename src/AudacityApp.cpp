@@ -1706,23 +1706,25 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
    if(event.GetKeyCode() == WXK_ESCAPE) {
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
-      auto token = ProjectAudioIO::Get( *project ).GetAudioIOToken();
-      auto &scrubber = Scrubber::Get( *project );
-      auto scrubbing = scrubber.HasMark();
-      if (scrubbing)
-         scrubber.Cancel();
-      auto gAudioIO = AudioIO::Get();
-      if((token > 0 &&
-               gAudioIO->IsAudioTokenActive(token) &&
-               gAudioIO->GetNumCaptureChannels() == 0) ||
-         scrubbing)
-         // ESC out of other play (but not record)
-         ProjectAudioManager::Get( *project ).Stop();
-      else
-         event.Skip();
+      if ( project ) {
+         auto token = ProjectAudioIO::Get( *project ).GetAudioIOToken();
+         auto &scrubber = Scrubber::Get( *project );
+         auto scrubbing = scrubber.HasMark();
+         if (scrubbing)
+            scrubber.Cancel();
+         auto gAudioIO = AudioIO::Get();
+         if((token > 0 &&
+                  gAudioIO->IsAudioTokenActive(token) &&
+                  gAudioIO->GetNumCaptureChannels() == 0) ||
+            scrubbing)
+            // ESC out of other play (but not record)
+            ProjectAudioManager::Get( *project ).Stop();
+         else
+            event.Skip();
+      }
    }
-   else
-      event.Skip();
+
+   event.Skip();
 }
 
 // Ensures directory is created and puts the name into result.
