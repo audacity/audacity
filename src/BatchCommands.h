@@ -87,7 +87,7 @@ class MacroCommands final {
       const FileExtension &extension);
    bool WriteMp3File( const wxString & Name, int bitrate );
    double GetEndTime();
-   static bool IsMono();
+   static bool IsMono( AudacityProject *project );
 
    // These commands do not depend on the command list.
    static void MigrateLegacyChains();
@@ -122,6 +122,9 @@ class MacroCommands final {
 
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
+
+private:
+   AudacityProject &mProject;
 
    CommandIDs mCommandMacro;
    wxArrayString mParamsMacro;

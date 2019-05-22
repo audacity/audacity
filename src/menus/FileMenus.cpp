@@ -92,7 +92,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
       FileHistory::Global().AddFileToHistory(filename);
       // We're in batch mode, the file does not exist already.
       // We really can proceed without prompting.
-      int nChannels = MacroCommands::IsMono() ? 1 : 2;
+      int nChannels = MacroCommands::IsMono( &project ) ? 1 : 2;
       e.Process(
          nChannels,  // numChannels,
          Format,     // type, 
