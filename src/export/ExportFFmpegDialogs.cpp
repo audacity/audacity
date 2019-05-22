@@ -58,7 +58,6 @@
 
 #include "../FileFormats.h"
 #include "../Mix.h"
-#include "../Project.h"
 #include "../Tags.h"
 #include "../TranslatableStringArray.h"
 #include "../widgets/AudacityMessageBox.h"

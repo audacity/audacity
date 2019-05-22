@@ -36,7 +36,6 @@ This class now lists
 #include "CommandContext.h"
 
 #include "SelectCommand.h"
-#include "../Project.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 

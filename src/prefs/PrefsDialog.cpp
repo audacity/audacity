@@ -35,7 +35,6 @@
 #include <wx/treebook.h>
 
 #include "../AudioIO.h"
-#include "../Project.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 

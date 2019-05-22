@@ -48,7 +48,6 @@
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
 #include "../Prefs.h"
-#include "../Project.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 

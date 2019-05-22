@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 #include "../../../TrackPanelMouseEvent.h"
-#include "../../../Project.h"
 
 #include "../../ui/EnvelopeHandle.h"
 

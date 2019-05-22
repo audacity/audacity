@@ -67,7 +67,6 @@ preferences.
 
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 
-//#include "Project.h"
 #include "WrappedType.h"
 //#include "effects/Effect.h"
 

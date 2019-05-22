@@ -28,7 +28,6 @@ UndoManager
 #include "BlockFile.h"
 #include "Clipboard.h"
 #include "Diags.h"
-#include "Project.h"
 #include "Sequence.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"          // temp
