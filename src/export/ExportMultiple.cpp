@@ -131,6 +131,7 @@ END_EVENT_TABLE()
 ExportMultipleDialog::ExportMultipleDialog(AudacityProject *project)
 : wxDialogWrapper( &GetProjectFrame( *project ),
    wxID_ANY, XO("Export Multiple") )
+, mExporter{ *project }
 , mSelectionState{ SelectionState::Get( *project ) }
 {
    SetName();

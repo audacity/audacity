@@ -357,11 +357,10 @@ would overwrite another project.\nPlease try again and select an original name."
 
 void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
-   AudacityProject* pProject = &mProject;
-   Exporter eExporter;
+   Exporter eExporter{ mProject };
 
    // Call the Exporter to set the options required
-   if (eExporter.SetAutoExportOptions(pProject)) {
+   if (eExporter.SetAutoExportOptions()) {
       // Populate the options so that we can destroy this instance of the Exporter
       m_fnAutoExportFile = eExporter.GetAutoExportFileName();
       m_iAutoExportFormat = eExporter.GetAutoExportFormat();
@@ -644,10 +643,10 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
-      Exporter e;
+      Exporter e{ mProject };
       MissingAliasFilesDialog::SetShouldShow(true);
       bExportOK = e.ProcessFromTimerRecording(
-         pProject, false, 0.0, TrackList::Get( *pProject ).GetEndTime(),
+         false, 0.0, TrackList::Get( *pProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
             m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
    }

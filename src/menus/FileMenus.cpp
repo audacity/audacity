@@ -40,7 +40,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
 {
    auto &tracks = TrackList::Get( project );
 
-   Exporter e;
+   Exporter e{ project };
 
    MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
@@ -85,7 +85,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
    {
       // Do export with prompting.
       e.SetDefaultFormat(Format);
-      e.Process(&project, false, t0, t1);
+      e.Process(false, t0, t1);
    }
    else
    {
@@ -94,7 +94,6 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
       // We really can proceed without prompting.
       int nChannels = MacroCommands::IsMono() ? 1 : 2;
       e.Process(
-         &project,   // AudacityProject
          nChannels,  // numChannels,
          Format,     // type, 
          filename,   // filename,
@@ -201,11 +200,11 @@ void OnExportSelection(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   Exporter e;
+   Exporter e{ project };
 
    MissingAliasFilesDialog::SetShouldShow(true);
    e.SetFileDialogTitle( XO("Export Selected Audio") );
-   e.Process(&project, true, selectedRegion.t0(),
+   e.Process(true, selectedRegion.t0(),
       selectedRegion.t1());
 }
 

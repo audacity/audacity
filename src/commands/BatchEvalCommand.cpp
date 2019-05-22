@@ -55,7 +55,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    wxString macroName = GetString(wxT("MacroName"));
    if (!macroName.empty())
    {
-      MacroCommands batch;
+      MacroCommands batch{ context.project };
       batch.ReadMacro(macroName);
       return batch.ApplyMacro(catalog);
    }
@@ -68,7 +68,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
       : iter->name.Msgid().Stripped();
 
    // Create a Batch that will have just one command in it...
-   MacroCommands Batch;
+   MacroCommands Batch{ context.project };
    bool bResult = Batch.ApplyCommandInBatchMode(friendly, cmdName, cmdParams, &context);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();

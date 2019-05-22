@@ -47,7 +47,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew MacrosWindow(
-         &window, true
+         &window, parent, true
       );
    }
 };
@@ -543,7 +543,7 @@ void OnApplyMacroDirectly(const CommandContext &context )
    auto &window = ProjectWindow::Get( project );
 
    //wxLogDebug( "Macro was: %s", context.parameter);
-   ApplyMacroDialog dlg( &window );
+   ApplyMacroDialog dlg( &window, project );
    const auto &Name = context.parameter;
 
 // We used numbers previously, but macros could get renumbered, making

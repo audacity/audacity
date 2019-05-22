@@ -86,7 +86,8 @@ static const std::pair<TranslatableString, CommandID> SpecialCommands[] = {
 };
 // end CLEANSPEECH remnant
 
-MacroCommands::MacroCommands()
+MacroCommands::MacroCommands( AudacityProject &project )
+: mExporter{ project }
 {
    ResetMacro();
 
@@ -574,12 +575,11 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
    double endTime = GetEndTime();
    if( endTime <= 0.0f )
       return false;
-   AudacityProject *project = GetActiveProject();
    if( bitrate <=0 )
    {
       // 'No' bitrate given, use the current default.
       // Use Mp3Stereo to control if export is to a stereo or mono file
-      return mExporter.Process(project, numChannels, wxT("MP3"), Name, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("MP3"), Name, false, 0.0, endTime);
    }
 
 
@@ -596,7 +596,7 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
    } );
 
    // Use Mp3Stereo to control if export is to a stereo or mono file
-   rc = mExporter.Process(project, numChannels, wxT("MP3"), Name, false, 0.0, endTime);
+   rc = mExporter.Process(numChannels, wxT("MP3"), Name, false, 0.0, endTime);
    return rc;
 }
 
@@ -679,7 +679,7 @@ bool MacroCommands::ApplySpecialCommand(
       if (endTime <= 0.0f) {
          return false;
       }
-      return mExporter.Process(project, numChannels, wxT("WAV"), filename, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("WAV"), filename, false, 0.0, endTime);
    } else if (command == wxT("ExportOgg")) {
 #ifdef USE_LIBVORBIS
       filename.Replace(wxT(".mp3"), wxT(".ogg"), false);
@@ -687,7 +687,7 @@ bool MacroCommands::ApplySpecialCommand(
       if (endTime <= 0.0f) {
          return false;
       }
-      return mExporter.Process(project, numChannels, wxT("OGG"), filename, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("OGG"), filename, false, 0.0, endTime);
 #else
       AudacityMessageBox( XO(
 "Ogg Vorbis support is not included in this build of Audacity"));
@@ -700,7 +700,7 @@ bool MacroCommands::ApplySpecialCommand(
       if (endTime <= 0.0f) {
          return false;
       }
-      return mExporter.Process(project, numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
 #else
       AudacityMessageBox(XO(
 "FLAC support is not included in this build of Audacity"));

@@ -297,7 +297,8 @@ Exporter::RegisteredExportPlugin::RegisteredExportPlugin(
       sFactories().emplace_back( factory );
 }
 
-Exporter::Exporter()
+Exporter::Exporter( AudacityProject &project )
+: mProject{ &project }
 {
    mMixerSpec = NULL;
    mBook = NULL;
@@ -342,7 +343,7 @@ void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
 
 void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
 {
-   wxWindow * pWin = FindProjectFrame( GetActiveProject() );
+   wxWindow * pWin = FindProjectFrame( mProject );
    HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
 }
 
@@ -400,10 +401,9 @@ bool Exporter::DoEditMetadata(AudacityProject &project,
    return false;
 }
 
-bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, double t1)
+bool Exporter::Process(bool selectedOnly, double t0, double t1)
 {
    // Save parms
-   mProject = project;
    mSelectedOnly = selectedOnly;
    mT0 = t0;
    mT1 = t1;
@@ -425,7 +425,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!DoEditMetadata( *project,
+      if (!DoEditMetadata( *mProject,
          XO("Edit Metadata Tags"), XO("Exported Tags"),
          ProjectSettings::Get( *mProject ).GetShowId3Dialog())) {
          return false;
@@ -446,12 +446,11 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
    return success;
 }
 
-bool Exporter::Process(AudacityProject *project, unsigned numChannels,
+bool Exporter::Process(unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
 {
    // Save parms
-   mProject = project;
    mChannels = numChannels;
    mFilename = filename;
    mSelectedOnly = selectedOnly;
@@ -1018,8 +1017,7 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    mBook->ChangeSelection(index);
 }
 
-bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
-                                         bool selectedOnly,
+bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
                                          double t0,
                                          double t1,
                                          wxFileName fnFile,
@@ -1028,7 +1026,6 @@ bool Exporter::ProcessFromTimerRecording(AudacityProject *project,
                                          int iFilterIndex)
 {
    // Save parms
-   mProject = project;
    mSelectedOnly = selectedOnly;
    mT0 = t0;
    mT1 = t1;
@@ -1079,16 +1076,15 @@ wxFileName Exporter::GetAutoExportFileName() {
    return mFilename;
 }
 
-bool Exporter::SetAutoExportOptions(AudacityProject *project) {
+bool Exporter::SetAutoExportOptions() {
    mFormat = -1;
-   mProject = project;
 
    if( GetFilename()==false )
         return false;
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!DoEditMetadata( *project,
+      if (!DoEditMetadata( *mProject,
          XO("Edit Metadata Tags"),
          XO("Exported Tags"),
          ProjectSettings::Get(*mProject).GetShowId3Dialog())) {

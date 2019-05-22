@@ -59,7 +59,7 @@ class MacroCommands final {
       const PluginID & ID, const CommandContext & context, unsigned flags );
 
    // constructors and destructors
-   MacroCommands();
+   MacroCommands( AudacityProject &project );
  public:
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
       const wxString & filename = {});

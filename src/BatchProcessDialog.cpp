@@ -80,10 +80,12 @@ BEGIN_EVENT_TABLE(ApplyMacroDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_HELP, ApplyMacroDialog::OnHelp)
 END_EVENT_TABLE()
 
-ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
+ApplyMacroDialog::ApplyMacroDialog(
+   wxWindow * parent, AudacityProject &project, bool bInherited):
    wxDialogWrapper(parent, wxID_ANY, XO("Macros Palette"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+   , mMacroCommands{ project }
    , mCatalog( GetActiveProject() )
 {
    //AudacityProject * p = GetActiveProject();
@@ -518,8 +520,9 @@ enum {
 };
 
 /// Constructor
-MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
-   ApplyMacroDialog(parent, true)
+MacrosWindow::MacrosWindow(
+   wxWindow * parent, AudacityProject &project, bool bExpanded):
+   ApplyMacroDialog(parent, project, true)
 {
    mbExpanded = bExpanded;
    auto Title = WindowTitle();
