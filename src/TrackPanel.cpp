@@ -185,8 +185,6 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 
-    EVT_COMMAND(wxID_ANY, EVT_ODTASK_UPDATE,   TrackPanel::OnODTask)
-    EVT_COMMAND(wxID_ANY, EVT_ODTASK_COMPLETE, TrackPanel::OnODTask)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -316,6 +314,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                      &TrackPanel::OnPlayback,
                      this);
+
+   GetProject()->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
+   GetProject()->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
 
    UpdatePrefs();
 }

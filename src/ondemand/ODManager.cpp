@@ -145,7 +145,7 @@ pfodman ODManager::Instance = &(ODManager::InstanceFirstTime);
 //libsndfile is not threadsafe - this deals with it
 static ODLock sLibSndFileMutex;
 
-DEFINE_EVENT_TYPE(EVT_ODTASK_UPDATE)
+wxDEFINE_EVENT(EVT_ODTASK_UPDATE, wxCommandEvent);
 
 //using this with wxStringArray::Sort will give you a list that
 //is alphabetical, without depending on case.  If you use the

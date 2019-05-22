@@ -29,7 +29,7 @@ in a background thread.
 //#include "../Profiler.h"
 
 
-DEFINE_EVENT_TYPE(EVT_ODTASK_COMPLETE)
+wxDEFINE_EVENT(EVT_ODTASK_COMPLETE, wxCommandEvent);
 
 /// Constructs an ODTask
 ODTask::ODTask()
