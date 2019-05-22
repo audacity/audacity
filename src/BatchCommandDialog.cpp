@@ -66,7 +66,7 @@ MacroCommandDialog::MacroCommandDialog(
    wxDialogWrapper(parent, id, XO("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
-   , mCatalog( &project )
+   , mCatalog{ &project }
 {
    SetLabel(XO("Select Command"));         // Provide visual label
    SetName(XO("Select Command"));          // Provide audible label

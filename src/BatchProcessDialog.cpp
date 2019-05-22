@@ -86,9 +86,9 @@ ApplyMacroDialog::ApplyMacroDialog(
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
    , mMacroCommands{ project }
-   , mCatalog( GetActiveProject() )
+   , mProject{ project }
+   , mCatalog( &project )
 {
-   //AudacityProject * p = GetActiveProject();
    mAbort = false;
    mbExpanded = false;
    if( bInherited )
@@ -332,7 +332,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/Batch/ActiveMacro"), name);
    gPrefs->Flush();
 
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
    if (!TrackList::Get( *project ).empty()) {
       AudacityMessageBox(
          XO("Please save and close the current project first.") );
@@ -730,7 +730,7 @@ void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
 void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
-   auto p = GetActiveProject();
+   auto p = &mProject;
    MenuManager::Get(*p).RebuildMenuBar(*p);
 }
 

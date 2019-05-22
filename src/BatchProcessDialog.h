@@ -63,6 +63,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    wxString mMacroBeingRenamed;
 
 protected:
+   AudacityProject &mProject;
    const MacroCommandsCatalog mCatalog;
 
    DECLARE_EVENT_TABLE()
