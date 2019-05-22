@@ -1098,11 +1098,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       else {
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
-         AudacityProject *p = GetActiveProject();
-         if (!p)
-            THROW_INCONSISTENCY_EXCEPTION;
-         auto &factory = TrackFactory::Get( *p );
-         auto tmp = factory.NewWaveTrack( GetSampleFormat(), GetRate() );
+         auto tmp = std::make_shared<WaveTrack>(
+            mDirManager, GetSampleFormat(), GetRate() );
 
          tmp->InsertSilence(0.0, newT1 - oldT1);
          tmp->Flush();
