@@ -350,7 +350,11 @@ bool LabelDialog::Show(bool show)
 {
    bool ret = wxDialogWrapper::Show(show);
 
-   mGrid->SetFocus();   // Required for Linux and Mac.
+#if defined(__WXMAC__) || defined(__WXGTK__)
+   if (show) {
+      mGrid->SetFocus();   // Required for Linux and Mac.
+   }
+#endif
 
    // Set initial row
    // (This will not work until the grid is actually displayed)
