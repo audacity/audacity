@@ -39,9 +39,10 @@ void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("MacroName"), wxT(""), std::move(macroValidator));
 }
 
-OldStyleCommandPointer BatchEvalCommandType::Create(std::unique_ptr<CommandOutputTargets> && WXUNUSED(target))
+OldStyleCommandPointer BatchEvalCommandType::Create( AudacityProject *project,
+   std::unique_ptr<CommandOutputTargets> && WXUNUSED(target))
 {
-   return std::make_shared<BatchEvalCommand>(*GetActiveProject(), *this);
+   return std::make_shared<BatchEvalCommand>(*project, *this);
 }
 
 bool BatchEvalCommand::Apply(const CommandContext & context)

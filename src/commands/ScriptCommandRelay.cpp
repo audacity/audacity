@@ -24,6 +24,7 @@ code out of ModuleManager.
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"
+#include "../Project.h"
 #include <wx/app.h>
 #include <wx/window.h>
 #include <wx/string.h>
@@ -70,7 +71,7 @@ void ScriptCommandRelay::PostCommand(
 int ExecCommand(wxString *pIn, wxString *pOut)
 {
    {
-      CommandBuilder builder(*pIn);
+      CommandBuilder builder(::GetActiveProject(), *pIn);
       if (builder.WasValid())
       {
          OldStyleCommandPointer cmd = builder.GetCommand();
@@ -105,7 +106,7 @@ int ExecCommand(wxString *pIn, wxString *pOut)
 int ExecCommand2(wxString *pIn, wxString *pOut)
 {
    {
-      CommandBuilder builder(*pIn);
+      CommandBuilder builder(::GetActiveProject(), *pIn);
       if (builder.WasValid())
       {
          OldStyleCommandPointer cmd = builder.GetCommand();

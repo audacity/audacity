@@ -30,16 +30,18 @@ system by constructing BatchCommandEval objects.
 #include "CommandTargets.h"
 #include "../Shuttle.h"
 
-CommandBuilder::CommandBuilder(const wxString &cmdString)
+CommandBuilder::CommandBuilder(
+   AudacityProject *project, const wxString &cmdString)
    : mValid(false)
 {
-   BuildCommand(cmdString);
+   BuildCommand(project, cmdString);
 }
 
-CommandBuilder::CommandBuilder(const wxString &cmdName, const wxString &params)
+CommandBuilder::CommandBuilder(AudacityProject *project,
+   const wxString &cmdName, const wxString &params)
    : mValid(false)
 {
-   BuildCommand(cmdName, params);
+   BuildCommand(project, cmdName, params);
 }
 
 CommandBuilder::~CommandBuilder()
@@ -77,7 +79,8 @@ void CommandBuilder::Success(const OldStyleCommandPointer &cmd)
    mValid = true;
 }
 
-void CommandBuilder::BuildCommand(const wxString &cmdName,
+void CommandBuilder::BuildCommand(AudacityProject *project,
+                                  const wxString &cmdName,
                                   const wxString &cmdParamsArg)
 {
    // Stage 1: create a Command object of the right type
@@ -97,7 +100,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
 #endif
       OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
       wxASSERT(type != NULL);
-      mCommand = type->Create(nullptr);
+      mCommand = type->Create(project, nullptr);
       mCommand->SetParameter(wxT("CommandName"), cmdName);
       mCommand->SetParameter(wxT("ParamString"), cmdParamsArg);
       auto aCommand = std::make_shared<ApplyAndSendResponse>(mCommand, output);
@@ -181,7 +184,8 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
 #endif
 }
 
-void CommandBuilder::BuildCommand(const wxString &cmdStringArg)
+void CommandBuilder::BuildCommand(
+   AudacityProject *project, const wxString &cmdStringArg)
 {
    wxString cmdString(cmdStringArg);
 
@@ -205,5 +209,5 @@ void CommandBuilder::BuildCommand(const wxString &cmdStringArg)
    cmdName.Trim(true);
    cmdParams.Trim(false);
 
-   BuildCommand(cmdName, cmdParams);
+   BuildCommand(project, cmdName, cmdParams);
 }
