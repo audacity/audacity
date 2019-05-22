@@ -445,7 +445,6 @@ enum{
    kAudacitySortByName = (1 << 2),
 };
 
-//sort based on flags.  see Project.h for sort flags
 void DoSortTracks( AudacityProject &project, int flags )
 {
    auto GetTime = [](const Track *t) {
