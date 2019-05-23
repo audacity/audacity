@@ -19,7 +19,6 @@
 #include "../Audacity.h"
 #include "GetTrackInfoCommand.h"
 
-#include "../Project.h"
 #include "../TrackPanel.h"
 #include "../NoteTrack.h"
 #include "../WaveTrack.h"

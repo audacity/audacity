@@ -57,7 +57,6 @@ and sends it to that message target.
 
 #include "../MemoryX.h"
 #include <vector>
-//#include "../src/Project.h"
 #include "../commands/ResponseQueue.h"
 
 class wxStatusBar;

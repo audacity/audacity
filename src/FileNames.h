@@ -13,6 +13,7 @@
 
 #include "Audacity.h"
 
+#include <wx/dir.h> // for wxDIR_FILES
 #include <wx/string.h> // function return value
 #include "audacity/Types.h"
 
@@ -35,6 +36,21 @@ public:
 
    static wxString MkDir(const wxString &Str);
    static wxString TempDir();
+
+   static const FilePath &DefaultTempDir();
+   static void SetDefaultTempDir( const FilePath &tempDir );
+   static bool IsTempDirectoryNameOK( const FilePath & Name );
+
+   /** \brief A list of directories that should be searched for Audacity files
+    * (plug-ins, help files, etc.).
+    *
+    * On Unix this will include the directory Audacity was installed into,
+    * plus the current user's .audacity-data/Plug-Ins directory.  Additional
+    * directories can be specified using the AUDACITY_PATH environment
+    * variable.  On Windows or Mac OS, this will include the directory
+    * which contains the Audacity program. */
+   static const FilePaths &AudacityPathList();
+   static void SetAudacityPathList( FilePaths list );
 
    // originally an ExportMultiple method. Append suffix if newName appears in otherNames.
    static void MakeNameUnique(
@@ -119,11 +135,48 @@ public:
                 int flags,
                 wxWindow *parent);
 
+   // Useful functions for working with search paths
+   static void AddUniquePathToPathList(const FilePath &path,
+                                       FilePaths &pathList);
+   static void AddMultiPathsToPathList(const wxString &multiPathString,
+                                       FilePaths &pathList);
+   static void FindFilesInPathList(const wxString & pattern,
+                                   const FilePaths & pathList,
+                                   FilePaths &results,
+                                   int flags = wxDIR_FILES);
+
+   /** \brief Protect against Unicode to multi-byte conversion failures
+    * on Windows */
+#if defined(__WXMSW__)
+   static char *VerifyFilename(const wxString &s, bool input = true);
+   
+   // stuff for file name sanitisation
+   static wxCharBuffer mFilename;
+#endif
+
 private:
    // Private constructors: No one is ever going to instantiate it.
    //
    FileNames(){;};
    ~FileNames(){;};
 };
+
+// Use this macro to wrap all filenames and pathnames that get
+// passed directly to a system call, like opening a file, creating
+// a directory, checking to see that a file exists, etc...
+#if defined(__WXMSW__)
+// Note, on Windows we don't define an OSFILENAME() to prevent accidental use.
+// See VerifyFilename() for an explanation.
+#define OSINPUT(X) FileNames::VerifyFilename(X, true)
+#define OSOUTPUT(X) FileNames::VerifyFilename(X, false)
+#elif defined(__WXMAC__)
+#define OSFILENAME(X) ((char *) (const char *)(X).fn_str())
+#define OSINPUT(X) OSFILENAME(X)
+#define OSOUTPUT(X) OSFILENAME(X)
+#else
+#define OSFILENAME(X) ((char *) (const char *)(X).mb_str())
+#define OSINPUT(X) OSFILENAME(X)
+#define OSOUTPUT(X) OSFILENAME(X)
+#endif
 
 #endif

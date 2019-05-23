@@ -54,7 +54,6 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "../EffectManager.h"
-#include "../../AudacityApp.h"
 #include "../../DirManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
@@ -62,14 +61,15 @@ effects from this one class.
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../Project.h"
-#include "../../Shuttle.h"
+#include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/ErrorDialog.h"
+#include "../../widgets/AudacityMessageBox.h"
 #include "../../Prefs.h"
 #include "../../wxFileNameWrapper.h"
+#include "../../prefs/GUIPrefs.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/ProgressDialog.h"
@@ -655,7 +655,7 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-      lang = (lang.empty())? wxGetApp().SetLang(lang) : lang;
+      lang = (lang.empty())? GUIPrefs::SetLang(lang) : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
@@ -2350,15 +2350,15 @@ void NyquistEffect::OSCallback()
 
 FilePaths NyquistEffect::GetNyquistSearchPath()
 {
-   const auto &audacityPathList = wxGetApp().audacityPathList;
+   const auto &audacityPathList = FileNames::AudacityPathList();
    FilePaths pathList;
 
    for (size_t i = 0; i < audacityPathList.size(); i++)
    {
       wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("nyquist"), pathList);
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);
+      FileNames::AddUniquePathToPathList(prefix + wxT("nyquist"), pathList);
+      FileNames::AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
+      FileNames::AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);
    }
    pathList.push_back(FileNames::PlugInDir());
 

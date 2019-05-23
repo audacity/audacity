@@ -27,7 +27,8 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include "ErrorDialog.h"
+#include "AudacityMessageBox.h"
+#include "../Internat.h"
 
 #ifdef __BORLANDC__
     #pragma hdrstop

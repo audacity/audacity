@@ -39,7 +39,7 @@ function.
 #include "../Mix.h"
 #include "../Project.h"
 #include "../Tags.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 #include "Export.h"

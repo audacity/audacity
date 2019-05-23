@@ -34,7 +34,7 @@
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"
 #include "../../src/commands/CommandContext.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 
 #include "NyqBench.h"
 

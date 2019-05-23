@@ -27,6 +27,7 @@
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectFileIORegistry.h"
 #include "TrackArtist.h"
 #include "AllThemeResources.h"
 
@@ -38,6 +39,15 @@ std::shared_ptr<TimeTrack> TrackFactory::NewTimeTrack()
 {
    return std::make_shared<TimeTrack>(mDirManager, mZoomInfo);
 }
+
+static ProjectFileIORegistry::Entry registerFactory{
+   wxT( "timetrack" ),
+   []( AudacityProject &project ){
+      auto &trackFactory = *project.GetTrackFactory();
+      auto &tracks = *project.GetTracks();
+      return tracks.Add(trackFactory.NewTimeTrack());
+   }
+};
 
 TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const ZoomInfo *zoomInfo):
    Track(projDirManager)

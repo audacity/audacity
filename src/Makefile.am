@@ -125,6 +125,12 @@ audacity_SOURCES = \
 	Benchmark.h \
 	CellularPanel.cpp \
 	CellularPanel.h \
+	ClientData.h \
+	ClientDataHelpers.h \
+        Clipboard.cpp \
+        Clipboard.h \
+        CrashReport.cpp \
+        CrashReport.h \
 	Dependencies.cpp \
 	Dependencies.h \
 	DeviceChange.cpp \
@@ -160,6 +166,8 @@ audacity_SOURCES = \
 	InconsistencyException.h \
 	InterpolateAudio.cpp \
 	InterpolateAudio.h \
+	KeyboardCapture.cpp \
+	KeyboardCapture.h \
 	LabelDialog.cpp \
 	LabelDialog.h \
 	LabelTrack.cpp \
@@ -180,6 +188,8 @@ audacity_SOURCES = \
 	MemoryX.h \
 	Menus.cpp \
 	Menus.h \
+	MissingAliasFileDialog.cpp \
+	MissingAliasFileDialog.h \
 	Mix.cpp \
 	Mix.h \
 	MixerBoard.cpp \
@@ -199,6 +209,10 @@ audacity_SOURCES = \
 	Profiler.h \
 	Project.cpp \
 	Project.h \
+	ProjectFileIORegistry.cpp \
+	ProjectFileIORegistry.h \
+	ProjectFSCK.cpp \
+	ProjectFSCK.h \
 	RealFFTf.cpp \
 	RealFFTf.h \
 	RealFFTf48x.cpp \
@@ -217,6 +231,8 @@ audacity_SOURCES = \
 	SelectionState.h \
 	Shuttle.cpp \
 	Shuttle.h \
+	ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h \
 	ShuttleGui.cpp \
 	ShuttleGui.h \
 	ShuttlePrefs.cpp \
@@ -668,6 +684,8 @@ audacity_SOURCES = \
 	widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp \
 	widgets/AttachableScrollBar.h \
+	widgets/AudacityMessageBox.cpp \
+	widgets/AudacityMessageBox.h \
 	widgets/BackedPanel.cpp \
 	widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp \

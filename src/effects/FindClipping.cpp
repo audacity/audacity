@@ -29,7 +29,7 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"

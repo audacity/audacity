@@ -1,9 +1,9 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
-#include "../AudacityApp.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
+#include "../MissingAliasFileDialog.h"
 #include "../Mix.h"
 
 #include "../Prefs.h"
@@ -19,7 +19,7 @@
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 #include <wx/combobox.h>
@@ -43,7 +43,7 @@ void DoMixAndRender
    auto defaultFormat = project.GetDefaultFormat();
    auto trackPanel = project.GetTrackPanel();
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(
@@ -440,7 +440,11 @@ long mixer_process(void *mixer, float **buffer, long n)
 
 #endif // EXPERIMENTAL_SCOREALIGN
 
-//sort based on flags.  see Project.h for sort flags
+enum{
+   kAudacitySortByTime = (1 << 1),
+   kAudacitySortByName = (1 << 2),
+};
+
 void DoSortTracks( AudacityProject &project, int flags )
 {
    auto GetTime = [](const Track *t) {
@@ -797,7 +801,7 @@ void OnNewWaveTrack(const CommandContext &context)
    auto rate = project.GetRate();
 
    auto t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -816,7 +820,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto defaultFormat = project.GetDefaultFormat();
    auto rate = project.GetRate();
 
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    auto left = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
    left->SetSelected(true);
@@ -841,7 +845,7 @@ void OnNewLabelTrack(const CommandContext &context)
 
    auto t = tracks->Add(trackFactory->NewLabelTrack());
 
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -865,7 +869,7 @@ void OnNewTimeTrack(const CommandContext &context)
 
    auto t = tracks->AddToHead(trackFactory->NewTimeTrack());
 
-   project.SelectNone();
+   SelectActions::SelectNone( project );
 
    t->SetSelected(true);
 

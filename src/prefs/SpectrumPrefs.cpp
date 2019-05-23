@@ -23,6 +23,7 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/checkbox.h>
+#include <wx/textctrl.h>
 
 #include "../FFT.h"
 #include "../Project.h"
@@ -32,7 +33,7 @@
 
 #include <algorithm>
 
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
 :  PrefsPanel(parent, winid, wt ? _("Spectrogram Settings") : _("Spectrograms"))

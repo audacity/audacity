@@ -39,7 +39,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #include "AllThemeResources.h"
 
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 
 #include "commands/CommandContext.h"
 
@@ -729,7 +729,7 @@ bool MacroCommands::ApplyEffectCommand(
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
    if( plug->GetPluginType() != PluginTypeAudacityCommand )
-      project->SelectAllIfNone();
+      SelectActions::SelectAllIfNone( *project );
 
    bool res = false;
 

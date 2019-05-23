@@ -208,7 +208,7 @@ class PipeClient(object):
             line = read_pipe.readline()
             # Stop timer as soon as we get first line of response.
             stop_time = time.time()
-            while line != EOL:
+            while line != '\n':
                 message += line
                 line = read_pipe.readline()
                 if line == '':

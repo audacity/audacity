@@ -24,10 +24,13 @@ capture the more lengthy output from some commands.
 #include "../Audacity.h"
 #include "CommandTargets.h"
 
+#include <wx/app.h>
+#include <wx/statusbr.h>
 #include <wx/string.h>
+#include <wx/textctrl.h>
 #include "../ShuttleGui.h"
-#include "../Project.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/wxPanelWrapper.h"
 
 void CommandMessageTarget::StartArray()
 {
@@ -375,7 +378,8 @@ void LongMessageDialog::OnCancel(wxCommandEvent & WXUNUSED(evt)){
 void LongMessageDialog::AcceptText( const wxString & Text )
 {
    if( pDlg == NULL ){
-      pDlg = new LongMessageDialog( GetActiveProject(), _( "Long Message" ) );
+      pDlg = new LongMessageDialog(
+         wxTheApp->GetTopWindow(), _( "Long Message" ) );
       pDlg->Init();
       pDlg->Show();
    }

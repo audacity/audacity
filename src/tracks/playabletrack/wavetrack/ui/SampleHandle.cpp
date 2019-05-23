@@ -26,7 +26,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../UndoManager.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../../images/Cursors.h"
-#include "../../../../widgets/ErrorDialog.h"
+#include "../../../../widgets/AudacityMessageBox.h"
 
 
 static const int SMOOTHING_KERNEL_RADIUS = 3;

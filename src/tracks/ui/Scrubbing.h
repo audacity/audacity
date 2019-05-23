@@ -216,6 +216,7 @@ public:
    ScrubbingOverlay(AudacityProject *project);
 
 private:
+   unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 

@@ -98,7 +98,6 @@ class TranscriptionToolBar final : public ToolBar {
    //void Populate() override;
    //void Repaint(wxDC * WXUNUSED(dc)) override {}
    //void EnableDisableButtons() override;
-   //void UpdatePrefs() override;
 
    //void OnFocus(wxFocusEvent &event);
    //void OnCaptureKey(wxCommandEvent &event);

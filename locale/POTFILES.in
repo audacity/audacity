@@ -56,7 +56,13 @@ src/BlockFile.cpp
 src/BlockFile.h
 src/CellularPanel.cpp
 src/CellularPanel.h
+src/Clipboard.cpp
+src/Clipboard.h
+src/CrashReport.cpp
+src/CrashReport.h
 src/ClassicThemeAsCeeCode.h
+src/ClientData.h
+src/ClientDataHelpers.h
 src/CrossFade.cpp
 src/CrossFade.h
 src/DarkThemeAsCeeCode.h
@@ -103,6 +109,8 @@ src/Internat.cpp
 src/Internat.h
 src/InterpolateAudio.cpp
 src/InterpolateAudio.h
+src/KeyboardCapture.cpp
+src/KeyboardCapture.h
 src/LabelDialog.cpp
 src/LabelDialog.h
 src/LabelTrack.cpp
@@ -125,6 +133,8 @@ src/MemoryX.h
 src/Menus.cpp
 src/Menus.h
 src/MenusMac.cpp
+src/MissingAliasFileDialog.cpp
+src/MissingAliasFileDialog.h
 src/Mix.cpp
 src/Mix.h
 src/MixerBoard.cpp
@@ -148,6 +158,10 @@ src/Profiler.cpp
 src/Profiler.h
 src/Project.cpp
 src/Project.h
+src/ProjectFileIORegistry.cpp
+src/ProjectFileIORegistry.h
+src/ProjectFSCK.cpp
+src/ProjectFSCK.h
 src/RealFFTf.cpp
 src/RealFFTf.h
 src/RealFFTf48x.cpp
@@ -171,6 +185,8 @@ src/Sequence.cpp
 src/Sequence.h
 src/Shuttle.cpp
 src/Shuttle.h
+src/ShuttleGetDefinition.cpp
+src/ShuttleGetDefinition.h
 src/ShuttleGui.cpp
 src/ShuttleGui.h
 src/ShuttlePrefs.cpp
@@ -689,6 +705,8 @@ src/widgets/ASlider.cpp
 src/widgets/ASlider.h
 src/widgets/AttachableScrollBar.cpp
 src/widgets/AttachableScrollBar.h
+src/widgets/AudacityMessageBox.cpp
+src/widgets/AudacityMessageBox.h
 src/widgets/BackedPanel.cpp
 src/widgets/BackedPanel.h
 src/widgets/ErrorDialog.cpp

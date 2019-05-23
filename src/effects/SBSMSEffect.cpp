@@ -20,7 +20,6 @@ effect that uses SBSMS to do its processing (TimeScale)
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
-#include "../Project.h"
 #include "TimeWarper.h"
 
 enum {

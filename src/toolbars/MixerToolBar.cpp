@@ -34,8 +34,8 @@
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
+#include "../KeyboardCapture.h"
 #include "../Prefs.h"
-#include "../Project.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/Grabber.h"
 
@@ -67,6 +67,7 @@ MixerToolBar::~MixerToolBar()
 void MixerToolBar::Create(wxWindow *parent)
 {
    ToolBar::Create(parent);
+   UpdatePrefs();
 }
 
 void MixerToolBar::Populate()
@@ -117,16 +118,7 @@ void MixerToolBar::Populate()
 //Also from SelectionBar;
 void MixerToolBar::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void MixerToolBar::OnCaptureKey(wxCommandEvent &event)

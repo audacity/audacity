@@ -137,6 +137,8 @@
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
     <ClCompile Include="..\..\..\src\CellularPanel.cpp" />
+    <ClCompile Include="..\..\..\src\Clipboard.cpp" />
+    <ClCompile Include="..\..\..\src\CrashReport.cpp" />
     <ClCompile Include="..\..\..\src\commands\AudacityCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandContext.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp" />
@@ -178,6 +180,7 @@
     <ClCompile Include="..\..\..\src\InconsistencyException.cpp" />
     <ClCompile Include="..\..\..\src\Internat.cpp" />
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp" />
+    <ClCompile Include="..\..\..\src\KeyboardCapture.cpp" />
     <ClCompile Include="..\..\..\src\LabelDialog.cpp" />
     <ClCompile Include="..\..\..\src\LabelTrack.cpp" />
     <ClCompile Include="..\..\..\src\LangChoice.cpp" />
@@ -201,6 +204,7 @@
     <ClCompile Include="..\..\..\src\menus\TransportMenus.cpp" />
     <ClCompile Include="..\..\..\src\menus\ViewMenus.cpp" />
     <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp" />
+    <ClCompile Include="..\..\..\src\MissingAliasFileDialog.cpp" />
     <ClCompile Include="..\..\..\src\Mix.cpp" />
     <ClCompile Include="..\..\..\src\MixerBoard.cpp" />
     <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp" />
@@ -217,6 +221,8 @@
     <ClCompile Include="..\..\..\src\Printing.cpp" />
     <ClCompile Include="..\..\..\src\Profiler.cpp" />
     <ClCompile Include="..\..\..\src\Project.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
     <ClCompile Include="..\..\..\src\Resample.cpp" />
@@ -227,6 +233,7 @@
     <ClCompile Include="..\..\..\src\SelectionState.cpp" />
     <ClCompile Include="..\..\..\src\Sequence.cpp" />
     <ClCompile Include="..\..\..\src\Shuttle.cpp" />
+    <ClCompile Include="..\..\..\src\ShuttleGetDefinition.cpp" />
     <ClCompile Include="..\..\..\src\ShuttleGui.cpp" />
     <ClCompile Include="..\..\..\src\ShuttlePrefs.cpp" />
     <ClCompile Include="..\..\..\src\Snap.cpp" />
@@ -394,6 +401,7 @@
     <ClCompile Include="..\..\..\src\widgets\AButton.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ASlider.cpp" />
     <ClCompile Include="..\..\..\src\widgets\AttachableScrollBar.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\AudacityMessageBox.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ErrorDialog.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ExpandingToolBar.cpp" />
     <ClCompile Include="..\..\..\src\widgets\FileHistory.cpp" />
@@ -496,6 +504,10 @@
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
     <ClInclude Include="..\..\..\src\CellularPanel.h" />
+    <ClInclude Include="..\..\..\src\Clipboard.h" />
+    <ClInclude Include="..\..\..\src\ClientData.h" />
+    <ClInclude Include="..\..\..\src\ClientDataHelpers.h" />
+    <ClInclude Include="..\..\..\src\CrashReport.h" />
     <ClInclude Include="..\..\..\src\commands\AudacityCommand.h" />
     <ClInclude Include="..\..\..\src\commands\CommandContext.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />
@@ -524,6 +536,7 @@
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\InconsistencyException.h" />
+    <ClInclude Include="..\..\..\src\KeyboardCapture.h" />
     <ClInclude Include="..\..\..\src\MemoryX.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\NumberScale.h" />
@@ -623,6 +636,7 @@
     <ClInclude Include="..\..\..\src\MacroMagic.h" />
     <ClInclude Include="..\..\..\src\Matrix.h" />
     <ClInclude Include="..\..\..\src\Menus.h" />
+    <ClInclude Include="..\..\..\src\MissingAliasFileDialog.h" />
     <ClInclude Include="..\..\..\src\Mix.h" />
     <ClInclude Include="..\..\..\src\MixerBoard.h" />
     <ClInclude Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.h" />
@@ -634,6 +648,8 @@
     <ClInclude Include="..\..\..\src\Printing.h" />
     <ClInclude Include="..\..\..\src\Profiler.h" />
     <ClInclude Include="..\..\..\src\Project.h" />
+    <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h" />
+    <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />
     <ClInclude Include="..\..\..\src\RingBuffer.h" />
@@ -641,6 +657,7 @@
     <ClInclude Include="..\..\..\src\Screenshot.h" />
     <ClInclude Include="..\..\..\src\Sequence.h" />
     <ClInclude Include="..\..\..\src\Shuttle.h" />
+    <ClInclude Include="..\..\..\src\ShuttleGetDefinition.h" />
     <ClInclude Include="..\..\..\src\ShuttleGui.h" />
     <ClInclude Include="..\..\..\src\ShuttlePrefs.h" />
     <ClInclude Include="..\..\..\src\Snap.h" />
@@ -750,6 +767,7 @@
     <ClInclude Include="..\..\..\src\widgets\AButton.h" />
     <ClInclude Include="..\..\..\src\widgets\ASlider.h" />
     <ClInclude Include="..\..\..\src\widgets\AttachableScrollBar.h" />
+    <ClInclude Include="..\..\..\src\widgets\AudacityMessageBox.h" />
     <ClInclude Include="..\..\..\src\widgets\ErrorDialog.h" />
     <ClInclude Include="..\..\..\src\widgets\ExpandingToolBar.h" />
     <ClInclude Include="..\..\..\src\widgets\FileHistory.h" />

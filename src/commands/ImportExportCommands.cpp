@@ -40,7 +40,7 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 }
 
 bool ImportCommand::Apply(const CommandContext & context){
-   return context.GetProject()->Import(mFileName);
+   return context.project.Import(mFileName);
 }
 
 
@@ -66,8 +66,8 @@ void ExportCommand::PopulateOrExchange(ShuttleGui & S)
 bool ExportCommand::Apply(const CommandContext & context)
 {
    double t0, t1;
-   t0 = context.GetProject()->mViewInfo.selectedRegion.t0();
-   t1 = context.GetProject()->mViewInfo.selectedRegion.t1();
+   t0 = context.project.mViewInfo.selectedRegion.t0();
+   t1 = context.project.mViewInfo.selectedRegion.t1();
 
    // Find the extension and check it's valid
    int splitAt = mFileName.Find(wxUniChar('.'), true);
@@ -80,7 +80,7 @@ bool ExportCommand::Apply(const CommandContext & context)
 
    Exporter exporter;
 
-   bool exportSuccess = exporter.Process(context.GetProject(),
+   bool exportSuccess = exporter.Process(&context.project,
                                          std::max(0, mnChannels),
                                          extension, mFileName,
                                          true, t0, t1);

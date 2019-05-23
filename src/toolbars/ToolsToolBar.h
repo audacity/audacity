@@ -68,6 +68,7 @@ class ToolsToolBar final : public ToolBar {
 
  private:
 
+   void Create(wxWindow * parent) override;
    void RegenerateTooltips() override;
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
    static AButton *MakeTool(

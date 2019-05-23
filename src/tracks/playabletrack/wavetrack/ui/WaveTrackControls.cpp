@@ -30,7 +30,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/SpectrumPrefs.h"
 #include "../../../../prefs/TracksBehaviorsPrefs.h"
 #include "../../../../prefs/WaveformPrefs.h"
-#include "../../../../widgets/ErrorDialog.h"
+#include "../../../../widgets/AudacityMessageBox.h"
 
 #include <wx/combobox.h>
 #include <wx/sizer.h>

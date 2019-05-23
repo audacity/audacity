@@ -258,3 +258,9 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
                  IsDown(multiTool));
    gPrefs->Flush();
 }
+
+void ToolsToolBar::Create(wxWindow * parent)
+{
+   ToolBar::Create(parent);
+   UpdatePrefs();
+}

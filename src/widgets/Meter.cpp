@@ -253,9 +253,6 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 // How many pixels between items?
 const static int gap = 2;
 
-// Event used to notify all meters of preference changes
-wxDEFINE_EVENT(EVT_METER_PREFERENCES_CHANGED, wxCommandEvent);
-
 const static wxChar *PrefStyles[] =
 {
    wxT("AutomaticStereo"),
@@ -347,11 +344,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
    mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
-
-   // Register for our preference update event
-   wxTheApp->Bind(EVT_METER_PREFERENCES_CHANGED,
-                     &MeterPanel::OnMeterPrefsUpdated,
-                     this);
 
    if (mIsInput) {
       wxTheApp->Bind(EVT_AUDIOIO_MONITOR,
@@ -457,6 +449,20 @@ void MeterPanel::UpdatePrefs()
    Reset(mRate, false);
 
    mLayoutValid = false;
+
+   Refresh(false);
+}
+
+static int MeterPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
+
+void MeterPanel::UpdateSelectedPrefs(int id)
+{
+   if (id == MeterPrefsID())
+      UpdatePrefs();
 }
 
 void MeterPanel::OnErase(wxEraseEvent & WXUNUSED(event))
@@ -1964,15 +1970,6 @@ void MeterPanel::OnMonitor(wxCommandEvent & WXUNUSED(event))
    StartMonitoring();
 }
 
-void MeterPanel::OnMeterPrefsUpdated(wxCommandEvent & evt)
-{
-   evt.Skip();
-
-   UpdatePrefs();
-
-   Refresh(false);
-}
-
 void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *rate;
@@ -2099,9 +2096,8 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
       // Currently, there are 2 playback meters and 2 record meters and any number of 
       // mixerboard meters, so we have to send out an preferences updated message to
       // ensure they all update themselves.
-      wxCommandEvent e(EVT_METER_PREFERENCES_CHANGED);
-      e.SetEventObject(this);
-      GetParent()->GetEventHandler()->ProcessEvent(e);
+      wxTheApp->AddPendingEvent(wxCommandEvent{
+         EVT_PREFS_UPDATE, MeterPrefsID() });
    }
 }
 

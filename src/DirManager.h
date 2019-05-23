@@ -14,15 +14,13 @@
 #include "audacity/Types.h"
 #include "xml/XMLTagHandler.h"
 
+#include <functional>
 #include <unordered_map>
 
 class wxFileNameWrapper;
 class BlockArray;
 class BlockFile;
-
-#define FSCKstatus_CLOSE_REQ 0x1
-#define FSCKstatus_CHANGED   0x2
-#define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
+class ProgressDialog;
 
 using DirHash = std::unordered_map<int, int>;
 
@@ -44,10 +42,54 @@ enum {
 class PROFILE_DLL_API DirManager final : public XMLTagHandler {
  public:
 
+   static int RecursivelyEnumerate(const FilePath &dirPath,
+                                     FilePaths& filePathArray,  // output: all files in dirPath tree
+                                     wxString dirspec,
+                                     wxString filespec,
+                                     bool bFiles, bool bDirs,
+                                     int progress_count = 0,
+                                     int progress_bias = 0,
+                                     ProgressDialog* progress = nullptr);
+
+   static int RecursivelyEnumerateWithProgress(const FilePath &dirPath,
+                                                FilePaths& filePathArray, // output: all files in dirPath tree
+                                                wxString dirspec,
+                                                wxString filespec,
+                                                bool bFiles, bool bDirs,
+                                                int progress_count,
+                                                const wxChar* message);
+
+   static int RecursivelyCountSubdirs( const FilePath &dirPath );
+
+   static int RecursivelyRemoveEmptyDirs(const FilePath &dirPath,
+                                          int nDirCount = 0,
+                                          ProgressDialog* pProgress = nullptr);
+
+   static void RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
+                                 int flags, const wxChar* message = nullptr);
+
+   // Type of a function that builds a block file, using attributes from XML
+   using BlockFileDeserializer =
+      std::function< BlockFilePtr( DirManager&, const wxChar ** ) >;
+   // Typically a statically declared object,
+   // registers a function for an XML tag
+   struct RegisteredBlockFileDeserializer {
+      RegisteredBlockFileDeserializer(
+         const wxString &tag, BlockFileDeserializer function );
+   };
+
+ private:
    // MM: Construct DirManager
+   // Don't call this directly but use Create() instead
    DirManager();
 
+ public:
+
+   static std::shared_ptr< DirManager > Create();
+
    virtual ~DirManager();
+
+   size_t NumBlockFiles() const { return mBlockFileHash.size(); }
 
    static void SetTempDir(const wxString &_temp) { globaltemp = _temp; }
 
@@ -82,23 +124,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    wxLongLong GetFreeDiskSpace();
 
-   BlockFilePtr
-      NewSimpleBlockFile(samplePtr sampleData,
-                                 size_t sampleLen,
-                                 sampleFormat format,
-                                 bool allowDeferredWrite = false);
-
-   BlockFilePtr
-      NewAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel);
-
-   BlockFilePtr
-      NewODAliasBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel);
-
-   BlockFilePtr
-      NewODDecodeBlockFile( const FilePath &aliasedFile, sampleCount aliasStart,
-                                 size_t aliasLen, int aliasChannel, int decodeType);
+   using BlockFileFactory = std::function< BlockFilePtr( wxFileNameWrapper ) >;
+   BlockFilePtr NewBlockFile( const BlockFileFactory &factory );
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
    bool ContainsBlockFile(const BlockFile *b) const;
@@ -125,12 +152,14 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    bool EnsureSafeFilename(const wxFileName &fName);
 
-   void SetLoadingTarget(BlockArray *pArray, unsigned idx)
+   using LoadingTarget = std::function< BlockFilePtr &() >;
+   void SetLoadingTarget( LoadingTarget loadingTarget )
    {
-      mLoadingTarget = pArray;
-      mLoadingTargetIdx = idx;
+      mLoadingTarget = loadingTarget;
    }
+   sampleFormat GetLoadingFormat() const { return mLoadingFormat; }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
+   size_t GetLoadingBlockLength() const { return mLoadingBlockLen; }
    void SetLoadingBlockLength(size_t len) { mLoadingBlockLen = len; }
 
    // Note: following affects only the loading of block files when opening a project
@@ -152,16 +181,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
       const wxString &msg,
       int flags = 0);
 
-   // Check the project for errors and possibly prompt user
-   // bForceError: Always show log error alert even if no errors are found here.
-   //    Important when you know that there are already errors in the log.
-   // bAutoRecoverMode: Do not show any option dialogs for how to deal with errors found here.
-   //    Too complicated during auto-recover. Just correct problems the "safest" way.
-   int ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode);
-
-   void FindMissingAliasedFiles(
-         BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
-         BlockHash& missingAliasedFilePathHash);   // output: full paths of missing aliased files
+   void FindMissingAliasFiles(
+         BlockHash& missingAliasFilesAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
+         BlockHash& missingAliasFilesPathHash);   // output: full paths of missing aliased files
    void FindMissingAUFs(
          BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles
    void FindMissingAUs(
@@ -230,8 +252,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    FilePaths aliasList;
 
-   BlockArray *mLoadingTarget;
-   unsigned mLoadingTargetIdx;
+   LoadingTarget mLoadingTarget;
    sampleFormat mLoadingFormat;
    size_t mLoadingBlockLen;
 

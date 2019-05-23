@@ -22,7 +22,7 @@
 
 #include "TimeWarper.h"
 
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 bool Generator::Process()
 {

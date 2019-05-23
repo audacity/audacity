@@ -33,6 +33,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/textctrl.h>
 
 #include "../Prefs.h"
 #include "../Project.h"
@@ -44,7 +45,7 @@ KeyConfigPrefs and MousePrefs use.
 #include "../FileNames.h"
 
 #include "../widgets/KeyView.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

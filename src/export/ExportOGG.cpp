@@ -34,7 +34,7 @@
 #include "../ShuttleGui.h"
 
 #include "../Tags.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 //----------------------------------------------------------------------------

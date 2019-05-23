@@ -40,12 +40,13 @@
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
+#include "../KeyboardCapture.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../widgets/Grabber.h"
 #include "../DeviceManager.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Grabber.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -62,6 +63,12 @@ BEGIN_EVENT_TABLE(DeviceToolBar, ToolBar)
    EVT_CHOICE(wxID_ANY, DeviceToolBar::OnChoice)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, DeviceToolBar::OnCaptureKey)
 END_EVENT_TABLE()
+
+static int DeviceToolbarPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
 
 //Standard contructor
 DeviceToolBar::DeviceToolBar()
@@ -188,16 +195,7 @@ void DeviceToolBar::RefillCombos()
 
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void DeviceToolBar::OnCaptureKey(wxCommandEvent &event)
@@ -319,6 +317,13 @@ void DeviceToolBar::UpdatePrefs()
 
    Layout();
    Refresh();
+}
+
+void DeviceToolBar::UpdateSelectedPrefs( int id )
+{
+   if (id == DeviceToolbarPrefsID())
+      UpdatePrefs();
+   ToolBar::UpdateSelectedPrefs( id );
 }
 
 
@@ -781,10 +786,8 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       gAudioIO->HandleDeviceChange();
    }
 
-   // Update all projects' DeviceToolBar.
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      gAudacityProjects[i]->GetDeviceToolBar()->UpdatePrefs();
-   }
+   wxTheApp->AddPendingEvent(wxCommandEvent{
+      EVT_PREFS_UPDATE, DeviceToolbarPrefsID() });
 }
 
 void DeviceToolBar::ShowInputDialog()

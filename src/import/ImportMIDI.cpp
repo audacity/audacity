@@ -22,7 +22,7 @@
 //#include "mfmidi.h"
 
 #include "../NoteTrack.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
 {

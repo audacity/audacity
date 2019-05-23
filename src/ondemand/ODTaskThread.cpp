@@ -18,44 +18,6 @@
 
 #include "ODTaskThread.h"
 
-#include "ODTask.h"
-#include "ODManager.h"
-
-
-ODTaskThread::ODTaskThread(ODTask* task)
-#ifndef __WXMAC__
-: wxThread()
-#endif
-{
-   mTask=task;
-#ifdef __WXMAC__
-   mDestroy = false;
-   mThread = NULL;
-#endif
-
-}
-
-#ifdef __WXMAC__
-
-void ODTaskThread::Entry()
-#else
-void *ODTaskThread::Entry()
-
-#endif
-{
-   //TODO: Figure out why this has no effect at all.
-   //wxThread::This()->SetPriority( 40);
-   //Do at least 5 percent of the task
-   mTask->DoSome(0.05f);
-
-   //release the thread count so that the ODManager knows how many active threads are alive.
-   ODManager::Instance()->DecrementCurrentThreads();
-
-
-#ifndef __WXMAC__
-   return NULL;
-#endif
-}
 
 #ifdef __WXMAC__
 ODCondition::ODCondition(ODLock *lock)

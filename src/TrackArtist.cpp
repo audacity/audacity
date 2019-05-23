@@ -77,6 +77,7 @@ audio tracks.
 #include "LabelTrack.h"
 #include "TimeTrack.h"
 #include "Prefs.h"
+#include "prefs/GUIPrefs.h"
 #include "prefs/GUISettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
@@ -142,7 +143,6 @@ TrackArtist::TrackArtist( TrackPanel *parent_ )
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
    mSampleDisplay = 1;// Stem plots by default.
-   UpdatePrefs();
 
    SetColours(0);
    vruler = std::make_unique<Ruler>();
@@ -3267,15 +3267,22 @@ void TrackArt::DrawTimeTrack(TrackPanelDrawingContext &context,
         track->GetDisplayLog(), dbRange, lower, upper, false );
 }
 
+void TrackArtist::UpdateSelectedPrefs( int id )
+{
+   if( id == ShowClippingPrefsID())
+      mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
+}
+
 void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
-   mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
    mSampleDisplay = TracksPrefs::SampleViewChoice();
 
    mbShowTrackNameInTrack =
       gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
    
+   UpdateSelectedPrefs( ShowClippingPrefsID() );
+
    SetColours(0);
 }
 

@@ -30,7 +30,7 @@ threshold of difference in two selected tracks
 
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 #include "CommandContext.h"
 
@@ -43,10 +43,6 @@ extern void RegisterCompareAudio( Registrar & R){
 
 bool CompareAudioCommand::DefineParams( ShuttleParams & S ){
    S.Define( errorThreshold,  wxT("Threshold"),   0.0f,  0.0f,    0.01f,    1.0f );
-   return true;
-}
-
-bool CompareAudioCommand::Apply(){
    return true;
 }
 
@@ -107,7 +103,7 @@ inline int min(int a, int b)
 
 bool CompareAudioCommand::Apply(const CommandContext & context)
 {
-   if (!GetSelection(context, *context.GetProject()))
+   if (!GetSelection(context, context.project))
    {
       return false;
    }

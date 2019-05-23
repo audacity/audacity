@@ -97,7 +97,7 @@ private:
    void FinishTrack();
 
    // Variables that only exist during processing
-   std::unique_ptr<WaveTrack> mOutputTrack;
+   std::shared_ptr<WaveTrack> mOutputTrack;
    sampleCount       mInSampleCount;
    sampleCount       mOutSampleCount;
    int                   mInputPos;
@@ -141,7 +141,7 @@ public:
    wxSizer *MakeNoiseRemovalDialog(bool call_fit = true,
                                    bool set_sizer = true);
 
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -149,7 +149,7 @@ private:
    // handlers
    void OnGetProfile( wxCommandEvent &event );
    void OnKeepNoise( wxCommandEvent &event );
-   void OnPreview(wxCommandEvent &event);
+   void OnPreview(wxCommandEvent &event) override;
    void OnRemoveNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
 

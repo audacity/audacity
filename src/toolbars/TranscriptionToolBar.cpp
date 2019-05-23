@@ -36,6 +36,7 @@
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
+#include "../KeyboardCapture.h"
 #include "../Project.h"
 #include "../TimeTrack.h"
 #include "../WaveTrack.h"
@@ -337,16 +338,7 @@ void TranscriptionToolBar::RegenerateTooltips()
 
 void TranscriptionToolBar::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void TranscriptionToolBar::OnCaptureKey(wxCommandEvent &event)
@@ -491,18 +483,15 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
       // No need to set cutPreview options.
-      // Due to a rather hacky approach, the appearance is used
-      // to signal use of cutpreview to code below.
       options.timeTrack = mTimeTrack.get();
-      ControlToolBar::PlayAppearance appearance =
-         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
-         : looped ? ControlToolBar::PlayAppearance::Looped
-         : ControlToolBar::PlayAppearance::Straight;
+      auto mode =
+         cutPreview ? PlayMode::cutPreviewPlay
+         : options.playLooped ? PlayMode::loopedPlay
+         : PlayMode::normalPlay;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
             options,
-            PlayMode::normalPlay,
-            appearance);
+            mode);
    }
    else
    {

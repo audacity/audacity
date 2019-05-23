@@ -24,7 +24,7 @@ got to show.
 
 #include <wx/atomic.h>
 
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 
 AudacityException::~AudacityException()
 {

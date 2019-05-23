@@ -438,6 +438,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "portmixer.h"
 #endif
 
+#include <wx/app.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
@@ -447,7 +448,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 
-#include "AudacityApp.h"
+#include "MissingAliasFileDialog.h"
 #include "Mix.h"
 #include "Resample.h"
 #include "RingBuffer.h"
@@ -460,8 +461,10 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 #include "effects/EffectManager.h"
 #include "prefs/QualityPrefs.h"
+#include "prefs/RecordingPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
 
@@ -2058,7 +2061,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    // Enable warning popups for unfound aliased blockfiles.
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    commit = true;
    return mStreamToken;
@@ -5368,7 +5371,7 @@ void AudioIoCallback::SendVuOutputMeterData(
       //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
       //if (pMixerBoard)
       //   pMixerBoard->UpdateMeters(GetStreamTime(),
-      //                              (pProj->mLastPlayMode == loopedPlay));
+      //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
    }
    mUpdatingMeters = false;
 }

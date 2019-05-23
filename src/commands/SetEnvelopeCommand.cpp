@@ -19,7 +19,6 @@
 #include "../Audacity.h"
 #include "SetEnvelopeCommand.h"
 
-#include "../Project.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"

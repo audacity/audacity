@@ -30,12 +30,14 @@
 #include "Audacity.h"
 #include "CellularPanel.h"
 
+#include <wx/eventfilter.h>
 #include <wx/setup.h> // for wxUSE_* macros
-#include "Project.h"
+#include "KeyboardCapture.h"
 #include "UIHandle.h"
 #include "TrackPanelMouseEvent.h"
 #include "HitTestResult.h"
 #include "RefreshCode.h"
+#include "TrackPanelCell.h"
 
 // A singleton class that intercepts escape key presses when some cellular
 // panel is dragging
@@ -888,9 +890,9 @@ void CellularPanel::OnSetFocus(wxFocusEvent &event)
 
 void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
-   if (AudacityProject::HasKeyboardCapture(this))
+   if (KeyboardCapture::IsHandler(this))
    {
-      AudacityProject::ReleaseKeyboard(this);
+      KeyboardCapture::Release(this);
    }
    Refresh( false);
 }

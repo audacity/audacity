@@ -13,10 +13,12 @@
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
+#include "../prefs/RecordingPrefs.h"
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../tracks/ui/Scrubbing.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 
 #include <float.h>
@@ -190,6 +192,14 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 namespace TransportActions {
 
 // exported helper functions
+
+// Stop playing or recording, if paused.
+void StopIfPaused( AudacityProject &project )
+{
+   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   if( flags & PausedFlag )
+      DoStop( project );
+}
 
 bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
@@ -457,7 +467,11 @@ void OnTimerRecord(const CommandContext &context)
          // No action required
          break;
       case POST_TIMER_RECORD_CLOSE:
-         wxTheApp->CallAfter( []{ QuitAudacity(); } );
+         wxTheApp->CallAfter( []{
+            // Simulate the application Exit menu item
+            wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
+            wxTheApp->AddPendingEvent( evt );
+         } );
          break;
       case POST_TIMER_RECORD_RESTART:
          // Restart System
@@ -693,9 +707,9 @@ void OnPlayOneSecond(const CommandContext &context)
    auto options = project.GetDefaultPlayOptions();
 
    double pos = trackPanel->GetMostRecentXPos();
-   controlToolBar->PlayPlayRegion
-      (SelectedRegion(pos - 0.5, pos + 0.5), options,
-       PlayMode::oneSecondPlay);
+   controlToolBar->PlayPlayRegion(
+      SelectedRegion(pos - 0.5, pos + 0.5), options,
+      PlayMode::oneSecondPlay);
 }
 
 /// The idea for this function (and first implementation)
@@ -745,8 +759,8 @@ void OnPlayToSelection(const CommandContext &context)
    auto controlToolBar = project.GetControlToolBar();
    auto playOptions = project.GetDefaultPlayOptions();
 
-   controlToolBar->PlayPlayRegion
-      (SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
+   controlToolBar->PlayPlayRegion(
+      SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
 }
 
 // The next 4 functions provide a limited version of the

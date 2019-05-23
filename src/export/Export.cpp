@@ -67,7 +67,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"
 #include "../AColor.h"
@@ -674,8 +674,8 @@ bool Exporter::GetFilename()
       // This causes problems for the exporter, so we don't allow it.
       // Overwritting non-missing aliased files is okay.
       // Also, this can only happen for uncompressed audio.
-      bool overwritingMissingAlias;
-      overwritingMissingAlias = false;
+      bool overwritingMissingAliasFiles;
+      overwritingMissingAliasFiles = false;
       for (size_t i = 0; i < gAudacityProjects.size(); i++) {
          AliasedFileArray aliasedFiles;
          FindDependencies(gAudacityProjects[i].get(), aliasedFiles);
@@ -687,11 +687,11 @@ bool Exporter::GetFilename()
                The file cannot be written because the path is needed to restore the original audio to the project.\n\
                Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n\
                If you still wish to export, please choose a different filename or folder."));
-               overwritingMissingAlias = true;
+               overwritingMissingAliasFiles = true;
             }
          }
       }
-      if (overwritingMissingAlias)
+      if (overwritingMissingAliasFiles)
          continue;
 
       if (mFilename.FileExists()) {

@@ -41,9 +41,6 @@ class QualityPrefs final : public PrefsPanel
 
    static sampleFormat SampleFormatChoice();
 
-   static DitherType FastDitherChoice();
-   static DitherType BestDitherChoice();
-
  private:
    void Populate();
    void GetNamesAndLabels();

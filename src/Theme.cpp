@@ -72,15 +72,12 @@ can't be.
 #include <wx/mstream.h>
 #include <wx/settings.h>
 
-#include "Project.h"
-#include "toolbars/ToolManager.h"
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"
-#include "AColor.h"
-#include "AdornedRulerPanel.h"
 #include "ImageManipulation.h"
-#include "widgets/ErrorDialog.h"
+#include "Internat.h"
+#include "widgets/AudacityMessageBox.h"
 
 // JKC: First get the MAC specific images.
 // As we've disabled USE_AQUA_THEME, we need to name each file we use.
@@ -245,23 +242,6 @@ bool ThemeBase::LoadPreferredTheme()
 
    theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
    return true;
-}
-
-void Theme::ApplyUpdatedImages()
-{
-   AColor::ReInit();
-
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      AudacityProject *p = gAudacityProjects[i].get();
-      p->ApplyUpdatedTheme();
-      for( int ii = 0; ii < ToolBarCount; ++ii )
-      {
-         ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
-         if( pToolBar )
-            pToolBar->ReCreateButtons();
-      }
-      p->GetRulerPanel()->ReCreateButtons();
-   }
 }
 
 void Theme::RegisterImages()

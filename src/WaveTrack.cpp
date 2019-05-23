@@ -48,6 +48,7 @@ Track classes.
 #include "Spectrum.h"
 
 #include "Project.h"
+#include "ProjectFileIORegistry.h"
 
 #include "AudioIO.h"
 #include "Prefs.h"
@@ -68,6 +69,15 @@ Track classes.
 #include "tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h"
 
 using std::max;
+
+static ProjectFileIORegistry::Entry registerFactory{
+   wxT( "wavetrack" ),
+   []( AudacityProject &project ){
+      auto &trackFactory = *project.GetTrackFactory();
+      auto &tracks = *project.GetTracks();
+      return tracks.Add(trackFactory.NewWaveTrack());
+   }
+};
 
 WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
@@ -1599,12 +1609,21 @@ void WaveTrack::AppendCoded(const FilePath &fName, sampleCount start,
 }
 
 ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
+#include "blockfile/ODDecodeBlockFile.h"
 unsigned int WaveTrack::GetODFlags() const
 {
    unsigned int ret = 0;
    for (const auto &clip : mClips)
    {
-      ret = ret | clip->GetSequence()->GetODFlags();
+      auto sequence = clip->GetSequence();
+      const auto &blocks = sequence->GetBlockArray();
+      for ( const auto &block : blocks ) {
+         const auto &file = block.f;
+         if(!file->IsDataAvailable())
+            ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
+         else if(!file->IsSummaryAvailable())
+            ret |= ODTask::eODPCMSummary;
+      }
    }
    return ret;
 }

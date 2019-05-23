@@ -54,6 +54,7 @@
 #include "FileNames.h"
 #include "import/Import.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY

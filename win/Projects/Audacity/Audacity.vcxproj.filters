@@ -194,6 +194,9 @@
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\KeyboardCapture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\LabelDialog.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -219,6 +222,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Menus.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MissingAliasFileDialog.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Mix.cpp">
@@ -254,6 +260,12 @@
     <ClCompile Include="..\..\..\src\Project.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectFSCK.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\RealFFTf.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -273,6 +285,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Shuttle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ShuttleGetDefinition.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ShuttleGui.cpp">
@@ -588,6 +603,9 @@
       <Filter>src\widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\AttachableScrollBar.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\AudacityMessageBox.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\ErrorDialog.cpp">
@@ -1088,6 +1106,12 @@
     <ClCompile Include="..\..\..\src\CellularPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Clipboard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\CrashReport.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp">
       <Filter>src\menus</Filter>
     </ClCompile>
@@ -1258,6 +1282,9 @@
     <ClInclude Include="..\..\..\src\Menus.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\MissingAliasFileDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\Mix.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1291,6 +1318,12 @@
     <ClInclude Include="..\..\..\src\Project.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectFSCK.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\RealFFTf.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1310,6 +1343,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Shuttle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ShuttleGetDefinition.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ShuttleGui.h">
@@ -1637,6 +1673,9 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\AttachableScrollBar.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\AudacityMessageBox.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\ErrorDialog.h">
@@ -2209,11 +2248,26 @@
     <ClInclude Include="..\..\..\src\CellularPanel.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Clipboard.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ClientData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ClientDataHelpers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CrashReport.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h">
       <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\KeyboardCapture.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

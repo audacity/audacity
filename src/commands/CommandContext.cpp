@@ -24,15 +24,13 @@ messaging from a command back to its invoker.
 #include "CommandContext.h"
 
 #include <map>
+#include <wx/app.h>
+#include <wx/log.h>
 #include <wx/string.h>
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
-#include "CommandBuilder.h"
 #include "CommandTargets.h"
-#include "CommandDirectory.h"
-
-#include "../Project.h"
 
 CommandContext::CommandContext(
       AudacityProject &p
@@ -91,9 +89,6 @@ void CommandContext::Progress( double d ) const
 
 AudacityApp * CommandContext::GetApp() const
 {  return (AudacityApp *) wxTheApp;}
-
-AudacityProject *CommandContext::GetProject() const
-{  return GetActiveProject();}
 
 void CommandContext::StartArray() const
 {

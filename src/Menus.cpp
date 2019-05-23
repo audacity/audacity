@@ -31,8 +31,8 @@
 #include "Experimental.h"
 
 #include "AdornedRulerPanel.h"
-#include "AudacityApp.h"
 #include "AudioIO.h"
+#include "Clipboard.h"
 #include "LabelTrack.h"
 #include "ModuleManager.h"
 #ifdef USE_MIDI
@@ -51,14 +51,6 @@
 
 #include <wx/menu.h>
 
-PrefsListener::~PrefsListener()
-{
-}
-
-void PrefsListener::UpdatePrefs()
-{
-}
-
 MenuManager &GetMenuManager(AudacityProject &project)
 { return *project.mMenuManager; }
 
@@ -68,6 +60,11 @@ MenuCreator::MenuCreator()
 
 MenuCreator::~MenuCreator()
 {
+}
+
+MenuManager::MenuManager()
+{
+   UpdatePrefs();
 }
 
 void MenuManager::UpdatePrefs()
@@ -388,6 +385,7 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
    return AlwaysEnabledFlag;
 }
 
+
 CommandFlag MenuManager::GetUpdateFlags
 (AudacityProject &project, bool checkActive)
 {
@@ -491,7 +489,7 @@ CommandFlag MenuManager::GetUpdateFlags
 #endif
    );
 
-   if((AudacityProject::msClipT1 - AudacityProject::msClipT0) > 0.0)
+   if( Clipboard::Get().Duration() > 0 )
       flags |= ClipboardFlag;
 
    auto &undoManager = *project.GetUndoManager();
@@ -537,7 +535,7 @@ CommandFlag MenuManager::GetUpdateFlags
       }
    }
 
-   if (wxGetApp().GetRecentFiles()->GetCount() > 0)
+   if (FileHistory::Global().GetCount() > 0)
       flags |= HaveRecentFiles;
 
    if (project.IsSyncLocked())
@@ -548,7 +546,7 @@ CommandFlag MenuManager::GetUpdateFlags
    if (!EffectManager::Get().RealtimeIsActive())
       flags |= IsRealtimeNotActiveFlag;
 
-      if (!project.IsCapturing())
+   if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
       flags |= CaptureNotBusyFlag;
 
    ControlToolBar *bar = project.GetControlToolBar();
@@ -781,7 +779,7 @@ bool MenuManager::TryToMakeActionAllowed
    auto MissingFlags = (~flags & flagsRqd) & mask;
 
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
-      project.StopIfPaused();
+      TransportActions::StopIfPaused( project );
       // Hope this will now reflect stopped audio.
       flags = GetMenuManager(project).GetUpdateFlags(project);
       bAllowed = ((flags & mask) == (flagsRqd & mask));

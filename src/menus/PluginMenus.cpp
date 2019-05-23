@@ -1,12 +1,12 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
-#include "../AudacityApp.h"
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../FreqWindow.h"
 #include "../Menus.h"
+#include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -319,9 +319,12 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    std::vector<const PluginDescriptor*> defplugs;
    std::vector<const PluginDescriptor*> optplugs;
 
+   EffectManager & em = EffectManager::Get();
    const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
    while (plug)
    {
+      if( plug->IsInstantiated() && em.IsHidden(plug->GetID()) )
+         continue;
       if ( !plug->IsEnabled() ){
          ;// don't add to menus!
       }
@@ -409,10 +412,10 @@ bool DoEffect(
    if (flags & kConfigured)
    {
       TransportActions::DoStop(project);
-      project.SelectAllIfNone();
+      SelectActions::SelectAllIfNone( project );
    }
 
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   MissingAliasFilesDialog::SetShouldShow(true);
 
    auto nTracksOriginally = project.GetTrackCount();
    wxWindow *focus = wxWindow::FindFocus();

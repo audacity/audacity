@@ -27,14 +27,15 @@ effects.
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
 
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 #include "EffectRack.h"
 #endif
 
-#include "../Shuttle.h"
+#include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
+#include "../commands/Command.h"
 #include "../PluginManager.h"
 
 

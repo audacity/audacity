@@ -78,6 +78,8 @@ void MeterToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
 
+   UpdatePrefs();
+
    // Simulate a size event to set initial meter placement/size
    wxSizeEvent dummy;
    OnSize(dummy);
@@ -156,18 +158,6 @@ void MeterToolBar::Populate()
 
 void MeterToolBar::UpdatePrefs()
 {
-   if( mPlayMeter )
-   {
-      mPlayMeter->UpdatePrefs();
-      mPlayMeter->Refresh();
-   }
-
-   if( mRecordMeter )
-   {
-      mRecordMeter->UpdatePrefs();
-      mRecordMeter->Refresh();
-   }
-
    RegenerateTooltips();
 
    // Set label to pull in language change
@@ -175,8 +165,6 @@ void MeterToolBar::UpdatePrefs()
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
-
-
 }
 
 void MeterToolBar::RegenerateTooltips()

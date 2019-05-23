@@ -19,7 +19,6 @@
 #include "../Audacity.h"
 #include "SetClipCommand.h"
 
-#include "../Project.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"

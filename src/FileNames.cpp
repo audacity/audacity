@@ -36,6 +36,7 @@ used throughout Audacity into this one place.
 #include "Internat.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
+#include "widgets/AudacityMessageBox.h"
 #include "../lib-src/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
@@ -475,3 +476,151 @@ FileNames::SelectFile(Operation op,
             wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
    });
 }
+
+/** \brief Default temp directory */
+static FilePath sDefaultTempDir;
+
+const FilePath &FileNames::DefaultTempDir()
+{
+   return sDefaultTempDir;
+}
+
+void FileNames::SetDefaultTempDir( const FilePath &tempDir )
+{
+   sDefaultTempDir = tempDir;
+}
+
+// We now disallow temp directory name that puts it where cleaner apps will
+// try to clean out the files.  
+bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
+{
+   if( Name.empty() )
+      return false;
+
+   wxFileName tmpFile;
+   tmpFile.AssignTempFileName(wxT("nn"));
+   // use Long Path to expand out any abbreviated long substrings.
+   wxString BadPath = tmpFile.GetLongPath();
+   ::wxRemoveFile(tmpFile.GetFullPath());
+
+#ifdef __WXMAC__
+   // This test is to fix bug 1220 on a 1.x to 2.x to 2.1.3 upgrade.
+   // It is less permissive than we could be as it stops a path
+   // with this string ANYWHERE within it rather than excluding just
+   // the paths that the earlier Audacities used to create.
+   if( Name.Contains( "/tmp/") )
+      return false;
+   BadPath = BadPath.BeforeLast( '/' ) + "/";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "/";
+#else
+   BadPath = BadPath.BeforeLast( '\\' ) + "\\";
+   wxFileName cmpFile( Name );
+   wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
+#endif
+   return !(NameCanonical.StartsWith( BadPath ));
+}
+
+static FilePaths sAudacityPathList;
+
+const FilePaths &FileNames::AudacityPathList()
+{
+   return sAudacityPathList;
+}
+
+void FileNames::SetAudacityPathList( FilePaths list )
+{
+   sAudacityPathList = std::move( list );
+}
+
+// static
+void FileNames::AddUniquePathToPathList(const FilePath &pathArg,
+                                          FilePaths &pathList)
+{
+   wxFileNameWrapper pathNorm { pathArg };
+   pathNorm.Normalize();
+   const wxString newpath{ pathNorm.GetFullPath() };
+
+   for(const auto &path : pathList) {
+      if (pathNorm == wxFileNameWrapper{ path })
+         return;
+   }
+
+   pathList.push_back(newpath);
+}
+
+// static
+void FileNames::AddMultiPathsToPathList(const wxString &multiPathStringArg,
+                                          FilePaths &pathList)
+{
+   wxString multiPathString(multiPathStringArg);
+   while (!multiPathString.empty()) {
+      wxString onePath = multiPathString.BeforeFirst(wxPATH_SEP[0]);
+      multiPathString = multiPathString.AfterFirst(wxPATH_SEP[0]);
+      AddUniquePathToPathList(onePath, pathList);
+   }
+}
+
+#include <wx/log.h>
+
+// static
+void FileNames::FindFilesInPathList(const wxString & pattern,
+                                      const FilePaths & pathList,
+                                      FilePaths & results,
+                                      int flags)
+{
+   wxLogNull nolog;
+
+   if (pattern.empty()) {
+      return;
+   }
+
+   wxFileNameWrapper ff;
+
+   for(size_t i = 0; i < pathList.size(); i++) {
+      ff = pathList[i] + wxFILE_SEP_PATH + pattern;
+      wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
+   }
+}
+
+#if defined(__WXMSW__)
+wxCharBuffer FileNames::mFilename;
+
+//
+// On Windows, wxString::mb_str() can return a NULL pointer if the
+// conversion to multi-byte fails.  So, based on direction intent,
+// returns a pointer to an empty string or prompts for a NEW name.
+//
+char *FileNames::VerifyFilename(const wxString &s, bool input)
+{
+   static wxCharBuffer buf;
+   wxString name = s;
+
+   if (input) {
+      if ((char *) (const char *)name.mb_str() == NULL) {
+         name = wxEmptyString;
+      }
+   }
+   else {
+      wxFileName ff(name);
+      wxString ext;
+      while ((char *) (const char *)name.mb_str() == NULL) {
+         AudacityMessageBox(_("The specified filename could not be converted due to Unicode character use."));
+
+         ext = ff.GetExt();
+         name = FileNames::SelectFile(FileNames::Operation::_None,
+                             _("Specify New Filename:"),
+                             wxEmptyString,
+                             name,
+                             ext,
+                             wxT("*.") + ext,
+                             wxFD_SAVE | wxRESIZE_BORDER,
+                             wxGetTopLevelParent(NULL));
+      }
+   }
+
+   mFilename = name.mb_str();
+
+   return (char *) (const char *) mFilename;
+}
+#endif

@@ -26,8 +26,8 @@ UndoManager
 #include <wx/hashset.h>
 
 #include "BlockFile.h"
+#include "Clipboard.h"
 #include "Diags.h"
-#include "Project.h"
 #include "Sequence.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"          // temp
@@ -141,7 +141,7 @@ void UndoManager::CalculateSpaceUsage()
    }
 
    mClipboardSpaceUsage = CalculateUsage(
-      *AudacityProject::GetClipboardTracks(), nullptr);
+      Clipboard::Get().GetTracks(), nullptr);
 
    //TIMER_STOP( space_calc );
 }

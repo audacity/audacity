@@ -484,6 +484,24 @@ namespace SelectActions {
 
 // exported helper functions
 
+void SelectNone( AudacityProject &project )
+{
+   for (auto t : project.GetTracks()->Any())
+      t->SetSelected(false);
+
+   project.GetTrackPanel()->Refresh(false);
+}
+
+// Select the full time range, if no
+// time range is selected.
+void SelectAllIfNone( AudacityProject &project )
+{
+   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   if(!(flags & TracksSelectedFlag) ||
+      (project.GetViewInfo().selectedRegion.isPoint()))
+      DoSelectAllAudio( project );
+}
+
 void DoListSelection
 (AudacityProject &project, Track *t, bool shift, bool ctrl, bool modifyState)
 {
@@ -535,6 +553,7 @@ void DoSelectSomething(AudacityProject &project)
 
 struct Handler
    : CommandHandlerObject // MUST be the first base class!
+   , ClientData::Base
    , PrefsListener
 {
 
@@ -549,7 +568,7 @@ void OnSelectNone(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    selectedRegion.collapseToT0();
-   project.SelectNone();
+   SelectNone( project );
    project.ModifyState(false);
 }
 
@@ -1115,12 +1134,12 @@ Handler()
 
 // Handler is stateful.  Needs a factory registered with
 // AudacityProject.
-static const AudacityProject::RegisteredAttachedObjectFactory factory{ []{
-   return std::make_unique< SelectActions::Handler >();
-} };
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) {
+      return std::make_unique< SelectActions::Handler >(); } };
+
 static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
-   return static_cast<SelectActions::Handler&>(
-      project.GetAttachedObject(factory));
+   return project.AttachedObjects::Get< SelectActions::Handler >( key );
 };
 
 // Menu definitions

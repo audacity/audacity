@@ -25,6 +25,7 @@ This class now lists
 
 #include "../Project.h"
 #include "CommandManager.h"
+#include "CommandTargets.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
 #include "../TrackPanel.h"
@@ -35,7 +36,6 @@ This class now lists
 #include "CommandContext.h"
 
 #include "SelectCommand.h"
-#include "../Project.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
@@ -120,7 +120,7 @@ bool GetInfoCommand::Apply(const CommandContext &context)
    if( mFormat == kLisp )
    {
       CommandContext LispyContext( 
-         *(context.GetProject()), 
+         context.project,
          std::make_unique<LispifiedCommandOutputTargets>( *context.pOutput.get() )
          );
       return ApplyInner( LispyContext );
@@ -129,7 +129,7 @@ bool GetInfoCommand::Apply(const CommandContext &context)
    if( mFormat == kBrief )
    {
       CommandContext BriefContext( 
-         *(context.GetProject()), 
+         context.project,
          std::make_unique<BriefCommandOutputTargets>( *context.pOutput.get() )
          );
       return ApplyInner( BriefContext );
@@ -158,7 +158,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
 
 bool GetInfoCommand::SendMenus(const CommandContext &context)
 {
-   wxMenuBar * pBar = context.GetProject()->GetMenuBar();
+   wxMenuBar * pBar = context.project.GetMenuBar();
    if(!pBar ){
       wxLogDebug("No menus");
       return false;
@@ -417,10 +417,10 @@ wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
 bool GetInfoCommand::SendPreferences(const CommandContext &context)
 {
    context.StartArray();
-   GlobalPrefsDialog dialog( context.GetProject() );
+   GlobalPrefsDialog dialog( &context.project );
    // wxCommandEvent Evt;
    //dialog.Show();
-   wxWindow * pWin = context.GetProject();
+   wxWindow * pWin = &context.project;
    ShuttleGuiGetDefinition S(pWin, *((context.pOutput)->mStatusTarget) );
    dialog.ShuttleAll( S );
    context.EndArray();
@@ -453,7 +453,7 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
 bool GetInfoCommand::SendBoxes(const CommandContext &context)
 {
    //context.Status("Boxes");
-   wxWindow * pWin = context.GetProject();
+   wxWindow * pWin = &context.project;
 
    context.StartArray();
    wxRect R = pWin->GetScreenRect();
@@ -482,11 +482,11 @@ bool GetInfoCommand::SendBoxes(const CommandContext &context)
 
 bool GetInfoCommand::SendTracks(const CommandContext & context)
 {
-   TrackList *projTracks = context.GetProject()->GetTracks();
+   TrackList *projTracks = context.project.GetTracks();
    context.StartArray();
    for (auto trk : projTracks->Leaders())
    {
-      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      TrackPanel *panel = context.project.GetTrackPanel();
       Track * fTrack = panel->GetFocusedTrack();
 
       context.StartStruct();
@@ -529,7 +529,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
 
 bool GetInfoCommand::SendClips(const CommandContext &context)
 {
-   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackList *tracks = context.project.GetTracks();
    int i=0;
    context.StartArray();
    for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
@@ -551,7 +551,7 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
 
 bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 {
-   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackList *tracks = context.project.GetTracks();
    int i=0;
    int j=0;
    context.StartArray();
@@ -588,7 +588,7 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 
 bool GetInfoCommand::SendLabels(const CommandContext &context)
 {
-   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackList *tracks = context.project.GetTracks();
    int i=0;
    context.StartArray();
    for (auto t : tracks->Leaders()) {
@@ -639,7 +639,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
    if( !pMenu )
       return;
 
-   CommandManager * pMan = context.GetProject()->GetCommandManager();
+   CommandManager * pMan = context.project.GetCommandManager();
 
    wxMenuItemList list = pMenu->GetMenuItems();
    size_t lcnt = list.size();
@@ -713,7 +713,7 @@ void GetInfoCommand::ExploreAdornments( const CommandContext &context,
 void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    wxPoint P, wxWindow * pWin, int WXUNUSED(Id), int depth )
 {
-   AudacityProject * pProj = context.GetProject();
+   AudacityProject * pProj = &context.project;
    TrackPanel * pTP = pProj->GetTrackPanel();
 
    wxRect trackRect = pWin->GetRect();

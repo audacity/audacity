@@ -28,6 +28,7 @@ public:
    void Update(int newIndicatorX) { mNewIndicatorX = newIndicatorX; }
 
 private:
+   unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 

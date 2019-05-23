@@ -29,6 +29,8 @@ with changes in the SelectionBar.
 #include "../Audacity.h"
 #include "SelectionBar.h"
 
+#include "SelectionBarListener.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -51,8 +53,8 @@ with changes in the SelectionBar.
 #include "../widgets/AButton.h"
 #include "../AudioIO.h"
 #include "../AColor.h"
+#include "../KeyboardCapture.h"
 #include "../Prefs.h"
-#include "../Project.h"
 #include "../Snap.h"
 #include "../AllThemeResources.h"
 
@@ -130,6 +132,7 @@ SelectionBar::~SelectionBar()
 void SelectionBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
+   UpdatePrefs();
 }
 
 
@@ -502,7 +505,8 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    // Save format name before recreating the controls so they resize properly
    {
       auto format = mStartTime->GetBuiltinName(index);
-      mListener->AS_SetSelectionFormat(format);
+      if (mListener)
+         mListener->AS_SetSelectionFormat(format);
    }
 
    RegenerateTooltips();
@@ -699,15 +703,7 @@ void SelectionBar::UpdateRates()
 
 void SelectionBar::OnFocus(wxFocusEvent &event)
 {
-   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      AudacityProject::ReleaseKeyboard(this);
-   }
-   else {
-      AudacityProject::CaptureKeyboard(this);
-   }
-
-   Refresh(false);
-   event.Skip();
+   KeyboardCapture::OnFocus( *this, event );
 }
 
 void SelectionBar::OnCaptureKey(wxCommandEvent &event)

@@ -2124,7 +2124,6 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 // two files at some later date.
 #include "../extnpanel-src/GuiWaveTrack.h"
 #endif
-#include "./widgets/AttachableScrollBar.h"
 
 ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
    ShuttleGuiBase( pParent, ShuttleMode )
@@ -2184,6 +2183,8 @@ GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
 #endif
 }
 
+//#include "./widgets/AttachableScrollBar.h"
+#if 0
 AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
 {
    UseUpId();
@@ -2203,6 +2204,7 @@ AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
    UpdateSizers();
    return pAttachableScrollBar;
 }
+#endif
 
 std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 {

@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../Project.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../toolbars/ToolsToolBar.h"
 

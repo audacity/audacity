@@ -89,7 +89,7 @@
 #include "../Project.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024

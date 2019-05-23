@@ -43,7 +43,8 @@ of the BlockFile system.
 #include "Prefs.h"
 
 #include "FileNames.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/wxPanelWrapper.h"
 
 class BenchmarkDialog final : public wxDialogWrapper
 {
@@ -359,7 +360,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    HoldPrint(true);
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
-   auto dd = std::make_shared<DirManager>();
+   auto dd = DirManager::Create();
    const auto t = TrackFactory{ dd, &zoomInfo }.NewWaveTrack(int16Sample);
 
    t->SetRate(1);

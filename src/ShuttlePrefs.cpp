@@ -29,7 +29,6 @@
 
 #include <wx/defs.h>
 
-#include "Project.h"
 #include "WrappedType.h"
 #include "Prefs.h"
 

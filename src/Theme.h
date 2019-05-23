@@ -102,7 +102,6 @@ public:
 
 public:
    virtual void EnsureInitialised()=0;
-   virtual void ApplyUpdatedImages()=0;
    void LoadTheme( teThemeType Theme );
    void RegisterImage( int &iIndex,char const** pXpm, const wxString & Name);
    void RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name );
@@ -165,7 +164,6 @@ public:
    ~Theme(void);
 public:
    void EnsureInitialised() override;
-   void ApplyUpdatedImages() override;
    void RegisterImages();
    void RegisterColours();
    bool mbInitialised;

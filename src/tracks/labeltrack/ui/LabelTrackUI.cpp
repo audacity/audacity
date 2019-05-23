@@ -18,7 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/SelectHandle.h"
 
 #include "../../../HitTestResult.h"
-#include "../../../Project.h"
 #include "../../../TrackPanelMouseEvent.h"
 
 std::vector<UIHandlePtr> LabelTrack::DetailedHitTest

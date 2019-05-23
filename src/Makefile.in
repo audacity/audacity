@@ -297,31 +297,37 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
 	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
 	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CellularPanel.cpp CellularPanel.h Dependencies.cpp \
-	Dependencies.h DeviceChange.cpp DeviceChange.h \
-	DeviceManager.cpp DeviceManager.h Diags.cpp Diags.h \
-	Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h \
-	FFT.cpp FFT.h FileException.cpp FileException.h FileIO.cpp \
-	FileIO.h FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
-	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
-	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
-	ImageManipulation.h InconsistencyException.cpp \
-	InconsistencyException.h InterpolateAudio.cpp \
-	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
-	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
-	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
-	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
-	Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h Mix.cpp Mix.h \
-	MixerBoard.cpp MixerBoard.h ModuleManager.cpp ModuleManager.h \
-	NumberScale.h PitchName.cpp PitchName.h \
+	CellularPanel.cpp CellularPanel.h ClientData.h \
+	ClientDataHelpers.h Clipboard.cpp Clipboard.h CrashReport.cpp \
+	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
+	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
+	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
+	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
+	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
+	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
+	ImageManipulation.cpp ImageManipulation.h \
+	InconsistencyException.cpp InconsistencyException.h \
+	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
+	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
+	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
+	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
+	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
+	Matrix.h MemoryX.h Menus.cpp Menus.h \
+	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
-	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h \
-	Resample.cpp Resample.h RevisionIdent.h RingBuffer.cpp \
-	RingBuffer.h Screenshot.cpp Screenshot.h SelectedRegion.cpp \
+	Profiler.cpp Profiler.h Project.cpp Project.h \
+	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
+	ProjectFSCK.cpp ProjectFSCK.h RealFFTf.cpp RealFFTf.h \
+	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
+	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
+	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
 	SelectedRegion.h SelectionState.cpp SelectionState.h \
-	Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
+	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
 	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
@@ -546,6 +552,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	tracks/ui/ZoomHandle.h widgets/AButton.cpp widgets/AButton.h \
 	widgets/ASlider.cpp widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp widgets/AttachableScrollBar.h \
+	widgets/AudacityMessageBox.cpp widgets/AudacityMessageBox.h \
 	widgets/BackedPanel.cpp widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp widgets/ErrorDialog.h \
 	widgets/ExpandingToolBar.cpp widgets/ExpandingToolBar.h \
@@ -633,6 +640,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-BatchCommands.$(OBJEXT) \
 	audacity-BatchProcessDialog.$(OBJEXT) \
 	audacity-Benchmark.$(OBJEXT) audacity-CellularPanel.$(OBJEXT) \
+	audacity-Clipboard.$(OBJEXT) audacity-CrashReport.$(OBJEXT) \
 	audacity-Dependencies.$(OBJEXT) \
 	audacity-DeviceChange.$(OBJEXT) \
 	audacity-DeviceManager.$(OBJEXT) audacity-Diags.$(OBJEXT) \
@@ -644,21 +652,25 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ImageManipulation.$(OBJEXT) \
 	audacity-InconsistencyException.$(OBJEXT) \
 	audacity-InterpolateAudio.$(OBJEXT) \
+	audacity-KeyboardCapture.$(OBJEXT) \
 	audacity-LabelDialog.$(OBJEXT) audacity-LabelTrack.$(OBJEXT) \
 	audacity-LangChoice.$(OBJEXT) audacity-Languages.$(OBJEXT) \
 	audacity-Legacy.$(OBJEXT) audacity-Lyrics.$(OBJEXT) \
 	audacity-LyricsWindow.$(OBJEXT) audacity-Matrix.$(OBJEXT) \
-	audacity-Menus.$(OBJEXT) audacity-Mix.$(OBJEXT) \
-	audacity-MixerBoard.$(OBJEXT) audacity-ModuleManager.$(OBJEXT) \
-	audacity-PitchName.$(OBJEXT) \
+	audacity-Menus.$(OBJEXT) \
+	audacity-MissingAliasFileDialog.$(OBJEXT) \
+	audacity-Mix.$(OBJEXT) audacity-MixerBoard.$(OBJEXT) \
+	audacity-ModuleManager.$(OBJEXT) audacity-PitchName.$(OBJEXT) \
 	audacity-PlatformCompatibility.$(OBJEXT) \
 	audacity-PluginManager.$(OBJEXT) audacity-Printing.$(OBJEXT) \
 	audacity-Profiler.$(OBJEXT) audacity-Project.$(OBJEXT) \
-	audacity-RealFFTf.$(OBJEXT) audacity-RealFFTf48x.$(OBJEXT) \
-	audacity-Resample.$(OBJEXT) audacity-RingBuffer.$(OBJEXT) \
-	audacity-Screenshot.$(OBJEXT) \
+	audacity-ProjectFileIORegistry.$(OBJEXT) \
+	audacity-ProjectFSCK.$(OBJEXT) audacity-RealFFTf.$(OBJEXT) \
+	audacity-RealFFTf48x.$(OBJEXT) audacity-Resample.$(OBJEXT) \
+	audacity-RingBuffer.$(OBJEXT) audacity-Screenshot.$(OBJEXT) \
 	audacity-SelectedRegion.$(OBJEXT) \
 	audacity-SelectionState.$(OBJEXT) audacity-Shuttle.$(OBJEXT) \
+	audacity-ShuttleGetDefinition.$(OBJEXT) \
 	audacity-ShuttleGui.$(OBJEXT) audacity-ShuttlePrefs.$(OBJEXT) \
 	audacity-Snap.$(OBJEXT) \
 	audacity-SoundActivatedRecord.$(OBJEXT) \
@@ -874,6 +886,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	widgets/audacity-AButton.$(OBJEXT) \
 	widgets/audacity-ASlider.$(OBJEXT) \
 	widgets/audacity-AttachableScrollBar.$(OBJEXT) \
+	widgets/audacity-AudacityMessageBox.$(OBJEXT) \
 	widgets/audacity-BackedPanel.$(OBJEXT) \
 	widgets/audacity-ErrorDialog.$(OBJEXT) \
 	widgets/audacity-ExpandingToolBar.$(OBJEXT) \
@@ -1243,7 +1256,6 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -1347,31 +1359,37 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
 	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
 	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CellularPanel.cpp CellularPanel.h Dependencies.cpp \
-	Dependencies.h DeviceChange.cpp DeviceChange.h \
-	DeviceManager.cpp DeviceManager.h Diags.cpp Diags.h \
-	Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h \
-	FFT.cpp FFT.h FileException.cpp FileException.h FileIO.cpp \
-	FileIO.h FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
-	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
-	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
-	ImageManipulation.h InconsistencyException.cpp \
-	InconsistencyException.h InterpolateAudio.cpp \
-	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
-	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
-	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
-	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
-	Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h Mix.cpp Mix.h \
-	MixerBoard.cpp MixerBoard.h ModuleManager.cpp ModuleManager.h \
-	NumberScale.h PitchName.cpp PitchName.h \
+	CellularPanel.cpp CellularPanel.h ClientData.h \
+	ClientDataHelpers.h Clipboard.cpp Clipboard.h CrashReport.cpp \
+	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
+	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
+	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
+	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
+	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
+	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
+	ImageManipulation.cpp ImageManipulation.h \
+	InconsistencyException.cpp InconsistencyException.h \
+	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
+	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
+	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
+	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
+	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
+	Matrix.h MemoryX.h Menus.cpp Menus.h \
+	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
-	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h \
-	Resample.cpp Resample.h RevisionIdent.h RingBuffer.cpp \
-	RingBuffer.h Screenshot.cpp Screenshot.h SelectedRegion.cpp \
+	Profiler.cpp Profiler.h Project.cpp Project.h \
+	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
+	ProjectFSCK.cpp ProjectFSCK.h RealFFTf.cpp RealFFTf.h \
+	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
+	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
+	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
 	SelectedRegion.h SelectionState.cpp SelectionState.h \
-	Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
+	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
 	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
@@ -1597,6 +1615,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	tracks/ui/ZoomHandle.h widgets/AButton.cpp widgets/AButton.h \
 	widgets/ASlider.cpp widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp widgets/AttachableScrollBar.h \
+	widgets/AudacityMessageBox.cpp widgets/AudacityMessageBox.h \
 	widgets/BackedPanel.cpp widgets/BackedPanel.h \
 	widgets/ErrorDialog.cpp widgets/ErrorDialog.h \
 	widgets/ExpandingToolBar.cpp widgets/ExpandingToolBar.h \
@@ -2315,6 +2334,8 @@ widgets/audacity-ASlider.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-AttachableScrollBar.$(OBJEXT):  \
 	widgets/$(am__dirstamp) widgets/$(DEPDIR)/$(am__dirstamp)
+widgets/audacity-AudacityMessageBox.$(OBJEXT):  \
+	widgets/$(am__dirstamp) widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-BackedPanel.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-ErrorDialog.$(OBJEXT): widgets/$(am__dirstamp) \
@@ -2492,6 +2513,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Benchmark.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-CellularPanel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Clipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-CrashReport.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Dependencies.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceChange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceManager.Po@am__quote@
@@ -2512,6 +2535,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-InconsistencyException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Internat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-InterpolateAudio.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-KeyboardCapture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LabelDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LabelTrack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LangChoice.Po@am__quote@
@@ -2521,6 +2545,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LyricsWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Matrix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Menus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-MissingAliasFileDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Mix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-MixerBoard.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ModuleManager.Po@am__quote@
@@ -2532,6 +2557,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Printing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Profiler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Project.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFSCK.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileIORegistry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RealFFTf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RealFFTf48x.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Resample.Po@am__quote@
@@ -2542,6 +2569,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SelectionState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Sequence.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Shuttle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ShuttleGetDefinition.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ShuttleGui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ShuttlePrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Snap.Po@am__quote@
@@ -2808,6 +2836,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AButton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ASlider.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AttachableScrollBar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AudacityMessageBox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-BackedPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ErrorDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ExpandingToolBar.Po@am__quote@
@@ -3399,6 +3428,34 @@ audacity-CellularPanel.obj: CellularPanel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-CellularPanel.obj `if test -f 'CellularPanel.cpp'; then $(CYGPATH_W) 'CellularPanel.cpp'; else $(CYGPATH_W) '$(srcdir)/CellularPanel.cpp'; fi`
 
+audacity-Clipboard.o: Clipboard.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Clipboard.o -MD -MP -MF $(DEPDIR)/audacity-Clipboard.Tpo -c -o audacity-Clipboard.o `test -f 'Clipboard.cpp' || echo '$(srcdir)/'`Clipboard.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-Clipboard.Tpo $(DEPDIR)/audacity-Clipboard.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Clipboard.cpp' object='audacity-Clipboard.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Clipboard.o `test -f 'Clipboard.cpp' || echo '$(srcdir)/'`Clipboard.cpp
+
+audacity-Clipboard.obj: Clipboard.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Clipboard.obj -MD -MP -MF $(DEPDIR)/audacity-Clipboard.Tpo -c -o audacity-Clipboard.obj `if test -f 'Clipboard.cpp'; then $(CYGPATH_W) 'Clipboard.cpp'; else $(CYGPATH_W) '$(srcdir)/Clipboard.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-Clipboard.Tpo $(DEPDIR)/audacity-Clipboard.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Clipboard.cpp' object='audacity-Clipboard.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Clipboard.obj `if test -f 'Clipboard.cpp'; then $(CYGPATH_W) 'Clipboard.cpp'; else $(CYGPATH_W) '$(srcdir)/Clipboard.cpp'; fi`
+
+audacity-CrashReport.o: CrashReport.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-CrashReport.o -MD -MP -MF $(DEPDIR)/audacity-CrashReport.Tpo -c -o audacity-CrashReport.o `test -f 'CrashReport.cpp' || echo '$(srcdir)/'`CrashReport.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-CrashReport.Tpo $(DEPDIR)/audacity-CrashReport.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CrashReport.cpp' object='audacity-CrashReport.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-CrashReport.o `test -f 'CrashReport.cpp' || echo '$(srcdir)/'`CrashReport.cpp
+
+audacity-CrashReport.obj: CrashReport.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-CrashReport.obj -MD -MP -MF $(DEPDIR)/audacity-CrashReport.Tpo -c -o audacity-CrashReport.obj `if test -f 'CrashReport.cpp'; then $(CYGPATH_W) 'CrashReport.cpp'; else $(CYGPATH_W) '$(srcdir)/CrashReport.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-CrashReport.Tpo $(DEPDIR)/audacity-CrashReport.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CrashReport.cpp' object='audacity-CrashReport.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-CrashReport.obj `if test -f 'CrashReport.cpp'; then $(CYGPATH_W) 'CrashReport.cpp'; else $(CYGPATH_W) '$(srcdir)/CrashReport.cpp'; fi`
+
 audacity-Dependencies.o: Dependencies.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Dependencies.o -MD -MP -MF $(DEPDIR)/audacity-Dependencies.Tpo -c -o audacity-Dependencies.o `test -f 'Dependencies.cpp' || echo '$(srcdir)/'`Dependencies.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-Dependencies.Tpo $(DEPDIR)/audacity-Dependencies.Po
@@ -3623,6 +3680,20 @@ audacity-InterpolateAudio.obj: InterpolateAudio.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-InterpolateAudio.obj `if test -f 'InterpolateAudio.cpp'; then $(CYGPATH_W) 'InterpolateAudio.cpp'; else $(CYGPATH_W) '$(srcdir)/InterpolateAudio.cpp'; fi`
 
+audacity-KeyboardCapture.o: KeyboardCapture.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-KeyboardCapture.o -MD -MP -MF $(DEPDIR)/audacity-KeyboardCapture.Tpo -c -o audacity-KeyboardCapture.o `test -f 'KeyboardCapture.cpp' || echo '$(srcdir)/'`KeyboardCapture.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-KeyboardCapture.Tpo $(DEPDIR)/audacity-KeyboardCapture.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='KeyboardCapture.cpp' object='audacity-KeyboardCapture.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-KeyboardCapture.o `test -f 'KeyboardCapture.cpp' || echo '$(srcdir)/'`KeyboardCapture.cpp
+
+audacity-KeyboardCapture.obj: KeyboardCapture.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-KeyboardCapture.obj -MD -MP -MF $(DEPDIR)/audacity-KeyboardCapture.Tpo -c -o audacity-KeyboardCapture.obj `if test -f 'KeyboardCapture.cpp'; then $(CYGPATH_W) 'KeyboardCapture.cpp'; else $(CYGPATH_W) '$(srcdir)/KeyboardCapture.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-KeyboardCapture.Tpo $(DEPDIR)/audacity-KeyboardCapture.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='KeyboardCapture.cpp' object='audacity-KeyboardCapture.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-KeyboardCapture.obj `if test -f 'KeyboardCapture.cpp'; then $(CYGPATH_W) 'KeyboardCapture.cpp'; else $(CYGPATH_W) '$(srcdir)/KeyboardCapture.cpp'; fi`
+
 audacity-LabelDialog.o: LabelDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-LabelDialog.o -MD -MP -MF $(DEPDIR)/audacity-LabelDialog.Tpo -c -o audacity-LabelDialog.o `test -f 'LabelDialog.cpp' || echo '$(srcdir)/'`LabelDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-LabelDialog.Tpo $(DEPDIR)/audacity-LabelDialog.Po
@@ -3748,6 +3819,20 @@ audacity-Menus.obj: Menus.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Menus.cpp' object='audacity-Menus.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Menus.obj `if test -f 'Menus.cpp'; then $(CYGPATH_W) 'Menus.cpp'; else $(CYGPATH_W) '$(srcdir)/Menus.cpp'; fi`
+
+audacity-MissingAliasFileDialog.o: MissingAliasFileDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-MissingAliasFileDialog.o -MD -MP -MF $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo -c -o audacity-MissingAliasFileDialog.o `test -f 'MissingAliasFileDialog.cpp' || echo '$(srcdir)/'`MissingAliasFileDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo $(DEPDIR)/audacity-MissingAliasFileDialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='MissingAliasFileDialog.cpp' object='audacity-MissingAliasFileDialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-MissingAliasFileDialog.o `test -f 'MissingAliasFileDialog.cpp' || echo '$(srcdir)/'`MissingAliasFileDialog.cpp
+
+audacity-MissingAliasFileDialog.obj: MissingAliasFileDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-MissingAliasFileDialog.obj -MD -MP -MF $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo -c -o audacity-MissingAliasFileDialog.obj `if test -f 'MissingAliasFileDialog.cpp'; then $(CYGPATH_W) 'MissingAliasFileDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/MissingAliasFileDialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-MissingAliasFileDialog.Tpo $(DEPDIR)/audacity-MissingAliasFileDialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='MissingAliasFileDialog.cpp' object='audacity-MissingAliasFileDialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-MissingAliasFileDialog.obj `if test -f 'MissingAliasFileDialog.cpp'; then $(CYGPATH_W) 'MissingAliasFileDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/MissingAliasFileDialog.cpp'; fi`
 
 audacity-Mix.o: Mix.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Mix.o -MD -MP -MF $(DEPDIR)/audacity-Mix.Tpo -c -o audacity-Mix.o `test -f 'Mix.cpp' || echo '$(srcdir)/'`Mix.cpp
@@ -3875,6 +3960,34 @@ audacity-Project.obj: Project.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Project.obj `if test -f 'Project.cpp'; then $(CYGPATH_W) 'Project.cpp'; else $(CYGPATH_W) '$(srcdir)/Project.cpp'; fi`
 
+audacity-ProjectFileIORegistry.o: ProjectFileIORegistry.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFileIORegistry.o -MD -MP -MF $(DEPDIR)/audacity-ProjectFileIORegistry.Tpo -c -o audacity-ProjectFileIORegistry.o `test -f 'ProjectFileIORegistry.cpp' || echo '$(srcdir)/'`ProjectFileIORegistry.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectFileIORegistry.Tpo $(DEPDIR)/audacity-ProjectFileIORegistry.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFileIORegistry.cpp' object='audacity-ProjectFileIORegistry.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFileIORegistry.o `test -f 'ProjectFileIORegistry.cpp' || echo '$(srcdir)/'`ProjectFileIORegistry.cpp
+
+audacity-ProjectFileIORegistry.obj: ProjectFileIORegistry.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFileIORegistry.obj -MD -MP -MF $(DEPDIR)/audacity-ProjectFileIORegistry.Tpo -c -o audacity-ProjectFileIORegistry.obj `if test -f 'ProjectFileIORegistry.cpp'; then $(CYGPATH_W) 'ProjectFileIORegistry.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFileIORegistry.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectFileIORegistry.Tpo $(DEPDIR)/audacity-ProjectFileIORegistry.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFileIORegistry.cpp' object='audacity-ProjectFileIORegistry.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFileIORegistry.obj `if test -f 'ProjectFileIORegistry.cpp'; then $(CYGPATH_W) 'ProjectFileIORegistry.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFileIORegistry.cpp'; fi`
+
+audacity-ProjectFSCK.o: ProjectFSCK.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFSCK.o -MD -MP -MF $(DEPDIR)/audacity-ProjectFSCK.Tpo -c -o audacity-ProjectFSCK.o `test -f 'ProjectFSCK.cpp' || echo '$(srcdir)/'`ProjectFSCK.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectFSCK.Tpo $(DEPDIR)/audacity-ProjectFSCK.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFSCK.cpp' object='audacity-ProjectFSCK.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFSCK.o `test -f 'ProjectFSCK.cpp' || echo '$(srcdir)/'`ProjectFSCK.cpp
+
+audacity-ProjectFSCK.obj: ProjectFSCK.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFSCK.obj -MD -MP -MF $(DEPDIR)/audacity-ProjectFSCK.Tpo -c -o audacity-ProjectFSCK.obj `if test -f 'ProjectFSCK.cpp'; then $(CYGPATH_W) 'ProjectFSCK.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFSCK.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectFSCK.Tpo $(DEPDIR)/audacity-ProjectFSCK.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFSCK.cpp' object='audacity-ProjectFSCK.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFSCK.obj `if test -f 'ProjectFSCK.cpp'; then $(CYGPATH_W) 'ProjectFSCK.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFSCK.cpp'; fi`
+
 audacity-RealFFTf.o: RealFFTf.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-RealFFTf.o -MD -MP -MF $(DEPDIR)/audacity-RealFFTf.Tpo -c -o audacity-RealFFTf.o `test -f 'RealFFTf.cpp' || echo '$(srcdir)/'`RealFFTf.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-RealFFTf.Tpo $(DEPDIR)/audacity-RealFFTf.Po
@@ -3986,6 +4099,20 @@ audacity-Shuttle.obj: Shuttle.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Shuttle.cpp' object='audacity-Shuttle.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Shuttle.obj `if test -f 'Shuttle.cpp'; then $(CYGPATH_W) 'Shuttle.cpp'; else $(CYGPATH_W) '$(srcdir)/Shuttle.cpp'; fi`
+
+audacity-ShuttleGetDefinition.o: ShuttleGetDefinition.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ShuttleGetDefinition.o -MD -MP -MF $(DEPDIR)/audacity-ShuttleGetDefinition.Tpo -c -o audacity-ShuttleGetDefinition.o `test -f 'ShuttleGetDefinition.cpp' || echo '$(srcdir)/'`ShuttleGetDefinition.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ShuttleGetDefinition.Tpo $(DEPDIR)/audacity-ShuttleGetDefinition.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ShuttleGetDefinition.cpp' object='audacity-ShuttleGetDefinition.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ShuttleGetDefinition.o `test -f 'ShuttleGetDefinition.cpp' || echo '$(srcdir)/'`ShuttleGetDefinition.cpp
+
+audacity-ShuttleGetDefinition.obj: ShuttleGetDefinition.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ShuttleGetDefinition.obj -MD -MP -MF $(DEPDIR)/audacity-ShuttleGetDefinition.Tpo -c -o audacity-ShuttleGetDefinition.obj `if test -f 'ShuttleGetDefinition.cpp'; then $(CYGPATH_W) 'ShuttleGetDefinition.cpp'; else $(CYGPATH_W) '$(srcdir)/ShuttleGetDefinition.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ShuttleGetDefinition.Tpo $(DEPDIR)/audacity-ShuttleGetDefinition.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ShuttleGetDefinition.cpp' object='audacity-ShuttleGetDefinition.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ShuttleGetDefinition.obj `if test -f 'ShuttleGetDefinition.cpp'; then $(CYGPATH_W) 'ShuttleGetDefinition.cpp'; else $(CYGPATH_W) '$(srcdir)/ShuttleGetDefinition.cpp'; fi`
 
 audacity-ShuttleGui.o: ShuttleGui.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ShuttleGui.o -MD -MP -MF $(DEPDIR)/audacity-ShuttleGui.Tpo -c -o audacity-ShuttleGui.o `test -f 'ShuttleGui.cpp' || echo '$(srcdir)/'`ShuttleGui.cpp
@@ -7136,6 +7263,20 @@ widgets/audacity-AttachableScrollBar.obj: widgets/AttachableScrollBar.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/AttachableScrollBar.cpp' object='widgets/audacity-AttachableScrollBar.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-AttachableScrollBar.obj `if test -f 'widgets/AttachableScrollBar.cpp'; then $(CYGPATH_W) 'widgets/AttachableScrollBar.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/AttachableScrollBar.cpp'; fi`
+
+widgets/audacity-AudacityMessageBox.o: widgets/AudacityMessageBox.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-AudacityMessageBox.o -MD -MP -MF widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo -c -o widgets/audacity-AudacityMessageBox.o `test -f 'widgets/AudacityMessageBox.cpp' || echo '$(srcdir)/'`widgets/AudacityMessageBox.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo widgets/$(DEPDIR)/audacity-AudacityMessageBox.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/AudacityMessageBox.cpp' object='widgets/audacity-AudacityMessageBox.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-AudacityMessageBox.o `test -f 'widgets/AudacityMessageBox.cpp' || echo '$(srcdir)/'`widgets/AudacityMessageBox.cpp
+
+widgets/audacity-AudacityMessageBox.obj: widgets/AudacityMessageBox.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-AudacityMessageBox.obj -MD -MP -MF widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo -c -o widgets/audacity-AudacityMessageBox.obj `if test -f 'widgets/AudacityMessageBox.cpp'; then $(CYGPATH_W) 'widgets/AudacityMessageBox.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/AudacityMessageBox.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-AudacityMessageBox.Tpo widgets/$(DEPDIR)/audacity-AudacityMessageBox.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/AudacityMessageBox.cpp' object='widgets/audacity-AudacityMessageBox.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-AudacityMessageBox.obj `if test -f 'widgets/AudacityMessageBox.cpp'; then $(CYGPATH_W) 'widgets/AudacityMessageBox.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/AudacityMessageBox.cpp'; fi`
 
 widgets/audacity-BackedPanel.o: widgets/BackedPanel.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-BackedPanel.o -MD -MP -MF widgets/$(DEPDIR)/audacity-BackedPanel.Tpo -c -o widgets/audacity-BackedPanel.o `test -f 'widgets/BackedPanel.cpp' || echo '$(srcdir)/'`widgets/BackedPanel.cpp

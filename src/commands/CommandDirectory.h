@@ -31,17 +31,23 @@ class CommandDirectory
 {
 private:
    static std::unique_ptr<CommandDirectory> mInstance;
-   CommandMap mCmdMap;
+   static CommandMap &sCmdMap();
+
+   static void AddCommand(std::unique_ptr<OldStyleCommandType> type);
 public:
+   /// Register a type of command with the directory with a statically
+   /// constructed instance of this class.
+   struct RegisterType{
+     RegisterType( std::unique_ptr<OldStyleCommandType> type )
+        { AddCommand( std::move( type ) ); }
+   };
+
    ~CommandDirectory();
 
    /// If a command with the given name has been registered in the directory,
    /// return a pointer to the factory for commands of that type.
    /// Otherwise return NULL.
    OldStyleCommandType *LookUp(const wxString &cmdName) const;
-
-   /// Register a type of command with the directory.
-   void AddCommand(std::unique_ptr<OldStyleCommandType> &&type);
 
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();
