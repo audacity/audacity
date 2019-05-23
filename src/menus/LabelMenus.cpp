@@ -5,6 +5,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../TrackPanel.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -17,9 +18,9 @@ int DoAddLabel(
    AudacityProject &project, const SelectedRegion &region,
    bool preserveFocus = false)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
 
    wxString title;      // of label
 
@@ -36,13 +37,13 @@ int DoAddLabel(
 
    // Look for a label track at or after the focused track
    auto iter = pFocusedTrack
-      ? tracks->Find(pFocusedTrack)
-      : tracks->Any().begin();
+      ? tracks.Find(pFocusedTrack)
+      : tracks.Any().begin();
    auto lt = * iter.Filter< LabelTrack >();
 
    // If none found, start a NEW label track and use it
    if (!lt)
-      lt = tracks->Add(trackFactory->NewLabelTrack());
+      lt = tracks.Add( trackFactory.NewLabelTrack() );
 
 // LLL: Commented as it seemed a little forceful to remove users
 //      selection when adding the label.  This does not happen if
@@ -257,7 +258,7 @@ void OnEditLabels(const CommandContext &context)
 void OnAddLabel(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    DoAddLabel(project, selectedRegion);
 }
@@ -279,27 +280,26 @@ void OnAddLabelPlaying(const CommandContext &context)
 void OnPasteNewLabel(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    bool bPastedSomething = false;
 
    {
-      auto trackRange = tracks->Selected< const LabelTrack >();
+      auto trackRange = tracks.Selected< const LabelTrack >();
       if (trackRange.empty())
       {
          // If there are no selected label tracks, try to choose the first label
          // track after some other selected track
-         Track *t = *tracks->Selected().begin()
+         Track *t = *tracks.Selected().begin()
             .Filter( &Track::Any )
             .Filter<LabelTrack>();
 
          // If no match found, add one
-         if (!t) {
-            t = tracks->Add(trackFactory->NewLabelTrack());
-         }
+         if (!t)
+            t = tracks.Add( trackFactory.NewLabelTrack() );
 
          // Select this track so the loop picks it up
          t->SetSelected(true);
@@ -307,7 +307,7 @@ void OnPasteNewLabel(const CommandContext &context)
    }
 
    LabelTrack *plt = NULL; // the previous track
-   for ( auto lt : tracks->Selected< LabelTrack >() )
+   for ( auto lt : tracks.Selected< LabelTrack >() )
    {
       // Unselect the last label, so we'll have just one active label when
       // we're done
@@ -353,8 +353,8 @@ void OnToggleTypeToCreateLabel(const CommandContext &WXUNUSED(context) )
 void OnCutLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
      return;
@@ -385,8 +385,8 @@ void OnCutLabels(const CommandContext &context)
 void OnDeleteLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;
@@ -407,8 +407,8 @@ void OnDeleteLabels(const CommandContext &context)
 void OnSplitCutLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;
@@ -429,8 +429,8 @@ void OnSplitCutLabels(const CommandContext &context)
 void OnSplitDeleteLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;
@@ -452,8 +452,8 @@ void OnSilenceLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;
@@ -473,8 +473,8 @@ void OnCopyLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;
@@ -492,8 +492,8 @@ void OnCopyLabels(const CommandContext &context)
 void OnSplitLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Split, false );
 
@@ -510,8 +510,8 @@ void OnSplitLabels(const CommandContext &context)
 void OnJoinLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;
@@ -531,8 +531,8 @@ void OnJoinLabels(const CommandContext &context)
 void OnDisjoinLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = *project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( selectedRegion.isPoint() )
       return;

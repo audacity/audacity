@@ -14,6 +14,7 @@
 #include "../UndoManager.h"
 #include "../WaveClip.h"
 #include "../prefs/RecordingPrefs.h"
+#include "../ViewInfo.h"
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
@@ -132,11 +133,11 @@ void DoPlayStop(const CommandContext &context)
 
 void DoMoveToLabel(AudacityProject &project, bool next)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
    // Find the number of label tracks, and ptr to last track found
-   auto trackRange = tracks->Any<LabelTrack>();
+   auto trackRange = tracks.Any<LabelTrack>();
    auto lt = *trackRange.rbegin();
    auto nLabelTrack = trackRange.size();
 
@@ -146,7 +147,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
       lt =
-         *tracks->Find(trackPanel->GetFocusedTrack()).Filter<LabelTrack>();
+         *tracks.Find(trackPanel->GetFocusedTrack()).Filter<LabelTrack>();
       if (!lt)
          trackPanel->MessageForScreenReader(
             _("no label track at or below focused track"));
@@ -154,7 +155,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
    // If there is a single label track, or there is a label track at or below
    // the focused track
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    if (lt) {
       int i;
       if (next)
@@ -196,7 +197,7 @@ namespace TransportActions {
 // Stop playing or recording, if paused.
 void StopIfPaused( AudacityProject &project )
 {
-   auto flags = GetMenuManager( project ).GetUpdateFlags( project );
+   auto flags = MenuManager::Get( project ).GetUpdateFlags( project );
    if( flags & PausedFlag )
       DoStop( project );
 }
@@ -205,9 +206,9 @@ bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
 {
    auto toolbar = project.GetControlToolBar();
-   auto &scrubber = project.GetScrubber();
+   auto &scrubber = Scrubber::Get( project );
    auto token = project.GetAudioIOToken();
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
 
    //If busy, stop playing, make sure everything is unpaused.
@@ -295,12 +296,12 @@ void DoRecord( AudacityProject &project )
 
 void DoLockPlayRegion( AudacityProject &project )
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto ruler = project.GetRulerPanel();
 
    double start, end;
    project.GetPlayRegion(&start, &end);
-   if (start >= tracks->GetEndTime()) {
+   if (start >= tracks.GetEndTime()) {
        AudacityMessageBox(_("Cannot lock region beyond\nend of project."),
                     _("Error"));
    }
@@ -334,7 +335,7 @@ void DoTogglePinnedHead( AudacityProject &project )
       // Update button image
       ruler->UpdateButtonStates();
 
-   auto &scrubber = project.GetScrubber();
+   auto &scrubber = Scrubber::Get( project );
    if (scrubber.HasMark())
       scrubber.SetScrollScrubbing(value);
 }
@@ -399,7 +400,7 @@ void OnRecord2ndChoice(const CommandContext &context)
 void OnTimerRecord(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &undoManager = *project.GetUndoManager();
+   auto &undoManager = UndoManager::Get( project );
 
    // MY: Due to improvements in how Timer Recording saves and/or exports
    // it is now safer to disable Timer Recording when there is more than
@@ -416,7 +417,7 @@ void OnTimerRecord(const CommandContext &context)
    // preventing issues surrounding "dirty" projects when Automatic Save/Export
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
-       (project.GetTracks()->Any() || project.EmptyCanBeDirty())) {
+       (TrackList::Get( project ).Any() || project.EmptyCanBeDirty())) {
       AudacityMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);
@@ -435,7 +436,7 @@ void OnTimerRecord(const CommandContext &context)
    int modalResult = dialog.ShowModal();
    if (modalResult == wxID_CANCEL)
    {
-      // Cancelled before recording - don't need to do anyting.
+      // Cancelled before recording - don't need to do anything.
    }
    else
    {
@@ -493,7 +494,7 @@ void OnTimerRecord(const CommandContext &context)
 void OnPunchAndRoll(const CommandContext &context)
 {
    AudacityProject &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
 
    static const auto url =
       wxT("Punch_and_Roll_Record#Using_Punch_and_Roll_Record");
@@ -589,7 +590,8 @@ void OnPunchAndRoll(const CommandContext &context)
    const auto duplex = ControlToolBar::UseDuplex();
    if (duplex)
       // play all
-      transportTracks = GetAllPlaybackTracks(*project.GetTracks(), false, true);
+      transportTracks =
+         GetAllPlaybackTracks( TrackList::Get( project ), false, true);
    else
       // play recording tracks only
       std::copy(tracks.begin(), tracks.end(),
@@ -727,7 +729,7 @@ void OnPlayToSelection(const CommandContext &context)
       return;
 
    auto trackPanel = project.GetTrackPanel();
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double pos = trackPanel->GetMostRecentXPos();
@@ -773,7 +775,7 @@ void OnPlayBeforeSelectionStart(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double t0 = selectedRegion.t0();
@@ -794,7 +796,7 @@ void OnPlayAfterSelectionStart(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double t0 = selectedRegion.t0();
@@ -821,7 +823,7 @@ void OnPlayBeforeSelectionEnd(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double t0 = selectedRegion.t0();
@@ -849,7 +851,7 @@ void OnPlayAfterSelectionEnd(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double t1 = selectedRegion.t1();
@@ -871,7 +873,7 @@ void OnPlayBeforeAndAfterSelectionStart
    if (!MakeReadyToPlay(project))
       return;
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double t0 = selectedRegion.t0();
@@ -902,7 +904,7 @@ void OnPlayBeforeAndAfterSelectionEnd
    if (!MakeReadyToPlay(project))
       return;
 
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
    double t0 = selectedRegion.t0();
@@ -1108,7 +1110,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
       ),
 
       // Scrubbing sub-menu
-      project.GetScrubber().Menu(),
+      Scrubber::Get( project ).Menu(),
 
       CursorMenu,
 

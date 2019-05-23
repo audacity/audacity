@@ -847,7 +847,7 @@ void ToolBar::SetButtonToolTip
    wxString result;
    const auto project = GetActiveProject();
    const auto commandManager =
-      project ? project->GetCommandManager() : nullptr;
+      project ? &CommandManager::Get( *project ) : nullptr;
    if (commandManager)
       result =
          commandManager->DescribeCommandsAndShortcuts(commands, nCommands);

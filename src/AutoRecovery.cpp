@@ -289,7 +289,7 @@ RecordingRecoveryHandler::RecordingRecoveryHandler(AudacityProject* proj)
 
 int RecordingRecoveryHandler::FindTrack() const
 {
-   WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+   WaveTrackArray tracks = TrackList::Get( *mProject ).GetWaveTrackArray(false);
    int index;
    if (mAutoSaveIdent)
    {
@@ -322,7 +322,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+      WaveTrackArray tracks = TrackList::Get( *mProject ).GetWaveTrackArray(false);
       int index = FindTrack();
       // We need to find the track and sequence where the blockfile belongs
 
@@ -338,14 +338,14 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       Sequence* seq = clip->GetSequence();
 
       // Load the blockfile from the XML
-      const auto &dirManager = mProject->GetDirManager();
-      dirManager->SetLoadingFormat(seq->GetSampleFormat());
+      auto &dirManager = DirManager::Get( *mProject );
+      dirManager.SetLoadingFormat(seq->GetSampleFormat());
 
       BlockFilePtr blockFile;
-      dirManager->SetLoadingTarget(
+      dirManager.SetLoadingTarget(
          [&]() -> BlockFilePtr& { return blockFile; } );
 
-      if (!dirManager->HandleXMLTag(tag, attrs) || !blockFile)
+      if (!dirManager.HandleXMLTag(tag, attrs) || !blockFile)
       {
          // This should only happen if there is a bug
          wxASSERT(false);
@@ -408,7 +408,7 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
       // Still in inner loop
       return;
 
-   WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
+   WaveTrackArray tracks = TrackList::Get( *mProject ).GetWaveTrackArray(false);
    int index = FindTrack();
    // We need to find the track and sequence where the blockfile belongs
 

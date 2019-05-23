@@ -37,6 +37,7 @@
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UIHandle.h"
+#include "ViewInfo.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
@@ -195,14 +196,15 @@ AdornedRulerPanel *AdornedRulerPanel::QuickPlayRulerOverlay::GetRuler() const
 void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 {
    const auto project = mPartner.mProject;
+   auto &scrubber = Scrubber::Get( *project );
    auto ruler = GetRuler();
 
    // Hide during transport, or if mouse is not in the ruler, unless scrubbing
    if ((!ruler->LastCell() || project->IsAudioActive())
-       && (!project->GetScrubber().IsScrubbing() || project->GetScrubber().IsSpeedPlaying()))
+       && (!scrubber.IsScrubbing() || scrubber.IsSpeedPlaying()))
       mNewQPIndicatorPos = -1;
    else {
-      const auto &selectedRegion = project->GetViewInfo().selectedRegion;
+      const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
       double latestEnd =
          std::max(ruler->mTracks->GetEndTime(), selectedRegion.t1());
       if (ruler->mQuickPlayPos >= latestEnd)
@@ -214,7 +216,6 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 
          // These determine which shape is drawn on the ruler, and whether
          // in the scrub or the qp zone
-         const auto &scrubber = mPartner.mProject->GetScrubber();
          mNewScrub =
             ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
             (ruler->LastCell() == ruler->mScrubbingCell ||
@@ -226,7 +227,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
          // the track panel, green for scrub or yellow for snapped or white
          mNewPreviewingScrub =
             ruler->LastCell() == ruler->mScrubbingCell &&
-            !project->GetScrubber().IsScrubbing();
+            !scrubber.IsScrubbing();
          mNewQPIndicatorSnapped = ruler->mIsSnapped;
       }
    }
@@ -724,7 +725,7 @@ private:
       auto result = CommonRulerHandle::Click(event, pProject);
       if (!( result & RefreshCode::Cancelled )) {
          if (mClicked == Button::Left) {
-            auto &scrubber = pProject->GetScrubber();
+            auto &scrubber = Scrubber::Get( *pProject );
             // only if scrubbing is allowed now
             bool canScrub =
                scrubber.CanScrub() &&
@@ -775,7 +776,7 @@ private:
       auto result = CommonRulerHandle::Cancel(pProject);
 
       if (mClicked == Button::Left) {
-         auto &scrubber = pProject->GetScrubber();
+         auto &scrubber = Scrubber::Get( *pProject );
          scrubber.Cancel();
          
          auto ctb = pProject->GetControlToolBar();
@@ -876,7 +877,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( Ruler::TimeFormat );
 
-   mTracks = project->GetTracks();
+   mTracks = &TrackList::Get( *project );
 
    mIsSnapped = false;
 
@@ -1232,7 +1233,7 @@ auto AdornedRulerPanel::QPHandle::Click
          if (!(mParent && mParent->mQuickPlayEnabled))
             return RefreshCode::Cancelled;
 
-         auto &scrubber = pProject->GetScrubber();
+         auto &scrubber = Scrubber::Get( *pProject );
          if(scrubber.HasMark()) {
             // We can't stop scrubbing yet (see comments in Bug 1391),
             // but we can pause it.
@@ -1245,7 +1246,7 @@ auto AdornedRulerPanel::QPHandle::Click
          mParent->mPlayRegionLock =     mParent->mProject->IsPlayRegionLocked();
 
          // Save old selection, in case drag of selection is cancelled
-         mOldSelection = pProject->GetViewInfo().selectedRegion;
+         mOldSelection = ViewInfo::Get( *pProject ).selectedRegion;
 
          mParent->HandleQPClick( event.event, mX );
          mParent->HandleQPDrag( event.event, mX );
@@ -1393,7 +1394,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 -> HitTestPreview
 {
    (void)state;// Compiler food
-   const auto &scrubber = pProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *pProject );
    auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
    return {
@@ -1417,7 +1418,7 @@ auto AdornedRulerPanel::QPHandle::Preview
    }
 
    wxString message;
-   const auto &scrubber = pProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *pProject );
    const bool scrubbing = scrubber.HasMark();
    if (scrubbing)
       // Don't distinguish zones
@@ -1479,7 +1480,8 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
-   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   const auto &selectedRegion = viewInfo.selectedRegion;
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
@@ -1528,7 +1530,7 @@ auto AdornedRulerPanel::QPHandle::Cancel
 
    if (mClicked == Button::Left) {
       if( mParent ) {
-         pProject->GetViewInfo().selectedRegion = mOldSelection;
+         ViewInfo::Get( *pProject ).selectedRegion = mOldSelection;
          mParent->mMouseEventState = mesNone;
          mParent->SetPlayRegion(
             mParent->mOldPlayRegionStart, mParent->mOldPlayRegionEnd);
@@ -1548,7 +1550,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
 {
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
-   const auto &selectedRegion = mProject->GetViewInfo().selectedRegion;
+   auto &viewInfo = ViewInfo::Get( *mProject );
+   const auto &selectedRegion = viewInfo.selectedRegion;
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
@@ -1612,7 +1615,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
 // For example buttons and menus must update.
 void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
 {
-   auto &scrubber = mProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *mProject );
    scrubber.OnToggleScrubRuler(*mProject);
 }
 
@@ -1742,12 +1745,12 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 
 void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
 {
-   auto &scrubber = mProject->GetScrubber();
+   auto &scrubber = Scrubber::Get( *mProject );
    PushEventHandler(&scrubber);
    auto cleanup = finally([this]{ PopEventHandler(); });
 
    wxMenu rulerMenu;
-   mProject->GetScrubber().PopulatePopupMenu(rulerMenu);
+   scrubber.PopulatePopupMenu(rulerMenu);
    PopupMenu(&rulerMenu, pos);
 }
 
@@ -1768,8 +1771,10 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
 
 void AdornedRulerPanel::DragSelection()
 {
-   mViewInfo->selectedRegion.setT0(mPlayRegionStart, false);
-   mViewInfo->selectedRegion.setT1(mPlayRegionEnd, true);
+   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   auto &selectedRegion = viewInfo.selectedRegion;
+   selectedRegion.setT0(mPlayRegionStart, false);
+   selectedRegion.setT1(mPlayRegionEnd, true);
 }
 
 void AdornedRulerPanel::HandleSnapping()

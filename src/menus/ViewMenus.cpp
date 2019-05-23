@@ -8,6 +8,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../TrackPanel.h"
+#include "../ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
@@ -24,7 +25,7 @@ namespace {
 
 double GetZoomOfSelection( const AudacityProject &project )
 {
-   const auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &trackPanel = *project.GetTrackPanel();
 
    const double lowerBound =
@@ -121,8 +122,8 @@ namespace ViewActions {
 
 double GetZoomOfToFit( const AudacityProject &project )
 {
-   const auto &tracks = *project.GetTracks();
-   const auto &viewInfo = project.GetViewInfo();
+   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &trackPanel = *project.GetTrackPanel();
 
    const double end = tracks.GetEndTime();
@@ -142,11 +143,11 @@ double GetZoomOfToFit( const AudacityProject &project )
 
 void DoZoomFit(AudacityProject &project)
 {
-   auto &viewInfo = project.GetViewInfo();
-   auto tracks = project.GetTracks();
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &tracks = TrackList::Get( project );
 
    const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks->GetStartTime(), 0.0)
+      ? std::min(tracks.GetStartTime(), 0.0)
       : 0;
 
    project.Zoom( GetZoomOfToFit( project ) );
@@ -156,10 +157,10 @@ void DoZoomFit(AudacityProject &project)
 void DoZoomFitV(AudacityProject &project)
 {
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
-   auto range = tracks->Any<AudioTrack>() - &Track::GetMinimized;
+   auto range = tracks.Any<AudioTrack>() - &Track::GetMinimized;
    auto count = range.size();
    if (count == 0)
       return;
@@ -171,7 +172,7 @@ void DoZoomFitV(AudacityProject &project)
    
    // The height of minimized and non-audio tracks cannot be apportioned
    height -=
-      tracks->Any().sum( &Track::GetHeight ) - range.sum( &Track::GetHeight );
+      tracks.Any().sum( &Track::GetHeight ) - range.sum( &Track::GetHeight );
    
    // Give each resized track the average of the remaining height
    height = height / count;
@@ -209,7 +210,7 @@ void OnZoomOut(const CommandContext &context)
 void OnZoomSel(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    project.Zoom( GetZoomOfSelection( project ) );
    project.TP_ScrollWindow(selectedRegion.t0());
@@ -218,7 +219,7 @@ void OnZoomSel(const CommandContext &context)
 void OnZoomToggle(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
 //   const double origLeft = viewInfo.h;
@@ -257,21 +258,21 @@ void OnZoomFitV(const CommandContext &context)
 void OnAdvancedVZoom(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool checked = !gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L);
    gPrefs->Write(wxT("/GUI/VerticalZooming"), checked);
    gPrefs->Flush();
-   commandManager->Check(wxT("AdvancedVZoom"), checked);
+   commandManager.Check(wxT("AdvancedVZoom"), checked);
    MenuCreator::RebuildAllMenuBars();
 }
 
 void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
-   for (auto t : tracks->Any())
+   for (auto t : tracks.Any())
       t->SetMinimized(true);
 
    project.ModifyState(true);
@@ -281,9 +282,9 @@ void OnCollapseAllTracks(const CommandContext &context)
 void OnExpandAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
-   for (auto t : tracks->Any())
+   for (auto t : tracks.Any())
       t->SetMinimized(false);
 
    project.ModifyState(true);
@@ -293,7 +294,7 @@ void OnExpandAllTracks(const CommandContext &context)
 void OnGoSelStart(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
    auto &trackPanel = *project.GetTrackPanel();
 
@@ -307,7 +308,7 @@ void OnGoSelStart(const CommandContext &context)
 void OnGoSelEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
    auto &trackPanel = *project.GetTrackPanel();
 
@@ -349,25 +350,25 @@ void OnMixerBoard(const CommandContext &context)
 void OnShowExtraMenus(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool checked = !gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L);
    gPrefs->Write(wxT("/GUI/ShowExtraMenus"), checked);
    gPrefs->Flush();
-   commandManager->Check(wxT("ShowExtraMenus"), checked);
+   commandManager.Check(wxT("ShowExtraMenus"), checked);
    MenuCreator::RebuildAllMenuBars();
 }
 
 void OnShowClipping(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
    bool checked = !gPrefs->Read(wxT("/GUI/ShowClipping"), 0L);
    gPrefs->Write(wxT("/GUI/ShowClipping"), checked);
    gPrefs->Flush();
-   commandManager->Check(wxT("ShowClipping"), checked);
+   commandManager.Check(wxT("ShowClipping"), checked);
 
    wxTheApp->AddPendingEvent(wxCommandEvent{
       EVT_PREFS_UPDATE, ShowClippingPrefsID() });

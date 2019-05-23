@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
@@ -197,6 +198,21 @@ void Scrubber::ScrubPoller::Notify()
    mScrubber.ContinueScrubbingUI();
 }
 
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+  []( AudacityProject &parent ){
+     return std::make_shared< Scrubber >( &parent ); }
+};
+
+Scrubber &Scrubber::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< Scrubber >( key );
+}
+
+const Scrubber &Scrubber::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
 Scrubber::Scrubber(AudacityProject *project)
    : mScrubToken(-1)
    , mPaused(true)
@@ -333,10 +349,10 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
       wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
-         const ViewInfo &viewInfo = mProject->GetViewInfo();
+         auto &viewInfo = ViewInfo::Get( *mProject );
          TrackPanel *const trackPanel = mProject->GetTrackPanel();
          ControlToolBar * const ctb = mProject->GetControlToolBar();
-         double maxTime = mProject->GetTracks()->GetEndTime();
+         double maxTime = TrackList::Get( *mProject ).GetEndTime();
          const int leftOffset = trackPanel->GetLeftOffset();
          double time0 = std::min(maxTime,
             viewInfo.PositionToTime(mScrubStartPosition, leftOffset)
@@ -387,7 +403,8 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
 #endif
             mOptions.minTime = 0;
-            mOptions.maxTime = std::max(0.0, mProject->GetTracks()->GetEndTime());
+            mOptions.maxTime =
+               std::max(0.0, TrackList::Get( *mProject ).GetEndTime());
             mOptions.minStutterTime =
 #ifdef DRAG_SCRUB
                mDragging ? 0.0 :
@@ -470,7 +487,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mOptions.maxSpeed = speed +0.01;
 
    if (time1 == time0)
-      time1 = std::max(0.0, mProject->GetTracks()->GetEndTime());
+      time1 = std::max(0.0, TrackList::Get( *mProject ).GetEndTime());
    mOptions.minTime = 0;
    mOptions.maxTime = time1;
    mOptions.minStutterTime = std::max(0.0, MinStutter);
@@ -547,7 +564,7 @@ void Scrubber::ContinueScrubbingPoll()
       const wxMouseState state(::wxGetMouseState());
       const auto trackPanel = mProject->GetTrackPanel();
       const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
-      const auto &viewInfo = mProject->GetViewInfo();
+      auto &viewInfo = ViewInfo::Get( *mProject );
 #ifdef DRAG_SCRUB
       if (mDragging && mSmoothScrollingScrub) {
          const auto lastTime = gAudioIO->GetLastScrubTime();
@@ -778,7 +795,7 @@ bool Scrubber::ShouldDrawScrubSpeed()
 
 double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
-   ViewInfo &viewInfo = mProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *mProject );
    const double screen =
       mProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
@@ -864,6 +881,14 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
 
 ///////////////////////////////////////////////////////////////////////////////
 // class ScrubbingOverlay is responsible for drawing the speed numbers
+
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< ScrubbingOverlay >( &parent );
+     parent.GetTrackPanel()->AddOverlay( result );
+     return result;
+   }
+};
 
 ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
    : mProject(project)
@@ -969,8 +994,9 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       const double maxScrubSpeed = GetScrubber().GetMaxScrubSpeed();
       const double speed =
          scrubber.IsScrollScrubbing()
-         ? scrubber.FindScrubSpeed
-            (seeking, mProject->GetViewInfo().PositionToTime(position.x, trackPanel->GetLeftOffset()))
+         ? scrubber.FindScrubSpeed( seeking,
+             ViewInfo::Get( *mProject )
+                .PositionToTime(position.x, trackPanel->GetLeftOffset()))
          : maxScrubSpeed;
 
       const wxChar *format =
@@ -1006,12 +1032,12 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
 
 const Scrubber &ScrubbingOverlay::GetScrubber() const
 {
-   return mProject->GetScrubber();
+   return Scrubber::Get( *mProject );
 }
 
 Scrubber &ScrubbingOverlay::GetScrubber()
 {
-   return mProject->GetScrubber();
+   return Scrubber::Get( *mProject );
 }
 
 void Scrubber::DoScrub(bool seek)
@@ -1077,7 +1103,8 @@ void Scrubber::OnSeek(const CommandContext&)
 void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
    mProject->GetRulerPanel()->OnToggleScrubRuler();
-   const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
+   const auto toolbar =
+      ToolManager::Get( *mProject ).GetToolBar( ScrubbingBarID );
    toolbar->EnableDisableButtons();
    CheckMenuItems();
 }
@@ -1142,13 +1169,13 @@ std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
 bool Scrubber::CanScrub() const
 {
    // Return the enabled state for the menu item that really launches the scrub or seek.
-   auto cm = mProject->GetCommandManager();
-   return cm->GetEnabled(menuItems[ 0 ].name);
+   auto &cm = CommandManager::Get( *mProject );
+   return cm.GetEnabled(menuItems[ 0 ].name);
 }
 
 // To supply the "finder" argument
 static CommandHandlerObject &findme(AudacityProject &project)
-{ return project.GetScrubber(); }
+{ return Scrubber::Get( project ); }
 
 MenuTable::BaseItemPtr Scrubber::Menu()
 {
@@ -1175,9 +1202,9 @@ MenuTable::BaseItemPtr Scrubber::Menu()
 void Scrubber::PopulatePopupMenu(wxMenu &menu)
 {
    int id = CMD_ID;
-   auto cm = mProject->GetCommandManager();
+   auto &cm = CommandManager::Get( *mProject );
    for (const auto &item : menuItems) {
-      if (cm->GetEnabled(item.name)) {
+      if (cm.GetEnabled(item.name)) {
          auto test = item.StatusTest;
          menu.Append(id, wxGetTranslation(item.label), wxString{},
                      test ? wxITEM_CHECK : wxITEM_NORMAL);
@@ -1190,11 +1217,11 @@ void Scrubber::PopulatePopupMenu(wxMenu &menu)
 
 void Scrubber::CheckMenuItems()
 {
-   auto cm = mProject->GetCommandManager();
+   auto &cm = CommandManager::Get( *mProject );
    for (const auto &item : menuItems) {
       auto test = item.StatusTest;
       if (test)
-         cm->Check(item.name, (this->*test)());
+         cm.Check(item.name, (this->*test)());
    }
 }
 

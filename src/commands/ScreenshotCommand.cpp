@@ -38,6 +38,7 @@ small calculations of rectangles.
 #include "../Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "../Track.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 
@@ -432,7 +433,7 @@ void ScreenshotCommand::CapturePreferences(
    AudacityProject * pProject, const wxString &FileName ){
    (void)&FileName;//compiler food.
    (void)&context;
-   CommandManager * pMan = pProject->GetCommandManager();
+   CommandManager &commandManager = CommandManager::Get( *pProject );
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
@@ -451,7 +452,7 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
-      if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !commandManager.HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          // using GET in a log message for devs' eyes only
          wxLogDebug("Command %s not found", Command.GET() );
@@ -595,7 +596,7 @@ void ScreenshotCommand::CaptureScriptables(
 void ScreenshotCommand::CaptureCommands( 
    const CommandContext & context, const wxArrayStringEx & Commands ){
    AudacityProject * pProject = &context.project;
-   CommandManager * pMan = pProject->GetCommandManager();
+   CommandManager &manager = CommandManager::Get( *pProject );
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
@@ -611,7 +612,7 @@ void ScreenshotCommand::CaptureCommands(
       SetIdleHandler( IdleHandler );
       Str = Commands[i];
       const CommandContext projectContext( *pProject );
-      if( !pMan->HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !manager.HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Str);
       }
@@ -782,7 +783,7 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
    };
 
    int count = 0;
-   for (auto t : pProj->GetTracks()->Leaders()) {
+   for (auto t : TrackList::Get( *pProj ).Leaders()) {
       count +=  1;
       if( count > n )
       {
@@ -807,7 +808,7 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    GetDerivedParams();
    //Don't reset the toolbars to a known state.
    //We will be capturing variations of them.
-   //context.project.GetToolManager()->Reset();
+   //ToolManager::Get( context.project ).Reset();
 
    wxTopLevelWindow *w = GetFrontWindow(&context.project);
    if (!w)
@@ -816,13 +817,15 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    TrackPanel *panel = context.project.GetTrackPanel();
    AdornedRulerPanel *ruler = panel->mRuler;
 
-   int nTracks = context.project.GetTracks()->size();
+   int nTracks = TrackList::Get( context.project ).size();
 
    int x1,y1,x2,y2;
    w->ClientToScreen(&x1, &y1);
    panel->ClientToScreen(&x2, &y2);
 
    wxPoint p( x2-x1, y2-y1);
+
+   auto &toolManager = ToolManager::Get( context.project );
 
    switch (mCaptureMode) {
    case kwindow:
@@ -833,7 +836,7 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    case kfullscreen:
       return Capture(context, mFileName, w,GetScreenRect());
    case ktoolbars:
-      return CaptureDock(context, context.project.GetToolManager()->GetTopDock(), mFileName);
+      return CaptureDock(context, toolManager.GetTopDock(), mFileName);
    case kscriptables:
       CaptureScriptables(context, &context.project, mFileName);
       break;
@@ -844,29 +847,29 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       CapturePreferences(context, &context.project, mFileName);
       break;
    case kselectionbar:
-      return CaptureToolbar(context, context.project.GetToolManager(), SelectionBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, SelectionBarID, mFileName);
    case kspectralselection:
-      return CaptureToolbar(context, context.project.GetToolManager(), SpectralSelectionBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, SpectralSelectionBarID, mFileName);
    case ktools:
-      return CaptureToolbar(context, context.project.GetToolManager(), ToolsBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, ToolsBarID, mFileName);
    case ktransport:
-      return CaptureToolbar(context, context.project.GetToolManager(), TransportBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, TransportBarID, mFileName);
    case kmixer:
-      return CaptureToolbar(context, context.project.GetToolManager(), MixerBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, MixerBarID, mFileName);
    case kmeter:
-      return CaptureToolbar(context, context.project.GetToolManager(), MeterBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, MeterBarID, mFileName);
    case krecordmeter:
-      return CaptureToolbar(context, context.project.GetToolManager(), RecordMeterBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, RecordMeterBarID, mFileName);
    case kplaymeter:
-      return CaptureToolbar(context, context.project.GetToolManager(), PlayMeterBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, PlayMeterBarID, mFileName);
    case kedit:
-      return CaptureToolbar(context, context.project.GetToolManager(), EditBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, EditBarID, mFileName);
    case kdevice:
-      return CaptureToolbar(context, context.project.GetToolManager(), DeviceBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, DeviceBarID, mFileName);
    case ktranscription:
-      return CaptureToolbar(context, context.project.GetToolManager(), TranscriptionBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, TranscriptionBarID, mFileName);
    case kscrub:
-      return CaptureToolbar(context, context.project.GetToolManager(), ScrubbingBarID, mFileName);
+      return CaptureToolbar(context, &toolManager, ScrubbingBarID, mFileName);
    case ktrackpanel:
       return Capture(context, mFileName, panel, GetPanelRect(panel));
    case kruler:

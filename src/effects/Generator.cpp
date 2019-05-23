@@ -18,6 +18,7 @@
 
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 
 #include "TimeWarper.h"
@@ -78,7 +79,7 @@ bool Generator::Process()
                tmp->Flush();
                StepTimeWarper warper{
                   mT0+GetDuration(), GetDuration()-(mT1-mT0) };
-               const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+               const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
                track->ClearAndPaste(
                   selectedRegion.t0(), selectedRegion.t1(),
                   &*tmp, true, false, &warper);

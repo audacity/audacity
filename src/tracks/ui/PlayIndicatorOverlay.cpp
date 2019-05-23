@@ -15,7 +15,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 #include "Scrubbing.h"
 #include "../../toolbars/ControlToolBar.h"
 
@@ -113,6 +115,14 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(false);
 }
 
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< PlayIndicatorOverlay >( &parent );
+     parent.GetTrackPanel()->AddOverlay( result );
+     return result;
+   }
+};
+
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
@@ -142,7 +152,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
       mNewIsCapturing = false;
-      const auto &scrubber = mProject->GetScrubber();
+      const auto &scrubber = Scrubber::Get( *mProject );
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
          const auto offset = trackPanel->GetLeftOffset();
@@ -152,7 +162,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       }
    }
    else {
-      ViewInfo &viewInfo = mProject->GetViewInfo();
+      const auto &viewInfo = ViewInfo::Get( *mProject );
 
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;

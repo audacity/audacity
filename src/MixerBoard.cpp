@@ -904,30 +904,30 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
       */
 
    mPrevT1 = 0.0;
-   mTracks = mProject->GetTracks();
+   mTracks = &TrackList::Get( *mProject );
 
    // Events from the project don't propagate directly to this other frame, so...
    mProject->Bind(EVT_TRACK_PANEL_TIMER,
       &MixerBoard::OnTimer,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
+   mTracks->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
       &MixerBoard::OnTrackChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_PERMUTED,
+   mTracks->Bind(EVT_TRACKLIST_PERMUTED,
       &MixerBoard::OnTrackSetChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_ADDITION,
+   mTracks->Bind(EVT_TRACKLIST_ADDITION,
       &MixerBoard::OnTrackSetChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_DELETION,
+   mTracks->Bind(EVT_TRACKLIST_DELETION,
       &MixerBoard::OnTrackSetChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
+   mTracks->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
       &MixerBoard::OnTrackChanged,
       this);
 
@@ -1457,7 +1457,8 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
 {
    AudacityProject *project = GetActiveProject();
-   project->GetCommandManager()->FilterKeyEvent(project, event, true);
+   auto &commandManager = CommandManager::Get( *project );
+   commandManager.FilterKeyEvent(project, event, true);
 }
 
 void MixerBoardFrame::Recreate( AudacityProject *pProject )

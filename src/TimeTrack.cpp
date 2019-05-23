@@ -29,6 +29,7 @@
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "TrackArtist.h"
+#include "ViewInfo.h"
 #include "AllThemeResources.h"
 
 //TODO-MB: are these sensible values?
@@ -43,8 +44,8 @@ std::shared_ptr<TimeTrack> TrackFactory::NewTimeTrack()
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "timetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = *project.GetTrackFactory();
-      auto &tracks = *project.GetTracks();
+      auto &trackFactory = TrackFactory::Get( project );
+      auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewTimeTrack());
    }
 };

@@ -44,6 +44,7 @@
 #include "../LabelTrack.h"
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../SelectionState.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
@@ -127,12 +128,12 @@ END_EVENT_TABLE()
 
 ExportMultiple::ExportMultiple(AudacityProject *project)
 : wxDialogWrapper(project, wxID_ANY, wxString(_("Export Multiple")))
-, mSelectionState{ project->GetSelectionState() }
+, mSelectionState{ SelectionState::Get( *project ) }
 {
    SetName(GetTitle());
 
    mProject = project;
-   mTracks = project->GetTracks();
+   mTracks = &TrackList::Get( *project );
    // Construct an array of non-owning pointers
    for (const auto &plugin : mExporter.GetPlugins())
       mPlugins.push_back(plugin.get());
@@ -732,7 +733,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
 
          /* do the metadata for this file */
          // copy project metadata to start with
-         setting.filetags = *(mProject->GetTags());
+         setting.filetags = Tags::Get( *mProject );
          // over-ride with values
          setting.filetags.SetTag(TAG_TITLE, title);
          setting.filetags.SetTag(TAG_TRACK, l+1);
@@ -849,7 +850,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 
          /* do the metadata for this file */
          // copy project metadata to start with
-         setting.filetags = *(mProject->GetTags());
+         setting.filetags = Tags::Get( *mProject );
          // over-ride with values
          setting.filetags.SetTag(TAG_TITLE, title);
          setting.filetags.SetTag(TAG_TRACK, l+1);
@@ -925,7 +926,7 @@ ProgressResult ExportMultiple::DoExport(std::unique_ptr<ProgressDialog> &pDialog
    wxFileName backup;
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
-      if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
+      if (!DirManager::Get( *mProject ).EnsureSafeFilename(inName)) {
          return ProgressResult::Cancelled;
       }
       name = inName;

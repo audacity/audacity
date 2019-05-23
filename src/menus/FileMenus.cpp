@@ -10,6 +10,7 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -30,13 +31,13 @@ namespace {
 void DoExport
 (AudacityProject &project, const wxString & Format )
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Exporter e;
 
    MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
-   double t1 = tracks->GetEndTime();
+   double t1 = tracks.GetEndTime();
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired =
@@ -110,7 +111,7 @@ namespace FileActions {
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const FilePath &fileName)
 {
-   auto tracks = pProject->GetTracks();
+   auto &tracks = TrackList::Get( *pProject );
 
    AudacityProject *pNewProject {};
    if ( !pProject )
@@ -118,12 +119,12 @@ AudacityProject *DoImportMIDI(
    auto cleanup = finally( [&]
       { if ( pNewProject ) pNewProject->Close(true); } );
 
-   auto newTrack = pProject->GetTrackFactory()->NewNoteTrack();
+   auto newTrack = TrackFactory::Get( *pProject ).NewNoteTrack();
 
    if (::ImportMIDI(fileName, newTrack.get())) {
 
       SelectActions::SelectNone( *pProject );
-      auto pTrack = tracks->Add( newTrack );
+      auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
 
       pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
@@ -229,7 +230,7 @@ void OnExportAudio(const CommandContext &context)
 void OnExportSelection(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    Exporter e;
 
    MissingAliasFilesDialog::SetShouldShow(true);
@@ -241,11 +242,11 @@ void OnExportSelection(const CommandContext &context)
 void OnExportLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
-   auto trackRange = tracks->Any<const LabelTrack>();
+   auto trackRange = tracks.Any<const LabelTrack>();
    auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {
@@ -312,11 +313,11 @@ void OnExportMultiple(const CommandContext &context)
 void OnExportMIDI(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    // Make sure that there is
    // exactly one NoteTrack selected.
-   const auto range = tracks->Selected< const NoteTrack >();
+   const auto range = tracks.Selected< const NoteTrack >();
    const auto numNoteTracksSelected = range.size();
 
    if(numNoteTracksSelected > 1) {
@@ -438,8 +439,8 @@ void OnImport(const CommandContext &context)
 void OnImportLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackFactory = project.GetTrackFactory();
-   auto tracks = project.GetTracks();
+   auto &trackFactory = TrackFactory::Get( project );
+   auto &tracks = TrackList::Get( project );
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
@@ -461,7 +462,7 @@ void OnImportLabels(const CommandContext &context)
          return;
       }
 
-      auto newTrack = trackFactory->NewLabelTrack();
+      auto newTrack = trackFactory.NewLabelTrack();
       wxString sTrackName;
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
@@ -470,7 +471,7 @@ void OnImportLabels(const CommandContext &context)
 
       SelectActions::SelectNone( project );
       newTrack->SetSelected(true);
-      tracks->Add( newTrack );
+      tracks.Add( newTrack );
 
       project.PushState(wxString::
                 Format(_("Imported labels from '%s'"), fileName),
@@ -501,7 +502,7 @@ void OnImportMIDI(const CommandContext &context)
 void OnImportRaw(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
@@ -518,7 +519,7 @@ void OnImportRaw(const CommandContext &context)
 
    TrackHolders newTracks;
 
-   ::ImportRaw(&project, fileName, trackFactory, newTracks);
+   ::ImportRaw(&project, fileName, &trackFactory, newTracks);
 
    if (newTracks.size() <= 0)
       return;
@@ -537,8 +538,8 @@ void OnPrint(const CommandContext &context)
 {
    auto &project = context.project;
    auto name = project.GetProjectName();
-   auto tracks = project.GetTracks();
-   HandlePrint(&project, name, tracks, *project.GetTrackPanel());
+   auto &tracks = TrackList::Get( project );
+   HandlePrint(&project, name, &tracks, *project.GetTrackPanel());
 }
 
 void OnExit(const CommandContext &WXUNUSED(context) )

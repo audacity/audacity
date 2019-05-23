@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../commands/CommandType.h"
 #include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
+#include "../../Track.h"
 #include "../../widgets/PopupMenuTable.h"
 
 
@@ -121,12 +122,12 @@ void TrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
    Track *const pTrack = mpData->pTrack;
 
-   TrackList *const tracks = GetActiveProject()->GetTracks();
+   const auto &tracks = TrackList::Get( *GetActiveProject() );
 
-   pMenu->Enable(OnMoveUpID, tracks->CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveDownID, tracks->CanMoveDown(pTrack));
-   pMenu->Enable(OnMoveTopID, tracks->CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveBottomID, tracks->CanMoveDown(pTrack));
+   pMenu->Enable(OnMoveUpID, tracks.CanMoveUp(pTrack));
+   pMenu->Enable(OnMoveDownID, tracks.CanMoveDown(pTrack));
+   pMenu->Enable(OnMoveTopID, tracks.CanMoveUp(pTrack));
+   pMenu->Enable(OnMoveBottomID, tracks.CanMoveDown(pTrack));
 }
 
 BEGIN_POPUP_MENU(TrackMenuTable)
@@ -138,28 +139,28 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       // functions.
       OnMoveUpID,
       _("Move Track &Up") + wxT("\t") +
-         (GetActiveProject()->GetCommandManager()->
+         (CommandManager::Get( *GetActiveProject() ).
           // using GET to compose menu item name for wxWidgets
           GetKeyFromName(wxT("TrackMoveUp")).GET()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveDownID,
       _("Move Track &Down") + wxT("\t") +
-         (GetActiveProject()->GetCommandManager()->
+         (CommandManager::Get( *GetActiveProject() ).
           // using GET to compose menu item name for wxWidgets
           GetKeyFromName(wxT("TrackMoveDown")).GET()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveTopID,
       _("Move Track to &Top") + wxT("\t") +
-         (GetActiveProject()->GetCommandManager()->
+         (CommandManager::Get( *GetActiveProject() ).
           // using GET to compose menu item name for wxWidgets
           GetKeyFromName(wxT("TrackMoveTop")).GET()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveBottomID,
       _("Move Track to &Bottom") + wxT("\t") +
-         (GetActiveProject()->GetCommandManager()->
+         (CommandManager::Get( *GetActiveProject() ).
           // using GET to compose menu item name for wxWidgets
           GetKeyFromName(wxT("TrackMoveBottom")).GET()),
       OnMoveTrack)

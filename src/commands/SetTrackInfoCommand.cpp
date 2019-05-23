@@ -94,8 +94,8 @@ bool SetTrackBase::Apply(const CommandContext & context  )
 {
    long i = 0;// track counter
    long j = 0;// channel counter
-   auto tracks = context.project.GetTracks();
-   for ( auto t : tracks->Leaders() )
+   auto &tracks = TrackList::Get( context.project );
+   for ( auto t : tracks.Leaders() )
    {
       auto channels = TrackList::Channels(t);
       for ( auto channel : channels ) {

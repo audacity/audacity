@@ -52,6 +52,7 @@
 #include <vector>
 #include <wx/event.h> // to declare custom event types
 #include "ondemand/ODTaskThread.h"
+#include "ClientData.h"
 #include "SelectedRegion.h"
 
 // Events emitted by UndoManager for the use of listeners
@@ -67,6 +68,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_MODIFIED, wxCommandEvent);
 // contents did not change other than the pointer to current state
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_RESET, wxCommandEvent);
 
+class AudacityProject;
 class Tags;
 class Track;
 class TrackList;
@@ -102,8 +104,14 @@ inline UndoPush operator | (UndoPush a, UndoPush b)
 inline UndoPush operator & (UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
-class AUDACITY_DLL_API UndoManager : public wxEvtHandler {
+class AUDACITY_DLL_API UndoManager
+   : public wxEvtHandler
+   , public ClientData::Base
+{
  public:
+   static UndoManager &Get( AudacityProject &project );
+   static const UndoManager &Get( const AudacityProject &project );
+ 
    UndoManager();
    ~UndoManager();
 

@@ -40,6 +40,7 @@ explicitly code all three.
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../effects/Effect.h"
+#include "../ViewInfo.h"
 #include "CommandContext.h"
 
 
@@ -98,11 +99,11 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       mRelativeTo = 0;
 
    AudacityProject * p = &context.project;
-   double end = p->GetTracks()->GetEndTime();
+   double end = TrackList::Get( *p ).GetEndTime();
    double t0;
    double t1;
 
-   const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
    switch( bHasRelativeSpec ? mRelativeTo : 0 ){
    default:
    case 0: //project start
@@ -131,7 +132,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       break;
    }
 
-   p->mViewInfo.selectedRegion.setTimes( t0, t1);
+   selectedRegion.setTimes( t0, t1 );
    return true;
 }
 
@@ -214,7 +215,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    // Used to invalidate cached selection and tracks.
    Effect::IncEffectCounter();
    int index = 0;
-   TrackList *tracks = context.project.GetTracks();
+   auto &tracks = TrackList::Get( context.project );
 
    // Defaults if no value...
    if( !bHasNumTracks ) 
@@ -226,7 +227,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    double last = mFirstTrack+mNumTracks;
    double first = mFirstTrack;
 
-   for (auto t : tracks->Leaders()) {
+   for (auto t : tracks.Leaders()) {
       auto channels = TrackList::Channels(t);
       double term = 0.0;
       // Add 0.01 so we are free of rounding errors in comparisons.

@@ -135,7 +135,7 @@ void ODTask::DoSome(float amountWork)
          if(IsTaskAssociatedWithProject(gAudacityProjects[i].get()))
          {
             //mark the changes so that the project can be resaved.
-            gAudacityProjects[i]->GetUndoManager()->SetODChangesFlag();
+            UndoManager::Get( *gAudacityProjects[i] ).SetODChangesFlag();
             break;
          }
       }
@@ -161,7 +161,7 @@ void ODTask::DoSome(float amountWork)
             //this assumes tasks are only associated with one project.
             gAudacityProjects[i]->GetEventHandler()->AddPendingEvent(event);
             //mark the changes so that the project can be resaved.
-            gAudacityProjects[i]->GetUndoManager()->SetODChangesFlag();
+            UndoManager::Get( *gAudacityProjects[i] ).SetODChangesFlag();
             break;
          }
       }
@@ -175,7 +175,7 @@ void ODTask::DoSome(float amountWork)
 
 bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
 {
-   for (auto tr : proj->GetTracks()->Any<const WaveTrack>())
+   for (auto tr : TrackList::Get( *proj ).Any<const WaveTrack>())
    {
       //go over all tracks in the project
       //look inside our task's track list for one that matches this projects one.

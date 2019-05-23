@@ -20,6 +20,7 @@
 #include <functional>
 #include <wx/longlong.h>
 
+#include "ClientData.h"
 #include "SampleFormat.h"
 #include "tracks/ui/CommonTrackPanelCell.h"
 #include "xml/XMLTagHandler.h"
@@ -1158,8 +1159,11 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 /** \brief TrackList is a flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, plus serialization of the list of tracks.
  */
-class TrackList final : public wxEvtHandler, public ListOfTracks
+class TrackList final
+   : public wxEvtHandler
+   , public ListOfTracks
    , public std::enable_shared_from_this<TrackList>
+   , public ClientData::Base
 {
    // privatize this, make you use Add instead:
    using ListOfTracks::push_back;
@@ -1178,6 +1182,9 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    void clear() = delete;
 
  public:
+   static TrackList &Get( AudacityProject &project );
+   static const TrackList &Get( const AudacityProject &project );
+ 
    // Create an empty TrackList
    // Don't call directly -- use Create() instead
    TrackList();
@@ -1613,15 +1620,22 @@ private:
    std::vector< Updater > mUpdaters;
 };
 
-class AUDACITY_DLL_API TrackFactory
+class AUDACITY_DLL_API TrackFactory final
+   : public ClientData::Base
 {
- private:
+ public:
+   static TrackFactory &Get( AudacityProject &project );
+   static const TrackFactory &Get( const AudacityProject &project );
+   static TrackFactory &Reset( AudacityProject &project );
+   static void Destroy( AudacityProject &project );
+
    TrackFactory(const std::shared_ptr<DirManager> &dirManager, const ZoomInfo *zoomInfo):
       mDirManager(dirManager)
       , mZoomInfo(zoomInfo)
    {
    }
 
+ private:
    const std::shared_ptr<DirManager> mDirManager;
    const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;

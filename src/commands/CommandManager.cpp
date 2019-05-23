@@ -152,6 +152,23 @@ SubMenuListEntry::~SubMenuListEntry()
 }
 
 ///
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) {
+      return std::make_unique<CommandManager>();
+   }
+};
+
+CommandManager &CommandManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< CommandManager >( key );
+}
+
+const CommandManager &CommandManager::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+///
 ///  Standard Constructor
 ///
 CommandManager::CommandManager():
@@ -1139,7 +1156,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   auto flags = GetMenuManager(*project).GetUpdateFlags(*project);
+   auto flags = MenuManager::Get(*project).GetUpdateFlags(*project);
 
    wxKeyEvent temp = evt;
 
@@ -1231,7 +1248,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
       bool allowed =
-         GetMenuManager(*proj).ReportIfActionNotAllowed( *proj,
+         MenuManager::Get(*proj).ReportIfActionNotAllowed( *proj,
             NiceName, flags, entry->flags, combinedMask );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
@@ -1642,8 +1659,8 @@ static struct InstallHandlers
       KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
          // Capture handler window didn't want it, so ask the CommandManager.
          AudacityProject *project = GetActiveProject();
-         CommandManager *manager = project->GetCommandManager();
-         return manager && manager->FilterKeyEvent(project, key);
+         auto &manager = CommandManager::Get( *project );
+         return manager.FilterKeyEvent(project, key);
       } );
    }
 } installHandlers;

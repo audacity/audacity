@@ -39,6 +39,7 @@
 #include "../KeyboardCapture.h"
 #include "../Project.h"
 #include "../TimeTrack.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
@@ -403,7 +404,7 @@ void TranscriptionToolBar::GetSamples(
    //First, get the current selection. It is part of the mViewInfo, which is
    //part of the project
 
-   const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+   const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
    double start = selectedRegion.t0();
    double end = selectedRegion.t1();
 
@@ -442,7 +443,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    // VariSpeed play reuses Scrubbing.
    bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
    // Scrubbing doesn't support note tracks, but the fixed-speed method using time tracks does.
-   if (p->GetTracks()->Any<NoteTrack>())
+   if ( TrackList::Get( *p ).Any< NoteTrack >() )
       bFixedSpeedPlay = true;
 
    // Scrubbing only supports straight through play.
@@ -452,7 +453,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    {
       // Create a TimeTrack if we haven't done so already
       if (!mTimeTrack) {
-         mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
+         mTimeTrack = TrackFactory::Get( *p ).NewTimeTrack();
          if (!mTimeTrack) {
             return;
          }
@@ -495,8 +496,9 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    }
    else
    {
-      Scrubber &Scrubber = p->GetScrubber();
-      Scrubber.StartSpeedPlay(GetPlaySpeed(), playRegionStart, playRegionEnd);
+      auto &scrubber = Scrubber::Get( *p );
+      scrubber.StartSpeedPlay(GetPlaySpeed(),
+         playRegionStart, playRegionEnd);
    }
 }
 

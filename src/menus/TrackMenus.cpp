@@ -14,6 +14,7 @@
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -37,8 +38,8 @@ namespace {
 void DoMixAndRender
 (AudacityProject &project, bool toNewTrack)
 {
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
    auto defaultFormat = project.GetDefaultFormat();
    auto trackPanel = project.GetTrackPanel();
@@ -47,12 +48,12 @@ void DoMixAndRender
 
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(
-      tracks, trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
+      &tracks, &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
 
-      auto trackRange = tracks->Selected< WaveTrack >();
+      auto trackRange = tracks.Selected< WaveTrack >();
       auto selectedCount = (trackRange + &Track::IsLeader).size();
       wxString firstName;
       if (selectedCount > 0)
@@ -60,18 +61,18 @@ void DoMixAndRender
       if (!toNewTrack)  {
          // Beware iterator invalidation!
          for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
-            tracks->Remove( *it++ );
+            tracks.Remove( *it++ );
       }
 
       // Add NEW tracks
 
-      auto pNewLeft = tracks->Add( uNewLeft );
+      auto pNewLeft = tracks.Add( uNewLeft );
       decltype(pNewLeft) pNewRight{};
       if (uNewRight)
-         pNewRight = tracks->Add( uNewRight );
+         pNewRight = tracks.Add( uNewRight );
 
       // Do this only after adding tracks to the list
-      tracks->GroupChannels(*pNewLeft, pNewRight ? 2 : 1);
+      tracks.GroupChannels(*pNewLeft, pNewRight ? 2 : 1);
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {
@@ -110,10 +111,10 @@ void DoMixAndRender
 
 void DoPanTracks(AudacityProject &project, float PanValue)
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    // count selected wave tracks
-   const auto range = tracks->Any< WaveTrack >();
+   const auto range = tracks.Any< WaveTrack >();
    const auto selectedRange = range + &Track::IsSelected;
    auto count = selectedRange.size();
 
@@ -153,16 +154,16 @@ const size_t kAlignLabelsCount = alignLabels.end() - alignLabels.begin();
 void DoAlign
 (AudacityProject &project, int index, bool moveSel)
 {
-   auto tracks = project.GetTracks();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+   auto &tracks = TrackList::Get( project );
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    wxString action;
    wxString shortAction;
    double delta = 0.0;
    double newPos = -1.0;
 
-   auto channelRange = tracks->Selected< AudioTrack >();
-   auto trackRange = tracks->SelectedLeaders< AudioTrack >();
+   auto channelRange = tracks.Selected< AudioTrack >();
+   auto trackRange = tracks.SelectedLeaders< AudioTrack >();
 
    auto FindOffset = []( const Track *pTrack ) {
       return TrackList::Channels(pTrack).min( &Track::GetOffset ); };
@@ -255,7 +256,7 @@ void DoAlign
 
    if ((unsigned)index >= kAlignLabelsCount) {
       // This is an alignLabelsNoSync command.
-      for (auto t : tracks->SelectedLeaders< AudioTrack >()) {
+      for (auto t : tracks.SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock
          // move.
          // Only align Wave and Note tracks end to end.
@@ -278,7 +279,7 @@ void DoAlign
 
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
-      for (auto t : tracks->Any() + &Track::IsSelectedOrSyncLockSelected )
+      for (auto t : tracks.Any() + &Track::IsSelectedOrSyncLockSelected )
          t->SetOffset(t->GetOffset() + delta);
    }
 
@@ -471,14 +472,14 @@ void DoSortTracks( AudacityProject &project, int flags )
    // This one place outside of TrackList where we must use undisguised
    // std::list iterators!  Avoid this elsewhere!
    std::vector<TrackNodePointer> arr;
-   auto pTracks = project.GetTracks();
-   arr.reserve(pTracks->size());
+   auto &tracks = TrackList::Get( project );
+   arr.reserve(tracks.size());
 
    // First find the permutation.
    // This routine, very unusually, deals with the underlying stl list
    // iterators, not with TrackIter!  Dangerous!
-   for (auto iter = pTracks->ListOfTracks::begin(),
-        end = pTracks->ListOfTracks::end(); iter != end; ++iter) {
+   for (auto iter = tracks.ListOfTracks::begin(),
+        end = tracks.ListOfTracks::end(); iter != end; ++iter) {
       const auto &track = *iter;
       if ( !track->IsLeader() )
          // keep channels contiguous
@@ -515,11 +516,11 @@ void DoSortTracks( AudacityProject &project, int flags )
             ndx += channels.size();
          }
       }
-      arr.insert(arr.begin() + ndx, TrackNodePointer{iter, pTracks});
+      arr.insert(arr.begin() + ndx, TrackNodePointer{iter, &tracks});
    }
 
    // Now apply the permutation
-   pTracks->Permute(arr);
+   tracks.Permute(arr);
 }
 
 void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
@@ -556,29 +557,29 @@ namespace TrackActions {
 
 void DoRemoveTracks( AudacityProject &project )
 {
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
    std::vector<Track*> toRemove;
-   for (auto track : tracks->Selected())
+   for (auto track : tracks.Selected())
       toRemove.push_back(track);
 
    // Capture the track preceding the first removed track
    Track *f{};
    if (!toRemove.empty()) {
-      auto found = tracks->Find(toRemove[0]);
+      auto found = tracks.Find(toRemove[0]);
       f = *--found;
    }
 
    for (auto track : toRemove)
-      tracks->Remove(track);
+      tracks.Remove(track);
 
    if (!f)
       // try to use the last track
-      f = *tracks->Any().rbegin();
+      f = *tracks.Any().rbegin();
    if (f) {
       // Try to use the first track after the removal
-      auto found = tracks->FindLeader(f);
+      auto found = tracks.FindLeader(f);
       auto t = *++found;
       if (t)
          f = t;
@@ -596,7 +597,7 @@ void DoRemoveTracks( AudacityProject &project )
 
 void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
 {
-   auto &tracks = *project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = *project.GetTrackPanel();
 
    // Whatever t is, replace with lead channel
@@ -645,7 +646,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
 
 void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
 {
-   auto &tracks = *project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = *project.GetTrackPanel();
    
    // Whatever t is, replace with lead channel
@@ -697,7 +698,7 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
 
 void DoRemoveTrack(AudacityProject &project, Track * toRemove)
 {
-   auto &tracks = *project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = *project.GetTrackPanel();
 
    // If it was focused, then NEW focus is the next or, if
@@ -738,7 +739,7 @@ void DoMoveTrack
 (AudacityProject &project, Track* target, MoveChoice choice)
 {
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    wxString longDesc, shortDesc;
 
@@ -751,8 +752,8 @@ void DoMoveTrack
 
       // TODO: write TrackList::Rotate to do this in one step and avoid emitting
       // an event for each swap
-      while (tracks->CanMoveUp(target))
-         tracks->Move(target, true);
+      while (tracks.CanMoveUp(target))
+         tracks.Move(target, true);
 
       break;
    case OnMoveBottomID:
@@ -762,14 +763,14 @@ void DoMoveTrack
 
       // TODO: write TrackList::Rotate to do this in one step and avoid emitting
       // an event for each swap
-      while (tracks->CanMoveDown(target))
-         tracks->Move(target, false);
+      while (tracks.CanMoveDown(target))
+         tracks.Move(target, false);
 
       break;
    default:
       bool bUp = (OnMoveUpID == choice);
 
-      tracks->Move(target, bUp);
+      tracks.Move(target, bUp);
       longDesc =
          /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
          bUp? _("Moved '%s' Up")
@@ -794,13 +795,13 @@ struct Handler : CommandHandlerObject {
 void OnNewWaveTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto defaultFormat = project.GetDefaultFormat();
    auto rate = project.GetRate();
 
-   auto t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   auto t = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    SelectActions::SelectNone( project );
 
    t->SetSelected(true);
@@ -814,21 +815,21 @@ void OnNewWaveTrack(const CommandContext &context)
 void OnNewStereoTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
    auto defaultFormat = project.GetDefaultFormat();
    auto rate = project.GetRate();
 
    SelectActions::SelectNone( project );
 
-   auto left = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   auto left = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    left->SetSelected(true);
 
-   auto right = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   auto right = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    right->SetSelected(true);
 
-   tracks->GroupChannels(*left, 2);
+   tracks.GroupChannels(*left, 2);
 
    project.PushState(_("Created new stereo audio track"), _("New Track"));
 
@@ -839,11 +840,11 @@ void OnNewStereoTrack(const CommandContext &context)
 void OnNewLabelTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
-   auto t = tracks->Add(trackFactory->NewLabelTrack());
+   auto t = tracks.Add( trackFactory.NewLabelTrack() );
 
    SelectActions::SelectNone( project );
 
@@ -858,16 +859,16 @@ void OnNewLabelTrack(const CommandContext &context)
 void OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto trackPanel = project.GetTrackPanel();
 
-   if (tracks->GetTimeTrack()) {
+   if (tracks.GetTimeTrack()) {
       AudacityMessageBox(_("This version of Audacity only allows one time track for each project window."));
       return;
    }
 
-   auto t = tracks->AddToHead(trackFactory->NewTimeTrack());
+   auto t = tracks.AddToHead( trackFactory.NewTimeTrack() );
 
    SelectActions::SelectNone( project );
 
@@ -903,8 +904,8 @@ void OnResample(const CommandContext &context)
 {
    auto &project = context.project;
    auto projectRate = project.GetRate();
-   auto tracks = project.GetTracks();
-   auto &undoManager = *project.GetUndoManager();
+   auto &tracks = TrackList::Get( project );
+   auto &undoManager = UndoManager::Get( project );
 
    int newRate;
 
@@ -974,7 +975,7 @@ void OnResample(const CommandContext &context)
 
    int ndx = 0;
    auto flags = UndoPush::AUTOSAVE;
-   for (auto wt : tracks->Selected< WaveTrack >())
+   for (auto wt : tracks.Selected< WaveTrack >())
    {
       wxString msg;
 
@@ -1013,11 +1014,11 @@ void OnRemoveTracks(const CommandContext &context)
 void OnMuteAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto soloSimple = project.IsSoloSimple();
    auto soloNone = project.IsSoloNone();
 
-   for (auto pt : tracks->Any<PlayableTrack>())
+   for (auto pt : tracks.Any<PlayableTrack>())
    {
       pt->SetMute(true);
       if (soloSimple || soloNone)
@@ -1031,11 +1032,11 @@ void OnMuteAllTracks(const CommandContext &context)
 void OnUnmuteAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto soloSimple = project.IsSoloSimple();
    auto soloNone = project.IsSoloNone();
 
-   for (auto pt : tracks->Any<PlayableTrack>())
+   for (auto pt : tracks.Any<PlayableTrack>())
    {
       pt->SetMute(false);
       if (soloSimple || soloNone)
@@ -1399,10 +1400,10 @@ void OnTrackMoveUp(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Track *const focusedTrack = trackPanel->GetFocusedTrack();
-   if (tracks->CanMoveUp(focusedTrack)) {
+   if (tracks.CanMoveUp(focusedTrack)) {
       DoMoveTrack(project, focusedTrack, OnMoveUpID);
       trackPanel->Refresh(false);
    }
@@ -1412,10 +1413,10 @@ void OnTrackMoveDown(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Track *const focusedTrack = trackPanel->GetFocusedTrack();
-   if (tracks->CanMoveDown(focusedTrack)) {
+   if (tracks.CanMoveDown(focusedTrack)) {
       DoMoveTrack(project, focusedTrack, OnMoveDownID);
       trackPanel->Refresh(false);
    }
@@ -1425,10 +1426,10 @@ void OnTrackMoveTop(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Track *const focusedTrack = trackPanel->GetFocusedTrack();
-   if (tracks->CanMoveUp(focusedTrack)) {
+   if (tracks.CanMoveUp(focusedTrack)) {
       DoMoveTrack(project, focusedTrack, OnMoveTopID);
       trackPanel->Refresh(false);
    }
@@ -1438,10 +1439,10 @@ void OnTrackMoveBottom(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
 
    Track *const focusedTrack = trackPanel->GetFocusedTrack();
-   if (tracks->CanMoveDown(focusedTrack)) {
+   if (tracks.CanMoveDown(focusedTrack)) {
       DoMoveTrack(project, focusedTrack, OnMoveBottomID);
       trackPanel->Refresh(false);
    }

@@ -66,6 +66,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
 #include "../widgets/LinkingHtmlWindow.h"
@@ -460,7 +461,7 @@ void ControlToolBar::EnableDisableButtons()
    bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
-   bool tracks = p && p->GetTracks()->Any<AudioTrack>(); // PRL:  PlayableTrack ?
+   bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
 
    if (p) {
       TranscriptionToolBar *const playAtSpeedTB = p->GetTranscriptionToolBar();
@@ -596,19 +597,17 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (!p)
       return -1;  // Should never happen, but...
 
-   TrackList *t = p->GetTracks();
-   if (!t)
-      return -1;  // Should never happen, but...
+   auto &tracks = TrackList::Get( *p );
 
    mLastPlayMode = mode;
 
    bool hasaudio;
    if (useMidi)
-      hasaudio = ! p->GetTracks()->Any<PlayableTrack>().empty();
+      hasaudio = ! tracks.Any<PlayableTrack>().empty();
    else
-      hasaudio = ! p->GetTracks()->Any<WaveTrack>().empty();
+      hasaudio = ! tracks.Any<WaveTrack>().empty();
 
-   double latestEnd = (playWhiteSpace)? t1 : t->GetEndTime();
+   double latestEnd = (playWhiteSpace)? t1 : tracks.GetEndTime();
 
    if (!hasaudio)
       return -1;  // No need to continue without audio tracks
@@ -619,7 +618,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    if (t1 == t0) {
       if (looped) {
-         const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+         const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
          // play selection if there is one, otherwise
          // set start of play region to project start, 
          // and loop the project from current play position.
@@ -630,25 +629,25 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          }
          else {
             // loop the entire project
-            t0 = t->GetStartTime();
-            t1 = t->GetEndTime();
+            t0 = tracks.GetStartTime();
+            t1 = tracks.GetEndTime();
          }
       } else {
          // move t0 to valid range
          if (t0 < 0) {
-            t0 = t->GetStartTime();
+            t0 = tracks.GetStartTime();
          }
-         else if (t0 > t->GetEndTime()) {
-            t0 = t->GetEndTime();
+         else if (t0 > tracks.GetEndTime()) {
+            t0 = tracks.GetEndTime();
          }
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
          else {
             init_seek = t0;         //AC: init_seek is where playback will 'start'
-            t0 = t->GetStartTime();
+            t0 = tracks.GetStartTime();
          }
 #endif
       }
-      t1 = t->GetEndTime();
+      t1 = tracks.GetEndTime();
    }
    else {
       // maybe t1 < t0, with backwards scrubbing for instance
@@ -698,7 +697,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          }
          */
          token = gAudioIO->StartStream(
-            GetAllPlaybackTracks(*t, false, useMidi),
+            GetAllPlaybackTracks( tracks, false, useMidi ),
             t0, t1, options);
       }
       if (token != 0) {
@@ -837,7 +836,8 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
    if(project) {
       // Let scrubbing code do some appearance change
-      project->GetScrubber().StopScrubbing();
+      auto &scrubber = Scrubber::Get( *project );
+      scrubber.StopScrubbing();
    }
 
    if (!CanStopAudioStream())
@@ -879,7 +879,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
       }
    }
 
-   const auto toolbar = project->GetToolManager()->GetToolBar(ScrubbingBarID);
+   const auto toolbar = ToolManager::Get( *project ).GetToolBar(ScrubbingBarID);
    toolbar->EnableDisableButtons();
 }
 
@@ -920,10 +920,10 @@ WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(
    if (!strictRules && !selectedOnly)
       return {};
 
-   auto trackList = p->GetTracks();
+   auto &trackList = TrackList::Get( *p );
    std::vector<unsigned> channelCounts;
    WaveTrackArray candidates;
-   const auto range = trackList->Leaders<WaveTrack>();
+   const auto range = trackList.Leaders<WaveTrack>();
    for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
       // count channels in this track
       const auto channels = TrackList::Channels( candidate );
@@ -990,7 +990,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    const bool appendRecord = (altAppearance == bPreferNewTrack);
 
    if (p) {
-      const auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
       double t0 = selectedRegion.t0();
       double t1 = selectedRegion.t1();
       // When no time selection, recording duration is 'unlimited'.
@@ -1000,7 +1000,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       WaveTrackArray existingTracks;
 
       if (appendRecord) {
-         const auto trackRange = p->GetTracks()->Any< const WaveTrack >();
+         const auto trackRange = TrackList::Get( *p ).Any< const WaveTrack >();
 
          // Try to find wave tracks to record into.  (If any are selected,
          // try to choose only from them; else if wave tracks exist, may record into any.)
@@ -1030,7 +1030,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // playback.
          /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-         transportTracks = GetAllPlaybackTracks(*p->GetTracks(), false, true);
+         transportTracks = GetAllPlaybackTracks(TrackList::Get( *p ), false, true);
          for (const auto &wt : existingTracks) {
             auto end = transportTracks.playbackTracks.end();
             auto it = std::find(transportTracks.playbackTracks.begin(), end, wt);
@@ -1067,7 +1067,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
 
    // NB: The call may have the side effect of changing flags.
-   bool allowed = GetMenuManager(project).TryToMakeActionAllowed(
+   bool allowed = MenuManager::Get(project).TryToMakeActionAllowed(
       project,
       flags,
       AudioIONotBusyFlag | CanStopAudioStreamFlag,
@@ -1135,7 +1135,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             // Get a copy of the track to be appended, to be pushed into
             // undo history only later.
             auto pending = std::static_pointer_cast<WaveTrack>(
-               p->GetTracks()->RegisterPendingChangedTrack(
+               TrackList::Get( *p ).RegisterPendingChangedTrack(
                   updater, wt.get() ) );
 
             // End of current track is before or at recording start time.
@@ -1145,7 +1145,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
                // Pad the recording track with silence, up to the
                // maximum time.
-               auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+               auto newTrack = TrackFactory::Get( *p ).NewWaveTrack();
                newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
                newTrack->InsertSilence(0.0, t0 - endTime);
                newTrack->Flush();
@@ -1154,7 +1154,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             }
             transportTracks.captureTracks.push_back(pending);
          }
-         p->GetTracks()->UpdatePendingTracks();
+         TrackList::Get( *p ).UpdatePendingTracks();
       }
 
       if( transportTracks.captureTracks.empty() )
@@ -1163,8 +1163,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
          wxString defaultTrackName, defaultRecordingTrackName;
 
          // Count the tracks.
-         const auto trackList = p->GetTracks();
-         auto numTracks = trackList->Leaders<const WaveTrack>().size();
+         auto &trackList = TrackList::Get( *p );
+         auto numTracks = trackList.Leaders< const WaveTrack >().size();
 
          auto recordingChannels = std::max(1L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
 
@@ -1179,7 +1179,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
          Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
-            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+            auto newTrack = TrackFactory::Get( *p ).NewWaveTrack();
             if (!first)
                first = newTrack.get();
 
@@ -1229,12 +1229,12 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                newTrack->SetMinimized(true);
             }
 
-            p->GetTracks()->RegisterPendingNewTrack( newTrack );
+            TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
             p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
          }
-         p->GetTracks()->GroupChannels(*first, recordingChannels);
+         TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
       }
       
       //Automated Input Level Adjustment Initialization
@@ -1285,11 +1285,14 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
+   auto project = GetActiveProject();
+   auto &scrubber = Scrubber::Get( *project );
+
    // Bug 1494 - Pausing a seek or scrub should just STOP as
    // it is confusing to be in a paused scrub state.
    bool bStopInstead = mPaused && 
       gAudioIO->IsScrubbing() && 
-      !GetActiveProject()->GetScrubber().IsSpeedPlaying();
+      !scrubber.IsSpeedPlaying();
 
    if (bStopInstead) {
       wxCommandEvent dummy;
@@ -1298,7 +1301,7 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    }
    
    if (gAudioIO->IsScrubbing())
-      GetActiveProject()->GetScrubber().Pause(mPaused);
+      scrubber.Pause(mPaused);
    else
 #endif
    {
@@ -1341,7 +1344,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
    ClearCutPreviewTracks();
    AudacityProject *p = GetActiveProject();
    if (p) {
-      auto trackRange = p->GetTracks()->Selected<const PlayableTrack>();
+      auto trackRange = TrackList::Get( *p ).Selected< const PlayableTrack >();
       if( !trackRange.empty() ) {
          auto cutPreviewTracks = TrackList::Create();
          for (const auto track1 : trackRange) {
@@ -1396,8 +1399,9 @@ wxString ControlToolBar::StateForStatusBar()
    wxString state;
 
    auto pProject = GetActiveProject();
-   auto scrubState =
-      pProject ? pProject->GetScrubber().GetUntranslatedStateString() : wxString();
+   auto scrubState = pProject
+      ? Scrubber::Get( *pProject ).GetUntranslatedStateString()
+      : wxString();
    if (!scrubState.empty())
       state = wxGetTranslation(scrubState);
    else if (mPlay->IsDown())
@@ -1427,7 +1431,7 @@ bool ControlToolBar::IsTransportingPinned()
 {
    if (!TracksPrefs::GetPinnedHeadPreference())
       return false;
-   const auto &scrubber = ::GetActiveProject()->GetScrubber();
+   const auto &scrubber = Scrubber::Get( *::GetActiveProject() );
    return
      !(scrubber.HasMark() &&
        !scrubber.WasSpeedPlaying() &&
@@ -1439,7 +1443,7 @@ void ControlToolBar::StartScrollingIfPreferred()
    if (IsTransportingPinned())
       StartScrolling();
 #ifdef __WXMAC__
-   else if (::GetActiveProject()->GetScrubber().HasMark()) {
+   else if (Scrubber::Get( *::GetActiveProject() ).HasMark()) {
       // PRL:  cause many "unnecessary" refreshes.  For reasons I don't understand,
       // doing this causes wheel rotation events (mapped from the double finger vertical
       // swipe) to be delivered more uniformly to the application, so that speed control
@@ -1501,11 +1505,11 @@ void ControlToolBar::StopScrolling()
 void ControlToolBar::CommitRecording()
 {
    const auto project = GetActiveProject();
-   project->GetTracks()->ApplyPendingTracks();
+   TrackList::Get( *project ).ApplyPendingTracks();
 }
 
 void ControlToolBar::CancelRecording()
 {
    const auto project = GetActiveProject();
-   project->GetTracks()->ClearPendingTracks();
+   TrackList::Get( *project ).ClearPendingTracks();
 }

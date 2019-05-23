@@ -12,6 +12,7 @@
 #include "../Project.h"
 #include "../Screenshot.h"
 #include "../TrackPanel.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -393,12 +394,12 @@ bool DoEffect(
    const PluginID & ID, const CommandContext &context, unsigned flags )
 {
    AudacityProject &project = context.project;
-   auto tracks = project.GetTracks();
+   auto &tracks = TrackList::Get( project );
    auto trackPanel = project.GetTrackPanel();
-   auto trackFactory = project.GetTrackFactory();
+   auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
-   auto commandManager = project.GetCommandManager();
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &commandManager = CommandManager::Get( project );
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
@@ -417,7 +418,7 @@ bool DoEffect(
 
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   auto nTracksOriginally = project.GetTrackCount();
+   auto nTracksOriginally = tracks.size();
    wxWindow *focus = wxWindow::FindFocus();
    wxWindow *parent = nullptr;
    if (focus != nullptr) {
@@ -431,14 +432,14 @@ bool DoEffect(
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         GetMenuManager(project).UpdateMenus(project, false);
+         MenuManager::Get(project).UpdateMenus(project, false);
       }
 
    } );
 
    int count = 0;
    bool clean = true;
-   for (auto t : tracks->Selected< const WaveTrack >()) {
+   for (auto t : tracks.Selected< const WaveTrack >()) {
       if (t->GetEndTime() != 0.0)
          clean = false;
       count++;
@@ -447,7 +448,7 @@ bool DoEffect(
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, &project, rate,
-      tracks, trackFactory, &selectedRegion,
+      &tracks, &trackFactory, &selectedRegion,
       (flags & kConfigured) == 0);
 
    if (!success)
@@ -469,12 +470,12 @@ bool DoEffect(
       // or analyze effects.
       if (type == EffectTypeProcess) {
          wxString shortDesc = em.GetCommandName(ID);
-         GetMenuManager(project).mLastEffect = ID;
+         MenuManager::Get(project).mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
          lastEffectDesc.Printf(_("Repeat %s"), shortDesc);
-         commandManager->Modify(wxT("RepeatLastEffect"), lastEffectDesc);
+         commandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
       }
    }
 
@@ -497,7 +498,7 @@ bool DoEffect(
    // New tracks added?  Scroll them into view so that user sees them.
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
-   if( project.GetTrackCount() > nTracksOriginally ){
+   if( tracks.size() > nTracksOriginally ){
       // 0.0 is min scroll position, 1.0 is max scroll position.
       trackPanel->VerticalScroll( 1.0 );
    }  else {
@@ -574,7 +575,7 @@ void OnManageEffects(const CommandContext &context)
 
 void OnRepeatLastEffect(const CommandContext &context)
 {
-   auto lastEffect = GetMenuManager(context.project).mLastEffect;
+   auto lastEffect = MenuManager::Get(context.project).mLastEffect;
    if (!lastEffect.empty())
    {
       DoEffect( lastEffect, context, kConfigured );
@@ -644,20 +645,20 @@ void OnBenchmark(const CommandContext &context)
 void OnSimulateRecordingErrors(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool &setting = gAudioIO->mSimulateRecordingErrors;
-   commandManager->Check(wxT("SimulateRecordingErrors"), !setting);
+   commandManager.Check(wxT("SimulateRecordingErrors"), !setting);
    setting = !setting;
 }
 
 void OnDetectUpstreamDropouts(const CommandContext &context)
 {
    auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
+   auto &commandManager = CommandManager::Get( project );
 
    bool &setting = gAudioIO->mDetectUpstreamDropouts;
-   commandManager->Check(wxT("DetectUpstreamDropouts"), !setting);
+   commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
    setting = !setting;
 }
 
@@ -877,7 +878,7 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
-   const auto &lastEffect = GetMenuManager(project).mLastEffect;
+   const auto &lastEffect = MenuManager::Get(project).mLastEffect;
    wxString buildMenuLabel;
    if (!lastEffect.empty()) {
       buildMenuLabel.Printf(_("Repeat %s"),

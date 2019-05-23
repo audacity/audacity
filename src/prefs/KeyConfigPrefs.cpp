@@ -136,7 +136,7 @@ void KeyConfigPrefs::Populate()
 
    mCommandSelected = wxNOT_FOUND;
 
-   mManager = project->GetCommandManager();
+   mManager = &CommandManager::Get( *project );
 
    // For speed, don't sort here.  We're just creating.
    // Instead sort when we do SetView later in this function.

@@ -184,7 +184,7 @@ extern "C"
          case MenusRebuilt:  {
             AudacityProject *p = GetActiveProject();
             wxASSERT(p != NULL);
-            CommandManager *c = p->GetCommandManager();
+            CommandManager *c = &CommandManager::Get( *p );
             wxASSERT(c != NULL);
 
             wxMenuBar * pBar = p->GetMenuBar();

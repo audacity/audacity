@@ -78,6 +78,7 @@ and in the spectrogram spectral selection.
 #include "Prefs.h"
 #include "Project.h"
 #include "WaveClip.h"
+#include "ViewInfo.h"
 #include "AllThemeResources.h"
 
 #include "FileNames.h"
@@ -583,11 +584,12 @@ void FreqWindow::GetAudio()
 
    int selcount = 0;
    bool warning = false;
-   for (auto track : p->GetTracks()->Selected< const WaveTrack >()) {
+   for (auto track : TrackList::Get( *p ).Selected< const WaveTrack >()) {
+      auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
       if (selcount==0) {
          mRate = track->GetRate();
-         auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
-         auto end = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t1());
+         auto start = track->TimeToLongSamples(selectedRegion.t0());
+         auto end = track->TimeToLongSamples(selectedRegion.t1());
          auto dataLen = end - start;
          if (dataLen > 10485760) {
             warning = true;
@@ -608,7 +610,7 @@ void FreqWindow::GetAudio()
             mDataLen = 0;
             return;
          }
-         auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
+         auto start = track->TimeToLongSamples(selectedRegion.t0());
          Floats buffer2{ mDataLen };
          // Again, stop exceptions
          track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen,

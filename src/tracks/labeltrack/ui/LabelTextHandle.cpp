@@ -17,7 +17,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../LabelTrack.h"
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
+#include "../../../SelectionState.h"
 #include "../../../TrackPanelMouseEvent.h"
+#include "../../../ViewInfo.h"
 #include "../../../images/Cursors.h"
 
 LabelTextHandle::LabelTextHandle
@@ -73,13 +75,13 @@ UIHandle::Result LabelTextHandle::Click
 
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
-   auto &selectionState = pProject->GetSelectionState();
-   TrackList *const tracks = pProject->GetTracks();
+   auto &selectionState = SelectionState::Get( *pProject );
+   auto &tracks = TrackList::Get( *pProject );
    mChanger =
-      std::make_shared< SelectionStateChanger >( selectionState, *tracks );
+      std::make_shared< SelectionStateChanger >( selectionState, tracks );
 
    const wxMouseEvent &event = evt.event;
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    mSelectedRegion = viewInfo.selectedRegion;
    pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
@@ -89,13 +91,13 @@ UIHandle::Result LabelTextHandle::Click
       // IF the user clicked a label, THEN select all other tracks by Label
 
       //do nothing if at least one other track is selected
-      bool done = tracks->Selected().any_of(
+      bool done = tracks.Selected().any_of(
          [&](const Track *pTrack){ return pTrack != pLT.get(); }
       );
 
       if (!done) {
          //otherwise, select all tracks
-         for (auto t : tracks->Any())
+         for (auto t : tracks.Any())
             selectionState.SelectTrack( *t, true, true );
       }
 
@@ -119,7 +121,7 @@ UIHandle::Result LabelTextHandle::Drag
    auto result = LabelDefaultClickHandle::Drag( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
-   auto pLT = pProject->GetTracks()->Lock(mpLT);
+   auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if(pLT)
       pLT->HandleTextDragRelease(event);
 
@@ -167,7 +169,7 @@ UIHandle::Result LabelTextHandle::Release
    }
 
    const wxMouseEvent &event = evt.event;
-   auto pLT = pProject->GetTracks()->Lock(mpLT);
+   auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if (pLT)
       pLT->HandleTextDragRelease(event);
 
@@ -183,7 +185,7 @@ UIHandle::Result LabelTextHandle::Cancel( AudacityProject *pProject )
    // Restore the selection states of tracks
    // Note that we are also relying on LabelDefaultClickHandle::Cancel
    // to restore the selection state of the labels in the tracks.
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
    viewInfo.selectedRegion = mSelectedRegion;
    auto result = LabelDefaultClickHandle::Cancel( pProject );
    return result | RefreshCode::RefreshAll;

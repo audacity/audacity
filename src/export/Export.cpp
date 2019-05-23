@@ -461,10 +461,10 @@ bool Exporter::ExamineTracks()
    double earliestBegin = mT1;
    double latestEnd = mT0;
 
-   const TrackList *tracks = mProject->GetTracks();
+   auto &tracks = TrackList::Get( *mProject );
 
    for (auto tr :
-         tracks->Any< const WaveTrack >()
+         tracks.Any< const WaveTrack >()
             + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
             - &WaveTrack::GetMute
    ) {
@@ -729,7 +729,7 @@ bool Exporter::CheckFilename()
    // existing file.)
    //
 
-   if (!mProject->GetDirManager()->EnsureSafeFilename(mFilename))
+   if (!DirManager::Get( *mProject ).EnsureSafeFilename(mFilename))
       return false;
 
    if( mFormatName.empty() )
@@ -841,7 +841,7 @@ bool Exporter::CheckMix()
       if (exportedChannels < 0)
          exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
 
-      ExportMixerDialog md(mProject->GetTracks(),
+      ExportMixerDialog md(&TrackList::Get( *mProject ),
                            mSelectedOnly,
                            exportedChannels,
                            NULL,

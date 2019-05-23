@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Menus.h"
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
+#include "../../../Track.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 
@@ -46,9 +47,9 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
    if (!focused)
       return name;
 
-   auto commandManager = project->GetCommandManager();
+   auto &commandManager = CommandManager::Get( *project );
    TranslatedInternalString command{ wxT("TrackMute"), name };
-   return commandManager->DescribeCommandsAndShortcuts(&command, 1u);
+   return commandManager.DescribeCommandsAndShortcuts(&command, 1u);
 }
 
 UIHandlePtr MuteButtonHandle::HitTest
@@ -102,9 +103,9 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
    if (!focused)
       return name;
 
-   auto commandManager = project->GetCommandManager();
+   auto &commandManager = CommandManager::Get( *project );
    TranslatedInternalString command{ wxT("TrackSolo"), name };
-   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
+   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr SoloButtonHandle::HitTest

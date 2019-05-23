@@ -16,6 +16,7 @@
 
 #include "audacity/Types.h"
 
+#include "../ClientData.h"
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
 
@@ -99,9 +100,13 @@ using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
 class AudacityProject;
 class CommandContext;
 
-class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
+class AUDACITY_DLL_API CommandManager final
+   : public XMLTagHandler
+   , public ClientData::Base
 {
  public:
+   static CommandManager &Get( AudacityProject &project );
+   static const CommandManager &Get( const AudacityProject &project );
 
    //
    // Constructor / Destructor

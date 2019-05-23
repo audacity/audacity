@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
-#include "../../../Project.h"
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
 
@@ -33,9 +32,9 @@ void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
 {
    mLabelState = std::make_shared<LabelState>();
    auto &pairs = mLabelState->mPairs;
-   TrackList *const tracks = pProject->GetTracks();
+   auto &tracks = TrackList::Get( *pProject );
 
-   for (auto lt : tracks->Any<LabelTrack>())
+   for (auto lt : tracks.Any<LabelTrack>())
       pairs.push_back( std::make_pair(
          lt->SharedPointer<LabelTrack>(), lt->SaveFlags() ) );
 }
@@ -44,7 +43,7 @@ void LabelDefaultClickHandle::RestoreState( AudacityProject *pProject )
 {
    if ( mLabelState ) {
       for ( const auto &pair : mLabelState->mPairs )
-         if (auto pLt = pProject->GetTracks()->Lock(pair.first))
+         if (auto pLt = TrackList::Get( *pProject ).Lock(pair.first))
             pLt->RestoreFlags( pair.second );
       mLabelState.reset();
    }
@@ -62,7 +61,7 @@ UIHandle::Result LabelDefaultClickHandle::Click
       SaveState( pProject );
 
       const auto pLT = evt.pCell.get();
-      for (auto lt : pProject->GetTracks()->Any<LabelTrack>()) {
+      for (auto lt : TrackList::Get( *pProject ).Any<LabelTrack>()) {
          if (pLT != lt) {
             lt->ResetFlags();
             lt->Unselect();

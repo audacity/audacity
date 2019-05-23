@@ -892,7 +892,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // there are no tracks, but there's an Undo history, etc, then
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
-         if (proj && (proj->GetDirty() || !proj->GetTracks()->empty()))
+         if (proj && (proj->GetDirty() || !TrackList::Get( *proj ).empty()))
             proj = nullptr;
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
@@ -1073,7 +1073,7 @@ bool AudacityApp::OnExceptionInMainLoop()
             pProject->RollbackState();
 
             // Forget pending changes in the TrackList
-            pProject->GetTracks()->ClearPendingTracks();
+            TrackList::Get( *pProject ).ClearPendingTracks();
 
             pProject->RedrawProject();
          }
@@ -1607,7 +1607,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
-      auto &scrubber = project->GetScrubber();
+      auto &scrubber = Scrubber::Get( *project );
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();

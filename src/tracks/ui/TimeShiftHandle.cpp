@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/ToolsToolBar.h"
 #include "../../UndoManager.h"
 #include "../../WaveClip.h"
+#include "../../ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
@@ -358,13 +359,13 @@ UIHandle::Result TimeShiftHandle::Click
 
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
-   const ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
    if (!pTrack)
       return RefreshCode::Cancelled;
 
-   TrackList *const trackList = pProject->GetTracks();
+   auto &trackList = TrackList::Get( *pProject );
 
    mClipMoveState.clear();
    mDidSlideVertically = false;
@@ -404,14 +405,14 @@ UIHandle::Result TimeShiftHandle::Click
    if ( ! ok )
       return Cancelled;
    else if ( captureClips )
-      CreateListOfCapturedClips
-         ( mClipMoveState, viewInfo, *pTrack, *trackList,
-           pProject->IsSyncLocked(), clickTime );
+      CreateListOfCapturedClips(
+         mClipMoveState, viewInfo, *pTrack, trackList,
+         pProject->IsSyncLocked(), clickTime );
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
    mClipMoveState.mMouseClickX = event.m_x;
-   mSnapManager = std::make_shared<SnapManager>(trackList,
+   mSnapManager = std::make_shared<SnapManager>(&trackList,
                                   &viewInfo,
                                   &mClipMoveState.capturedClipArray,
                                   &mClipMoveState.trackExclusions,
@@ -677,7 +678,7 @@ UIHandle::Result TimeShiftHandle::Drag
    }
 
    const wxMouseEvent &event = evt.event;
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    Track *track = dynamic_cast<Track*>(evt.pCell.get());
 
@@ -700,7 +701,7 @@ UIHandle::Result TimeShiftHandle::Drag
       return RefreshCode::RefreshNone;
 
 
-   TrackList *const trackList = pProject->GetTracks();
+   auto &trackList = TrackList::Get( *pProject );
 
    // GM: DoSlide now implementing snap-to
    // samples functionality based on sample rate.
@@ -734,7 +735,7 @@ UIHandle::Result TimeShiftHandle::Drag
        /* && !mCapturedClipIsSelection*/
       && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
             if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-                     *trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
+                     trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
                mCapturedTrack = pTrack;
                mDidSlideVertically = true;
             }
@@ -755,7 +756,7 @@ UIHandle::Result TimeShiftHandle::Drag
 
    mClipMoveState.hSlideAmount = desiredSlideAmount;
 
-   DoSlideHorizontal( mClipMoveState, *trackList, *mCapturedTrack );
+   DoSlideHorizontal( mClipMoveState, trackList, *mCapturedTrack );
 
    if (mClipMoveState.capturedClipIsSelection) {
       // Slide the selection, too

@@ -33,10 +33,12 @@
 
 #include "xml/XMLTagHandler.h"
 
+#include "ClientData.h"
 #include <utility>
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 
+#include <memory>
 #include <unordered_map>
 #include "audacity/Types.h"
 
@@ -47,6 +49,7 @@ class wxGridCellStringRenderer;
 class wxGridEvent;
 class wxTextCtrl;
 
+class AudacityProject;
 class Grid;
 class ShuttleGui;
 class TagsEditor;
@@ -64,9 +67,20 @@ using TagMap = std::unordered_map< wxString, wxString >;
 #define TAG_SOFTWARE wxT("Software")
 #define TAG_COPYRIGHT wxT("Copyright")
 
-class AUDACITY_DLL_API Tags final : public XMLTagHandler {
+class AUDACITY_DLL_API Tags final
+   : public XMLTagHandler
+   , public std::enable_shared_from_this< Tags >
+   , public ClientData::Base
+{
 
  public:
+
+   static Tags &Get( AudacityProject &project );
+   static const Tags &Get( const AudacityProject &project );
+   // Returns reference to *tags
+   static Tags &Set(
+      AudacityProject &project, const std::shared_ptr<Tags> &tags );
+
    Tags();  // constructor
    Tags( const Tags& ) = default;
    //Tags( Tags && ) = default;

@@ -28,6 +28,7 @@ UndoManager
 #include "BlockFile.h"
 #include "Clipboard.h"
 #include "Diags.h"
+#include "Project.h"
 #include "Sequence.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"          // temp
@@ -62,6 +63,20 @@ struct UndoStackElem {
    wxString description;
    wxString shortDescription;
 };
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) { return std::make_unique<UndoManager>(); }
+};
+
+UndoManager &UndoManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< UndoManager >( key );
+}
+
+const UndoManager &UndoManager::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
 
 UndoManager::UndoManager()
 {
