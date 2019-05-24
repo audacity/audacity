@@ -265,12 +265,9 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    // We have to multiply by 4 because one sample is 2 bytes wide!
    ArrayOf<unsigned char> mp2Buffer{ mp2BufferSize };
 
-   const WaveTrackConstArray waveTracks =
-      tracks.GetWaveTrackConstArray(selectionOnly, false);
    auto updateResult = ProgressResult::Success;
    {
-      auto mixer = CreateMixer(waveTracks,
-         tracks.GetTimeTrack(),
+      auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          stereo ? 2 : 1, pcmBufferSize, true,
          rate, int16Sample, true, mixerSpec);

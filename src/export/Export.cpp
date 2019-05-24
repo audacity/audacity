@@ -240,13 +240,16 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 }
 
 //Create a mixer by computing the time warp factor
-std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
-         const TimeTrack *timeTrack,
+std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
+         bool selectionOnly,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
+   const WaveTrackConstArray inputTracks =
+      tracks.GetWaveTrackConstArray(selectionOnly, false);
+   const TimeTrack *timeTrack = tracks.GetTimeTrack();
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
                   // Throw, to stop exporting, if read fails:

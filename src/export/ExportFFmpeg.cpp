@@ -896,10 +896,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    size_t pcmBufferSize = 1024;
 
-   const WaveTrackConstArray waveTracks =
-      tracks.GetWaveTrackConstArray(selectionOnly, false);
-   auto mixer = CreateMixer(waveTracks,
-      tracks.GetTimeTrack(),
+   auto mixer = CreateMixer(tracks, selectionOnly,
       t0, t1,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, true, mixerSpec);

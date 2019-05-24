@@ -274,11 +274,8 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       }
    }
 
-   const WaveTrackConstArray waveTracks =
-      tracks.GetWaveTrackConstArray(selectionOnly, false);
    {
-      auto mixer = CreateMixer(waveTracks,
-         tracks.GetTimeTrack(),
+      auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, false,
          rate, floatSample, true, mixerSpec);

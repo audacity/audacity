@@ -1903,11 +1903,8 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    ArrayOf<unsigned char> buffer{ bufferSize };
    wxASSERT(buffer);
 
-   const WaveTrackConstArray waveTracks =
-      tracks.GetWaveTrackConstArray(selectionOnly, false);
    {
-      auto mixer = CreateMixer(waveTracks,
-         tracks.GetTimeTrack(),
+      auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          channels, inSamples, true,
          rate, int16Sample, true, mixerSpec);
