@@ -186,7 +186,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
           playPos >= 0 && !onScreen ) {
          // msmeyer: But only if not playing looped or in one-second mode
          // PRL: and not scrolling with play/record head fixed
-         auto mode = mProject->GetControlToolBar()->GetLastPlayMode();
+         auto mode = ControlToolBar::Get( *mProject ).GetLastPlayMode();
          if (!pinned &&
              mode != PlayMode::loopedPlay &&
              mode != PlayMode::oneSecondPlay &&

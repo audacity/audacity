@@ -900,7 +900,7 @@ HitTestPreview SelectHandle::Preview
       auto xx = viewInfo.TimeToPosition(time, mRect.x);
 
       const bool bMultiToolMode =
-         pProject->GetToolsToolBar()->IsDown(multiTool);
+         ToolsToolBar::Get( *pProject ).IsDown(multiTool);
 
       //In Multi-tool mode, give multitool prompt if no-special-hit.
       if (bMultiToolMode) {

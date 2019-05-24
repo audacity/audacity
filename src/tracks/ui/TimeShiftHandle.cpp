@@ -370,7 +370,7 @@ UIHandle::Result TimeShiftHandle::Click
    mClipMoveState.clear();
    mDidSlideVertically = false;
 
-   ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+   const auto ttb = &ToolsToolBar::Get( *pProject );
    const bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
 
    const double clickTime =

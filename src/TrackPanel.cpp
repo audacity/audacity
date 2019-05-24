@@ -463,7 +463,8 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
-      p->GetControlToolBar()->StopPlaying(!gAudioIO->IsStreamActive());
+      auto &bar = ControlToolBar::Get( *p );
+      bar.StopPlaying(!gAudioIO->IsStreamActive());
    }
 
    // Next, check to see if we were playing or recording
@@ -1130,7 +1131,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    // Don't draw a bottom margin here.
 
-   ToolsToolBar *pTtb = GetProject()->GetToolsToolBar();
+   auto pTtb = &ToolsToolBar::Get( *GetProject() );
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;

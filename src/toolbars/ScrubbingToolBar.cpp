@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "ScrubbingToolBar.h"
+#include "ToolManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -62,6 +63,17 @@ ScrubbingToolBar::ScrubbingToolBar()
 
 ScrubbingToolBar::~ScrubbingToolBar()
 {
+}
+
+ScrubbingToolBar &ScrubbingToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<ScrubbingToolBar*>( toolManager.GetToolBar(ScrubbingBarID) );
+}
+
+const ScrubbingToolBar &ScrubbingToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void ScrubbingToolBar::Create(wxWindow * parent)

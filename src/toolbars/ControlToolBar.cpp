@@ -125,6 +125,25 @@ ControlToolBar::~ControlToolBar()
 }
 
 
+ControlToolBar *ControlToolBar::Find( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return static_cast<ControlToolBar*>(
+      toolManager.GetToolBar(TransportBarID) );
+}
+
+ControlToolBar &ControlToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<ControlToolBar*>(
+      toolManager.GetToolBar(TransportBarID) );
+}
+
+const ControlToolBar &ControlToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
+}
+
 void ControlToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
@@ -464,7 +483,7 @@ void ControlToolBar::EnableDisableButtons()
    bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
 
    if (p) {
-      TranscriptionToolBar *const playAtSpeedTB = p->GetTranscriptionToolBar();
+      const auto playAtSpeedTB = &TranscriptionToolBar::Get( *p );
       if (playAtSpeedTB)
          playAtSpeedTB->SetEnabled(CanStopAudioStream() && tracks && !recording);
    }

@@ -1345,7 +1345,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    {
       UpdateMeters(
          gAudioIO->GetStreamTime(),
-         (mProject->GetControlToolBar()->GetLastPlayMode()
+         (ControlToolBar::Get( *mProject ).GetLastPlayMode()
             == PlayMode::loopedPlay)
       );
    }

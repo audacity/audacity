@@ -300,12 +300,12 @@ void Scrubber::MarkScrubStart(
    // drag events.
    mSmoothScrollingScrub  = smoothScrolling;
 
-   ControlToolBar * const ctb = mProject->GetControlToolBar();
+   auto &ctb = ControlToolBar::Get( *mProject );
 
    // Stop any play in progress
    // Bug 1492: mCancelled to stop us collapsing the selected region.
    mCancelled = true;
-   ctb->StopPlaying();
+   ctb.StopPlaying();
    mCancelled = false;
 
    // Usually the timer handler of TrackPanel does this, but we do this now,
@@ -316,14 +316,14 @@ void Scrubber::MarkScrubStart(
    mSeeking = seek;
    CheckMenuItems();
 
-   ctb->SetPlay(true, ControlToolBar::PlayAppearance::Straight );
+   ctb.SetPlay(true, ControlToolBar::PlayAppearance::Straight );
    // Commented out for Bug 1421
    //   mSeeking
    //   ? ControlToolBar::PlayAppearance::Seek
    //   : ControlToolBar::PlayAppearance::Scrub);
 
    mScrubStartPosition = xx;
-   ctb->UpdateStatusBar(mProject);
+   ctb.UpdateStatusBar(mProject);
    mCancelled = false;
 }
 
@@ -351,7 +351,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          auto &viewInfo = ViewInfo::Get( *mProject );
          auto &trackPanel = TrackPanel::Get( *mProject );
-         ControlToolBar * const ctb = mProject->GetControlToolBar();
+         auto &ctb = ControlToolBar::Get( *mProject );
          double maxTime = TrackList::Get( *mProject ).GetEndTime();
          const int leftOffset = trackPanel.GetLeftOffset();
          double time0 = std::min(maxTime,
@@ -363,7 +363,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          if (time1 != time0) {
             if (busy) {
                position = mScrubStartPosition;
-               ctb->StopPlaying();
+               ctb.StopPlaying();
                mScrubStartPosition = position;
             }
 
@@ -390,7 +390,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                // Take the starting speed limit from the transcription toolbar,
                // but it may be varied during the scrub.
                mMaxSpeed = mOptions.maxSpeed =
-                  mProject->GetTranscriptionToolBar()->GetPlaySpeed();
+                  TranscriptionToolBar::Get( *mProject ).GetPlaySpeed();
             }
 #else
             // That idea seems unpopular... just make it one for move-scrub,
@@ -430,7 +430,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             });
 
             mScrubToken =
-               ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
+               ctb.PlayPlayRegion(SelectedRegion(time0, time1), options,
                                    PlayMode::normalPlay, backwards);
             if (mScrubToken <= 0) {
                // Bug1627 (part of it):
@@ -470,9 +470,9 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
       return false;
    }
 
-   ControlToolBar * const ctb = mProject->GetControlToolBar();
+   auto &ctb = ControlToolBar::Get( *mProject );
    if (busy) {
-      ctb->StopPlaying();
+      ctb.StopPlaying();
    }
    mScrubStartPosition = 0;
    mSpeedPlaying = true;
@@ -517,7 +517,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    double stopTolerance = 20.0 / options.rate;
    mScrubToken =
       // Reduce time by 'stopTolerance' fudge factor, so that the Play will stop.
-      ctb->PlayPlayRegion(SelectedRegion(time0, time1-stopTolerance), options,
+      ctb.PlayPlayRegion(SelectedRegion(time0, time1-stopTolerance), options,
          PlayMode::normalPlay, backwards);
 
    if (mScrubToken >= 0) {
@@ -551,7 +551,7 @@ void Scrubber::ContinueScrubbingPoll()
       // default speed of 1.3 set, so that we can hear there is a problem
       // when playAtSpeedTB not found.
       double speed = 1.3;
-      TranscriptionToolBar *const playAtSpeedTB = mProject->GetTranscriptionToolBar();
+      const auto playAtSpeedTB = &TranscriptionToolBar::Get( *mProject );
       if (playAtSpeedTB) {
          speed = playAtSpeedTB->GetPlaySpeed();
       }
@@ -629,7 +629,7 @@ void Scrubber::ContinueScrubbingUI()
       bool bShift = state.ShiftDown();
       TransportActions::DoPlayStopSelect(*mProject, true, bShift);
       wxCommandEvent evt;
-      mProject->GetControlToolBar()->OnStop(evt);
+      ControlToolBar::Get( *mProject ).OnStop(evt);
       return;
    }
 
@@ -639,9 +639,8 @@ void Scrubber::ContinueScrubbingUI()
       // Show the correct status for seeking.
       bool backup = mSeeking;
       mSeeking = seek;
-      const auto ctb = mProject->GetControlToolBar();
-      if (ctb)
-         ctb->UpdateStatusBar(mProject);
+      auto &ctb = ControlToolBar::Get( *mProject );
+      ctb.UpdateStatusBar(mProject);
       mSeeking = backup;
    }
 
@@ -704,8 +703,8 @@ void Scrubber::StopScrubbing()
    {
       // Marked scrub start, but
       // didn't really play, but did change button apperance
-      const auto ctb = mProject->GetControlToolBar();
-      ctb->SetPlay(false, ControlToolBar::PlayAppearance::Straight);
+      auto &ctb = ControlToolBar::Get( *mProject );
+      ctb.SetPlay(false, ControlToolBar::PlayAppearance::Straight);
    }
 
    AdornedRulerPanel::Get( *mProject ).DrawBothOverlays();
@@ -836,9 +835,9 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
    // Pause if Pause down, or not scrubbing.
    if (!mProject)
       Pause(true);
-   else if (!mProject->GetControlToolBar())
-      Pause(true);
-   else if (mProject->GetControlToolBar()->IsPauseDown())
+   else if ( !ControlToolBar::Find( *mProject ) )
+      Pause( true );
+   else if (ControlToolBar::Get( *mProject ).IsPauseDown())
       Pause( true );
    else if (!IsScrubbing())
       Pause( true );
@@ -1060,8 +1059,10 @@ void Scrubber::DoScrub(bool seek)
    else if (mSeeking != seek) {
       // just switching mode
    }
-   else
-      mProject->GetControlToolBar()->StopPlaying();
+   else {
+      auto &ctb = ControlToolBar::Get( *mProject );
+      ctb.StopPlaying();
+   }
 }
 
 void Scrubber::OnScrubOrSeek(bool seek)
@@ -1070,8 +1071,8 @@ void Scrubber::OnScrubOrSeek(bool seek)
 
    if (HasMark()) {
       // Show the correct status.
-      const auto ctb = mProject->GetControlToolBar();
-      ctb->UpdateStatusBar(mProject);
+      auto &ctb = ControlToolBar::Get( *mProject );
+      ctb.UpdateStatusBar(mProject);
    }
 
    mSeeking = seek;
@@ -1081,7 +1082,7 @@ void Scrubber::OnScrubOrSeek(bool seek)
    // Update button images
    ruler.UpdateButtonStates();
 
-   auto scrubbingToolBar = mProject->GetScrubbingToolBar();
+   auto scrubbingToolBar = &ScrubbingToolBar::Get( *mProject );
    scrubbingToolBar->EnableDisableButtons();
    scrubbingToolBar->RegenerateTooltips();
 }

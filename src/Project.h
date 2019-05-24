@@ -63,16 +63,6 @@ class TrackPanel;
 class FreqWindow;
 class MeterPanel;
 
-// toolbar classes
-class ControlToolBar;
-class DeviceToolBar;
-class MixerToolBar;
-class ScrubbingToolBar;
-class SelectionBar;
-class SpectralSelectionBar;
-class ToolsToolBar;
-class TranscriptionToolBar;
-
 // windows and frames
 class AdornedRulerPanel;
 class LyricsWindow;
@@ -415,22 +405,6 @@ public:
    void TP_ScrollWindow(double scrollto) override;
    bool TP_ScrollUpDown(int delta) override;
    void TP_HandleResize() override;
-
-   // ToolBar
-
-   // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
-   ControlToolBar *GetControlToolBar();
-
-   DeviceToolBar *GetDeviceToolBar();
-   MixerToolBar *GetMixerToolBar();
-   ScrubbingToolBar *GetScrubbingToolBar();
-   SelectionBar *GetSelectionBar();
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar *GetSpectralSelectionBar();
-#endif
-   ToolsToolBar *GetToolsToolBar();
-   const ToolsToolBar *GetToolsToolBar() const;
-   TranscriptionToolBar *GetTranscriptionToolBar();
 
    MeterPanel *GetPlaybackMeter();
    void SetPlaybackMeter(MeterPanel *playback);

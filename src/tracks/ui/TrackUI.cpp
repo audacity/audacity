@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackVRulerControls.h"
 
 #include "../../HitTestResult.h"
-#include "../../Project.h"
 #include "../../toolbars/ToolsToolBar.h"
 
 #include "../ui/SelectHandle.h"
@@ -32,7 +31,7 @@ std::vector<UIHandlePtr> Track::HitTest
 {
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
-   const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
+   auto pTtb = &ToolsToolBar::Get( *pProject );
    const bool isMultiTool = pTtb->IsDown(multiTool);
    const auto currentTool = pTtb->GetCurrentTool();
 

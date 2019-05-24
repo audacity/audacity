@@ -32,6 +32,7 @@
 
 #include "../Audacity.h"
 #include "ToolsToolBar.h"
+#include "ToolManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -91,6 +92,17 @@ ToolsToolBar::ToolsToolBar()
 
 ToolsToolBar::~ToolsToolBar()
 {
+}
+
+ToolsToolBar &ToolsToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<ToolsToolBar*>( toolManager.GetToolBar(ToolsBarID) );
+}
+
+const ToolsToolBar &ToolsToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void ToolsToolBar::RegenerateTooltips()

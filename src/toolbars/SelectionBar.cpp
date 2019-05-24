@@ -30,6 +30,7 @@ with changes in the SelectionBar.
 #include "SelectionBar.h"
 
 #include "SelectionBarListener.h"
+#include "ToolManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -127,6 +128,17 @@ SelectionBar::SelectionBar()
 
 SelectionBar::~SelectionBar()
 {
+}
+
+SelectionBar &SelectionBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<SelectionBar*>( toolManager.GetToolBar(SelectionBarID) );
+}
+
+const SelectionBar &SelectionBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void SelectionBar::Create(wxWindow * parent)

@@ -18,6 +18,8 @@
 
 #include "ToolBar.h"
 
+class AudacityProject;
+
 class wxCommandEvent;
 class wxDC;
 class wxImage;
@@ -40,6 +42,9 @@ public:
 
    ScrubbingToolBar();
    virtual ~ScrubbingToolBar();
+
+   static ScrubbingToolBar &Get( AudacityProject &project );
+   static const ScrubbingToolBar &Get( const AudacityProject &project );
 
    void Create(wxWindow *parent) override;
 

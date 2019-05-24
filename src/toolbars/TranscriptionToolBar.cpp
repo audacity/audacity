@@ -16,6 +16,7 @@
 
 #include "../Audacity.h"
 #include "TranscriptionToolBar.h"
+#include "ToolManager.h"
 
 #include "../Experimental.h"
 
@@ -103,6 +104,17 @@ TranscriptionToolBar::TranscriptionToolBar()
 
 TranscriptionToolBar::~TranscriptionToolBar()
 {
+}
+
+TranscriptionToolBar &TranscriptionToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<TranscriptionToolBar*>( toolManager.GetToolBar(TranscriptionBarID) );
+}
+
+const TranscriptionToolBar &TranscriptionToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void TranscriptionToolBar::Create(wxWindow * parent)
@@ -469,7 +481,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // If IO is busy, abort immediately
    if (gAudioIO->IsBusy()) {
-      p->GetControlToolBar()->StopPlaying();
+      auto &bar = ControlToolBar::Get( *p );
+      bar.StopPlaying();
    }
 
    // Get the current play region
@@ -489,7 +502,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          cutPreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
-      p->GetControlToolBar()->PlayPlayRegion
+      auto &bar = ControlToolBar::Get( *p );
+      bar.PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
             options,
             mode);

@@ -562,8 +562,8 @@ CommandFlag MenuManager::GetUpdateFlags
    if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
       flags |= CaptureNotBusyFlag;
 
-   ControlToolBar *bar = project.GetControlToolBar();
-   if (bar->ControlToolBar::CanStopAudioStream())
+   auto &bar = ControlToolBar::Get( project );
+   if (bar.ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
 
    lastFlags = flags;
