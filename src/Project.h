@@ -442,8 +442,6 @@ public:
    FreqWindow *GetFreqWindow(bool create = false);
    ContrastDialog *GetContrastDialog(bool create = false);
 
-   wxStatusBar* GetStatusBar() { return mStatusBar; }
-
 private:
    bool SnapSelection();
 
@@ -545,8 +543,6 @@ private:
    wxString mLastMainStatusMessage;
    std::unique_ptr<wxTimer> mTimer;
    void RestartTimer();
-
-   wxStatusBar *mStatusBar;
 
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};

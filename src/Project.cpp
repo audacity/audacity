@@ -1082,12 +1082,12 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // In addition, the help strings of menu items are by default sent to the first
    // field. Currently there are no such help strings, but it they were introduced, then
    // there would need to be an event handler to send them to the appropriate field.
-   mStatusBar = CreateStatusBar(4);
+   auto statusBar = CreateStatusBar(4);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
-   mStatusBar->SetAccessible(safenew WindowAccessible(mStatusBar));
+   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
 #endif
-   mStatusBar->SetName(wxT("status_line"));     // not localized
+   statusBar->SetName(wxT("status_line"));     // not localized
    mProjectNo = mProjectCounter++; // Bug 322
 
    MissingAliasFilesDialog::SetShouldShow(true);
@@ -1324,11 +1324,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
    mIconized = false;
 
-   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
-   mStatusBar->SetStatusWidths(4, widths);
+   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(statusBar), -1, 150};
+   statusBar->SetStatusWidths(4, widths);
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
-   mStatusBar->SetStatusText(msg, mainStatusBarField);
+   statusBar->SetStatusText(msg, mainStatusBarField);
    GetControlToolBar()->UpdateStatusBar(this);
 
    mTimer = std::make_unique<wxTimer>(this, AudacityProjectTimerID);
@@ -3810,6 +3810,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    // See explanation above
    // ProjectDisabler disabler(this);
    auto &proj = *this;
+   auto &window = proj;
    auto &dirManager = DirManager::Get( proj );
 
    wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
@@ -4052,7 +4053,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       // cancel the cleanup:
       safetyFileName = wxT("");
 
-   mStatusBar->SetStatusText(wxString::Format(_("Saved %s"),
+   window.GetStatusBar()->SetStatusText(wxString::Format(_("Saved %s"),
                                               mFileName), mainStatusBarField);
 
    return true;
@@ -4937,6 +4938,7 @@ void AudacityProject::RestartTimer()
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = *this;
+   auto &window = project;
    auto &dirManager = DirManager::Get( project );
    MixerToolBar *mixerToolBar = GetMixerToolBar();
    if( mixerToolBar )
@@ -4953,7 +4955,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          sMessage.Printf(_("Disk space remaining for recording: %s"), GetHoursMinsString(iRecordingMins));
 
          // Do not change mLastMainStatusMessage
-         mStatusBar->SetStatusText(sMessage, mainStatusBarField);
+         window.GetStatusBar()->SetStatusText(sMessage, mainStatusBarField);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -4974,7 +4976,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 
 
             msg = _("On-demand import and waveform calculation complete.");
-            mStatusBar->SetStatusText(msg, mainStatusBarField);
+            window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
 
          }
          else if(numTasks>1)
@@ -4985,7 +4987,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
              ratioComplete*100.0);
 
 
-         mStatusBar->SetStatusText(msg, mainStatusBarField);
+         window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
       }
    }
 
@@ -4997,9 +4999,10 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 // TrackPanel callback method
 void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 {
+   auto &window = *this;
    if ( msg != mLastMainStatusMessage ) {
       mLastMainStatusMessage = msg;
-      mStatusBar->SetStatusText(msg, mainStatusBarField);
+      window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
       
       // When recording, let the NEW status message stay at least as long as
       // the timer interval (if it is not replaced again by this function),
@@ -5167,6 +5170,7 @@ void AudacityProject::MayStartMonitoring()
 
 void AudacityProject::OnAudioIORate(int rate)
 {
+   auto &window = *this;
    wxString display;
    if (rate > 0) {
       display = wxString::Format(_("Actual Rate: %d"), rate);
@@ -5176,10 +5180,11 @@ void AudacityProject::OnAudioIORate(int rate)
       ;
 
    int x, y;
-   mStatusBar->GetTextExtent(display, &x, &y);
-   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, x+50};
-   mStatusBar->SetStatusWidths(4, widths);
-   mStatusBar->SetStatusText(display, rateStatusBarField);
+   auto statusBar = window.GetStatusBar();
+   statusBar->GetTextExtent(display, &x, &y);
+   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(statusBar), -1, x+50};
+   statusBar->SetStatusWidths(4, widths);
+   statusBar->SetStatusText(display, rateStatusBarField);
 }
 
 void AudacityProject::OnAudioIOStartRecording()
