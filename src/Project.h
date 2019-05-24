@@ -37,7 +37,7 @@
 
 #include "import/ImportRaw.h" // defines TrackHolders
 
-#include <xml/XMLTagHandler.h> // to inherit
+#include "xml/XMLTagHandler.h" // to inherit
 
 const int AudacityProjectTimerID = 5200;
 
