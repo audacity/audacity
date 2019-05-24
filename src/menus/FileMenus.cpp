@@ -10,6 +10,7 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
@@ -539,7 +540,7 @@ void OnPrint(const CommandContext &context)
    auto &project = context.project;
    auto name = project.GetProjectName();
    auto &tracks = TrackList::Get( project );
-   HandlePrint(&project, name, &tracks, *project.GetTrackPanel());
+   HandlePrint(&project, name, &tracks, TrackPanel::Get( project ));
 }
 
 void OnExit(const CommandContext &WXUNUSED(context) )

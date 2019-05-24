@@ -188,9 +188,9 @@ bool WaveformPrefs::Commit()
    }
 
    if (isOpenPage) {
-      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
-      tp->UpdateVRulers();
-      tp->Refresh(false);
+      auto &tp = TrackPanel::Get( *::GetActiveProject() );
+      tp.UpdateVRulers();
+      tp.Refresh(false);
    }
 
    return true;

@@ -31,6 +31,7 @@ with changes in the SpectralSelectionBar.
 #include "SpectralSelectionBarListener.h"
 
 #include "../Experimental.h"
+#include "ToolManager.h"
 
 #include <algorithm>
 
@@ -102,6 +103,18 @@ SpectralSelectionBar::SpectralSelectionBar()
 SpectralSelectionBar::~SpectralSelectionBar()
 {
    // Do nothing, sizer deletes the controls
+}
+
+SpectralSelectionBar &SpectralSelectionBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<SpectralSelectionBar*>(
+      toolManager.GetToolBar(SpectralSelectionBarID) );
+}
+
+const SpectralSelectionBar &SpectralSelectionBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void SpectralSelectionBar::Create(wxWindow * parent)

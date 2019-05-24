@@ -61,26 +61,11 @@ class TrackList;
 
 class TrackPanel;
 class FreqWindow;
-class ContrastDialog;
 class MeterPanel;
-
-// toolbar classes
-class ControlToolBar;
-class DeviceToolBar;
-class MixerToolBar;
-class ScrubbingToolBar;
-class SelectionBar;
-class SpectralSelectionBar;
-class ToolsToolBar;
-class TranscriptionToolBar;
 
 // windows and frames
 class AdornedRulerPanel;
-class HistoryWindow;
-class MacrosWindow;
 class LyricsWindow;
-class MixerBoard;
-class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
 struct UndoState;
@@ -166,9 +151,17 @@ class WaveTrack;
 
 class MenuManager;
 
+// Container of various objects associated with the project, which is
+// responsible for destroying them
 using AttachedObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
+// Container of pointers to various windows associated with the project, which
+// is not responsible for destroying them -- wxWidgets handles that instead
+using AttachedWindows = ClientData::Site<
+   AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
+>;
+
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
@@ -177,9 +170,11 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public AudioIOListener,
                                      private PrefsListener
    , public AttachedObjects
+   , public AttachedWindows
 {
  public:
    using AttachedObjects = ::AttachedObjects;
+   using AttachedWindows = ::AttachedWindows;
 
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
@@ -202,7 +197,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
    wxString GetProjectName() const;
-   AdornedRulerPanel *GetRulerPanel();
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
@@ -297,8 +291,6 @@ public:
 
    wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
-   TrackPanel * GetTrackPanel() {return mTrackPanel;}
-   const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
 
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -414,33 +406,10 @@ public:
    bool TP_ScrollUpDown(int delta) override;
    void TP_HandleResize() override;
 
-   // ToolBar
-
-   // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
-   ControlToolBar *GetControlToolBar();
-
-   DeviceToolBar *GetDeviceToolBar();
-   MixerToolBar *GetMixerToolBar();
-   ScrubbingToolBar *GetScrubbingToolBar();
-   SelectionBar *GetSelectionBar();
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar *GetSpectralSelectionBar();
-#endif
-   ToolsToolBar *GetToolsToolBar();
-   const ToolsToolBar *GetToolsToolBar() const;
-   TranscriptionToolBar *GetTranscriptionToolBar();
-
    MeterPanel *GetPlaybackMeter();
    void SetPlaybackMeter(MeterPanel *playback);
    MeterPanel *GetCaptureMeter();
    void SetCaptureMeter(MeterPanel *capture);
-
-   LyricsWindow* GetLyricsWindow(bool create = false);
-   MixerBoardFrame* GetMixerBoardFrame(bool create = false);
-   HistoryWindow *GetHistoryWindow(bool create = false);
-   MacrosWindow *GetMacrosWindow(bool bExpanded, bool create = false);
-   FreqWindow *GetFreqWindow(bool create = false);
-   ContrastDialog *GetContrastDialog(bool create = false);
 
 private:
    bool SnapSelection();
@@ -544,9 +513,7 @@ private:
    std::unique_ptr<wxTimer> mTimer;
    void RestartTimer();
 
-   AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
-   TrackPanel *mTrackPanel{};
    wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
@@ -561,14 +528,6 @@ private:
    bool mAutoScrolling{ false };
    bool mActive{ true };
    bool mIconized;
-
-   MacrosWindow *mMacrosWindow{};
-   HistoryWindow *mHistoryWindow{};
-   LyricsWindow* mLyricsWindow{};
-   MixerBoardFrame* mMixerBoardFrame{};
-
-   Destroy_ptr<FreqWindow> mFreqWindow;
-   Destroy_ptr<ContrastDialog> mContrastDialog;
 
    bool mShownOnce{ false };
 

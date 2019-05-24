@@ -487,8 +487,8 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
    context.StartArray();
    for (auto trk : tracks.Leaders())
    {
-      TrackPanel *panel = context.project.GetTrackPanel();
-      Track * fTrack = panel->GetFocusedTrack();
+      auto &panel = TrackPanel::Get( context.project );
+      Track * fTrack = panel.GetFocusedTrack();
 
       context.StartStruct();
       context.AddItem( trk->GetName(), "name" );
@@ -715,12 +715,12 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    wxPoint P, wxWindow * pWin, int WXUNUSED(Id), int depth )
 {
    AudacityProject * pProj = &context.project;
-   TrackPanel * pTP = pProj->GetTrackPanel();
+   auto &tp = TrackPanel::Get( *pProj );
 
    wxRect trackRect = pWin->GetRect();
 
    for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
-      trackRect.y = t->GetY() - pTP->mViewInfo->vpos;
+      trackRect.y = t->GetY() - tp.mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
 #if 0
@@ -775,9 +775,9 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
       // The VRuler.
       {  
          wxRect R = trackRect;
-         R.x += pTP->GetVRulerOffset();
+         R.x += tp.GetVRulerOffset();
          R.y += kTopMargin;
-         R.width = pTP->GetVRulerWidth();
+         R.width = tp.GetVRulerWidth();
          R.height -= (kTopMargin + kBottomMargin);
          R.SetPosition( R.GetPosition() + P );
 

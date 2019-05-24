@@ -98,22 +98,17 @@ scroll information.  It also has some status flags.
 #include "AdornedRulerPanel.h"
 #include "Clipboard.h"
 #include "widgets/FileHistory.h"
-#include "FreqWindow.h"
-#include "effects/Contrast.h"
 #include "AutoRecovery.h"
 #include "AColor.h"
 #include "AudioIO.h"
-#include "BatchProcessDialog.h"
 #include "Dependencies.h"
 #include "Diags.h"
-#include "HistoryWindow.h"
+#include "export/Export.h"
 #include "InconsistencyException.h"
-#include "MixerBoard.h"
 #include "import/Import.h"
 #include "KeyboardCapture.h"
 #include "LabelTrack.h"
 #include "Legacy.h"
-#include "LyricsWindow.h"
 #include "Menus.h"
 #include "MissingAliasFileDialog.h"
 #include "Mix.h"
@@ -153,13 +148,9 @@ scroll information.  It also has some status flags.
 
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
-#include "toolbars/ScrubbingToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
-#include "toolbars/ToolsToolBar.h"
-#include "toolbars/TranscriptionToolBar.h"
 
 #include "tracks/ui/Scrubbing.h"
 
@@ -1133,21 +1124,16 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Create the ToolDock
    //
-   GetSelectionBar()->SetListener(this);
+   SelectionBar::Get( project ).SetListener( &project );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   GetSpectralSelectionBar()->SetListener(this);
+   SpectralSelectionBar::Get( project ).SetListener( &project );
 #endif
    ToolManager::Get( project ).LayoutToolBars();
 
    //
    // Create the horizontal ruler
    //
-   mRuler = safenew AdornedRulerPanel( this, window.GetTopPanel(),
-      wxID_ANY,
-      wxDefaultPosition,
-      wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
-      &viewInfo );
-   mRuler->SetLayoutDirection(wxLayout_LeftToRight);
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    //
    // Create the TrackPanel and the scrollbars
@@ -1194,7 +1180,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
-      ubs->Add(mRuler, 0, wxEXPAND);
+      ubs->Add(&ruler, 0, wxEXPAND);
       mTopPanel->SetSizer(ubs.release());
    }
 
@@ -1210,23 +1196,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    }
    bs->Layout();
 
-   {
-   auto mainPage = window.GetMainPage();
-   wxASSERT( mainPage ); // to justify safenew
-
-   // The right hand side translates to NEW TrackPanel(...) in normal
-   // Audacity without additional DLLs.
-   auto &tracks = TrackList::Get( project );
-   mTrackPanel = safenew TrackPanel(mainPage,
-                                             window.NextWindowID(),
-                                             wxDefaultPosition,
-                                             wxDefaultSize,
-                                             tracks.shared_from_this(),
-                                             &viewInfo,
-                                             this,
-                                             mRuler);
-   }
-
+   auto &trackPanel = TrackPanel::Get( project );
+ 
    mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
 
    MenuManager::Get( project ).CreateMenusAndCommands( project );
@@ -1260,7 +1231,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       // Track panel
-      hs->Add(mTrackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+      hs->Add(&trackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
 
       {
          // Vertical grouping
@@ -1279,7 +1250,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       // Bottom scrollbar
-      hs->Add(mTrackPanel->GetLeftOffset() - 1, 0);
+      hs->Add(trackPanel.GetLeftOffset() - 1, 0);
       hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
       hs->Add(mVsbar->GetSize().GetWidth(), 0);
       bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
@@ -1295,14 +1266,14 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mMainPanel->Layout();
 
-   wxASSERT( mTrackPanel->GetProject()==this);
+   wxASSERT( trackPanel.GetProject()==this);
 
    // MM: Give track panel the focus to ensure keyboard commands work
-   mTrackPanel->SetFocus();
+   trackPanel.SetFocus();
 
    InitialState();
    FixScrollbars();
-   mRuler->SetLeftOffset(mTrackPanel->GetLeftOffset());  // bevel on AdornedRuler
+   ruler.SetLeftOffset(trackPanel.GetLeftOffset());  // bevel on AdornedRuler
 
    //
    // Set the Icon
@@ -1324,12 +1295,17 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
    mIconized = false;
 
-   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(statusBar), -1, 150};
+   int widths[] = {
+      0,
+      ControlToolBar::Get( project ).WidthForStatusBar(statusBar),
+      -1,
+      150
+   };
    statusBar->SetStatusWidths(4, widths);
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    statusBar->SetStatusText(msg, mainStatusBarField);
-   GetControlToolBar()->UpdateStatusBar(this);
+   ControlToolBar::Get( project ).UpdateStatusBar(this);
 
    mTimer = std::make_unique<wxTimer>(this, AudacityProjectTimerID);
    RestartTimer();
@@ -1342,7 +1318,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 //   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
 
    // SetDropTarget takes ownership
-   mTrackPanel->SetDropTarget(safenew DropTarget(this));
+   trackPanel.SetDropTarget(safenew DropTarget(this));
 #endif
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &AudacityProject::OnThemeChange, this);
@@ -1352,6 +1328,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
 
    AttachedObjects::BuildAll();
+   // But not for the attached windows.  They get built only on demand, such as
+   // from menu items.
 }
 
 AudacityProject::~AudacityProject()
@@ -1363,9 +1341,11 @@ AudacityProject::~AudacityProject()
 
 void AudacityProject::ApplyUpdatedTheme()
 {
+   auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    ClearBackground();// For wxGTK.
-   mTrackPanel->ApplyUpdatedTheme();
+   trackPanel.ApplyUpdatedTheme();
 }
 
 
@@ -1415,10 +1395,8 @@ void AudacityProject::UpdatePrefsVariables()
    if( TrackList::Get( *this ).size() == 0){
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
       // If necessary, we change this rate in the selection toolbar too.
-      auto bar = GetSelectionBar();
-      if( bar ){
-         bar->SetRate( mRate );
-      }
+      auto bar = SelectionBar::Get( *this );
+      bar.SetRate( mRate );
    }
 #endif
 
@@ -1436,6 +1414,7 @@ void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
 {
    auto &project = *this;
    auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
    FixScrollbars();
    if (bForceWaveTracks)
    {
@@ -1443,12 +1422,14 @@ void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
          for (const auto &clip: pWaveTrack->GetClips())
             clip->MarkChanged();
    }
-   mTrackPanel->Refresh(false);
+   trackPanel.Refresh(false);
 }
 
 void AudacityProject::RefreshCursor()
 {
-   mTrackPanel->HandleCursorForPresentMouseState();
+   auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
+   trackPanel.HandleCursorForPresentMouseState();
 }
 
 void AudacityProject::OnThemeChange(wxCommandEvent& evt)
@@ -1463,12 +1444,7 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
-   GetRulerPanel()->ReCreateButtons();
-}
-
-AdornedRulerPanel *AudacityProject::GetRulerPanel()
-{
-   return mRuler;
+   AdornedRulerPanel::Get( project ).ReCreateButtons();
 }
 
 int AudacityProject::GetAudioIOToken() const
@@ -1597,13 +1573,14 @@ const NumericFormatSymbol & AudacityProject::AS_GetSelectionFormat()
 
 void AudacityProject::AS_SetSelectionFormat(const NumericFormatSymbol & format)
 {
+   auto &project = *this;
    mSelectionFormat = format;
 
    gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat.Internal());
    gPrefs->Flush();
 
-   if (SnapSelection() && GetTrackPanel())
-      GetTrackPanel()->Refresh(false);
+   if (SnapSelection())
+      TrackPanel::Get( project ).Refresh(false);
 }
 
 double AudacityProject::SSBL_GetRate() const
@@ -1647,6 +1624,7 @@ void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, 
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    double nyq = SSBL_GetRate() / 2.0;
@@ -1655,7 +1633,7 @@ void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, 
    if (top >= 0.0)
       top = std::min(nyq, top);
    viewInfo.selectedRegion.setFrequencies(bottom, top);
-   mTrackPanel->Refresh(false);
+   trackPanel.Refresh(false);
    if (done) {
       ModifyState(false);
    }
@@ -1671,11 +1649,10 @@ const NumericFormatSymbol & AudacityProject::GetFrequencySelectionFormatName() c
 
 void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
+   auto &project = *this;
    SSBL_SetFrequencySelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   if (GetSpectralSelectionBar()) {
-      GetSpectralSelectionBar()->SetFrequencySelectionFormatName(formatName);
-   }
+   SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
 #endif
 }
 
@@ -1686,20 +1663,18 @@ const NumericFormatSymbol & AudacityProject::GetBandwidthSelectionFormatName() c
 
 void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
+   auto &project = *this;
    SSBL_SetBandwidthSelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   if (GetSpectralSelectionBar()) {
-      GetSpectralSelectionBar()->SetBandwidthSelectionFormatName(formatName);
-   }
+   SpectralSelectionBar::Get( project ).SetBandwidthSelectionFormatName(formatName);
 #endif
 }
 
 void AudacityProject::SetSelectionFormat(const NumericFormatSymbol & format)
 {
+   auto &project = *this;
    AS_SetSelectionFormat(format);
-   if (GetSelectionBar()) {
-      GetSelectionBar()->SetSelectionFormat(format);
-   }
+   SelectionBar::Get( project ).SetSelectionFormat(format);
 }
 
 const NumericFormatSymbol & AudacityProject::GetSelectionFormat() const
@@ -1711,9 +1686,10 @@ const NumericFormatSymbol & AudacityProject::GetSelectionFormat() const
 void AudacityProject::AS_ModifySelection(double &start, double &end, bool done)
 {
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.selectedRegion.setTimes(start, end);
-   mTrackPanel->Refresh(false);
+   trackPanel.Refresh(false);
    if (done) {
       ModifyState(false);
    }
@@ -1851,10 +1827,11 @@ double AudacityProject::ScrollingLowerBoundTime() const
 {
    auto &project = *this;
    auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    if (!MayScrollBeyondZero())
       return 0;
-   const double screen = mTrackPanel->GetScreenEndTime() - viewInfo.h;
+   const double screen = trackPanel.GetScreenEndTime() - viewInfo.h;
    return std::min(tracks.GetStartTime(), -screen);
 }
 
@@ -1937,6 +1914,7 @@ void AudacityProject::FixScrollbars()
 {
    auto &project = *this;
    auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    bool refresh = false;
@@ -1945,7 +1923,7 @@ void AudacityProject::FixScrollbars()
    int totalHeight = (tracks.GetHeight() + 32);
 
    int panelWidth, panelHeight;
-   mTrackPanel->GetTracksUsableArea(&panelWidth, &panelHeight);
+   trackPanel.GetTracksUsableArea(&panelWidth, &panelHeight);
 
    // (From Debian...at least I think this is the change cooresponding
    // to this comment)
@@ -1971,7 +1949,7 @@ void AudacityProject::FixScrollbars()
       std::max(LastTime, viewInfo.selectedRegion.t1());
 
    const double screen =
-      GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
+      trackPanel.GetScreenEndTime() - viewInfo.h;
    const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
@@ -2018,7 +1996,7 @@ void AudacityProject::FixScrollbars()
    bool oldhstate;
    bool oldvstate;
    bool newhstate =
-      (GetTrackPanel()->GetScreenEndTime() - viewInfo.h) < viewInfo.total;
+      (trackPanel.GetScreenEndTime() - viewInfo.h) < viewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
@@ -2077,8 +2055,8 @@ void AudacityProject::FixScrollbars()
                         panelHeight / viewInfo.scrollStep, TRUE);
 
    if (refresh || (rescroll &&
-       (GetTrackPanel()->GetScreenEndTime() - viewInfo.h) < viewInfo.total)) {
-      mTrackPanel->Refresh(false);
+       (trackPanel.GetScreenEndTime() - viewInfo.h) < viewInfo.total)) {
+      trackPanel.Refresh(false);
    }
 
    MenuManager::Get( project ).UpdateMenus( project );
@@ -2087,17 +2065,17 @@ void AudacityProject::FixScrollbars()
       UpdateLayout();
    }
 
-   CallAfter(
-      [this]{ if (GetTrackPanel())
-         GetTrackPanel()->HandleCursorForPresentMouseState(); } );
+   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
+   CallAfter( [pPanel]{
+      if ( pPanel )
+         pPanel->HandleCursorForPresentMouseState();
+   } );
 }
 
 void AudacityProject::UpdateLayout()
 {
-   if (!mTrackPanel)
-      return;
-
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &toolManager = ToolManager::Get( project );
 
    // 1. Layout panel, to get widths of the docks.
@@ -2114,7 +2092,7 @@ void AudacityProject::UpdateLayout()
 
    // Retrieve position of the track panel to use as the size of the top
    // third of the window
-   wxPoint tppos = ClientToScreen(mTrackPanel->GetParent()->GetPosition());
+   wxPoint tppos = ClientToScreen(trackPanel.GetParent()->GetPosition());
 
    // Retrieve position of bottom dock to use as the size of the bottom
    // third of the window
@@ -2126,8 +2104,13 @@ void AudacityProject::UpdateLayout()
 
 void AudacityProject::HandleResize()
 {
-   if (!mTrackPanel)
+   // Activate events can fire during window teardown, so just
+   // ignore them.
+   if (mIsDeleting) {
       return;
+   }
+
+   auto &project = *this;
 
    FixScrollbars();
 
@@ -2277,11 +2260,12 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 void AudacityProject::DoScroll()
 {
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
 
    int width;
-   mTrackPanel->GetTracksUsableArea(&width, NULL);
+   trackPanel.GetTracksUsableArea(&width, NULL);
    viewInfo.SetBeforeScreenWidth(viewInfo.sbarH, width, lowerBound);
 
 
@@ -2303,12 +2287,14 @@ void AudacityProject::DoScroll()
    //SetActiveProject(this);
 
    if (!mAutoScrolling) {
-      mTrackPanel->Refresh(false);
+      trackPanel.Refresh(false);
    }
 
-   CallAfter(
-      [this]{ if (GetTrackPanel())
-         GetTrackPanel()->HandleCursorForPresentMouseState(); } );
+   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
+   CallAfter( [pPanel]{
+      if ( pPanel )
+         pPanel->HandleCursorForPresentMouseState();
+   } );
 }
 
 void AudacityProject::OnMenu(wxCommandEvent & event)
@@ -2366,14 +2352,14 @@ void AudacityProject::MacShowUndockedToolbars(bool show)
 
 void AudacityProject::OnActivate(wxActivateEvent & event)
 {
-   auto &project = *this;
-
    // Activate events can fire during window teardown, so just
    // ignore them.
    if (IsBeingDeleted()) {
       return;
    }
 
+   auto &project = *this;
+   
    mActive = event.GetActive();
 
    // Under Windows, focus can be "lost" when returning to
@@ -2396,11 +2382,8 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    else {
       auto &toolManager = ToolManager::Get( project );
       SetActiveProject(this);
-      if ( ! toolManager.RestoreFocus() ) {
-         if (mTrackPanel) {
-            mTrackPanel->SetFocus();
-         }
-      }
+      if ( ! toolManager.RestoreFocus() )
+         TrackPanel::Get( project ).SetFocus();
 
 #ifdef __WXMAC__
       MacShowUndockedToolbars(true);
@@ -2479,14 +2462,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       return;
    }
 
-   // TODO: consider postponing these steps until after the possible veto
-   // below:  closing the two analysis dialogs, and stopping audio streams.
-   // Streams can be for play, recording, or monitoring.  But maybe it still
-   // makes sense to stop any recording before putting up the dialog.
-
-   mFreqWindow.reset();
-   mContrastDialog.reset();
-
    // Check to see if we were playing or recording
    // audio, and if so, make sure Audio I/O is completely finished.
    // The main point of this is to properly push the state
@@ -2499,7 +2474,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
       // We were playing or recording audio, but we've stopped the stream.
       wxCommandEvent dummyEvent;
-      GetControlToolBar()->OnStop(dummyEvent);
+      ControlToolBar::Get( project ).OnStop(dummyEvent);
 
       FixScrollbars();
       SetAudioIOToken(0);
@@ -2590,31 +2565,16 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    projectFileIO.CloseLock();
 
-   // Get rid of the history window
-   // LL:  Destroy it before the TrackPanel and ToolBars since they
-   //      may/will get additional wxEVT_PAINT events since window
-   //      destruction may be queued.  This seems to only be a problem
-   //      on the Mac.
-   if (mHistoryWindow) {
-      mHistoryWindow->Destroy();
-      mHistoryWindow = NULL;
-   }
-
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
    // crashing when running with Jaws on Windows 10 1703.
-   if (mRuler)
-	   mRuler->Destroy();
+   AdornedRulerPanel::Destroy( project );
 
    // Destroy the TrackPanel early so it's not around once we start
    // deleting things like tracks and such out from underneath it.
    // Check validity of mTrackPanel per bug 584 Comment 1.
    // Deeper fix is in the Import code, but this failsafes against crash.
-   if (mTrackPanel)
-   {
-      mTrackPanel->Destroy();
-      mTrackPanel = NULL;              // Make sure this gets set...see HandleResize()
-   }
+   TrackPanel::Destroy( project );
 
    // Finalize the tool manager before the children since it needs
    // to save the state of the toolbars.
@@ -2685,7 +2645,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Destroys this
    pSelf.reset();
-   mRuler = nullptr;
 }
 
 void AudacityProject::OnOpenAudioFile(wxCommandEvent & event)
@@ -3029,6 +2988,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 {
    auto &project = *this;
    auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
    auto &dirManager = DirManager::Get( project );
 
    // On Win32, we may be given a short (DOS-compatible) file name on rare
@@ -3159,10 +3119,10 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 
    if (bParseSuccess) {
       InitialState();
-      mTrackPanel->SetFocusedTrack( *tracks.Any().begin() );
+      trackPanel.SetFocusedTrack( *tracks.Any().begin() );
       HandleResize();
-      mTrackPanel->Refresh(false);
-      mTrackPanel->Update(); // force any repaint to happen now,
+      trackPanel.Refresh(false);
+      trackPanel.Update(); // force any repaint to happen now,
       // else any asynch calls into the blockfile code will not have
       // finished logging errors (if any) before the call to ProjectFSCK()
 
@@ -3242,7 +3202,7 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
                for (const auto &clip: wt->GetClips())
                   clip->MarkChanged();
 
-            mTrackPanel->Refresh(true);
+            trackPanel.Refresh(true);
 
             // Vaughan, 2010-08-20: This was bogus, as all the actions in ProjectFSCK
             // that return FSCKstatus_CHANGED cannot be undone.
@@ -3528,7 +3488,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       else if (!wxStrcmp(attr, wxT("rate"))) {
          Internat::CompatibleToDouble(value, &mRate);
-         GetSelectionBar()->SetRate(mRate);
+         SelectionBar::Get( project ).SetRate( mRate );
       }
 
       else if (!wxStrcmp(attr, wxT("snapto"))) {
@@ -4249,7 +4209,7 @@ AudacityProject::AddImportedTracks(const FilePath &fileName,
    // if this is the first file that is imported
    if (initiallyEmpty && newRate > 0) {
       mRate = newRate;
-      GetSelectionBar()->SetRate(mRate);
+      SelectionBar::Get( project ).SetRate( newRate );
    }
 
    PushState(wxString::Format(_("Imported '%s'"), fileName),
@@ -4279,13 +4239,16 @@ AudacityProject::AddImportedTracks(const FilePath &fileName,
 
 void AudacityProject::ZoomAfterImport(Track *pTrack)
 {
+   auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
+
    ViewActions::DoZoomFit(*this);
 
-   mTrackPanel->SetFocus();
+   trackPanel.SetFocus();
    RedrawProject();
    if (!pTrack)
-      pTrack = mTrackPanel->GetFirstSelectedTrack();
-   mTrackPanel->EnsureVisible(pTrack);
+      pTrack = trackPanel.GetFirstSelectedTrack();
+   trackPanel.EnsureVisible(pTrack);
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
@@ -4662,7 +4625,7 @@ void AudacityProject::PushState(const wxString &desc,
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 
-   GetTrackPanel()->HandleCursorForPresentMouseState();
+   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
 }
 
 void AudacityProject::RollbackState()
@@ -4683,7 +4646,7 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
       &tracks, viewInfo.selectedRegion, tags.shared_from_this());
    if (bWantsAutoSave)
       AutoSave();
-   GetTrackPanel()->HandleCursorForPresentMouseState();
+   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -4748,13 +4711,14 @@ void AudacityProject::PopState(const UndoState &state)
 void AudacityProject::SetStateTo(unsigned int n)
 {
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    undoManager.SetStateTo(n,
       [this]( const UndoState &state ){ PopState(state); } );
 
    HandleResize();
-   mTrackPanel->SetFocusedTrack(NULL);
-   mTrackPanel->Refresh(false);
+   trackPanel.SetFocusedTrack(NULL);
+   trackPanel.Refresh(false);
    MenuManager::Get( project ).ModifyUndoMenuItems( project );
 }
 
@@ -4769,7 +4733,7 @@ void AudacityProject::Zoom(double level)
    // tOnLeft is the amount of time we would need before the selection left edge to center it.
    float t0 = viewInfo.selectedRegion.t0();
    float t1 = viewInfo.selectedRegion.t1();
-   float tAvailable = GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
+   float tAvailable = TrackPanel::Get( project ).GetScreenEndTime() - viewInfo.h;
    float tOnLeft = (tAvailable - t0 + t1)/2.0;
    // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
    // If tOnLeft is positive, then we have room for the selection, so scroll to it.
@@ -4818,6 +4782,7 @@ void AudacityProject::SkipEnd(bool shift)
 {
    auto &project = *this;
    auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    double len = tracks.GetEndTime();
 
@@ -4826,77 +4791,10 @@ void AudacityProject::SkipEnd(bool shift)
       viewInfo.selectedRegion.setT0(len);
 
    // Make sure the end of the track is visible
-   mTrackPanel->ScrollIntoView(len);
-   mTrackPanel->Refresh(false);
+   trackPanel.ScrollIntoView(len);
+   trackPanel.Refresh(false);
 }
 
-
-namespace {
-   template<typename ToolBar>
-   ToolBar *DoGetToolBar( AudacityProject &project, int type )
-   {
-      auto &toolManager = ToolManager::Get( project );
-      return static_cast<ToolBar *>( toolManager.GetToolBar( type ) );
-   }
-
-   template<typename ToolBar>
-   const ToolBar *DoGetToolBar( const AudacityProject &project, int type )
-   {
-      return DoGetToolBar<ToolBar>(
-         const_cast<AudacityProject&>( project ), type );
-   }
-}
-
-////////////////////////////////////////////////////////////
-//  This fetches a pointer to the Transport Toolbar.  It may
-//  either be docked or floating out in the open.
-////////////////////////////////////////////////////////////
-ControlToolBar *AudacityProject::GetControlToolBar()
-{
-   return DoGetToolBar< ControlToolBar >( *this, TransportBarID );
-}
-
-DeviceToolBar *AudacityProject::GetDeviceToolBar()
-{
-   return DoGetToolBar< DeviceToolBar >( *this, DeviceBarID );
-}
-
-MixerToolBar *AudacityProject::GetMixerToolBar()
-{
-   return DoGetToolBar< MixerToolBar >( *this, MixerBarID );
-}
-
-ScrubbingToolBar *AudacityProject::GetScrubbingToolBar()
-{
-   return DoGetToolBar< ScrubbingToolBar >( *this, ScrubbingBarID );
-}
-
-SelectionBar *AudacityProject::GetSelectionBar()
-{
-   return DoGetToolBar< SelectionBar >( *this, SelectionBarID );
-}
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-SpectralSelectionBar *AudacityProject::GetSpectralSelectionBar()
-{
-   return DoGetToolBar< SpectralSelectionBar >( *this, SpectralSelectionBarID );
-}
-#endif
-
-ToolsToolBar *AudacityProject::GetToolsToolBar()
-{
-   return DoGetToolBar< ToolsToolBar >( *this, ToolsBarID );
-}
-
-const ToolsToolBar *AudacityProject::GetToolsToolBar() const
-{
-   return DoGetToolBar< const ToolsToolBar >( *this, ToolsBarID );
-}
-
-TranscriptionToolBar *AudacityProject::GetTranscriptionToolBar()
-{
-   return DoGetToolBar< TranscriptionToolBar >( *this, TranscriptionBarID );
-}
 
 MeterPanel *AudacityProject::GetPlaybackMeter()
 {
@@ -4940,9 +4838,8 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
    auto &project = *this;
    auto &window = project;
    auto &dirManager = DirManager::Get( project );
-   MixerToolBar *mixerToolBar = GetMixerToolBar();
-   if( mixerToolBar )
-      mixerToolBar->UpdateControls();
+   auto mixerToolBar = &MixerToolBar::Get( project );
+   mixerToolBar->UpdateControls();
 
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
@@ -5014,18 +4911,16 @@ void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 void AudacityProject::TP_DisplaySelection()
 {
    auto &project = *this;
+   auto &ruler = AdornedRulerPanel::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
    double audioTime;
 
-   if (mRuler) {
-      if (!gAudioIO->IsBusy() && !mLockPlayRegion)
-         mRuler->SetPlayRegion(selectedRegion.t0(),
-         selectedRegion.t1());
-      else
-         // Cause ruler redraw anyway, because we may be zooming or scrolling
-         mRuler->Refresh();
-   }
+   if (!gAudioIO->IsBusy() && !mLockPlayRegion)
+      ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
+   else
+      // Cause ruler redraw anyway, because we may be zooming or scrolling
+      ruler.Refresh();
 
    if (gAudioIO->IsBusy())
       audioTime = gAudioIO->GetStreamTime();
@@ -5034,13 +4929,12 @@ void AudacityProject::TP_DisplaySelection()
       GetPlayRegion(&audioTime, &playEnd);
    }
 
-   GetSelectionBar()->SetTimes(selectedRegion.t0(),
+   SelectionBar::Get( project ).SetTimes(selectedRegion.t0(),
                                selectedRegion.t1(), audioTime);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   GetSpectralSelectionBar()->SetFrequencies(
+   SpectralSelectionBar::Get( project ).SetFrequencies(
       selectedRegion.f0(), selectedRegion.f1());
 #endif
-
 }
 
 
@@ -5070,10 +4964,9 @@ void AudacityProject::TP_HandleResize()
 void AudacityProject::GetPlayRegion(double* playRegionStart,
                                     double *playRegionEnd)
 {
-   if (mRuler)
-      mRuler->GetPlayRegion(playRegionStart, playRegionEnd);
-   else
-      *playRegionEnd = *playRegionStart = 0;
+   auto &project = *this;
+   AdornedRulerPanel::Get( project ).GetPlayRegion(
+      playRegionStart, playRegionEnd);
 }
 
 void AudacityProject::AutoSave()
@@ -5170,7 +5063,8 @@ void AudacityProject::MayStartMonitoring()
 
 void AudacityProject::OnAudioIORate(int rate)
 {
-   auto &window = *this;
+   auto &project = *this;
+   auto &window = project;
    wxString display;
    if (rate > 0) {
       display = wxString::Format(_("Actual Rate: %d"), rate);
@@ -5182,7 +5076,12 @@ void AudacityProject::OnAudioIORate(int rate)
    int x, y;
    auto statusBar = window.GetStatusBar();
    statusBar->GetTextExtent(display, &x, &y);
-   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(statusBar), -1, x+50};
+   int widths[] = {
+      0,
+      ControlToolBar::Get( project ).WidthForStatusBar(statusBar),
+      -1,
+      x+50
+   };
    statusBar->SetStatusWidths(4, widths);
    statusBar->SetStatusText(display, rateStatusBarField);
 }
@@ -5272,12 +5171,11 @@ void AudacityProject::OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog)
 
 void AudacityProject::SetSnapTo(int snap)
 {
+   auto &project = *this;
    AS_SetSnapTo(snap);
-   if (GetSelectionBar()) {
-      GetSelectionBar()->SetSnapTo(snap);
-   }
+   SelectionBar::Get( project ).SetSnapTo(snap);
 }
-
+   
 int AudacityProject::GetSnapTo() const
 {
    return mSnapTo;
@@ -5294,10 +5192,10 @@ bool AudacityProject::IsSyncLocked()
 
 void AudacityProject::SetSyncLock(bool flag)
 {
+   auto &project = *this;
    if (flag != mIsSyncLocked) {
       mIsSyncLocked = flag;
-      if (GetTrackPanel())
-         GetTrackPanel()->Refresh(false);
+      TrackPanel::Get( project ).Refresh(false);
    }
 }
 
@@ -5473,18 +5371,18 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       // to the application, so scrub speed control is smoother.
       // (So I see at least with OS 10.10 and wxWidgets 3.0.2.)
       // Is there another way to ensure that than by refreshing?
-      const auto trackPanel = mProject->GetTrackPanel();
-      trackPanel->Refresh(false);
+      auto &trackPanel = TrackPanel::Get( *mProject );
+      trackPanel.Refresh(false);
    }
    else if (mMode != Mode::Off) {
       // Pan the view, so that we put the play indicator at some fixed
       // fraction of the window width.
 
       auto &viewInfo = ViewInfo::Get( *mProject );
-      TrackPanel *const trackPanel = mProject->GetTrackPanel();
+      auto &trackPanel = TrackPanel::Get( *mProject );
       const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
       int width;
-      trackPanel->GetTracksUsableArea(&width, NULL);
+      trackPanel.GetTracksUsableArea(&width, NULL);
       int deltaX;
       switch (mMode)
       {
@@ -5503,71 +5401,14 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       if (!mProject->MayScrollBeyondZero())
          // Can't scroll too far left
          viewInfo.h = std::max(0.0, viewInfo.h);
-      trackPanel->Refresh(false);
+      trackPanel.Refresh(false);
    }
-}
-
-LyricsWindow* AudacityProject::GetLyricsWindow(bool create)
-{
-   if (create && !mLyricsWindow)
-      mLyricsWindow = safenew LyricsWindow{ this };
-   return mLyricsWindow;
-}
-
-MixerBoardFrame* AudacityProject::GetMixerBoardFrame(bool create)
-{
-   if (create && !mMixerBoardFrame)
-      mMixerBoardFrame = safenew MixerBoardFrame{ this };
-   return mMixerBoardFrame;
-}
-
-HistoryWindow *AudacityProject::GetHistoryWindow(bool create)
-{
-   auto &project = *this;
-   auto &undoManager = UndoManager::Get( project );
-   if (create && !mHistoryWindow)
-      mHistoryWindow = safenew HistoryWindow{ this, &undoManager };
-   return mHistoryWindow;
-}
-
-MacrosWindow *AudacityProject::GetMacrosWindow(bool bExpanded, bool create)
-{
-   if (create && !mMacrosWindow)
-      mMacrosWindow = safenew MacrosWindow{ this, bExpanded };
-
-   if (mMacrosWindow) {
-      mMacrosWindow->Show();
-      mMacrosWindow->Raise();
-      mMacrosWindow->UpdateDisplay( bExpanded );
-   }
-   return mMacrosWindow;
-}
-
-FreqWindow *AudacityProject::GetFreqWindow(bool create)
-{
-   if (create && !mFreqWindow)
-      mFreqWindow.reset( safenew FreqWindow{
-         this, -1, _("Frequency Analysis"),
-         wxPoint{ 150, 150 }
-      } );
-   return mFreqWindow.get();
-}
-
-ContrastDialog *AudacityProject::GetContrastDialog(bool create)
-{
-   // All of this goes away when the Contrast Dialog is converted to a module
-   if(create && !mContrastDialog)
-      mContrastDialog.reset( safenew ContrastDialog{
-         this, -1, _("Contrast Analysis (WCAG 2 compliance)"),
-         wxPoint{ 150, 150 }
-      } );
-
-   return mContrastDialog.get();
 }
 
 void AudacityProject::ZoomInByFactor( double ZoomFactor )
 {
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    // LLL: Handling positioning differently when audio is
@@ -5575,8 +5416,8 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) &&
        !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
-      mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
-      mTrackPanel->Refresh(false);
+      trackPanel.ScrollIntoView(gAudioIO->GetStreamTime());
+      trackPanel.Refresh(false);
       return;
    }
 
@@ -5584,7 +5425,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    // when there's a selection that's currently at least
    // partially on-screen
 
-   const double endTime = GetTrackPanel()->GetScreenEndTime();
+   const double endTime = trackPanel.GetScreenEndTime();
    const double duration = endTime - viewInfo.h;
 
    bool selectionIsOnscreen =
@@ -5612,7 +5453,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
       // Zoom in
       ZoomBy(ZoomFactor);
       const double newDuration =
-         GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
+         trackPanel.GetScreenEndTime() - viewInfo.h;
 
       // Recenter on selCenter
       TP_ScrollWindow(selCenter - newDuration / 2);
@@ -5625,7 +5466,7 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    ZoomBy(ZoomFactor);
 
    const double newDuration =
-      GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
+      trackPanel.GetScreenEndTime() - viewInfo.h;
    double newh = origLeft + (origWidth - newDuration) / 2;
 
    // MM: Commented this out because it was confusing users
@@ -5647,14 +5488,15 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
 void AudacityProject::ZoomOutByFactor( double ZoomFactor )
 {
    auto &project = *this;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    //Zoom() may change these, so record original values:
    const double origLeft = viewInfo.h;
-   const double origWidth = GetTrackPanel()->GetScreenEndTime() - origLeft;
+   const double origWidth = trackPanel.GetScreenEndTime() - origLeft;
 
    ZoomBy(ZoomFactor);
-   const double newWidth = GetTrackPanel()->GetScreenEndTime() - viewInfo.h;
+   const double newWidth = trackPanel.GetScreenEndTime() - viewInfo.h;
 
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;

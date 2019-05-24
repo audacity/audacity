@@ -125,6 +125,25 @@ ControlToolBar::~ControlToolBar()
 }
 
 
+ControlToolBar *ControlToolBar::Find( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return static_cast<ControlToolBar*>(
+      toolManager.GetToolBar(TransportBarID) );
+}
+
+ControlToolBar &ControlToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<ControlToolBar*>(
+      toolManager.GetToolBar(TransportBarID) );
+}
+
+const ControlToolBar &ControlToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
+}
+
 void ControlToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
@@ -464,7 +483,7 @@ void ControlToolBar::EnableDisableButtons()
    bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
 
    if (p) {
-      TranscriptionToolBar *const playAtSpeedTB = p->GetTranscriptionToolBar();
+      const auto playAtSpeedTB = &TranscriptionToolBar::Get( *p );
       if (playAtSpeedTB)
          playAtSpeedTB->SetEnabled(CanStopAudioStream() && tracks && !recording);
    }
@@ -731,7 +750,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    // Let other UI update appearance
    if (p)
-      p->GetRulerPanel()->DrawBothOverlays();
+      AdornedRulerPanel::Get( *p ).DrawBothOverlays();
 
    return token;
 }
@@ -1232,7 +1251,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
-            p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
+            TrackPanel::Get( *p ).SetFocusedTrack( newTrack.get() );
          }
          TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
       }

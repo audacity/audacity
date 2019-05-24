@@ -190,7 +190,7 @@ AdornedRulerPanel::QuickPlayRulerOverlay::QuickPlayRulerOverlay(
 
 AdornedRulerPanel *AdornedRulerPanel::QuickPlayRulerOverlay::GetRuler() const
 {
-   return mPartner.mProject->GetRulerPanel();
+   return &Get( *mPartner.mProject );
 }
 
 void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
@@ -530,19 +530,19 @@ namespace
 
 wxCoord GetPlayHeadX( const AudacityProject *pProject )
 {
-   const TrackPanel *tp = pProject->GetTrackPanel();
+   const auto &tp = TrackPanel::Get( *pProject );
    int width;
-   tp->GetTracksUsableArea(&width, NULL);
-   return tp->GetLeftOffset()
+   tp.GetTracksUsableArea(&width, NULL);
+   return tp.GetLeftOffset()
       + width * TracksPrefs::GetPinnedHeadPositionPreference();
 }
 
 double GetPlayHeadFraction( const AudacityProject *pProject, wxCoord xx )
 {
-   const TrackPanel *tp = pProject->GetTrackPanel();
+   const auto &tp = TrackPanel::Get( *pProject );
    int width;
-   tp->GetTracksUsableArea(&width, NULL);
-   auto fraction = (xx - tp->GetLeftOffset()) / double(width);
+   tp.GetTracksUsableArea(&width, NULL);
+   auto fraction = (xx - tp.GetLeftOffset()) / double(width);
    return std::max(0.0, std::min(1.0, fraction));
 }
 
@@ -779,9 +779,9 @@ private:
          auto &scrubber = Scrubber::Get( *pProject );
          scrubber.Cancel();
          
-         auto ctb = pProject->GetControlToolBar();
+         auto &ctb = ControlToolBar::Get( *pProject );
          wxCommandEvent evt;
-         ctb->OnStop(evt);
+         ctb.OnStop(evt);
       }
 
       return result;
@@ -840,6 +840,40 @@ std::vector<UIHandlePtr> AdornedRulerPanel::ScrubbingCell::HitTest
    return results;
 }
 
+namespace{
+AudacityProject::AttachedWindows::RegisteredFactory sKey{
+[]( AudacityProject &project ) -> wxWeakRef< wxWindow > {
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &window = project;
+
+   return safenew AdornedRulerPanel( &project, window.GetTopPanel(),
+      wxID_ANY,
+      wxDefaultPosition,
+      wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
+      &viewInfo );
+}
+};
+}
+
+AdornedRulerPanel &AdornedRulerPanel::Get( AudacityProject &project )
+{
+   return project.AttachedWindows::Get< AdornedRulerPanel >( sKey );
+}
+
+const AdornedRulerPanel &AdornedRulerPanel::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+void AdornedRulerPanel::Destroy( AudacityProject &project )
+{
+   auto *pPanel = project.AttachedWindows::Find( sKey );
+   if (pPanel) {
+      pPanel->wxWindow::Destroy();
+      project.AttachedWindows::Assign( sKey, nullptr );
+   }
+}
+
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
                                      wxWindow *parent,
                                      wxWindowID id,
@@ -849,6 +883,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 :  CellularPanel(parent, id, pos, size, viewinfo)
 , mProject(project)
 {
+   SetLayoutDirection(wxLayout_LeftToRight);
+
    mQPCell = std::make_shared<QPCell>( this );
    mScrubbingCell = std::make_shared<ScrubbingCell>( this );
    
@@ -1559,8 +1595,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
    bool startPlaying = (mPlayRegionStart >= 0);
 
    if (startPlaying) {
-      ControlToolBar* ctb = mProject->GetControlToolBar();
-      ctb->StopPlaying();
+      auto &ctb = ControlToolBar::Get( *mProject );
+      ctb.StopPlaying();
 
       bool loopEnabled = true;
       double start, end;
@@ -1602,7 +1638,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       mPlayRegionEnd = end;
       Refresh();
 
-      ctb->PlayPlayRegion((SelectedRegion(start, end)),
+      ctb.PlayPlayRegion((SelectedRegion(start, end)),
                           options, mode,
                           false,
                           true);
@@ -1637,7 +1673,7 @@ void AdornedRulerPanel::SetPanelSize()
 
 void AdornedRulerPanel::DrawBothOverlays()
 {
-   mProject->GetTrackPanel()->DrawOverlays( false );
+   TrackPanel::Get( *mProject ).DrawOverlays( false );
    DrawOverlays( false );
 }
 
@@ -1680,11 +1716,11 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown)
 {
    // Keep Quick-Play within usable track area.
-   TrackPanel *tp = mProject->GetTrackPanel();
+   const auto &tp = TrackPanel::Get( *mProject );
    int width;
-   tp->GetTracksUsableArea(&width, NULL);
-   mousePosX = std::max(mousePosX, tp->GetLeftOffset());
-   mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
+   tp.GetTracksUsableArea(&width, NULL);
+   mousePosX = std::max(mousePosX, tp.GetLeftOffset());
+   mousePosX = std::min(mousePosX, tp.GetLeftOffset() + width - 1);
 
    mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
 
@@ -2077,8 +2113,8 @@ void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
 
 void AdornedRulerPanel::ClearPlayRegion()
 {
-   ControlToolBar* ctb = mProject->GetControlToolBar();
-   ctb->StopPlaying();
+   auto &ctb = ControlToolBar::Get( *mProject );
+   ctb.StopPlaying();
 
    mPlayRegionStart = -1;
    mPlayRegionEnd = -1;
@@ -2198,7 +2234,7 @@ void AdornedRulerPanel::CreateOverlays()
    if (!mOverlay) {
       mOverlay =
          std::make_shared<QuickPlayIndicatorOverlay>( mProject );
-      mProject->GetTrackPanel()->AddOverlay( mOverlay );
+      TrackPanel::Get( *mProject ).AddOverlay( mOverlay );
       this->AddOverlay( mOverlay->mPartner );
    }
 }

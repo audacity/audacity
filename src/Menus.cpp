@@ -377,12 +377,12 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 {
    wxWindow *w = wxWindow::FindFocus();
 
-   while (w && project.GetTrackPanel()) {
+   while (w) {
       if (w == ToolManager::Get( project ).GetTopDock()) {
          return TopDockHasFocus;
       }
 
-      if (w == project.GetRulerPanel())
+      if (w == &AdornedRulerPanel::Get( project ))
          return RulerHasFocus;
 
       if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {
@@ -562,8 +562,8 @@ CommandFlag MenuManager::GetUpdateFlags
    if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
       flags |= CaptureNotBusyFlag;
 
-   ControlToolBar *bar = project.GetControlToolBar();
-   if (bar->ControlToolBar::CanStopAudioStream())
+   auto &bar = ControlToolBar::Get( project );
+   if (bar.ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
 
    lastFlags = flags;

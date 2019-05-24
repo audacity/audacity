@@ -931,7 +931,8 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    if (channels.size() != 2)
       return;
 
-   Track *const focused = project->GetTrackPanel()->GetFocusedTrack();
+   auto &trackPanel = TrackPanel::Get( *project );
+   Track *const focused = trackPanel.GetFocusedTrack();
    const bool hasFocus = channels.contains( focused );
 
    auto partner = *channels.rbegin();
@@ -943,7 +944,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    tracks.GroupChannels( *partner, 2 );
 
    if (hasFocus)
-      project->GetTrackPanel()->SetFocusedTrack(partner);
+      trackPanel.SetFocusedTrack(partner);
 
    /* i18n-hint: The string names a track  */
    project->PushState(wxString::Format(_("Swapped Channels in '%s'"),

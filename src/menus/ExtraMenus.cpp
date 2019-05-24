@@ -22,7 +22,7 @@ struct Handler : CommandHandlerObject {
 void OnOutputGain(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
+   auto tb = &MixerToolBar::Get( project );
 
    if (tb) {
       tb->ShowOutputGainDialog();
@@ -32,7 +32,7 @@ void OnOutputGain(const CommandContext &context)
 void OnOutputGainInc(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
+   auto tb = &MixerToolBar::Get( project );
 
    if (tb) {
       tb->AdjustOutputGain(1);
@@ -42,7 +42,7 @@ void OnOutputGainInc(const CommandContext &context)
 void OnOutputGainDec(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
+   auto tb = &MixerToolBar::Get( project );
 
    if (tb) {
       tb->AdjustOutputGain(-1);
@@ -52,7 +52,7 @@ void OnOutputGainDec(const CommandContext &context)
 void OnInputGain(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
+   auto tb = &MixerToolBar::Get( project );
 
    if (tb) {
       tb->ShowInputGainDialog();
@@ -62,7 +62,7 @@ void OnInputGain(const CommandContext &context)
 void OnInputGainInc(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
+   auto tb = &MixerToolBar::Get( project );
 
    if (tb) {
       tb->AdjustInputGain(1);
@@ -72,7 +72,7 @@ void OnInputGainInc(const CommandContext &context)
 void OnInputGainDec(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
+   auto tb = &MixerToolBar::Get( project );
 
    if (tb) {
       tb->AdjustInputGain(-1);
@@ -82,41 +82,29 @@ void OnInputGainDec(const CommandContext &context)
 void OnInputDevice(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowInputDialog();
-   }
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowInputDialog();
 }
 
 void OnOutputDevice(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowOutputDialog();
-   }
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowOutputDialog();
 }
 
 void OnInputChannels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowChannelsDialog();
-   }
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowChannelsDialog();
 }
 
 void OnAudioHost(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowHostDialog();
-   }
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowHostDialog();
 }
 
 void OnFullScreen(const CommandContext &context)

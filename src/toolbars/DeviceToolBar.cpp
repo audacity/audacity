@@ -16,6 +16,7 @@
 
 #include "../Audacity.h" // for USE_* macros
 #include "DeviceToolBar.h"
+#include "ToolManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -78,6 +79,17 @@ DeviceToolBar::DeviceToolBar()
 
 DeviceToolBar::~DeviceToolBar()
 {
+}
+
+DeviceToolBar &DeviceToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<DeviceToolBar*>( toolManager.GetToolBar(DeviceBarID) );
+}
+
+const DeviceToolBar &DeviceToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void DeviceToolBar::Create(wxWindow *parent)
@@ -339,7 +351,7 @@ void DeviceToolBar::EnableDisableButtons()
          if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels) {
             AudacityProject *activeProject = GetActiveProject();
             if (activeProject) {
-               activeProject->GetTrackPanel()->SetFocus();
+               TrackPanel::Get( *activeProject ).SetFocus();
             }
          }
       }

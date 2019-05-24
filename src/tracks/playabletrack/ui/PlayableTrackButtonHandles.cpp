@@ -43,7 +43,7 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Mute");
    auto project = ::GetActiveProject();
    auto focused =
-      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
    if (!focused)
       return name;
 
@@ -99,7 +99,7 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Solo");
    auto project = ::GetActiveProject();
    auto focused =
-      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
    if (!focused)
       return name;
 

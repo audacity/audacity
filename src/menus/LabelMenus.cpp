@@ -19,7 +19,7 @@ int DoAddLabel(
    bool preserveFocus = false)
 {
    auto &tracks = TrackList::Get( project );
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
 
    wxString title;      // of label
@@ -33,7 +33,7 @@ int DoAddLabel(
    }
 
    // If the focused track is a label track, use that
-   Track *const pFocusedTrack = trackPanel->GetFocusedTrack();
+   Track *const pFocusedTrack = trackPanel.GetFocusedTrack();
 
    // Look for a label track at or after the focused track
    auto iter = pFocusedTrack
@@ -73,9 +73,9 @@ int DoAddLabel(
 
    project.RedrawProject();
    if (!useDialog) {
-      trackPanel->EnsureVisible(lt);
+      trackPanel.EnsureVisible(lt);
    }
-   trackPanel->SetFocus();
+   trackPanel.SetFocus();
 
    return index;
 }
@@ -282,7 +282,7 @@ void OnPasteNewLabel(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    bool bPastedSomething = false;
@@ -328,8 +328,8 @@ void OnPasteNewLabel(const CommandContext &context)
    // plt should point to the last label track pasted to -- ensure it's visible
    // and set focus
    if (plt) {
-      trackPanel->EnsureVisible(plt);
-      trackPanel->SetFocus();
+      trackPanel.EnsureVisible(plt);
+      trackPanel.SetFocus();
    }
 
    if (bPastedSomething) {
@@ -451,7 +451,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
 void OnSilenceLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -466,13 +466,13 @@ void OnSilenceLabels(const CommandContext &context)
       /* i18n-hint: (verb)*/
       _( "Silence Labeled Audio" ) );
 
-   trackPanel->Refresh( false );
+   trackPanel.Refresh( false );
 }
 
 void OnCopyLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -486,7 +486,7 @@ void OnCopyLabels(const CommandContext &context)
    /* i18n-hint: (verb)*/
       _( "Copy Labeled Audio" ) );
 
-   trackPanel->Refresh( false );
+   trackPanel.Refresh( false );
 }
 
 void OnSplitLabels(const CommandContext &context)

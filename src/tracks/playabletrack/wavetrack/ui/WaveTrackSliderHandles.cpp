@@ -80,7 +80,7 @@ UIHandlePtr GainSliderHandle::HitTest
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::GainSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
-             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+             &TrackPanel::Get( *pProject ));
       };
       auto result =
          std::make_shared<GainSliderHandle>( sliderFn, sliderRect2, pTrack );
@@ -156,7 +156,7 @@ UIHandlePtr PanSliderHandle::HitTest
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::PanSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
-             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+             &TrackPanel::Get( *pProject ));
       };
       auto result = std::make_shared<PanSliderHandle>(
          sliderFn, sliderRect, pTrack );

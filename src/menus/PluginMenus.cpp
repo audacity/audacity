@@ -23,6 +23,32 @@
 // private helper classes and functions
 namespace {
 
+AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      return safenew ContrastDialog(
+         &parent, -1, _("Contrast Analysis (WCAG 2 compliance)"),
+         wxPoint{ 150, 150 }
+      );
+   }
+};
+
+AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      return safenew FreqWindow(
+         &parent, -1, _("Frequency Analysis"),
+         wxPoint{ 150, 150 }
+      );
+   }
+};
+
+AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      return safenew MacrosWindow(
+         &parent, true
+      );
+   }
+};
+
 void DoManagePluginsMenu
 (AudacityProject &project, EffectType type)
 {
@@ -395,7 +421,7 @@ bool DoEffect(
 {
    AudacityProject &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -500,10 +526,10 @@ bool DoEffect(
    // Label track and we want to see it.
    if( tracks.size() > nTracksOriginally ){
       // 0.0 is min scroll position, 1.0 is max scroll position.
-      trackPanel->VerticalScroll( 1.0 );
+      trackPanel.VerticalScroll( 1.0 );
    }  else {
-      trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
-      trackPanel->Refresh(false);
+      trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
+      trackPanel.Refresh(false);
    }
 
    return true;
@@ -591,8 +617,8 @@ void OnManageAnalyzers(const CommandContext &context)
 void OnContrast(const CommandContext &context)
 {
    auto &project = context.project;
-   auto contrastDialog = project.GetContrastDialog(true);
-
+   auto contrastDialog =
+      &project.AttachedWindows::Get< ContrastDialog >( sContrastDialogKey );
 
    contrastDialog->CentreOnParent();
    if( ScreenshotCommand::MayCapture( contrastDialog ) )
@@ -603,8 +629,8 @@ void OnContrast(const CommandContext &context)
 void OnPlotSpectrum(const CommandContext &context)
 {
    auto &project = context.project;
-   auto freqWindow = project.GetFreqWindow(true);
-
+   auto freqWindow =
+      &project.AttachedWindows::Get< FreqWindow >( sFrequencyWindowKey );
 
    if( ScreenshotCommand::MayCapture( freqWindow ) )
       return;
@@ -622,13 +648,25 @@ void OnManageTools(const CommandContext &context )
 void OnManageMacros(const CommandContext &context )
 {
    auto &project = context.project;
-   project.GetMacrosWindow( true, true );
+   auto macrosWindow =
+      &project.AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
+   if (macrosWindow) {
+      macrosWindow->Show();
+      macrosWindow->Raise();
+      macrosWindow->UpdateDisplay( true );
+   }
 }
 
 void OnApplyMacrosPalette(const CommandContext &context )
 {
    auto &project = context.project;
-   project.GetMacrosWindow( false, true );
+   auto macrosWindow =
+      &project.AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
+   if (macrosWindow) {
+      macrosWindow->Show();
+      macrosWindow->Raise();
+      macrosWindow->UpdateDisplay( false );
+   }
 }
 
 void OnScreenshot(const CommandContext &WXUNUSED(context) )

@@ -2659,8 +2659,8 @@ void AudioIO::StopStream()
             }
          }
 
-         ControlToolBar *bar = mOwningProject->GetControlToolBar();
-         bar->CommitRecording();
+         ControlToolBar &bar = ControlToolBar::Get( *mOwningProject );
+         bar.CommitRecording();
       }
    }
 
@@ -4830,8 +4830,8 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer
    bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
    if( bShouldBePaused != IsPaused())
    {
-      ControlToolBar *bar = mOwningProject->GetControlToolBar();
-      bar->CallAfter(&ControlToolBar::Pause);
+      auto &bar = ControlToolBar::Get( *mOwningProject );
+      bar.CallAfter(&ControlToolBar::Pause);
    }
 }
 

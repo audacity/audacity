@@ -37,14 +37,14 @@ namespace {
 bool MakeReadyToPlay(AudacityProject &project,
    bool loop = false, bool cutpreview = false)
 {
-   ControlToolBar *toolbar = project.GetControlToolBar();
+   auto &toolbar = ControlToolBar::Get( project );
    wxCommandEvent evt;
 
    // If this project is playing, stop playing
    if (gAudioIO->IsStreamActive(project.GetAudioIOToken())) {
-      toolbar->SetPlay(false);        //Pops
-      toolbar->SetStop(true);         //Pushes stop down
-      toolbar->OnStop(evt);
+      toolbar.SetPlay(false);        //Pops
+      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.OnStop(evt);
 
       ::wxMilliSleep(100);
    }
@@ -58,8 +58,8 @@ bool MakeReadyToPlay(AudacityProject &project,
       cutpreview ? ControlToolBar::PlayAppearance::CutPreview
       : loop ? ControlToolBar::PlayAppearance::Looped
       : ControlToolBar::PlayAppearance::Straight;
-   toolbar->SetPlay(true, appearance);
-   toolbar->SetStop(false);
+   toolbar.SetPlay(true, appearance);
+   toolbar.SetStop(false);
 
    return true;
 }
@@ -79,14 +79,14 @@ enum {
 void DoPlayStop(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolbar = project.GetControlToolBar();
+   auto &toolbar = ControlToolBar::Get( project );
    auto token = project.GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
    if (gAudioIO->IsStreamActive(token)) {
-      toolbar->SetPlay(false);        //Pops
-      toolbar->SetStop(true);         //Pushes stop down
-      toolbar->StopPlaying();
+      toolbar.SetPlay(false);        //Pops
+      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.StopPlaying();
    }
    else if (gAudioIO->IsStreamActive()) {
       // If this project isn't playing, but another one is, stop playing the
@@ -103,10 +103,10 @@ void DoPlayStop(const CommandContext &context)
 
       //stop playing the other project
       if(otherProject) {
-         ControlToolBar *otherToolbar = otherProject->GetControlToolBar();
-         otherToolbar->SetPlay(false);        //Pops
-         otherToolbar->SetStop(true);         //Pushes stop down
-         otherToolbar->StopPlaying();
+         auto &otherToolbar = ControlToolBar::Get( *otherProject );
+         otherToolbar.SetPlay(false);        //Pops
+         otherToolbar.SetStop(true);         //Pushes stop down
+         otherToolbar.StopPlaying();
       }
 
       //play the front project
@@ -115,26 +115,26 @@ void DoPlayStop(const CommandContext &context)
          project.TP_DisplaySelection();
          //Otherwise, start playing (assuming audio I/O isn't busy)
          //toolbar->SetPlay(true); // Not needed as done in PlayPlayRegion.
-         toolbar->SetStop(false);
+         toolbar.SetStop(false);
 
          // Will automatically set mLastPlayMode
-         toolbar->PlayCurrentRegion(false);
+         toolbar.PlayCurrentRegion(false);
       }
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
       //toolbar->SetPlay(true); // Not needed as done in PlayPlayRegion.
-      toolbar->SetStop(false);
+      toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode
-      toolbar->PlayCurrentRegion(false);
+      toolbar.PlayCurrentRegion(false);
    }
 }
 
 void DoMoveToLabel(AudacityProject &project, bool next)
 {
    auto &tracks = TrackList::Get( project );
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
 
    // Find the number of label tracks, and ptr to last track found
    auto trackRange = tracks.Any<LabelTrack>();
@@ -142,14 +142,14 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto nLabelTrack = trackRange.size();
 
    if (nLabelTrack == 0 ) {
-      trackPanel->MessageForScreenReader(_("no label track"));
+      trackPanel.MessageForScreenReader(_("no label track"));
    }
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
       lt =
-         *tracks.Find(trackPanel->GetFocusedTrack()).Filter<LabelTrack>();
+         *tracks.Find(trackPanel.GetFocusedTrack()).Filter<LabelTrack>();
       if (!lt)
-         trackPanel->MessageForScreenReader(
+         trackPanel.MessageForScreenReader(
             _("no label track at or below focused track"));
    }
 
@@ -173,17 +173,17 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          }
          else {
             selectedRegion = label->selectedRegion;
-            trackPanel->ScrollIntoView(selectedRegion.t0());
+            trackPanel.ScrollIntoView(selectedRegion.t0());
             project.RedrawProject();
          }
 
          wxString message;
          message.Printf(
             wxT("%s %d of %d"), label->title, i + 1, lt->GetNumLabels() );
-         trackPanel->MessageForScreenReader(message);
+         trackPanel.MessageForScreenReader(message);
       }
       else {
-         trackPanel->MessageForScreenReader(_("no labels in label track"));
+         trackPanel.MessageForScreenReader(_("no labels in label track"));
       }
    }
 }
@@ -205,7 +205,7 @@ void StopIfPaused( AudacityProject &project )
 bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
 {
-   auto toolbar = project.GetControlToolBar();
+   auto &toolbar = ControlToolBar::Get( project );
    auto &scrubber = Scrubber::Get( project );
    auto token = project.GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
@@ -214,8 +214,8 @@ bool DoPlayStopSelect
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
        gAudioIO->IsStreamActive(token)) {
-      toolbar->SetPlay(false);        //Pops
-      toolbar->SetStop(true);         //Pushes stop down
+      toolbar.SetPlay(false);        //Pops
+      toolbar.SetStop(true);         //Pushes stop down
 
       // change the selection
       auto time = gAudioIO->GetStreamTime();
@@ -263,17 +263,17 @@ bool DoPlayStopSelect
 // "OnStopSelect" merged.
 void DoPlayStopSelect(AudacityProject &project)
 {
-   auto toolbar = project.GetControlToolBar();
+   auto &toolbar = ControlToolBar::Get( project );
    wxCommandEvent evt;
    if (DoPlayStopSelect(project, false, false))
-      toolbar->OnStop(evt);
+      toolbar.OnStop(evt);
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
       //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
-      toolbar->SetStop(false);
+      toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode
-      toolbar->PlayCurrentRegion(false);
+      toolbar.PlayCurrentRegion(false);
    }
 }
 
@@ -281,8 +281,8 @@ void DoPause( AudacityProject &project )
 {
    wxCommandEvent evt;
 
-   auto controlToolBar = project.GetControlToolBar();
-   controlToolBar->OnPause(evt);
+   auto &controlToolBar = ControlToolBar::Get( project );
+   controlToolBar.OnPause(evt);
 }
 
 void DoRecord( AudacityProject &project )
@@ -290,14 +290,14 @@ void DoRecord( AudacityProject &project )
    wxCommandEvent evt;
    evt.SetInt(2); // 0 is default, use 1 to set shift on, 2 to clear it
 
-   auto controlToolBar = project.GetControlToolBar();
-   controlToolBar->OnRecord(evt);
+   auto &controlToolBar = ControlToolBar::Get( project );
+   controlToolBar.OnRecord(evt);
 }
 
 void DoLockPlayRegion( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
-   auto ruler = project.GetRulerPanel();
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    double start, end;
    project.GetPlayRegion(&start, &end);
@@ -307,16 +307,16 @@ void DoLockPlayRegion( AudacityProject &project )
    }
    else {
       project.SetPlayRegionLocked( true );
-      ruler->Refresh(false);
+      ruler.Refresh(false);
    }
 }
 
 void DoUnlockPlayRegion( AudacityProject &project )
 {
-   auto ruler = project.GetRulerPanel();
+   auto &ruler = AdornedRulerPanel::Get( project );
 
    project.SetPlayRegionLocked( false );
-   ruler->Refresh(false);
+   ruler.Refresh(false);
 }
 
 void DoTogglePinnedHead( AudacityProject &project )
@@ -326,14 +326,13 @@ void DoTogglePinnedHead( AudacityProject &project )
    MenuManager::ModifyAllProjectToolbarMenus();
 
    // Change what happens in case transport is in progress right now
-   auto ctb = GetActiveProject()->GetControlToolBar();
+   auto ctb = ControlToolBar::Find( *GetActiveProject() );
    if (ctb)
       ctb->StartScrollingIfPreferred();
 
-   auto ruler = project.GetRulerPanel();
-   if (ruler)
-      // Update button image
-      ruler->UpdateButtonStates();
+   auto &ruler = AdornedRulerPanel::Get( project );
+   // Update button image
+   ruler.UpdateButtonStates();
 
    auto &scrubber = Scrubber::Get( project );
    if (scrubber.HasMark())
@@ -344,8 +343,8 @@ void DoStop( AudacityProject &project )
 {
    wxCommandEvent evt;
 
-   auto controlToolBar = project.GetControlToolBar();
-   controlToolBar->OnStop(evt);
+   auto &controlToolBar = ControlToolBar::Get( project );
+   controlToolBar.OnStop(evt);
 }
 
 // Menu handler functions
@@ -371,8 +370,8 @@ void OnPlayLooped(const CommandContext &context)
 
    // Now play in a loop
    // Will automatically set mLastPlayMode
-   auto controlToolBar = project.GetControlToolBar();
-   controlToolBar->PlayCurrentRegion(true);
+   auto &controlToolBar = ControlToolBar::Get( project );
+   controlToolBar.PlayCurrentRegion(true);
 }
 
 void OnPause(const CommandContext &context)
@@ -393,8 +392,8 @@ void OnRecord2ndChoice(const CommandContext &context)
    wxCommandEvent evt;
    evt.SetInt(1); // 0 is default, use 1 to set shift on, 2 to clear it
 
-   auto controlToolBar = project.GetControlToolBar();
-   controlToolBar->OnRecord(evt);
+   auto &controlToolBar = ControlToolBar::Get( project );
+   controlToolBar.OnRecord(evt);
 }
 
 void OnTimerRecord(const CommandContext &context)
@@ -507,8 +506,8 @@ void OnPunchAndRoll(const CommandContext &context)
    double t1 = std::max(0.0, viewInfo.selectedRegion.t1());
 
    // Decide which tracks to record in.
-   auto pBar = project.GetControlToolBar();
-   auto tracks = pBar->ChooseExistingRecordingTracks(project, true);
+   auto &bar = ControlToolBar::Get( project );
+   auto tracks = bar.ChooseExistingRecordingTracks(project, true);
    if (tracks.empty()) {
       int recordingChannels =
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
@@ -606,7 +605,7 @@ void OnPunchAndRoll(const CommandContext &context)
    options.preRoll = std::max(0L,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;
-   bool success = project.GetControlToolBar()->DoRecord(project,
+   bool success = ControlToolBar::Get( project ).DoRecord(project,
       transportTracks,
       t1, DBL_MAX,
       false, // altAppearance
@@ -704,12 +703,12 @@ void OnPlayOneSecond(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto trackPanel = project.GetTrackPanel();
-   auto controlToolBar = project.GetControlToolBar();
+   auto &trackPanel = TrackPanel::Get( project );
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto options = project.GetDefaultPlayOptions();
 
-   double pos = trackPanel->GetMostRecentXPos();
-   controlToolBar->PlayPlayRegion(
+   double pos = trackPanel.GetMostRecentXPos();
+   controlToolBar.PlayPlayRegion(
       SelectedRegion(pos - 0.5, pos + 0.5), options,
       PlayMode::oneSecondPlay);
 }
@@ -728,11 +727,11 @@ void OnPlayToSelection(const CommandContext &context)
    if( !MakeReadyToPlay(project) )
       return;
 
-   auto trackPanel = project.GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
 
-   double pos = trackPanel->GetMostRecentXPos();
+   double pos = trackPanel.GetMostRecentXPos();
 
    double t0,t1;
    // check region between pointer and the nearest selection edge
@@ -758,10 +757,10 @@ void OnPlayToSelection(const CommandContext &context)
    // only when playing a short region, less than or equal to a second.
 //   mLastPlayMode = ((t1-t0) > 1.0) ? normalPlay : oneSecondPlay;
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
-   controlToolBar->PlayPlayRegion(
+   controlToolBar.PlayPlayRegion(
       SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
 }
 
@@ -782,10 +781,10 @@ void OnPlayBeforeSelectionStart(const CommandContext &context)
    double beforeLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
-   controlToolBar->PlayPlayRegion(
+   controlToolBar.PlayPlayRegion(
       SelectedRegion(t0 - beforeLen, t0), playOptions, PlayMode::oneSecondPlay);
 }
 
@@ -804,14 +803,14 @@ void OnPlayAfterSelectionStart(const CommandContext &context)
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
    else
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t0, t0 + afterLen), playOptions,
          PlayMode::oneSecondPlay);
 }
@@ -831,14 +830,14 @@ void OnPlayBeforeSelectionEnd(const CommandContext &context)
    double beforeLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
    else
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t1 - beforeLen, t1), playOptions,
          PlayMode::oneSecondPlay);
 }
@@ -858,10 +857,10 @@ void OnPlayAfterSelectionEnd(const CommandContext &context)
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
-   controlToolBar->PlayPlayRegion(
+   controlToolBar.PlayPlayRegion(
       SelectedRegion(t1, t1 + afterLen), playOptions, PlayMode::oneSecondPlay);
 }
 
@@ -883,15 +882,15 @@ void OnPlayBeforeAndAfterSelectionStart
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t0 - beforeLen, t1), playOptions,
          PlayMode::oneSecondPlay);
    else
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t0 - beforeLen, t0 + afterLen), playOptions,
          PlayMode::oneSecondPlay);
 }
@@ -914,15 +913,15 @@ void OnPlayBeforeAndAfterSelectionEnd
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto controlToolBar = project.GetControlToolBar();
+   auto &controlToolBar = ControlToolBar::Get( project );
    auto playOptions = project.GetDefaultPlayOptions();
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t0, t1 + afterLen), playOptions,
          PlayMode::oneSecondPlay);
    else
-      controlToolBar->PlayPlayRegion(
+      controlToolBar.PlayPlayRegion(
          SelectedRegion(t1 - beforeLen, t1 + afterLen), playOptions,
          PlayMode::oneSecondPlay);
 }
@@ -936,14 +935,14 @@ void OnPlayCutPreview(const CommandContext &context)
       return;
 
    // Play with cut preview
-   auto controlToolBar = project.GetControlToolBar();
-   controlToolBar->PlayCurrentRegion(false, true);
+   auto &controlToolBar = ControlToolBar::Get( project );
+   controlToolBar.PlayCurrentRegion(false, true);
 }
 
 void OnPlayAtSpeed(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetTranscriptionToolBar();
+   auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
       tb->PlayAtSpeed(false, false);
@@ -953,7 +952,7 @@ void OnPlayAtSpeed(const CommandContext &context)
 void OnPlayAtSpeedLooped(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetTranscriptionToolBar();
+   auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
       tb->PlayAtSpeed(true, false);
@@ -963,7 +962,7 @@ void OnPlayAtSpeedLooped(const CommandContext &context)
 void OnPlayAtSpeedCutPreview(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetTranscriptionToolBar();
+   auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
       tb->PlayAtSpeed(false, true);
@@ -973,7 +972,7 @@ void OnPlayAtSpeedCutPreview(const CommandContext &context)
 void OnSetPlaySpeed(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetTranscriptionToolBar();
+   auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
       tb->ShowPlaySpeedDialog();
@@ -983,7 +982,7 @@ void OnSetPlaySpeed(const CommandContext &context)
 void OnPlaySpeedInc(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetTranscriptionToolBar();
+   auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
       tb->AdjustPlaySpeed(0.1f);
@@ -993,7 +992,7 @@ void OnPlaySpeedInc(const CommandContext &context)
 void OnPlaySpeedDec(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tb = project.GetTranscriptionToolBar();
+   auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
       tb->AdjustPlaySpeed(-0.1f);
@@ -1022,9 +1021,9 @@ void OnStopSelect(const CommandContext &context)
    wxCommandEvent evt;
 
    if (gAudioIO->IsStreamActive()) {
-      auto controlToolBar = project.GetControlToolBar();
+      auto &controlToolbar = ControlToolBar::Get( project );
       selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
-      controlToolBar->OnStop(evt);
+      controlToolBar.OnStop(evt);
       project.ModifyState(false);           // without bWantsAutoSave
    }
 }

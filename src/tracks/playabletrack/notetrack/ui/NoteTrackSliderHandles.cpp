@@ -83,7 +83,7 @@ UIHandlePtr VelocitySliderHandle::HitTest
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::VelocitySlider
             (sliderRect, static_cast<NoteTrack*>( pTrack ), true,
-             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+             &TrackPanel::Get( *pProject ));
       };
       auto result = std::make_shared<VelocitySliderHandle>(
          sliderFn, sliderRect, pTrack );

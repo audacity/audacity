@@ -78,7 +78,8 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
       // MM: Zoom in/out when used with Control key down
       // We're converting pixel positions to times,
       // counting pixels from the left edge of the track.
-      int trackLeftEdge = pProject->GetTrackPanel()->GetLeftOffset();
+      auto &trackPanel = TrackPanel::Get( *pProject );
+      int trackLeftEdge = trackPanel.GetLeftOffset();
 
       // Time corresponding to mouse position
       wxCoord xx;
@@ -88,7 +89,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
       // Scrubbing? Expand or contract about the center, ignoring mouse position
       if (scrubber.IsScrollScrubbing())
          center_h = viewInfo.h +
-            (pProject->GetTrackPanel()->GetScreenEndTime() - viewInfo.h) / 2.0;
+            (trackPanel.GetScreenEndTime() - viewInfo.h) / 2.0;
       // Zooming out? Focus on mouse.
       else if( steps <= 0 )
          center_h = mouse_h;
