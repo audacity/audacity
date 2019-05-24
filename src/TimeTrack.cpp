@@ -58,11 +58,11 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
 {
    mHeight = 100;
 
-   mRangeLower = 0.9;
-   mRangeUpper = 1.1;
+   SetRangeLower( 0.9 );
+   SetRangeUpper( 1.1 );
    mDisplayLog = false;
 
-   mEnvelope = std::make_unique<Envelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
+   mEnvelope = std::make_unique<BoundedEnvelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
    mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetOffset(0);
 
@@ -84,10 +84,10 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
    auto len = DBL_MAX;
    if (pT0 && pT1) {
       len = *pT1 - *pT0;
-      mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope, *pT0, *pT1 );
+      mEnvelope = std::make_unique<BoundedEnvelope>( *orig.mEnvelope, *pT0, *pT1 );
    }
    else
-      mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope );
+      mEnvelope = std::make_unique<BoundedEnvelope>( *orig.mEnvelope );
    mEnvelope->SetTrackLen( len );
    mEnvelope->SetOffset(0);
 
@@ -111,6 +111,26 @@ void TimeTrack::Init(const TimeTrack &orig)
 
 TimeTrack::~TimeTrack()
 {
+}
+
+double TimeTrack::GetRangeLower() const
+{
+   return mEnvelope->GetRangeLower();
+}
+
+double TimeTrack::GetRangeUpper() const
+{
+   return mEnvelope->GetRangeUpper();
+}
+
+void TimeTrack::SetRangeLower(double lower)
+{
+   mEnvelope->SetRangeLower( lower );
+}
+
+void TimeTrack::SetRangeUpper(double upper)
+{
+   mEnvelope->SetRangeUpper( upper );
 }
 
 Track::Holder TimeTrack::Cut( double t0, double t1 )
@@ -207,12 +227,12 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mMinimized = (nValue != 0);
          else if (!wxStrcmp(attr, wxT("rangelower")))
          {
-            mRangeLower = Internat::CompatibleToDouble(value);
+            SetRangeLower( Internat::CompatibleToDouble(value) );
             mRescaleXMLValues = false;
          }
          else if (!wxStrcmp(attr, wxT("rangeupper")))
          {
-            mRangeUpper = Internat::CompatibleToDouble(value);
+            SetRangeUpper( Internat::CompatibleToDouble(value) );
             mRescaleXMLValues = false;
          }
          else if (!wxStrcmp(attr, wxT("displaylog")) &&
@@ -242,7 +262,7 @@ void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
    if(mRescaleXMLValues)
    {
       mRescaleXMLValues = false;
-      mEnvelope->RescaleValues(mRangeLower, mRangeUpper);
+      mEnvelope->RescaleValues(GetRangeLower(), GetRangeUpper());
       mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
    }
 }
@@ -265,8 +285,8 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
    //xmlFile.WriteAttr(wxT("offset"), mOffset, 8);
    xmlFile.WriteAttr(wxT("height"), GetActualHeight());
    xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
-   xmlFile.WriteAttr(wxT("rangelower"), mRangeLower, 12);
-   xmlFile.WriteAttr(wxT("rangeupper"), mRangeUpper, 12);
+   xmlFile.WriteAttr(wxT("rangelower"), GetRangeLower(), 12);
+   xmlFile.WriteAttr(wxT("rangeupper"), GetRangeUpper(), 12);
    xmlFile.WriteAttr(wxT("displaylog"), GetDisplayLog());
    xmlFile.WriteAttr(wxT("interpolatelog"), GetInterpolateLog());
 
@@ -324,14 +344,15 @@ void TimeTrack::Draw
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
    dc.SetPen( pen );
 
-   double logLower = log(std::max(1.0e-7, mRangeLower)), logUpper = log(std::max(1.0e-7, mRangeUpper));
+   double logLower = log(std::max(1.0e-7, GetRangeLower())),
+      logUpper = log(std::max(1.0e-7, GetRangeUpper()));
    for (int x = 0; x < mid.width; x++)
       {
          double y;
          if(mDisplayLog)
             y = (double)mid.height * (logUpper - log(envValues[x])) / (logUpper - logLower);
          else
-            y = (double)mid.height * (mRangeUpper - envValues[x]) / (mRangeUpper - mRangeLower);
+            y = (double)mid.height * (GetRangeUpper() - envValues[x]) / (GetRangeUpper() - GetRangeLower());
          int thisy = r.y + (int)y;
          AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
       }

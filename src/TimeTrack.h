@@ -16,7 +16,7 @@
 #include <algorithm>
 
 class wxRect;
-class Envelope;
+class BoundedEnvelope;
 class Ruler;
 class ZoomInfo;
 struct TrackPanelDrawingContext;
@@ -80,8 +80,8 @@ class TimeTrack final : public Track {
 
    // Access the track's speed envelope
 
-   Envelope *GetEnvelope() { return mEnvelope.get(); }
-   const Envelope *GetEnvelope() const { return mEnvelope.get(); }
+   BoundedEnvelope *GetEnvelope() { return mEnvelope.get(); }
+   const BoundedEnvelope *GetEnvelope() const { return mEnvelope.get(); }
 
    //Note: The meaning of this function has changed (December 2012)
    //Previously this function did something that was close to the opposite (but not entirely accurate).
@@ -117,11 +117,11 @@ class TimeTrack final : public Track {
 
    // Get/Set the speed-warping range, as percentage of original speed (e.g. 90%-110%)
 
-   double GetRangeLower() const { return mRangeLower; }
-   double GetRangeUpper() const { return mRangeUpper; }
+   double GetRangeLower() const;
+   double GetRangeUpper() const;
 
-   void SetRangeLower(double lower) { mRangeLower = lower; }
-   void SetRangeUpper(double upper) { mRangeUpper = upper; }
+   void SetRangeLower(double lower);
+   void SetRangeUpper(double upper);
 
    bool GetDisplayLog() const { return mDisplayLog; }
    void SetDisplayLog(bool displayLog) { mDisplayLog = displayLog; }
@@ -135,10 +135,8 @@ class TimeTrack final : public Track {
    TrackKind GetKind() const override { return TrackKind::Time; }
 
    const ZoomInfo  *const mZoomInfo;
-   std::unique_ptr<Envelope> mEnvelope;
+   std::unique_ptr<BoundedEnvelope> mEnvelope;
    std::unique_ptr<Ruler> mRuler;
-   double           mRangeLower;
-   double           mRangeUpper;
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
 

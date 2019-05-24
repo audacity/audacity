@@ -69,7 +69,7 @@ private:
 typedef std::vector<EnvPoint> EnvArray;
 struct TrackPanelDrawingContext;
 
-class Envelope final : public XMLTagHandler {
+class Envelope /* not final */ : public XMLTagHandler {
 public:
    // Envelope can define a piecewise linear function, or piecewise exponential.
    Envelope(bool exponential, double minValue, double maxValue, double defaultValue);
@@ -263,5 +263,30 @@ inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
       val = pEnvelope->ClampValue(val);
    mVal = val;
 }
+
+/*
+PRL: This class gives access to all the important numerical data in a TimeTrack,
+without need for the entire TimeTrack.
+
+Confusingly, Envelope already carried its own limiting values, but those
+in the TimeTrack were not guaranteed to be the same.
+
+I'm just preserving behavior as I break file dependencies and won't try to fix
+that confusion now.
+*/
+class BoundedEnvelope final : public Envelope
+{
+public:
+   using Envelope::Envelope;
+
+   double GetRangeLower() const { return mRangeLower; }
+   double GetRangeUpper() const { return mRangeUpper; }
+
+   void SetRangeLower(double lower) { mRangeLower = lower; }
+   void SetRangeUpper(double upper) { mRangeUpper = upper; }
+
+private:
+   double mRangeLower{}, mRangeUpper{};
+};
 
 #endif
