@@ -173,6 +173,8 @@ public:
 
    bool IsDirty() const;
 
+   void Clear() { mEnv.clear(); }
+
    /** \brief Add a point at a particular absolute time coordinate */
    int InsertOrReplace(double when, double value)
    { return InsertOrReplaceRelative( when - mOffset, value ); }
@@ -191,15 +193,14 @@ public:
    /** \brief Return number of points */
    size_t GetNumberOfPoints() const;
 
-private:
-   int InsertOrReplaceRelative(double when, double value);
-
-   friend class EnvelopeEditor;
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
    {
       return mEnv[index];
    }
+
+private:
+   int InsertOrReplaceRelative(double when, double value);
 
    std::pair<int, int> EqualRange( double when, double sampleDur ) const;
 
@@ -219,11 +220,11 @@ public:
    bool GetDragPointValid() const { return mDragPointValid; }
    // Modify the dragged point and change its value.
    // But consistency constraints may move it less then you ask for.
-
-private:
    void MoveDragPoint(double newWhen, double value);
    // May delete the drag point.  Restores envelope consistency.
    void ClearDragPoint();
+
+private:
    void AddPointAtEnd( double t, double val );
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
    // relative time
@@ -254,8 +255,6 @@ private:
    int mDragPoint { -1 };
 
    mutable int mSearchGuess { -2 };
-   friend class GetInfoCommand;
-   friend class SetEnvelopeCommand;
 };
 
 inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
