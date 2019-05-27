@@ -554,6 +554,7 @@ UIHandle::Result SelectHandle::Click
       return RefreshAll | Cancelled;
    
    auto &selectionState = SelectionState::Get( *pProject );
+   const auto &settings = ProjectSettings::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
       auto &trackList = TrackList::Get( *pProject );
 
@@ -564,7 +565,7 @@ UIHandle::Result SelectHandle::Click
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
-         ( viewInfo, *pTrack, pProject->IsSyncLocked() );
+         ( viewInfo, *pTrack, settings.IsSyncLocked() );
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip

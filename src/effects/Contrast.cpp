@@ -194,7 +194,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    wxString number;
 
    AudacityProject *p = GetActiveProject();
-   mProjectRate = p->GetRate();
+   const auto &settings = ProjectSettings::Get( *p );
+   mProjectRate = settings.GetRate();
 
    ShuttleGui S(this, eIsCreating);
 

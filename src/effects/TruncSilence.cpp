@@ -328,7 +328,8 @@ bool EffectTruncSilence::ProcessIndependently()
 {
    unsigned nGroups = 0;
 
-   const bool syncLock = ::GetActiveProject()->IsSyncLocked();
+   const auto &settings = ProjectSettings::Get( *::GetActiveProject() );
+   const bool syncLock = settings.IsSyncLocked();
 
    // Check if it's permissible
    {

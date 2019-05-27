@@ -163,8 +163,7 @@ Effect::Effect()
    mUIDebug = false;
 
    AudacityProject *p = GetActiveProject();
-   mProjectRate = p ? p->GetRate() : 44100;
-
+   mProjectRate = p ? ProjectSettings::Get( *p ).GetRate() : 44100;
    mIsBatch = false;
 }
 
@@ -770,7 +769,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   return GetActiveProject()->GetSelectionFormat();
+   return ProjectSettings( *GetActiveProject() ).GetSelectionFormat();
 }
 
 void Effect::SetDuration(double seconds)

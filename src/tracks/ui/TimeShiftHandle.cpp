@@ -407,7 +407,7 @@ UIHandle::Result TimeShiftHandle::Click
    else if ( captureClips )
       CreateListOfCapturedClips(
          mClipMoveState, viewInfo, *pTrack, trackList,
-         pProject->IsSyncLocked(), clickTime );
+         ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime );
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;

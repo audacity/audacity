@@ -1871,7 +1871,7 @@ void MeterPanel::StartMonitoring()
    if (start && !gAudioIO->IsBusy()){
       AudacityProject *p = GetActiveProject();
       if (p){
-         gAudioIO->StartMonitoring(p->GetRate());
+         gAudioIO->StartMonitoring( ProjectSettings::Get( *p ).GetRate());
       }
 
       mLayoutValid = false;

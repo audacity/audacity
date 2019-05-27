@@ -620,7 +620,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    LoadCurves();
 
    const auto t = *inputTracks()->Any< const WaveTrack >().first;
-   mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+   mHiFreq =
+      (t
+         ? t->GetRate()
+         : ProjectSettings::Get( *GetActiveProject() ).GetRate())
+      / 2.0;
    mLoFreq = loFreqI;
 
    S.SetBorder(0);

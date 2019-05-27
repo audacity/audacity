@@ -93,13 +93,16 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
    PlayableTrack(projDirManager)
 {
-   if (format == (sampleFormat)0)
    {
-      format = GetActiveProject()->GetDefaultFormat();
-   }
-   if (rate == 0)
-   {
-      rate = GetActiveProject()->GetRate();
+      const auto settings = ProjectSettings::Get( *GetActiveProject() );
+      if (format == (sampleFormat)0)
+      {
+         format = settings.GetDefaultFormat();
+      }
+      if (rate == 0)
+      {
+         rate = settings.GetRate();
+      }
    }
 
    // Force creation always:

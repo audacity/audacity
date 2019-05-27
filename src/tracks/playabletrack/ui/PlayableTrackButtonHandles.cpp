@@ -60,7 +60,7 @@ UIHandlePtr MuteButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       TrackInfo::GetMuteSoloRect(rect, buttonRect, false,
-         !pProject->IsSoloNone(), pTrack.get());
+         !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
@@ -116,7 +116,7 @@ UIHandlePtr SoloButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       TrackInfo::GetMuteSoloRect(rect, buttonRect, true,
-         !pProject->IsSoloNone(), pTrack.get());
+         !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
 
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};

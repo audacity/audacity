@@ -3085,11 +3085,12 @@ int LabelTrack::FindNextLabel(const SelectedRegion& currentRegion)
 void LabelTrack::DoEditLabels
 (AudacityProject &project, LabelTrack *lt, int index)
 {
-   auto format = project.GetSelectionFormat(),
-      freqFormat = project.GetFrequencySelectionFormatName();
+   const auto &settings = ProjectSettings::Get( project );
+   auto format = settings.GetSelectionFormat(),
+      freqFormat = settings.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto rate = project.GetRate();
+   auto rate = ProjectSettings::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 

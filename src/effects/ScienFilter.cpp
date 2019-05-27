@@ -346,7 +346,11 @@ bool EffectScienFilter::Init()
 
    {
       auto t = *trackRange.begin();
-      mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+      mNyquist =
+         (t
+            ? t->GetRate()
+            : ProjectSettings::Get( *GetActiveProject() ).GetRate())
+         / 2.0;
    }
 
    for (auto t : trackRange)

@@ -224,8 +224,9 @@ UIHandle::Result StretchHandle::Release
 
    bool left = mStretchState.mMode == stretchLeft;
    bool right = mStretchState.mMode == stretchRight;
+   const auto &settings = ProjectSettings::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
-   if ( pProject->IsSyncLocked() && ( left || right ) ) {
+   if ( settings.IsSyncLocked() && ( left || right ) ) {
       for ( auto track :
            TrackList::SyncLockGroup( mpTrack.get() ) ) {
          if ( track != mpTrack.get() ) {

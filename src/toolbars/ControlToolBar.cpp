@@ -1242,7 +1242,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
 
-            if ((recordingChannels > 2) && !(p->GetTracksFitVerticallyZoomed())) {
+            if ((recordingChannels > 2) &&
+                !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
                newTrack->SetMinimized(true);
             }
 

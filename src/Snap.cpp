@@ -72,9 +72,10 @@ SnapManager::~SnapManager()
 
 void SnapManager::Reinit()
 {
-   int snapTo = mProject->GetSnapTo();
-   double rate = mProject->GetRate();
-   auto format = mProject->GetSelectionFormat();
+   const auto &settings = ProjectSettings::Get( *mProject );
+   int snapTo = settings.GetSnapTo();
+   double rate = settings.GetRate();
+   auto format = settings.GetSelectionFormat();
 
    // No need to reinit if these are still the same
    if (snapTo == mSnapTo && rate == mRate && format == mFormat)
@@ -329,7 +330,10 @@ SnapResults SnapManager::Snap
 
    if (mSnapToTime) {
       // Find where it would snap time to the grid
-      mConverter.ValueToControls(t, GetActiveProject()->GetSnapTo() == SNAP_NEAREST);
+      mConverter.ValueToControls(
+         t,
+         ProjectSettings::Get( *GetActiveProject() ).GetSnapTo() == SNAP_NEAREST
+      );
       mConverter.ControlsToValue();
       results.timeSnappedTime = mConverter.GetValue();
    }

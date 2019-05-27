@@ -38,10 +38,11 @@ namespace {
 void DoMixAndRender
 (AudacityProject &project, bool toNewTrack)
 {
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto rate = project.GetRate();
-   auto defaultFormat = project.GetDefaultFormat();
+   auto rate = settings.GetRate();
+   auto defaultFormat = settings.GetDefaultFormat();
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -600,6 +601,7 @@ void DoRemoveTracks( AudacityProject &project )
 
 void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
 {
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
@@ -626,7 +628,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
       for (auto channel : TrackList::Channels(pt))
          channel->SetMute( !wasMute );
 
-      if (project.IsSoloSimple() || project.IsSoloNone())
+      if (settings.IsSoloSimple() || settings.IsSoloNone())
       {
          // We also set a solo indicator if we have just one track / stereo pair playing.
          // in a group of more than one playable tracks.
@@ -649,6 +651,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
 
 void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
 {
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    
@@ -660,7 +663,7 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
       return;
    bool bWasSolo = pt->GetSolo();
 
-   bool bSoloMultiple = !project.IsSoloSimple() ^ exclusive;
+   bool bSoloMultiple = !settings.IsSoloSimple() ^ exclusive;
 
    // Standard and Simple solo have opposite defaults:
    //   Standard - Behaves as individual buttons, shift=radio buttons
@@ -682,12 +685,12 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
          for (auto channel : group) {
             if (chosen) {
                channel->SetSolo( !bWasSolo );
-               if( project.IsSoloSimple() )
+               if( settings.IsSoloSimple() )
                   channel->SetMute( false );
             }
             else {
                channel->SetSolo( false );
-               if( project.IsSoloSimple() )
+               if( settings.IsSoloSimple() )
                   channel->SetMute( !bWasSolo );
             }
          }
@@ -799,13 +802,14 @@ struct Handler : CommandHandlerObject {
 void OnNewWaveTrack(const CommandContext &context)
 {
    auto &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto defaultFormat = project.GetDefaultFormat();
-   auto rate = project.GetRate();
+   auto defaultFormat = settings.GetDefaultFormat();
+   auto rate = settings.GetRate();
 
    auto t = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    SelectActions::SelectNone( project );
@@ -821,13 +825,14 @@ void OnNewWaveTrack(const CommandContext &context)
 void OnNewStereoTrack(const CommandContext &context)
 {
    auto &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto defaultFormat = project.GetDefaultFormat();
-   auto rate = project.GetRate();
+   auto defaultFormat = settings.GetDefaultFormat();
+   auto rate = settings.GetRate();
 
    SelectActions::SelectNone( project );
 
@@ -913,7 +918,8 @@ void OnMixAndRenderToNewTrack(const CommandContext &context)
 void OnResample(const CommandContext &context)
 {
    auto &project = context.project;
-   auto projectRate = project.GetRate();
+   const auto &settings = ProjectSettings::Get( project );
+   auto projectRate = settings.GetRate();
    auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -1025,11 +1031,12 @@ void OnRemoveTracks(const CommandContext &context)
 void OnMuteAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto soloSimple = project.IsSoloSimple();
-   auto soloNone = project.IsSoloNone();
+   auto soloSimple = settings.IsSoloSimple();
+   auto soloNone = settings.IsSoloNone();
 
    for (auto pt : tracks.Any<PlayableTrack>())
    {
@@ -1045,11 +1052,12 @@ void OnMuteAllTracks(const CommandContext &context)
 void OnUnmuteAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto soloSimple = project.IsSoloSimple();
-   auto soloNone = project.IsSoloNone();
+   auto soloSimple = settings.IsSoloSimple();
+   auto soloNone = settings.IsSoloNone();
 
    for (auto pt : tracks.Any<PlayableTrack>())
    {

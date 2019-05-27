@@ -139,7 +139,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
       // with various project and track sample rates.
       // So do it at the sample rate of the project
       AudacityProject *p = GetActiveProject();
-      double projRate = p->GetRate();
+      double projRate = ProjectSettings::Get( *p ).GetRate();
       double quantT0 = QUANTIZED_TIME(clipboard.T0(), projRate);
       double quantT1 = QUANTIZED_TIME(clipboard.T1(), projRate);
       selectedRegion.setTimes(
@@ -201,6 +201,7 @@ bool DoEditMetadata
 (AudacityProject &project,
  const wxString &title, const wxString &shortUndoDescription, bool force)
 {
+   auto &settings = ProjectSettings::Get( project );
    auto &tags = Tags::Get( project );
 
    // Back up my tags
@@ -218,7 +219,7 @@ bool DoEditMetadata
       }
       bool bShowInFuture;
       gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
-      project.SetShowId3Dialog( bShowInFuture );
+      settings.SetShowId3Dialog( bShowInFuture );
       return true;
    }
 
@@ -440,9 +441,10 @@ void OnPaste(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto isSyncLocked = project.IsSyncLocked();
+   auto isSyncLocked = settings.IsSyncLocked();
 
    // Handle text paste (into active label) first.
    if (DoPasteText(project))
