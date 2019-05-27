@@ -1554,7 +1554,9 @@ int AudacityProject::AS_GetSnapTo()
 
 void AudacityProject::AS_SetSnapTo(int snap)
 {
-   mSnapTo = snap;
+   auto &project = *this;
+
+   SetSnapTo( snap );
 
 // LLL: TODO - what should this be changed to???
 // GetCommandManager()->Check(wxT("Snap"), mSnapTo);
@@ -1564,6 +1566,8 @@ void AudacityProject::AS_SetSnapTo(int snap)
    SnapSelection();
 
    RedrawProject();
+
+   SelectionBar::Get( project ).SetSnapTo(snap);
 }
 
 const NumericFormatSymbol & AudacityProject::AS_GetSelectionFormat()
@@ -3496,7 +3500,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       else if (!wxStrcmp(attr, wxT("snapto"))) {
-         SetSnapTo(wxString(value) == wxT("on") ? true : false);
+         AS_SetSnapTo(wxString(value) == wxT("on") ? true : false);
       }
 
       else if (!wxStrcmp(attr, wxT("selectionformat")))
@@ -3513,7 +3517,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    } // while
 
    if (longVpos != 0) {
-      // PRL: It seems this must happen after SetSnapTo
+      // PRL: It seems this must happen after AS_SetSnapTo
        viewInfo.vpos = longVpos;
        mbInitializingScrollbar = true;
    }
@@ -5175,9 +5179,7 @@ void AudacityProject::OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog)
 
 void AudacityProject::SetSnapTo(int snap)
 {
-   auto &project = *this;
-   AS_SetSnapTo(snap);
-   SelectionBar::Get( project ).SetSnapTo(snap);
+   mSnapTo = snap;
 }
    
 int AudacityProject::GetSnapTo() const

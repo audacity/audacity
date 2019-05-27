@@ -883,19 +883,19 @@ void OnZeroCrossing(const CommandContext &context)
 void OnSnapToOff(const CommandContext &context)
 {
    auto &project = context.project;
-   project.SetSnapTo(SNAP_OFF);
+   project.AS_SetSnapTo(SNAP_OFF);
 }
 
 void OnSnapToNearest(const CommandContext &context)
 {
    auto &project = context.project;
-   project.SetSnapTo(SNAP_NEAREST);
+   project.AS_SetSnapTo(SNAP_NEAREST);
 }
 
 void OnSnapToPrior(const CommandContext &context)
 {
    auto &project = context.project;
-   project.SetSnapTo(SNAP_PRIOR);
+   project.AS_SetSnapTo(SNAP_PRIOR);
 }
 
 void OnSelToStart(const CommandContext &context)
