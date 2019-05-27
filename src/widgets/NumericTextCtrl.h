@@ -83,8 +83,13 @@ private:
 
 public:
    void PrintDebugInfo();
-   void SetFormatName(const NumericFormatSymbol & formatName);
-   void SetFormatString(const wxString & formatString);
+
+   // returns true iff the format name really changed:
+   bool SetFormatName(const NumericFormatSymbol & formatName);
+
+   // returns true iff the format string really changed:
+   bool SetFormatString(const wxString & formatString);
+
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
    void SetMinValue(double minValue);
@@ -187,8 +192,12 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
-   void SetFormatString(const wxString & formatString);
-   void SetFormatName(const NumericFormatSymbol & formatName);
+
+   // returns true iff the format string really changed:
+   bool SetFormatString(const wxString & formatString);
+
+   // returns true iff the format name really changed:
+   bool SetFormatName(const NumericFormatSymbol & formatName);
 
    void SetFieldFocus(int /* digit */);
 

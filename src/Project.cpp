@@ -1574,13 +1574,15 @@ const NumericFormatSymbol & AudacityProject::AS_GetSelectionFormat()
 void AudacityProject::AS_SetSelectionFormat(const NumericFormatSymbol & format)
 {
    auto &project = *this;
-   mSelectionFormat = format;
+   SetSelectionFormat( format );
 
    gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat.Internal());
    gPrefs->Flush();
 
    if (SnapSelection())
       TrackPanel::Get( project ).Refresh(false);
+
+   SelectionBar::Get( project ).SetSelectionFormat(format);
 }
 
 double AudacityProject::SSBL_GetRate() const
@@ -1599,11 +1601,17 @@ const NumericFormatSymbol & AudacityProject::SSBL_GetFrequencySelectionFormatNam
 
 void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
-   mFrequencySelectionFormatName = formatName;
+   auto &project = *this;
+
+   SetFrequencySelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/FrequencySelectionFormatName"),
                  mFrequencySelectionFormatName.Internal());
    gPrefs->Flush();
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
+#endif
 }
 
 const NumericFormatSymbol & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
@@ -1613,11 +1621,17 @@ const NumericFormatSymbol & AudacityProject::SSBL_GetBandwidthSelectionFormatNam
 
 void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
-   mBandwidthSelectionFormatName = formatName;
+   auto &project = *this;
+
+   SetBandwidthSelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
       mBandwidthSelectionFormatName.Internal());
    gPrefs->Flush();
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   SpectralSelectionBar::Get( project ).SetBandwidthSelectionFormatName(formatName);
+#endif
 }
 
 void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, bool done)
@@ -1649,11 +1663,7 @@ const NumericFormatSymbol & AudacityProject::GetFrequencySelectionFormatName() c
 
 void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
-   auto &project = *this;
-   SSBL_SetFrequencySelectionFormatName(formatName);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
-#endif
+   mFrequencySelectionFormatName = formatName;
 }
 
 const NumericFormatSymbol & AudacityProject::GetBandwidthSelectionFormatName() const
@@ -1663,18 +1673,12 @@ const NumericFormatSymbol & AudacityProject::GetBandwidthSelectionFormatName() c
 
 void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
-   auto &project = *this;
-   SSBL_SetBandwidthSelectionFormatName(formatName);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetBandwidthSelectionFormatName(formatName);
-#endif
+   mBandwidthSelectionFormatName = formatName;
 }
 
 void AudacityProject::SetSelectionFormat(const NumericFormatSymbol & format)
 {
-   auto &project = *this;
-   AS_SetSelectionFormat(format);
-   SelectionBar::Get( project ).SetSelectionFormat(format);
+   mSelectionFormat = format;
 }
 
 const NumericFormatSymbol & AudacityProject::GetSelectionFormat() const
@@ -3496,15 +3500,15 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       else if (!wxStrcmp(attr, wxT("selectionformat")))
-         SetSelectionFormat(
+         AS_SetSelectionFormat(
             NumericConverter::LookupFormat( NumericConverter::TIME, value) );
 
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
-         SetFrequencySelectionFormatName(
+         SSBL_SetFrequencySelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
 
       else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-         SetBandwidthSelectionFormatName(
+         SSBL_SetBandwidthSelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
    } // while
 
