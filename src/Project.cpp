@@ -3126,6 +3126,11 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
    const bool err = results.trackError;
 
    if (bParseSuccess) {
+      AS_SetSnapTo(GetSnapTo());
+      AS_SetSelectionFormat(GetSelectionFormat());
+      SSBL_SetFrequencySelectionFormatName(GetFrequencySelectionFormatName());
+      SSBL_SetBandwidthSelectionFormatName(GetBandwidthSelectionFormatName());
+
       InitialState();
       trackPanel.SetFocusedTrack( *tracks.Any().begin() );
       HandleResize();
@@ -3500,24 +3505,24 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       else if (!wxStrcmp(attr, wxT("snapto"))) {
-         AS_SetSnapTo(wxString(value) == wxT("on") ? true : false);
+         SetSnapTo(wxString(value) == wxT("on") ? true : false);
       }
 
       else if (!wxStrcmp(attr, wxT("selectionformat")))
-         AS_SetSelectionFormat(
+         SetSelectionFormat(
             NumericConverter::LookupFormat( NumericConverter::TIME, value) );
 
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
-         SSBL_SetFrequencySelectionFormatName(
+         SetFrequencySelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
 
       else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-         SSBL_SetBandwidthSelectionFormatName(
+         SetBandwidthSelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
    } // while
 
    if (longVpos != 0) {
-      // PRL: It seems this must happen after AS_SetSnapTo
+      // PRL: It seems this must happen after SetSnapTo
        viewInfo.vpos = longVpos;
        mbInitializingScrollbar = true;
    }
