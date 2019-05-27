@@ -1043,7 +1043,7 @@ AudioIO::AudioIO()
    mUpdatingMeters = false;
 
    mOwningProject = NULL;
-   mOutputMeter = NULL;
+   mOutputMeter.Release();
 
    PaError err = Pa_Initialize();
 
@@ -1493,7 +1493,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       return false;
 
    mInputMeter.Release();
-   mOutputMeter = NULL;
+   mOutputMeter.Release();
 
    mLastPaError = paNoError;
    // pick a rate to do the audio I/O at, from those available. The project
@@ -2671,7 +2671,7 @@ void AudioIO::StopStream()
       mOutputMeter->Reset(mRate, false);
 
    mInputMeter.Release();
-   mOutputMeter = NULL;
+   mOutputMeter.Release();
    mOwningProject = NULL;
 
    if (mListener && mNumCaptureChannels > 0)
