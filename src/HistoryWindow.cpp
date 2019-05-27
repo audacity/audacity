@@ -185,7 +185,7 @@ bool HistoryWindow::Show( bool show )
 {
    if ( show && !IsShown())
       DoUpdate();
-   return wxDialogWrapper::Show();
+   return wxDialogWrapper::Show( show );
 }
 
 void HistoryWindow::DoUpdate()
