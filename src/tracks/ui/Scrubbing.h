@@ -196,6 +196,7 @@ private:
 #endif
 
    AudacityProject *mProject;
+   wxWindowRef mWindow;
 
    DECLARE_EVENT_TABLE()
 

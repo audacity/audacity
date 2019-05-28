@@ -7,33 +7,6 @@
   Dominic Mazzoni
   Vaughan Johnson
 
-*******************************************************************//**
-
-\file Project.cpp
-\brief Implements AudacityProject
-
-*//****************************************************************//**
-
-\class AudacityProject
-\brief AudacityProject provides the main window, with tools and
-tracks contained within it.
-
-  In Audacity, the main window you work in is called a project.
-  AudacityProjects can contain an arbitrary number of tracks of many
-  different types, but if a project contains just one or two
-  tracks then it can be saved in standard formats like WAV or AIFF.
-  This window is the one that contains the menu bar (except on
-  the Mac).
-
-\attention The menu functions for AudacityProject, those for creating
-the menu bars and acting on clicks, are found in file Menus.cpp
-
-*//****************************************************************//**
-
-\class ViewInfo
-\brief ViewInfo is used mainly to hold the zooming, selection and
-scroll information.  It also has some status flags.
-
 *//*******************************************************************/
 
 #include "Audacity.h" // for USE_* macros
@@ -556,74 +529,45 @@ enum {
    NextID,
 };
 
-int AudacityProject::NextWindowID()
+int ProjectWindow::NextWindowID()
 {
    return mNextWindowID++;
 }
 
 
-BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
-   EVT_MENU(wxID_ANY, AudacityProject::OnMenu)
-   EVT_MOUSE_EVENTS(AudacityProject::OnMouseEvent)
-   EVT_CLOSE(AudacityProject::OnCloseWindow)
-   EVT_SIZE(AudacityProject::OnSize)
-   EVT_SHOW(AudacityProject::OnShow)
-   EVT_ICONIZE(AudacityProject::OnIconize)
-   EVT_MOVE(AudacityProject::OnMove)
-   EVT_ACTIVATE(AudacityProject::OnActivate)
-   EVT_COMMAND_SCROLL_LINEUP(HSBarID, AudacityProject::OnScrollLeftButton)
-   EVT_COMMAND_SCROLL_LINEDOWN(HSBarID, AudacityProject::OnScrollRightButton)
-   EVT_COMMAND_SCROLL(HSBarID, AudacityProject::OnScroll)
-   EVT_COMMAND_SCROLL(VSBarID, AudacityProject::OnScroll)
+BEGIN_EVENT_TABLE(ProjectWindow, wxFrame)
+   EVT_MENU(wxID_ANY, ProjectWindow::OnMenu)
+   EVT_MOUSE_EVENTS(ProjectWindow::OnMouseEvent)
+   EVT_CLOSE(ProjectWindow::OnCloseWindow)
+   EVT_SIZE(ProjectWindow::OnSize)
+   EVT_SHOW(ProjectWindow::OnShow)
+   EVT_ICONIZE(ProjectWindow::OnIconize)
+   EVT_MOVE(ProjectWindow::OnMove)
+   EVT_ACTIVATE(ProjectWindow::OnActivate)
+   EVT_COMMAND_SCROLL_LINEUP(HSBarID, ProjectWindow::OnScrollLeftButton)
+   EVT_COMMAND_SCROLL_LINEDOWN(HSBarID, ProjectWindow::OnScrollRightButton)
+   EVT_COMMAND_SCROLL(HSBarID, ProjectWindow::OnScroll)
+   EVT_COMMAND_SCROLL(VSBarID, ProjectWindow::OnScroll)
    // Fires for menu with ID #1...first menu defined
-   EVT_UPDATE_UI(1, AudacityProject::OnUpdateUI)
-   EVT_ICONIZE(AudacityProject::OnIconize)
-   EVT_COMMAND(wxID_ANY, EVT_TOOLBAR_UPDATED, AudacityProject::OnToolBarUpdate)
+   EVT_UPDATE_UI(1, ProjectWindow::OnUpdateUI)
+   EVT_COMMAND(wxID_ANY, EVT_TOOLBAR_UPDATED, ProjectWindow::OnToolBarUpdate)
    //mchinen:multithreaded calls - may not be threadsafe with CommandEvent: may have to change.
 END_EVENT_TABLE()
 
-AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
+ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
-                                 const wxSize & size)
+                                 const wxSize & size, AudacityProject &project)
    : wxFrame(parent, id, _TS("Audacity"), pos, size)
+   , mProject{ project }
 {
-   auto &project = *this;
-   auto &window = project;
+   project.SetFrame( this );
 
    mNextWindowID = NextID;
 
-#ifdef EXPERIMENTAL_DA2
-   SetBackgroundColour(theTheme.Colour( clrMedium ));
-#endif
-   // Note that the first field of the status bar is a dummy, and it's width is set
-   // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
-   // if you move to the menu bar, the first field of the menu bar is cleared, which
-   // is undesirable behaviour.
-   // In addition, the help strings of menu items are by default sent to the first
-   // field. Currently there are no such help strings, but it they were introduced, then
-   // there would need to be an event handler to send them to the appropriate field.
-   auto statusBar = CreateStatusBar(4);
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
-#endif
-   statusBar->SetName(wxT("status_line"));     // not localized
-   mProjectNo = mProjectCounter++; // Bug 322
-
-   auto &viewInfo = ViewInfo::Get( *this );
-
-   mLockPlayRegion = false;
-
-   // LLL:  Read this!!!
-   //
-   // Until the time (and cpu) required to refresh the track panel is
-   // reduced, leave the following window creations in the order specified.
-   // This will place the refresh of the track panel last, allowing all
-   // the others to get done quickly.
-   //
-   // Near as I can tell, this is only a problem under Windows.
-   //
-
+   // Two sub-windows need to be made before Init(),
+   // so that this construcator can complete, and then TrackPanel and
+   // AdornedRulerPanel can retrieve those windows from this in their
+   // factory functions
 
    // PRL:  this panel groups the top tool dock and the ruler into one
    // tab cycle.
@@ -641,19 +585,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
 
-   //
-   // Create the ToolDock
-   //
-   ToolManager::Get( project ).LayoutToolBars();
-
-   //
-   // Create the horizontal ruler
-   //
-   auto &ruler = AdornedRulerPanel::Get( project );
-
-   //
-   // Create the TrackPanel and the scrollbars
-   //
    wxWindow    * pPage;
 
 #ifdef EXPERIMENTAL_NOTEBOOK
@@ -693,12 +624,65 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mMainPage = pPage;
 
+   mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
+}
+
+void ProjectWindow::Init()
+{
+   auto &project = mProject;
+
+#ifdef EXPERIMENTAL_DA2
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
+   // Note that the first field of the status bar is a dummy, and its width is set
+   // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
+   // if you move to the menu bar, the first field of the menu bar is cleared, which
+   // is undesirable behaviour.
+   // In addition, the help strings of menu items are by default sent to the first
+   // field. Currently there are no such help strings, but it they were introduced, then
+   // there would need to be an event handler to send them to the appropriate field.
+   auto statusBar = CreateStatusBar(4);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
+#endif
+   statusBar->SetName(wxT("status_line"));     // not localized
+
+   auto &viewInfo = ViewInfo::Get( project );
+
+   // LLL:  Read this!!!
+   //
+   // Until the time (and cpu) required to refresh the track panel is
+   // reduced, leave the following window creations in the order specified.
+   // This will place the refresh of the track panel last, allowing all
+   // the others to get done quickly.
+   //
+   // Near as I can tell, this is only a problem under Windows.
+   //
+
+
+   //
+   // Create the ToolDock
+   //
+   ToolManager::Get( project ).LayoutToolBars();
+
+   //
+   // Create the horizontal ruler
+   //
+   auto &ruler = AdornedRulerPanel::Get( project );
+
+   //
+   // Create the TrackPanel and the scrollbars
+   //
+
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
       ubs->Add(&ruler, 0, wxEXPAND);
       mTopPanel->SetSizer(ubs.release());
    }
+
+   const auto pPage = GetMainPage();
 
    wxBoxSizer *bs;
    {
@@ -713,8 +697,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    bs->Layout();
 
    auto &trackPanel = TrackPanel::Get( project );
- 
-   mPlaybackScroller = std::make_unique<PlaybackScroller>(this);
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
@@ -780,7 +762,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mMainPanel->Layout();
 
-   wxASSERT( trackPanel.GetProject()==this);
+   wxASSERT( trackPanel.GetProject() == &project );
 
    // MM: Give track panel the focus to ensure keyboard commands work
    trackPanel.SetFocus();
@@ -818,14 +800,18 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    statusBar->SetStatusText(msg, mainStatusBarField);
-   ControlToolBar::Get( project ).UpdateStatusBar(this);
+   ControlToolBar::Get( project ).UpdateStatusBar( &project );
 
-   wxTheApp->Bind(EVT_THEME_CHANGE, &AudacityProject::OnThemeChange, this);
+   wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
 
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
 #endif
+}
 
+AudacityProject::AudacityProject()
+{
+   mProjectNo = mProjectCounter++; // Bug 322
    AttachedObjects::BuildAll();
    // But not for the attached windows.  They get built only on demand, such as
    // from menu items.
@@ -833,23 +819,84 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
 AudacityProject::~AudacityProject()
 {
+}
+
+namespace {
+
+AudacityProject::AttachedWindows::RegisteredFactory sProjectWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      wxRect wndRect;
+      bool bMaximized = false;
+      bool bIconized = false;
+      GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
+
+      auto pWindow = safenew ProjectWindow(
+         nullptr, -1,
+         wxDefaultPosition,
+         wxSize(wndRect.width, wndRect.height),
+         parent
+      );
+
+      auto &window = *pWindow;
+      // wxGTK3 seems to need to require creating the window using default position
+      // and then manually positioning it.
+      window.SetPosition(wndRect.GetPosition());
+
+      if(bMaximized) {
+         window.Maximize(true);
+      }
+      else if (bIconized) {
+         // if the user close down and iconized state we could start back up and iconized state
+         // window.Iconize(TRUE);
+      }
+
+      return pWindow;
+   }
+};
+
+}
+
+ProjectWindow &ProjectWindow::Get( AudacityProject &project )
+{
+   return project.AttachedWindows::Get< ProjectWindow >( sProjectWindowKey );
+}
+
+const ProjectWindow &ProjectWindow::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+ProjectWindow *ProjectWindow::Find( AudacityProject *pProject )
+{
+   return pProject
+      ? pProject->AttachedWindows::Find< ProjectWindow >( sProjectWindowKey )
+      : nullptr;
+}
+
+const ProjectWindow *ProjectWindow::Find( const AudacityProject *pProject )
+{
+   return Find( const_cast< AudacityProject * >( pProject ) );
+}
+
+ProjectWindow::~ProjectWindow()
+{
    // Tool manager gives us capture sometimes
    if(HasCapture())
       ReleaseMouse();
 }
 
-void AudacityProject::ApplyUpdatedTheme()
+void ProjectWindow::ApplyUpdatedTheme()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    ClearBackground();// For wxGTK.
    trackPanel.ApplyUpdatedTheme();
 }
 
-void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
+void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
 {
-   auto &project = *this;
+   auto &project = mProject ;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    FixScrollbars();
@@ -862,18 +909,18 @@ void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
    trackPanel.Refresh(false);
 }
 
-void AudacityProject::RefreshCursor()
+void ProjectWindow::RefreshCursor()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    trackPanel.HandleCursorForPresentMouseState();
 }
 
-void AudacityProject::OnThemeChange(wxCommandEvent& evt)
+void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
 {
    evt.Skip();
-   auto &project = *this;
-   ProjectWindow::Get( project ).ApplyUpdatedTheme();
+   auto &project = mProject;
+   this->ApplyUpdatedTheme();
    auto &toolManager = ToolManager::Get( project );
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
@@ -896,7 +943,7 @@ wxString AudacityProject::GetProjectName() const
    return name;
 }
 
-void AudacityProject::FinishAutoScroll()
+void ProjectWindow::FinishAutoScroll()
 {
    // Set a flag so we don't have to generate two update events
    mAutoScrolling = true;
@@ -908,14 +955,13 @@ void AudacityProject::FinishAutoScroll()
    mAutoScrolling = false;
 }
 
-
 ///
 /// This method handles general left-scrolling, either for drag-scrolling
 /// or when the scrollbar is clicked to the left of the thumb
 ///
-void AudacityProject::OnScrollLeft()
+void ProjectWindow::OnScrollLeft()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mHsbar->GetThumbPosition();
    // move at least one scroll increment
@@ -936,9 +982,9 @@ void AudacityProject::OnScrollLeft()
 /// or when the scrollbar is clicked to the right of the thumb
 ///
 
-void AudacityProject::OnScrollRight()
+void ProjectWindow::OnScrollRight()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mHsbar->GetThumbPosition();
    // move at least one scroll increment
@@ -957,12 +1003,13 @@ void AudacityProject::OnScrollRight()
    }
 }
 
+
 ///
 ///  This handles the event when the left direction button on the scrollbar is depresssed
 ///
-void AudacityProject::OnScrollLeftButton(wxScrollEvent & /*event*/)
+void ProjectWindow::OnScrollLeftButton(wxScrollEvent & /*event*/)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mHsbar->GetThumbPosition();
    // move at least one scroll increment
@@ -981,9 +1028,9 @@ void AudacityProject::OnScrollLeftButton(wxScrollEvent & /*event*/)
 ///
 ///  This handles  the event when the right direction button on the scrollbar is depresssed
 ///
-void AudacityProject::OnScrollRightButton(wxScrollEvent & /*event*/)
+void ProjectWindow::OnScrollRightButton(wxScrollEvent & /*event*/)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mHsbar->GetThumbPosition();
    // move at least one scroll increment
@@ -1003,9 +1050,9 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & /*event*/)
 }
 
 
-bool AudacityProject::MayScrollBeyondZero() const
+bool ProjectWindow::MayScrollBeyondZero() const
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &scrubber = Scrubber::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    if (viewInfo.bScrollBeyondZero)
@@ -1024,9 +1071,9 @@ bool AudacityProject::MayScrollBeyondZero() const
    return false;
 }
 
-double AudacityProject::ScrollingLowerBoundTime() const
+double ProjectWindow::ScrollingLowerBoundTime() const
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
@@ -1038,9 +1085,9 @@ double AudacityProject::ScrollingLowerBoundTime() const
 
 // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
 // That's why ViewInfo::TimeRangeToPixelWidth was defined, with some regret.
-double AudacityProject::PixelWidthBeforeTime(double scrollto) const
+double ProjectWindow::PixelWidthBeforeTime(double scrollto) const
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
    return
@@ -1048,9 +1095,9 @@ double AudacityProject::PixelWidthBeforeTime(double scrollto) const
       viewInfo.TimeRangeToPixelWidth(scrollto - lowerBound);
 }
 
-void AudacityProject::SetHorizontalThumb(double scrollto)
+void ProjectWindow::SetHorizontalThumb(double scrollto)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const auto unscaled = PixelWidthBeforeTime(scrollto);
    const int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
@@ -1071,7 +1118,7 @@ void AudacityProject::SetHorizontalThumb(double scrollto)
 // This method, like the other methods prefaced with TP, handles TrackPanel
 // 'callback'.
 //
-void AudacityProject::TP_ScrollWindow(double scrollto)
+void ProjectWindow::TP_ScrollWindow(double scrollto)
 {
    SetHorizontalThumb(scrollto);
 
@@ -1085,7 +1132,7 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
 // handler in Track Panel. A positive argument makes the window
 // scroll down, while a negative argument scrolls up.
 //
-bool AudacityProject::TP_ScrollUpDown(int delta)
+bool ProjectWindow::TP_ScrollUpDown(int delta)
 {
    int oldPos = mVsbar->GetThumbPosition();
    int pos = oldPos + delta;
@@ -1111,9 +1158,9 @@ bool AudacityProject::TP_ScrollUpDown(int delta)
       return false;
 }
 
-void AudacityProject::FixScrollbars()
+void ProjectWindow::FixScrollbars()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
@@ -1273,9 +1320,9 @@ void AudacityProject::FixScrollbars()
    } );
 }
 
-void AudacityProject::UpdateLayout()
+void ProjectWindow::UpdateLayout()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    auto &toolManager = ToolManager::Get( project );
 
@@ -1303,7 +1350,7 @@ void AudacityProject::UpdateLayout()
    SetSizeHints(250, (mainsz.y - sbpos.y) + tppos.y + 50, 20000, 20000);
 }
 
-void AudacityProject::HandleResize()
+void ProjectWindow::HandleResize()
 {
    // Activate events can fire during window teardown, so just
    // ignore them.
@@ -1311,14 +1358,18 @@ void AudacityProject::HandleResize()
       return;
    }
 
-   auto &project = *this;
-
    FixScrollbars();
 
    UpdateLayout();
 }
 
-void AudacityProject::OnIconize(wxIconizeEvent &event)
+
+bool ProjectWindow::IsIconized() const
+{
+   return mIconized;
+}
+
+void ProjectWindow::OnIconize(wxIconizeEvent &event)
 {
    //JKC: On Iconizing we get called twice.  Don't know
    // why but it does no harm.
@@ -1349,14 +1400,14 @@ void AudacityProject::OnIconize(wxIconizeEvent &event)
    OnShow( Evt );
 }
 
-void AudacityProject::OnMove(wxMoveEvent & event)
+void ProjectWindow::OnMove(wxMoveEvent & event)
 {
    if (!this->IsMaximized() && !this->IsIconized())
       SetNormalizedWindowState(this->GetRect());
    event.Skip();
 }
 
-void AudacityProject::OnSize(wxSizeEvent & event)
+void ProjectWindow::OnSize(wxSizeEvent & event)
 {
    // (From Debian)
    //
@@ -1374,7 +1425,7 @@ void AudacityProject::OnSize(wxSizeEvent & event)
    event.Skip();
 }
 
-void AudacityProject::OnShow(wxShowEvent & event)
+void ProjectWindow::OnShow(wxShowEvent & event)
 {
    // Remember that the window has been shown at least once
    mShownOnce = true;
@@ -1414,16 +1465,16 @@ void AudacityProject::OnShow(wxShowEvent & event)
 ///
 ///  A toolbar has been updated, so handle it like a sizing event.
 ///
-void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
+void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
 {
    HandleResize();
 
    event.Skip(false);             /* No need to propagate any further */
 }
 
-void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
+void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const wxInt64 offset = PixelWidthBeforeTime(0.0);
    viewInfo.sbarH =
@@ -1431,9 +1482,9 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    DoScroll();
 }
 
-void AudacityProject::DoScroll()
+void ProjectWindow::DoScroll()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
@@ -1471,7 +1522,7 @@ void AudacityProject::DoScroll()
    } );
 }
 
-void AudacityProject::OnMenu(wxCommandEvent & event)
+void ProjectWindow::OnMenu(wxCommandEvent & event)
 {
 #ifdef __WXMSW__
    // Bug 1642: We can arrive here with bogus menu IDs, which we
@@ -1486,7 +1537,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
       return;
    }
 #endif
-   auto &project = *this;
+   auto &project = mProject;
    auto &commandManager = CommandManager::Get( project );
    bool handled = commandManager.HandleMenuID(
       event.GetId(), MenuManager::Get( project ).GetUpdateFlags( project ),
@@ -1500,13 +1551,13 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
    }
 }
 
-void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
+void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 {
-   auto &project = *this;
+   auto &project = mProject;
    MenuManager::Get( project ).UpdateMenus( project );
 }
 
-void AudacityProject::MacShowUndockedToolbars(bool show)
+void ProjectWindow::MacShowUndockedToolbars(bool show)
 {
    (void)show;//compiler food
 #ifdef __WXMAC__
@@ -1524,7 +1575,7 @@ void AudacityProject::MacShowUndockedToolbars(bool show)
 #endif
 }
 
-void AudacityProject::OnActivate(wxActivateEvent & event)
+void ProjectWindow::OnActivate(wxActivateEvent & event)
 {
    // Activate events can fire during window teardown, so just
    // ignore them.
@@ -1532,7 +1583,7 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
       return;
    }
 
-   auto &project = *this;
+   auto &project = mProject;
    
    mActive = event.GetActive();
 
@@ -1555,7 +1606,7 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    }
    else {
       auto &toolManager = ToolManager::Get( project );
-      SetActiveProject(this);
+      SetActiveProject( &project );
       if ( ! toolManager.RestoreFocus() )
          TrackPanel::Get( project ).SetFocus();
 
@@ -1566,15 +1617,16 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    event.Skip();
 }
 
-bool AudacityProject::IsActive()
+bool ProjectWindow::IsActive()
 {
    return mActive;
 }
 
-void AudacityProject::OnMouseEvent(wxMouseEvent & event)
+void ProjectWindow::OnMouseEvent(wxMouseEvent & event)
 {
+   auto &project = mProject;
    if (event.ButtonDown())
-      SetActiveProject(this);
+      SetActiveProject( &project );
 }
 
 static void RefreshAllTitles(bool bShowProjectNumbers )
@@ -1587,14 +1639,15 @@ static void RefreshAllTitles(bool bShowProjectNumbers )
    }
 }
 
-TitleRestorer::TitleRestorer(AudacityProject * p )
+TitleRestorer::TitleRestorer(ProjectWindow * pWindow )
 {
-   auto &window = GetProjectFrame( *p );
+   auto &window = *pWindow;
    if( window.IsIconized() )
       window.Restore();
    window.Raise(); // May help identifying the window on Mac
 
    // Construct this projects name and number.
+   auto p = &pWindow->GetProject();
    sProjName = p->GetProjectName();
    if (sProjName.empty()){
       sProjName = _("<untitled>");
@@ -1618,12 +1671,12 @@ TitleRestorer::~TitleRestorer() {
       RefreshAllTitles( false );
 }
 
-void AudacityProject::ZoomAfterImport(Track *pTrack)
+void ProjectWindow::ZoomAfterImport(Track *pTrack)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
 
-   ViewActions::DoZoomFit(*this);
+   ViewActions::DoZoomFit( project );
 
    trackPanel.SetFocus();
    RedrawProject();
@@ -1633,9 +1686,9 @@ void AudacityProject::ZoomAfterImport(Track *pTrack)
 }
 
 // Utility function called by other zoom methods
-void AudacityProject::Zoom(double level)
+void ProjectWindow::Zoom(double level)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.SetZoom(level);
    FixScrollbars();
@@ -1652,9 +1705,9 @@ void AudacityProject::Zoom(double level)
 }
 
 // Utility function called by other zoom methods
-void AudacityProject::ZoomBy(double multiplier)
+void ProjectWindow::ZoomBy(double multiplier)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.ZoomBy(multiplier);
    FixScrollbars();
@@ -1668,9 +1721,9 @@ void AudacityProject::ZoomBy(double multiplier)
 // selection to 0 (holding right edge constant), otherwise it will
 // move both left and right edge of selection to 0
 ///////////////////////////////////////////////////////////////////
-void AudacityProject::Rewind(bool shift)
+void ProjectWindow::Rewind(bool shift)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.selectedRegion.setT0(0, false);
    if (!shift)
@@ -1688,9 +1741,9 @@ void AudacityProject::Rewind(bool shift)
 // selection to the end (holding left edge constant), otherwise it will
 // move both left and right edge of selection to the end
 ///////////////////////////////////////////////////////////////////
-void AudacityProject::SkipEnd(bool shift)
+void ProjectWindow::SkipEnd(bool shift)
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
@@ -1712,19 +1765,19 @@ void AudacityProject::SetStatus(const wxString &msg)
    if ( msg != mLastMainStatusMessage ) {
       mLastMainStatusMessage = msg;
       wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
-      project.GetEventHandler()->ProcessEvent( evt );
+      project.ProcessEvent( evt );
    }
 }
 
-void AudacityProject::TP_DisplaySelection()
+void ProjectWindow::TP_DisplaySelection()
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &ruler = AdornedRulerPanel::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
    double audioTime;
 
-   if (!gAudioIO->IsBusy() && !mLockPlayRegion)
+   if (!gAudioIO->IsBusy() && project.IsPlayRegionLocked())
       ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else
       // Cause ruler redraw anyway, because we may be zooming or scrolling
@@ -1734,7 +1787,7 @@ void AudacityProject::TP_DisplaySelection()
       audioTime = gAudioIO->GetStreamTime();
    else {
       double playEnd;
-      GetPlayRegion(&audioTime, &playEnd);
+      project.GetPlayRegion(&audioTime, &playEnd);
    }
 
    SelectionBar::Get( project ).SetTimes(selectedRegion.t0(),
@@ -1747,24 +1800,24 @@ void AudacityProject::TP_DisplaySelection()
 
 
 // TrackPanel callback method
-void AudacityProject::TP_ScrollLeft()
+void ProjectWindow::TP_ScrollLeft()
 {
    OnScrollLeft();
 }
 
 // TrackPanel callback method
-void AudacityProject::TP_ScrollRight()
+void ProjectWindow::TP_ScrollRight()
 {
    OnScrollRight();
 }
 
 // TrackPanel callback method
-void AudacityProject::TP_RedrawScrollbars()
+void ProjectWindow::TP_RedrawScrollbars()
 {
    FixScrollbars();
 }
 
-void AudacityProject::TP_HandleResize()
+void ProjectWindow::TP_HandleResize()
 {
    HandleResize();
 }
@@ -1777,7 +1830,7 @@ void AudacityProject::GetPlayRegion(double* playRegionStart,
       playRegionStart, playRegionEnd);
 }
 
-AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
+ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
    ViewInfo::Get( *mProject ).Bind(EVT_TRACK_PANEL_TIMER,
@@ -1785,7 +1838,7 @@ AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
       this);
 }
 
-void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
+void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
 {
    // Let other listeners get the notification
    event.Skip();
@@ -1837,9 +1890,9 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
    }
 }
 
-void AudacityProject::ZoomInByFactor( double ZoomFactor )
+void ProjectWindow::ZoomInByFactor( double ZoomFactor )
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -1918,9 +1971,9 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    TP_ScrollWindow(newh);
 }
 
-void AudacityProject::ZoomOutByFactor( double ZoomFactor )
+void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
 {
-   auto &project = *this;
+   auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -1934,4 +1987,20 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
+}
+
+wxFrame &GetProjectFrame( AudacityProject &project )
+{
+   auto ptr = project.GetFrame();
+   if ( !ptr )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *ptr;
+}
+
+const wxFrame &GetProjectFrame( const AudacityProject &project )
+{
+   auto ptr = project.GetFrame();
+   if ( !ptr )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *ptr;
 }

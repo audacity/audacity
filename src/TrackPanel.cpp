@@ -501,7 +501,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    // Notify listeners for timer ticks
    {
       wxCommandEvent e(EVT_TRACK_PANEL_TIMER);
-      p->GetEventHandler()->ProcessEvent(e);
+      p->ProcessEvent(e);
    }
 
    DrawOverlays(false);
