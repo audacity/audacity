@@ -1119,6 +1119,7 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 ///
 bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
 {
+   auto pWindow = FindProjectFrame( project );
    CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
    if (entry == NULL)
    {
@@ -1141,10 +1142,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 
    wxWindow * pFocus = wxWindow::FindFocus();
    wxWindow * pParent = wxGetTopLevelParent( pFocus );
-   bool validTarget = pParent == project;
+   bool validTarget = pParent == pWindow;
    // Bug 1557.  MixerBoard should count as 'destined for project'
    // MixerBoard IS a TopLevelWindow, and its parent is the project.
-   if( pParent && pParent->GetParent() == project){
+   if( pParent && pParent->GetParent() == pWindow ){
       if( dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ) != NULL )
          validTarget = true;
    }
@@ -1280,7 +1281,8 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
       // Only want one page of the preferences
       PrefsDialog::Factories factories;
       factories.push_back(KeyConfigPrefsFactory( entry->name ));
-      GlobalPrefsDialog dialog(GetActiveProject(), factories);
+      auto pWindow = FindProjectFrame( GetActiveProject() );
+      GlobalPrefsDialog dialog( pWindow, factories );
       dialog.ShowModal();
       MenuCreator::RebuildAllMenuBars();
       return true;
@@ -1654,7 +1656,7 @@ static struct InstallHandlers
          // We must have a project since we will be working with the
          // CommandManager, which is tied to individual projects.
          AudacityProject *project = GetActiveProject();
-         return project && project->IsEnabled();
+         return project && GetProjectFrame( *project ).IsEnabled();
       } );
       KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
          // Capture handler window didn't want it, so ask the CommandManager.

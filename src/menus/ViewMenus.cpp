@@ -47,10 +47,11 @@ double GetZoomOfSelection( const AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    const double lowerBound =
       std::max(viewInfo.selectedRegion.t0(),
-         project.ScrollingLowerBoundTime());
+         window.ScrollingLowerBoundTime());
    const double denom =
       viewInfo.selectedRegion.t1() - lowerBound;
    if (denom <= 0.0)
@@ -165,13 +166,14 @@ void DoZoomFit(AudacityProject &project)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &tracks = TrackList::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    const double start = viewInfo.bScrollBeyondZero
       ? std::min(tracks.GetStartTime(), 0.0)
       : 0;
 
-   project.Zoom( GetZoomOfToFit( project ) );
-   project.TP_ScrollWindow(start);
+   window.Zoom( GetZoomOfToFit( project ) );
+   window.TP_ScrollWindow(start);
 }
 
 void DoZoomFitV(AudacityProject &project)
@@ -209,31 +211,35 @@ struct Handler : CommandHandlerObject {
 void OnZoomIn(const CommandContext &context)
 {
    auto &project = context.project;
-   project.ZoomInByFactor( 2.0 );
+   auto &window = ProjectWindow::Get( project );
+   window.ZoomInByFactor( 2.0 );
 }
 
 void OnZoomNormal(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
-   project.Zoom(ZoomInfo::GetDefaultZoom());
+   window.Zoom(ZoomInfo::GetDefaultZoom());
    trackPanel.Refresh(false);
 }
 
 void OnZoomOut(const CommandContext &context)
 {
    auto &project = context.project;
-   project.ZoomOutByFactor( 1 /2.0 );
+   auto &window = ProjectWindow::Get( project );
+   window.ZoomOutByFactor( 1 /2.0 );
 }
 
 void OnZoomSel(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
-   project.Zoom( GetZoomOfSelection( project ) );
-   project.TP_ScrollWindow(selectedRegion.t0());
+   window.Zoom( GetZoomOfSelection( project ) );
+   window.TP_ScrollWindow(selectedRegion.t0());
 }
 
 void OnZoomToggle(const CommandContext &context)
@@ -241,6 +247,7 @@ void OnZoomToggle(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
 //   const double origLeft = viewInfo.h;
 //   const double origWidth = GetScreenEndTime() - origLeft;
@@ -252,7 +259,7 @@ void OnZoomToggle(const CommandContext &context)
    double ChosenZoom =
       fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 
-   project.Zoom(ChosenZoom);
+   window.Zoom(ChosenZoom);
    trackPanel.Refresh(false);
 //   const double newWidth = GetScreenEndTime() - viewInfo.h;
 //   const double newh = origLeft + (origWidth - newWidth) / 2;
@@ -267,11 +274,12 @@ void OnZoomFit(const CommandContext &context)
 void OnZoomFitV(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &window = ProjectWindow::Get( project );
 
    DoZoomFitV(project);
 
-   project.GetVerticalScrollBar().SetThumbPosition(0);
-   project.RedrawProject();
+   window.GetVerticalScrollBar().SetThumbPosition(0);
+   window.RedrawProject();
    project.ModifyState(true);
 }
 
@@ -291,24 +299,26 @@ void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks.Any())
       t->SetMinimized(true);
 
    project.ModifyState(true);
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnExpandAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks.Any())
       t->SetMinimized(false);
 
    project.ModifyState(true);
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnGoSelStart(const CommandContext &context)
@@ -317,11 +327,12 @@ void OnGoSelStart(const CommandContext &context)
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
-   project.TP_ScrollWindow(
+   window.TP_ScrollWindow(
       selectedRegion.t0() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
@@ -331,11 +342,12 @@ void OnGoSelEnd(const CommandContext &context)
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
-   project.TP_ScrollWindow(
+   window.TP_ScrollWindow(
       selectedRegion.t1() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
 }
 

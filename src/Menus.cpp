@@ -51,6 +51,7 @@
 #include "widgets/FileHistory.h"
 
 #include <wx/menu.h>
+#include <wx/windowptr.h>
 
 MenuCreator::MenuCreator()
 {
@@ -302,7 +303,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
    VisitItem( project, menuTree.get() );
 
-   project.SetMenuBar(menubar.release());
+   GetProjectFrame( project ).SetMenuBar(menubar.release());
 
    mLastFlags = AlwaysEnabledFlag;
 
@@ -361,8 +362,9 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    // Delete the menus, since we will soon recreate them.
    // Rather oddly, the menus don't vanish as a result of doing this.
    {
-      std::unique_ptr<wxMenuBar> menuBar{ project.GetMenuBar() };
-      project.DetachMenuBar();
+      auto &window = ProjectWindow::Get( project );
+      wxWindowPtr<wxMenuBar> menuBar{ window.GetMenuBar() };
+      window.DetachMenuBar();
       // menuBar gets deleted here
    }
 
@@ -411,7 +413,8 @@ CommandFlag MenuManager::GetUpdateFlags
    static auto lastFlags = flags;
 
    // if (auto focus = wxWindow::FindFocus()) {
-   if (wxWindow * focus = &project) {
+   auto &window = GetProjectFrame( project );
+   if (wxWindow * focus = &window) {
       while (focus && focus->GetParent())
          focus = focus->GetParent();
       if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
@@ -430,7 +433,7 @@ CommandFlag MenuManager::GetUpdateFlags
       flags |= NotPausedFlag;
 
    // quick 'short-circuit' return.
-   if ( checkActive && !project.IsActive() ){
+   if ( checkActive && !window.IsActive() ){
       const auto checkedFlags = 
          NotMinimizedFlag | AudioIONotBusyFlag | AudioIOBusyFlag |
          PausedFlag | NotPausedFlag;
@@ -749,9 +752,10 @@ void MenuCreator::RebuildAllMenuBars()
       //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
       //
       // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
-      wxRect r = p->GetRect();
-      p->SetSize(wxSize(1,1));
-      p->SetSize(r.GetSize());
+      auto &window = GetProjectFrame( *p );
+      wxRect r = window.GetRect();
+      window.SetSize(wxSize(1,1));
+      window.SetSize(r.GetSize());
 #endif
    }
 }

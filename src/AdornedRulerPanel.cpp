@@ -844,7 +844,7 @@ namespace{
 AudacityProject::AttachedWindows::RegisteredFactory sKey{
 []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = project;
+   auto &window = ProjectWindow::Get( project );
 
    return safenew AdornedRulerPanel( &project, window.GetTopPanel(),
       wxID_ANY,

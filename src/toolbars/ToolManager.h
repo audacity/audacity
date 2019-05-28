@@ -34,6 +34,7 @@ class wxTimerEvent;
 class wxWindow;
 
 class AudacityProject;
+using ProjectWindow = AudacityProject;
 class ToolFrame;
 
 ////////////////////////////////////////////////////////////
@@ -183,8 +184,6 @@ public:
    void OnKeyDown( wxKeyEvent &event );
 
    void Resize( const wxSize &size );
-
-   AudacityProject *GetParent() const { return mParent; }
 
 private:
 

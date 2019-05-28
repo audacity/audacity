@@ -334,7 +334,7 @@ void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
 
 void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
 {
-   wxWindow * pWin = GetActiveProject();
+   wxWindow * pWin = FindProjectFrame( GetActiveProject() );
    HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
 }
 
@@ -572,7 +572,7 @@ bool Exporter::GetFilename()
          auto useFileName = mFilename;
          if (!useFileName.HasExt())
             useFileName.SetExt(defext);
-         FileDialogWrapper fd(mProject,
+         FileDialogWrapper fd( ProjectWindow::Find( mProject ),
                        mFileDialogTitle,
                        mFilename.GetPath(),
                        useFileName.GetFullName(),
@@ -813,22 +813,23 @@ bool Exporter::CheckMix()
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
 
+         auto pWindow = ProjectWindow::Find( mProject );
          if (exportedChannels == 1) {
-            if (ShowWarningDialog(mProject,
+            if (ShowWarningDialog(pWindow,
                                   wxT("MixMono"),
                                   _("Your tracks will be mixed down and exported as one mono file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else if (exportedChannels == 2) {
-            if (ShowWarningDialog(mProject,
+            if (ShowWarningDialog(pWindow,
                                   wxT("MixStereo"),
                                   _("Your tracks will be mixed down and exported as one stereo file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else {
-            if (ShowWarningDialog(mProject,
+            if (ShowWarningDialog(pWindow,
                                   wxT("MixUnknownChannels"),
                                   _("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)

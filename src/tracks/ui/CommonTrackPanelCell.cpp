@@ -48,6 +48,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    Scrubber &scrubber = Scrubber::Get( *pProject );
+   auto &window = ProjectWindow::Get( *pProject );
    const auto steps = evt.steps;
 
    if (event.ShiftDown()
@@ -57,7 +58,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
       )
    {
       // MM: Scroll left/right when used with Shift key down
-      pProject->TP_ScrollWindow(
+      window.TP_ScrollWindow(
          viewInfo.OffsetTimeByPixels(
             viewInfo.PositionToTime(0), 50.0 * -steps));
    }
@@ -153,7 +154,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
          double lines = steps * 4 + mVertScrollRemainder;
          mVertScrollRemainder = lines - floor(lines);
          lines = floor(lines);
-         auto didSomething = pProject->TP_ScrollUpDown((int)-lines);
+         auto didSomething = window.TP_ScrollUpDown((int)-lines);
          if (!didSomething)
             result |= Cancelled;
       }

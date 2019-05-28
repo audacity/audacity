@@ -25,8 +25,9 @@ namespace {
 
 AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
       return safenew ContrastDialog(
-         &parent, -1, _("Contrast Analysis (WCAG 2 compliance)"),
+         &window, -1, _("Contrast Analysis (WCAG 2 compliance)"),
          wxPoint{ 150, 150 }
       );
    }
@@ -34,8 +35,9 @@ AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
 
 AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
       return safenew FreqWindow(
-         &parent, -1, _("Frequency Analysis"),
+         &window, -1, _("Frequency Analysis"),
          wxPoint{ 150, 150 }
       );
    }
@@ -43,16 +45,17 @@ AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
 
 AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
       return safenew MacrosWindow(
-         &parent, true
+         &window, true
       );
    }
 };
 
-void DoManagePluginsMenu
-(AudacityProject &project, EffectType type)
+void DoManagePluginsMenu(AudacityProject &project, EffectType type)
 {
-   if (PluginManager::Get().ShowManager(&project, type))
+   auto &window = GetProjectFrame( project );
+   if (PluginManager::Get().ShowManager(&window, type))
       MenuCreator::RebuildAllMenuBars();
 }
 
@@ -426,6 +429,7 @@ bool DoEffect(
    auto rate = project.GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
@@ -473,7 +477,7 @@ bool DoEffect(
 
    EffectManager & em = EffectManager::Get();
 
-   success = em.DoEffect(ID, &project, rate,
+   success = em.DoEffect(ID, &window, rate,
       &tracks, &trackFactory, &selectedRegion,
       (flags & kConfigured) == 0);
 
@@ -515,7 +519,7 @@ bool DoEffect(
          ViewActions::DoZoomFit(project);
          //  trackPanel->Refresh(false);
    }
-   project.RedrawProject();
+   window.RedrawProject();
    if (focus != nullptr && focus->GetParent()==parent) {
       focus->SetFocus();
    }
@@ -543,6 +547,7 @@ bool DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags )
 {
    auto &project = context.project;
+   auto &window = ProjectWindow::Get( project );
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
       return false;
@@ -556,7 +561,7 @@ bool DoAudacityCommand(
    EffectManager & em = EffectManager::Get();
    bool success = em.DoAudacityCommand(ID, 
       context,
-      &project,
+      &window,
       (flags & kConfigured) == 0);
 
    if (!success)
@@ -573,7 +578,7 @@ bool DoAudacityCommand(
       PushState(longDesc, shortDesc);
    }
 */
-   project.RedrawProject();
+   window.RedrawProject();
    return true;
 }
 
@@ -677,7 +682,8 @@ void OnScreenshot(const CommandContext &WXUNUSED(context) )
 void OnBenchmark(const CommandContext &context)
 {
    auto &project = context.project;
-   ::RunBenchmark(&project);
+   auto &window = GetProjectFrame( project );
+   ::RunBenchmark(&window);
 }
 
 void OnSimulateRecordingErrors(const CommandContext &context)
@@ -703,9 +709,10 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
 void OnApplyMacroDirectly(const CommandContext &context )
 {
    auto &project = context.project;
+   auto &window = ProjectWindow::Get( project );
 
    //wxLogDebug( "Macro was: %s", context.parameter);
-   ApplyMacroDialog dlg( &project );
+   ApplyMacroDialog dlg( &window );
    const auto &Name = context.parameter;
 
 // We used numbers previously, but macros could get renumbered, making

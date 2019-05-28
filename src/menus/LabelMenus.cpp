@@ -21,6 +21,7 @@ int DoAddLabel(
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    wxString title;      // of label
 
@@ -71,7 +72,7 @@ int DoAddLabel(
 
    project.PushState(_("Added label"), _("Label"));
 
-   project.RedrawProject();
+   window.RedrawProject();
    if (!useDialog) {
       trackPanel.EnsureVisible(lt);
    }
@@ -284,6 +285,7 @@ void OnPasteNewLabel(const CommandContext &context)
    auto &trackFactory = TrackFactory::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    bool bPastedSomething = false;
 
@@ -337,7 +339,7 @@ void OnPasteNewLabel(const CommandContext &context)
          _("Pasted from the clipboard"), _("Paste Text to New Label"));
 
       // Is this necessary? (carried over from former logic in OnPaste())
-      project.RedrawProject();
+      window.RedrawProject();
    }
 }
 
@@ -355,6 +357,7 @@ void OnCutLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    if( selectedRegion.isPoint() )
      return;
@@ -379,7 +382,7 @@ void OnCutLabels(const CommandContext &context)
    /* i18n-hint: (verb)*/
       _( "Cut Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnDeleteLabels(const CommandContext &context)
@@ -387,6 +390,7 @@ void OnDeleteLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    if( selectedRegion.isPoint() )
       return;
@@ -401,7 +405,7 @@ void OnDeleteLabels(const CommandContext &context)
       /* i18n-hint: (verb)*/
       _( "Delete Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnSplitCutLabels(const CommandContext &context)
@@ -409,6 +413,7 @@ void OnSplitCutLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    if( selectedRegion.isPoint() )
       return;
@@ -423,7 +428,7 @@ void OnSplitCutLabels(const CommandContext &context)
       /* i18n-hint: (verb) Do a special kind of cut on the labels*/
       _( "Split Cut Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnSplitDeleteLabels(const CommandContext &context)
@@ -431,6 +436,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    if( selectedRegion.isPoint() )
       return;
@@ -445,7 +451,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
          regions */
       _( "Split Delete Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnSilenceLabels(const CommandContext &context)
@@ -494,6 +500,7 @@ void OnSplitLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Split, false );
 
@@ -504,7 +511,7 @@ void OnSplitLabels(const CommandContext &context)
       /* i18n-hint: (verb)*/
       _( "Split Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnJoinLabels(const CommandContext &context)
@@ -512,6 +519,7 @@ void OnJoinLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    if( selectedRegion.isPoint() )
       return;
@@ -525,7 +533,7 @@ void OnJoinLabels(const CommandContext &context)
       /* i18n-hint: (verb) */
       _( "Join Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 void OnDisjoinLabels(const CommandContext &context)
@@ -533,6 +541,7 @@ void OnDisjoinLabels(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get( project );
 
    if( selectedRegion.isPoint() )
       return;
@@ -547,7 +556,7 @@ void OnDisjoinLabels(const CommandContext &context)
       /* i18n-hint: (verb)*/
       _( "Detach Labeled Audio" ) );
 
-   project.RedrawProject();
+   window.RedrawProject();
 }
 
 }; // struct Handler

@@ -126,7 +126,8 @@ static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
-   mProject->GetPlaybackScroller().Bind(EVT_TRACK_PANEL_TIMER,
+   ProjectWindow::Get( *mProject ).GetPlaybackScroller().Bind(
+      EVT_TRACK_PANEL_TIMER,
       &PlayIndicatorOverlay::OnTimer,
       this);
 }
@@ -165,8 +166,10 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;
 
-      using Mode = AudacityProject::PlaybackScroller::Mode;
-      const Mode mode = mProject->GetPlaybackScroller().GetMode();
+      auto &window = ProjectWindow::Get( *mProject );
+      using Mode = ProjectWindow::PlaybackScroller::Mode;
+      const Mode mode =
+         window.GetPlaybackScroller().GetMode();
       const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
@@ -179,7 +182,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          trackPanel.GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
-      mProject->TP_DisplaySelection();
+      window.TP_DisplaySelection();
 
       // BG: Scroll screen if option is set
       if( viewInfo.bUpdateTrackIndicator &&
@@ -199,9 +202,9 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
                // just a little bit equal to the scrubbing poll interval
                // duration.
                newPos = viewInfo.OffsetTimeByPixels( newPos, -width );
-               newPos = std::max( newPos, mProject->ScrollingLowerBoundTime() );
+               newPos = std::max( newPos, window.ScrollingLowerBoundTime() );
             }
-            mProject->TP_ScrollWindow(newPos);
+            window.TP_ScrollWindow(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
@@ -213,7 +216,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // Always update scrollbars even if not scrolling the window. This is
       // important when NEW audio is recorded, because this can change the
       // length of the project and therefore the appearance of the scrollbar.
-      mProject->TP_RedrawScrollbars();
+      window.TP_RedrawScrollbars();
 
       if (onScreen)
          mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel.GetLeftOffset());

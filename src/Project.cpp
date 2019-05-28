@@ -184,11 +184,11 @@ bool AllProjects::Close( bool force )
       // of deletion from gAudacityProjects
       if ( force )
       {
-         gAudacityProjects[0]->Close(true);
+         GetProjectFrame( *gAudacityProjects[0] ).Close(true);
       }
       else
       {
-         if (!gAudacityProjects[0]->Close())
+         if (! GetProjectFrame( *gAudacityProjects[0] ).Close())
             return false;
       }
    }
@@ -202,14 +202,15 @@ void AllProjects::SaveWindowSize()
       return;
    }
    bool validWindowForSaveWindowSize = FALSE;
-   AudacityProject * validProject = NULL;
+   ProjectWindow * validProject = nullptr;
    bool foundIconizedProject = FALSE;
    size_t numProjects = gAudacityProjects.size();
    for (size_t i = 0; i < numProjects; i++)
    {
-      if (!gAudacityProjects[i]->IsIconized()) {
+      auto &window = ProjectWindow::Get( *gAudacityProjects[i] );
+      if (!window.IsIconized()) {
          validWindowForSaveWindowSize = TRUE;
-         validProject = gAudacityProjects[i].get();
+         validProject = &window;
          i = numProjects;
       }
       else
@@ -235,7 +236,7 @@ void AllProjects::SaveWindowSize()
    else
    {
       if (foundIconizedProject) {
-         validProject = gAudacityProjects[0].get();
+         validProject = &ProjectWindow::Get( *gAudacityProjects[0] );
          bool wndMaximized = validProject->IsMaximized();
          wxRect normalRect = validProject->GetNormalizedWindowState();
          // store only the normal rectangle because the itemized rectangle
@@ -403,7 +404,7 @@ void SetActiveProject(AudacityProject * project)
       gActiveProject = project;
       KeyboardCapture::Capture( nullptr );
    }
-   wxTheApp->SetTopWindow(project);
+   wxTheApp->SetTopWindow( FindProjectFrame( project ) );
 }
 
 #if wxUSE_DRAG_AND_DROP
@@ -552,7 +553,7 @@ public:
          ODManager::Pauser pauser;
 
          auto cleanup = finally( [&] {
-            mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+            ProjectWindow::Get( *mProject ).HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
          for (const auto &name : sortednames) {
@@ -564,7 +565,8 @@ public:
                mProject->Import(name);
          }
 
-         mProject->ZoomAfterImport(nullptr);
+         auto &window = ProjectWindow::Get( *mProject );
+         window.ZoomAfterImport(nullptr);
 
          return true;
       } );
@@ -669,17 +671,19 @@ AudacityProject *CreateNewAudacityProject()
       Destroyer< AudacityProject > {}
    } );
    const auto p = gAudacityProjects.back().get();
+   auto &project = *p;
+   auto &window = GetProjectFrame( *p );
 
    // wxGTK3 seems to need to require creating the window using default position
    // and then manually positioning it.
-   p->SetPosition(wndRect.GetPosition());
+   window.SetPosition(wndRect.GetPosition());
 
    if(bMaximized) {
-      p->Maximize(true);
+      window.Maximize(true);
    }
    else if (bIconized) {
       // if the user close down and iconized state we could start back up and iconized state
-      // p->Iconize(TRUE);
+      // window.Iconize(TRUE);
    }
 
    //Initialise the Listener
@@ -694,7 +698,7 @@ AudacityProject *CreateNewAudacityProject()
 
    ModuleManager::Get().Dispatch(ProjectInitialized);
 
-   p->Show(true);
+   window.Show(true);
 
    return p;
 }
@@ -703,21 +707,21 @@ void RedrawAllProjects()
 {
    size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
-      gAudacityProjects[i]->RedrawProject();
+      ProjectWindow::Get( *gAudacityProjects[i] ).RedrawProject();
 }
 
 void RefreshCursorForAllProjects()
 {
    size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
-      gAudacityProjects[i]->RefreshCursor();
+      ProjectWindow::Get( *gAudacityProjects[i] ).RefreshCursor();
 }
 
 AUDACITY_DLL_API void CloseAllProjects()
 {
    size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
-      gAudacityProjects[i]->Close();
+      GetProjectFrame( *gAudacityProjects[i] ).Close();
 
    //Set the Offset and Position increments to 0
    gAudacityOffsetInc = 0;
@@ -904,12 +908,12 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 
    bool validWindowSize = false;
-   AudacityProject * validProject = NULL;
+   ProjectWindow * validProject = NULL;
    size_t numProjects = gAudacityProjects.size();
    for (int i = numProjects; i > 0 ; i--) {
-      if (!gAudacityProjects[i-1]->IsIconized()) {
+      if (!GetProjectFrame( *gAudacityProjects[i-1] ).IsIconized()) {
             validWindowSize = true;
-            validProject = gAudacityProjects[i-1].get();
+            validProject = &ProjectWindow::Get( *gAudacityProjects[i-1] );
             break;
       }
    }
@@ -1439,7 +1443,7 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
 {
    evt.Skip();
    auto &project = *this;
-   ApplyUpdatedTheme();
+   ProjectWindow::Get( project ).ApplyUpdatedTheme();
    auto &toolManager = ToolManager::Get( project );
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
@@ -2144,7 +2148,7 @@ void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
 {
    for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
       if ( gAudacityProjects[i] ) {
-         if ( !gAudacityProjects[i]->mIconized ) {
+         if ( !GetProjectFrame( *gAudacityProjects[i] ).IsIconized() ) {
             AudacityProject * p;
             p = gAudacityProjects[i].get();
             p->SetProjectTitle( bShowProjectNumbers ? p->GetProjectNumber() : -1 );
@@ -2169,7 +2173,7 @@ void AudacityProject::OnIconize(wxIconizeEvent &event)
    // It's not used outside this function.
    for(i=0;i<gAudacityProjects.size();i++){
       if(gAudacityProjects[i]){
-         if( !gAudacityProjects[i]->mIconized )
+         if( !GetProjectFrame( *gAudacityProjects[i] ).IsIconized() )
             VisibleProjectCount++;
       }
    }
@@ -2418,9 +2422,10 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 class TitleRestorer{
 public:
    TitleRestorer(AudacityProject * p ){
-      if( p->IsIconized() )
-         p->Restore();
-      p->Raise(); // May help identifying the window on Mac
+      auto &window = GetProjectFrame( *p );
+      if( window.IsIconized() )
+         window.Restore();
+      window.Raise(); // May help identifying the window on Mac
 
       // Construct this projects name and number.
       sProjName = p->GetProjectName();
@@ -2881,11 +2886,15 @@ AudacityProject *AudacityProject::OpenProject(
    AudacityProject *pNewProject = nullptr;
    if ( ! pProject )
       pProject = pNewProject = CreateNewAudacityProject();
-   auto cleanup = finally( [&] { if( pNewProject ) pNewProject->Close(true); } );
+   auto cleanup = finally( [&] {
+      if( pNewProject )
+         GetProjectFrame( *pNewProject ).Close(true);
+   } );
    pProject->OpenFile( fileNameArg, addtohistory );
    pNewProject = nullptr;
    if( pProject && pProject->mIsRecovered )
-      pProject->Zoom( ViewActions::GetZoomOfToFit( *pProject ) );
+      ProjectWindow::Get( *pProject ).Zoom(
+         ViewActions::GetZoomOfToFit( *pProject ) );
 
    return pProject;
 }
@@ -3385,6 +3394,7 @@ void AudacityProject::EnqueueODTasks()
 bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto &project = *this;
+   auto &window = ProjectWindow::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &dirManager = DirManager::Get( project );
    bool bFileVersionFound = false;
@@ -3527,7 +3537,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        viewInfo.vpos = longVpos;
-       mbInitializingScrollbar = true;
+       window.mbInitializingScrollbar = true;
    }
 
    // Specifically detect newer versions of Audacity
@@ -3786,7 +3796,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    // See explanation above
    // ProjectDisabler disabler(this);
    auto &proj = *this;
-   auto &window = proj;
+   auto &window = GetProjectFrame( proj );
    auto &dirManager = DirManager::Get( proj );
 
    wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
@@ -5089,7 +5099,7 @@ void AudacityProject::MayStartMonitoring()
 void AudacityProject::OnAudioIORate(int rate)
 {
    auto &project = *this;
-   auto &window = project;
+   auto &window = GetProjectFrame( project );
    wxString display;
    if (rate > 0) {
       display = wxString::Format(_("Actual Rate: %d"), rate);
@@ -5123,6 +5133,7 @@ void AudacityProject::OnAudioIOStopRecording()
 {
    auto &project = *this;
    auto &dirManager = DirManager::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    // Only push state if we were capturing and not monitoring
    if (GetAudioIOToken() > 0)
@@ -5147,7 +5158,7 @@ void AudacityProject::OnAudioIOStopRecording()
                   interval.first + interval.second },
                wxString::Format(wxT("%ld"), counter++),
                -2 );
-         ShowWarningDialog(this, wxT("DropoutDetected"), _("\
+         ShowWarningDialog(&window, wxT("DropoutDetected"), _("\
 Recorded audio was lost at the labeled locations. Possible causes:\n\
 \n\
 Other applications are competing with Audacity for processor time\n\
@@ -5170,8 +5181,8 @@ You are saving directly to a slow external storage device\n\
       }
 
       // Refresh the project window
-      FixScrollbars();
-      RedrawProject();
+      window.FixScrollbars();
+      window.RedrawProject();
    }
 
    // Write all cached files to disk, if any
@@ -5421,7 +5432,7 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       }
       viewInfo.h =
          viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
-      if (!mProject->MayScrollBeyondZero())
+      if (!ProjectWindow::Get( *mProject ).MayScrollBeyondZero())
          // Can't scroll too far left
          viewInfo.h = std::max(0.0, viewInfo.h);
       trackPanel.Refresh(false);

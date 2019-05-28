@@ -956,9 +956,10 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
                // Get the users attention
                AudacityProject *project = GetActiveProject();
                if (project) {
-                  project->Maximize();
-                  project->Raise();
-                  project->RequestUserAttention();
+                  auto &window = GetProjectFrame( *project );
+                  window.Maximize();
+                  window.Raise();
+                  window.RequestUserAttention();
                }
                continue;
             }
@@ -989,8 +990,9 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 
       // if there are no projects open, don't show the warning (user has closed it)
       if (offendingProject) {
-         offendingProject->Iconize(false);
-         offendingProject->Raise();
+         auto &window = GetProjectFrame( *offendingProject );
+         window.Iconize(false);
+         window.Raise();
 
          wxString errorMessage = wxString::Format(_(
 "One or more external audio files could not be found.\n\
@@ -1074,7 +1076,7 @@ bool AudacityApp::OnExceptionInMainLoop()
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();
 
-            pProject->RedrawProject();
+            ProjectWindow::Get( *pProject ).RedrawProject();
          }
 
          // Give the user an alert
@@ -1512,8 +1514,9 @@ bool AudacityApp::OnInit()
       wxWindow * pWnd = MakeHijackPanel();
       if (pWnd)
       {
-         project->Show(false);
-         pWnd->SetParent(project);
+         auto &window = GetProjectFrame( *project );
+         window.Show(false);
+         pWnd->SetParent( &window );
          SetTopWindow(pWnd);
          pWnd->Show(true);
       }

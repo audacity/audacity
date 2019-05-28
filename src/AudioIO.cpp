@@ -1700,7 +1700,8 @@ void AudioIO::StartMonitoring(double sampleRate)
 
    if (!success) {
       wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), gAudioIO->LastPaErrorString());
-      ShowErrorDialog(mOwningProject, _("Error"), msg, wxT("Error_opening_sound_device"));
+      ShowErrorDialog( ProjectWindow::Find( mOwningProject ),
+         _("Error"), msg, wxT("Error_opening_sound_device"));
       return;
    }
 

@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE(EffectRack, wxFrame)
 END_EVENT_TABLE()
 
 EffectRack::EffectRack()
-:  wxFrame(GetActiveProject(),
+:  wxFrame( FindProjectFrame( GetActiveProject() ),
       wxID_ANY,
       _("Effects Rack"),
       wxDefaultPosition,

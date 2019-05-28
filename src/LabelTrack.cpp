@@ -2180,7 +2180,7 @@ void LabelTrack::ShowContextMenu()
 
    // Bug 2044.  parent can be nullptr after a context switch.
    if( !parent )
-      parent = GetActiveProject();
+      parent = FindProjectFrame( GetActiveProject() );
 
    if( parent )
    {
@@ -3091,8 +3091,9 @@ void LabelTrack::DoEditLabels
    auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
    auto &viewInfo = ViewInfo::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
-   LabelDialog dlg(&project, trackFactory, &tracks,
+   LabelDialog dlg(&window, trackFactory, &tracks,
                    lt, index,
                    viewInfo, rate,
                    format, freqFormat);
@@ -3102,7 +3103,7 @@ void LabelTrack::DoEditLabels
 
    if (dlg.ShowModal() == wxID_OK) {
       project.PushState(_("Edited labels"), _("Label"));
-      project.RedrawProject();
+      window.RedrawProject();
    }
 }
 
@@ -3121,7 +3122,8 @@ int LabelTrack::DialogForLabelName(
       -40;
    position.y += 2;  // just below the bottom of the track
    position = trackPanel.ClientToScreen(position);
-   AudacityTextEntryDialog dialog{ &project,
+   auto &window = GetProjectFrame( project );
+   AudacityTextEntryDialog dialog{ &window,
       _("Name:"),
       _("New label"),
       initialValue,
@@ -3130,7 +3132,7 @@ int LabelTrack::DialogForLabelName(
 
    // keep the dialog within Audacity's window, so that the dialog is always fully visible
    wxRect dialogScreenRect = dialog.GetScreenRect();
-   wxRect projScreenRect = project.GetScreenRect();
+   wxRect projScreenRect = window.GetScreenRect();
    wxPoint max = projScreenRect.GetBottomRight() + wxPoint{ -dialogScreenRect.width, -dialogScreenRect.height };
    if (dialogScreenRect.x > max.x) {
       position.x = max.x;

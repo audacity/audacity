@@ -66,20 +66,21 @@ void SetProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetProjectCommand::Apply(const CommandContext & context)
 {
-   AudacityProject * pProj = &context.project;
+   auto &project = context.project;
+   auto &window = GetProjectFrame( project );
    if( bHasName )
-      pProj->SetLabel(mName);
+      window.SetLabel(mName);
 
    if( bHasRate && mRate >= 1 && mRate <= 1000000 )
    {
-      auto &bar = SelectionBar::Get( *pProj );
+      auto &bar = SelectionBar::Get( project );
       bar.SetRate( mRate );
    }
 
    if( bHasSizing )
    {
-      pProj->SetPosition( wxPoint( mPosX, mPosY));
-      pProj->SetSize( wxSize( mWidth, mHeight ));
+      window.SetPosition( wxPoint( mPosX, mPosY));
+      window.SetSize( wxSize( mWidth, mHeight ));
    }
    return true;
 }
