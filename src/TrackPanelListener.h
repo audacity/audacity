@@ -25,7 +25,6 @@ class AUDACITY_DLL_API TrackPanelListener /* not final */ {
    virtual ~TrackPanelListener(){};
 
    virtual void TP_DisplaySelection() = 0;
-   virtual void TP_DisplayStatusMessage(const wxString &msg) = 0;
 
    virtual void TP_RedrawScrollbars() = 0;
    virtual void TP_ScrollLeft() = 0;

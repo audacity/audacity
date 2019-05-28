@@ -707,7 +707,7 @@ void TrackPanel::UpdateStatusMessage( const wxString &st )
    if (HasEscape())
    /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
-   mListener->TP_DisplayStatusMessage(status);
+   GetProject()->SetStatus(status);
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -765,7 +765,7 @@ void TrackPanel::UpdateViewIfNoTracks()
 
       mListener->TP_RedrawScrollbars();
       mListener->TP_HandleResize();
-      mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
+      GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
    }
 }
 

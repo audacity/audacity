@@ -755,14 +755,14 @@ void MeterPanel::OnMouse(wxMouseEvent &evt)
 
   #if wxUSE_TOOLTIPS // Not available in wxX11
    if (evt.Leaving()){
-      GetActiveProject()->TP_DisplayStatusMessage(wxT(""));
+      GetActiveProject()->SetStatus(wxT(""));
    }
    else if (evt.Entering()) {
       // Display the tooltip in the status bar
       wxToolTip * pTip = this->GetToolTip();
       if( pTip ) {
          wxString tipText = pTip->GetTip();
-         GetActiveProject()->TP_DisplayStatusMessage(tipText);
+         GetActiveProject()->SetStatus(tipText);
       }
    }
   #endif

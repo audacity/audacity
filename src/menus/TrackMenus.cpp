@@ -1384,7 +1384,7 @@ void OnTrackClose(const CommandContext &context)
 
    if (isAudioActive)
    {
-      project.TP_DisplayStatusMessage(
+      project.SetStatus(
          _("Can't delete track with active audio"));
       wxBell();
       return;

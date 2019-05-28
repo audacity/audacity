@@ -168,6 +168,8 @@ scroll information.  It also has some status flags.
 #include "widgets/WindowAccessible.h"
 #endif
 
+wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
+
 bool AllProjects::sbClosing = false;
 bool AllProjects::sbWindowRectAlreadySaved = false;
 
@@ -1322,6 +1324,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &AudacityProject::OnThemeChange, this);
+
+   project.Bind(EVT_PROJECT_STATUS_UPDATE,
+      &AudacityProject::OnStatusChange, this);
 
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
@@ -4905,18 +4910,27 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 }
 
 // TrackPanel callback method
-void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
+void AudacityProject::SetStatus(const wxString &msg)
 {
-   auto &window = *this;
+   auto &project = *this;
    if ( msg != mLastMainStatusMessage ) {
       mLastMainStatusMessage = msg;
-      window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
-      
-      // When recording, let the NEW status message stay at least as long as
-      // the timer interval (if it is not replaced again by this function),
-      // before replacing it with the message about remaining disk capacity.
-      RestartTimer();
+      wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
+      project.GetEventHandler()->ProcessEvent( evt );
    }
+}
+
+void AudacityProject::OnStatusChange( wxCommandEvent & )
+{
+   auto &project = *this;
+   auto &window = project;
+   const auto &msg = project.GetStatus();
+   window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
+   
+   // When recording, let the NEW status message stay at least as long as
+   // the timer interval (if it is not replaced again by this function),
+   // before replacing it with the message about remaining disk capacity.
+   RestartTimer();
 }
 
 void AudacityProject::TP_DisplaySelection()

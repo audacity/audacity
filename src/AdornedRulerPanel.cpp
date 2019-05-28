@@ -2226,7 +2226,7 @@ void AdornedRulerPanel::ProcessUIHandleResult
 
 void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
 {
-   GetProject()->TP_DisplayStatusMessage(message);
+   GetProject()->SetStatus(message);
 }
 
 void AdornedRulerPanel::CreateOverlays()
