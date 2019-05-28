@@ -28,8 +28,8 @@ namespace {
 
 void DoMacMinimize(AudacityProject *project)
 {
-   auto window = project;
-   if (window) {
+   if (project) {
+      auto window = &GetProjectFrame( *project );
 #ifdef USE_COCOA
       // Adapted from mbarman.mm in wxWidgets 3.0.2
       auto peer = window->GetPeer();
@@ -67,7 +67,7 @@ void OnMacMinimize(const CommandContext &context)
 
 void OnMacZoom(const CommandContext &context)
 {
-   auto window = &context.project;
+   auto window = &GetProjectFrame( context.project );
    auto topWindow = static_cast<wxTopLevelWindow*>(window);
    auto maximized = topWindow->IsMaximized();
    if (window) {
@@ -89,9 +89,8 @@ void OnMacBringAllToFront(const CommandContext &)
 {
    // Reall this de-miniaturizes all, which is not exactly the standard
    // behavior.
-   for (const auto project : gAudacityProjects) {
-      project->Raise();
-   }
+   for (const auto project : gAudacityProjects)
+      GetProjectFrame( *project ).Raise();
 }
 
 void OnMacMinimizeAll(const CommandContext &)

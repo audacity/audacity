@@ -844,7 +844,7 @@ namespace{
 AudacityProject::AttachedWindows::RegisteredFactory sKey{
 []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = project;
+   auto &window = ProjectWindow::Get( project );
 
    return safenew AdornedRulerPanel( &project, window.GetTopPanel(),
       wxID_ANY,
@@ -1620,7 +1620,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       // Looping a tiny selection may freeze, so just play it once.
       loopEnabled = ((end - start) > 0.001)? true : false;
 
-      AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
+      auto options = DefaultPlayOptions( *mProject );
       options.playLooped = (loopEnabled && looped);
 
       auto oldStart = mPlayRegionStart;
@@ -2226,7 +2226,7 @@ void AdornedRulerPanel::ProcessUIHandleResult
 
 void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
 {
-   GetProject()->TP_DisplayStatusMessage(message);
+   GetProject()->SetStatus(message);
 }
 
 void AdornedRulerPanel::CreateOverlays()

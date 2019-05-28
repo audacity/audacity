@@ -306,10 +306,6 @@ class AUDACITY_DLL_API TrackPanel final
 
    void DisplaySelection();
 
-   // These two are neither used nor defined as of Nov-2011
-   // void SetSelectionFormat(int iformat)
-   // void SetSnapTo(int snapto)
-
    void HandlePageUpKey();
    void HandlePageDownKey();
    AudacityProject * GetProject() const override;

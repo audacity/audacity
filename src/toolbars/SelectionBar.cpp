@@ -666,11 +666,15 @@ void SelectionBar::SetSnapTo(int snap)
 
 void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
 {
-   mStartTime->SetFormatString(mStartTime->GetBuiltinFormat(format));
+   bool changed =
+      mStartTime->SetFormatString(mStartTime->GetBuiltinFormat(format));
 
-   wxCommandEvent e;
-   e.SetInt(mStartTime->GetFormatIndex());
-   OnUpdate(e);
+   // Test first whether changed, to avoid infinite recursion from OnUpdate
+   if ( changed ) {
+      wxCommandEvent e;
+      e.SetInt(mStartTime->GetFormatIndex());
+      OnUpdate(e);
+   }
 }
 
 void SelectionBar::SetRate(double rate)

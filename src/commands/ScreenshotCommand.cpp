@@ -150,7 +150,7 @@ void IdleHandler(wxIdleEvent& event){
 wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(AudacityProject *project)
 {
    wxWindow *front = NULL;
-   wxWindow *proj = wxGetTopLevelParent(project);
+   wxWindow *proj = wxGetTopLevelParent( ProjectWindow::Find( project ) );
 
 
    // JKC: The code below is no longer such a good idea.
@@ -795,7 +795,7 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
 }
 
 wxString ScreenshotCommand::WindowFileName(AudacityProject * proj, wxTopLevelWindow *w){
-   if (w != proj && !w->GetTitle().empty()) {
+   if (w != ProjectWindow::Find( proj ) && !w->GetTitle().empty()) {
       mFileName = MakeFileName(mFilePath,
          kCaptureWhatStrings[ mCaptureMode ].Translation() +
             (wxT("-") + w->GetTitle() + wxT("-")));

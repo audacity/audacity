@@ -3532,7 +3532,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       auto &bar = ControlToolBar::Get( *mProject );
       bar.PlayPlayRegion(
          SelectedRegion(mPlayPos, mRegion.t1()),
-         mProject->GetDefaultPlayOptions(),
+         DefaultPlayOptions( *mProject ),
          PlayMode::normalPlay );
    }
 }

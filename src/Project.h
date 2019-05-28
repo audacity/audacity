@@ -41,6 +41,9 @@
 
 const int AudacityProjectTimerID = 5200;
 
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
+
 class wxMemoryDC;
 class wxArrayString;
 class wxWindow;
@@ -162,6 +165,7 @@ using AttachedWindows = ClientData::Site<
    AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
 >;
 
+using ProjectWindow = AudacityProject;
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
@@ -173,6 +177,12 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    , public AttachedWindows
 {
  public:
+   static ProjectWindow &Get( AudacityProject &project ) { return project; }
+   static const ProjectWindow &Get( const AudacityProject &project ) { return project; }
+   static ProjectWindow *Find( AudacityProject *pProject ) { return pProject; }
+   static const ProjectWindow *Find( const AudacityProject *pProject ) { return pProject; }
+   AudacityProject &GetProject() { return *this; }
+ 
    using AttachedObjects = ::AttachedObjects;
    using AttachedWindows = ::AttachedWindows;
 
@@ -184,9 +194,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    int NextWindowID();
 
    virtual void ApplyUpdatedTheme();
-
-   AudioIOStartStreamOptions GetDefaultPlayOptions();
-   AudioIOStartStreamOptions GetSpeedPlayOptions();
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
@@ -397,7 +404,6 @@ public:
 
    // TrackPanel callback methods, overrides of TrackPanelListener
    void TP_DisplaySelection() override;
-   void TP_DisplayStatusMessage(const wxString &msg) override;
 
    void TP_RedrawScrollbars() override;
    void TP_ScrollLeft() override;
@@ -410,6 +416,11 @@ public:
    void SetPlaybackMeter(MeterPanel *playback);
    MeterPanel *GetCaptureMeter();
    void SetCaptureMeter(MeterPanel *capture);
+
+   const wxString &GetStatus() const { return mLastMainStatusMessage; }
+   void SetStatus(const wxString &msg);
+
+   void OnStatusChange( wxCommandEvent& );
 
 private:
    bool SnapSelection();
@@ -643,6 +654,20 @@ public:
 
    DECLARE_EVENT_TABLE()
 };
+
+inline wxFrame &GetProjectFrame( AudacityProject &project ) { return project; }
+inline const wxFrame &GetProjectFrame( const AudacityProject &project ) {
+   return project;
+}
+inline wxFrame *FindProjectFrame( AudacityProject *project ) {
+   return project ? &GetProjectFrame( *project ) : nullptr;
+}
+inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
+   return project ? &GetProjectFrame( *project ) : nullptr;
+}
+
+AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
+AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 #endif
 

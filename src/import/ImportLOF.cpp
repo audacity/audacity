@@ -472,13 +472,13 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
    if (callDurationFactor)
    {
       double longestDuration = TrackList::Get( *mProject ).GetEndTime();
-      mProject->ZoomBy(longestDuration / durationFactor);
+      ProjectWindow::Get( *mProject ).ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }
 
    if (callScrollOffset && (scrollOffset != 0))
    {
-      mProject->TP_ScrollWindow(scrollOffset);
+      ProjectWindow::Get( *mProject ).TP_ScrollWindow(scrollOffset);
       callScrollOffset = false;
    }
 

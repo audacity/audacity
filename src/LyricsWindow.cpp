@@ -44,8 +44,8 @@ END_EVENT_TABLE()
 
 const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 
-LyricsWindow::LyricsWindow(AudacityProject *parent):
-   wxFrame(parent, -1,
+LyricsWindow::LyricsWindow(AudacityProject *parent)
+   : wxFrame( &GetProjectFrame( *parent ), -1,
             wxString::Format(_("Audacity Karaoke%s"),
                               ((parent->GetProjectName().empty()) ?
                                  wxT("") :

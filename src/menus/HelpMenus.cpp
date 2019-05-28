@@ -35,7 +35,8 @@ void ShowDiagnostics(
    AudacityProject &project, const wxString &info,
    const wxString &description, const wxString &defaultPath)
 {
-   wxDialogWrapper dlg(&project, wxID_ANY, description);
+   auto &window = GetProjectFrame( project );
+   wxDialogWrapper dlg( &window, wxID_ANY, description);
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
 
@@ -62,7 +63,7 @@ void ShowDiagnostics(
          wxT("txt"),
          wxT("*.txt"),
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-         &project);
+         &window);
       if (!fName.empty())
       {
          if (!text->SaveFile(fName))
@@ -250,7 +251,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
       // preference dialogs.
       if( Str == "/SnapTo" )
       {
-         pProject->SetSnapTo( 0 );
+         pProject->AS_SetSnapTo( 0 );
       }
       else
       {
@@ -280,7 +281,7 @@ namespace HelpActions {
 
 void DoHelpWelcome( AudacityProject &project )
 {
-   SplashDialog::Show2( &project );
+   SplashDialog::Show2( &GetProjectFrame( project ) );
 }
 
 // Menu handler functions
@@ -290,7 +291,7 @@ struct Handler : CommandHandlerObject {
 void OnQuickFix(const CommandContext &context)
 {
    auto &project = context.project;
-   QuickFixDialog dlg( &project );
+   QuickFixDialog dlg( &GetProjectFrame( project ) );
    dlg.ShowModal();
 }
 
@@ -298,7 +299,7 @@ void OnQuickHelp(const CommandContext &context)
 {
    auto &project = context.project;
    HelpSystem::ShowHelp(
-      &project,
+      &GetProjectFrame( project ),
       wxT("Quick_Help"));
 }
 
@@ -306,7 +307,7 @@ void OnManual(const CommandContext &context)
 {
    auto &project = context.project;
    HelpSystem::ShowHelp(
-      &project,
+      &GetProjectFrame( project ),
       wxT("Main_Page"));
 }
 
@@ -368,9 +369,10 @@ void OnAbout(const CommandContext &context)
    wxTheApp->AddPendingEvent( evt );
 #else
    auto &project = context.project;
+   auto &window = GetProjectFrame( project );
 
    // Windows and Linux still modal.
-   AboutDialog dlog(&project);
+   AboutDialog dlog( &window );
    dlog.ShowModal();
 #endif
 }

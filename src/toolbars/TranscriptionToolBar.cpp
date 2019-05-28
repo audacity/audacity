@@ -494,7 +494,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    if (bFixedSpeedPlay)
    {
-      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
+      auto options = DefaultPlayOptions( *p );
       options.playLooped = looped;
       // No need to set cutPreview options.
       options.timeTrack = mTimeTrack.get();

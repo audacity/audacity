@@ -159,7 +159,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
 
 bool GetInfoCommand::SendMenus(const CommandContext &context)
 {
-   wxMenuBar * pBar = context.project.GetMenuBar();
+   wxMenuBar * pBar = GetProjectFrame( context.project ).GetMenuBar();
    if(!pBar ){
       wxLogDebug("No menus");
       return false;
@@ -418,12 +418,12 @@ wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
 bool GetInfoCommand::SendPreferences(const CommandContext &context)
 {
    context.StartArray();
-   GlobalPrefsDialog dialog( &context.project );
+   auto pWin = &GetProjectFrame( context.project );
+   GlobalPrefsDialog dialog( pWin );
    // wxCommandEvent Evt;
    //dialog.Show();
-   wxWindow * pWin = &context.project;
    ShuttleGuiGetDefinition S(pWin, *((context.pOutput)->mStatusTarget) );
-   dialog.ShuttleAll( S );
+    dialog.ShuttleAll( S );
    context.EndArray();
    return true;
 }
@@ -454,7 +454,7 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
 bool GetInfoCommand::SendBoxes(const CommandContext &context)
 {
    //context.Status("Boxes");
-   wxWindow * pWin = &context.project;
+   auto pWin = &GetProjectFrame( context.project );
 
    context.StartArray();
    wxRect R = pWin->GetScreenRect();

@@ -83,7 +83,7 @@
 //
 ToolFrame::ToolFrame
    ( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
-   : wxFrame( parent,
+   : wxFrame( ProjectWindow::Find( parent ),
           bar->GetId(),
           wxEmptyString,
           pos,
@@ -324,7 +324,8 @@ END_EVENT_TABLE()
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   []( AudacityProject &parent ){
-     return std::make_shared< ToolManager >( &parent, parent.GetTopPanel() ); }
+     auto &window = ProjectWindow::Get( parent );
+     return std::make_shared< ToolManager >( &parent, window.GetTopPanel() ); }
 };
 
 ToolManager &ToolManager::Get( AudacityProject &project )
@@ -343,6 +344,7 @@ const ToolManager &ToolManager::Get( const AudacityProject &project )
 ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 : wxEvtHandler()
 {
+   auto &window = ProjectWindow::Get( *parent );
    wxPoint pt[ 3 ];
 
 #if defined(__WXMAC__)
@@ -409,19 +411,19 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 
    // Hook the parents mouse events...using the parent helps greatly
    // under GTK
-   mParent->Bind( wxEVT_LEFT_UP,
+   window.Bind( wxEVT_LEFT_UP,
                      &ToolManager::OnMouse,
                      this );
-   mParent->Bind( wxEVT_MOTION,
+   window.Bind( wxEVT_MOTION,
                      &ToolManager::OnMouse,
                      this );
-   mParent->Bind( wxEVT_MOUSE_CAPTURE_LOST,
+   window.Bind( wxEVT_MOUSE_CAPTURE_LOST,
                      &ToolManager::OnCaptureLost,
                      this );
 
    // Create the top and bottom docks
    mTopDock = safenew ToolDock( this, topDockParent, TopDockID );
-   mBotDock = safenew ToolDock( this, mParent, BotDockID );
+   mBotDock = safenew ToolDock( this, &window, BotDockID );
 
    // Create all of the toolbars
    // All have the project as parent window
@@ -665,7 +667,7 @@ int ToolManager::FilterEvent(wxEvent &event)
       if ( window &&
            !dynamic_cast<Grabber*>( window ) &&
            !dynamic_cast<ToolFrame*>( window ) &&
-           top == mParent )
+           top == ProjectWindow::Find( mParent ) )
          // Note this is a dangle-proof wxWindowRef:
          mLastFocus = window;
    }
@@ -1050,7 +1052,7 @@ void ToolManager::Updated()
 {
    // Queue an update event
    wxCommandEvent e( EVT_TOOLBAR_UPDATED );
-   mParent->GetEventHandler()->AddPendingEvent( e );
+   GetProjectFrame( *mParent ).GetEventHandler()->AddPendingEvent( e );
 }
 
 //
@@ -1182,7 +1184,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
          // Must set the bar afloat if it's currently docked
          mDidDrag = true;
          wxPoint mp = event.GetPosition();
-         mp = mParent->ClientToScreen(mp);
+         mp = GetProjectFrame( *mParent ).ClientToScreen(mp);
          if (!mDragWindow) {
             // We no longer have control
             if (mPrevDock)
@@ -1457,8 +1459,9 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    }
 
    // We want all mouse events from this point on
-   if( !mParent->HasCapture() )
-      mParent->CaptureMouse();
+   auto &window = GetProjectFrame( *mParent );
+   if( !window.HasCapture() )
+      window.CaptureMouse();
 
    // Start monitoring shift key changes
    mLastState = wxGetKeyState( WXK_SHIFT );
@@ -1499,9 +1502,10 @@ void ToolManager::DoneDragging()
 {
    // Done dragging
    // Release capture
-   if( mParent->HasCapture() )
+   auto &window = GetProjectFrame( *mParent );
+   if( window.HasCapture() )
    {
-      mParent->ReleaseMouse();
+      window.ReleaseMouse();
    }
 
    // Hide the indicator
