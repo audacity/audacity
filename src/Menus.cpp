@@ -516,7 +516,8 @@ CommandFlag MenuManager::GetUpdateFlags
 
    auto &undoManager = UndoManager::Get( project );
 
-   if (undoManager.UnsavedChanges() || !project.IsProjectSaved())
+   if (undoManager.UnsavedChanges() ||
+      !ProjectFileIO::Get( project ).IsProjectSaved())
       flags |= UnsavedChangesFlag;
 
    if (!mLastEffect.empty())

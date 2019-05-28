@@ -122,9 +122,7 @@ using AttachedWindows = ClientData::Site<
 
 using ProjectWindow = AudacityProject;
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
-                                     public TrackPanelListener,
-                                     public XMLTagHandler,
-                                     private PrefsListener
+                                     public TrackPanelListener
    , public AttachedObjects
    , public AttachedWindows
 {
@@ -155,49 +153,15 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    bool IsActive() override;
 
-   struct ReadProjectResults
-   {
-      bool decodeError;
-      bool parseSuccess;
-      bool trackError;
-      wxString errorString;
-   };
-   ReadProjectResults ReadProjectFile( const FilePath &fileName );
-
-   void EnqueueODTasks();
-
    using wxFrame::DetachMenuBar;
 
-   bool WarnOfLegacyFile( );
-
    void ZoomAfterImport(Track *pTrack);
-
-   void CloseLock();
-
-   bool Save();
-   bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
-   bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false, bool addToHistory = true);
-   // strProjectPathName is full path for aup except extension
-   bool SaveCopyWaveTracks(const FilePath & strProjectPathName, bool bLossless = false);
-
-private:
-   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
-public:
 
    const FilePath &GetFileName() { return mFileName; }
    void SetFileName( const FilePath &value ) { mFileName = value; }
 
-   const FilePath &GetAutoSaveFileName() { return mAutoSaveFileName; }
-   void SetProjectTitle( int number =-1);
-
    wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
-
-   // Timer Record Auto Save/Export Routines
-   bool SaveFromTimerRecording(wxFileName fnFile);
-   bool IsProjectSaved();
-
-   void ResetProjectFileIO();
 
 
    // Message Handlers
@@ -225,7 +189,6 @@ public:
    // Other commands
    
    int GetProjectNumber(){ return mProjectNo;};
-   void UpdatePrefs() override;
    void RedrawProject(const bool bForceWaveTracks = false);
    void RefreshCursor();
    void Zoom(double level);
@@ -265,38 +228,15 @@ public:
    const wxString &GetStatus() const { return mLastMainStatusMessage; }
    void SetStatus(const wxString &msg);
 
-public:
-
-   // XMLTagHandler callback methods
-
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(
-      XMLWriter &xmlFile, bool bWantSaveCopy) /* not override */;
-
-   void WriteXMLHeader(XMLWriter &xmlFile) const;
-
  private:
 
    void OnThemeChange(wxCommandEvent & evt);
 
- public:
-   void AutoSave();
-
-   void DeleteCurrentAutoSaveFile();
-
- private:
-
    // The project's name and file info
    FilePath mFileName; // Note: extension-less
-   bool mbLoadedFromAup;
 
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.
-
-   std::shared_ptr<TrackList> mLastSavedTracks;
-
-private:
 
    // Window elements
 
@@ -333,35 +273,16 @@ private:
 public:
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
-   bool IsRecovered() const { return mIsRecovered; }
-   void SetImportedDependencies( bool value ) { mImportedDependencies = value; }
-   void SetLoadedFromAup( bool value ) { mbLoadedFromAup = value; }
+
 private:
 
    bool mLockPlayRegion;
 
-   // Last auto-save file name and path (empty if none)
-   FilePath mAutoSaveFileName;
-
-   // Are we currently auto-saving or not?
-   bool mAutoSaving{ false };
-
-   // Has this project been recovered from an auto-saved version
-   bool mIsRecovered{ false };
-
-   // The auto-save data dir the project has been recovered from
-   wxString mRecoveryAutoSaveDataDir;
-
-   // Dependencies have been imported and a warning should be shown on save
-   bool mImportedDependencies{ false };
-
-   FilePaths mStrOtherNamesArray; // used to make sure compressed file names are unique
-
    wxRect mNormalizedWindowState;
 
+public:
    bool mbInitializingScrollbar{ false };
 
-public:
    class PlaybackScroller final : public wxEvtHandler
    {
    public:
@@ -406,6 +327,99 @@ inline wxFrame *FindProjectFrame( AudacityProject *project ) {
 inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
 }
+
+class ProjectFileIO final
+   : public ClientData::Base
+   , private XMLTagHandler
+   , private PrefsListener
+{
+public:
+   static ProjectFileIO &Get( AudacityProject &project );
+   static const ProjectFileIO &Get( const AudacityProject &project );
+
+   explicit ProjectFileIO( AudacityProject &project );
+   ~ProjectFileIO();
+
+   struct ReadProjectResults
+   {
+      bool decodeError;
+      bool parseSuccess;
+      bool trackError;
+      wxString errorString;
+   };
+   ReadProjectResults ReadProjectFile( const FilePath &fileName );
+
+   void EnqueueODTasks();
+
+   bool WarnOfLegacyFile( );
+   
+   // To be called when closing a project that has been saved, so that
+   // block files are not erased
+   void CloseLock();
+
+   bool Save();
+   bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
+   bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false,
+      bool addToHistory = true);
+   // strProjectPathName is full path for aup except extension
+   bool SaveFromTimerRecording( wxFileName fnFile );
+
+   const FilePath &GetAutoSaveFileName() { return mAutoSaveFileName; }
+
+   // It seems odd to put this method in this class, but the results do depend
+   // on what is discovered while opening the file, such as whether it is a
+   // recovery file
+   void SetProjectTitle( int number = -1 );
+
+   bool IsProjectSaved();
+
+   void ResetProjectFileIO();
+   
+   void AutoSave();
+   void DeleteCurrentAutoSaveFile();
+
+   bool IsRecovered() const { return mIsRecovered; }
+   void SetImportedDependencies( bool value ) { mImportedDependencies = value; }
+   void SetLoadedFromAup( bool value ) { mbLoadedFromAup = value; }
+ 
+private:
+   bool SaveCopyWaveTracks(const FilePath & strProjectPathName,
+      bool bLossless = false);
+   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
+
+   void UpdatePrefs() override;
+
+   // XMLTagHandler callback methods
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXMLHeader(XMLWriter &xmlFile) const;
+   void WriteXML(
+      XMLWriter &xmlFile, bool bWantSaveCopy) /* not override */;
+
+   // non-staic data members
+   AudacityProject &mProject;
+
+   std::shared_ptr<TrackList> mLastSavedTracks;
+
+   FilePaths mStrOtherNamesArray; // used to make sure compressed file names are unique
+
+   // Last auto-save file name and path (empty if none)
+   FilePath mAutoSaveFileName;
+
+   // The auto-save data dir the project has been recovered from
+   FilePath mRecoveryAutoSaveDataDir;
+
+   // Are we currently auto-saving or not?
+   bool mAutoSaving{ false };
+
+   // Has this project been recovered from an auto-saved version
+   bool mIsRecovered{ false };
+
+   bool mbLoadedFromAup{ false };
+
+   // Dependencies have been imported and a warning should be shown on save
+   bool mImportedDependencies{ false };
+};
 
 // TitleRestorer restores project window titles to what they were, in its destructor.
 class TitleRestorer{

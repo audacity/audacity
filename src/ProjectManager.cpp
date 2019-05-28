@@ -399,8 +399,6 @@ AudacityProject *ProjectManager::New()
    SpectralSelectionBar::Get( project ).SetListener( &projectManager );
 #endif
    
-   project.UpdatePrefs();
-   
 #if wxUSE_DRAG_AND_DROP
    // We can import now, so become a drag target
    //   SetDropTarget(safenew AudacityDropTarget(this));
@@ -654,7 +652,7 @@ void ProjectManager::SSBL_ModifySpectralSelection(
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    const auto &settings = ProjectSettings::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
@@ -1070,7 +1068,8 @@ AudacityProject *ProjectManager::OpenProject(
    } );
    Get( *pProject ).OpenFile( fileNameArg, addtohistory );
    pNewProject = nullptr;
-   if( pProject && pProject->IsRecovered() )
+   auto &projectFileIO = ProjectFileIO::Get( *pProject );
+   if( projectFileIO.IsRecovered() )
       ProjectWindow::Get( *pProject ).Zoom(
          ViewActions::GetZoomOfToFit( *pProject ) );
 
@@ -1191,7 +1190,7 @@ ProjectManager::sImportHandlerFactory{
 void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &dirManager = DirManager::Get( project );
@@ -1528,7 +1527,7 @@ ProjectManager::AddImportedTracks(const FilePath &fileName,
                                    TrackHolders &&newTracks)
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
 
    std::vector< std::shared_ptr< Track > > results;
@@ -1763,7 +1762,7 @@ void ProjectManager::PushState(const wxString &desc,
                                 UndoPush flags )
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
@@ -1797,7 +1796,7 @@ void ProjectManager::RollbackState()
 void ProjectManager::ModifyState(bool bWantsAutoSave)
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
@@ -1815,7 +1814,7 @@ void ProjectManager::ModifyState(bool bWantsAutoSave)
 void ProjectManager::PopState(const UndoState &state)
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &dstTracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -1889,7 +1888,7 @@ void ProjectManager::SetStateTo(unsigned int n)
 // This is done to empty out the tracks, but without creating a new project.
 void ProjectManager::ResetProjectToEmpty() {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    SelectActions::DoSelectAll( project );
@@ -2017,7 +2016,7 @@ void ProjectManager::OnAudioIORate(int rate)
 
 void ProjectManager::OnAudioIOStartRecording()
 {
-   auto &projectFileIO = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( mProject );
    // Before recording is started, auto-save the file. The file will have
    // empty tracks at the bottom where the recording will be put into
    projectFileIO.AutoSave();
@@ -2029,7 +2028,7 @@ void ProjectManager::OnAudioIOStopRecording()
    auto &project = mProject;
    auto &dirManager = DirManager::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // Only push state if we were capturing and not monitoring
@@ -2093,7 +2092,7 @@ void ProjectManager::OnAudioIONewBlockFiles(
    const AutoSaveFile & blockFileLog)
 {
    auto &project = mProject;
-   auto &projectFileIO = project;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    // New blockfiles have been created, so add them to the auto-save file
    const auto &autoSaveFileName = projectFileIO.GetAutoSaveFileName();
    if ( !autoSaveFileName.empty() )
