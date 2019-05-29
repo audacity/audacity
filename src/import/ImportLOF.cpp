@@ -87,6 +87,7 @@
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
 #include "../widgets/AudacityMessageBox.h"

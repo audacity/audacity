@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../Project.h"
+#include "../../../../ProjectManager.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"

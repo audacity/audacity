@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Experimental.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../Project.h"
+#include "../../../../ProjectManager.h"
 #include "../../../../ProjectAudioIO.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Snap.h" // for kPixelTolerance

@@ -38,6 +38,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 
 #include "../../images/EffectRack/EffectRack.h"
 

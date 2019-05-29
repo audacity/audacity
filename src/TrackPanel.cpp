@@ -71,6 +71,7 @@ is time to refresh some aspect of the screen.
 #include "KeyboardCapture.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"

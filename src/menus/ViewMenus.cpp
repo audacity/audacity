@@ -7,6 +7,7 @@
 #include "../MixerBoard.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../ViewInfo.h"

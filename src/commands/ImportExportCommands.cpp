@@ -17,7 +17,7 @@
 #include "../Audacity.h"
 #include "ImportExportCommands.h"
 
-#include "../Project.h"
+#include "../ProjectManager.h"
 #include "../ViewInfo.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"

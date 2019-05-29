@@ -3,6 +3,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../Track.h"
 #include "../SelectionState.h"
 #include "../TrackPanel.h"

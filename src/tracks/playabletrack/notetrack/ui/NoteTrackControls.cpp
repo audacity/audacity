@@ -24,6 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../Project.h"
+#include "../../../../ProjectManager.h"
 #include "../../../../RefreshCode.h"
 
 ///////////////////////////////////////////////////////////////////////////////

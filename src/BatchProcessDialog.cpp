@@ -42,6 +42,7 @@
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectManager.h"
 #include "commands/CommandManager.h"
 #include "effects/Effect.h"
 #include "../images/Arrow.xpm"

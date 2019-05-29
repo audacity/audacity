@@ -1,4 +1,4 @@
-#include "../Project.h"
+#include "../ProjectManager.h"
 #include "../ProjectSettings.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"

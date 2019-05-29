@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/translation.h>
 
 #include "HitTestResult.h"
-#include "Project.h"
+#include "ProjectManager.h"
 #include "RefreshCode.h"
 #include "Track.h"
 #include "TrackPanelMouseEvent.h"

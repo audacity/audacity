@@ -10,6 +10,7 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"

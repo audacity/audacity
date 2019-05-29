@@ -37,7 +37,7 @@ undo memory so as to free up space.
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
-#include "Project.h"
+#include "ProjectManager.h"
 #include "ShuttleGui.h"
 
 enum {

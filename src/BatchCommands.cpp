@@ -25,6 +25,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include <wx/textfile.h>
 
 #include "Project.h"
+#include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"

@@ -39,6 +39,7 @@
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"

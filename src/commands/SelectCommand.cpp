@@ -35,7 +35,7 @@ explicitly code all three.
 #include <wx/string.h>
 #include <float.h>
 
-#include "../Project.h"
+#include "../ProjectManager.h"
 #include "../TrackPanel.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

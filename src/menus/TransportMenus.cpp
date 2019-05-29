@@ -9,6 +9,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectManager.h"
 #include "../ProjectSettings.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"

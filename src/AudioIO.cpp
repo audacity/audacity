@@ -418,6 +418,8 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 #include "Experimental.h"
 
+#include "AudioIOListener.h"
+
 #include "float_cast.h"
 #include "DeviceManager.h"
 
