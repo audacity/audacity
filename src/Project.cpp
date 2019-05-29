@@ -379,12 +379,6 @@ BEGIN_EVENT_TABLE(ScrollBar, wxScrollBar)
 END_EVENT_TABLE()
 
 /* Define Global Variables */
-//The following global counts the number of documents that have been opened
-//for the purpose of project placement (not to keep track of the number)
-//It is only accurate modulo ten, and does not decrement when a project is
-//closed.
-static int gAudacityOffsetInc = 0;
-static int gAudacityPosInc = 0;
 //This is a pointer to the currently-active project.
 static AudacityProject *gActiveProject;
 //This array holds onto all of the projects currently open
@@ -722,10 +716,6 @@ AUDACITY_DLL_API void CloseAllProjects()
    size_t len = gAudacityProjects.size();
    for (size_t i = 0; i < len; i++)
       GetProjectFrame( *gAudacityProjects[i] ).Close();
-
-   //Set the Offset and Position increments to 0
-   gAudacityOffsetInc = 0;
-   gAudacityPosInc = 0;
 }
 
 // BG: The default size and position of the first window
