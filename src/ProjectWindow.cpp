@@ -23,6 +23,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
+#include "WaveTrack.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"

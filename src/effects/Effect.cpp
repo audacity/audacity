@@ -2572,7 +2572,7 @@ void Effect::Preview(bool dryOnly)
 
       mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->SetSelected(true);
-      mixLeft->SetDisplay(WaveTrack::NoDisplay);
+      mixLeft->SetDisplay(WaveTrackViewConstants::NoDisplay);
       auto pLeft = mTracks->Add( mixLeft );
       Track *pRight{};
       if (mixRight) {
@@ -2587,7 +2587,8 @@ void Effect::Preview(bool dryOnly)
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
-            static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
+            static_cast<WaveTrack*>(dest.get())
+               ->SetDisplay(WaveTrackViewConstants::NoDisplay);
             mTracks->Add( dest );
          }
       }

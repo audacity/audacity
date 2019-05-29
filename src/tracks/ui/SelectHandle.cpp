@@ -129,7 +129,7 @@ namespace
       return pTrack && pTrack->TypeSwitch< bool >( [&](const WaveTrack *wt) {
          const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
          const int display = wt->GetDisplay();
-         return (display == WaveTrack::Spectrum) &&
+         return (display == WaveTrackViewConstants::Spectrum) &&
             settings.SpectralSelectionEnabled();
       });
    }

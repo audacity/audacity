@@ -52,7 +52,7 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
    const auto pTrack = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   bool isWaveform = (pTrack->GetDisplay() == WaveTrack::Waveform);
+   bool isWaveform = (pTrack->GetDisplay() == WaveTrackViewConstants::Waveform);
 
    if (bMultiTool && st.state.CmdDown()) {
       // Ctrl modifier key in multi-tool overrides everything else
@@ -129,7 +129,7 @@ void WaveTrackView::DoSetMinimized( bool minimized )
    if( bHalfWave )
    {
       const bool spectral =
-         (wt->GetDisplay() == WaveTrack::Spectrum);
+         (wt->GetDisplay() == WaveTrackViewConstants::Spectrum);
       if ( spectral ) {
          // It is all right to set the top of scale to a huge number,
          // not knowing the track rate here -- because when retrieving the

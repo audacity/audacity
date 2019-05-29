@@ -13,19 +13,9 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class WaveTrack;
+#include "WaveTrackViewConstants.h"
 #include "../../../../UIHandle.h"
 
-
-// Note that these can be with or without spectrum view which
-// adds a constant.
-const int kZoom1to1 = 1;
-const int kZoomTimes2 = 2;
-const int kZoomDiv2 = 3;
-const int kZoomHalfWave = 4;
-const int kZoomInByDrag = 5;
-const int kZoomIn = 6;
-const int kZoomOut = 7;
-const int kZoomReset = 8;
 
 class WaveTrackVZoomHandle : public UIHandle
 {
@@ -40,7 +30,8 @@ public:
 
    static void DoZoom
    (AudacityProject *pProject,
-    WaveTrack *pTrack, bool allChannels, int ZoomKind,
+    WaveTrack *pTrack, bool allChannels,
+    WaveTrackViewConstants::ZoomActions ZoomKind,
     const wxRect &rect, int zoomStart, int zoomEnd,
     bool fixedMousePoint);
 

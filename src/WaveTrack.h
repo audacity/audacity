@@ -17,6 +17,7 @@
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 class ProgressDialog;
 
@@ -535,67 +536,7 @@ private:
    // Set the unique autosave ID
    void SetAutoSaveIdent(int id);
 
-   //
-   // The following code will eventually become part of a GUIWaveTrack
-   // and will be taken out of the WaveTrack class:
-   //
-
-
-   typedef int WaveTrackDisplay;
-   enum WaveTrackDisplayValues : int {
-
-      // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
-
-      Waveform = 0,
-      MinDisplay = Waveform,
-
-      obsoleteWaveformDBDisplay,
-
-      Spectrum,
-
-      obsolete1, // was SpectrumLogDisplay
-      obsolete2, // was SpectralSelectionDisplay
-      obsolete3, // was SpectralSelectionLogDisplay
-      obsolete4, // was PitchDisplay
-
-      // Add values here, and update MaxDisplay.
-
-      MaxDisplay = Spectrum,
-
-      NoDisplay,            // Preview track has no display
-   };
-
-   // Only two types of sample display for now, but
-   // others (eg sinc interpolation) may be added later.
-   enum SampleDisplay {
-      LinearInterpolate = 0,
-      StemPlot
-   };
-
-   // Various preset zooming levels.
-   enum ZoomPresets {
-      kZoomToFit = 0,
-      kZoomToSelection,
-      kZoomDefault,
-      kZoomMinutes,
-      kZoomSeconds,
-      kZoom5ths,
-      kZoom10ths,
-      kZoom20ths,
-      kZoom50ths,
-      kZoom100ths,
-      kZoom500ths,
-      kZoomMilliSeconds,
-      kZoomSamples,
-      kZoom4To1,
-      kMaxZoom,
-   };
-
-   // Handle remapping of enum values from 2.1.0 and earlier
-   static WaveTrackDisplay ConvertLegacyDisplayValue(int oldValue);
-
-   // Handle restriction of range of values of the enum from future versions
-   static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
+   using WaveTrackDisplay = WaveTrackViewConstants::Display;
 
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;

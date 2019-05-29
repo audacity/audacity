@@ -533,6 +533,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \
@@ -888,6 +890,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackView.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVZoomHandle.$(OBJEXT) \
 	tracks/timetrack/ui/audacity-TimeTrackControls.$(OBJEXT) \
@@ -1628,6 +1631,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \
@@ -2312,6 +2317,9 @@ tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.$(OBJEXT):  \
 tracks/playabletrack/wavetrack/ui/audacity-WaveTrackView.$(OBJEXT):  \
 	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
 	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.$(OBJEXT):  \
 	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
 	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
@@ -2885,6 +2893,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVZoomHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackView.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackView.Po@am__quote@
@@ -7225,6 +7234,20 @@ tracks/playabletrack/wavetrack/ui/audacity-WaveTrackView.obj: tracks/playabletra
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackView.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackView.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.o: tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.obj: tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackViewConstants.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp'; fi`
 
 tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o: tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp

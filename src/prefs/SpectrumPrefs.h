@@ -25,7 +25,7 @@
 
 #include <wx/defs.h>
 
-#include "../WaveTrack.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
@@ -98,7 +98,7 @@ class SpectrumPrefs final : public PrefsPanel
 
    SpectrogramSettings mTempSettings, mOrigSettings;
 
-   WaveTrack::WaveTrackDisplay mOrigDisplay;
+   WaveTrackViewConstants::Display mOrigDisplay;
    float mOrigMin, mOrigMax;
 
    bool mPopulating;

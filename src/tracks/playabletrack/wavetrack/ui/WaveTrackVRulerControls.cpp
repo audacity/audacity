@@ -62,8 +62,12 @@ void WaveTrackVRulerControls::DoZoomPreset( int i)
    // during recording and there are special pending tracks.
    // This function implements WaveTrack::DoSetMinimized which is always
    // called in a context that loops over linked tracks too and reinvokes.
+   using namespace WaveTrackViewConstants;
    WaveTrackVZoomHandle::DoZoom(
-         NULL, wt, false, (i==1)?kZoomHalfWave: kZoom1to1,
+         NULL, wt, false,
+         (i==1)
+            ? kZoomHalfWave
+            : kZoom1to1,
          wxRect(0,0,0,0), 0,0, true);
 }
 
@@ -87,8 +91,9 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    const auto wt = static_cast<WaveTrack*>(pTrack.get());
    auto steps = evt.steps;
 
+   using namespace WaveTrackViewConstants;
    const bool isDB =
-      wt->GetDisplay() == WaveTrack::Waveform &&
+      wt->GetDisplay() == Waveform &&
       wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
    // Special cases for Waveform dB only.
    // Set the bottom of the dB scale but only if it's visible
@@ -136,14 +141,17 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
       WaveTrackVZoomHandle::DoZoom(
-         pProject, wt, true, (steps < 0)?kZoomOut:kZoomIn,
+         pProject, wt, true,
+         (steps < 0)
+            ? kZoomOut
+            : kZoomIn,
          evt.rect, yy, yy, true);
    }
    else if (!event.CmdDown() && event.ShiftDown()) {
       // Scroll some fixed number of pixels, independent of zoom level or track height:
       static const float movement = 10.0f;
       const int height = evt.rect.GetHeight();
-      const bool spectral = (wt->GetDisplay() == WaveTrack::Spectrum);
+      const bool spectral = (wt->GetDisplay() == Spectrum);
       if (spectral) {
          const float delta = steps * movement / height;
          SpectrogramSettings &settings = wt->GetIndependentSpectrogramSettings();
