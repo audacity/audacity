@@ -8,6 +8,7 @@
 
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../TimeTrack.h"

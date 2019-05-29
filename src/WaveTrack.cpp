@@ -49,6 +49,7 @@ Track classes.
 
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
+#include "ProjectSettings.h"
 
 #include "AudioIO.h"
 #include "Prefs.h"

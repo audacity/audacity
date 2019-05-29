@@ -38,6 +38,7 @@
 #include "KeyboardCapture.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
 #include "WaveTrack.h"

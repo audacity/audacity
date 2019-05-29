@@ -40,6 +40,7 @@ and TimeTrack.
 #include "NoteTrack.h"
 #include "LabelTrack.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "DirManager.h"
 
 #include "InconsistencyException.h"

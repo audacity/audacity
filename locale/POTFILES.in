@@ -162,6 +162,8 @@ src/ProjectFileIORegistry.cpp
 src/ProjectFileIORegistry.h
 src/ProjectFSCK.cpp
 src/ProjectFSCK.h
+src/ProjectSettings.cpp
+src/ProjectSettings.h
 src/RealFFTf.cpp
 src/RealFFTf.h
 src/RealFFTf48x.cpp

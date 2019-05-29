@@ -223,6 +223,7 @@
     <ClCompile Include="..\..\..\src\Project.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectSettings.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
     <ClCompile Include="..\..\..\src\Resample.cpp" />
@@ -650,6 +651,7 @@
     <ClInclude Include="..\..\..\src\Project.h" />
     <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h" />
     <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
+    <ClInclude Include="..\..\..\src\ProjectSettings.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />
     <ClInclude Include="..\..\..\src\RingBuffer.h" />

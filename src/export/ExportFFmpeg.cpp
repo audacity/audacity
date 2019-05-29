@@ -37,7 +37,7 @@ function.
 
 #include "../FileFormats.h"
 #include "../Mix.h"
-#include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"

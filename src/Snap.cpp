@@ -15,6 +15,7 @@
 #include <cstdlib>
 
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "LabelTrack.h"
 #include "NoteTrack.h"
 #include "WaveClip.h"

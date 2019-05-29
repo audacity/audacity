@@ -53,6 +53,7 @@ AliasedFile s.
 #include "DirManager.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "Sequence.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"

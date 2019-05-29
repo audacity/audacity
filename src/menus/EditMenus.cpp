@@ -6,6 +6,7 @@
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"

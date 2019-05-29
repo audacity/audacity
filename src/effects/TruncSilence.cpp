@@ -29,6 +29,7 @@
 
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"

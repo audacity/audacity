@@ -85,6 +85,7 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"

@@ -66,6 +66,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"

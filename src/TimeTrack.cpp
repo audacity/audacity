@@ -27,6 +27,7 @@
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
 #include "TrackArtist.h"
 #include "ViewInfo.h"

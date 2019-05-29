@@ -14,7 +14,7 @@
 #include "../Audacity.h"
 #include "ExportCL.h"
 
-#include "../Project.h"
+#include "../ProjectSettings.h"
 
 #include <wx/app.h>
 #include <wx/button.h>

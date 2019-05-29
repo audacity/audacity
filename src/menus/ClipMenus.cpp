@@ -1,4 +1,5 @@
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"

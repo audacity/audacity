@@ -15,6 +15,7 @@
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../ViewInfo.h"
