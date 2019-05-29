@@ -7,6 +7,7 @@
 #include "../Menus.h" // for PrefsListener
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../SelectionState.h"
 #include "../TimeDialog.h"

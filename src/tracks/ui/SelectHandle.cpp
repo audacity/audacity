@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"

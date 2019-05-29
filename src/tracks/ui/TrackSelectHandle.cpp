@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../Menus.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"

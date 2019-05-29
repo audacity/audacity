@@ -209,6 +209,8 @@ audacity_SOURCES = \
 	Profiler.h \
 	Project.cpp \
 	Project.h \
+	ProjectAudioIO.cpp \
+	ProjectAudioIO.h \
 	ProjectFileIORegistry.cpp \
 	ProjectFileIORegistry.h \
 	ProjectFSCK.cpp \

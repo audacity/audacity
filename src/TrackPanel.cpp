@@ -70,6 +70,7 @@ is time to refresh some aspect of the screen.
 #include "AdornedRulerPanel.h"
 #include "KeyboardCapture.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectSettings.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"

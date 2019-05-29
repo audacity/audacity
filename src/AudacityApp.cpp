@@ -83,6 +83,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "MissingAliasFileDialog.h"
 #include "PluginManager.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectSettings.h"
 #include "Screenshot.h"
 #include "Sequence.h"

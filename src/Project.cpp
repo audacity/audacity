@@ -51,6 +51,7 @@ scroll information.  It also has some status flags.
 #include "Audacity.h" // for USE_* macros
 #include "Project.h"
 
+#include "ProjectAudioIO.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
 
@@ -1416,22 +1417,6 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
          pToolBar->ReCreateButtons();
    }
    AdornedRulerPanel::Get( project ).ReCreateButtons();
-}
-
-int ProjectAudioIO::GetAudioIOToken() const
-{
-   return mAudioIOToken;
-}
-
-void ProjectAudioIO::SetAudioIOToken(int token)
-{
-   mAudioIOToken = token;
-}
-
-bool ProjectAudioIO::IsAudioActive() const
-{
-   return GetAudioIOToken() > 0 &&
-      gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
 wxString AudacityProject::GetProjectName() const
@@ -4769,37 +4754,6 @@ void AudacityProject::SkipEnd(bool shift)
 }
 
 
-MeterPanel *ProjectAudioIO::GetPlaybackMeter()
-{
-   return mPlaybackMeter;
-}
-
-void ProjectAudioIO::SetPlaybackMeter(MeterPanel *playback)
-{
-   auto &project = mProject;
-   mPlaybackMeter = playback;
-   if (gAudioIO)
-   {
-      gAudioIO->SetPlaybackMeter( &project , mPlaybackMeter );
-   }
-}
-
-MeterPanel *ProjectAudioIO::GetCaptureMeter()
-{
-   return mCaptureMeter;
-}
-
-void ProjectAudioIO::SetCaptureMeter(MeterPanel *capture)
-{
-   auto &project = mProject;
-   mCaptureMeter = capture;
-
-   if (gAudioIO)
-   {
-      gAudioIO->SetCaptureMeter( &project, mCaptureMeter );
-   }
-}
-
 void AudacityProject::RestartTimer()
 {
    if (mTimer) {
@@ -5455,29 +5409,4 @@ void AudacityProject::CloseLock()
       mLastSavedTracks->Clear();
       mLastSavedTracks.reset();
    }
-}
-
-static const AudacityProject::AttachedObjects::RegisteredFactory sAudioIOKey{
-  []( AudacityProject &parent ){
-     return std::make_shared< ProjectAudioIO >( parent );
-   }
-};
-
-ProjectAudioIO &ProjectAudioIO::Get( AudacityProject &project )
-{
-   return project.AttachedObjects::Get< ProjectAudioIO >( sAudioIOKey );
-}
-
-const ProjectAudioIO &ProjectAudioIO::Get( const AudacityProject &project )
-{
-   return Get( const_cast<AudacityProject &>(project) );
-}
-
-ProjectAudioIO::ProjectAudioIO( AudacityProject &project )
-: mProject{ project }
-{
-}
-
-ProjectAudioIO::~ProjectAudioIO()
-{
 }

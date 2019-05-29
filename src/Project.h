@@ -55,8 +55,6 @@ class RecordingRecoveryHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
 
-class MeterPanel;
-
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
@@ -584,35 +582,6 @@ inline wxFrame *FindProjectFrame( AudacityProject *project ) {
 inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
 }
-
-class ProjectAudioIO final
-   : public ClientData::Base
-{
-public:
-   static ProjectAudioIO &Get( AudacityProject &project );
-   static const ProjectAudioIO &Get( const AudacityProject &project );
-
-   explicit ProjectAudioIO( AudacityProject &project );
-   ~ProjectAudioIO();
-
-   int GetAudioIOToken() const;
-   bool IsAudioActive() const;
-   void SetAudioIOToken(int token);
-
-   MeterPanel *GetPlaybackMeter();
-   void SetPlaybackMeter(MeterPanel *playback);
-   MeterPanel *GetCaptureMeter();
-   void SetCaptureMeter(MeterPanel *capture);
-
-private:
-   AudacityProject &mProject;
-
-   // Project owned meters
-   MeterPanel *mPlaybackMeter{};
-   MeterPanel *mCaptureMeter{};
-
-   int  mAudioIOToken{ -1 };
-};
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );

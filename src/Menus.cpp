@@ -40,6 +40,7 @@
 #endif // USE_MIDI
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectSettings.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"

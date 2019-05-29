@@ -8,6 +8,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
