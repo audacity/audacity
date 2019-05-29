@@ -136,14 +136,11 @@ public:
    // But if return is false, that means the user cancelled close of at least
    // one un-saved project.
    static bool Close( bool force = false );
-   static void SaveWindowSize();
 
    static bool Closing() { return sbClosing; }
-   static void Reset() { sbWindowRectAlreadySaved = false; }
 
 private:
    static bool sbClosing;
-   static bool sbWindowRectAlreadySaved;
 };
 
 class Track;
@@ -511,6 +508,8 @@ public:
 
    void ResetProjectToEmpty();
 
+   static void SaveWindowSize();
+
    // Routine to estimate how many minutes of recording time are left on disk
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
    // Converts number of minutes to human readable format
@@ -600,6 +599,8 @@ private:
    bool mTimerRecordCanceled{ false };
 
    DECLARE_EVENT_TABLE()
+
+   static bool sbWindowRectAlreadySaved;
 };
 
 inline wxFrame &GetProjectFrame( AudacityProject &project ) { return project; }

@@ -479,6 +479,10 @@ static void QuitAudacity(bool bForce)
    else
 /*end+*/
    {
+      if (AllProjects{}.size())
+         // PRL:  Always did at least once before close might be vetoed
+         // though I don't know why that is important
+         ProjectManager::SaveWindowSize();
       bool closedAll = AllProjects::Close( bForce );
       if ( !closedAll )
       {
@@ -1987,6 +1991,10 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
    // Try to close each open window.  If the user hits Cancel
    // in a Save Changes dialog, don't continue.
    gIsQuitting = true;
+   if (AllProjects{}.size())
+      // PRL:  Always did at least once before close might be vetoed
+      // though I don't know why that is important
+      ProjectManager::SaveWindowSize();
    bool closedAll = AllProjects::Close( force );
    if ( !closedAll )
    {

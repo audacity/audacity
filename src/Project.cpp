@@ -219,15 +219,11 @@ void AllProjects::Add( const value_type &pProject )
 }
 
 bool AllProjects::sbClosing = false;
-bool AllProjects::sbWindowRectAlreadySaved = false;
+bool ProjectManager::sbWindowRectAlreadySaved = false;
 
 bool AllProjects::Close( bool force )
 {
    ValueRestorer<bool> cleanup{ sbClosing, true };
-   if (AllProjects{}.size())
-      // PRL:  Always did at least once before close might be vetoed
-      // though I don't know why that is important
-      SaveWindowSize();
    while (AllProjects{}.size())
    {
       // Closing the project has global side-effect
@@ -245,7 +241,7 @@ bool AllProjects::Close( bool force )
    return true;
 }
 
-void AllProjects::SaveWindowSize()
+void ProjectManager::SaveWindowSize()
 {
    if (sbWindowRectAlreadySaved)
    {
@@ -2492,7 +2488,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    //
    // LL: Save before doing anything else to the window that might make
    //     its size change.
-   AllProjects::SaveWindowSize();
+   SaveWindowSize();
 
    window.SetIsBeingDeleted();
 
@@ -2586,7 +2582,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          wxTheApp->AddPendingEvent( evt );
       }
       else {
-         AllProjects::Reset();
+         sbWindowRectAlreadySaved = false;
          // For non-Mac, always keep at least one project window open
          (void) New();
       }
