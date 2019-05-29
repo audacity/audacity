@@ -89,13 +89,13 @@ void OnMacBringAllToFront(const CommandContext &)
 {
    // Reall this de-miniaturizes all, which is not exactly the standard
    // behavior.
-   for (const auto project : gAudacityProjects)
+   for (const auto project : AllProjects{})
       GetProjectFrame( *project ).Raise();
 }
 
 void OnMacMinimizeAll(const CommandContext &)
 {
-   for (const auto project : gAudacityProjects) {
+   for (const auto project : AllProjects{}) {
       DoMacMinimize(project.get());
    }
 }

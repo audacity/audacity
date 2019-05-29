@@ -226,13 +226,15 @@ void ToolsToolBar::SetCurrentTool(int tool)
       mCurrentTool=tool;
       mTool[mCurrentTool]->PushDown();
    }
-   //JKC: ANSWER-ME: Why is this RedrawAllProjects() line required?
+   //JKC: ANSWER-ME: Why is this required?
    //msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
    // we'll see if anyone complains.
-   // RedrawAllProjects();
+   //for ( auto pProject : AllProjects{} )
+   //   ProjectWindow::Get( *pProject ).RedrawProject();
 
    //msmeyer: But we instruct the projects to handle the cursor shape again
-   RefreshCursorForAllProjects();
+   for ( auto pProject : AllProjects{} )
+      ProjectWindow::Get( *pProject ).RefreshCursor();
 
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));
@@ -264,7 +266,8 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
       else
          mTool[i]->PopUp();
 
-   RedrawAllProjects();
+   for ( auto pProject : AllProjects{} )
+      ProjectWindow::Get( *pProject ).RedrawProject();
 
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));

@@ -575,9 +575,8 @@ CommandFlag MenuManager::GetUpdateFlags
 
 void MenuManager::ModifyAllProjectToolbarMenus()
 {
-   AProjectArray::iterator i;
-   for (i = gAudacityProjects.begin(); i != gAudacityProjects.end(); ++i) {
-      auto &project = **i;
+   for (auto pProject : AllProjects{}) {
+      auto &project = *pProject;
       MenuManager::Get(project).ModifyToolbarMenus(project);
    }
 }
@@ -742,9 +741,7 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
 
 void MenuCreator::RebuildAllMenuBars()
 {
-   for( size_t i = 0; i < gAudacityProjects.size(); i++ ) {
-      AudacityProject *p = gAudacityProjects[i].get();
-
+   for( auto p : AllProjects{} ) {
       MenuManager::Get(*p).RebuildMenuBar(*p);
 #if defined(__WXGTK__)
       // Workaround for:

@@ -108,11 +108,10 @@ namespace MissingAliasFilesDialog {
    {
       Lock lock{ m_LastMissingBlockFileLock };
       if (b) {
-         size_t numProjects = gAudacityProjects.size();
-         for (size_t ii = 0; ii < numProjects; ++ii) {
+         for ( auto pProject : AllProjects{} ) {
             // search each project for the blockfile
-            if (DirManager::Get( *gAudacityProjects[ii] ).ContainsBlockFile(b)) {
-               m_LastMissingBlockFileProject = gAudacityProjects[ii];
+            if (DirManager::Get( *pProject ).ContainsBlockFile(b)) {
+               m_LastMissingBlockFileProject = pProject;
                break;
             }
          }

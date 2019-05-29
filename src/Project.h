@@ -83,21 +83,12 @@ class WaveClip;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
-void RedrawAllProjects();
-void RefreshCursorForAllProjects();
-AUDACITY_DLL_API void CloseAllProjects();
 
 void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 bool IsWindowAccessible(wxRect *requestedRect);
 
-// Use shared_ptr to projects, because elsewhere we need weak_ptr
-using AProjectHolder = std::shared_ptr< AudacityProject >;
-using AProjectArray = std::vector< AProjectHolder >;
-
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
-
-extern AProjectArray gAudacityProjects;
 
 
 enum StatusBarField {
@@ -124,9 +115,45 @@ class ImportXMLTagHandler final : public XMLTagHandler
    AudacityProject* mProject;
 };
 
+/// \brief an object of class AllProjects acts like a standard library
+/// container, but refers to a global array of open projects.  So you can
+/// iterate easily over shared pointers to them with range-for :
+/// for (auto pProject : AllProjects{}) { ... }
+/// The pointers are never null.
 class AllProjects
 {
+   // Use shared_ptr to projects, because elsewhere we need weak_ptr
+   using AProjectHolder = std::shared_ptr< AudacityProject >;
+   using Container = std::vector< AProjectHolder >;
+   static Container gAudacityProjects;
+
 public:
+   AllProjects() = default;
+
+   size_t size() const;
+   bool empty() const { return size() == 0; }
+
+   using const_iterator = Container::const_iterator;
+   const_iterator begin() const;
+   const_iterator end() const;
+
+   using const_reverse_iterator = Container::const_reverse_iterator;
+   const_reverse_iterator rbegin() const;
+   const_reverse_iterator rend() const;
+
+   using value_type = Container::value_type;
+
+   // If the project is present, remove it from the global array and return
+   // a shared pointer, else return null.  This invalidates any iterators.
+   value_type Remove( AudacityProject &project );
+
+   // This invalidates iterators
+   void Add( const value_type &pProject );
+
+   /// In case you must iterate in a non-main thread, use this to prevent
+   /// changes in the set of open projects
+   static ODLock &Mutex();
+
    // Return true if all projects do close (always so if force == true)
    // But if return is false, that means the user cancelled close of at least
    // one un-saved project.
@@ -310,7 +337,6 @@ public:
 
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
-   static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
    void ResetProjectFileIO();
@@ -351,8 +377,6 @@ public:
    // Other commands
    
    int GetProjectNumber(){ return mProjectNo;};
-   static int CountUnnamed();
-   static void RefreshAllTitles(bool bShowProjectNumbers );
    void UpdatePrefs() override;
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
@@ -509,11 +533,6 @@ public:
    NumericFormatSymbol mBandwidthSelectionFormatName;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
-
-public:
-   ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
-   //shared by all projects
-   static ODLock &AllProjectDeleteMutex();
 
 private:
    bool mDirty{ false };

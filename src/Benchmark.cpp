@@ -95,7 +95,8 @@ _("This will close all project windows (without saving)\nand open the Audacity B
    if (action != wxYES)
       return;
 
-   CloseAllProjects();
+   for ( auto pProject : AllProjects{} )
+      GetProjectFrame( *pProject ).Close();
    */
 
    BenchmarkDialog dlog(parent);

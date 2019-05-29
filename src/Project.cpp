@@ -170,25 +170,72 @@ scroll information.  It also has some status flags.
 
 wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
+size_t AllProjects::size() const
+{
+   return gAudacityProjects.size();
+}
+
+auto AllProjects::begin() const -> const_iterator
+{
+   return gAudacityProjects.begin();
+}
+
+auto AllProjects::end() const -> const_iterator
+{
+   return gAudacityProjects.end();
+}
+
+auto AllProjects::rbegin() const -> const_reverse_iterator
+{
+   return gAudacityProjects.rbegin();
+}
+
+auto AllProjects::rend() const -> const_reverse_iterator
+{
+   return gAudacityProjects.rend();
+}
+
+auto AllProjects::Remove( AudacityProject &project ) -> value_type
+{
+   ODLocker locker{ &Mutex() };
+   auto start = begin(), finish = end(), iter = std::find_if(
+      start, finish,
+      [&]( const value_type &ptr ){ return ptr.get() == &project; }
+   );
+   if (iter == finish)
+      return nullptr;
+   auto result = *iter;
+   gAudacityProjects.erase( iter );
+   return result;
+}
+
+void AllProjects::Add( const value_type &pProject )
+{
+   ODLocker locker{ &Mutex() };
+   gAudacityProjects.push_back( pProject );
+}
+
 bool AllProjects::sbClosing = false;
 bool AllProjects::sbWindowRectAlreadySaved = false;
 
 bool AllProjects::Close( bool force )
 {
    ValueRestorer<bool> cleanup{ sbClosing, true };
-   if (gAudacityProjects.size())
+   if (AllProjects{}.size())
+      // PRL:  Always did at least once before close might be vetoed
+      // though I don't know why that is important
       SaveWindowSize();
-   while (gAudacityProjects.size())
+   while (AllProjects{}.size())
    {
       // Closing the project has global side-effect
       // of deletion from gAudacityProjects
       if ( force )
       {
-         GetProjectFrame( *gAudacityProjects[0] ).Close(true);
+         GetProjectFrame( **AllProjects{}.begin() ).Close(true);
       }
       else
       {
-         if (! GetProjectFrame( *gAudacityProjects[0] ).Close())
+         if (! GetProjectFrame( **AllProjects{}.begin() ).Close())
             return false;
       }
    }
@@ -204,14 +251,13 @@ void AllProjects::SaveWindowSize()
    bool validWindowForSaveWindowSize = FALSE;
    ProjectWindow * validProject = nullptr;
    bool foundIconizedProject = FALSE;
-   size_t numProjects = gAudacityProjects.size();
-   for (size_t i = 0; i < numProjects; i++)
+   for ( auto pProject : AllProjects{} )
    {
-      auto &window = ProjectWindow::Get( *gAudacityProjects[i] );
+      auto &window = ProjectWindow::Get( *pProject );
       if (!window.IsIconized()) {
          validWindowForSaveWindowSize = TRUE;
          validProject = &window;
-         i = numProjects;
+         break;
       }
       else
          foundIconizedProject =  TRUE;
@@ -236,7 +282,7 @@ void AllProjects::SaveWindowSize()
    else
    {
       if (foundIconizedProject) {
-         validProject = &ProjectWindow::Get( *gAudacityProjects[0] );
+         validProject = &ProjectWindow::Get( **AllProjects{}.begin() );
          bool wndMaximized = validProject->IsMaximized();
          wxRect normalRect = validProject->GetNormalizedWindowState();
          // store only the normal rectangle because the itemized rectangle
@@ -274,7 +320,7 @@ void AllProjects::SaveWindowSize()
    sbWindowRectAlreadySaved = true;
 }
 
-ODLock &AudacityProject::AllProjectDeleteMutex()
+ODLock &AllProjects::Mutex()
 {
    static ODLock theMutex;
    return theMutex;
@@ -382,7 +428,7 @@ END_EVENT_TABLE()
 //This is a pointer to the currently-active project.
 static AudacityProject *gActiveProject;
 //This array holds onto all of the projects currently open
-AProjectArray gAudacityProjects;
+AllProjects::Container AllProjects::gAudacityProjects;
 
 /* Declare Static functions */
 static void SetActiveProject(AudacityProject * project);
@@ -656,15 +702,16 @@ AudacityProject *CreateNewAudacityProject()
 
    // Create and show a NEW project
    // Use a non-default deleter in the smart pointer!
-   gAudacityProjects.push_back( AProjectHolder {
+   auto sp = AllProjects::value_type {
       safenew AudacityProject(
          nullptr, -1,
          wxDefaultPosition,
          wxSize(wndRect.width, wndRect.height)
       ),
       Destroyer< AudacityProject > {}
-   } );
-   const auto p = gAudacityProjects.back().get();
+   };
+   AllProjects{}.Add( sp );
+   auto p = sp.get();
    auto &project = *p;
    auto &window = GetProjectFrame( *p );
 
@@ -695,27 +742,6 @@ AudacityProject *CreateNewAudacityProject()
    window.Show(true);
 
    return p;
-}
-
-void RedrawAllProjects()
-{
-   size_t len = gAudacityProjects.size();
-   for (size_t i = 0; i < len; i++)
-      ProjectWindow::Get( *gAudacityProjects[i] ).RedrawProject();
-}
-
-void RefreshCursorForAllProjects()
-{
-   size_t len = gAudacityProjects.size();
-   for (size_t i = 0; i < len; i++)
-      ProjectWindow::Get( *gAudacityProjects[i] ).RefreshCursor();
-}
-
-AUDACITY_DLL_API void CloseAllProjects()
-{
-   size_t len = gAudacityProjects.size();
-   for (size_t i = 0; i < len; i++)
-      GetProjectFrame( *gAudacityProjects[i] ).Close();
 }
 
 // BG: The default size and position of the first window
@@ -861,7 +887,7 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
 
    // IF projects empty, THEN it's the first window.
    // It lands where the config says it should, and can straddle screen.
-   if (gAudacityProjects.empty()) {
+   if (AllProjects{}.empty()) {
       if (*pMaximized || *pIconized) {
          *nextRect = normalRect;
       }
@@ -899,12 +925,14 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
 
    bool validWindowSize = false;
    ProjectWindow * validProject = NULL;
-   size_t numProjects = gAudacityProjects.size();
-   for (int i = numProjects; i > 0 ; i--) {
-      if (!GetProjectFrame( *gAudacityProjects[i-1] ).IsIconized()) {
-            validWindowSize = true;
-            validProject = &ProjectWindow::Get( *gAudacityProjects[i-1] );
-            break;
+   for ( auto iter = AllProjects{}.rbegin(), end = AllProjects{}.rend();
+      iter != end; ++iter
+   ) {
+      auto pProject = *iter;
+      if (!GetProjectFrame( *pProject ).IsIconized()) {
+         validWindowSize = true;
+         validProject = &ProjectWindow::Get( *pProject );
+         break;
       }
    }
    if (validWindowSize) {
@@ -2122,35 +2150,8 @@ void AudacityProject::HandleResize()
    UpdateLayout();
 }
 
-// How many projects that do not have a name yet?
-int AudacityProject::CountUnnamed()
-{
-   int j = 0;
-   for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
-      if ( gAudacityProjects[i] )
-         if ( gAudacityProjects[i]->GetProjectName().empty() )
-            j++;
-   }
-   return j;
-}
-
-void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
-{
-   for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
-      if ( gAudacityProjects[i] ) {
-         if ( !GetProjectFrame( *gAudacityProjects[i] ).IsIconized() ) {
-            AudacityProject * p;
-            p = gAudacityProjects[i].get();
-            p->SetProjectTitle( bShowProjectNumbers ? p->GetProjectNumber() : -1 );
-         }
-      }
-   }
-}
-
 void AudacityProject::OnIconize(wxIconizeEvent &event)
 {
-   int VisibleProjectCount = 0;
-
    //JKC: On Iconizing we get called twice.  Don't know
    // why but it does no harm.
    // Should we be returning true/false rather than
@@ -2161,12 +2162,12 @@ void AudacityProject::OnIconize(wxIconizeEvent &event)
 
    // VisibileProjectCount seems to be just a counter for debugging.
    // It's not used outside this function.
-   for(i=0;i<gAudacityProjects.size();i++){
-      if(gAudacityProjects[i]){
-         if( !GetProjectFrame( *gAudacityProjects[i] ).IsIconized() )
-            VisibleProjectCount++;
+   auto VisibleProjectCount = std::count_if(
+      AllProjects{}.begin(), AllProjects{}.end(),
+      []( const AllProjects::value_type &ptr ){
+         return !GetProjectFrame( *ptr ).IsIconized();
       }
-   }
+   );
    event.Skip();
 
    // This step is to fix part of Bug 2040, where the BackingPanel
@@ -2410,8 +2411,17 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 
 // TitleRestorer restores project window titles to what they were, in its destructor.
 class TitleRestorer{
+   static void RefreshAllTitles(bool bShowProjectNumbers )
+   {
+      for ( auto pProject : AllProjects{} ) {
+         if ( !GetProjectFrame( *pProject ).IsIconized() ) {
+            pProject->SetProjectTitle(
+               bShowProjectNumbers ? pProject->GetProjectNumber() : -1 );
+         }
+      }
+   }
 public:
-   TitleRestorer(AudacityProject * p ){
+   TitleRestorer(AudacityProject * p ) {
       auto &window = GetProjectFrame( *p );
       if( window.IsIconized() )
          window.Restore();
@@ -2421,10 +2431,15 @@ public:
       sProjName = p->GetProjectName();
       if (sProjName.empty()){
          sProjName = _("<untitled>");
-         UnnamedCount=AudacityProject::CountUnnamed();
+         UnnamedCount = std::count_if(
+            AllProjects{}.begin(), AllProjects{}.end(),
+            []( const AllProjects::value_type &ptr ){
+               return ptr->GetProjectName().empty();
+            }
+         );
          if( UnnamedCount > 1 ){
             sProjNumber.Printf( "[Project %02i] ", p->GetProjectNumber()+1 );
-            AudacityProject::RefreshAllTitles( true ); 
+            RefreshAllTitles( true );
          } 
       } else {
          UnnamedCount = 0;
@@ -2432,11 +2447,11 @@ public:
    };
    ~TitleRestorer() { 
       if( UnnamedCount > 1 )
-         AudacityProject::RefreshAllTitles( false ); 
+         RefreshAllTitles( false );
    };
    wxString sProjNumber;
    wxString sProjName;
-   int UnnamedCount;
+   size_t UnnamedCount;
 };
 
 
@@ -2560,7 +2575,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // DanH: If we're definitely about to quit, clear the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
-   if ((gAudacityProjects.size() == 1) &&
+   if ((AllProjects{}.size() == 1) &&
       (quitOnClose || AllProjects::Closing()))
       Clipboard::Get().Clear();
 
@@ -2606,21 +2621,14 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //     have been deleted before this.
    DirManager::Destroy( project );
 
-   AProjectHolder pSelf;
-   {
-      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
-      auto end = gAudacityProjects.end();
-      auto it = std::find_if(gAudacityProjects.begin(), end,
-         [this] (const AProjectHolder &p) { return p.get() == this; });
-      wxASSERT( it != end );
-      pSelf = std::move( *it );
-      gAudacityProjects.erase(it);
-   }
+   // Remove self from the global array, but defer destruction of self
+   auto pSelf = AllProjects{}.Remove( *this );
+   wxASSERT( pSelf );
 
    if (gActiveProject == this) {
       // Find a NEW active project
-      if (gAudacityProjects.size() > 0) {
-         SetActiveProject(gAudacityProjects[0].get());
+      if ( !AllProjects{}.empty() ) {
+         SetActiveProject(AllProjects{}.begin()->get());
       }
       else {
          SetActiveProject(NULL);
@@ -2633,7 +2641,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       gAudioIO->SetListener(gActiveProject);
    }
 
-   if (gAudacityProjects.empty() && !AllProjects::Closing()) {
+   if (AllProjects{}.empty() && !AllProjects::Closing()) {
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
@@ -2773,18 +2781,18 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
 bool AudacityProject::IsAlreadyOpen(const FilePath &projPathName)
 {
    const wxFileName newProjPathName(projPathName);
-   size_t numProjects = gAudacityProjects.size();
-   for (size_t i = 0; i < numProjects; i++)
-   {
-      if (newProjPathName.SameAs(gAudacityProjects[i]->mFileName))
-      {
-         wxString errMsg =
-            wxString::Format(_("%s is already open in another window."),
-                              newProjPathName.GetName());
-         wxLogError(errMsg);
-         AudacityMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
-         return true;
-      }
+   auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
+   iter = std::find_if( start, finish,
+      [&]( const AllProjects::value_type &ptr ){
+         return (newProjPathName.SameAs(wxFileNameWrapper{ ptr->mFileName }));
+      } );
+   if (iter != finish) {
+      wxString errMsg =
+      wxString::Format(_("%s is already open in another window."),
+                       newProjPathName.GetName());
+      wxLogError(errMsg);
+      AudacityMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
+      return true;
    }
    return false;
 }
@@ -4498,7 +4506,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
       // saved to disk, and we then need to check the destination file is not
       // open in another window.
       int mayOverwrite = (mFileName == fName)? 2 : 1;
-      for (auto p : gAudacityProjects) {
+      for ( auto p : AllProjects{} ) {
          const wxFileName openProjectName(p->mFileName);
          if (openProjectName.SameAs(fName)) {
             mayOverwrite -= 1;
@@ -5221,10 +5229,6 @@ void AudacityProject::SetSyncLock(bool flag)
       mIsSyncLocked = flag;
       TrackPanel::Get( project ).Refresh(false);
    }
-}
-
-int AudacityProject::GetOpenProjectCount() {
-   return gAudacityProjects.size();
 }
 
 bool AudacityProject::IsProjectSaved() {

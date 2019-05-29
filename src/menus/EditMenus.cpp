@@ -179,9 +179,7 @@ void DoReloadPreferences( AudacityProject &project )
    // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      AudacityProject *p = gAudacityProjects[i].get();
-
+   for (auto p : AllProjects{}) {
       MenuManager::Get(*p).RebuildMenuBar(*p);
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
@@ -1031,9 +1029,7 @@ void OnPreferences(const CommandContext &context)
    // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      AudacityProject *p = gAudacityProjects[i].get();
-
+   for (auto p : AllProjects{}) {
       MenuManager::Get(*p).RebuildMenuBar(*p);
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)

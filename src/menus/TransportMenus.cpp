@@ -94,16 +94,14 @@ void DoPlayStop(const CommandContext &context)
       // old and start the NEW.
 
       //find out which project we need;
-      AudacityProject* otherProject = NULL;
-      for(unsigned i=0; i<gAudacityProjects.size(); i++) {
-         if(gAudioIO->IsStreamActive(gAudacityProjects[i]->GetAudioIOToken())) {
-            otherProject=gAudacityProjects[i].get();
-            break;
-         }
-      }
+      auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
+         iter = std::find_if( start, finish,
+            []( const AllProjects::value_type &ptr ){
+               return gAudioIO->IsStreamActive(ptr->GetAudioIOToken()); } );
 
       //stop playing the other project
-      if(otherProject) {
+      if(iter != finish) {
+         auto otherProject = *iter;
          auto &otherToolbar = ControlToolBar::Get( *otherProject );
          otherToolbar.SetPlay(false);        //Pops
          otherToolbar.SetStop(true);         //Pushes stop down
@@ -407,7 +405,7 @@ void OnTimerRecord(const CommandContext &context)
    // MY: Due to improvements in how Timer Recording saves and/or exports
    // it is now safer to disable Timer Recording when there is more than
    // one open project.
-   if (AudacityProject::GetOpenProjectCount() > 1) {
+   if (AllProjects{}.size() > 1) {
       AudacityMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);

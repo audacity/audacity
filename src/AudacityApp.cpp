@@ -466,9 +466,9 @@ static void QuitAudacity(bool bForce)
    // BG: unless force is true
 
    // BG: Are there any projects open?
-   //-   if (!gAudacityProjects.empty())
+   //-   if (!AllProjects{}.empty())
 /*start+*/
-   if (gAudacityProjects.empty())
+   if (AllProjects{}.empty())
    {
 #ifdef __WXMAC__
       Clipboard::Get().Clear();
@@ -607,7 +607,7 @@ static gboolean save_yourself_cb(GnomeClient *client,
       return TRUE;
    }
 
-   if (gAudacityProjects.empty()) {
+   if (AllProjects{}.empty()) {
       return TRUE;
    }
 
@@ -808,7 +808,7 @@ void AudacityApp::MacNewFile()
    // This method should only be used on the Mac platform
    // when no project windows are open.
 
-   if (gAudacityProjects.size() == 0) {
+   if (AllProjects{}.empty()) {
       CreateNewAudacityProject();
    }
 }
@@ -983,9 +983,9 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (MissingAliasFilesDialog::ShouldShow()) {
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
-      //size_t numProjects = gAudacityProjects.size();
+      //size_t numProjects = AllProjects{}.size();
       auto marked = MissingAliasFilesDialog::Marked();
-      AProjectHolder offendingProject = marked.second;
+      auto offendingProject = marked.second;
       wxString missingFileName = marked.first;
 
       // if there are no projects open, don't show the warning (user has closed it)
@@ -2085,7 +2085,7 @@ void AudacityApp::OnMenuNew(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
 
-   if(gAudacityProjects.size() == 0)
+   if(AllProjects{}.empty())
       CreateNewAudacityProject();
    else
       event.Skip();
@@ -2101,7 +2101,7 @@ void AudacityApp::OnMenuOpen(wxCommandEvent & event)
    // all platforms.
 
 
-   if(gAudacityProjects.size() == 0)
+   if(AllProjects{}.empty())
       AudacityProject::OpenFiles(NULL);
    else
       event.Skip();
@@ -2117,7 +2117,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
 
-   if(gAudacityProjects.size() == 0) {
+   if(AllProjects{}.empty()) {
       GlobalPrefsDialog dialog(NULL /* parent */ );
       dialog.ShowModal();
    }
@@ -2135,12 +2135,12 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
    // all platforms.
 
    // LL:  Removed "if" to allow closing based on final project count.
-   // if(gAudacityProjects.size() == 0)
+   // if(AllProjects{}.empty())
       QuitAudacity();
 
    // LL:  Veto quit if projects are still open.  This can happen
    //      if the user selected Cancel in a Save dialog.
-   event.Skip(gAudacityProjects.size() == 0);
+   event.Skip(AllProjects{}.empty());
 
 }
 

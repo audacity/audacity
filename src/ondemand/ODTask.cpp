@@ -129,13 +129,13 @@ void ODTask::DoSome(float amountWork)
       ODManager::Instance()->AddTask(this);
 
       //we did a bit of progress - we should allow a resave.
-      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
-      for(unsigned i=0; i<gAudacityProjects.size(); i++)
+      ODLocker locker{ &AllProjects::Mutex() };
+      for ( auto pProject : AllProjects{} )
       {
-         if(IsTaskAssociatedWithProject(gAudacityProjects[i].get()))
+         if(IsTaskAssociatedWithProject(pProject.get()))
          {
             //mark the changes so that the project can be resaved.
-            UndoManager::Get( *gAudacityProjects[i] ).SetODChangesFlag();
+            UndoManager::Get( *pProject ).SetODChangesFlag();
             break;
          }
       }
@@ -153,16 +153,16 @@ void ODTask::DoSome(float amountWork)
 
       wxCommandEvent event( EVT_ODTASK_COMPLETE );
 
-      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
-      for(unsigned i=0; i<gAudacityProjects.size(); i++)
+      ODLocker locker{ &AllProjects::Mutex() };
+      for ( auto pProject : AllProjects{} )
       {
-         if(IsTaskAssociatedWithProject(gAudacityProjects[i].get()))
+         if(IsTaskAssociatedWithProject(pProject.get()))
          {
             //this assumes tasks are only associated with one project.
-            GetProjectFrame( *gAudacityProjects[i] )
+            GetProjectFrame( *pProject )
                .GetEventHandler()->AddPendingEvent(event);
             //mark the changes so that the project can be resaved.
-            UndoManager::Get( *gAudacityProjects[i] ).SetODChangesFlag();
+            UndoManager::Get( *pProject ).SetODChangesFlag();
             break;
          }
       }
