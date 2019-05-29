@@ -222,6 +222,7 @@
     <ClCompile Include="..\..\..\src\Profiler.cpp" />
     <ClCompile Include="..\..\..\src\Project.cpp" />
     <ClCompile Include="..\..\..\src\ProjectAudioIO.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectFileIO.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
     <ClCompile Include="..\..\..\src\ProjectManager.cpp" />
@@ -652,6 +653,7 @@
     <ClInclude Include="..\..\..\src\Profiler.h" />
     <ClInclude Include="..\..\..\src\Project.h" />
     <ClInclude Include="..\..\..\src\ProjectAudioIO.h" />
+    <ClInclude Include="..\..\..\src\ProjectFileIO.h" />
     <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h" />
     <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
     <ClInclude Include="..\..\..\src\ProjectManager.h" />

@@ -18,6 +18,7 @@
 #include "OpenSaveCommands.h"
 
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"

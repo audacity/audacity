@@ -41,6 +41,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectFileIO.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "TrackPanel.h"
