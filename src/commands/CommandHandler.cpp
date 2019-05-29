@@ -21,6 +21,7 @@
 
 #include <wx/event.h>
 #include "../Project.h"
+#include "../ProjectWindow.h"
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
 #include "../commands/CommandContext.h"

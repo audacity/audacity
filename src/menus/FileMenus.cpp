@@ -12,6 +12,7 @@
 #include "../Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
+#include "../ProjectWindow.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"

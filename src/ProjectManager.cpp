@@ -29,6 +29,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIORegistry.h"
 #include "ProjectFSCK.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"

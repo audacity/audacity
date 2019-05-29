@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "Scrubbing.h"
 
-#include "../../Project.h"
+#include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"

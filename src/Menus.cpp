@@ -44,6 +44,7 @@
 #include "ProjectFileIO.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"

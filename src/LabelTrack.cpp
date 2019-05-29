@@ -66,6 +66,7 @@ for drawing different aspects of the label and its text box.
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
+#include "ProjectWindow.h"
 #include "TrackArtist.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"

@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_TRACK_PANEL_LISTENER__
 #define __AUDACITY_TRACK_PANEL_LISTENER__
 
+#include "Audacity.h"
+
 enum class UndoPush : unsigned char;
 
 /*

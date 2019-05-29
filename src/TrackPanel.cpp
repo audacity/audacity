@@ -73,6 +73,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectAudioIO.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1

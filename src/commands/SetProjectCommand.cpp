@@ -28,6 +28,8 @@
 #include "CommandContext.h"
 #include "../toolbars/SelectionBar.h"
 
+#include <wx/frame.h>
+
 SetProjectCommand::SetProjectCommand()
 {
 }
