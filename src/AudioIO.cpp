@@ -2404,11 +2404,13 @@ void AudioIO::SetPlaybackMeter(AudacityProject *project, MeterPanel *meter)
    if (( mOwningProject ) && ( mOwningProject != project))
       return;
 
-   mOutputMeter = meter;
-   if (mOutputMeter)
+   if (meter)
    {
+      mOutputMeter = meter;
       mOutputMeter->Reset(mRate, true);
    }
+   else
+      mOutputMeter.Release();
 }
 
 void AudioIO::SetMeters()
