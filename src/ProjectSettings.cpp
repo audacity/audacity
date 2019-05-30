@@ -13,8 +13,18 @@ Paul Licameli split from AudacityProject.cpp
 #include "AudioIO.h"
 #include "Project.h"
 #include "Snap.h"
-#include "TrackPanel.h"
 #include "prefs/QualityPrefs.h"
+
+wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
+
+namespace {
+   void Notify( AudacityProject &project, ProjectSettings::EventCode code )
+   {
+      wxCommandEvent e{ EVT_PROJECT_SETTINGS_CHANGE };
+      e.SetInt( static_cast<int>( code ) );
+      project.GetEventHandler()->ProcessEvent( e );
+   }
+}
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSettingsKey{
@@ -157,7 +167,7 @@ void ProjectSettings::SetSyncLock(bool flag)
    auto &project = mProject;
    if (flag != mIsSyncLocked) {
       mIsSyncLocked = flag;
-      TrackPanel::Get( project ).Refresh(false);
+      Notify( project, ChangedSyncLock );
    }
 }
 

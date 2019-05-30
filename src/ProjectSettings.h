@@ -11,10 +11,16 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_SETTINGS__
 #define __AUDACITY_PROJECT_SETTINGS__
 
+#include <wx/event.h> // to declare custom event type
+
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 
 class AudacityProject;
+
+// Sent to the project when certain settings change
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+   EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
 ///\brief Holds various per-project settings values, including the sample rate,
 /// and sends events to the project when certain values change
@@ -26,6 +32,11 @@ public:
    static ProjectSettings &Get( AudacityProject &project );
    static const ProjectSettings &Get( const AudacityProject &project );
    
+   // Values retrievable from GetInt() of the event for settings change
+   enum EventCode : int {
+      ChangedSyncLock,
+   };
+
    ProjectSettings( AudacityProject &project );
 
    sampleFormat GetDefaultFormat() const { return mDefaultFormat; }
