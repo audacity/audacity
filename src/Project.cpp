@@ -1356,8 +1356,11 @@ void AudacityProject::ApplyUpdatedTheme()
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
 {
-   AudioIOStartStreamOptions options {
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   AudioIOStartStreamOptions options { &project,
       ProjectSettings::Get( project ).GetRate() };
+   options.captureMeter = projectAudioIO.GetCaptureMeter();
+   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
    options.listener = &project;
    return options;
@@ -1366,12 +1369,15 @@ DefaultPlayOptions( AudacityProject &project )
 AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
       ProjectSettings::Get( project ).GetRate()  //suggested rate
    );
-   AudioIOStartStreamOptions options{ PlayAtSpeedRate };
+   AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
+   options.captureMeter = projectAudioIO.GetCaptureMeter();
+   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
    options.listener = &project;
    return options;

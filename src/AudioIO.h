@@ -116,8 +116,9 @@ using PRCrossfadeData = std::vector< std::vector < float > >;
 struct AudioIOStartStreamOptions
 {
    explicit
-   AudioIOStartStreamOptions(double rate_)
-      : timeTrack(NULL)
+   AudioIOStartStreamOptions(AudacityProject *pProject_, double rate_)
+      : pProject{ pProject_ }
+      , timeTrack(NULL)
       , listener(NULL)
       , rate(rate_)
       , playLooped(false)
@@ -127,6 +128,8 @@ struct AudioIOStartStreamOptions
       , preRoll(0.0)
    {}
 
+   AudacityProject *pProject{};
+   MeterPanel *captureMeter{}, *playbackMeter{};
    TimeTrack *timeTrack;
    AudioIOListener* listener;
    double rate;
@@ -810,7 +813,7 @@ public:
     * selected number of input channels to open the recording device and start
     * reading input data. If software playthrough is enabled, it also opens
     * the output device in stereo to play the data through */
-   void StartMonitoring(double sampleRate);
+   void StartMonitoring( const AudioIOStartStreamOptions &options );
 
    /** \brief Start recording or playing back audio
     *
@@ -1101,7 +1104,7 @@ private:
     * if necessary. The captureFormat is used for recording only, the playback
     * being floating point always. Returns true if the stream opened sucessfully
     * and false if it did not. */
-   bool StartPortAudioStream(double sampleRate,
+   bool StartPortAudioStream(const AudioIOStartStreamOptions &options,
                              unsigned int numPlaybackChannels,
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
