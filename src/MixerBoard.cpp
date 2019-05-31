@@ -296,7 +296,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       (MUTE_SOLO_HEIGHT + (bSoloNone ? 0 : MUTE_SOLO_HEIGHT) + kDoubleInset);
    ctrlSize.Set(kRightSideStackWidth, nMeterHeight);
 
-   mMeter = NULL;
+   mMeter.Release();
    if (GetWave()) {
       mMeter =
          safenew MeterPanel(GetActiveProject(), // AudacityProject* project,
