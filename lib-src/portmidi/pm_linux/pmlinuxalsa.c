@@ -201,7 +201,7 @@ static PmError alsa_write_byte(PmInternal *midi, unsigned char byte,
             /* compute relative time of event = timestamp - now + latency */
             PmTimestamp now = (midi->time_proc ? 
                                midi->time_proc(midi->time_info) : 
-                               Pt_Time(NULL));
+                               Pt_Time());
             int when = timestamp;
             /* if timestamp is zero, send immediately */
             /* otherwise compute time delay and use delay if positive */
