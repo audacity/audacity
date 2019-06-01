@@ -30,7 +30,8 @@ number of threads.
 #include <time.h>
 #endif //__WXMAC__
 
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_ODTASK_UPDATE, -1)
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_ODTASK_UPDATE, wxCommandEvent);
 
 ///wxstring compare function for sorting case, which is needed to load correctly.
 int CompareNoCaseFileName(const wxString& first, const wxString& second);

@@ -31,6 +31,7 @@ with changes in the SpectralSelectionBar.
 #include "SpectralSelectionBarListener.h"
 
 #include "../Experimental.h"
+#include "ToolManager.h"
 
 #include <algorithm>
 
@@ -102,6 +103,18 @@ SpectralSelectionBar::SpectralSelectionBar()
 SpectralSelectionBar::~SpectralSelectionBar()
 {
    // Do nothing, sizer deletes the controls
+}
+
+SpectralSelectionBar &SpectralSelectionBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<SpectralSelectionBar*>(
+      toolManager.GetToolBar(SpectralSelectionBarID) );
+}
+
+const SpectralSelectionBar &SpectralSelectionBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void SpectralSelectionBar::Create(wxWindow * parent)
@@ -454,21 +467,27 @@ void SpectralSelectionBar::SetFrequencies(double bottom, double top)
 void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
    NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
-   frequencyCtrl->SetFormatName(formatName);
-
-   wxCommandEvent e(EVT_FREQUENCYTEXTCTRL_UPDATED);
-   e.SetInt(frequencyCtrl->GetFormatIndex());
-   OnUpdate(e);
+   bool changed =
+      frequencyCtrl->SetFormatName(formatName);
+   // Test first whether changed, to avoid infinite recursion from OnUpdate
+   if (changed) {
+      wxCommandEvent e(EVT_FREQUENCYTEXTCTRL_UPDATED);
+      e.SetInt(frequencyCtrl->GetFormatIndex());
+      OnUpdate(e);
+   }
 }
 
 void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
    if (mbCenterAndWidth) {
-      mWidthCtrl->SetFormatName(formatName);
-
-      wxCommandEvent e(EVT_BANDWIDTHTEXTCTRL_UPDATED);
-      e.SetInt(mWidthCtrl->GetFormatIndex());
-      OnUpdate(e);
+      bool changed =
+         mWidthCtrl->SetFormatName(formatName);
+      // Test first whether changed, to avoid infinite recursion from OnUpdate
+      if (changed) {
+         wxCommandEvent e(EVT_BANDWIDTHTEXTCTRL_UPDATED);
+         e.SetInt(mWidthCtrl->GetFormatIndex());
+         OnUpdate(e);
+      }
    }
 }
 

@@ -1051,17 +1051,23 @@ void NumericConverter::ControlsToValue()
    mValue = std::max(mMinValue, std::min(mMaxValue, t));
 }
 
-void NumericConverter::SetFormatName(const NumericFormatSymbol & formatName)
+bool NumericConverter::SetFormatName(const NumericFormatSymbol & formatName)
 {
-   SetFormatString(GetBuiltinFormat(formatName));
+   return
+      SetFormatString(GetBuiltinFormat(formatName));
 }
 
-void NumericConverter::SetFormatString(const wxString & formatString)
+bool NumericConverter::SetFormatString(const wxString & formatString)
 {
-   mFormatString = formatString;
-   ParseFormatString(mFormatString);
-   ValueToControls();
-   ControlsToValue();
+   if (mFormatString != formatString) {
+      mFormatString = formatString;
+      ParseFormatString(mFormatString);
+      ValueToControls();
+      ControlsToValue();
+      return true;
+   }
+   else
+      return false;
 }
 
 void NumericConverter::SetSampleRate(double sampleRate)
@@ -1366,19 +1372,24 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
-void NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
+bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
 {
-   SetFormatString(GetBuiltinFormat(formatName));
+   return
+      SetFormatString(GetBuiltinFormat(formatName));
 }
 
-void NumericTextCtrl::SetFormatString(const wxString & formatString)
+bool NumericTextCtrl::SetFormatString(const wxString & formatString)
 {
-   NumericConverter::SetFormatString(formatString);
-   Layout();
-   Fit();
-   ValueToControls();
-   ControlsToValue();
-   UpdateAutoFocus();
+   auto result =
+      NumericConverter::SetFormatString(formatString);
+   if (result) {
+      Layout();
+      Fit();
+      ValueToControls();
+      ControlsToValue();
+      UpdateAutoFocus();
+   }
+   return result;
 }
 
 void NumericTextCtrl::SetSampleRate(double sampleRate)

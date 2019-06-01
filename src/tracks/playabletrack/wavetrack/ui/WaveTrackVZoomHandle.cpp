@@ -594,7 +594,7 @@ UIHandle::Result WaveTrackVZoomHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
 
@@ -618,7 +618,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 

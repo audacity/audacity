@@ -152,9 +152,9 @@ int ModuleDispatch(ModuleDispatchTypes type)
          if( p== NULL )
             return 0;
 
-         wxMenuBar * pBar = p->GetMenuBar();
+         wxMenuBar * pBar = GetProjectFrame( *p ).GetMenuBar();
          wxMenu * pMenu = pBar->GetMenu( 8 );  // Menu 8 is the Analyze Menu.
-         CommandManager * c = p->GetCommandManager();
+         CommandManager * c = &CommandManager::Get( *p );
 
          c->SetCurrentMenu( pMenu );
          c->AddSeparator();

@@ -14,6 +14,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
+#include "../../SelectionState.h"
+#include "../../Track.h"
+#include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UIHandle.h"
 
@@ -50,7 +53,8 @@ public:
       // AS: If the user clicked outside all tracks, make nothing
       //  selected.
       if ((event.ButtonDown() || event.ButtonDClick())) {
-         pProject->GetSelectionState().SelectNone( *pProject->GetTracks() );
+         SelectionState::Get( *pProject ).SelectNone(
+            TrackList::Get( *pProject ) );
          result |= RefreshAll;
       }
 
@@ -73,6 +77,24 @@ public:
    Result Cancel(AudacityProject *) override
    { return RefreshCode::RefreshNone; }
 };
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< BackgroundCell >( &parent );
+     TrackPanel::Get( parent ).SetBackgroundCell( result );
+     return result;
+   }
+};
+
+BackgroundCell &BackgroundCell::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< BackgroundCell >( key );
+}
+
+const BackgroundCell &BackgroundCell::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
 
 BackgroundCell::~BackgroundCell()
 {

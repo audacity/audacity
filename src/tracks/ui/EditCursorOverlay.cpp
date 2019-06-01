@@ -14,8 +14,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AColor.h"
 #include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
+#include "../../Track.h" //
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 
 #include <wx/dc.h>
 
@@ -26,6 +28,14 @@ namespace {
       return (m >= l && m < h);
    }
 }
+
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< EditCursorOverlay >( &parent );
+     TrackPanel::Get( parent ).AddOverlay( result );
+     return result;
+   }
+};
 
 EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
    : mProject(project)
@@ -43,15 +53,15 @@ unsigned EditCursorOverlay::SequenceNumber() const
 
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
-   const auto &selection = mProject->GetViewInfo().selectedRegion;
+   const auto &selection = ViewInfo::Get( *mProject ).selectedRegion;
    if (!selection.isPoint()) {
       mCursorTime = -1.0;
       mNewCursorX = -1;
    }
    else {
       mCursorTime = selection.t0();
-      mNewCursorX = mProject->GetZoomInfo().TimeToPosition
-         (mCursorTime, mProject->GetTrackPanel()->GetLeftOffset());
+      mNewCursorX = ZoomInfo::Get( *mProject ).TimeToPosition(
+         mCursorTime, TrackPanel::Get( *mProject ).GetLeftOffset());
    }
 
    // Excessive height in case of the ruler, but it matters little.
@@ -67,23 +77,22 @@ std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 {
    if (mIsMaster && !mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if (ruler) {
-         mPartner = std::make_shared<EditCursorOverlay>(mProject, false);
-         ruler->AddOverlay( mPartner );
-      }
+      auto &ruler = AdornedRulerPanel::Get( *mProject );
+      mPartner = std::make_shared<EditCursorOverlay>(mProject, false);
+      ruler.AddOverlay( mPartner );
    }
 
    mLastCursorX = mNewCursorX;
    if (mLastCursorX == -1)
       return;
 
-   const ZoomInfo &viewInfo = mProject->GetZoomInfo();
+   const auto &viewInfo = ZoomInfo::Get( *mProject );
 
+   auto &trackPanel = TrackPanel::Get( *mProject );
    const bool
    onScreen = between_incexc(viewInfo.h,
                              mCursorTime,
-                             mProject->GetTrackPanel()->GetScreenEndTime());
+                             trackPanel.GetScreenEndTime());
 
    if (!onScreen)
       return;
@@ -98,7 +107,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
          if (!pTrack)
             return;
          if (pTrack->GetSelected() ||
-             mProject->GetTrackPanel()->GetAx().IsFocused(pTrack))
+             trackPanel.GetAx().IsFocused(pTrack))
          {
             // AColor::Line includes both endpoints so use GetBottom()
             AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());

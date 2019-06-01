@@ -417,8 +417,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                ;
             else if (Internat::CompatibleToDouble(tokenholder, &offset))
             {
-               auto tracks = mProject->GetTracks();
-               auto t = *tracks->Leaders().rbegin();
+               auto &tracks = TrackList::Get( *mProject );
+               auto t = *tracks.Leaders().rbegin();
 
                // t is now the last track in the project, unless the import of
                // all tracks failed, in which case it will be null. In that
@@ -471,14 +471,14 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
    bool doSomething = callDurationFactor || callScrollOffset;
    if (callDurationFactor)
    {
-      double longestDuration = mProject->GetTracks()->GetEndTime();
-      mProject->ZoomBy(longestDuration / durationFactor);
+      double longestDuration = TrackList::Get( *mProject ).GetEndTime();
+      ProjectWindow::Get( *mProject ).ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }
 
    if (callScrollOffset && (scrollOffset != 0))
    {
-      mProject->TP_ScrollWindow(scrollOffset);
+      ProjectWindow::Get( *mProject ).TP_ScrollWindow(scrollOffset);
       callScrollOffset = false;
    }
 

@@ -58,6 +58,7 @@ greater use in future.
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/Command.h"
 #include "../toolbars/ControlToolBar.h"
@@ -1604,13 +1605,9 @@ bool Effect::ProcessTrack(int count,
 
       // Create temporary tracks
       genLeft = mFactory->NewWaveTrack(left->GetSampleFormat(), left->GetRate());
-      genLeft->SetWaveColorIndex( left->GetWaveColorIndex() );
 
       if (right)
-      {
          genRight = mFactory->NewWaveTrack(right->GetSampleFormat(), right->GetRate());
-         genRight->SetWaveColorIndex( right->GetWaveColorIndex() );
-      }
    }
 
    // Call the effect until we run out of input or delayed samples
@@ -1892,7 +1889,7 @@ bool Effect::ProcessTrack(int count,
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
       left->ClearAndPaste(mT0,
          selectedRegion.t1(), genLeft.get(), true, true,
          nullptr /* &warper */);
@@ -3271,11 +3268,11 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       mEffect && 
       mEffect->GetType() != EffectTypeGenerate && 
       mEffect->GetType() != EffectTypeTool && 
-      mProject->mViewInfo.selectedRegion.isPoint())
+      ViewInfo::Get( *mProject ).selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed =
-         GetMenuManager(*mProject).ReportIfActionNotAllowed(
+         MenuManager::Get(*mProject).ReportIfActionNotAllowed(
          *mProject,
          mEffect->GetTranslatedName(),
          flags,
@@ -3506,10 +3503,13 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    if (mPlaying)
    {
       mPlayPos = gAudioIO->GetStreamTime();
-      mProject->GetControlToolBar()->StopPlaying();
+      auto &bar = ControlToolBar::Get( *mProject );
+      bar.StopPlaying();
    }
    else
    {
+      auto &viewInfo = ViewInfo::Get( *mProject );
+      const auto &selectedRegion = viewInfo.selectedRegion;
       if (mProject->IsPlayRegionLocked())
       {
          double t0, t1;
@@ -3517,10 +3517,10 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          mRegion.setTimes(t0, t1);
          mPlayPos = mRegion.t0();
       }
-      else if (mProject->mViewInfo.selectedRegion.t0() != mRegion.t0() ||
-               mProject->mViewInfo.selectedRegion.t1() != mRegion.t1())
+      else if (selectedRegion.t0() != mRegion.t0() ||
+               selectedRegion.t1() != mRegion.t1())
       {
-         mRegion = mProject->mViewInfo.selectedRegion;
+         mRegion = selectedRegion;
          mPlayPos = mRegion.t0();
       }
 
@@ -3529,9 +3529,10 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          mPlayPos = mRegion.t1();
       }
 
-      mProject->GetControlToolBar()->PlayPlayRegion(
+      auto &bar = ControlToolBar::Get( *mProject );
+      bar.PlayPlayRegion(
          SelectedRegion(mPlayPos, mRegion.t1()),
-         mProject->GetDefaultPlayOptions(),
+         DefaultPlayOptions( *mProject ),
          PlayMode::normalPlay );
    }
 }
@@ -3602,7 +3603,7 @@ void EffectUIHost::OnPlayback(wxCommandEvent & evt)
 
    if (mPlaying)
    {
-      mRegion = mProject->mViewInfo.selectedRegion;
+      mRegion = ViewInfo::Get( *mProject ).selectedRegion;
       mPlayPos = mRegion.t0();
    }
 

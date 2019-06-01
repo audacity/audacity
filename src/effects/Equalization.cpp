@@ -100,6 +100,7 @@
 #include "../Project.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
+#include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"
@@ -509,7 +510,7 @@ bool EffectEqualization::Init()
    double rate = 0.0;
 
    auto trackRange =
-      GetActiveProject()->GetTracks()->Selected< const WaveTrack >();
+      TrackList::Get( *GetActiveProject() ).Selected< const WaveTrack >();
    if (trackRange) {
       rate = (*(trackRange.first++)) -> GetRate();
       ++selcount;
@@ -1091,7 +1092,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 {
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    AudacityProject *p = GetActiveProject();
-   auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   auto output = TrackFactory::Get( *p ).NewWaveTrack(floatSample, t->GetRate());
 
    wxASSERT(mM - 1 < windowSize);
    size_t L = windowSize - (mM - 1);   //Process L samples at a go

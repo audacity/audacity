@@ -32,6 +32,7 @@
 
 #include "../Audacity.h"
 #include "ToolsToolBar.h"
+#include "ToolManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -91,6 +92,17 @@ ToolsToolBar::ToolsToolBar()
 
 ToolsToolBar::~ToolsToolBar()
 {
+}
+
+ToolsToolBar &ToolsToolBar::Get( AudacityProject &project )
+{
+   auto &toolManager = ToolManager::Get( project );
+   return *static_cast<ToolsToolBar*>( toolManager.GetToolBar(ToolsBarID) );
+}
+
+const ToolsToolBar &ToolsToolBar::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject&>( project )) ;
 }
 
 void ToolsToolBar::RegenerateTooltips()
@@ -214,13 +226,15 @@ void ToolsToolBar::SetCurrentTool(int tool)
       mCurrentTool=tool;
       mTool[mCurrentTool]->PushDown();
    }
-   //JKC: ANSWER-ME: Why is this RedrawAllProjects() line required?
+   //JKC: ANSWER-ME: Why is this required?
    //msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
    // we'll see if anyone complains.
-   // RedrawAllProjects();
+   //for ( auto pProject : AllProjects{} )
+   //   ProjectWindow::Get( *pProject ).RedrawProject();
 
    //msmeyer: But we instruct the projects to handle the cursor shape again
-   RefreshCursorForAllProjects();
+   for ( auto pProject : AllProjects{} )
+      ProjectWindow::Get( *pProject ).RefreshCursor();
 
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));
@@ -252,7 +266,8 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
       else
          mTool[i]->PopUp();
 
-   RedrawAllProjects();
+   for ( auto pProject : AllProjects{} )
+      ProjectWindow::Get( *pProject ).RedrawProject();
 
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));

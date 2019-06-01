@@ -29,7 +29,7 @@ in a background thread.
 //#include "../Profiler.h"
 
 
-DEFINE_EVENT_TYPE(EVT_ODTASK_COMPLETE)
+wxDEFINE_EVENT(EVT_ODTASK_COMPLETE, wxCommandEvent);
 
 /// Constructs an ODTask
 ODTask::ODTask()
@@ -129,13 +129,13 @@ void ODTask::DoSome(float amountWork)
       ODManager::Instance()->AddTask(this);
 
       //we did a bit of progress - we should allow a resave.
-      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
-      for(unsigned i=0; i<gAudacityProjects.size(); i++)
+      ODLocker locker{ &AllProjects::Mutex() };
+      for ( auto pProject : AllProjects{} )
       {
-         if(IsTaskAssociatedWithProject(gAudacityProjects[i].get()))
+         if(IsTaskAssociatedWithProject(pProject.get()))
          {
             //mark the changes so that the project can be resaved.
-            gAudacityProjects[i]->GetUndoManager()->SetODChangesFlag();
+            UndoManager::Get( *pProject ).SetODChangesFlag();
             break;
          }
       }
@@ -153,15 +153,16 @@ void ODTask::DoSome(float amountWork)
 
       wxCommandEvent event( EVT_ODTASK_COMPLETE );
 
-      ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
-      for(unsigned i=0; i<gAudacityProjects.size(); i++)
+      ODLocker locker{ &AllProjects::Mutex() };
+      for ( auto pProject : AllProjects{} )
       {
-         if(IsTaskAssociatedWithProject(gAudacityProjects[i].get()))
+         if(IsTaskAssociatedWithProject(pProject.get()))
          {
             //this assumes tasks are only associated with one project.
-            gAudacityProjects[i]->GetEventHandler()->AddPendingEvent(event);
+            GetProjectFrame( *pProject )
+               .GetEventHandler()->AddPendingEvent(event);
             //mark the changes so that the project can be resaved.
-            gAudacityProjects[i]->GetUndoManager()->SetODChangesFlag();
+            UndoManager::Get( *pProject ).SetODChangesFlag();
             break;
          }
       }
@@ -175,7 +176,7 @@ void ODTask::DoSome(float amountWork)
 
 bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
 {
-   for (auto tr : proj->GetTracks()->Any<const WaveTrack>())
+   for (auto tr : TrackList::Get( *proj ).Any<const WaveTrack>())
    {
       //go over all tracks in the project
       //look inside our task's track list for one that matches this projects one.

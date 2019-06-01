@@ -13,13 +13,17 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/event.h> // to inherit
 #include "../../MemoryX.h"
+#include "../../ClientData.h"
 #include "../../widgets/Overlay.h" // to inherit
 
 class AudacityProject;
 
 
 // Common class for overlaying track panel or ruler
-class PlayIndicatorOverlayBase : public wxEvtHandler, public Overlay
+class PlayIndicatorOverlayBase
+   : public wxEvtHandler
+   , public Overlay
+   , public ClientData::Base
 {
 public:
    PlayIndicatorOverlayBase(AudacityProject *project, bool isMaster);

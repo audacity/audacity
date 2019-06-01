@@ -36,8 +36,9 @@ MissingAliasFileDialog::MissingAliasFileDialog(wxWindow *parent,
       const wxString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
-      const bool Close, const bool modal):
-ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
+      const bool Close, const bool modal)
+: ErrorDialog( parent,
+               dlogTitle, message, helpURL, Close, modal )
 {
    sDialogs.push_back( this );
 }
@@ -62,12 +63,13 @@ namespace MissingAliasFilesDialog {
    
    using Lock = std::unique_lock< std::mutex >;
    
-   void Show(AudacityProject *parent,
+   void Show(AudacityProject *project,
              const wxString &dlogTitle,
              const wxString &message,
              const wxString &helpPage,
              const bool Close)
    {
+      auto parent = FindProjectFrame( project );
       wxASSERT(parent); // to justify safenew
       ErrorDialog *dlog = safenew MissingAliasFileDialog(parent, dlogTitle, message, helpPage, Close, false);
       // Don't center because in many cases (effect, export, etc) there will be a progress bar in the center that blocks this.
@@ -92,10 +94,11 @@ namespace MissingAliasFilesDialog {
    
    wxDialog *Find( const AudacityProject &project )
    {
+      auto &window = GetProjectFrame( project );
       auto begin = sDialogs.begin(), end = sDialogs.end(),
          iter = std::find_if( begin, end,
             [&]( const wxDialogRef &ref ){
-               return ref && ref->GetParent() == &project; } );
+               return ref && ref->GetParent() == &window; } );
       if (iter != end)
          return *iter;
       return nullptr;
@@ -105,11 +108,10 @@ namespace MissingAliasFilesDialog {
    {
       Lock lock{ m_LastMissingBlockFileLock };
       if (b) {
-         size_t numProjects = gAudacityProjects.size();
-         for (size_t ii = 0; ii < numProjects; ++ii) {
+         for ( auto pProject : AllProjects{} ) {
             // search each project for the blockfile
-            if (gAudacityProjects[ii]->GetDirManager()->ContainsBlockFile(b)) {
-               m_LastMissingBlockFileProject = gAudacityProjects[ii];
+            if (DirManager::Get( *pProject ).ContainsBlockFile(b)) {
+               m_LastMissingBlockFileProject = pProject;
                break;
             }
          }

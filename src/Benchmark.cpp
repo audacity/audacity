@@ -41,6 +41,7 @@ of the BlockFile system.
 #include "WaveTrack.h"
 #include "Sequence.h"
 #include "Prefs.h"
+#include "ViewInfo.h"
 
 #include "FileNames.h"
 #include "widgets/AudacityMessageBox.h"
@@ -94,7 +95,8 @@ _("This will close all project windows (without saving)\nand open the Audacity B
    if (action != wxYES)
       return;
 
-   CloseAllProjects();
+   for ( auto pProject : AllProjects{} )
+      GetProjectFrame( *pProject ).Close();
    */
 
    BenchmarkDialog dlog(parent);

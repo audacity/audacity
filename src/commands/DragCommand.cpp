@@ -90,7 +90,7 @@ bool DragCommand::Apply(const CommandContext & context)
    if( !bHasToY )
       mToY = 10;
 
-   wxWindow * pWin = &context.project;
+   wxWindow * pWin = &GetProjectFrame( context.project );
    wxWindow * pWin1 = nullptr;
    wxMouseEvent Evt( wxEVT_MOTION );
    Evt.m_x = mFromX;

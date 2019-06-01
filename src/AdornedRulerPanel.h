@@ -26,6 +26,10 @@ class AUDACITY_DLL_API AdornedRulerPanel final
 , private PrefsListener
 {
 public:
+   static AdornedRulerPanel &Get( AudacityProject &project );
+   static const AdornedRulerPanel &Get( const AudacityProject &project );
+   static void Destroy( AudacityProject &project );
+
    AdornedRulerPanel(AudacityProject *project,
                      wxWindow* parent,
                      wxWindowID id,

@@ -15,7 +15,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h"
+#include "../../ViewInfo.h"
 #include "Scrubbing.h"
 #include "../../toolbars/ControlToolBar.h"
 
@@ -72,9 +74,9 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
        && mLastIsCapturing != mNewIsCapturing) {
       // Detect transition to recording during punch and roll; make ruler
       // change its button color too
-      const auto ruler = mProject->GetRulerPanel();
-      ruler->UpdateButtonStates();
-      ruler->Refresh();
+      auto &ruler = AdornedRulerPanel::Get( *mProject );
+      ruler.UpdateButtonStates();
+      ruler.Refresh();
    }
    mLastIsCapturing = mNewIsCapturing;
 
@@ -113,10 +115,19 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(false);
 }
 
+static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( AudacityProject &parent ){
+     auto result = std::make_shared< PlayIndicatorOverlay >( &parent );
+     TrackPanel::Get( parent ).AddOverlay( result );
+     return result;
+   }
+};
+
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
-   mProject->GetPlaybackScroller().Bind(EVT_TRACK_PANEL_TIMER,
+   ProjectWindow::Get( *mProject ).GetPlaybackScroller().Bind(
+      EVT_TRACK_PANEL_TIMER,
       &PlayIndicatorOverlay::OnTimer,
       this);
 }
@@ -128,56 +139,57 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
    // Ensure that there is an overlay attached to the ruler
    if (!mPartner) {
-      auto ruler = mProject->GetRulerPanel();
-      if (ruler) {
-         mPartner = std::make_shared<PlayIndicatorOverlayBase>(mProject, false);
-         ruler->AddOverlay( mPartner );
-      }
+      auto &ruler = AdornedRulerPanel::Get( *mProject );
+      mPartner = std::make_shared<PlayIndicatorOverlayBase>(mProject, false);
+      ruler.AddOverlay( mPartner );
    }
 
-   auto trackPanel = mProject->GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( *mProject );
    int width;
-   trackPanel->GetTracksUsableArea(&width, nullptr);
+   trackPanel.GetTracksUsableArea(&width, nullptr);
 
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
       mNewIsCapturing = false;
-      const auto &scrubber = mProject->GetScrubber();
+      const auto &scrubber = Scrubber::Get( *mProject );
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
-         const auto offset = trackPanel->GetLeftOffset();
-         if(position >= trackPanel->GetLeftOffset() &&
+         const auto offset = trackPanel.GetLeftOffset();
+         if(position >= trackPanel.GetLeftOffset() &&
             position < offset + width)
             mNewIndicatorX = position;
       }
    }
    else {
-      ViewInfo &viewInfo = mProject->GetViewInfo();
+      const auto &viewInfo = ViewInfo::Get( *mProject );
 
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;
 
-      using Mode = AudacityProject::PlaybackScroller::Mode;
-      const Mode mode = mProject->GetPlaybackScroller().GetMode();
+      auto &window = ProjectWindow::Get( *mProject );
+      using Mode = ProjectWindow::PlaybackScroller::Mode;
+      const Mode mode =
+         window.GetPlaybackScroller().GetMode();
       const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right
+      auto &trackPanel = TrackPanel::Get( *mProject );
       const auto tolerance = pinned ? 1.5 * kTimerInterval / 1000.0 : 0;
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
-         mProject->GetTrackPanel()->GetScreenEndTime() + tolerance);
+         trackPanel.GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
-      mProject->TP_DisplaySelection();
+      window.TP_DisplaySelection();
 
       // BG: Scroll screen if option is set
       if( viewInfo.bUpdateTrackIndicator &&
           playPos >= 0 && !onScreen ) {
          // msmeyer: But only if not playing looped or in one-second mode
          // PRL: and not scrolling with play/record head fixed
-         auto mode = mProject->GetControlToolBar()->GetLastPlayMode();
+         auto mode = ControlToolBar::Get( *mProject ).GetLastPlayMode();
          if (!pinned &&
              mode != PlayMode::loopedPlay &&
              mode != PlayMode::oneSecondPlay &&
@@ -190,24 +202,24 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
                // just a little bit equal to the scrubbing poll interval
                // duration.
                newPos = viewInfo.OffsetTimeByPixels( newPos, -width );
-               newPos = std::max( newPos, mProject->ScrollingLowerBoundTime() );
+               newPos = std::max( newPos, window.ScrollingLowerBoundTime() );
             }
-            mProject->TP_ScrollWindow(newPos);
+            window.TP_ScrollWindow(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
                            playPos,
-                           mProject->GetTrackPanel()->GetScreenEndTime());
+                           trackPanel.GetScreenEndTime());
          }
       }
 
       // Always update scrollbars even if not scrolling the window. This is
       // important when NEW audio is recorded, because this can change the
       // length of the project and therefore the appearance of the scrollbar.
-      mProject->TP_RedrawScrollbars();
+      window.TP_RedrawScrollbars();
 
       if (onScreen)
-         mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel->GetLeftOffset());
+         mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel.GetLeftOffset());
       else
          mNewIndicatorX = -1;
 

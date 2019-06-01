@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UndoManager.h"
+#include "../../../../ViewInfo.h"
 #include "../../../../../images/Cursors.h"
 
 #include <algorithm>
@@ -73,7 +74,7 @@ UIHandlePtr StretchHandle::HitTest
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
    // within the selection
-   const ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    if (!pTrack || !pTrack->GetSelected())
       return {};
@@ -166,7 +167,7 @@ UIHandle::Result StretchHandle::Click
 
 
    mLeftEdge = evt.rect.GetLeft();
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    viewInfo.selectedRegion.setTimes
       ( mStretchState.mBeat0.first, mStretchState.mBeat1.first );
@@ -223,7 +224,7 @@ UIHandle::Result StretchHandle::Release
 
    bool left = mStretchState.mMode == stretchLeft;
    bool right = mStretchState.mMode == stretchRight;
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
    if ( pProject->IsSyncLocked() && ( left || right ) ) {
       for ( auto track :
            TrackList::SyncLockGroup( mpTrack.get() ) ) {
@@ -277,7 +278,7 @@ double StretchHandle::GetT1(const Track &track, const ViewInfo &viewInfo)
 void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge,
    Track *pTrack)
 {
-   ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( *pProject );
 
    if (pTrack == NULL && mpTrack != NULL)
       pTrack = mpTrack.get();

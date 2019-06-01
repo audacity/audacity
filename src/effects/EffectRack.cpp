@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE(EffectRack, wxFrame)
 END_EVENT_TABLE()
 
 EffectRack::EffectRack()
-:  wxFrame(GetActiveProject(),
+:  wxFrame( FindProjectFrame( GetActiveProject() ),
       wxID_ANY,
       _("Effects Rack"),
       wxDefaultPosition,
@@ -294,7 +294,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    AudacityProject *project = GetActiveProject();
 
    bool success = false;
-   auto state = project->GetUndoManager()->GetCurrentState();
+   auto state = UndoManager::Get( *project ).GetCurrentState();
    auto cleanup = finally( [&] {
       if(!success)
          project->SetStateTo(state);

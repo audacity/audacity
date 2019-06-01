@@ -42,6 +42,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 
+#include "ViewInfo.h"
 #include "WaveTrack.h"
 
 class OldStyleCommandType;
@@ -284,7 +285,7 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // because we've switched monitor mid play.
    // Bug 383 - Resetting the toolbars is not wanted.
    // Any that are invisible will be amde visible as/when needed.
-   //mContext.GetProject()->GetToolManager()->Reset();
+   //ToolManager::Get( mContext.project ).Reset();
    Center();
 }
 
@@ -469,7 +470,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
       CentreOnParent();
    }
 
-   SetIcon(mContext.project.GetIcon());
+   SetIcon( GetProjectFrame( mContext.project ).GetIcon() );
 }
 
 bool ScreenFrame::ProcessEvent(wxEvent & e)
@@ -564,10 +565,11 @@ void ScreenFrame::SizeMainWindow(int w, int h)
 {
    int top = 20;
 
-   mContext.project.Maximize(false);
-   mContext.project.SetSize(16, 16 + top, w, h);
+   auto &window = GetProjectFrame( mContext.project );
+   window.Maximize(false);
+   window.SetSize(16, 16 + top, w, h);
    //Bug383 - Toolbar Resets not wanted.
-   //mContext.GetProject()->GetToolManager()->Reset();
+   //ToolManager::Get( mContext.project ).Reset();
 }
 
 void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
@@ -668,10 +670,12 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 
 void ScreenFrame::TimeZoom(double seconds)
 {
+   auto &viewInfo = ViewInfo::Get( mContext.project );
+   auto &window = ProjectWindow::Get( mContext.project );
    int width, height;
-   mContext.project.GetClientSize(&width, &height);
-   mContext.project.mViewInfo.SetZoom((0.75 * width) / seconds);
-   mContext.project.RedrawProject();
+   window.GetClientSize(&width, &height);
+   viewInfo.SetZoom((0.75 * width) / seconds);
+   window.RedrawProject();
 }
 
 void ScreenFrame::OnOneSec(wxCommandEvent & WXUNUSED(event))
@@ -708,23 +712,23 @@ void ScreenFrame::SizeTracks(int h)
    // If there should be more-than-stereo tracks, this makes
    // each channel as high as for a stereo channel
 
-   auto tracks = mContext.project.GetTracks();
-   for (auto t : tracks->Leaders<WaveTrack>()) {
+   auto &tracks = TrackList::Get( mContext.project );
+   for (auto t : tracks.Leaders<WaveTrack>()) {
       auto channels = TrackList::Channels(t);
       auto nChannels = channels.size();
       auto height = nChannels == 1 ? 2 * h : h;
       for (auto channel : channels)
          channel->SetHeight(height);
    }
-   mContext.project.RedrawProject();
+   ProjectWindow::Get( mContext.project ).RedrawProject();
 }
 
 void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : mContext.project.GetTracks()->Any<WaveTrack>())
+   for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>())
       t->SetHeight(t->GetMinimizedHeight());
 
-   mContext.project.RedrawProject();
+   ProjectWindow::Get( mContext.project ).RedrawProject();
 }
 
 void ScreenFrame::OnMedTracks(wxCommandEvent & WXUNUSED(event))

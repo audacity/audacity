@@ -538,7 +538,7 @@ protected:
 
    AudacityProject    *mOwningProject;
    wxWeakRef<MeterPanel> mInputMeter{};
-   MeterPanel         *mOutputMeter;
+   wxWeakRef<MeterPanel> mOutputMeter{};
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;
 

@@ -67,6 +67,7 @@ for drawing different aspects of the label and its text box.
 #include "TrackArtist.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
+#include "ViewInfo.h"
 #include "commands/CommandManager.h"
 
 #include "effects/TimeWarper.h"
@@ -102,8 +103,8 @@ int LabelTrack::mFontHeight=-1;
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "labeltrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = *project.GetTrackFactory();
-      auto &tracks = *project.GetTracks();
+      auto &trackFactory = TrackFactory::Get( project );
+      auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewLabelTrack());
    }
 };
@@ -795,7 +796,7 @@ namespace {
    LabelTrackHit *findHit()
    {
       // Fetch the highlighting state
-      auto target = GetActiveProject()->GetTrackPanel()->Target();
+      auto target = TrackPanel::Get( *GetActiveProject() ).Target();
       if (target) {
          auto handle = dynamic_cast<LabelGlyphHandle*>( target.get() );
          if (handle)
@@ -1782,8 +1783,9 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
 #endif
 
          // If there's a label there already don't capture
-         if( GetLabelIndex(pProj->mViewInfo.selectedRegion.t0(),
-                           pProj->mViewInfo.selectedRegion.t1()) != wxNOT_FOUND ) {
+         auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
+         if( GetLabelIndex(selectedRegion.t0(),
+                           selectedRegion.t1()) != wxNOT_FOUND ) {
             return false;
          }
 
@@ -1818,7 +1820,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
    // Make sure caret is in view
    int x;
    if (CalcCursorX(&x)) {
-      pProj->GetTrackPanel()->ScrollIntoView(x);
+      TrackPanel::Get( *pProj ).ScrollIntoView(x);
    }
 
    // If selection modified, refresh
@@ -1988,10 +1990,10 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_ESCAPE:
          if (mRestoreFocus >= 0) {
-            auto track = *GetActiveProject()->GetTracks()->Any()
+            auto track = *TrackList::Get( *GetActiveProject() ).Any()
                .begin().advance(mRestoreFocus);
             if (track)
-               GetActiveProject()->GetTrackPanel()->SetFocusedTrack(track);
+               TrackPanel::Get( *GetActiveProject() ).SetFocusedTrack(track);
             mRestoreFocus = -1;
          }
          mSelIndex = -1;
@@ -2117,21 +2119,22 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       bool useDialog;
       AudacityProject *p = GetActiveProject();
       gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
+      auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
       if (useDialog) {
          wxString title;
          if (DialogForLabelName(
-            *p, p->mViewInfo.selectedRegion, charCode, title) ==
+            *p, selectedRegion, charCode, title) ==
              wxID_CANCEL) {
             return false;
          }
          SetSelected(true);
-         AddLabel(p->mViewInfo.selectedRegion, title, -2);
+         AddLabel(selectedRegion, title, -2);
          p->PushState(_("Added label"), _("Label"));
          return false;
       }
       else {
          SetSelected(true);
-         AddLabel(p->mViewInfo.selectedRegion);
+         AddLabel(selectedRegion);
          p->PushState(_("Added label"), _("Label"));
       }
    }
@@ -2177,7 +2180,7 @@ void LabelTrack::ShowContextMenu()
 
    // Bug 2044.  parent can be nullptr after a context switch.
    if( !parent )
-      parent = GetActiveProject();
+      parent = FindProjectFrame( GetActiveProject() );
 
    if( parent )
    {
@@ -2218,7 +2221,7 @@ void LabelTrack::ShowContextMenu()
 void LabelTrack::OnContextMenu(wxCommandEvent & evt)
 {
    AudacityProject *p = GetActiveProject();
-   auto &selectedRegion = p->GetViewInfo().selectedRegion;
+   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
    switch (evt.GetId())
    {
@@ -3084,12 +3087,13 @@ void LabelTrack::DoEditLabels
 {
    auto format = project.GetSelectionFormat(),
       freqFormat = project.GetFrequencySelectionFormatName();
-   auto tracks = project.GetTracks();
-   auto trackFactory = project.GetTrackFactory();
+   auto &tracks = TrackList::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
    auto rate = project.GetRate();
-   auto &viewInfo = project.GetViewInfo();
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
-   LabelDialog dlg(&project, *trackFactory, tracks,
+   LabelDialog dlg(&window, trackFactory, &tracks,
                    lt, index,
                    viewInfo, rate,
                    format, freqFormat);
@@ -3099,7 +3103,7 @@ void LabelTrack::DoEditLabels
 
    if (dlg.ShowModal() == wxID_OK) {
       project.PushState(_("Edited labels"), _("Label"));
-      project.RedrawProject();
+      window.RedrawProject();
    }
 }
 
@@ -3107,19 +3111,19 @@ int LabelTrack::DialogForLabelName(
    AudacityProject &project,
    const SelectedRegion& region, const wxString& initialValue, wxString& value)
 {
-   auto trackPanel = project.GetTrackPanel();
-   auto &viewInfo = project.GetViewInfo();
+   auto &trackPanel = TrackPanel::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
 
-   wxPoint position =
-      trackPanel->FindTrackRect(trackPanel->GetFocusedTrack()).GetBottomLeft();
+   wxPoint position = trackPanel.FindTrackRect(trackPanel.GetFocusedTrack()).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
-   position.x += trackPanel->GetLabelWidth()
+   position.x += trackPanel.GetLabelWidth()
       + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
       -40;
    position.y += 2;  // just below the bottom of the track
-   position = trackPanel->ClientToScreen(position);
-   AudacityTextEntryDialog dialog{ &project,
+   position = trackPanel.ClientToScreen(position);
+   auto &window = GetProjectFrame( project );
+   AudacityTextEntryDialog dialog{ &window,
       _("Name:"),
       _("New label"),
       initialValue,
@@ -3128,7 +3132,7 @@ int LabelTrack::DialogForLabelName(
 
    // keep the dialog within Audacity's window, so that the dialog is always fully visible
    wxRect dialogScreenRect = dialog.GetScreenRect();
-   wxRect projScreenRect = project.GetScreenRect();
+   wxRect projScreenRect = window.GetScreenRect();
    wxPoint max = projScreenRect.GetBottomRight() + wxPoint{ -dialogScreenRect.width, -dialogScreenRect.height };
    if (dialogScreenRect.x > max.x) {
       position.x = max.x;

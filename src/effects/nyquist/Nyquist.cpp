@@ -63,6 +63,7 @@ effects from this one class.
 #include "../../Project.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
+#include "../../ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
@@ -539,7 +540,7 @@ bool NyquistEffect::Init()
       bool bAllowSpectralEditing = true;
 
       for ( auto t :
-               project->GetTracks()->Selected< const WaveTrack >() ) {
+               TrackList::Get( *project ).Selected< const WaveTrack >() ) {
          if (t->GetDisplay() != WaveTrack::Spectrum ||
              !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = false;
@@ -704,7 +705,8 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day));
 
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), (int) gAudacityProjects.size());
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"),
+         (int) AllProjects{}.size());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetProjectName());
 
       int numTracks = 0;
@@ -715,7 +717,7 @@ bool NyquistEffect::Process()
       wxString waveTrackList;   // track positions of selected audio tracks.
 
       {
-         auto countRange = project->GetTracks()->Leaders();
+         auto countRange = TrackList::Get( *project ).Leaders();
          for (auto t : countRange) {
             t->TypeSwitch( [&](const WaveTrack *) {
                numWave++;
@@ -930,7 +932,7 @@ finish:
       // Selection is to be set to whatever it is in the project.
       AudacityProject *project = GetActiveProject();
       if (project) {
-         auto &selectedRegion = project->GetViewInfo().selectedRegion;
+         auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
          mT0 = selectedRegion.t0();
          mT1 = selectedRegion.t1();
       }
@@ -1437,7 +1439,6 @@ bool NyquistEffect::ProcessOne()
       }
 
       outputTrack[i] = mFactory->NewWaveTrack(format, rate);
-      outputTrack[i]->SetWaveColorIndex( mCurTrack[i]->GetWaveColorIndex() );
 
       // Clean the initial buffer states again for the get callbacks
       // -- is this really needed?
@@ -1643,7 +1644,7 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
    AudacityProject *project = GetActiveProject();
    if (project && s.IsSameAs(wxT("half-srate"), false)) {
       auto rate =
-         project->GetTracks()->Selected< const WaveTrack >()
+         TrackList::Get( *project ).Selected< const WaveTrack >()
             .min( &WaveTrack::GetRate );
       return (rate / 2.0);
    }

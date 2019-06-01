@@ -83,6 +83,7 @@ is time to refresh some aspect of the screen.
 #include "RefreshCode.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
+#include "ViewInfo.h"
 #include "WaveTrack.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "NoteTrack.h"
@@ -184,8 +185,6 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 
-    EVT_COMMAND(wxID_ANY, EVT_ODTASK_UPDATE,   TrackPanel::OnODTask)
-    EVT_COMMAND(wxID_ANY, EVT_ODTASK_COMPLETE, TrackPanel::OnODTask)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -208,6 +207,48 @@ std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const
 }
 
 
+namespace{
+
+AudacityProject::AttachedWindows::RegisteredFactory sKey{
+   []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
+      auto &ruler = AdornedRulerPanel::Get( project );
+      auto &viewInfo = ViewInfo::Get( project );
+      auto &window = ProjectWindow::Get( project );
+      auto mainPage = window.GetMainPage();
+      wxASSERT( mainPage ); // to justify safenew
+
+      auto &tracks = TrackList::Get( project );
+      return safenew TrackPanel(mainPage,
+         window.NextWindowID(),
+         wxDefaultPosition,
+         wxDefaultSize,
+         tracks.shared_from_this(),
+         &viewInfo,
+         &project,
+         &ruler);
+   }
+};
+
+}
+
+TrackPanel &TrackPanel::Get( AudacityProject &project )
+{
+   return project.AttachedWindows::Get< TrackPanel >( sKey );
+}
+
+const TrackPanel &TrackPanel::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+void TrackPanel::Destroy( AudacityProject &project )
+{
+   auto *pPanel = project.AttachedWindows::Find( sKey );
+   if (pPanel) {
+      pPanel->wxWindow::Destroy();
+      project.AttachedWindows::Assign( sKey, nullptr );
+   }
+}
 
 // Don't warn us about using 'this' in the base member initializer list.
 #ifndef __WXGTK__ //Get rid if this pragma for gtk
@@ -218,11 +259,11 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        const wxSize & size,
                        const std::shared_ptr<TrackList> &tracks,
                        ViewInfo * viewInfo,
-                       TrackPanelListener * listener,
+                       AudacityProject * project,
                        AdornedRulerPanel * ruler)
    : CellularPanel(parent, id, pos, size, viewInfo,
                    wxWANTS_CHARS | wxNO_BORDER),
-     mListener(listener),
+     mListener( &ProjectWindow::Get( *project ) ),
      mTracks(tracks),
      mRuler(ruler),
      mTrackArtist(nullptr),
@@ -258,7 +299,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTimeCount = 0;
    mTimer.parent = this;
    // Timer is started after the window is visible
-   GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
+   ProjectWindow::Get( *GetProject() ).Bind(wxEVT_IDLE,
+      &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
    mTracks->Bind(EVT_TRACKLIST_RESIZING,
@@ -273,6 +315,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                      &TrackPanel::OnPlayback,
                      this);
+
+   GetProject()->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
+   GetProject()->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
 
    UpdatePrefs();
 }
@@ -373,9 +418,9 @@ AudacityProject * TrackPanel::GetProject() const
 #endif
    pWind = pWind->GetParent(); //MainPanel
    wxASSERT( pWind );
-   pWind = pWind->GetParent(); //Project
+   pWind = pWind->GetParent(); //ProjectWindow
    wxASSERT( pWind );
-   return (AudacityProject*)pWind;
+   return &static_cast<ProjectWindow*>( pWind )->GetProject();
 }
 
 void TrackPanel::OnIdle(wxIdleEvent& event)
@@ -386,7 +431,8 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
       mTimer.Start(kTimerInterval, FALSE);
 
       // Timer is started, we don't need the event anymore
-      GetProject()->Unbind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
+      GetProjectFrame( *GetProject() ).Unbind(wxEVT_IDLE,
+         &TrackPanel::OnIdle, this);
    }
    else
    {
@@ -406,21 +452,24 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    // us a deactivate event for the application.
    {
       auto project = GetProject();
-      if (project->IsIconized())
-         project->MacShowUndockedToolbars(false);
+      auto &window = ProjectWindow::Get( *project );
+      if (window.IsIconized())
+         window.MacShowUndockedToolbars(false);
    }
 #endif
 
    mTimeCount++;
 
    AudacityProject *const p = GetProject();
+   auto &window = ProjectWindow::Get( *p );
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (p->GetAudioIOToken()>0 && !IsAudioActive())
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
-      p->GetControlToolBar()->StopPlaying(!gAudioIO->IsStreamActive());
+      auto &bar = ControlToolBar::Get( *p );
+      bar.StopPlaying(!gAudioIO->IsStreamActive());
    }
 
    // Next, check to see if we were playing or recording
@@ -428,9 +477,9 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    if (p->GetAudioIOToken()>0 &&
          !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken()))
    {
-      p->FixScrollbars();
+      window.FixScrollbars();
       p->SetAudioIOToken(0);
-      p->RedrawProject();
+      window.RedrawProject();
 
       mRedrawAfterStop = false;
 
@@ -577,7 +626,7 @@ void TrackPanel::ProcessUIHandleResult
 
    // Copy data from the underlying tracks to the pending tracks that are
    // really displayed
-   panel->GetProject()->GetTracks()->UpdatePendingTracks();
+   TrackList::Get( *panel->GetProject() ).UpdatePendingTracks();
 
    using namespace RefreshCode;
 
@@ -662,7 +711,7 @@ void TrackPanel::UpdateStatusMessage( const wxString &st )
    if (HasEscape())
    /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
-   mListener->TP_DisplayStatusMessage(status);
+   GetProject()->SetStatus(status);
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -720,7 +769,7 @@ void TrackPanel::UpdateViewIfNoTracks()
 
       mListener->TP_RedrawScrollbars();
       mListener->TP_HandleResize();
-      mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
+      GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
    }
 }
 
@@ -1087,7 +1136,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    // Don't draw a bottom margin here.
 
-   ToolsToolBar *pTtb = GetProject()->GetToolsToolBar();
+   auto pTtb = &ToolsToolBar::Get( *GetProject() );
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
@@ -2717,7 +2766,8 @@ LWSlider * TrackInfo::GainSlider
    gGainCaptured->Set(gain);
 
    auto slider = (captured ? gGainCaptured : gGain).get();
-   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
    return slider;
 }
 
@@ -2733,7 +2783,8 @@ LWSlider * TrackInfo::PanSlider
    gPanCaptured->Set(pan);
 
    auto slider = (captured ? gPanCaptured : gPan).get();
-   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
    return slider;
 }
 
@@ -2750,7 +2801,8 @@ LWSlider * TrackInfo::VelocitySlider
    gVelocityCaptured->Set(velocity);
 
    auto slider = (captured ? gVelocityCaptured : gVelocity).get();
-   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
    return slider;
 }
 #endif
@@ -2844,8 +2896,8 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 
 IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
    : mPanelRect {
-        wxPoint{ 0, project->mViewInfo.vpos },
-        project->GetTrackPanel()->GetTracksUsableArea()
+        wxPoint{ 0, ViewInfo::Get( *project ).vpos },
+        TrackPanel::Get( *project ).GetTracksUsableArea()
      }
 {}
 

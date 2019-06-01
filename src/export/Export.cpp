@@ -334,7 +334,7 @@ void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
 
 void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
 {
-   wxWindow * pWin = GetActiveProject();
+   wxWindow * pWin = FindProjectFrame( GetActiveProject() );
    HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
 }
 
@@ -461,10 +461,10 @@ bool Exporter::ExamineTracks()
    double earliestBegin = mT1;
    double latestEnd = mT0;
 
-   const TrackList *tracks = mProject->GetTracks();
+   auto &tracks = TrackList::Get( *mProject );
 
    for (auto tr :
-         tracks->Any< const WaveTrack >()
+         tracks.Any< const WaveTrack >()
             + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
             - &WaveTrack::GetMute
    ) {
@@ -572,7 +572,7 @@ bool Exporter::GetFilename()
          auto useFileName = mFilename;
          if (!useFileName.HasExt())
             useFileName.SetExt(defext);
-         FileDialogWrapper fd(mProject,
+         FileDialogWrapper fd( ProjectWindow::Find( mProject ),
                        mFileDialogTitle,
                        mFilename.GetPath(),
                        useFileName.GetFullName(),
@@ -676,9 +676,9 @@ bool Exporter::GetFilename()
       // Also, this can only happen for uncompressed audio.
       bool overwritingMissingAliasFiles;
       overwritingMissingAliasFiles = false;
-      for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+      for (auto pProject : AllProjects{}) {
          AliasedFileArray aliasedFiles;
-         FindDependencies(gAudacityProjects[i].get(), aliasedFiles);
+         FindDependencies(pProject.get(), aliasedFiles);
          for (const auto &aliasedFile : aliasedFiles) {
             if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
                 !mFilename.FileExists()) {
@@ -729,7 +729,7 @@ bool Exporter::CheckFilename()
    // existing file.)
    //
 
-   if (!mProject->GetDirManager()->EnsureSafeFilename(mFilename))
+   if (!DirManager::Get( *mProject ).EnsureSafeFilename(mFilename))
       return false;
 
    if( mFormatName.empty() )
@@ -813,22 +813,23 @@ bool Exporter::CheckMix()
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
 
+         auto pWindow = ProjectWindow::Find( mProject );
          if (exportedChannels == 1) {
-            if (ShowWarningDialog(mProject,
+            if (ShowWarningDialog(pWindow,
                                   wxT("MixMono"),
                                   _("Your tracks will be mixed down and exported as one mono file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else if (exportedChannels == 2) {
-            if (ShowWarningDialog(mProject,
+            if (ShowWarningDialog(pWindow,
                                   wxT("MixStereo"),
                                   _("Your tracks will be mixed down and exported as one stereo file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else {
-            if (ShowWarningDialog(mProject,
+            if (ShowWarningDialog(pWindow,
                                   wxT("MixUnknownChannels"),
                                   _("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)
@@ -841,7 +842,7 @@ bool Exporter::CheckMix()
       if (exportedChannels < 0)
          exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
 
-      ExportMixerDialog md(mProject->GetTracks(),
+      ExportMixerDialog md(&TrackList::Get( *mProject ),
                            mSelectedOnly,
                            exportedChannels,
                            NULL,

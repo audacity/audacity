@@ -262,8 +262,7 @@ void EditToolBar::ForAllButtons(int Action)
    if( Action & ETBActEnableDisable ){
       p = GetActiveProject();
       if (!p) return;
-      cm = p->GetCommandManager();
-      if (!cm) return;
+      cm = &CommandManager::Get( *p );
 #ifdef OPTION_SYNC_LOCK_BUTTON
       bool bSyncLockTracks;
       gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
@@ -298,12 +297,11 @@ void EditToolBar::OnButton(wxCommandEvent &event)
 
    AudacityProject *p = GetActiveProject();
    if (!p) return;
-   CommandManager* cm = p->GetCommandManager();
-   if (!cm) return;
+   auto &cm = CommandManager::Get( *p );
 
-   auto flags = GetMenuManager(*p).GetUpdateFlags(*p);
+   auto flags = MenuManager::Get(*p).GetUpdateFlags(*p);
    const CommandContext context( *GetActiveProject() );
-   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecified);
+   cm.HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecified);
 }
 
 

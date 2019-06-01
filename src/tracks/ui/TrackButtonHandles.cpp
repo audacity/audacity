@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../commands/CommandManager.h"
 
@@ -164,13 +165,13 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Close");
    auto project = ::GetActiveProject();
    auto focused =
-      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
    if (!focused)
       return name;
 
-   auto commandManager = project->GetCommandManager();
+   auto &commandManager = CommandManager::Get( *project );
    TranslatedInternalString command{ wxT("TrackClose"), name };
-   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
+   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr CloseButtonHandle::HitTest
@@ -206,7 +207,7 @@ MenuButtonHandle::~MenuButtonHandle()
 UIHandle::Result MenuButtonHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
-   auto pPanel = pProject->GetTrackPanel();
+   auto &trackPanel = TrackPanel::Get( *pProject );
    auto pCell = mpCell.lock();
    if (!pCell)
       return RefreshCode::Cancelled;
@@ -214,7 +215,8 @@ UIHandle::Result MenuButtonHandle::CommitChanges
       static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
    if (!pTrack)
       return RefreshCode::Cancelled;
-   pPanel->CallAfter( [=]{ pPanel->OnTrackMenu( pTrack.get() ); } );
+   trackPanel.CallAfter(
+      [&trackPanel,pTrack]{ trackPanel.OnTrackMenu( pTrack.get() ); } );
    return RefreshCode::RefreshNone;
 }
 
@@ -223,13 +225,13 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Open menu...");
    auto project = ::GetActiveProject();
    auto focused =
-      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
    if (!focused)
       return name;
 
-   auto commandManager = project->GetCommandManager();
+   auto &commandManager = CommandManager::Get( *project );
    TranslatedInternalString command{ wxT("TrackMenu"), name };
-   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
+   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr MenuButtonHandle::HitTest

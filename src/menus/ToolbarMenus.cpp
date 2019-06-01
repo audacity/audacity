@@ -2,7 +2,6 @@
 #include "../Experimental.h"
 
 #include "../Menus.h"
-#include "../Project.h"
 #include "../TrackPanel.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -15,10 +14,10 @@ namespace {
 /// Called by handlers that set tools.
 void SetTool(AudacityProject &project, int tool)
 {
-   ToolsToolBar *toolbar = project.GetToolsToolBar();
+   auto toolbar = &ToolsToolBar::Get( project );
    if (toolbar) {
       toolbar->SetCurrentTool(tool);
-      project.GetTrackPanel()->Refresh(false);
+      TrackPanel::Get( project ).Refresh(false);
    }
 }
 
@@ -37,135 +36,135 @@ struct Handler : CommandHandlerObject {
 void OnResetToolBars(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->Reset();
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.Reset();
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowTransportToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide(TransportBarID);
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide(TransportBarID);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowToolsToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( ToolsBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( ToolsBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowRecordMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   if( !toolManager->IsVisible( RecordMeterBarID ) )
+   if( !toolManager.IsVisible( RecordMeterBarID ) )
    {
-      toolManager->Expose( MeterBarID, false );
+      toolManager.Expose( MeterBarID, false );
    }
-   toolManager->ShowHide( RecordMeterBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( RecordMeterBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowPlayMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   if( !toolManager->IsVisible( PlayMeterBarID ) )
+   if( !toolManager.IsVisible( PlayMeterBarID ) )
    {
-      toolManager->Expose( MeterBarID, false );
+      toolManager.Expose( MeterBarID, false );
    }
 
-   toolManager->ShowHide( PlayMeterBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( PlayMeterBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 #if 0
 void OnShowMeterToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   if( !toolManager->IsVisible( MeterBarID ) )
+   if( !toolManager.IsVisible( MeterBarID ) )
    {
-      toolManager->Expose( PlayMeterBarID, false );
-      toolManager->Expose( RecordMeterBarID, false );
+      toolManager.Expose( PlayMeterBarID, false );
+      toolManager.Expose( RecordMeterBarID, false );
    }
-   toolManager->ShowHide( MeterBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( MeterBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 #endif
 
 void OnShowMixerToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( MixerBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( MixerBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowEditToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( EditBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( EditBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowTranscriptionToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( TranscriptionBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( TranscriptionBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowScrubbingToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( ScrubbingBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( ScrubbingBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowDeviceToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( DeviceBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( DeviceBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 void OnShowSelectionToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( SelectionBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( SelectionBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnShowSpectralSelectionToolBar(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolManager = project.GetToolManager();
+   auto &toolManager = ToolManager::Get( project );
 
-   toolManager->ShowHide( SpectralSelectionBarID );
-   GetMenuManager(project).ModifyToolbarMenus(project);
+   toolManager.ShowHide( SpectralSelectionBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 #endif
 
@@ -206,29 +205,25 @@ void OnMultiTool(const CommandContext &context)
 void OnPrevTool(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolbar = project.GetToolsToolBar();
-   auto trackPanel = project.GetTrackPanel();
+   auto &toolbar = ToolsToolBar::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
 
-   if (toolbar) {
-      // Use GetDownTool() here since GetCurrentTool() can return a value that
-      // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+(numTools-1))%numTools);
-      trackPanel->Refresh(false);
-   }
+   // Use GetDownTool() here since GetCurrentTool() can return a value that
+   // doesn't represent the real tool if the Multi-tool is being used.
+   toolbar.SetCurrentTool((toolbar.GetDownTool()+(numTools-1))%numTools);
+   trackPanel.Refresh(false);
 }
 
 void OnNextTool(const CommandContext &context)
 {
    auto &project = context.project;
-   auto toolbar = project.GetToolsToolBar();
-   auto trackPanel = project.GetTrackPanel();
+   auto &toolbar = ToolsToolBar::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
 
-   if (toolbar) {
-      // Use GetDownTool() here since GetCurrentTool() can return a value that
-      // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+1)%numTools);
-      trackPanel->Refresh(false);
-   }
+   // Use GetDownTool() here since GetCurrentTool() can return a value that
+   // doesn't represent the real tool if the Multi-tool is being used.
+   toolbar.SetCurrentTool((toolbar.GetDownTool()+1)%numTools);
+   trackPanel.Refresh(false);
 }
 
 }; // struct Handler

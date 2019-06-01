@@ -296,7 +296,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       (MUTE_SOLO_HEIGHT + (bSoloNone ? 0 : MUTE_SOLO_HEIGHT) + kDoubleInset);
    ctrlSize.Set(kRightSideStackWidth, nMeterHeight);
 
-   mMeter = NULL;
+   mMeter.Release();
    if (GetWave()) {
       mMeter =
          safenew MeterPanel(GetActiveProject(), // AudacityProject* project,
@@ -408,7 +408,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
       GetRight()->SetGain(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+   TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       mProject->PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
@@ -421,7 +421,7 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
       GetNote()->SetVelocity(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+   TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       mProject->PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
 }
@@ -436,7 +436,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
       GetRight()->SetPan(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+   TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
 
    if (bWantPushState)
       mProject->PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
@@ -748,12 +748,10 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 
    // Update the TrackPanel correspondingly.
    if (mProject->IsSoloSimple())
-   {
-      mProject->RedrawProject();
-   }
+      ProjectWindow::Get( *mProject ).RedrawProject();
    else
       // Update only the changed track.
-      mProject->GetTrackPanel()->RefreshTrack(mTrack.get());
+      TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
 }
 
 void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
@@ -765,7 +763,7 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 
    // Update the TrackPanel correspondingly.
    // Bug 509: Must repaint all, as many tracks can change with one Solo change.
-   mProject->RedrawProject();
+   ProjectWindow::Get( *mProject ).RedrawProject();
 }
 
 
@@ -904,30 +902,30 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
       */
 
    mPrevT1 = 0.0;
-   mTracks = mProject->GetTracks();
+   mTracks = &TrackList::Get( *mProject );
 
    // Events from the project don't propagate directly to this other frame, so...
    mProject->Bind(EVT_TRACK_PANEL_TIMER,
       &MixerBoard::OnTimer,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
+   mTracks->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
       &MixerBoard::OnTrackChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_PERMUTED,
+   mTracks->Bind(EVT_TRACKLIST_PERMUTED,
       &MixerBoard::OnTrackSetChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_ADDITION,
+   mTracks->Bind(EVT_TRACKLIST_ADDITION,
       &MixerBoard::OnTrackSetChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_DELETION,
+   mTracks->Bind(EVT_TRACKLIST_DELETION,
       &MixerBoard::OnTrackSetChanged,
       this);
 
-   mProject->GetTracks()->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
+   mTracks->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
       &MixerBoard::OnTrackChanged,
       this);
 
@@ -1345,7 +1343,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    {
       UpdateMeters(
          gAudioIO->GetStreamTime(),
-         (mProject->GetControlToolBar()->GetLastPlayMode()
+         (ControlToolBar::Get( *mProject ).GetLastPlayMode()
             == PlayMode::loopedPlay)
       );
    }
@@ -1397,7 +1395,7 @@ const wxSize kDefaultSize =
    wxSize(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
-: wxFrame(parent, -1,
+: wxFrame( &GetProjectFrame( *parent ), -1,
           wxString::Format(_("Audacity Mixer Board%s"),
                            ((parent->GetProjectName().empty()) ?
                               wxT("") :
@@ -1457,7 +1455,8 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
 {
    AudacityProject *project = GetActiveProject();
-   project->GetCommandManager()->FilterKeyEvent(project, event, true);
+   auto &commandManager = CommandManager::Get( *project );
+   commandManager.FilterKeyEvent(project, event, true);
 }
 
 void MixerBoardFrame::Recreate( AudacityProject *pProject )

@@ -23,10 +23,7 @@
 #include "Experimental.h"
 
 #include "ClientData.h"
-#include "Track.h"
 #include "Prefs.h"
-#include "SelectionState.h"
-#include "ViewInfo.h"
 #include "commands/CommandManagerWindowClasses.h"
 
 #include "TrackPanelListener.h"
@@ -40,7 +37,12 @@
 
 #include "import/ImportRaw.h" // defines TrackHolders
 
+#include "xml/XMLTagHandler.h" // to inherit
+
 const int AudacityProjectTimerID = 5200;
+
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
 class wxMemoryDC;
 class wxArrayString;
@@ -56,36 +58,17 @@ class AudacityProject;
 class AutoSaveFile;
 class Importer;
 class ODLock;
-class Overlay;
 class RecordingRecoveryHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
-class Tags;
 
 class TrackPanel;
 class FreqWindow;
-class ContrastDialog;
 class MeterPanel;
-
-// toolbar classes
-class ControlToolBar;
-class DeviceToolBar;
-class MixerToolBar;
-class Scrubber;
-class ScrubbingToolBar;
-class SelectionBar;
-class SpectralSelectionBar;
-class ToolManager;
-class ToolsToolBar;
-class TranscriptionToolBar;
 
 // windows and frames
 class AdornedRulerPanel;
-class HistoryWindow;
-class MacrosWindow;
 class LyricsWindow;
-class MixerBoard;
-class MixerBoardFrame;
 
 struct AudioIOStartStreamOptions;
 struct UndoState;
@@ -96,26 +79,16 @@ enum class UndoPush : unsigned char;
 
 class Track;
 class WaveClip;
-class BackgroundCell;
 
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
-void RedrawAllProjects();
-void RefreshCursorForAllProjects();
-AUDACITY_DLL_API void CloseAllProjects();
 
 void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 bool IsWindowAccessible(wxRect *requestedRect);
 
-// Use shared_ptr to projects, because elsewhere we need weak_ptr
-using AProjectHolder = std::shared_ptr< AudacityProject >;
-using AProjectArray = std::vector< AProjectHolder >;
-
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
-
-extern AProjectArray gAudacityProjects;
 
 
 enum StatusBarField {
@@ -142,9 +115,45 @@ class ImportXMLTagHandler final : public XMLTagHandler
    AudacityProject* mProject;
 };
 
+/// \brief an object of class AllProjects acts like a standard library
+/// container, but refers to a global array of open projects.  So you can
+/// iterate easily over shared pointers to them with range-for :
+/// for (auto pProject : AllProjects{}) { ... }
+/// The pointers are never null.
 class AllProjects
 {
+   // Use shared_ptr to projects, because elsewhere we need weak_ptr
+   using AProjectHolder = std::shared_ptr< AudacityProject >;
+   using Container = std::vector< AProjectHolder >;
+   static Container gAudacityProjects;
+
 public:
+   AllProjects() = default;
+
+   size_t size() const;
+   bool empty() const { return size() == 0; }
+
+   using const_iterator = Container::const_iterator;
+   const_iterator begin() const;
+   const_iterator end() const;
+
+   using const_reverse_iterator = Container::const_reverse_iterator;
+   const_reverse_iterator rbegin() const;
+   const_reverse_iterator rend() const;
+
+   using value_type = Container::value_type;
+
+   // If the project is present, remove it from the global array and return
+   // a shared pointer, else return null.  This invalidates any iterators.
+   value_type Remove( AudacityProject &project );
+
+   // This invalidates iterators
+   void Add( const value_type &pProject );
+
+   /// In case you must iterate in a non-main thread, use this to prevent
+   /// changes in the set of open projects
+   static ODLock &Mutex();
+
    // Return true if all projects do close (always so if force == true)
    // But if return is false, that means the user cancelled close of at least
    // one un-saved project.
@@ -161,7 +170,6 @@ private:
 
 class EffectPlugs;
 class CommandContext;
-class CommandManager;
 class Track;
 class TrackHolder;
 class TrackList;
@@ -173,10 +181,18 @@ class WaveTrack;
 
 class MenuManager;
 
+// Container of various objects associated with the project, which is
+// responsible for destroying them
 using AttachedObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
+// Container of pointers to various windows associated with the project, which
+// is not responsible for destroying them -- wxWidgets handles that instead
+using AttachedWindows = ClientData::Site<
+   AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
+>;
 
+using ProjectWindow = AudacityProject;
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
@@ -185,9 +201,17 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public AudioIOListener,
                                      private PrefsListener
    , public AttachedObjects
+   , public AttachedWindows
 {
  public:
+   static ProjectWindow &Get( AudacityProject &project ) { return project; }
+   static const ProjectWindow &Get( const AudacityProject &project ) { return project; }
+   static ProjectWindow *Find( AudacityProject *pProject ) { return pProject; }
+   static const ProjectWindow *Find( const AudacityProject *pProject ) { return pProject; }
+   AudacityProject &GetProject() { return *this; }
+ 
    using AttachedObjects = ::AttachedObjects;
+   using AttachedWindows = ::AttachedWindows;
 
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
@@ -198,32 +222,15 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    virtual void ApplyUpdatedTheme();
 
-   AudioIOStartStreamOptions GetDefaultPlayOptions();
-   AudioIOStartStreamOptions GetSpeedPlayOptions();
-
-   TrackList *GetTracks() { return mTracks.get(); }
-   const TrackList *GetTracks() const { return mTracks.get(); }
-   size_t GetTrackCount() const { return GetTracks()->size(); }
-   UndoManager *GetUndoManager() { return mUndoManager.get(); }
-
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
    double GetRate() const { return mRate; }
-   const ZoomInfo &GetZoomInfo() const { return mViewInfo; }
-   const ViewInfo &GetViewInfo() const { return mViewInfo; }
-   ViewInfo &GetViewInfo() { return mViewInfo; }
 
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
    wxString GetProjectName() const;
-   const std::shared_ptr<DirManager> &GetDirManager();
-   TrackFactory *GetTrackFactory();
-   AdornedRulerPanel *GetRulerPanel();
-   Tags *GetTags();
-   const Tags *GetTags() const;
-   void SetTags( const std::shared_ptr<Tags> &tags );
    int GetAudioIOToken() const;
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
@@ -318,9 +325,6 @@ public:
 
    wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
-   TrackPanel * GetTrackPanel() {return mTrackPanel;}
-   const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
-   SelectionState &GetSelectionState() { return mSelectionState; }
 
    bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -333,7 +337,6 @@ public:
 
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
-   static int GetOpenProjectCount();
    bool IsProjectSaved();
    void ResetProjectToEmpty();
    void ResetProjectFileIO();
@@ -342,11 +345,6 @@ public:
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
    // Converts number of minutes to human readable format
    wxString GetHoursMinsString(int iMinutes);
-
-   CommandManager *GetCommandManager()
-      { return mCommandManager.get(); }
-   const CommandManager *GetCommandManager() const
-      { return mCommandManager.get(); }
 
    void MayStartMonitoring();
 
@@ -379,8 +377,6 @@ public:
    // Other commands
    
    int GetProjectNumber(){ return mProjectNo;};
-   static int CountUnnamed();
-   static void RefreshAllTitles(bool bShowProjectNumbers );
    void UpdatePrefs() override;
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
@@ -432,7 +428,6 @@ public:
 
    // TrackPanel callback methods, overrides of TrackPanelListener
    void TP_DisplaySelection() override;
-   void TP_DisplayStatusMessage(const wxString &msg) override;
 
    void TP_RedrawScrollbars() override;
    void TP_ScrollLeft() override;
@@ -441,35 +436,15 @@ public:
    bool TP_ScrollUpDown(int delta) override;
    void TP_HandleResize() override;
 
-   // ToolBar
-
-   // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
-   ControlToolBar *GetControlToolBar();
-
-   DeviceToolBar *GetDeviceToolBar();
-   MixerToolBar *GetMixerToolBar();
-   ScrubbingToolBar *GetScrubbingToolBar();
-   SelectionBar *GetSelectionBar();
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar *GetSpectralSelectionBar();
-#endif
-   ToolsToolBar *GetToolsToolBar();
-   const ToolsToolBar *GetToolsToolBar() const;
-   TranscriptionToolBar *GetTranscriptionToolBar();
-
    MeterPanel *GetPlaybackMeter();
    void SetPlaybackMeter(MeterPanel *playback);
    MeterPanel *GetCaptureMeter();
    void SetCaptureMeter(MeterPanel *capture);
 
-   LyricsWindow* GetLyricsWindow(bool create = false);
-   MixerBoardFrame* GetMixerBoardFrame(bool create = false);
-   HistoryWindow *GetHistoryWindow(bool create = false);
-   MacrosWindow *GetMacrosWindow(bool bExpanded, bool create = false);
-   FreqWindow *GetFreqWindow(bool create = false);
-   ContrastDialog *GetContrastDialog(bool create = false);
+   const wxString &GetStatus() const { return mLastMainStatusMessage; }
+   void SetStatus(const wxString &msg);
 
-   wxStatusBar* GetStatusBar() { return mStatusBar; }
+   void OnStatusChange( wxCommandEvent& );
 
 private:
    bool SnapSelection();
@@ -508,8 +483,6 @@ public:
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
-   ViewInfo mViewInfo;
-
    // Audio IO callback methods
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
@@ -547,22 +520,12 @@ public:
    // The project's name and file info
    FilePath mFileName; // Note: extension-less
    bool mbLoadedFromAup;
-   std::shared_ptr<DirManager> mDirManager; // MM: DirManager now created dynamically
 
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.
 
    double mRate;
    sampleFormat mDefaultFormat;
-
-   // Tags (artist name, song properties, MP3 ID3 info, etc.)
-   // The structure may be shared with undo history entries
-   // To keep undo working correctly, always replace this with a NEW duplicate
-   // BEFORE doing any editing of it!
-   std::shared_ptr<Tags> mTags;
-
-   // List of tracks and display info
-   std::shared_ptr<TrackList> mTracks;
 
    int mSnapTo;
    NumericFormatSymbol mSelectionFormat;
@@ -571,19 +534,8 @@ public:
 
    std::shared_ptr<TrackList> mLastSavedTracks;
 
-public:
-   ///Prevents DELETE from external thread - for e.g. use of GetActiveProject
-   //shared by all projects
-   static ODLock &AllProjectDeleteMutex();
-
 private:
-   // History/Undo manager
-   std::unique_ptr<UndoManager> mUndoManager;
    bool mDirty{ false };
-
-   // Commands
-
-   std::unique_ptr<CommandManager> mCommandManager;
 
    // Window elements
 
@@ -591,13 +543,7 @@ private:
    std::unique_ptr<wxTimer> mTimer;
    void RestartTimer();
 
-   wxStatusBar *mStatusBar;
-
-   AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
-   TrackPanel *mTrackPanel{};
-   SelectionState mSelectionState{};
-   std::unique_ptr<TrackFactory> mTrackFactory{};
    wxWindow * mMainPage;
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
@@ -613,24 +559,13 @@ private:
    bool mActive{ true };
    bool mIconized;
 
-   MacrosWindow *mMacrosWindow{};
-   HistoryWindow *mHistoryWindow{};
-   LyricsWindow* mLyricsWindow{};
-   MixerBoardFrame* mMixerBoardFrame{};
-
-   Destroy_ptr<FreqWindow> mFreqWindow;
-   Destroy_ptr<ContrastDialog> mContrastDialog;
-
    bool mShownOnce{ false };
 
    // Project owned meters
    MeterPanel *mPlaybackMeter{};
    MeterPanel *mCaptureMeter{};
 
-   std::unique_ptr<ToolManager> mToolManager;
-
  public:
-   ToolManager *GetToolManager() { return mToolManager.get(); }
    bool mShowSplashScreen;
    wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
@@ -698,27 +633,7 @@ public:
 private:
    bool mbInitializingScrollbar{ false };
 
-   // TrackPanelOverlay objects
-   std::shared_ptr<Overlay>
-      mIndicatorOverlay, mCursorOverlay;
-
-   std::shared_ptr<BackgroundCell> mBackgroundCell;
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   std::shared_ptr<Overlay> mScrubOverlay;
-   std::unique_ptr<Scrubber> mScrubber;
 public:
-   Scrubber &GetScrubber() { return *mScrubber; }
-   const Scrubber &GetScrubber() const { return *mScrubber; }
-private:
-#endif
-
-private:
-   std::unique_ptr<MenuManager> mMenuManager;
-
-public:
-   friend MenuManager &GetMenuManager(AudacityProject &project);
-
    class PlaybackScroller final : public wxEvtHandler
    {
    public:
@@ -755,11 +670,23 @@ private:
 
 public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
-   std::shared_ptr<BackgroundCell> GetBackgroundCell() const
-      { return mBackgroundCell; }
 
    DECLARE_EVENT_TABLE()
 };
+
+inline wxFrame &GetProjectFrame( AudacityProject &project ) { return project; }
+inline const wxFrame &GetProjectFrame( const AudacityProject &project ) {
+   return project;
+}
+inline wxFrame *FindProjectFrame( AudacityProject *project ) {
+   return project ? &GetProjectFrame( *project ) : nullptr;
+}
+inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
+   return project ? &GetProjectFrame( *project ) : nullptr;
+}
+
+AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
+AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 #endif
 

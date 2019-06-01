@@ -87,6 +87,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
+#include "../Track.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -1754,9 +1755,9 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 {
    int rate = lrint(project->GetRate());
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
-   wxWindow *parent = project;
+   wxWindow *parent = ProjectWindow::Find( project );
 #endif // DISABLE_DYNAMIC_LOADING_LAME
-   const TrackList *tracks = project->GetTracks();
+   const auto &tracks = TrackList::Get( *project );
    MP3Exporter exporter;
 
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
@@ -1867,7 +1868,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    // Put ID3 tags at beginning of file
    if (metadata == NULL)
-      metadata = project->GetTags();
+      metadata = &Tags::Get( *project );
 
    // Open file for writing
    wxFFile outFile(fName, wxT("w+b"));
@@ -1902,10 +1903,10 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    wxASSERT(buffer);
 
    const WaveTrackConstArray waveTracks =
-      tracks->GetWaveTrackConstArray(selectionOnly, false);
+      tracks.GetWaveTrackConstArray(selectionOnly, false);
    {
       auto mixer = CreateMixer(waveTracks,
-         tracks->GetTimeTrack(),
+         tracks.GetTimeTrack(),
          t0, t1,
          channels, inSamples, true,
          rate, int16Sample, true, mixerSpec);

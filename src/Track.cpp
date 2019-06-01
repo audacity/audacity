@@ -569,6 +569,20 @@ wxDEFINE_EVENT(EVT_TRACKLIST_DELETION, TrackListEvent);
 // same value as in the default constructed TrackId:
 long TrackList::sCounter = -1;
 
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) { return TrackList::Create(); }
+};
+
+TrackList &TrackList::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< TrackList >( key );
+}
+
+const TrackList &TrackList::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
 TrackList::TrackList()
 :  wxEvtHandler()
 {
@@ -1391,4 +1405,38 @@ TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bo
    WXUNUSED(useMidi);
 #endif
    return result;
+}
+
+#include "ViewInfo.h"
+static auto TrackFactoryFactory = []( AudacityProject &project ) {
+   auto &dirManager = DirManager::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
+   return std::make_shared< TrackFactory >(
+      dirManager.shared_from_this(), &viewInfo );
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key2{
+   TrackFactoryFactory
+};
+
+TrackFactory &TrackFactory::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< TrackFactory >( key2 );
+}
+
+const TrackFactory &TrackFactory::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+TrackFactory &TrackFactory::Reset( AudacityProject &project )
+{
+   auto result = TrackFactoryFactory( project );
+   project.AttachedObjects::Assign( key2, result );
+   return *result;
+}
+
+void TrackFactory::Destroy( AudacityProject &project )
+{
+   project.AttachedObjects::Assign( key2, nullptr );
 }

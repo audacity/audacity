@@ -75,7 +75,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "DirManager.h"
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
-#include "effects/Contrast.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
 #include "LangChoice.h"
@@ -467,9 +466,9 @@ static void QuitAudacity(bool bForce)
    // BG: unless force is true
 
    // BG: Are there any projects open?
-   //-   if (!gAudacityProjects.empty())
+   //-   if (!AllProjects{}.empty())
 /*start+*/
-   if (gAudacityProjects.empty())
+   if (AllProjects{}.empty())
    {
 #ifdef __WXMAC__
       Clipboard::Get().Clear();
@@ -608,7 +607,7 @@ static gboolean save_yourself_cb(GnomeClient *client,
       return TRUE;
    }
 
-   if (gAudacityProjects.empty()) {
+   if (AllProjects{}.empty()) {
       return TRUE;
    }
 
@@ -809,7 +808,7 @@ void AudacityApp::MacNewFile()
    // This method should only be used on the Mac platform
    // when no project windows are open.
 
-   if (gAudacityProjects.size() == 0) {
+   if (AllProjects{}.empty()) {
       CreateNewAudacityProject();
    }
 }
@@ -892,7 +891,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // there are no tracks, but there's an Undo history, etc, then
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
-         if (proj && (proj->GetDirty() || !proj->GetTracks()->empty()))
+         if (proj && (proj->GetDirty() || !TrackList::Get( *proj ).empty()))
             proj = nullptr;
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
@@ -957,9 +956,10 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
                // Get the users attention
                AudacityProject *project = GetActiveProject();
                if (project) {
-                  project->Maximize();
-                  project->Raise();
-                  project->RequestUserAttention();
+                  auto &window = GetProjectFrame( *project );
+                  window.Maximize();
+                  window.Raise();
+                  window.RequestUserAttention();
                }
                continue;
             }
@@ -983,15 +983,16 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (MissingAliasFilesDialog::ShouldShow()) {
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
-      //size_t numProjects = gAudacityProjects.size();
+      //size_t numProjects = AllProjects{}.size();
       auto marked = MissingAliasFilesDialog::Marked();
-      AProjectHolder offendingProject = marked.second;
+      auto offendingProject = marked.second;
       wxString missingFileName = marked.first;
 
       // if there are no projects open, don't show the warning (user has closed it)
       if (offendingProject) {
-         offendingProject->Iconize(false);
-         offendingProject->Raise();
+         auto &window = GetProjectFrame( *offendingProject );
+         window.Iconize(false);
+         window.Raise();
 
          wxString errorMessage = wxString::Format(_(
 "One or more external audio files could not be found.\n\
@@ -1073,9 +1074,9 @@ bool AudacityApp::OnExceptionInMainLoop()
             pProject->RollbackState();
 
             // Forget pending changes in the TrackList
-            pProject->GetTracks()->ClearPendingTracks();
+            TrackList::Get( *pProject ).ClearPendingTracks();
 
-            pProject->RedrawProject();
+            ProjectWindow::Get( *pProject ).RedrawProject();
          }
 
          // Give the user an alert
@@ -1513,8 +1514,9 @@ bool AudacityApp::OnInit()
       wxWindow * pWnd = MakeHijackPanel();
       if (pWnd)
       {
-         project->Show(false);
-         pWnd->SetParent(project);
+         auto &window = GetProjectFrame( *project );
+         window.Show(false);
+         pWnd->SetParent( &window );
          SetTopWindow(pWnd);
          pWnd->Show(true);
       }
@@ -1607,7 +1609,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
-      auto &scrubber = project->GetScrubber();
+      auto &scrubber = Scrubber::Get( *project );
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
@@ -2083,7 +2085,7 @@ void AudacityApp::OnMenuNew(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
 
-   if(gAudacityProjects.size() == 0)
+   if(AllProjects{}.empty())
       CreateNewAudacityProject();
    else
       event.Skip();
@@ -2099,7 +2101,7 @@ void AudacityApp::OnMenuOpen(wxCommandEvent & event)
    // all platforms.
 
 
-   if(gAudacityProjects.size() == 0)
+   if(AllProjects{}.empty())
       AudacityProject::OpenFiles(NULL);
    else
       event.Skip();
@@ -2115,7 +2117,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    // this happens, and enable the same code to be present on
    // all platforms.
 
-   if(gAudacityProjects.size() == 0) {
+   if(AllProjects{}.empty()) {
       GlobalPrefsDialog dialog(NULL /* parent */ );
       dialog.ShowModal();
    }
@@ -2133,12 +2135,12 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
    // all platforms.
 
    // LL:  Removed "if" to allow closing based on final project count.
-   // if(gAudacityProjects.size() == 0)
+   // if(AllProjects{}.empty())
       QuitAudacity();
 
    // LL:  Veto quit if projects are still open.  This can happen
    //      if the user selected Cancel in a Save dialog.
-   event.Skip(gAudacityProjects.size() == 0);
+   event.Skip(AllProjects{}.empty());
 
 }
 

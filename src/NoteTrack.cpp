@@ -33,7 +33,6 @@
 #include "AColor.h"
 #include "DirManager.h"
 #include "Prefs.h"
-#include "Project.h"
 #include "ProjectFileIORegistry.h"
 
 #include "InconsistencyException.h"
@@ -107,8 +106,8 @@ SONFNS(AutoSave)
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = *project.GetTrackFactory();
-      auto &tracks = *project.GetTracks();
+      auto &trackFactory = TrackFactory::Get( project );
+      auto &tracks = TrackList::Get( project );
       return tracks.Add(trackFactory.NewNoteTrack());
    }
 };

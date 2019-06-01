@@ -152,6 +152,23 @@ SubMenuListEntry::~SubMenuListEntry()
 }
 
 ///
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject&) {
+      return std::make_unique<CommandManager>();
+   }
+};
+
+CommandManager &CommandManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< CommandManager >( key );
+}
+
+const CommandManager &CommandManager::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+///
 ///  Standard Constructor
 ///
 CommandManager::CommandManager():
@@ -1102,6 +1119,7 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 ///
 bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
 {
+   auto pWindow = FindProjectFrame( project );
    CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
    if (entry == NULL)
    {
@@ -1124,10 +1142,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 
    wxWindow * pFocus = wxWindow::FindFocus();
    wxWindow * pParent = wxGetTopLevelParent( pFocus );
-   bool validTarget = pParent == project;
+   bool validTarget = pParent == pWindow;
    // Bug 1557.  MixerBoard should count as 'destined for project'
    // MixerBoard IS a TopLevelWindow, and its parent is the project.
-   if( pParent && pParent->GetParent() == project){
+   if( pParent && pParent->GetParent() == pWindow ){
       if( dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ) != NULL )
          validTarget = true;
    }
@@ -1139,7 +1157,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   auto flags = GetMenuManager(*project).GetUpdateFlags(*project);
+   auto flags = MenuManager::Get(*project).GetUpdateFlags(*project);
 
    wxKeyEvent temp = evt;
 
@@ -1231,7 +1249,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
       bool allowed =
-         GetMenuManager(*proj).ReportIfActionNotAllowed( *proj,
+         MenuManager::Get(*proj).ReportIfActionNotAllowed( *proj,
             NiceName, flags, entry->flags, combinedMask );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
@@ -1263,7 +1281,8 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
       // Only want one page of the preferences
       PrefsDialog::Factories factories;
       factories.push_back(KeyConfigPrefsFactory( entry->name ));
-      GlobalPrefsDialog dialog(GetActiveProject(), factories);
+      auto pWindow = FindProjectFrame( GetActiveProject() );
+      GlobalPrefsDialog dialog( pWindow, factories );
       dialog.ShowModal();
       MenuCreator::RebuildAllMenuBars();
       return true;
@@ -1637,13 +1656,13 @@ static struct InstallHandlers
          // We must have a project since we will be working with the
          // CommandManager, which is tied to individual projects.
          AudacityProject *project = GetActiveProject();
-         return project && project->IsEnabled();
+         return project && GetProjectFrame( *project ).IsEnabled();
       } );
       KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
          // Capture handler window didn't want it, so ask the CommandManager.
          AudacityProject *project = GetActiveProject();
-         CommandManager *manager = project->GetCommandManager();
-         return manager && manager->FilterKeyEvent(project, key);
+         auto &manager = CommandManager::Get( *project );
+         return manager.FilterKeyEvent(project, key);
       } );
    }
 } installHandlers;

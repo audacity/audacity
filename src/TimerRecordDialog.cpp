@@ -48,6 +48,7 @@
 #include "MissingAliasFileDialog.h"
 #include "Project.h"
 #include "Prefs.h"
+#include "Track.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
@@ -631,7 +632,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       Exporter e;
       MissingAliasFilesDialog::SetShouldShow(true);
       bExportOK = e.ProcessFromTimerRecording(
-         pProject, false, 0.0, pProject->GetTracks()->GetEndTime(),
+         pProject, false, 0.0, TrackList::Get( *pProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
             m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
    }

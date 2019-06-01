@@ -94,8 +94,8 @@ bool SetTrackBase::Apply(const CommandContext & context  )
 {
    long i = 0;// track counter
    long j = 0;// channel counter
-   auto tracks = context.project.GetTracks();
-   for ( auto t : tracks->Leaders() )
+   auto &tracks = TrackList::Get( context.project );
+   for ( auto t : tracks.Leaders() )
    {
       auto channels = TrackList::Channels(t);
       for ( auto channel : channels ) {
@@ -163,11 +163,11 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
    if( !bIsSecondChannel ){
       if( bHasFocused )
       {
-         TrackPanel *panel = context.project.GetTrackPanel();
+         auto &panel = TrackPanel::Get( context.project );
          if( bFocused)
-            panel->SetFocusedTrack( t );
-         else if( t== panel->GetFocusedTrack() )
-            panel->SetFocusedTrack( nullptr );
+            panel.SetFocusedTrack( t );
+         else if( t== panel.GetFocusedTrack() )
+            panel.SetFocusedTrack( nullptr );
       }
    }
    return true;
@@ -395,8 +395,8 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          mVZoomTop = c + ZOOMLIMIT / 2.0;
       }
       wt->SetDisplayBounds(mVZoomBottom, mVZoomTop);
-      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
-      tp->UpdateVRulers();
+      auto &tp = TrackPanel::Get( *::GetActiveProject() );
+      tp.UpdateVRulers();
    }
 
    if( wt && bHasUseSpecPrefs   ){

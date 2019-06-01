@@ -1043,7 +1043,7 @@ AudioIO::AudioIO()
    mUpdatingMeters = false;
 
    mOwningProject = NULL;
-   mOutputMeter = NULL;
+   mOutputMeter.Release();
 
    PaError err = Pa_Initialize();
 
@@ -1493,7 +1493,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       return false;
 
    mInputMeter.Release();
-   mOutputMeter = NULL;
+   mOutputMeter.Release();
 
    mLastPaError = paNoError;
    // pick a rate to do the audio I/O at, from those available. The project
@@ -1700,7 +1700,8 @@ void AudioIO::StartMonitoring(double sampleRate)
 
    if (!success) {
       wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), gAudioIO->LastPaErrorString());
-      ShowErrorDialog(mOwningProject, _("Error"), msg, wxT("Error_opening_sound_device"));
+      ShowErrorDialog( ProjectWindow::Find( mOwningProject ),
+         _("Error"), msg, wxT("Error_opening_sound_device"));
       return;
    }
 
@@ -1980,7 +1981,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // work with a thread, or else yield to timer messages, but that would
       // execute too much else
       if (mScrubState) {
-         mOwningProject->GetScrubber().ContinueScrubbingPoll();
+         Scrubber::Get( *mOwningProject ).ContinueScrubbingPoll();
          wxMilliSleep( Scrubber::ScrubPollInterval_ms * 0.9 );
       }
       else
@@ -2403,11 +2404,13 @@ void AudioIO::SetPlaybackMeter(AudacityProject *project, MeterPanel *meter)
    if (( mOwningProject ) && ( mOwningProject != project))
       return;
 
-   mOutputMeter = meter;
-   if (mOutputMeter)
+   if (meter)
    {
+      mOutputMeter = meter;
       mOutputMeter->Reset(mRate, true);
    }
+   else
+      mOutputMeter.Release();
 }
 
 void AudioIO::SetMeters()
@@ -2659,8 +2662,8 @@ void AudioIO::StopStream()
             }
          }
 
-         ControlToolBar *bar = mOwningProject->GetControlToolBar();
-         bar->CommitRecording();
+         ControlToolBar &bar = ControlToolBar::Get( *mOwningProject );
+         bar.CommitRecording();
       }
    }
 
@@ -2671,7 +2674,7 @@ void AudioIO::StopStream()
       mOutputMeter->Reset(mRate, false);
 
    mInputMeter.Release();
-   mOutputMeter = NULL;
+   mOutputMeter.Release();
    mOwningProject = NULL;
 
    if (mListener && mNumCaptureChannels > 0)
@@ -4605,7 +4608,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more now
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
+                  proj->SetStatus(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
                }
                wxPrintf("\talready min vol:%f\n", iv);
             }
@@ -4614,7 +4617,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
                msg.Printf(_("Automated Recording Level Adjustment decreased the volume to %f."), vol);
-               proj->TP_DisplayStatusMessage(msg);
+               proj->SetStatus(msg);
                changetype = 1;
                wxPrintf("\tnew vol:%f\n", vol);
                float check = Px_GetInputVolume(mPortMixer);
@@ -4628,7 +4631,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
+                  proj->SetStatus(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
                }
                wxPrintf("\talready max vol:%f\n", iv);
             }
@@ -4641,7 +4644,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
                msg.Printf(_("Automated Recording Level Adjustment increased the volume to %.2f."), vol);
-               proj->TP_DisplayStatusMessage(msg);
+               proj->SetStatus(msg);
                changetype = 2;
                wxPrintf("\tnew vol:%f\n", vol);
                float check = Px_GetInputVolume(mPortMixer);
@@ -4674,13 +4677,13 @@ void AudioIO::AILAProcess(double maxPeak) {
       if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
          mAILAActive = false;
          if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
-            proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."));
+            proj->SetStatus(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."));
          else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
-            proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."));
+            proj->SetStatus(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."));
          else {
             wxString msg;
             msg.Printf(_("Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."), Px_GetInputVolume(mPortMixer));
-            proj->TP_DisplayStatusMessage(msg);
+            proj->SetStatus(msg);
          }
       }
    }
@@ -4830,8 +4833,8 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer
    bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
    if( bShouldBePaused != IsPaused())
    {
-      ControlToolBar *bar = mOwningProject->GetControlToolBar();
-      bar->CallAfter(&ControlToolBar::Pause);
+      auto &bar = ControlToolBar::Get( *mOwningProject );
+      bar.CallAfter(&ControlToolBar::Pause);
    }
 }
 

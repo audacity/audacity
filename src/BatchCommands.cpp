@@ -314,14 +314,14 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
       }
    }
 
-   auto mManager = project->GetCommandManager();
+   auto &manager = CommandManager::Get( *project );
    wxArrayString mLabels;
    CommandIDs mNames;
    std::vector<bool> vHasDialog;
    mLabels.clear();
    mNames.clear();
-   mManager->GetAllCommandLabels(mLabels, vHasDialog, true);
-   mManager->GetAllCommandNames(mNames, true);
+   manager.GetAllCommandLabels(mLabels, vHasDialog, true);
+   manager.GetAllCommandNames(mNames, true);
 
    const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
 
@@ -479,14 +479,9 @@ double MacroCommands::GetEndTime()
       //AudacityMessageBox( _("No project to process!") );
       return -1.0;
    }
-   TrackList * tracks = project->GetTracks();
-   if( tracks == NULL )
-   {
-      //AudacityMessageBox( _("No tracks to process!") );
-      return -1.0;
-   }
+   auto &tracks = TrackList::Get( *project );
 
-   double endTime = tracks->GetEndTime();
+   double endTime = tracks.GetEndTime();
    return endTime;
 }
 
@@ -499,14 +494,9 @@ bool MacroCommands::IsMono()
       return false;
    }
 
-   TrackList * tracks = project->GetTracks();
-   if( tracks == NULL )
-   {
-      //AudacityMessageBox( _("No tracks to process!") );
-      return false;
-   }
+   auto &tracks = TrackList::Get( *project );
 
-   return ( tracks->Any() - &Track::IsLeader ).empty();
+   return ( tracks.Any() - &Track::IsLeader ).empty();
 }
 
 wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
@@ -784,9 +774,9 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    }
 
    AudacityProject *project = GetActiveProject();
-   CommandManager * pManager = project->GetCommandManager();
+   auto &manager = CommandManager::Get( *project );
    if( pContext ){
-      if( pManager->HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( manager.HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
          return true;
       pContext->Status( wxString::Format(
          _("Your batch command of %s was not recognized."), friendlyCommand ));
@@ -795,7 +785,7 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    else
    {
       const CommandContext context(  *GetActiveProject() );
-      if( pManager->HandleTextualCommand( command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( manager.HandleTextualCommand( command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
          return true;
    }
 
@@ -812,7 +802,7 @@ bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
 {
    AudacityProject *project = GetActiveProject();
    // Recalc flags and enable items that may have become enabled.
-   GetMenuManager(*project).UpdateMenus(*project, false);
+   MenuManager::Get(*project).UpdateMenus(*project, false);
    // enter batch mode...
    bool prevShowMode = project->GetShowId3Dialog();
    project->mBatchMode++;

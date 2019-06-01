@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackVRulerControls.h"
 
 #include "../../HitTestResult.h"
-#include "../../Project.h"
 #include "../../toolbars/ToolsToolBar.h"
 
 #include "../ui/SelectHandle.h"
@@ -32,7 +31,7 @@ std::vector<UIHandlePtr> Track::HitTest
 {
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
-   const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
+   auto pTtb = &ToolsToolBar::Get( *pProject );
    const bool isMultiTool = pTtb->IsDown(multiTool);
    const auto currentTool = pTtb->GetCurrentTool();
 
@@ -40,7 +39,7 @@ std::vector<UIHandlePtr> Track::HitTest
       // Zoom tool is a non-selecting tool that takes precedence in all tracks
       // over all other tools, no matter what detail you point at.
       result = ZoomHandle::HitAnywhere(
-         pProject->GetBackgroundCell()->mZoomHandle);
+         BackgroundCell::Get( *pProject ).mZoomHandle );
       results.push_back(result);
       return results;
    }
@@ -63,7 +62,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // other detailed hits.
    if ( isMultiTool ) {
       result = ZoomHandle::HitTest(
-         pProject->GetBackgroundCell()->mZoomHandle, st.state);
+         BackgroundCell::Get( *pProject ).mZoomHandle, st.state);
       if (result)
          results.push_back(result);
    }

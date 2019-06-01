@@ -34,6 +34,7 @@
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ViewInfo.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Grid.h"
@@ -745,7 +746,7 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
       RowData &rd = mData[event.GetRow()];
       mViewInfo->selectedRegion = rd.selectedRegion;
 
-      GetActiveProject()->RedrawProject();
+      ProjectWindow::Get( *GetActiveProject() ).RedrawProject();
    }
 
    event.Skip();
