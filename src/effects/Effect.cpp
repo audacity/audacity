@@ -61,6 +61,7 @@ greater use in future.
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/Command.h"
+#include "../commands/CommandFlag.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"

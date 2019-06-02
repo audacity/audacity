@@ -20,11 +20,8 @@
 
 #include "Audacity.h"
 
-#include "Experimental.h"
-
 #include "ClientData.h"
 #include "Prefs.h"
-#include "commands/CommandManagerWindowClasses.h"
 
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
@@ -32,7 +29,6 @@
 #include "toolbars/SpectralSelectionBarListener.h"
 
 #include <memory>
-#include <wx/defs.h>
 #include <wx/frame.h> // to inherit
 
 #include "import/ImportRaw.h" // defines TrackHolders
@@ -44,10 +40,8 @@ const int AudacityProjectTimerID = 5200;
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
-class wxMemoryDC;
 class wxArrayString;
 class wxWindow;
-class wxDialog;
 class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;
@@ -56,29 +50,17 @@ class wxTimerEvent;
 
 class AudacityProject;
 class AutoSaveFile;
-class Importer;
 class ODLock;
 class RecordingRecoveryHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
 
-class TrackPanel;
-class FreqWindow;
 class MeterPanel;
-
-// windows and frames
-class AdornedRulerPanel;
-class LyricsWindow;
 
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
-class LWSlider;
-class UndoManager;
 enum class UndoPush : unsigned char;
-
-class Track;
-class WaveClip;
 
 
 AudacityProject *CreateNewAudacityProject();
@@ -88,6 +70,7 @@ void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 bool IsWindowAccessible(wxRect *requestedRect);
 
+class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 
@@ -168,18 +151,7 @@ private:
    static bool sbWindowRectAlreadySaved;
 };
 
-class EffectPlugs;
-class CommandContext;
 class Track;
-class TrackHolder;
-class TrackList;
-class WaveClip;
-class WaveTrack;
-
-#include "./commands/CommandFlag.h"
-#include "../include/audacity/EffectInterface.h"
-
-class MenuManager;
 
 // Container of various objects associated with the project, which is
 // responsible for destroying them

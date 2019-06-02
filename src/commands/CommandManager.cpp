@@ -83,6 +83,7 @@ CommandManager.  It holds the callback for one command.
 #include "CommandManager.h"
 
 #include "CommandContext.h"
+#include "CommandManagerWindowClasses.h"
 
 #include <wx/defs.h>
 #include <wx/evtloop.h>
