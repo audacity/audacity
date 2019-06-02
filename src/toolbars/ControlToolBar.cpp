@@ -886,8 +886,6 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    // So that we continue monitoring after playing or recording.
    // also clean the MeterQueues
    if( project ) {
-      project->MayStartMonitoring();
-
       MeterPanel *meter = project->GetPlaybackMeter();
       if( meter ) {
          meter->Clear();

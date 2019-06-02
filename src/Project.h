@@ -346,8 +346,6 @@ public:
    // Converts number of minutes to human readable format
    wxString GetHoursMinsString(int iMinutes);
 
-   void MayStartMonitoring();
-
 
    // Message Handlers
 

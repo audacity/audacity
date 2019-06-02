@@ -1530,13 +1530,6 @@ bool AudacityApp::OnInit()
       HelpActions::DoHelpWelcome(*project);
    }
 
-   // JKC 10-Sep-2007: Enable monitoring from the start.
-   // (recommended by lprod.org).
-   // Monitoring stops again after any
-   // PLAY or RECORD completes.
-   // So we also call StartMonitoring when STOP is called.
-   project->MayStartMonitoring();
-
    #ifdef USE_FFMPEG
    FFmpegStartup();
    #endif
