@@ -159,8 +159,7 @@ void ODTask::DoSome(float amountWork)
          if(IsTaskAssociatedWithProject(pProject.get()))
          {
             //this assumes tasks are only associated with one project.
-            GetProjectFrame( *pProject )
-               .GetEventHandler()->AddPendingEvent(event);
+            pProject->wxEvtHandler::AddPendingEvent(event);
             //mark the changes so that the project can be resaved.
             UndoManager::Get( *pProject ).SetODChangesFlag();
             break;
