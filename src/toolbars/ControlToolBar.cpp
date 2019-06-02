@@ -722,7 +722,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
       if (token != 0) {
          success = true;
-         p->SetAudioIOToken(token);
+         ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
          mBusyProject = p;
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
          //AC: If init_seek was set, now's the time to make it happen.
@@ -794,7 +794,9 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
    // Does not appear to be needed on Linux. Perhaps on some other platform?
    // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
-      if (gAudioIO->IsStreamActive(GetActiveProject()->GetAudioIOToken())) {
+      if (gAudioIO->IsStreamActive(
+         ProjectAudioIO::Get( *GetActiveProject() ).GetAudioIOToken()
+      )) {
          SetPlay(false);
          SetStop(true);
          StopPlaying();
@@ -887,12 +889,13 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    // So that we continue monitoring after playing or recording.
    // also clean the MeterQueues
    if( project ) {
-      MeterPanel *meter = project->GetPlaybackMeter();
+      auto &projectAudioIO = ProjectAudioIO::Get( *project );
+      MeterPanel *meter = projectAudioIO.GetPlaybackMeter();
       if( meter ) {
          meter->Clear();
       }
 
-      meter = project->GetCaptureMeter();
+      meter = projectAudioIO.GetCaptureMeter();
       if( meter ) {
          meter->Clear();
       }
@@ -1266,7 +1269,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
       success = (token != 0);
 
       if (success) {
-         p->SetAudioIOToken(token);
+         ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
          mBusyProject = p;
 
          StartScrollingIfPreferred();

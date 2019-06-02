@@ -467,8 +467,10 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    AudacityProject *const p = GetProject();
    auto &window = ProjectWindow::Get( *p );
 
+   auto &projectAudioIO = ProjectAudioIO::Get( *p );
+
    // Check whether we were playing or recording, but the stream has stopped.
-   if (p->GetAudioIOToken()>0 && !IsAudioActive())
+   if (projectAudioIO.GetAudioIOToken()>0 && !IsAudioActive())
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
@@ -478,11 +480,11 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 
    // Next, check to see if we were playing or recording
    // audio, but now Audio I/O is completely finished.
-   if (p->GetAudioIOToken()>0 &&
-         !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken()))
+   if (projectAudioIO.GetAudioIOToken()>0 &&
+         !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
    {
       window.FixScrollbars();
-      p->SetAudioIOToken(0);
+      projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
 
       mRedrawAfterStop = false;
@@ -718,7 +720,7 @@ void TrackPanel::HandlePageDownKey()
 bool TrackPanel::IsAudioActive()
 {
    AudacityProject *p = GetProject();
-   return p->IsAudioActive();
+   return ProjectAudioIO::Get( *p ).IsAudioActive();
 }
 
 void TrackPanel::UpdateStatusMessage( const wxString &st )

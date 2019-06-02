@@ -1559,7 +1559,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
-      mOutputMeter = mOwningProject->GetPlaybackMeter();
+      mOutputMeter = ProjectAudioIO::Get( *mOwningProject ).GetPlaybackMeter();
    }
 
    if( numCaptureChannels > 0)
@@ -1589,7 +1589,8 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter( mOwningProject, mOwningProject->GetCaptureMeter() );
+      SetCaptureMeter( mOwningProject,
+         ProjectAudioIO::Get( *mOwningProject ).GetCaptureMeter() );
    }
 
    SetMeters();

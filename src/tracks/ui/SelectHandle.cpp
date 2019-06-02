@@ -544,7 +544,7 @@ UIHandle::Result SelectHandle::Click
          // We should reach this, only in default of other hits on glyphs or
          // text boxes.
          bool bShift = event.ShiftDown();
-         bool unsafe = pProject->IsAudioActive();
+         bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
          SelectActions::DoListSelection(
             *pProject, pTrack, bShift, true, !unsafe);
          return true;

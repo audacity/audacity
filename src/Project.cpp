@@ -1418,17 +1418,17 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
    AdornedRulerPanel::Get( project ).ReCreateButtons();
 }
 
-int AudacityProject::GetAudioIOToken() const
+int ProjectAudioIO::GetAudioIOToken() const
 {
    return mAudioIOToken;
 }
 
-void AudacityProject::SetAudioIOToken(int token)
+void ProjectAudioIO::SetAudioIOToken(int token)
 {
    mAudioIOToken = token;
 }
 
-bool AudacityProject::IsAudioActive() const
+bool ProjectAudioIO::IsAudioActive() const
 {
    return GetAudioIOToken() > 0 &&
       gAudioIO->IsStreamActive(GetAudioIOToken());
@@ -1780,7 +1780,7 @@ bool AudacityProject::MayScrollBeyondZero() const
       return true;
 
    if (scrubber.HasMark() ||
-       IsAudioActive()) {
+       ProjectAudioIO::Get( project ).IsAudioActive()) {
       if (mPlaybackScroller) {
          auto mode = mPlaybackScroller->GetMode();
          if (mode == PlaybackScroller::Mode::Pinned ||
@@ -2400,6 +2400,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    auto &project = *this;
    auto &projectFileIO = project;
    const auto &settings = ProjectSettings::Get( project );
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = project;
 
@@ -2427,15 +2428,15 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // recording NEW state.
    // This code is derived from similar code in
    // AudacityProject::~AudacityProject() and TrackPanel::OnTimer().
-   if (GetAudioIOToken()>0 &&
-       gAudioIO->IsStreamActive(GetAudioIOToken())) {
+   if (projectAudioIO.GetAudioIOToken()>0 &&
+       gAudioIO->IsStreamActive(projectAudioIO.GetAudioIOToken())) {
 
       // We were playing or recording audio, but we've stopped the stream.
       wxCommandEvent dummyEvent;
       ControlToolBar::Get( project ).OnStop(dummyEvent);
 
       FixScrollbars();
-      SetAudioIOToken(0);
+      projectAudioIO.SetAudioIOToken(0);
       RedrawProject();
    }
    else if (gAudioIO->IsMonitoring()) {
@@ -4768,32 +4769,34 @@ void AudacityProject::SkipEnd(bool shift)
 }
 
 
-MeterPanel *AudacityProject::GetPlaybackMeter()
+MeterPanel *ProjectAudioIO::GetPlaybackMeter()
 {
    return mPlaybackMeter;
 }
 
-void AudacityProject::SetPlaybackMeter(MeterPanel *playback)
+void ProjectAudioIO::SetPlaybackMeter(MeterPanel *playback)
 {
+   auto &project = mProject;
    mPlaybackMeter = playback;
    if (gAudioIO)
    {
-      gAudioIO->SetPlaybackMeter(this, mPlaybackMeter);
+      gAudioIO->SetPlaybackMeter( &project , mPlaybackMeter );
    }
 }
 
-MeterPanel *AudacityProject::GetCaptureMeter()
+MeterPanel *ProjectAudioIO::GetCaptureMeter()
 {
    return mCaptureMeter;
 }
 
-void AudacityProject::SetCaptureMeter(MeterPanel *capture)
+void ProjectAudioIO::SetCaptureMeter(MeterPanel *capture)
 {
+   auto &project = mProject;
    mCaptureMeter = capture;
 
    if (gAudioIO)
    {
-      gAudioIO->SetCaptureMeter(this, mCaptureMeter);
+      gAudioIO->SetCaptureMeter( &project, mCaptureMeter );
    }
 }
 
@@ -4808,6 +4811,7 @@ void AudacityProject::RestartTimer()
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = *this;
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &window = project;
    auto &dirManager = DirManager::Get( project );
    auto mixerToolBar = &MixerToolBar::Get( project );
@@ -4815,7 +4819,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
-   if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
+   if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
       if (freeSpace >= 0) {
          wxString sMessage;
@@ -5063,11 +5067,12 @@ void AudacityProject::OnAudioIOStartRecording()
 void AudacityProject::OnAudioIOStopRecording()
 {
    auto &project = *this;
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &dirManager = DirManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // Only push state if we were capturing and not monitoring
-   if (GetAudioIOToken() > 0)
+   if (projectAudioIO.GetAudioIOToken() > 0)
    {
       auto &tracks = TrackList::Get( project );
       auto &intervals = gAudioIO->LostCaptureIntervals();
@@ -5296,7 +5301,7 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       this->ProcessEvent( event );
    });
 
-   if(!mProject->IsAudioActive())
+   if(!ProjectAudioIO::Get( *mProject ).IsAudioActive())
       return;
    else if (mMode == Mode::Refresh) {
       // PRL:  see comments in Scrubbing.cpp for why this is sometimes needed.
@@ -5346,7 +5351,8 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
 
    // LLL: Handling positioning differently when audio is
    // actively playing.  Don't do this if paused.
-   if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) &&
+   if (gAudioIO->IsStreamActive(
+         ProjectAudioIO::Get( project ).GetAudioIOToken()) &&
        !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
       trackPanel.ScrollIntoView(gAudioIO->GetStreamTime());
@@ -5449,4 +5455,29 @@ void AudacityProject::CloseLock()
       mLastSavedTracks->Clear();
       mLastSavedTracks.reset();
    }
+}
+
+static const AudacityProject::AttachedObjects::RegisteredFactory sAudioIOKey{
+  []( AudacityProject &parent ){
+     return std::make_shared< ProjectAudioIO >( parent );
+   }
+};
+
+ProjectAudioIO &ProjectAudioIO::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< ProjectAudioIO >( sAudioIOKey );
+}
+
+const ProjectAudioIO &ProjectAudioIO::Get( const AudacityProject &project )
+{
+   return Get( const_cast<AudacityProject &>(project) );
+}
+
+ProjectAudioIO::ProjectAudioIO( AudacityProject &project )
+: mProject{ project }
+{
+}
+
+ProjectAudioIO::~ProjectAudioIO()
+{
 }

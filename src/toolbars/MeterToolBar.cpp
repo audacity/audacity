@@ -89,27 +89,28 @@ void MeterToolBar::ReCreateButtons()
 {
    MeterPanel::State playState{ false }, recordState{ false };
 
-   if (mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter)
+   auto &projectAudioIO = ProjectAudioIO::Get( *mProject );
+   if (mPlayMeter && projectAudioIO.GetPlaybackMeter() == mPlayMeter)
    {
       playState = mPlayMeter->SaveState();
-      mProject->SetPlaybackMeter( NULL );
+      projectAudioIO.SetPlaybackMeter( nullptr );
    }
 
-   if (mRecordMeter && mProject->GetCaptureMeter() == mRecordMeter)
+   if (mRecordMeter && projectAudioIO.GetCaptureMeter() == mRecordMeter)
    {
       recordState = mRecordMeter->SaveState();
-      mProject->SetCaptureMeter( NULL );
+      projectAudioIO.SetCaptureMeter( nullptr );
    }
 
    ToolBar::ReCreateButtons();
 
    mPlayMeter->RestoreState(playState);
    if( playState.mSaved  ){
-      mProject->SetPlaybackMeter( mPlayMeter );
+      projectAudioIO.SetPlaybackMeter( mPlayMeter );
    }
    mRecordMeter->RestoreState(recordState);
    if( recordState.mSaved ){
-      mProject->SetCaptureMeter( mRecordMeter );
+      projectAudioIO.SetCaptureMeter( mRecordMeter );
    }
 }
 
@@ -229,21 +230,22 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
 
 bool MeterToolBar::Expose( bool show )
 {
+   auto &projectAudioIO = ProjectAudioIO::Get( *mProject );
    if( show ) {
       if( mPlayMeter ) {
-         mProject->SetPlaybackMeter( mPlayMeter );
+         projectAudioIO.SetPlaybackMeter( mPlayMeter );
       }
 
       if( mRecordMeter ) {
-         mProject->SetCaptureMeter( mRecordMeter );
+         projectAudioIO.SetCaptureMeter( mRecordMeter );
       }
    } else {
-      if( mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter ) {
-         mProject->SetPlaybackMeter( NULL );
+      if( mPlayMeter && projectAudioIO.GetPlaybackMeter() == mPlayMeter ) {
+         projectAudioIO.SetPlaybackMeter( nullptr );
       }
 
-      if( mRecordMeter && mProject->GetCaptureMeter() == mRecordMeter ) {
-         mProject->SetCaptureMeter( NULL );
+      if( mRecordMeter && projectAudioIO.GetCaptureMeter() == mRecordMeter ) {
+         projectAudioIO.SetCaptureMeter( nullptr );
       }
    }
 

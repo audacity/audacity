@@ -1340,7 +1340,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    // Vaughan, 2010-01-30:
    //    Since all we're doing here is updating the meters, I moved it to
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
-   if (mProject->IsAudioActive())
+   if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
       UpdateMeters(
          gAudioIO->GetStreamTime(),

@@ -152,7 +152,7 @@ void LyricsWindow::OnStyle_Highlight(wxCommandEvent & WXUNUSED(event))
 
 void LyricsWindow::OnTimer(wxCommandEvent &event)
 {
-   if (mProject->IsAudioActive())
+   if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
       GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
    }

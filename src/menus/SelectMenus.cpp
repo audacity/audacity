@@ -173,7 +173,7 @@ bool OnlyHandleKeyUp( const CommandContext &context )
    auto evt = context.pEvt;
    bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
 
-   if( project.IsAudioActive() )
+   if( ProjectAudioIO::Get( project ).IsAudioActive() )
       return bKeyUp;
    if( !bKeyUp )
       return false;
@@ -377,7 +377,7 @@ void SeekLeftOrRight
    // zoom and does not vary if the key is held
    // Else: jump depends on the zoom and gets bigger if the key is held
 
-   if( project.IsAudioActive() )
+   if( ProjectAudioIO::Get( project ).IsAudioActive() )
    {
       if( operation == CURSOR_MOVE )
          SeekWhenAudioActive( info.mSeekShort * direction,
@@ -410,7 +410,7 @@ void DoCursorMove(
    AudacityProject &project, double seekStep,
    wxLongLong &lastSelectionAdjustment)
 {
-   if (project.IsAudioActive()) {
+   if (ProjectAudioIO::Get( project ).IsAudioActive()) {
       SeekWhenAudioActive(seekStep, lastSelectionAdjustment);
    }
    else
@@ -445,7 +445,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    // contracting.  it is no longer needed.
    bool bMoveT0 = (step < 0 );// ^ boundaryContract ;
 
-   if( project.IsAudioActive() )
+   if( ProjectAudioIO::Get( project ).IsAudioActive() )
    {
       double indicator = gAudioIO->GetStreamTime();
       if( bMoveT0 )
@@ -616,7 +616,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
 void OnSetLeftSelection(const CommandContext &context)
 {
    auto &project = context.project;
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
@@ -656,7 +656,7 @@ void OnSetLeftSelection(const CommandContext &context)
 void OnSetRightSelection(const CommandContext &context)
 {
    auto &project = context.project;
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
@@ -846,7 +846,7 @@ void OnSelectCursorStoredCursor(const CommandContext &context)
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto isAudioActive = project.IsAudioActive();
+   auto isAudioActive = ProjectAudioIO::Get( project ).IsAudioActive();
 
    if (mCursorPositionHasBeenStored) {
       double cursorPositionCurrent = isAudioActive
@@ -865,7 +865,7 @@ void OnCursorPositionStore(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto isAudioActive = project.IsAudioActive();
+   auto isAudioActive = ProjectAudioIO::Get( project ).IsAudioActive();
 
    mCursorPositionStored =
       isAudioActive ? gAudioIO->GetStreamTime() : selectedRegion.t0();

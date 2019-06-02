@@ -267,7 +267,7 @@ void OnAddLabel(const CommandContext &context)
 void OnAddLabelPlaying(const CommandContext &context)
 {
    auto &project = context.project;
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
    if (token > 0 &&
        gAudioIO->IsStreamActive(token)) {

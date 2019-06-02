@@ -1404,7 +1404,7 @@ void OnTrackClose(const CommandContext &context)
    if (!t)
       return;
 
-   auto isAudioActive = project.IsAudioActive();
+   auto isAudioActive = ProjectAudioIO::Get( project ).IsAudioActive();
 
    if (isAudioActive)
    {

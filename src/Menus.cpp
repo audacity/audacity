@@ -423,7 +423,8 @@ CommandFlag MenuManager::GetUpdateFlags
    }
 
    // These flags are cheap to calculate.
-   if (!gAudioIO->IsAudioTokenActive(project.GetAudioIOToken()))
+   if (!gAudioIO->IsAudioTokenActive(ProjectAudioIO::Get( project )
+      .GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
    else
       flags |= AudioIOBusyFlag;

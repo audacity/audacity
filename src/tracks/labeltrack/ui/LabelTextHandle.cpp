@@ -107,7 +107,7 @@ UIHandle::Result LabelTextHandle::Click
    }
 
    // PRL: bug1659 -- make selection change undo correctly
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (!unsafe)
       pProject->ModifyState(false);
 

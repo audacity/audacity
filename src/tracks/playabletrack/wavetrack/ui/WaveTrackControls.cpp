@@ -176,7 +176,7 @@ void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
 
    AudacityProject *const project = ::GetActiveProject();
-   bool unsafe = project->IsAudioActive();
+   bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
    for (int i = OnInstrument1ID; i <= OnInstrument4ID; i++) {
       pMenu->Enable(i, !unsafe);
    }
@@ -269,7 +269,7 @@ void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
 
    AudacityProject *const project = ::GetActiveProject();
-   bool unsafe = project->IsAudioActive();
+   bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
    for (int i = On16BitID; i <= OnFloatID; i++) {
       pMenu->Enable(i, !unsafe);
    }
@@ -387,7 +387,7 @@ void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
 
    AudacityProject *const project = ::GetActiveProject();
-   bool unsafe = project->IsAudioActive();
+   bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
    for (int i = OnRate8ID; i <= OnRateOtherID; i++) {
       pMenu->Enable(i, !unsafe);
    }
@@ -606,7 +606,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    AudacityProject *const project = ::GetActiveProject();
    auto &tracks = TrackList::Get( *project );
    bool unsafe = EffectManager::Get().RealtimeIsActive() &&
-      project->IsAudioActive();
+      ProjectAudioIO::Get( *project ).IsAudioActive();
 
    auto nChannels = TrackList::Channels(pTrack).size();
    const bool isMono = ( nChannels == 1 );
