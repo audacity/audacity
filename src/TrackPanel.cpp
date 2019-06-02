@@ -63,9 +63,9 @@ is time to refresh some aspect of the screen.
 #include "Audacity.h" // for USE_* macros
 #include "TrackPanel.h"
 
-#include <wx/setup.h> // for wxUSE_* macros
-
 #include "Experimental.h"
+
+#include <wx/setup.h> // for wxUSE_* macros
 
 #include "AdornedRulerPanel.h"
 #include "KeyboardCapture.h"
