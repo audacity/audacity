@@ -8,6 +8,7 @@
 
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
@@ -1404,7 +1405,7 @@ void OnTrackClose(const CommandContext &context)
    if (!t)
       return;
 
-   auto isAudioActive = project.IsAudioActive();
+   auto isAudioActive = ProjectAudioIO::Get( project ).IsAudioActive();
 
    if (isAudioActive)
    {

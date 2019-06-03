@@ -55,8 +55,6 @@ class RecordingRecoveryHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
 class TrackList;
 
-class MeterPanel;
-
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
@@ -199,9 +197,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
    wxString GetProjectName() const;
-   int GetAudioIOToken() const;
-   bool IsAudioActive() const;
-   void SetAudioIOToken(int token);
 
    bool IsActive() override;
 
@@ -371,11 +366,6 @@ public:
    bool TP_ScrollUpDown(int delta) override;
    void TP_HandleResize() override;
 
-   MeterPanel *GetPlaybackMeter();
-   void SetPlaybackMeter(MeterPanel *playback);
-   MeterPanel *GetCaptureMeter();
-   void SetCaptureMeter(MeterPanel *capture);
-
    const wxString &GetStatus() const { return mLastMainStatusMessage; }
    void SetStatus(const wxString &msg);
 
@@ -484,10 +474,6 @@ private:
 
    bool mShownOnce{ false };
 
-   // Project owned meters
-   MeterPanel *mPlaybackMeter{};
-   MeterPanel *mCaptureMeter{};
-
  public:
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
@@ -500,8 +486,6 @@ private:
    void ResetTimerRecordCancelled(){mTimerRecordCanceled=false;}
 
  private:
-   int  mAudioIOToken{ -1 };
-
    bool mIsDeleting{ false };
 
 public:

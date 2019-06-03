@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../Project.h"
+#include "../../../../ProjectAudioIO.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -205,7 +206,7 @@ UIHandle::Result SampleHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
 
@@ -337,7 +338,7 @@ UIHandle::Result SampleHandle::Drag
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe) {
       this->Cancel(pProject);
       return RefreshCell | Cancelled;
@@ -416,7 +417,7 @@ UIHandle::Result SampleHandle::Drag
 HitTestPreview SampleHandle::Preview
 (const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    return HitPreview(st.state, pProject, unsafe);
 }
 
@@ -424,7 +425,7 @@ UIHandle::Result SampleHandle::Release
 (const TrackPanelMouseEvent &, AudacityProject *pProject,
  wxWindow *)
 {
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe)
       return this->Cancel(pProject);
 

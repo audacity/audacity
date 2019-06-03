@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
@@ -148,7 +149,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    int width;
    trackPanel.GetTracksUsableArea(&width, nullptr);
 
-   if (!mProject->IsAudioActive()) {
+   if (!ProjectAudioIO::Get( *mProject ).IsAudioActive()) {
       mNewIndicatorX = -1;
       mNewIsCapturing = false;
       const auto &scrubber = Scrubber::Get( *mProject );

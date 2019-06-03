@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"
@@ -544,7 +545,7 @@ UIHandle::Result SelectHandle::Click
          // We should reach this, only in default of other hits on glyphs or
          // text boxes.
          bool bShift = event.ShiftDown();
-         bool unsafe = pProject->IsAudioActive();
+         bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
          SelectActions::DoListSelection(
             *pProject, pTrack, bShift, true, !unsafe);
          return true;

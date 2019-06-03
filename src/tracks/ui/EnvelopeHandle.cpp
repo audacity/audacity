@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../RefreshCode.h"
 #include "../../TimeTrack.h"
 #include "../../TrackArtist.h"
@@ -169,7 +170,7 @@ UIHandle::Result EnvelopeHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
 
@@ -241,7 +242,7 @@ UIHandle::Result EnvelopeHandle::Drag
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe) {
       this->Cancel(pProject);
       return RefreshCell | Cancelled;
@@ -254,7 +255,7 @@ UIHandle::Result EnvelopeHandle::Drag
 HitTestPreview EnvelopeHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto envelopeCursor =
@@ -280,7 +281,7 @@ UIHandle::Result EnvelopeHandle::Release
 {
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe)
       return this->Cancel(pProject);
 

@@ -83,6 +83,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "MissingAliasFileDialog.h"
 #include "PluginManager.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectSettings.h"
 #include "Screenshot.h"
 #include "Sequence.h"
@@ -1602,7 +1603,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
    if(event.GetKeyCode() == WXK_ESCAPE) {
       // Stop play, including scrub, but not record
       auto project = ::GetActiveProject();
-      auto token = project->GetAudioIOToken();
+      auto token = ProjectAudioIO::Get( *project ).GetAudioIOToken();
       auto &scrubber = Scrubber::Get( *project );
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)

@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Menus.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
@@ -90,7 +91,7 @@ UIHandle::Result SelectButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
-      const bool unsafe = pProject->IsAudioActive();
+      const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
       SelectActions::DoListSelection(*pProject,
          pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 //    return RefreshAll ;
@@ -147,7 +148,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    if (pTrack)
    {
       TransportActions::StopIfPaused( *pProject );
-      if (!pProject->IsAudioActive()) {
+      if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
          TrackActions::DoRemoveTrack(*pProject, pTrack.get());
          // Redraw all tracks when any one of them closes

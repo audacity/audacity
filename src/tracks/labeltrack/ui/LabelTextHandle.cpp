@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../Project.h"
+#include "../../../ProjectAudioIO.h"
 #include "../../../RefreshCode.h"
 #include "../../../SelectionState.h"
 #include "../../../TrackPanelMouseEvent.h"
@@ -107,7 +108,7 @@ UIHandle::Result LabelTextHandle::Click
    }
 
    // PRL: bug1659 -- make selection change undo correctly
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (!unsafe)
       pProject->ModifyState(false);
 

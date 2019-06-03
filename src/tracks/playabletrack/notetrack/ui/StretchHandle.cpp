@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../Project.h"
+#include "../../../../ProjectAudioIO.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -155,7 +156,7 @@ UIHandle::Result StretchHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
 
@@ -184,7 +185,7 @@ UIHandle::Result StretchHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe) {
       this->Cancel(pProject);
       return RefreshAll | Cancelled;
@@ -207,7 +208,7 @@ UIHandle::Result StretchHandle::Drag
 HitTestPreview StretchHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    return HitPreview( mStretchState.mMode, unsafe );
 }
 
@@ -217,7 +218,7 @@ UIHandle::Result StretchHandle::Release
 {
    using namespace RefreshCode;
 
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe) {
       this->Cancel(pProject);
       return RefreshAll | Cancelled;

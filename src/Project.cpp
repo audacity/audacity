@@ -51,6 +51,7 @@ scroll information.  It also has some status flags.
 #include "Audacity.h" // for USE_* macros
 #include "Project.h"
 
+#include "ProjectAudioIO.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
 
@@ -1355,8 +1356,11 @@ void AudacityProject::ApplyUpdatedTheme()
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
 {
-   AudioIOStartStreamOptions options {
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   AudioIOStartStreamOptions options { &project,
       ProjectSettings::Get( project ).GetRate() };
+   options.captureMeter = projectAudioIO.GetCaptureMeter();
+   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
    options.listener = &project;
    return options;
@@ -1365,12 +1369,15 @@ DefaultPlayOptions( AudacityProject &project )
 AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
       ProjectSettings::Get( project ).GetRate()  //suggested rate
    );
-   AudioIOStartStreamOptions options{ PlayAtSpeedRate };
+   AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
+   options.captureMeter = projectAudioIO.GetCaptureMeter();
+   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
    options.listener = &project;
    return options;
@@ -1416,22 +1423,6 @@ void AudacityProject::OnThemeChange(wxCommandEvent& evt)
          pToolBar->ReCreateButtons();
    }
    AdornedRulerPanel::Get( project ).ReCreateButtons();
-}
-
-int AudacityProject::GetAudioIOToken() const
-{
-   return mAudioIOToken;
-}
-
-void AudacityProject::SetAudioIOToken(int token)
-{
-   mAudioIOToken = token;
-}
-
-bool AudacityProject::IsAudioActive() const
-{
-   return GetAudioIOToken() > 0 &&
-      gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
 wxString AudacityProject::GetProjectName() const
@@ -1780,7 +1771,7 @@ bool AudacityProject::MayScrollBeyondZero() const
       return true;
 
    if (scrubber.HasMark() ||
-       IsAudioActive()) {
+       ProjectAudioIO::Get( project ).IsAudioActive()) {
       if (mPlaybackScroller) {
          auto mode = mPlaybackScroller->GetMode();
          if (mode == PlaybackScroller::Mode::Pinned ||
@@ -2400,6 +2391,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    auto &project = *this;
    auto &projectFileIO = project;
    const auto &settings = ProjectSettings::Get( project );
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = project;
 
@@ -2427,15 +2419,15 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // recording NEW state.
    // This code is derived from similar code in
    // AudacityProject::~AudacityProject() and TrackPanel::OnTimer().
-   if (GetAudioIOToken()>0 &&
-       gAudioIO->IsStreamActive(GetAudioIOToken())) {
+   if (projectAudioIO.GetAudioIOToken()>0 &&
+       gAudioIO->IsStreamActive(projectAudioIO.GetAudioIOToken())) {
 
       // We were playing or recording audio, but we've stopped the stream.
       wxCommandEvent dummyEvent;
       ControlToolBar::Get( project ).OnStop(dummyEvent);
 
       FixScrollbars();
-      SetAudioIOToken(0);
+      projectAudioIO.SetAudioIOToken(0);
       RedrawProject();
    }
    else if (gAudioIO->IsMonitoring()) {
@@ -4768,35 +4760,6 @@ void AudacityProject::SkipEnd(bool shift)
 }
 
 
-MeterPanel *AudacityProject::GetPlaybackMeter()
-{
-   return mPlaybackMeter;
-}
-
-void AudacityProject::SetPlaybackMeter(MeterPanel *playback)
-{
-   mPlaybackMeter = playback;
-   if (gAudioIO)
-   {
-      gAudioIO->SetPlaybackMeter(this, mPlaybackMeter);
-   }
-}
-
-MeterPanel *AudacityProject::GetCaptureMeter()
-{
-   return mCaptureMeter;
-}
-
-void AudacityProject::SetCaptureMeter(MeterPanel *capture)
-{
-   mCaptureMeter = capture;
-
-   if (gAudioIO)
-   {
-      gAudioIO->SetCaptureMeter(this, mCaptureMeter);
-   }
-}
-
 void AudacityProject::RestartTimer()
 {
    if (mTimer) {
@@ -4808,6 +4771,7 @@ void AudacityProject::RestartTimer()
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = *this;
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &window = project;
    auto &dirManager = DirManager::Get( project );
    auto mixerToolBar = &MixerToolBar::Get( project );
@@ -4815,7 +4779,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
-   if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
+   if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
       if (freeSpace >= 0) {
          wxString sMessage;
@@ -5063,11 +5027,12 @@ void AudacityProject::OnAudioIOStartRecording()
 void AudacityProject::OnAudioIOStopRecording()
 {
    auto &project = *this;
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &dirManager = DirManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // Only push state if we were capturing and not monitoring
-   if (GetAudioIOToken() > 0)
+   if (projectAudioIO.GetAudioIOToken() > 0)
    {
       auto &tracks = TrackList::Get( project );
       auto &intervals = gAudioIO->LostCaptureIntervals();
@@ -5296,7 +5261,7 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       this->ProcessEvent( event );
    });
 
-   if(!mProject->IsAudioActive())
+   if(!ProjectAudioIO::Get( *mProject ).IsAudioActive())
       return;
    else if (mMode == Mode::Refresh) {
       // PRL:  see comments in Scrubbing.cpp for why this is sometimes needed.
@@ -5346,7 +5311,8 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
 
    // LLL: Handling positioning differently when audio is
    // actively playing.  Don't do this if paused.
-   if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) &&
+   if (gAudioIO->IsStreamActive(
+         ProjectAudioIO::Get( project ).GetAudioIOToken()) &&
        !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
       trackPanel.ScrollIntoView(gAudioIO->GetStreamTime());

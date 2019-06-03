@@ -8,6 +8,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
@@ -42,7 +43,9 @@ bool MakeReadyToPlay(AudacityProject &project,
    wxCommandEvent evt;
 
    // If this project is playing, stop playing
-   if (gAudioIO->IsStreamActive(project.GetAudioIOToken())) {
+   if (gAudioIO->IsStreamActive(
+      ProjectAudioIO::Get( project ).GetAudioIOToken()
+   )) {
       toolbar.SetPlay(false);        //Pops
       toolbar.SetStop(true);         //Pushes stop down
       toolbar.OnStop(evt);
@@ -82,7 +85,7 @@ void DoPlayStop(const CommandContext &context)
    auto &project = context.project;
    auto &toolbar = ControlToolBar::Get( project );
    auto &window = ProjectWindow::Get( project );
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
    if (gAudioIO->IsStreamActive(token)) {
@@ -98,7 +101,8 @@ void DoPlayStop(const CommandContext &context)
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
          iter = std::find_if( start, finish,
             []( const AllProjects::value_type &ptr ){
-               return gAudioIO->IsStreamActive(ptr->GetAudioIOToken()); } );
+               return gAudioIO->IsStreamActive(
+                  ProjectAudioIO::Get( *ptr ).GetAudioIOToken()); } );
 
       //stop playing the other project
       if(iter != finish) {
@@ -166,7 +170,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
       if (i >= 0) {
          const LabelStruct* label = lt->GetLabel(i);
-         if (project.IsAudioActive()) {
+         if (ProjectAudioIO::Get( project ).IsAudioActive()) {
             DoPlayStop(project);     // stop
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
@@ -208,7 +212,7 @@ bool DoPlayStopSelect
 {
    auto &toolbar = ControlToolBar::Get( project );
    auto &scrubber = Scrubber::Get( project );
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
 

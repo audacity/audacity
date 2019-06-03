@@ -32,6 +32,7 @@
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "RefreshCode.h"
 #include "Snap.h"
 #include "TrackPanel.h"
@@ -200,7 +201,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
    auto ruler = GetRuler();
 
    // Hide during transport, or if mouse is not in the ruler, unless scrubbing
-   if ((!ruler->LastCell() || project->IsAudioActive())
+   if ((!ruler->LastCell() || ProjectAudioIO::Get( *project ).IsAudioActive())
        && (!scrubber.IsScrubbing() || scrubber.IsSpeedPlaying()))
       mNewQPIndicatorPos = -1;
    else {
@@ -568,7 +569,7 @@ public:
    HitTest( const AudacityProject *pProject, wxCoord xx )
    {
       if( ControlToolBar::IsTransportingPinned() &&
-          pProject->IsAudioActive() )
+          ProjectAudioIO::Get( *pProject ).IsAudioActive() )
       {
          const auto targetX = GetPlayHeadX( pProject );
          if ( abs( xx - targetX ) <= SELECT_TOLERANCE_PIXEL )

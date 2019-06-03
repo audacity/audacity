@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../Project.h"
+#include "../../../../ProjectAudioIO.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Snap.h" // for kPixelTolerance
 #include "../../../../TrackPanelMouseEvent.h"
@@ -121,7 +122,7 @@ UIHandle::Result CutlineHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
 
@@ -208,7 +209,7 @@ UIHandle::Result CutlineHandle::Drag
 HitTestPreview CutlineHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    auto bCutline = (mLocation.typ == WaveTrackLocation::locationCutLine);
    return HitPreview( bCutline, unsafe );
 }

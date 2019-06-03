@@ -38,6 +38,7 @@
 #include "KeyboardCapture.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectSettings.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
@@ -1340,7 +1341,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    // Vaughan, 2010-01-30:
    //    Since all we're doing here is updating the meters, I moved it to
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
-   if (mProject->IsAudioActive())
+   if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
       UpdateMeters(
          gAudioIO->GetStreamTime(),

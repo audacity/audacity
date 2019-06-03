@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../Menus.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -84,7 +85,7 @@ UIHandle::Result TrackSelectHandle::Click
    const auto pTrack = mpTrack;
    if (!pTrack)
       return Cancelled;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
 
    // DM: If they weren't clicking on a particular part of a track label,
    //  deselect other tracks and select this one.
@@ -116,7 +117,7 @@ UIHandle::Result TrackSelectHandle::Drag
    auto &tracks = TrackList::Get( *pProject );
 
    // probably harmless during play?  However, we do disallow the click, so check this too.
-   bool unsafe = pProject->IsAudioActive();
+   bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe)
       return result;
 
@@ -150,7 +151,8 @@ HitTestPreview TrackSelectHandle::Preview
          ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
       static wxCursor rearrangeCursor{ wxCURSOR_HAND };
 
-      const bool unsafe = GetActiveProject()->IsAudioActive();
+      const bool unsafe =
+         ProjectAudioIO::Get( *GetActiveProject() ).IsAudioActive();
       return {
          message,
          (unsafe

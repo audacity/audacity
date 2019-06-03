@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AudioIO.h"
 #include "../../Menus.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
 #include "../../prefs/PlaybackPrefs.h"
@@ -311,7 +312,7 @@ void Scrubber::MarkScrubStart(
    // Usually the timer handler of TrackPanel does this, but we do this now,
    // so that same timer does not StopPlaying() again after this function and destroy
    // scrubber state
-   mProject->SetAudioIOToken(0);
+   ProjectAudioIO::Get( *mProject ).SetAudioIOToken(0);
 
    mSeeking = seek;
    CheckMenuItems();
@@ -721,8 +722,9 @@ bool Scrubber::IsScrubbing() const
 {
    if (mScrubToken <= 0)
       return false;
-   else if (mScrubToken == mProject->GetAudioIOToken() &&
-            mProject->IsAudioActive())
+   auto projectAudioIO = ProjectAudioIO::Get( *mProject );
+   if (mScrubToken == projectAudioIO.GetAudioIOToken() &&
+            projectAudioIO.IsAudioActive())
       return true;
    else {
       const_cast<Scrubber&>(*this).mScrubToken = -1;
