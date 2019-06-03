@@ -21,6 +21,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"
+#include "../../ProjectAudioIO.h"
+#include "../../ProjectManager.h"
+#include "../../ProjectSettings.h"
+#include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"
 #include "../../TrackPanel.h"
@@ -543,7 +547,7 @@ UIHandle::Result SelectHandle::Click
          // We should reach this, only in default of other hits on glyphs or
          // text boxes.
          bool bShift = event.ShiftDown();
-         bool unsafe = pProject->IsAudioActive();
+         bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
          SelectActions::DoListSelection(
             *pProject, pTrack, bShift, true, !unsafe);
          return true;
@@ -554,6 +558,7 @@ UIHandle::Result SelectHandle::Click
       return RefreshAll | Cancelled;
    
    auto &selectionState = SelectionState::Get( *pProject );
+   const auto &settings = ProjectSettings::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
       auto &trackList = TrackList::Get( *pProject );
 
@@ -564,7 +569,7 @@ UIHandle::Result SelectHandle::Click
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
-         ( viewInfo, *pTrack, pProject->IsSyncLocked() );
+         ( viewInfo, *pTrack, settings.IsSyncLocked() );
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
@@ -576,7 +581,7 @@ UIHandle::Result SelectHandle::Click
          }
       } );
 
-      pProject->ModifyState(false);
+      ProjectManager::Get( *pProject ).ModifyState(false);
 
       // Do not start a drag
       return RefreshAll | UpdateSelection | Cancelled;
@@ -661,7 +666,7 @@ UIHandle::Result SelectHandle::Click
       };
 
       // For persistence of the selection change:
-      pProject->ModifyState(false);
+      ProjectManager::Get( *pProject ).ModifyState(false);
 
       // Get timer events so we can auto-scroll
       Connect(pProject);
@@ -699,7 +704,7 @@ UIHandle::Result SelectHandle::Click
                static_cast<WaveTrack*>(pTrack),
                viewInfo, event.m_y, mRect.y, mRect.height);
             // For persistence of the selection change:
-            pProject->ModifyState(false);
+            ProjectManager::Get( *pProject ).ModifyState(false);
             mSelectionBoundary = SBWidth;
             return UpdateSelection;
          }
@@ -983,7 +988,7 @@ UIHandle::Result SelectHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   pProject->ModifyState(false);
+   ProjectManager::Get( *pProject ).ModifyState(false);
    mFrequencySnapper.reset();
    mSnapManager.reset();
    if (mSelectionStateChanger) {
@@ -1123,7 +1128,7 @@ void SelectHandle::StartSelection( AudacityProject *pProject )
    // PRL:  commented out the Sonify stuff with the TrackPanel refactor.
    // It was no-op anyway.
    //SonifyBeginModifyState();
-   pProject->ModifyState(false);
+   ProjectManager::Get( *pProject ).ModifyState(false);
    //SonifyEndModifyState();
 }
 

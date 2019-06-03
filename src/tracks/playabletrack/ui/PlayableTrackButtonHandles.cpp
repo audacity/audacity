@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../commands/CommandManager.h"
 #include "../../../Menus.h"
 #include "../../../Project.h"
+#include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
 #include "../../../Track.h"
 #include "../../../TrackPanel.h"
@@ -60,7 +61,7 @@ UIHandlePtr MuteButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       TrackInfo::GetMuteSoloRect(rect, buttonRect, false,
-         !pProject->IsSoloNone(), pTrack.get());
+         !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
@@ -116,7 +117,7 @@ UIHandlePtr SoloButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       TrackInfo::GetMuteSoloRect(rect, buttonRect, true,
-         !pProject->IsSoloNone(), pTrack.get());
+         !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
 
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};

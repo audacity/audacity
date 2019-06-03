@@ -63,7 +63,10 @@ for drawing different aspects of the label and its text box.
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "Project.h"
+#include "ProjectManager.h"
+#include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
+#include "ProjectWindow.h"
 #include "TrackArtist.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
@@ -1812,7 +1815,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
    if (OnKeyDown(viewInfo.selectedRegion, event)) {
-      pProj->PushState(_("Modified Label"),
+      ProjectManager::Get( *pProj ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
@@ -1844,7 +1847,7 @@ unsigned LabelTrack::Char(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
    AudacityProject *const pProj = GetActiveProject();
 
    if (OnChar(viewInfo.selectedRegion, event))
-      pProj->PushState(_("Modified Label"),
+      ProjectManager::Get( *pProj ).PushState(_("Modified Label"),
       _("Label Edit"),
       UndoPush::CONSOLIDATE);
 
@@ -2129,13 +2132,13 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
          }
          SetSelected(true);
          AddLabel(selectedRegion, title, -2);
-         p->PushState(_("Added label"), _("Label"));
+         ProjectManager::Get( *p ).PushState(_("Added label"), _("Label"));
          return false;
       }
       else {
          SetSelected(true);
          AddLabel(selectedRegion);
-         p->PushState(_("Added label"), _("Label"));
+         ProjectManager::Get( *p ).PushState(_("Added label"), _("Label"));
       }
    }
 
@@ -2229,7 +2232,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
    case OnCutSelectedTextID:
       if (CutSelectedText())
       {
-         p->PushState(_("Modified Label"),
+         ProjectManager::Get( *p ).PushState(_("Modified Label"),
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
@@ -2244,7 +2247,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
    case OnPasteSelectedTextID:
       if (PasteSelectedText(selectedRegion.t0(), selectedRegion.t1()))
       {
-         p->PushState(_("Modified Label"),
+         ProjectManager::Get( *p ).PushState(_("Modified Label"),
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
@@ -2256,7 +2259,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       if (ndx != -1)
       {
          DeleteLabel(ndx);
-         p->PushState(_("Deleted Label"),
+         ProjectManager::Get( *p ).PushState(_("Deleted Label"),
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
@@ -3085,11 +3088,12 @@ int LabelTrack::FindNextLabel(const SelectedRegion& currentRegion)
 void LabelTrack::DoEditLabels
 (AudacityProject &project, LabelTrack *lt, int index)
 {
-   auto format = project.GetSelectionFormat(),
-      freqFormat = project.GetFrequencySelectionFormatName();
+   const auto &settings = ProjectSettings::Get( project );
+   auto format = settings.GetSelectionFormat(),
+      freqFormat = settings.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto rate = project.GetRate();
+   auto rate = ProjectSettings::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -3102,7 +3106,8 @@ void LabelTrack::DoEditLabels
 #endif
 
    if (dlg.ShowModal() == wxID_OK) {
-      project.PushState(_("Edited labels"), _("Label"));
+      ProjectManager::Get( project )
+         .PushState(_("Edited labels"), _("Label"));
       window.RedrawProject();
    }
 }

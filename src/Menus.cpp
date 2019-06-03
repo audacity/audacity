@@ -40,6 +40,11 @@
 #endif // USE_MIDI
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectFileIO.h"
+#include "ProjectManager.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -325,7 +330,8 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
       commandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
                                               desc));
-      commandManager.Enable(wxT("Undo"), project.UndoAvailable());
+      commandManager.Enable(wxT("Undo"),
+         ProjectManager::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
@@ -337,7 +343,8 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
       commandManager.Modify(wxT("Redo"),
                              wxString::Format(_("&Redo %s"),
                                               desc));
-      commandManager.Enable(wxT("Redo"), project.RedoAvailable());
+      commandManager.Enable(wxT("Redo"),
+         ProjectManager::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
@@ -422,7 +429,8 @@ CommandFlag MenuManager::GetUpdateFlags
    }
 
    // These flags are cheap to calculate.
-   if (!gAudioIO->IsAudioTokenActive(project.GetAudioIOToken()))
+   if (!gAudioIO->IsAudioTokenActive(ProjectAudioIO::Get( project )
+      .GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
    else
       flags |= AudioIOBusyFlag;
@@ -510,16 +518,18 @@ CommandFlag MenuManager::GetUpdateFlags
 
    auto &undoManager = UndoManager::Get( project );
 
-   if (undoManager.UnsavedChanges() || !project.IsProjectSaved())
+   if (undoManager.UnsavedChanges() ||
+      !ProjectFileIO::Get( project ).IsProjectSaved())
       flags |= UnsavedChangesFlag;
 
    if (!mLastEffect.empty())
       flags |= HasLastEffectFlag;
 
-   if (project.UndoAvailable())
+   auto &projectManager = ProjectManager::Get( project );
+   if (projectManager.UndoAvailable())
       flags |= UndoAvailableFlag;
 
-   if (project.RedoAvailable())
+   if (projectManager.RedoAvailable())
       flags |= RedoAvailableFlag;
 
    if (ViewInfo::Get( project ).ZoomInAvailable() && (flags & TracksExistFlag))
@@ -536,11 +546,10 @@ CommandFlag MenuManager::GetUpdateFlags
 
    flags |= GetFocusedFrame(project);
 
-   double start, end;
-   project.GetPlayRegion(&start, &end);
-   if (project.IsPlayRegionLocked())
+   const auto &playRegion = viewInfo.playRegion;
+   if (playRegion.Locked())
       flags |= PlayRegionLockedFlag;
-   else if (start != end)
+   else if (!playRegion.Empty())
       flags |= PlayRegionNotLockedFlag;
 
    if (flags & AudioIONotBusyFlag) {
@@ -554,7 +563,8 @@ CommandFlag MenuManager::GetUpdateFlags
    if (FileHistory::Global().GetCount() > 0)
       flags |= HaveRecentFiles;
 
-   if (project.IsSyncLocked())
+   const auto &settings = ProjectSettings::Get( project );
+   if (settings.IsSyncLocked())
       flags |= IsSyncLockedFlag;
    else
       flags |= IsNotSyncLockedFlag;
@@ -588,6 +598,8 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    auto &toolManager = ToolManager::Get( project );
 
    auto &commandManager = CommandManager::Get( project );
+
+   auto &settings = ProjectSettings::Get( project );
 
    commandManager.Check(wxT("ShowScrubbingTB"),
                          toolManager.IsVisible(ScrubbingBarID));
@@ -644,8 +656,10 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    commandManager.Check(wxT("Overdub"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    commandManager.Check(wxT("SWPlaythrough"), active);
+
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
-   project.SetSyncLock(active);
+   settings.SetSyncLock(active);
+
    commandManager.Check(wxT("SyncLock"), active);
    gPrefs->Read(wxT("/GUI/TypeToCreateLabel"),&active, false);
    commandManager.Check(wxT("TypeToCreateLabel"), active);

@@ -37,7 +37,7 @@ undo memory so as to free up space.
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
-#include "Project.h"
+#include "ProjectManager.h"
 #include "ShuttleGui.h"
 
 enum {
@@ -254,7 +254,7 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
 
    mSelected -= i;
    mManager->RemoveStates(i);
-   mProject->SetStateTo(mSelected + 1);
+   ProjectManager::Get( *mProject ).SetStateTo(mSelected + 1);
 
    while(--i >= 0)
       mList->DeleteItem(i);
@@ -292,7 +292,7 @@ void HistoryWindow::OnItemSelected(wxListEvent &event)
    // entry.  Doing so can cause unnecessary delays upon initial load or while
    // clicking the same entry over and over.
    if (selected != mSelected) {
-      mProject->SetStateTo(selected + 1);
+      ProjectManager::Get( *mProject ).SetStateTo(selected + 1);
    }
    mSelected = selected;
 

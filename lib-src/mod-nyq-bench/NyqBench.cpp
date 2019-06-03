@@ -187,7 +187,7 @@ extern "C"
             CommandManager *c = &CommandManager::Get( *p );
             wxASSERT(c != NULL);
 
-            wxMenuBar * pBar = p->GetMenuBar();
+            wxMenuBar * pBar = GetProjectFrame( *p ).GetMenuBar();
             wxASSERT(pBar != NULL );
             wxMenu * pMenu = pBar->GetMenu( 9 );  // Menu 9 is the Tools Menu.
             wxASSERT( pMenu != NULL );

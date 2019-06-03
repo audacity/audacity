@@ -8,6 +8,7 @@
 #include "MissingAliasFileDialog.h"
 
 #include <mutex>
+#include <wx/frame.h>
 
 #include "BlockFile.h"
 #include "DirManager.h"

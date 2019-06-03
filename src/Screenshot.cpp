@@ -39,6 +39,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/window.h>
 
 #include "Project.h"
+#include "ProjectWindow.h"
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 

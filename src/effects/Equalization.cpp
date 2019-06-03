@@ -98,6 +98,7 @@
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
 #include "../ViewInfo.h"
@@ -620,7 +621,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    LoadCurves();
 
    const auto t = *inputTracks()->Any< const WaveTrack >().first;
-   mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+   mHiFreq =
+      (t
+         ? t->GetRate()
+         : ProjectSettings::Get( *GetActiveProject() ).GetRate())
+      / 2.0;
    mLoFreq = loFreqI;
 
    S.SetBorder(0);

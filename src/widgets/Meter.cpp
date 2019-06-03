@@ -51,6 +51,7 @@
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
+#include <wx/frame.h>
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/menu.h>
@@ -67,6 +68,7 @@
 #include "../ImageManipulation.h"
 #include "../prefs/GUISettings.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -1871,7 +1873,7 @@ void MeterPanel::StartMonitoring()
    if (start && !gAudioIO->IsBusy()){
       AudacityProject *p = GetActiveProject();
       if (p){
-         gAudioIO->StartMonitoring(p->GetRate());
+         gAudioIO->StartMonitoring( DefaultPlayOptions( *p ) );
       }
 
       mLayoutValid = false;

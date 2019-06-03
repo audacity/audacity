@@ -41,6 +41,7 @@ or ASlider.
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
+#include <wx/frame.h>
 #include <wx/graphics.h>
 #include <wx/image.h>
 #include <wx/panel.h>

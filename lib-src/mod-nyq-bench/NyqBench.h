@@ -10,6 +10,7 @@
 #define __NYQUIST_EFFECT_WORKBENCH__
 
 #include <wx/fdrepdlg.h> // wxFindReplaceData member variable
+#include <wx/frame.h> // to inherit
 #include <wx/string.h>
 
 #include <iostream>

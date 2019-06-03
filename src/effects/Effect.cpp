@@ -55,6 +55,8 @@ greater use in future.
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
+#include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
@@ -163,8 +165,7 @@ Effect::Effect()
    mUIDebug = false;
 
    AudacityProject *p = GetActiveProject();
-   mProjectRate = p ? p->GetRate() : 44100;
-
+   mProjectRate = p ? ProjectSettings::Get( *p ).GetRate() : 44100;
    mIsBatch = false;
 }
 
@@ -770,7 +771,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   return GetActiveProject()->GetSelectionFormat();
+   return ProjectSettings( *GetActiveProject() ).GetSelectionFormat();
 }
 
 void Effect::SetDuration(double seconds)
@@ -2624,7 +2625,7 @@ void Effect::Preview(bool dryOnly)
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      AudioIOStartStreamOptions options { rate };
+      AudioIOStartStreamOptions options { nullptr, rate };
       int token =
          gAudioIO->StartStream(tracks, mT0, t1, options);
 
@@ -3511,11 +3512,10 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    {
       auto &viewInfo = ViewInfo::Get( *mProject );
       const auto &selectedRegion = viewInfo.selectedRegion;
-      if (mProject->IsPlayRegionLocked())
+      const auto &playRegion = viewInfo.playRegion;
+      if ( playRegion.Locked() )
       {
-         double t0, t1;
-         mProject->GetPlayRegion(&t0, &t1);
-         mRegion.setTimes(t0, t1);
+         mRegion.setTimes(playRegion.GetStart(), playRegion.GetEnd());
          mPlayPos = mRegion.t0();
       }
       else if (selectedRegion.t0() != mRegion.t0() ||

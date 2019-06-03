@@ -17,7 +17,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
 #include "../../NoteTrack.h"
-#include "../../Project.h"
+#include "../../ProjectAudioIO.h"
+#include "../../ProjectManager.h"
+#include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../toolbars/ToolsToolBar.h"
@@ -353,7 +355,7 @@ UIHandle::Result TimeShiftHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
 
@@ -407,7 +409,7 @@ UIHandle::Result TimeShiftHandle::Click
    else if ( captureClips )
       CreateListOfCapturedClips(
          mClipMoveState, viewInfo, *pTrack, trackList,
-         pProject->IsSyncLocked(), clickTime );
+         ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime );
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
@@ -671,7 +673,7 @@ UIHandle::Result TimeShiftHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe) {
       this->Cancel(pProject);
       return RefreshAll | Cancelled;
@@ -776,7 +778,7 @@ HitTestPreview TimeShiftHandle::Preview
 {
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    return HitPreview(pProject, unsafe);
 }
 
@@ -785,7 +787,7 @@ UIHandle::Result TimeShiftHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe)
       return this->Cancel(pProject);
 
@@ -833,7 +835,7 @@ UIHandle::Result TimeShiftHandle::Release
          fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   pProject->PushState(msg, _("Time-Shift"),
+   ProjectManager::Get( *pProject ).PushState(msg, _("Time-Shift"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
 
    return result | FixScrollbars;
@@ -841,7 +843,7 @@ UIHandle::Result TimeShiftHandle::Release
 
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshAll;
 }
 

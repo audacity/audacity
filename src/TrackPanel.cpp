@@ -70,6 +70,10 @@ is time to refresh some aspect of the screen.
 #include "AdornedRulerPanel.h"
 #include "KeyboardCapture.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectManager.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
@@ -316,8 +320,11 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                      &TrackPanel::OnPlayback,
                      this);
 
-   GetProject()->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
-   GetProject()->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
+   auto theProject = GetProject();
+   theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
+   theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
+   theProject->Bind(
+      EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
 
    UpdatePrefs();
 }
@@ -463,8 +470,10 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    AudacityProject *const p = GetProject();
    auto &window = ProjectWindow::Get( *p );
 
+   auto &projectAudioIO = ProjectAudioIO::Get( *p );
+
    // Check whether we were playing or recording, but the stream has stopped.
-   if (p->GetAudioIOToken()>0 && !IsAudioActive())
+   if (projectAudioIO.GetAudioIOToken()>0 && !IsAudioActive())
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
@@ -474,11 +483,11 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 
    // Next, check to see if we were playing or recording
    // audio, but now Audio I/O is completely finished.
-   if (p->GetAudioIOToken()>0 &&
-         !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken()))
+   if (projectAudioIO.GetAudioIOToken()>0 &&
+         !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
    {
       window.FixScrollbars();
-      p->SetAudioIOToken(0);
+      projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
 
       mRedrawAfterStop = false;
@@ -493,7 +502,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    // Notify listeners for timer ticks
    {
       wxCommandEvent e(EVT_TRACK_PANEL_TIMER);
-      p->GetEventHandler()->ProcessEvent(e);
+      p->ProcessEvent(e);
    }
 
    DrawOverlays(false);
@@ -528,6 +537,18 @@ void TrackPanel::OnODTask(wxCommandEvent & WXUNUSED(event))
 {
    //todo: add track data to the event - check to see if the project contains it before redrawing.
    Refresh(false);
+}
+
+void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
+{
+   event.Skip();
+   switch ( static_cast<ProjectSettings::EventCode>( event.GetInt() ) ) {
+   case ProjectSettings::ChangedSyncLock:
+      Refresh(false);
+      break;
+   default:
+      break;
+   }
 }
 
 double TrackPanel::GetScreenEndTime() const
@@ -591,7 +612,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 {
-   GetProject()->ModifyState(bWantsAutoSave);
+   ProjectManager::Get( *GetProject() ).ModifyState(bWantsAutoSave);
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
@@ -702,7 +723,7 @@ void TrackPanel::HandlePageDownKey()
 bool TrackPanel::IsAudioActive()
 {
    AudacityProject *p = GetProject();
-   return p->IsAudioActive();
+   return ProjectAudioIO::Get( *p ).IsAudioActive();
 }
 
 void TrackPanel::UpdateStatusMessage( const wxString &st )

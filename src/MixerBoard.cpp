@@ -38,6 +38,10 @@
 #include "KeyboardCapture.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectManager.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
 #include "WaveTrack.h"
@@ -283,7 +287,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
-   bool bSoloNone = mProject->IsSoloNone();
+   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
    mToggleButton_Solo->Show(!bSoloNone);
 
 
@@ -382,7 +386,7 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
 #endif
 
-   bool bSoloNone = mProject->IsSoloNone();
+   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
 
    mToggleButton_Solo->Show(!bSoloNone);
 
@@ -410,7 +414,8 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
-      mProject->PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
+      ProjectManager::Get( *mProject )
+         .PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -423,7 +428,9 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
-      mProject->PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
+      ProjectManager::Get( *mProject )
+         .PushState(_("Moved velocity slider"), _("Velocity"),
+            UndoPush::CONSOLIDATE);
 }
 #endif
 
@@ -439,7 +446,9 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
 
    if (bWantPushState)
-      mProject->PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
+      ProjectManager::Get( *mProject )
+         .PushState(_("Moved pan slider"), _("Pan"),
+            UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::ResetMeter(const bool bResetClipping)
@@ -747,7 +756,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
-   if (mProject->IsSoloSimple())
+   if (ProjectSettings::Get(*mProject).IsSoloSimple())
       ProjectWindow::Get( *mProject ).RedrawProject();
    else
       // Update only the changed track.
@@ -1339,7 +1348,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    // Vaughan, 2010-01-30:
    //    Since all we're doing here is updating the meters, I moved it to
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
-   if (mProject->IsAudioActive())
+   if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
       UpdateMeters(
          gAudioIO->GetStreamTime(),

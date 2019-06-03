@@ -34,7 +34,7 @@ class wxTimerEvent;
 class wxWindow;
 
 class AudacityProject;
-using ProjectWindow = AudacityProject;
+class ProjectWindow;
 class ToolFrame;
 
 ////////////////////////////////////////////////////////////

@@ -10,6 +10,9 @@
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
+#include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../Screenshot.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
@@ -423,10 +426,11 @@ bool DoEffect(
    const PluginID & ID, const CommandContext &context, unsigned flags )
 {
    AudacityProject &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto rate = project.GetRate();
+   auto rate = settings.GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -491,7 +495,7 @@ bool DoEffect(
    {
       wxString shortDesc = em.GetCommandName(ID);
       wxString longDesc = em.GetCommandDescription(ID);
-      project.PushState(longDesc, shortDesc);
+      ProjectManager::Get( project ).PushState(longDesc, shortDesc);
    }
 
    if (!(flags & kDontRepeatLast))

@@ -14,7 +14,7 @@
 #include "../Audacity.h"
 #include "ExportCL.h"
 
-#include "../Project.h"
+#include "../ProjectSettings.h"
 
 #include <wx/app.h>
 #include <wx/button.h>
@@ -388,7 +388,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    wxLogNull nolog;
 
    // establish parameters
-   int rate = lrint(project->GetRate());
+   int rate = lrint( ProjectSettings::Get( *project ).GetRate());
    const size_t maxBlockLen = 44100 * 5;
    unsigned long totalSamples = lrint((t1 - t0) * rate);
    unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(int16Sample);

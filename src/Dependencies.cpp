@@ -52,7 +52,8 @@ AliasedFile s.
 #include "blockfile/SimpleBlockFile.h"
 #include "DirManager.h"
 #include "Prefs.h"
-#include "Project.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "Sequence.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
@@ -107,7 +108,8 @@ static void ReplaceBlockFiles(BlockPtrArray &blocks,
 void FindDependencies(AudacityProject *project,
                       AliasedFileArray &outAliasedFiles)
 {
-   sampleFormat format = project->GetDefaultFormat();
+   const auto &settings = ProjectSettings::Get( *project );
+   sampleFormat format = settings.GetDefaultFormat();
 
    BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
@@ -164,6 +166,7 @@ static void RemoveDependencies(AudacityProject *project,
 // STRONG-GUARANTEE
 {
    auto &dirManager = DirManager::Get( *project );
+   const auto &settings = ProjectSettings::Get( *project );
 
    ProgressDialog progress
       (_("Removing Dependencies"),
@@ -183,7 +186,7 @@ static void RemoveDependencies(AudacityProject *project,
    BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
-   const sampleFormat format = project->GetDefaultFormat();
+   const sampleFormat format = settings.GetDefaultFormat();
    ReplacedBlockFileHash blockFileHash;
    wxLongLong completedBytes = 0;
    for (const auto blockFile : blocks) {

@@ -38,6 +38,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 
 #include "../../images/EffectRack/EffectRack.h"
 
@@ -297,7 +298,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    auto state = UndoManager::Get( *project ).GetCurrentState();
    auto cleanup = finally( [&] {
       if(!success)
-         project->SetStateTo(state);
+         ProjectManager::Get( *project ).SetStateTo( state );
    } );
 
    for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
