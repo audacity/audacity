@@ -19,6 +19,10 @@
 
 #include <wx/debugrpt.h>
 
+#if defined(__WXMSW__)
+#include <wx/evtloop.h>
+#endif
+
 namespace CrashReport
 {
    void Generate(wxDebugReport::Context ctx);
