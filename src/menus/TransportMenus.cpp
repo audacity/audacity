@@ -9,6 +9,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
 #include "../SoundActivatedRecord.h"
@@ -432,7 +433,7 @@ void OnTimerRecord(const CommandContext &context)
    }
    // We use this variable to display "Current Project" in the Timer Recording
    // save project field
-   bool bProjectSaved = project.IsProjectSaved();
+   bool bProjectSaved = ProjectFileIO::Get( project ).IsProjectSaved();
 
    //we break the prompting and waiting dialogs into two sections
    //because they both give the user a chance to click cancel

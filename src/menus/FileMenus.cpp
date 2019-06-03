@@ -10,6 +10,7 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
@@ -184,26 +185,30 @@ void OnClose(const CommandContext &context )
 void OnSave(const CommandContext &context )
 {
    auto &project = context.project;
-   project.Save();
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   projectFileIO.Save();
 }
 
 void OnSaveAs(const CommandContext &context )
 {
    auto &project = context.project;
-   project.SaveAs();
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   projectFileIO.SaveAs();
 }
 
 void OnSaveCopy(const CommandContext &context )
 {
    auto &project = context.project;
-   project.SaveAs(true, true);
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   projectFileIO.SaveAs(true, true);
 }
 
 #ifdef USE_LIBVORBIS
 void OnSaveCompressed(const CommandContext &context)
 {
    auto &project = context.project;
-   project.SaveAs(true);
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   projectFileIO.SaveAs(true);
 }
 #endif
 
