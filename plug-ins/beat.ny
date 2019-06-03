@@ -1,11 +1,11 @@
 $nyquist plug-in
-$version 1
+$version 4
 $type analyze
 $name (_ "Beat Finder")
 $manpage "Beat_Finder"
 $action (_ "Finding beats...")
 $author (_ "Audacity")
-$release 2.3.0
+$release 2.3.2
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
@@ -16,14 +16,29 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 $control thresval (_ "Threshold Percentage") int "" 65 5 100
-(setf s1 (if (arrayp s) (snd-add (aref s 0) (aref s 1)) s))
-(defun signal () (force-srate 1000 (lp (snd-follow (lp s1 50) 0.001 0.01 0.1 512) 10)))
-(setq max (peak (signal) NY:ALL))
-(setq thres (* (/ thresval 100.0) max))
-(setq s2 (signal))
-(do ((c 0.0) (l NIL) (p T) (v (snd-fetch s2))) ((not v) l)
-; "B" seems too short to put into the i18n catalog.  Make it a control?
- (if (and p (> v thres)) (setq l (cons (list c "B") l)))
- (setq p (< v thres))
- (setq c (+ c 0.001))
- (setq v (snd-fetch s2)))
+
+(setf threshold (/ thresval 100.0))
+
+(defun mix-to-mono (sig)
+  (if (arrayp sig)
+      (sum (aref sig 0) (aref sig 1))
+      sig))
+
+(defun bass-tracker (sig)
+  (let* ((bass (lp sig 50))
+         ;(snd-follow sound floor risetime falltime lookahead)
+         (follower (snd-follow bass 0.001 0.01 0.1 512)))
+    (force-srate 1000 (lp follower 10))))
+
+
+(let ((beats (bass-tracker (mix-to-mono *track*))))
+  (setf peak-sig (peak beats ny:all))
+  (setf threshold (* threshold peak-sig))
+  (do ((time 0.0 (+ time 0.001))
+       (val (snd-fetch beats) (snd-fetch beats))
+       (flag T)
+       labels)
+      ((not val) labels)
+    (when (and flag (> val threshold))
+      (push (list time "B") labels))
+    (setf flag (< val threshold))))
