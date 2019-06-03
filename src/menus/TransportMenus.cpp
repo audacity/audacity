@@ -12,6 +12,7 @@
 #include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanel.h"

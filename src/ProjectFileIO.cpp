@@ -19,6 +19,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "SelectionState.h"
 #include "Tags.h"
 #include "UndoManager.h"
@@ -1106,8 +1107,8 @@ bool ProjectFileIO::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*= 
 bool ProjectFileIO::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= false*/)
 {
    auto &project = mProject;
-   auto &window = GetProjectFrame( project );
-   TitleRestorer Restorer( &project ); // RAII
+   auto &window = ProjectWindow::Get( project );
+   TitleRestorer Restorer( &window ); // RAII
    bool bHasPath = true;
    wxFileName filename{ project.GetFileName() };
    // Save a copy of the project with 32-bit float tracks.

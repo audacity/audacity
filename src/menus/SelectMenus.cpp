@@ -10,6 +10,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../SelectionState.h"
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"

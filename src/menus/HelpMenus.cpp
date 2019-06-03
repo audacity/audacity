@@ -3,6 +3,7 @@
 
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>
+#include <wx/frame.h>
 
 #include "../AboutDialog.h"
 #include "../AllThemeResources.h"

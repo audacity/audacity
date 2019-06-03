@@ -73,6 +73,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectAudioIO.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
@@ -501,7 +502,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    // Notify listeners for timer ticks
    {
       wxCommandEvent e(EVT_TRACK_PANEL_TIMER);
-      p->GetEventHandler()->ProcessEvent(e);
+      p->ProcessEvent(e);
    }
 
    DrawOverlays(false);

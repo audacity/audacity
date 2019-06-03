@@ -45,6 +45,7 @@ This class now lists
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
 
+#include <wx/frame.h>
 #include <wx/menu.h>
 
 enum {

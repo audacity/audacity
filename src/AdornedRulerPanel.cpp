@@ -34,6 +34,7 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectManager.h"
+#include "ProjectWindow.h"
 #include "RefreshCode.h"
 #include "Snap.h"
 #include "TrackPanel.h"

@@ -324,11 +324,12 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	ProjectFileIO.h ProjectFileIORegistry.cpp \
 	ProjectFileIORegistry.h ProjectFSCK.cpp ProjectFSCK.h \
 	ProjectManager.cpp ProjectManager.h ProjectSettings.cpp \
-	ProjectSettings.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
-	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
-	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
-	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	ProjectSettings.h ProjectWindow.cpp ProjectWindow.h \
+	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
+	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
+	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
+	SelectedRegion.cpp SelectedRegion.h SelectionState.cpp \
+	SelectionState.h Shuttle.cpp Shuttle.h \
 	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
 	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
@@ -671,7 +672,8 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ProjectFileIORegistry.$(OBJEXT) \
 	audacity-ProjectFSCK.$(OBJEXT) \
 	audacity-ProjectManager.$(OBJEXT) \
-	audacity-ProjectSettings.$(OBJEXT) audacity-RealFFTf.$(OBJEXT) \
+	audacity-ProjectSettings.$(OBJEXT) \
+	audacity-ProjectWindow.$(OBJEXT) audacity-RealFFTf.$(OBJEXT) \
 	audacity-RealFFTf48x.$(OBJEXT) audacity-Resample.$(OBJEXT) \
 	audacity-RingBuffer.$(OBJEXT) audacity-Screenshot.$(OBJEXT) \
 	audacity-SelectedRegion.$(OBJEXT) \
@@ -1392,11 +1394,12 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	ProjectFileIO.h ProjectFileIORegistry.cpp \
 	ProjectFileIORegistry.h ProjectFSCK.cpp ProjectFSCK.h \
 	ProjectManager.cpp ProjectManager.h ProjectSettings.cpp \
-	ProjectSettings.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
-	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
-	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
-	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	ProjectSettings.h ProjectWindow.cpp ProjectWindow.h \
+	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
+	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
+	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
+	SelectedRegion.cpp SelectedRegion.h SelectionState.cpp \
+	SelectionState.h Shuttle.cpp Shuttle.h \
 	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
 	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
@@ -2571,6 +2574,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileIORegistry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectSettings.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RealFFTf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RealFFTf48x.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Resample.Po@am__quote@
@@ -4055,6 +4059,20 @@ audacity-ProjectSettings.obj: ProjectSettings.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectSettings.cpp' object='audacity-ProjectSettings.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectSettings.obj `if test -f 'ProjectSettings.cpp'; then $(CYGPATH_W) 'ProjectSettings.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectSettings.cpp'; fi`
+
+audacity-ProjectWindow.o: ProjectWindow.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectWindow.o -MD -MP -MF $(DEPDIR)/audacity-ProjectWindow.Tpo -c -o audacity-ProjectWindow.o `test -f 'ProjectWindow.cpp' || echo '$(srcdir)/'`ProjectWindow.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectWindow.Tpo $(DEPDIR)/audacity-ProjectWindow.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectWindow.cpp' object='audacity-ProjectWindow.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectWindow.o `test -f 'ProjectWindow.cpp' || echo '$(srcdir)/'`ProjectWindow.cpp
+
+audacity-ProjectWindow.obj: ProjectWindow.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectWindow.obj -MD -MP -MF $(DEPDIR)/audacity-ProjectWindow.Tpo -c -o audacity-ProjectWindow.obj `if test -f 'ProjectWindow.cpp'; then $(CYGPATH_W) 'ProjectWindow.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectWindow.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectWindow.Tpo $(DEPDIR)/audacity-ProjectWindow.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectWindow.cpp' object='audacity-ProjectWindow.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectWindow.obj `if test -f 'ProjectWindow.cpp'; then $(CYGPATH_W) 'ProjectWindow.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectWindow.cpp'; fi`
 
 audacity-RealFFTf.o: RealFFTf.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-RealFFTf.o -MD -MP -MF $(DEPDIR)/audacity-RealFFTf.Tpo -c -o audacity-RealFFTf.o `test -f 'RealFFTf.cpp' || echo '$(srcdir)/'`RealFFTf.cpp

@@ -6,13 +6,6 @@
 
   Dominic Mazzoni
 
-  In Audacity, the main window you work in is called a project.
-  Projects can contain an arbitrary number of tracks of many
-  different types, but if a project contains just one or two
-  tracks then it can be saved in standard formats like WAV or AIFF.
-  This window is the one that contains the menu bar (except on
-  the Mac).
-
 **********************************************************************/
 
 #ifndef __AUDACITY_PROJECT__
@@ -20,20 +13,13 @@
 
 #include "Audacity.h"
 
-#include "ClientData.h"
-
-#include "TrackPanelListener.h"
+#include "ClientData.h" // to inherit
 
 #include <memory>
-#include <wx/frame.h> // to inherit
+#include <wx/weakref.h> // member variable
 
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
-
+class wxFrame;
 class wxWindow;
-class wxScrollEvent;
-class wxScrollBar;
-class wxPanel;
 
 class AudacityProject;
 class ODLock;
@@ -42,10 +28,6 @@ class ODLock;
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 // For use by ProjectManager only:
 extern void SetActiveProject(AudacityProject * project);
-
-void GetDefaultWindowRect(wxRect *defRect);
-void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
-bool IsWindowAccessible(wxRect *requestedRect);
 
 enum StatusBarField {
    stateStatusBarField = 1,
@@ -103,8 +85,6 @@ private:
    static bool sbClosing;
 };
 
-class Track;
-
 // Container of various objects associated with the project, which is
 // responsible for destroying them
 using AttachedObjects = ClientData::Site<
@@ -116,117 +96,47 @@ using AttachedWindows = ClientData::Site<
    AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
 >;
 
-using ProjectWindow = AudacityProject;
-class AUDACITY_DLL_API AudacityProject final : public wxFrame,
-                                     public TrackPanelListener
+// Type of event emitted by the project when its status message is set
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
+
+///\brief The top-level handle to an Audacity project.  It serves as a source
+/// of events that other objects can bind to, and a container of associated
+/// sub-objects that it treats opaquely.  It stores a filename and a status
+/// message and a few other things.
+/// There is very little in this class, most of the intelligence residing in
+/// the cooperating attached objects.
+class AUDACITY_DLL_API AudacityProject final
+   : public wxEvtHandler
    , public AttachedObjects
    , public AttachedWindows
 {
  public:
-   static ProjectWindow &Get( AudacityProject &project ) { return project; }
-   static const ProjectWindow &Get( const AudacityProject &project ) { return project; }
-   static ProjectWindow *Find( AudacityProject *pProject ) { return pProject; }
-   static const ProjectWindow *Find( const AudacityProject *pProject ) { return pProject; }
-   AudacityProject &GetProject() { return *this; }
- 
    using AttachedObjects = ::AttachedObjects;
    using AttachedWindows = ::AttachedWindows;
 
-   AudacityProject(wxWindow * parent, wxWindowID id,
-                   const wxPoint & pos, const wxSize & size);
+   AudacityProject();
    virtual ~AudacityProject();
 
-   // Next available ID for sub-windows
-   int NextWindowID();
-
-   virtual void ApplyUpdatedTheme();
-
+   wxFrame *GetFrame() { return mFrame; }
+   const wxFrame *GetFrame() const { return mFrame; }
+   void SetFrame( wxFrame *pFrame );
+ 
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
 
    wxString GetProjectName() const;
 
-   bool IsActive() override;
-
-   using wxFrame::DetachMenuBar;
-
-   void ZoomAfterImport(Track *pTrack);
-
    const FilePath &GetFileName() { return mFileName; }
-   void SetFileName( const FilePath &value ) { mFileName = value; }
+   void SetFileName( const FilePath &fileName ) { mFileName = fileName; }
 
-   wxWindow *GetMainPage() { return mMainPage; }
-   wxPanel *GetTopPanel() { return mTopPanel; }
-
-
-   // Message Handlers
-
-   void OnMenu(wxCommandEvent & event);
-   void OnUpdateUI(wxUpdateUIEvent & event);
-
-   void MacShowUndockedToolbars(bool show);
-   void OnActivate(wxActivateEvent & event);
-
-   void OnMouseEvent(wxMouseEvent & event);
-   void OnIconize(wxIconizeEvent &event);
-   void OnSize(wxSizeEvent & event);
-   void OnShow(wxShowEvent & event);
-   void OnMove(wxMoveEvent & event);
-   void DoScroll();
-   void OnScroll(wxScrollEvent & event);
-   void OnToolBarUpdate(wxCommandEvent & event);
-
-   void HandleResize();
-   void UpdateLayout();
-   void ZoomInByFactor( double ZoomFactor );
-   void ZoomOutByFactor( double ZoomFactor );
-
-   // Other commands
+   int GetProjectNumber(){ return mProjectNo;}
    
-   int GetProjectNumber(){ return mProjectNo;};
-   void RedrawProject(const bool bForceWaveTracks = false);
-   void RefreshCursor();
-   void Zoom(double level);
-   void ZoomBy(double multiplier);
-   void Rewind(bool shift);
-   void SkipEnd(bool shift);
-
-
-   // Scrollbars
-
-   void OnScrollLeft();
-   void OnScrollRight();
-
-   void OnScrollLeftButton(wxScrollEvent & event);
-   void OnScrollRightButton(wxScrollEvent & event);
-
-   void FinishAutoScroll();
-   void FixScrollbars();
-
-   bool MayScrollBeyondZero() const;
-   double ScrollingLowerBoundTime() const;
-   // How many pixels are covered by the period from lowermost scrollable time, to the given time:
-   // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
-   double PixelWidthBeforeTime(double scrollto) const;
-   void SetHorizontalThumb(double scrollto);
-
-   // TrackPanel callback methods, overrides of TrackPanelListener
-   void TP_DisplaySelection() override;
-
-   void TP_RedrawScrollbars() override;
-   void TP_ScrollLeft() override;
-   void TP_ScrollRight() override;
-   void TP_ScrollWindow(double scrollto) override;
-   bool TP_ScrollUpDown(int delta) override;
-   void TP_HandleResize() override;
-
    const wxString &GetStatus() const { return mLastMainStatusMessage; }
    void SetStatus(const wxString &msg);
 
  private:
-
-   void OnThemeChange(wxCommandEvent & evt);
 
    // The project's name and file info
    FilePath mFileName; // Note: extension-less
@@ -234,104 +144,30 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.
 
-   // Window elements
-
-   wxString mLastMainStatusMessage;
-
-   wxPanel *mTopPanel{};
-   wxWindow * mMainPage;
-   wxPanel * mMainPanel;
-   wxScrollBar *mHsbar;
-   wxScrollBar *mVsbar;
-
-public:
-   wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
-
-private:
-   int mNextWindowID;
-
-   bool mAutoScrolling{ false };
-   bool mActive{ true };
-   bool mIconized;
-
-   bool mShownOnce{ false };
-
  public:
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
-   void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
-   wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
-
  private:
-   bool mIsDeleting{ false };
+   bool mLockPlayRegion{ false };
 
-public:
-   bool IsBeingDeleted() const { return mIsDeleting; }
-   void SetIsBeingDeleted() { mIsDeleting = true; }
+   wxString mLastMainStatusMessage;
 
-private:
-
-   bool mLockPlayRegion;
-
-   wxRect mNormalizedWindowState;
-
-public:
-   bool mbInitializingScrollbar{ false };
-
-   class PlaybackScroller final : public wxEvtHandler
-   {
-   public:
-      explicit PlaybackScroller(AudacityProject *project);
-
-      enum class Mode {
-         Off,
-         Refresh,
-         Pinned,
-         Right,
-      };
-
-      Mode GetMode() const { return mMode; }
-      void Activate(Mode mode)
-      {
-         mMode = mode;
-      }
-
-   private:
-      void OnTimer(wxCommandEvent &event);
-
-      AudacityProject *mProject;
-      Mode mMode { Mode::Off };
-   };
-
-private:
-   std::unique_ptr<PlaybackScroller> mPlaybackScroller;
-
-public:
-   PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
-
-   DECLARE_EVENT_TABLE()
+   wxWeakRef< wxFrame > mFrame{};
 };
 
-inline wxFrame &GetProjectFrame( AudacityProject &project ) { return project; }
-inline const wxFrame &GetProjectFrame( const AudacityProject &project ) {
-   return project;
-}
+///\brief Get the top-level window associated with the project (as a wxFrame
+/// only, when you do not need to use the subclass ProjectWindow)
+wxFrame &GetProjectFrame( AudacityProject &project );
+const wxFrame &GetProjectFrame( const AudacityProject &project );
+
+///\brief Get a pointer to the window associaged with a project, or null if
+/// the given pointer is null.
 inline wxFrame *FindProjectFrame( AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
 }
 inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
 }
-
-// TitleRestorer restores project window titles to what they were, in its destructor.
-class TitleRestorer{
-public:
-   TitleRestorer(AudacityProject * p );
-   ~TitleRestorer();
-   wxString sProjNumber;
-   wxString sProjName;
-   size_t UnnamedCount;
-};
 
 #endif

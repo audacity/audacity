@@ -170,6 +170,8 @@ src/ProjectManager.cpp
 src/ProjectManager.h
 src/ProjectSettings.cpp
 src/ProjectSettings.h
+src/ProjectWindow.cpp
+src/ProjectWindow.h
 src/RealFFTf.cpp
 src/RealFFTf.h
 src/RealFFTf48x.cpp

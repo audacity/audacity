@@ -457,6 +457,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectWindow.h"
 #include "TimeTrack.h"
 #include "WaveTrack.h"
 #include "AutoRecovery.h"

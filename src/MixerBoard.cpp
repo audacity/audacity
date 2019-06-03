@@ -41,6 +41,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
 #include "WaveTrack.h"

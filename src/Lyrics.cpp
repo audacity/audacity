@@ -16,6 +16,7 @@
 #include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/dcmemory.h>
+#include <wx/frame.h>
 #include <wx/mimetype.h>
 
 #include "AudioIO.h"

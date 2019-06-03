@@ -12,6 +12,7 @@
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
+#include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"

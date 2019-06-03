@@ -12,6 +12,7 @@
 #include "../Project.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../Screenshot.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"

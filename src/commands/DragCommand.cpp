@@ -26,6 +26,8 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
+#include <wx/frame.h>
+
 DragCommand::DragCommand()
 {
 }

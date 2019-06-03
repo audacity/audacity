@@ -221,6 +221,8 @@ audacity_SOURCES = \
 	ProjectManager.h \
 	ProjectSettings.cpp \
 	ProjectSettings.h \
+	ProjectWindow.cpp \
+	ProjectWindow.h \
 	RealFFTf.cpp \
 	RealFFTf.h \
 	RealFFTf48x.cpp \

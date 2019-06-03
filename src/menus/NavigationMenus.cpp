@@ -4,6 +4,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectManager.h"
+#include "../ProjectWindow.h"
 #include "../Track.h"
 #include "../SelectionState.h"
 #include "../TrackPanel.h"

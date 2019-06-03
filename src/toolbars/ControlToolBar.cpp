@@ -69,6 +69,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"

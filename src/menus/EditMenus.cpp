@@ -8,6 +8,7 @@
 #include "../Project.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"

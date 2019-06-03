@@ -226,6 +226,7 @@ Scrubber::Scrubber(AudacityProject *project)
 #endif
 
    , mProject(project)
+   , mWindow( FindProjectFrame( project ) )
    , mPoller { std::make_unique<ScrubPoller>(*this) }
    , mOptions {}
 
@@ -234,7 +235,8 @@ Scrubber::Scrubber(AudacityProject *project)
       wxTheApp->Bind
       (wxEVT_ACTIVATE_APP,
        &Scrubber::OnActivateOrDeactivateApp, this);
-   mProject->PushEventHandler(&mForwarder);
+   if (mWindow)
+      mWindow->PushEventHandler(&mForwarder);
 }
 
 Scrubber::~Scrubber()
@@ -244,7 +246,8 @@ Scrubber::~Scrubber()
       mpThread->Delete();
 #endif
 
-   mProject->PopEventHandler();
+   if ( mWindow )
+      mWindow->PopEventHandler();
 }
 
 namespace {

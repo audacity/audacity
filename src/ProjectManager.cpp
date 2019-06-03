@@ -29,6 +29,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIORegistry.h"
 #include "ProjectFSCK.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "Sequence.h"
 #include "Snap.h"
 #include "Tags.h"
@@ -361,19 +362,13 @@ AudacityProject *ProjectManager::New()
    
    // Create and show a NEW project
    // Use a non-default deleter in the smart pointer!
-   auto sp = AllProjects::value_type {
-      safenew AudacityProject(
-                              nullptr, -1,
-                              wxDefaultPosition,
-                              wxSize(wndRect.width, wndRect.height)
-                              ),
-      Destroyer< AudacityProject > {}
-   };
+   auto sp = std::make_shared< AudacityProject >();
    AllProjects{}.Add( sp );
    auto p = sp.get();
    auto &project = *p;
    auto &projectManager = Get( project );
-   auto &window = GetProjectFrame( *p );
+   auto &window = ProjectWindow::Get( *p );
+   window.Init();
    
    MissingAliasFilesDialog::SetShouldShow(true);
    MenuManager::Get( project ).CreateMenusAndCommands( project );
@@ -457,7 +452,7 @@ bool ProjectManager::SnapSelection()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
-   auto &window = project;
+   auto &window = ProjectWindow::Get( project );
    auto snapTo = settings.GetSnapTo();
    if (snapTo != SNAP_OFF) {
       auto &viewInfo = ViewInfo::Get( project );
@@ -514,7 +509,7 @@ void ProjectManager::AS_SetSnapTo(int snap)
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
-   auto &window = project;
+   auto &window = ProjectWindow::Get( project );
 
    settings.SetSnapTo( snap );
 
@@ -657,7 +652,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    const auto &settings = ProjectSettings::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &window = project;
+   auto &window = ProjectWindow::Get( project );
 
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
    // wxEVT_QUERY_END_SESSION, so we have to protect against multiple
@@ -1980,7 +1975,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 void ProjectManager::OnStatusChange( wxCommandEvent & )
 {
    auto &project = mProject;
-   auto &window = project;
+   auto &window = GetProjectFrame( project );
    const auto &msg = project.GetStatus();
    window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
    

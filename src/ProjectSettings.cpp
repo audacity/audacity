@@ -22,7 +22,7 @@ namespace {
    {
       wxCommandEvent e{ EVT_PROJECT_SETTINGS_CHANGE };
       e.SetInt( static_cast<int>( code ) );
-      project.GetEventHandler()->ProcessEvent( e );
+      project.ProcessEvent( e );
    }
 }
 

@@ -5,6 +5,8 @@
 #include "../toolbars/MixerToolBar.h"
 #include "../toolbars/DeviceToolBar.h"
 
+#include <wx/frame.h>
+
 // helper functions and classes
 namespace {
 }

@@ -1215,6 +1215,7 @@
 		5E135A39229EDEBA0076E983 /* ProjectAudioIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A37229EDEBA0076E983 /* ProjectAudioIO.cpp */; };
 		5E135A3C229EDF2E0076E983 /* ProjectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A3A229EDF2E0076E983 /* ProjectManager.cpp */; };
 		5E135A45229EE4DE0076E983 /* ProjectFileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A43229EE4DE0076E983 /* ProjectFileIO.cpp */; };
+		5E135A48229EE5530076E983 /* ProjectWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A46229EE5530076E983 /* ProjectWindow.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
 		5E15125A1DB000DC00702E29 /* LabelTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */; };
 		5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512421DB000DC00702E29 /* LabelTrackUI.cpp */; };
@@ -3187,6 +3188,8 @@
 		5E135A3B229EDF2E0076E983 /* ProjectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectManager.h; sourceTree = "<group>"; };
 		5E135A43229EE4DE0076E983 /* ProjectFileIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectFileIO.cpp; sourceTree = "<group>"; };
 		5E135A44229EE4DE0076E983 /* ProjectFileIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectFileIO.h; sourceTree = "<group>"; };
+		5E135A46229EE5530076E983 /* ProjectWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectWindow.cpp; sourceTree = "<group>"; };
+		5E135A47229EE5530076E983 /* ProjectWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectWindow.h; sourceTree = "<group>"; };
 		5E1512381DB000C000702E29 /* HitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitTestResult.h; sourceTree = "<group>"; };
 		5E1512391DB000C000702E29 /* RefreshCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshCode.h; sourceTree = "<group>"; };
 		5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelMouseEvent.h; sourceTree = "<group>"; };
@@ -4376,6 +4379,7 @@
 				5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */,
 				5E135A3A229EDF2E0076E983 /* ProjectManager.cpp */,
 				5E135A34229EDBE80076E983 /* ProjectSettings.cpp */,
+				5E135A46229EE5530076E983 /* ProjectWindow.cpp */,
 				28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */,
 				EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */,
 				1790B0D209883BFD008A330A /* Resample.cpp */,
@@ -4495,6 +4499,7 @@
 				5ECF728B228B307E007F2A35 /* ProjectFSCK.h */,
 				5E135A3B229EDF2E0076E983 /* ProjectManager.h */,
 				5E135A35229EDBE80076E983 /* ProjectSettings.h */,
+				5E135A47229EE5530076E983 /* ProjectWindow.h */,
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
 				5E1512391DB000C000702E29 /* RefreshCode.h */,
@@ -8587,6 +8592,7 @@
 				5E89EEEA1F78D017000F5E82 /* zh_CN.po in Sources */,
 				28884943131B6CF600B59735 /* af.po in Sources */,
 				28884944131B6CF600B59735 /* ar.po in Sources */,
+				5E135A48229EE5530076E983 /* ProjectWindow.cpp in Sources */,
 				5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */,
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,

@@ -26,6 +26,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h"
 #include "../../widgets/PopupMenuTable.h"
 
+#include <wx/frame.h>
 
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
    : mwTrack{ pTrack }

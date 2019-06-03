@@ -66,6 +66,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
