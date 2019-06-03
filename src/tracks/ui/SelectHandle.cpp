@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../NumberScale.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
+#include "../../ProjectManager.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"
@@ -579,7 +580,7 @@ UIHandle::Result SelectHandle::Click
          }
       } );
 
-      pProject->ModifyState(false);
+      ProjectManager::Get( *pProject ).ModifyState(false);
 
       // Do not start a drag
       return RefreshAll | UpdateSelection | Cancelled;
@@ -664,7 +665,7 @@ UIHandle::Result SelectHandle::Click
       };
 
       // For persistence of the selection change:
-      pProject->ModifyState(false);
+      ProjectManager::Get( *pProject ).ModifyState(false);
 
       // Get timer events so we can auto-scroll
       Connect(pProject);
@@ -702,7 +703,7 @@ UIHandle::Result SelectHandle::Click
                static_cast<WaveTrack*>(pTrack),
                viewInfo, event.m_y, mRect.y, mRect.height);
             // For persistence of the selection change:
-            pProject->ModifyState(false);
+            ProjectManager::Get( *pProject ).ModifyState(false);
             mSelectionBoundary = SBWidth;
             return UpdateSelection;
          }
@@ -986,7 +987,7 @@ UIHandle::Result SelectHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   pProject->ModifyState(false);
+   ProjectManager::Get( *pProject ).ModifyState(false);
    mFrequencySnapper.reset();
    mSnapManager.reset();
    if (mSelectionStateChanger) {
@@ -1126,7 +1127,7 @@ void SelectHandle::StartSelection( AudacityProject *pProject )
    // PRL:  commented out the Sonify stuff with the TrackPanel refactor.
    // It was no-op anyway.
    //SonifyBeginModifyState();
-   pProject->ModifyState(false);
+   ProjectManager::Get( *pProject ).ModifyState(false);
    //SonifyEndModifyState();
 }
 

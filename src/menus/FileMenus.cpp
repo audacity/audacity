@@ -10,6 +10,7 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -116,7 +117,7 @@ AudacityProject *DoImportMIDI(
 
    AudacityProject *pNewProject {};
    if ( !pProject )
-      pProject = pNewProject = CreateNewAudacityProject();
+      pProject = pNewProject = ProjectManager::New();
    auto cleanup = finally( [&]
       { if ( pNewProject ) GetProjectFrame( *pNewProject ).Close(true); } );
 
@@ -128,7 +129,8 @@ AudacityProject *DoImportMIDI(
       auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
 
-      pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
+      ProjectManager::Get( *pProject )
+         .PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName), _("Import MIDI"));
 
       ProjectWindow::Get( *pProject ).ZoomAfterImport(pTrack);
@@ -151,13 +153,13 @@ struct Handler : CommandHandlerObject {
 
 void OnNew(const CommandContext & )
 {
-   CreateNewAudacityProject();
+   ( void ) ProjectManager::New();
 }
 
 void OnOpen(const CommandContext &context )
 {
    auto &project = context.project;
-   AudacityProject::OpenFiles(&project);
+   ProjectManager::OpenFiles(&project);
 }
 
 // JKC: This is like OnClose, except it emptys the project in place,
@@ -168,14 +170,14 @@ void OnOpen(const CommandContext &context )
 void OnProjectReset(const CommandContext &context)
 {
    auto &project = context.project;
-   project.ResetProjectToEmpty();
+   ProjectManager::Get( project ).ResetProjectToEmpty();
 }
 
 void OnClose(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &window = GetProjectFrame( project );
-   project.SetMenuClose(true);
+   auto &window = ProjectWindow::Get( project );
+   ProjectManager::Get( project ).SetMenuClose(true);
    window.Close();
 }
 
@@ -405,7 +407,7 @@ void OnImport(const CommandContext &context)
    // this serves to track the file if the users zooms in and such.
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   wxArrayString selectedFiles = project.ShowOpenDialog(wxT(""));
+   wxArrayString selectedFiles = ProjectManager::ShowOpenDialog(wxT(""));
    if (selectedFiles.size() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       gPrefs->Flush();
@@ -435,7 +437,7 @@ void OnImport(const CommandContext &context)
 
       FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
-      project.Import(fileName);
+      ProjectManager::Get( project ).Import(fileName);
    }
 
    window.ZoomAfterImport(nullptr);
@@ -479,9 +481,9 @@ void OnImportLabels(const CommandContext &context)
       newTrack->SetSelected(true);
       tracks.Add( newTrack );
 
-      project.PushState(wxString::
-                Format(_("Imported labels from '%s'"), fileName),
-                _("Import Labels"));
+      ProjectManager::Get( project ).PushState(
+         wxString::Format(_("Imported labels from '%s'"), fileName),
+            _("Import Labels"));
 
       window.ZoomAfterImport(nullptr);
    }
@@ -532,7 +534,7 @@ void OnImportRaw(const CommandContext &context)
    if (newTracks.size() <= 0)
       return;
 
-   project.AddImportedTracks(fileName, std::move(newTracks));
+   ProjectManager::Get( project ).AddImportedTracks(fileName, std::move(newTracks));
    window.HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 

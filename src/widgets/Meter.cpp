@@ -67,6 +67,7 @@
 #include "../ImageManipulation.h"
 #include "../prefs/GUISettings.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 

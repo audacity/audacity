@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
+#include "../../ProjectManager.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
@@ -39,7 +40,7 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
       bool wasMinimized = pTrack->GetMinimized();
       for (auto channel : TrackList::Channels(pTrack.get()))
          channel->SetMinimized(!wasMinimized);
-      pProject->ModifyState(true);
+      ProjectManager::Get( *pProject ).ModifyState(true);
 
       // Redraw all tracks when any one of them expands or contracts
       // (Could we invent a return code that draws only those at or below

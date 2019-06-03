@@ -33,6 +33,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectManager.h"
 #include "RefreshCode.h"
 #include "Snap.h"
 #include "TrackPanel.h"

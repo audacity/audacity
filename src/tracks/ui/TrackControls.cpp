@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../Menus.h"
 #include "../../Project.h"
+#include "../../ProjectManager.h"
 #include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
 #include <wx/textdlg.h>
@@ -221,7 +222,8 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
          for (auto channel : TrackList::Channels(pTrack))
             channel->SetName(newName);
 
-         proj->PushState(wxString::Format(_("Renamed '%s' to '%s'"),
+         ProjectManager::Get( *proj )
+            .PushState(wxString::Format(_("Renamed '%s' to '%s'"),
             oldName,
             newName),
             _("Name Change"));

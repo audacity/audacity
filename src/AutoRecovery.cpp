@@ -23,7 +23,7 @@ text or binary format to a file.
 #include "DirManager.h"
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
-#include "Project.h"
+#include "ProjectManager.h"
 #include "Sequence.h"
 #include "ShuttleGui.h"
 
@@ -227,7 +227,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
       // Open project. When an auto-save file has been opened successfully,
       // the opened auto-save file is automatically deleted and a NEW one
       // is created.
-      AudacityProject::OpenProject( proj, files[i], false );
+      (void) ProjectManager::OpenProject( proj, files[i], false );
    }
 
    return true;

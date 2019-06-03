@@ -269,6 +269,9 @@
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1331,6 +1334,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFSCK.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectManager.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectSettings.h">

@@ -9,6 +9,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectManager.h"
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
@@ -91,7 +92,7 @@ void DoMixAndRender
          msg.Printf(_("Rendered all audio in track '%s'"), firstName);
          /* i18n-hint: Convert the audio into a more usable form, so apply
           * panning and amplification and write to some external file.*/
-         project.PushState(msg, _("Render"));
+         ProjectManager::Get( project ).PushState(msg, _("Render"));
       }
       else {
          wxString msg;
@@ -103,7 +104,7 @@ void DoMixAndRender
             msg.Printf(
                _("Mixed and rendered %d tracks into one new mono track"),
                (int)selectedCount);
-         project.PushState(msg, _("Mix and Render"));
+         ProjectManager::Get( project ).PushState(msg, _("Mix and Render"));
       }
 
       trackPanel.SetFocus();
@@ -131,7 +132,8 @@ void DoPanTracks(AudacityProject &project, float PanValue)
 
    auto flags = UndoPush::AUTOSAVE;
    /*i18n-hint: One or more audio tracks have been panned*/
-   project.PushState(_("Panned audio track(s)"), _("Pan Track"), flags);
+   ProjectManager::Get( project )
+      .PushState(_("Panned audio track(s)"), _("Pan Track"), flags);
          flags = flags | UndoPush::CONSOLIDATE;
 }
 
@@ -292,7 +294,7 @@ void DoAlign
    if (moveSel)
       selectedRegion.move(delta);
 
-   project.PushState(action, shortAction);
+   ProjectManager::Get( project ).PushState(action, shortAction);
 
    window.RedrawProject();
 }
@@ -537,7 +539,8 @@ void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    for (auto channel : TrackList::Channels(wt))
       channel->SetGain(newValue);
 
-   project.PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
+   ProjectManager::Get( project )
+      .PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
 
    TrackPanel::Get( project ).RefreshTrack(wt);
 }
@@ -550,7 +553,8 @@ void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    for (auto channel : TrackList::Channels(wt))
       channel->SetPan(newValue);
 
-   project.PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
+   ProjectManager::Get( project )
+      .PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
 
    TrackPanel::Get( project ).RefreshTrack(wt);
 }
@@ -595,7 +599,8 @@ void DoRemoveTracks( AudacityProject &project )
    if (f)
       trackPanel.EnsureVisible(f);
 
-   project.PushState(_("Removed audio track(s)"), _("Remove Track"));
+   ProjectManager::Get( project )
+      .PushState(_("Removed audio track(s)"), _("Remove Track"));
 
    trackPanel.UpdateViewIfNoTracks();
    trackPanel.Refresh(false);
@@ -645,7 +650,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
             track->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !track->GetMute() );
       }
    }
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
 
    trackPanel.UpdateAccessibility();
    trackPanel.Refresh(false);
@@ -698,7 +703,7 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
          }
       }
    }
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
 
    trackPanel.UpdateAccessibility();
    trackPanel.Refresh(false);
@@ -734,7 +739,7 @@ void DoRemoveTrack(AudacityProject &project, Track * toRemove)
    if (toRemoveWasFocused)
       trackPanel.SetFocusedTrack(newFocus);
 
-   project.PushState(
+   ProjectManager::Get( project ).PushState(
       wxString::Format(_("Removed track '%s.'"),
       name),
       _("Track Remove"));
@@ -793,7 +798,7 @@ void DoMoveTrack
 
    longDesc = longDesc.Format(target->GetName());
 
-   project.PushState(longDesc, shortDesc);
+   ProjectManager::Get( project ).PushState(longDesc, shortDesc);
    trackPanel.Refresh(false);
 }
 
@@ -818,7 +823,8 @@ void OnNewWaveTrack(const CommandContext &context)
 
    t->SetSelected(true);
 
-   project.PushState(_("Created new audio track"), _("New Track"));
+   ProjectManager::Get( project )
+      .PushState(_("Created new audio track"), _("New Track"));
 
    window.RedrawProject();
    trackPanel.EnsureVisible(t);
@@ -846,7 +852,8 @@ void OnNewStereoTrack(const CommandContext &context)
 
    tracks.GroupChannels(*left, 2);
 
-   project.PushState(_("Created new stereo audio track"), _("New Track"));
+   ProjectManager::Get( project )
+      .PushState(_("Created new stereo audio track"), _("New Track"));
 
    window.RedrawProject();
    trackPanel.EnsureVisible(left);
@@ -866,7 +873,8 @@ void OnNewLabelTrack(const CommandContext &context)
 
    t->SetSelected(true);
 
-   project.PushState(_("Created new label track"), _("New Track"));
+   ProjectManager::Get( project )
+      .PushState(_("Created new label track"), _("New Track"));
 
    window.RedrawProject();
    trackPanel.EnsureVisible(t);
@@ -891,7 +899,8 @@ void OnNewTimeTrack(const CommandContext &context)
 
    t->SetSelected(true);
 
-   project.PushState(_("Created new time track"), _("New Track"));
+   ProjectManager::Get( project )
+      .PushState(_("Created new time track"), _("New Track"));
 
    window.RedrawProject();
    trackPanel.EnsureVisible(t);
@@ -1013,7 +1022,7 @@ void OnResample(const CommandContext &context)
       // commit that to the undo stack.  The second and later times,
       // consolidate.
 
-      project.PushState(
+      ProjectManager::Get( project ).PushState(
          _("Resampled audio track(s)"), _("Resample Track"), flags);
       flags = flags | UndoPush::CONSOLIDATE;
    }
@@ -1047,7 +1056,7 @@ void OnMuteAllTracks(const CommandContext &context)
          pt->SetSolo(false);
    }
 
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
    window.RedrawProject();
 }
 
@@ -1068,7 +1077,7 @@ void OnUnmuteAllTracks(const CommandContext &context)
          pt->SetSolo(false);
    }
 
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
    window.RedrawProject();
 }
 
@@ -1252,7 +1261,8 @@ void OnSortTime(const CommandContext &context)
    auto &project = context.project;
    DoSortTracks(project, kAudacitySortByTime);
 
-   project.PushState(_("Tracks sorted by time"), _("Sort by Time"));
+   ProjectManager::Get( project )
+      .PushState(_("Tracks sorted by time"), _("Sort by Time"));
 
    auto &trackPanel = TrackPanel::Get( project );
    trackPanel.Refresh(false);
@@ -1263,7 +1273,8 @@ void OnSortName(const CommandContext &context)
    auto &project = context.project;
    DoSortTracks(project, kAudacitySortByName);
 
-   project.PushState(_("Tracks sorted by name"), _("Sort by Name"));
+   ProjectManager::Get( project )
+      .PushState(_("Tracks sorted by name"), _("Sort by Name"));
 
    auto &trackPanel = TrackPanel::Get( project );
    trackPanel.Refresh(false);

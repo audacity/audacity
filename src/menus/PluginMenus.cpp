@@ -10,6 +10,7 @@
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../ProjectSettings.h"
 #include "../Screenshot.h"
 #include "../TrackPanel.h"
@@ -493,7 +494,7 @@ bool DoEffect(
    {
       wxString shortDesc = em.GetCommandName(ID);
       wxString longDesc = em.GetCommandDescription(ID);
-      project.PushState(longDesc, shortDesc);
+      ProjectManager::Get( project ).PushState(longDesc, shortDesc);
    }
 
    if (!(flags & kDontRepeatLast))

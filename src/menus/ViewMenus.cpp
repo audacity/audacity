@@ -7,6 +7,7 @@
 #include "../MixerBoard.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../ViewInfo.h"
@@ -280,7 +281,7 @@ void OnZoomFitV(const CommandContext &context)
 
    window.GetVerticalScrollBar().SetThumbPosition(0);
    window.RedrawProject();
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
 }
 
 void OnAdvancedVZoom(const CommandContext &context)
@@ -304,7 +305,7 @@ void OnCollapseAllTracks(const CommandContext &context)
    for (auto t : tracks.Any())
       t->SetMinimized(true);
 
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
    window.RedrawProject();
 }
 
@@ -317,7 +318,7 @@ void OnExpandAllTracks(const CommandContext &context)
    for (auto t : tracks.Any())
       t->SetMinimized(false);
 
-   project.ModifyState(true);
+   ProjectManager::Get( project ).ModifyState(true);
    window.RedrawProject();
 }
 

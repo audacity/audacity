@@ -84,6 +84,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "Screenshot.h"
 #include "Sequence.h"
@@ -479,6 +480,10 @@ static void QuitAudacity(bool bForce)
    else
 /*end+*/
    {
+      if (AllProjects{}.size())
+         // PRL:  Always did at least once before close might be vetoed
+         // though I don't know why that is important
+         ProjectManager::SaveWindowSize();
       bool closedAll = AllProjects::Close( bForce );
       if ( !closedAll )
       {
@@ -810,9 +815,8 @@ void AudacityApp::MacNewFile()
    // This method should only be used on the Mac platform
    // when no project windows are open.
 
-   if (AllProjects{}.empty()) {
-      CreateNewAudacityProject();
-   }
+   if (AllProjects{}.empty())
+      (void) ProjectManager::New();
 }
 
 #endif //__WXMAC__
@@ -880,7 +884,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // Test here even though AudacityProject::OpenFile() also now checks, because
          // that method does not return the bad result.
          // That itself may be a FIXME.
-         if (AudacityProject::IsAlreadyOpen(fullPathStr))
+         if (ProjectManager::IsAlreadyOpen(fullPathStr))
             return false;
 
          // DMM: If the project is dirty, that means it's been touched at
@@ -893,12 +897,15 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // there are no tracks, but there's an Undo history, etc, then
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
-         if (proj && (proj->GetDirty() || !TrackList::Get( *proj ).empty()))
+         if (proj && (
+            ProjectManager::Get( *proj ).GetDirty() ||
+            !TrackList::Get( *proj ).empty()
+         ) )
             proj = nullptr;
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
          // and it's okay to open a NEW project inside this window.
-         AudacityProject::OpenProject( proj, fullPathStr );
+         ( void ) ProjectManager::OpenProject( proj, fullPathStr );
       }
       else {
          // File doesn't exist - remove file from history
@@ -936,7 +943,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    // PRL: Don't call SafeMRUOpen
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
-   if (!AudacityProject::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
+   if (!ProjectManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       history.RemoveFileFromHistory(n);
 }
 
@@ -1073,7 +1080,7 @@ bool AudacityApp::OnExceptionInMainLoop()
          // Restore the state of the project to what it was before the
          // failed operation
          if (pProject) {
-            pProject->RollbackState();
+            ProjectManager::Get( *pProject ).RollbackState();
 
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();
@@ -1511,7 +1518,7 @@ bool AudacityApp::OnInit()
    // Root cause is problem with wxSplashScreen and other dialogs co-existing, that
    // seemed to arrive with wx3.
    {
-      project = CreateNewAudacityProject();
+      project = ProjectManager::New();
       mCmdHandler->SetProject(project);
       wxWindow * pWnd = MakeHijackPanel();
       if (pWnd)
@@ -1985,6 +1992,10 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
    // Try to close each open window.  If the user hits Cancel
    // in a Save Changes dialog, don't continue.
    gIsQuitting = true;
+   if (AllProjects{}.size())
+      // PRL:  Always did at least once before close might be vetoed
+      // though I don't know why that is important
+      ProjectManager::SaveWindowSize();
    bool closedAll = AllProjects::Close( force );
    if ( !closedAll )
    {
@@ -2081,7 +2092,7 @@ void AudacityApp::OnMenuNew(wxCommandEvent & event)
    // all platforms.
 
    if(AllProjects{}.empty())
-      CreateNewAudacityProject();
+      (void) ProjectManager::New();
    else
       event.Skip();
 }
@@ -2097,7 +2108,7 @@ void AudacityApp::OnMenuOpen(wxCommandEvent & event)
 
 
    if(AllProjects{}.empty())
-      AudacityProject::OpenFiles(NULL);
+      ProjectManager::OpenFiles(NULL);
    else
       event.Skip();
 

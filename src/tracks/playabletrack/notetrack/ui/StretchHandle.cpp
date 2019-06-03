@@ -15,8 +15,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../Project.h"
 #include "../../../../ProjectAudioIO.h"
+#include "../../../../ProjectManager.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -252,7 +252,7 @@ UIHandle::Result StretchHandle::Release
 
    /* i18n-hint: (noun) The track that is used for MIDI notes which can be
    dragged to change their duration.*/
-   pProject->PushState(_("Stretch Note Track"),
+   ProjectManager::Get( *pProject ).PushState(_("Stretch Note Track"),
       /* i18n-hint: In the history list, indicates a MIDI note has
       been dragged to change its duration (stretch it). Using either past
       or present tense is fine here.  If unsure, go for whichever is
@@ -264,7 +264,7 @@ UIHandle::Result StretchHandle::Release
 
 UIHandle::Result StretchHandle::Cancel(AudacityProject *pProject)
 {
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshNone;
 }
 

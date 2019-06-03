@@ -224,6 +224,7 @@
     <ClCompile Include="..\..\..\src\ProjectAudioIO.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp" />
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectManager.cpp" />
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
@@ -653,6 +654,7 @@
     <ClInclude Include="..\..\..\src\ProjectAudioIO.h" />
     <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h" />
     <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
+    <ClInclude Include="..\..\..\src\ProjectManager.h" />
     <ClInclude Include="..\..\..\src\ProjectSettings.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />
