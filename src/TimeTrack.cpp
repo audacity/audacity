@@ -27,6 +27,7 @@
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
 #include "TrackArtist.h"
 #include "ViewInfo.h"
@@ -125,14 +126,14 @@ Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
 
 void TimeTrack::Clear(double t0, double t1)
 {
-   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+   auto sampleTime = 1.0 / ProjectSettings::Get( *GetActiveProject() ).GetRate();
    mEnvelope->CollapseRegion( t0, t1, sampleTime );
 }
 
 void TimeTrack::Paste(double t, const Track * src)
 {
    bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
-      auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+      auto sampleTime = 1.0 / ProjectSettings::Get( *GetActiveProject() ).GetRate();
       mEnvelope->PasteEnvelope
          (t, tt->mEnvelope.get(), sampleTime);
       return true;

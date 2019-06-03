@@ -15,6 +15,7 @@
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../ViewInfo.h"
@@ -194,7 +195,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    wxString number;
 
    AudacityProject *p = GetActiveProject();
-   mProjectRate = p->GetRate();
+   const auto &settings = ProjectSettings::Get( *p );
+   mProjectRate = settings.GetRate();
 
    ShuttleGui S(this, eIsCreating);
 

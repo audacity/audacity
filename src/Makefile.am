@@ -213,6 +213,8 @@ audacity_SOURCES = \
 	ProjectFileIORegistry.h \
 	ProjectFSCK.cpp \
 	ProjectFSCK.h \
+	ProjectSettings.cpp \
+	ProjectSettings.h \
 	RealFFTf.cpp \
 	RealFFTf.h \
 	RealFFTf48x.cpp \

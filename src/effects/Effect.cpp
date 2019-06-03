@@ -55,6 +55,7 @@ greater use in future.
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
@@ -163,8 +164,7 @@ Effect::Effect()
    mUIDebug = false;
 
    AudacityProject *p = GetActiveProject();
-   mProjectRate = p ? p->GetRate() : 44100;
-
+   mProjectRate = p ? ProjectSettings::Get( *p ).GetRate() : 44100;
    mIsBatch = false;
 }
 
@@ -770,7 +770,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   return GetActiveProject()->GetSelectionFormat();
+   return ProjectSettings( *GetActiveProject() ).GetSelectionFormat();
 }
 
 void Effect::SetDuration(double seconds)

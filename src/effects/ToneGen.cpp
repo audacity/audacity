@@ -29,6 +29,7 @@ frequency changes smoothly during the tone.
 #include <wx/valgen.h>
 
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
@@ -321,7 +322,11 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
    mWaveform = Waveform;
    mInterpolation = Interp;
 
-   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
+   double freqMax =
+      (GetActiveProject()
+         ? ProjectSettings::Get( *GetActiveProject() ).GetRate()
+         : 44100.0)
+      / 2.0;
    mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
 
    return true;
@@ -364,7 +369,10 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxLEFT, 50);
             {
                FloatingPointValidator<double> vldStartFreq(6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES);
-               vldStartFreq.SetRange(MIN_StartFreq, GetActiveProject()->GetRate() / 2.0);
+               vldStartFreq.SetRange(
+                  MIN_StartFreq,
+                  ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
+               );
                t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Frequency Hertz Start"));
                t->SetValidator(vldStartFreq);
@@ -374,7 +382,10 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxLEFT, 50);
             {
                FloatingPointValidator<double> vldEndFreq(6, &mFrequency[1], NumValidatorStyle::NO_TRAILING_ZEROES);
-               vldEndFreq.SetRange(MIN_EndFreq, GetActiveProject()->GetRate() / 2.0);
+               vldEndFreq.SetRange(
+                  MIN_EndFreq,
+                  ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
+               );
                t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Frequency Hertz End"));
                t->SetValidator(vldEndFreq);
@@ -415,7 +426,10 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
       else
       {
          FloatingPointValidator<double> vldFrequency(6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES);
-         vldFrequency.SetRange(MIN_Frequency, GetActiveProject()->GetRate() / 2.0);
+         vldFrequency.SetRange(
+            MIN_Frequency,
+            ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
+         );
          t = S.AddTextBox(_("Frequency (Hz):"), wxT(""), 12);
          t->SetValidator(vldFrequency);
 

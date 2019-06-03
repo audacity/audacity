@@ -38,6 +38,7 @@
 #include "KeyboardCapture.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
 #include "WaveTrack.h"
@@ -283,7 +284,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
-   bool bSoloNone = mProject->IsSoloNone();
+   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
    mToggleButton_Solo->Show(!bSoloNone);
 
 
@@ -382,7 +383,7 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
 #endif
 
-   bool bSoloNone = mProject->IsSoloNone();
+   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
 
    mToggleButton_Solo->Show(!bSoloNone);
 
@@ -747,7 +748,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
-   if (mProject->IsSoloSimple())
+   if (ProjectSettings::Get(*mProject).IsSoloSimple())
       ProjectWindow::Get( *mProject ).RedrawProject();
    else
       // Update only the changed track.

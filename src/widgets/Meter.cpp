@@ -67,6 +67,7 @@
 #include "../ImageManipulation.h"
 #include "../prefs/GUISettings.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -1871,7 +1872,7 @@ void MeterPanel::StartMonitoring()
    if (start && !gAudioIO->IsBusy()){
       AudacityProject *p = GetActiveProject();
       if (p){
-         gAudioIO->StartMonitoring(p->GetRate());
+         gAudioIO->StartMonitoring( ProjectSettings::Get( *p ).GetRate());
       }
 
       mLayoutValid = false;

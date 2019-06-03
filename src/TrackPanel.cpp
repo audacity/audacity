@@ -70,6 +70,7 @@ is time to refresh some aspect of the screen.
 #include "AdornedRulerPanel.h"
 #include "KeyboardCapture.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
@@ -316,8 +317,11 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                      &TrackPanel::OnPlayback,
                      this);
 
-   GetProject()->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
-   GetProject()->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
+   auto theProject = GetProject();
+   theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
+   theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
+   theProject->Bind(
+      EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
 
    UpdatePrefs();
 }
@@ -528,6 +532,18 @@ void TrackPanel::OnODTask(wxCommandEvent & WXUNUSED(event))
 {
    //todo: add track data to the event - check to see if the project contains it before redrawing.
    Refresh(false);
+}
+
+void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
+{
+   event.Skip();
+   switch ( static_cast<ProjectSettings::EventCode>( event.GetInt() ) ) {
+   case ProjectSettings::ChangedSyncLock:
+      Refresh(false);
+      break;
+   default:
+      break;
+   }
 }
 
 double TrackPanel::GetScreenEndTime() const

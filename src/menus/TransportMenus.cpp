@@ -8,6 +8,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanel.h"
@@ -399,6 +400,7 @@ void OnRecord2ndChoice(const CommandContext &context)
 void OnTimerRecord(const CommandContext &context)
 {
    auto &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -417,7 +419,7 @@ void OnTimerRecord(const CommandContext &context)
    // preventing issues surrounding "dirty" projects when Automatic Save/Export
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
-       (TrackList::Get( project ).Any() || project.EmptyCanBeDirty())) {
+       (TrackList::Get( project ).Any() || settings.EmptyCanBeDirty())) {
       AudacityMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);

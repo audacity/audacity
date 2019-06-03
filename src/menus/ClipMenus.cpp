@@ -1,4 +1,5 @@
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
@@ -701,8 +702,9 @@ void DoClipLeftOrRight
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto isSyncLocked = project.IsSyncLocked();
+   auto isSyncLocked = settings.IsSyncLocked();
 
    auto amount = DoClipMove( viewInfo, trackPanel.GetFocusedTrack(),
         tracks, isSyncLocked, right );

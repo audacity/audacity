@@ -40,6 +40,7 @@
 #endif // USE_MIDI
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -554,7 +555,8 @@ CommandFlag MenuManager::GetUpdateFlags
    if (FileHistory::Global().GetCount() > 0)
       flags |= HaveRecentFiles;
 
-   if (project.IsSyncLocked())
+   const auto &settings = ProjectSettings::Get( project );
+   if (settings.IsSyncLocked())
       flags |= IsSyncLockedFlag;
    else
       flags |= IsNotSyncLockedFlag;
@@ -588,6 +590,8 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    auto &toolManager = ToolManager::Get( project );
 
    auto &commandManager = CommandManager::Get( project );
+
+   auto &settings = ProjectSettings::Get( project );
 
    commandManager.Check(wxT("ShowScrubbingTB"),
                          toolManager.IsVisible(ScrubbingBarID));
@@ -644,8 +648,10 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    commandManager.Check(wxT("Overdub"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    commandManager.Check(wxT("SWPlaythrough"), active);
+
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
-   project.SetSyncLock(active);
+   settings.SetSyncLock(active);
+
    commandManager.Check(wxT("SyncLock"), active);
    gPrefs->Read(wxT("/GUI/TypeToCreateLabel"),&active, false);
    commandManager.Check(wxT("TypeToCreateLabel"), active);

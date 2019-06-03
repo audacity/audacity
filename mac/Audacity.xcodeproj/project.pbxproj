@@ -1211,6 +1211,7 @@
 		5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E013217E5F66003C6C99 /* LabelMenus.cpp */; };
 		5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
+		5E135A36229EDBE80076E983 /* ProjectSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A34229EDBE80076E983 /* ProjectSettings.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
 		5E15125A1DB000DC00702E29 /* LabelTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */; };
 		5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512421DB000DC00702E29 /* LabelTrackUI.cpp */; };
@@ -3175,6 +3176,8 @@
 		5E0D233E21B468BF0057D7C3 /* ClientData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientData.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
 		5E10D9051EC8F81300B3AC57 /* PlayableTrackButtonHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayableTrackButtonHandles.h; sourceTree = "<group>"; };
+		5E135A34229EDBE80076E983 /* ProjectSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectSettings.cpp; sourceTree = "<group>"; };
+		5E135A35229EDBE80076E983 /* ProjectSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectSettings.h; sourceTree = "<group>"; };
 		5E1512381DB000C000702E29 /* HitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitTestResult.h; sourceTree = "<group>"; };
 		5E1512391DB000C000702E29 /* RefreshCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshCode.h; sourceTree = "<group>"; };
 		5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelMouseEvent.h; sourceTree = "<group>"; };
@@ -4360,6 +4363,7 @@
 				1790B0D009883BFD008A330A /* Project.cpp */,
 				5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */,
 				5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */,
+				5E135A34229EDBE80076E983 /* ProjectSettings.cpp */,
 				28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */,
 				EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */,
 				1790B0D209883BFD008A330A /* Resample.cpp */,
@@ -4475,6 +4479,7 @@
 				1790B0D109883BFD008A330A /* Project.h */,
 				5E18CFEF2291C31000E75250 /* ProjectFileIORegistry.h */,
 				5ECF728B228B307E007F2A35 /* ProjectFSCK.h */,
+				5E135A35229EDBE80076E983 /* ProjectSettings.h */,
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
 				5E1512391DB000C000702E29 /* RefreshCode.h */,
@@ -8639,6 +8644,7 @@
 				5E15126D1DB0010C00702E29 /* CommonTrackPanelCell.cpp in Sources */,
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
+				5E135A36229EDBE80076E983 /* ProjectSettings.cpp in Sources */,
 				28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */,
 				28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */,
 				28F2CED5181867BB00573D61 /* valnum.cpp in Sources */,

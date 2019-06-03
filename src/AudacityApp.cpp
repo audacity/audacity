@@ -83,6 +83,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "MissingAliasFileDialog.h"
 #include "PluginManager.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "Screenshot.h"
 #include "Sequence.h"
 #include "WaveTrack.h"
@@ -1522,7 +1523,7 @@ bool AudacityApp::OnInit()
       }
    }
 
-   if( project->mShowSplashScreen ){
+   if( ProjectSettings::Get( *project ).GetShowSplashScreen() ){
       // This may do a check-for-updates at every start up.
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.

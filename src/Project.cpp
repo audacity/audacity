@@ -52,6 +52,7 @@ scroll information.  It also has some status flags.
 #include "Project.h"
 
 #include "ProjectFileIORegistry.h"
+#include "ProjectSettings.h"
 
 #include "Experimental.h"
 
@@ -1061,31 +1062,12 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
    : wxFrame(parent, id, _TS("Audacity"), pos, size),
-     mbLoadedFromAup( false ),
-     mDefaultFormat(QualityPrefs::SampleFormatChoice()),
-     mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
-     mSelectionFormat( NumericTextCtrl::LookupFormat(
-         NumericConverter::TIME,
-         gPrefs->Read(wxT("/SelectionFormat"), wxT("")) ) ),
-     mFrequencySelectionFormatName( NumericTextCtrl::LookupFormat(
-         NumericConverter::FREQUENCY,
-         gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) ) ),
-     mBandwidthSelectionFormatName( NumericTextCtrl::LookupFormat(
-         NumericConverter::BANDWIDTH,
-         gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) ) )
+     mbLoadedFromAup( false )
 {
    auto &project = *this;
    auto &window = project;
 
    mNextWindowID = NextID;
-
-   if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate())) {
-      // The default given above can vary with host/devices. So unless there is an entry for
-      // the default sample rate in audacity.cfg, Audacity can open with a rate which is different
-      // from the rate with which it closed. See bug 1879.
-      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
-      gPrefs->Flush();
-   }
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1112,11 +1094,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    auto &viewInfo = ViewInfo::Get( *this );
 
    mLockPlayRegion = false;
-
-   // Make sure valgrind sees mIsSyncLocked is initialized, even
-   // though we're about to set it from prefs.
-   mIsSyncLocked = false;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
    // LLL:  Read this!!!
    //
@@ -1378,7 +1355,8 @@ void AudacityProject::ApplyUpdatedTheme()
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
 {
-   AudioIOStartStreamOptions options { project.GetRate() };
+   AudioIOStartStreamOptions options {
+      ProjectSettings::Get( project ).GetRate() };
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
    options.listener = &project;
    return options;
@@ -1390,7 +1368,7 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
-      project.GetRate()  //suggested rate
+      ProjectSettings::Get( project ).GetRate()  //suggested rate
    );
    AudioIOStartStreamOptions options{ PlayAtSpeedRate };
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
@@ -1398,40 +1376,8 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    return options;
 }
 
-void AudacityProject::UpdatePrefsVariables()
-{
-   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
-   gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
-   gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
-   gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
-   // Update the old default to the NEW default.
-   if (mSoloPref == wxT("Standard"))
-      mSoloPref = wxT("Simple");
-   gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
-   //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
-
-   // This code to change an empty projects rate is currently disabled, after discussion.
-   // The rule 'Default sample rate' only affects newly created projects was felt to 
-   // be simpler and better.
-#if 0
-   // The DefaultProjectSample rate is the rate for new projects.
-   // Do not change this project's rate, unless there are no tracks.
-   if( TrackList::Get( *this ).size() == 0){
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
-      // If necessary, we change this rate in the selection toolbar too.
-      auto bar = SelectionBar::Get( *this );
-      bar.SetRate( mRate );
-   }
-#endif
-
-   mDefaultFormat = QualityPrefs::SampleFormatChoice();
-}
-
 void AudacityProject::UpdatePrefs()
 {
-   UpdatePrefsVariables();
-
    SetProjectTitle();
 }
 
@@ -1532,12 +1478,15 @@ void AudacityProject::SetProjectTitle( int number)
 
 bool AudacityProject::SnapSelection()
 {
-   if (mSnapTo != SNAP_OFF) {
-      auto &project = *this;
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   auto snapTo = settings.GetSnapTo();
+   if (snapTo != SNAP_OFF) {
       auto &viewInfo = ViewInfo::Get( project );
       SelectedRegion &selectedRegion = viewInfo.selectedRegion;
-      NumericConverter nc(NumericConverter::TIME, GetSelectionFormat(), 0, GetRate());
-      const bool nearest = (mSnapTo == SNAP_NEAREST);
+      NumericConverter nc(NumericConverter::TIME,
+         settings.GetSelectionFormat(), 0, settings.GetRate());
+      const bool nearest = (snapTo == SNAP_NEAREST);
 
       const double oldt0 = selectedRegion.t0();
       const double oldt1 = selectedRegion.t1();
@@ -1562,30 +1511,37 @@ bool AudacityProject::SnapSelection()
 
 double AudacityProject::AS_GetRate()
 {
-   return mRate;
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   return settings.GetRate();
 }
 
 // Typically this came from the SelectionToolbar and does not need to 
 // be communicated back to it.
 void AudacityProject::AS_SetRate(double rate)
 {
-   mRate = rate;
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   settings.SetRate( rate );
 }
 
 int AudacityProject::AS_GetSnapTo()
 {
-   return GetSnapTo();
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   return settings.GetSnapTo();
 }
 
 void AudacityProject::AS_SetSnapTo(int snap)
 {
    auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
 
-   SetSnapTo( snap );
+   settings.SetSnapTo( snap );
 
 // LLL: TODO - what should this be changed to???
 // GetCommandManager()->Check(wxT("Snap"), mSnapTo);
-   gPrefs->Write(wxT("/SnapTo"), mSnapTo);
+   gPrefs->Write(wxT("/SnapTo"), snap);
    gPrefs->Flush();
 
    SnapSelection();
@@ -1597,15 +1553,18 @@ void AudacityProject::AS_SetSnapTo(int snap)
 
 const NumericFormatSymbol & AudacityProject::AS_GetSelectionFormat()
 {
-   return GetSelectionFormat();
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   return settings.GetSelectionFormat();
 }
 
 void AudacityProject::AS_SetSelectionFormat(const NumericFormatSymbol & format)
 {
    auto &project = *this;
-   SetSelectionFormat( format );
+   auto &settings = ProjectSettings::Get( project );
+   settings.SetSelectionFormat( format );
 
-   gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat.Internal());
+   gPrefs->Write(wxT("/SelectionFormat"), format.Internal());
    gPrefs->Flush();
 
    if (SnapSelection())
@@ -1617,25 +1576,29 @@ void AudacityProject::AS_SetSelectionFormat(const NumericFormatSymbol & format)
 double AudacityProject::SSBL_GetRate() const
 {
    auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    // Return maximum of project rate and all track rates.
-   return std::max( mRate,
+   return std::max( settings.GetRate(),
       tracks.Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
 }
 
 const NumericFormatSymbol & AudacityProject::SSBL_GetFrequencySelectionFormatName()
 {
-   return GetFrequencySelectionFormatName();
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   return settings.GetFrequencySelectionFormatName();
 }
 
 void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
 {
    auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
 
-   SetFrequencySelectionFormatName( formatName );
+   settings.SetFrequencySelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/FrequencySelectionFormatName"),
-                 mFrequencySelectionFormatName.Internal());
+                 formatName.Internal());
    gPrefs->Flush();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1645,17 +1608,20 @@ void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatSy
 
 const NumericFormatSymbol & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
 {
-   return GetBandwidthSelectionFormatName();
+   auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
+   return settings.GetBandwidthSelectionFormatName();
 }
 
 void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
 {
    auto &project = *this;
+   auto &settings = ProjectSettings::Get( project );
 
-   SetBandwidthSelectionFormatName( formatName );
+   settings.SetBandwidthSelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
-      mBandwidthSelectionFormatName.Internal());
+      formatName.Internal());
    gPrefs->Flush();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1683,36 +1649,6 @@ void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, 
 #else
    bottom; top; done;
 #endif
-}
-
-const NumericFormatSymbol & AudacityProject::GetFrequencySelectionFormatName() const
-{
-   return mFrequencySelectionFormatName;
-}
-
-void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
-{
-   mFrequencySelectionFormatName = formatName;
-}
-
-const NumericFormatSymbol & AudacityProject::GetBandwidthSelectionFormatName() const
-{
-   return mBandwidthSelectionFormatName;
-}
-
-void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
-{
-   mBandwidthSelectionFormatName = formatName;
-}
-
-void AudacityProject::SetSelectionFormat(const NumericFormatSymbol & format)
-{
-   mSelectionFormat = format;
-}
-
-const NumericFormatSymbol & AudacityProject::GetSelectionFormat() const
-{
-   return mSelectionFormat;
 }
 
 
@@ -2463,6 +2399,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = *this;
    auto &projectFileIO = project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = project;
 
@@ -2510,7 +2447,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
-   if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
+   if (event.CanVeto() && (settings.EmptyCanBeDirty() || bHasTracks)) {
       if ( UndoManager::Get( project ).UnsavedChanges() ) {
          TitleRestorer Restorer( this );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
@@ -3136,10 +3073,13 @@ void AudacityProject::OpenFile(const FilePath &fileNameArg, bool addtohistory)
    const bool err = results.trackError;
 
    if (bParseSuccess) {
-      AS_SetSnapTo(GetSnapTo());
-      AS_SetSelectionFormat(GetSelectionFormat());
-      SSBL_SetFrequencySelectionFormatName(GetFrequencySelectionFormatName());
-      SSBL_SetBandwidthSelectionFormatName(GetBandwidthSelectionFormatName());
+      auto &settings = ProjectSettings::Get( project );
+      AS_SetSnapTo(settings.GetSnapTo());
+      AS_SetSelectionFormat(settings.GetSelectionFormat());
+      SSBL_SetFrequencySelectionFormatName(
+         settings.GetFrequencySelectionFormatName());
+      SSBL_SetBandwidthSelectionFormatName(
+         settings.GetBandwidthSelectionFormatName());
 
       InitialState();
       trackPanel.SetFocusedTrack( *tracks.Any().begin() );
@@ -3395,6 +3335,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    auto &window = ProjectWindow::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &dirManager = DirManager::Get( project );
+   auto &settings = ProjectSettings::Get( project );
    bool bFileVersionFound = false;
    wxString fileVersion = _("<unrecognized version -- possibly corrupt project file>");
    wxString audacityVersion = _("<unrecognized version -- possibly corrupt project file>");
@@ -3511,24 +3452,26 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       else if (!wxStrcmp(attr, wxT("rate"))) {
-         Internat::CompatibleToDouble(value, &mRate);
-         SelectionBar::Get( project ).SetRate( mRate );
+         double rate;
+         Internat::CompatibleToDouble(value, &rate);
+         settings.SetRate( rate );
+         SelectionBar::Get( project ).SetRate( rate );
       }
 
       else if (!wxStrcmp(attr, wxT("snapto"))) {
-         SetSnapTo(wxString(value) == wxT("on") ? true : false);
+         settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
       }
 
       else if (!wxStrcmp(attr, wxT("selectionformat")))
-         SetSelectionFormat(
+         settings.SetSelectionFormat(
             NumericConverter::LookupFormat( NumericConverter::TIME, value) );
 
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
-         SetFrequencySelectionFormatName(
+         settings.SetFrequencySelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
 
       else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-         SetBandwidthSelectionFormatName(
+         settings.SetBandwidthSelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
    } // while
 
@@ -3645,6 +3588,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    auto &viewInfo = ViewInfo::Get( proj );
    auto &dirManager = DirManager::Get( proj );
    auto &tags = Tags::Get( proj );
+   const auto &settings = ProjectSettings::Get( proj );
 
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
@@ -3680,14 +3624,14 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
    viewInfo.WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("rate"), mRate);
-   xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
+   xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
+   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
    xmlFile.WriteAttr(wxT("selectionformat"),
-                     GetSelectionFormat().Internal());
+                     settings.GetSelectionFormat().Internal());
    xmlFile.WriteAttr(wxT("frequencyformat"),
-                     GetFrequencySelectionFormatName().Internal());
+                     settings.GetFrequencySelectionFormatName().Internal());
    xmlFile.WriteAttr(wxT("bandwidthformat"),
-                     GetBandwidthSelectionFormatName().Internal());
+                     settings.GetBandwidthSelectionFormatName().Internal());
 
    tags.WriteXML(xmlFile);
 
@@ -3796,6 +3740,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    auto &proj = *this;
    auto &window = GetProjectFrame( proj );
    auto &dirManager = DirManager::Get( proj );
+   const auto &settings = ProjectSettings::Get( proj );
 
    wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
 
@@ -3806,7 +3751,8 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       auto &tracks = TrackList::Get( project );
       if ( ! tracks.Any() )
       {
-         if ( UndoManager::Get( proj ).UnsavedChanges() && mEmptyCanBeDirty) {
+         if ( UndoManager::Get( proj ).UnsavedChanges()
+         && settings.EmptyCanBeDirty()) {
             int result = AudacityMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
                                       _("Warning - Empty Project"),
                                       wxYES_NO | wxICON_QUESTION, this);
@@ -4232,7 +4178,8 @@ AudacityProject::AddImportedTracks(const FilePath &fileName,
    // Automatically assign rate of imported file to whole project,
    // if this is the first file that is imported
    if (initiallyEmpty && newRate > 0) {
-      mRate = newRate;
+      auto &settings = ProjectSettings::Get( project );
+      settings.SetRate( newRate );
       SelectionBar::Get( project ).SetRate( newRate );
    }
 
@@ -4630,6 +4577,7 @@ void AudacityProject::PushState(const wxString &desc,
                                 UndoPush flags )
 {
    auto &project = *this;
+   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
@@ -4644,8 +4592,8 @@ void AudacityProject::PushState(const wxString &desc,
    menuManager.ModifyUndoMenuItems( project );
    menuManager.UpdateMenus( project );
 
-   if (GetTracksFitVerticallyZoomed())
-      ViewActions::DoZoomFitV(*this);
+   if (settings.GetTracksFitVerticallyZoomed())
+      ViewActions::DoZoomFitV( project );
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 
@@ -5188,34 +5136,6 @@ void AudacityProject::OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog)
    }
 }
 
-void AudacityProject::SetSnapTo(int snap)
-{
-   mSnapTo = snap;
-}
-   
-int AudacityProject::GetSnapTo() const
-{
-   return mSnapTo;
-}
-
-bool AudacityProject::IsSyncLocked()
-{
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   return mIsSyncLocked;
-#else
-   return false;
-#endif
-}
-
-void AudacityProject::SetSyncLock(bool flag)
-{
-   auto &project = *this;
-   if (flag != mIsSyncLocked) {
-      mIsSyncLocked = flag;
-      TrackPanel::Get( project ).Refresh(false);
-   }
-}
-
 bool AudacityProject::IsProjectSaved() {
    auto &project = *this;
    auto &dirManager = DirManager::Get( project );
@@ -5350,7 +5270,7 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) 
    dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
    dRecTime /= bytesOnDiskPerSample;   
    dRecTime /= lCaptureChannels;
-   dRecTime /= GetRate();
+   dRecTime /= ProjectSettings::Get( project ).GetRate();
 
    // Convert to minutes before returning
    int iRecMins = (int)round(dRecTime / 60.0);

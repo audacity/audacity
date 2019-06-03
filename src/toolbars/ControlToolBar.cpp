@@ -66,6 +66,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
@@ -1242,7 +1243,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
 
-            if ((recordingChannels > 2) && !(p->GetTracksFitVerticallyZoomed())) {
+            if ((recordingChannels > 2) &&
+                !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
                newTrack->SetMinimized(true);
             }
 

@@ -7,6 +7,7 @@
 #include "../Menus.h" // for PrefsListener
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../SelectionState.h"
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"
@@ -93,7 +94,8 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
 double NearestZeroCrossing
 (AudacityProject &project, double t0)
 {
-   auto rate = project.GetRate();
+   const auto &settings = ProjectSettings::Get( project );
+   auto rate = settings.GetRate();
    auto &tracks = TrackList::Get( project );
 
    // Window is 1/100th of a second.
@@ -226,9 +228,10 @@ void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 double GridMove
 (AudacityProject &project, double t, int minPix)
 {
-   auto rate = project.GetRate();
+   const auto &settings = ProjectSettings::Get( project );
+   auto rate = settings.GetRate();
    auto &viewInfo = ViewInfo::Get( project );
-   auto format = project.GetSelectionFormat();
+   auto format = settings.GetSelectionFormat();
 
    NumericConverter nc(NumericConverter::TIME, format, t, rate);
 
@@ -271,10 +274,11 @@ void MoveWhenAudioInactive
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &ruler = AdornedRulerPanel::Get( project );
+   const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
-   int snapToTime = project.GetSnapTo();
+   int snapToTime = settings.GetSnapTo();
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max( 
       tracks.GetEndTime(),
@@ -324,6 +328,7 @@ SelectionOperation operation)
    auto &viewInfo = ViewInfo::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
+   const auto &settings = ProjectSettings::Get( project );
 
    if( operation == CURSOR_MOVE )
    {
@@ -331,7 +336,7 @@ SelectionOperation operation)
       return;
    }
 
-   int snapToTime = project.GetSnapTo();
+   int snapToTime = settings.GetSnapTo();
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max( 
@@ -513,10 +518,12 @@ void DoListSelection
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectionState = SelectionState::Get( project );
+   const auto &settings = ProjectSettings::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = GetProjectFrame( project );
 
-   auto isSyncLocked = project.IsSyncLocked();
+   auto isSyncLocked = settings.IsSyncLocked();
+
    selectionState.HandleListSelection(
       tracks, viewInfo, *t,
       shift, ctrl, isSyncLocked );
@@ -611,6 +618,7 @@ void OnSetLeftSelection(const CommandContext &context)
    auto &project = context.project;
    auto token = project.GetAudioIOToken();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   const auto &settings = ProjectSettings::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = GetProjectFrame( project );
 
@@ -623,8 +631,8 @@ void OnSetLeftSelection(const CommandContext &context)
    }
    else
    {
-      auto fmt = project.GetSelectionFormat();
-      auto rate = project.GetRate();
+      auto fmt = settings.GetSelectionFormat();
+      auto rate = settings.GetRate();
 
       TimeDialog dlg(&window, _("Set Left Selection Boundary"),
          fmt, rate, selectedRegion.t0(), _("Position"));
@@ -650,6 +658,7 @@ void OnSetRightSelection(const CommandContext &context)
    auto &project = context.project;
    auto token = project.GetAudioIOToken();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   const auto &settings = ProjectSettings::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = GetProjectFrame( project );
 
@@ -662,8 +671,8 @@ void OnSetRightSelection(const CommandContext &context)
    }
    else
    {
-      auto fmt = project.GetSelectionFormat();
-      auto rate = project.GetRate();
+      auto fmt = settings.GetSelectionFormat();
+      auto rate = settings.GetRate();
 
       TimeDialog dlg(&window, _("Set Right Selection Boundary"),
          fmt, rate, selectedRegion.t1(), _("Position"));
@@ -867,6 +876,7 @@ void OnZeroCrossing(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   const auto &settings = ProjectSettings::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
    const double t0 = NearestZeroCrossing(project, selectedRegion.t0());
@@ -875,7 +885,7 @@ void OnZeroCrossing(const CommandContext &context)
    else {
       const double t1 = NearestZeroCrossing(project, selectedRegion.t1());
       // Empty selection is generally not much use, so do not make it if empty.
-      if( fabs( t1 - t0 ) * project.GetRate() > 1.5 )
+      if( fabs( t1 - t0 ) * settings.GetRate() > 1.5 )
          selectedRegion.setTimes(t0, t1);
    }
 

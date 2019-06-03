@@ -194,10 +194,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    virtual void ApplyUpdatedTheme();
 
-   sampleFormat GetDefaultFormat() { return mDefaultFormat; }
-
-   double GetRate() const { return mRate; }
-
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }
@@ -298,15 +294,6 @@ public:
    wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
 
-   bool GetTracksFitVerticallyZoomed() { return mTracksFitVerticallyZoomed; } //lda
-   void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
-
-   bool GetShowId3Dialog() { return mShowId3Dialog; } //lda
-   void SetShowId3Dialog(bool flag) { mShowId3Dialog = flag; } //lda
-
-   bool GetNormalizeOnLoad() { return mNormalizeOnLoad; } //lda
-   void SetNormalizeOnLoad(bool flag) { mNormalizeOnLoad = flag; } //lda
-
    // Timer Record Auto Save/Export Routines
    bool SaveFromTimerRecording(wxFileName fnFile);
    bool IsProjectSaved();
@@ -348,7 +335,6 @@ public:
    
    int GetProjectNumber(){ return mProjectNo;};
    void UpdatePrefs() override;
-   void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
    void RefreshCursor();
    void Zoom(double level);
@@ -356,27 +342,6 @@ public:
    void Rewind(bool shift);
    void SkipEnd(bool shift);
 
-
-   bool IsSyncLocked();
-   void SetSyncLock(bool flag);
-
-   // Snap To
-
-   void SetSnapTo(int snap);
-   int GetSnapTo() const;
-
-   // Selection Format
-
-   void SetSelectionFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetSelectionFormat() const;
-
-   // Spectral Selection Formats
-
-   void SetFrequencySelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
-
-   void SetBandwidthSelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
 
    // Scrollbars
 
@@ -481,10 +446,6 @@ public:
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
 
- public:
-   bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
-   bool IsSoloNone() const { return mSoloPref == wxT("None"); }
-
  private:
 
    // The project's name and file info
@@ -493,14 +454,6 @@ public:
 
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.
-
-   double mRate;
-   sampleFormat mDefaultFormat;
-
-   int mSnapTo;
-   NumericFormatSymbol mSelectionFormat;
-   NumericFormatSymbol mFrequencySelectionFormatName;
-   NumericFormatSymbol mBandwidthSelectionFormatName;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
 
@@ -536,8 +489,6 @@ private:
    MeterPanel *mCaptureMeter{};
 
  public:
-   bool mShowSplashScreen;
-   wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
@@ -552,18 +503,11 @@ private:
    int  mAudioIOToken{ -1 };
 
    bool mIsDeleting{ false };
-   bool mTracksFitVerticallyZoomed{ false };  //lda
-   bool mNormalizeOnLoad;  //lda
-   bool mShowId3Dialog{ true }; //lda
-   bool mEmptyCanBeDirty;
 
 public:
-   bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
 private:
-
-   bool mIsSyncLocked;
 
    bool mLockPlayRegion;
 
@@ -659,4 +603,3 @@ AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 #endif
-
