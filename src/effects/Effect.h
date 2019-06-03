@@ -19,6 +19,7 @@
 #include <set>
 
 #include <wx/defs.h>
+#include <wx/bitmap.h>
 
 class wxButton;
 class wxCheckBox;
