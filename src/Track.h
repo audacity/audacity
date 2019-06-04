@@ -1654,8 +1654,4 @@ class AUDACITY_DLL_API TrackFactory final
 #endif
 };
 
-// global functions
-struct TransportTracks;
-TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi = false);
-
 #endif

@@ -1544,3 +1544,16 @@ void ControlToolBar::CancelRecording()
    const auto project = GetActiveProject();
    TrackList::Get( *project ).ClearPendingTracks();
 }
+
+TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
+{
+   TransportTracks result;
+   result.playbackTracks = trackList.GetWaveTrackArray(selectedOnly);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (useMidi)
+      result.midiTracks = trackList.GetNoteTrackConstArray(selectedOnly);
+#else
+   WXUNUSED(useMidi);
+#endif
+   return result;
+}
