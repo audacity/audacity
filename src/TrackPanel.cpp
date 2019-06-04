@@ -110,8 +110,6 @@ is time to refresh some aspect of the screen.
 
 #include <wx/dcclient.h>
 
-wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
-
 /**
 
 \class TrackPanel

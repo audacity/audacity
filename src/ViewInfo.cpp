@@ -18,7 +18,6 @@ Paul Licameli
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "xml/XMLWriter.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "xml/XMLWriter.h"
