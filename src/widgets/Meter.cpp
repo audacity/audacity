@@ -292,7 +292,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanelWrapper(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
+: MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mQueue(1024),
    mWidth(size.x),
@@ -2148,6 +2148,10 @@ MeterAx::MeterAx(wxWindow *window):
 }
 
 MeterAx::~MeterAx()
+{
+}
+
+MeterPanelBase::~MeterPanelBase()
 {
 }
 

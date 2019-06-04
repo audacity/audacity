@@ -14,7 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 
 class AudacityProject;
-class MeterPanel;
+class MeterPanelBase;
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
@@ -32,17 +32,17 @@ public:
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
-   MeterPanel *GetPlaybackMeter();
-   void SetPlaybackMeter(MeterPanel *playback);
-   MeterPanel *GetCaptureMeter();
-   void SetCaptureMeter(MeterPanel *capture);
+   MeterPanelBase *GetPlaybackMeter();
+   void SetPlaybackMeter(MeterPanelBase *playback);
+   MeterPanelBase *GetCaptureMeter();
+   void SetCaptureMeter(MeterPanelBase *capture);
 
 private:
    AudacityProject &mProject;
 
    // Project owned meters
-   MeterPanel *mPlaybackMeter{};
-   MeterPanel *mCaptureMeter{};
+   MeterPanelBase *mPlaybackMeter{};
+   MeterPanelBase *mCaptureMeter{};
 
    int  mAudioIOToken{ -1 };
 };

@@ -306,7 +306,7 @@ void AudioIOBase::HandleDeviceChange()
 #endif   // USE_PORTMIXER
 }
 
-void AudioIOBase::SetCaptureMeter(AudacityProject *project, MeterPanel *meter)
+void AudioIOBase::SetCaptureMeter(AudacityProject *project, MeterPanelBase *meter)
 {
    if (( mOwningProject ) && ( mOwningProject != project))
       return;
@@ -320,7 +320,7 @@ void AudioIOBase::SetCaptureMeter(AudacityProject *project, MeterPanel *meter)
       mInputMeter.Release();
 }
 
-void AudioIOBase::SetPlaybackMeter(AudacityProject *project, MeterPanel *meter)
+void AudioIOBase::SetPlaybackMeter(AudacityProject *project, MeterPanelBase *meter)
 {
    if (( mOwningProject ) && ( mOwningProject != project))
       return;

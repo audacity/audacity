@@ -893,7 +893,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    // also clean the MeterQueues
    if( project ) {
       auto &projectAudioIO = ProjectAudioIO::Get( *project );
-      MeterPanel *meter = projectAudioIO.GetPlaybackMeter();
+      auto meter = projectAudioIO.GetPlaybackMeter();
       if( meter ) {
          meter->Clear();
       }

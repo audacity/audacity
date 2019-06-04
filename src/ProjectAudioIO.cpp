@@ -55,12 +55,12 @@ bool ProjectAudioIO::IsAudioActive() const
       gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
-MeterPanel *ProjectAudioIO::GetPlaybackMeter()
+MeterPanelBase *ProjectAudioIO::GetPlaybackMeter()
 {
    return mPlaybackMeter;
 }
 
-void ProjectAudioIO::SetPlaybackMeter(MeterPanel *playback)
+void ProjectAudioIO::SetPlaybackMeter(MeterPanelBase *playback)
 {
    auto &project = mProject;
    mPlaybackMeter = playback;
@@ -71,12 +71,12 @@ void ProjectAudioIO::SetPlaybackMeter(MeterPanel *playback)
    }
 }
 
-MeterPanel *ProjectAudioIO::GetCaptureMeter()
+MeterPanelBase *ProjectAudioIO::GetCaptureMeter()
 {
    return mCaptureMeter;
 }
 
-void ProjectAudioIO::SetCaptureMeter(MeterPanel *capture)
+void ProjectAudioIO::SetCaptureMeter(MeterPanelBase *capture)
 {
    auto &project = mProject;
    mCaptureMeter = capture;

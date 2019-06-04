@@ -87,11 +87,27 @@ class MeterUpdateQueue
 
 class MeterAx;
 
+class MeterPanelBase /* not final */
+   : public wxPanelWrapper
+{
+public:
+   using wxPanelWrapper::wxPanelWrapper;
+   ~MeterPanelBase() override;
+
+   virtual void Clear() = 0;
+   virtual void Reset(double sampleRate, bool resetClipping) = 0;
+   virtual void UpdateDisplay(unsigned numChannels,
+                      int numFrames, float *sampleData) = 0;
+   virtual bool IsMeterDisabled() const = 0;
+   virtual float GetMaxPeak() const = 0;
+private:
+};
+
 /********************************************************************//**
 \brief MeterPanel is a panel that paints the meter used for monitoring
 or playback.
 ************************************************************************/
-class MeterPanel final : public wxPanelWrapper, private PrefsListener
+class MeterPanel final : public MeterPanelBase, private PrefsListener
 {
    DECLARE_DYNAMIC_CLASS(MeterPanel)
 
@@ -121,7 +137,7 @@ class MeterPanel final : public wxPanelWrapper, private PrefsListener
 
    void SetFocusFromKbd() override;
 
-   void Clear();
+   void Clear() override;
 
    Style GetStyle() const { return mStyle; }
    Style GetDesiredStyle() const { return mDesiredStyle; }
@@ -132,7 +148,7 @@ class MeterPanel final : public wxPanelWrapper, private PrefsListener
     * This method is thread-safe!  Feel free to call from a
     * different thread (like from an audio I/O callback).
     */
-   void Reset(double sampleRate, bool resetClipping);
+   void Reset(double sampleRate, bool resetClipping) override;
 
    /** \brief Update the meters with a block of audio data
     *
@@ -157,7 +173,7 @@ class MeterPanel final : public wxPanelWrapper, private PrefsListener
     * The second overload is for ease of use in MixerBoard.
     */
    void UpdateDisplay(unsigned numChannels,
-                      int numFrames, float *sampleData);
+                      int numFrames, float *sampleData) override;
 
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
    //void UpdateDisplay(int numChannels, int numFrames,
@@ -171,9 +187,9 @@ class MeterPanel final : public wxPanelWrapper, private PrefsListener
     * This method is thread-safe!  Feel free to call from a
     * different thread (like from an audio I/O callback).
     */
-   bool IsMeterDisabled() const;
+   bool IsMeterDisabled() const override;
 
-   float GetMaxPeak() const;
+   float GetMaxPeak() const override;
 
    bool IsClipping() const;
 

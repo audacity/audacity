@@ -31,7 +31,7 @@ class AudioIOBase;
 class AudacityProject;
 class AudioIOListener;
 class BoundedEnvelope;
-class MeterPanel;
+class MeterPanelBase;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
 #define BAD_STREAM_TIME (-DBL_MAX)
@@ -83,7 +83,7 @@ struct AudioIOStartStreamOptions
    {}
 
    AudacityProject *pProject{};
-   MeterPanel *captureMeter{}, *playbackMeter{};
+   MeterPanelBase *captureMeter{}, *playbackMeter{};
    BoundedEnvelope *envelope; // for time warping
    AudioIOListener* listener;
    double rate;
@@ -111,8 +111,8 @@ class AudioIOBase /* not final */
 public:
    static AudioIOBase *Get();
 
-   void SetCaptureMeter(AudacityProject *project, MeterPanel *meter);
-   void SetPlaybackMeter(AudacityProject *project, MeterPanel *meter);
+   void SetCaptureMeter(AudacityProject *project, MeterPanelBase *meter);
+   void SetPlaybackMeter(AudacityProject *project, MeterPanelBase *meter);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -268,8 +268,8 @@ protected:
 
    PaStream           *mPortStreamV19;
 
-   wxWeakRef<MeterPanel> mInputMeter{};
-   wxWeakRef<MeterPanel> mOutputMeter{};
+   wxWeakRef<MeterPanelBase> mInputMeter{};
+   wxWeakRef<MeterPanelBase> mOutputMeter{};
 
    #if USE_PORTMIXER
    PxMixer            *mPortMixer;
