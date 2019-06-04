@@ -674,6 +674,9 @@
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\MeterPanelBase.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
@@ -1760,6 +1763,9 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\Meter.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\MeterPanelBase.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\MultiDialog.h">

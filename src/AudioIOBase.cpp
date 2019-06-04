@@ -17,8 +17,9 @@ Paul Licameli split from AudioIO.cpp
 #include <wx/txtstrm.h>
 
 #include "Envelope.h"
+#include "Prefs.h"
 #include "prefs/RecordingPrefs.h"
-#include "widgets/Meter.h"
+#include "widgets/MeterPanelBase.h"
 
 #if USE_PORTMIXER
 #include "portmixer.h"

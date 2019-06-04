@@ -72,7 +72,7 @@
 #include "../ProjectWindow.h"
 #include "../ViewInfo.h"
 #include "../widgets/AButton.h"
-#include "../widgets/Meter.h"
+#include "../widgets/MeterPanelBase.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"

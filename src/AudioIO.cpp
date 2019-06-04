@@ -463,7 +463,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "prefs/QualityPrefs.h"
 #include "prefs/RecordingPrefs.h"
 #include "toolbars/ControlToolBar.h"
-#include "widgets/Meter.h"
+#include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"

@@ -1218,6 +1218,7 @@
 		5E135A48229EE5530076E983 /* ProjectWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A46229EE5530076E983 /* ProjectWindow.cpp */; };
 		5E135A5122A93DC60076E983 /* ProjectAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4F22A93DC60076E983 /* ProjectAudioManager.cpp */; };
 		5E135A4B22A5F7560076E983 /* AudioIOBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4922A5F7560076E983 /* AudioIOBase.cpp */; };
+		5E135A4E22A62B7E0076E983 /* MeterPanelBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4C22A62B7E0076E983 /* MeterPanelBase.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
 		5E15125A1DB000DC00702E29 /* LabelTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */; };
 		5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512421DB000DC00702E29 /* LabelTrackUI.cpp */; };
@@ -3194,6 +3195,8 @@
 		5E135A5022A93DC60076E983 /* ProjectAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectAudioManager.h; sourceTree = "<group>"; };
 		5E135A4922A5F7560076E983 /* AudioIOBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioIOBase.cpp; sourceTree = "<group>"; };
 		5E135A4A22A5F7560076E983 /* AudioIOBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioIOBase.h; sourceTree = "<group>"; };
+		5E135A4C22A62B7E0076E983 /* MeterPanelBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeterPanelBase.cpp; sourceTree = "<group>"; };
+		5E135A4D22A62B7E0076E983 /* MeterPanelBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterPanelBase.h; sourceTree = "<group>"; };
 		5E1512381DB000C000702E29 /* HitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitTestResult.h; sourceTree = "<group>"; };
 		5E1512391DB000C000702E29 /* RefreshCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshCode.h; sourceTree = "<group>"; };
 		5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelMouseEvent.h; sourceTree = "<group>"; };
@@ -4876,16 +4879,14 @@
 		1790B0FD09883BFD008A330A /* widgets */ = {
 			isa = PBXGroup;
 			children = (
-				659B26C3207501970039894A /* WindowAccessible.cpp */,
-				659B26C4207501970039894A /* WindowAccessible.h */,
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
 				1790B0FF09883BFD008A330A /* AButton.h */,
 				1790B10009883BFD008A330A /* ASlider.cpp */,
 				1790B10109883BFD008A330A /* ASlider.h */,
 				28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */,
 				28F1D8180A2D0018005506A7 /* AttachableScrollBar.h */,
-				5E18CFF122931CA900E75250 /* AudacityMessageBox.h */,
 				5E18CFF222931D3D00E75250 /* AudacityMessageBox.cpp */,
+				5E18CFF122931CA900E75250 /* AudacityMessageBox.h */,
 				5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */,
 				5ED1D0B01CDE560C00471E3C /* BackedPanel.h */,
 				283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */,
@@ -4910,6 +4911,8 @@
 				2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */,
 				1790B10309883BFD008A330A /* Meter.cpp */,
 				1790B10409883BFD008A330A /* Meter.h */,
+				5E135A4C22A62B7E0076E983 /* MeterPanelBase.cpp */,
+				5E135A4D22A62B7E0076E983 /* MeterPanelBase.h */,
 				1790B10509883BFD008A330A /* MultiDialog.cpp */,
 				1790B10609883BFD008A330A /* MultiDialog.h */,
 				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
@@ -4919,9 +4922,9 @@
 				5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */,
 				5ED1D0AA1CDE55BD00471E3C /* Overlay.h */,
 				5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */,
+				5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */,
 				5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */,
 				5E73963A1DAFD82D00BA0A4D /* PopupMenuTable.h */,
-				5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */,
 				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
 				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
 				1790B10709883BFD008A330A /* Ruler.cpp */,
@@ -4930,6 +4933,8 @@
 				28F2CED3181867BB00573D61 /* valnum.h */,
 				1790B10B09883BFD008A330A /* Warning.cpp */,
 				1790B10C09883BFD008A330A /* Warning.h */,
+				659B26C3207501970039894A /* WindowAccessible.cpp */,
+				659B26C4207501970039894A /* WindowAccessible.h */,
 				5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */,
 				5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */,
 			);
@@ -8712,6 +8717,7 @@
 				5EA018291EC7B226001F2996 /* NoteTrackUI.cpp in Sources */,
 				280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */,
 				5E7396471DAFD8F200BA0A4D /* EnvelopeHandle.cpp in Sources */,
+				5E135A4E22A62B7E0076E983 /* MeterPanelBase.cpp in Sources */,
 				28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */,
 				28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */,
 				28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */,

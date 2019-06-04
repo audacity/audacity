@@ -424,6 +424,7 @@
     <ClCompile Include="..\..\..\src\widgets\KeyView.cpp" />
     <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\MeterPanelBase.cpp" />
     <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp" />
     <ClCompile Include="..\..\..\src\widgets\numformatter.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ProgressDialog.cpp" />
@@ -795,6 +796,7 @@
     <ClInclude Include="..\..\..\src\widgets\KeyView.h" />
     <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h" />
     <ClInclude Include="..\..\..\src\widgets\Meter.h" />
+    <ClInclude Include="..\..\..\src\widgets\MeterPanelBase.h" />
     <ClInclude Include="..\..\..\src\widgets\MultiDialog.h" />
     <ClInclude Include="..\..\..\src\widgets\numformatter.h" />
     <ClInclude Include="..\..\..\src\widgets\ProgressDialog.h" />

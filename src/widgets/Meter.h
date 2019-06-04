@@ -23,6 +23,7 @@
 
 #include "../SampleFormat.h"
 #include "../Prefs.h"
+#include "MeterPanelBase.h" // to inherit
 #include "Ruler.h" // member variable
 
 class AudacityProject;
@@ -86,22 +87,6 @@ class MeterUpdateQueue
 };
 
 class MeterAx;
-
-class MeterPanelBase /* not final */
-   : public wxPanelWrapper
-{
-public:
-   using wxPanelWrapper::wxPanelWrapper;
-   ~MeterPanelBase() override;
-
-   virtual void Clear() = 0;
-   virtual void Reset(double sampleRate, bool resetClipping) = 0;
-   virtual void UpdateDisplay(unsigned numChannels,
-                      int numFrames, float *sampleData) = 0;
-   virtual bool IsMeterDisabled() const = 0;
-   virtual float GetMaxPeak() const = 0;
-private:
-};
 
 /********************************************************************//**
 \brief MeterPanel is a panel that paints the meter used for monitoring

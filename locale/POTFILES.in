@@ -747,6 +747,8 @@ src/widgets/LinkingHtmlWindow.cpp
 src/widgets/LinkingHtmlWindow.h
 src/widgets/Meter.cpp
 src/widgets/Meter.h
+src/widgets/MeterPanelBase.cpp
+src/widgets/MeterPanelBase.h
 src/widgets/MultiDialog.cpp
 src/widgets/MultiDialog.h
 src/widgets/NumericTextCtrl.cpp

@@ -729,6 +729,8 @@ audacity_SOURCES = \
 	widgets/LinkingHtmlWindow.h \
 	widgets/Meter.cpp \
 	widgets/Meter.h \
+	widgets/MeterPanelBase.cpp \
+	widgets/MeterPanelBase.h \
 	widgets/MultiDialog.cpp \
 	widgets/MultiDialog.h \
 	widgets/NumericTextCtrl.cpp \

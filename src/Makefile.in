@@ -566,6 +566,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	widgets/ImageRoll.cpp widgets/ImageRoll.h widgets/KeyView.cpp \
 	widgets/KeyView.h widgets/LinkingHtmlWindow.cpp \
 	widgets/LinkingHtmlWindow.h widgets/Meter.cpp widgets/Meter.h \
+	widgets/MeterPanelBase.cpp widgets/MeterPanelBase.h \
 	widgets/MultiDialog.cpp widgets/MultiDialog.h \
 	widgets/NumericTextCtrl.cpp widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp widgets/numformatter.h \
@@ -911,6 +912,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	widgets/audacity-KeyView.$(OBJEXT) \
 	widgets/audacity-LinkingHtmlWindow.$(OBJEXT) \
 	widgets/audacity-Meter.$(OBJEXT) \
+	widgets/audacity-MeterPanelBase.$(OBJEXT) \
 	widgets/audacity-MultiDialog.$(OBJEXT) \
 	widgets/audacity-NumericTextCtrl.$(OBJEXT) \
 	widgets/audacity-numformatter.$(OBJEXT) \
@@ -1644,6 +1646,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	widgets/ImageRoll.cpp widgets/ImageRoll.h widgets/KeyView.cpp \
 	widgets/KeyView.h widgets/LinkingHtmlWindow.cpp \
 	widgets/LinkingHtmlWindow.h widgets/Meter.cpp widgets/Meter.h \
+	widgets/MeterPanelBase.cpp widgets/MeterPanelBase.h \
 	widgets/MultiDialog.cpp widgets/MultiDialog.h \
 	widgets/NumericTextCtrl.cpp widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp widgets/numformatter.h \
@@ -2378,6 +2381,8 @@ widgets/audacity-LinkingHtmlWindow.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-Meter.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
+widgets/audacity-MeterPanelBase.$(OBJEXT): widgets/$(am__dirstamp) \
+	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-MultiDialog.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-NumericTextCtrl.$(OBJEXT): widgets/$(am__dirstamp) \
@@ -2879,6 +2884,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-KeyView.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-LinkingHtmlWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Meter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-MeterPanelBase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-MultiDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-NumericTextCtrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Overlay.Po@am__quote@
@@ -7643,6 +7649,20 @@ widgets/audacity-Meter.obj: widgets/Meter.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/Meter.cpp' object='widgets/audacity-Meter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-Meter.obj `if test -f 'widgets/Meter.cpp'; then $(CYGPATH_W) 'widgets/Meter.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/Meter.cpp'; fi`
+
+widgets/audacity-MeterPanelBase.o: widgets/MeterPanelBase.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-MeterPanelBase.o -MD -MP -MF widgets/$(DEPDIR)/audacity-MeterPanelBase.Tpo -c -o widgets/audacity-MeterPanelBase.o `test -f 'widgets/MeterPanelBase.cpp' || echo '$(srcdir)/'`widgets/MeterPanelBase.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-MeterPanelBase.Tpo widgets/$(DEPDIR)/audacity-MeterPanelBase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/MeterPanelBase.cpp' object='widgets/audacity-MeterPanelBase.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-MeterPanelBase.o `test -f 'widgets/MeterPanelBase.cpp' || echo '$(srcdir)/'`widgets/MeterPanelBase.cpp
+
+widgets/audacity-MeterPanelBase.obj: widgets/MeterPanelBase.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-MeterPanelBase.obj -MD -MP -MF widgets/$(DEPDIR)/audacity-MeterPanelBase.Tpo -c -o widgets/audacity-MeterPanelBase.obj `if test -f 'widgets/MeterPanelBase.cpp'; then $(CYGPATH_W) 'widgets/MeterPanelBase.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/MeterPanelBase.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-MeterPanelBase.Tpo widgets/$(DEPDIR)/audacity-MeterPanelBase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/MeterPanelBase.cpp' object='widgets/audacity-MeterPanelBase.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-MeterPanelBase.obj `if test -f 'widgets/MeterPanelBase.cpp'; then $(CYGPATH_W) 'widgets/MeterPanelBase.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/MeterPanelBase.cpp'; fi`
 
 widgets/audacity-MultiDialog.o: widgets/MultiDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-MultiDialog.o -MD -MP -MF widgets/$(DEPDIR)/audacity-MultiDialog.Tpo -c -o widgets/audacity-MultiDialog.o `test -f 'widgets/MultiDialog.cpp' || echo '$(srcdir)/'`widgets/MultiDialog.cpp
