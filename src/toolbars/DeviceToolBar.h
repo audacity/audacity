@@ -59,6 +59,8 @@ class DeviceToolBar final : public ToolBar {
    void RefillCombos();
 
  private:
+   void OnRescannedDevices( wxCommandEvent& );
+
    int  ChangeHost();
    void ChangeDevice(bool isInput);
    void FillHosts();

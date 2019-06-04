@@ -38,7 +38,8 @@
 #include "AudioIOBase.h"
 
 #include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
-#include "toolbars/DeviceToolBar.h"
+
+wxDEFINE_EVENT(EVT_RESCANNED_DEVICES, wxCommandEvent);
 
 DeviceManager DeviceManager::dm;
 
@@ -299,13 +300,11 @@ void DeviceManager::Rescan()
    }
 
    // If this was not an initial scan update each device toolbar.
-   // Hosts may have disappeared or appeared so a complete repopulate is needed.
-   if (m_inited) {
-      for ( auto pProject : AllProjects{} ) {
-         auto &dt = DeviceToolBar::Get( *pProject );
-         dt.RefillCombos();
-      }
+   if ( m_inited ) {
+      wxCommandEvent e{ EVT_RESCANNED_DEVICES };
+      wxTheApp->ProcessEvent( e );
    }
+
    m_inited = true;
    mRescanTime = std::chrono::steady_clock::now();
 }

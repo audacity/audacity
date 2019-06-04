@@ -75,6 +75,8 @@ static int DeviceToolbarPrefsID()
 DeviceToolBar::DeviceToolBar()
 : ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
 {
+   wxTheApp->Bind( EVT_RESCANNED_DEVICES,
+      &DeviceToolBar::OnRescannedDevices, this );
 }
 
 DeviceToolBar::~DeviceToolBar()
@@ -626,6 +628,13 @@ void DeviceToolBar::FillHostDevices()
    mOutput->SetMaxSize(mOutput->GetBestSize()*4);
 
    // The setting of the Device is left up to OnChoice
+}
+
+void DeviceToolBar::OnRescannedDevices( wxCommandEvent &event )
+{
+   event.Skip();
+   // Hosts may have disappeared or appeared so a complete repopulate is needed.
+   RefillCombos();
 }
 
 //return 1 if host changed, 0 otherwise.
