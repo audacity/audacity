@@ -22,6 +22,13 @@ class AudacityProject;
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
+enum
+{
+   SNAP_OFF,
+   SNAP_NEAREST,
+   SNAP_PRIOR
+};
+
 ///\brief Holds various per-project settings values, including the sample rate,
 /// and sends events to the project when certain values change
 class ProjectSettings final

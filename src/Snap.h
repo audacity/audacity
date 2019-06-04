@@ -47,13 +47,6 @@ public:
 
 class TrackClipArray : public std::vector < TrackClip > {};
 
-enum
-{
-   SNAP_OFF,
-   SNAP_NEAREST,
-   SNAP_PRIOR
-};
-
 const int kPixelTolerance = 4;
 
 class SnapPoint

@@ -56,6 +56,7 @@ with changes in the SelectionBar.
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
+#include "../ProjectSettings.h"
 #include "../Snap.h"
 #include "../AllThemeResources.h"
 
