@@ -25,7 +25,6 @@
 #include "AColor.h"
 #include "widgets/Ruler.h"
 #include "Envelope.h"
-#include "EnvelopeEditor.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectSettings.h"
@@ -316,7 +315,7 @@ void TimeTrack::Draw
    mRuler->Draw(dc, GetEnvelope());
 
    Doubles envValues{ size_t(mid.width) };
-   EnvelopeEditor::GetValues( *GetEnvelope(),
+   Envelope::GetValues( *GetEnvelope(),
       0, 0, envValues.get(), mid.width, 0, zoomInfo );
 
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;

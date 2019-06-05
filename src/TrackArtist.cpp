@@ -1816,7 +1816,7 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   EnvelopeEditor::GetValues( *clip->GetEnvelope(),
+   Envelope::GetValues( *clip->GetEnvelope(),
       tOffset,
 
       // PRL: change back to make envelope evaluate only at sample times
@@ -1956,7 +1956,7 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            EnvelopeEditor::GetValues( *clip->GetEnvelope(),
+            Envelope::GetValues( *clip->GetEnvelope(),
                tOffset,
 
                // PRL: change back to make envelope evaluate only at sample times
