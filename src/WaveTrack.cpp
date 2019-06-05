@@ -56,9 +56,9 @@ Track classes.
 #include "ondemand/ODManager.h"
 
 #include "effects/TimeWarper.h"
-#include "prefs/SpectrumPrefs.h"
+#include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
-#include "prefs/WaveformPrefs.h"
+#include "prefs/WaveformSettings.h"
 
 #include "InconsistencyException.h"
 
