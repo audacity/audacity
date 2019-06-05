@@ -49,6 +49,7 @@ public:
    };
    ReadProjectResults ReadProjectFile( const FilePath &fileName );
 
+   static unsigned int GetODFlags( const WaveTrack &track );
    void EnqueueODTasks();
 
    // To be called when closing a project that has been saved, so that

@@ -29,6 +29,7 @@
 #include <wx/valgen.h>
 
 #include "../Prefs.h"
+#include "../ProjectFileManager.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
@@ -474,7 +475,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
          // Since we need complete summary data, we need to block until the OD tasks are done for this track
          // This is needed for track->GetMinMax
          // TODO: should we restrict the flags to just the relevant block files (for selections)
-         while (track->GetODFlags()) {
+         while (ProjectFileManager::GetODFlags( *track )) {
             // update the gui
             if (ProgressResult::Cancelled == mProgress->Update(
                0, _("Waiting for waveform to finish computing...")) )

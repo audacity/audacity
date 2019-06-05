@@ -1506,27 +1506,6 @@ void WaveTrack::Append(samplePtr buffer, sampleFormat format,
                                         blockFileLog);
 }
 
-///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-#include "blockfile/ODDecodeBlockFile.h"
-unsigned int WaveTrack::GetODFlags() const
-{
-   unsigned int ret = 0;
-   for (const auto &clip : mClips)
-   {
-      auto sequence = clip->GetSequence();
-      const auto &blocks = sequence->GetBlockArray();
-      for ( const auto &block : blocks ) {
-         const auto &file = block.f;
-         if(!file->IsDataAvailable())
-            ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
-         else if(!file->IsSummaryAvailable())
-            ret |= ODTask::eODPCMSummary;
-      }
-   }
-   return ret;
-}
-
-
 sampleCount WaveTrack::GetBlockStart(sampleCount s) const
 {
    for (const auto &clip : mClips)

@@ -246,6 +246,7 @@ public:
    // but use more high-level functions inside WaveClip (or add them if you
    // think they are useful for general use)
    Sequence* GetSequence() { return mSequence.get(); }
+   const Sequence* GetSequence() const { return mSequence.get(); }
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something

@@ -43,6 +43,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "effects/EffectManager.h"
+#include "blockfile/ODDecodeBlockFile.h"
 #include "export/Export.h"
 #include "import/Import.h"
 #include "commands/CommandContext.h"
@@ -169,6 +170,25 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
    return { false, bParseSuccess, err, xmlFile.GetErrorStr() };
 }
 
+///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
+unsigned int ProjectFileManager::GetODFlags( const WaveTrack &track )
+{
+   unsigned int ret = 0;
+   for ( const auto &clip : track.GetClips() )
+   {
+      auto sequence = clip->GetSequence();
+      const auto &blocks = sequence->GetBlockArray();
+      for ( const auto &block : blocks ) {
+         const auto &file = block.f;
+         if(!file->IsDataAvailable())
+            ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
+         else if(!file->IsSummaryAvailable())
+            ret |= ODTask::eODPCMSummary;
+      }
+   }
+   return ret;
+}
+
 void ProjectFileManager::EnqueueODTasks()
 {
    //check the ODManager to see if we should add the tracks to the ODManager.
@@ -185,7 +205,7 @@ void ProjectFileManager::EnqueueODTasks()
       for (auto wt : tracks.Any<WaveTrack>()) {
          //check the track for blocks that need decoding.
          //There may be more than one type e.g. FLAC/FFMPEG/lame
-         unsigned int odFlags = wt->GetODFlags();
+         unsigned int odFlags = GetODFlags( *wt );
 
          //add the track to the already created tasks that correspond to the od flags in the wavetrack.
          for(unsigned int i=0;i<newTasks.size();i++) {

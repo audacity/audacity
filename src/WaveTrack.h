@@ -220,9 +220,6 @@ private:
    /// Flush must be called after last Append
    void Flush();
 
-   ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags() const;
-
    ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
    void ClearWaveCaches();
 
