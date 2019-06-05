@@ -257,7 +257,7 @@ void ODManager::AddNewTask(std::unique_ptr<ODTask> &&mtask, bool lockMutex)
    {
       //search for a task containing the lead track.  wavetrack removal is threadsafe and bound to the mQueuesMutex
       //note that GetWaveTrack is not threadsafe, but we are assuming task is not running on a different thread yet.
-      if(mQueues[i]->ContainsWaveTrack(task->GetWaveTrack(0)))
+      if(mQueues[i]->ContainsWaveTrack(task->GetWaveTrack(0).get()))
          queue = mQueues[i].get();
    }
 
@@ -472,20 +472,9 @@ void ODManager::Quit()
    }
 }
 
-///removes a wavetrack and notifies its associated tasks to stop using its reference.
-void ODManager::RemoveWaveTrack(WaveTrack* track)
-{
-   mQueuesMutex.Lock();
-   for(unsigned int i=0;i<mQueues.size();i++)
-   {
-      if(mQueues[i]->ContainsWaveTrack(track))
-         mQueues[i]->RemoveWaveTrack(track);
-   }
-   mQueuesMutex.Unlock();
-}
-
 ///replace the wavetrack whose wavecache the gui watches for updates
-void ODManager::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
+void ODManager::ReplaceWaveTrack(Track *oldTrack,
+   const std::shared_ptr<Track> &newTrack)
 {
    mQueuesMutex.Lock();
    for(unsigned int i=0;i<mQueues.size();i++)
@@ -496,13 +485,14 @@ void ODManager::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
 }
 
 ///if it shares a queue/task, creates a NEW queue/task for the track, and removes it from any previously existing tasks.
-void ODManager::MakeWaveTrackIndependent(WaveTrack* track)
+void ODManager::MakeWaveTrackIndependent(
+   const std::shared_ptr< WaveTrack > &track)
 {
    ODWaveTrackTaskQueue* owner=NULL;
    mQueuesMutex.Lock();
    for(unsigned int i=0;i<mQueues.size();i++)
    {
-      if(mQueues[i]->ContainsWaveTrack(track))
+      if(mQueues[i]->ContainsWaveTrack(track.get()))
       {
          owner = mQueues[i].get();
          break;
@@ -519,7 +509,10 @@ void ODManager::MakeWaveTrackIndependent(WaveTrack* track)
 ///better design in the future.
 ///@return returns success.  Some ODTask conditions require that the tasks finish before merging.
 ///e.g. they have different effects being processed at the same time.
-bool ODManager::MakeWaveTrackDependent(WaveTrack* dependentTrack,WaveTrack* masterTrack)
+bool ODManager::MakeWaveTrackDependent(
+   const std::shared_ptr< WaveTrack > &dependentTrack,
+   WaveTrack* masterTrack
+)
 {
    //First, check to see if the task lists are mergeable.  If so, we can simply add this track to the other task and queue,
    //then DELETE this one.
@@ -535,7 +528,7 @@ bool ODManager::MakeWaveTrackDependent(WaveTrack* dependentTrack,WaveTrack* mast
       {
          masterQueue = mQueues[i].get();
       }
-      else if(mQueues[i]->ContainsWaveTrack(dependentTrack))
+      else if(mQueues[i]->ContainsWaveTrack(dependentTrack.get()))
       {
          dependentQueue = mQueues[i].get();
          dependentIndex = i;

@@ -889,7 +889,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())
-      if (!ODManager::Instance()->MakeWaveTrackDependent(partner, pTrack))
+      if (!ODManager::Instance()
+         ->MakeWaveTrackDependent(partner->SharedPointer<WaveTrack>(), pTrack))
       {
          ;
          //TODO: in the future, we will have to check the return value of MakeWaveTrackDependent -
@@ -927,7 +928,8 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
       //On Demand - have each channel add its own.
       if (ODManager::IsInstanceCreated())
-         ODManager::Instance()->MakeWaveTrackIndependent(channel);
+         ODManager::Instance()->MakeWaveTrackIndependent(
+            channel->SharedPointer<WaveTrack>() );
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
          view.SetHeight(view.GetMinimizedHeight());

@@ -53,8 +53,6 @@ Track classes.
 
 #include "Prefs.h"
 
-#include "ondemand/ODManager.h"
-
 #include "effects/TimeWarper.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
@@ -213,10 +211,6 @@ void WaveTrack::Merge(const Track &orig)
 
 WaveTrack::~WaveTrack()
 {
-   //Let the ODManager know this WaveTrack is disappearing.
-   //Deschedules tasks associated with this track.
-   if(ODManager::IsInstanceCreated())
-      ODManager::Instance()->RemoveWaveTrack(this);
 }
 
 double WaveTrack::GetOffset() const

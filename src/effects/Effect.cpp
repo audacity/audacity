@@ -2256,7 +2256,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
          // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
-            ODManager::Instance()->ReplaceWaveTrack( t, o.get() );
+            ODManager::Instance()->ReplaceWaveTrack( t, o );
          }
       }
    }

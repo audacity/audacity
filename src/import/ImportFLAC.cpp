@@ -505,7 +505,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
       bool moreThanStereo = mNumChannels>2;
       for (const auto &channel : mChannels)
       {
-         mDecoderTask->AddWaveTrack(channel.get());
+         mDecoderTask->AddWaveTrack(channel);
          if(moreThanStereo)
          {
             //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.

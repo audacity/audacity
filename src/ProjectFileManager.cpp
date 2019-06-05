@@ -210,7 +210,7 @@ void ProjectFileManager::EnqueueODTasks()
          //add the track to the already created tasks that correspond to the od flags in the wavetrack.
          for(unsigned int i=0;i<newTasks.size();i++) {
             if(newTasks[i]->GetODType() & odFlags)
-               newTasks[i]->AddWaveTrack(wt);
+               newTasks[i]->AddWaveTrack(wt->SharedPointer< WaveTrack >());
          }
 
          //create whatever NEW tasks we need to.
@@ -236,7 +236,7 @@ void ProjectFileManager::EnqueueODTasks()
             }
             if(newTask)
             {
-               newTask->AddWaveTrack(wt);
+               newTask->AddWaveTrack(wt->SharedPointer< WaveTrack >());
                newTasks.push_back(std::move(newTask));
             }
          }

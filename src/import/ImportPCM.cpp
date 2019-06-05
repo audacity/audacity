@@ -445,7 +445,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
          bool moreThanStereo = mInfo.channels>2;
          for (const auto &channel : channels)
          {
-            computeTask->AddWaveTrack(channel.get());
+            computeTask->AddWaveTrack(channel);
             if(moreThanStereo)
             {
                //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.

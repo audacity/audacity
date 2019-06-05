@@ -102,8 +102,9 @@ void ODDecodeTask::DoSomeInternal()
          mWaveTrackMutex.Lock();
          for(size_t i=0;i<mWaveTracks.size();i++)
          {
-            if(mWaveTracks[i])
-               mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+            auto waveTrack = mWaveTracks[i].lock();
+            if(waveTrack)
+               waveTrack->AddInvalidRegion(blockStartSample,blockEndSample);
          }
          mWaveTrackMutex.Unlock();
       }
@@ -138,13 +139,14 @@ void ODDecodeTask::Update()
 
    for(size_t j=0;j<mWaveTracks.size();j++)
    {
-      if(mWaveTracks[j])
+      auto waveTrack = mWaveTracks[j].lock();
+      if(waveTrack)
       {
          BlockArray *blocks;
          Sequence *seq;
 
          //gather all the blockfiles that we should process in the wavetrack.
-         for (const auto &clip : mWaveTracks[j]->GetAllClips()) {
+         for (const auto &clip : waveTrack->GetAllClips()) {
             seq = clip->GetSequence();
             //TODO:this lock is way to big since the whole file is one sequence.  find a way to break it down.
             seq->LockDeleteUpdateMutex();

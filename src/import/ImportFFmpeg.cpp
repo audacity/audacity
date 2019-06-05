@@ -588,7 +588,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
          //for each wavetrack within the stream add coded blockfiles
          for (int c = 0; c < sc->m_stream->codec->channels; c++) {
-            WaveTrack *t = stream[c].get();
+            auto t = stream[c];
             odTask->AddWaveTrack(t);
 
             auto maxBlockSize = t->GetMaxBlockSize();
