@@ -190,14 +190,4 @@ private:
 void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
 
-// TitleRestorer restores project window titles to what they were, in its destructor.
-class TitleRestorer{
-public:
-   TitleRestorer(ProjectWindow * pWindow );
-   ~TitleRestorer();
-   wxString sProjNumber;
-   wxString sProjName;
-   size_t UnnamedCount;
-};
-
 #endif

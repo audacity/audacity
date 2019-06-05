@@ -700,7 +700,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // project is now empty.
    if (event.CanVeto() && (settings.EmptyCanBeDirty() || bHasTracks)) {
       if ( UndoManager::Get( project ).UnsavedChanges() ) {
-         TitleRestorer Restorer( &window );// RAII
+         TitleRestorer Restorer( window, project );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
          wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber, Restorer.sProjName);
          wxString Message = _("Save project before closing?");

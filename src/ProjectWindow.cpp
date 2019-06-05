@@ -16,7 +16,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "ProjectFileIO.h"
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
@@ -38,48 +37,6 @@ Paul Licameli split from AudacityProject.cpp
 #ifdef __WXGTK__
 #include "../images/AudacityLogoAlpha.xpm"
 #endif
-
-static void RefreshAllTitles(bool bShowProjectNumbers )
-{
-   for ( auto pProject : AllProjects{} ) {
-      if ( !GetProjectFrame( *pProject ).IsIconized() ) {
-         ProjectFileIO::Get( *pProject ).SetProjectTitle(
-            bShowProjectNumbers ? pProject->GetProjectNumber() : -1 );
-      }
-   }
-}
-
-TitleRestorer::TitleRestorer(ProjectWindow * pWindow )
-{
-   auto &window = *pWindow;
-   if( window.IsIconized() )
-      window.Restore();
-   window.Raise(); // May help identifying the window on Mac
-
-   // Construct this projects name and number.
-   auto p = &pWindow->GetProject();
-   sProjName = p->GetProjectName();
-   if (sProjName.empty()){
-      sProjName = _("<untitled>");
-      UnnamedCount = std::count_if(
-         AllProjects{}.begin(), AllProjects{}.end(),
-         []( const AllProjects::value_type &ptr ){
-            return ptr->GetProjectName().empty();
-         }
-      );
-      if( UnnamedCount > 1 ){
-         sProjNumber.Printf( "[Project %02i] ", p->GetProjectNumber()+1 );
-         RefreshAllTitles( true );
-      } 
-   } else {
-      UnnamedCount = 0;
-   }
-}
-
-TitleRestorer::~TitleRestorer() {
-   if( UnnamedCount > 1 )
-      RefreshAllTitles( false );
-}
 
 // Returns the screen containing a rectangle, or -1 if none does.
 int ScreenContaining( wxRect & r ){

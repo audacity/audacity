@@ -113,4 +113,16 @@ private:
    bool mImportedDependencies{ false };
 };
 
+class wxTopLevelWindow;
+
+// TitleRestorer restores project window titles to what they were, in its destructor.
+class TitleRestorer{
+public:
+   TitleRestorer( wxTopLevelWindow &window, AudacityProject &project );
+   ~TitleRestorer();
+   wxString sProjNumber;
+   wxString sProjName;
+   size_t UnnamedCount;
+};
+
 #endif

@@ -39,6 +39,48 @@ Paul Licameli split from AudacityProject.cpp
 #include "xml/XMLFileReader.h"
 #include "xml/XMLWriter.h"
 
+static void RefreshAllTitles(bool bShowProjectNumbers )
+{
+   for ( auto pProject : AllProjects{} ) {
+      if ( !GetProjectFrame( *pProject ).IsIconized() ) {
+         ProjectFileIO::Get( *pProject ).SetProjectTitle(
+            bShowProjectNumbers ? pProject->GetProjectNumber() : -1 );
+      }
+   }
+}
+
+TitleRestorer::TitleRestorer(
+   wxTopLevelWindow &window, AudacityProject &project )
+{
+   if( window.IsIconized() )
+      window.Restore();
+   window.Raise(); // May help identifying the window on Mac
+
+   // Construct this project's name and number.
+   sProjName = project.GetProjectName();
+   if ( sProjName.empty() ) {
+      sProjName = _("<untitled>");
+      UnnamedCount = std::count_if(
+         AllProjects{}.begin(), AllProjects{}.end(),
+         []( const AllProjects::value_type &ptr ){
+            return ptr->GetProjectName().empty();
+         }
+      );
+      if ( UnnamedCount > 1 ) {
+         sProjNumber.Printf(
+            "[Project %02i] ", project.GetProjectNumber() + 1 );
+         RefreshAllTitles( true );
+      } 
+   }
+   else
+      UnnamedCount = 0;
+}
+
+TitleRestorer::~TitleRestorer() {
+   if( UnnamedCount > 1 )
+      RefreshAllTitles( false );
+}
+
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{
   []( AudacityProject &parent ){
      auto result = std::make_shared< ProjectFileIO >( parent );
@@ -1108,7 +1150,7 @@ bool ProjectFileIO::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= fa
 {
    auto &project = mProject;
    auto &window = ProjectWindow::Get( project );
-   TitleRestorer Restorer( &window ); // RAII
+   TitleRestorer Restorer( window, project ); // RAII
    bool bHasPath = true;
    wxFileName filename{ project.GetFileName() };
    // Save a copy of the project with 32-bit float tracks.
