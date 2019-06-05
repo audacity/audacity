@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 
 #include "Scrubbing.h"
-#include "TrackControls.h"
 
 #include "../../AColor.h"
 #include "../../FreqWindow.h"

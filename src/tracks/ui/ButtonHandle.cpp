@@ -15,7 +15,6 @@ Paul Licameli
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../ui/TrackControls.h"
 
 ButtonHandle::ButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )

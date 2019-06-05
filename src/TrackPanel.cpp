@@ -99,7 +99,6 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolsToolBar.h"
 
-#include "tracks/ui/TrackControls.h" // for inheritance relation
 #include "tracks/ui/TrackVRulerControls.h" // for inheritance relation
 
 //This loads the appropriate set of cursors, depending on platform.
@@ -1282,9 +1281,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    if (target)
       target->DrawExtras(UIHandle::Panel, dc, region, clip);
 }
-
-// Make this #include go away!
-#include "tracks/ui/TrackControls.h"
 
 void TrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
