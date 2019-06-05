@@ -76,7 +76,7 @@ void ProjectFileIO::UpdatePrefs()
 void ProjectFileIO::SetProjectTitle( int number)
 {
    auto &project = mProject;
-   auto &window = GetProjectFrame( project );
+   auto &window = ProjectWindow::Get( project );
    wxString name = project.GetProjectName();
 
    // If we are showing project numbers, then we also explicitly show "<untitled>" if there

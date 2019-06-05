@@ -780,7 +780,7 @@ void Exporter::DisplayOptions(int index)
    }
 
 #if defined(__WXMSW__)
-   mPlugins[mf]->DisplayOptions(mProject, msf);
+   mPlugins[mf]->DisplayOptions( FindProjectFrame( mProject ), msf);
 #else
    mPlugins[mf]->DisplayOptions(mDialog, msf);
 #endif
