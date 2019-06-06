@@ -3254,11 +3254,79 @@ void TrackArt::DrawNoteTrack(TrackPanelDrawingContext &context,
 #endif // USE_MIDI
 
 
+// Header needed only for experimental drawing below
+//#include "tracks/ui/EnvelopeHandle.h"
+namespace {
+void DrawHorzRulerAndCurve
+( TrackPanelDrawingContext &context, const wxRect & r,
+  const TimeTrack &track, Ruler &ruler )
+{
+   auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+   
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
+   highlight = target && target->GetEnvelope() == this->GetEnvelope();
+#endif
+   
+   double min = zoomInfo.PositionToTime(0);
+   double max = zoomInfo.PositionToTime(r.width);
+   if (min > max)
+   {
+      wxASSERT(false);
+      min = max;
+   }
+   
+   AColor::UseThemeColour( &dc, clrUnselected );
+   dc.DrawRectangle(r);
+   
+   //copy this rectangle away for future use.
+   wxRect mid = r;
+   
+   // Draw the Ruler
+   ruler.SetBounds(r.x, r.y, r.x + r.width - 1, r.y + r.height - 1);
+   ruler.SetRange(min, max);
+   ruler.SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
+   // I have no idea why!
+   //
+   // LL:  It's because the ruler only Invalidate()s when the NEW value is different
+   //      than the current value.
+   ruler.SetFlip( true );
+   // ruler.SetFlip(track.GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
+   ruler.Draw(dc, track.GetEnvelope());
+   
+   Doubles envValues{ size_t(mid.width) };
+   Envelope::GetValues( *track.GetEnvelope(),
+      0, 0, envValues.get(), mid.width, 0, zoomInfo );
+   
+   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
+   dc.SetPen( pen );
+   
+   auto rangeLower = track.GetRangeLower(), rangeUpper = track.GetRangeUpper();
+   double logLower = log(std::max(1.0e-7, rangeLower)),
+      logUpper = log(std::max(1.0e-7, rangeUpper));
+
+   for (int x = 0; x < mid.width; x++)
+   {
+      double y;
+      if ( track.GetDisplayLog() )
+         y = (double)mid.height * (logUpper - log(envValues[x])) / (logUpper - logLower);
+      else
+         y = (double)mid.height * (rangeUpper - envValues[x]) / (rangeUpper - rangeLower);
+      int thisy = r.y + (int)y;
+      AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
+   }
+}
+}
+
 void TrackArt::DrawTimeTrack(TrackPanelDrawingContext &context,
                                 const TimeTrack *track,
                                 const wxRect & rect)
 {
-   track->Draw( context, rect );
+   DrawHorzRulerAndCurve( context, rect, *track, track->GetRuler() );
    wxRect envRect = rect;
    envRect.height -= 2;
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
