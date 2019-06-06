@@ -495,16 +495,11 @@ audacity_SOURCES = \
 	import/Import.cpp \
 	import/Import.h \
 	import/ImportFLAC.cpp \
-	import/ImportFLAC.h \
 	import/ImportForwards.h \
 	import/ImportLOF.cpp \
-	import/ImportLOF.h \
 	import/ImportMP3.cpp \
-	import/ImportMP3.h \
 	import/ImportOGG.cpp \
-	import/ImportOGG.h \
 	import/ImportPCM.cpp \
-	import/ImportPCM.h \
 	import/ImportPlugin.h \
 	import/ImportRaw.cpp \
 	import/ImportRaw.h \
@@ -776,7 +771,6 @@ audacity_SOURCES += \
 	export/ExportFFmpegDialogs.cpp \
 	export/ExportFFmpegDialogs.h \
 	import/ImportFFmpeg.cpp \
-	import/ImportFFmpeg.h \
 	$(NULL)
 endif
 
@@ -785,7 +779,6 @@ audacity_CPPFLAGS += $(GSTREAMER_CFLAGS)
 audacity_LDADD += $(GSTREAMER_LIBS)
 audacity_SOURCES += \
 	import/ImportGStreamer.cpp \
-	import/ImportGStreamer.h \
 	$(NULL)
 endif
 
@@ -881,7 +874,6 @@ audacity_CPPFLAGS += $(QUICKTIME_CFLAGS)
 audacity_LDADD += $(QUICKTIME_LIBS)
 audacity_SOURCES += \
 	import/ImportQT.cpp \
-	import/ImportQT.h \
 	$(NULL)
 endif
 

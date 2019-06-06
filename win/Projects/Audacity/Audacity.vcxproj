@@ -543,7 +543,6 @@
     <ClInclude Include="..\..\..\src\HitTestResult.h" />
     <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
     <ClInclude Include="..\..\..\src\import\ImportForwards.h" />
-    <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\InconsistencyException.h" />
@@ -752,13 +751,7 @@
     <ClInclude Include="..\..\..\src\export\ExportOGG.h" />
     <ClInclude Include="..\..\..\src\export\ExportPCM.h" />
     <ClInclude Include="..\..\..\src\import\Import.h" />
-    <ClInclude Include="..\..\..\src\import\ImportFFmpeg.h" />
-    <ClInclude Include="..\..\..\src\import\ImportFLAC.h" />
-    <ClInclude Include="..\..\..\src\import\ImportLOF.h" />
     <ClInclude Include="..\..\..\src\import\ImportMIDI.h" />
-    <ClInclude Include="..\..\..\src\import\ImportMP3.h" />
-    <ClInclude Include="..\..\..\src\import\ImportOGG.h" />
-    <ClInclude Include="..\..\..\src\import\ImportPCM.h" />
     <ClInclude Include="..\..\..\src\import\ImportPlugin.h" />
     <ClInclude Include="..\..\..\src\import\ImportRaw.h" />
     <ClInclude Include="..\..\..\src\import\RawAudioGuess.h" />

@@ -88,6 +88,19 @@ class ExtImportItem
 
 class Importer {
 public:
+
+   // Objects of this type are statically constructed in files implementing
+   // subclasses of ImportPlugin
+   struct RegisteredImportPlugin{
+      RegisteredImportPlugin( std::unique_ptr<ImportPlugin> );
+   };
+
+   // Objects of this type are statically constructed in files, to identify
+   // unsupported import formats; typically in a conditional compilation
+   struct RegisteredUnusableImportPlugin{
+      RegisteredUnusableImportPlugin( std::unique_ptr<UnusableImportPlugin> );
+   };
+
    Importer();
    ~Importer();
 
@@ -148,8 +161,8 @@ private:
    static Importer mInstance;
 
    ExtImportItems mExtImportItems;
-   ImportPluginList mImportPluginList;
-   UnusableImportPluginList mUnusableImportPluginList;
+   static ImportPluginList &sImportPluginList();
+   static UnusableImportPluginList &sUnusableImportPluginList();
 };
 
 //----------------------------------------------------------------------------

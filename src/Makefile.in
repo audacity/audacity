@@ -105,14 +105,12 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_FFMPEG_TRUE@	export/ExportFFmpegDialogs.cpp \
 @USE_FFMPEG_TRUE@	export/ExportFFmpegDialogs.h \
 @USE_FFMPEG_TRUE@	import/ImportFFmpeg.cpp \
-@USE_FFMPEG_TRUE@	import/ImportFFmpeg.h \
 @USE_FFMPEG_TRUE@	$(NULL)
 
 @USE_GSTREAMER_TRUE@am__append_7 = $(GSTREAMER_CFLAGS)
 @USE_GSTREAMER_TRUE@am__append_8 = $(GSTREAMER_LIBS)
 @USE_GSTREAMER_TRUE@am__append_9 = \
 @USE_GSTREAMER_TRUE@	import/ImportGStreamer.cpp \
-@USE_GSTREAMER_TRUE@	import/ImportGStreamer.h \
 @USE_GSTREAMER_TRUE@	$(NULL)
 
 @USE_LADSPA_TRUE@am__append_10 = $(LADSPA_CFLAGS)
@@ -175,7 +173,6 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_QUICKTIME_TRUE@am__append_40 = $(QUICKTIME_LIBS)
 @USE_QUICKTIME_TRUE@am__append_41 = \
 @USE_QUICKTIME_TRUE@	import/ImportQT.cpp \
-@USE_QUICKTIME_TRUE@	import/ImportQT.h \
 @USE_QUICKTIME_TRUE@	$(NULL)
 
 @USE_SBSMS_TRUE@am__append_42 = $(SBSMS_CFLAGS)
@@ -432,18 +429,16 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	export/ExportMultiple.cpp export/ExportMultiple.h \
 	export/ExportOGG.cpp export/ExportOGG.h export/ExportPCM.cpp \
 	export/ExportPCM.h import/Import.cpp import/Import.h \
-	import/ImportFLAC.cpp import/ImportFLAC.h \
-	import/ImportForwards.h import/ImportLOF.cpp \
-	import/ImportLOF.h import/ImportMP3.cpp import/ImportMP3.h \
-	import/ImportOGG.cpp import/ImportOGG.h import/ImportPCM.cpp \
-	import/ImportPCM.h import/ImportPlugin.h import/ImportRaw.cpp \
-	import/ImportRaw.h import/RawAudioGuess.cpp \
-	import/RawAudioGuess.h import/FormatClassifier.cpp \
-	import/FormatClassifier.h import/MultiFormatReader.cpp \
-	import/MultiFormatReader.h import/SpecPowerMeter.cpp \
-	import/SpecPowerMeter.h menus/ClipMenus.cpp \
-	menus/EditMenus.cpp menus/ExtraMenus.cpp menus/FileMenus.cpp \
-	menus/HelpMenus.cpp menus/LabelMenus.cpp \
+	import/ImportFLAC.cpp import/ImportForwards.h \
+	import/ImportLOF.cpp import/ImportMP3.cpp import/ImportOGG.cpp \
+	import/ImportPCM.cpp import/ImportPlugin.h \
+	import/ImportRaw.cpp import/ImportRaw.h \
+	import/RawAudioGuess.cpp import/RawAudioGuess.h \
+	import/FormatClassifier.cpp import/FormatClassifier.h \
+	import/MultiFormatReader.cpp import/MultiFormatReader.h \
+	import/SpecPowerMeter.cpp import/SpecPowerMeter.h \
+	menus/ClipMenus.cpp menus/EditMenus.cpp menus/ExtraMenus.cpp \
+	menus/FileMenus.cpp menus/HelpMenus.cpp menus/LabelMenus.cpp \
 	menus/NavigationMenus.cpp menus/PluginMenus.cpp \
 	menus/SelectMenus.cpp menus/ToolbarMenus.cpp \
 	menus/TrackMenus.cpp menus/TransportMenus.cpp \
@@ -585,8 +580,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/audiounits/AudioUnitEffect.h export/ExportFFmpeg.cpp \
 	export/ExportFFmpeg.h export/ExportFFmpegDialogs.cpp \
 	export/ExportFFmpegDialogs.h import/ImportFFmpeg.cpp \
-	import/ImportFFmpeg.h import/ImportGStreamer.cpp \
-	import/ImportGStreamer.h effects/ladspa/ladspa.h \
+	import/ImportGStreamer.cpp effects/ladspa/ladspa.h \
 	effects/ladspa/LadspaEffect.cpp effects/ladspa/LadspaEffect.h \
 	ondemand/ODDecodeFlacTask.cpp ondemand/ODDecodeFlacTask.h \
 	effects/nyquist/LoadNyquist.cpp effects/nyquist/LoadNyquist.h \
@@ -594,7 +588,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/lv2/LoadLV2.cpp effects/lv2/LoadLV2.h \
 	effects/lv2/LV2Effect.cpp effects/lv2/LV2Effect.h \
 	NoteTrack.cpp NoteTrack.h import/ImportMIDI.cpp \
-	import/ImportMIDI.h import/ImportQT.cpp import/ImportQT.h \
+	import/ImportMIDI.h import/ImportQT.cpp \
 	effects/vamp/LoadVamp.cpp effects/vamp/LoadVamp.h \
 	effects/vamp/VampEffect.cpp effects/vamp/VampEffect.h \
 	effects/VST/aeffectx.h effects/VST/VSTEffect.cpp \
@@ -1512,18 +1506,16 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	export/ExportMultiple.cpp export/ExportMultiple.h \
 	export/ExportOGG.cpp export/ExportOGG.h export/ExportPCM.cpp \
 	export/ExportPCM.h import/Import.cpp import/Import.h \
-	import/ImportFLAC.cpp import/ImportFLAC.h \
-	import/ImportForwards.h import/ImportLOF.cpp \
-	import/ImportLOF.h import/ImportMP3.cpp import/ImportMP3.h \
-	import/ImportOGG.cpp import/ImportOGG.h import/ImportPCM.cpp \
-	import/ImportPCM.h import/ImportPlugin.h import/ImportRaw.cpp \
-	import/ImportRaw.h import/RawAudioGuess.cpp \
-	import/RawAudioGuess.h import/FormatClassifier.cpp \
-	import/FormatClassifier.h import/MultiFormatReader.cpp \
-	import/MultiFormatReader.h import/SpecPowerMeter.cpp \
-	import/SpecPowerMeter.h menus/ClipMenus.cpp \
-	menus/EditMenus.cpp menus/ExtraMenus.cpp menus/FileMenus.cpp \
-	menus/HelpMenus.cpp menus/LabelMenus.cpp \
+	import/ImportFLAC.cpp import/ImportForwards.h \
+	import/ImportLOF.cpp import/ImportMP3.cpp import/ImportOGG.cpp \
+	import/ImportPCM.cpp import/ImportPlugin.h \
+	import/ImportRaw.cpp import/ImportRaw.h \
+	import/RawAudioGuess.cpp import/RawAudioGuess.h \
+	import/FormatClassifier.cpp import/FormatClassifier.h \
+	import/MultiFormatReader.cpp import/MultiFormatReader.h \
+	import/SpecPowerMeter.cpp import/SpecPowerMeter.h \
+	menus/ClipMenus.cpp menus/EditMenus.cpp menus/ExtraMenus.cpp \
+	menus/FileMenus.cpp menus/HelpMenus.cpp menus/LabelMenus.cpp \
 	menus/NavigationMenus.cpp menus/PluginMenus.cpp \
 	menus/SelectMenus.cpp menus/ToolbarMenus.cpp \
 	menus/TrackMenus.cpp menus/TransportMenus.cpp \

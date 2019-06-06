@@ -1630,25 +1630,7 @@
     <ClInclude Include="..\..\..\src\import\Import.h">
       <Filter>src\import</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportFFmpeg.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportFLAC.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportLOF.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportMIDI.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportMP3.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportOGG.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportPCM.h">
       <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportPlugin.h">
@@ -1947,9 +1929,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\SseMathFuncs.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportGStreamer.h">
-      <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h">
       <Filter>src\widgets</Filter>

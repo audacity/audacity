@@ -40,16 +40,6 @@ been compiled or are not available in this version of Audacity.  Has
 enough information to identify the file extensions that would be used,
 but little else.
 
-*//****************************************************************//**
-
-\class ImportPluginList
-\brief An ImportPlugin list.
-
-*//****************************************************************//**
-
-\class UnusableImportPluginList
-\brief An UnusableImportPlugin list.
-
 *//*******************************************************************/
 
 #ifndef __AUDACITY_IMPORTER__
@@ -103,6 +93,8 @@ public:
    // format, false otherwise.  This puts the importer into the open
    // state.
    virtual std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) = 0;
+
+   virtual unsigned SequenceNumber() const = 0;
 
    virtual ~ImportPlugin() { }
 
