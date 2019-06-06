@@ -106,9 +106,6 @@ public:
 
 /// Namespace for functions for Edit menu
 namespace EditActions {
-bool DoEditMetadata(
-   AudacityProject &project,
-   const wxString &title, const wxString &shortUndoDescription, bool force );
 void DoReloadPreferences( AudacityProject & );
 }
 

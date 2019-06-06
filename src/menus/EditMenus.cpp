@@ -11,7 +11,6 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -20,6 +19,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
+#include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
@@ -204,35 +204,6 @@ void DoReloadPreferences( AudacityProject &project )
       window.SetSize(r.GetSize());
 #endif
    }
-}
-
-bool DoEditMetadata
-(AudacityProject &project,
- const wxString &title, const wxString &shortUndoDescription, bool force)
-{
-   auto &settings = ProjectSettings::Get( project );
-   auto &tags = Tags::Get( project );
-
-   // Back up my tags
-   // Tags (artist name, song properties, MP3 ID3 info, etc.)
-   // The structure may be shared with undo history entries
-   // To keep undo working correctly, always replace this with a NEW duplicate
-   // BEFORE doing any editing of it!
-   auto newTags = tags.Duplicate();
-
-   if (newTags->ShowEditDialog(&GetProjectFrame( project ), title, force)) {
-      if (tags != *newTags) {
-         // Commit the change to project state only now.
-         Tags::Set( project, newTags );
-         ProjectHistory::Get( project ).PushState(title, shortUndoDescription);
-      }
-      bool bShowInFuture;
-      gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
-      settings.SetShowId3Dialog( bShowInFuture );
-      return true;
-   }
-
-   return false;
 }
 
 // Menu handler functions
@@ -1012,7 +983,7 @@ void OnDisjoin(const CommandContext &context)
 void OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
-   (void)DoEditMetadata( project,
+   (void)Exporter::DoEditMetadata( project,
       _("Edit Metadata Tags"), _("Metadata Tags"), true);
 }
 

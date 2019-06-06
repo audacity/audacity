@@ -61,13 +61,14 @@
 
 #include "../DirManager.h"
 #include "../FileFormats.h"
-#include "../Menus.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
+#include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -380,6 +381,34 @@ const ExportPluginArray &Exporter::GetPlugins()
    return mPlugins;
 }
 
+bool Exporter::DoEditMetadata(AudacityProject &project,
+   const wxString &title, const wxString &shortUndoDescription, bool force)
+{
+   auto &settings = ProjectSettings::Get( project );
+   auto &tags = Tags::Get( project );
+
+   // Back up my tags
+   // Tags (artist name, song properties, MP3 ID3 info, etc.)
+   // The structure may be shared with undo history entries
+   // To keep undo working correctly, always replace this with a NEW duplicate
+   // BEFORE doing any editing of it!
+   auto newTags = tags.Duplicate();
+
+   if (newTags->ShowEditDialog(&GetProjectFrame( project ), title, force)) {
+      if (tags != *newTags) {
+         // Commit the change to project state only now.
+         Tags::Set( project, newTags );
+         ProjectHistory::Get( project ).PushState(title, shortUndoDescription);
+      }
+      bool bShowInFuture;
+      gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
+      settings.SetShowId3Dialog( bShowInFuture );
+      return true;
+   }
+
+   return false;
+}
+
 bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, double t1)
 {
    // Save parms
@@ -405,9 +434,9 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(EditActions::DoEditMetadata( *project,
+      if (!DoEditMetadata( *project,
          _("Edit Metadata Tags"), _("Exported Tags"),
-         ProjectSettings::Get( *mProject ).GetShowId3Dialog()))) {
+         ProjectSettings::Get( *mProject ).GetShowId3Dialog())) {
          return false;
       }
    }
@@ -1044,10 +1073,10 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(EditActions::DoEditMetadata( *project,
+      if (!DoEditMetadata( *project,
          _("Edit Metadata Tags"),
          _("Exported Tags"),
-         ProjectSettings::Get(*mProject).GetShowId3Dialog()))) {
+         ProjectSettings::Get(*mProject).GetShowId3Dialog())) {
          return false;
       }
    }
