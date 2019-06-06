@@ -553,7 +553,7 @@ private:
    // AutoSave related
    //
    // Retrieve the unique autosave ID
-   int GetAutoSaveIdent();
+   int GetAutoSaveIdent() const;
    // Set the unique autosave ID
    void SetAutoSaveIdent(int id);
 

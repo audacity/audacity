@@ -144,7 +144,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   auto timeTrack = tracks->GetTimeTrack();
+   auto timeTrack = *tracks->Any<TimeTrack>().begin();
    Mixer mixer(waveArray,
       // Throw to abort mix-and-render if read fails:
       true,

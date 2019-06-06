@@ -118,7 +118,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
             },
             [&](const TimeTrack *) {
                // Maintain uniqueness of the time track!
-               pNewTrack = tracks.GetTimeTrack();
+               pNewTrack = *tracks.Any<TimeTrack>().begin();
                if (!pNewTrack)
                   uNewTrack = trackFactory.NewTimeTrack(),
                   pNewTrack = uNewTrack.get();

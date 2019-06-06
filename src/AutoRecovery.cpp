@@ -45,13 +45,14 @@ RecordingRecoveryHandler::RecordingRecoveryHandler(AudacityProject* proj)
 
 int RecordingRecoveryHandler::FindTrack() const
 {
-   WaveTrackArray tracks = TrackList::Get( *mProject ).GetWaveTrackArray(false);
-   int index;
+   auto tracks = TrackList::Get( *mProject ).Any< const WaveTrack >();
+   int index = 0;
    if (mAutoSaveIdent)
    {
-      for (index = 0; index < (int)tracks.size(); index++)
+      auto iter = tracks.begin(), end = tracks.end();
+      for (; iter != end; ++iter, ++index)
       {
-         if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
+         if ((*iter)->GetAutoSaveIdent() == mAutoSaveIdent)
          {
             break;
          }
@@ -78,7 +79,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      WaveTrackArray tracks = TrackList::Get( *mProject ).GetWaveTrackArray(false);
+      auto tracks = TrackList::Get( *mProject ).Any< WaveTrack >();
       int index = FindTrack();
       // We need to find the track and sequence where the blockfile belongs
 
@@ -89,7 +90,9 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      WaveTrack* track = tracks[index].get();
+      auto iter = tracks.begin();
+      std::advance( iter, index );
+      WaveTrack* track = *iter;
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
@@ -164,7 +167,7 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
       // Still in inner loop
       return;
 
-   WaveTrackArray tracks = TrackList::Get( *mProject ).GetWaveTrackArray(false);
+   auto tracks = TrackList::Get( *mProject ).Any< WaveTrack >();
    int index = FindTrack();
    // We need to find the track and sequence where the blockfile belongs
 
@@ -173,7 +176,9 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
       wxASSERT(false);
    }
    else {
-      WaveTrack* track = tracks[index].get();
+      auto iter = tracks.begin();
+      std::advance( iter, index );
+      WaveTrack* track = *iter;
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 

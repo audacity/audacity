@@ -1545,13 +1545,28 @@ void ControlToolBar::CancelRecording()
    TrackList::Get( *project ).ClearPendingTracks();
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+#include "NoteTrack.h"
+#endif
+
 TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
 {
    TransportTracks result;
-   result.playbackTracks = trackList.GetWaveTrackArray(selectedOnly);
+   {
+      auto range = trackList.Any< WaveTrack >()
+         + (selectedOnly ? &Track::IsSelected : &Track::Any );
+      for (auto pTrack: range)
+         result.playbackTracks.push_back(
+            pTrack->SharedPointer< WaveTrack >() );
+   }
 #ifdef EXPERIMENTAL_MIDI_OUT
-   if (useMidi)
-      result.midiTracks = trackList.GetNoteTrackConstArray(selectedOnly);
+   if (useMidi) {
+      auto range = trackList.Any< const NoteTrack >() +
+         (selectedOnly ? &Track::IsSelected : &Track::Any );
+      for (auto pTrack: range)
+         result.midiTracks.push_back(
+            pTrack->SharedPointer< const NoteTrack >() );
+   }
 #else
    WXUNUSED(useMidi);
 #endif

@@ -889,7 +889,7 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   if (tracks.GetTimeTrack()) {
+   if ( *tracks.Any<TimeTrack>().begin() ) {
       AudacityMessageBox(_("This version of Audacity only allows one time track for each project window."));
       return;
    }
@@ -1205,7 +1205,9 @@ void OnScoreAlign(const CommandContext &context)
       Mixer mix(
          waveTracks,              // const WaveTrackConstArray &inputTracks
          false, // mayThrow -- is this right?
-         Mixer::WarpOptions{ tracks->GetTimeTrack() }, // const WarpOptions &warpOptions
+         Mixer::WarpOptions{
+            *tracks->Any<const TimeTrack >().begin()
+         }, // const WarpOptions &warpOptions
          0.0,                     // double startTime
          endTime,                 // double stopTime
          2,                       // int numOutChannels

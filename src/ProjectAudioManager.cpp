@@ -176,7 +176,7 @@ DefaultPlayOptions( AudacityProject &project )
       ProjectSettings::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = TrackList::Get( project ).GetTimeTrack();
+   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = &ProjectAudioManager::Get( project );
    return options;
@@ -195,7 +195,7 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = TrackList::Get( project ).GetTimeTrack();
+   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = &ProjectAudioManager::Get( project );
    return options;
