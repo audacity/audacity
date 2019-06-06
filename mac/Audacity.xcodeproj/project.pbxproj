@@ -1232,6 +1232,7 @@
 		5E18CFF02291C31000E75250 /* ProjectFileIORegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */; };
 		5E18CFF322931D3D00E75250 /* AudacityMessageBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E18CFF222931D3D00E75250 /* AudacityMessageBox.cpp */; };
 		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
+		5E19F59922A9665500E3F88E /* AutoRecoveryDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A09F217FA2430068E082 /* EditMenus.cpp */; };
 		5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */; };
@@ -3222,6 +3223,8 @@
 		5E18CFF122931CA900E75250 /* AudacityMessageBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityMessageBox.h; sourceTree = "<group>"; };
 		5E18CFF222931D3D00E75250 /* AudacityMessageBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityMessageBox.cpp; sourceTree = "<group>"; };
 		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
+		5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutoRecoveryDialog.cpp; sourceTree = "<group>"; };
+		5E19F59822A9665500E3F88E /* AutoRecoveryDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoRecoveryDialog.h; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E36A09F217FA2430068E082 /* EditMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditMenus.cpp; path = menus/EditMenus.cpp; sourceTree = "<group>"; };
@@ -4328,6 +4331,7 @@
 				28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */,
 				1790AFD209883BFD008A330A /* AudioIO.cpp */,
 				28560C8F0A75E40F00A3429E /* AutoRecovery.cpp */,
+				5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */,
 				1790AFD409883BFD008A330A /* BatchCommandDialog.cpp */,
 				1790AFD609883BFD008A330A /* BatchCommands.cpp */,
 				1790AFD809883BFD008A330A /* BatchProcessDialog.cpp */,
@@ -4437,6 +4441,7 @@
 				1790AFD309883BFD008A330A /* AudioIO.h */,
 				28F996D91A2A9261008FEEF3 /* AudioIOListener.h */,
 				28560C900A75E40F00A3429E /* AutoRecovery.h */,
+				5E19F59822A9665500E3F88E /* AutoRecoveryDialog.h */,
 				1790AFD509883BFD008A330A /* BatchCommandDialog.h */,
 				1790AFD709883BFD008A330A /* BatchCommands.h */,
 				1790AFD909883BFD008A330A /* BatchProcessDialog.h */,
@@ -8521,6 +8526,7 @@
 				5EA0182C1EC7B226001F2996 /* WaveTrackUI.cpp in Sources */,
 				5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */,
 				2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */,
+				5E19F59922A9665500E3F88E /* AutoRecoveryDialog.cpp in Sources */,
 				2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */,
 				5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */,
 				28D587CB0E264CF4009C7DEA /* LoadLV2.cpp in Sources */,

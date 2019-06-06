@@ -115,6 +115,8 @@ audacity_SOURCES = \
 	AudioIOListener.h \
 	AutoRecovery.cpp \
 	AutoRecovery.h \
+	AutoRecoveryDialog.cpp \
+	AutoRecoveryDialog.h \
 	BatchCommandDialog.cpp \
 	BatchCommandDialog.h \
 	BatchCommands.cpp \

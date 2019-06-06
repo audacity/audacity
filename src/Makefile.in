@@ -294,45 +294,46 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	AudacityApp.cpp AudacityApp.h AudacityException.cpp \
 	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
 	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
-	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
-	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
-	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CellularPanel.cpp CellularPanel.h ClientData.h \
-	ClientDataHelpers.h Clipboard.cpp Clipboard.h CrashReport.cpp \
-	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
-	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
-	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
-	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
-	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
-	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
-	ImageManipulation.cpp ImageManipulation.h \
-	InconsistencyException.cpp InconsistencyException.h \
-	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
-	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
-	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
-	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
-	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
-	Matrix.h MemoryX.h Menus.cpp Menus.h \
-	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
-	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
-	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
-	PlatformCompatibility.cpp PlatformCompatibility.h \
-	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h \
-	ProjectAudioIO.cpp ProjectAudioIO.h ProjectAudioManager.cpp \
-	ProjectAudioManager.h ProjectFileIO.cpp ProjectFileIO.h \
-	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
-	ProjectFSCK.cpp ProjectFSCK.h ProjectHistory.cpp \
-	ProjectHistory.h ProjectManager.cpp ProjectManager.h \
-	ProjectSettings.cpp ProjectSettings.h ProjectWindow.cpp \
-	ProjectWindow.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
-	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
-	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
-	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
-	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	AutoRecovery.h AutoRecoveryDialog.cpp AutoRecoveryDialog.h \
+	BatchCommandDialog.cpp BatchCommandDialog.h BatchCommands.cpp \
+	BatchCommands.h BatchProcessDialog.cpp BatchProcessDialog.h \
+	Benchmark.cpp Benchmark.h CellularPanel.cpp CellularPanel.h \
+	ClientData.h ClientDataHelpers.h Clipboard.cpp Clipboard.h \
+	CrashReport.cpp CrashReport.h Dependencies.cpp Dependencies.h \
+	DeviceChange.cpp DeviceChange.h DeviceManager.cpp \
+	DeviceManager.h Diags.cpp Diags.h Envelope.cpp Envelope.h \
+	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
+	FileException.cpp FileException.h FileIO.cpp FileIO.h \
+	FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
+	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
+	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
+	ImageManipulation.h InconsistencyException.cpp \
+	InconsistencyException.h InterpolateAudio.cpp \
+	InterpolateAudio.h KeyboardCapture.cpp KeyboardCapture.h \
+	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
+	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
+	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
+	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h MemoryX.h \
+	Menus.cpp Menus.h MissingAliasFileDialog.cpp \
+	MissingAliasFileDialog.h Mix.cpp Mix.h MixerBoard.cpp \
+	MixerBoard.h ModuleManager.cpp ModuleManager.h NumberScale.h \
+	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
+	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
+	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
+	Project.h ProjectAudioIO.cpp ProjectAudioIO.h \
+	ProjectAudioManager.cpp ProjectAudioManager.h \
+	ProjectFileIO.cpp ProjectFileIO.h ProjectFileIORegistry.cpp \
+	ProjectFileIORegistry.h ProjectFSCK.cpp ProjectFSCK.h \
+	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
+	ProjectManager.h ProjectSettings.cpp ProjectSettings.h \
+	ProjectWindow.cpp ProjectWindow.h RealFFTf.cpp RealFFTf.h \
+	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
+	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
+	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
+	SelectedRegion.h SelectionState.cpp SelectionState.h \
+	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
+	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -640,6 +641,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-AudacityException.$(OBJEXT) \
 	audacity-AudacityLogger.$(OBJEXT) audacity-AudioIO.$(OBJEXT) \
 	audacity-AutoRecovery.$(OBJEXT) \
+	audacity-AutoRecoveryDialog.$(OBJEXT) \
 	audacity-BatchCommandDialog.$(OBJEXT) \
 	audacity-BatchCommands.$(OBJEXT) \
 	audacity-BatchProcessDialog.$(OBJEXT) \
@@ -1367,45 +1369,46 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AudacityApp.cpp AudacityApp.h AudacityException.cpp \
 	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
 	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
-	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
-	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
-	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CellularPanel.cpp CellularPanel.h ClientData.h \
-	ClientDataHelpers.h Clipboard.cpp Clipboard.h CrashReport.cpp \
-	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
-	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
-	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
-	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
-	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
-	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
-	ImageManipulation.cpp ImageManipulation.h \
-	InconsistencyException.cpp InconsistencyException.h \
-	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
-	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
-	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
-	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
-	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
-	Matrix.h MemoryX.h Menus.cpp Menus.h \
-	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
-	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
-	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
-	PlatformCompatibility.cpp PlatformCompatibility.h \
-	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h \
-	ProjectAudioIO.cpp ProjectAudioIO.h ProjectAudioManager.cpp \
-	ProjectAudioManager.h ProjectFileIO.cpp ProjectFileIO.h \
-	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
-	ProjectFSCK.cpp ProjectFSCK.h ProjectHistory.cpp \
-	ProjectHistory.h ProjectManager.cpp ProjectManager.h \
-	ProjectSettings.cpp ProjectSettings.h ProjectWindow.cpp \
-	ProjectWindow.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
-	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
-	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
-	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
-	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	AutoRecovery.h AutoRecoveryDialog.cpp AutoRecoveryDialog.h \
+	BatchCommandDialog.cpp BatchCommandDialog.h BatchCommands.cpp \
+	BatchCommands.h BatchProcessDialog.cpp BatchProcessDialog.h \
+	Benchmark.cpp Benchmark.h CellularPanel.cpp CellularPanel.h \
+	ClientData.h ClientDataHelpers.h Clipboard.cpp Clipboard.h \
+	CrashReport.cpp CrashReport.h Dependencies.cpp Dependencies.h \
+	DeviceChange.cpp DeviceChange.h DeviceManager.cpp \
+	DeviceManager.h Diags.cpp Diags.h Envelope.cpp Envelope.h \
+	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
+	FileException.cpp FileException.h FileIO.cpp FileIO.h \
+	FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
+	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
+	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
+	ImageManipulation.h InconsistencyException.cpp \
+	InconsistencyException.h InterpolateAudio.cpp \
+	InterpolateAudio.h KeyboardCapture.cpp KeyboardCapture.h \
+	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
+	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
+	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
+	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h MemoryX.h \
+	Menus.cpp Menus.h MissingAliasFileDialog.cpp \
+	MissingAliasFileDialog.h Mix.cpp Mix.h MixerBoard.cpp \
+	MixerBoard.h ModuleManager.cpp ModuleManager.h NumberScale.h \
+	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
+	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
+	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
+	Project.h ProjectAudioIO.cpp ProjectAudioIO.h \
+	ProjectAudioManager.cpp ProjectAudioManager.h \
+	ProjectFileIO.cpp ProjectFileIO.h ProjectFileIORegistry.cpp \
+	ProjectFileIORegistry.h ProjectFSCK.cpp ProjectFSCK.h \
+	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
+	ProjectManager.h ProjectSettings.cpp ProjectSettings.h \
+	ProjectWindow.cpp ProjectWindow.h RealFFTf.cpp RealFFTf.h \
+	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
+	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
+	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
+	SelectedRegion.h SelectionState.cpp SelectionState.h \
+	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
+	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -2522,6 +2525,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityLogger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudioIO.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AutoRecovery.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AutoRecoveryDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BatchCommandDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BatchCommands.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BatchProcessDialog.Po@am__quote@
@@ -3379,6 +3383,20 @@ audacity-AutoRecovery.obj: AutoRecovery.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AutoRecovery.cpp' object='audacity-AutoRecovery.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AutoRecovery.obj `if test -f 'AutoRecovery.cpp'; then $(CYGPATH_W) 'AutoRecovery.cpp'; else $(CYGPATH_W) '$(srcdir)/AutoRecovery.cpp'; fi`
+
+audacity-AutoRecoveryDialog.o: AutoRecoveryDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AutoRecoveryDialog.o -MD -MP -MF $(DEPDIR)/audacity-AutoRecoveryDialog.Tpo -c -o audacity-AutoRecoveryDialog.o `test -f 'AutoRecoveryDialog.cpp' || echo '$(srcdir)/'`AutoRecoveryDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AutoRecoveryDialog.Tpo $(DEPDIR)/audacity-AutoRecoveryDialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AutoRecoveryDialog.cpp' object='audacity-AutoRecoveryDialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AutoRecoveryDialog.o `test -f 'AutoRecoveryDialog.cpp' || echo '$(srcdir)/'`AutoRecoveryDialog.cpp
+
+audacity-AutoRecoveryDialog.obj: AutoRecoveryDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AutoRecoveryDialog.obj -MD -MP -MF $(DEPDIR)/audacity-AutoRecoveryDialog.Tpo -c -o audacity-AutoRecoveryDialog.obj `if test -f 'AutoRecoveryDialog.cpp'; then $(CYGPATH_W) 'AutoRecoveryDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/AutoRecoveryDialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AutoRecoveryDialog.Tpo $(DEPDIR)/audacity-AutoRecoveryDialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AutoRecoveryDialog.cpp' object='audacity-AutoRecoveryDialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AutoRecoveryDialog.obj `if test -f 'AutoRecoveryDialog.cpp'; then $(CYGPATH_W) 'AutoRecoveryDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/AutoRecoveryDialog.cpp'; fi`
 
 audacity-BatchCommandDialog.o: BatchCommandDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-BatchCommandDialog.o -MD -MP -MF $(DEPDIR)/audacity-BatchCommandDialog.Tpo -c -o audacity-BatchCommandDialog.o `test -f 'BatchCommandDialog.cpp' || echo '$(srcdir)/'`BatchCommandDialog.cpp

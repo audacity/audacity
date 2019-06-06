@@ -44,6 +44,8 @@ src/AudioIO.h
 src/AudioIOListener.h
 src/AutoRecovery.cpp
 src/AutoRecovery.h
+src/AutoRecoveryDialog.cpp
+src/AutoRecoveryDialog.h
 src/BatchCommandDialog.cpp
 src/BatchCommandDialog.h
 src/BatchCommands.cpp
