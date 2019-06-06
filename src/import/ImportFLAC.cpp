@@ -39,7 +39,6 @@
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
 
-#include "Import.h"
 #include "ImportPlugin.h"
 
 #include "../Tags.h"

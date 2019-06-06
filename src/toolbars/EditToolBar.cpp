@@ -49,7 +49,6 @@
 #endif
 
 #include "../AllThemeResources.h"
-#include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../Menus.h"
 #include "../Prefs.h"

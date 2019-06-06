@@ -34,7 +34,6 @@
 #include <wx/gbsizer.h>
 
 #include "../AllThemeResources.h"
-#include "../AudioIO.h"
 #include "../ProjectAudioIO.h"
 #include "../widgets/Meter.h"
 

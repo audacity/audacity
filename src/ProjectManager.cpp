@@ -333,7 +333,7 @@ public:
 
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
-            if (Importer::IsMidi(name))
+            if (FileNames::IsMidi(name))
                FileActions::DoImportMIDI(mProject, name);
             else
 #endif
@@ -1292,7 +1292,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 
       {
 #ifdef USE_MIDI
-         if (Importer::IsMidi(fileName))
+         if (FileNames::IsMidi(fileName))
             FileActions::DoImportMIDI( &project, fileName );
          else
 #endif

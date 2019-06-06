@@ -46,6 +46,7 @@ and ImportLOF.cpp.
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
+#include "../FileNames.h"
 #include "../ShuttleGui.h"
 #include "../Project.h"
 #include "../WaveTrack.h"
@@ -325,15 +326,6 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    return new_item;
 }
 
-bool Importer::IsMidi(const FilePath &fName)
-{
-   const auto extension = fName.AfterLast(wxT('.'));
-   return
-      extension.IsSameAs(wxT("gro"), false) ||
-      extension.IsSameAs(wxT("midi"), false) ||
-      extension.IsSameAs(wxT("mid"), false);
-}
-
 // returns number of tracks imported
 bool Importer::Import(const FilePath &fName,
                      TrackFactory *trackFactory,
@@ -349,7 +341,7 @@ bool Importer::Import(const FilePath &fName,
    // Always refuse to import MIDI, even though the FFmpeg plugin pretends to know how (but makes very bad renderings)
 #ifdef USE_MIDI
    // MIDI files must be imported, not opened
-   if (IsMidi(fName)) {
+   if (FileNames::IsMidi(fName)) {
       errorMessage.Printf(_("\"%s\" \nis a MIDI file, not an audio file. \nAudacity cannot open this type of file for playing, but you can\nedit it by clicking File > Import > MIDI."), fName);
       return false;
    }

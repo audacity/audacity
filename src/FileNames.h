@@ -41,6 +41,8 @@ public:
    static void SetDefaultTempDir( const FilePath &tempDir );
    static bool IsTempDirectoryNameOK( const FilePath & Name );
 
+   static bool IsMidi(const FilePath &fName);
+
    /** \brief A list of directories that should be searched for Audacity files
     * (plug-ins, help files, etc.).
     *

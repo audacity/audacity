@@ -81,9 +81,9 @@
 #ifdef USE_MIDI
 #include "ImportMIDI.h"
 #endif // USE_MIDI
+#include "../FileNames.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
-#include "Import.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Project.h"
@@ -374,7 +374,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
 #ifdef USE_MIDI
       // If file is a midi
-      if (Importer::IsMidi(targetfile))
+      if (FileNames::IsMidi(targetfile))
       {
          mProject = FileActions::DoImportMIDI(mProject, targetfile);
       }

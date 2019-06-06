@@ -51,7 +51,6 @@ Track classes.
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
 
-#include "AudioIO.h"
 #include "Prefs.h"
 
 #include "ondemand/ODManager.h"

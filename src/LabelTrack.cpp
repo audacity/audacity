@@ -56,7 +56,6 @@ for drawing different aspects of the label and its text box.
 #include <wx/tokenzr.h>
 #include <wx/utils.h>
 
-#include "AudioIO.h"
 #include "DirManager.h"
 #include "Prefs.h"
 #include "RefreshCode.h"

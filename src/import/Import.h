@@ -137,8 +137,6 @@ public:
     */
     std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
-   static bool IsMidi(const FilePath &fName);
-
    // if false, the import failed and errorMessage will be set.
    bool Import(const FilePath &fName,
               TrackFactory *trackFactory,

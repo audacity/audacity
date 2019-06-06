@@ -32,13 +32,10 @@ The summary is eventually computed and written to a file in a background thread.
 #include "../FileFormats.h"
 
 #include "../ondemand/ODManager.h"
-#include "../AudioIO.h"
 
 #include "NotYetAvailableException.h"
 
 //#include <errno.h>
-
-extern AudioIO *gAudioIO;
 
 const int aheaderTagLen = 20;
 char aheaderTag[aheaderTagLen + 1] = "AudacityBlockFile112";
