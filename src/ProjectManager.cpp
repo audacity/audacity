@@ -61,6 +61,33 @@ Paul Licameli split from AudacityProject.cpp
 
 const int AudacityProjectTimerID = 5200;
 
+static AudacityProject::AttachedObjects::RegisteredFactory
+sProjectSelectionManagerKey {
+   []( AudacityProject &project ) {
+      return std::make_shared< ProjectSelectionManager >( project );
+   }
+};
+
+ProjectSelectionManager &ProjectSelectionManager::Get(
+   AudacityProject &project )
+{
+   return project.AttachedObjects::Get< ProjectSelectionManager >(
+      sProjectSelectionManagerKey );
+}
+
+const ProjectSelectionManager &ProjectSelectionManager::Get(
+   const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+ProjectSelectionManager::ProjectSelectionManager( AudacityProject &project )
+   : mProject{ project }
+{
+}
+
+ProjectSelectionManager::~ProjectSelectionManager() = default;
+
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectManagerKey {
    []( AudacityProject &project ) {
       return std::make_shared< ProjectManager >( project );
@@ -391,9 +418,10 @@ AudacityProject *ProjectManager::New()
    
    //Initialise the Listeners
    gAudioIO->SetListener( &ProjectAudioManager::Get( project ) );
-   SelectionBar::Get( project ).SetListener( &projectManager );
+   auto &projectSelectionManager = ProjectSelectionManager::Get( project );
+   SelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetListener( &projectManager );
+   SpectralSelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #endif
    
 #if wxUSE_DRAG_AND_DROP
@@ -419,7 +447,7 @@ AudacityProject *ProjectManager::New()
    return p;
 }
 
-bool ProjectManager::SnapSelection()
+bool ProjectSelectionManager::SnapSelection()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
@@ -453,7 +481,7 @@ bool ProjectManager::SnapSelection()
    return false;
 }
 
-double ProjectManager::AS_GetRate()
+double ProjectSelectionManager::AS_GetRate()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
@@ -462,21 +490,21 @@ double ProjectManager::AS_GetRate()
 
 // Typically this came from the SelectionToolbar and does not need to 
 // be communicated back to it.
-void ProjectManager::AS_SetRate(double rate)
+void ProjectSelectionManager::AS_SetRate(double rate)
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
    settings.SetRate( rate );
 }
 
-int ProjectManager::AS_GetSnapTo()
+int ProjectSelectionManager::AS_GetSnapTo()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
    return settings.GetSnapTo();
 }
 
-void ProjectManager::AS_SetSnapTo(int snap)
+void ProjectSelectionManager::AS_SetSnapTo(int snap)
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
@@ -496,14 +524,15 @@ void ProjectManager::AS_SetSnapTo(int snap)
    SelectionBar::Get( project ).SetSnapTo(snap);
 }
 
-const NumericFormatSymbol & ProjectManager::AS_GetSelectionFormat()
+const NumericFormatSymbol & ProjectSelectionManager::AS_GetSelectionFormat()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
    return settings.GetSelectionFormat();
 }
 
-void ProjectManager::AS_SetSelectionFormat(const NumericFormatSymbol & format)
+void ProjectSelectionManager::AS_SetSelectionFormat(
+   const NumericFormatSymbol & format)
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
@@ -518,7 +547,8 @@ void ProjectManager::AS_SetSelectionFormat(const NumericFormatSymbol & format)
    SelectionBar::Get( project ).SetSelectionFormat(format);
 }
 
-void ProjectManager::AS_ModifySelection(double &start, double &end, bool done)
+void ProjectSelectionManager::AS_ModifySelection(
+   double &start, double &end, bool done)
 {
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
@@ -531,7 +561,7 @@ void ProjectManager::AS_ModifySelection(double &start, double &end, bool done)
    }
 }
 
-double ProjectManager::SSBL_GetRate() const
+double ProjectSelectionManager::SSBL_GetRate() const
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
@@ -541,14 +571,15 @@ double ProjectManager::SSBL_GetRate() const
       tracks.Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
 }
 
-const NumericFormatSymbol & ProjectManager::SSBL_GetFrequencySelectionFormatName()
+const NumericFormatSymbol &
+ProjectSelectionManager::SSBL_GetFrequencySelectionFormatName()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
    return settings.GetFrequencySelectionFormatName();
 }
 
-void ProjectManager::SSBL_SetFrequencySelectionFormatName(
+void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
    auto &project = mProject;
@@ -566,14 +597,14 @@ void ProjectManager::SSBL_SetFrequencySelectionFormatName(
 }
 
 const NumericFormatSymbol &
-ProjectManager::SSBL_GetBandwidthSelectionFormatName()
+ProjectSelectionManager::SSBL_GetBandwidthSelectionFormatName()
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
    return settings.GetBandwidthSelectionFormatName();
 }
 
-void ProjectManager::SSBL_SetBandwidthSelectionFormatName(
+void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
    auto &project = mProject;
@@ -590,7 +621,7 @@ void ProjectManager::SSBL_SetBandwidthSelectionFormatName(
 #endif
 }
 
-void ProjectManager::SSBL_ModifySpectralSelection(
+void ProjectSelectionManager::SSBL_ModifySpectralSelection(
    double &bottom, double &top, bool done)
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1294,11 +1325,12 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 
    if (bParseSuccess) {
       auto &settings = ProjectSettings::Get( project );
-      AS_SetSnapTo(settings.GetSnapTo());
-      AS_SetSelectionFormat(settings.GetSelectionFormat());
-      SSBL_SetFrequencySelectionFormatName(
+      auto &selectionManager = ProjectSelectionManager::Get( project );
+      selectionManager.AS_SetSnapTo(settings.GetSnapTo());
+      selectionManager.AS_SetSelectionFormat(settings.GetSelectionFormat());
+      selectionManager.SSBL_SetFrequencySelectionFormatName(
          settings.GetFrequencySelectionFormatName());
-      SSBL_SetBandwidthSelectionFormatName(
+      selectionManager.SSBL_SetBandwidthSelectionFormatName(
          settings.GetBandwidthSelectionFormatName());
 
       ProjectHistory::Get( project ).InitialState();

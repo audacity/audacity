@@ -165,7 +165,7 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
    if( !bHasBottom )
       mBottom = 0.0;
 
-   ProjectManager::Get( context.project ).SSBL_ModifySpectralSelection(
+   ProjectSelectionManager::Get( context.project ).SSBL_ModifySpectralSelection(
       mBottom, mTop, false);// false for not done.
    return true;
 }

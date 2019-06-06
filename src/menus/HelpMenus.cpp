@@ -253,7 +253,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
       // preference dialogs.
       if( Str == "/SnapTo" )
       {
-         ProjectManager::Get( *pProject ).AS_SetSnapTo( 0 );
+         ProjectSelectionManager::Get( *pProject ).AS_SetSnapTo( 0 );
       }
       else
       {
