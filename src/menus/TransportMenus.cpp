@@ -11,7 +11,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SoundActivatedRecord.h"
@@ -262,7 +262,7 @@ bool DoPlayStopSelect
          // -- change t0, collapsing to point only if t1 was greater
          selection.setT0(time, false);
 
-      ProjectManager::Get( project ).ModifyState(false);           // without bWantsAutoSave
+      ProjectHistory::Get( project ).ModifyState(false);           // without bWantsAutoSave
       return true;
    }
    return false;
@@ -464,7 +464,7 @@ void OnTimerRecord(const CommandContext &context)
       switch (iTimerRecordingOutcome) {
       case POST_TIMER_RECORD_CANCEL_WAIT:
          // Canceled on the wait dialog
-         ProjectManager::Get( project ).RollbackState();
+         ProjectHistory::Get( project ).RollbackState();
          break;
       case POST_TIMER_RECORD_CANCEL:
          // RunWaitDialog() shows the "wait for start" as well as "recording"
@@ -629,7 +629,7 @@ void OnPunchAndRoll(const CommandContext &context)
       ;
    else
       // Roll back the deletions
-      ProjectManager::Get( project ).RollbackState();
+      ProjectHistory::Get( project ).RollbackState();
 }
 #endif
 
@@ -1029,6 +1029,7 @@ void OnMoveToNextLabel(const CommandContext &context)
 void OnStopSelect(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &history = ProjectHistory::Get( project );
    auto &viewInfo = project.GetViewInfo();
    auto &selectedRegion = viewInfo.selectedRegion;
    wxCommandEvent evt;
@@ -1037,7 +1038,7 @@ void OnStopSelect(const CommandContext &context)
       auto &controlToolbar = ControlToolBar::Get( project );
       selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
       controlToolBar.OnStop(evt);
-      project.ModifyState(false);           // without bWantsAutoSave
+      history.ModifyState(false);           // without bWantsAutoSave
    }
 }
 #endif

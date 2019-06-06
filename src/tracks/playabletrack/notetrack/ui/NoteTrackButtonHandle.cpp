@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h"
 
@@ -102,7 +102,7 @@ UIHandle::Result NoteTrackButtonHandle::Release
    if (pTrack->LabelClick(mRect, event.m_x, event.m_y,
       event.Button(wxMOUSE_BTN_RIGHT))) {
       // No undo items needed??
-      ProjectManager::Get( *pProject ).ModifyState(false);
+      ProjectHistory::Get( *pProject ).ModifyState(false);
       return RefreshAll;
    }
    return RefreshNone;

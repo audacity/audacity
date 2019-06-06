@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/translation.h>
 
 #include "HitTestResult.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "RefreshCode.h"
 #include "Track.h"
 #include "TrackPanelMouseEvent.h"
@@ -219,7 +219,7 @@ UIHandle::Result TrackPanelResizeHandle::Release
    ///  We also modify the undo state (the action doesn't become
    ///  undo-able, but it gets merged with the previous undo-able
    ///  event).
-   ProjectManager::Get( *pProject ).ModifyState(false);
+   ProjectHistory::Get( *pProject ).ModifyState(false);
    return RefreshCode::FixScrollbars;
 }
 

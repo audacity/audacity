@@ -168,6 +168,8 @@ src/ProjectFileIORegistry.cpp
 src/ProjectFileIORegistry.h
 src/ProjectFSCK.cpp
 src/ProjectFSCK.h
+src/ProjectHistory.cpp
+src/ProjectHistory.h
 src/ProjectManager.cpp
 src/ProjectManager.h
 src/ProjectSettings.cpp

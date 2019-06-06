@@ -60,7 +60,7 @@ for drawing different aspects of the label and its text box.
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "Project.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectWindow.h"
@@ -1812,7 +1812,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
    if (OnKeyDown(viewInfo.selectedRegion, event)) {
-      ProjectManager::Get( *pProj ).PushState(_("Modified Label"),
+      ProjectHistory::Get( *pProj ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
@@ -1844,7 +1844,7 @@ unsigned LabelTrack::Char(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
    AudacityProject *const pProj = GetActiveProject();
 
    if (OnChar(viewInfo.selectedRegion, event))
-      ProjectManager::Get( *pProj ).PushState(_("Modified Label"),
+      ProjectHistory::Get( *pProj ).PushState(_("Modified Label"),
       _("Label Edit"),
       UndoPush::CONSOLIDATE);
 
@@ -2129,13 +2129,13 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
          }
          SetSelected(true);
          AddLabel(selectedRegion, title, -2);
-         ProjectManager::Get( *p ).PushState(_("Added label"), _("Label"));
+         ProjectHistory::Get( *p ).PushState(_("Added label"), _("Label"));
          return false;
       }
       else {
          SetSelected(true);
          AddLabel(selectedRegion);
-         ProjectManager::Get( *p ).PushState(_("Added label"), _("Label"));
+         ProjectHistory::Get( *p ).PushState(_("Added label"), _("Label"));
       }
    }
 
@@ -2229,7 +2229,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
    case OnCutSelectedTextID:
       if (CutSelectedText())
       {
-         ProjectManager::Get( *p ).PushState(_("Modified Label"),
+         ProjectHistory::Get( *p ).PushState(_("Modified Label"),
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
@@ -2244,7 +2244,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
    case OnPasteSelectedTextID:
       if (PasteSelectedText(selectedRegion.t0(), selectedRegion.t1()))
       {
-         ProjectManager::Get( *p ).PushState(_("Modified Label"),
+         ProjectHistory::Get( *p ).PushState(_("Modified Label"),
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
@@ -2256,7 +2256,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
       if (ndx != -1)
       {
          DeleteLabel(ndx);
-         ProjectManager::Get( *p ).PushState(_("Deleted Label"),
+         ProjectHistory::Get( *p ).PushState(_("Deleted Label"),
                       _("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
@@ -3103,7 +3103,7 @@ void LabelTrack::DoEditLabels
 #endif
 
    if (dlg.ShowModal() == wxID_OK) {
-      ProjectManager::Get( project )
+      ProjectHistory::Get( project )
          .PushState(_("Edited labels"), _("Label"));
       window.RedrawProject();
    }

@@ -323,16 +323,16 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	ProjectAudioIO.cpp ProjectAudioIO.h ProjectAudioManager.cpp \
 	ProjectAudioManager.h ProjectFileIO.cpp ProjectFileIO.h \
 	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
-	ProjectFSCK.cpp ProjectFSCK.h ProjectManager.cpp \
-	ProjectManager.h ProjectSettings.cpp ProjectSettings.h \
-	ProjectWindow.cpp ProjectWindow.h RealFFTf.cpp RealFFTf.h \
-	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
-	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
-	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
-	SelectedRegion.h SelectionState.cpp SelectionState.h \
-	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
-	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
-	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	ProjectFSCK.cpp ProjectFSCK.h ProjectHistory.cpp \
+	ProjectHistory.h ProjectManager.cpp ProjectManager.h \
+	ProjectSettings.cpp ProjectSettings.h ProjectWindow.cpp \
+	ProjectWindow.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
+	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
+	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
+	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
+	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
+	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -673,6 +673,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ProjectFileIO.$(OBJEXT) \
 	audacity-ProjectFileIORegistry.$(OBJEXT) \
 	audacity-ProjectFSCK.$(OBJEXT) \
+	audacity-ProjectHistory.$(OBJEXT) \
 	audacity-ProjectManager.$(OBJEXT) \
 	audacity-ProjectSettings.$(OBJEXT) \
 	audacity-ProjectWindow.$(OBJEXT) audacity-RealFFTf.$(OBJEXT) \
@@ -1395,16 +1396,16 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	ProjectAudioIO.cpp ProjectAudioIO.h ProjectAudioManager.cpp \
 	ProjectAudioManager.h ProjectFileIO.cpp ProjectFileIO.h \
 	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
-	ProjectFSCK.cpp ProjectFSCK.h ProjectManager.cpp \
-	ProjectManager.h ProjectSettings.cpp ProjectSettings.h \
-	ProjectWindow.cpp ProjectWindow.h RealFFTf.cpp RealFFTf.h \
-	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
-	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
-	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
-	SelectedRegion.h SelectionState.cpp SelectionState.h \
-	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
-	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
-	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	ProjectFSCK.cpp ProjectFSCK.h ProjectHistory.cpp \
+	ProjectHistory.h ProjectManager.cpp ProjectManager.h \
+	ProjectSettings.cpp ProjectSettings.h ProjectWindow.cpp \
+	ProjectWindow.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
+	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
+	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
+	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
+	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
+	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -2576,6 +2577,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFSCK.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileIO.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileIORegistry.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectHistory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectSettings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectWindow.Po@am__quote@
@@ -4049,6 +4051,20 @@ audacity-ProjectFSCK.obj: ProjectFSCK.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFSCK.cpp' object='audacity-ProjectFSCK.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFSCK.obj `if test -f 'ProjectFSCK.cpp'; then $(CYGPATH_W) 'ProjectFSCK.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFSCK.cpp'; fi`
+
+audacity-ProjectHistory.o: ProjectHistory.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectHistory.o -MD -MP -MF $(DEPDIR)/audacity-ProjectHistory.Tpo -c -o audacity-ProjectHistory.o `test -f 'ProjectHistory.cpp' || echo '$(srcdir)/'`ProjectHistory.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectHistory.Tpo $(DEPDIR)/audacity-ProjectHistory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectHistory.cpp' object='audacity-ProjectHistory.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectHistory.o `test -f 'ProjectHistory.cpp' || echo '$(srcdir)/'`ProjectHistory.cpp
+
+audacity-ProjectHistory.obj: ProjectHistory.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectHistory.obj -MD -MP -MF $(DEPDIR)/audacity-ProjectHistory.Tpo -c -o audacity-ProjectHistory.obj `if test -f 'ProjectHistory.cpp'; then $(CYGPATH_W) 'ProjectHistory.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectHistory.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectHistory.Tpo $(DEPDIR)/audacity-ProjectHistory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectHistory.cpp' object='audacity-ProjectHistory.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectHistory.obj `if test -f 'ProjectHistory.cpp'; then $(CYGPATH_W) 'ProjectHistory.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectHistory.cpp'; fi`
 
 audacity-ProjectManager.o: ProjectManager.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectManager.o -MD -MP -MF $(DEPDIR)/audacity-ProjectManager.Tpo -c -o audacity-ProjectManager.o `test -f 'ProjectManager.cpp' || echo '$(srcdir)/'`ProjectManager.cpp

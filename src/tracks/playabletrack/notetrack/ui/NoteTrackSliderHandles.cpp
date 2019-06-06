@@ -15,7 +15,7 @@
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h" // for TrackInfo
 #include "../../../../UndoManager.h"
@@ -60,7 +60,7 @@ UIHandle::Result VelocitySliderHandle::SetValue
 UIHandle::Result VelocitySliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject )
+   ProjectHistory::Get( *pProject )
       .PushState(_("Moved velocity slider"), _("Velocity"),
          UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;

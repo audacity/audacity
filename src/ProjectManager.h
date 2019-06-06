@@ -28,8 +28,6 @@ struct AudioIOStartStreamOptions;
 class ImportXMLTagHandler;
 class RecordingRecoveryHandler;
 class Track;
-class UndoState;
-enum class UndoPush : unsigned char;
 class WaveTrack;
 class XMLTagHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
@@ -110,8 +108,6 @@ public:
    AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
-   bool GetDirty() { return mDirty; }
-
    void ResetProjectToEmpty();
 
    static void SaveWindowSize();
@@ -120,18 +116,6 @@ public:
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
    // Converts number of minutes to human readable format
    wxString GetHoursMinsString(int iMinutes);
-
-   void SetStateTo(unsigned int n);
-   bool UndoAvailable();
-   bool RedoAvailable();
-   void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
-   void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
-   void RollbackState();
-   void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file.
-      // Should set only if you really want the state change restored after
-      // a crash, as it can take many seconds for large (eg. 10 track-hours)
-      // projects
-   void PopState(const UndoState &state);
 
    void SetMenuClose(bool value) { mMenuClose = value; }
 
@@ -163,8 +147,6 @@ private:
 
    bool SnapSelection();
 
-   void InitialState();
-
    void RestartTimer();
 
    // Declared in this class so that they can have access to private members
@@ -182,8 +164,6 @@ private:
    std::unique_ptr<ImportXMLTagHandler> mImportXMLTagHandler;
 
    std::unique_ptr<wxTimer> mTimer;
-
-   bool mDirty{ false };
 
    // See explanation in OnCloseWindow
    bool mIsBeingDeleted{ false };

@@ -84,6 +84,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
@@ -899,7 +900,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
          if (proj && (
-            ProjectManager::Get( *proj ).GetDirty() ||
+            ProjectHistory::Get( *proj ).GetDirty() ||
             !TrackList::Get( *proj ).empty()
          ) )
             proj = nullptr;
@@ -1081,7 +1082,7 @@ bool AudacityApp::OnExceptionInMainLoop()
          // Restore the state of the project to what it was before the
          // failed operation
          if (pProject) {
-            ProjectManager::Get( *pProject ).RollbackState();
+            ProjectHistory::Get( *pProject ).RollbackState();
 
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();

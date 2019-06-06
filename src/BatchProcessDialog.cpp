@@ -42,6 +42,7 @@
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectHistory.h"
 #include "ProjectManager.h"
 #include "ProjectWindow.h"
 #include "commands/CommandManager.h"

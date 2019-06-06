@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectManager.h"
+#include "../../ProjectHistory.h"
 #include "../../RefreshCode.h"
 #include "../../TimeTrack.h"
 #include "../../TrackArtist.h"
@@ -287,7 +287,7 @@ UIHandle::Result EnvelopeHandle::Release
 
    const bool needUpdate = ForwardEventToEnvelopes(event, viewInfo);
 
-   ProjectManager::Get( *pProject ).PushState(
+   ProjectHistory::Get( *pProject ).PushState(
       /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
       _("Adjusted envelope."),
       /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
@@ -302,7 +302,7 @@ UIHandle::Result EnvelopeHandle::Release
 
 UIHandle::Result EnvelopeHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    mEnvelopeEditors.clear();
    return RefreshCode::RefreshCell;
 }

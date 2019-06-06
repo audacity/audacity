@@ -14,8 +14,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Experimental.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../ProjectManager.h"
 #include "../../../../ProjectAudioIO.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Snap.h" // for kPixelTolerance
 #include "../../../../TrackPanelMouseEvent.h"
@@ -224,16 +224,16 @@ UIHandle::Result CutlineHandle::Release
    default:
       wxASSERT(false);
    case Merge:
-      ProjectManager::Get( *pProject )
+      ProjectHistory::Get( *pProject )
          .PushState(_("Merged Clips"), _("Merge"), UndoPush::CONSOLIDATE);
       break;
    case Expand:
-      ProjectManager::Get( *pProject )
+      ProjectHistory::Get( *pProject )
          .PushState(_("Expanded Cut Line"), _("Expand"));
       result |= RefreshCode::UpdateSelection;
       break;
    case Remove:
-      ProjectManager::Get( *pProject )
+      ProjectHistory::Get( *pProject )
          .PushState(_("Removed Cut Line"), _("Remove"));
       break;
    }
@@ -246,7 +246,7 @@ UIHandle::Result CutlineHandle::Cancel(AudacityProject *pProject)
 {
    using namespace RefreshCode;
    UIHandle::Result result = RefreshCell;
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    if (mOperation == Expand) {
       AudacityProject &project = *pProject;
       auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;

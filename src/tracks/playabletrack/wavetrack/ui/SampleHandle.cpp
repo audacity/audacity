@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../ProjectAudioIO.h"
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -434,7 +434,7 @@ UIHandle::Result SampleHandle::Release
    //*************************************************
    //On up-click, send the state to the undo stack
    mClickedTrack.reset();       //Set this to NULL so it will catch improper drag events.
-   ProjectManager::Get( *pProject ).PushState(_("Moved Samples"),
+   ProjectHistory::Get( *pProject ).PushState(_("Moved Samples"),
       _("Sample Edit"),
       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
 
@@ -444,7 +444,7 @@ UIHandle::Result SampleHandle::Release
 
 UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    mClickedTrack.reset();
    return RefreshCode::RefreshCell;
 }

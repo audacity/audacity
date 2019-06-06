@@ -219,6 +219,8 @@ audacity_SOURCES = \
 	ProjectFileIORegistry.h \
 	ProjectFSCK.cpp \
 	ProjectFSCK.h \
+	ProjectHistory.cpp \
+	ProjectHistory.h \
 	ProjectManager.cpp \
 	ProjectManager.h \
 	ProjectSettings.cpp \

@@ -11,6 +11,7 @@
 #include "../Printing.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
+#include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../TrackPanel.h"
@@ -131,7 +132,7 @@ AudacityProject *DoImportMIDI(
       auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
 
-      ProjectManager::Get( *pProject )
+      ProjectHistory::Get( *pProject )
          .PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName), _("Import MIDI"));
 
@@ -487,7 +488,7 @@ void OnImportLabels(const CommandContext &context)
       newTrack->SetSelected(true);
       tracks.Add( newTrack );
 
-      ProjectManager::Get( project ).PushState(
+      ProjectHistory::Get( project ).PushState(
          wxString::Format(_("Imported labels from '%s'"), fileName),
             _("Import Labels"));
 

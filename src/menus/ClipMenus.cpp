@@ -1,4 +1,4 @@
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -389,7 +389,7 @@ void DoSelectClipBoundary(AudacityProject &project, bool next)
       else
          selectedRegion.setT0(results[0].time);
 
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
 
       wxString message = ClipBoundaryMessage(results);
@@ -572,7 +572,7 @@ void DoSelectClip(AudacityProject &project, bool next)
       double t0 = results[0].startTime;
       double t1 = results[0].endTime;
       selectedRegion.setTimes(t0, t1);
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.ScrollIntoView(selectedRegion.t0());
       trackPanel.Refresh(false);
 
@@ -618,7 +618,7 @@ void DoCursorClipBoundary
       // value.
       double time = results[0].time;
       selectedRegion.setTimes(time, time);
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.ScrollIntoView(selectedRegion.t0());
       trackPanel.Refresh(false);
 
@@ -720,7 +720,7 @@ void DoClipLeftOrRight
       // keypress (keydown, then keyup), and holding down a key
       // (multiple keydowns followed by a keyup) result in a single
       // entry in Audacity's history dialog.
-      ProjectManager::Get( project )
+      ProjectHistory::Get( project )
          .PushState(message, _("Time-Shift"), UndoPush::CONSOLIDATE);
    }
 

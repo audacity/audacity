@@ -21,7 +21,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "toolbars/ControlToolBar.h"
@@ -127,7 +127,7 @@ You are saving directly to a slow external storage device\n\
       }
 
       // Add to history
-      auto &history = ProjectManager::Get( project );
+      auto &history = ProjectHistory::Get( project );
       history.PushState(_("Recorded Audio"), _("Record"));
 
       // Reset timer record 

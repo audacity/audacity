@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../Project.h"
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
    pTrack->ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = ::GetActiveProject();
-   ProjectManager::Get( *project )
+   ProjectHistory::Get( *project )
       .ModifyState(false);
    mpData->result = RefreshCode::RefreshAll;
 }

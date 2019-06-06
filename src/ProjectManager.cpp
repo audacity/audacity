@@ -30,6 +30,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectFSCK.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "Sequence.h"
@@ -37,14 +38,12 @@ Paul Licameli split from AudacityProject.cpp
 #include "Tags.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
-#include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
 #include "wxFileNameWrapper.h"
 #include "commands/CommandContext.h"
 #include "effects/EffectManager.h"
 #include "import/Import.h"
-#include "ondemand/ODComputeSummaryTask.h"
 #include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
 #include "toolbars/ControlToolBar.h"
@@ -367,6 +366,7 @@ AudacityProject *ProjectManager::New()
    AllProjects{}.Add( sp );
    auto p = sp.get();
    auto &project = *p;
+   auto &projectHistory = ProjectHistory::Get( project );
    auto &projectManager = Get( project );
    auto &window = ProjectWindow::Get( *p );
    window.Init();
@@ -374,7 +374,7 @@ AudacityProject *ProjectManager::New()
    MissingAliasFilesDialog::SetShouldShow(true);
    MenuManager::Get( project ).CreateMenusAndCommands( project );
    
-   projectManager.InitialState();
+   projectHistory.InitialState();
    projectManager.RestartTimer();
    
    // wxGTK3 seems to need to require creating the window using default position
@@ -521,12 +521,13 @@ void ProjectManager::AS_SetSelectionFormat(const NumericFormatSymbol & format)
 void ProjectManager::AS_ModifySelection(double &start, double &end, bool done)
 {
    auto &project = mProject;
+   auto &history = ProjectHistory::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.selectedRegion.setTimes(start, end);
    trackPanel.Refresh(false);
    if (done) {
-      ModifyState(false);
+      history.ModifyState(false);
    }
 }
 
@@ -594,6 +595,7 @@ void ProjectManager::SSBL_ModifySpectralSelection(
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    auto &project = mProject;
+   auto &history = ProjectHistory::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -605,7 +607,7 @@ void ProjectManager::SSBL_ModifySpectralSelection(
    viewInfo.selectedRegion.setFrequencies(bottom, top);
    trackPanel.Refresh(false);
    if (done) {
-      ModifyState(false);
+      history.ModifyState(false);
    }
 #else
    bottom; top; done;
@@ -1011,7 +1013,7 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       // bad things can happen, including data files moving to the NEW
       // project directory, etc.
       if ( proj && (
-         Get( *proj ).mDirty ||
+         ProjectHistory::Get( *proj ).GetDirty() ||
          !TrackList::Get( *proj ).empty()
       ) )
          proj = nullptr;
@@ -1157,6 +1159,7 @@ ProjectManager::sImportHandlerFactory{
 void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 {
    auto &project = mProject;
+   auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
@@ -1298,7 +1301,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       SSBL_SetBandwidthSelectionFormatName(
          settings.GetBandwidthSelectionFormatName());
 
-      InitialState();
+      ProjectHistory::Get( project ).InitialState();
       trackPanel.SetFocusedTrack( *tracks.Any().begin() );
       window.HandleResize();
       trackPanel.Refresh(false);
@@ -1343,7 +1346,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          ::ProjectFSCK(dirManager, err, true); // Correct problems in auto-recover mode.
 
          // PushState calls AutoSave(), so no longer need to do so here.
-         PushState(_("Project was recovered"), _("Recover"));
+         history.PushState(_("Project was recovered"), _("Recover"));
 
          if (!wxRemoveFile(fileName))
             AudacityMessageBox(_("Could not remove old auto save file"),
@@ -1494,6 +1497,7 @@ ProjectManager::AddImportedTracks(const FilePath &fileName,
                                    TrackHolders &&newTracks)
 {
    auto &project = mProject;
+   auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
 
@@ -1571,7 +1575,7 @@ ProjectManager::AddImportedTracks(const FilePath &fileName,
       SelectionBar::Get( project ).SetRate( newRate );
    }
 
-   PushState(wxString::Format(_("Imported '%s'"), fileName),
+   history.PushState(wxString::Format(_("Imported '%s'"), fileName),
        _("Import"));
 
 #if defined(__WXGTK__)
@@ -1676,186 +1680,12 @@ bool ProjectManager::Import(
    dirManager.FillBlockfilesCache();
    return true;
 }
-//
-// Undo/History methods
-//
-
-void ProjectManager::InitialState()
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
-
-   undoManager.ClearStates();
-
-   undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
-      _("Created new project"), wxT(""));
-
-   undoManager.StateSaved();
-
-   auto &menuManager = MenuManager::Get( project );
-   menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus( project );
-}
-
-bool ProjectManager::UndoAvailable()
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   return undoManager.UndoAvailable() &&
-       !tracks.HasPendingTracks();
-}
-
-bool ProjectManager::RedoAvailable()
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   return undoManager.RedoAvailable() &&
-      !tracks.HasPendingTracks();
-}
-
-void ProjectManager::PushState(const wxString &desc, const wxString &shortDesc)
-{
-   PushState(desc, shortDesc, UndoPush::AUTOSAVE);
-}
-
-void ProjectManager::PushState(const wxString &desc,
-                                const wxString &shortDesc,
-                                UndoPush flags )
-{
-   auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
-   undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
-      desc, shortDesc, flags);
-
-   mDirty = true;
-
-   auto &menuManager = MenuManager::Get( project );
-   menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus( project );
-
-   if (settings.GetTracksFitVerticallyZoomed())
-      ViewActions::DoZoomFitV( project );
-   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
-      projectFileIO.AutoSave();
-
-   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
-}
-
-void ProjectManager::RollbackState()
-{
-   auto &project = mProject;
-   auto &undoManager = UndoManager::Get( project );
-   SetStateTo( undoManager.GetCurrentState() );
-}
-
-void ProjectManager::ModifyState(bool bWantsAutoSave)
-{
-   auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
-   undoManager.ModifyState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this());
-   if (bWantsAutoSave)
-      projectFileIO.AutoSave();
-   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
-}
-
-// LL:  Is there a memory leak here as "l" and "t" are not deleted???
-// Vaughan, 2010-08-29: No, as "l" is a TrackList* of an Undo stack state.
-//    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
-void ProjectManager::PopState(const UndoState &state)
-{
-   auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &dstTracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   viewInfo.selectedRegion = state.selectedRegion;
-
-   // Restore tags
-   Tags::Set( project, state.tags );
-
-   TrackList *const tracks = state.tracks.get();
-
-   dstTracks.Clear();
-   bool odUsed = false;
-   std::unique_ptr<ODComputeSummaryTask> computeTask;
-
-   for (auto t : tracks->Any())
-   {
-      auto copyTrack = dstTracks.Add(t->Duplicate());
-
-      //add the track to OD if the manager exists.  later we might do a more rigorous check...
-      copyTrack->TypeSwitch( [&](WaveTrack *wt) {
-         //if the ODManager hasn't been initialized, there's no chance this track has OD blocks since this
-         //is a "Redo" operation.
-         //TODO: update this to look like the update loop in OpenFile that handles general purpose ODTasks.
-         //BUT, it is too slow to go thru every blockfile and check the odtype, so maybe put a flag in wavetrack
-         //that gets unset on OD Completion, (and we could also update the drawing there too.)  The hard part is that
-         //we would need to watch every possible way a OD Blockfile could get inserted into a wavetrack and change the
-         //flag there.
-         if(ODManager::IsInstanceCreated())
-         {
-            if(!odUsed)
-            {
-               computeTask = std::make_unique<ODComputeSummaryTask>();
-               odUsed=true;
-            }
-            // PRL:  Is it correct to add all tracks to one task, even if they
-            // are not partnered channels?  Rather than
-            // make one task for each?
-            computeTask->AddWaveTrack(wt);
-         }
-      });
-   }
-
-   //add the task.
-   if(odUsed)
-      ODManager::Instance()->AddNewTask(std::move(computeTask));
-
-   window.HandleResize();
-
-   MenuManager::Get( project ).UpdateMenus( project );
-
-   projectFileIO.AutoSave();
-}
-
-void ProjectManager::SetStateTo(unsigned int n)
-{
-   auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   undoManager.SetStateTo(n,
-      [this]( const UndoState &state ){ PopState(state); } );
-
-   window.HandleResize();
-   trackPanel.SetFocusedTrack(NULL);
-   trackPanel.Refresh(false);
-   MenuManager::Get( project ).ModifyUndoMenuItems( project );
-}
 
 // This is done to empty out the tracks, but without creating a new project.
 void ProjectManager::ResetProjectToEmpty() {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
+   auto &projectHistory = ProjectHistory::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    SelectActions::DoSelectAll( project );
@@ -1867,7 +1697,7 @@ void ProjectManager::ResetProjectToEmpty() {
 
    projectFileIO.ResetProjectFileIO();
 
-   mDirty = false;
+   projectHistory.SetDirty( false );
    auto &undoManager = UndoManager::Get( project );
    undoManager.ClearStates();
 }

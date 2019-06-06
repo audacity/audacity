@@ -1279,6 +1279,7 @@
 		5EA0182B1EC7B226001F2996 /* WaveTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018231EC7B226001F2996 /* WaveTrackControls.cpp */; };
 		5EA0182C1EC7B226001F2996 /* WaveTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018251EC7B226001F2996 /* WaveTrackUI.cpp */; };
 		5EA0182D1EC7B226001F2996 /* WaveTrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */; };
+		5EB15A2022A94043009FEC89 /* ProjectHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EB15A1E22A94043009FEC89 /* ProjectHistory.cpp */; };
 		5EBD243D1F74C50800132E0A /* eu_ES.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD243C1F74C50800132E0A /* eu_ES.po */; };
 		5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD35851F78D37A0084D13F /* pt_PT.po */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
@@ -3311,6 +3312,8 @@
 		5EA018251EC7B226001F2996 /* WaveTrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveTrackUI.cpp; sourceTree = "<group>"; };
 		5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveTrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5EA018271EC7B226001F2996 /* WaveTrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackVRulerControls.h; sourceTree = "<group>"; };
+		5EB15A1E22A94043009FEC89 /* ProjectHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectHistory.cpp; sourceTree = "<group>"; };
+		5EB15A1F22A94043009FEC89 /* ProjectHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectHistory.h; sourceTree = "<group>"; };
 		5EB9EA281D5B81270050AF40 /* ImportForwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportForwards.h; sourceTree = "<group>"; };
 		5EBD243C1F74C50800132E0A /* eu_ES.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = eu_ES.po; path = ../locale/eu_ES.po; sourceTree = "<group>"; };
 		5EBD35851F78D37A0084D13F /* pt_PT.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pt_PT.po; path = ../locale/pt_PT.po; sourceTree = "<group>"; };
@@ -4381,6 +4384,7 @@
 				5E135A43229EE4DE0076E983 /* ProjectFileIO.cpp */,
 				5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */,
 				5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */,
+				5EB15A1E22A94043009FEC89 /* ProjectHistory.cpp */,
 				5E135A3A229EDF2E0076E983 /* ProjectManager.cpp */,
 				5E135A34229EDBE80076E983 /* ProjectSettings.cpp */,
 				5E135A46229EE5530076E983 /* ProjectWindow.cpp */,
@@ -4502,6 +4506,7 @@
 				5E135A44229EE4DE0076E983 /* ProjectFileIO.h */,
 				5E18CFEF2291C31000E75250 /* ProjectFileIORegistry.h */,
 				5ECF728B228B307E007F2A35 /* ProjectFSCK.h */,
+				5EB15A1F22A94043009FEC89 /* ProjectHistory.h */,
 				5E135A3B229EDF2E0076E983 /* ProjectManager.h */,
 				5E135A35229EDBE80076E983 /* ProjectSettings.h */,
 				5E135A47229EE5530076E983 /* ProjectWindow.h */,
@@ -8607,6 +8612,7 @@
 				AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */,
 				28884948131B6CF600B59735 /* bs.po in Sources */,
 				28884949131B6CF600B59735 /* ca.po in Sources */,
+				5EB15A2022A94043009FEC89 /* ProjectHistory.cpp in Sources */,
 				2888494A131B6CF600B59735 /* ca_ES@valencia.po in Sources */,
 				2888494B131B6CF600B59735 /* cs.po in Sources */,
 				5ECF728A22887B3B007F2A35 /* MissingAliasFileDialog.cpp in Sources */,

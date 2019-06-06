@@ -87,6 +87,7 @@
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Project.h"
+#include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../FileFormats.h"
@@ -442,7 +443,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
 
                // Amend the undo transaction made by import
-               ProjectManager::Get( *mProject ).ModifyState(false);
+               ProjectHistory::Get( *mProject ).ModifyState(false);
             } // end of converting "offset" argument
             else
             {
@@ -486,7 +487,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (doSomething)
       // Amend last undo state
-      ProjectManager::Get( *mProject ).ModifyState(false);
+      ProjectHistory::Get( *mProject ).ModifyState(false);
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()
