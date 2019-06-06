@@ -57,7 +57,7 @@ class AudioIO;
 class RingBuffer;
 class Mixer;
 class Resample;
-class TimeTrack;
+class BoundedEnvelope;
 class AudioThread;
 class MeterPanel;
 class SelectedRegion;
@@ -118,7 +118,7 @@ struct AudioIOStartStreamOptions
    explicit
    AudioIOStartStreamOptions(AudacityProject *pProject_, double rate_)
       : pProject{ pProject_ }
-      , timeTrack(NULL)
+      , envelope(nullptr)
       , listener(NULL)
       , rate(rate_)
       , playLooped(false)
@@ -130,7 +130,7 @@ struct AudioIOStartStreamOptions
 
    AudacityProject *pProject{};
    MeterPanel *captureMeter{}, *playbackMeter{};
-   TimeTrack *timeTrack;
+   BoundedEnvelope *envelope; // for time warping
    AudioIOListener* listener;
    double rate;
    bool playLooped;
@@ -668,7 +668,7 @@ protected:
       // with ComputeWarpedLength, it is now possible the calculate the warped length with 100% accuracy
       // (ignoring accumulated rounding errors during playback) which fixes the 'missing sound at the end' bug
       
-      const TimeTrack *mTimeTrack;
+      const BoundedEnvelope *mEnvelope;
       
       volatile enum {
          PLAY_STRAIGHT,

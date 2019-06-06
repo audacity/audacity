@@ -21,7 +21,7 @@ class wxDC;
 class wxFont;
 
 class NumberScale;
-class TimeTrack;
+class Envelope;
 class ZoomInfo;
 
 class AUDACITY_DLL_API Ruler {
@@ -136,7 +136,7 @@ class AUDACITY_DLL_API Ruler {
 
    // Note that it will not erase for you...
    void Draw(wxDC& dc);
-   void Draw(wxDC& dc, const TimeTrack* timetrack);
+   void Draw(wxDC& dc, const Envelope* envelope);
    // If length <> 0, draws lines perpendiculars to ruler corresponding
    // to selected ticks (major, minor, or both), in an adjacent window.
    // You may need to use the offsets if you are using part of the dc for rulers, borders etc.
@@ -151,7 +151,7 @@ class AUDACITY_DLL_API Ruler {
 
  private:
    void Update();
-   void Update(const TimeTrack* timetrack);
+   void Update(const Envelope* envelope);
    void FindTickSizes();
    void FindLinearTickSizes(double UPP);
    wxString LabelString(double d, bool major);

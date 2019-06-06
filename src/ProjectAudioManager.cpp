@@ -24,6 +24,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "TimeTrack.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
@@ -174,7 +175,8 @@ DefaultPlayOptions( AudacityProject &project )
       ProjectSettings::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   options.timeTrack = TrackList::Get( project ).GetTimeTrack();
+   auto timeTrack = TrackList::Get( project ).GetTimeTrack();
+   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = &ProjectAudioManager::Get( project );
    return options;
 }
@@ -191,7 +193,8 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   options.timeTrack = TrackList::Get( project ).GetTimeTrack();
+   auto timeTrack = TrackList::Get( project ).GetTimeTrack();
+   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = &ProjectAudioManager::Get( project );
    return options;
 }

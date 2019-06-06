@@ -58,11 +58,12 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
 {
    mHeight = 100;
 
+   mEnvelope = std::make_unique<BoundedEnvelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
+
    SetRangeLower( 0.9 );
    SetRangeUpper( 1.1 );
    mDisplayLog = false;
 
-   mEnvelope = std::make_unique<BoundedEnvelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
    mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetOffset(0);
 
@@ -88,6 +89,10 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
    }
    else
       mEnvelope = std::make_unique<BoundedEnvelope>( *orig.mEnvelope );
+
+   SetRangeLower(orig.GetRangeLower());
+   SetRangeUpper(orig.GetRangeUpper());
+
    mEnvelope->SetTrackLen( len );
    mEnvelope->SetOffset(0);
 
@@ -104,8 +109,6 @@ void TimeTrack::Init(const TimeTrack &orig)
    Track::Init(orig);
    SetDefaultName(orig.GetDefaultName());
    SetName(orig.GetName());
-   SetRangeLower(orig.GetRangeLower());
-   SetRangeUpper(orig.GetRangeUpper());
    SetDisplayLog(orig.GetDisplayLog());
 }
 
@@ -186,22 +189,6 @@ bool TimeTrack::GetInterpolateLog() const
 
 void TimeTrack::SetInterpolateLog(bool interpolateLog) {
    mEnvelope->SetExponential(interpolateLog);
-}
-
-//Compute the (average) warp factor between two non-warped time points
-double TimeTrack::ComputeWarpFactor(double t0, double t1) const
-{
-   return GetEnvelope()->AverageOfInverse(t0, t1);
-}
-
-double TimeTrack::ComputeWarpedLength(double t0, double t1) const
-{
-   return GetEnvelope()->IntegralOfInverse(t0, t1);
-}
-
-double TimeTrack::SolveWarpedLength(double t0, double length) const
-{
-   return GetEnvelope()->SolveIntegralOfInverse(t0, length);
 }
 
 bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -335,7 +322,7 @@ void TimeTrack::Draw
                             //      than the current value.
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
    mRuler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
-   mRuler->Draw(dc, this);
+   mRuler->Draw(dc, GetEnvelope());
 
    Doubles envValues{ size_t(mid.width) };
    EnvelopeEditor::GetValues( *GetEnvelope(),

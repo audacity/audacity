@@ -1626,7 +1626,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       if (!cutPreview)
          options.pStartTime = &oldStart;
       else
-         options.timeTrack = NULL;
+         options.envelope = nullptr;
 
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay

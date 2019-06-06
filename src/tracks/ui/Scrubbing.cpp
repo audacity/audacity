@@ -387,7 +387,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             auto options =
                DefaultPlayOptions( *mProject );
             options.pScrubbingOptions = &mOptions;
-            options.timeTrack = NULL;
+            options.envelope = nullptr;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
             mOptions.isPlayingAtSpeed = false;
             mOptions.minSpeed = 0.0;
@@ -487,7 +487,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
 
    auto options = DefaultSpeedPlayOptions( *mProject );
    options.pScrubbingOptions = &mOptions;
-   options.timeTrack = NULL;
+   options.envelope = nullptr;
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
    mOptions.minSpeed = speed -0.01;
    mOptions.maxSpeed = speed +0.01;

@@ -409,7 +409,7 @@ callbacks for these events.
 
 \class AudioIOStartStreamOptions
 \brief struct holding stream options, including a pointer to the 
-TimeTrack and AudioIOListener and whether the playback is looped.
+time warp info and AudioIOListener and whether the playback is looped.
 
 *//*******************************************************************/
 
@@ -458,7 +458,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindow.h"
-#include "TimeTrack.h"
+#include "Envelope.h"
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 
@@ -2143,7 +2143,7 @@ bool AudioIO::AllocateBuffers(
                       ScrubbingOptions::MaxAllowedScrubSpeed())
                   :
 #endif
-                    Mixer::WarpOptions(mPlaybackSchedule.mTimeTrack);
+                    Mixer::WarpOptions(mPlaybackSchedule.mEnvelope);
 
             mPlaybackQueueMinimum = mPlaybackSamplesToCopy;
             if (scrubbing)
@@ -2806,9 +2806,9 @@ void AudioIO::PlaybackSchedule::Init(
       // the existing audio.  (Unless we figured out the inverse warp of the
       // captured samples in real time.)
       // So just quietly ignore the time track.
-      mTimeTrack = nullptr;
+      mEnvelope = nullptr;
    else
-      mTimeTrack = options.timeTrack;
+      mEnvelope = options.envelope;
 
    mT0      = t0;
    if (pRecordingSchedule)
@@ -2838,7 +2838,7 @@ void AudioIO::PlaybackSchedule::Init(
       const auto &scrubOptions = *options.pScrubbingOptions;
       if (pRecordingSchedule ||
           Looping() ||
-          mTimeTrack != NULL ||
+          mEnvelope ||
           scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
          wxASSERT(false);
          scrubbing = false;
@@ -4173,7 +4173,7 @@ static Alg_update gAllNotesOff; // special event for loop ending
 double AudioIO::UncorrectedMidiEventTime()
 {
    double time;
-   if (mPlaybackSchedule.mTimeTrack)
+   if (mPlaybackSchedule.mEnvelope)
       time =
          mPlaybackSchedule.RealDuration(mNextEventTime - MidiLoopOffset())
          + mPlaybackSchedule.mT0 + (mMidiLoopPasses *
@@ -5633,6 +5633,35 @@ bool AudioIO::PlaybackSchedule::Overruns( double trackTime ) const
    return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
 }
 
+namespace
+{
+/** @brief Compute the duration (in seconds at playback) of the specified region of the track.
+ *
+ * Takes a region of the time track (specified by the unwarped time points in the project), and
+ * calculates how long it will actually take to play this region back, taking the time track's
+ * warping effects into account.
+ * @param t0 unwarped time to start calculation from
+ * @param t1 unwarped time to stop calculation at
+ * @return the warped duration in seconds
+ */
+double ComputeWarpedLength(const Envelope &env, double t0, double t1)
+{
+   return env.IntegralOfInverse(t0, t1);
+}
+
+/** @brief Compute how much unwarped time must have elapsed if length seconds of warped time has
+ * elapsed
+ *
+ * @param t0 The unwarped time (seconds from project start) at which to start
+ * @param length How many seconds of warped time went past.
+ * @return The end point (in seconds from project start) as unwarped time
+ */
+double SolveWarpedLength(const Envelope &env, double t0, double length)
+{
+   return env.SolveIntegralOfInverse(t0, length);
+}
+}
+
 double AudioIO::PlaybackSchedule::AdvancedTrackTime(
    double time, double realElapsed, double speed ) const
 {
@@ -5643,7 +5672,7 @@ double AudioIO::PlaybackSchedule::AdvancedTrackTime(
    if ( fabs(mT0 - mT1) < 1e-9 )
       return mT0;
 
-   if (mTimeTrack) {
+   if (mEnvelope) {
        wxASSERT( speed == 1.0 );
 
       double total=0.0;
@@ -5654,7 +5683,7 @@ double AudioIO::PlaybackSchedule::AdvancedTrackTime(
             // Avoid SolveWarpedLength
             time = mT1;
          else
-            time = mTimeTrack->SolveWarpedLength(time, realElapsed);
+            time = SolveWarpedLength(*mEnvelope, time, realElapsed);
 
          if (!Looping() || !Overruns( time )) 
             break;
@@ -5666,7 +5695,7 @@ double AudioIO::PlaybackSchedule::AdvancedTrackTime(
             // Avoid integrating again
             delta = total;
          else {
-            delta = mTimeTrack->ComputeWarpedLength(oldTime, mT1);
+            delta = ComputeWarpedLength(*mEnvelope, oldTime, mT1);
             if (oldTime == mT0)
                foundTotal = true, total = delta;
          }
@@ -5762,8 +5791,8 @@ double AudioIO::TimeQueue::Consumer( size_t nSamples, double rate )
 
 double AudioIO::PlaybackSchedule::TrackDuration(double realElapsed) const
 {
-   if (mTimeTrack)
-      return mTimeTrack->SolveWarpedLength(mT0, realElapsed);
+   if (mEnvelope)
+      return SolveWarpedLength(*mEnvelope, mT0, realElapsed);
    else
       return realElapsed;
 }
@@ -5771,8 +5800,8 @@ double AudioIO::PlaybackSchedule::TrackDuration(double realElapsed) const
 double AudioIO::PlaybackSchedule::RealDuration(double trackTime1) const
 {
    double duration;
-   if (mTimeTrack)
-      duration = mTimeTrack->ComputeWarpedLength(mT0, trackTime1);
+   if (mEnvelope)
+      duration = ComputeWarpedLength(*mEnvelope, mT0, trackTime1);
    else
       duration = trackTime1 - mT0;
    return fabs(duration);

@@ -29,7 +29,6 @@ class Tags;
 class TrackList;
 class MixerSpec;
 class ProgressDialog;
-class TimeTrack;
 class Mixer;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 enum class ProgressResult : unsigned;
