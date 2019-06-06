@@ -63,6 +63,27 @@ Paul Licameli split from AudacityProject.cpp
 
 const int AudacityProjectTimerID = 5200;
 
+static AudacityProject::AttachedObjects::RegisteredFactory
+sProjectAudioManagerKey {
+   []( AudacityProject &project ) {
+      return std::make_shared< ProjectAudioManager >( project );
+   }
+};
+
+ProjectAudioManager &ProjectAudioManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< ProjectAudioManager >(
+      sProjectAudioManagerKey );
+}
+
+const ProjectAudioManager &ProjectAudioManager::Get(
+   const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+ProjectAudioManager::~ProjectAudioManager() = default;
+
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectManagerKey {
    []( AudacityProject &project ) {
       return std::make_shared< ProjectManager >( project );
@@ -391,7 +412,7 @@ AudacityProject *ProjectManager::New()
    }
    
    //Initialise the Listeners
-   gAudioIO->SetListener( &projectManager );
+   gAudioIO->SetListener( &ProjectAudioManager::Get( project ) );
    SelectionBar::Get( project ).SetListener( &projectManager );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBar::Get( project ).SetListener( &projectManager );
@@ -429,7 +450,7 @@ DefaultPlayOptions( AudacityProject &project )
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
-   options.listener = &ProjectManager::Get( project );
+   options.listener = &ProjectAudioManager::Get( project );
    return options;
 }
 
@@ -446,7 +467,7 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.timeTrack = TrackList::Get( project ).GetTimeTrack();
-   options.listener = &ProjectManager::Get( project );
+   options.listener = &ProjectAudioManager::Get( project );
    return options;
 }
 
@@ -827,10 +848,10 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Since we're going to be destroyed, make sure we're not to
    // receive audio notifications anymore.
-   if (gAudioIO->GetListener() == this) {
+   if ( gAudioIO->GetListener() == &ProjectAudioManager::Get( project ) ) {
       auto active = GetActiveProject();
       gAudioIO->SetListener(
-         active ? &ProjectManager::Get( *active ) : nullptr
+         active ? &ProjectAudioManager::Get( *active ) : nullptr
       );
    }
 
@@ -1987,7 +2008,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent & )
    RestartTimer();
 }
 
-void ProjectManager::OnAudioIORate(int rate)
+void ProjectAudioManager::OnAudioIORate(int rate)
 {
    auto &project = mProject;
    auto &window = GetProjectFrame( project );
@@ -2012,7 +2033,7 @@ void ProjectManager::OnAudioIORate(int rate)
    statusBar->SetStatusText(display, rateStatusBarField);
 }
 
-void ProjectManager::OnAudioIOStartRecording()
+void ProjectAudioManager::OnAudioIOStartRecording()
 {
    auto &projectFileIO = ProjectFileIO::Get( mProject );
    // Before recording is started, auto-save the file. The file will have
@@ -2021,7 +2042,7 @@ void ProjectManager::OnAudioIOStartRecording()
 }
 
 // This is called after recording has stopped and all tracks have flushed.
-void ProjectManager::OnAudioIOStopRecording()
+void ProjectAudioManager::OnAudioIOStopRecording()
 {
    auto &project = mProject;
    auto &dirManager = DirManager::Get( project );
@@ -2065,7 +2086,8 @@ You are saving directly to a slow external storage device\n\
       }
 
       // Add to history
-      PushState(_("Recorded Audio"), _("Record"));
+      auto &history = ProjectManager::Get( project );
+      history.PushState(_("Recorded Audio"), _("Record"));
 
       // Reset timer record 
       if (IsTimerRecordCancelled())
@@ -2086,7 +2108,7 @@ You are saving directly to a slow external storage device\n\
    projectFileIO.AutoSave();
 }
 
-void ProjectManager::OnAudioIONewBlockFiles(
+void ProjectAudioManager::OnAudioIONewBlockFiles(
    const AutoSaveFile & blockFileLog)
 {
    auto &project = mProject;

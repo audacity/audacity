@@ -37,13 +37,42 @@ namespace ProjectFileIORegistry{ struct Entry; }
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
+class ProjectAudioManager final
+   : public ClientData::Base
+   , public AudioIOListener
+{
+public:
+   static ProjectAudioManager &Get( AudacityProject &project );
+   static const ProjectAudioManager &Get( const AudacityProject &project );
+
+   explicit ProjectAudioManager( AudacityProject &project )
+      : mProject{ project }
+   {}
+   ~ProjectAudioManager() override;
+
+   bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }
+   void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
+   void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
+
+private:
+   // Audio IO callback methods
+   void OnAudioIORate(int rate) override;
+   void OnAudioIOStartRecording() override;
+   void OnAudioIOStopRecording() override;
+   void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
+
+   AudacityProject &mProject;
+
+   //flag for cancellation of timer record.
+   bool mTimerRecordCanceled{ false };
+};
+
 ///\brief Object associated with a project for high-level management of the
 /// project's lifetime, including creation, destruction, opening from file,
 /// importing, pushing undo states, and reverting to saved states
 class ProjectManager final
    : public wxEvtHandler
    , public ClientData::Base
-   , public AudioIOListener
    , private SelectionBarListener
    , private SpectralSelectionBarListener
 {
@@ -135,10 +164,6 @@ public:
       // projects
    void PopState(const UndoState &state);
 
-   bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }
-   void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
-   void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
-
    void SetMenuClose(bool value) { mMenuClose = value; }
 
    // SelectionBarListener callback methods
@@ -169,12 +194,6 @@ private:
 
    bool SnapSelection();
 
-   // Audio IO callback methods
-   void OnAudioIORate(int rate) override;
-   void OnAudioIOStartRecording() override;
-   void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
-
    void InitialState();
 
    void RestartTimer();
@@ -202,9 +221,6 @@ private:
 
    // Are we currently closing as the result of a menu command?
    bool mMenuClose{ false };
-
-   //flag for cancellation of timer record.
-   bool mTimerRecordCanceled{ false };
 
    DECLARE_EVENT_TABLE()
 
