@@ -578,7 +578,8 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
    xmlFile.Write(wxT(">\n"));
 }
 
-void ProjectFileIO::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
+void ProjectFileIO::WriteXML(
+   XMLWriter &xmlFile, FilePaths *strOtherNamesArray)
 // may throw
 {
    auto &proj = mProject;
@@ -587,6 +588,8 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
    auto &dirManager = DirManager::Get( proj );
    auto &tags = Tags::Get( proj );
    const auto &settings = ProjectSettings::Get( proj );
+
+   bool bWantSaveCopy = (strOtherNamesArray != nullptr);
 
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
@@ -642,7 +645,8 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
 
             //vvv This should probably be a method, WaveTrack::WriteCompressedTrackXML().
             xmlFile.StartTag(wxT("import"));
-            xmlFile.WriteAttr(wxT("filename"), mStrOtherNamesArray[ndx]); // Assumes mTracks order hasn't changed!
+            xmlFile.WriteAttr(wxT("filename"),
+               (*strOtherNamesArray)[ndx]); // Assumes mTracks order hasn't changed!
 
             // Don't store "channel" and "linked" tags because the importer can figure that out,
             // e.g., from stereo Ogg files.
@@ -799,6 +803,7 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
 
    bool success = true;
    FilePath project, projName, projPath;
+   FilePaths strOtherNamesArray;
 
    auto cleanup = finally( [&] {
       if (!safetyFileName.empty()) {
@@ -807,7 +812,7 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
          wxRename(safetyFileName, fileName);
       }
 
-      // mStrOtherNamesArray is a temporary array of file names, used only when
+      // strOtherNamesArray is a temporary array of file names, used only when
       // saving compressed
       if (!success) {
          AudacityMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
@@ -817,13 +822,11 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
 
          // Make the export of tracks succeed all-or-none.
          auto dir = project + wxT("_data");
-         for ( auto &name : mStrOtherNamesArray )
+         for ( auto &name : strOtherNamesArray )
             wxRemoveFile( dir + wxFileName::GetPathSeparator() + name);
          // This has effect only if the folder is empty
          wxFileName::Rmdir( dir );
       }
-      // Success or no, we can forget the names
-      mStrOtherNamesArray.clear();
    } );
 
    if (fromSaveAs) {
@@ -847,10 +850,11 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
       if (bWantSaveCopy)
       {
          // Do this before saving the .aup, because we accumulate
-         // mStrOtherNamesArray which affects the contents of the .aup
+         // strOtherNamesArray which affects the contents of the .aup
 
-         // This populates the array mStrOtherNamesArray
-         success = this->SaveCopyWaveTracks(project, bLossless);
+         // This populates the array strOtherNamesArray
+         success = this->SaveCopyWaveTracks(
+            project, bLossless, strOtherNamesArray);
       }
 
       if (!success)
@@ -866,7 +870,7 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
    XMLFileWriter saveFile{ fileName, _("Error Saving Project") };
    success = GuardedCall< bool >( [&] {
          WriteXMLHeader(saveFile);
-         WriteXML(saveFile, bWantSaveCopy);
+         WriteXML(saveFile, bWantSaveCopy ? &strOtherNamesArray : nullptr);
          // Flushes files, forcing space exhaustion errors before trying
          // SetProject():
          saveFile.PreCommit();
@@ -988,7 +992,7 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
 }
 
 bool ProjectFileIO::SaveCopyWaveTracks(const FilePath & strProjectPathName,
-                                         const bool bLossless /*= false*/)
+   const bool bLossless, FilePaths &strOtherNamesArray)
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
@@ -1067,10 +1071,6 @@ bool ProjectFileIO::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    // Export all WaveTracks to OGG.
    bool bSuccess = true;
 
-   // This accumulates the names of the track files, to be written as
-   // dependencies in the .aup file
-   mStrOtherNamesArray.clear();
-
    Exporter theExporter;
    wxFileName uniqueTrackFileName;
    for (auto pTrack : (trackRange + &Track::IsLeader))
@@ -1081,7 +1081,7 @@ bool ProjectFileIO::SaveCopyWaveTracks(const FilePath & strProjectPathName,
       for (auto channel : channels)
          channel->SetSelected(true);
       uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), extension);
-      FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
+      FileNames::MakeNameUnique(strOtherNamesArray, uniqueTrackFileName);
       const auto startTime = channels.min( &Track::GetStartTime );
       const auto endTime = channels.max( &Track::GetEndTime );
       bSuccess =
@@ -1385,8 +1385,7 @@ void ProjectFileIO::AutoSave()
 
       AutoSaveFile buffer;
       WriteXMLHeader( buffer );
-      WriteXML( buffer, false );
-      mStrOtherNamesArray.clear();
+      WriteXML( buffer, nullptr );
 
       wxFFile saveFile;
       saveFile.Open(fn + wxT(".tmp"), wxT("wb"));

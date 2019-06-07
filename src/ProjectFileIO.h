@@ -75,8 +75,9 @@ public:
    void SetLoadedFromAup( bool value ) { mbLoadedFromAup = value; }
  
 private:
+   // Push names of NEW export files onto the path list
    bool SaveCopyWaveTracks(const FilePath & strProjectPathName,
-      bool bLossless = false);
+      bool bLossless, FilePaths &strOtherNamesArray);
    bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 
    void UpdatePrefs() override;
@@ -85,15 +86,17 @@ private:
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXMLHeader(XMLWriter &xmlFile) const;
+
+   // If the second argument is not null, that means we are saving a
+   // compressed project, and the wave tracks have been exported into the
+   // named files
    void WriteXML(
-      XMLWriter &xmlFile, bool bWantSaveCopy) /* not override */;
+      XMLWriter &xmlFile, FilePaths *strOtherNamesArray) /* not override */;
 
    // non-staic data members
    AudacityProject &mProject;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
-
-   FilePaths mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    // Last auto-save file name and path (empty if none)
    FilePath mAutoSaveFileName;
