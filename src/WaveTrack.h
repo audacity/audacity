@@ -65,6 +65,17 @@ using Regions = std::vector < Region >;
 
 class Envelope;
 
+// Note that these can be with or without spectrum view which
+// adds a constant.
+const int kZoom1to1 = 1;
+const int kZoomTimes2 = 2;
+const int kZoomDiv2 = 3;
+const int kZoomHalfWave = 4;
+const int kZoomInByDrag = 5;
+const int kZoomIn = 6;
+const int kZoomOut = 7;
+const int kZoomReset = 8;
+
 class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 public:
 
@@ -551,6 +562,13 @@ private:
    // and will be taken out of the WaveTrack class:
    //
 
+
+   static void DoZoom
+   (AudacityProject *pProject,
+    WaveTrack *pTrack, bool allChannels, int ZoomKind,
+    const wxRect &rect, int zoomStart, int zoomEnd,
+    bool fixedMousePoint);
+   void DoZoomPreset( int i);
 
    typedef int WaveTrackDisplay;
    enum WaveTrackDisplayValues : int {
