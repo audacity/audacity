@@ -101,9 +101,6 @@ private:
    // Last auto-save file name and path (empty if none)
    FilePath mAutoSaveFileName;
 
-   // The auto-save data dir the project has been recovered from
-   FilePath mRecoveryAutoSaveDataDir;
-
    // Are we currently auto-saving or not?
    bool mAutoSaving{ false };
 

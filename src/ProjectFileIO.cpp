@@ -185,7 +185,6 @@ auto ProjectFileIO::ReadProjectFile( const FilePath &fileName )
    project.SetFileName( fileName );
    mbLoadedFromAup = true;
 
-   mRecoveryAutoSaveDataDir = wxT("");
    mIsRecovered = false;
 
    SetProjectTitle();
@@ -336,6 +335,9 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    int requiredTags = 0;
    long longVpos = 0;
 
+   // The auto-save data dir the project has been recovered from
+   FilePath recoveryAutoSaveDataDir;
+
    // loop through attrs, which is a null-terminated list of
    // attribute-value pairs
    while(*attrs) {
@@ -363,7 +365,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          {
             // Remember that this is a recovered project
             mIsRecovered = true;
-            mRecoveryAutoSaveDataDir = value;
+            recoveryAutoSaveDataDir = value;
          }
       }
 
@@ -388,7 +390,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // (which was lost by the crash) rather than the one in the
             // auto save folder
             wxFileName realFileDir;
-            realFileDir.AssignDir(mRecoveryAutoSaveDataDir);
+            realFileDir.AssignDir(recoveryAutoSaveDataDir);
             realFileDir.RemoveLastDir();
 
             wxString realFileName = value;
@@ -403,7 +405,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                // A previously unsaved project has been recovered, so fake
                // an unsaved project. The data files just stay in the temp
                // directory
-               dirManager.SetLocalTempDir(mRecoveryAutoSaveDataDir);
+               dirManager.SetLocalTempDir(recoveryAutoSaveDataDir);
                project.SetFileName( wxT("") );
                projName = wxT("");
                projPath = wxT("");
@@ -950,7 +952,6 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
          // Before we saved this, this was a recovered project, but now it is
          // a regular project, so remember this.
          mIsRecovered = false;
-         mRecoveryAutoSaveDataDir = wxT("");
          SetProjectTitle();
       }
       else if (fromSaveAs)
