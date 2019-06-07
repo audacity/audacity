@@ -87,10 +87,10 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SaveProjectCommand::Apply(const CommandContext &context)
 {
-   auto &projectFileIO = ProjectFileIO::Get( context.project );
+   auto &projectFileManager = ProjectFileManager::Get( context.project );
    if ( mFileName.empty() )
-      return projectFileIO.SaveAs(mbCompress);
+      return projectFileManager.SaveAs(mbCompress);
    else
-      return projectFileIO.SaveAs(
+      return projectFileManager.SaveAs(
          mFileName, mbCompress, mbAddToHistory);
 }

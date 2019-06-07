@@ -428,6 +428,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
+   auto &projectFileManager = ProjectFileManager::Get( project );
    const auto &settings = ProjectSettings::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
@@ -493,7 +494,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
                                    &window);
 
          if (result == wxCANCEL || (result == wxYES &&
-              !GuardedCall<bool>( [&]{ return projectFileIO.Save(); } )
+              !GuardedCall<bool>( [&]{ return projectFileManager.Save(); } )
          )) {
             event.Veto();
             return;
@@ -551,7 +552,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
-   projectFileIO.CloseLock();
+   projectFileManager.CloseLock();
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
@@ -967,6 +968,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
+   auto &projectFileManager = ProjectFileManager::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &dirManager = DirManager::Get( project );
@@ -1089,7 +1091,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
       mRecordingRecoveryHandler.reset();
    } );
 
-   auto results = projectFileIO.ReadProjectFile( fileName );
+   auto results = projectFileManager.ReadProjectFile( fileName );
 
    if ( results.decodeError )
       return;
@@ -1131,7 +1133,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          if ( bParseSuccess ) {
             // This is a no-fail:
             dirManager.FillBlockfilesCache();
-            projectFileIO.EnqueueODTasks();
+            projectFileManager.EnqueueODTasks();
          }
 
          // For an unknown reason, OSX requires that the project window be
@@ -1199,7 +1201,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
             //    this->PushState(_("Project checker repaired file"), _("Project Repair"));
 
             if (status & FSCKstatus_SAVE_AUP)
-               projectFileIO.Save(), saved = true;
+               projectFileManager.Save(), saved = true;
          }
       }
 
@@ -1207,7 +1209,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          if (!saved)
             // We processed an <import> tag, so save it as a normal project,
             // with no <import> tags.
-            projectFileIO.Save();
+            projectFileManager.Save();
       }
    }
    else {
@@ -1306,6 +1308,7 @@ ProjectManager::AddImportedTracks(const FilePath &fileName,
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
+   auto &projectFileManager = ProjectFileManager::Get( project );
    auto &tracks = TrackList::Get( project );
 
    std::vector< std::shared_ptr< Track > > results;
@@ -1366,9 +1369,7 @@ ProjectManager::AddImportedTracks(const FilePath &fileName,
             {
                SeqBlock& block = blocks[0];
                if (block.f->IsAlias())
-               {
-                  projectFileIO.SetImportedDependencies( true );
-               }
+                  projectFileManager.SetImportedDependencies( true );
             }
          }
       });
@@ -1492,6 +1493,7 @@ bool ProjectManager::Import(
 void ProjectManager::ResetProjectToEmpty() {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
+   auto &projectFileManager = ProjectFileManager::Get( project );
    auto &projectHistory = ProjectHistory::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -1502,7 +1504,7 @@ void ProjectManager::ResetProjectToEmpty() {
    DirManager::Reset( project );
    TrackFactory::Reset( project );
 
-   projectFileIO.ResetProjectFileIO();
+   projectFileManager.Reset();
 
    projectHistory.SetDirty( false );
    auto &undoManager = UndoManager::Get( project );

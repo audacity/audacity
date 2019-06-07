@@ -83,10 +83,34 @@ TitleRestorer::~TitleRestorer() {
       RefreshAllTitles( false );
 }
 
+static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{
+   []( AudacityProject &parent ){
+      auto result = std::make_shared< ProjectFileManager >( parent );
+      return result;
+   }
+};
+
+ProjectFileManager &ProjectFileManager::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< ProjectFileManager >( sFileManagerKey );
+}
+
+const ProjectFileManager &ProjectFileManager::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+ProjectFileManager::ProjectFileManager( AudacityProject &project )
+: mProject{ project }
+{
+}
+
+ProjectFileManager::~ProjectFileManager() = default;
+
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{
-  []( AudacityProject &parent ){
-     auto result = std::make_shared< ProjectFileIO >( parent );
-     return result;
+   []( AudacityProject &parent ){
+      auto result = std::make_shared< ProjectFileIO >( parent );
+      return result;
    }
 };
 
@@ -176,18 +200,17 @@ bool ProjectFileIO::WarnOfLegacyFile( )
    return (action != wxNO);
 }
 
-auto ProjectFileIO::ReadProjectFile( const FilePath &fileName )
+auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
   -> ReadProjectResults
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &window = GetProjectFrame( project );
 
    project.SetFileName( fileName );
-   mbLoadedFromAup = true;
-
-   mIsRecovered = false;
-
-   SetProjectTitle();
+   projectFileIO.SetLoadedFromAup( true );
+   projectFileIO.SetIsRecovered( false );
+   projectFileIO.SetProjectTitle();
 
    const wxString autoSaveExt = wxT("autosave");
    if ( wxFileNameWrapper{ fileName }.GetExt() == autoSaveExt )
@@ -233,7 +256,7 @@ auto ProjectFileIO::ReadProjectFile( const FilePath &fileName )
       gPrefs->Flush();
    } );
 
-   bool bParseSuccess = xmlFile.Parse(this, fileName);
+   bool bParseSuccess = xmlFile.Parse(&projectFileIO, fileName);
    
    bool err = false;
 
@@ -265,7 +288,7 @@ auto ProjectFileIO::ReadProjectFile( const FilePath &fileName )
    return { false, bParseSuccess, err, xmlFile.GetErrorStr() };
 }
 
-void ProjectFileIO::EnqueueODTasks()
+void ProjectFileManager::EnqueueODTasks()
 {
    //check the ODManager to see if we should add the tracks to the ODManager.
    //this flag would have been set in the HandleXML calls from above, if there were
@@ -722,10 +745,10 @@ private:
 };
 #endif
 
-bool ProjectFileIO::Save()
+bool ProjectFileManager::Save()
 {
    // Prompt for file name?
-   bool bPromptingRequired = !IsProjectSaved();
+   bool bPromptingRequired = !ProjectFileIO::Get( mProject ).IsProjectSaved();
 
    if (bPromptingRequired)
       return SaveAs();
@@ -734,7 +757,7 @@ bool ProjectFileIO::Save()
 }
 
 // Assumes AudacityProject::mFileName has been set to the desired path.
-bool ProjectFileIO::DoSave (const bool fromSaveAs,
+bool ProjectFileManager::DoSave (const bool fromSaveAs,
                               const bool bWantSaveCopy,
                               const bool bLossless /*= false*/)
 {
@@ -744,6 +767,7 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
    const auto &fileName = proj.GetFileName();
    auto &window = GetProjectFrame( proj );
    auto &dirManager = DirManager::Get( proj );
+   auto &projectFileIO = ProjectFileIO::Get( proj );
    const auto &settings = ProjectSettings::Get( proj );
 
    wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
@@ -871,8 +895,8 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
    // (SetProject, when it fails, cleans itself up.)
    XMLFileWriter saveFile{ fileName, _("Error Saving Project") };
    success = GuardedCall< bool >( [&] {
-         WriteXMLHeader(saveFile);
-         WriteXML(saveFile, bWantSaveCopy ? &strOtherNamesArray : nullptr);
+         projectFileIO.WriteXMLHeader(saveFile);
+         projectFileIO.WriteXML(saveFile, bWantSaveCopy ? &strOtherNamesArray : nullptr);
          // Flushes files, forcing space exhaustion errors before trying
          // SetProject():
          saveFile.PreCommit();
@@ -940,9 +964,9 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
    if ( !bWantSaveCopy )
    {
       // Now that we have saved the file, we can DELETE the auto-saved version
-      DeleteCurrentAutoSaveFile();
+      projectFileIO.DeleteCurrentAutoSaveFile();
 
-      if (mIsRecovered)
+      if ( projectFileIO.IsRecovered() )
       {
          // This was a recovered file, that is, we have just overwritten the
          // old, crashed .aup file. There may still be orphaned blockfiles in
@@ -951,8 +975,8 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
 
          // Before we saved this, this was a recovered project, but now it is
          // a regular project, so remember this.
-         mIsRecovered = false;
-         SetProjectTitle();
+         projectFileIO.SetIsRecovered( false );
+         projectFileIO.SetProjectTitle();
       }
       else if (fromSaveAs)
       {
@@ -992,7 +1016,7 @@ bool ProjectFileIO::DoSave (const bool fromSaveAs,
    return true;
 }
 
-bool ProjectFileIO::SaveCopyWaveTracks(const FilePath & strProjectPathName,
+bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    const bool bLossless, FilePaths &strOtherNamesArray)
 {
    auto &project = mProject;
@@ -1099,15 +1123,17 @@ bool ProjectFileIO::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    return bSuccess;
 }
 
-bool ProjectFileIO::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*= false*/, bool addToHistory /*= true*/)
+bool ProjectFileManager::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*= false*/, bool addToHistory /*= true*/)
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   bool bLoadedFromAup = projectFileIO.IsLoadedFromAup();
 
    // This version of SaveAs is invoked only from scripting and does not
    // prompt for a file name
    auto oldFileName = project.GetFileName();
 
-   bool bOwnsNewAupName = mbLoadedFromAup && (oldFileName == newFileName);
+   bool bOwnsNewAupName = bLoadedFromAup && (oldFileName == newFileName);
    //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
@@ -1141,17 +1167,18 @@ bool ProjectFileIO::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*= 
    {
    }
    else {
-      mbLoadedFromAup = true;
-      SetProjectTitle();
+      projectFileIO.SetLoadedFromAup( true );
+      projectFileIO.SetProjectTitle();
    }
 
    return(success);
 }
 
 
-bool ProjectFileIO::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= false*/)
+bool ProjectFileManager::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= false*/)
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &window = ProjectWindow::Get( project );
    TitleRestorer Restorer( window, project ); // RAII
    bool bHasPath = true;
@@ -1159,6 +1186,8 @@ bool ProjectFileIO::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= fa
    // Save a copy of the project with 32-bit float tracks.
    if (bLossless)
       bWantSaveCopy = true;
+
+   bool bLoadedFromAup = projectFileIO.IsLoadedFromAup();
 
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
    if( !FileNames::IsPathAvailable( filename.GetPath( wxPATH_GET_VOLUME| wxPATH_GET_SEPARATOR) ) ){
@@ -1243,7 +1272,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
       return false;
    }
 
-   bool bOwnsNewAupName = mbLoadedFromAup && ( project.GetFileName() == fName );
+   bool bOwnsNewAupName = bLoadedFromAup && ( project.GetFileName() == fName );
    // Check to see if the project file already exists, and if it does
    // check that the project file 'belongs' to this project.
    // otherwise, prompt the user before overwriting.
@@ -1318,8 +1347,8 @@ will be irreversibly overwritten."), fName, fName);
    {
    }
    else {
-      mbLoadedFromAup = true;
-      SetProjectTitle();
+      projectFileIO.SetLoadedFromAup( true );
+      projectFileIO.SetProjectTitle();
    }
 
 
@@ -1448,7 +1477,7 @@ bool ProjectFileIO::IsProjectSaved() {
    return (!dirManager.GetProjectName().empty());
 }
 
-void ProjectFileIO::ResetProjectFileIO()
+void ProjectFileManager::Reset()
 {
    // mLastSavedTrack code copied from OnCloseWindow.
    // Lock all blocks in all tracks of the last saved version, so that
@@ -1456,17 +1485,22 @@ void ProjectFileIO::ResetProjectFileIO()
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    CloseLock();
+   
+   ProjectFileIO::Get( mProject ).Reset();
+}
 
-   //mLastSavedTracks = TrackList::Create();
+void ProjectFileIO::Reset()
+{
    mProject.SetFileName( {} );
    mIsRecovered = false;
    mbLoadedFromAup = false;
    SetProjectTitle();
 }
 
-bool ProjectFileIO::SaveFromTimerRecording(wxFileName fnFile)
+bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( project );
 
    // MY: Will save the project to a NEW location a-la Save As
    // and then tidy up after itself.
@@ -1476,7 +1510,7 @@ bool ProjectFileIO::SaveFromTimerRecording(wxFileName fnFile)
    // MY: To allow SaveAs from Timer Recording we need to check what
    // the value of mFileName is before we change it.
    FilePath sOldFilename;
-   if (IsProjectSaved()) {
+   if (projectFileIO.IsProjectSaved()) {
       sOldFilename = project.GetFileName();
    }
 
@@ -1499,14 +1533,14 @@ bool ProjectFileIO::SaveFromTimerRecording(wxFileName fnFile)
 
    if (bSuccess) {
       FileHistory::Global().AddFileToHistory( project.GetFileName() );
-      mbLoadedFromAup = true;
-      SetProjectTitle();
+      projectFileIO.SetLoadedFromAup( true );
+      projectFileIO.SetProjectTitle();
    }
 
    return bSuccess;
 }
 
-void ProjectFileIO::CloseLock()
+void ProjectFileManager::CloseLock()
 {
    // Lock all blocks in all tracks of the last saved version, so that
    // the blockfiles aren't deleted on disk when we DELETE the blockfiles

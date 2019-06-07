@@ -18,19 +18,15 @@ Paul Licameli split from AudacityProject.h
 class AudacityProject;
 class TrackList;
 
-///\brief Object associated with a project that manages reading and writing
-/// of Audacity project file formats, and autosave
-class ProjectFileIO final
+class ProjectFileManager final
    : public ClientData::Base
-   , private XMLTagHandler
-   , private PrefsListener
 {
 public:
-   static ProjectFileIO &Get( AudacityProject &project );
-   static const ProjectFileIO &Get( const AudacityProject &project );
+   static ProjectFileManager &Get( AudacityProject &project );
+   static const ProjectFileManager &Get( const AudacityProject &project );
 
-   explicit ProjectFileIO( AudacityProject &project );
-   ~ProjectFileIO();
+   explicit ProjectFileManager( AudacityProject &project );
+   ~ProjectFileManager();
 
    struct ReadProjectResults
    {
@@ -43,8 +39,6 @@ public:
 
    void EnqueueODTasks();
 
-   bool WarnOfLegacyFile( );
-   
    // To be called when closing a project that has been saved, so that
    // block files are not erased
    void CloseLock();
@@ -56,6 +50,40 @@ public:
    // strProjectPathName is full path for aup except extension
    bool SaveFromTimerRecording( wxFileName fnFile );
 
+   void Reset();
+
+   void SetImportedDependencies( bool value ) { mImportedDependencies = value; }
+
+private:
+   // Push names of NEW export files onto the path list
+   bool SaveCopyWaveTracks(const FilePath & strProjectPathName,
+      bool bLossless, FilePaths &strOtherNamesArray);
+   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
+
+   AudacityProject &mProject;
+
+   std::shared_ptr<TrackList> mLastSavedTracks;
+   
+   // Dependencies have been imported and a warning should be shown on save
+   bool mImportedDependencies{ false };
+};
+
+///\brief Object associated with a project that manages reading and writing
+/// of Audacity project file formats, and autosave
+class ProjectFileIO final
+   : public ClientData::Base
+   , public XMLTagHandler
+   , private PrefsListener
+{
+public:
+   static ProjectFileIO &Get( AudacityProject &project );
+   static const ProjectFileIO &Get( const AudacityProject &project );
+
+   explicit ProjectFileIO( AudacityProject &project );
+   ~ProjectFileIO();
+
+   bool WarnOfLegacyFile( );
+   
    const FilePath &GetAutoSaveFileName() { return mAutoSaveFileName; }
 
    // It seems odd to put this method in this class, but the results do depend
@@ -65,25 +93,16 @@ public:
 
    bool IsProjectSaved();
 
-   void ResetProjectFileIO();
+   void Reset();
    
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
 
    bool IsRecovered() const { return mIsRecovered; }
-   void SetImportedDependencies( bool value ) { mImportedDependencies = value; }
+   void SetIsRecovered( bool value ) { mIsRecovered = value; }
+   bool IsLoadedFromAup() const { return mbLoadedFromAup; }
    void SetLoadedFromAup( bool value ) { mbLoadedFromAup = value; }
  
-private:
-   // Push names of NEW export files onto the path list
-   bool SaveCopyWaveTracks(const FilePath & strProjectPathName,
-      bool bLossless, FilePaths &strOtherNamesArray);
-   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
-
-   void UpdatePrefs() override;
-
-   // XMLTagHandler callback methods
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
@@ -93,10 +112,14 @@ private:
    void WriteXML(
       XMLWriter &xmlFile, FilePaths *strOtherNamesArray) /* not override */;
 
-   // non-staic data members
-   AudacityProject &mProject;
+private:
+   // XMLTagHandler callback methods
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
 
-   std::shared_ptr<TrackList> mLastSavedTracks;
+   void UpdatePrefs() override;
+
+   // non-static data members
+   AudacityProject &mProject;
 
    // Last auto-save file name and path (empty if none)
    FilePath mAutoSaveFileName;
@@ -108,9 +131,6 @@ private:
    bool mIsRecovered{ false };
 
    bool mbLoadedFromAup{ false };
-
-   // Dependencies have been imported and a warning should be shown on save
-   bool mImportedDependencies{ false };
 };
 
 class wxTopLevelWindow;

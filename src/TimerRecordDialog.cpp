@@ -622,12 +622,12 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Do Automatic Save?
    if (m_bAutoSaveEnabled) {
 
-      auto &projectFileIO = ProjectFileIO::Get( *pProject );
+      auto &projectFileManager = ProjectFileManager::Get( *pProject );
       // MY: If this project has already been saved then simply execute a Save here
       if (m_bProjectAlreadySaved) {
-         bSaveOK = projectFileIO.Save();
+         bSaveOK = projectFileManager.Save();
       } else {
-         bSaveOK = projectFileIO.SaveFromTimerRecording(m_fnAutoSaveFile);
+         bSaveOK = projectFileManager.SaveFromTimerRecording(m_fnAutoSaveFile);
       }
    }
 

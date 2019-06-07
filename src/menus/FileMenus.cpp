@@ -187,30 +187,30 @@ void OnClose(const CommandContext &context )
 void OnSave(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.Save();
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.Save();
 }
 
 void OnSaveAs(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.SaveAs();
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveAs();
 }
 
 void OnSaveCopy(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.SaveAs(true, true);
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveAs(true, true);
 }
 
 #ifdef USE_LIBVORBIS
 void OnSaveCompressed(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.SaveAs(true);
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveAs(true);
 }
 #endif
 
