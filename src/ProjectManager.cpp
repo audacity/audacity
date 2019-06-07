@@ -1112,6 +1112,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          settings.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
          settings.GetBandwidthSelectionFormatName());
+
       SelectionBar::Get( project ).SetRate( settings.GetRate() );
 
       ProjectHistory::Get( project ).InitialState();
