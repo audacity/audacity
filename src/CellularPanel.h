@@ -2,7 +2,7 @@
 
  Audacity: A Digital Audio Editor
 
- TrackPanel.h
+ CellularPanel.h
 
  Paul Licameli
 
