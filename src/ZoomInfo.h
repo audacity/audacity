@@ -78,6 +78,12 @@ public:
       return PositionToTime(offset + TimeToPosition(time, ignoreFisheye), ignoreFisheye);
    }
 
+   int GetWidth() const { return mWidth; }
+   void SetWidth( int width ) { mWidth = width; }
+
+   int GetVRulerWidth() const { return mVRulerWidth; }
+   void SetVRulerWidth( int width ) { mVRulerWidth = width; }
+
    bool ZoomInAvailable() const;
    bool ZoomOutAvailable() const;
 
@@ -137,6 +143,9 @@ public:
    // Exclusive:
    wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0)) const
    {return 0;} // stub
+
+   int mWidth{ 0 };
+   int mVRulerWidth{ 36 };
 };
 
 #endif

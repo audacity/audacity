@@ -103,6 +103,9 @@ public:
 
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
+   int GetHeight() const { return mHeight; }
+   void SetHeight( int height ) { mHeight = height; }
+
    int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
 
    static int UpdateScrollPrefsID();
@@ -157,6 +160,9 @@ public:
 
    // Receive track panel timer notifications
    void OnTimer(wxCommandEvent &event);
+
+private:
+   int mHeight{ 0 };
 };
 
 #endif

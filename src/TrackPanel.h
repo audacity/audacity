@@ -96,6 +96,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    double GetMostRecentXPos();
 
+   void OnSize( wxSizeEvent & );
    void OnIdle(wxIdleEvent & event);
    void OnTimer(wxTimerEvent& event);
    void OnODTask(wxCommandEvent &event);
@@ -270,9 +271,6 @@ protected:
    friend class ScreenshotCommand;
 
    SelectedRegion mLastDrawnSelectedRegion {};
-
- public:
-   wxSize vrulerSize;
 
  protected:
 

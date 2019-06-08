@@ -170,6 +170,8 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 
+    EVT_SIZE(TrackPanel::OnSize)
+
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -252,8 +254,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mTracks(tracks),
      mRuler(ruler),
      mTrackArtist(nullptr),
-     mRefreshBacking(false),
-     vrulerSize(36,0)
+     mRefreshBacking(false)
 #ifndef __WXGTK__   //Get rid if this pragma for gtk
 #pragma warning( default: 4355 )
 #endif
@@ -382,6 +383,14 @@ AudacityProject * TrackPanel::GetProject() const
    pWind = pWind->GetParent(); //ProjectWindow
    wxASSERT( pWind );
    return &static_cast<ProjectWindow*>( pWind )->GetProject();
+}
+
+void TrackPanel::OnSize( wxSizeEvent &evt )
+{
+   evt.Skip();
+   const auto &size = evt.GetSize();
+   mViewInfo->SetWidth( size.GetWidth() );
+   mViewInfo->SetHeight( size.GetHeight() );
 }
 
 void TrackPanel::OnIdle(wxIdleEvent& event)
@@ -1278,8 +1287,8 @@ void TrackPanel::UpdateVRulerSize()
       for (auto t : trackRange)
          s.IncTo(t->vrulerSize);
 
-      if (vrulerSize != s) {
-         vrulerSize = s;
+      if (mViewInfo->GetVRulerWidth() != s.GetWidth()) {
+         mViewInfo->SetVRulerWidth( s.GetWidth() );
          mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();
       }
@@ -1630,7 +1639,7 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
 
 int TrackPanel::GetVRulerWidth() const
 {
-   return vrulerSize.x;
+   return mViewInfo->GetVRulerWidth();
 }
 
 int TrackPanel::GetLabelWidth() const
