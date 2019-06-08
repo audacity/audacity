@@ -418,6 +418,8 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 #include "Experimental.h"
 
+#include "AudioIOListener.h"
+
 #include "float_cast.h"
 #include "DeviceManager.h"
 
@@ -455,6 +457,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectWindow.h"
 #include "TimeTrack.h"
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
@@ -1465,11 +1468,12 @@ static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
    }
 }
 
-bool AudioIO::StartPortAudioStream(double sampleRate,
+bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                                    unsigned int numPlaybackChannels,
                                    unsigned int numCaptureChannels,
                                    sampleFormat captureFormat)
 {
+   auto sampleRate = options.rate;
 #ifdef EXPERIMENTAL_MIDI_OUT
    mNumFrames = 0;
    mNumPauseFrames = 0;
@@ -1485,7 +1489,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    mCallbackCount = 0;
    mAudioFramesPerBuffer = 0;
 #endif
-   mOwningProject = GetActiveProject();
+   mOwningProject = options.pProject;
 
    // PRL:  Protection from crash reported by David Bailes, involving starting
    // and stopping with frequent changes of active window, hard to reproduce
@@ -1559,7 +1563,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
-      mOutputMeter = mOwningProject->GetPlaybackMeter();
+      mOutputMeter = options.playbackMeter;
    }
 
    if( numCaptureChannels > 0)
@@ -1589,7 +1593,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter( mOwningProject, mOwningProject->GetCaptureMeter() );
+      SetCaptureMeter( mOwningProject, options.captureMeter );
    }
 
    SetMeters();
@@ -1676,7 +1680,7 @@ wxString AudioIO::LastPaErrorString()
    return wxString::Format(wxT("%d %s."), (int) mLastPaError, Pa_GetErrorText(mLastPaError));
 }
 
-void AudioIO::StartMonitoring(double sampleRate)
+void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 {
    if ( mPortStreamV19 || mStreamToken )
       return;
@@ -1694,7 +1698,7 @@ void AudioIO::StartMonitoring(double sampleRate)
    // FIXME: TRAP_ERR StartPortAudioStream (a PaError may be present)
    // but StartPortAudioStream function only returns true or false.
    mUsingAlsa = false;
-   success = StartPortAudioStream(sampleRate, (unsigned int)playbackChannels,
+   success = StartPortAudioStream(options, (unsigned int)playbackChannels,
                                   (unsigned int)captureChannels,
                                   captureFormat);
 
@@ -1735,8 +1739,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    if( IsBusy() )
       return 0;
-
-   const auto &sampleRate = options.rate;
 
    // We just want to set mStreamToken to -1 - this way avoids
    // an extremely rare but possible race condition, if two functions
@@ -1800,7 +1802,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mRecordingSchedule.mCrossfadeData.swap( *options.pCrossfadeData );
 
    mListener = options.listener;
-   mRate    = sampleRate;
+   mRate    = options.rate;
 
    mSeek    = 0;
    mLastRecordingOffset = 0;
@@ -1875,7 +1877,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    bool successAudio;
 
-   successAudio = StartPortAudioStream(sampleRate, playbackChannels,
+   successAudio = StartPortAudioStream(options, playbackChannels,
                                        captureChannels, captureFormat);
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -1900,7 +1902,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       return 0;
    }
 
-   if ( ! AllocateBuffers( options, tracks, t0, t1, sampleRate, scrubbing ) )
+   if ( ! AllocateBuffers( options, tracks, t0, t1, options.rate, scrubbing ) )
       return 0;
 
    if (mNumPlaybackChannels > 0)
@@ -2675,7 +2677,7 @@ void AudioIO::StopStream()
 
    mInputMeter.Release();
    mOutputMeter.Release();
-   mOwningProject = NULL;
+   mOwningProject = nullptr;
 
    if (mListener && mNumCaptureChannels > 0)
       mListener->OnAudioIOStopRecording();

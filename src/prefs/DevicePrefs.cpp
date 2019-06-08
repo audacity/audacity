@@ -36,7 +36,6 @@ other settings.
 
 #include "portaudio.h"
 
-#include "../AudioIO.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../DeviceManager.h"

@@ -81,12 +81,14 @@
 #ifdef USE_MIDI
 #include "ImportMIDI.h"
 #endif // USE_MIDI
+#include "../FileNames.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
-#include "Import.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
+#include "../ProjectWindow.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -372,7 +374,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
 #ifdef USE_MIDI
       // If file is a midi
-      if (Importer::IsMidi(targetfile))
+      if (FileNames::IsMidi(targetfile))
       {
          mProject = FileActions::DoImportMIDI(mProject, targetfile);
       }
@@ -385,7 +387,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
           * audio file. TODO: Some sort of message here? */
 
 #endif // USE_MIDI
-         mProject = AudacityProject::OpenProject( mProject, targetfile );
+         mProject = ProjectManager::OpenProject( mProject, targetfile );
 
       // Set tok to right after filename
       temptok2.SetString(targettoken);
@@ -440,7 +442,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
 
                // Amend the undo transaction made by import
-               mProject->ModifyState(false);
+               ProjectManager::Get( *mProject ).ModifyState(false);
             } // end of converting "offset" argument
             else
             {
@@ -484,7 +486,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (doSomething)
       // Amend last undo state
-      mProject->ModifyState(false);
+      ProjectManager::Get( *mProject ).ModifyState(false);
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()

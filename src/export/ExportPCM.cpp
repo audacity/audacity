@@ -28,7 +28,7 @@
 #include "../FileFormats.h"
 #include "../Mix.h"
 #include "../Prefs.h"
-#include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
@@ -442,7 +442,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                        const Tags *metadata,
                        int subformat)
 {
-   double       rate = project->GetRate();
+   double       rate = ProjectSettings::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
    int sf_format;
 

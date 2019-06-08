@@ -65,6 +65,8 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -395,7 +397,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!(EditActions::DoEditMetadata( *project,
          _("Edit Metadata Tags"), _("Exported Tags"),
-         mProject->GetShowId3Dialog()))) {
+         ProjectSettings::Get( *mProject ).GetShowId3Dialog()))) {
          return false;
       }
    }
@@ -778,7 +780,7 @@ void Exporter::DisplayOptions(int index)
    }
 
 #if defined(__WXMSW__)
-   mPlugins[mf]->DisplayOptions(mProject, msf);
+   mPlugins[mf]->DisplayOptions( FindProjectFrame( mProject ), msf);
 #else
    mPlugins[mf]->DisplayOptions(mDialog, msf);
 #endif
@@ -1034,7 +1036,8 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!(EditActions::DoEditMetadata( *project,
          _("Edit Metadata Tags"),
-         _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+         _("Exported Tags"),
+         ProjectSettings::Get(*mProject).GetShowId3Dialog()))) {
          return false;
       }
    }

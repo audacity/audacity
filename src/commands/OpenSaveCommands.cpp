@@ -18,6 +18,8 @@
 #include "OpenSaveCommands.h"
 
 #include "../Project.h"
+#include "../ProjectFileIO.h"
+#include "../ProjectManager.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -48,11 +50,12 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    if(mFileName.empty())
    {
       auto project = &context.project;
-      AudacityProject::OpenFiles(project);
+      ProjectManager::OpenFiles(project);
    }
    else
    {
-      context.project.OpenFile(mFileName, mbAddToHistory);
+      ProjectManager::Get( context.project )
+         .OpenFile(mFileName, mbAddToHistory);
    }
    const auto &newFileName = context.project.GetFileName();
 
@@ -84,8 +87,10 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SaveProjectCommand::Apply(const CommandContext &context)
 {
-   if(mFileName.empty())
-      return context.project.SaveAs(mbCompress);
+   auto &projectFileIO = ProjectFileIO::Get( context.project );
+   if ( mFileName.empty() )
+      return projectFileIO.SaveAs(mbCompress);
    else
-      return context.project.SaveAs(mFileName,mbCompress,mbAddToHistory);
+      return projectFileIO.SaveAs(
+         mFileName, mbCompress, mbAddToHistory);
 }

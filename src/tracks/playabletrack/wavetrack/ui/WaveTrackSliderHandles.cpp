@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "../../../../Project.h"
+#include "../../../../ProjectManager.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../UndoManager.h"
@@ -57,7 +57,8 @@ UIHandle::Result GainSliderHandle::SetValue
 UIHandle::Result GainSliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
-   pProject->PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE);
+   ProjectManager::Get( *pProject )
+      .PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
 }
 
@@ -135,7 +136,8 @@ UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newV
 UIHandle::Result PanSliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
-   pProject->PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE);
+   ProjectManager::Get( *pProject )
+      .PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
 }
 

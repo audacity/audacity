@@ -14,8 +14,8 @@
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
 #include "Prefs.h"
+#include "ViewInfo.h" // for PlayRegion
 
-class ViewInfo;
 class AudacityProject;
 class SnapManager;
 class TrackList;
@@ -54,7 +54,6 @@ public:
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
-   void GetPlayRegion(double* playRegionStart, double* playRegionEnd);
 
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
@@ -132,11 +131,7 @@ private:
 
    bool mIsSnapped;
 
-   bool   mPlayRegionLock;
-   double mPlayRegionStart;
-   double mPlayRegionEnd;
-   double mOldPlayRegionStart;
-   double mOldPlayRegionEnd;
+   PlayRegion mOldPlayRegion;
 
    bool mIsRecording;
 

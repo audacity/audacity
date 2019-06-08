@@ -8,6 +8,11 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
+#include "../ProjectFileIO.h"
+#include "../ProjectManager.h"
+#include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanel.h"
@@ -41,7 +46,9 @@ bool MakeReadyToPlay(AudacityProject &project,
    wxCommandEvent evt;
 
    // If this project is playing, stop playing
-   if (gAudioIO->IsStreamActive(project.GetAudioIOToken())) {
+   if (gAudioIO->IsStreamActive(
+      ProjectAudioIO::Get( project ).GetAudioIOToken()
+   )) {
       toolbar.SetPlay(false);        //Pops
       toolbar.SetStop(true);         //Pushes stop down
       toolbar.OnStop(evt);
@@ -81,7 +88,7 @@ void DoPlayStop(const CommandContext &context)
    auto &project = context.project;
    auto &toolbar = ControlToolBar::Get( project );
    auto &window = ProjectWindow::Get( project );
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
    if (gAudioIO->IsStreamActive(token)) {
@@ -97,7 +104,8 @@ void DoPlayStop(const CommandContext &context)
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
          iter = std::find_if( start, finish,
             []( const AllProjects::value_type &ptr ){
-               return gAudioIO->IsStreamActive(ptr->GetAudioIOToken()); } );
+               return gAudioIO->IsStreamActive(
+                  ProjectAudioIO::Get( *ptr ).GetAudioIOToken()); } );
 
       //stop playing the other project
       if(iter != finish) {
@@ -165,7 +173,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
       if (i >= 0) {
          const LabelStruct* label = lt->GetLabel(i);
-         if (project.IsAudioActive()) {
+         if (ProjectAudioIO::Get( project ).IsAudioActive()) {
             DoPlayStop(project);     // stop
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
@@ -207,7 +215,7 @@ bool DoPlayStopSelect
 {
    auto &toolbar = ControlToolBar::Get( project );
    auto &scrubber = Scrubber::Get( project );
-   auto token = project.GetAudioIOToken();
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
 
@@ -253,7 +261,7 @@ bool DoPlayStopSelect
          // -- change t0, collapsing to point only if t1 was greater
          selection.setT0(time, false);
 
-      project.ModifyState(false);           // without bWantsAutoSave
+      ProjectManager::Get( project ).ModifyState(false);           // without bWantsAutoSave
       return true;
    }
    return false;
@@ -299,14 +307,14 @@ void DoLockPlayRegion( AudacityProject &project )
    auto &tracks = TrackList::Get( project );
    auto &ruler = AdornedRulerPanel::Get( project );
 
-   double start, end;
-   project.GetPlayRegion(&start, &end);
-   if (start >= tracks.GetEndTime()) {
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   if (playRegion.GetStart() >= tracks.GetEndTime()) {
        AudacityMessageBox(_("Cannot lock region beyond\nend of project."),
                     _("Error"));
    }
    else {
-      project.SetPlayRegionLocked( true );
+      playRegion.SetLocked( true );
       ruler.Refresh(false);
    }
 }
@@ -314,8 +322,9 @@ void DoLockPlayRegion( AudacityProject &project )
 void DoUnlockPlayRegion( AudacityProject &project )
 {
    auto &ruler = AdornedRulerPanel::Get( project );
-
-   project.SetPlayRegionLocked( false );
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   playRegion.SetLocked( false );
    ruler.Refresh(false);
 }
 
@@ -399,6 +408,7 @@ void OnRecord2ndChoice(const CommandContext &context)
 void OnTimerRecord(const CommandContext &context)
 {
    auto &project = context.project;
+   const auto &settings = ProjectSettings::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -417,7 +427,7 @@ void OnTimerRecord(const CommandContext &context)
    // preventing issues surrounding "dirty" projects when Automatic Save/Export
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
-       (TrackList::Get( project ).Any() || project.EmptyCanBeDirty())) {
+       (TrackList::Get( project ).Any() || settings.EmptyCanBeDirty())) {
       AudacityMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
                    _("Timer Recording"),
                    wxICON_INFORMATION | wxOK);
@@ -425,7 +435,7 @@ void OnTimerRecord(const CommandContext &context)
    }
    // We use this variable to display "Current Project" in the Timer Recording
    // save project field
-   bool bProjectSaved = project.IsProjectSaved();
+   bool bProjectSaved = ProjectFileIO::Get( project ).IsProjectSaved();
 
    //we break the prompting and waiting dialogs into two sections
    //because they both give the user a chance to click cancel
@@ -453,7 +463,7 @@ void OnTimerRecord(const CommandContext &context)
       switch (iTimerRecordingOutcome) {
       case POST_TIMER_RECORD_CANCEL_WAIT:
          // Canceled on the wait dialog
-         project.RollbackState();
+         ProjectManager::Get( project ).RollbackState();
          break;
       case POST_TIMER_RECORD_CANCEL:
          // RunWaitDialog() shows the "wait for start" as well as "recording"
@@ -462,7 +472,7 @@ void OnTimerRecord(const CommandContext &context)
          // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
          // which is blocked by this function.
          // so instead we mark a flag to undo it there.
-         project.SetTimerRecordCancelled();
+         ProjectManager::Get( project ).SetTimerRecordCancelled();
          break;
       case POST_TIMER_RECORD_NOTHING:
          // No action required
@@ -618,7 +628,7 @@ void OnPunchAndRoll(const CommandContext &context)
       ;
    else
       // Roll back the deletions
-      project.RollbackState();
+      ProjectManager::Get( project ).RollbackState();
 }
 #endif
 

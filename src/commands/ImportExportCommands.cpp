@@ -17,7 +17,7 @@
 #include "../Audacity.h"
 #include "ImportExportCommands.h"
 
-#include "../Project.h"
+#include "../ProjectManager.h"
 #include "../ViewInfo.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"
@@ -41,7 +41,7 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 }
 
 bool ImportCommand::Apply(const CommandContext & context){
-   return context.project.Import(mFileName);
+   return ProjectManager::Get( context.project ).Import(mFileName);
 }
 
 

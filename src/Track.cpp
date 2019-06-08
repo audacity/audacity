@@ -40,6 +40,7 @@ and TimeTrack.
 #include "NoteTrack.h"
 #include "LabelTrack.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "DirManager.h"
 
 #include "InconsistencyException.h"
@@ -323,7 +324,7 @@ bool Track::IsSyncLockSelected() const
 {
 #ifdef EXPERIMENTAL_SYNC_LOCK
    AudacityProject *p = GetActiveProject();
-   if (!p || !p->IsSyncLocked())
+   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
       return false;
 
    auto pList = mList.lock();

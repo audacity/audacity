@@ -11,6 +11,8 @@
 #include "../Project.h"
 #include "../commands/CommandContext.h"
 
+#include <wx/frame.h>
+
 #undef USE_COCOA
 
 #ifdef USE_COCOA

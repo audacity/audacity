@@ -289,6 +289,7 @@ class AUDACITY_DLL_API TrackPanel final
    void OnIdle(wxIdleEvent & event);
    void OnTimer(wxTimerEvent& event);
    void OnODTask(wxCommandEvent &event);
+   void OnProjectSettingsChange(wxCommandEvent &event);
 
    int GetLeftOffset() const { return GetLabelWidth() + 1;}
 

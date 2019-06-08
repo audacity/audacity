@@ -3,6 +3,7 @@
 
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>
+#include <wx/frame.h>
 
 #include "../AboutDialog.h"
 #include "../AllThemeResources.h"
@@ -15,6 +16,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "../Theme.h"
@@ -251,7 +253,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
       // preference dialogs.
       if( Str == "/SnapTo" )
       {
-         pProject->AS_SetSnapTo( 0 );
+         ProjectManager::Get( *pProject ).AS_SetSnapTo( 0 );
       }
       else
       {

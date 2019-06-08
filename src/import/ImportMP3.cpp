@@ -40,7 +40,6 @@
 #include <wx/intl.h>
 
 #include "../Prefs.h"
-#include "Import.h"
 #include "ImportPlugin.h"
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"

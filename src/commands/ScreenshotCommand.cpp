@@ -36,6 +36,7 @@ small calculations of rectangles.
 #include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
 #include "../Prefs.h"
+#include "../ProjectWindow.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../Track.h"

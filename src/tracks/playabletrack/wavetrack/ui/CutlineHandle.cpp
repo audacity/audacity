@@ -14,7 +14,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Experimental.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../Project.h"
+#include "../../../../ProjectManager.h"
+#include "../../../../ProjectAudioIO.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Snap.h" // for kPixelTolerance
 #include "../../../../TrackPanelMouseEvent.h"
@@ -121,7 +122,7 @@ UIHandle::Result CutlineHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
 
@@ -208,7 +209,7 @@ UIHandle::Result CutlineHandle::Drag
 HitTestPreview CutlineHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   const bool unsafe = pProject->IsAudioActive();
+   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    auto bCutline = (mLocation.typ == WaveTrackLocation::locationCutLine);
    return HitPreview( bCutline, unsafe );
 }
@@ -219,19 +220,21 @@ UIHandle::Result CutlineHandle::Release
    UIHandle::Result result = RefreshCode::RefreshNone;
 
    // Only now commit the result to the undo stack
-   AudacityProject *const project = pProject;
    switch (mOperation) {
    default:
       wxASSERT(false);
    case Merge:
-      project->PushState(_("Merged Clips"), _("Merge"), UndoPush::CONSOLIDATE);
+      ProjectManager::Get( *pProject )
+         .PushState(_("Merged Clips"), _("Merge"), UndoPush::CONSOLIDATE);
       break;
    case Expand:
-      project->PushState(_("Expanded Cut Line"), _("Expand"));
+      ProjectManager::Get( *pProject )
+         .PushState(_("Expanded Cut Line"), _("Expand"));
       result |= RefreshCode::UpdateSelection;
       break;
    case Remove:
-      project->PushState(_("Removed Cut Line"), _("Remove"));
+      ProjectManager::Get( *pProject )
+         .PushState(_("Removed Cut Line"), _("Remove"));
       break;
    }
 
@@ -243,7 +246,7 @@ UIHandle::Result CutlineHandle::Cancel(AudacityProject *pProject)
 {
    using namespace RefreshCode;
    UIHandle::Result result = RefreshCell;
-   pProject->RollbackState();
+   ProjectManager::Get( *pProject ).RollbackState();
    if (mOperation == Expand) {
       AudacityProject &project = *pProject;
       auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;

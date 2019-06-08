@@ -47,6 +47,8 @@
 #include "Menus.h"
 #include "MissingAliasFileDialog.h"
 #include "Project.h"
+#include "ProjectFileIO.h"
+#include "ProjectManager.h"
 #include "Prefs.h"
 #include "Track.h"
 #include "widgets/NumericTextCtrl.h"
@@ -417,9 +419,10 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    // as its possible that they plan to free up some
    // space before the recording begins
    AudacityProject* pProject = GetActiveProject();
+   auto &projectManager = ProjectManager::Get( *pProject );
 
    // How many minutes do we have left on the disc?
-   int iMinsLeft = pProject->GetEstimatedRecordingMinsLeftOnDisk();
+   int iMinsLeft = projectManager.GetEstimatedRecordingMinsLeftOnDisk();
 
    // How many minutes will this recording require?
    int iMinsRecording = m_TimeSpan_Duration.GetMinutes();
@@ -429,9 +432,9 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
       // Format the strings
       wxString sRemainingTime;
-      sRemainingTime = pProject->GetHoursMinsString(iMinsLeft);
+      sRemainingTime = projectManager.GetHoursMinsString(iMinsLeft);
       wxString sPlannedTime;
-      sPlannedTime = pProject->GetHoursMinsString(iMinsRecording);
+      sPlannedTime = projectManager.GetHoursMinsString(iMinsRecording);
 
       // Create the message string
       wxString sMessage;
@@ -619,11 +622,12 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Do Automatic Save?
    if (m_bAutoSaveEnabled) {
 
+      auto &projectFileIO = ProjectFileIO::Get( *pProject );
       // MY: If this project has already been saved then simply execute a Save here
       if (m_bProjectAlreadySaved) {
-         bSaveOK = pProject->Save();
+         bSaveOK = projectFileIO.Save();
       } else {
-         bSaveOK = pProject->SaveFromTimerRecording(m_fnAutoSaveFile);
+         bSaveOK = projectFileIO.SaveFromTimerRecording(m_fnAutoSaveFile);
       }
    }
 

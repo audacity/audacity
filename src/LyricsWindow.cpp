@@ -14,6 +14,7 @@
 #include "AudioIO.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "ViewInfo.h"
 
@@ -152,7 +153,7 @@ void LyricsWindow::OnStyle_Highlight(wxCommandEvent & WXUNUSED(event))
 
 void LyricsWindow::OnTimer(wxCommandEvent &event)
 {
-   if (mProject->IsAudioActive())
+   if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
       GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
    }

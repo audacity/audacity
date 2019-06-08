@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NumberScale.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../prefs/WaveformSettings.h"
-#include "../../../../Project.h"
+#include "../../../../ProjectManager.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
@@ -186,7 +186,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    else
       return RefreshNone;
 
-   pProject->ModifyState(true);
+   ProjectManager::Get( *pProject ).ModifyState(true);
 
    return RefreshCell | UpdateVRuler;
 }

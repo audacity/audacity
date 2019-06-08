@@ -39,6 +39,7 @@
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Project.h"
+#include "../ProjectManager.h"
 #include "../TimeTrack.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -486,11 +487,11 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    }
 
    // Get the current play region
-   double playRegionStart, playRegionEnd;
-   p->GetPlayRegion(&playRegionStart, &playRegionEnd);
+   const auto &viewInfo = ViewInfo::Get( *p );
+   const auto &playRegion = viewInfo.playRegion;
 
    // Start playing
-   if (playRegionStart < 0)
+   if (playRegion.GetStart() < 0)
       return;
    if (bFixedSpeedPlay)
    {
@@ -503,8 +504,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       auto &bar = ControlToolBar::Get( *p );
-      bar.PlayPlayRegion
-         (SelectedRegion(playRegionStart, playRegionEnd),
+      bar.PlayPlayRegion(
+         SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
             options,
             mode);
    }
@@ -512,7 +513,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    {
       auto &scrubber = Scrubber::Get( *p );
       scrubber.StartSpeedPlay(GetPlaySpeed(),
-         playRegionStart, playRegionEnd);
+         playRegion.GetStart(), playRegion.GetEnd());
    }
 }
 

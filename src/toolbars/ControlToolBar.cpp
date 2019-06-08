@@ -66,6 +66,10 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
+#include "../ProjectManager.h"
+#include "../ProjectSettings.h"
+#include "../ProjectWindow.h"
 #include "../ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
@@ -721,7 +725,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
       if (token != 0) {
          success = true;
-         p->SetAudioIOToken(token);
+         ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
          mBusyProject = p;
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
          //AC: If init_seek was set, now's the time to make it happen.
@@ -766,8 +770,7 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
    if (p)
    {
 
-      double playRegionStart, playRegionEnd;
-      p->GetPlayRegion(&playRegionStart, &playRegionEnd);
+      const auto &playRegion = ViewInfo::Get( *p ).playRegion;
 
       auto options = DefaultPlayOptions( *p );
       options.playLooped = looped;
@@ -777,7 +780,7 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
          cutpreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
-      PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
+      PlayPlayRegion(SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
                      options,
                      mode);
    }
@@ -793,7 +796,9 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
    // Does not appear to be needed on Linux. Perhaps on some other platform?
    // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
-      if (gAudioIO->IsStreamActive(GetActiveProject()->GetAudioIOToken())) {
+      if (gAudioIO->IsStreamActive(
+         ProjectAudioIO::Get( *GetActiveProject() ).GetAudioIOToken()
+      )) {
          SetPlay(false);
          SetStop(true);
          StopPlaying();
@@ -886,14 +891,13 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    // So that we continue monitoring after playing or recording.
    // also clean the MeterQueues
    if( project ) {
-      project->MayStartMonitoring();
-
-      MeterPanel *meter = project->GetPlaybackMeter();
+      auto &projectAudioIO = ProjectAudioIO::Get( *project );
+      MeterPanel *meter = projectAudioIO.GetPlaybackMeter();
       if( meter ) {
          meter->Clear();
       }
 
-      meter = project->GetCaptureMeter();
+      meter = projectAudioIO.GetCaptureMeter();
       if( meter ) {
          meter->Clear();
       }
@@ -1244,7 +1248,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
 
-            if ((recordingChannels > 2) && !(p->GetTracksFitVerticallyZoomed())) {
+            if ((recordingChannels > 2) &&
+                !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
                newTrack->SetMinimized(true);
             }
 
@@ -1266,7 +1271,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
       success = (token != 0);
 
       if (success) {
-         p->SetAudioIOToken(token);
+         ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
          mBusyProject = p;
 
          StartScrollingIfPreferred();

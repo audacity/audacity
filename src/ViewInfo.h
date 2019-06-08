@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_VIEWINFO__
 #define __AUDACITY_VIEWINFO__
 
+#include <utility>
 #include <vector>
 #include <wx/event.h> // inherit wxEvtHandler
 #include "ClientData.h"
@@ -147,6 +148,58 @@ public:
    {return 0;} // stub
 };
 
+class PlayRegion
+{
+public:
+   PlayRegion() = default;
+
+   PlayRegion( const PlayRegion& ) = delete;
+   PlayRegion &operator= ( const PlayRegion &that )
+   {
+      mLocked = that.mLocked;
+      // Guarantee the equivalent un-swapped order of endpoints
+      mStart = that.GetStart();
+      mEnd = that.GetEnd();
+      return *this;
+   }
+
+   bool Locked() const { return mLocked; }
+   void SetLocked( bool locked ) { mLocked = locked; }
+
+   bool Empty() const { return GetStart() == GetEnd(); }
+   double GetStart() const
+   {
+      if ( mEnd < 0 )
+         return mStart;
+      else
+         return std::min( mStart, mEnd );
+   }
+   double GetEnd() const
+   {
+      if ( mStart < 0 )
+         return mEnd;
+      else
+         return std::max( mStart, mEnd );
+   }
+
+   void SetStart( double start ) { mStart = start; }
+   void SetEnd( double end ) { mEnd = end; }
+   void SetTimes( double start, double end ) { mStart = start, mEnd = end; }
+
+   void Order()
+   {
+      if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd)
+         std::swap( mStart, mEnd );
+   }
+
+private:
+   // Times:
+   double mStart{ -1.0 };
+   double mEnd{ -1.0 };
+
+   bool mLocked{ false };
+};
+
 class AUDACITY_DLL_API ViewInfo final
    : public wxEvtHandler, public ZoomInfo
 {
@@ -172,6 +225,7 @@ public:
    // Current selection
 
    SelectedRegion selectedRegion;
+   PlayRegion playRegion;
 
    // Scroll info
 

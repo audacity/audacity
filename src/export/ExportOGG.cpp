@@ -28,7 +28,7 @@
 #include <vorbis/vorbisenc.h>
 
 #include "../FileIO.h"
-#include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -170,7 +170,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                        const Tags *metadata,
                        int WXUNUSED(subformat))
 {
-   double    rate    = project->GetRate();
+   double    rate    = ProjectSettings::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
    double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
 
