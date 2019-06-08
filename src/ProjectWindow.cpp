@@ -550,6 +550,10 @@ void ProjectWindow::Init()
       mTopPanel->SetSizer(ubs.release());
    }
 
+   // Ensure that the topdock comes before the ruler in the tab order,
+   // irrespective of the order in which they were created.
+   ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
+
    const auto pPage = GetMainPage();
 
    wxBoxSizer *bs;
