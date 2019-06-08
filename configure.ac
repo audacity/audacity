@@ -589,7 +589,7 @@ case "${host_os}" in
 
    mingw*)
       dnl Windows/CygWin configuration
-      LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm"
+      LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm -lshlwapi"
       CONFIGHEADER="configwin.h"
       CFLAGS="${CFLAGS} -DUNICODE -D_UNICODE"
       CXXFLAGS="${CXXFLAGS} -DUNICODE -D_UNICODE"
