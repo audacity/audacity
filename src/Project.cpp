@@ -155,7 +155,7 @@ void AudacityProject::SetStatus(const wxString &msg)
    }
 }
 
-wxFrame &GetProjectFrame( AudacityProject &project )
+AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
 {
    auto ptr = project.GetFrame();
    if ( !ptr )
@@ -163,7 +163,7 @@ wxFrame &GetProjectFrame( AudacityProject &project )
    return *ptr;
 }
 
-const wxFrame &GetProjectFrame( const AudacityProject &project )
+AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project )
 {
    auto ptr = project.GetFrame();
    if ( !ptr )

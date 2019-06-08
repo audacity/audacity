@@ -152,8 +152,8 @@ class AUDACITY_DLL_API AudacityProject final
 
 ///\brief Get the top-level window associated with the project (as a wxFrame
 /// only, when you do not need to use the subclass ProjectWindow)
-wxFrame &GetProjectFrame( AudacityProject &project );
-const wxFrame &GetProjectFrame( const AudacityProject &project );
+AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project );
+AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project );
 
 ///\brief Get a pointer to the window associated with a project, or null if
 /// the given pointer is null.
