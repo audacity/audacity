@@ -1144,8 +1144,8 @@ void ProjectWindow::FixScrollbars()
 
    int totalHeight = TrackView::GetTotalHeight( tracks ) + 32;
 
-   int panelWidth, panelHeight;
-   trackPanel.GetTracksUsableArea(&panelWidth, &panelHeight);
+   auto panelWidth = viewInfo.GetTracksUsableWidth();
+   auto panelHeight = viewInfo.GetHeight();
 
    // (From Debian...at least I think this is the change cooresponding
    // to this comment)
@@ -1469,8 +1469,7 @@ void ProjectWindow::DoScroll()
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
 
-   int width;
-   trackPanel.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    viewInfo.SetBeforeScreenWidth(viewInfo.sbarH, width, lowerBound);
 
 
@@ -1770,8 +1769,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
       auto &viewInfo = ViewInfo::Get( *mProject );
       auto &trackPanel = TrackPanel::Get( *mProject );
       const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
-      int width;
-      trackPanel.GetTracksUsableArea(&width, NULL);
+      auto width = viewInfo.GetTracksUsableWidth();
       int deltaX;
       switch (mMode)
       {
@@ -1899,7 +1897,6 @@ double ProjectWindow::GetZoomOfToFit() const
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
 
    const double end = tracks.GetEndTime();
    const double start = viewInfo.bScrollBeyondZero
@@ -1910,8 +1907,7 @@ double ProjectWindow::GetZoomOfToFit() const
    if (len <= 0.0)
       return viewInfo.GetZoom();
 
-   int w;
-   trackPanel.GetTracksUsableArea(&w, NULL);
+   auto w = viewInfo.GetTracksUsableWidth();
    w -= 10;
    return w/len;
 }

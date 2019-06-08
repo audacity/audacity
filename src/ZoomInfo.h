@@ -101,6 +101,12 @@ public:
    int GetLabelWidth() const { return GetVRulerOffset() + GetVRulerWidth(); }
    int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   int GetTracksUsableWidth() const
+   {
+      return
+         std::max( 0, GetWidth() - ( GetLeftOffset() + kRightMargin ) );
+   }
+
    bool ZoomInAvailable() const;
    bool ZoomOutAvailable() const;
 

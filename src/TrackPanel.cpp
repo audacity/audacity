@@ -345,25 +345,6 @@ void TrackPanel::UpdatePrefs()
    Refresh();
 }
 
-wxSize TrackPanel::GetTracksUsableArea() const
-{
-   auto size = GetSize();
-   return {
-      std::max( 0,
-         size.GetWidth() - ( mViewInfo->GetLeftOffset() + kRightMargin ) ),
-      size.GetHeight()
-   };
-}
-
-void TrackPanel::GetTracksUsableArea(int *width, int *height) const
-{
-   auto size = GetTracksUsableArea();
-   if (width)
-      *width = size.GetWidth();
-   if (height)
-      *height = size.GetHeight();
-}
-
 /// Gets the pointer to the AudacityProject that
 /// goes with this track panel.
 AudacityProject * TrackPanel::GetProject() const
@@ -519,8 +500,7 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
 
 double TrackPanel::GetScreenEndTime() const
 {
-   int width;
-   GetTracksUsableArea(&width, NULL);
+   auto width = mViewInfo->GetTracksUsableWidth();
    return mViewInfo->PositionToTime(width, 0, true);
 }
 
@@ -1302,8 +1282,7 @@ void TrackPanel::UpdateVRulerSize()
 // Make sure selection edge is in view
 void TrackPanel::ScrollIntoView(double pos)
 {
-   int w;
-   GetTracksUsableArea( &w, NULL );
+   auto w = mViewInfo->GetTracksUsableWidth();
 
    int pixel = mViewInfo->TimeToPosition(pos);
    if (pixel < 0 || pixel >= w)
@@ -1758,7 +1737,10 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
    : mPanelRect {
         wxPoint{ 0, ViewInfo::Get( *project ).vpos },
-        TrackPanel::Get( *project ).GetTracksUsableArea()
+        wxSize{
+           ViewInfo::Get( *project ).GetTracksUsableWidth(),
+           ViewInfo::Get( *project ).GetHeight()
+        }
      }
 {}
 

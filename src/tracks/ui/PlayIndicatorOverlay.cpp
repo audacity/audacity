@@ -150,8 +150,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
    auto &trackPanel = TrackPanel::Get( *mProject );
    const auto &viewInfo = ViewInfo::Get( *mProject );
-   int width;
-   trackPanel.GetTracksUsableArea(&width, nullptr);
+   auto width = viewInfo.GetTracksUsableWidth();
 
    if (!ProjectAudioIO::Get( *mProject ).IsAudioActive()) {
       mNewIndicatorX = -1;

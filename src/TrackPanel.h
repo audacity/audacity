@@ -103,12 +103,6 @@ class AUDACITY_DLL_API TrackPanel final
    void OnProjectSettingsChange(wxCommandEvent &event);
    void OnTrackFocusChange( wxCommandEvent &event );
 
-   wxSize GetTracksUsableArea() const;
-
-   // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
-   // Either argument may be NULL
-   void GetTracksUsableArea(int *width, int *height) const;
-
    void OnUndoReset( wxCommandEvent &event );
 
    void Refresh

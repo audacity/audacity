@@ -611,8 +611,7 @@ void Scrubber::ContinueScrubbingPoll()
             // toward the mouse position, then move the target time to a more
             // extreme position to avoid catching-up and halting before the
             // screen scrolls.
-            int width;
-            trackPanel.GetTracksUsableArea(&width, NULL);
+            auto width = viewInfo.GetTracksUsableWidth();
             auto delta = xx - origin;
             if (delta < 0)
                delta -= width;
@@ -1077,8 +1076,7 @@ void Scrubber::DoScrub(bool seek)
       wxCoord xx = tp.ScreenToClient(::wxGetMouseState().GetPosition()).x;
 
       // Limit x
-      int width;
-      tp.GetTracksUsableArea(&width, nullptr);
+      auto width = viewInfo.GetTracksUsableWidth();
       const auto offset = viewInfo.GetLeftOffset();
       xx = (std::max(offset, std::min(offset + width - 1, xx)));
 

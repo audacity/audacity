@@ -535,20 +535,16 @@ namespace
 
 wxCoord GetPlayHeadX( const AudacityProject *pProject )
 {
-   const auto &tp = TrackPanel::Get( *pProject );
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   int width;
-   tp.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    return viewInfo.GetLeftOffset()
       + width * TracksPrefs::GetPinnedHeadPositionPreference();
 }
 
 double GetPlayHeadFraction( const AudacityProject *pProject, wxCoord xx )
 {
-   const auto &tp = TrackPanel::Get( *pProject );
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   int width;
-   tp.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    auto fraction = (xx - viewInfo.GetLeftOffset()) / double(width);
    return std::max(0.0, std::min(1.0, fraction));
 }
@@ -1711,10 +1707,8 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown)
 {
    // Keep Quick-Play within usable track area.
-   const auto &tp = TrackPanel::Get( *mProject );
    const auto &viewInfo = ViewInfo::Get( *mProject );
-   int width;
-   tp.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    mousePosX = std::max(mousePosX, viewInfo.GetLeftOffset());
    mousePosX = std::min(mousePosX, viewInfo.GetLeftOffset() + width - 1);
 
