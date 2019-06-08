@@ -55,7 +55,7 @@
 #include "ClientData.h"
 #include "SelectedRegion.h"
 
-// Events emitted by UndoManager for the use of listeners
+// Events emitted by AudacityProject for the use of listeners
 
 // Project state did not change, but a new state was copied into Undo history
 // and any redo states were lost
@@ -105,14 +105,13 @@ inline UndoPush operator & (UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
 class AUDACITY_DLL_API UndoManager
-   : public wxEvtHandler
-   , public ClientData::Base
+   : public ClientData::Base
 {
  public:
    static UndoManager &Get( AudacityProject &project );
    static const UndoManager &Get( const AudacityProject &project );
  
-   UndoManager();
+   UndoManager( AudacityProject &project );
    ~UndoManager();
 
    UndoManager( const UndoManager& ) = delete;
@@ -139,7 +138,7 @@ class AUDACITY_DLL_API UndoManager
    void SetLongDescription(unsigned int n, const wxString &desc);
 
    // These functions accept a callback that uses the state,
-   // and then they emit EVT_UNDO_RESET when that has finished.
+   // and then they send to the project EVT_UNDO_RESET when that has finished.
    using Consumer = std::function< void( const UndoState & ) >;
    void SetStateTo(unsigned int n, const Consumer &consumer);
    void Undo(const Consumer &consumer);
@@ -167,6 +166,8 @@ class AUDACITY_DLL_API UndoManager
    void ResetODChangesFlag();
 
  private:
+   AudacityProject &mProject;
+ 
    int current;
    int saved;
    UndoStack stack;
