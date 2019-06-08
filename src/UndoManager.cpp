@@ -41,6 +41,7 @@ UndoManager
 
 wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
 using ConstBlockFilePtr = const BlockFile*;
@@ -356,7 +357,7 @@ void UndoManager::Undo(const Consumer &consumer)
    consumer( stack[current]->state );
 
    // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
+   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
 }
 
 void UndoManager::Redo(const Consumer &consumer)
@@ -384,7 +385,7 @@ void UndoManager::Redo(const Consumer &consumer)
    consumer( stack[current]->state );
 
    // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
+   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
 }
 
 bool UndoManager::UnsavedChanges()

@@ -122,6 +122,7 @@ LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
 
    project->Bind(EVT_UNDO_PUSHED, &LyricsPanel::UpdateLyrics, this);
    project->Bind(EVT_UNDO_MODIFIED, &LyricsPanel::UpdateLyrics, this);
+   project->Bind(EVT_UNDO_OR_REDO, &LyricsPanel::UpdateLyrics, this);
    project->Bind(EVT_UNDO_RESET, &LyricsPanel::UpdateLyrics, this);
 
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK, &LyricsPanel::OnStartStop, this);
