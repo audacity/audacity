@@ -134,7 +134,6 @@ void DoSelectSomething( AudacityProject &project );
 namespace ViewActions {
 double GetZoomOfToFit( const AudacityProject &project );
 void DoZoomFit( AudacityProject &project );
-void DoZoomFitV( AudacityProject &project );
 }
 
 /// Namespace for functions for Transport menu

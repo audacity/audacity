@@ -11,10 +11,8 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 
 #include "DirManager.h"
-#include "Menus.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
-#include "ProjectSettings.h"
 #include "Tags.h"
 #include "Track.h"
 #include "TrackPanel.h"
@@ -91,7 +89,6 @@ void ProjectHistory::PushState(const wxString &desc,
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
@@ -102,8 +99,6 @@ void ProjectHistory::PushState(const wxString &desc,
 
    mDirty = true;
 
-   if (settings.GetTracksFitVerticallyZoomed())
-      ViewActions::DoZoomFitV( project );
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       projectFileIO.AutoSave();
 }
