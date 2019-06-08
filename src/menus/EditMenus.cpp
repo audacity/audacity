@@ -252,8 +252,6 @@ void DoUndo(AudacityProject &project)
          ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   MenuManager::ModifyUndoMenuItems(project);
 }
 
 // Menu handler functions
@@ -286,8 +284,6 @@ void OnRedo(const CommandContext &context)
          ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   MenuManager::ModifyUndoMenuItems(project);
 }
 
 void OnCut(const CommandContext &context)

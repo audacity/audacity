@@ -85,11 +85,16 @@ MenuManager::MenuManager( AudacityProject &project )
    : mProject{ project }
 {
    UpdatePrefs();
-   
+   mProject.Bind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
 }
 
 MenuManager::~MenuManager()
 {
+   mProject.Unbind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
+   mProject.Unbind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
+   mProject.Unbind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
 }
 
 void MenuManager::UpdatePrefs()
@@ -386,6 +391,13 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    CreateMenusAndCommands(project);
 
    ModuleManager::Get().Dispatch(MenusRebuilt);
+}
+
+void MenuManager::OnUndoRedo( wxCommandEvent &evt )
+{
+   evt.Skip();
+   ModifyUndoMenuItems( mProject );
+   UpdateMenus();
 }
 
 CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)

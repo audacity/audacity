@@ -17,6 +17,7 @@
 #include "ClientData.h"
 
 class wxArrayString;
+class wxCommandEvent;
 class AudacityProject;
 class CommandContext;
 class CommandManager;
@@ -87,6 +88,8 @@ public:
 
 
 private:
+   void OnUndoRedo( wxCommandEvent &evt );
+
    CommandFlag GetFocusedFrame(AudacityProject &project);
 
    AudacityProject &mProject;

@@ -60,10 +60,6 @@ void ProjectHistory::InitialState()
       _("Created new project"), wxT(""));
 
    undoManager.StateSaved();
-
-   auto &menuManager = MenuManager::Get( project );
-   menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus();
 }
 
 bool ProjectHistory::UndoAvailable()
@@ -105,10 +101,6 @@ void ProjectHistory::PushState(const wxString &desc,
       desc, shortDesc, flags);
 
    mDirty = true;
-
-   auto &menuManager = MenuManager::Get( project );
-   menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus();
 
    if (settings.GetTracksFitVerticallyZoomed())
       ViewActions::DoZoomFitV( project );
@@ -190,8 +182,6 @@ void ProjectHistory::PopState(const UndoState &state)
    if(odUsed)
       ODManager::Instance()->AddNewTask(std::move(computeTask));
 
-   MenuManager::Get( project ).UpdateMenus();
-
    projectFileIO.AutoSave();
 }
 
@@ -206,5 +196,4 @@ void ProjectHistory::SetStateTo(unsigned int n)
 
    trackPanel.SetFocusedTrack(NULL);
    trackPanel.Refresh(false);
-   MenuManager::Get( project ).ModifyUndoMenuItems( project );
 }
