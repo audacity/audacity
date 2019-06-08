@@ -155,7 +155,7 @@ class AUDACITY_DLL_API AudacityProject final
 wxFrame &GetProjectFrame( AudacityProject &project );
 const wxFrame &GetProjectFrame( const AudacityProject &project );
 
-///\brief Get a pointer to the window associaged with a project, or null if
+///\brief Get a pointer to the window associated with a project, or null if
 /// the given pointer is null.
 inline wxFrame *FindProjectFrame( AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
