@@ -24,6 +24,7 @@ undo memory so as to free up space.
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/event.h>
+#include <wx/frame.h>
 #include <wx/imaglist.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
@@ -37,6 +38,7 @@ undo memory so as to free up space.
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
+#include "Project.h"
 #include "ProjectManager.h"
 #include "ShuttleGui.h"
 
@@ -57,7 +59,7 @@ BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
 END_EVENT_TABLE()
 
 HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
-   wxDialogWrapper((wxWindow*)parent, wxID_ANY, wxString(_("History")),
+   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, wxString(_("History")),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
