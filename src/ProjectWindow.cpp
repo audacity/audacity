@@ -1553,7 +1553,7 @@ void ProjectWindow::TP_DisplaySelection()
    double audioTime;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
-   if (!gAudioIO->IsBusy() && playRegion.Locked())
+   if (!gAudioIO->IsBusy() && !playRegion.Locked())
       ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else
       // Cause ruler redraw anyway, because we may be zooming or scrolling
