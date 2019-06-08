@@ -180,7 +180,7 @@ void OnClose(const CommandContext &context )
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-   ProjectManager::Get( project ).SetMenuClose(true);
+   ProjectFileManager::Get( project ).SetMenuClose(true);
    window.Close();
 }
 
@@ -414,7 +414,7 @@ void OnImport(const CommandContext &context)
    // this serves to track the file if the users zooms in and such.
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   wxArrayString selectedFiles = ProjectManager::ShowOpenDialog(wxT(""));
+   wxArrayString selectedFiles = ProjectFileManager::ShowOpenDialog(wxT(""));
    if (selectedFiles.size() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       gPrefs->Flush();
@@ -444,7 +444,7 @@ void OnImport(const CommandContext &context)
 
       FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
-      ProjectManager::Get( project ).Import(fileName);
+      ProjectFileManager::Get( project ).Import(fileName);
    }
 
    window.ZoomAfterImport(nullptr);
@@ -541,7 +541,8 @@ void OnImportRaw(const CommandContext &context)
    if (newTracks.size() <= 0)
       return;
 
-   ProjectManager::Get( project ).AddImportedTracks(fileName, std::move(newTracks));
+   ProjectFileManager::Get( project )
+      .AddImportedTracks(fileName, std::move(newTracks));
    window.HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 

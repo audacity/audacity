@@ -42,6 +42,7 @@
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
 #include "ProjectWindow.h"
@@ -464,7 +465,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       fileList->EnsureVisible(i);
 
       auto success = GuardedCall< bool >( [&] {
-         ProjectManager::Get( *project ).Import(files[i]);
+         ProjectFileManager::Get( *project ).Import(files[i]);
          ProjectWindow::Get( *project ).ZoomAfterImport(nullptr);
          SelectActions::DoSelectAll(*project);
          if (!mMacroCommands.ApplyMacro(mCatalog))

@@ -54,7 +54,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    }
    else
    {
-      ProjectManager::Get( context.project )
+      ProjectFileManager::Get( context.project )
          .OpenFile(mFileName, mbAddToHistory);
    }
    const auto &newFileName = context.project.GetFileName();
