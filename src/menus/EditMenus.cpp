@@ -253,8 +253,6 @@ void DoUndo(AudacityProject &project)
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
 
-   window.RedrawProject();
-
    MenuManager::ModifyUndoMenuItems(project);
 }
 
@@ -288,8 +286,6 @@ void OnRedo(const CommandContext &context)
          ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   window.RedrawProject();
 
    MenuManager::ModifyUndoMenuItems(project);
 }

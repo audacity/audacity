@@ -15,7 +15,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "Tags.h"
 #include "Track.h"
 #include "TrackPanel.h"
@@ -147,7 +146,6 @@ void ProjectHistory::PopState(const UndoState &state)
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &dstTracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    viewInfo.selectedRegion = state.selectedRegion;
 
@@ -192,8 +190,6 @@ void ProjectHistory::PopState(const UndoState &state)
    if(odUsed)
       ODManager::Instance()->AddNewTask(std::move(computeTask));
 
-   window.HandleResize();
-
    MenuManager::Get( project ).UpdateMenus();
 
    projectFileIO.AutoSave();
@@ -204,12 +200,10 @@ void ProjectHistory::SetStateTo(unsigned int n)
    auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    undoManager.SetStateTo(n,
       [this]( const UndoState &state ){ PopState(state); } );
 
-   window.HandleResize();
    trackPanel.SetFocusedTrack(NULL);
    trackPanel.Refresh(false);
    MenuManager::Get( project ).ModifyUndoMenuItems( project );

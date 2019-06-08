@@ -21,6 +21,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "RefreshCode.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -642,6 +643,9 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mMainPage = pPage;
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
+
+   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
+   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
 }
 
 void ProjectWindow::Init()
@@ -1434,6 +1438,20 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    HandleResize();
 
    event.Skip(false);             /* No need to propagate any further */
+}
+
+void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
+{
+   evt.Skip();
+   HandleResize();
+   CallAfter( [this]{ RedrawProject(); } );
+}
+
+void ProjectWindow::OnUndoReset( wxCommandEvent &evt )
+{
+   evt.Skip();
+   HandleResize();
+   // CallAfter( [this]{ RedrawProject(); } );  // Should we do this here too?
 }
 
 void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
