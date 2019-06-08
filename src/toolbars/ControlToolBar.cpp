@@ -1095,7 +1095,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
    // NB: The call may have the side effect of changing flags.
    bool allowed = MenuManager::Get(project).TryToMakeActionAllowed(
-      project,
       flags,
       AudioIONotBusyFlag | CanStopAudioStreamFlag,
       AudioIONotBusyFlag | CanStopAudioStreamFlag);

@@ -64,7 +64,7 @@ void ProjectHistory::InitialState()
 
    auto &menuManager = MenuManager::Get( project );
    menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus( project );
+   menuManager.UpdateMenus();
 }
 
 bool ProjectHistory::UndoAvailable()
@@ -109,7 +109,7 @@ void ProjectHistory::PushState(const wxString &desc,
 
    auto &menuManager = MenuManager::Get( project );
    menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus( project );
+   menuManager.UpdateMenus();
 
    if (settings.GetTracksFitVerticallyZoomed())
       ViewActions::DoZoomFitV( project );
@@ -194,7 +194,7 @@ void ProjectHistory::PopState(const UndoState &state)
 
    window.HandleResize();
 
-   MenuManager::Get( project ).UpdateMenus( project );
+   MenuManager::Get( project ).UpdateMenus();
 
    projectFileIO.AutoSave();
 }
