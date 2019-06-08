@@ -33,8 +33,6 @@ for drawing different aspects of the label and its text box.
 
 #include "Experimental.h"
 
-#include "TrackPanel.h"
-
 #include <stdio.h>
 #include <algorithm>
 #include <limits.h>

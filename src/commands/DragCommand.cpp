@@ -20,7 +20,6 @@
 #include "DragCommand.h"
 
 #include "../Project.h"
-#include "../TrackPanel.h"
 #include "../WaveTrack.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
