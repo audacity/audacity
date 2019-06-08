@@ -102,6 +102,9 @@ public:
 
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
 
+   void ScrollIntoView(double pos);
+   void ScrollIntoView(int x);
+
    void OnScrollLeft();
    void OnScrollRight();
 

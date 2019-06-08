@@ -41,7 +41,6 @@ void FinishCopy
 bool DoPasteText(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
@@ -61,7 +60,7 @@ bool DoPasteText(AudacityProject &project)
             // Make sure caret is in view
             int x;
             if (view.CalcCursorX( project, &x )) {
-               trackPanel.ScrollIntoView(x);
+               window.ScrollIntoView(x);
             }
 
             return true;

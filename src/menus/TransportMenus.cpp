@@ -173,7 +173,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          }
          else {
             selectedRegion = label->selectedRegion;
-            trackPanel.ScrollIntoView(selectedRegion.t0());
+            window.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
 

@@ -935,6 +935,28 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 #include "AllThemeResources.h"
 #endif
 
+// Make sure selection edge is in view
+void ProjectWindow::ScrollIntoView(double pos)
+{
+   auto &trackPanel = TrackPanel::Get( mProject );
+   auto &viewInfo = ViewInfo::Get( mProject );
+   auto w = viewInfo.GetTracksUsableWidth();
+
+   int pixel = viewInfo.TimeToPosition(pos);
+   if (pixel < 0 || pixel >= w)
+   {
+      TP_ScrollWindow
+         (viewInfo.OffsetTimeByPixels(pos, -(w / 2)));
+      trackPanel.Refresh(false);
+   }
+}
+
+void ProjectWindow::ScrollIntoView(int x)
+{
+   auto &viewInfo = ViewInfo::Get( mProject );
+   ScrollIntoView(viewInfo.PositionToTime(x, viewInfo.GetLeftOffset()));
+}
+
 ///
 /// This method handles general left-scrolling, either for drag-scrolling
 /// or when the scrollbar is clicked to the left of the thumb
@@ -1717,7 +1739,6 @@ void ProjectWindow::SkipEnd(bool shift)
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    double len = tracks.GetEndTime();
 
@@ -1726,8 +1747,7 @@ void ProjectWindow::SkipEnd(bool shift)
       viewInfo.selectedRegion.setT0(len);
 
    // Make sure the end of the track is visible
-   trackPanel.ScrollIntoView(len);
-   trackPanel.Refresh(false);
+   ScrollIntoView(len);
 }
 
 void ProjectWindow::TP_DisplaySelection()
@@ -1832,7 +1852,6 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
 void ProjectWindow::ZoomInByFactor( double ZoomFactor )
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    auto gAudioIO = AudioIOBase::Get();
@@ -1842,8 +1861,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
          ProjectAudioIO::Get( project ).GetAudioIOToken()) &&
        !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
-      trackPanel.ScrollIntoView(gAudioIO->GetStreamTime());
-      trackPanel.Refresh(false);
+      ScrollIntoView(gAudioIO->GetStreamTime());
       return;
    }
 

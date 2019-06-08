@@ -1302,7 +1302,7 @@ unsigned LabelTrackView::KeyDown(
    // Make sure caret is in view
    int x;
    if (CalcCursorX( *project, &x ))
-      TrackPanel::Get( *project ).ScrollIntoView(x);
+      ProjectWindow::Get( *project ).ScrollIntoView(x);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
