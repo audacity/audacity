@@ -295,6 +295,8 @@ class AUDACITY_DLL_API TrackPanel final
    // Either argument may be NULL
    void GetTracksUsableArea(int *width, int *height) const;
 
+   void OnUndoReset( wxCommandEvent &event );
+
    void Refresh
       (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
       override;

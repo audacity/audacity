@@ -78,6 +78,8 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
 
+#include "UndoManager.h"
+
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
@@ -320,6 +322,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
 
+   theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
+
    UpdatePrefs();
 }
 
@@ -552,6 +556,13 @@ double TrackPanel::GetScreenEndTime() const
    int width;
    GetTracksUsableArea(&width, NULL);
    return mViewInfo->PositionToTime(width, 0, true);
+}
+
+void TrackPanel::OnUndoReset( wxCommandEvent &event )
+{
+   event.Skip();
+   SetFocusedTrack( nullptr );
+   Refresh( false );
 }
 
 /// AS: OnPaint( ) is called during the normal course of

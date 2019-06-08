@@ -15,7 +15,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectFileIO.h"
 #include "Tags.h"
 #include "Track.h"
-#include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "ondemand/ODComputeSummaryTask.h"
@@ -183,12 +182,8 @@ void ProjectHistory::PopState(const UndoState &state)
 void ProjectHistory::SetStateTo(unsigned int n)
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
 
    undoManager.SetStateTo(n,
       [this]( const UndoState &state ){ PopState(state); } );
-
-   trackPanel.SetFocusedTrack(NULL);
-   trackPanel.Refresh(false);
 }
