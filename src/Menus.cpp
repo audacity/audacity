@@ -900,7 +900,7 @@ bool MenuManager::ReportIfActionNotAllowed(
    const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd )
 {
    auto &project = mProject;
-   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, flagsRqd );
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
    if( bAllowed )
       return true;
    auto &cm = CommandManager::Get( project );
@@ -913,7 +913,7 @@ bool MenuManager::ReportIfActionNotAllowed(
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
 bool MenuManager::TryToMakeActionAllowed(
-   CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+   CommandFlag & flags, CommandFlag flagsRqd )
 {
    auto &project = mProject;
    bool bAllowed;
@@ -921,19 +921,19 @@ bool MenuManager::TryToMakeActionAllowed(
    if( flags.none() )
       flags = GetUpdateFlags();
 
-   bAllowed = ((flags & mask) == (flagsRqd & mask));
+   bAllowed = ((flags & flagsRqd) == flagsRqd);
    if( bAllowed )
       return true;
 
    // Why is action not allowed?
    // 1's wherever a required flag is missing.
-   auto MissingFlags = (~flags & flagsRqd) & mask;
+   auto MissingFlags = (~flags & flagsRqd);
 
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ).any() ){
       TransportActions::StopIfPaused( project );
       // Hope this will now reflect stopped audio.
       flags = GetUpdateFlags();
-      bAllowed = ((flags & mask) == (flagsRqd & mask));
+      bAllowed = ((flags & flagsRqd) == flagsRqd);
       if( bAllowed )
          return true;
    }
@@ -949,7 +949,7 @@ bool MenuManager::TryToMakeActionAllowed(
 
    // Why is action still not allowed?
    // 0's wherever a required flag is missing (or is don't care)
-   MissingFlags = (flags & ~flagsRqd) & mask;
+   MissingFlags = (flags & ~flagsRqd) & flagsRqd;
 
    // IF selecting all audio won't do any good, THEN return with failure.
    if( (flags & WaveTracksExistFlag).none() )
@@ -967,6 +967,6 @@ bool MenuManager::TryToMakeActionAllowed(
    // So changed to DoSelectAllAudio.
    SelectActions::DoSelectAllAudio(project);
    flags = GetUpdateFlags();
-   bAllowed = ((flags & mask) == (flagsRqd & mask));
+   bAllowed = ((flags & flagsRqd) == flagsRqd);
    return bAllowed;
 }

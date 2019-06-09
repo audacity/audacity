@@ -83,7 +83,7 @@ public:
    bool ReportIfActionNotAllowed(
       const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd );
    bool TryToMakeActionAllowed(
-      CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+      CommandFlag & flags, CommandFlag flagsRqd );
 
 
 private:
