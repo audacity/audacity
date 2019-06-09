@@ -225,6 +225,8 @@ audacity_SOURCES = \
 	ProjectHistory.h \
 	ProjectManager.cpp \
 	ProjectManager.h \
+	ProjectSelectionManager.cpp \
+	ProjectSelectionManager.h \
 	ProjectSettings.cpp \
 	ProjectSettings.h \
 	ProjectWindow.cpp \

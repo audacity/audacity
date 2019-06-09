@@ -16,7 +16,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectSelectionManager.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "../Theme.h"
@@ -253,7 +253,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
       // preference dialogs.
       if( Str == "/SnapTo" )
       {
-         ProjectManager::Get( *pProject ).AS_SetSnapTo( 0 );
+         ProjectSelectionManager::Get( *pProject ).AS_SetSnapTo( 0 );
       }
       else
       {

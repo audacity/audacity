@@ -9,7 +9,7 @@
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
-#include "../ProjectManager.h"
+#include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectionState.h"
@@ -901,19 +901,19 @@ void OnZeroCrossing(const CommandContext &context)
 void OnSnapToOff(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectManager::Get( project ).AS_SetSnapTo(SNAP_OFF);
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_OFF);
 }
 
 void OnSnapToNearest(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectManager::Get( project ).AS_SetSnapTo(SNAP_NEAREST);
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_NEAREST);
 }
 
 void OnSnapToPrior(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectManager::Get( project ).AS_SetSnapTo(SNAP_PRIOR);
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_PRIOR);
 }
 
 void OnSelToStart(const CommandContext &context)

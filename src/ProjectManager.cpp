@@ -31,10 +31,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIORegistry.h"
 #include "ProjectFSCK.h"
 #include "ProjectHistory.h"
+#include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "Sequence.h"
-#include "Snap.h"
 #include "Tags.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
@@ -391,9 +391,10 @@ AudacityProject *ProjectManager::New()
    
    //Initialise the Listeners
    gAudioIO->SetListener( &ProjectAudioManager::Get( project ) );
-   SelectionBar::Get( project ).SetListener( &projectManager );
+   auto &projectSelectionManager = ProjectSelectionManager::Get( project );
+   SelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetListener( &projectManager );
+   SpectralSelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #endif
    
 #if wxUSE_DRAG_AND_DROP
@@ -417,201 +418,6 @@ AudacityProject *ProjectManager::New()
    window.Show(true);
    
    return p;
-}
-
-bool ProjectManager::SnapSelection()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   auto snapTo = settings.GetSnapTo();
-   if (snapTo != SNAP_OFF) {
-      auto &viewInfo = ViewInfo::Get( project );
-      SelectedRegion &selectedRegion = viewInfo.selectedRegion;
-      NumericConverter nc(NumericConverter::TIME,
-         settings.GetSelectionFormat(), 0, settings.GetRate());
-      const bool nearest = (snapTo == SNAP_NEAREST);
-
-      const double oldt0 = selectedRegion.t0();
-      const double oldt1 = selectedRegion.t1();
-
-      nc.ValueToControls(oldt0, nearest);
-      nc.ControlsToValue();
-      const double t0 = nc.GetValue();
-
-      nc.ValueToControls(oldt1, nearest);
-      nc.ControlsToValue();
-      const double t1 = nc.GetValue();
-
-      if (t0 != oldt0 || t1 != oldt1) {
-         selectedRegion.setTimes(t0, t1);
-         window.TP_DisplaySelection();
-         return true;
-      }
-   }
-
-   return false;
-}
-
-double ProjectManager::AS_GetRate()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetRate();
-}
-
-// Typically this came from the SelectionToolbar and does not need to 
-// be communicated back to it.
-void ProjectManager::AS_SetRate(double rate)
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   settings.SetRate( rate );
-}
-
-int ProjectManager::AS_GetSnapTo()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetSnapTo();
-}
-
-void ProjectManager::AS_SetSnapTo(int snap)
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   settings.SetSnapTo( snap );
-
-// LLL: TODO - what should this be changed to???
-// GetCommandManager()->Check(wxT("Snap"), mSnapTo);
-   gPrefs->Write(wxT("/SnapTo"), snap);
-   gPrefs->Flush();
-
-   SnapSelection();
-
-   window.RedrawProject();
-
-   SelectionBar::Get( project ).SetSnapTo(snap);
-}
-
-const NumericFormatSymbol & ProjectManager::AS_GetSelectionFormat()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetSelectionFormat();
-}
-
-void ProjectManager::AS_SetSelectionFormat(const NumericFormatSymbol & format)
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   settings.SetSelectionFormat( format );
-
-   gPrefs->Write(wxT("/SelectionFormat"), format.Internal());
-   gPrefs->Flush();
-
-   if (SnapSelection())
-      TrackPanel::Get( project ).Refresh(false);
-
-   SelectionBar::Get( project ).SetSelectionFormat(format);
-}
-
-void ProjectManager::AS_ModifySelection(double &start, double &end, bool done)
-{
-   auto &project = mProject;
-   auto &history = ProjectHistory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   viewInfo.selectedRegion.setTimes(start, end);
-   trackPanel.Refresh(false);
-   if (done) {
-      history.ModifyState(false);
-   }
-}
-
-double ProjectManager::SSBL_GetRate() const
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   auto &tracks = TrackList::Get( project );
-   // Return maximum of project rate and all track rates.
-   return std::max( settings.GetRate(),
-      tracks.Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
-}
-
-const NumericFormatSymbol & ProjectManager::SSBL_GetFrequencySelectionFormatName()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetFrequencySelectionFormatName();
-}
-
-void ProjectManager::SSBL_SetFrequencySelectionFormatName(
-   const NumericFormatSymbol & formatName)
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-
-   settings.SetFrequencySelectionFormatName( formatName );
-
-   gPrefs->Write(wxT("/FrequencySelectionFormatName"),
-                 formatName.Internal());
-   gPrefs->Flush();
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
-#endif
-}
-
-const NumericFormatSymbol &
-ProjectManager::SSBL_GetBandwidthSelectionFormatName()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetBandwidthSelectionFormatName();
-}
-
-void ProjectManager::SSBL_SetBandwidthSelectionFormatName(
-   const NumericFormatSymbol & formatName)
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-
-   settings.SetBandwidthSelectionFormatName( formatName );
-
-   gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
-      formatName.Internal());
-   gPrefs->Flush();
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetBandwidthSelectionFormatName(formatName);
-#endif
-}
-
-void ProjectManager::SSBL_ModifySpectralSelection(
-   double &bottom, double &top, bool done)
-{
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   auto &project = mProject;
-   auto &history = ProjectHistory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-
-   double nyq = SSBL_GetRate() / 2.0;
-   if (bottom >= 0.0)
-      bottom = std::min(nyq, bottom);
-   if (top >= 0.0)
-      top = std::min(nyq, top);
-   viewInfo.selectedRegion.setFrequencies(bottom, top);
-   trackPanel.Refresh(false);
-   if (done) {
-      history.ModifyState(false);
-   }
-#else
-   bottom; top; done;
-#endif
 }
 
 // LL: All objects that have a reference to the DirManager should
@@ -1294,11 +1100,12 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 
    if (bParseSuccess) {
       auto &settings = ProjectSettings::Get( project );
-      AS_SetSnapTo(settings.GetSnapTo());
-      AS_SetSelectionFormat(settings.GetSelectionFormat());
-      SSBL_SetFrequencySelectionFormatName(
+      auto &selectionManager = ProjectSelectionManager::Get( project );
+      selectionManager.AS_SetSnapTo(settings.GetSnapTo());
+      selectionManager.AS_SetSelectionFormat(settings.GetSelectionFormat());
+      selectionManager.SSBL_SetFrequencySelectionFormatName(
          settings.GetFrequencySelectionFormatName());
-      SSBL_SetBandwidthSelectionFormatName(
+      selectionManager.SSBL_SetBandwidthSelectionFormatName(
          settings.GetBandwidthSelectionFormatName());
 
       ProjectHistory::Get( project ).InitialState();

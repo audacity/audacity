@@ -16,8 +16,6 @@ Paul Licameli split from AudacityProject.h
 
 #include <wx/event.h> // to inherit
 #include "ClientData.h" // to inherit
-#include "toolbars/SelectionBarListener.h" // to inherit
-#include "toolbars/SpectralSelectionBarListener.h" // to inherit
 #include "import/ImportRaw.h" // defines TrackHolders
 
 class wxTimer;
@@ -40,8 +38,6 @@ using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 class ProjectManager final
    : public wxEvtHandler
    , public ClientData::Base
-   , private SelectionBarListener
-   , private SpectralSelectionBarListener
 {
 public:
    static ProjectManager &Get( AudacityProject &project );
@@ -119,33 +115,11 @@ public:
 
    void SetMenuClose(bool value) { mMenuClose = value; }
 
-   // SelectionBarListener callback methods
-   double AS_GetRate() override;
-   void AS_SetRate(double rate) override;
-   int AS_GetSnapTo() override;
-   void AS_SetSnapTo(int snap) override;
-   const NumericFormatSymbol & AS_GetSelectionFormat() override;
-   void AS_SetSelectionFormat(const NumericFormatSymbol & format) override;
-   void AS_ModifySelection(double &start, double &end, bool done) override;
-
-   // SpectralSelectionBarListener callback methods
-   double SSBL_GetRate() const override;
-   const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName() override;
-   void SSBL_SetFrequencySelectionFormatName(
-      const NumericFormatSymbol & formatName) override;
-   const NumericFormatSymbol & SSBL_GetBandwidthSelectionFormatName() override;
-   void SSBL_SetBandwidthSelectionFormatName(
-      const NumericFormatSymbol & formatName) override;
-   void SSBL_ModifySpectralSelection(
-      double &bottom, double &top, bool done) override;
-
 private:
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);
    void OnStatusChange( wxCommandEvent& );
-
-   bool SnapSelection();
 
    void RestartTimer();
 
