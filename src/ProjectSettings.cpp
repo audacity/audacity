@@ -10,6 +10,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectSettings.h"
 
+#include "Experimental.h"
+
 #include "AudioIO.h"
 #include "Project.h"
 #include "Snap.h"

@@ -10,6 +10,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFileIO.h"
 
+#include "Experimental.h"
+
 #include <wx/crt.h>
 
 #include "AutoRecovery.h"

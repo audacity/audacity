@@ -10,6 +10,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectWindow.h"
 
+#include "Experimental.h"
+
 #include "AdornedRulerPanel.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
