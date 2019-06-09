@@ -1303,6 +1303,7 @@
 		5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */; };
 		5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */; };
 		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
+		5EF5706B22AAAEDA00C4702C /* ProjectFileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF5706922AAAEDA00C4702C /* ProjectFileManager.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
 		5EFEAD9E22723E390077DFF6 /* Clipboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */; };
 		5EFEADA02273382D0077DFF6 /* AudacityApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */; };
@@ -3364,6 +3365,8 @@
 		5EF3E65E203FDFE9006C6882 /* SetEnvelopeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetEnvelopeCommand.h; sourceTree = "<group>"; };
 		5EF3E660203FE73C006C6882 /* DragCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragCommand.cpp; sourceTree = "<group>"; };
 		5EF3E661203FE73C006C6882 /* DragCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragCommand.h; sourceTree = "<group>"; };
+		5EF5706922AAAEDA00C4702C /* ProjectFileManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectFileManager.cpp; sourceTree = "<group>"; };
+		5EF5706A22AAAEDA00C4702C /* ProjectFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectFileManager.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
 		5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clipboard.cpp; sourceTree = "<group>"; };
@@ -4390,6 +4393,7 @@
 				5E135A4F22A93DC60076E983 /* ProjectAudioManager.cpp */,
 				5E135A43229EE4DE0076E983 /* ProjectFileIO.cpp */,
 				5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */,
+				5EF5706922AAAEDA00C4702C /* ProjectFileManager.cpp */,
 				5ECF728C228B307E007F2A35 /* ProjectFSCK.cpp */,
 				5EB15A1E22A94043009FEC89 /* ProjectHistory.cpp */,
 				5E135A3A229EDF2E0076E983 /* ProjectManager.cpp */,
@@ -4514,6 +4518,7 @@
 				5E135A5022A93DC60076E983 /* ProjectAudioManager.h */,
 				5E135A44229EE4DE0076E983 /* ProjectFileIO.h */,
 				5E18CFEF2291C31000E75250 /* ProjectFileIORegistry.h */,
+				5EF5706A22AAAEDA00C4702C /* ProjectFileManager.h */,
 				5ECF728B228B307E007F2A35 /* ProjectFSCK.h */,
 				5EB15A1F22A94043009FEC89 /* ProjectHistory.h */,
 				5E135A3B229EDF2E0076E983 /* ProjectManager.h */,
@@ -8475,6 +8480,7 @@
 				28EBA7FC0A78FADE00C8BB1F /* Repair.cpp in Sources */,
 				28EBA8010A78FAF800C8BB1F /* InterpolateAudio.cpp in Sources */,
 				28EBA8020A78FAF800C8BB1F /* Matrix.cpp in Sources */,
+				5EF5706B22AAAEDA00C4702C /* ProjectFileManager.cpp in Sources */,
 				28E3E6E80A7C14CA00AB1361 /* ExportFLAC.cpp in Sources */,
 				2897F6F00AB3DB5A003C20C5 /* ControlToolBar.cpp in Sources */,
 				2897F6F10AB3DB5A003C20C5 /* EditToolBar.cpp in Sources */,

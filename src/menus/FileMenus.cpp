@@ -10,7 +10,7 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
-#include "../ProjectFileIO.h"
+#include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"

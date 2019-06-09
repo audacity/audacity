@@ -47,7 +47,7 @@
 #include "Menus.h"
 #include "MissingAliasFileDialog.h"
 #include "Project.h"
-#include "ProjectFileIO.h"
+#include "ProjectFileManager.h"
 #include "ProjectManager.h"
 #include "Prefs.h"
 #include "Track.h"

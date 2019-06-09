@@ -29,6 +29,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
 #include "ProjectFileIORegistry.h"
+#include "ProjectFileManager.h"
 #include "ProjectFSCK.h"
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
