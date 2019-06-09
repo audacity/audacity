@@ -897,14 +897,14 @@ void MenuCreator::RebuildAllMenuBars()
 }
 
 bool MenuManager::ReportIfActionNotAllowed(
-   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd )
 {
    auto &project = mProject;
-   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, mask );
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, flagsRqd );
    if( bAllowed )
       return true;
    auto &cm = CommandManager::Get( project );
-   cm.TellUserWhyDisallowed( Name, flags & mask, flagsRqd & mask);
+   cm.TellUserWhyDisallowed( Name, flags & flagsRqd, flagsRqd);
    return false;
 }
 

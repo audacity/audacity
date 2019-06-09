@@ -1271,7 +1271,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       // NB: The call may have the side effect of changing flags.
       bool allowed =
          MenuManager::Get(*proj).ReportIfActionNotAllowed(
-            NiceName, flags, entry->flags, entry->flags );
+            NiceName, flags, entry->flags );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
       // Otherwise we may get other handlers having a go at obeying the command.

@@ -81,8 +81,7 @@ public:
 
    // Command Handling
    bool ReportIfActionNotAllowed(
-      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd,
-      CommandFlag mask );
+      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd );
    bool TryToMakeActionAllowed(
       CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
