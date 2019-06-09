@@ -323,7 +323,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	Project.h ProjectAudioIO.cpp ProjectAudioIO.h \
 	ProjectAudioManager.cpp ProjectAudioManager.h \
 	ProjectFileIO.cpp ProjectFileIO.h ProjectFileIORegistry.cpp \
-	ProjectFileIORegistry.h ProjectFSCK.cpp ProjectFSCK.h \
+	ProjectFileIORegistry.h ProjectFileManager.cpp \
+	ProjectFileManager.h ProjectFSCK.cpp ProjectFSCK.h \
 	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
 	ProjectManager.h ProjectSelectionManager.cpp \
 	ProjectSelectionManager.h ProjectSettings.cpp \
@@ -675,6 +676,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ProjectAudioManager.$(OBJEXT) \
 	audacity-ProjectFileIO.$(OBJEXT) \
 	audacity-ProjectFileIORegistry.$(OBJEXT) \
+	audacity-ProjectFileManager.$(OBJEXT) \
 	audacity-ProjectFSCK.$(OBJEXT) \
 	audacity-ProjectHistory.$(OBJEXT) \
 	audacity-ProjectManager.$(OBJEXT) \
@@ -1400,7 +1402,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	Project.h ProjectAudioIO.cpp ProjectAudioIO.h \
 	ProjectAudioManager.cpp ProjectAudioManager.h \
 	ProjectFileIO.cpp ProjectFileIO.h ProjectFileIORegistry.cpp \
-	ProjectFileIORegistry.h ProjectFSCK.cpp ProjectFSCK.h \
+	ProjectFileIORegistry.h ProjectFileManager.cpp \
+	ProjectFileManager.h ProjectFSCK.cpp ProjectFSCK.h \
 	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
 	ProjectManager.h ProjectSelectionManager.cpp \
 	ProjectSelectionManager.h ProjectSettings.cpp \
@@ -2584,6 +2587,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFSCK.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileIO.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileIORegistry.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectFileManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectHistory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectSelectionManager.Po@am__quote@
@@ -4059,6 +4063,20 @@ audacity-ProjectFileIORegistry.obj: ProjectFileIORegistry.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFileIORegistry.cpp' object='audacity-ProjectFileIORegistry.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFileIORegistry.obj `if test -f 'ProjectFileIORegistry.cpp'; then $(CYGPATH_W) 'ProjectFileIORegistry.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFileIORegistry.cpp'; fi`
+
+audacity-ProjectFileManager.o: ProjectFileManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFileManager.o -MD -MP -MF $(DEPDIR)/audacity-ProjectFileManager.Tpo -c -o audacity-ProjectFileManager.o `test -f 'ProjectFileManager.cpp' || echo '$(srcdir)/'`ProjectFileManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectFileManager.Tpo $(DEPDIR)/audacity-ProjectFileManager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFileManager.cpp' object='audacity-ProjectFileManager.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFileManager.o `test -f 'ProjectFileManager.cpp' || echo '$(srcdir)/'`ProjectFileManager.cpp
+
+audacity-ProjectFileManager.obj: ProjectFileManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFileManager.obj -MD -MP -MF $(DEPDIR)/audacity-ProjectFileManager.Tpo -c -o audacity-ProjectFileManager.obj `if test -f 'ProjectFileManager.cpp'; then $(CYGPATH_W) 'ProjectFileManager.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFileManager.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectFileManager.Tpo $(DEPDIR)/audacity-ProjectFileManager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectFileManager.cpp' object='audacity-ProjectFileManager.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectFileManager.obj `if test -f 'ProjectFileManager.cpp'; then $(CYGPATH_W) 'ProjectFileManager.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectFileManager.cpp'; fi`
 
 audacity-ProjectFSCK.o: ProjectFSCK.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectFSCK.o -MD -MP -MF $(DEPDIR)/audacity-ProjectFSCK.Tpo -c -o audacity-ProjectFSCK.o `test -f 'ProjectFSCK.cpp' || echo '$(srcdir)/'`ProjectFSCK.cpp
