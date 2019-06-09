@@ -542,6 +542,7 @@ void CommandManager::AddItem(const CommandID &name,
          hasDialog,
          options.accel, CurrentMenu(), finder, callback,
          {}, 0, 0, options.bIsEffect, cookedParameter);
+   entry->useStrictFlags = options.useStrictFlags;
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
@@ -955,17 +956,26 @@ void CommandManager::Enable(const wxString &name, bool enabled)
    Enable(entry, enabled);
 }
 
-void CommandManager::EnableUsingFlags(CommandFlag flags, CommandMask mask)
+void CommandManager::EnableUsingFlags(
+   CommandFlag flags, CommandFlag strictFlags, CommandMask mask)
 {
+   // strictFlags are a subset of flags.  strictFlags represent the real
+   // conditions now, but flags are the conditions that could be made true.
+   // Some commands use strict flags only, refusing the chance to fix
+   // conditions
+   wxASSERT( (strictFlags & ~flags).none() );
+
    for(const auto &entry : mCommandList) {
       if (entry->multi && entry->index != 0)
          continue;
       if( entry->isOccult )
          continue;
 
+      auto useFlags = entry->useStrictFlags ? strictFlags : flags;
+
       auto combinedMask = (mask & entry->mask);
       if (combinedMask.any()) {
-         bool enable = ((flags & combinedMask) ==
+         bool enable = ((useFlags & combinedMask) ==
                         (entry->flags & combinedMask));
          Enable(entry.get(), enable);
       }

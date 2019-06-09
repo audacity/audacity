@@ -1156,10 +1156,12 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       Menu( _("R&emove Special"),
          /* i18n-hint: (verb) Do a special kind of cut*/
          Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+X") ),
+            NotBusyTimeAndTracksFlags,
+            Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
          /* i18n-hint: (verb) Do a special kind of DELETE*/
          Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+K") ),
+            NotBusyTimeAndTracksFlags,
+            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() ),
 
          Separator(),
 
@@ -1170,7 +1172,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
          /* i18n-hint: (verb)*/
          Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
             AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
-            wxT("Ctrl+T") )
+            Options{ wxT("Ctrl+T") }.UseStrictFlags() )
       ),
 
       Separator(),
@@ -1180,10 +1182,11 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       Menu( _("Clip B&oundaries"),
          /* i18n-hint: (verb) It's an item on a menu. */
          Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
-            AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+I") ),
+            AudioIONotBusyFlag | WaveTracksSelectedFlag,
+            Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
          Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
             AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-            wxT("Ctrl+Alt+I") ),
+            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() ),
 
          Separator(),
 

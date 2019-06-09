@@ -863,42 +863,14 @@ void MenuManager::UpdateMenus( bool checkActive )
 
    auto &commandManager = CommandManager::Get( project );
 
-   commandManager.EnableUsingFlags(flags2 , NoFlagsSpecified);
-
    // With select-all-on-none, some items that we don't want enabled may have
    // been enabled, since we changed the flags.  Here we manually disable them.
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   if (mWhatIfNoSelection != 0)
-   {
-      if ( (flags & TimeSelectedFlag).none() ||
-           (flags & TracksSelectedFlag).none ())
-      {
-         commandManager.Enable(wxT("SplitCut"), false);
-         commandManager.Enable(wxT("SplitDelete"), false);
-      }
-      if ( (flags & WaveTracksSelectedFlag).none() )
-      {
-         commandManager.Enable(wxT("Split"), false);
-      }
-      if ( (flags & TimeSelectedFlag).none() ||
-           (flags & WaveTracksSelectedFlag).none() )
-      {
-         commandManager.Enable(wxT("ExportSel"), false);
-         commandManager.Enable(wxT("SplitNew"), false);
-      }
-      if ( (flags & TimeSelectedFlag).none() ||
-           (flags & AudioTracksSelectedFlag).none() )
-      {
-         commandManager.Enable(wxT("Trim"), false);
-      }
-   }
-
-#if 0
-   if ( (flags & CutCopyAvailableFlag).any() ) {
-      GetCommandManager()->Enable(wxT("Copy"), true);
-      GetCommandManager()->Enable(wxT("Cut"), true);
-   }
-#endif
+   commandManager.EnableUsingFlags(
+      flags2, // the "lax" flags
+      (mWhatIfNoSelection == 0 ? flags2 : flags), // the "strict" flags
+      NoFlagsSpecified
+   );
 
    MenuManager::ModifyToolbarMenus(project);
 }

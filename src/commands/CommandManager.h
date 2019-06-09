@@ -82,6 +82,7 @@ struct CommandListEntry
    bool hasDialog;
    CommandFlag flags;
    CommandMask mask;
+   bool useStrictFlags{ false };
 };
 
 using MenuBarList = std::vector < MenuBarListEntry >;
@@ -164,6 +165,8 @@ class AUDACITY_DLL_API CommandManager final
          { longName = value; return std::move(*this); }
       Options &&IsGlobal () &&
          { global = true; return std::move(*this); }
+      Options &&UseStrictFlags () &&
+         { useStrictFlags = true; return std::move(*this); }
 
       const wxChar *accel{ wxT("") };
       int check{ -1 }; // default value means it's not a check item
@@ -172,6 +175,7 @@ class AUDACITY_DLL_API CommandManager final
       CommandMask mask{ NoFlagsSpecified };
       wxString longName{}; // translated
       bool global{ false };
+      bool useStrictFlags{ false };
    };
 
    void AddItemList(const CommandID & name,
@@ -218,7 +222,8 @@ class AUDACITY_DLL_API CommandManager final
    // Modifying menus
    //
 
-   void EnableUsingFlags(CommandFlag flags, CommandMask mask);
+   void EnableUsingFlags(
+      CommandFlag flags, CommandFlag strictFlags, CommandMask mask);
    void Enable(const wxString &name, bool enabled);
    void Check(const CommandID &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);
