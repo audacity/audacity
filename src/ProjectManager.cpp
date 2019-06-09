@@ -1102,6 +1102,9 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
 
    if (bParseSuccess) {
       auto &settings = ProjectSettings::Get( project );
+      window.mbInitializingScrollbar = true; // this must precede AS_SetSnapTo
+         // to make persistence of the vertical scrollbar position work
+
       auto &selectionManager = ProjectSelectionManager::Get( project );
       selectionManager.AS_SetSnapTo(settings.GetSnapTo());
       selectionManager.AS_SetSelectionFormat(settings.GetSelectionFormat());
@@ -1109,6 +1112,7 @@ void ProjectManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
          settings.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
          settings.GetBandwidthSelectionFormatName());
+      SelectionBar::Get( project ).SetRate( settings.GetRate() );
 
       ProjectHistory::Get( project ).InitialState();
       trackPanel.SetFocusedTrack( *tracks.Any().begin() );

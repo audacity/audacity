@@ -12,7 +12,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "Experimental.h"
 
-#include <wx/crt.h>
+#include <wx/crt.h> // for wxPrintf
+#include <wx/frame.h>
 
 #include "AutoRecovery.h"
 #include "Dependencies.h"
@@ -21,7 +22,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "SelectionState.h"
 #include "Tags.h"
 #include "UndoManager.h"
@@ -32,7 +32,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ondemand/ODComputeSummaryTask.h"
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
-#include "toolbars/SelectionBar.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/FileHistory.h"
@@ -144,7 +143,7 @@ void ProjectFileIO::UpdatePrefs()
 void ProjectFileIO::SetProjectTitle( int number)
 {
    auto &project = mProject;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame( project );
    wxString name = project.GetProjectName();
 
    // If we are showing project numbers, then we also explicitly show "<untitled>" if there
@@ -348,7 +347,7 @@ void ProjectFileManager::EnqueueODTasks()
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto &project = mProject;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &dirManager = DirManager::Get( project );
    auto &settings = ProjectSettings::Get( project );
@@ -477,7 +476,6 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          double rate;
          Internat::CompatibleToDouble(value, &rate);
          settings.SetRate( rate );
-         SelectionBar::Get( project ).SetRate( rate );
       }
 
       else if (!wxStrcmp(attr, wxT("snapto"))) {
@@ -500,7 +498,6 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        viewInfo.vpos = longVpos;
-       window.mbInitializingScrollbar = true;
    }
 
    // Specifically detect newer versions of Audacity
@@ -1179,7 +1176,7 @@ bool ProjectFileManager::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame( project );
    TitleRestorer Restorer( window, project ); // RAII
    bool bHasPath = true;
    wxFileName filename{ project.GetFileName() };
