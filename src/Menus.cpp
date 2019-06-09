@@ -445,22 +445,30 @@ namespace{
       static Predicates thePredicates;
       return thePredicates;
    }
+   std::vector< CommandFlagOptions > &Options()
+   {
+      static std::vector< CommandFlagOptions > options;
+      return options;
+   }
 }
 
-ReservedCommandFlag::ReservedCommandFlag( const Predicate &predicate )
+ReservedCommandFlag::ReservedCommandFlag(
+   const Predicate &predicate, const CommandFlagOptions &options )
 {
    static size_t sNextReservedFlag = 0;
    // This will throw std::out_of_range if the constant NCommandFlags is too
    // small
    set( sNextReservedFlag++ );
    RegisteredPredicates().emplace_back( predicate );
+   Options().emplace_back( options );
 }
 
 const ReservedCommandFlag
    AudioIONotBusyFlag{
       [](const AudacityProject &project ){
          return !AudioIOBusyPred( project );
-      }
+      },
+      CommandFlagOptions{}.QuickTest()
    },
    TimeSelectedFlag{
       TimeSelectedPred
@@ -568,7 +576,8 @@ const ReservedCommandFlag
       }
    },
    AudioIOBusyFlag{
-      AudioIOBusyPred
+      AudioIOBusyPred,
+      CommandFlagOptions{}.QuickTest()
    }, //lll
    PlayRegionLockedFlag{
       [](const AudacityProject &project){
@@ -654,12 +663,14 @@ const ReservedCommandFlag
          return (focus &&
             !static_cast<const wxTopLevelWindow*>(focus)->IsIconized()
          );
-      }
+      },
+      CommandFlagOptions{}.QuickTest()
    }, // prl
    PausedFlag{
       [](const AudacityProject&){
          return AudioIOBase::Get()->IsPaused();
-      }
+      },
+      CommandFlagOptions{}.QuickTest()
    },
    HasWaveDataFlag{
       [](const AudacityProject &project){

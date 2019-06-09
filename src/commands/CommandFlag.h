@@ -13,6 +13,7 @@
 
 #include <bitset>
 #include <functional>
+#include <utility>
 
 class AudacityProject;
 
@@ -32,13 +33,26 @@ constexpr CommandFlag
    AlwaysEnabledFlag{},      // all zeroes
    NoFlagsSpecified{ ~0ULL }; // all ones
 
+struct CommandFlagOptions{
+   CommandFlagOptions() = default;
+   CommandFlagOptions && QuickTest() &&
+   { quickTest = true; return std::move( *this ); }
+
+   // If true, assume this is a cheap test to be done always.  If false, the
+   // test may be skipped and the condition assumed to be unchanged since the
+   // last more comprehensive testing
+   bool quickTest = false;
+};
+
 // Construct one statically to register (and reserve) a bit position in the set
-// an associate it with a test function
+// an associate it with a test function; those with quickTest = true are cheap
+// to compute and always checked
 class ReservedCommandFlag : public CommandFlag
 {
 public:
    using Predicate = std::function< bool( const AudacityProject& ) >;
-   ReservedCommandFlag( const Predicate & );
+   ReservedCommandFlag( const Predicate &predicate,
+      const CommandFlagOptions &options = {} );
 };
 
 // Widely used command flags, but this list need not be exhaustive.  It may be
