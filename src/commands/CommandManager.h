@@ -243,8 +243,8 @@ class AUDACITY_DLL_API CommandManager final
    // "permit" allows filtering even if the active window isn't a child of the project.
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
-   bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
-   bool HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, CommandMask mask);
+   bool HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled);
+   bool HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
 
    //
    // Accessing
@@ -343,7 +343,8 @@ private:
    // Executing commands
    //
 
-   bool HandleCommandEntry(const CommandListEntry * entry, CommandFlag flags, CommandMask mask, const wxEvent * evt = NULL);
+   bool HandleCommandEntry(const CommandListEntry * entry, CommandFlag flags,
+      bool alwaysEnabled, const wxEvent * evt = NULL);
 
    //
    // Modifying

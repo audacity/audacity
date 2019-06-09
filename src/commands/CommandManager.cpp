@@ -1159,7 +1159,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // LL:  Why do they need to be disabled???
       entry->enabled = false;
       auto cleanup = valueRestorer( entry->enabled, true );
-      return HandleCommandEntry(entry, NoFlagsSpecified, NoFlagsSpecified, &evt);
+      return HandleCommandEntry(entry, NoFlagsSpecified, false, &evt);
    }
 
    wxWindow * pFocus = wxWindow::FindFocus();
@@ -1233,12 +1233,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       {
          return true;
       }
-      return HandleCommandEntry(entry, flags, NoFlagsSpecified, &temp);
+      return HandleCommandEntry(entry, flags, false, &temp);
    }
 
    if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      return HandleCommandEntry(entry, flags, NoFlagsSpecified, &temp);
+      return HandleCommandEntry(entry, flags, false, &temp);
    }
 
    return false;
@@ -1249,7 +1249,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
 bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
-                                        CommandFlag flags, CommandMask mask, const wxEvent * evt)
+   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt)
 {
    if (!entry )
       return false;
@@ -1259,8 +1259,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 
    auto proj = GetActiveProject();
 
-   auto combinedMask = (mask & entry->flags);
-   if (combinedMask.any()) {
+   if (!alwaysEnabled && entry->flags.any()) {
 
       wxASSERT( proj );
       if( !proj )
@@ -1272,7 +1271,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       // NB: The call may have the side effect of changing flags.
       bool allowed =
          MenuManager::Get(*proj).ReportIfActionNotAllowed(
-            NiceName, flags, entry->flags, combinedMask );
+            NiceName, flags, entry->flags, entry->flags );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
       // Otherwise we may get other handlers having a go at obeying the command.
@@ -1292,7 +1291,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 ///CommandManagerListener function.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
+bool CommandManager::HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled)
 {
    CommandListEntry *entry = mCommandNumericIDHash[id];
 
@@ -1300,13 +1299,13 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
    if (hook && hook(entry->name))
       return true;
 
-   return HandleCommandEntry( entry, flags, mask );
+   return HandleCommandEntry( entry, flags, alwaysEnabled );
 }
 
 /// HandleTextualCommand() allows us a limitted version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
-bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, CommandMask mask)
+bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
 {
    if( Str.empty() )
       return false;
@@ -1322,7 +1321,7 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
             // sub-menu name)
             Str == entry->labelPrefix )
          {
-            return HandleCommandEntry( entry.get(), flags, mask);
+            return HandleCommandEntry( entry.get(), flags, alwaysEnabled);
          }
       }
       else
@@ -1330,7 +1329,7 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
          // Handle multis too...
          if( Str == entry->name )
          {
-            return HandleCommandEntry( entry.get(), flags, mask);
+            return HandleCommandEntry( entry.get(), flags, alwaysEnabled);
          }
       }
    }
