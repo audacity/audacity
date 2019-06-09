@@ -400,22 +400,6 @@ void MenuManager::OnUndoRedo( wxCommandEvent &evt )
    UpdateMenus();
 }
 
-CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
-{
-   wxWindow *w = wxWindow::FindFocus();
-
-   while (w) {
-      if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {
-         return TrackPanelHasFocus;
-      }
-
-      w = w->GetParent();
-   }
-
-   return AlwaysEnabledFlag;
-}
-
-
 // Really means, some track is selected, that isn't a time track
 const auto TracksSelectedPred =
    [](const AudacityProject &project){
@@ -711,164 +695,38 @@ const ReservedCommandFlag
 
 CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
 {
-   auto &project = mProject;
-
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,
    // and returns them in a bitfield.  Note that if none of the flags
    // have changed, it's not necessary to even check for updates.
-   auto flags = AlwaysEnabledFlag;
+
    // static variable, used to remember flags for next time.
-   static auto lastFlags = flags;
+   static CommandFlag lastFlags;
 
-   // if (auto focus = wxWindow::FindFocus()) {
-   auto &window = GetProjectFrame( project );
-   if (wxWindow * focus = &window) {
-      while (focus && focus->GetParent())
-         focus = focus->GetParent();
-      if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
-         flags |= NotMinimizedFlag;
+   CommandFlag flags, quickFlags;
+
+   const auto &options = Options();
+   size_t ii = 0;
+   for ( const auto &predicate : RegisteredPredicates() ) {
+      if ( options[ii].quickTest ) {
+         quickFlags[ii] = true;
+         if( predicate( mProject ) )
+            flags[ii] = true;
+      }
+      ++ii;
    }
 
-   // These flags are cheap to calculate.
-   auto gAudioIO = AudioIO::Get();
-   if (!gAudioIO->IsAudioTokenActive(ProjectAudioIO::Get( project )
-      .GetAudioIOToken()))
-      flags |= AudioIONotBusyFlag;
-   else
-      flags |= AudioIOBusyFlag;
-
-   if( gAudioIO->IsPaused() )
-      flags |= PausedFlag;
-
-   // quick 'short-circuit' return.
-   if ( checkActive && !window.IsActive() ){
-      const auto checkedFlags = 
-         NotMinimizedFlag | AudioIONotBusyFlag | AudioIOBusyFlag |
-         PausedFlag;
-      // short cirucit return should preserve flags that have not been calculated.
-      flags = (lastFlags & ~checkedFlags) | flags;
-      lastFlags = flags;
-      return flags;
-   }
-
-   auto &viewInfo = ViewInfo::Get( project );
-   const auto &selectedRegion = viewInfo.selectedRegion;
-
-   if (!selectedRegion.isPoint())
-      flags |= TimeSelectedFlag;
-
-   auto &tracks = TrackList::Get( project );
-   auto trackRange = tracks.Any();
-   if ( trackRange )
-      flags |= TracksExistFlag;
-   trackRange.Visit(
-      [&](LabelTrack *lt) {
-         flags |= LabelTracksExistFlag;
-
-         if (lt->GetSelected()) {
-            flags |= TracksSelectedFlag;
-            for (int i = 0; i < lt->GetNumLabels(); i++) {
-               const LabelStruct *ls = lt->GetLabel(i);
-               if (ls->getT0() >= selectedRegion.t0() &&
-                   ls->getT1() <= selectedRegion.t1()) {
-                  flags |= LabelsSelectedFlag;
-                  break;
-               }
-            }
-         }
-
-         if (lt->IsTextSelected()) {
-            flags |= CutCopyAvailableFlag;
-         }
-      },
-      [&](WaveTrack *t) {
-         flags |= WaveTracksExistFlag;
-         flags |= PlayableTracksExistFlag;
-         if (t->GetSelected()) {
-            flags |= TracksSelectedFlag;
-            // TODO: more-than-two-channels
-            if (TrackList::Channels(t).size() > 1) {
-               flags |= StereoRequiredFlag;
-            }
-            flags |= WaveTracksSelectedFlag;
-            flags |= AudioTracksSelectedFlag;
-         }
-         if( t->GetEndTime() > t->GetStartTime() )
-            flags |= HasWaveDataFlag;
-      }
-#if defined(USE_MIDI)
-      ,
-      [&](NoteTrack *nt) {
-         flags |= NoteTracksExistFlag;
-#ifdef EXPERIMENTAL_MIDI_OUT
-         flags |= PlayableTracksExistFlag;
-#endif
-
-         if (nt->GetSelected()) {
-            flags |= TracksSelectedFlag;
-            flags |= NoteTracksSelectedFlag;
-            flags |= AudioTracksSelectedFlag; // even if not EXPERIMENTAL_MIDI_OUT
-         }
-      }
-#endif
-   );
-
-   auto &undoManager = UndoManager::Get( project );
-
-   if (undoManager.UnsavedChanges() ||
-      !ProjectFileIO::Get( project ).IsProjectSaved())
-      flags |= UnsavedChangesFlag;
-
-   if (!mLastEffect.empty())
-      flags |= HasLastEffectFlag;
-
-   auto &history = ProjectHistory::Get( project );
-   if (history.UndoAvailable())
-      flags |= UndoAvailableFlag;
-
-   if (history.RedoAvailable())
-      flags |= RedoAvailableFlag;
-
-   if (ViewInfo::Get( project ).ZoomInAvailable() &&
-       (flags & TracksExistFlag).any())
-      flags |= ZoomInAvailableFlag;
-
-   if (ViewInfo::Get( project ).ZoomOutAvailable() &&
-       (flags & TracksExistFlag).any())
-      flags |= ZoomOutAvailableFlag;
-
-   flags |= GetFocusedFrame(project);
-
-   const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.Locked())
-      flags |= PlayRegionLockedFlag;
-   else if (!playRegion.Empty())
-      flags |= PlayRegionNotLockedFlag;
-
-   if ( (flags & AudioIONotBusyFlag).any() ) {
-      if ( (flags & TimeSelectedFlag).any() ) {
-         if ( (flags & TracksSelectedFlag).any() ) {
-            flags |= CutCopyAvailableFlag;
-         }
+   if ( checkActive && !GetProjectFrame( mProject ).IsActive() )
+      // quick 'short-circuit' return.
+      flags = (lastFlags & ~quickFlags) | flags;
+   else {
+      ii = 0;
+      for ( const auto &predicate : RegisteredPredicates() ) {
+         if ( !options[ii].quickTest && predicate( mProject ) )
+            flags[ii] = true;
+         ++ii;
       }
    }
-
-   const auto &settings = ProjectSettings::Get( project );
-   if (settings.IsSyncLocked())
-      flags |= IsSyncLockedFlag;
-   else
-      flags |= IsNotSyncLockedFlag;
-
-   if (!EffectManager::Get().RealtimeIsActive())
-      flags |= IsRealtimeNotActiveFlag;
-
-   if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
-      flags |= CaptureNotBusyFlag;
-
-   auto &bar = ControlToolBar::Get( project );
-   if (bar.ControlToolBar::CanStopAudioStream())
-      flags |= CanStopAudioStreamFlag;
 
    lastFlags = flags;
    return flags;

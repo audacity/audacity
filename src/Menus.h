@@ -90,8 +90,6 @@ public:
 private:
    void OnUndoRedo( wxCommandEvent &evt );
 
-   CommandFlag GetFocusedFrame(AudacityProject &project);
-
    AudacityProject &mProject;
 
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
