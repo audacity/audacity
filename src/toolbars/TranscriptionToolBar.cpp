@@ -39,7 +39,7 @@
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectAudioManager.h"
 #include "../TimeTrack.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"

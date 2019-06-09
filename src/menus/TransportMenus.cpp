@@ -9,6 +9,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
