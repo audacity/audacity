@@ -9,6 +9,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectManager.h"
 #include "../ProjectSettings.h"
@@ -472,7 +473,7 @@ void OnTimerRecord(const CommandContext &context)
          // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
          // which is blocked by this function.
          // so instead we mark a flag to undo it there.
-         ProjectManager::Get( project ).SetTimerRecordCancelled();
+         ProjectAudioManager::Get( project ).SetTimerRecordCancelled();
          break;
       case POST_TIMER_RECORD_NOTHING:
          // No action required

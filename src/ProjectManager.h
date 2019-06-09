@@ -16,7 +16,6 @@ Paul Licameli split from AudacityProject.h
 
 #include <wx/event.h> // to inherit
 #include "ClientData.h" // to inherit
-#include "AudioIOListener.h" // to inherit
 #include "toolbars/SelectionBarListener.h" // to inherit
 #include "toolbars/SpectralSelectionBarListener.h" // to inherit
 #include "import/ImportRaw.h" // defines TrackHolders
@@ -43,7 +42,6 @@ using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 class ProjectManager final
    : public wxEvtHandler
    , public ClientData::Base
-   , public AudioIOListener
    , private SelectionBarListener
    , private SpectralSelectionBarListener
 {
@@ -135,10 +133,6 @@ public:
       // projects
    void PopState(const UndoState &state);
 
-   bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }
-   void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
-   void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
-
    void SetMenuClose(bool value) { mMenuClose = value; }
 
    // SelectionBarListener callback methods
@@ -169,12 +163,6 @@ private:
 
    bool SnapSelection();
 
-   // Audio IO callback methods
-   void OnAudioIORate(int rate) override;
-   void OnAudioIOStartRecording() override;
-   void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
-
    void InitialState();
 
    void RestartTimer();
@@ -203,15 +191,9 @@ private:
    // Are we currently closing as the result of a menu command?
    bool mMenuClose{ false };
 
-   //flag for cancellation of timer record.
-   bool mTimerRecordCanceled{ false };
-
    DECLARE_EVENT_TABLE()
 
    static bool sbWindowRectAlreadySaved;
 };
-
-AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
-AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 #endif

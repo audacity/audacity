@@ -67,7 +67,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
-#include "../ProjectManager.h"
+#include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ViewInfo.h"
