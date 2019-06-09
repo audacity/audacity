@@ -947,18 +947,8 @@ bool MenuManager::TryToMakeActionAllowed(
    if( (flagsRqd & NoAutoSelect).any() )
       return false;
 
-   // Why is action still not allowed?
-   // 0's wherever a required flag is missing (or is don't care)
-   MissingFlags = (flags & ~flagsRqd) & flagsRqd;
-
    // IF selecting all audio won't do any good, THEN return with failure.
    if( (flags & WaveTracksExistFlag).none() )
-      return false;
-   // returns if mask wants a zero in some flag and that's not present.
-   // logic seems a bit peculiar and worth revisiting.
-   if( (MissingFlags &
-        ~( TimeSelectedFlag | WaveTracksSelectedFlag )
-       ).any() )
       return false;
 
    // This was 'DoSelectSomething()'.  
