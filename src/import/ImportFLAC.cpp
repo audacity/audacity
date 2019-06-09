@@ -23,7 +23,6 @@
 *//*******************************************************************/
 
 #include "../Audacity.h" // for USE_* macros
-#include "ImportFLAC.h"
 
 #include "../Experimental.h"
 
@@ -39,6 +38,7 @@
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
 
+#include "Import.h"
 #include "ImportPlugin.h"
 
 #include "../Tags.h"
@@ -56,14 +56,10 @@ static const auto exts = {
 
 #ifndef USE_LIBFLAC
 
-void GetFLACImportPlugin(ImportPluginList &importPluginList,
-                        UnusableImportPluginList &unusableImportPluginList)
-{
-   unusableImportPluginList.push_back(
+static Importer::RegisteredUnusableImportPlugin registered{
       std::make_unique<UnusableImportPlugin>
          (DESC, FileExtensions( exts.begin(), exts.end() ) )
-   );
-}
+};
 
 #else /* USE_LIBFLAC */
 
@@ -138,6 +134,8 @@ class FLACImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() override { return wxT("libflac"); }
    wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename)  override;
+
+   unsigned SequenceNumber() const override;
 };
 
 
@@ -285,14 +283,6 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
    }, MakeSimpleGuard(FLAC__STREAM_DECODER_WRITE_STATUS_ABORT) );
 }
 
-
-void GetFLACImportPlugin(ImportPluginList &importPluginList,
-                         UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
-{
-   importPluginList.push_back( std::make_unique<FLACImportPlugin>() );
-}
-
-
 wxString FLACImportPlugin::GetPluginFormatDescription()
 {
     return DESC;
@@ -340,6 +330,14 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const FilePath &filenam
    return std::move(handle);
 }
 
+unsigned FLACImportPlugin::SequenceNumber() const
+{
+   return 30;
+}
+
+static Importer::RegisteredImportPlugin registered{
+   std::make_unique< FLACImportPlugin >()
+};
 
 FLACImportFileHandle::FLACImportFileHandle(const FilePath & name)
 :  ImportFileHandle(name),

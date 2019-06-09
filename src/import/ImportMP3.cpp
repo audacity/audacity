@@ -27,7 +27,6 @@
 *//*******************************************************************/
 
 #include "../Audacity.h" // for USE_* macros
-#include "ImportMP3.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -40,6 +39,7 @@
 #include <wx/intl.h>
 
 #include "../Prefs.h"
+#include "Import.h"
 #include "ImportPlugin.h"
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
@@ -55,14 +55,10 @@ static const auto exts = {
 
 #ifndef USE_LIBMAD
 
-void GetMP3ImportPlugin(ImportPluginList &importPluginList,
-                        UnusableImportPluginList &unusableImportPluginList)
-{
-   unusableImportPluginList.push_back(
+static Importer::RegisteredUnusableImportPlugin registered{
       std::make_unique<UnusableImportPlugin>
          (DESC, FileExtensions( exts.begin(), exts.end() ) )
-  );
-}
+};
 
 #else /* USE_LIBMAD */
 
@@ -120,6 +116,8 @@ public:
    wxString GetPluginStringID() override { return wxT("libmad"); }
    wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+
+   unsigned SequenceNumber() const override;
 };
 
 class MP3ImportFileHandle final : public ImportFileHandle
@@ -156,12 +154,6 @@ private:
    void *mUserData;
    mad_decoder mDecoder;
 };
-
-void GetMP3ImportPlugin(ImportPluginList &importPluginList,
-                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
-{
-   importPluginList.push_back( std::make_unique<MP3ImportPlugin>() );
-}
 
 /* The MAD callbacks */
 enum mad_flow input_cb(void *_data, struct mad_stream *stream);
@@ -262,6 +254,15 @@ ProgressResult MP3ImportFileHandle::Import(
 
    return privateData.updateResult;
 }
+
+unsigned MP3ImportPlugin::SequenceNumber() const
+{
+   return 40;
+}
+
+static Importer::RegisteredImportPlugin registered{
+   std::make_unique< MP3ImportPlugin >()
+};
 
 MP3ImportFileHandle::~MP3ImportFileHandle()
 {

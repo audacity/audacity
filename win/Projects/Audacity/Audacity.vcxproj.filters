@@ -131,6 +131,9 @@
     <ClCompile Include="..\..\..\src\AutoRecovery.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\AutoRecoveryDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\BatchCommandDialog.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -263,16 +266,28 @@
     <ClCompile Include="..\..\..\src\ProjectAudioIO.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectAudioManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectFileIO.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectFileManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectHistory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectSelectionManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp">
@@ -1198,6 +1213,9 @@
     <ClInclude Include="..\..\..\src\AutoRecovery.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\AutoRecoveryDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\BatchCommandDialog.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1336,16 +1354,28 @@
     <ClInclude Include="..\..\..\src\ProjectAudioIO.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectAudioManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFileIO.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectFileManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFSCK.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectHistory.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectSelectionManager.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectSettings.h">
@@ -1600,25 +1630,7 @@
     <ClInclude Include="..\..\..\src\import\Import.h">
       <Filter>src\import</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportFFmpeg.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportFLAC.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportLOF.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportMIDI.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportMP3.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportOGG.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportPCM.h">
       <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportPlugin.h">
@@ -1917,9 +1929,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\SseMathFuncs.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportGStreamer.h">
-      <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h">
       <Filter>src\widgets</Filter>

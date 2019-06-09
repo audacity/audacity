@@ -8,7 +8,8 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
+#include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectionState.h"
@@ -40,7 +41,7 @@ void DoSelectTimeAndTracks
       for (auto t : tracks.Any())
          t->SetSelected(true);
 
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
    }
 }
@@ -65,7 +66,7 @@ void DoSelectTimeAndAudioTracks
       for (auto t : tracks.Any<WaveTrack>())
          t->SetSelected(true);
 
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
    }
 }
@@ -90,7 +91,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
       SpectrumAnalyst analyst;
       SelectHandle::SnapCenterOnce(analyst, viewInfo, pTrack, up);
       trackPanel.Refresh(false);
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
    }
 }
 
@@ -181,7 +182,7 @@ bool OnlyHandleKeyUp( const CommandContext &context )
    if( !bKeyUp )
       return false;
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
    return true;
 }
 
@@ -422,7 +423,7 @@ void DoCursorMove(
       MoveWhenAudioInactive(project, seekStep, TIME_UNIT_SECONDS);
    }
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
@@ -456,7 +457,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
       else
          viewInfo.selectedRegion.setT1(indicator);
 
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
       return;
    }
@@ -485,7 +486,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    trackPanel.ScrollIntoView(newT);
    trackPanel.Refresh(false);
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 }
@@ -535,7 +536,7 @@ void DoListSelection
       trackPanel.SetFocusedTrack(t);
    window.Refresh(false);
    if (modifyState)
-      ProjectManager::Get( project ).ModifyState(true);
+      ProjectHistory::Get( project ).ModifyState(true);
 }
 
 void DoSelectAll(AudacityProject &project)
@@ -585,7 +586,7 @@ void OnSelectNone(const CommandContext &context)
 
    selectedRegion.collapseToT0();
    SelectNone( project );
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnSelectAllTracks(const CommandContext &context)
@@ -608,7 +609,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
    }
 
    if (selected)
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
 
    trackPanel.Refresh(false);
 }
@@ -651,7 +652,7 @@ void OnSetLeftSelection(const CommandContext &context)
 
    if (bSelChanged)
    {
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
    }
 }
@@ -691,7 +692,7 @@ void OnSetRightSelection(const CommandContext &context)
 
    if (bSelChanged)
    {
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
    }
 }
@@ -717,7 +718,7 @@ void OnSelectStartCursor(const CommandContext &context)
 
    selectedRegion.setT0(minOffset);
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 
    trackPanel.Refresh(false);
 }
@@ -743,7 +744,7 @@ void OnSelectCursorEnd(const CommandContext &context)
 
    selectedRegion.setT1(maxEndOffset);
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 
    trackPanel.Refresh(false);
 }
@@ -763,7 +764,7 @@ void OnSelectTrackStartToEnd(const CommandContext &context)
       return;
 
    viewInfo.selectedRegion.setTimes( minOffset, maxEndOffset );
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 
    trackPanel.Refresh(false);
 }
@@ -791,7 +792,7 @@ void OnSelectionRestore(const CommandContext &context)
 
    selectedRegion = mRegionSave;
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 
    trackPanel.Refresh(false);
 }
@@ -824,7 +825,7 @@ void OnToggleSpectralSelection(const CommandContext &context)
       selectedRegion.setFrequencies(mLastF0, mLastF1);
 
    trackPanel.Refresh(false);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnNextHigherPeakFrequency(const CommandContext &context)
@@ -859,7 +860,7 @@ void OnSelectCursorStoredCursor(const CommandContext &context)
          std::min(cursorPositionCurrent, mCursorPositionStored),
          std::max(cursorPositionCurrent, mCursorPositionStored));
 
-      ProjectManager::Get( project ).ModifyState(false);
+      ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.Refresh(false);
    }
 }
@@ -892,7 +893,7 @@ void OnZeroCrossing(const CommandContext &context)
          selectedRegion.setTimes(t0, t1);
    }
 
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 
    trackPanel.Refresh(false);
 }
@@ -900,19 +901,19 @@ void OnZeroCrossing(const CommandContext &context)
 void OnSnapToOff(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectManager::Get( project ).AS_SetSnapTo(SNAP_OFF);
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_OFF);
 }
 
 void OnSnapToNearest(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectManager::Get( project ).AS_SetSnapTo(SNAP_NEAREST);
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_NEAREST);
 }
 
 void OnSnapToPrior(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectManager::Get( project ).AS_SetSnapTo(SNAP_PRIOR);
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_PRIOR);
 }
 
 void OnSelToStart(const CommandContext &context)
@@ -920,7 +921,7 @@ void OnSelToStart(const CommandContext &context)
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
    window.Rewind(true);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnSelToEnd(const CommandContext &context)
@@ -928,7 +929,7 @@ void OnSelToEnd(const CommandContext &context)
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
    window.SkipEnd(true);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 // Handler state:
@@ -979,7 +980,7 @@ void OnCursorSelStart(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    selectedRegion.collapseToT0();
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
    trackPanel.ScrollIntoView(selectedRegion.t0());
    trackPanel.Refresh(false);
 }
@@ -991,7 +992,7 @@ void OnCursorSelEnd(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    selectedRegion.collapseToT1();
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
    trackPanel.ScrollIntoView(selectedRegion.t1());
    trackPanel.Refresh(false);
 }
@@ -1018,7 +1019,7 @@ void OnCursorTrackStart(const CommandContext &context)
       return;
 
    selectedRegion.setTimes(minOffset, minOffset);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
    trackPanel.ScrollIntoView(selectedRegion.t0());
    trackPanel.Refresh(false);
 }
@@ -1045,7 +1046,7 @@ void OnCursorTrackEnd(const CommandContext &context)
       return;
 
    selectedRegion.setTimes(maxEndOffset, maxEndOffset);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
    trackPanel.ScrollIntoView(selectedRegion.t1());
    trackPanel.Refresh(false);
 }
@@ -1057,7 +1058,7 @@ void OnSkipStart(const CommandContext &context)
 
    auto &controlToolBar = ControlToolBar::Get( project );
    controlToolBar.OnRewind(evt);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnSkipEnd(const CommandContext &context)
@@ -1067,7 +1068,7 @@ void OnSkipEnd(const CommandContext &context)
 
    auto &controlToolBar = ControlToolBar::Get( project );
    controlToolBar.OnFF(evt);
-   ProjectManager::Get( project ).ModifyState(false);
+   ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnCursorLeft(const CommandContext &context)

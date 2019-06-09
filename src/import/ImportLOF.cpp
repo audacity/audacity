@@ -70,7 +70,6 @@
 *//*******************************************************************/
 
 #include "../Audacity.h" // for USE_* macros
-#include "ImportLOF.h"
 
 #include <wx/string.h>
 #include <wx/utils.h>
@@ -84,9 +83,11 @@
 #include "../FileNames.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
+#include "Import.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Project.h"
+#include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../FileFormats.h"
@@ -115,6 +116,8 @@ public:
    wxString GetPluginStringID() override { return wxT("lof"); }
    wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+
+   unsigned SequenceNumber() const override;
 };
 
 
@@ -168,12 +171,6 @@ LOFImportFileHandle::LOFImportFileHandle
    mTextFile(std::move(file))
    , mLOFFileName{name}
 {
-}
-
-void GetLOFImportPlugin(ImportPluginList &importPluginList,
-                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
-{
-   importPluginList.push_back( std::make_unique<LOFImportPlugin>() );
 }
 
 wxString LOFImportPlugin::GetPluginFormatDescription()
@@ -270,6 +267,15 @@ ProgressResult LOFImportFileHandle::Import(
 
    return ProgressResult::Success;
 }
+
+unsigned LOFImportPlugin::SequenceNumber() const
+{
+   return 50;
+}
+
+static Importer::RegisteredImportPlugin registered{
+   std::make_unique< LOFImportPlugin >()
+};
 
 /** @brief Processes a single line from a LOF text file, doing whatever is
  * indicated on the line.
@@ -442,7 +448,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
 
                // Amend the undo transaction made by import
-               ProjectManager::Get( *mProject ).ModifyState(false);
+               ProjectHistory::Get( *mProject ).ModifyState(false);
             } // end of converting "offset" argument
             else
             {
@@ -486,7 +492,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (doSomething)
       // Amend last undo state
-      ProjectManager::Get( *mProject ).ModifyState(false);
+      ProjectHistory::Get( *mProject ).ModifyState(false);
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()

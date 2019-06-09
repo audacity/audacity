@@ -10,7 +10,8 @@
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
-#include "../ProjectFileIO.h"
+#include "../ProjectFileManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../TrackPanel.h"
@@ -131,7 +132,7 @@ AudacityProject *DoImportMIDI(
       auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
 
-      ProjectManager::Get( *pProject )
+      ProjectHistory::Get( *pProject )
          .PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName), _("Import MIDI"));
 
@@ -179,37 +180,37 @@ void OnClose(const CommandContext &context )
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-   ProjectManager::Get( project ).SetMenuClose(true);
+   ProjectFileManager::Get( project ).SetMenuClose(true);
    window.Close();
 }
 
 void OnSave(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.Save();
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.Save();
 }
 
 void OnSaveAs(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.SaveAs();
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveAs();
 }
 
 void OnSaveCopy(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.SaveAs(true, true);
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveAs(true, true);
 }
 
 #ifdef USE_LIBVORBIS
 void OnSaveCompressed(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.SaveAs(true);
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveAs(true);
 }
 #endif
 
@@ -413,7 +414,7 @@ void OnImport(const CommandContext &context)
    // this serves to track the file if the users zooms in and such.
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   wxArrayString selectedFiles = ProjectManager::ShowOpenDialog(wxT(""));
+   wxArrayString selectedFiles = ProjectFileManager::ShowOpenDialog(wxT(""));
    if (selectedFiles.size() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       gPrefs->Flush();
@@ -443,7 +444,7 @@ void OnImport(const CommandContext &context)
 
       FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
-      ProjectManager::Get( project ).Import(fileName);
+      ProjectFileManager::Get( project ).Import(fileName);
    }
 
    window.ZoomAfterImport(nullptr);
@@ -487,7 +488,7 @@ void OnImportLabels(const CommandContext &context)
       newTrack->SetSelected(true);
       tracks.Add( newTrack );
 
-      ProjectManager::Get( project ).PushState(
+      ProjectHistory::Get( project ).PushState(
          wxString::Format(_("Imported labels from '%s'"), fileName),
             _("Import Labels"));
 
@@ -540,7 +541,8 @@ void OnImportRaw(const CommandContext &context)
    if (newTracks.size() <= 0)
       return;
 
-   ProjectManager::Get( project ).AddImportedTracks(fileName, std::move(newTracks));
+   ProjectFileManager::Get( project )
+      .AddImportedTracks(fileName, std::move(newTracks));
    window.HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 

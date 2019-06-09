@@ -39,7 +39,7 @@
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
@@ -414,7 +414,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
-      ProjectManager::Get( *mProject )
+      ProjectHistory::Get( *mProject )
          .PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
 
@@ -428,7 +428,7 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
-      ProjectManager::Get( *mProject )
+      ProjectHistory::Get( *mProject )
          .PushState(_("Moved velocity slider"), _("Velocity"),
             UndoPush::CONSOLIDATE);
 }
@@ -446,7 +446,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
 
    if (bWantPushState)
-      ProjectManager::Get( *mProject )
+      ProjectHistory::Get( *mProject )
          .PushState(_("Moved pan slider"), _("Pan"),
             UndoPush::CONSOLIDATE );
 }

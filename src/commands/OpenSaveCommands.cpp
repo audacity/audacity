@@ -18,7 +18,7 @@
 #include "OpenSaveCommands.h"
 
 #include "../Project.h"
-#include "../ProjectFileIO.h"
+#include "../ProjectFileManager.h"
 #include "../ProjectManager.h"
 #include "../export/Export.h"
 #include "../Shuttle.h"
@@ -54,7 +54,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    }
    else
    {
-      ProjectManager::Get( context.project )
+      ProjectFileManager::Get( context.project )
          .OpenFile(mFileName, mbAddToHistory);
    }
    const auto &newFileName = context.project.GetFileName();
@@ -87,10 +87,10 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SaveProjectCommand::Apply(const CommandContext &context)
 {
-   auto &projectFileIO = ProjectFileIO::Get( context.project );
+   auto &projectFileManager = ProjectFileManager::Get( context.project );
    if ( mFileName.empty() )
-      return projectFileIO.SaveAs(mbCompress);
+      return projectFileManager.SaveAs(mbCompress);
    else
-      return projectFileIO.SaveAs(
+      return projectFileManager.SaveAs(
          mFileName, mbCompress, mbAddToHistory);
 }

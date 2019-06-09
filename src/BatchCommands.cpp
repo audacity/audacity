@@ -25,7 +25,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include <wx/textfile.h>
 
 #include "Project.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
@@ -843,7 +843,7 @@ bool MacroCommands::ApplyMacro(
       if (!res) {
          if(proj) {
             // Macro failed or was cancelled; revert to the previous state
-            ProjectManager::Get( *proj ).RollbackState();
+            ProjectHistory::Get( *proj ).RollbackState();
          }
       }
    } );
@@ -889,7 +889,7 @@ bool MacroCommands::ApplyMacro(
    if (!proj)
       return false;
    if( MacroReentryCount <= 1 )
-      ProjectManager::Get( *proj ).PushState(longDesc, shortDesc);
+      ProjectHistory::Get( *proj ).PushState(longDesc, shortDesc);
    return true;
 }
 

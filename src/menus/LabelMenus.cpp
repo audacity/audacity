@@ -4,7 +4,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../ProjectAudioIO.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
@@ -72,7 +72,7 @@ int DoAddLabel(
 
    int index = lt->AddLabel(region, title, focusTrackNumber);
 
-   ProjectManager::Get( project ).PushState(_("Added label"), _("Label"));
+   ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
 
    window.RedrawProject();
    if (!useDialog) {
@@ -337,7 +337,7 @@ void OnPasteNewLabel(const CommandContext &context)
    }
 
    if (bPastedSomething) {
-      ProjectManager::Get( project ).PushState(
+      ProjectHistory::Get( project ).PushState(
          _("Pasted from the clipboard"), _("Paste Text to New Label"));
 
       // Is this necessary? (carried over from former logic in OnPaste())
@@ -377,7 +377,7 @@ void OnCutLabels(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
    /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
       regions.*/
       _( "Cut labeled audio regions to clipboard" ),
@@ -401,7 +401,7 @@ void OnDeleteLabels(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just deleted the labeled audio regions*/
       _( "Deleted labeled audio regions" ),
       /* i18n-hint: (verb)*/
@@ -423,7 +423,7 @@ void OnSplitCutLabels(const CommandContext &context)
    EditClipboardByLabel( project,
       tracks, selectedRegion, &WaveTrack::SplitCut );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just split cut the labeled audio
          regions*/
       _( "Split Cut labeled audio regions to clipboard" ),
@@ -445,7 +445,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::SplitDelete, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on
          the labeled audio regions */
       _( "Split Deleted labeled audio regions" ),
@@ -468,7 +468,7 @@ void OnSilenceLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Silence, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb)*/
       _( "Silenced labeled audio regions" ),
       /* i18n-hint: (verb)*/
@@ -490,7 +490,7 @@ void OnCopyLabels(const CommandContext &context)
    EditClipboardByLabel( project,
       tracks, selectedRegion, &WaveTrack::CopyNonconst );
 
-   ProjectManager::Get( project ).PushState( _( "Copied labeled audio regions to clipboard" ),
+   ProjectHistory::Get( project ).PushState( _( "Copied labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/
       _( "Copy Labeled Audio" ) );
 
@@ -506,7 +506,7 @@ void OnSplitLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Split, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) past tense.  Audacity has just split the labeled
          audio (a point or a region)*/
       _( "Split labeled audio (points or regions)" ),
@@ -528,7 +528,7 @@ void OnJoinLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Join, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or
          regions) */
       _( "Joined labeled audio (points or regions)" ),
@@ -550,7 +550,7 @@ void OnDisjoinLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Disjoin, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just detached the labeled audio regions.
       This message appears in history and tells you about something
       Audacity has done.*/

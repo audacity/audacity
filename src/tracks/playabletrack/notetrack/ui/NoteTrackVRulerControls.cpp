@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 
@@ -81,7 +81,7 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
       return RefreshNone;
    }
 
-   ProjectManager::Get( *pProject ).ModifyState(false);
+   ProjectHistory::Get( *pProject ).ModifyState(false);
 
    return RefreshCell | UpdateVRuler;
 }

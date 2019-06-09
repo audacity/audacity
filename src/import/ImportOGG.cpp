@@ -29,7 +29,6 @@
 *//*******************************************************************/
 
 #include "../Audacity.h" // for USE_* macros
-#include "ImportOGG.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -39,6 +38,7 @@
 #endif
 
 #include <wx/intl.h>
+#include "Import.h"
 #include "../Prefs.h"
 #include "../Tags.h"
 #include "../prefs/QualityPrefs.h"
@@ -55,14 +55,10 @@ static const auto exts = {
 /* BPF There is no real reason to compile without LIBVORBIS, but if you do, you will needs this header */
 #include "ImportPlugin.h"
 
-void GetOGGImportPlugin(ImportPluginList &importPluginList,
-                        UnusableImportPluginList &unusableImportPluginList)
-{
-   unusableImportPluginList.push_back(
+static Importer::RegisteredUnusableImportPlugin registered{
       std::make_unique<UnusableImportPlugin>
          (DESC, FileExtensions( exts.begin(), exts.end() ) )
-   );
-}
+};
 
 #else /* USE_LIBVORBIS */
 
@@ -94,6 +90,8 @@ public:
    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
    wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+
+   unsigned SequenceNumber() const override;
 };
 
 
@@ -159,11 +157,6 @@ private:
    sampleFormat   mFormat;
 };
 
-void GetOGGImportPlugin(ImportPluginList &importPluginList,
-                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
-{
-   importPluginList.push_back( std::make_unique<OggImportPlugin>() );
-}
 
 wxString OggImportPlugin::GetPluginFormatDescription()
 {
@@ -215,6 +208,15 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const FilePath &filename
 
    return std::make_unique<OggImportFileHandle>(filename, std::move(file), std::move(vorbisFile));
 }
+
+unsigned OggImportPlugin::SequenceNumber() const
+{
+   return 20;
+}
+
+static Importer::RegisteredImportPlugin registered{
+   std::make_unique< OggImportPlugin >()
+};
 
 wxString OggImportFileHandle::GetFileDescription()
 {

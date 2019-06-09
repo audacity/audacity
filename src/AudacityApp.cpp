@@ -84,6 +84,8 @@ It handles initialization and termination by subclassing wxApp.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectFileManager.h"
+#include "ProjectHistory.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
@@ -95,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "PlatformCompatibility.h"
 #include "FileNames.h"
 #include "AutoRecovery.h"
+#include "AutoRecoveryDialog.h"
 #include "SplashDialog.h"
 #include "FFT.h"
 #include "BlockFile.h"
@@ -869,7 +872,7 @@ END_EVENT_TABLE()
 //  - Inform the user if DefaultOpenPath not set.
 //  - Switch focus to correct instance of project window, if already open.
 bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
-   // Most of the checks below are copied from AudacityProject::OpenFiles.
+   // Most of the checks below are copied from ProjectManager::OpenFiles.
    // - some rationalisation might be possible.
 
    AudacityProject *proj = GetActiveProject();
@@ -885,7 +888,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // Test here even though AudacityProject::OpenFile() also now checks, because
          // that method does not return the bad result.
          // That itself may be a FIXME.
-         if (ProjectManager::IsAlreadyOpen(fullPathStr))
+         if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
             return false;
 
          // DMM: If the project is dirty, that means it's been touched at
@@ -899,7 +902,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
          if (proj && (
-            ProjectManager::Get( *proj ).GetDirty() ||
+            ProjectHistory::Get( *proj ).GetDirty() ||
             !TrackList::Get( *proj ).empty()
          ) )
             proj = nullptr;
@@ -944,7 +947,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    // PRL: Don't call SafeMRUOpen
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
-   if (!ProjectManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
+   if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       history.RemoveFileFromHistory(n);
 }
 
@@ -1081,7 +1084,7 @@ bool AudacityApp::OnExceptionInMainLoop()
          // Restore the state of the project to what it was before the
          // failed operation
          if (pProject) {
-            ProjectManager::Get( *pProject ).RollbackState();
+            ProjectHistory::Get( *pProject ).RollbackState();
 
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();

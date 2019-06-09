@@ -115,6 +115,8 @@ audacity_SOURCES = \
 	AudioIOListener.h \
 	AutoRecovery.cpp \
 	AutoRecovery.h \
+	AutoRecoveryDialog.cpp \
+	AutoRecoveryDialog.h \
 	BatchCommandDialog.cpp \
 	BatchCommandDialog.h \
 	BatchCommands.cpp \
@@ -211,14 +213,22 @@ audacity_SOURCES = \
 	Project.h \
 	ProjectAudioIO.cpp \
 	ProjectAudioIO.h \
+	ProjectAudioManager.cpp \
+	ProjectAudioManager.h \
 	ProjectFileIO.cpp \
 	ProjectFileIO.h \
 	ProjectFileIORegistry.cpp \
 	ProjectFileIORegistry.h \
+	ProjectFileManager.cpp \
+	ProjectFileManager.h \
 	ProjectFSCK.cpp \
 	ProjectFSCK.h \
+	ProjectHistory.cpp \
+	ProjectHistory.h \
 	ProjectManager.cpp \
 	ProjectManager.h \
+	ProjectSelectionManager.cpp \
+	ProjectSelectionManager.h \
 	ProjectSettings.cpp \
 	ProjectSettings.h \
 	ProjectWindow.cpp \
@@ -485,16 +495,11 @@ audacity_SOURCES = \
 	import/Import.cpp \
 	import/Import.h \
 	import/ImportFLAC.cpp \
-	import/ImportFLAC.h \
 	import/ImportForwards.h \
 	import/ImportLOF.cpp \
-	import/ImportLOF.h \
 	import/ImportMP3.cpp \
-	import/ImportMP3.h \
 	import/ImportOGG.cpp \
-	import/ImportOGG.h \
 	import/ImportPCM.cpp \
-	import/ImportPCM.h \
 	import/ImportPlugin.h \
 	import/ImportRaw.cpp \
 	import/ImportRaw.h \
@@ -766,7 +771,6 @@ audacity_SOURCES += \
 	export/ExportFFmpegDialogs.cpp \
 	export/ExportFFmpegDialogs.h \
 	import/ImportFFmpeg.cpp \
-	import/ImportFFmpeg.h \
 	$(NULL)
 endif
 
@@ -775,7 +779,6 @@ audacity_CPPFLAGS += $(GSTREAMER_CFLAGS)
 audacity_LDADD += $(GSTREAMER_LIBS)
 audacity_SOURCES += \
 	import/ImportGStreamer.cpp \
-	import/ImportGStreamer.h \
 	$(NULL)
 endif
 
@@ -871,7 +874,6 @@ audacity_CPPFLAGS += $(QUICKTIME_CFLAGS)
 audacity_LDADD += $(QUICKTIME_LIBS)
 audacity_SOURCES += \
 	import/ImportQT.cpp \
-	import/ImportQT.h \
 	$(NULL)
 endif
 

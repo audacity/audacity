@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
-#include "../../../ProjectManager.h"
+#include "../../../ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UndoManager.h"
@@ -141,7 +141,7 @@ UIHandle::Result LabelGlyphHandle::Release
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (mpLT->HandleGlyphDragRelease
           (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
-      ProjectManager::Get( *pProject ).PushState(_("Modified Label"),
+      ProjectHistory::Get( *pProject ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
@@ -152,7 +152,7 @@ UIHandle::Result LabelGlyphHandle::Release
 
 UIHandle::Result LabelGlyphHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    auto result = LabelDefaultClickHandle::Cancel( pProject );
    return result | RefreshCode::RefreshAll;
 }

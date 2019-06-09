@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../NoteTrack.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectManager.h"
+#include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -835,7 +835,7 @@ UIHandle::Result TimeShiftHandle::Release
          fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   ProjectManager::Get( *pProject ).PushState(msg, _("Time-Shift"),
+   ProjectHistory::Get( *pProject ).PushState(msg, _("Time-Shift"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
 
    return result | FixScrollbars;
@@ -843,7 +843,7 @@ UIHandle::Result TimeShiftHandle::Release
 
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshAll;
 }
 

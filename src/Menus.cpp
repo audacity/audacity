@@ -42,7 +42,7 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "UndoManager.h"
@@ -331,7 +331,7 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
                              wxString::Format(_("&Undo %s"),
                                               desc));
       commandManager.Enable(wxT("Undo"),
-         ProjectManager::Get( project ).UndoAvailable());
+         ProjectHistory::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
@@ -344,7 +344,7 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
                              wxString::Format(_("&Redo %s"),
                                               desc));
       commandManager.Enable(wxT("Redo"),
-         ProjectManager::Get( project ).RedoAvailable());
+         ProjectHistory::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
@@ -525,11 +525,11 @@ CommandFlag MenuManager::GetUpdateFlags
    if (!mLastEffect.empty())
       flags |= HasLastEffectFlag;
 
-   auto &projectManager = ProjectManager::Get( project );
-   if (projectManager.UndoAvailable())
+   auto &history = ProjectHistory::Get( project );
+   if (history.UndoAvailable())
       flags |= UndoAvailableFlag;
 
-   if (projectManager.RedoAvailable())
+   if (history.RedoAvailable())
       flags |= RedoAvailableFlag;
 
    if (ViewInfo::Get( project ).ZoomInAvailable() && (flags & TracksExistFlag))

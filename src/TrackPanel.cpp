@@ -71,7 +71,7 @@ is time to refresh some aspect of the screen.
 #include "KeyboardCapture.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "TrackPanelMouseEvent.h"
@@ -612,7 +612,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 {
-   ProjectManager::Get( *GetProject() ).ModifyState(bWantsAutoSave);
+   ProjectHistory::Get( *GetProject() ).ModifyState(bWantsAutoSave);
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
