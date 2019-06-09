@@ -26,7 +26,6 @@ static_assert(
 
 // Type to specify conditions for enabling of a menu item
 using CommandFlag = std::bitset<NCommandFlags>;
-using CommandMask = CommandFlag;
 
 // Special constant values
 constexpr CommandFlag

@@ -1021,7 +1021,8 @@ void CommandManager::SetKeyFromIndex(int i, const NormalizedKeyString &key)
    entry->key = key;
 }
 
-void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag flagsGot, CommandMask flagsRequired )
+void CommandManager::TellUserWhyDisallowed(
+   const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
