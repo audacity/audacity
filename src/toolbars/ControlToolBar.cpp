@@ -824,7 +824,7 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
    }
 }
 
-bool ControlToolBar::CanStopAudioStream()
+bool ControlToolBar::CanStopAudioStream() const
 {
    auto gAudioIO = AudioIO::Get();
    return (!gAudioIO->IsStreamActive() ||

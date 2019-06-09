@@ -388,7 +388,7 @@ void UndoManager::Redo(const Consumer &consumer)
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
 }
 
-bool UndoManager::UnsavedChanges()
+bool UndoManager::UnsavedChanges() const
 {
    return (saved != current) || HasODChangesFlag();
 }
@@ -418,7 +418,7 @@ void UndoManager::SetODChangesFlag()
    mODChangesMutex.Unlock();
 }
 
-bool UndoManager::HasODChangesFlag()
+bool UndoManager::HasODChangesFlag() const
 {
    bool ret;
    mODChangesMutex.Lock();

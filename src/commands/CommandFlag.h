@@ -12,6 +12,9 @@
 // Flags used in command handling.
 
 #include <bitset>
+#include <functional>
+
+class AudacityProject;
 
 // Increase the template parameter as needed to allow more flags
 constexpr size_t NCommandFlags = 64;
@@ -30,10 +33,12 @@ constexpr CommandFlag
    NoFlagsSpecified{ ~0ULL }; // all ones
 
 // Construct one statically to register (and reserve) a bit position in the set
+// an associate it with a test function
 class ReservedCommandFlag : public CommandFlag
 {
 public:
-   ReservedCommandFlag();
+   using Predicate = std::function< bool( const AudacityProject& ) >;
+   ReservedCommandFlag( const Predicate & );
 };
 
 // Widely used command flags, but this list need not be exhaustive.  It may be

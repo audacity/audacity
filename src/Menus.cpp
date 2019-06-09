@@ -30,6 +30,8 @@
 
 #include "Experimental.h"
 
+#include <wx/frame.h>
+
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "LabelTrack.h"
@@ -414,55 +416,286 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 }
 
 
-ReservedCommandFlag::ReservedCommandFlag()
+// Really means, some track is selected, that isn't a time track
+const auto TracksSelectedPred =
+   [](const AudacityProject &project){
+      auto range = TrackList::Get( project ).Selected()
+        - []( const Track *pTrack ){
+           return track_cast<const TimeTrack*>( pTrack ); };
+      return !range.empty();
+   };
+
+const auto AudioIOBusyPred =
+   [](const AudacityProject &project ){
+      return AudioIOBase::Get()->IsAudioTokenActive(
+         ProjectAudioIO::Get( project ).GetAudioIOToken());
+   };
+
+const auto TimeSelectedPred =
+   [](const AudacityProject &project){
+      // This is equivalent to check if there is a valid selection,
+      // so it's used for Zoom to Selection too
+      return !ViewInfo::Get( project ).selectedRegion.isPoint();
+   };
+
+namespace{
+   using Predicates = std::vector< ReservedCommandFlag::Predicate >;
+   Predicates &RegisteredPredicates()
+   {
+      static Predicates thePredicates;
+      return thePredicates;
+   }
+}
+
+ReservedCommandFlag::ReservedCommandFlag( const Predicate &predicate )
 {
    static size_t sNextReservedFlag = 0;
    // This will throw std::out_of_range if the constant NCommandFlags is too
    // small
    set( sNextReservedFlag++ );
+   RegisteredPredicates().emplace_back( predicate );
 }
 
 const ReservedCommandFlag
-   AudioIONotBusyFlag,
-   TimeSelectedFlag, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
-   TracksSelectedFlag,
-   TracksExistFlag,
-   LabelTracksExistFlag,
-   WaveTracksSelectedFlag,
-   ClipboardFlag,
-   TextClipFlag, // Same as Clipboard flag for now.
-   UnsavedChangesFlag,
-   HasLastEffectFlag,
-   UndoAvailableFlag,
-   RedoAvailableFlag,
-   ZoomInAvailableFlag,
-   ZoomOutAvailableFlag,
-   StereoRequiredFlag,  //lda
-   TopDockHasFocus,  //lll
-   TrackPanelHasFocus,  //lll
-   BotDockHasFocus,  //lll
-   LabelsSelectedFlag,
-   AudioIOBusyFlag,  //lll
-   PlayRegionLockedFlag,  //msmeyer
-   PlayRegionNotLockedFlag,  //msmeyer
-   CutCopyAvailableFlag,
-   WaveTracksExistFlag,
-   NoteTracksExistFlag,  //gsw
-   NoteTracksSelectedFlag,  //gsw
-   HaveRecentFiles,
-   IsNotSyncLockedFlag,  //awd
-   IsSyncLockedFlag,  //awd
-   IsRealtimeNotActiveFlag,  //lll
-   CaptureNotBusyFlag,
-   CanStopAudioStreamFlag,
-   RulerHasFocus, // prl
-   NotMinimizedFlag, // prl
-   PausedFlag, // jkc
-   NotPausedFlag, // jkc
-   HasWaveDataFlag, // jkc
-   PlayableTracksExistFlag,
-   AudioTracksSelectedFlag,
-   NoAutoSelect // jkc
+   AudioIONotBusyFlag{
+      [](const AudacityProject &project ){
+         return !AudioIOBusyPred( project );
+      }
+   },
+   TimeSelectedFlag{
+      TimeSelectedPred
+   },
+   TracksSelectedFlag{
+      TracksSelectedPred
+   },
+   TracksExistFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any().empty();
+      }
+   },
+   LabelTracksExistFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any<const LabelTrack>().empty();
+      }
+   },
+   WaveTracksSelectedFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Selected<const WaveTrack>().empty();
+      }
+   },
+   UnsavedChangesFlag{
+      [](const AudacityProject &project){
+         auto &undoManager = UndoManager::Get( project );
+         return
+            undoManager.UnsavedChanges()
+         ||
+            !ProjectFileIO::Get( project ).IsProjectSaved()
+         ;
+      }
+   },
+   HasLastEffectFlag{
+      [](const AudacityProject &project){
+         return !MenuManager::Get( project ).mLastEffect.empty();
+      }
+   },
+   UndoAvailableFlag{
+      [](const AudacityProject &project){
+         return ProjectHistory::Get( project ).UndoAvailable();
+      }
+   },
+   RedoAvailableFlag{
+      [](const AudacityProject &project){
+         return ProjectHistory::Get( project ).RedoAvailable();
+      }
+   },
+   ZoomInAvailableFlag{
+      [](const AudacityProject &project){
+         return
+            ViewInfo::Get( project ).ZoomInAvailable()
+         &&
+            !TrackList::Get( project ).Any().empty()
+         ;
+      }
+   },
+   ZoomOutAvailableFlag{
+      [](const AudacityProject &project){
+         return
+            ViewInfo::Get( project ).ZoomOutAvailable()
+         &&
+            !TrackList::Get( project ).Any().empty()
+         ;
+      }
+   },
+   StereoRequiredFlag{
+      [](const AudacityProject &project){
+         // True iff at least one stereo track is selected, i.e., at least
+         // one right channel is selected.
+         // TODO: more-than-two-channels
+         auto range = TrackList::Get( project ).Selected<const WaveTrack>()
+            - &Track::IsLeader;
+         return !range.empty();
+      }
+   },  //lda
+   TrackPanelHasFocus{
+      [](const AudacityProject &project){
+         for (auto w = wxWindow::FindFocus(); w; w = w->GetParent()) {
+            if (dynamic_cast<const NonKeystrokeInterceptingWindow*>(w))
+               return true;
+         }
+         return false;
+      }
+   },  //lll
+   LabelsSelectedFlag{
+      [](const AudacityProject &project){
+         // At least one label track selected, having at least one label
+         // completely within the time selection.
+         const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+         const auto &test = [&]( const LabelTrack *pTrack ){
+            const auto &labels = pTrack->GetLabels();
+            return std::any_of( labels.begin(), labels.end(),
+               [&](const LabelStruct &label){
+                  return
+                     label.getT0() >= selectedRegion.t0()
+                  &&
+                     label.getT1() <= selectedRegion.t1()
+                  ;
+               }
+            );
+         };
+         auto range = TrackList::Get( project ).Selected<const LabelTrack>()
+            + test;
+         return !range.empty();
+      }
+   },
+   AudioIOBusyFlag{
+      AudioIOBusyPred
+   }, //lll
+   PlayRegionLockedFlag{
+      [](const AudacityProject &project){
+         return ViewInfo::Get(project).playRegion.Locked();
+      }
+   },  //msmeyer
+   PlayRegionNotLockedFlag{
+      [](const AudacityProject &project){
+         const auto &playRegion = ViewInfo::Get(project).playRegion;
+         return !playRegion.Locked() && !playRegion.Empty();
+      }
+   },  //msmeyer
+   CutCopyAvailableFlag{
+      [](const AudacityProject &project){
+         auto range = TrackList::Get( project ).Any<const LabelTrack>()
+            + &LabelTrack::IsTextSelected;
+         if ( !range.empty() )
+            return true;
+
+         if (
+            !AudioIOBusyPred( project )
+         &&
+            TimeSelectedPred( project )
+         &&
+            TracksSelectedPred( project )
+         )
+            return true;
+
+         return false;
+      }
+   },
+   WaveTracksExistFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any<const WaveTrack>().empty();
+      }
+   },
+   NoteTracksExistFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any<const NoteTrack>().empty();
+      }
+   },  //gsw
+   NoteTracksSelectedFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Selected<const NoteTrack>().empty();
+      }
+   },  //gsw
+   IsNotSyncLockedFlag{
+      [](const AudacityProject &project){
+         return !ProjectSettings::Get( project ).IsSyncLocked();
+      }
+   },  //awd
+   IsSyncLockedFlag{
+      [](const AudacityProject &project){
+         return ProjectSettings::Get( project ).IsSyncLocked();
+      }
+   },  //awd
+   IsRealtimeNotActiveFlag{
+      [](const AudacityProject &){
+         return !EffectManager::Get().RealtimeIsActive();
+      }
+   },  //lll
+   CaptureNotBusyFlag{
+      [](const AudacityProject &){
+         auto gAudioIO = AudioIO::Get();
+         return !(
+            gAudioIO->IsBusy() &&
+            gAudioIO->GetNumCaptureChannels() > 0
+         );
+      }
+   },
+   CanStopAudioStreamFlag{
+      [](const AudacityProject &project){
+         return ControlToolBar::Get( project ).CanStopAudioStream();
+      }
+   },
+   NotMinimizedFlag{
+      [](const AudacityProject &project){
+         const wxWindow *focus = FindProjectFrame( &project );
+         if (focus) {
+            while (focus && focus->GetParent())
+               focus = focus->GetParent();
+         }
+         return (focus &&
+            !static_cast<const wxTopLevelWindow*>(focus)->IsIconized()
+         );
+      }
+   }, // prl
+   PausedFlag{
+      [](const AudacityProject&){
+         return AudioIOBase::Get()->IsPaused();
+      }
+   },
+   HasWaveDataFlag{
+      [](const AudacityProject &project){
+         auto range = TrackList::Get( project ).Any<const WaveTrack>()
+            + [](const WaveTrack *pTrack){
+               return pTrack->GetEndTime() > pTrack->GetStartTime();
+            };
+         return !range.empty();
+      }
+   }, // jkc
+   PlayableTracksExistFlag{
+      [](const AudacityProject &project){
+         auto &tracks = TrackList::Get( project );
+         return
+#ifdef EXPERIMENTAL_MIDI_OUT
+            !tracks.Any<const NoteTrack>().empty()
+         ||
+#endif
+            !tracks.Any<const WaveTrack>().empty()
+         ;
+      }
+   },
+   AudioTracksSelectedFlag{
+      [](const AudacityProject &project){
+         auto &tracks = TrackList::Get( project );
+         return
+            !tracks.Selected<const NoteTrack>().empty()
+            // even if not EXPERIMENTAL_MIDI_OUT
+         ||
+            tracks.Selected<const WaveTrack>().empty()
+         ;
+      }
+   },
+   NoAutoSelect{
+     [](const AudacityProject &){ return false; }
+   } // jkc
 ;
 
 CommandFlag MenuManager::GetUpdateFlags( bool checkActive )

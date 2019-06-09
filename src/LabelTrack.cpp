@@ -1012,7 +1012,7 @@ void LabelTrack::calculateFontHeight(wxDC & dc) const
    mFontHeight += CursorExtraHeight - (charLeading+charDescent);
 }
 
-bool LabelTrack::IsTextSelected()
+bool LabelTrack::IsTextSelected() const
 {
    if (mSelIndex == -1)
       return false;
