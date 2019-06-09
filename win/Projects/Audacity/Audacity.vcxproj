@@ -229,6 +229,7 @@
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp" />
     <ClCompile Include="..\..\..\src\ProjectHistory.cpp" />
     <ClCompile Include="..\..\..\src\ProjectManager.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectSelectionManager.cpp" />
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp" />
     <ClCompile Include="..\..\..\src\ProjectWindow.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
@@ -664,6 +665,7 @@
     <ClInclude Include="..\..\..\src\ProjectFSCK.h" />
     <ClInclude Include="..\..\..\src\ProjectHistory.h" />
     <ClInclude Include="..\..\..\src\ProjectManager.h" />
+    <ClInclude Include="..\..\..\src\ProjectSelectionManager.h" />
     <ClInclude Include="..\..\..\src\ProjectSettings.h" />
     <ClInclude Include="..\..\..\src\ProjectWindow.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
