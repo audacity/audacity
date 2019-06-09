@@ -164,6 +164,9 @@
     <ClCompile Include="..\..\..\src\Envelope.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\EnvelopeEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\FFmpeg.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1247,6 +1250,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Envelope.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EnvelopeEditor.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Experimental.h">

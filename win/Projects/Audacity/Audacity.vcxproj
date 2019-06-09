@@ -164,6 +164,7 @@
     <ClCompile Include="..\..\..\src\effects\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp" />
     <ClCompile Include="..\..\..\src\Envelope.cpp" />
+    <ClCompile Include="..\..\..\src\EnvelopeEditor.cpp" />
     <ClCompile Include="..\..\..\src\FFmpeg.cpp" />
     <ClCompile Include="..\..\..\src\FFT.cpp" />
     <ClCompile Include="..\..\..\src\FileException.cpp" />
@@ -624,6 +625,7 @@
     <ClInclude Include="..\..\..\src\DirManager.h" />
     <ClInclude Include="..\..\..\src\Dither.h" />
     <ClInclude Include="..\..\..\src\Envelope.h" />
+    <ClInclude Include="..\..\..\src\EnvelopeEditor.h" />
     <ClInclude Include="..\..\..\src\Experimental.h" />
     <ClInclude Include="..\..\..\src\FFmpeg.h" />
     <ClInclude Include="..\..\..\src\FFT.h" />

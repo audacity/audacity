@@ -82,6 +82,8 @@ src/Dither.cpp
 src/Dither.h
 src/Envelope.cpp
 src/Envelope.h
+src/EnvelopeEditor.cpp
+src/EnvelopeEditor.h
 src/Experimental.h
 src/FFT.cpp
 src/FFT.h

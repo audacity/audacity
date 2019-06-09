@@ -72,6 +72,7 @@ audio tracks.
 #include "AColor.h"
 #include "BlockFile.h"
 #include "Envelope.h"
+#include "EnvelopeEditor.h"
 #include "NumberScale.h"
 #include "WaveClip.h"
 #include "LabelTrack.h"
@@ -1809,14 +1810,14 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   clip->GetEnvelope()->GetValues
-      ( tOffset,
+   EnvelopeEditor::GetValues( *clip->GetEnvelope(),
+      tOffset,
 
-        // PRL: change back to make envelope evaluate only at sample times
-        // and then interpolate the display
-        0, // 1.0 / rate,
+      // PRL: change back to make envelope evaluate only at sample times
+      // and then interpolate the display
+      0, // 1.0 / rate,
 
-        env, mid.width, leftOffset, zoomInfo );
+      env, mid.width, leftOffset, zoomInfo );
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -1949,14 +1950,14 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            clip->GetEnvelope()->GetValues
-               ( tOffset,
+            EnvelopeEditor::GetValues( *clip->GetEnvelope(),
+               tOffset,
 
-                 // PRL: change back to make envelope evaluate only at sample times
-                 // and then interpolate the display
-                 0, // 1.0 / rate,
+               // PRL: change back to make envelope evaluate only at sample times
+               // and then interpolate the display
+               0, // 1.0 / rate,
 
-                 env2, rectPortion.width, leftOffset, zoomInfo );
+               env2, rectPortion.width, leftOffset, zoomInfo );
             DrawMinMaxRMS( context, rectPortion, env2,
                zoomMin, zoomMax,
                dB, dBRange,
@@ -1984,8 +1985,8 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
    if (drawEnvelope) {
       DrawEnvelope(
          context, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope );
-      clip->GetEnvelope()->DrawPoints
-         ( context, rect, dB, dBRange, zoomMin, zoomMax, true );
+      EnvelopeEditor::DrawPoints( *clip->GetEnvelope(),
+         context, rect, dB, dBRange, zoomMin, zoomMax, true );
    }
 
    // Draw arrows on the left side if the track extends to the left of the
@@ -3262,9 +3263,9 @@ void TrackArt::DrawTimeTrack(TrackPanelDrawingContext &context,
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dbRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dbRange + 1.0;
    }
-   track->GetEnvelope()->DrawPoints
-      ( context, envRect,
-        track->GetDisplayLog(), dbRange, lower, upper, false );
+   EnvelopeEditor::DrawPoints( *track->GetEnvelope(),
+      context, envRect,
+      track->GetDisplayLog(), dbRange, lower, upper, false );
 }
 
 void TrackArtist::UpdateSelectedPrefs( int id )

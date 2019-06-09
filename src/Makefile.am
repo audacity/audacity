@@ -143,6 +143,8 @@ audacity_SOURCES = \
 	Diags.h \
 	Envelope.cpp \
 	Envelope.h \
+	EnvelopeEditor.cpp \
+	EnvelopeEditor.h \
 	Experimental.h \
 	FFmpeg.cpp \
 	FFmpeg.h \
