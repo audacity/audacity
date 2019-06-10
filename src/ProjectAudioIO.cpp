@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectAudioIO.h"
 
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 #include "Project.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sAudioIOKey{
@@ -50,6 +50,7 @@ void ProjectAudioIO::SetAudioIOToken(int token)
 
 bool ProjectAudioIO::IsAudioActive() const
 {
+   auto gAudioIO = AudioIOBase::Get();
    return GetAudioIOToken() > 0 &&
       gAudioIO->IsStreamActive(GetAudioIOToken());
 }
@@ -63,6 +64,7 @@ void ProjectAudioIO::SetPlaybackMeter(MeterPanel *playback)
 {
    auto &project = mProject;
    mPlaybackMeter = playback;
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO)
    {
       gAudioIO->SetPlaybackMeter( &project , mPlaybackMeter );
@@ -79,6 +81,7 @@ void ProjectAudioIO::SetCaptureMeter(MeterPanel *capture)
    auto &project = mProject;
    mCaptureMeter = capture;
 
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO)
    {
       gAudioIO->SetCaptureMeter( &project, mCaptureMeter );

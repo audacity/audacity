@@ -129,6 +129,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\AudacityLogger.cpp" />
     <ClCompile Include="..\..\..\src\AudioIO.cpp" />
+    <ClCompile Include="..\..\..\src\AudioIOBase.cpp" />
     <ClCompile Include="..\..\..\src\AutoRecovery.cpp" />
     <ClCompile Include="..\..\..\src\AutoRecoveryDialog.cpp" />
     <ClCompile Include="..\..\..\src\BatchCommandDialog.cpp" />
@@ -506,6 +507,7 @@
     <ClInclude Include="..\..\..\src\AudacityHeaders.h" />
     <ClInclude Include="..\..\..\src\AudacityLogger.h" />
     <ClInclude Include="..\..\..\src\AudioIO.h" />
+    <ClInclude Include="..\..\..\src\AudioIOBase.h" />
     <ClInclude Include="..\..\..\src\AudioIOListener.h" />
     <ClInclude Include="..\..\..\src\AutoRecovery.h" />
     <ClInclude Include="..\..\..\src\AutoRecoveryDialog.h" />

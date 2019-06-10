@@ -8,7 +8,7 @@
 #include "../AboutDialog.h"
 #include "../AllThemeResources.h"
 #include "../AudacityLogger.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../CrashReport.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
@@ -316,6 +316,7 @@ void OnManual(const CommandContext &context)
 void OnAudioDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto gAudioIO = AudioIOBase::Get();
    wxString info = gAudioIO->GetDeviceInfo();
    ShowDiagnostics( project, info,
       _("Audio Device Info"), wxT("deviceinfo.txt") );
@@ -325,6 +326,7 @@ void OnAudioDeviceInfo(const CommandContext &context)
 void OnMidiDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto gAudioIO = AudioIOBase::Get();
    wxString info = gAudioIO->GetMidiDeviceInfo();
    ShowDiagnostics( project, info,
       _("MIDI Device Info"), wxT("midideviceinfo.txt") );

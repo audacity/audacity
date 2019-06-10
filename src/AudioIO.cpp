@@ -1155,6 +1155,11 @@ AudioIO::~AudioIO()
    gAudioIO = nullptr;
 }
 
+AudioIO *AudioIO::Get()
+{
+   return gAudioIO;
+}
+
 void AudioIO::SetMixer(int inputSource)
 {
 #if defined(USE_PORTMIXER)

@@ -259,6 +259,7 @@ void DeviceManager::Rescan()
    if (m_inited) {
       // check to see if there is a stream open - can happen if monitoring,
       // but otherwise Rescan() should not be available to the user.
+      auto gAudioIO = AudioIO::Get();
       if (gAudioIO) {
          if (gAudioIO->IsMonitoring())
          {

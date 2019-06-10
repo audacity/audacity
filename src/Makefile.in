@@ -290,8 +290,9 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	AdornedRulerPanel.h AllThemeResources.h Audacity.h \
 	AudacityApp.cpp AudacityApp.h AudacityException.cpp \
 	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
-	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
-	AutoRecovery.h AutoRecoveryDialog.cpp AutoRecoveryDialog.h \
+	AudioIO.cpp AudioIO.h AudioIOBase.cpp AudioIOBase.h \
+	AudioIOListener.h AutoRecovery.cpp AutoRecovery.h \
+	AutoRecoveryDialog.cpp AutoRecoveryDialog.h \
 	BatchCommandDialog.cpp BatchCommandDialog.h BatchCommands.cpp \
 	BatchCommands.h BatchProcessDialog.cpp BatchProcessDialog.h \
 	Benchmark.cpp Benchmark.h CellularPanel.cpp CellularPanel.h \
@@ -636,7 +637,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-AudacityApp.$(OBJEXT) \
 	audacity-AudacityException.$(OBJEXT) \
 	audacity-AudacityLogger.$(OBJEXT) audacity-AudioIO.$(OBJEXT) \
-	audacity-AutoRecovery.$(OBJEXT) \
+	audacity-AudioIOBase.$(OBJEXT) audacity-AutoRecovery.$(OBJEXT) \
 	audacity-AutoRecoveryDialog.$(OBJEXT) \
 	audacity-BatchCommandDialog.$(OBJEXT) \
 	audacity-BatchCommands.$(OBJEXT) \
@@ -1366,8 +1367,9 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AdornedRulerPanel.h AllThemeResources.h Audacity.h \
 	AudacityApp.cpp AudacityApp.h AudacityException.cpp \
 	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
-	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
-	AutoRecovery.h AutoRecoveryDialog.cpp AutoRecoveryDialog.h \
+	AudioIO.cpp AudioIO.h AudioIOBase.cpp AudioIOBase.h \
+	AudioIOListener.h AutoRecovery.cpp AutoRecovery.h \
+	AutoRecoveryDialog.cpp AutoRecoveryDialog.h \
 	BatchCommandDialog.cpp BatchCommandDialog.h BatchCommands.cpp \
 	BatchCommands.h BatchProcessDialog.cpp BatchProcessDialog.h \
 	Benchmark.cpp Benchmark.h CellularPanel.cpp CellularPanel.h \
@@ -2522,6 +2524,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityLogger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudioIO.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudioIOBase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AutoRecovery.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AutoRecoveryDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BatchCommandDialog.Po@am__quote@
@@ -3370,6 +3373,20 @@ audacity-AudioIO.obj: AudioIO.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AudioIO.cpp' object='audacity-AudioIO.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AudioIO.obj `if test -f 'AudioIO.cpp'; then $(CYGPATH_W) 'AudioIO.cpp'; else $(CYGPATH_W) '$(srcdir)/AudioIO.cpp'; fi`
+
+audacity-AudioIOBase.o: AudioIOBase.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AudioIOBase.o -MD -MP -MF $(DEPDIR)/audacity-AudioIOBase.Tpo -c -o audacity-AudioIOBase.o `test -f 'AudioIOBase.cpp' || echo '$(srcdir)/'`AudioIOBase.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AudioIOBase.Tpo $(DEPDIR)/audacity-AudioIOBase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AudioIOBase.cpp' object='audacity-AudioIOBase.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AudioIOBase.o `test -f 'AudioIOBase.cpp' || echo '$(srcdir)/'`AudioIOBase.cpp
+
+audacity-AudioIOBase.obj: AudioIOBase.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AudioIOBase.obj -MD -MP -MF $(DEPDIR)/audacity-AudioIOBase.Tpo -c -o audacity-AudioIOBase.obj `if test -f 'AudioIOBase.cpp'; then $(CYGPATH_W) 'AudioIOBase.cpp'; else $(CYGPATH_W) '$(srcdir)/AudioIOBase.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AudioIOBase.Tpo $(DEPDIR)/audacity-AudioIOBase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AudioIOBase.cpp' object='audacity-AudioIOBase.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AudioIOBase.obj `if test -f 'AudioIOBase.cpp'; then $(CYGPATH_W) 'AudioIOBase.cpp'; else $(CYGPATH_W) '$(srcdir)/AudioIOBase.cpp'; fi`
 
 audacity-AutoRecovery.o: AutoRecovery.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AutoRecovery.o -MD -MP -MF $(DEPDIR)/audacity-AutoRecovery.Tpo -c -o audacity-AutoRecovery.o `test -f 'AutoRecovery.cpp' || echo '$(srcdir)/'`AutoRecovery.cpp

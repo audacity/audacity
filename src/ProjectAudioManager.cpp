@@ -96,6 +96,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    if (projectAudioIO.GetAudioIOToken() > 0)
    {
       auto &tracks = TrackList::Get( project );
+      auto gAudioIO = AudioIO::Get();
       auto &intervals = gAudioIO->LostCaptureIntervals();
       if (intervals.size()) {
          // Make a track with labels for recording errors
@@ -185,6 +186,7 @@ AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
    auto &projectAudioIO = ProjectAudioIO::Get( project );
+   auto gAudioIO = AudioIO::Get();
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing

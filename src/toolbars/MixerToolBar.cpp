@@ -120,6 +120,7 @@ void MixerToolBar::Populate()
                  &MixerToolBar::OnFocus,
                  this);
    // Show or hide the input slider based on whether it works
+   auto gAudioIO = AudioIO::Get();
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
 
    UpdateControls();
@@ -164,6 +165,7 @@ void MixerToolBar::UpdatePrefs()
    int inputSource;
 
    // Reset the selected source
+   auto gAudioIO = AudioIO::Get();
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 
    // Show or hide the input slider based on whether it works
@@ -210,6 +212,7 @@ void MixerToolBar::UpdateControls()
    int inputSource;
 
    // Show or hide the input slider based on whether it works
+   auto gAudioIO = AudioIO::Get();
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
 
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
@@ -236,6 +239,7 @@ void MixerToolBar::SetMixer(wxCommandEvent & WXUNUSED(event))
    float oldIn, oldOut;
    int inputSource;
 
+   auto gAudioIO = AudioIO::Get();
    gAudioIO->GetMixer(&inputSource, &oldIn, &oldOut);
    gAudioIO->SetMixer(inputSource, inputVolume, outputVolume);
    mOutputSliderVolume = outputVolume;
@@ -297,6 +301,7 @@ void MixerToolBar::SetToolTips()
 
    if (mOutputSlider->IsEnabled()) {
       wxString format;
+      auto gAudioIO = AudioIO::Get();
       if (gAudioIO->OutputMixerEmulated())
          format = _("Playback Volume: %s (emulated)");
       else

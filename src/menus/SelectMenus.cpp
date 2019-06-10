@@ -211,6 +211,7 @@ struct SeekInfo
 
 void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 {
+   auto gAudioIO = AudioIO::Get();
 #ifdef EXPERIMENTAL_IMPROVED_SEEKING
    if (gAudioIO->GetLastPlaybackTime() < lastSelectionAdjustment) {
       // Allow time for the last seek to output a buffer before
@@ -451,6 +452,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 
    if( ProjectAudioIO::Get( project ).IsAudioActive() )
    {
+      auto gAudioIO = AudioIO::Get();
       double indicator = gAudioIO->GetStreamTime();
       if( bMoveT0 )
          viewInfo.selectedRegion.setT0(indicator, false);
@@ -627,6 +629,7 @@ void OnSetLeftSelection(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    bool bSelChanged = false;
+   auto gAudioIO = AudioIOBase::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();
@@ -667,6 +670,7 @@ void OnSetRightSelection(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    bool bSelChanged = false;
+   auto gAudioIO = AudioIOBase::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();
@@ -853,6 +857,7 @@ void OnSelectCursorStoredCursor(const CommandContext &context)
    auto isAudioActive = ProjectAudioIO::Get( project ).IsAudioActive();
 
    if (mCursorPositionHasBeenStored) {
+      auto gAudioIO = AudioIO::Get();
       double cursorPositionCurrent = isAudioActive
          ? gAudioIO->GetStreamTime()
          : selectedRegion.t0();
@@ -871,6 +876,7 @@ void OnCursorPositionStore(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto isAudioActive = ProjectAudioIO::Get( project ).IsAudioActive();
 
+   auto gAudioIO = AudioIO::Get();
    mCursorPositionStored =
       isAudioActive ? gAudioIO->GetStreamTime() : selectedRegion.t0();
    mCursorPositionHasBeenStored = true;

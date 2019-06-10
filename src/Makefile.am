@@ -112,6 +112,8 @@ audacity_SOURCES = \
 	AudacityLogger.h \
 	AudioIO.cpp \
 	AudioIO.h \
+	AudioIOBase.cpp \
+	AudioIOBase.h \
 	AudioIOListener.h \
 	AutoRecovery.cpp \
 	AutoRecovery.h \

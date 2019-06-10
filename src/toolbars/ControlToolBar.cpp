@@ -481,6 +481,7 @@ void ControlToolBar::EnableDisableButtons()
    bool paused = mPause->IsDown();
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
+   auto gAudioIO = AudioIO::Get();
    bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
@@ -609,6 +610,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
    } );
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
       return -1;
 
@@ -787,6 +789,8 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
       return;
    }
 
+   auto gAudioIO = AudioIOBase::Get();
+
    // Does not appear to be needed on Linux. Perhaps on some other platform?
    // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
@@ -833,6 +837,7 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 
 bool ControlToolBar::CanStopAudioStream()
 {
+   auto gAudioIO = AudioIO::Get();
    return (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
            gAudioIO->GetOwningProject() == GetActiveProject());
@@ -863,6 +868,8 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
       return;
 
    mStop->PushDown();
+
+   auto gAudioIO = AudioIO::Get();
 
    SetStop(false);
    if(stopStream)
@@ -903,8 +910,10 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
 void ControlToolBar::Pause()
 {
-   if (!CanStopAudioStream())
+   if (!CanStopAudioStream()) {
+      auto gAudioIO = AudioIO::Get();
       gAudioIO->SetPaused(!gAudioIO->IsPaused());
+   }
    else {
       wxCommandEvent dummy;
       OnPause(dummy);
@@ -1095,6 +1104,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
       return false;
    // ...end of code from CommandHandler.
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy()) {
       if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
          mRecord->PopUp();
@@ -1301,6 +1311,8 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
       mPaused=true;
    }
 
+   auto gAudioIO = AudioIO::Get();
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
    auto project = GetActiveProject();
@@ -1480,6 +1492,7 @@ void ControlToolBar::StartScrolling()
    using Mode = ProjectWindow::PlaybackScroller::Mode;
    const auto project = GetActiveProject();
    if (project) {
+      auto gAudioIO = AudioIO::Get();
       auto mode = Mode::Pinned;
 
 #if 0

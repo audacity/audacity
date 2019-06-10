@@ -800,6 +800,8 @@ class AUDACITY_DLL_API AudioIO final : public AudioIoCallback {
    AudioIO();
    ~AudioIO();
 
+   // This might return null during application startup or shutdown
+   static AudioIO *Get();
 
 public:
 
@@ -1188,5 +1190,7 @@ private:
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
    void StartStreamCleanup(bool bOnlyBuffers = false);
 };
+
+using AudioIOBase = AudioIO;
 
 #endif

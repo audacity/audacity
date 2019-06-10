@@ -1066,6 +1066,8 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       return;
    }
 
+   auto gAudioIO = AudioIO::Get();
+
    // There may have been several update messages since the last
    // time we got to this function.  Catch up to real-time by
    // popping them off until there are none left.  It is necessary
@@ -1866,6 +1868,7 @@ void MeterPanel::StartMonitoring()
 {
    bool start = !mMonitoring;
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
    } 
@@ -1884,6 +1887,7 @@ void MeterPanel::StartMonitoring()
 
 void MeterPanel::StopMonitoring(){
    mMonitoring = false;
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
    } 

@@ -1695,6 +1695,7 @@ void AdornedRulerPanel::UpdateButtonStates()
          pinButton->PopUp();
       else
          pinButton->PushDown();
+      auto gAudioIO = AudioIO::Get();
       pinButton->SetAlternateIdx(
          (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
       // Bug 1584: Toltip now shows what clicking will do.

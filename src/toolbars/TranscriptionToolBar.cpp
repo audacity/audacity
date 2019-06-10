@@ -35,7 +35,7 @@
 
 #include "ControlToolBar.h"
 #include "../AllThemeResources.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Project.h"
@@ -381,6 +381,7 @@ void TranscriptionToolBar::OnKeyEvent(wxKeyEvent & event)
    }
 
    if (event.GetKeyCode() == WXK_SPACE) {
+      auto gAudioIO = AudioIOBase::Get();
       if (gAudioIO->IsBusy()) {
          /*Do Stuff Here*/
       }
@@ -485,6 +486,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    SetButton(false, mButtons[TTB_PlaySpeed]);
 
    // If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()) {
       auto &bar = ControlToolBar::Get( *p );
       bar.StopPlaying();
@@ -541,6 +543,7 @@ void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
    // If IO is busy, abort immediately
    // AWD: This is disabled to work around a hang on Linux when PulseAudio is
    // used.  If we figure that one out we can re-enable this code.
+   // auto gAudioIO = AudioIOBase::Get();
    //if (gAudioIO->IsBusy()) {
    //   OnPlaySpeed(event);
    //}
@@ -550,6 +553,7 @@ void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
 void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_StartOn]);
       return;
@@ -582,6 +586,7 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_StartOff]);
       return;
@@ -615,6 +620,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_EndOn]);
       return;
@@ -650,6 +656,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_EndOff]);
       return;
@@ -684,6 +691,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_SelectSound]);
       return;
@@ -723,6 +731,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_SelectSilence]);
       return;
@@ -761,6 +770,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_Calibrate]);
       return;
@@ -808,6 +818,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy())
    {
       SetButton(false,mButtons[TTB_EndOff]);

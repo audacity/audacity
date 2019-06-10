@@ -344,6 +344,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       const auto state = ::wxGetMouseState();
       mDragging = state.LeftIsDown();
 
+      auto gAudioIO = AudioIO::Get();
       const bool busy = gAudioIO->IsBusy();
       if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
          // Do not stop recording, and don't try to start scrubbing after
@@ -468,6 +469,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    if (IsScrubbing())
       return false;
 
+   auto gAudioIO = AudioIO::Get();
    const bool busy = gAudioIO->IsBusy();
    if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
       // Do not stop recording, and don't try to start scrubbing after
@@ -545,6 +547,7 @@ void Scrubber::ContinueScrubbingPoll()
    // timer callback, to a left click event detected elsewhere.)
    const bool seek = TemporarilySeeks() || Seeks();
 
+   auto gAudioIO = AudioIO::Get();
    if (mPaused) {
       // When paused, make silent scrubs.
       mOptions.minSpeed = 0.0;
@@ -691,6 +694,7 @@ void Scrubber::StopPolling()
 
 void Scrubber::StopScrubbing()
 {
+   auto gAudioIO = AudioIO::Get();
    gAudioIO->StopScrub();
    StopPolling();
 

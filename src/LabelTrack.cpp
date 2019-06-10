@@ -1770,6 +1770,7 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
          // If we're playing, don't capture if the selection is the same as the
          // playback region (this helps prevent label track creation from
          // stealing unmodified kbd. shortcuts)
+         auto gAudioIO = AudioIOBase::Get();
          if (pProj->GetAudioIOToken() > 0 &&
                gAudioIO->IsStreamActive(pProj->GetAudioIOToken()))
          {

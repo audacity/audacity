@@ -1,4 +1,4 @@
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../Clipboard.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
@@ -271,6 +271,7 @@ void OnAddLabelPlaying(const CommandContext &context)
    auto &project = context.project;
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
+   auto gAudioIO = AudioIOBase::Get();
    if (token > 0 &&
        gAudioIO->IsStreamActive(token)) {
       double indicator = gAudioIO->GetStreamTime();

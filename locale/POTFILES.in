@@ -41,6 +41,8 @@ src/AudacityLogger.cpp
 src/AudacityLogger.h
 src/AudioIO.cpp
 src/AudioIO.h
+src/AudioIOBase.cpp
+src/AudioIOBase.h
 src/AudioIOListener.h
 src/AutoRecovery.cpp
 src/AutoRecovery.h

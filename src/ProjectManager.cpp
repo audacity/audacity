@@ -382,6 +382,7 @@ AudacityProject *ProjectManager::New()
    }
    
    //Initialise the Listeners
+   auto gAudioIO = AudioIO::Get();
    gAudioIO->SetListener( &ProjectAudioManager::Get( project ) );
    auto &projectSelectionManager = ProjectSelectionManager::Get( project );
    SelectionBar::Get( project ).SetListener( &projectSelectionManager );
@@ -425,6 +426,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
+   auto gAudioIO = AudioIO::Get();
 
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
    // wxEVT_QUERY_END_SESSION, so we have to protect against multiple
@@ -760,6 +762,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    
    auto &statusBar = *window.GetStatusBar();
 
+   auto gAudioIO = AudioIO::Get();
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
    if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {

@@ -1619,6 +1619,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
+      auto gAudioIO = AudioIO::Get();
       if((token > 0 &&
                gAudioIO->IsAudioTokenActive(token) &&
                gAudioIO->GetNumCaptureChannels() == 0) ||

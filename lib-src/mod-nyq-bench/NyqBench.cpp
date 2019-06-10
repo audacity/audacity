@@ -23,7 +23,7 @@
 #include <wx/textctrl.h>
 #include <wx/toolbar.h>
 
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "ModuleManager.h"
@@ -1590,6 +1590,7 @@ void NyqBench::OnRunUpdate(wxUpdateUIEvent & e)
    wxToolBar *tbar = GetToolBar();
    wxMenuBar *mbar = GetMenuBar();
 
+   auto gAudioIO = AudioIOBase::Get();
    if (p && gAudioIO->IsBusy()) {
       mbar->Enable(ID_GO, false);
       mbar->Enable(ID_STOP, false);
