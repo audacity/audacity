@@ -80,7 +80,6 @@ bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
@@ -161,7 +160,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
       window.RedrawProject();
 
       if (pFirstNewTrack)
-         trackPanel.EnsureVisible(pFirstNewTrack);
+         pFirstNewTrack->EnsureVisible();
 
       return true;
    }
@@ -178,6 +177,7 @@ struct Handler : CommandHandlerObject {
 void OnUndo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -196,11 +196,17 @@ void OnUndo(const CommandContext &context)
       [&]( const UndoState &state ){
          ProjectHistory::Get( project ).PopState( state ); } );
 
-   trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
+   auto t = *tracks.Selected().begin();
+   if (!t)
+      t = *tracks.Any().begin();
+   if (t)
+      t->EnsureVisible();
 }
+
 void OnRedo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -218,7 +224,11 @@ void OnRedo(const CommandContext &context)
       [&]( const UndoState &state ){
          ProjectHistory::Get( project ).PopState( state ); } );
 
-   trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
+   auto t = *tracks.Selected().begin();
+   if (!t)
+      t = *tracks.Any().begin();
+   if (t)
+      t->EnsureVisible();
 }
 
 void OnCut(const CommandContext &context)
@@ -374,7 +384,6 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
@@ -633,7 +642,7 @@ void OnPaste(const CommandContext &context)
       window.RedrawProject();
 
       if (ff)
-         trackPanel.EnsureVisible(ff);
+         ff->EnsureVisible();
    }
 }
 

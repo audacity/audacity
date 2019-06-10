@@ -78,7 +78,7 @@ int DoAddLabel(
 
    window.RedrawProject();
    if (!useDialog) {
-      trackPanel.EnsureVisible(lt);
+      lt->EnsureVisible();
    }
    trackPanel.SetFocus();
 
@@ -336,7 +336,7 @@ void OnPasteNewLabel(const CommandContext &context)
    // plt should point to the last label track pasted to -- ensure it's visible
    // and set focus
    if (plt) {
-      trackPanel.EnsureVisible(plt);
+      plt->EnsureVisible();
       trackPanel.SetFocus();
    }
 

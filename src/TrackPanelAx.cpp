@@ -704,8 +704,7 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
       Track* t = FindTrack(childId).get();
       if (t) {
          mTrackPanel->SetFocusedTrack(t);
-         mTrackPanel->EnsureVisible(t);
-         mTrackPanel->MakeParentModifyState(false);
+         t->EnsureVisible( true );
       }
    }
    else

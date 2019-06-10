@@ -296,6 +296,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTracks->Bind(EVT_TRACKLIST_DELETION,
                     &TrackPanel::OnTrackListDeletion,
                     this);
+   mTracks->Bind(EVT_TRACKLIST_TRACK_REQUEST_VISIBLE,
+                    &TrackPanel::OnEnsureVisible,
+                    this);
 
    auto theProject = GetProject();
    theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
@@ -656,7 +659,7 @@ void TrackPanel::ProcessUIHandleResult
    }
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack)
-      panel->EnsureVisible(pClickedTrack);
+      pClickedTrack->EnsureVisible();
 }
 
 void TrackPanel::HandlePageUpKey()
@@ -812,7 +815,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
          if ( t )
-            EnsureVisible(t.get());
+            t->EnsureVisible();
       } );
    }
 
@@ -1304,18 +1307,15 @@ void TrackPanel::OnTrackMenu(Track *t)
    CellularPanel::DoContextMenu( &TrackView::Get( *t ) );
 }
 
-Track * TrackPanel::GetFirstSelectedTrack()
+// Tracks have been removed from the list.
+void TrackPanel::OnEnsureVisible(TrackListEvent & e)
 {
-   auto t = *GetTracks()->Selected().begin();
-   if (t)
-      return t;
-   else
-      //if nothing is selected, return the first track
-      return *GetTracks()->Any().begin();
-}
+   e.Skip();
+   bool modifyState = e.GetInt();
 
-void TrackPanel::EnsureVisible(Track * t)
-{
+   auto pTrack = e.mpTrack.lock();
+   auto t = pTrack.get();
+
    SetFocusedTrack(t);
 
    int trackTop = 0;
@@ -1349,6 +1349,9 @@ void TrackPanel::EnsureVisible(Track * t)
       }
    }
    Refresh(false);
+
+   if ( modifyState )
+      ProjectHistory::Get( *GetProject() ).ModifyState( false );
 }
 
 // 0.0 scrolls to top

@@ -114,7 +114,7 @@ void DoMixAndRender
 
       trackPanel.SetFocus();
       trackPanel.SetFocusedTrack(pNewLeft);
-      trackPanel.EnsureVisible(pNewLeft);
+      pNewLeft->EnsureVisible();
       window.RedrawProject();
    }
 }
@@ -577,7 +577,6 @@ void OnNewWaveTrack(const CommandContext &context)
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = settings.GetDefaultFormat();
@@ -592,7 +591,7 @@ void OnNewWaveTrack(const CommandContext &context)
       .PushState(_("Created new audio track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(t);
+   t->EnsureVisible();
 }
 
 void OnNewStereoTrack(const CommandContext &context)
@@ -601,7 +600,6 @@ void OnNewStereoTrack(const CommandContext &context)
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = settings.GetDefaultFormat();
@@ -621,7 +619,7 @@ void OnNewStereoTrack(const CommandContext &context)
       .PushState(_("Created new stereo audio track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(left);
+   left->EnsureVisible();
 }
 
 void OnNewLabelTrack(const CommandContext &context)
@@ -629,7 +627,6 @@ void OnNewLabelTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto t = tracks.Add( trackFactory.NewLabelTrack() );
@@ -642,7 +639,7 @@ void OnNewLabelTrack(const CommandContext &context)
       .PushState(_("Created new label track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(t);
+   t->EnsureVisible();
 }
 
 void OnNewTimeTrack(const CommandContext &context)
@@ -650,7 +647,6 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if ( *tracks.Any<TimeTrack>().begin() ) {
@@ -668,7 +664,7 @@ void OnNewTimeTrack(const CommandContext &context)
       .PushState(_("Created new time track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(t);
+   t->EnsureVisible();
 }
 
 void OnStereoToMono(const CommandContext &context)
