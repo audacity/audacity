@@ -734,7 +734,6 @@ void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
       if( pToolBar )
          pToolBar->ReCreateButtons();
    }
-   AdornedRulerPanel::Get( project ).ReCreateButtons();
 }
 
 void ProjectWindow::UpdatePrefs()

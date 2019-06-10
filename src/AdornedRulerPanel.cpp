@@ -46,6 +46,7 @@
 #include "ViewInfo.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/TracksPrefs.h"
+#include "prefs/ThemePrefs.h"
 #include "toolbars/ToolBar.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
@@ -938,6 +939,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    // Delay until after CommandManager has been populated:
    this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
+
+   wxTheApp->Bind(EVT_THEME_CHANGE, &AdornedRulerPanel::OnThemeChange, this);
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
@@ -1183,6 +1186,11 @@ void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
    UpdateRects();
 
    OverlayPanel::OnSize(evt);
+}
+
+void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
+{
+   ReCreateButtons();
 }
 
 void AdornedRulerPanel::UpdateRects()
