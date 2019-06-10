@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <vector>
 #include <wx/longlong.h>
 
+#include "../../AudioIOBase.h" // for ScrubbingOptions
 #include "../../ClientData.h"
 #include "../../widgets/Overlay.h" // to inherit
 #include "../../commands/CommandContext.h"
@@ -33,36 +34,6 @@ extern AudacityProject *GetActiveProject();
 #else
 #define USE_SCRUB_THREAD
 #endif
-
-// For putting an increment of work in the scrubbing queue
-struct ScrubbingOptions {
-   ScrubbingOptions() {}
-
-   bool adjustStart {};
-
-   // usually from TrackList::GetEndTime()
-   double maxTime {};
-   double minTime {};
-
-   bool bySpeed {};
-   bool isPlayingAtSpeed{};
-
-   double delay {};
-
-   // Limiting values for the speed of a scrub interval:
-   double minSpeed { 0.0 };
-   double maxSpeed { 1.0 };
-
-
-   // When maximum speed scrubbing skips to follow the mouse,
-   // this is the minimum amount of playback allowed at the maximum speed:
-   double minStutterTime {};
-
-   static double MaxAllowedScrubSpeed()
-   { return 32.0; } // Is five octaves enough for your amusement?
-   static double MinAllowedScrubSpeed()
-   { return 0.01; } // Mixer needs a lower bound speed.  Scrub no slower than this.
-};
 
 // Scrub state object
 class Scrubber final

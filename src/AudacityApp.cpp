@@ -1478,7 +1478,7 @@ bool AudacityApp::OnInit()
       // More initialization
 
       InitDitherers();
-      InitAudioIO();
+      AudioIO::Init();
 
 #ifdef __WXMAC__
 
@@ -2041,7 +2041,7 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
-   DeinitAudioIO();
+   AudioIO::Deinit();
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
