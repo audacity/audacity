@@ -35,7 +35,7 @@
 
 #include "Project.h"
 
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 
 #include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
 #include "toolbars/DeviceToolBar.h"
@@ -259,7 +259,7 @@ void DeviceManager::Rescan()
    if (m_inited) {
       // check to see if there is a stream open - can happen if monitoring,
       // but otherwise Rescan() should not be available to the user.
-      auto gAudioIO = AudioIO::Get();
+      auto gAudioIO = AudioIOBase::Get();
       if (gAudioIO) {
          if (gAudioIO->IsMonitoring())
          {

@@ -39,7 +39,7 @@
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
@@ -341,7 +341,7 @@ void DeviceToolBar::UpdateSelectedPrefs( int id )
 
 void DeviceToolBar::EnableDisableButtons()
 {
-   auto gAudioIO = AudioIO::Get();
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO) {
       // we allow changes when monitoring, but not when recording
       bool audioStreamActive = gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
@@ -776,7 +776,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       ChangeDevice(false);
    }
 
-   auto gAudioIO = AudioIO::Get();
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO) {
       // We cannot have gotten here if gAudioIO->IsAudioTokenActive(),
       // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in
