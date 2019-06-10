@@ -170,6 +170,20 @@ const CommandManager &CommandManager::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
+static CommandManager::MenuHook &sMenuHook()
+{
+   static CommandManager::MenuHook theHook;
+   return theHook;
+}
+
+auto CommandManager::SetMenuHook( const MenuHook &hook ) -> MenuHook
+{
+   auto &theHook = sMenuHook();
+   auto result = theHook;
+   theHook = hook;
+   return result;
+}
+
 ///
 ///  Standard Constructor
 ///
@@ -1272,24 +1286,13 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 ///CommandManagerListener function.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-#include "../prefs/PrefsDialog.h"
-#include "../prefs/KeyConfigPrefs.h"
 bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 {
    CommandListEntry *entry = mCommandNumericIDHash[id];
 
-#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
-   if (::wxGetMouseState().ShiftDown()) {
-      // Only want one page of the preferences
-      PrefsDialog::Factories factories;
-      factories.push_back(KeyConfigPrefsFactory( entry->name ));
-      auto pWindow = FindProjectFrame( GetActiveProject() );
-      GlobalPrefsDialog dialog( pWindow, factories );
-      dialog.ShowModal();
-      MenuCreator::RebuildAllMenuBars();
+   auto hook = sMenuHook();
+   if (hook && hook(entry->name))
       return true;
-   }
-#endif
 
    return HandleCommandEntry( entry, flags, mask );
 }

@@ -108,6 +108,10 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileHistory.h"
 
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+#include "../prefs/KeyConfigPrefs.h"
+#endif
+
 //temporarily commented out till it is added to all projects
 //#include "Profiler.h"
 
@@ -1592,6 +1596,23 @@ bool AudacityApp::OnInit()
 
    mTimer.SetOwner(this, kAudacityAppTimerID);
    mTimer.Start(200);
+
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+   CommandManager::SetMenuHook( [](const CommandID &id){
+      if (::wxGetMouseState().ShiftDown()) {
+         // Only want one page of the preferences
+         PrefsDialog::Factories factories;
+         factories.push_back(KeyConfigPrefsFactory( id ));
+         auto pWindow = FindProjectFrame( GetActiveProject() );
+         GlobalPrefsDialog dialog( pWindow, factories );
+         dialog.ShowModal();
+         MenuCreator::RebuildAllMenuBars();
+         return true;
+      }
+      else
+         return false;
+   } );
+#endif
 
    return TRUE;
 }
