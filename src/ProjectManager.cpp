@@ -360,6 +360,8 @@ AudacityProject *ProjectManager::New()
    auto &projectManager = Get( project );
    auto &window = ProjectWindow::Get( *p );
    window.Init();
+
+   ProjectFileIO::Get( *p ).SetProjectTitle();
    
    MissingAliasFilesDialog::SetShouldShow(true);
    MenuManager::Get( project ).CreateMenusAndCommands( project );
