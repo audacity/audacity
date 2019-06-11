@@ -1752,7 +1752,7 @@ void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
          return;
 
       default:
-         if (keyCode >= '0' && keyCode <= '9')
+         if (keyCode >= '0' && keyCode <= '9' && !kevent->HasAnyModifiers())
             return;
    }
 
@@ -1770,7 +1770,7 @@ void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
       keyCode -= WXK_NUMPAD0 - '0';
 
-   if ((keyCode >= '0' && keyCode <= '9') ||
+   if ((keyCode >= '0' && keyCode <= '9' && !event.HasAnyModifiers()) ||
        (keyCode == WXK_DELETE) ||
        (keyCode == WXK_BACK) ||
        (keyCode == WXK_UP) ||
@@ -1801,7 +1801,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
       keyCode -= WXK_NUMPAD0 - '0';
 
-   if (!mReadOnly && (keyCode >= '0' && keyCode <= '9')) {
+   if (!mReadOnly && (keyCode >= '0' && keyCode <= '9' && !event.HasAnyModifiers())) {
       int digitPosition = mDigits[mFocusedDigit].pos;
       if (mValueString[digitPosition] == wxChar('-')) {
          mValue = std::max(mMinValue, std::min(mMaxValue, 0.0));
