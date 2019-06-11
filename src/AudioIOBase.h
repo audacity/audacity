@@ -106,7 +106,7 @@ struct AudioIOStartStreamOptions
 
 ///\brief A singleton object supporting queries of the state of any active
 /// audio streams, and audio device capabilities
-class AudioIOBase /* not final */
+class AUDACITY_DLL_API AudioIOBase /* not final */
 {
 public:
    static AudioIOBase *Get();
