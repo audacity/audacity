@@ -132,7 +132,7 @@ public:
     * If no information about available sample rates can be fetched,
     * an empty list is returned.
     *
-    * You can explicitely give the index of the device.  If you don't
+    * You can explicitly give the index of the device.  If you don't
     * give it, the currently selected device from the preferences will be used.
     *
     * You may also specify a rate for which to check in addition to the
@@ -147,7 +147,7 @@ public:
     * If no information about available sample rates can be fetched,
     * an empty list is returned.
     *
-    * You can explicitely give the index of the device.  If you don't
+    * You can explicitly give the index of the device.  If you don't
     * give it, the currently selected device from the preferences will be used.
     *
     * You may also specify a rate for which to check in addition to the
@@ -164,7 +164,7 @@ public:
     * supported on both the output and input device. If no information
     * about available sample rates can be fetched, it returns a default
     * list.
-    * You can explicitely give the indexes of the playDevice/recDevice.
+    * You can explicitly give the indexes of the playDevice/recDevice.
     * If you don't give them, the selected devices from the preferences
     * will be used.
     * You may also specify a rate for which to check in addition to the
