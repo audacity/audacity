@@ -23,11 +23,16 @@
 #include <chrono>
 #include <vector>
 
+#include <wx/event.h> // to declare a custom event type
 #include <wx/string.h> // member variables
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #include "DeviceChange.h"
 #endif
+
+// Event sent to the application
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_RESCANNED_DEVICES, wxCommandEvent);
 
 typedef struct DeviceSourceMap {
    int deviceIndex;

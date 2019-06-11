@@ -111,6 +111,8 @@ class AudioIOBase /* not final */
 public:
    static AudioIOBase *Get();
 
+   virtual ~AudioIOBase();
+
    void SetCaptureMeter(AudacityProject *project, MeterPanelBase *meter);
    void SetPlaybackMeter(AudacityProject *project, MeterPanelBase *meter);
 
@@ -210,6 +212,8 @@ public:
 
    /** \brief Find out if playback / recording is currently paused */
    bool IsPaused() const;
+
+   virtual void StopStream() = 0;
 
    /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
     * or recording.

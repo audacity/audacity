@@ -96,6 +96,8 @@ AudioIOBase *AudioIOBase::Get()
    return ugAudioIO.get();
 }
 
+AudioIOBase::~AudioIOBase() = default;
+
 void AudioIOBase::SetMixer(int inputSource)
 {
 #if defined(USE_PORTMIXER)

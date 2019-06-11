@@ -586,7 +586,7 @@ public:
     * Does quite a bit of housekeeping, including switching off monitoring,
     * flushing recording buffers out to wave tracks, and applies latency
     * correction to recorded tracks if necessary */
-   void StopStream();
+   void StopStream() override;
    /** \brief Move the playback / recording position of the current stream
     * by the specified amount from where it is now */
    void SeekStream(double seconds) { mSeek = seconds; }
