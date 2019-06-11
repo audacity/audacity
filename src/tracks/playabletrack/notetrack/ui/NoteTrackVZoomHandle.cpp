@@ -138,20 +138,6 @@ HitTestPreview NoteTrackVZoomHandle::Preview
    return HitPreview(st.state);
 }
 
-// Note that these can be with or without spectrum view which
-// adds a constant.
-//const int kZoom1to1 = 1;
-//const int kZoomTimes2 = 2;
-//const int kZoomDiv2 = 3;
-//const int kZoomHalfWave = 4;
-//const int kZoomInByDrag = 5;
-const int kZoomIn = 6;
-const int kZoomOut = 7;
-const int kZoomReset = 8;
-const int kZoomMax = 9;
-const int kUpOctave = 10;
-const int kDownOctave = 11;
-
 enum {
    OnZoomFitVerticalID = 20000,
    OnZoomResetID,
@@ -187,6 +173,22 @@ public:
    static NoteTrackVRulerMenuTable &Instance();
 
 protected:
+   enum {
+// Note that these can be with or without spectrum view which
+// adds a constant.
+//const int kZoom1to1 = 1;
+//const int kZoomTimes2 = 2;
+//const int kZoomDiv2 = 3;
+//const int kZoomHalfWave = 4;
+//const int kZoomInByDrag = 5;
+      kZoomIn = 6,
+      kZoomOut = 7,
+      kZoomReset = 8,
+      kZoomMax = 9,
+      kUpOctave = 10,
+      kDownOctave = 11,
+   };
+
    InitMenuData *mpData {};
    void OnZoom( int iZoomCode );
 // void OnZoomFitVertical(wxCommandEvent&){ OnZoom( kZoom1to1 );};
