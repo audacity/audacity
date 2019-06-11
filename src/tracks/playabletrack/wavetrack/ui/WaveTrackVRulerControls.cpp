@@ -49,6 +49,25 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
    return results;
 }
 
+void WaveTrackVRulerControls::DoZoomPreset( int i)
+{
+
+   const auto pTrack = FindTrack();
+   if (!pTrack)
+      return;
+
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+
+   // Don't do all channels, that causes problems when updating display
+   // during recording and there are special pending tracks.
+   // This function implements WaveTrack::DoSetMinimized which is always
+   // called in a context that loops over linked tracks too and reinvokes.
+   WaveTrackVZoomHandle::DoZoom(
+         NULL, wt, false, (i==1)?kZoomHalfWave: kZoom1to1,
+         wxRect(0,0,0,0), 0,0, true);
+}
+
+
 unsigned WaveTrackVRulerControls::HandleWheelRotation
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -116,7 +135,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
-      WaveTrack::DoZoom(
+      WaveTrackVZoomHandle::DoZoom(
          pProject, wt, true, (steps < 0)?kZoomOut:kZoomIn,
          evt.rect, yy, yy, true);
    }

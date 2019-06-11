@@ -16,6 +16,17 @@ class WaveTrack;
 #include "../../../../UIHandle.h"
 
 
+// Note that these can be with or without spectrum view which
+// adds a constant.
+const int kZoom1to1 = 1;
+const int kZoomTimes2 = 2;
+const int kZoomDiv2 = 3;
+const int kZoomHalfWave = 4;
+const int kZoomInByDrag = 5;
+const int kZoomIn = 6;
+const int kZoomOut = 7;
+const int kZoomReset = 8;
+
 class WaveTrackVZoomHandle : public UIHandle
 {
    WaveTrackVZoomHandle(const WaveTrackVZoomHandle&);
@@ -26,6 +37,12 @@ public:
       (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
 
    WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
+
+   static void DoZoom
+   (AudacityProject *pProject,
+    WaveTrack *pTrack, bool allChannels, int ZoomKind,
+    const wxRect &rect, int zoomStart, int zoomEnd,
+    bool fixedMousePoint);
 
    virtual ~WaveTrackVZoomHandle();
 
