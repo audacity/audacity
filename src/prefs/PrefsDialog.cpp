@@ -814,6 +814,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    SavePreferredPage();
 
 #if USE_PORTMIXER
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO) {
       // We cannot have opened this dialog if gAudioIO->IsAudioTokenActive(),
       // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in

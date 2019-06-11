@@ -480,6 +480,7 @@ void LyricsPanel::UpdateLyrics(wxEvent &e)
    e.Skip();
 
    // It's crucial to not do that repopulating during playback.
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive()) {
       mDelayedUpdate = true;
       return;

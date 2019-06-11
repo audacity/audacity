@@ -428,11 +428,9 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
    // Mix 'em up
    const auto &tracks = TrackList::Get( *project );
-   const WaveTrackConstArray waveTracks =
-      tracks.GetWaveTrackConstArray(selectionOnly, false);
    auto mixer = CreateMixer(
-                            waveTracks,
-                            tracks.GetTimeTrack(),
+                            tracks,
+                            selectionOnly,
                             t0,
                             t1,
                             channels,

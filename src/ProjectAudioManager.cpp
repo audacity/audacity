@@ -24,6 +24,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "TimeTrack.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
@@ -95,6 +96,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    if (projectAudioIO.GetAudioIOToken() > 0)
    {
       auto &tracks = TrackList::Get( project );
+      auto gAudioIO = AudioIO::Get();
       auto &intervals = gAudioIO->LostCaptureIntervals();
       if (intervals.size()) {
          // Make a track with labels for recording errors
@@ -174,7 +176,8 @@ DefaultPlayOptions( AudacityProject &project )
       ProjectSettings::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   options.timeTrack = TrackList::Get( project ).GetTimeTrack();
+   auto timeTrack = TrackList::Get( project ).GetTimeTrack();
+   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = &ProjectAudioManager::Get( project );
    return options;
 }
@@ -183,6 +186,7 @@ AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
    auto &projectAudioIO = ProjectAudioIO::Get( project );
+   auto gAudioIO = AudioIO::Get();
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
@@ -191,7 +195,8 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   options.timeTrack = TrackList::Get( project ).GetTimeTrack();
+   auto timeTrack = TrackList::Get( project ).GetTimeTrack();
+   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = &ProjectAudioManager::Get( project );
    return options;
 }

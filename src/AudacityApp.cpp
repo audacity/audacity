@@ -1478,7 +1478,7 @@ bool AudacityApp::OnInit()
       // More initialization
 
       InitDitherers();
-      InitAudioIO();
+      AudioIO::Init();
 
 #ifdef __WXMAC__
 
@@ -1619,6 +1619,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
+      auto gAudioIO = AudioIO::Get();
       if((token > 0 &&
                gAudioIO->IsAudioTokenActive(token) &&
                gAudioIO->GetNumCaptureChannels() == 0) ||
@@ -2040,7 +2041,7 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
-   DeinitAudioIO();
+   AudioIO::Deinit();
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();

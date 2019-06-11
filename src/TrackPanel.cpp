@@ -471,6 +471,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    auto &window = ProjectWindow::Get( *p );
 
    auto &projectAudioIO = ProjectAudioIO::Get( *p );
+   auto gAudioIO = AudioIO::Get();
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (projectAudioIO.GetAudioIOToken()>0 && !IsAudioActive())

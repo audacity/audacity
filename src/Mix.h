@@ -25,7 +25,7 @@
 
 class Resample;
 class DirManager;
-class TimeTrack;
+class BoundedEnvelope;
 class TrackFactory;
 class TrackList;
 class WaveTrack;
@@ -83,15 +83,15 @@ class AUDACITY_DLL_API Mixer {
     class WarpOptions
     {
     public:
-       explicit WarpOptions(const TimeTrack *t)
-          : timeTrack(t), minSpeed(0.0), maxSpeed(0.0)
+       explicit WarpOptions(const BoundedEnvelope *e)
+          : envelope(e), minSpeed(0.0), maxSpeed(0.0)
        {}
 
        WarpOptions(double min, double max);
 
     private:
        friend class Mixer;
-       const TimeTrack *timeTrack;
+       const BoundedEnvelope *envelope = nullptr;
        double minSpeed, maxSpeed;
     };
 
@@ -164,7 +164,7 @@ class AUDACITY_DLL_API Mixer {
    size_t           mNumInputTracks;
    ArrayOf<WaveTrackCache> mInputTrack;
    bool             mbVariableRates;
-   const TimeTrack *mTimeTrack;
+   const BoundedEnvelope *mEnvelope;
    ArrayOf<sampleCount> mSamplePos;
    bool             mApplyTrackGains;
    Doubles          mEnvValues;

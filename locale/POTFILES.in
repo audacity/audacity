@@ -41,6 +41,8 @@ src/AudacityLogger.cpp
 src/AudacityLogger.h
 src/AudioIO.cpp
 src/AudioIO.h
+src/AudioIOBase.cpp
+src/AudioIOBase.h
 src/AudioIOListener.h
 src/AutoRecovery.cpp
 src/AutoRecovery.h
@@ -82,6 +84,8 @@ src/Dither.cpp
 src/Dither.h
 src/Envelope.cpp
 src/Envelope.h
+src/EnvelopeEditor.cpp
+src/EnvelopeEditor.h
 src/Experimental.h
 src/FFT.cpp
 src/FFT.h
@@ -743,6 +747,8 @@ src/widgets/LinkingHtmlWindow.cpp
 src/widgets/LinkingHtmlWindow.h
 src/widgets/Meter.cpp
 src/widgets/Meter.h
+src/widgets/MeterPanelBase.cpp
+src/widgets/MeterPanelBase.h
 src/widgets/MultiDialog.cpp
 src/widgets/MultiDialog.h
 src/widgets/NumericTextCtrl.cpp

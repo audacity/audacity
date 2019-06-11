@@ -2494,6 +2494,7 @@ void Effect::Preview(bool dryOnly)
       return;
    }
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy()) {
       return;
    }
@@ -2994,6 +2995,7 @@ bool EffectUIHost::Initialize()
          w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
             mParent->GetSize().GetHeight() / 2));
 
+         auto gAudioIO = AudioIO::Get();
          mDisableTransport = !gAudioIO->IsAvailable(mProject);
          mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
          mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
@@ -3504,6 +3506,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
    if (mPlaying)
    {
+      auto gAudioIO = AudioIO::Get();
       mPlayPos = gAudioIO->GetStreamTime();
       auto &bar = ControlToolBar::Get( *mProject );
       bar.StopPlaying();
@@ -3542,6 +3545,7 @@ void EffectUIHost::OnRewind(wxCommandEvent & WXUNUSED(evt))
 {
    if (mPlaying)
    {
+      auto gAudioIO = AudioIO::Get();
       double seek;
       gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &seek, 1.0);
 
@@ -3566,6 +3570,7 @@ void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
       double seek;
       gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &seek, 1.0);
 
+      auto gAudioIO = AudioIO::Get();
       double pos = gAudioIO->GetStreamTime();
       if (mRegion.t0() < mRegion.t1() && pos + seek > mRegion.t1())
       {

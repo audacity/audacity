@@ -47,6 +47,7 @@ bool MakeReadyToPlay(AudacityProject &project,
    wxCommandEvent evt;
 
    // If this project is playing, stop playing
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(
       ProjectAudioIO::Get( project ).GetAudioIOToken()
    )) {
@@ -92,6 +93,7 @@ void DoPlayStop(const CommandContext &context)
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(token)) {
       toolbar.SetPlay(false);        //Pops
       toolbar.SetStop(true);         //Pushes stop down
@@ -104,7 +106,7 @@ void DoPlayStop(const CommandContext &context)
       //find out which project we need;
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
          iter = std::find_if( start, finish,
-            []( const AllProjects::value_type &ptr ){
+            [&]( const AllProjects::value_type &ptr ){
                return gAudioIO->IsStreamActive(
                   ProjectAudioIO::Get( *ptr ).GetAudioIOToken()); } );
 
@@ -219,6 +221,7 @@ bool DoPlayStopSelect
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
+   auto gAudioIO = AudioIOBase::Get();
 
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
@@ -274,6 +277,7 @@ void DoPlayStopSelect(AudacityProject &project)
 {
    auto &toolbar = ControlToolBar::Get( project );
    wxCommandEvent evt;
+   auto gAudioIO = AudioIO::Get();
    if (DoPlayStopSelect(project, false, false))
       toolbar.OnStop(evt);
    else if (!gAudioIO->IsBusy()) {
@@ -511,6 +515,7 @@ void OnPunchAndRoll(const CommandContext &context)
    static const auto url =
       wxT("Punch_and_Roll_Record#Using_Punch_and_Roll_Record");
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
       return;
 
@@ -1034,6 +1039,7 @@ void OnStopSelect(const CommandContext &context)
    auto &selectedRegion = viewInfo.selectedRegion;
    wxCommandEvent evt;
 
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive()) {
       auto &controlToolbar = ControlToolBar::Get( project );
       selectedRegion.setT0(gAudioIO->GetStreamTime(), false);

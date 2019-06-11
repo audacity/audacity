@@ -93,6 +93,7 @@
 #include "../PlatformCompatibility.h"
 #include "../FileNames.h"
 #include "../Envelope.h"
+#include "../EnvelopeEditor.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FFT.h"
@@ -3113,7 +3114,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
       artist.pZoomInfo = &zoomInfo;
       TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
-      mEffect->mEnvelope->DrawPoints(
+      EnvelopeEditor::DrawPoints( *mEffect->mEnvelope,
          context, mEnvRect, false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax, false);
    }

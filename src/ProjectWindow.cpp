@@ -14,7 +14,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AdornedRulerPanel.h"
 #include "AllThemeResources.h"
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -1555,6 +1555,7 @@ void ProjectWindow::TP_DisplaySelection()
    double audioTime;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
+   auto gAudioIO = AudioIOBase::Get();
    if (!gAudioIO->IsBusy() && !playRegion.Locked())
       ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else
@@ -1664,6 +1665,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
+   auto gAudioIO = AudioIOBase::Get();
    // LLL: Handling positioning differently when audio is
    // actively playing.  Don't do this if paused.
    if (gAudioIO->IsStreamActive(

@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "../../../../AudioIO.h"
+#include "../../../../AudioIOBase.h"
 #include "../../../../Menus.h"
 #include "../../../../Project.h"
 #include "../../../../ProjectAudioIO.h"
@@ -604,6 +604,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    // Bug 1253.  Shouldn't open preferences if audio is busy.
    // We can't change them on the fly yet anyway.
+   auto gAudioIO = AudioIOBase::Get();
    const bool bAudioBusy = gAudioIO->IsBusy();
    pMenu->Enable(OnSpectrogramSettingsID,
       (display == WaveTrack::Spectrum) && !bAudioBusy);
@@ -776,6 +777,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       const int mPage;
    };
 
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       AudacityMessageBox(_("To change Spectrogram Settings, stop any\n"
                      "playing or recording first."),
