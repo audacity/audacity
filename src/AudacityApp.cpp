@@ -109,7 +109,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/FileHistory.h"
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
-#include "../prefs/KeyConfigPrefs.h"
+#include "prefs/KeyConfigPrefs.h"
 #endif
 
 //temporarily commented out till it is added to all projects
