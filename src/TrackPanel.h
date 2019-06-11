@@ -56,9 +56,6 @@ struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
 
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_TRACK_PANEL_TIMER, wxCommandEvent);
-
 enum {
    kTimerInterval = 50, // milliseconds
 };

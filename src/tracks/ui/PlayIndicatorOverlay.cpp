@@ -69,6 +69,7 @@ std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 {
    // Set play/record color
+   auto gAudioIO = AudioIO::Get();
    bool rec = gAudioIO->IsCapturing();
    AColor::IndicatorColor(&dc, !rec);
 
@@ -185,6 +186,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // This displays the audio time, too...
       window.TP_DisplaySelection();
+
+      auto gAudioIO = AudioIO::Get();
 
       // BG: Scroll screen if option is set
       if( viewInfo.bUpdateTrackIndicator &&

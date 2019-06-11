@@ -112,6 +112,8 @@ audacity_SOURCES = \
 	AudacityLogger.h \
 	AudioIO.cpp \
 	AudioIO.h \
+	AudioIOBase.cpp \
+	AudioIOBase.h \
 	AudioIOListener.h \
 	AutoRecovery.cpp \
 	AutoRecovery.h \
@@ -143,6 +145,8 @@ audacity_SOURCES = \
 	Diags.h \
 	Envelope.cpp \
 	Envelope.h \
+	EnvelopeEditor.cpp \
+	EnvelopeEditor.h \
 	Experimental.h \
 	FFmpeg.cpp \
 	FFmpeg.h \
@@ -725,6 +729,8 @@ audacity_SOURCES = \
 	widgets/LinkingHtmlWindow.h \
 	widgets/Meter.cpp \
 	widgets/Meter.h \
+	widgets/MeterPanelBase.cpp \
+	widgets/MeterPanelBase.h \
 	widgets/MultiDialog.cpp \
 	widgets/MultiDialog.h \
 	widgets/NumericTextCtrl.cpp \

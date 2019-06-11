@@ -28,7 +28,6 @@ class wxStatusBar;
 class AButton;
 class AudacityProject;
 class TrackList;
-class TimeTrack;
 
 struct AudioIOStartStreamOptions;
 class SelectedRegion;

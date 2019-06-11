@@ -129,6 +129,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\AudacityLogger.cpp" />
     <ClCompile Include="..\..\..\src\AudioIO.cpp" />
+    <ClCompile Include="..\..\..\src\AudioIOBase.cpp" />
     <ClCompile Include="..\..\..\src\AutoRecovery.cpp" />
     <ClCompile Include="..\..\..\src\AutoRecoveryDialog.cpp" />
     <ClCompile Include="..\..\..\src\BatchCommandDialog.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="..\..\..\src\effects\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\effects\VST\VSTControlMSW.cpp" />
     <ClCompile Include="..\..\..\src\Envelope.cpp" />
+    <ClCompile Include="..\..\..\src\EnvelopeEditor.cpp" />
     <ClCompile Include="..\..\..\src\FFmpeg.cpp" />
     <ClCompile Include="..\..\..\src\FFT.cpp" />
     <ClCompile Include="..\..\..\src\FileException.cpp" />
@@ -422,6 +424,7 @@
     <ClCompile Include="..\..\..\src\widgets\KeyView.cpp" />
     <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\MeterPanelBase.cpp" />
     <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp" />
     <ClCompile Include="..\..\..\src\widgets\numformatter.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ProgressDialog.cpp" />
@@ -505,6 +508,7 @@
     <ClInclude Include="..\..\..\src\AudacityHeaders.h" />
     <ClInclude Include="..\..\..\src\AudacityLogger.h" />
     <ClInclude Include="..\..\..\src\AudioIO.h" />
+    <ClInclude Include="..\..\..\src\AudioIOBase.h" />
     <ClInclude Include="..\..\..\src\AudioIOListener.h" />
     <ClInclude Include="..\..\..\src\AutoRecovery.h" />
     <ClInclude Include="..\..\..\src\AutoRecoveryDialog.h" />
@@ -624,6 +628,7 @@
     <ClInclude Include="..\..\..\src\DirManager.h" />
     <ClInclude Include="..\..\..\src\Dither.h" />
     <ClInclude Include="..\..\..\src\Envelope.h" />
+    <ClInclude Include="..\..\..\src\EnvelopeEditor.h" />
     <ClInclude Include="..\..\..\src\Experimental.h" />
     <ClInclude Include="..\..\..\src\FFmpeg.h" />
     <ClInclude Include="..\..\..\src\FFT.h" />
@@ -791,6 +796,7 @@
     <ClInclude Include="..\..\..\src\widgets\KeyView.h" />
     <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h" />
     <ClInclude Include="..\..\..\src\widgets\Meter.h" />
+    <ClInclude Include="..\..\..\src\widgets\MeterPanelBase.h" />
     <ClInclude Include="..\..\..\src\widgets\MultiDialog.h" />
     <ClInclude Include="..\..\..\src\widgets\numformatter.h" />
     <ClInclude Include="..\..\..\src\widgets\ProgressDialog.h" />

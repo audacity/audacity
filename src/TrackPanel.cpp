@@ -99,7 +99,6 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolsToolBar.h"
 
-#include "tracks/ui/TrackControls.h" // for inheritance relation
 #include "tracks/ui/TrackVRulerControls.h" // for inheritance relation
 
 //This loads the appropriate set of cursors, depending on platform.
@@ -109,8 +108,6 @@ is time to refresh some aspect of the screen.
 #include <algorithm>
 
 #include <wx/dcclient.h>
-
-wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 /**
 
@@ -471,6 +468,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    auto &window = ProjectWindow::Get( *p );
 
    auto &projectAudioIO = ProjectAudioIO::Get( *p );
+   auto gAudioIO = AudioIO::Get();
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (projectAudioIO.GetAudioIOToken()>0 && !IsAudioActive())
@@ -1283,9 +1281,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    if (target)
       target->DrawExtras(UIHandle::Panel, dc, region, clip);
 }
-
-// Make this #include go away!
-#include "tracks/ui/TrackControls.h"
 
 void TrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,

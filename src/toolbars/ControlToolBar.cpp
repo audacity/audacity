@@ -72,7 +72,7 @@
 #include "../ProjectWindow.h"
 #include "../ViewInfo.h"
 #include "../widgets/AButton.h"
-#include "../widgets/Meter.h"
+#include "../widgets/MeterPanelBase.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
@@ -481,6 +481,7 @@ void ControlToolBar::EnableDisableButtons()
    bool paused = mPause->IsDown();
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
+   auto gAudioIO = AudioIO::Get();
    bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
@@ -609,6 +610,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
    } );
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
       return -1;
 
@@ -713,12 +715,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
             return -1;
       }
       else {
-         // Lifted the following into AudacityProject::GetDefaultPlayOptions()
-         /*
-         if (!timetrack) {
-            timetrack = t->GetTimeTrack();
-         }
-         */
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks( tracks, false, useMidi ),
             t0, t1, options);
@@ -775,7 +771,7 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       auto options = DefaultPlayOptions( *p );
       options.playLooped = looped;
       if (cutpreview)
-         options.timeTrack = NULL;
+         options.envelope = nullptr;
       auto mode =
          cutpreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
@@ -792,6 +788,8 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
       event.Skip();
       return;
    }
+
+   auto gAudioIO = AudioIOBase::Get();
 
    // Does not appear to be needed on Linux. Perhaps on some other platform?
    // If so, "!CanStopAudioStream()" should probably apply.
@@ -839,6 +837,7 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 
 bool ControlToolBar::CanStopAudioStream()
 {
+   auto gAudioIO = AudioIO::Get();
    return (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
            gAudioIO->GetOwningProject() == GetActiveProject());
@@ -870,6 +869,8 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
    mStop->PushDown();
 
+   auto gAudioIO = AudioIO::Get();
+
    SetStop(false);
    if(stopStream)
       gAudioIO->StopStream();
@@ -892,7 +893,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    // also clean the MeterQueues
    if( project ) {
       auto &projectAudioIO = ProjectAudioIO::Get( *project );
-      MeterPanel *meter = projectAudioIO.GetPlaybackMeter();
+      auto meter = projectAudioIO.GetPlaybackMeter();
       if( meter ) {
          meter->Clear();
       }
@@ -909,8 +910,10 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
 void ControlToolBar::Pause()
 {
-   if (!CanStopAudioStream())
+   if (!CanStopAudioStream()) {
+      auto gAudioIO = AudioIO::Get();
       gAudioIO->SetPaused(!gAudioIO->IsPaused());
+   }
    else {
       wxCommandEvent dummy;
       OnPause(dummy);
@@ -1101,6 +1104,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
       return false;
    // ...end of code from CommandHandler.
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy()) {
       if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
          mRecord->PopUp();
@@ -1307,6 +1311,8 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
       mPaused=true;
    }
 
+   auto gAudioIO = AudioIO::Get();
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
    auto project = GetActiveProject();
@@ -1486,6 +1492,7 @@ void ControlToolBar::StartScrolling()
    using Mode = ProjectWindow::PlaybackScroller::Mode;
    const auto project = GetActiveProject();
    if (project) {
+      auto gAudioIO = AudioIO::Get();
       auto mode = Mode::Pinned;
 
 #if 0

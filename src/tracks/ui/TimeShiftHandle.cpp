@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 
-#include "TrackControls.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
 #include "../../NoteTrack.h"

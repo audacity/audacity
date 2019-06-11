@@ -567,12 +567,12 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
          Envelope * pEnv = pClip->GetEnvelope();
          context.StartField( "points" );
          context.StartArray();
-         double offset = pEnv->mOffset;
-         for( size_t k=0;k<pEnv->mEnv.size(); k++)
+         double offset = pEnv->GetOffset();
+         for( size_t k = 0; k < pEnv->GetNumberOfPoints(); k++)
          {
             context.StartStruct( );
-            context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
-            context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
+            context.AddItem( (*pEnv)[k].GetT()+offset, "t" );
+            context.AddItem( (*pEnv)[k].GetVal(), "y" );
             context.EndStruct();
          }
          context.EndArray();

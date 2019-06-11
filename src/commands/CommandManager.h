@@ -108,6 +108,13 @@ class AUDACITY_DLL_API CommandManager final
    static CommandManager &Get( AudacityProject &project );
    static const CommandManager &Get( const AudacityProject &project );
 
+   // Type of a function that can intercept menu item handling.
+   // If it returns true, bypass the usual dipatch of commands.
+   using MenuHook = std::function< bool(const CommandID&) >;
+
+   // install a menu hook, returning the previously installed one
+   static MenuHook SetMenuHook( const MenuHook &hook );
+
    //
    // Constructor / Destructor
    //

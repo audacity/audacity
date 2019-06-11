@@ -83,7 +83,7 @@ std::shared_ptr<TrackPanelCell> Track::ContextMenuDelegate()
    return FindTrack()->GetTrackControl();
 }
 
-std::shared_ptr<TrackControls> Track::GetTrackControl()
+std::shared_ptr<TrackPanelCell> Track::GetTrackControl()
 {
    if (!mpControls)
       // create on demand
@@ -91,7 +91,7 @@ std::shared_ptr<TrackControls> Track::GetTrackControl()
    return mpControls;
 }
 
-std::shared_ptr<const TrackControls> Track::GetTrackControl() const
+std::shared_ptr<const TrackPanelCell> Track::GetTrackControl() const
 {
    return const_cast< Track* >( this )->GetTrackControl();
 }

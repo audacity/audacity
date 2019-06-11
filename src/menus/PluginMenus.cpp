@@ -695,6 +695,7 @@ void OnSimulateRecordingErrors(const CommandContext &context)
    auto &project = context.project;
    auto &commandManager = CommandManager::Get( project );
 
+   auto gAudioIO = AudioIO::Get();
    bool &setting = gAudioIO->mSimulateRecordingErrors;
    commandManager.Check(wxT("SimulateRecordingErrors"), !setting);
    setting = !setting;
@@ -705,6 +706,7 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
    auto &project = context.project;
    auto &commandManager = CommandManager::Get( project );
 
+   auto gAudioIO = AudioIO::Get();
    bool &setting = gAudioIO->mDetectUpstreamDropouts;
    commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
    setting = !setting;
@@ -991,6 +993,7 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
+   auto gAudioIO = AudioIO::Get();
 
    return Menu( _("T&ools"),
 

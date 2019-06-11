@@ -19,6 +19,7 @@
 #include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
+wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 size_t AllProjects::size() const
 {

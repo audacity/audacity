@@ -108,6 +108,10 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileHistory.h"
 
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+#include "../prefs/KeyConfigPrefs.h"
+#endif
+
 //temporarily commented out till it is added to all projects
 //#include "Profiler.h"
 
@@ -1478,7 +1482,7 @@ bool AudacityApp::OnInit()
       // More initialization
 
       InitDitherers();
-      InitAudioIO();
+      AudioIO::Init();
 
 #ifdef __WXMAC__
 
@@ -1593,6 +1597,23 @@ bool AudacityApp::OnInit()
    mTimer.SetOwner(this, kAudacityAppTimerID);
    mTimer.Start(200);
 
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+   CommandManager::SetMenuHook( [](const CommandID &id){
+      if (::wxGetMouseState().ShiftDown()) {
+         // Only want one page of the preferences
+         PrefsDialog::Factories factories;
+         factories.push_back(KeyConfigPrefsFactory( id ));
+         auto pWindow = FindProjectFrame( GetActiveProject() );
+         GlobalPrefsDialog dialog( pWindow, factories );
+         dialog.ShowModal();
+         MenuCreator::RebuildAllMenuBars();
+         return true;
+      }
+      else
+         return false;
+   } );
+#endif
+
    return TRUE;
 }
 
@@ -1619,6 +1640,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
+      auto gAudioIO = AudioIO::Get();
       if((token > 0 &&
                gAudioIO->IsAudioTokenActive(token) &&
                gAudioIO->GetNumCaptureChannels() == 0) ||
@@ -2040,7 +2062,7 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
-   DeinitAudioIO();
+   AudioIO::Deinit();
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();

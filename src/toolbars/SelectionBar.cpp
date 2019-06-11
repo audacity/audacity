@@ -52,10 +52,11 @@ with changes in the SelectionBar.
 
 
 #include "../widgets/AButton.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
+#include "../ProjectSettings.h"
 #include "../Snap.h"
 #include "../AllThemeResources.h"
 
@@ -120,7 +121,7 @@ SelectionBar::SelectionBar()
    // Audacity to fail.
    // We expect mRate to be set from the project later.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-      AudioIO::GetOptimalSupportedSampleRate());
+      AudioIOBase::GetOptimalSupportedSampleRate());
 
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
@@ -711,8 +712,9 @@ void SelectionBar::UpdateRates()
 {
    wxString oldValue = mRateBox->GetValue();
    mRateBox->Clear();
-   for (int i = 0; i < AudioIO::NumStandardRates; i++) {
-      mRateBox->Append(wxString::Format(wxT("%d"), AudioIO::StandardRates[i]));
+   for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
+      mRateBox->Append(
+         wxString::Format(wxT("%d"), AudioIOBase::StandardRates[i]));
    }
    mRateBox->SetValue(oldValue);
 }

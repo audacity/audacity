@@ -22,7 +22,7 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../Dither.h"
 #include "../Prefs.h"
 #include "../Resample.h"
@@ -92,7 +92,7 @@ void QualityPrefs::Populate()
    GetNamesAndLabels();
    gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
                 &mOtherSampleRateValue,
-                AudioIO::GetOptimalSupportedSampleRate());
+                AudioIOBase::GetOptimalSupportedSampleRate());
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -126,8 +126,8 @@ void QualityPrefs::GetNamesAndLabels()
    //
    //      GetSupportedSampleRates() allows passing in device names, but
    //      how do you get at them as they are on the Audio I/O page????
-   for (int i = 0; i < AudioIO::NumStandardRates; i++) {
-      int iRate = AudioIO::StandardRates[i];
+   for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
+      int iRate = AudioIOBase::StandardRates[i];
       mSampleRateLabels.push_back(iRate);
       mSampleRateNames.push_back(wxString::Format(wxT("%i Hz"), iRate));
    }
@@ -160,7 +160,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
             // We make sure we have a pointer to it, so that we can drive it.
             mSampleRates = S.TieNumberAsChoice( {},
                                        wxT("/SamplingRate/DefaultProjectSampleRate"),
-                                       AudioIO::GetOptimalSupportedSampleRate(),
+                                       AudioIOBase::GetOptimalSupportedSampleRate(),
                                        mSampleRateNames,
                                        mSampleRateLabels);
 

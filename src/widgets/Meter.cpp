@@ -292,7 +292,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanelWrapper(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
+: MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mQueue(1024),
    mWidth(size.x),
@@ -1065,6 +1065,8 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       mQueue.Clear();
       return;
    }
+
+   auto gAudioIO = AudioIO::Get();
 
    // There may have been several update messages since the last
    // time we got to this function.  Catch up to real-time by
@@ -1866,6 +1868,7 @@ void MeterPanel::StartMonitoring()
 {
    bool start = !mMonitoring;
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
    } 
@@ -1884,6 +1887,7 @@ void MeterPanel::StartMonitoring()
 
 void MeterPanel::StopMonitoring(){
    mMonitoring = false;
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
    } 

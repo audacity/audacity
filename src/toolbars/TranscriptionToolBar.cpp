@@ -35,12 +35,12 @@
 
 #include "ControlToolBar.h"
 #include "../AllThemeResources.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
-#include "../TimeTrack.h"
+#include "../Envelope.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
@@ -381,6 +381,7 @@ void TranscriptionToolBar::OnKeyEvent(wxKeyEvent & event)
    }
 
    if (event.GetKeyCode() == WXK_SPACE) {
+      auto gAudioIO = AudioIOBase::Get();
       if (gAudioIO->IsBusy()) {
          /*Do Stuff Here*/
       }
@@ -443,6 +444,11 @@ void TranscriptionToolBar::GetSamples(
    *slen = ss1 - ss0;
 }
 
+// PRL: duplicating constants from TimeTrack.cpp
+//TODO-MB: are these sensible values?
+#define TIMETRACK_MIN 0.01
+#define TIMETRACK_MAX 10.0
+
 // Come here from button clicks, or commands
 void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 {
@@ -464,23 +470,23 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
    if (bFixedSpeedPlay)
    {
-      // Create a TimeTrack if we haven't done so already
-      if (!mTimeTrack) {
-         mTimeTrack = TrackFactory::Get( *p ).NewTimeTrack();
-         if (!mTimeTrack) {
-            return;
-         }
+      // Create a BoundedEnvelope if we haven't done so already
+      if (!mEnvelope) {
+         mEnvelope =
+            std::make_unique<BoundedEnvelope>(
+               true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
       }
       // Set the speed range
       //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
       //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
-      mTimeTrack->GetEnvelope()->Flatten((double)mPlaySpeed / 100.0);
+      mEnvelope->Flatten((double)mPlaySpeed / 100.0);
    }
 
    // Pop up the button
    SetButton(false, mButtons[TTB_PlaySpeed]);
 
    // If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()) {
       auto &bar = ControlToolBar::Get( *p );
       bar.StopPlaying();
@@ -498,7 +504,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       auto options = DefaultPlayOptions( *p );
       options.playLooped = looped;
       // No need to set cutPreview options.
-      options.timeTrack = mTimeTrack.get();
+      options.envelope = mEnvelope.get();
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
@@ -537,6 +543,7 @@ void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
    // If IO is busy, abort immediately
    // AWD: This is disabled to work around a hang on Linux when PulseAudio is
    // used.  If we figure that one out we can re-enable this code.
+   // auto gAudioIO = AudioIOBase::Get();
    //if (gAudioIO->IsBusy()) {
    //   OnPlaySpeed(event);
    //}
@@ -546,6 +553,7 @@ void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
 void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_StartOn]);
       return;
@@ -578,6 +586,7 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_StartOff]);
       return;
@@ -611,6 +620,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_EndOn]);
       return;
@@ -646,6 +656,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_EndOff]);
       return;
@@ -680,6 +691,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_SelectSound]);
       return;
@@ -719,6 +731,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 {
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_SelectSilence]);
       return;
@@ -757,6 +770,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 {
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
       SetButton(false,mButtons[TTB_Calibrate]);
       return;
@@ -804,6 +818,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
 
    //If IO is busy, abort immediately
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy())
    {
       SetButton(false,mButtons[TTB_EndOff]);

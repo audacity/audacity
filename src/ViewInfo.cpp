@@ -14,11 +14,10 @@ Paul Licameli
 
 #include <algorithm>
 
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "xml/XMLWriter.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "xml/XMLWriter.h"
@@ -245,6 +244,7 @@ bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
 
 void ViewInfo::OnTimer(wxCommandEvent &event)
 {
+   auto gAudioIO = AudioIOBase::Get();
    mRecentStreamTime = gAudioIO->GetStreamTime();
    event.Skip();
    // Propagate the message to other listeners bound to this

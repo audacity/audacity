@@ -69,7 +69,7 @@ bool SetEnvelopeCommand::ApplyInner( const CommandContext &, Track * t )
             // Inside this IF is where we actually apply the command
             Envelope* pEnv = pClip->GetEnvelope();
             if( bHasDelete && mbDelete )
-               pEnv->mEnv.clear();
+               pEnv->Clear();
             if( bHasT && bHasV )
                pEnv->InsertOrReplace( mT, pEnv->ClampValue( mV ) );
          }
