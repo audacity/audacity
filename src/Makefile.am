@@ -288,6 +288,8 @@ audacity_SOURCES = \
 	Track.h \
 	TrackArtist.cpp \
 	TrackArtist.h \
+	TrackInfo.cpp \
+	TrackInfo.h \
 	TrackPanel.cpp \
 	TrackPanel.h \
 	TrackPanelAx.cpp \

@@ -268,6 +268,7 @@
     <ClCompile Include="..\..\..\src\toolbars\SpectralSelectionBar.cpp" />
     <ClCompile Include="..\..\..\src\Track.cpp" />
     <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
+    <ClCompile Include="..\..\..\src\TrackInfo.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelResizeHandle.cpp" />
@@ -707,6 +708,7 @@
     <ClInclude Include="..\..\..\src\TimeTrack.h" />
     <ClInclude Include="..\..\..\src\Track.h" />
     <ClInclude Include="..\..\..\src\TrackArtist.h" />
+    <ClInclude Include="..\..\..\src\TrackInfo.h" />
     <ClInclude Include="..\..\..\src\TrackPanel.h" />
     <ClInclude Include="..\..\..\src\TrackPanelAx.h" />
     <ClInclude Include="..\..\..\src\UndoManager.h" />

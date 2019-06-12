@@ -365,6 +365,9 @@
     <ClCompile Include="..\..\..\src\TrackArtist.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1472,6 +1475,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackArtist.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackInfo.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanel.h">

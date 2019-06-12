@@ -1312,6 +1312,7 @@
 		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
 		5EF5706B22AAAEDA00C4702C /* ProjectFileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF5706922AAAEDA00C4702C /* ProjectFileManager.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
+		5EFCC3B322B09CEC0015E2F1 /* TrackInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFCC3B122B09CEC0015E2F1 /* TrackInfo.cpp */; };
 		5EFEAD9E22723E390077DFF6 /* Clipboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */; };
 		5EFEADA02273382D0077DFF6 /* AudacityApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */; };
 		5EFEADA322733DD30077DFF6 /* CrashReport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EFEADA122733DD30077DFF6 /* CrashReport.cpp */; };
@@ -3387,6 +3388,8 @@
 		5EF5706A22AAAEDA00C4702C /* ProjectFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectFileManager.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
+		5EFCC3B122B09CEC0015E2F1 /* TrackInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackInfo.cpp; sourceTree = "<group>"; };
+		5EFCC3B222B09CEC0015E2F1 /* TrackInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackInfo.h; sourceTree = "<group>"; };
 		5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clipboard.cpp; sourceTree = "<group>"; };
 		5EFEAD9D22723E390077DFF6 /* Clipboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clipboard.h; sourceTree = "<group>"; };
 		5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudacityApp.mm; sourceTree = "<group>"; };
@@ -4446,6 +4449,7 @@
 				1790B0E209883BFD008A330A /* TimeTrack.cpp */,
 				1790B0E809883BFD008A330A /* Track.cpp */,
 				1790B0EA09883BFD008A330A /* TrackArtist.cpp */,
+				5EFCC3B122B09CEC0015E2F1 /* TrackInfo.cpp */,
 				1790B0EC09883BFD008A330A /* TrackPanel.cpp */,
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
 				5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */,
@@ -4579,6 +4583,7 @@
 				1790B0E309883BFD008A330A /* TimeTrack.h */,
 				1790B0E909883BFD008A330A /* Track.h */,
 				1790B0EB09883BFD008A330A /* TrackArtist.h */,
+				5EFCC3B222B09CEC0015E2F1 /* TrackInfo.h */,
 				1790B0ED09883BFD008A330A /* TrackPanel.h */,
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */,
@@ -8493,6 +8498,7 @@
 				174D9031098C78AF00D5909F /* CommandManager.cpp in Sources */,
 				174D9033098C78AF00D5909F /* Keyboard.cpp in Sources */,
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
+				5EFCC3B322B09CEC0015E2F1 /* TrackInfo.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
 				5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */,

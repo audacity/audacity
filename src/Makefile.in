@@ -341,13 +341,13 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
-	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	TrackPanelCell.h TrackPanelDrawingContext.h \
-	TrackPanelListener.h TrackPanelMouseEvent.h \
-	TrackPanelResizeHandle.cpp TrackPanelResizeHandle.h \
-	TrackPanelResizerCell.cpp TrackPanelResizerCell.h \
-	TranslatableStringArray.h UIHandle.h UIHandle.cpp \
-	UndoManager.cpp UndoManager.h UserException.cpp \
+	TrackInfo.cpp TrackInfo.h TrackPanel.cpp TrackPanel.h \
+	TrackPanelAx.cpp TrackPanelAx.h TrackPanelCell.h \
+	TrackPanelDrawingContext.h TrackPanelListener.h \
+	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
+	TrackPanelResizeHandle.h TrackPanelResizerCell.cpp \
+	TrackPanelResizerCell.h TranslatableStringArray.h UIHandle.h \
+	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
@@ -700,8 +700,8 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-Theme.$(OBJEXT) audacity-TimeDialog.$(OBJEXT) \
 	audacity-TimerRecordDialog.$(OBJEXT) \
 	audacity-TimeTrack.$(OBJEXT) audacity-Track.$(OBJEXT) \
-	audacity-TrackArtist.$(OBJEXT) audacity-TrackPanel.$(OBJEXT) \
-	audacity-TrackPanelAx.$(OBJEXT) \
+	audacity-TrackArtist.$(OBJEXT) audacity-TrackInfo.$(OBJEXT) \
+	audacity-TrackPanel.$(OBJEXT) audacity-TrackPanelAx.$(OBJEXT) \
 	audacity-TrackPanelResizeHandle.$(OBJEXT) \
 	audacity-TrackPanelResizerCell.$(OBJEXT) \
 	audacity-UIHandle.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
@@ -1431,13 +1431,13 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
-	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	TrackPanelCell.h TrackPanelDrawingContext.h \
-	TrackPanelListener.h TrackPanelMouseEvent.h \
-	TrackPanelResizeHandle.cpp TrackPanelResizeHandle.h \
-	TrackPanelResizerCell.cpp TrackPanelResizerCell.h \
-	TranslatableStringArray.h UIHandle.h UIHandle.cpp \
-	UndoManager.cpp UndoManager.h UserException.cpp \
+	TrackInfo.cpp TrackInfo.h TrackPanel.cpp TrackPanel.h \
+	TrackPanelAx.cpp TrackPanelAx.h TrackPanelCell.h \
+	TrackPanelDrawingContext.h TrackPanelListener.h \
+	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
+	TrackPanelResizeHandle.h TrackPanelResizerCell.cpp \
+	TrackPanelResizerCell.h TranslatableStringArray.h UIHandle.h \
+	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
@@ -2642,6 +2642,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TimerRecordDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Track.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackArtist.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelAx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelResizeHandle.Po@am__quote@
@@ -4553,6 +4554,20 @@ audacity-TrackArtist.obj: TrackArtist.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackArtist.cpp' object='audacity-TrackArtist.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackArtist.obj `if test -f 'TrackArtist.cpp'; then $(CYGPATH_W) 'TrackArtist.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackArtist.cpp'; fi`
+
+audacity-TrackInfo.o: TrackInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackInfo.o -MD -MP -MF $(DEPDIR)/audacity-TrackInfo.Tpo -c -o audacity-TrackInfo.o `test -f 'TrackInfo.cpp' || echo '$(srcdir)/'`TrackInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-TrackInfo.Tpo $(DEPDIR)/audacity-TrackInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackInfo.cpp' object='audacity-TrackInfo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackInfo.o `test -f 'TrackInfo.cpp' || echo '$(srcdir)/'`TrackInfo.cpp
+
+audacity-TrackInfo.obj: TrackInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackInfo.obj -MD -MP -MF $(DEPDIR)/audacity-TrackInfo.Tpo -c -o audacity-TrackInfo.obj `if test -f 'TrackInfo.cpp'; then $(CYGPATH_W) 'TrackInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackInfo.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-TrackInfo.Tpo $(DEPDIR)/audacity-TrackInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackInfo.cpp' object='audacity-TrackInfo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackInfo.obj `if test -f 'TrackInfo.cpp'; then $(CYGPATH_W) 'TrackInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackInfo.cpp'; fi`
 
 audacity-TrackPanel.o: TrackPanel.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackPanel.o -MD -MP -MF $(DEPDIR)/audacity-TrackPanel.Tpo -c -o audacity-TrackPanel.o `test -f 'TrackPanel.cpp' || echo '$(srcdir)/'`TrackPanel.cpp

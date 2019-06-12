@@ -242,6 +242,8 @@ src/Track.cpp
 src/Track.h
 src/TrackArtist.cpp
 src/TrackArtist.h
+src/TrackInfo.cpp
+src/TrackInfo.h
 src/TrackPanel.cpp
 src/TrackPanel.h
 src/TrackPanelAx.cpp
