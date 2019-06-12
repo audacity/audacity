@@ -1546,7 +1546,7 @@ void ControlToolBar::CancelRecording()
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-#include "NoteTrack.h"
+#include "../NoteTrack.h"
 #endif
 
 TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
