@@ -79,6 +79,7 @@ class SelectionBar final : public ToolBar {
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
+   void OnIdle( wxIdleEvent &evt );
 
    void ModifySelection(int newDriver, bool done = false);
    void UpdateRates();

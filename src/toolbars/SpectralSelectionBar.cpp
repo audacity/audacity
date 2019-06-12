@@ -55,8 +55,10 @@ with changes in the SpectralSelectionBar.
 #include <wx/statline.h>
 
 #include "../Prefs.h"
+#include "../Project.h"
 #include "../AllThemeResources.h"
 #include "../SelectedRegion.h"
+#include "../ViewInfo.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -86,6 +88,7 @@ BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
    EVT_CHOICE(OnChoiceID, SpectralSelectionBar::OnChoice)
    EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
    EVT_COMMAND(wxID_ANY, EVT_BANDWIDTHTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
+   EVT_IDLE( SpectralSelectionBar::OnIdle )
 END_EVENT_TABLE()
 
 static const wxString preferencePath
@@ -367,6 +370,14 @@ void SpectralSelectionBar::OnChoice(wxCommandEvent &)
    wxWindowBase::GetSizer()->SetMinSize(wxSize(0, mHeight));   // so that height of toolbar does not change
    wxWindowBase::GetSizer()->SetSizeHints(this);
    Updated();
+}
+
+void SpectralSelectionBar::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   auto &project = mProject;
+   const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   SetFrequencies( selectedRegion.f0(), selectedRegion.f1() );
 }
 
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)

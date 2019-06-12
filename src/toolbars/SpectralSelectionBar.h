@@ -56,6 +56,7 @@ private:
    void OnUpdate(wxCommandEvent &evt);
    void OnCtrl(wxCommandEvent &evt);
    void OnChoice(wxCommandEvent &evt);
+   void OnIdle( wxIdleEvent &evt );
 
    void OnSize(wxSizeEvent &evt);
 

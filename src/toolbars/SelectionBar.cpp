@@ -56,8 +56,11 @@ with changes in the SelectionBar.
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
+#include "../Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../Snap.h"
+#include "../ViewInfo.h"
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -96,6 +99,7 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
    EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
    EVT_CHOICE(ChoiceID, SelectionBar::OnChoice )
+   EVT_IDLE( SelectionBar::OnIdle )
    EVT_COMBOBOX(RateID, SelectionBar::OnRate)
    EVT_TEXT(RateID, SelectionBar::OnRate)
 
@@ -576,6 +580,27 @@ void SelectionBar::OnChoice(wxCommandEvent & WXUNUSED(event))
    int mode = mChoice->GetSelection();
    SetSelectionMode( mode );
    SelectionModeUpdated();
+}
+
+void SelectionBar::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   auto &project = mProject;
+   const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+
+   double audioTime;
+
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   if ( projectAudioIO.IsAudioActive() ){
+      auto gAudioIO = AudioIOBase::Get();
+      audioTime = gAudioIO->GetStreamTime();
+   }
+   else {
+      const auto &playRegion = ViewInfo::Get( project ).playRegion;
+      audioTime = playRegion.GetStart();
+   }
+
+   SetTimes(selectedRegion.t0(), selectedRegion.t1(), audioTime);
 }
 
 void SelectionBar::SelectionModeUpdated()
