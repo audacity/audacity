@@ -276,7 +276,6 @@ class AUDACITY_DLL_API TrackPanel final
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
 
-   void OnPlayback(wxEvent &);
    void OnTrackListResizing(TrackListEvent & event);
    void OnTrackListDeletion(wxEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().

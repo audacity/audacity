@@ -313,9 +313,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTracks->Bind(EVT_TRACKLIST_DELETION,
                     &TrackPanel::OnTrackListDeletion,
                     this);
-   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &TrackPanel::OnPlayback,
-                     this);
 
    auto theProject = GetProject();
    theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
@@ -429,6 +426,7 @@ AudacityProject * TrackPanel::GetProject() const
 
 void TrackPanel::OnIdle(wxIdleEvent& event)
 {
+   event.Skip();
    // The window must be ready when the timer fires (#1401)
    if (IsShownOnScreen())
    {
@@ -790,15 +788,6 @@ void TrackPanel::UpdateViewIfNoTracks()
       mListener->TP_HandleResize();
       GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
    }
-}
-
-void TrackPanel::OnPlayback(wxEvent &e)
-{
-   e.Skip();
-   // Starting or stopping of play or record affects some cursors.
-   // Start or stop is in progress now, not completed; so delay the cursor
-   // change until next idle time.
-   CallAfter( [this] { HandleCursorForPresentMouseState(); } );
 }
 
 // The tracks positions within the list have changed, so update the vertical

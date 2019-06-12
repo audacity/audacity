@@ -138,6 +138,7 @@ ScreenshotCommand * ScreenshotCommand::mpShooter=NULL;
 // fully created.  Usually the dialog will have been created by invoking
 // an effects gui.
 void IdleHandler(wxIdleEvent& event){
+   event.Skip();
    wxWindow * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
    wxASSERT( pWin );
    pWin->Unbind(wxEVT_IDLE, IdleHandler);

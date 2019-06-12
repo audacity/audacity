@@ -115,8 +115,6 @@ void ProjectHistory::PushState(const wxString &desc,
       ViewActions::DoZoomFitV( project );
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       projectFileIO.AutoSave();
-
-   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
 }
 
 void ProjectHistory::RollbackState()
@@ -138,7 +136,6 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
       &tracks, viewInfo.selectedRegion, tags.shared_from_this());
    if (bWantsAutoSave)
       projectFileIO.AutoSave();
-   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???

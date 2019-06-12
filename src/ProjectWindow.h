@@ -85,7 +85,6 @@ public:
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
    void RedrawProject(const bool bForceWaveTracks = false);
-   void RefreshCursor();
 
    void Zoom(double level);
    void ZoomInByFactor( double ZoomFactor );

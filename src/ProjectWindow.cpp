@@ -880,13 +880,6 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
    trackPanel.Refresh(false);
 }
 
-void ProjectWindow::RefreshCursor()
-{
-   auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
-   trackPanel.HandleCursorForPresentMouseState();
-}
-
 void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
 {
    evt.Skip();
@@ -1289,12 +1282,6 @@ void ProjectWindow::FixScrollbars()
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
    }
-
-   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
-   CallAfter( [pPanel]{
-      if ( pPanel )
-         pPanel->HandleCursorForPresentMouseState();
-   } );
 }
 
 void ProjectWindow::UpdateLayout()
@@ -1491,12 +1478,6 @@ void ProjectWindow::DoScroll()
    if (!mAutoScrolling) {
       trackPanel.Refresh(false);
    }
-
-   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
-   CallAfter( [pPanel]{
-      if ( pPanel )
-         pPanel->HandleCursorForPresentMouseState();
-   } );
 }
 
 void ProjectWindow::OnMenu(wxCommandEvent & event)
