@@ -1572,3 +1572,7 @@ TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bo
 #endif
    return result;
 }
+
+static RegisteredToolbarFactory factory{ TransportBarID,
+   [](AudacityProject*){ return ToolBar::Holder{ safenew ControlToolBar }; }
+};

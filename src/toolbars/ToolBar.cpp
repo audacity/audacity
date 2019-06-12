@@ -913,3 +913,25 @@ int ToolBar::GetResizeGrabberWidth()
 {
    return RWIDTH;
 }
+
+namespace {
+
+RegisteredToolbarFactory::Functions &GetFunctions()
+{
+   static RegisteredToolbarFactory::Functions factories( ToolBarCount );
+   return factories;
+}
+
+}
+
+RegisteredToolbarFactory::RegisteredToolbarFactory(
+   int id, const Function &function)
+{
+   wxASSERT( id >= 0 && id < ToolBarCount );
+   GetFunctions()[ id ] = function;
+}
+
+auto RegisteredToolbarFactory::GetFactories() -> const Functions&
+{
+   return GetFunctions();
+}

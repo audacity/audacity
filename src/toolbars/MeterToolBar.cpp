@@ -274,3 +274,15 @@ void MeterToolBar::SetDocked(ToolDock *dock, bool pushed) {
    Fit();
 }
 
+static RegisteredToolbarFactory factory1{ RecordMeterBarID,
+   [](AudacityProject *parent){
+      return ToolBar::Holder{ safenew MeterToolBar{ parent, RecordMeterBarID } }; }
+};
+static RegisteredToolbarFactory factory2{ PlayMeterBarID,
+   [](AudacityProject *parent){
+      return ToolBar::Holder{ safenew MeterToolBar{ parent, PlayMeterBarID } }; }
+};
+static RegisteredToolbarFactory factory3{ MeterBarID,
+   [](AudacityProject *parent){
+      return ToolBar::Holder{ safenew MeterToolBar{ parent, MeterBarID } }; }
+};

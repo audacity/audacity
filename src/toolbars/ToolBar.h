@@ -15,12 +15,14 @@
 
 #include "../Experimental.h"
 
+#include <functional>
 #include <vector>
 #include <wx/defs.h>
 
 #include "../Prefs.h"
 #include "../Theme.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include <wx/windowptr.h>
 
 class wxBoxSizer;
 class wxDC;
@@ -92,7 +94,7 @@ class ToolBar /* not final */
 
  public:
 
-   using Holder = Destroy_ptr<ToolBar>;
+   using Holder = wxWindowPtr<ToolBar>;
 
    ToolBar(int type, const wxString & label, const wxString & section, bool resizable = false);
    virtual ~ToolBar();
@@ -237,6 +239,17 @@ class ToolBar /* not final */
    DECLARE_EVENT_TABLE()
 
    friend class ToolBarResizer;
+};
+
+class AudacityProject;
+
+struct RegisteredToolbarFactory {
+   using Function = std::function< ToolBar::Holder( AudacityProject * ) >;
+   using Functions = std::vector< Function >;
+
+   RegisteredToolbarFactory( int id, const Function &function );
+
+   static const Functions &GetFactories();
 };
 
 #endif

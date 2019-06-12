@@ -980,3 +980,7 @@ void TranscriptionToolBar::AdjustPlaySpeed(float adj)
    OnSpeedSlider(e);
 }
 
+static RegisteredToolbarFactory factory{ TranscriptionBarID,
+   [](AudacityProject *){
+      return ToolBar::Holder{ safenew TranscriptionToolBar }; }
+};

@@ -261,3 +261,7 @@ void ScrubbingToolBar::EnableDisableButtons()
    RegenerateTooltips();
    scrubber.CheckMenuItems();
 }
+
+static RegisteredToolbarFactory factory{ ScrubbingBarID,
+   [](AudacityProject *){ return ToolBar::Holder{ safenew ScrubbingToolBar }; }
+};

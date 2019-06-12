@@ -303,4 +303,6 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    cm.HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecified);
 }
 
-
+static RegisteredToolbarFactory factory{ EditBarID,
+   [](AudacityProject *){ return ToolBar::Holder{ safenew EditToolBar }; }
+};

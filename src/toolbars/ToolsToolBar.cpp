@@ -276,3 +276,7 @@ void ToolsToolBar::Create(wxWindow * parent)
    ToolBar::Create(parent);
    UpdatePrefs();
 }
+
+static RegisteredToolbarFactory factory{ ToolsBarID,
+   [](AudacityProject*){ return ToolBar::Holder{ safenew ToolsToolBar }; }
+};

@@ -314,3 +314,7 @@ void MixerToolBar::SetToolTips()
       mOutputSlider->SetToolTipTemplate(_("Playback Volume (Unavailable; use system mixer.)"));
    }
 }
+
+static RegisteredToolbarFactory factory{ MixerBarID,
+   [](AudacityProject *){ return ToolBar::Holder{ safenew MixerToolBar }; }
+};
