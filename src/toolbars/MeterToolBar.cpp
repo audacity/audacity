@@ -48,11 +48,9 @@ BEGIN_EVENT_TABLE( MeterToolBar, ToolBar )
 END_EVENT_TABLE()
 
 //Standard contructor
-MeterToolBar::MeterToolBar(AudacityProject *project, int type)
-: ToolBar(type, _("Combined Meter"), wxT("CombinedMeter"), true)
+MeterToolBar::MeterToolBar(AudacityProject &project, int type)
+: ToolBar(project, type, _("Combined Meter"), wxT("CombinedMeter"), true)
 {
-   mProject = project;
-
    if( mType == RecordMeterBarID ){
       mWhichMeters = kWithRecordMeter;
       mLabel = _("Recording Meter");
@@ -88,7 +86,7 @@ void MeterToolBar::ReCreateButtons()
 {
    MeterPanel::State playState{ false }, recordState{ false };
 
-   auto &projectAudioIO = ProjectAudioIO::Get( *mProject );
+   auto &projectAudioIO = ProjectAudioIO::Get( mProject );
    if (mPlayMeter && projectAudioIO.GetPlaybackMeter() == mPlayMeter)
    {
       playState = mPlayMeter->SaveState();
@@ -116,13 +114,12 @@ void MeterToolBar::ReCreateButtons()
 void MeterToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   wxASSERT(mProject); // to justify safenew
    Add((mSizer = safenew wxGridBagSizer()), 1, wxEXPAND);
 
    if( mWhichMeters & kWithRecordMeter ){
       //JKC: Record on left, playback on right.  Left to right flow
       //(maybe we should do it differently for Arabic language :-)  )
-      mRecordMeter = safenew MeterPanel( mProject,
+      mRecordMeter = safenew MeterPanel( &mProject,
                                 this,
                                 wxID_ANY,
                                 true,
@@ -138,7 +135,7 @@ void MeterToolBar::Populate()
    }
 
    if( mWhichMeters & kWithPlayMeter ){
-      mPlayMeter = safenew MeterPanel( mProject,
+      mPlayMeter = safenew MeterPanel( &mProject,
                               this,
                               wxID_ANY,
                               false,
@@ -229,7 +226,7 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
 
 bool MeterToolBar::Expose( bool show )
 {
-   auto &projectAudioIO = ProjectAudioIO::Get( *mProject );
+   auto &projectAudioIO = ProjectAudioIO::Get( mProject );
    if( show ) {
       if( mPlayMeter ) {
          projectAudioIO.SetPlaybackMeter( mPlayMeter );
@@ -275,14 +272,17 @@ void MeterToolBar::SetDocked(ToolDock *dock, bool pushed) {
 }
 
 static RegisteredToolbarFactory factory1{ RecordMeterBarID,
-   [](AudacityProject *parent){
-      return ToolBar::Holder{ safenew MeterToolBar{ parent, RecordMeterBarID } }; }
+   []( AudacityProject &project ){
+      return ToolBar::Holder{
+         safenew MeterToolBar{ project, RecordMeterBarID } }; }
 };
 static RegisteredToolbarFactory factory2{ PlayMeterBarID,
-   [](AudacityProject *parent){
-      return ToolBar::Holder{ safenew MeterToolBar{ parent, PlayMeterBarID } }; }
+   []( AudacityProject &project ){
+      return ToolBar::Holder{
+         safenew MeterToolBar{ project, PlayMeterBarID } }; }
 };
 static RegisteredToolbarFactory factory3{ MeterBarID,
-   [](AudacityProject *parent){
-      return ToolBar::Holder{ safenew MeterToolBar{ parent, MeterBarID } }; }
+   []( AudacityProject &project ){
+      return ToolBar::Holder{
+         safenew MeterToolBar{ project, MeterBarID } }; }
 };

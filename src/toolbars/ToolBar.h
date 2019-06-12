@@ -87,6 +87,8 @@ enum
 // How may pixels padding each side of a floating toolbar
 enum { ToolBarFloatMargin = 1 };
 
+class AudacityProject;
+
 class ToolBar /* not final */
 : public wxPanelWrapper
 , protected PrefsListener
@@ -96,7 +98,9 @@ class ToolBar /* not final */
 
    using Holder = wxWindowPtr<ToolBar>;
 
-   ToolBar(int type, const wxString & label, const wxString & section, bool resizable = false);
+   ToolBar( AudacityProject &project,
+      int type, const wxString & label, const wxString & section,
+      bool resizable = false);
    virtual ~ToolBar();
 
    bool AcceptsFocus() const override { return false; };
@@ -162,7 +166,7 @@ class ToolBar /* not final */
 
    static
    void SetButtonToolTip
-      (AButton &button,
+      (AudacityProject &project, AButton &button,
        // If a shortcut key is defined for the command, then it is appended,
        // parenthesized, after the translated name.
        const TranslatedInternalString commands[], size_t nCommands);
@@ -216,6 +220,7 @@ class ToolBar /* not final */
    void OnMouseEvents(wxMouseEvent &event);
 
  protected:
+   AudacityProject &mProject;
    wxString mLabel;
    wxString mSection;
    int mType;
@@ -241,10 +246,8 @@ class ToolBar /* not final */
    friend class ToolBarResizer;
 };
 
-class AudacityProject;
-
 struct RegisteredToolbarFactory {
-   using Function = std::function< ToolBar::Holder( AudacityProject * ) >;
+   using Function = std::function< ToolBar::Holder( AudacityProject & ) >;
    using Functions = std::vector< Function >;
 
    RegisteredToolbarFactory( int id, const Function &function );

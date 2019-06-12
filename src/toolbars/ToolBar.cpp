@@ -314,11 +314,13 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolBar::ToolBar( int type,
+ToolBar::ToolBar( AudacityProject &project,
+                  int type,
                   const wxString &label,
                   const wxString &section,
                   bool resizable )
 : wxPanelWrapper()
+, mProject{ project }
 {
    // Save parameters
    mType = type;
@@ -842,10 +844,11 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 }
 
 void ToolBar::SetButtonToolTip
-(AButton &button, const TranslatedInternalString commands[], size_t nCommands)
+(AudacityProject &theProject,
+ AButton &button, const TranslatedInternalString commands[], size_t nCommands)
 {
    wxString result;
-   const auto project = GetActiveProject();
+   const auto project = &theProject;
    const auto commandManager =
       project ? &CommandManager::Get( *project ) : nullptr;
    if (commandManager)

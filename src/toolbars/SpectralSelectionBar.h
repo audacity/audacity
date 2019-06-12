@@ -29,7 +29,7 @@ class SpectralSelectionBar final : public ToolBar {
 
 public:
 
-   SpectralSelectionBar();
+   SpectralSelectionBar( AudacityProject &project );
    virtual ~SpectralSelectionBar();
 
    static SpectralSelectionBar &Get( AudacityProject &project );

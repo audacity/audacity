@@ -25,7 +25,7 @@ class DeviceToolBar final : public ToolBar {
 
  public:
 
-   DeviceToolBar();
+   DeviceToolBar( AudacityProject &project );
    virtual ~DeviceToolBar();
 
    static DeviceToolBar &Get( AudacityProject &project );

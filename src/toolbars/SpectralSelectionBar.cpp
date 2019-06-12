@@ -91,8 +91,9 @@ END_EVENT_TABLE()
 static const wxString preferencePath
 (wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
-SpectralSelectionBar::SpectralSelectionBar()
-: ToolBar(SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection"))
+SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
+: ToolBar( project,
+   SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection") )
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
@@ -492,7 +493,8 @@ void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSy
 }
 
 static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
-   [](AudacityProject *){ return ToolBar::Holder{ safenew SpectralSelectionBar }; }
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew SpectralSelectionBar{ project } }; }
 };
 
 #endif // #ifdef EXPERIMENTAL_SPECTRAL_EDITING

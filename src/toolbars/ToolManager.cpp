@@ -420,8 +420,14 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    wxASSERT(parent);
 
    size_t ii = 0;
-   for (const auto &factory : RegisteredToolbarFactory::GetFactories())
-      mBars[ii++] = factory( parent );
+   for (const auto &factory : RegisteredToolbarFactory::GetFactories()) {
+      if (factory) {
+         mBars[ii] = factory( *parent );
+      }
+      else
+         wxASSERT( false );
+      ++ii;
+   }
 
    // We own the timer
    mTimer.SetOwner( this );

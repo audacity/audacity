@@ -40,7 +40,7 @@ class NumericTextCtrl;
 class SelectionBar final : public ToolBar {
 
  public:
-   SelectionBar();
+   SelectionBar( AudacityProject &project );
    virtual ~SelectionBar();
 
    static SelectionBar &Get( AudacityProject &project );

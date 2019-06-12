@@ -49,7 +49,7 @@ class ToolsToolBar final : public ToolBar {
 
  public:
 
-   ToolsToolBar();
+   ToolsToolBar( AudacityProject &project );
    virtual ~ToolsToolBar();
 
    static ToolsToolBar &Get( AudacityProject &project );

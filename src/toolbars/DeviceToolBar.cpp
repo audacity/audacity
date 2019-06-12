@@ -72,8 +72,8 @@ static int DeviceToolbarPrefsID()
 }
 
 //Standard contructor
-DeviceToolBar::DeviceToolBar()
-: ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
+DeviceToolBar::DeviceToolBar( AudacityProject &project )
+: ToolBar( project, DeviceBarID, _("Device"), wxT("Device"), true )
 {
    wxTheApp->Bind( EVT_RESCANNED_DEVICES,
       &DeviceToolBar::OnRescannedDevices, this );
@@ -351,12 +351,8 @@ void DeviceToolBar::EnableDisableButtons()
       // Here we should relinquish focus
       if (audioStreamActive) {
          wxWindow *focus = wxWindow::FindFocus();
-         if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels) {
-            AudacityProject *activeProject = GetActiveProject();
-            if (activeProject) {
-               TrackPanel::Get( *activeProject ).SetFocus();
-            }
-         }
+         if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels)
+            TrackPanel::Get( mProject ).SetFocus();
       }
 
       mHost->Enable(!audioStreamActive);
@@ -873,5 +869,6 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
 }
 
 static RegisteredToolbarFactory factory{ DeviceBarID,
-   [](AudacityProject *){ return ToolBar::Holder{ safenew DeviceToolBar }; }
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew DeviceToolBar{ project } }; }
 };
