@@ -27,7 +27,6 @@ class wxRect;
 class wxWindow;
 
 class GrabberEvent;
-class ToolManager;
 
 ////////////////////////////////////////////////////////////
 /// class ToolDock
@@ -290,7 +289,7 @@ class ToolDock final : public wxPanelWrapper
 {
 public:
 
-   ToolDock( ToolManager *manager, wxWindow *parent, int dockid );
+   ToolDock( wxEvtHandler *manager, wxWindow *parent, int dockid );
    ~ToolDock();
 
    bool AcceptsFocus() const override { return false; };
@@ -332,7 +331,7 @@ public:
 
 
 
-   ToolManager *mManager;
+   wxEvtHandler *mManager;
 
    // Stores adjacency relations that we want to realize in the dock layout
    ToolBarConfiguration mConfiguration;

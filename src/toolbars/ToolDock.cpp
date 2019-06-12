@@ -40,8 +40,6 @@
 #include <wx/window.h>
 #endif  /*  */
 
-#include "ToolManager.h"
-
 #include <algorithm>
 
 #include "../AColor.h"
@@ -378,7 +376,7 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
+ToolDock::ToolDock( wxEvtHandler *manager, wxWindow *parent, int dockid ):
    wxPanelWrapper( parent, dockid, wxDefaultPosition, parent->GetSize() )
 {
    SetLabel( XO( "ToolDock" ) );
