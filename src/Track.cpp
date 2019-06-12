@@ -35,10 +35,6 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "TimeTrack.h"
-#include "WaveTrack.h"
-#include "NoteTrack.h"
-#include "LabelTrack.h"
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "DirManager.h"
@@ -1070,106 +1066,6 @@ size_t TrackList::size() const
    return cnt;
 }
 
-TimeTrack *TrackList::GetTimeTrack()
-{
-   return *Any<TimeTrack>().begin();
-}
-
-const TimeTrack *TrackList::GetTimeTrack() const
-{
-   return const_cast<TrackList*>(this)->GetTimeTrack();
-}
-
-unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
-{
-   /* counters for tracks panned different places */
-   int numLeft = 0;
-   int numRight = 0;
-   //int numMono = 0;
-   /* track iteration kit */
-
-   // Want only unmuted wave tracks.
-   for (auto tr :
-         Any< const WaveTrack >()
-            + (selectionOnly ? &Track::IsSelected : &Track::Any)
-            - &WaveTrack::GetMute
-   ) {
-      // Found a left channel
-      if (tr->GetChannel() == Track::LeftChannel) {
-         numLeft++;
-      }
-
-      // Found a right channel
-      else if (tr->GetChannel() == Track::RightChannel) {
-         numRight++;
-      }
-
-      // Found a mono channel, but it may be panned
-      else if (tr->GetChannel() == Track::MonoChannel) {
-         float pan = tr->GetPan();
-
-         // Figure out what kind of channel it should be
-         if (pan == -1.0) {   // panned hard left
-            numLeft++;
-         }
-         else if (pan == 1.0) {  // panned hard right
-            numRight++;
-         }
-         else if (pan == 0) { // panned dead center
-            // numMono++;
-         }
-         else {   // panned somewhere else
-            numLeft++;
-            numRight++;
-         }
-      }
-   }
-
-   // if there is stereo content, report 2, else report 1
-   if (numRight > 0 || numLeft > 0) {
-      return 2;
-   }
-
-   return 1;
-}
-
-namespace {
-   template<typename Array, typename TrackRange>
-   Array GetTypedTracks(const TrackRange &trackRange,
-                       bool selectionOnly, bool includeMuted)
-   {
-      using Type = typename std::remove_reference<
-         decltype( *std::declval<Array>()[0] )
-      >::type;
-      auto subRange =
-         trackRange.template Filter<Type>();
-      if ( selectionOnly )
-         subRange = subRange + &Track::IsSelected;
-      if ( ! includeMuted )
-         subRange = subRange - &Type::GetMute;
-      return transform_range<Array>( subRange.begin(), subRange.end(),
-         []( Type *t ){ return t->template SharedPointer<Type>(); }
-      );
-   }
-}
-
-WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly, bool includeMuted)
-{
-   return GetTypedTracks<WaveTrackArray>(Any(), selectionOnly, includeMuted);
-}
-
-WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool includeMuted) const
-{
-   return GetTypedTracks<WaveTrackConstArray>(Any(), selectionOnly, includeMuted);
-}
-
-#if defined(USE_MIDI)
-NoteTrackConstArray TrackList::GetNoteTrackConstArray(bool selectionOnly) const
-{
-   return GetTypedTracks<NoteTrackConstArray>(Any(), selectionOnly, true);
-}
-#endif
-
 int TrackList::GetHeight() const
 {
    int height = 0;
@@ -1392,20 +1288,6 @@ bool TrackList::HasPendingTracks() const
    }))
       return true;
    return false;
-}
-
-#include "AudioIO.h"
-TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
-{
-   TransportTracks result;
-   result.playbackTracks = trackList.GetWaveTrackArray(selectedOnly);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   if (useMidi)
-      result.midiTracks = trackList.GetNoteTrackConstArray(selectedOnly);
-#else
-   WXUNUSED(useMidi);
-#endif
-   return result;
 }
 
 #include "ViewInfo.h"

@@ -85,7 +85,6 @@ public:
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
    void RedrawProject(const bool bForceWaveTracks = false);
-   void RefreshCursor();
 
    void Zoom(double level);
    void ZoomInByFactor( double ZoomFactor );
@@ -156,6 +155,8 @@ public:
    void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
+   void OnUndoRedo( wxCommandEvent & );
+   void OnUndoReset( wxCommandEvent & );
 
    bool mbInitializingScrollbar{ false };
 

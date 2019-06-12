@@ -21,6 +21,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "RefreshCode.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -642,6 +643,9 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mMainPage = pPage;
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
+
+   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
+   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
 }
 
 void ProjectWindow::Init()
@@ -878,13 +882,6 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
             clip->MarkChanged();
    }
    trackPanel.Refresh(false);
-}
-
-void ProjectWindow::RefreshCursor()
-{
-   auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
-   trackPanel.HandleCursorForPresentMouseState();
 }
 
 void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
@@ -1284,17 +1281,11 @@ void ProjectWindow::FixScrollbars()
       trackPanel.Refresh(false);
    }
 
-   MenuManager::Get( project ).UpdateMenus( project );
+   MenuManager::Get( project ).UpdateMenus();
 
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
    }
-
-   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
-   CallAfter( [pPanel]{
-      if ( pPanel )
-         pPanel->HandleCursorForPresentMouseState();
-   } );
 }
 
 void ProjectWindow::UpdateLayout()
@@ -1449,6 +1440,20 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
+void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
+{
+   evt.Skip();
+   HandleResize();
+   CallAfter( [this]{ RedrawProject(); } );
+}
+
+void ProjectWindow::OnUndoReset( wxCommandEvent &evt )
+{
+   evt.Skip();
+   HandleResize();
+   // CallAfter( [this]{ RedrawProject(); } );  // Should we do this here too?
+}
+
 void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
    auto &project = mProject;
@@ -1491,12 +1496,6 @@ void ProjectWindow::DoScroll()
    if (!mAutoScrolling) {
       trackPanel.Refresh(false);
    }
-
-   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
-   CallAfter( [pPanel]{
-      if ( pPanel )
-         pPanel->HandleCursorForPresentMouseState();
-   } );
 }
 
 void ProjectWindow::OnMenu(wxCommandEvent & event)
@@ -1517,7 +1516,7 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
    auto &project = mProject;
    auto &commandManager = CommandManager::Get( project );
    bool handled = commandManager.HandleMenuID(
-      event.GetId(), MenuManager::Get( project ).GetUpdateFlags( project ),
+      event.GetId(), MenuManager::Get( project ).GetUpdateFlags(),
       NoFlagsSpecified);
 
    if (handled)
@@ -1531,7 +1530,7 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
 void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 {
    auto &project = mProject;
-   MenuManager::Get( project ).UpdateMenus( project );
+   MenuManager::Get( project ).UpdateMenus();
 }
 
 void ProjectWindow::MacShowUndockedToolbars(bool show)

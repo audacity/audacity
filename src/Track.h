@@ -1416,24 +1416,6 @@ public:
    bool MoveDown(Track * t);
    bool Move(Track * t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
 
-   TimeTrack *GetTimeTrack();
-   const TimeTrack *GetTimeTrack() const;
-
-   /** \brief Find out how many channels this track list mixes to
-   *
-   * This is used in exports of the tracks to work out whether to export in
-   * Mono, Stereo etc. @param selectionOnly Whether to consider the entire track
-   * list or only the selected members of it
-   */
-   unsigned GetNumExportChannels(bool selectionOnly) const;
-
-   WaveTrackArray GetWaveTrackArray(bool selectionOnly, bool includeMuted = true);
-   WaveTrackConstArray GetWaveTrackConstArray(bool selectionOnly, bool includeMuted = true) const;
-
-#if defined(USE_MIDI)
-   NoteTrackConstArray GetNoteTrackConstArray(bool selectionOnly) const;
-#endif
-
    /// Mainly a test function. Uses a linear search, so could be slow.
    bool Contains(const Track * t) const;
 
@@ -1653,9 +1635,5 @@ class AUDACITY_DLL_API TrackFactory final
    std::shared_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
-
-// global functions
-struct TransportTracks;
-TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
 #endif

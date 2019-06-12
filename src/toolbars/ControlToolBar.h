@@ -43,6 +43,8 @@ class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 struct TransportTracks;
+TransportTracks GetAllPlaybackTracks(
+   TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar final : public ToolBar {

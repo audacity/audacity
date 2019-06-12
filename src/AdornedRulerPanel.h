@@ -62,8 +62,6 @@ public:
    void UpdatePrefs() override;
    void ReCreateButtons();
 
-   void RegenerateTooltips();
-
    void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
 
    bool ShowingScrubRuler() const { return mShowScrubbing; }

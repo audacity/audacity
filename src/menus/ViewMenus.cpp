@@ -8,6 +8,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
+#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -178,6 +179,9 @@ void DoZoomFit(AudacityProject &project)
    window.TP_ScrollWindow(start);
 }
 
+}
+
+namespace {
 void DoZoomFitV(AudacityProject &project)
 {
    auto &trackPanel = TrackPanel::Get( project );
@@ -205,10 +209,16 @@ void DoZoomFitV(AudacityProject &project)
    for (auto t : range)
       t->SetHeight(height);
 }
+}
+
+namespace ViewActions {
 
 // Menu handler functions
 
-struct Handler : CommandHandlerObject {
+struct Handler final
+   : CommandHandlerObject // MUST be the first base class!
+   , ClientData::Base
+{
 
 void OnZoomIn(const CommandContext &context)
 {
@@ -417,15 +427,40 @@ void OnShowEffectsRack(const CommandContext &WXUNUSED(context) )
 }
 #endif
 
+// Not a menu item, but a listener for events
+void OnUndoPushed( wxCommandEvent &evt )
+{
+   evt.Skip();
+   const auto &settings = ProjectSettings::Get( mProject );
+   if (settings.GetTracksFitVerticallyZoomed())
+      DoZoomFitV( mProject );
+}
+
+Handler( AudacityProject &project )
+   : mProject{ project }
+{
+   mProject.Bind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
+}
+
+~Handler()
+{
+   mProject.Unbind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
+}
+
+AudacityProject &mProject;
+
 }; // struct Handler
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static ViewActions::Handler instance;
-   return instance;
+// Handler needs a back-reference to the project, so needs a factory registered
+// with AudacityProject.
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   []( AudacityProject &project ) {
+      return std::make_unique< ViewActions::Handler >( project ); } };
+
+static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
+   return project.AttachedObjects::Get< ViewActions::Handler >( key );
 };
 
 // Menu definitions

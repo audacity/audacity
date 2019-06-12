@@ -67,8 +67,8 @@ MenuCreator::~MenuCreator()
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  []( AudacityProject&){
-     return std::make_shared< MenuManager >(); }
+  []( AudacityProject &project ){
+     return std::make_shared< MenuManager >( project ); }
 };
 
 MenuManager &MenuManager::Get( AudacityProject &project )
@@ -81,9 +81,20 @@ const MenuManager &MenuManager::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-MenuManager::MenuManager()
+MenuManager::MenuManager( AudacityProject &project )
+   : mProject{ project }
 {
    UpdatePrefs();
+   mProject.Bind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
+}
+
+MenuManager::~MenuManager()
+{
+   mProject.Unbind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
+   mProject.Unbind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
+   mProject.Unbind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
 }
 
 void MenuManager::UpdatePrefs()
@@ -382,6 +393,13 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    ModuleManager::Get().Dispatch(MenusRebuilt);
 }
 
+void MenuManager::OnUndoRedo( wxCommandEvent &evt )
+{
+   evt.Skip();
+   ModifyUndoMenuItems( mProject );
+   UpdateMenus();
+}
+
 CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 {
    wxWindow *w = wxWindow::FindFocus();
@@ -408,9 +426,10 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 }
 
 
-CommandFlag MenuManager::GetUpdateFlags
-(AudacityProject &project, bool checkActive)
+CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
 {
+   auto &project = mProject;
+
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,
    // and returns them in a bitfield.  Note that if none of the flags
@@ -668,15 +687,17 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
 
 // checkActive is a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
+void MenuManager::UpdateMenus( bool checkActive )
 {
+   auto &project = mProject;
+
    //ANSWER-ME: Why UpdateMenus only does active project?
    //JKC: Is this test fixing a bug when multiple projects are open?
    //so that menu states work even when different in different projects?
    if (&project != GetActiveProject())
       return;
 
-   auto flags = MenuManager::Get(project).GetUpdateFlags(project, checkActive);
+   auto flags = GetUpdateFlags(checkActive);
    auto flags2 = flags;
 
    // We can enable some extra items if we have select-all-on-none.
@@ -772,11 +793,11 @@ void MenuCreator::RebuildAllMenuBars()
    }
 }
 
-bool MenuManager::ReportIfActionNotAllowed
-( AudacityProject &project,
-  const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+bool MenuManager::ReportIfActionNotAllowed(
+   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
-   bool bAllowed = TryToMakeActionAllowed( project, flags, flagsRqd, mask );
+   auto &project = mProject;
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, mask );
    if( bAllowed )
       return true;
    auto &cm = CommandManager::Get( project );
@@ -788,14 +809,14 @@ bool MenuManager::ReportIfActionNotAllowed
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool MenuManager::TryToMakeActionAllowed
-( AudacityProject &project,
-  CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+bool MenuManager::TryToMakeActionAllowed(
+   CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
+   auto &project = mProject;
    bool bAllowed;
 
    if( !flags )
-      flags = MenuManager::Get(project).GetUpdateFlags(project);
+      flags = GetUpdateFlags();
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    if( bAllowed )
@@ -808,7 +829,7 @@ bool MenuManager::TryToMakeActionAllowed
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
       TransportActions::StopIfPaused( project );
       // Hope this will now reflect stopped audio.
-      flags = MenuManager::Get(project).GetUpdateFlags(project);
+      flags = GetUpdateFlags();
       bAllowed = ((flags & mask) == (flagsRqd & mask));
       if( bAllowed )
          return true;
@@ -840,7 +861,7 @@ bool MenuManager::TryToMakeActionAllowed
    // When autoselect triggers, it might not select all audio in all tracks.
    // So changed to DoSelectAllAudio.
    SelectActions::DoSelectAllAudio(project);
-   flags = MenuManager::Get(project).GetUpdateFlags(project);
+   flags = GetUpdateFlags();
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
 }

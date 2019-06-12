@@ -276,7 +276,6 @@ class AUDACITY_DLL_API TrackPanel final
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
 
-   void OnPlayback(wxEvent &);
    void OnTrackListResizing(TrackListEvent & event);
    void OnTrackListDeletion(wxEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
@@ -295,6 +294,8 @@ class AUDACITY_DLL_API TrackPanel final
    // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
    // Either argument may be NULL
    void GetTracksUsableArea(int *width, int *height) const;
+
+   void OnUndoReset( wxCommandEvent &event );
 
    void Refresh
       (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)

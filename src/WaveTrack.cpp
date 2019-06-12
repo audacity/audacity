@@ -2624,7 +2624,7 @@ void WaveTrack::AddInvalidRegion(sampleCount startSample, sampleCount endSample)
       clip->AddInvalidRegion(startSample, endSample);
 }
 
-int WaveTrack::GetAutoSaveIdent()
+int WaveTrack::GetAutoSaveIdent() const
 {
    return mAutoSaveIdent;
 }

@@ -805,7 +805,7 @@ bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
    AudacityProject *project = GetActiveProject();
    auto &settings = ProjectSettings::Get( *project );
    // Recalc flags and enable items that may have become enabled.
-   MenuManager::Get(*project).UpdateMenus(*project, false);
+   MenuManager::Get(*project).UpdateMenus(false);
    // enter batch mode...
    bool prevShowMode = settings.GetShowId3Dialog();
    project->mBatchMode++;

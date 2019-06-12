@@ -134,6 +134,8 @@ private:
    
    void OnContextMenu(wxContextMenuEvent & event);
    
+   void OnIdle(wxIdleEvent & event);
+   
    void HandleInterruptedDrag();
    void Uncapture( bool escaping, wxMouseState *pState = nullptr );
    bool HandleEscapeKey(bool down);

@@ -78,6 +78,8 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
 
+#include "UndoManager.h"
+
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
@@ -313,15 +315,14 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTracks->Bind(EVT_TRACKLIST_DELETION,
                     &TrackPanel::OnTrackListDeletion,
                     this);
-   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &TrackPanel::OnPlayback,
-                     this);
 
    auto theProject = GetProject();
    theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
    theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
+
+   theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
 
    UpdatePrefs();
 }
@@ -429,6 +430,7 @@ AudacityProject * TrackPanel::GetProject() const
 
 void TrackPanel::OnIdle(wxIdleEvent& event)
 {
+   event.Skip();
    // The window must be ready when the timer fires (#1401)
    if (IsShownOnScreen())
    {
@@ -554,6 +556,13 @@ double TrackPanel::GetScreenEndTime() const
    int width;
    GetTracksUsableArea(&width, NULL);
    return mViewInfo->PositionToTime(width, 0, true);
+}
+
+void TrackPanel::OnUndoReset( wxCommandEvent &event )
+{
+   event.Skip();
+   SetFocusedTrack( nullptr );
+   Refresh( false );
 }
 
 /// AS: OnPaint( ) is called during the normal course of
@@ -790,15 +799,6 @@ void TrackPanel::UpdateViewIfNoTracks()
       mListener->TP_HandleResize();
       GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
    }
-}
-
-void TrackPanel::OnPlayback(wxEvent &e)
-{
-   e.Skip();
-   // Starting or stopping of play or record affects some cursors.
-   // Start or stop is in progress now, not completed; so delay the cursor
-   // change until next idle time.
-   CallAfter( [this] { HandleCursorForPresentMouseState(); } );
 }
 
 // The tracks positions within the list have changed, so update the vertical

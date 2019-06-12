@@ -118,7 +118,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
             },
             [&](const TimeTrack *) {
                // Maintain uniqueness of the time track!
-               pNewTrack = tracks.GetTimeTrack();
+               pNewTrack = *tracks.Any<TimeTrack>().begin();
                if (!pNewTrack)
                   uNewTrack = trackFactory.NewTimeTrack(),
                   pNewTrack = uNewTrack.get();
@@ -252,10 +252,6 @@ void DoUndo(AudacityProject &project)
          ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   window.RedrawProject();
-
-   MenuManager::ModifyUndoMenuItems(project);
 }
 
 // Menu handler functions
@@ -288,10 +284,6 @@ void OnRedo(const CommandContext &context)
          ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   window.RedrawProject();
-
-   MenuManager::ModifyUndoMenuItems(project);
 }
 
 void OnCut(const CommandContext &context)

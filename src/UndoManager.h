@@ -55,7 +55,7 @@
 #include "ClientData.h"
 #include "SelectedRegion.h"
 
-// Events emitted by UndoManager for the use of listeners
+// Events emitted by AudacityProject for the use of listeners
 
 // Project state did not change, but a new state was copied into Undo history
 // and any redo states were lost
@@ -64,7 +64,11 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_PUSHED, wxCommandEvent);
 // Project state did not change, but current state was modified in Undo history
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_MODIFIED, wxCommandEvent);
 
-// Project state changed because of undo or redo or rollback; undo manager
+// Project state changed because of undo or redo; undo manager
+// contents did not change other than the pointer to current state
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_OR_REDO, wxCommandEvent);
+
+// Project state for changed other than single-step undo/redo; undo manager
 // contents did not change other than the pointer to current state
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_RESET, wxCommandEvent);
 
@@ -105,14 +109,13 @@ inline UndoPush operator & (UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
 class AUDACITY_DLL_API UndoManager
-   : public wxEvtHandler
-   , public ClientData::Base
+   : public ClientData::Base
 {
  public:
    static UndoManager &Get( AudacityProject &project );
    static const UndoManager &Get( const AudacityProject &project );
  
-   UndoManager();
+   UndoManager( AudacityProject &project );
    ~UndoManager();
 
    UndoManager( const UndoManager& ) = delete;
@@ -139,7 +142,8 @@ class AUDACITY_DLL_API UndoManager
    void SetLongDescription(unsigned int n, const wxString &desc);
 
    // These functions accept a callback that uses the state,
-   // and then they emit EVT_UNDO_RESET when that has finished.
+   // and then they send to the project EVT_UNDO_RESET or EVT_UNDO_OR_REDO when
+   // that has finished.
    using Consumer = std::function< void( const UndoState & ) >;
    void SetStateTo(unsigned int n, const Consumer &consumer);
    void Undo(const Consumer &consumer);
@@ -167,6 +171,8 @@ class AUDACITY_DLL_API UndoManager
    void ResetODChangesFlag();
 
  private:
+   AudacityProject &mProject;
+ 
    int current;
    int saved;
    UndoStack stack;

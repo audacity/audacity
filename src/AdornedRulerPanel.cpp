@@ -984,8 +984,6 @@ void AdornedRulerPanel::UpdatePrefs()
    // Affected by the last
    UpdateRects();
    SetPanelSize();
-
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::ReCreateButtons()
@@ -1121,11 +1119,6 @@ namespace {
    }
 }
 
-void AdornedRulerPanel::RegenerateTooltips()
-{
-   CallAfter( [this]{ HandleCursorForPresentMouseState(); } );
-}
-
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 {
    evt.Skip();
@@ -1142,8 +1135,6 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
       mIsRecording = false;
       UpdateButtonStates();
    }
-   
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -1796,7 +1787,6 @@ void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
    mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
    gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
    gPrefs->Flush();
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
@@ -1834,7 +1824,6 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
    mTimelineToolTip = (mTimelineToolTip)? false : true;
    gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
    gPrefs->Flush();
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)

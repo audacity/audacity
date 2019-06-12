@@ -1095,7 +1095,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
    // NB: The call may have the side effect of changing flags.
    bool allowed = MenuManager::Get(project).TryToMakeActionAllowed(
-      project,
       flags,
       AudioIONotBusyFlag | CanStopAudioStreamFlag,
       AudioIONotBusyFlag | CanStopAudioStreamFlag);
@@ -1544,4 +1543,32 @@ void ControlToolBar::CancelRecording()
 {
    const auto project = GetActiveProject();
    TrackList::Get( *project ).ClearPendingTracks();
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+#include "NoteTrack.h"
+#endif
+
+TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
+{
+   TransportTracks result;
+   {
+      auto range = trackList.Any< WaveTrack >()
+         + (selectedOnly ? &Track::IsSelected : &Track::Any );
+      for (auto pTrack: range)
+         result.playbackTracks.push_back(
+            pTrack->SharedPointer< WaveTrack >() );
+   }
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (useMidi) {
+      auto range = trackList.Any< const NoteTrack >() +
+         (selectedOnly ? &Track::IsSelected : &Track::Any );
+      for (auto pTrack: range)
+         result.midiTracks.push_back(
+            pTrack->SharedPointer< const NoteTrack >() );
+   }
+#else
+   WXUNUSED(useMidi);
+#endif
+   return result;
 }

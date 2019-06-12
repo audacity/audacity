@@ -159,9 +159,10 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
 
    Clipboard::Get().Bind(
       EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
-   manager->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
-   manager->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
-   manager->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_OR_REDO, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
 }
 
 void HistoryWindow::OnAudioIO(wxCommandEvent& evt)

@@ -466,7 +466,7 @@ bool DoEffect(
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         MenuManager::Get(project).UpdateMenus(project, false);
+         MenuManager::Get(project).UpdateMenus( false );
       }
 
    } );

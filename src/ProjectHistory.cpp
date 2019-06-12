@@ -11,14 +11,10 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 
 #include "DirManager.h"
-#include "Menus.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
-#include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "Tags.h"
 #include "Track.h"
-#include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "ondemand/ODComputeSummaryTask.h"
@@ -61,10 +57,6 @@ void ProjectHistory::InitialState()
       _("Created new project"), wxT(""));
 
    undoManager.StateSaved();
-
-   auto &menuManager = MenuManager::Get( project );
-   menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus( project );
 }
 
 bool ProjectHistory::UndoAvailable()
@@ -96,7 +88,6 @@ void ProjectHistory::PushState(const wxString &desc,
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
@@ -107,16 +98,8 @@ void ProjectHistory::PushState(const wxString &desc,
 
    mDirty = true;
 
-   auto &menuManager = MenuManager::Get( project );
-   menuManager.ModifyUndoMenuItems( project );
-   menuManager.UpdateMenus( project );
-
-   if (settings.GetTracksFitVerticallyZoomed())
-      ViewActions::DoZoomFitV( project );
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       projectFileIO.AutoSave();
-
-   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
 }
 
 void ProjectHistory::RollbackState()
@@ -138,7 +121,6 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
       &tracks, viewInfo.selectedRegion, tags.shared_from_this());
    if (bWantsAutoSave)
       projectFileIO.AutoSave();
-   TrackPanel::Get( project ).HandleCursorForPresentMouseState();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -150,7 +132,6 @@ void ProjectHistory::PopState(const UndoState &state)
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &dstTracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    viewInfo.selectedRegion = state.selectedRegion;
 
@@ -195,25 +176,14 @@ void ProjectHistory::PopState(const UndoState &state)
    if(odUsed)
       ODManager::Instance()->AddNewTask(std::move(computeTask));
 
-   window.HandleResize();
-
-   MenuManager::Get( project ).UpdateMenus( project );
-
    projectFileIO.AutoSave();
 }
 
 void ProjectHistory::SetStateTo(unsigned int n)
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    undoManager.SetStateTo(n,
       [this]( const UndoState &state ){ PopState(state); } );
-
-   window.HandleResize();
-   trackPanel.SetFocusedTrack(NULL);
-   trackPanel.Refresh(false);
-   MenuManager::Get( project ).ModifyUndoMenuItems( project );
 }

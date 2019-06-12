@@ -233,10 +233,6 @@ void ToolsToolBar::SetCurrentTool(int tool)
    //for ( auto pProject : AllProjects{} )
    //   ProjectWindow::Get( *pProject ).RedrawProject();
 
-   //msmeyer: But we instruct the projects to handle the cursor shape again
-   for ( auto pProject : AllProjects{} )
-      ProjectWindow::Get( *pProject ).RefreshCursor();
-
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));
    gPrefs->Flush();
