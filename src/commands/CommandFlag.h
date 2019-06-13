@@ -23,8 +23,7 @@ enum CommandFlag : unsigned long long
    TracksExistFlag        = 0x00000008,
    LabelTracksExistFlag   = 0x00000010,
    WaveTracksSelectedFlag = 0x00000020,
-   ClipboardFlag          = 0x00000040,
-   TextClipFlag           = 0x00000040, // Same as Clipboard flag for now.
+
    UnsavedChangesFlag     = 0x00000080,
    HasLastEffectFlag      = 0x00000100,
    UndoAvailableFlag      = 0x00000200,
@@ -32,9 +31,9 @@ enum CommandFlag : unsigned long long
    ZoomInAvailableFlag    = 0x00000800,
    ZoomOutAvailableFlag   = 0x00001000,
    StereoRequiredFlag     = 0x00002000,  //lda
-   TopDockHasFocus        = 0x00004000,  //lll
+
    TrackPanelHasFocus     = 0x00008000,  //lll
-   BotDockHasFocus        = 0x00010000,  //lll
+
    LabelsSelectedFlag     = 0x00020000,
    AudioIOBusyFlag        = 0x00040000,  //lll
    PlayRegionLockedFlag   = 0x00080000,  //msmeyer
@@ -43,16 +42,16 @@ enum CommandFlag : unsigned long long
    WaveTracksExistFlag    = 0x00400000,
    NoteTracksExistFlag    = 0x00800000,  //gsw
    NoteTracksSelectedFlag = 0x01000000,  //gsw
-   HaveRecentFiles        = 0x02000000,
+
    IsNotSyncLockedFlag    = 0x04000000,  //awd
    IsSyncLockedFlag       = 0x08000000,  //awd
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
    CaptureNotBusyFlag     = 0x20000000,
    CanStopAudioStreamFlag = 0x40000000,
-   RulerHasFocus          = 0x80000000ULL, // prl
+
    NotMinimizedFlag      = 0x100000000ULL, // prl
    PausedFlag            = 0x200000000ULL, // jkc
-   NotPausedFlag         = 0x400000000ULL, // jkc
+
    HasWaveDataFlag       = 0x800000000ULL, // jkc
    PlayableTracksExistFlag = 0x1000000000ULL,
    AudioTracksSelectedFlag = 0x2000000000ULL,

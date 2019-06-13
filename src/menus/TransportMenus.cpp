@@ -208,8 +208,7 @@ namespace TransportActions {
 // Stop playing or recording, if paused.
 void StopIfPaused( AudacityProject &project )
 {
-   auto flags = MenuManager::Get( project ).GetUpdateFlags();
-   if( flags & PausedFlag )
+   if( AudioIOBase::Get()->IsPaused() )
       DoStop( project );
 }
 

@@ -32,7 +32,6 @@
 
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
-#include "Clipboard.h"
 #include "LabelTrack.h"
 #include "ModuleManager.h"
 #ifdef USE_MIDI
@@ -53,7 +52,6 @@
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/FileHistory.h"
 
 #include <wx/menu.h>
 #include <wx/windowptr.h>
@@ -405,18 +403,8 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
    wxWindow *w = wxWindow::FindFocus();
 
    while (w) {
-      if (w == ToolManager::Get( project ).GetTopDock()) {
-         return TopDockHasFocus;
-      }
-
-      if (w == &AdornedRulerPanel::Get( project ))
-         return RulerHasFocus;
-
       if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {
          return TrackPanelHasFocus;
-      }
-      if (w == ToolManager::Get( project ).GetBotDock()) {
-         return BotDockHasFocus;
       }
 
       w = w->GetParent();
@@ -457,14 +445,12 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
 
    if( gAudioIO->IsPaused() )
       flags |= PausedFlag;
-   else
-      flags |= NotPausedFlag;
 
    // quick 'short-circuit' return.
    if ( checkActive && !window.IsActive() ){
       const auto checkedFlags = 
          NotMinimizedFlag | AudioIONotBusyFlag | AudioIOBusyFlag |
-         PausedFlag | NotPausedFlag;
+         PausedFlag;
       // short cirucit return should preserve flags that have not been calculated.
       flags = (lastFlags & ~checkedFlags) | flags;
       lastFlags = flags;
@@ -533,9 +519,6 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
 #endif
    );
 
-   if( Clipboard::Get().Duration() > 0 )
-      flags |= ClipboardFlag;
-
    auto &undoManager = UndoManager::Get( project );
 
    if (undoManager.UnsavedChanges() ||
@@ -558,12 +541,6 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
    if (ViewInfo::Get( project ).ZoomOutAvailable() && (flags & TracksExistFlag))
       flags |= ZoomOutAvailableFlag;
 
-   // TextClipFlag is currently unused (Jan 2017, 2.1.3 alpha)
-   // and LabelTrack::IsTextClipSupported() is quite slow on Linux,
-   // so disable for now (See bug 1575).
-   // if ((flags & LabelTracksExistFlag) && LabelTrack::IsTextClipSupported())
-   //    flags |= TextClipFlag;
-
    flags |= GetFocusedFrame(project);
 
    const auto &playRegion = viewInfo.playRegion;
@@ -579,9 +556,6 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
          }
       }
    }
-
-   if (FileHistory::Global().GetCount() > 0)
-      flags |= HaveRecentFiles;
 
    const auto &settings = ProjectSettings::Get( project );
    if (settings.IsSyncLocked())
