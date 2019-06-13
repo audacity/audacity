@@ -689,7 +689,7 @@ const ReservedCommandFlag
       }
    },
    NoAutoSelect{
-     [](const AudacityProject &){ return false; }
+     [](const AudacityProject &){ return true; }
    } // jkc
 ;
 

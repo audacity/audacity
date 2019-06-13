@@ -81,7 +81,6 @@ struct CommandListEntry
    bool isEffect;
    bool hasDialog;
    CommandFlag flags;
-   CommandMask mask;
    bool useStrictFlags{ false };
 };
 
@@ -159,8 +158,6 @@ class AUDACITY_DLL_API CommandManager final
          { bIsEffect = true; return std::move(*this); }
       Options &&Parameter (const CommandParameter &value) &&
          { parameter = value; return std::move(*this); }
-      Options &&Mask (CommandMask value) &&
-         { mask = value; return std::move(*this); }
       Options &&LongName (const wxString &value) &&
          { longName = value; return std::move(*this); }
       Options &&IsGlobal () &&
@@ -172,7 +169,6 @@ class AUDACITY_DLL_API CommandManager final
       int check{ -1 }; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
-      CommandMask mask{ NoFlagsSpecified };
       wxString longName{}; // translated
       bool global{ false };
       bool useStrictFlags{ false };
@@ -216,7 +212,7 @@ class AUDACITY_DLL_API CommandManager final
    void EndOccultCommands();
 
 
-   void SetCommandFlags(const CommandID &name, CommandFlag flags, CommandMask mask);
+   void SetCommandFlags(const CommandID &name, CommandFlag flags);
 
    //
    // Modifying menus

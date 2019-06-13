@@ -1135,12 +1135,10 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       /* i18n-hint: (verb)*/
       Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
          AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
-         Options{ wxT("Ctrl+X") }
-            .Mask( AudioIONotBusyFlag | CutCopyAvailableFlag ) ),
+         wxT("Ctrl+X") ),
       Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
          AudioIONotBusyFlag | NoAutoSelect,
-         Options{ wxT("Ctrl+K") }
-            .Mask( AudioIONotBusyFlag ) ),
+         wxT("Ctrl+K") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
          AudioIONotBusyFlag | CutCopyAvailableFlag, wxT("Ctrl+C") ),
@@ -1224,10 +1222,10 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
    return Menu( _("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect),
-         Options{ wxT("Backspace") }.Mask( flags ) ),
+         wxT("Backspace") ),
       Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
          (flags | NoAutoSelect),
-         Options{ wxT("Delete") }.Mask( flags ) )
+         wxT("Delete") )
    );
 }
 

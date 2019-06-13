@@ -525,10 +525,6 @@ void CommandManager::AddItem(const CommandID &name,
 
    wxASSERT( flags != NoFlagsSpecified );
 
-   auto mask = options.mask;
-   if (mask == NoFlagsSpecified)
-      mask = flags;
-
    CommandParameter cookedParameter;
    const auto &parameter = options.parameter;
    if( parameter.empty() )
@@ -546,7 +542,7 @@ void CommandManager::AddItem(const CommandID &name,
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
-   SetCommandFlags(name, flags, mask);
+   SetCommandFlags(name, flags);
 
 
    auto checkmark = options.check;
@@ -589,7 +585,7 @@ void CommandManager::AddItemList(const CommandID & name,
                                               i,
                                               cnt,
                                               bIsEffect);
-      entry->mask = entry->flags = flags;
+      entry->flags = flags;
       CurrentMenu()->Append(entry->id, GetLabel(entry));
       mbSeparatorAllowed = true;
    }
@@ -618,7 +614,7 @@ void CommandManager::AddCommand(const CommandID &name,
 
    NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
-   SetCommandFlags(name, flags, flags);
+   SetCommandFlags(name, flags);
 }
 
 void CommandManager::AddGlobalCommand(const CommandID &name,
@@ -635,7 +631,6 @@ void CommandManager::AddGlobalCommand(const CommandID &name,
    entry->enabled = false;
    entry->isGlobal = true;
    entry->flags = AlwaysEnabledFlag;
-   entry->mask = AlwaysEnabledFlag;
 }
 
 void CommandManager::AddSeparator()
@@ -764,7 +759,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->multi = multi;
       entry->index = index;
       entry->count = count;
-      entry->flags = entry->mask = AlwaysEnabledFlag;
+      entry->flags = AlwaysEnabledFlag;
       entry->enabled = true;
       entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
@@ -973,9 +968,8 @@ void CommandManager::EnableUsingFlags(
 
       auto useFlags = entry->useStrictFlags ? strictFlags : flags;
 
-      if (entry->mask.any()) {
-         bool enable = ((useFlags & entry->mask) ==
-                        (entry->flags & entry->mask));
+      if (entry->flags.any()) {
+         bool enable = ((useFlags & entry->flags) == entry->flags);
          Enable(entry.get(), enable);
       }
    }
@@ -1265,7 +1259,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 
    auto proj = GetActiveProject();
 
-   auto combinedMask = (mask & entry->mask);
+   auto combinedMask = (mask & entry->flags);
    if (combinedMask.any()) {
 
       wxASSERT( proj );
@@ -1621,13 +1615,11 @@ void CommandManager::EndOccultCommands()
 }
 
 void CommandManager::SetCommandFlags(const CommandID &name,
-                                     CommandFlag flags, CommandMask mask)
+                                     CommandFlag flags)
 {
    CommandListEntry *entry = mCommandNameHash[name];
-   if (entry) {
+   if (entry)
       entry->flags = flags;
-      entry->mask = mask;
-   }
 }
 
 #if defined(__WXDEBUG__)
