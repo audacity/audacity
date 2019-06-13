@@ -1715,7 +1715,7 @@ bool ProjectFileManager::Import(
       PluginActions::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
-         PluginActions::kConfigured);
+         EffectManager::kConfigured);
    }
 
    // This is a no-fail:

@@ -47,6 +47,7 @@ greater use in future.
 
 #include "audacity/ConfigInterface.h"
 
+#include "EffectManager.h"
 #include "RealtimeEffectManager.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
@@ -777,7 +778,7 @@ bool Effect::Apply()
    //
    // It should callback to the EffectManager to kick off the processing
    return PluginActions::DoEffect(GetID(), context,
-      PluginActions::kConfigured);
+      EffectManager::kConfigured);
 }
 
 void Effect::Preview()

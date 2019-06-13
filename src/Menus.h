@@ -140,16 +140,6 @@ void DoRecord( AudacityProject & );
 
 /// Namespace for helper functions to do with plug ins
 namespace PluginActions {
-   enum : unsigned {
-      // No flags specified
-      kNone = 0x00,
-      // Flag used to disable prompting for configuration parameteres.
-      kConfigured = 0x01,
-      // Flag used to disable saving the state after processing.
-      kSkipState  = 0x02,
-      // Flag used to disable "Repeat Last Effect"
-      kDontRepeatLast = 0x04,
-   };
 bool DoEffect(
    const PluginID & ID, const CommandContext & context, unsigned flags );
 bool DoAudacityCommand(

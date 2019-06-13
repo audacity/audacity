@@ -447,7 +447,7 @@ bool DoEffect(
    // Make sure there's no activity since the effect is about to be applied
    // to the project's tracks.  Mainly for Apply during RTP, but also used
    // for batch commands
-   if (flags & kConfigured)
+   if (flags & EffectManager::kConfigured)
    {
       TransportActions::DoStop(project);
       SelectUtilities::SelectAllIfNone( project );
@@ -486,22 +486,22 @@ bool DoEffect(
 
    success = em.DoEffect(ID, &window, rate,
       &tracks, &trackFactory, &selectedRegion,
-      (flags & kConfigured) == 0);
+      (flags & EffectManager::kConfigured) == 0);
 
    if (!success)
       return false;
 
    if (em.GetSkipStateFlag())
-      flags = flags | kSkipState;
+      flags = flags | EffectManager::kSkipState;
 
-   if (!(flags & kSkipState))
+   if (!(flags & EffectManager::kSkipState))
    {
       wxString shortDesc = em.GetCommandName(ID);
       wxString longDesc = em.GetCommandDescription(ID);
       ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
    }
 
-   if (!(flags & kDontRepeatLast))
+   if (!(flags & EffectManager::kDontRepeatLast))
    {
       // Only remember a successful effect, don't remember insert,
       // or analyze effects.
@@ -559,7 +559,7 @@ bool DoAudacityCommand(
    if (!plug)
       return false;
 
-   if (flags & kConfigured)
+   if (flags & EffectManager::kConfigured)
    {
       TransportActions::DoStop(project);
 //    SelectAllIfNone();
@@ -569,7 +569,7 @@ bool DoAudacityCommand(
    bool success = em.DoAudacityCommand(ID, 
       context,
       &window,
-      (flags & kConfigured) == 0);
+      (flags & EffectManager::kConfigured) == 0);
 
    if (!success)
       return false;
@@ -616,7 +616,7 @@ void OnRepeatLastEffect(const CommandContext &context)
    auto lastEffect = MenuManager::Get(context.project).mLastEffect;
    if (!lastEffect.empty())
    {
-      DoEffect( lastEffect, context, kConfigured );
+      DoEffect( lastEffect, context, EffectManager::kConfigured );
    }
 }
 
@@ -743,7 +743,7 @@ void OnAudacityCommand(const CommandContext & ctx)
    wxLogDebug( "Command was: %s", ctx.parameter.GET());
    // Not configured, so prompt user.
    DoAudacityCommand(EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
-      ctx, kNone);
+      ctx, EffectManager::kNone);
 }
 
 }; // struct Handler

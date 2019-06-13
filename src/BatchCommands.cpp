@@ -736,16 +736,16 @@ bool MacroCommands::ApplyEffectCommand(
          // and apply the effect...
          res = PluginActions::DoAudacityCommand(ID,
             Context,
-            PluginActions::kConfigured |
-            PluginActions::kSkipState |
-            PluginActions::kDontRepeatLast);
+            EffectManager::kConfigured |
+            EffectManager::kSkipState |
+            EffectManager::kDontRepeatLast);
       else
          // and apply the effect...
          res = PluginActions::DoEffect(ID,
             Context,
-            PluginActions::kConfigured |
-            PluginActions::kSkipState |
-            PluginActions::kDontRepeatLast);
+            EffectManager::kConfigured |
+            EffectManager::kSkipState |
+            EffectManager::kDontRepeatLast);
    }
 
    return res;
@@ -778,7 +778,7 @@ bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
       {
          return PluginActions::DoEffect(
             plug->GetID(), context,
-            PluginActions::kConfigured);
+            EffectManager::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
