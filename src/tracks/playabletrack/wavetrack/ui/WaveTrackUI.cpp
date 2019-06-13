@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/EnvelopeHandle.h"
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
-#include "../../../ProjectSettings.h"
+#include "../../../../ProjectSettings.h"
 
 std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
