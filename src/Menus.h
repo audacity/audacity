@@ -142,8 +142,6 @@ void DoRecord( AudacityProject & );
 namespace PluginActions {
 bool DoEffect(
    const PluginID & ID, const CommandContext & context, unsigned flags );
-bool DoAudacityCommand(
-   const PluginID & ID, const CommandContext & context, unsigned flags );
 }
 
 /// Namespace for functions for Help menu

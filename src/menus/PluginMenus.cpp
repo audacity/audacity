@@ -546,49 +546,6 @@ bool DoEffect(
    return true;
 }
 
-/// DoAudacityCommand() takes a PluginID and executes the assocated command.
-///
-/// At the moment flags are used only to indicate whether to prompt for
-/// parameters
-bool DoAudacityCommand(
-   const PluginID & ID, const CommandContext & context, unsigned flags )
-{
-   auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   if (!plug)
-      return false;
-
-   if (flags & EffectManager::kConfigured)
-   {
-      TransportActions::DoStop(project);
-//    SelectAllIfNone();
-   }
-
-   EffectManager & em = EffectManager::Get();
-   bool success = em.DoAudacityCommand(ID, 
-      context,
-      &window,
-      (flags & EffectManager::kConfigured) == 0);
-
-   if (!success)
-      return false;
-
-/*
-   if (em.GetSkipStateFlag())
-      flags = flags | OnEffectFlags::kSkipState;
-
-   if (!(flags & OnEffectFlags::kSkipState))
-   {
-      wxString shortDesc = em.GetCommandName(ID);
-      wxString longDesc = em.GetCommandDescription(ID);
-      PushState(longDesc, shortDesc);
-   }
-*/
-   window.RedrawProject();
-   return true;
-}
-
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
@@ -742,7 +699,8 @@ void OnAudacityCommand(const CommandContext & ctx)
    // using GET in a log message for devs' eyes only
    wxLogDebug( "Command was: %s", ctx.parameter.GET());
    // Not configured, so prompt user.
-   DoAudacityCommand(EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
+   MacroCommands::DoAudacityCommand(
+      EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
       ctx, EffectManager::kNone);
 }
 
