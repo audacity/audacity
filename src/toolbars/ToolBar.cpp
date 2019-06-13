@@ -314,11 +314,13 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolBar::ToolBar( int type,
+ToolBar::ToolBar( AudacityProject &project,
+                  int type,
                   const wxString &label,
                   const wxString &section,
                   bool resizable )
 : wxPanelWrapper()
+, mProject{ project }
 {
    // Save parameters
    mType = type;
@@ -842,10 +844,11 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 }
 
 void ToolBar::SetButtonToolTip
-(AButton &button, const TranslatedInternalString commands[], size_t nCommands)
+(AudacityProject &theProject,
+ AButton &button, const TranslatedInternalString commands[], size_t nCommands)
 {
    wxString result;
-   const auto project = GetActiveProject();
+   const auto project = &theProject;
    const auto commandManager =
       project ? &CommandManager::Get( *project ) : nullptr;
    if (commandManager)
@@ -912,4 +915,26 @@ void ToolBar::OnMouseEvents(wxMouseEvent &event)
 int ToolBar::GetResizeGrabberWidth()
 {
    return RWIDTH;
+}
+
+namespace {
+
+RegisteredToolbarFactory::Functions &GetFunctions()
+{
+   static RegisteredToolbarFactory::Functions factories( ToolBarCount );
+   return factories;
+}
+
+}
+
+RegisteredToolbarFactory::RegisteredToolbarFactory(
+   int id, const Function &function)
+{
+   wxASSERT( id >= 0 && id < ToolBarCount );
+   GetFunctions()[ id ] = function;
+}
+
+auto RegisteredToolbarFactory::GetFactories() -> const Functions&
+{
+   return GetFunctions();
 }

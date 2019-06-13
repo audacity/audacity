@@ -55,8 +55,8 @@ BEGIN_EVENT_TABLE(MixerToolBar, ToolBar)
 END_EVENT_TABLE()
 
 //Standard contructor
-MixerToolBar::MixerToolBar()
-: ToolBar(MixerBarID, _("Mixer"), wxT("Mixer"), true)
+MixerToolBar::MixerToolBar( AudacityProject &project )
+: ToolBar(project, MixerBarID, _("Mixer"), wxT("Mixer"), true)
 {
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
@@ -314,3 +314,8 @@ void MixerToolBar::SetToolTips()
       mOutputSlider->SetToolTipTemplate(_("Playback Volume (Unavailable; use system mixer.)"));
    }
 }
+
+static RegisteredToolbarFactory factory{ MixerBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew MixerToolBar{ project } }; }
+};

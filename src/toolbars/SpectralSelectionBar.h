@@ -29,7 +29,7 @@ class SpectralSelectionBar final : public ToolBar {
 
 public:
 
-   SpectralSelectionBar();
+   SpectralSelectionBar( AudacityProject &project );
    virtual ~SpectralSelectionBar();
 
    static SpectralSelectionBar &Get( AudacityProject &project );
@@ -56,6 +56,7 @@ private:
    void OnUpdate(wxCommandEvent &evt);
    void OnCtrl(wxCommandEvent &evt);
    void OnChoice(wxCommandEvent &evt);
+   void OnIdle( wxIdleEvent &evt );
 
    void OnSize(wxSizeEvent &evt);
 

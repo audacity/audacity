@@ -35,7 +35,7 @@
 
 #include "ControlToolBar.h"
 #include "../AllThemeResources.h"
-#include "../AudioIOBase.h"
+#include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Project.h"
@@ -94,8 +94,9 @@ END_EVENT_TABLE()
    ;   //semicolon enforces  proper automatic indenting in emacs.
 
 ////Standard Constructor
-TranscriptionToolBar::TranscriptionToolBar()
-: ToolBar(TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"),true)
+TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
+: ToolBar( project,
+   TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"), true )
 {
    mPlaySpeed = 1.0 * 100.0;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -288,8 +289,20 @@ void TranscriptionToolBar::Populate()
 
 void TranscriptionToolBar::EnableDisableButtons()
 {
+   AudacityProject *p = &mProject;
+
+   auto gAudioIO = AudioIO::Get();
+   bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
+           gAudioIO->IsMonitoring() ||
+           gAudioIO->GetOwningProject() == p );
+   bool recording = gAudioIO->GetNumCaptureChannels() > 0;
+
+   // Only interested in audio type tracks
+   bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
+   SetEnabled( canStopAudioStream && tracks && !recording );
+
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    if (!p) return;
    // Is anything selected?
    auto selection = p->GetSel0() < p->GetSel1() && p->GetTracks()->Selected();
@@ -331,7 +344,8 @@ void TranscriptionToolBar::RegenerateTooltips()
          { entry.commandName,  wxGetTranslation(entry.untranslatedLabel)  },
          { entry.commandName2, wxGetTranslation(entry.untranslatedLabel2) },
       };
-      ToolBar::SetButtonToolTip( *mButtons[entry.tool], commands, 2u );
+      ToolBar::SetButtonToolTip( mProject,
+         *mButtons[entry.tool], commands, 2u );
    }
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -410,7 +424,7 @@ void TranscriptionToolBar::GetSamples(
    // GetSamples attempts to translate the start and end selection markers into sample indices
    // These selection numbers are doubles.
 
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    if (!p) {
       return;
    }
@@ -453,7 +467,7 @@ void TranscriptionToolBar::GetSamples(
 void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 {
    // Can't do anything without an active project
-   AudacityProject * p = GetActiveProject();
+   AudacityProject *p = &mProject;
    if (!p) {
       return;
    }
@@ -560,7 +574,7 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
    }
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
 
    auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
    if(t ) {
@@ -592,7 +606,7 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       return;
    }
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
 
    SetButton(false, mButtons[TTB_StartOff]);
    auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
@@ -627,7 +641,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
    }
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
    if(t) {
       auto wt = static_cast<const WaveTrack*>(t);
@@ -662,7 +676,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
       return;
    }
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
 
    auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
    if(t) {
@@ -699,7 +713,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
 
 
    TrackList *tl = p->GetTracks();
@@ -738,7 +752,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
    }
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
 
 
    TrackList *tl = p->GetTracks();
@@ -777,7 +791,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
    }
 
 
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
 
    TrackList *tl = p->GetTracks();
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
@@ -828,7 +842,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
    wxBusyCursor busy;
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    TrackList *tl = p->GetTracks();
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
@@ -899,7 +913,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
 void TranscriptionToolBar::OnMakeLabel(wxCommandEvent & WXUNUSED(event))
 {
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    SetButton(false, mButtons[TTB_MakeLabel]);
    p->DoAddLabel(SelectedRegion(p->GetSel0(),  p->GetSel1()));
 }
@@ -980,3 +994,7 @@ void TranscriptionToolBar::AdjustPlaySpeed(float adj)
    OnSpeedSlider(e);
 }
 
+static RegisteredToolbarFactory factory{ TranscriptionBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew TranscriptionToolBar{ project } }; }
+};

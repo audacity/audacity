@@ -65,7 +65,7 @@ class TranscriptionToolBar final : public ToolBar {
 
  public:
 
-   TranscriptionToolBar();
+   TranscriptionToolBar( AudacityProject &project );
    virtual ~TranscriptionToolBar();
 
    static TranscriptionToolBar &Get( AudacityProject &project );

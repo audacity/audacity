@@ -55,8 +55,8 @@ EVT_COMMAND_RANGE( STBFirstButton,
 END_EVENT_TABLE()
 
 //Standard contructor
-ScrubbingToolBar::ScrubbingToolBar()
-: ToolBar(ScrubbingBarID, _("Scrub"), wxT("Scrub"))
+ScrubbingToolBar::ScrubbingToolBar( AudacityProject &project )
+: ToolBar(project, ScrubbingBarID, _("Scrub"), wxT("Scrub"))
 {
 }
 
@@ -147,10 +147,10 @@ void ScrubbingToolBar::RegenerateTooltips()
    (AButton &button, const wxString &label, const CommandID &cmd)
    {
       TranslatedInternalString command{ cmd, label };
-      ToolBar::SetButtonToolTip( button, &command, 1u );
+      ToolBar::SetButtonToolTip( mProject, button, &command, 1u );
    };
 
-   auto project = GetActiveProject();
+   auto project = &mProject;
    if (project) {
       auto &scrubber = Scrubber::Get( *project );
 
@@ -192,7 +192,7 @@ void ScrubbingToolBar::RegenerateTooltips()
 
 void ScrubbingToolBar::OnButton(wxCommandEvent &event)
 {
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    if (!p) return;
    auto &scrubber = Scrubber::Get( *p );
 
@@ -222,7 +222,7 @@ void ScrubbingToolBar::EnableDisableButtons()
    const auto seekButton = mButtons[STBSeekID];
    seekButton->SetEnabled(true);
 
-   AudacityProject *p = GetActiveProject();
+   AudacityProject *p = &mProject;
    if (!p) return;
 
    auto &scrubber = Scrubber::Get( *p );
@@ -261,3 +261,8 @@ void ScrubbingToolBar::EnableDisableButtons()
    RegenerateTooltips();
    scrubber.CheckMenuItems();
 }
+
+static RegisteredToolbarFactory factory{ ScrubbingBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew ScrubbingToolBar{ project } }; }
+};

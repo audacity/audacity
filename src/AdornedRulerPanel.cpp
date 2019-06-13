@@ -570,7 +570,8 @@ public:
    static std::shared_ptr<PlayheadHandle>
    HitTest( const AudacityProject *pProject, wxCoord xx )
    {
-      if( ControlToolBar::IsTransportingPinned() &&
+      if( ControlToolBar::Get( *pProject )
+         .IsTransportingPinned() &&
           ProjectAudioIO::Get( *pProject ).IsAudioActive() )
       {
          const auto targetX = GetPlayHeadX( pProject );
@@ -1671,7 +1672,7 @@ void AdornedRulerPanel::UpdateButtonStates()
    auto common = [this]
    (AButton &button, const CommandID &commandName, const wxString &label) {
       TranslatedInternalString command{ commandName, label };
-      ToolBar::SetButtonToolTip( button, &command, 1u );
+      ToolBar::SetButtonToolTip( *mProject, button, &command, 1u );
       button.SetLabel(button.GetToolTipText());
 
       button.UpdateStatus();
@@ -2068,7 +2069,7 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      bool pinned = ControlToolBar::IsTransportingPinned();
+      bool pinned = ControlToolBar::Get( *mProject ).IsTransportingPinned();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
          (playing ? bmpPlayPointer : bmpRecordPointer) 

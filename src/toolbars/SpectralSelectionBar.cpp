@@ -55,8 +55,10 @@ with changes in the SpectralSelectionBar.
 #include <wx/statline.h>
 
 #include "../Prefs.h"
+#include "../Project.h"
 #include "../AllThemeResources.h"
 #include "../SelectedRegion.h"
+#include "../ViewInfo.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -86,13 +88,15 @@ BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
    EVT_CHOICE(OnChoiceID, SpectralSelectionBar::OnChoice)
    EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
    EVT_COMMAND(wxID_ANY, EVT_BANDWIDTHTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
+   EVT_IDLE( SpectralSelectionBar::OnIdle )
 END_EVENT_TABLE()
 
 static const wxString preferencePath
 (wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
-SpectralSelectionBar::SpectralSelectionBar()
-: ToolBar(SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection"))
+SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
+: ToolBar( project,
+   SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection") )
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
@@ -368,6 +372,14 @@ void SpectralSelectionBar::OnChoice(wxCommandEvent &)
    Updated();
 }
 
+void SpectralSelectionBar::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   auto &project = mProject;
+   const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   SetFrequencies( selectedRegion.f0(), selectedRegion.f1() );
+}
+
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 {
    int index = evt.GetInt();
@@ -490,5 +502,10 @@ void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSy
       }
    }
 }
+
+static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew SpectralSelectionBar{ project } }; }
+};
 
 #endif // #ifdef EXPERIMENTAL_SPECTRAL_EDITING

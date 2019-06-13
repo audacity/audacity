@@ -51,10 +51,10 @@ class ControlToolBar final : public ToolBar {
 
  public:
 
-   ControlToolBar();
+   ControlToolBar( AudacityProject &project );
    virtual ~ControlToolBar();
 
-   static bool IsTransportingPinned();
+   bool IsTransportingPinned() const;
 
    static ControlToolBar *Find( AudacityProject &project );
    static ControlToolBar &Get( AudacityProject &project );

@@ -26,8 +26,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/SelectionBar.h"
-#include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/wxPanelWrapper.h"
@@ -1696,7 +1694,6 @@ void ProjectWindow::TP_DisplaySelection()
    auto &ruler = AdornedRulerPanel::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
-   double audioTime;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
    auto gAudioIO = AudioIOBase::Get();
@@ -1705,18 +1702,6 @@ void ProjectWindow::TP_DisplaySelection()
    else
       // Cause ruler redraw anyway, because we may be zooming or scrolling
       ruler.Refresh();
-
-   if (gAudioIO->IsBusy())
-      audioTime = gAudioIO->GetStreamTime();
-   else
-      audioTime = playRegion.GetStart();
-
-   SelectionBar::Get( project ).SetTimes(selectedRegion.t0(),
-                               selectedRegion.t1(), audioTime);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetFrequencies(
-      selectedRegion.f0(), selectedRegion.f1());
-#endif
 }
 
 

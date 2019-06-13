@@ -52,17 +52,6 @@
 #include <wx/minifram.h>
 #include <wx/popupwin.h>
 
-#include "ControlToolBar.h"
-#include "DeviceToolBar.h"
-#include "EditToolBar.h"
-#include "MeterToolBar.h"
-#include "MixerToolBar.h"
-#include "ScrubbingToolBar.h"
-#include "SelectionBar.h"
-#include "SpectralSelectionBar.h"
-#include "ToolsToolBar.h"
-#include "TranscriptionToolBar.h"
-
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
@@ -429,20 +418,16 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    // Create all of the toolbars
    // All have the project as parent window
    wxASSERT(parent);
-   mBars[ ToolsBarID ]         =  ToolBar::Holder{ safenew ToolsToolBar() };
-   mBars[ TransportBarID ]     =  ToolBar::Holder{ safenew ControlToolBar() };
-   mBars[ RecordMeterBarID ]   =  ToolBar::Holder{ safenew MeterToolBar( parent, RecordMeterBarID ) };
-   mBars[ PlayMeterBarID ]     =  ToolBar::Holder{ safenew MeterToolBar( parent, PlayMeterBarID ) };
-   mBars[ MeterBarID ]         =  ToolBar::Holder{ safenew MeterToolBar( parent, MeterBarID ) };
-   mBars[ EditBarID ]          =  ToolBar::Holder{ safenew EditToolBar() };
-   mBars[ MixerBarID ]         =  ToolBar::Holder{ safenew MixerToolBar() };
-   mBars[ TranscriptionBarID ] =  ToolBar::Holder{ safenew TranscriptionToolBar() };
-   mBars[ SelectionBarID ]     =  ToolBar::Holder{ safenew SelectionBar() };
-   mBars[ DeviceBarID ]        =  ToolBar::Holder{ safenew DeviceToolBar() };
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mBars[SpectralSelectionBarID] =  ToolBar::Holder{ safenew SpectralSelectionBar() };
-#endif
-   mBars[ ScrubbingBarID ]     =  ToolBar::Holder{ safenew ScrubbingToolBar() };
+
+   size_t ii = 0;
+   for (const auto &factory : RegisteredToolbarFactory::GetFactories()) {
+      if (factory) {
+         mBars[ii] = factory( *parent );
+      }
+      else
+         wxASSERT( false );
+      ++ii;
+   }
 
    // We own the timer
    mTimer.SetOwner( this );

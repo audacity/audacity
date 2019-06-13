@@ -71,8 +71,8 @@ BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
 END_EVENT_TABLE()
 
 //Standard constructor
-ToolsToolBar::ToolsToolBar()
-: ToolBar(ToolsBarID, _("Tools"), wxT("Tools"))
+ToolsToolBar::ToolsToolBar( AudacityProject &project )
+: ToolBar(project, ToolsBarID, _("Tools"), wxT("Tools"))
 {
    //Read the following wxASSERTs as documentating a design decision
    wxASSERT( selectTool   == selectTool   - firstTool );
@@ -148,7 +148,8 @@ void ToolsToolBar::RegenerateTooltips()
    for (const auto &entry : table) {
       TranslatedInternalString command{
          entry.commandName, wxGetTranslation(entry.untranslatedLabel) };
-      ToolBar::SetButtonToolTip( *mTool[entry.tool], &command, 1u );
+      ToolBar::SetButtonToolTip( mProject,
+         *mTool[entry.tool], &command, 1u );
    }
 
    #endif
@@ -276,3 +277,8 @@ void ToolsToolBar::Create(wxWindow * parent)
    ToolBar::Create(parent);
    UpdatePrefs();
 }
+
+static RegisteredToolbarFactory factory{ ToolsBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew ToolsToolBar{ project } }; }
+};

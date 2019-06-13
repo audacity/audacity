@@ -33,7 +33,7 @@ class MeterToolBar final : public ToolBar {
 
  public:
 
-   MeterToolBar(AudacityProject *project, int type);
+   MeterToolBar(AudacityProject &project, int type);
    virtual ~MeterToolBar();
 
    void Create(wxWindow *parent) override;
@@ -56,7 +56,6 @@ class MeterToolBar final : public ToolBar {
  private:
    void RegenerateTooltips() override;
 
-   AudacityProject *mProject;
    int mWhichMeters;
    wxGridBagSizer *mSizer;
    MeterPanel *mPlayMeter;
