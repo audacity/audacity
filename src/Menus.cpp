@@ -36,7 +36,6 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
 #include "prefs/TracksPrefs.h"
@@ -352,6 +351,13 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
    }
 }
 
+// Get hackcess to a protected method
+class wxFrameEx : public wxFrame
+{
+public:
+   using wxFrame::DetachMenuBar;
+};
+
 void MenuCreator::RebuildMenuBar(AudacityProject &project)
 {
    // On OSX, we can't rebuild the menus while a modal dialog is being shown
@@ -368,7 +374,7 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    // Delete the menus, since we will soon recreate them.
    // Rather oddly, the menus don't vanish as a result of doing this.
    {
-      auto &window = ProjectWindow::Get( project );
+      auto &window = static_cast<wxFrameEx&>( GetProjectFrame( project ) );
       wxWindowPtr<wxMenuBar> menuBar{ window.GetMenuBar() };
       window.DetachMenuBar();
       // menuBar gets deleted here

@@ -79,8 +79,6 @@ public:
    };
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
 
-   using wxFrame::DetachMenuBar;
-
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
