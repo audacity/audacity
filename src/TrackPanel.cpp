@@ -99,7 +99,6 @@ is time to refresh some aspect of the screen.
 #include "ondemand/ODTask.h"
 
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/ToolsToolBar.h"
 
 #include "tracks/ui/TrackVRulerControls.h" // for inheritance relation
 
@@ -1155,10 +1154,13 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    // Don't draw a bottom margin here.
 
-   auto pTtb = &ToolsToolBar::Get( *GetProject() );
-   bool bMultiToolDown = pTtb->IsDown(multiTool);
-   bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
-   bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
+   const auto &settings = ProjectSettings::Get( *GetProject() );
+   bool bMultiToolDown =
+      (ToolCodes::multiTool == settings.GetTool());
+   bool envelopeFlag   =
+      bMultiToolDown || (ToolCodes::envelopeTool == settings.GetTool());
+   bool bigPointsFlag  =
+      bMultiToolDown || (ToolCodes::drawTool == settings.GetTool());
    bool sliderFlag     = bMultiToolDown;
 
    const bool hasSolo = GetTracks()->Any< PlayableTrack >()

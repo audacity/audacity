@@ -29,6 +29,21 @@ enum
    SNAP_PRIOR
 };
 
+namespace ToolCodes {
+enum {
+   selectTool,
+   envelopeTool,
+   drawTool,
+   zoomTool,
+   slideTool,
+   multiTool,
+   numTools,
+   
+   firstTool = selectTool,
+   lastTool = multiTool,
+};
+}
+
 ///\brief Holds various per-project settings values, including the sample rate,
 /// and sends events to the project when certain values change
 class ProjectSettings final
@@ -68,6 +83,11 @@ public:
    void SetSnapTo(int snap);
    int GetSnapTo() const;
 
+   // Current tool
+
+   void SetTool(int tool) { mCurrentTool = tool; }
+   int GetTool() const { return mCurrentTool; }
+
    // Selection Format
 
    void SetSelectionFormat(const NumericFormatSymbol & format);
@@ -103,6 +123,8 @@ private:
 
    sampleFormat mDefaultFormat;
    int mSnapTo;
+
+   int mCurrentTool;
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mShowId3Dialog{ true }; //lda

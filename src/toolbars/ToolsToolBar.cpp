@@ -51,6 +51,7 @@
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../tracks/ui/Scrubbing.h"
 
@@ -64,8 +65,8 @@ IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
-   EVT_COMMAND_RANGE(firstTool+FirstToolID,
-                     lastTool+FirstToolID,
+   EVT_COMMAND_RANGE(ToolCodes::firstTool + FirstToolID,
+                     ToolCodes::lastTool + FirstToolID,
                      wxEVT_COMMAND_BUTTON_CLICKED,
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
@@ -74,6 +75,8 @@ END_EVENT_TABLE()
 ToolsToolBar::ToolsToolBar( AudacityProject &project )
 : ToolBar(project, ToolsBarID, _("Tools"), wxT("Tools"))
 {
+   using namespace ToolCodes;
+
    //Read the following wxASSERTs as documentating a design decision
    wxASSERT( selectTool   == selectTool   - firstTool );
    wxASSERT( envelopeTool == envelopeTool - firstTool );
@@ -93,6 +96,8 @@ ToolsToolBar::ToolsToolBar( AudacityProject &project )
 
 ToolsToolBar::~ToolsToolBar()
 {
+   static_assert( ToolsToolBar::numTools == ToolCodes::numTools,
+      "mismatch in number of tools" );
 }
 
 ToolsToolBar &ToolsToolBar::Get( AudacityProject &project )
@@ -131,6 +136,8 @@ void ToolsToolBar::RegenerateTooltips()
    //		wxSafeYield(); //Deal with some queued up messages...
 
    #if wxUSE_TOOLTIPS
+
+   using namespace ToolCodes;
 
    static const struct Entry {
       int tool;
@@ -190,6 +197,7 @@ void ToolsToolBar::Populate()
    Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
 
    /* Tools */
+   using namespace ToolCodes;
    mTool[ selectTool   ] = MakeTool( this, bmpIBeam, selectTool, _("Selection Tool") );
    mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, _("Envelope Tool") );
    mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, _("Draw Tool") );
@@ -217,6 +225,7 @@ void ToolsToolBar::SetCurrentTool(int tool)
    //In multi-mode the current tool is shown by the
    //cursor icon.  The buttons are not updated.
 
+   using namespace ToolCodes;
    bool leavingMulticlipMode =
       IsDown(multiTool) && tool != multiTool;
 
@@ -237,6 +246,8 @@ void ToolsToolBar::SetCurrentTool(int tool)
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));
    gPrefs->Flush();
+
+   ProjectSettings::Get( mProject ).SetTool( mCurrentTool );
 }
 
 bool ToolsToolBar::IsDown(int tool) const
@@ -248,6 +259,7 @@ int ToolsToolBar::GetDownTool()
 {
    int tool;
 
+   using namespace ToolCodes;
    for (tool = firstTool; tool <= lastTool; tool++)
       if (IsDown(tool))
          return tool;
@@ -257,6 +269,7 @@ int ToolsToolBar::GetDownTool()
 
 void ToolsToolBar::OnTool(wxCommandEvent & evt)
 {
+   using namespace ToolCodes;
    mCurrentTool = evt.GetId() - firstTool - FirstToolID;
    for (int i = 0; i < numTools; i++)
       if (i == mCurrentTool)
@@ -270,6 +283,8 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
                  IsDown(multiTool));
    gPrefs->Flush();
+
+   ProjectSettings::Get( mProject ).SetTool( mCurrentTool );
 }
 
 void ToolsToolBar::Create(wxWindow * parent)

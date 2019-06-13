@@ -15,13 +15,13 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../toolbars/ToolsToolBar.h"
 
 #include "CutlineHandle.h"
 #include "../../../ui/SelectHandle.h"
 #include "../../../ui/EnvelopeHandle.h"
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
+#include "../../../ProjectSettings.h"
 
 std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
@@ -79,13 +79,13 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
          switch ( currentTool ) {
                // Unconditional hits appropriate to the tool
                // If tools toolbar were eliminated, we would eliminate these
-            case envelopeTool: {
+            case ToolCodes::envelopeTool: {
                auto envelope = GetEnvelopeAtX( st.state.m_x );
                result = EnvelopeHandle::HitAnywhere(
                   mEnvelopeHandle, envelope, false);
                break;
             }
-            case drawTool:
+            case ToolCodes::drawTool:
                result = SampleHandle::HitAnywhere(
                   mSampleHandle, st.state, SharedPointer<WaveTrack>());
                break;

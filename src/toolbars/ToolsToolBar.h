@@ -30,19 +30,6 @@ class AudacityProject;
 // Code duplication warning: these apparently need to be in the
 // same order as the enum in ToolsToolBar.cpp
 
-enum {
-   selectTool,
-   envelopeTool,
-   drawTool,
-   zoomTool,
-   slideTool,
-   multiTool,
-   numTools,
-
-   firstTool = selectTool,
-   lastTool = multiTool,
-};
-
 const int FirstToolID = 11200;
 
 class ToolsToolBar final : public ToolBar {
@@ -78,6 +65,7 @@ class ToolsToolBar final : public ToolBar {
    static AButton *MakeTool(
       ToolsToolBar *pBar, teBmps eTool, int id, const wxChar *label);
 
+   enum { numTools = 6 };
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;
