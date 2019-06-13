@@ -91,6 +91,7 @@ private:
 
    AudacityProject &mProject;
 
+public:
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
    int  mWhatIfNoSelection;
    bool mStopIfWasPaused;

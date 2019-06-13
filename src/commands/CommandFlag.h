@@ -94,4 +94,26 @@ extern const ReservedCommandFlag
    NoAutoSelect // jkc
 ;
 
+// To describe auto-selection, stop-if-paused, etc.:
+// A structure describing a set of conditions, another set that might be
+// made true given the first, and the function that may make them true.
+// If a menu item requires the second set, while the first set is true,
+// then the enabler will be invoked (unless the menu item is constructed with
+// the useStrictFlags option, or the applicability test first returns false).
+// The item's full set of required flags is passed to the function.
+struct MenuItemEnabler {
+   using Test = std::function< bool( const AudacityProject& ) >;
+   using Action = std::function< void( AudacityProject&, CommandFlag ) >;
+
+   const CommandFlag &actualFlags;
+   const CommandFlag &possibleFlags;
+   Test applicable;
+   Action tryEnable;
+};
+
+// Typically this is statically constructed:
+struct RegisteredMenuItemEnabler{
+   RegisteredMenuItemEnabler( const MenuItemEnabler &enabler );
+};
+
 #endif

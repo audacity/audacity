@@ -814,6 +814,55 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    commandManager.Check(wxT("TypeToCreateLabel"), active);
 }
 
+namespace
+{
+   using MenuItemEnablers = std::vector<MenuItemEnabler>;
+   MenuItemEnablers &Enablers()
+   {
+      static MenuItemEnablers enablers;
+      return enablers;
+   }
+}
+
+RegisteredMenuItemEnabler::RegisteredMenuItemEnabler(
+   const MenuItemEnabler &enabler )
+{
+   Enablers().emplace_back( enabler );
+}
+
+RegisteredMenuItemEnabler stopIfPaused{{
+   PausedFlag,
+   AudioIONotBusyFlag,
+   []( const AudacityProject &project ){
+      return MenuManager::Get( project ).mStopIfWasPaused; },
+   []( AudacityProject &project, CommandFlag ){
+      if ( MenuManager::Get( project ).mStopIfWasPaused )
+         TransportActions::StopIfPaused( project );
+   }
+}};
+
+auto canSelectAll = [](const AudacityProject &project){
+   return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
+auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
+   if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
+      (flagsRqd & NoAutoSelect).none() )
+      SelectActions::DoSelectAllAudio(project);
+};
+
+RegisteredMenuItemEnabler selectTracks{{
+   TracksExistFlag,
+   TracksSelectedFlag,
+   canSelectAll,
+   selectAll
+}};
+
+RegisteredMenuItemEnabler selectWaveTracks{{
+   WaveTracksExistFlag,
+   TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag,
+   canSelectAll,
+   selectAll
+}};
+
 // checkActive is a temporary hack that should be removed as soon as we
 // get multiple effect preview working
 void MenuManager::UpdateMenus( bool checkActive )
@@ -827,6 +876,12 @@ void MenuManager::UpdateMenus( bool checkActive )
       return;
 
    auto flags = GetUpdateFlags(checkActive);
+   // Return from this function if nothing's changed since
+   // the last time we were here.
+   if (flags == mLastFlags)
+      return;
+   mLastFlags = flags;
+
    auto flags2 = flags;
 
    // We can enable some extra items if we have select-all-on-none.
@@ -834,32 +889,14 @@ void MenuManager::UpdateMenus( bool checkActive )
    //ANSWER: Because flags2 is used in the menu enable/disable.
    //The effect still needs flags to determine whether it will need
    //to actually do the 'select all' to make the command valid.
-   if (mWhatIfNoSelection != 0)
-   {
-      if ( (flags & TracksExistFlag).any() )
-      {
-         flags2 |= TracksSelectedFlag;
-         if ( (flags & WaveTracksExistFlag).any() )
-         {
-            flags2 |= TimeSelectedFlag
-                   |  WaveTracksSelectedFlag
-                   |  CutCopyAvailableFlag;
-         }
-      }
-   }
 
-   if( mStopIfWasPaused )
-   {
-      if( (flags & PausedFlag).any() ){
-         flags2 |= AudioIONotBusyFlag;
-      }
+   for ( const auto &enabler : Enablers() ) {
+      if (
+         enabler.applicable( project ) &&
+         (flags & enabler.actualFlags) == enabler.actualFlags
+      )
+         flags2 |= enabler.possibleFlags;
    }
-
-   // Return from this function if nothing's changed since
-   // the last time we were here.
-   if (flags == mLastFlags)
-      return;
-   mLastFlags = flags;
 
    auto &commandManager = CommandManager::Get( project );
 
@@ -908,7 +945,6 @@ bool MenuManager::ReportIfActionNotAllowed(
    return false;
 }
 
-
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
@@ -921,42 +957,24 @@ bool MenuManager::TryToMakeActionAllowed(
    if( flags.none() )
       flags = GetUpdateFlags();
 
-   bAllowed = ((flags & flagsRqd) == flagsRqd);
-   if( bAllowed )
-      return true;
-
-   // Why is action not allowed?
-   // 1's wherever a required flag is missing.
-   auto MissingFlags = (~flags & flagsRqd);
-
-   if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ).any() ){
-      TransportActions::StopIfPaused( project );
-      // Hope this will now reflect stopped audio.
-      flags = GetUpdateFlags();
-      bAllowed = ((flags & flagsRqd) == flagsRqd);
-      if( bAllowed )
-         return true;
+   // Visit the table of recovery actions
+   auto &enablers = Enablers();
+   auto iter = enablers.begin(), end = enablers.end();
+   while ((flags & flagsRqd) != flagsRqd && iter != end) {
+      const auto &enabler = *iter;
+      auto MissingFlags = (~flags & flagsRqd);
+      if (
+         // Do we have the right precondition?
+         (flags & enabler.actualFlags) == enabler.actualFlags
+      &&
+         // Can we get the condition we need?
+         (MissingFlags & enabler.possibleFlags) == MissingFlags
+      ) {
+         // Then try the function
+         enabler.tryEnable( project, flagsRqd );
+         flags = GetUpdateFlags();
+      }
+      ++iter;
    }
-
-   //We can only make the action allowed if we select audio when no selection.
-   // IF not set up to select all audio when none, THEN return with failure.
-   if( mWhatIfNoSelection != 1 )
-      return false;
-
-   // Some effects disallow autoselection.
-   if( (flagsRqd & NoAutoSelect).any() )
-      return false;
-
-   // IF selecting all audio won't do any good, THEN return with failure.
-   if( (flags & WaveTracksExistFlag).none() )
-      return false;
-
-   // This was 'DoSelectSomething()'.  
-   // This made autoselect more confusing.
-   // When autoselect triggers, it might not select all audio in all tracks.
-   // So changed to DoSelectAllAudio.
-   SelectActions::DoSelectAllAudio(project);
-   flags = GetUpdateFlags();
-   bAllowed = ((flags & flagsRqd) == flagsRqd);
-   return bAllowed;
+   return (flags & flagsRqd) == flagsRqd;
 }
