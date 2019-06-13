@@ -1462,8 +1462,9 @@ void TrackArt::DrawEnvLine(
    }
 }
 
-#include "tracks/ui/TimeShiftHandle.h"
-#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
+// Headers needed only for experimental drawing below
+//#include "tracks/ui/TimeShiftHandle.h"
+//#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
 void TrackArt::DrawWaveform(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
@@ -1749,8 +1750,9 @@ void FindWavePortions
 }
 }
 
-#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
-#include "tracks/ui/EnvelopeHandle.h"
+// Headers needed only for experimental drawing below
+//#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
+//#include "tracks/ui/EnvelopeHandle.h"
 void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
