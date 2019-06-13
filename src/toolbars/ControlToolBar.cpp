@@ -56,8 +56,6 @@
 #include <wx/tooltip.h>
 #include <wx/datetime.h>
 
-#include "TranscriptionToolBar.h"
-
 #include "../AColor.h"
 #include "../AdornedRulerPanel.h"
 #include "../AllThemeResources.h"
@@ -486,12 +484,6 @@ void ControlToolBar::EnableDisableButtons()
 
    // Only interested in audio type tracks
    bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
-
-   if (p) {
-      const auto playAtSpeedTB = &TranscriptionToolBar::Get( *p );
-      if (playAtSpeedTB)
-         playAtSpeedTB->SetEnabled(CanStopAudioStream() && tracks && !recording);
-   }
 
    mPlay->SetEnabled(CanStopAudioStream() && tracks && !recording);
    mRecord->SetEnabled(

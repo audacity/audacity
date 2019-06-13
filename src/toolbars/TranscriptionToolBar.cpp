@@ -35,7 +35,7 @@
 
 #include "ControlToolBar.h"
 #include "../AllThemeResources.h"
-#include "../AudioIOBase.h"
+#include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Project.h"
@@ -288,6 +288,18 @@ void TranscriptionToolBar::Populate()
 
 void TranscriptionToolBar::EnableDisableButtons()
 {
+   AudacityProject *p = GetActiveProject();
+
+   auto gAudioIO = AudioIO::Get();
+   bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
+           gAudioIO->IsMonitoring() ||
+           gAudioIO->GetOwningProject() == p );
+   bool recording = gAudioIO->GetNumCaptureChannels() > 0;
+
+   // Only interested in audio type tracks
+   bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
+   SetEnabled( canStopAudioStream && tracks && !recording );
+
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    AudacityProject *p = GetActiveProject();
    if (!p) return;
