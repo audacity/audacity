@@ -586,7 +586,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   constexpr auto NotBusyLabelsAndWaveFlags =
+   static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag |
       LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag;
 

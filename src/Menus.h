@@ -15,6 +15,7 @@
 #include <wx/string.h> // member variable
 #include "Prefs.h"
 #include "ClientData.h"
+#include "commands/CommandFlag.h"
 
 class wxArrayString;
 class wxCommandEvent;
@@ -29,7 +30,6 @@ class ViewInfo;
 class WaveClip;
 class WaveTrack;
 
-enum CommandFlag : unsigned long long;
 enum EffectType : int;
 
 typedef wxString PluginID;

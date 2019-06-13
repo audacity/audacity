@@ -1075,7 +1075,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
    static const auto checkOff = Options{}.CheckState( false );
    static const auto checkOn = Options{}.CheckState( true );
 
-   constexpr auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
+   static const auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
 
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */

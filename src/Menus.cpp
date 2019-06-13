@@ -414,6 +414,57 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 }
 
 
+ReservedCommandFlag::ReservedCommandFlag()
+{
+   static size_t sNextReservedFlag = 0;
+   // This will throw std::out_of_range if the constant NCommandFlags is too
+   // small
+   set( sNextReservedFlag++ );
+}
+
+const ReservedCommandFlag
+   AudioIONotBusyFlag,
+   TimeSelectedFlag, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
+   TracksSelectedFlag,
+   TracksExistFlag,
+   LabelTracksExistFlag,
+   WaveTracksSelectedFlag,
+   ClipboardFlag,
+   TextClipFlag, // Same as Clipboard flag for now.
+   UnsavedChangesFlag,
+   HasLastEffectFlag,
+   UndoAvailableFlag,
+   RedoAvailableFlag,
+   ZoomInAvailableFlag,
+   ZoomOutAvailableFlag,
+   StereoRequiredFlag,  //lda
+   TopDockHasFocus,  //lll
+   TrackPanelHasFocus,  //lll
+   BotDockHasFocus,  //lll
+   LabelsSelectedFlag,
+   AudioIOBusyFlag,  //lll
+   PlayRegionLockedFlag,  //msmeyer
+   PlayRegionNotLockedFlag,  //msmeyer
+   CutCopyAvailableFlag,
+   WaveTracksExistFlag,
+   NoteTracksExistFlag,  //gsw
+   NoteTracksSelectedFlag,  //gsw
+   HaveRecentFiles,
+   IsNotSyncLockedFlag,  //awd
+   IsSyncLockedFlag,  //awd
+   IsRealtimeNotActiveFlag,  //lll
+   CaptureNotBusyFlag,
+   CanStopAudioStreamFlag,
+   RulerHasFocus, // prl
+   NotMinimizedFlag, // prl
+   PausedFlag, // jkc
+   NotPausedFlag, // jkc
+   HasWaveDataFlag, // jkc
+   PlayableTracksExistFlag,
+   AudioTracksSelectedFlag,
+   NoAutoSelect // jkc
+;
+
 CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
 {
    auto &project = mProject;
@@ -535,10 +586,12 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
    if (history.RedoAvailable())
       flags |= RedoAvailableFlag;
 
-   if (ViewInfo::Get( project ).ZoomInAvailable() && (flags & TracksExistFlag))
+   if (ViewInfo::Get( project ).ZoomInAvailable() &&
+       (flags & TracksExistFlag).any())
       flags |= ZoomInAvailableFlag;
 
-   if (ViewInfo::Get( project ).ZoomOutAvailable() && (flags & TracksExistFlag))
+   if (ViewInfo::Get( project ).ZoomOutAvailable() &&
+       (flags & TracksExistFlag).any())
       flags |= ZoomOutAvailableFlag;
 
    flags |= GetFocusedFrame(project);
@@ -549,9 +602,9 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
    else if (!playRegion.Empty())
       flags |= PlayRegionNotLockedFlag;
 
-   if (flags & AudioIONotBusyFlag) {
-      if (flags & TimeSelectedFlag) {
-         if (flags & TracksSelectedFlag) {
+   if ( (flags & AudioIONotBusyFlag).any() ) {
+      if ( (flags & TimeSelectedFlag).any() ) {
+         if ( (flags & TracksSelectedFlag).any() ) {
             flags |= CutCopyAvailableFlag;
          }
       }
@@ -681,10 +734,10 @@ void MenuManager::UpdateMenus( bool checkActive )
    //to actually do the 'select all' to make the command valid.
    if (mWhatIfNoSelection != 0)
    {
-      if ((flags & TracksExistFlag))
+      if ( (flags & TracksExistFlag).any() )
       {
          flags2 |= TracksSelectedFlag;
-         if ((flags & WaveTracksExistFlag))
+         if ( (flags & WaveTracksExistFlag).any() )
          {
             flags2 |= TimeSelectedFlag
                    |  WaveTracksSelectedFlag
@@ -695,7 +748,7 @@ void MenuManager::UpdateMenus( bool checkActive )
 
    if( mStopIfWasPaused )
    {
-      if( flags & PausedFlag ){
+      if( (flags & PausedFlag).any() ){
          flags2 |= AudioIONotBusyFlag;
       }
    }
@@ -715,28 +768,31 @@ void MenuManager::UpdateMenus( bool checkActive )
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
    if (mWhatIfNoSelection != 0)
    {
-      if (!(flags & TimeSelectedFlag) | !(flags & TracksSelectedFlag))
+      if ( (flags & TimeSelectedFlag).none() ||
+           (flags & TracksSelectedFlag).none ())
       {
          commandManager.Enable(wxT("SplitCut"), false);
          commandManager.Enable(wxT("SplitDelete"), false);
       }
-      if (!(flags & WaveTracksSelectedFlag))
+      if ( (flags & WaveTracksSelectedFlag).none() )
       {
          commandManager.Enable(wxT("Split"), false);
       }
-      if (!(flags & TimeSelectedFlag) | !(flags & WaveTracksSelectedFlag))
+      if ( (flags & TimeSelectedFlag).none() ||
+           (flags & WaveTracksSelectedFlag).none() )
       {
          commandManager.Enable(wxT("ExportSel"), false);
          commandManager.Enable(wxT("SplitNew"), false);
       }
-      if (!(flags & TimeSelectedFlag) | !(flags & AudioTracksSelectedFlag))
+      if ( (flags & TimeSelectedFlag).none() ||
+           (flags & AudioTracksSelectedFlag).none() )
       {
          commandManager.Enable(wxT("Trim"), false);
       }
    }
 
 #if 0
-   if (flags & CutCopyAvailableFlag) {
+   if ( (flags & CutCopyAvailableFlag).any() ) {
       GetCommandManager()->Enable(wxT("Copy"), true);
       GetCommandManager()->Enable(wxT("Cut"), true);
    }
@@ -789,7 +845,7 @@ bool MenuManager::TryToMakeActionAllowed(
    auto &project = mProject;
    bool bAllowed;
 
-   if( !flags )
+   if( flags.none() )
       flags = GetUpdateFlags();
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
@@ -800,7 +856,7 @@ bool MenuManager::TryToMakeActionAllowed(
    // 1's wherever a required flag is missing.
    auto MissingFlags = (~flags & flagsRqd) & mask;
 
-   if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
+   if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ).any() ){
       TransportActions::StopIfPaused( project );
       // Hope this will now reflect stopped audio.
       flags = GetUpdateFlags();
@@ -815,7 +871,7 @@ bool MenuManager::TryToMakeActionAllowed(
       return false;
 
    // Some effects disallow autoselection.
-   if( flagsRqd & NoAutoSelect )
+   if( (flagsRqd & NoAutoSelect).any() )
       return false;
 
    // Why is action still not allowed?
@@ -823,11 +879,13 @@ bool MenuManager::TryToMakeActionAllowed(
    MissingFlags = (flags & ~flagsRqd) & mask;
 
    // IF selecting all audio won't do any good, THEN return with failure.
-   if( !(flags & WaveTracksExistFlag) )
+   if( (flags & WaveTracksExistFlag).none() )
       return false;
    // returns if mask wants a zero in some flag and that's not present.
    // logic seems a bit peculiar and worth revisiting.
-   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
+   if( (MissingFlags &
+        ~( TimeSelectedFlag | WaveTracksSelectedFlag )
+       ).any() )
       return false;
 
    // This was 'DoSelectSomething()'.  

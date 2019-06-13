@@ -580,7 +580,7 @@ MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & )
 MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   constexpr auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
+   static const auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
 
    return Menu( _("F&ocus"),
       Command( wxT("PrevFrame"),

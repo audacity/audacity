@@ -964,7 +964,7 @@ void CommandManager::EnableUsingFlags(CommandFlag flags, CommandMask mask)
          continue;
 
       auto combinedMask = (mask & entry->mask);
-      if (combinedMask) {
+      if (combinedMask.any()) {
          bool enable = ((flags & combinedMask) ==
                         (entry->flags & combinedMask));
          Enable(entry.get(), enable);
@@ -1027,15 +1027,18 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    wxString title = _("Disallowed");
    wxString helpPage;
 
-   auto missingFlags = flagsRequired & (~flagsGot );
-   if( missingFlags & AudioIONotBusyFlag )
+   auto missingFlags = flagsRequired & ~flagsGot;
+   if( (missingFlags & AudioIONotBusyFlag).any() )
       // This reason will not be shown, because options that require it will be greyed our.
       reason = _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
-   else if( missingFlags & StereoRequiredFlag )
+   else if( (missingFlags & StereoRequiredFlag).any() )
       // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
       reason = _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
    // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
-   else if(( missingFlags & TimeSelectedFlag ) || (missingFlags &CutCopyAvailableFlag )){
+   else if( (
+      ( missingFlags & TimeSelectedFlag ) |
+      ( missingFlags & CutCopyAvailableFlag )
+   ).any() ){
       title = _("No Audio Selected");
 #ifdef EXPERIMENTAL_DA
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
@@ -1058,9 +1061,9 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
 #endif
       helpPage = "Selecting_Audio_-_the_basics";
    }
-   else if( missingFlags & WaveTracksSelectedFlag)
+   else if( (missingFlags & WaveTracksSelectedFlag).any() )
       reason = _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
-   else if ( missingFlags & TracksSelectedFlag )
+   else if ( (missingFlags & TracksSelectedFlag).any() )
       // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
       reason = wxString::Format(_("\"%s\" requires one or more tracks to be selected."), Name);
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
@@ -1254,7 +1257,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    auto proj = GetActiveProject();
 
    auto combinedMask = (mask & entry->mask);
-   if (combinedMask) {
+   if (combinedMask.any()) {
 
       wxASSERT( proj );
       if( !proj )
@@ -1671,3 +1674,4 @@ static struct InstallHandlers
       } );
    }
 } installHandlers;
+
