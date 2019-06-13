@@ -223,7 +223,7 @@ class AUDACITY_DLL_API CommandManager final
    //
 
    void EnableUsingFlags(
-      CommandFlag flags, CommandFlag strictFlags, CommandMask mask);
+      CommandFlag flags, CommandFlag strictFlags);
    void Enable(const wxString &name, bool enabled);
    void Check(const CommandID &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);

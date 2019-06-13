@@ -957,7 +957,7 @@ void CommandManager::Enable(const wxString &name, bool enabled)
 }
 
 void CommandManager::EnableUsingFlags(
-   CommandFlag flags, CommandFlag strictFlags, CommandMask mask)
+   CommandFlag flags, CommandFlag strictFlags)
 {
    // strictFlags are a subset of flags.  strictFlags represent the real
    // conditions now, but flags are the conditions that could be made true.
@@ -973,10 +973,9 @@ void CommandManager::EnableUsingFlags(
 
       auto useFlags = entry->useStrictFlags ? strictFlags : flags;
 
-      auto combinedMask = (mask & entry->mask);
-      if (combinedMask.any()) {
-         bool enable = ((useFlags & combinedMask) ==
-                        (entry->flags & combinedMask));
+      if (entry->mask.any()) {
+         bool enable = ((useFlags & entry->mask) ==
+                        (entry->flags & entry->mask));
          Enable(entry.get(), enable);
       }
    }

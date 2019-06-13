@@ -868,8 +868,7 @@ void MenuManager::UpdateMenus( bool checkActive )
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
    commandManager.EnableUsingFlags(
       flags2, // the "lax" flags
-      (mWhatIfNoSelection == 0 ? flags2 : flags), // the "strict" flags
-      NoFlagsSpecified
+      (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
    );
 
    MenuManager::ModifyToolbarMenus(project);
