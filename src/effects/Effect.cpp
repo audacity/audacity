@@ -777,7 +777,7 @@ bool Effect::Apply()
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   return PluginActions::DoEffect(GetID(), context,
+   return EffectManager::DoEffect(GetID(), context,
       EffectManager::kConfigured);
 }
 

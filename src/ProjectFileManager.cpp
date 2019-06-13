@@ -1712,7 +1712,7 @@ bool ProjectFileManager::Import(
       SelectUtilities::SelectNone( project );
       SelectUtilities::SelectAllIfNone( project );
       const CommandContext context( project );
-      PluginActions::DoEffect(
+      EffectManager::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
          EffectManager::kConfigured);

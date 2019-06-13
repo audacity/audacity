@@ -138,12 +138,6 @@ void DoTogglePinnedHead( AudacityProject & );
 void DoRecord( AudacityProject & );
 }
 
-/// Namespace for helper functions to do with plug ins
-namespace PluginActions {
-bool DoEffect(
-   const PluginID & ID, const CommandContext & context, unsigned flags );
-}
-
 /// Namespace for functions for Help menu
 namespace HelpActions {
 void DoHelpWelcome( AudacityProject & );

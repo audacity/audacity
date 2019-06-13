@@ -674,7 +674,7 @@ void OnNewTimeTrack(const CommandContext &context)
 
 void OnStereoToMono(const CommandContext &context)
 {
-   PluginActions::DoEffect(
+   EffectManager::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
       context,
       EffectManager::kConfigured);

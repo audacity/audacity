@@ -309,7 +309,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!PluginActions::DoEffect(mEffects[i]->GetID(),
+         if (!EffectManager::DoEffect(mEffects[i]->GetID(),
                            *project,
                            EffectManager::kConfigured))
             // If any effect fails (or throws), then stop.

@@ -67,6 +67,9 @@ public:
 // them by index number, usually when the user selects one from a menu.
 //
 public:
+   static bool DoEffect(
+      const PluginID & ID, const CommandContext &context, unsigned flags );
+
    EffectManager();
    virtual ~EffectManager();
 
