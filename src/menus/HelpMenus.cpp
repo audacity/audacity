@@ -282,11 +282,6 @@ namespace HelpActions {
 
 // exported helper functions
 
-void DoHelpWelcome( AudacityProject &project )
-{
-   SplashDialog::Show2( &GetProjectFrame( project ) );
-}
-
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
@@ -396,7 +391,7 @@ void MayCheckForUpdates(AudacityProject &project)
 
 void OnHelpWelcome(const CommandContext &context)
 {
-   DoHelpWelcome( context.project );
+   SplashDialog::DoHelpWelcome( context.project );
 }
 
 #endif

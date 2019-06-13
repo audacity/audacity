@@ -132,9 +132,4 @@ void DoTogglePinnedHead( AudacityProject & );
 void DoRecord( AudacityProject & );
 }
 
-/// Namespace for functions for Help menu
-namespace HelpActions {
-void DoHelpWelcome( AudacityProject & );
-}
-
 #endif

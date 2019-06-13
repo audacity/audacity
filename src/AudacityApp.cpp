@@ -1544,7 +1544,7 @@ bool AudacityApp::OnInit()
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
       // project->MayCheckForUpdates();
-      HelpActions::DoHelpWelcome(*project);
+      SplashDialog::DoHelpWelcome(*project);
    }
 
    #ifdef USE_FFMPEG
