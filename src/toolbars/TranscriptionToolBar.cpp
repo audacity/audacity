@@ -40,6 +40,7 @@
 #include "../KeyboardCapture.h"
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
+#include "../ProjectSettings.h"
 #include "../Envelope.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -98,7 +99,7 @@ TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
 : ToolBar( project,
    TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"), true )
 {
-   mPlaySpeed = 1.0 * 100.0;
+   SetPlaySpeed( 1.0 * 100.0 );
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mVk = std::make_unique<VoiceKey>();
 #endif
@@ -146,12 +147,18 @@ void TranscriptionToolBar::Create(wxWindow * parent)
    //JKC: Set speed this way is better, as we don't
    //then stop Audio if it is playing, so we can be playing
    //audio and open a second project.
-   mPlaySpeed = (mPlaySpeedSlider->Get()) * 100;
+   SetPlaySpeed( (mPlaySpeedSlider->Get()) * 100 );
 
    // Simulate a size event to set initial placement/size
    wxSizeEvent event(GetSize(), GetId());
    event.SetEventObject(this);
    GetEventHandler()->ProcessEvent(event);
+}
+
+void TranscriptionToolBar::SetPlaySpeed( double value )
+{
+   mPlaySpeed = value;
+   ProjectSettings::Get( mProject ).SetPlaySpeed( GetPlaySpeed() );
 }
 
 /// This is a convenience function that allows for button creation in
@@ -551,7 +558,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
 
 void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
 {
-   mPlaySpeed = (mPlaySpeedSlider->Get()) * 100;
+   SetPlaySpeed( (mPlaySpeedSlider->Get()) * 100 );
    RegenerateTooltips();
 
    // If IO is busy, abort immediately

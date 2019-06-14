@@ -121,7 +121,7 @@ class TranscriptionToolBar final : public ToolBar {
 
  private:
 
-   void InitializeTranscriptionToolBar();
+   void SetPlaySpeed( double value );
    static AButton *AddButton(
       TranscriptionToolBar *pBar,
       teBmps eFore, teBmps eDisabled,

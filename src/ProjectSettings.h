@@ -11,6 +11,7 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_SETTINGS__
 #define __AUDACITY_PROJECT_SETTINGS__
 
+#include <atomic>
 #include <wx/event.h> // to declare custom event type
 
 #include "ClientData.h" // to inherit
@@ -88,6 +89,12 @@ public:
    void SetTool(int tool) { mCurrentTool = tool; }
    int GetTool() const { return mCurrentTool; }
 
+   // Speed play
+   double GetPlaySpeed() const {
+      return mPlaySpeed.load( std::memory_order_relaxed ); }
+   void SetPlaySpeed( double value ) {
+      mPlaySpeed.store( value, std::memory_order_relaxed ); }
+
    // Selection Format
 
    void SetSelectionFormat(const NumericFormatSymbol & format);
@@ -120,6 +127,10 @@ private:
    wxString mSoloPref;
 
    double mRate;
+
+   // This is atomic because scrubber may read it in a separate thread from
+   // the main
+   std::atomic<double> mPlaySpeed{};
 
    sampleFormat mDefaultFormat;
    int mSnapTo;
