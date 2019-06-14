@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackVRulerControls.h"
 
 #include "../../HitTestResult.h"
-#include "../../toolbars/ToolsToolBar.h"
 
 #include "../ui/SelectHandle.h"
 #include "EnvelopeHandle.h"
@@ -24,16 +23,18 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeShiftHandle.h"
 #include "../../TrackPanelResizerCell.h"
 #include "BackgroundCell.h"
+#include "../../ProjectSettings.h"
 
 std::vector<UIHandlePtr> Track::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
    UIHandlePtr result;
+   using namespace ToolCodes;
    std::vector<UIHandlePtr> results;
-   auto pTtb = &ToolsToolBar::Get( *pProject );
-   const bool isMultiTool = pTtb->IsDown(multiTool);
-   const auto currentTool = pTtb->GetCurrentTool();
+   const auto &settings = ProjectSettings::Get( *pProject );
+   const auto currentTool = settings.GetTool();
+   const bool isMultiTool = ( currentTool == multiTool );
 
    if ( !isMultiTool && currentTool == zoomTool ) {
       // Zoom tool is a non-selecting tool that takes precedence in all tracks

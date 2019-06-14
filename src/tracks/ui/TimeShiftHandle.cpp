@@ -21,7 +21,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../UndoManager.h"
 #include "../../WaveClip.h"
 #include "../../ViewInfo.h"
@@ -371,8 +370,8 @@ UIHandle::Result TimeShiftHandle::Click
    mClipMoveState.clear();
    mDidSlideVertically = false;
 
-   const auto ttb = &ToolsToolBar::Get( *pProject );
-   const bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
+   const bool multiToolModeActive =
+      (ToolCodes::multiTool == ProjectSettings::Get( *pProject ).GetTool());
 
    const double clickTime =
       viewInfo.PositionToTime(event.m_x, rect.x);

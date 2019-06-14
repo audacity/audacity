@@ -90,7 +90,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    PlayableTrack(projDirManager)
 {
    {
-      const auto settings = ProjectSettings::Get( *GetActiveProject() );
+      const auto &settings = ProjectSettings::Get( *GetActiveProject() );
       if (format == (sampleFormat)0)
       {
          format = settings.GetDefaultFormat();

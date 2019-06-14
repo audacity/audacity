@@ -33,7 +33,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../ondemand/ODManager.h"
 #include "../../prefs/SpectrogramSettings.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../../images/Cursors.h"
 
 #include <wx/event.h>
@@ -904,7 +903,7 @@ HitTestPreview SelectHandle::Preview
       auto xx = viewInfo.TimeToPosition(time, mRect.x);
 
       const bool bMultiToolMode =
-         ToolsToolBar::Get( *pProject ).IsDown(multiTool);
+         (ToolCodes::multiTool == ProjectSettings::Get( *pProject ).GetTool());
 
       //In Multi-tool mode, give multitool prompt if no-special-hit.
       if (bMultiToolMode) {

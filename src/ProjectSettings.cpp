@@ -75,6 +75,14 @@ ProjectSettings::ProjectSettings( AudacityProject &project )
    }
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
+   bool multiToolActive = false;
+   gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
+
+   if (multiToolActive)
+      mCurrentTool = ToolCodes::multiTool;
+   else
+      mCurrentTool = ToolCodes::selectTool;
+
    UpdatePrefs();
 }
 
