@@ -59,25 +59,26 @@ public:
 // ReservedCommandFlag values
 
 extern const ReservedCommandFlag
-   AudioIONotBusyFlag,
+   AudioIOBusyFlag,  //lll
+   StereoRequiredFlag,  //lda
    TimeSelectedFlag, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
-   TracksSelectedFlag,
-   TracksExistFlag,
-   LabelTracksExistFlag,
+   CutCopyAvailableFlag,
    WaveTracksSelectedFlag,
+   TracksExistFlag,
+   TracksSelectedFlag,
+   TrackPanelHasFocus,  //lll
+
+   AudioIONotBusyFlag,
+   LabelTracksExistFlag,
    UnsavedChangesFlag,
    HasLastEffectFlag,
    UndoAvailableFlag,
    RedoAvailableFlag,
    ZoomInAvailableFlag,
    ZoomOutAvailableFlag,
-   StereoRequiredFlag,  //lda
-   TrackPanelHasFocus,  //lll
    LabelsSelectedFlag,
-   AudioIOBusyFlag,  //lll
    PlayRegionLockedFlag,  //msmeyer
    PlayRegionNotLockedFlag,  //msmeyer
-   CutCopyAvailableFlag,
    WaveTracksExistFlag,
    NoteTracksExistFlag,  //gsw
    NoteTracksSelectedFlag,  //gsw

@@ -454,26 +454,66 @@ const ReservedCommandFlag
          return !AudioIOBusyPred( project );
       },
       CommandFlagOptions{}.QuickTest()
-   },
+   }, //lll
+   StereoRequiredFlag{
+      [](const AudacityProject &project){
+         // True iff at least one stereo track is selected, i.e., at least
+         // one right channel is selected.
+         // TODO: more-than-two-channels
+         auto range = TrackList::Get( project ).Selected<const WaveTrack>()
+            - &Track::IsLeader;
+         return !range.empty();
+      }
+   },  //lda
    TimeSelectedFlag{
       TimeSelectedPred
    },
-   TracksSelectedFlag{
-      TracksSelectedPred
+   CutCopyAvailableFlag{
+      [](const AudacityProject &project){
+         auto range = TrackList::Get( project ).Any<const LabelTrack>()
+            + &LabelTrack::IsTextSelected;
+         if ( !range.empty() )
+            return true;
+
+         if (
+            !AudioIOBusyPred( project )
+         &&
+            TimeSelectedPred( project )
+         &&
+            TracksSelectedPred( project )
+         )
+            return true;
+
+         return false;
+      }
+   },
+   WaveTracksSelectedFlag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Selected<const WaveTrack>().empty();
+      }
    },
    TracksExistFlag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any().empty();
       }
    },
+   TracksSelectedFlag{
+      TracksSelectedPred
+   },
+   TrackPanelHasFocus{
+      [](const AudacityProject &project){
+         for (auto w = wxWindow::FindFocus(); w; w = w->GetParent()) {
+            if (dynamic_cast<const NonKeystrokeInterceptingWindow*>(w))
+               return true;
+         }
+         return false;
+      }
+   };  //lll
+
+const ReservedCommandFlag
    LabelTracksExistFlag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const LabelTrack>().empty();
-      }
-   },
-   WaveTracksSelectedFlag{
-      [](const AudacityProject &project){
-         return !TrackList::Get( project ).Selected<const WaveTrack>().empty();
       }
    },
    UnsavedChangesFlag{
@@ -519,25 +559,6 @@ const ReservedCommandFlag
          ;
       }
    },
-   StereoRequiredFlag{
-      [](const AudacityProject &project){
-         // True iff at least one stereo track is selected, i.e., at least
-         // one right channel is selected.
-         // TODO: more-than-two-channels
-         auto range = TrackList::Get( project ).Selected<const WaveTrack>()
-            - &Track::IsLeader;
-         return !range.empty();
-      }
-   },  //lda
-   TrackPanelHasFocus{
-      [](const AudacityProject &project){
-         for (auto w = wxWindow::FindFocus(); w; w = w->GetParent()) {
-            if (dynamic_cast<const NonKeystrokeInterceptingWindow*>(w))
-               return true;
-         }
-         return false;
-      }
-   },  //lll
    LabelsSelectedFlag{
       [](const AudacityProject &project){
          // At least one label track selected, having at least one label
@@ -575,25 +596,6 @@ const ReservedCommandFlag
          return !playRegion.Locked() && !playRegion.Empty();
       }
    },  //msmeyer
-   CutCopyAvailableFlag{
-      [](const AudacityProject &project){
-         auto range = TrackList::Get( project ).Any<const LabelTrack>()
-            + &LabelTrack::IsTextSelected;
-         if ( !range.empty() )
-            return true;
-
-         if (
-            !AudioIOBusyPred( project )
-         &&
-            TimeSelectedPred( project )
-         &&
-            TracksSelectedPred( project )
-         )
-            return true;
-
-         return false;
-      }
-   },
    WaveTracksExistFlag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const WaveTrack>().empty();
