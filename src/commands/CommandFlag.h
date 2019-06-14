@@ -14,6 +14,7 @@
 #include <bitset>
 #include <functional>
 #include <utility>
+#include <wx/string.h>
 
 class AudacityProject;
 
@@ -33,9 +34,44 @@ constexpr CommandFlag
    NoFlagsSpecified{ ~0ULL }; // all ones
 
 struct CommandFlagOptions{
+   // Supplied the translated name of the command, returns a translated
+   // error message
+   using MessageFormatter = std::function< wxString( const wxString& ) >;
+
    CommandFlagOptions() = default;
+   CommandFlagOptions(
+      const MessageFormatter &message_,
+      const wxString &helpPage_ = {},
+      const wxString &title_ = {}
+   ) : message{ message_ }, helpPage{ helpPage_ }, title{ title_ }
+   {}
+
    CommandFlagOptions && QuickTest() &&
    { quickTest = true; return std::move( *this ); }
+   CommandFlagOptions && DisableDefaultMessage() &&
+   { enableDefaultMessage = false; return std::move( *this ); }
+   CommandFlagOptions && Priority( unsigned priority_ ) &&
+   { priority = priority_; return std::move( *this ); }
+
+   // null, or else computes non-default message for the dialog box when the
+   // condition is not satisfied for the selected command
+   MessageFormatter message;
+
+   // Title and help page are used only if a message function is given
+   wxString helpPage;
+
+   // Empty, or non-default title for the dialog box when the
+   // condition is not satisfied for the selected command
+   // This string must be given UN-translated.
+   wxString title;
+
+   // Conditions with higher "priority" are preferred over others in choosing
+   // the help message
+   unsigned priority = 0;
+
+   // If false, and no other condition with a message is unsatisfied, then
+   // display no dialog box at all when this condition is not satisfied
+   bool enableDefaultMessage = true;
 
    // If true, assume this is a cheap test to be done always.  If false, the
    // test may be skipped and the condition assumed to be unchanged since the

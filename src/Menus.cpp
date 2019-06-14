@@ -448,13 +448,62 @@ ReservedCommandFlag::ReservedCommandFlag(
    Options().emplace_back( options );
 }
 
+static const CommandFlagOptions cutCopyOptions{
+// In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
+   []( const wxString &Name ) {
+      // PRL:  These strings have hard-coded mention of a certain shortcut key,
+      // thus assuming the default shortcuts.  That is questionable.
+      wxString format;
+#ifdef EXPERIMENTAL_DA
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      format = _("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio.");
+#else
+#ifdef __WXMAC__
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      format = _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+      // No need to explain what a help button is for.
+      // "\n\nClick the Help button to learn more about selection methods."
+      );
+
+#else
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      format = _("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+      // No need to explain what a help button is for.
+      // "\n\nClick the Help button to learn more about selection methods."
+      );
+#endif
+      return wxString::Format( format, Name );
+#endif
+   },
+   "Selecting_Audio_-_the_basics",
+   XO("No Audio Selected")
+};
+
 const ReservedCommandFlag
+   // This flag has higher priority than others for purposes of help messages.
+   // It was important to arrange that for reasons of breaking dependency
+   // cycles, giving more freedom in the choice of file in which to implement
+   // this flag.
    AudioIONotBusyFlag{
       [](const AudacityProject &project ){
          return !AudioIOBusyPred( project );
       },
-      CommandFlagOptions{}.QuickTest()
-   }, //lll
+      CommandFlagOptions{ []( const wxString& ) { return
+         // This reason will not be shown, because options that require it will be greyed out.
+         _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
+      } }
+      .QuickTest()
+      .Priority( 1 )
+   }; //lll
+
+const ReservedCommandFlag
+   // The sequence of these definitions has a minor significance in determining
+   // which user error message has precedence if more than one might apply, so
+   // they should be kept in this sequence in one .cpp file if it is important
+   // to preserve that behavior.  If they are dispersed to more than one file,
+   // then the precedence will be unspecified.
+   // The ordering of the flags that only disable the default message is not
+   // significant.
    StereoRequiredFlag{
       [](const AudacityProject &project){
          // True iff at least one stereo track is selected, i.e., at least
@@ -463,10 +512,15 @@ const ReservedCommandFlag
          auto range = TrackList::Get( project ).Selected<const WaveTrack>()
             - &Track::IsLeader;
          return !range.empty();
-      }
+      },
+      { []( const wxString& ) { return
+         // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
+         _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
+      } }
    },  //lda
    TimeSelectedFlag{
-      TimeSelectedPred
+      TimeSelectedPred,
+      cutCopyOptions
    },
    CutCopyAvailableFlag{
       [](const AudacityProject &project){
@@ -485,20 +539,30 @@ const ReservedCommandFlag
             return true;
 
          return false;
-      }
+      },
+      cutCopyOptions
    },
    WaveTracksSelectedFlag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Selected<const WaveTrack>().empty();
-      }
+      },
+      { []( const wxString& ) { return
+         _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
+      } }
    },
    TracksExistFlag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any().empty();
-      }
+      },
+      CommandFlagOptions{}.DisableDefaultMessage()
    },
    TracksSelectedFlag{
-      TracksSelectedPred
+      TracksSelectedPred,
+      { []( const wxString &Name ){ return wxString::Format(
+         // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+         _("\"%s\" requires one or more tracks to be selected."),
+         Name
+      ); } }
    },
    TrackPanelHasFocus{
       [](const AudacityProject &project){
@@ -507,7 +571,8 @@ const ReservedCommandFlag
                return true;
          }
          return false;
-      }
+      },
+      CommandFlagOptions{}.DisableDefaultMessage()
    };  //lll
 
 const ReservedCommandFlag
@@ -987,59 +1052,68 @@ void MenuManager::TellUserWhyDisallowed(
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
-   wxString reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
+   auto reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
    // The default title string is 'Disallowed'.
-   wxString title = _("Disallowed");
+   auto untranslatedTitle = XO("Disallowed");
    wxString helpPage;
 
-   auto missingFlags = flagsRequired & ~flagsGot;
-   if( (missingFlags & AudioIONotBusyFlag).any() )
-      // This reason will not be shown, because options that require it will be greyed our.
-      reason = _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
-   else if( (missingFlags & StereoRequiredFlag).any() )
-      // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
-      reason = _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
-   // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
-   else if( (
-      ( missingFlags & TimeSelectedFlag ) |
-      ( missingFlags & CutCopyAvailableFlag )
-   ).any() ){
-      title = _("No Audio Selected");
-#ifdef EXPERIMENTAL_DA
-      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      reason = wxString::Format( _("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio."), Name );
-#else
-#ifdef __WXMAC__
-      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      reason = wxString::Format( _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-      // No need to explain what a help button is for.
-      // "\n\nClick the Help button to learn more about selection methods."
-      ), Name );
+   bool enableDefaultMessage = true;
+   bool defaultMessage = true;
 
-#else
-      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      reason = wxString::Format( _("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-      // No need to explain what a help button is for.
-      // "\n\nClick the Help button to learn more about selection methods."
-      ), Name );
-#endif
-#endif
-      helpPage = "Selecting_Audio_-_the_basics";
+   auto doOption = [&](const CommandFlagOptions &options) {
+      if ( options.message ) {
+         reason = options.message( Name );
+         defaultMessage = false;
+         if ( !options.title.empty() )
+            untranslatedTitle = options.title;
+         helpPage = options.helpPage;
+         return true;
+      }
+      else {
+         enableDefaultMessage =
+            enableDefaultMessage && options.enableDefaultMessage;
+         return false;
+      }
+   };
+
+   const auto &alloptions = Options();
+   auto missingFlags = flagsRequired & ~flagsGot;
+
+   // Find greatest priority
+   unsigned priority = 0;
+   for ( const auto &options : alloptions )
+      priority = std::max( priority, options.priority );
+
+   // Visit all unsatisfied conditions' options, by descending priority,
+   // stopping when we find a message
+   ++priority;
+   while( priority-- ) {
+      size_t ii = 0;
+      for ( const auto &options : alloptions ) {
+         if (
+            priority == options.priority
+         &&
+            missingFlags[ii]
+         &&
+            doOption( options ) )
+            goto done;
+
+         ++ii;
+      }
    }
-   else if( (missingFlags & WaveTracksSelectedFlag).any() )
-      reason = _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
-   else if ( (missingFlags & TracksSelectedFlag).any() )
-      // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
-      reason = wxString::Format(_("\"%s\" requires one or more tracks to be selected."), Name);
-   // If the only thing wrong was no tracks, we do nothing and don't report a problem
-   else if( missingFlags == TracksExistFlag )
+   done:
+
+   if (
+      // didn't find a message
+      defaultMessage
+   &&
+      // did find a condition that suppresses the default message
+      !enableDefaultMessage
+   )
       return;
-   // Likewise return if it was just no tracks, and track panel did not have focus.  (e.g. up-arrow to move track)
-   else if( missingFlags == (TracksExistFlag | TrackPanelHasFocus) )
-      return;
-   // Likewise as above too...
-   else if( missingFlags == TrackPanelHasFocus )
-      return;
+
+   // Message is already translated but title is not yet
+   auto title = ::GetCustomTranslation( untranslatedTitle );
 
    // Does not have the warning icon...
    ShowErrorDialog(
