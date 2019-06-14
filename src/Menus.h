@@ -87,6 +87,9 @@ public:
 
 
 private:
+   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot,
+      CommandFlag flagsRequired);
+
    void OnUndoRedo( wxCommandEvent &evt );
 
    AudacityProject &mProject;

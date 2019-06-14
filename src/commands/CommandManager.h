@@ -286,7 +286,6 @@ class AUDACITY_DLL_API CommandManager final
    //
 
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
-   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired);
 
    ///
    /// Formatting summaries that include shortcut keys
