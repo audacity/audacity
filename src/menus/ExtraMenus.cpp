@@ -1,3 +1,4 @@
+#include "../CommonCommandFlags.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../commands/CommandContext.h"

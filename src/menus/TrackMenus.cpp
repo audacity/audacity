@@ -1,6 +1,7 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../MissingAliasFileDialog.h"

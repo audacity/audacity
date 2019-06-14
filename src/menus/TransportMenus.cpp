@@ -3,6 +3,7 @@
 
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../DeviceManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"

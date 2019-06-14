@@ -49,6 +49,7 @@ greater use in future.
 
 #include "EffectManager.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Mix.h"
@@ -57,7 +58,6 @@ greater use in future.
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
-#include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../ViewInfo.h"

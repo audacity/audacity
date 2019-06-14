@@ -7,6 +7,7 @@
 
 #ifdef __WXMAC__
 
+#include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../Project.h"
 #include "../commands/CommandContext.h"

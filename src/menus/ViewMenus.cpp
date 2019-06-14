@@ -1,6 +1,7 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
+#include "../CommonCommandFlags.h"
 #include "../HistoryWindow.h"
 #include "../LyricsWindow.h"
 #include "../Menus.h"

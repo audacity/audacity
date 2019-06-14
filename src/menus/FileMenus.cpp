@@ -2,6 +2,7 @@
 #include "../Experimental.h"
 
 #include "../BatchCommands.h"
+#include "../CommonCommandFlags.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../MissingAliasFileDialog.h"

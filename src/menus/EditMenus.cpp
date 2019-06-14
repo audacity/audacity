@@ -1,6 +1,7 @@
 #include "../Audacity.h" // for USE_* macros
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -1090,6 +1091,28 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
 
+const ReservedCommandFlag
+   CutCopyAvailableFlag{
+      [](const AudacityProject &project){
+         auto range = TrackList::Get( project ).Any<const LabelTrack>()
+            + &LabelTrack::IsTextSelected;
+         if ( !range.empty() )
+            return true;
+
+         if (
+            !AudioIOBusyPred( project )
+         &&
+            TimeSelectedPred( project )
+         &&
+            TracksSelectedPred( project )
+         )
+            return true;
+
+         return false;
+      },
+      cutCopyOptions
+   };
+
 MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 {
    using namespace MenuTable;
@@ -1228,6 +1251,28 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
          wxT("Delete") )
    );
 }
+
+auto canSelectAll = [](const AudacityProject &project){
+   return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
+auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
+   if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
+      (flagsRqd & NoAutoSelect).none() )
+      SelectActions::DoSelectAllAudio(project);
+};
+
+RegisteredMenuItemEnabler selectTracks{{
+   TracksExistFlag,
+   TracksSelectedFlag,
+   canSelectAll,
+   selectAll
+}};
+
+RegisteredMenuItemEnabler selectWaveTracks{{
+   WaveTracksExistFlag,
+   TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag,
+   canSelectAll,
+   selectAll
+}};
 
 #undef XXO
 #undef FN

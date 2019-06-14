@@ -94,43 +94,6 @@ public:
 // extended, with special purpose flags of limited use, by constucting static
 // ReservedCommandFlag values
 
-extern const ReservedCommandFlag
-   AudioIOBusyFlag,  //lll
-   StereoRequiredFlag,  //lda
-   TimeSelectedFlag, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
-   CutCopyAvailableFlag,
-   WaveTracksSelectedFlag,
-   TracksExistFlag,
-   TracksSelectedFlag,
-   TrackPanelHasFocus,  //lll
-
-   AudioIONotBusyFlag,
-   LabelTracksExistFlag,
-   UnsavedChangesFlag,
-   HasLastEffectFlag,
-   UndoAvailableFlag,
-   RedoAvailableFlag,
-   ZoomInAvailableFlag,
-   ZoomOutAvailableFlag,
-   LabelsSelectedFlag,
-   PlayRegionLockedFlag,  //msmeyer
-   PlayRegionNotLockedFlag,  //msmeyer
-   WaveTracksExistFlag,
-   NoteTracksExistFlag,  //gsw
-   NoteTracksSelectedFlag,  //gsw
-   IsNotSyncLockedFlag,  //awd
-   IsSyncLockedFlag,  //awd
-   IsRealtimeNotActiveFlag,  //lll
-   CaptureNotBusyFlag,
-   CanStopAudioStreamFlag,
-   NotMinimizedFlag, // prl
-   PausedFlag, // jkc
-   HasWaveDataFlag, // jkc
-   PlayableTracksExistFlag,
-   AudioTracksSelectedFlag,
-   NoAutoSelect // jkc
-;
-
 // To describe auto-selection, stop-if-paused, etc.:
 // A structure describing a set of conditions, another set that might be
 // made true given the first, and the function that may make them true.

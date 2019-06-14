@@ -210,5 +210,10 @@ class ControlToolBar final : public ToolBar {
    DECLARE_EVENT_TABLE()
 };
 
+#include "../commands/CommandFlag.h"
+
+extern const ReservedCommandFlag
+   CanStopAudioStreamFlag;
+
 #endif
 
