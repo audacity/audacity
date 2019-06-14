@@ -96,9 +96,7 @@ CommandManager.  It holds the callback for one command.
 
 #include "../Menus.h"
 
-#include "../PluginManager.h"
 #include "../Project.h"
-#include "../effects/EffectManager.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
@@ -1238,10 +1236,12 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled)
 /// HandleTextualCommand() allows us a limitted version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
-bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
+CommandManager::TextualCommandResult
+CommandManager::HandleTextualCommand(const CommandID & Str,
+   const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
 {
    if( Str.empty() )
-      return false;
+      return CommandFailure;
    // Linear search for now...
    for (const auto &entry : mCommandList)
    {
@@ -1254,7 +1254,8 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
             // sub-menu name)
             Str == entry->labelPrefix )
          {
-            return HandleCommandEntry( entry.get(), flags, alwaysEnabled);
+            return HandleCommandEntry( entry.get(), flags, alwaysEnabled)
+               ? CommandSuccess : CommandFailure;
          }
       }
       else
@@ -1262,34 +1263,12 @@ bool CommandManager::HandleTextualCommand(const CommandID & Str, const CommandCo
          // Handle multis too...
          if( Str == entry->name )
          {
-            return HandleCommandEntry( entry.get(), flags, alwaysEnabled);
+            return HandleCommandEntry( entry.get(), flags, alwaysEnabled)
+               ? CommandSuccess : CommandFailure;
          }
       }
    }
-   // Not one of the singleton commands.
-   // We could/should try all the list-style commands.
-   // instead we only try the effects.
-   AudacityProject * proj = GetActiveProject();
-   if( !proj )
-   {
-      return false;
-   }
-
-   PluginManager & pm = PluginManager::Get();
-   EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
-   while (plug)
-   {
-      if (em.GetCommandIdentifier(plug->GetID()) == Str)
-      {
-         return PluginActions::DoEffect(
-            plug->GetID(), context,
-            PluginActions::kConfigured);
-      }
-      plug = pm.GetNextPlugin(PluginTypeEffect);
-   }
-
-   return false;
+   return CommandNotFound;
 }
 
 void CommandManager::GetCategories(wxArrayString &cats)

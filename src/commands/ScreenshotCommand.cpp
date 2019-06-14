@@ -32,6 +32,7 @@ small calculations of rectangles.
 #include <wx/valgen.h>
 
 #include "../AdornedRulerPanel.h"
+#include "../BatchCommands.h"
 #include "../TrackPanel.h"
 #include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
@@ -454,7 +455,8 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
-      if( !commandManager.HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, true ) )
+      if( !MacroCommands::HandleTextualCommand( commandManager,
+         Command, projectContext, AlwaysEnabledFlag, true ) )
       {
          // using GET in a log message for devs' eyes only
          wxLogDebug("Command %s not found", Command.GET() );

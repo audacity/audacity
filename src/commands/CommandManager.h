@@ -244,7 +244,16 @@ class AUDACITY_DLL_API CommandManager final
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled);
-   bool HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
+
+   enum TextualCommandResult {
+      CommandFailure,
+      CommandSuccess,
+      CommandNotFound
+   };
+
+   TextualCommandResult
+   HandleTextualCommand(const CommandID & Str,
+      const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
 
    //
    // Accessing
