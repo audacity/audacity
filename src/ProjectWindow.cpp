@@ -1887,3 +1887,12 @@ void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
 }
+
+static struct InstallTopPanelHook{ InstallTopPanelHook() {
+   ToolManager::SetGetTopPanelHook(
+      []( wxWindow &window ){
+         auto pProjectWindow = dynamic_cast< ProjectWindow* >( &window );
+         return pProjectWindow ? pProjectWindow->GetTopPanel() : nullptr;
+      }
+   );
+}} installTopPanelHook;

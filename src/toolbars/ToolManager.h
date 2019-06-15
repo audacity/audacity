@@ -13,6 +13,8 @@
 #ifndef __AUDACITY_TOOLMANAGER__
 #define __AUDACITY_TOOLMANAGER__
 
+#include <functional>
+
 #include <wx/defs.h>
 #include <wx/eventfilter.h> // to inherit
 #include <wx/frame.h> // to inherit
@@ -48,6 +50,9 @@ class ToolManager final
 {
 
  public:
+   // a hook function to break dependency of ToolManager on ProjectWindow
+   using GetTopPanelHook = std::function< wxWindow*( wxWindow& ) >;
+   static GetTopPanelHook SetGetTopPanelHook( const GetTopPanelHook& );
 
    static ToolManager &Get( AudacityProject &project );
    static const ToolManager &Get( const AudacityProject &project );

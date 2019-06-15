@@ -57,7 +57,6 @@
 #include "../ImageManipulation.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectWindow.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/MeterPanelBase.h"
@@ -73,7 +72,7 @@
 //
 ToolFrame::ToolFrame
    ( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
-   : wxFrame( ProjectWindow::Find( parent ),
+   : wxFrame( FindProjectFrame( parent ),
           bar->GetId(),
           wxEmptyString,
           pos,
@@ -312,10 +311,26 @@ BEGIN_EVENT_TABLE( ToolManager, wxEvtHandler )
    EVT_TIMER( wxID_ANY, ToolManager::OnTimer )
 END_EVENT_TABLE()
 
+static ToolManager::GetTopPanelHook &getTopPanelHook()
+{
+   static ToolManager::GetTopPanelHook theHook;
+   return theHook;
+}
+
+auto ToolManager::SetGetTopPanelHook( const GetTopPanelHook &hook )
+   -> GetTopPanelHook
+{
+   auto &theHook = getTopPanelHook();
+   auto result = theHook;
+   theHook = hook;
+   return result;
+}
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   []( AudacityProject &parent ){
-     auto &window = ProjectWindow::Get( parent );
-     return std::make_shared< ToolManager >( &parent, window.GetTopPanel() ); }
+     auto &window = GetProjectFrame( parent );
+     return std::make_shared< ToolManager >(
+        &parent, getTopPanelHook()( window ) ); }
 };
 
 ToolManager &ToolManager::Get( AudacityProject &project )
@@ -334,7 +349,10 @@ const ToolManager &ToolManager::Get( const AudacityProject &project )
 ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 : wxEvtHandler()
 {
-   auto &window = ProjectWindow::Get( *parent );
+   if ( !topDockParent )
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   auto &window = GetProjectFrame( *parent );
    wxPoint pt[ 3 ];
 
 #if defined(__WXMAC__)
@@ -653,7 +671,7 @@ int ToolManager::FilterEvent(wxEvent &event)
       if ( window &&
            !dynamic_cast<Grabber*>( window ) &&
            !dynamic_cast<ToolFrame*>( window ) &&
-           top == ProjectWindow::Find( mParent ) )
+           top == FindProjectFrame( mParent ) )
          // Note this is a dangle-proof wxWindowRef:
          mLastFocus = window;
    }
