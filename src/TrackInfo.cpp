@@ -52,52 +52,23 @@ inline bool HasSoloButton()
 }
 
 #define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
-using TCPLines = std::vector< TrackInfo::TCPLine >;
-
-enum : unsigned {
-   // The sequence is not significant, just keep bits distinct
-   kItemBarButtons       = 1 << 0,
-   kItemStatusInfo1      = 1 << 1,
-   kItemMute             = 1 << 2,
-   kItemSolo             = 1 << 3,
-   kItemGain             = 1 << 4,
-   kItemPan              = 1 << 5,
-   kItemVelocity         = 1 << 6,
-   kItemMidiControlsRect = 1 << 7,
-   kItemMinimize         = 1 << 8,
-   kItemSyncLock         = 1 << 9,
-   kItemStatusInfo2      = 1 << 10,
-
-   kHighestBottomItem = kItemMinimize,
-};
+using TCPLine = TrackInfo::TCPLine;
+using TCPLines = std::vector< TCPLine >;
 
 }
-
-struct TrackInfo::TCPLine {
-   using DrawFunction = void (*)(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect,
-      const Track *maybeNULL
-   );
-
-   unsigned items; // a bitwise OR of values of the enum above
-   int height;
-   int extraSpace;
-   DrawFunction drawFunction;
-};
 
 namespace {
 
 #ifdef EXPERIMENTAL_DA
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 4, \
+      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 4, \
         &TrackInfo::CloseTitleDrawFunction },
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute, kTrackInfoBtnSize + 1, 1, \
+      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1, \
         &TrackInfo::WideMuteDrawFunction }, \
-      { kItemSolo, kTrackInfoBtnSize + 1, extra, \
+      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, extra, \
         &TrackInfo::WideSoloDrawFunction },
    // DA: Does not have status information for a track.
    #define STATUS_ITEMS
@@ -105,15 +76,15 @@ namespace {
 #else
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 0, \
+      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 0, \
         &TrackInfo::CloseTitleDrawFunction },
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, \
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, extra, \
         &TrackInfo::MuteAndSoloDrawFunction },
    #define STATUS_ITEMS \
-      { kItemStatusInfo1, 12, 0, \
+      { TCPLine::kItemStatusInfo1, 12, 0, \
         &TrackInfo::Status1DrawFunction }, \
-      { kItemStatusInfo2, 12, 0, \
+      { TCPLine::kItemStatusInfo2, 12, 0, \
         &TrackInfo::Status2DrawFunction },
 
 #endif
@@ -129,9 +100,9 @@ TCPLines commonTrackTCPLines{ RANGE(defaultCommonTrackTCPLines) };
 const TrackInfo::TCPLine defaultWaveTrackTCPLines[] = {
    COMMON_ITEMS
    MUTE_SOLO_ITEMS(2)
-   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+   { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
      &TrackInfo::GainSliderDrawFunction },
-   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+   { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
      &TrackInfo::PanSliderDrawFunction },
    STATUS_ITEMS
 };
@@ -149,9 +120,9 @@ const TrackInfo::TCPLine defaultNoteTrackTCPLines[] = {
    COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
-   { kItemMidiControlsRect, kMidiCellHeight * 4, 0,
+   { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
      &TrackInfo::MidiControlsDrawFunction },
-   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+   { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
      &TrackInfo::VelocitySliderDrawFunction },
 #endif
 };
@@ -213,7 +184,7 @@ std::pair< int, int > CalcItemY( const TCPLines &lines, unsigned iItem )
 const TrackInfo::TCPLine defaultCommonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0,
+   { TCPLine::kItemSyncLock | TCPLine::kItemMinimize, kTrackInfoBtnSize, 0,
      &TrackInfo::MinimizeSyncLockDrawFunction },
 };
 TCPLines commonTrackTCPBottomLines{ RANGE(defaultCommonTrackTCPBottomLines) };
@@ -251,7 +222,7 @@ unsigned TrackInfo::MinimumTrackHeight()
 bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
                  int allowance ) {
    auto limit = CalcBottomItemY
-   ( commonTrackTCPBottomLines, kHighestBottomItem, rect.height).first;
+   ( commonTrackTCPBottomLines, TCPLine::kHighestBottomItem, rect.height).first;
    // Return true if the rectangle is even touching the limit
    // without an overlap.  That was the behavior as of 2.1.3.
    return subRect.y + subRect.height - allowance >= rect.y + limit;
@@ -798,7 +769,7 @@ void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
 {
    GetCloseBoxHorizontalBounds( rect, dest );
-   auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
+   auto results = CalcItemY( commonTrackTCPLines, TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -817,7 +788,7 @@ void TrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
 {
    GetTitleBarHorizontalBounds( rect, dest );
-   auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
+   auto results = CalcItemY( commonTrackTCPLines, TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -849,8 +820,8 @@ void TrackInfo::GetMuteSoloRect
  const Track *pTrack)
 {
 
-   auto resultsM = CalcItemY( getTCPLines( *pTrack ), kItemMute );
-   auto resultsS = CalcItemY( getTCPLines( *pTrack ), kItemSolo );
+   auto resultsM = CalcItemY( getTCPLines( *pTrack ), TCPLine::kItemMute );
+   auto resultsS = CalcItemY( getTCPLines( *pTrack ), TCPLine::kItemSolo );
    dest.height = resultsS.second;
 
    int yMute = resultsM.first;
@@ -885,7 +856,7 @@ void TrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest 
 void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
 {
    GetSliderHorizontalBounds( topleft, dest );
-   auto results = CalcItemY( waveTrackTCPLines, kItemGain );
+   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
 }
@@ -893,7 +864,7 @@ void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
 void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest)
 {
    GetGainRect( topleft, dest );
-   auto results = CalcItemY( waveTrackTCPLines, kItemPan );
+   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemPan );
    dest.y = topleft.y + results.first;
 }
 
@@ -901,7 +872,7 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest)
 void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
 {
    GetSliderHorizontalBounds( topleft, dest );
-   auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
+   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
 }
@@ -925,7 +896,7 @@ void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
 {
    GetMinimizeHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
-      ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
+      ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -951,7 +922,7 @@ void TrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
 {
    GetSelectButtonHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
-      ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
+      ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -966,7 +937,7 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 {
    GetSyncLockHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
-      ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
+      ( commonTrackTCPBottomLines, TCPLine::kItemSyncLock, rect.height);
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -985,7 +956,7 @@ void TrackInfo::GetMidiControlsHorizontalBounds
 void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
 {
    GetMidiControlsHorizontalBounds( rect, dest );
-   auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
+   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemMidiControlsRect );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }

@@ -34,7 +34,35 @@ namespace TrackInfo
 
    unsigned MinimumTrackHeight();
 
-   struct TCPLine;
+   struct TCPLine {
+      enum : unsigned {
+         // The sequence is not significant, just keep bits distinct
+         kItemBarButtons       = 1 << 0,
+         kItemStatusInfo1      = 1 << 1,
+         kItemMute             = 1 << 2,
+         kItemSolo             = 1 << 3,
+         kItemGain             = 1 << 4,
+         kItemPan              = 1 << 5,
+         kItemVelocity         = 1 << 6,
+         kItemMidiControlsRect = 1 << 7,
+         kItemMinimize         = 1 << 8,
+         kItemSyncLock         = 1 << 9,
+         kItemStatusInfo2      = 1 << 10,
+
+         kHighestBottomItem = kItemMinimize,
+      };
+
+      using DrawFunction = void (*)(
+         TrackPanelDrawingContext &context,
+         const wxRect &rect,
+         const Track *maybeNULL
+      );
+
+      unsigned items; // a bitwise OR of values of the enum above
+      int height;
+      int extraSpace;
+      DrawFunction drawFunction;
+   };
 
    void DrawItems
       ( TrackPanelDrawingContext &context,
