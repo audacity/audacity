@@ -26,7 +26,17 @@ public:
                       int numFrames, float *sampleData) = 0;
    virtual bool IsMeterDisabled() const = 0;
    virtual float GetMaxPeak() const = 0;
+
+   bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   bool AcceptsFocusFromKeyboard() const override { return true; }
+
 private:
+   static bool s_AcceptsFocus;
+   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
+   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+public:
+   static TempAllowFocus TemporarilyAllowFocus();
 };
 
 #endif

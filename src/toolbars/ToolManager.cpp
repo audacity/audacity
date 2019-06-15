@@ -60,7 +60,7 @@
 #include "../ProjectWindow.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/Meter.h"
+#include "../widgets/MeterPanelBase.h"
 #include "../widgets/Grabber.h"
 
 ////////////////////////////////////////////////////////////
@@ -1527,7 +1527,7 @@ bool ToolManager::RestoreFocus()
    if (mLastFocus) {
       auto temp1 = AButton::TemporarilyAllowFocus();
       auto temp2 = ASlider::TemporarilyAllowFocus();
-      auto temp3 = MeterPanel::TemporarilyAllowFocus();
+      auto temp3 = MeterPanelBase::TemporarilyAllowFocus();
       mLastFocus->SetFocus();
       return true;
    }

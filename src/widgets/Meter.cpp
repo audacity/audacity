@@ -268,7 +268,7 @@ enum {
    OnPreferencesID
 };
 
-BEGIN_EVENT_TABLE(MeterPanel, wxPanelWrapper)
+BEGIN_EVENT_TABLE(MeterPanel, MeterPanelBase)
    EVT_TIMER(OnMeterUpdateID, MeterPanel::OnMeterUpdate)
    EVT_MOUSE_EVENTS(MeterPanel::OnMouse)
    EVT_CONTEXT_MENU(MeterPanel::OnContext)
@@ -2121,13 +2121,6 @@ wxString MeterPanel::Key(const wxString & key) const
    }
 
    return wxT("/Meter/Output/") + key;
-}
-
-bool MeterPanel::s_AcceptsFocus{ false };
-
-auto MeterPanel::TemporarilyAllowFocus() -> TempAllowFocus {
-   s_AcceptsFocus = true;
-   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 // This compensates for a but in wxWidgets 3.0.2 for mac:

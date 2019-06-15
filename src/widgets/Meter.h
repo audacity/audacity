@@ -117,9 +117,6 @@ class MeterPanel final : public MeterPanelBase, private PrefsListener
          Style style = HorizontalStereo,
          float fDecayRate = 60.0f);
 
-   bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
-
    void SetFocusFromKbd() override;
 
    void Clear() override;
@@ -191,13 +188,6 @@ class MeterPanel final : public MeterPanelBase, private PrefsListener
  private:
    void UpdatePrefs() override;
    void UpdateSelectedPrefs( int ) override;
-
-   static bool s_AcceptsFocus;
-   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
-   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
-
- public:
-   static TempAllowFocus TemporarilyAllowFocus();
 
  private:
    //

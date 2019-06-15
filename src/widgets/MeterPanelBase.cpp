@@ -13,3 +13,10 @@ Paul Licameli split from Meter.cpp
 MeterPanelBase::~MeterPanelBase()
 {
 }
+
+bool MeterPanelBase::s_AcceptsFocus{ false };
+
+auto MeterPanelBase::TemporarilyAllowFocus() -> TempAllowFocus {
+   s_AcceptsFocus = true;
+   return TempAllowFocus{ &s_AcceptsFocus };
+}
