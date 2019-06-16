@@ -1,6 +1,7 @@
 #include "../Audacity.h" // for USE_* macros
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -1090,12 +1091,34 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
 
+const ReservedCommandFlag
+   CutCopyAvailableFlag{
+      [](const AudacityProject &project){
+         auto range = TrackList::Get( project ).Any<const LabelTrack>()
+            + &LabelTrack::IsTextSelected;
+         if ( !range.empty() )
+            return true;
+
+         if (
+            !AudioIOBusyPred( project )
+         &&
+            TimeSelectedPred( project )
+         &&
+            TracksSelectedPred( project )
+         )
+            return true;
+
+         return false;
+      },
+      cutCopyOptions
+   };
+
 MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   constexpr auto NotBusyTimeAndTracksFlags =
+   static const auto NotBusyTimeAndTracksFlags =
       AudioIONotBusyFlag | TimeSelectedFlag | TracksSelectedFlag;
 
    // The default shortcut key for Redo is different on different platforms.
@@ -1135,12 +1158,10 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       /* i18n-hint: (verb)*/
       Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
          AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
-         Options{ wxT("Ctrl+X") }
-            .Mask( AudioIONotBusyFlag | CutCopyAvailableFlag ) ),
+         wxT("Ctrl+X") ),
       Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
          AudioIONotBusyFlag | NoAutoSelect,
-         Options{ wxT("Ctrl+K") }
-            .Mask( AudioIONotBusyFlag ) ),
+         wxT("Ctrl+K") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
          AudioIONotBusyFlag | CutCopyAvailableFlag, wxT("Ctrl+C") ),
@@ -1156,10 +1177,12 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       Menu( _("R&emove Special"),
          /* i18n-hint: (verb) Do a special kind of cut*/
          Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+X") ),
+            NotBusyTimeAndTracksFlags,
+            Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
          /* i18n-hint: (verb) Do a special kind of DELETE*/
          Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+K") ),
+            NotBusyTimeAndTracksFlags,
+            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() ),
 
          Separator(),
 
@@ -1170,7 +1193,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
          /* i18n-hint: (verb)*/
          Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
             AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
-            wxT("Ctrl+T") )
+            Options{ wxT("Ctrl+T") }.UseStrictFlags() )
       ),
 
       Separator(),
@@ -1180,10 +1203,11 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       Menu( _("Clip B&oundaries"),
          /* i18n-hint: (verb) It's an item on a menu. */
          Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
-            AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+I") ),
+            AudioIONotBusyFlag | WaveTracksSelectedFlag,
+            Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
          Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
             AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-            wxT("Ctrl+Alt+I") ),
+            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() ),
 
          Separator(),
 
@@ -1216,17 +1240,39 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   constexpr auto flags =
+   static const auto flags =
       AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
    return Menu( _("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect),
-         Options{ wxT("Backspace") }.Mask( flags ) ),
+         wxT("Backspace") ),
       Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
          (flags | NoAutoSelect),
-         Options{ wxT("Delete") }.Mask( flags ) )
+         wxT("Delete") )
    );
 }
+
+auto canSelectAll = [](const AudacityProject &project){
+   return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
+auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
+   if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
+      (flagsRqd & NoAutoSelect).none() )
+      SelectActions::DoSelectAllAudio(project);
+};
+
+RegisteredMenuItemEnabler selectTracks{{
+   TracksExistFlag,
+   TracksSelectedFlag,
+   canSelectAll,
+   selectAll
+}};
+
+RegisteredMenuItemEnabler selectWaveTracks{{
+   WaveTracksExistFlag,
+   TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag,
+   canSelectAll,
+   selectAll
+}};
 
 #undef XXO
 #undef FN

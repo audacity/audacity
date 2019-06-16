@@ -454,7 +454,7 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
-      if( !commandManager.HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !commandManager.HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, true ) )
       {
          // using GET in a log message for devs' eyes only
          wxLogDebug("Command %s not found", Command.GET() );
@@ -614,7 +614,7 @@ void ScreenshotCommand::CaptureCommands(
       SetIdleHandler( IdleHandler );
       Str = Commands[i];
       const CommandContext projectContext( *pProject );
-      if( !manager.HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !manager.HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, true ) )
       {
          wxLogDebug("Command %s not found", Str);
       }

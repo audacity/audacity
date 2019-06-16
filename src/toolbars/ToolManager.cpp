@@ -1022,10 +1022,20 @@ ToolDock *ToolManager::GetTopDock()
    return mTopDock;
 }
 
+const ToolDock *ToolManager::GetTopDock() const
+{
+   return mTopDock;
+}
+
 //
 // Return a pointer to the bottom dock
 //
 ToolDock *ToolManager::GetBotDock()
+{
+   return mBotDock;
+}
+
+const ToolDock *ToolManager::GetBotDock() const
 {
    return mBotDock;
 }

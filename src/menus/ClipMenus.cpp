@@ -1,3 +1,4 @@
+#include "../CommonCommandFlags.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../TrackPanel.h"

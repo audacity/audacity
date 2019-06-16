@@ -62,6 +62,8 @@ src/CellularPanel.cpp
 src/CellularPanel.h
 src/Clipboard.cpp
 src/Clipboard.h
+src/CommonCommandFlags.cpp
+src/CommonCommandFlags.h
 src/CrashReport.cpp
 src/CrashReport.h
 src/ClassicThemeAsCeeCode.h

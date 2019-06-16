@@ -117,7 +117,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
    bool IsGoodLabelEditKey(const wxKeyEvent & evt);
-   bool IsTextSelected();
+   bool IsTextSelected() const;
 
    void CreateCustomGlyphs();
    LabelTrack(const std::shared_ptr<DirManager> &projDirManager);
@@ -228,6 +228,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
+   const LabelArray &GetLabels() const { return mLabels; }
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region, const wxString &title = {},

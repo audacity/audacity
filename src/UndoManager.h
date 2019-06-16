@@ -152,7 +152,7 @@ class AUDACITY_DLL_API UndoManager
    bool UndoAvailable();
    bool RedoAvailable();
 
-   bool UnsavedChanges();
+   bool UnsavedChanges() const;
    void StateSaved();
 
    // Return value must first be calculated by CalculateSpaceUsage():
@@ -167,7 +167,7 @@ class AUDACITY_DLL_API UndoManager
 
    ///to mark as unsaved changes without changing the state/tracks.
    void SetODChangesFlag();
-   bool HasODChangesFlag();
+   bool HasODChangesFlag() const;
    void ResetODChangesFlag();
 
  private:
@@ -184,7 +184,7 @@ class AUDACITY_DLL_API UndoManager
    unsigned long long mClipboardSpaceUsage {};
 
    bool mODChanges;
-   ODLock mODChangesMutex;//mODChanges is accessed from many threads.
+   mutable ODLock mODChangesMutex;//mODChanges is accessed from many threads.
 
 };
 

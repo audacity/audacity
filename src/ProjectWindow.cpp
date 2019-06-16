@@ -1513,7 +1513,7 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
    auto &commandManager = CommandManager::Get( project );
    bool handled = commandManager.HandleMenuID(
       event.GetId(), MenuManager::Get( project ).GetUpdateFlags(),
-      NoFlagsSpecified);
+      false);
 
    if (handled)
       event.Skip(false);

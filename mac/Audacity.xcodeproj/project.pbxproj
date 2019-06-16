@@ -1216,9 +1216,9 @@
 		5E135A3C229EDF2E0076E983 /* ProjectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A3A229EDF2E0076E983 /* ProjectManager.cpp */; };
 		5E135A45229EE4DE0076E983 /* ProjectFileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A43229EE4DE0076E983 /* ProjectFileIO.cpp */; };
 		5E135A48229EE5530076E983 /* ProjectWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A46229EE5530076E983 /* ProjectWindow.cpp */; };
-		5E135A5122A93DC60076E983 /* ProjectAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4F22A93DC60076E983 /* ProjectAudioManager.cpp */; };
 		5E135A4B22A5F7560076E983 /* AudioIOBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4922A5F7560076E983 /* AudioIOBase.cpp */; };
 		5E135A4E22A62B7E0076E983 /* MeterPanelBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4C22A62B7E0076E983 /* MeterPanelBase.cpp */; };
+		5E135A5122A93DC60076E983 /* ProjectAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E135A4F22A93DC60076E983 /* ProjectAudioManager.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
 		5E15125A1DB000DC00702E29 /* LabelTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */; };
 		5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512421DB000DC00702E29 /* LabelTrackUI.cpp */; };
@@ -1230,6 +1230,7 @@
 		5E15126E1DB0010C00702E29 /* TrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512681DB0010C00702E29 /* TrackControls.cpp */; };
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
+		5E15A9AF22B3F7710007CC43 /* CommonCommandFlags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15A9AD22B3F7710007CC43 /* CommonCommandFlags.cpp */; };
 		5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */; };
 		5E17EF712298372D00B47301 /* EnvelopeEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E17EF6F2298372D00B47301 /* EnvelopeEditor.cpp */; };
 		5E18CFF02291C31000E75250 /* ProjectFileIORegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E18CFEE2291C31000E75250 /* ProjectFileIORegistry.cpp */; };
@@ -3191,12 +3192,12 @@
 		5E135A44229EE4DE0076E983 /* ProjectFileIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectFileIO.h; sourceTree = "<group>"; };
 		5E135A46229EE5530076E983 /* ProjectWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectWindow.cpp; sourceTree = "<group>"; };
 		5E135A47229EE5530076E983 /* ProjectWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectWindow.h; sourceTree = "<group>"; };
-		5E135A4F22A93DC60076E983 /* ProjectAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectAudioManager.cpp; sourceTree = "<group>"; };
-		5E135A5022A93DC60076E983 /* ProjectAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectAudioManager.h; sourceTree = "<group>"; };
 		5E135A4922A5F7560076E983 /* AudioIOBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioIOBase.cpp; sourceTree = "<group>"; };
 		5E135A4A22A5F7560076E983 /* AudioIOBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioIOBase.h; sourceTree = "<group>"; };
 		5E135A4C22A62B7E0076E983 /* MeterPanelBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeterPanelBase.cpp; sourceTree = "<group>"; };
 		5E135A4D22A62B7E0076E983 /* MeterPanelBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterPanelBase.h; sourceTree = "<group>"; };
+		5E135A4F22A93DC60076E983 /* ProjectAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectAudioManager.cpp; sourceTree = "<group>"; };
+		5E135A5022A93DC60076E983 /* ProjectAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectAudioManager.h; sourceTree = "<group>"; };
 		5E1512381DB000C000702E29 /* HitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitTestResult.h; sourceTree = "<group>"; };
 		5E1512391DB000C000702E29 /* RefreshCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshCode.h; sourceTree = "<group>"; };
 		5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelMouseEvent.h; sourceTree = "<group>"; };
@@ -3219,6 +3220,8 @@
 		5E15126A1DB0010C00702E29 /* TrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackUI.cpp; sourceTree = "<group>"; };
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
+		5E15A9AD22B3F7710007CC43 /* CommonCommandFlags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonCommandFlags.cpp; sourceTree = "<group>"; };
+		5E15A9AE22B3F7710007CC43 /* CommonCommandFlags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonCommandFlags.h; sourceTree = "<group>"; };
 		5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LanguageNames.txt; path = ../locale/LanguageNames.txt; sourceTree = "<group>"; };
 		5E17EF6F2298372D00B47301 /* EnvelopeEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnvelopeEditor.cpp; sourceTree = "<group>"; };
 		5E17EF702298372D00B47301 /* EnvelopeEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvelopeEditor.h; sourceTree = "<group>"; };
@@ -4347,6 +4350,7 @@
 				1790AFE809883BFD008A330A /* BlockFile.cpp */,
 				5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */,
 				5EFEAD9C22723E390077DFF6 /* Clipboard.cpp */,
+				5E15A9AD22B3F7710007CC43 /* CommonCommandFlags.cpp */,
 				5EFEADA122733DD30077DFF6 /* CrashReport.cpp */,
 				1790AFF409883BFD008A330A /* CrossFade.cpp */,
 				2849B4600A7444BE00ECF12D /* Dependencies.cpp */,
@@ -4464,6 +4468,7 @@
 				5E0D233E21B468BF0057D7C3 /* ClientData.h */,
 				5E6E060321BD98E700130DE0 /* ClientDataHelpers.h */,
 				5EFEAD9D22723E390077DFF6 /* Clipboard.h */,
+				5E15A9AE22B3F7710007CC43 /* CommonCommandFlags.h */,
 				1790AFF009883BFD008A330A /* configtemplate.h */,
 				5EFEADA222733DD30077DFF6 /* CrashReport.h */,
 				1790AFF509883BFD008A330A /* CrossFade.h */,
@@ -8405,6 +8410,7 @@
 				1790B18009883BFD008A330A /* BatchPrefs.cpp in Sources */,
 				5E135A39229EDEBA0076E983 /* ProjectAudioIO.cpp in Sources */,
 				1790B18109883BFD008A330A /* DirectoriesPrefs.cpp in Sources */,
+				5E15A9AF22B3F7710007CC43 /* CommonCommandFlags.cpp in Sources */,
 				1790B18309883BFD008A330A /* GUIPrefs.cpp in Sources */,
 				1790B18409883BFD008A330A /* KeyConfigPrefs.cpp in Sources */,
 				2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */,

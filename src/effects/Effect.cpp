@@ -49,6 +49,7 @@ greater use in future.
 
 #include "EffectManager.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Mix.h"
@@ -57,13 +58,11 @@ greater use in future.
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
-#include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/Command.h"
-#include "../commands/CommandFlag.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
@@ -3279,7 +3278,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
          MenuManager::Get(*mProject).ReportIfActionNotAllowed(
          mEffect->GetTranslatedName(),
          flags,
-         WaveTracksSelectedFlag | TimeSelectedFlag,
          WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
          return;

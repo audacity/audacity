@@ -68,7 +68,9 @@ class ToolManager final
    ToolBar *GetToolBar( int type ) const;
 
    ToolDock *GetTopDock();
+   const ToolDock *GetTopDock() const;
    ToolDock *GetBotDock();
+   const ToolDock *GetBotDock() const;
 
    void Reset();
    void Destroy();

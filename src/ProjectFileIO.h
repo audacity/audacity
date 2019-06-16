@@ -40,7 +40,7 @@ public:
    // recovery file
    void SetProjectTitle( int number = -1 );
 
-   bool IsProjectSaved();
+   bool IsProjectSaved() const;
 
    void Reset();
    

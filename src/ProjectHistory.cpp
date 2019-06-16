@@ -59,7 +59,7 @@ void ProjectHistory::InitialState()
    undoManager.StateSaved();
 }
 
-bool ProjectHistory::UndoAvailable()
+bool ProjectHistory::UndoAvailable() const
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
@@ -68,7 +68,7 @@ bool ProjectHistory::UndoAvailable()
        !tracks.HasPendingTracks();
 }
 
-bool ProjectHistory::RedoAvailable()
+bool ProjectHistory::RedoAvailable() const
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
