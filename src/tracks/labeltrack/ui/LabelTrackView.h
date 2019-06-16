@@ -14,6 +14,9 @@ Paul Licameli split from class LabelTrack
 #include "../../ui/CommonTrackView.h"
 
 class LabelTrack;
+class SelectedRegion;
+
+class wxKeyEvent;
 
 class LabelTrackView final : public CommonTrackView
 {
@@ -28,6 +31,10 @@ public:
 
    static LabelTrackView &Get( LabelTrack& );
    static const LabelTrackView &Get( const LabelTrack& );
+
+   bool DoCaptureKey(wxKeyEvent &event);
+   bool DoKeyDown(SelectedRegion &sel, wxKeyEvent & event);
+   bool DoChar(SelectedRegion &sel, wxKeyEvent & event);
 
 private:
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;

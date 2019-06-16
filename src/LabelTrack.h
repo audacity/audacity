@@ -106,6 +106,7 @@ class LabelTextHandle;
 
 class AUDACITY_DLL_API LabelTrack final : public Track
 {
+   friend class LabelTrackView;
    friend class LabelStruct;
 
  public:
@@ -115,8 +116,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
       AudacityProject &project, const SelectedRegion& region,
       const wxString& initialValue, wxString& value);
 
-   bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
-   bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected() const;
 
    void CreateCustomGlyphs();
@@ -130,7 +129,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
-   bool DoCaptureKey(wxKeyEvent &event);
    unsigned CaptureKey
      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
 
@@ -217,9 +215,6 @@ public:
        const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
    void HandleTextDragRelease(const wxMouseEvent & evt);
-
-   bool OnKeyDown(SelectedRegion &sel, wxKeyEvent & event);
-   bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
    void Import(wxTextFile & f);
    void Export(wxTextFile & f) const;
