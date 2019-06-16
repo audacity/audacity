@@ -43,6 +43,8 @@ and TimeTrack.
 
 #include "TrackPanel.h" // for TrackInfo
 
+#include "tracks/ui/TrackView.h"
+
 #ifdef _MSC_VER
 //Disable truncation warnings
 #pragma warning( disable : 4786 )
@@ -120,7 +122,9 @@ Track::Holder Track::Duplicate() const
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone();
 
-   // other steps to be added here
+   if (mpView)
+      // Copy view state that might be important to undo/redo
+      TrackView::Get( *result ).Copy( *mpView );
 
    return result;
 }

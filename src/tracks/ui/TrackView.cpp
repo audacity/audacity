@@ -24,6 +24,10 @@ TrackView::~TrackView()
 {
 }
 
+void TrackView::Copy( const TrackView & )
+{
+}
+
 TrackView &TrackView::Get( Track &track )
 {
    return *track.GetTrackView();

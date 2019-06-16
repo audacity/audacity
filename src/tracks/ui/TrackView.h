@@ -30,6 +30,9 @@ public:
       : CommonTrackCell{ pTrack } {}
    virtual ~TrackView() = 0;
 
+   // Copy view state, for undo/redo purposes
+   virtual void Copy( const TrackView &other );
+
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );
 
