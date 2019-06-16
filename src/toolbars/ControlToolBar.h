@@ -99,7 +99,7 @@ class ControlToolBar final : public ToolBar {
    bool IsRecordDown() const;
 
    // A project is only allowed to stop an audio stream that it owns.
-   bool CanStopAudioStream ();
+   bool CanStopAudioStream () const;
 
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
@@ -209,6 +209,11 @@ class ControlToolBar final : public ToolBar {
    DECLARE_CLASS(ControlToolBar)
    DECLARE_EVENT_TABLE()
 };
+
+#include "../commands/CommandFlag.h"
+
+extern const ReservedCommandFlag
+   CanStopAudioStreamFlag;
 
 #endif
 

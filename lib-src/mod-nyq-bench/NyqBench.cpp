@@ -24,6 +24,7 @@
 #include <wx/toolbar.h>
 
 #include "AudioIOBase.h"
+#include "CommonCommandFlags.h"
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "ModuleManager.h"

@@ -15,6 +15,7 @@
 #include <wx/string.h> // member variable
 #include "Prefs.h"
 #include "ClientData.h"
+#include "commands/CommandFlag.h"
 
 class wxArrayString;
 class wxCommandEvent;
@@ -29,7 +30,6 @@ class ViewInfo;
 class WaveClip;
 class WaveTrack;
 
-enum CommandFlag : unsigned long long;
 enum EffectType : int;
 
 typedef wxString PluginID;
@@ -81,19 +81,20 @@ public:
 
    // Command Handling
    bool ReportIfActionNotAllowed(
-      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd,
-      CommandFlag mask );
+      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd );
    bool TryToMakeActionAllowed(
-      CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+      CommandFlag & flags, CommandFlag flagsRqd );
 
 
 private:
-   void OnUndoRedo( wxCommandEvent &evt );
+   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot,
+      CommandFlag flagsRequired);
 
-   CommandFlag GetFocusedFrame(AudacityProject &project);
+   void OnUndoRedo( wxCommandEvent &evt );
 
    AudacityProject &mProject;
 
+public:
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
    int  mWhatIfNoSelection;
    bool mStopIfWasPaused;

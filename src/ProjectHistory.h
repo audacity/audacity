@@ -31,8 +31,8 @@ public:
 
    void InitialState();
    void SetStateTo(unsigned int n);
-   bool UndoAvailable();
-   bool RedoAvailable();
+   bool UndoAvailable() const;
+   bool RedoAvailable() const;
    void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
    void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
    void RollbackState();

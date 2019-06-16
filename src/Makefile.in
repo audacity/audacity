@@ -297,41 +297,42 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	BatchCommands.h BatchProcessDialog.cpp BatchProcessDialog.h \
 	Benchmark.cpp Benchmark.h CellularPanel.cpp CellularPanel.h \
 	ClientData.h ClientDataHelpers.h Clipboard.cpp Clipboard.h \
-	CrashReport.cpp CrashReport.h Dependencies.cpp Dependencies.h \
-	DeviceChange.cpp DeviceChange.h DeviceManager.cpp \
-	DeviceManager.h Diags.cpp Diags.h Envelope.cpp Envelope.h \
-	EnvelopeEditor.cpp EnvelopeEditor.h Experimental.h FFmpeg.cpp \
-	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
-	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
-	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
-	ImageManipulation.cpp ImageManipulation.h \
-	InconsistencyException.cpp InconsistencyException.h \
-	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
-	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
-	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
-	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
-	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
-	Matrix.h MemoryX.h Menus.cpp Menus.h \
-	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
-	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
-	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
-	PlatformCompatibility.cpp PlatformCompatibility.h \
-	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h \
-	ProjectAudioIO.cpp ProjectAudioIO.h ProjectAudioManager.cpp \
-	ProjectAudioManager.h ProjectFileIO.cpp ProjectFileIO.h \
-	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
-	ProjectFileManager.cpp ProjectFileManager.h ProjectFSCK.cpp \
-	ProjectFSCK.h ProjectHistory.cpp ProjectHistory.h \
-	ProjectManager.cpp ProjectManager.h \
-	ProjectSelectionManager.cpp ProjectSelectionManager.h \
-	ProjectSettings.cpp ProjectSettings.h ProjectWindow.cpp \
-	ProjectWindow.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
-	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
-	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
-	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	CommonCommandFlags.cpp CommonCommandFlags.h CrashReport.cpp \
+	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
+	Diags.h Envelope.cpp Envelope.h EnvelopeEditor.cpp \
+	EnvelopeEditor.h Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp \
+	FFT.h FileException.cpp FileException.h FileIO.cpp FileIO.h \
+	FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
+	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
+	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
+	ImageManipulation.h InconsistencyException.cpp \
+	InconsistencyException.h InterpolateAudio.cpp \
+	InterpolateAudio.h KeyboardCapture.cpp KeyboardCapture.h \
+	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
+	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
+	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
+	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h MemoryX.h \
+	Menus.cpp Menus.h MissingAliasFileDialog.cpp \
+	MissingAliasFileDialog.h Mix.cpp Mix.h MixerBoard.cpp \
+	MixerBoard.h ModuleManager.cpp ModuleManager.h NumberScale.h \
+	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
+	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
+	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
+	Project.h ProjectAudioIO.cpp ProjectAudioIO.h \
+	ProjectAudioManager.cpp ProjectAudioManager.h \
+	ProjectFileIO.cpp ProjectFileIO.h ProjectFileIORegistry.cpp \
+	ProjectFileIORegistry.h ProjectFileManager.cpp \
+	ProjectFileManager.h ProjectFSCK.cpp ProjectFSCK.h \
+	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
+	ProjectManager.h ProjectSelectionManager.cpp \
+	ProjectSelectionManager.h ProjectSettings.cpp \
+	ProjectSettings.h ProjectWindow.cpp ProjectWindow.h \
+	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
+	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
+	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
+	SelectedRegion.cpp SelectedRegion.h SelectionState.cpp \
+	SelectionState.h Shuttle.cpp Shuttle.h \
 	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
 	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
@@ -644,8 +645,9 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-BatchCommands.$(OBJEXT) \
 	audacity-BatchProcessDialog.$(OBJEXT) \
 	audacity-Benchmark.$(OBJEXT) audacity-CellularPanel.$(OBJEXT) \
-	audacity-Clipboard.$(OBJEXT) audacity-CrashReport.$(OBJEXT) \
-	audacity-Dependencies.$(OBJEXT) \
+	audacity-Clipboard.$(OBJEXT) \
+	audacity-CommonCommandFlags.$(OBJEXT) \
+	audacity-CrashReport.$(OBJEXT) audacity-Dependencies.$(OBJEXT) \
 	audacity-DeviceChange.$(OBJEXT) \
 	audacity-DeviceManager.$(OBJEXT) audacity-Diags.$(OBJEXT) \
 	audacity-Envelope.$(OBJEXT) audacity-EnvelopeEditor.$(OBJEXT) \
@@ -1376,41 +1378,42 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	BatchCommands.h BatchProcessDialog.cpp BatchProcessDialog.h \
 	Benchmark.cpp Benchmark.h CellularPanel.cpp CellularPanel.h \
 	ClientData.h ClientDataHelpers.h Clipboard.cpp Clipboard.h \
-	CrashReport.cpp CrashReport.h Dependencies.cpp Dependencies.h \
-	DeviceChange.cpp DeviceChange.h DeviceManager.cpp \
-	DeviceManager.h Diags.cpp Diags.h Envelope.cpp Envelope.h \
-	EnvelopeEditor.cpp EnvelopeEditor.h Experimental.h FFmpeg.cpp \
-	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
-	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
-	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
-	ImageManipulation.cpp ImageManipulation.h \
-	InconsistencyException.cpp InconsistencyException.h \
-	InterpolateAudio.cpp InterpolateAudio.h KeyboardCapture.cpp \
-	KeyboardCapture.h LabelDialog.cpp LabelDialog.h LabelTrack.cpp \
-	LabelTrack.h LangChoice.cpp LangChoice.h Languages.cpp \
-	Languages.h Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h \
-	LyricsWindow.cpp LyricsWindow.h MacroMagic.h Matrix.cpp \
-	Matrix.h MemoryX.h Menus.cpp Menus.h \
-	MissingAliasFileDialog.cpp MissingAliasFileDialog.h Mix.cpp \
-	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
-	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
-	PlatformCompatibility.cpp PlatformCompatibility.h \
-	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h \
-	ProjectAudioIO.cpp ProjectAudioIO.h ProjectAudioManager.cpp \
-	ProjectAudioManager.h ProjectFileIO.cpp ProjectFileIO.h \
-	ProjectFileIORegistry.cpp ProjectFileIORegistry.h \
-	ProjectFileManager.cpp ProjectFileManager.h ProjectFSCK.cpp \
-	ProjectFSCK.h ProjectHistory.cpp ProjectHistory.h \
-	ProjectManager.cpp ProjectManager.h \
-	ProjectSelectionManager.cpp ProjectSelectionManager.h \
-	ProjectSettings.cpp ProjectSettings.h ProjectWindow.cpp \
-	ProjectWindow.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
-	RealFFTf48x.h RefreshCode.h Resample.cpp Resample.h \
-	RevisionIdent.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h SelectedRegion.cpp SelectedRegion.h \
-	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	CommonCommandFlags.cpp CommonCommandFlags.h CrashReport.cpp \
+	CrashReport.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
+	Diags.h Envelope.cpp Envelope.h EnvelopeEditor.cpp \
+	EnvelopeEditor.h Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp \
+	FFT.h FileException.cpp FileException.h FileIO.cpp FileIO.h \
+	FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
+	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
+	HistoryWindow.h HitTestResult.h ImageManipulation.cpp \
+	ImageManipulation.h InconsistencyException.cpp \
+	InconsistencyException.h InterpolateAudio.cpp \
+	InterpolateAudio.h KeyboardCapture.cpp KeyboardCapture.h \
+	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
+	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
+	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
+	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h MemoryX.h \
+	Menus.cpp Menus.h MissingAliasFileDialog.cpp \
+	MissingAliasFileDialog.h Mix.cpp Mix.h MixerBoard.cpp \
+	MixerBoard.h ModuleManager.cpp ModuleManager.h NumberScale.h \
+	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
+	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
+	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
+	Project.h ProjectAudioIO.cpp ProjectAudioIO.h \
+	ProjectAudioManager.cpp ProjectAudioManager.h \
+	ProjectFileIO.cpp ProjectFileIO.h ProjectFileIORegistry.cpp \
+	ProjectFileIORegistry.h ProjectFileManager.cpp \
+	ProjectFileManager.h ProjectFSCK.cpp ProjectFSCK.h \
+	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
+	ProjectManager.h ProjectSelectionManager.cpp \
+	ProjectSelectionManager.h ProjectSettings.cpp \
+	ProjectSettings.h ProjectWindow.cpp ProjectWindow.h \
+	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
+	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
+	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
+	SelectedRegion.cpp SelectedRegion.h SelectionState.cpp \
+	SelectionState.h Shuttle.cpp Shuttle.h \
 	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
 	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
@@ -2539,6 +2542,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-CellularPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Clipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-CommonCommandFlags.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-CrashReport.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Dependencies.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceChange.Po@am__quote@
@@ -3505,6 +3509,20 @@ audacity-Clipboard.obj: Clipboard.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Clipboard.cpp' object='audacity-Clipboard.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Clipboard.obj `if test -f 'Clipboard.cpp'; then $(CYGPATH_W) 'Clipboard.cpp'; else $(CYGPATH_W) '$(srcdir)/Clipboard.cpp'; fi`
+
+audacity-CommonCommandFlags.o: CommonCommandFlags.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-CommonCommandFlags.o -MD -MP -MF $(DEPDIR)/audacity-CommonCommandFlags.Tpo -c -o audacity-CommonCommandFlags.o `test -f 'CommonCommandFlags.cpp' || echo '$(srcdir)/'`CommonCommandFlags.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-CommonCommandFlags.Tpo $(DEPDIR)/audacity-CommonCommandFlags.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CommonCommandFlags.cpp' object='audacity-CommonCommandFlags.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-CommonCommandFlags.o `test -f 'CommonCommandFlags.cpp' || echo '$(srcdir)/'`CommonCommandFlags.cpp
+
+audacity-CommonCommandFlags.obj: CommonCommandFlags.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-CommonCommandFlags.obj -MD -MP -MF $(DEPDIR)/audacity-CommonCommandFlags.Tpo -c -o audacity-CommonCommandFlags.obj `if test -f 'CommonCommandFlags.cpp'; then $(CYGPATH_W) 'CommonCommandFlags.cpp'; else $(CYGPATH_W) '$(srcdir)/CommonCommandFlags.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-CommonCommandFlags.Tpo $(DEPDIR)/audacity-CommonCommandFlags.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CommonCommandFlags.cpp' object='audacity-CommonCommandFlags.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-CommonCommandFlags.obj `if test -f 'CommonCommandFlags.cpp'; then $(CYGPATH_W) 'CommonCommandFlags.cpp'; else $(CYGPATH_W) '$(srcdir)/CommonCommandFlags.cpp'; fi`
 
 audacity-CrashReport.o: CrashReport.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-CrashReport.o -MD -MP -MF $(DEPDIR)/audacity-CrashReport.Tpo -c -o audacity-CrashReport.o `test -f 'CrashReport.cpp' || echo '$(srcdir)/'`CrashReport.cpp

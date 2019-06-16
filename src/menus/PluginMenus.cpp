@@ -4,6 +4,7 @@
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
+#include "../CommonCommandFlags.h"
 #include "../FreqWindow.h"
 #include "../Menus.h"
 #include "../MissingAliasFileDialog.h"
@@ -922,6 +923,13 @@ MenuTable::BaseItemPtr GenerateMenu( AudacityProject & )
          AudioIONotBusyFlag) )
    );
 }
+
+const ReservedCommandFlag
+   IsRealtimeNotActiveFlag{
+      [](const AudacityProject &){
+         return !EffectManager::Get().RealtimeIsActive();
+      }
+   };  //lll
 
 MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
 {

@@ -1148,6 +1148,9 @@
     <ClCompile Include="..\..\..\src\Clipboard.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\CommonCommandFlags.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\CrashReport.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -2312,6 +2315,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ClientDataHelpers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CommonCommandFlags.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\CrashReport.h">

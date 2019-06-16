@@ -2,6 +2,7 @@
 #include "../Experimental.h"
 
 #include "../BatchCommands.h"
+#include "../CommonCommandFlags.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../MissingAliasFileDialog.h"
@@ -589,6 +590,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 MenuTable::BaseItemPtr FileMenu( AudacityProject& )
 {
    using namespace MenuTable;
+   using Options = CommandManager::Options;
 
    return Menu( _("&File"),
       /*i18n-hint: "New" is an action (verb) to create a NEW project*/
@@ -683,7 +685,8 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
          // Enable Export Selection commands only when there's a selection.
          Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."),
             FN(OnExportSelection),
-            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag ),
+            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+            Options{}.UseStrictFlags() ),
 
          Command( wxT("ExportLabels"), XXO("Export &Labels..."),
             FN(OnExportLabels),

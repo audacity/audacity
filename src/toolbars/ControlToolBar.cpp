@@ -60,6 +60,7 @@
 #include "../AdornedRulerPanel.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../ImageManipulation.h"
 #include "../Menus.h"
 #include "../Prefs.h"
@@ -824,7 +825,7 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
    }
 }
 
-bool ControlToolBar::CanStopAudioStream()
+bool ControlToolBar::CanStopAudioStream() const
 {
    auto gAudioIO = AudioIO::Get();
    return (!gAudioIO->IsStreamActive() ||
@@ -1082,7 +1083,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    // NB: The call may have the side effect of changing flags.
    bool allowed = MenuManager::Get(project).TryToMakeActionAllowed(
       flags,
-      AudioIONotBusyFlag | CanStopAudioStreamFlag,
       AudioIONotBusyFlag | CanStopAudioStreamFlag);
 
    if (!allowed)
@@ -1563,3 +1563,10 @@ static RegisteredToolbarFactory factory{ TransportBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ControlToolBar{ project } }; }
 };
+
+const ReservedCommandFlag
+   CanStopAudioStreamFlag{
+      [](const AudacityProject &project){
+         return ControlToolBar::Get( project ).CanStopAudioStream();
+      }
+   };

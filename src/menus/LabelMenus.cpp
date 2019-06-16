@@ -1,5 +1,6 @@
 #include "../AudioIOBase.h"
 #include "../Clipboard.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Prefs.h"
@@ -586,7 +587,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   constexpr auto NotBusyLabelsAndWaveFlags =
+   static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag |
       LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag;
 

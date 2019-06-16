@@ -642,7 +642,7 @@ void ProjectFileIO::DeleteCurrentAutoSaveFile()
    }
 }
 
-bool ProjectFileIO::IsProjectSaved() {
+bool ProjectFileIO::IsProjectSaved() const {
    auto &project = mProject;
    auto &dirManager = DirManager::Get( project );
    // This is true if a project was opened from an .aup

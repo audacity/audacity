@@ -749,6 +749,41 @@ bool MacroCommands::ApplyEffectCommand(
    return res;
 }
 
+bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
+   const CommandID & Str,
+   const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
+{
+   switch ( commandManager.HandleTextualCommand(
+      Str, context, flags, alwaysEnabled) ) {
+   case CommandManager::CommandSuccess:
+      return true;
+   case CommandManager::CommandFailure:
+      return false;
+   case CommandManager::CommandNotFound:
+   default:
+      break;
+   }
+
+   // Not one of the singleton commands.
+   // We could/should try all the list-style commands.
+   // instead we only try the effects.
+   PluginManager & pm = PluginManager::Get();
+   EffectManager & em = EffectManager::Get();
+   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
+   while (plug)
+   {
+      if (em.GetCommandIdentifier(plug->GetID()) == Str)
+      {
+         return PluginActions::DoEffect(
+            plug->GetID(), context,
+            PluginActions::kConfigured);
+      }
+      plug = pm.GetNextPlugin(PluginTypeEffect);
+   }
+
+   return false;
+}
+
 bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    const CommandID & command, const wxString & params,
    CommandContext const * pContext)
@@ -778,7 +813,8 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    AudacityProject *project = GetActiveProject();
    auto &manager = CommandManager::Get( *project );
    if( pContext ){
-      if( manager.HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( HandleTextualCommand(
+         manager, command, *pContext, AlwaysEnabledFlag, true ) )
          return true;
       pContext->Status( wxString::Format(
          _("Your batch command of %s was not recognized."), friendlyCommand ));
@@ -787,7 +823,8 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    else
    {
       const CommandContext context(  *GetActiveProject() );
-      if( manager.HandleTextualCommand( command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( HandleTextualCommand(
+         manager, command, context, AlwaysEnabledFlag, true ) )
          return true;
    }
 

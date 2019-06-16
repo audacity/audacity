@@ -11,134 +11,109 @@
 
 // Flags used in command handling.
 
-// These flags represent the majority of the states that affect
-// whether or not items in menus are enabled or disabled.
-enum CommandFlag : unsigned long long
-{
-   AlwaysEnabledFlag      = 0x00000000,
+#include <bitset>
+#include <functional>
+#include <utility>
+#include <wx/string.h>
 
-   AudioIONotBusyFlag     = 0x00000001,
-   TimeSelectedFlag       = 0x00000002, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
-   TracksSelectedFlag     = 0x00000004,
-   TracksExistFlag        = 0x00000008,
-   LabelTracksExistFlag   = 0x00000010,
-   WaveTracksSelectedFlag = 0x00000020,
-   ClipboardFlag          = 0x00000040,
-   TextClipFlag           = 0x00000040, // Same as Clipboard flag for now.
-   UnsavedChangesFlag     = 0x00000080,
-   HasLastEffectFlag      = 0x00000100,
-   UndoAvailableFlag      = 0x00000200,
-   RedoAvailableFlag      = 0x00000400,
-   ZoomInAvailableFlag    = 0x00000800,
-   ZoomOutAvailableFlag   = 0x00001000,
-   StereoRequiredFlag     = 0x00002000,  //lda
-   TopDockHasFocus        = 0x00004000,  //lll
-   TrackPanelHasFocus     = 0x00008000,  //lll
-   BotDockHasFocus        = 0x00010000,  //lll
-   LabelsSelectedFlag     = 0x00020000,
-   AudioIOBusyFlag        = 0x00040000,  //lll
-   PlayRegionLockedFlag   = 0x00080000,  //msmeyer
-   PlayRegionNotLockedFlag= 0x00100000,  //msmeyer
-   CutCopyAvailableFlag   = 0x00200000,
-   WaveTracksExistFlag    = 0x00400000,
-   NoteTracksExistFlag    = 0x00800000,  //gsw
-   NoteTracksSelectedFlag = 0x01000000,  //gsw
-   HaveRecentFiles        = 0x02000000,
-   IsNotSyncLockedFlag    = 0x04000000,  //awd
-   IsSyncLockedFlag       = 0x08000000,  //awd
-   IsRealtimeNotActiveFlag= 0x10000000,  //lll
-   CaptureNotBusyFlag     = 0x20000000,
-   CanStopAudioStreamFlag = 0x40000000,
-   RulerHasFocus          = 0x80000000ULL, // prl
-   NotMinimizedFlag      = 0x100000000ULL, // prl
-   PausedFlag            = 0x200000000ULL, // jkc
-   NotPausedFlag         = 0x400000000ULL, // jkc
-   HasWaveDataFlag       = 0x800000000ULL, // jkc
-   PlayableTracksExistFlag = 0x1000000000ULL,
-   AudioTracksSelectedFlag = 0x2000000000ULL,
-   NoAutoSelect            = 0x4000000000ULL, // jkc
+class AudacityProject;
 
-   NoFlagsSpecified        = ~0ULL
+// Increase the template parameter as needed to allow more flags
+constexpr size_t NCommandFlags = 64;
+static_assert(
+   NCommandFlags <= 8 * sizeof( unsigned long long ),
+   "NoFlagsSpecified may have incorrect value"
+);
+
+// Type to specify conditions for enabling of a menu item
+using CommandFlag = std::bitset<NCommandFlags>;
+
+// Special constant values
+constexpr CommandFlag
+   AlwaysEnabledFlag{},      // all zeroes
+   NoFlagsSpecified{ ~0ULL }; // all ones
+
+struct CommandFlagOptions{
+   // Supplied the translated name of the command, returns a translated
+   // error message
+   using MessageFormatter = std::function< wxString( const wxString& ) >;
+
+   CommandFlagOptions() = default;
+   CommandFlagOptions(
+      const MessageFormatter &message_,
+      const wxString &helpPage_ = {},
+      const wxString &title_ = {}
+   ) : message{ message_ }, helpPage{ helpPage_ }, title{ title_ }
+   {}
+
+   CommandFlagOptions && QuickTest() &&
+   { quickTest = true; return std::move( *this ); }
+   CommandFlagOptions && DisableDefaultMessage() &&
+   { enableDefaultMessage = false; return std::move( *this ); }
+   CommandFlagOptions && Priority( unsigned priority_ ) &&
+   { priority = priority_; return std::move( *this ); }
+
+   // null, or else computes non-default message for the dialog box when the
+   // condition is not satisfied for the selected command
+   MessageFormatter message;
+
+   // Title and help page are used only if a message function is given
+   wxString helpPage;
+
+   // Empty, or non-default title for the dialog box when the
+   // condition is not satisfied for the selected command
+   // This string must be given UN-translated.
+   wxString title;
+
+   // Conditions with higher "priority" are preferred over others in choosing
+   // the help message
+   unsigned priority = 0;
+
+   // If false, and no other condition with a message is unsatisfied, then
+   // display no dialog box at all when this condition is not satisfied
+   bool enableDefaultMessage = true;
+
+   // If true, assume this is a cheap test to be done always.  If false, the
+   // test may be skipped and the condition assumed to be unchanged since the
+   // last more comprehensive testing
+   bool quickTest = false;
 };
 
-// Prevent accidental misuse with narrower types
-
-bool operator == (CommandFlag, unsigned long) PROHIBITED;
-bool operator == (CommandFlag, long) PROHIBITED;
-bool operator == (unsigned long, CommandFlag) PROHIBITED;
-bool operator == (long, CommandFlag) PROHIBITED;
-
-bool operator != (CommandFlag, unsigned long) PROHIBITED;
-bool operator != (CommandFlag, long) PROHIBITED;
-bool operator != (unsigned long, CommandFlag) PROHIBITED;
-bool operator != (long, CommandFlag) PROHIBITED;
-
-CommandFlag operator & (CommandFlag, unsigned long) PROHIBITED;
-CommandFlag operator & (CommandFlag, long) PROHIBITED;
-CommandFlag operator & (unsigned long, CommandFlag) PROHIBITED;
-CommandFlag operator & (long, CommandFlag) PROHIBITED;
-
-CommandFlag operator | (CommandFlag, unsigned long) PROHIBITED;
-CommandFlag operator | (CommandFlag, long) PROHIBITED;
-CommandFlag operator | (unsigned long, CommandFlag) PROHIBITED;
-CommandFlag operator | (long, CommandFlag) PROHIBITED;
-
-CommandFlag operator ^ (CommandFlag, unsigned long) PROHIBITED;
-CommandFlag operator ^ (CommandFlag, long) PROHIBITED;
-CommandFlag operator ^ (unsigned long, CommandFlag) PROHIBITED;
-CommandFlag operator ^ (long, CommandFlag) PROHIBITED;
-
-bool operator == (CommandFlag, unsigned int) PROHIBITED;
-bool operator == (CommandFlag, int) PROHIBITED;
-bool operator == (unsigned int, CommandFlag) PROHIBITED;
-bool operator == (int, CommandFlag) PROHIBITED;
-
-bool operator != (CommandFlag, unsigned int) PROHIBITED;
-bool operator != (CommandFlag, int) PROHIBITED;
-bool operator != (unsigned int, CommandFlag) PROHIBITED;
-bool operator != (int, CommandFlag) PROHIBITED;
-
-CommandFlag operator & (CommandFlag, unsigned int) PROHIBITED;
-CommandFlag operator & (CommandFlag, int) PROHIBITED;
-CommandFlag operator & (unsigned int, CommandFlag) PROHIBITED;
-CommandFlag operator & (int, CommandFlag) PROHIBITED;
-
-CommandFlag operator | (CommandFlag, unsigned int) PROHIBITED;
-CommandFlag operator | (CommandFlag, int) PROHIBITED;
-CommandFlag operator | (unsigned int, CommandFlag) PROHIBITED;
-CommandFlag operator | (int, CommandFlag) PROHIBITED;
-
-CommandFlag operator ^ (CommandFlag, unsigned int) PROHIBITED;
-CommandFlag operator ^ (CommandFlag, int) PROHIBITED;
-CommandFlag operator ^ (unsigned int, CommandFlag) PROHIBITED;
-CommandFlag operator ^ (int, CommandFlag) PROHIBITED;
-
-// Supply the bitwise operations
-
-inline constexpr CommandFlag operator ~ (CommandFlag flag)
+// Construct one statically to register (and reserve) a bit position in the set
+// an associate it with a test function; those with quickTest = true are cheap
+// to compute and always checked
+class ReservedCommandFlag : public CommandFlag
 {
-   return static_cast<CommandFlag>( ~ static_cast<unsigned long long> (flag) );
-}
-inline constexpr CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
-{
-   return static_cast<CommandFlag> (
-      static_cast<unsigned long long>(lhs) &
-      static_cast<unsigned long long>(rhs)
-   );
-}
-inline constexpr CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
-{
-   return static_cast<CommandFlag> (
-      static_cast<unsigned long long>(lhs) |
-      static_cast<unsigned long long>(rhs)
-   );
-}
-inline CommandFlag & operator |= (CommandFlag &lhs, CommandFlag rhs)
-{
-   lhs = lhs | rhs;
-   return lhs;
-}
+public:
+   using Predicate = std::function< bool( const AudacityProject& ) >;
+   ReservedCommandFlag( const Predicate &predicate,
+      const CommandFlagOptions &options = {} );
+};
 
-using CommandMask = CommandFlag;
+// Widely used command flags, but this list need not be exhaustive.  It may be
+// extended, with special purpose flags of limited use, by constucting static
+// ReservedCommandFlag values
+
+// To describe auto-selection, stop-if-paused, etc.:
+// A structure describing a set of conditions, another set that might be
+// made true given the first, and the function that may make them true.
+// If a menu item requires the second set, while the first set is true,
+// then the enabler will be invoked (unless the menu item is constructed with
+// the useStrictFlags option, or the applicability test first returns false).
+// The item's full set of required flags is passed to the function.
+struct MenuItemEnabler {
+   using Test = std::function< bool( const AudacityProject& ) >;
+   using Action = std::function< void( AudacityProject&, CommandFlag ) >;
+
+   const CommandFlag &actualFlags;
+   const CommandFlag &possibleFlags;
+   Test applicable;
+   Action tryEnable;
+};
+
+// Typically this is statically constructed:
+struct RegisteredMenuItemEnabler{
+   RegisteredMenuItemEnabler( const MenuItemEnabler &enabler );
+};
 
 #endif

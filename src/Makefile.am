@@ -133,6 +133,8 @@ audacity_SOURCES = \
 	ClientDataHelpers.h \
         Clipboard.cpp \
         Clipboard.h \
+        CommonCommandFlags.cpp \
+        CommonCommandFlags.h \
         CrashReport.cpp \
         CrashReport.h \
 	Dependencies.cpp \

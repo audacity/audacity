@@ -3,6 +3,7 @@
 
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../FreqWindow.h"
 #include "../Menus.h" // for PrefsListener
 #include "../Prefs.h"
@@ -513,7 +514,7 @@ void SelectAllIfNone( AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto flags = MenuManager::Get( project ).GetUpdateFlags();
-   if(!(flags & TracksSelectedFlag) ||
+   if((flags & TracksSelectedFlag).none() ||
       viewInfo.selectedRegion.isPoint())
       DoSelectAllAudio( project );
 }
@@ -1332,7 +1333,7 @@ MenuTable::BaseItemPtr CursorMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   constexpr auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
+   static const auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
 
    // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it
    // useful?
