@@ -11,10 +11,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackVRulerControls.h"
 
-#include "../../TrackPanel.h"
 #include "../../Track.h"
+#include "../../ViewInfo.h"
 
 #include <wx/cursor.h>
+#include <wx/dc.h>
 #include <wx/translation.h>
 
 TrackVRulerControls::TrackVRulerControls( std::shared_ptr<Track> pTrack )

@@ -20,6 +20,7 @@
 #include "../../../../TrackPanel.h" // for TrackInfo
 #include "../../../../UndoManager.h"
 #include "../../../../NoteTrack.h"
+#include "../../../../ViewInfo.h"
 
 VelocitySliderHandle::VelocitySliderHandle
 ( SliderFn sliderFn, const wxRect &rect,

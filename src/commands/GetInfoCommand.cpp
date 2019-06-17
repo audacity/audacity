@@ -717,11 +717,12 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 {
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
+   auto &viewInfo = *tp.mViewInfo;
 
    wxRect trackRect = pWin->GetRect();
 
    for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
-      trackRect.y = t->GetY() - tp.mViewInfo->vpos;
+      trackRect.y = t->GetY() - viewInfo.vpos;
       trackRect.height = t->GetHeight();
 
 #if 0
@@ -760,7 +761,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          R.height -= kTopInset;
 
          int labelw = pTP->GetLabelWidth();
-         int vrul = pTP->GetVRulerOffset();
+         //int vrul = viewInfo.GetVRulerOffset();
          bool bIsWave = true;
          //mTrackInfo.DrawBackground(dc, R, t->GetSelected(), bIsWave, labelw, vrul);
 
@@ -776,7 +777,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
       // The VRuler.
       {  
          wxRect R = trackRect;
-         R.x += tp.GetVRulerOffset();
+         R.x += viewInfo.GetVRulerOffset();
          R.y += kTopMargin;
          R.width = tp.GetVRulerWidth();
          R.height -= (kTopMargin + kBottomMargin);

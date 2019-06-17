@@ -915,6 +915,14 @@ const TrackInfo::TCPLine defaultWaveTrackTCPLines[] = {
 };
 TCPLines waveTrackTCPLines{ RANGE(defaultWaveTrackTCPLines) };
 
+#ifdef USE_MIDI
+enum : int {
+   // PRL:  was it correct to include the margin?
+   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
+   kMidiCellHeight = kTrackInfoBtnSize
+};
+#endif
+
 const TrackInfo::TCPLine defaultNoteTrackTCPLines[] = {
    COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1245,7 +1253,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          if (region.Contains(
             0, trackRect.y, GetLeftOffset(), trackRect.height)) {
             wxRect rect{
-               GetVRulerOffset(),
+               mViewInfo->GetVRulerOffset(),
                trackRect.y,
                GetVRulerWidth() + 1,
                trackRect.height - kSeparatorThickness
@@ -1764,7 +1772,7 @@ void TrackPanel::DrawOutside
       rect.height -= kSeparatorThickness;
 
       int labelw = GetLabelWidth();
-      int vrul = GetVRulerOffset();
+      int vrul = mViewInfo->GetVRulerOffset();
 
       TrackInfo::DrawBackground( dc, rect, t->GetSelected(), vrul );
 
@@ -1772,7 +1780,7 @@ void TrackPanel::DrawOutside
       // Draw sync-lock tiles in ruler area.
       //if (t->IsSyncLockSelected()) {
       //   wxRect tileFill = rect;
-      //   tileFill.x = GetVRulerOffset();
+      //   tileFill.x = mViewInfo->GetVRulerOffset();
       //   tileFill.width = GetVRulerWidth();
       //   TrackArt::DrawSyncLockTiles(dc, tileFill);
       //}
@@ -1962,7 +1970,7 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
    if (!t)
       return;
 
-   wxRect rect(GetVRulerOffset(),
+   wxRect rect(mViewInfo->GetVRulerOffset(),
             kTopMargin,
             GetVRulerWidth(),
             0);
@@ -2334,6 +2342,11 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
 int TrackPanel::GetVRulerWidth() const
 {
    return vrulerSize.x;
+}
+
+int TrackPanel::GetLabelWidth() const
+{
+   return mViewInfo->GetVRulerOffset() + GetVRulerWidth();
 }
 
 /// Displays the bounds of the selection in the status bar.

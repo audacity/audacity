@@ -84,7 +84,6 @@ audio tracks.
 #include "prefs/TracksPrefs.h"
 #include "prefs/WaveformSettings.h"
 #include "Spectrum.h"
-#include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
 #include "AllThemeResources.h"

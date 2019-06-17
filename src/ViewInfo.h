@@ -28,6 +28,29 @@
 
 class AudacityProject;
 
+// See big pictorial comment in TrackPanel.cpp for explanation of these numbers
+enum : int {
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kTopInset = 4,
+   kShadowThickness = 1,
+   kBorderThickness = 1,
+   kTopMargin = kTopInset + kBorderThickness,
+   kBottomMargin = kShadowThickness + kBorderThickness,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+   kSeparatorThickness = kBottomMargin + kTopMargin,
+};
+
+enum : int {
+   kTrackInfoWidth = 100 - kLeftMargin,
+   kTrackInfoBtnSize = 18, // widely used dimension, usually height
+   kTrackInfoSliderHeight = 25,
+   kTrackInfoSliderWidth = 84,
+   kTrackInfoSliderAllowance = 5,
+   kTrackInfoSliderExtra = 5,
+};
+
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
 // and for computing conversions between track times and pixel positions.
@@ -208,6 +231,8 @@ public:
    static const ViewInfo &Get( const AudacityProject &project );
 
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
+
+   int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
 
    static int UpdateScrollPrefsID();
    void UpdatePrefs() override;
