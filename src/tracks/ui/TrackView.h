@@ -15,8 +15,10 @@ Paul Licameli split from class Track
 #include "CommonTrackPanelCell.h" // to inherit
 
 class Track;
+class TrackVRulerControls;
 
 class TrackView /* not final */ : public CommonTrackCell
+   , public std::enable_shared_from_this<TrackView>
 {
    TrackView( const TrackView& ) = delete;
    TrackView &operator=( const TrackView& ) = delete;
@@ -29,6 +31,18 @@ public:
 
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );
+
+   // Return another, associated TrackPanelCell object that implements the
+   // mouse actions for the vertical ruler
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls();
+   std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
+
+protected:
+   // Private factory to make appropriate object; class TrackView handles
+   // memory management thereafter
+   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
+
+   std::shared_ptr<TrackVRulerControls> mpVRulerControls;
 };
 
 #endif

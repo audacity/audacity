@@ -38,7 +38,6 @@ class LabelTrack;
 class TimeTrack;
 class TrackControls;
 class TrackView;
-class TrackVRulerControls;
 class TrackPanelResizerCell;
 class WaveTrack;
 class NoteTrack;
@@ -297,11 +296,7 @@ class AUDACITY_DLL_API Track /* not final */
    std::shared_ptr<const TrackPanelCell> GetTrackControls() const;
 
    // Return another, associated TrackPanelCell object that implements the
-   // mouse actions for the vertical ruler
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls();
-   std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
 
-   // Return another, associated TrackPanelCell object that implements the
    // click and drag to resize
    std::shared_ptr<TrackPanelCell> GetResizer();
 
@@ -760,12 +755,10 @@ protected:
    // These are called to create controls on demand:
    virtual std::shared_ptr<TrackView> DoGetView() = 0;
    virtual std::shared_ptr<TrackControls> DoGetControls() = 0;
-   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    // These hold the controls:
    std::shared_ptr<TrackView> mpView;
    std::shared_ptr<TrackControls> mpControls;
-   std::shared_ptr<TrackVRulerControls> mpVRulerContols;
    std::shared_ptr<TrackPanelResizerCell> mpResizer;
 
    std::weak_ptr<SelectHandle> mSelectHandle;

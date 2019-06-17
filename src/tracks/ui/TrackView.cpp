@@ -119,17 +119,17 @@ std::shared_ptr<const TrackPanelCell> Track::GetTrackControls() const
    return const_cast< Track* >( this )->GetTrackControls();
 }
 
-std::shared_ptr<TrackVRulerControls> Track::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
 {
-   if (!mpVRulerContols)
+   if (!mpVRulerControls)
       // create on demand
-      mpVRulerContols = DoGetVRulerControls();
-   return mpVRulerContols;
+      mpVRulerControls = DoGetVRulerControls();
+   return mpVRulerControls;
 }
 
-std::shared_ptr<const TrackVRulerControls> Track::GetVRulerControls() const
+std::shared_ptr<const TrackVRulerControls> TrackView::GetVRulerControls() const
 {
-   return const_cast< Track* >( this )->GetVRulerControls();
+   return const_cast< TrackView* >( this )->GetVRulerControls();
 }
 
 #include "../../TrackPanelResizeHandle.h"

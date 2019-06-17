@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackControls.h"
 #include "TimeTrackVRulerControls.h"
 
+#include "TimeTrackVRulerControls.h"
 #include "../../../HitTestResult.h"
 #include "../../../TrackPanelMouseEvent.h"
 
@@ -45,7 +46,8 @@ std::shared_ptr<TrackControls> TimeTrack::DoGetControls()
    return std::make_shared<TimeTrackControls>( SharedPointer() );
 }
 
-std::shared_ptr<TrackVRulerControls> TimeTrack::DoGetVRulerControls()
+std::shared_ptr<TrackVRulerControls> TimeTrackView::DoGetVRulerControls()
 {
-   return std::make_shared<TimeTrackVRulerControls>( SharedPointer() );
+   return
+      std::make_shared<TimeTrackVRulerControls>( shared_from_this() );
 }

@@ -23,6 +23,8 @@ public:
    WaveTrackView( const std::shared_ptr<Track> &pTrack )
       : CommonTrackView{ pTrack } {}
    ~WaveTrackView() override;
+
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 #endif

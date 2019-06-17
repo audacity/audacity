@@ -101,7 +101,7 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 
 #include "tracks/ui/TrackControls.h"
-#include "tracks/ui/TrackVRulerControls.h" // for inheritance relation
+#include "tracks/ui/TrackVRulerControls.h"
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
