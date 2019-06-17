@@ -63,7 +63,7 @@ enum {
 
 namespace TrackInfo
 {
-   void ReCreateSliders( wxWindow *pParent );
+   void ReCreateSliders();
 
    unsigned MinimumTrackHeight();
 

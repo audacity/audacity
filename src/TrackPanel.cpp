@@ -277,7 +277,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #pragma warning( default: 4355 )
 #endif
 {
-   TrackInfo::ReCreateSliders( this );
+   TrackInfo::ReCreateSliders();
    TrackInfo::UpdatePrefs( this );
 
    SetLayoutDirection(wxLayout_LeftToRight);
@@ -385,7 +385,7 @@ void TrackPanel::UpdatePrefs()
 
 void TrackPanel::ApplyUpdatedTheme()
 {
-   TrackInfo::ReCreateSliders( this );
+   TrackInfo::ReCreateSliders();
 }
 
 
@@ -2430,20 +2430,20 @@ std::unique_ptr<LWSlider>
 
 }
 
-void TrackInfo::ReCreateSliders( wxWindow *pParent ){
+void TrackInfo::ReCreateSliders(){
    const wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetGainRect(point, sliderRect);
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   gGain = std::make_unique<LWSlider>(pParent, _("Gain"),
+   gGain = std::make_unique<LWSlider>(nullptr, _("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
    gGain->SetDefaultValue(defPos);
 
-   gGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
+   gGainCaptured = std::make_unique<LWSlider>(nullptr, _("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
@@ -2453,13 +2453,13 @@ void TrackInfo::ReCreateSliders( wxWindow *pParent ){
 
    defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   gPan = std::make_unique<LWSlider>(pParent, _("Pan"),
+   gPan = std::make_unique<LWSlider>(nullptr, _("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
    gPan->SetDefaultValue(defPos);
 
-   gPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
+   gPanCaptured = std::make_unique<LWSlider>(nullptr, _("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);
@@ -2469,12 +2469,12 @@ void TrackInfo::ReCreateSliders( wxWindow *pParent ){
    GetVelocityRect(point, sliderRect);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
-   gVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
+   gVelocity = std::make_unique<LWSlider>(nullptr, _("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
    gVelocity->SetDefaultValue(0.0);
-   gVelocityCaptured = std::make_unique<LWSlider>(pParent, _("Velocity"),
+   gVelocityCaptured = std::make_unique<LWSlider>(nullptr, _("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
