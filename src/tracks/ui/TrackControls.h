@@ -22,18 +22,13 @@ class MinimizeButtonHandle;
 class SelectButtonHandle;
 class TrackSelectHandle;
 
-class TrackControls /* not final */ : public CommonTrackPanelCell
+class TrackControls /* not final */ : public CommonTrackCell
 {
 public:
    explicit
    TrackControls( std::shared_ptr<Track> pTrack );
 
    virtual ~TrackControls() = 0;
-
-protected:
-   std::shared_ptr<Track> DoFindTrack() override;
-
-   std::weak_ptr<Track> mwTrack;
 };
 
 class CommonTrackControls /* not final */ : public TrackControls

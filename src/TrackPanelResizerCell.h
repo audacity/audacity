@@ -15,14 +15,14 @@
 
 class TrackPanelResizeHandle;
 
-class TrackPanelResizerCell : public CommonTrackPanelCell
+class TrackPanelResizerCell : public CommonTrackCell
 {
    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
    TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
 public:
 
    explicit
-   TrackPanelResizerCell( std::shared_ptr<Track> pTrack );
+   TrackPanelResizerCell( const std::shared_ptr<Track> &pTrack );
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *) override;

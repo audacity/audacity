@@ -29,17 +29,12 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/frame.h>
 
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
-   : mwTrack{ pTrack }
+   : CommonTrackCell{ pTrack }
 {
 }
 
 TrackControls::~TrackControls()
 {
-}
-
-std::shared_ptr<Track> TrackControls::DoFindTrack()
-{
-   return mwTrack.lock();
 }
 
 std::vector<UIHandlePtr> CommonTrackControls::HitTest

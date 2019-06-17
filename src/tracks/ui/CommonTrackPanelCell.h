@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelCell.h"
 
 #include <stdlib.h>
+#include <memory>
 #include <functional>
 
 class Track;
@@ -49,6 +50,22 @@ protected:
       (const TrackPanelMouseEvent &event,
       AudacityProject *pProject) override;
 
+};
+
+class AUDACITY_DLL_API CommonTrackCell /* not final */
+   : public CommonTrackPanelCell
+{
+public:
+   explicit CommonTrackCell( const std::shared_ptr<Track> &pTrack );
+
+  ~CommonTrackCell();
+
+   std::shared_ptr<Track> DoFindTrack() override;
+
+   void Reparent( const std::shared_ptr<Track> &parent );
+
+private:
+   std::weak_ptr< Track > mwTrack;
 };
 
 #endif

@@ -17,8 +17,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/mousestate.h>
 
-TrackPanelResizerCell::TrackPanelResizerCell( std::shared_ptr<Track> pTrack )
-: mpTrack{ pTrack }
+TrackPanelResizerCell::TrackPanelResizerCell(
+   const std::shared_ptr<Track> &pTrack )
+   : CommonTrackCell{ pTrack }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
