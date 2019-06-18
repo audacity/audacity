@@ -34,7 +34,7 @@ const TrackView &TrackView::Get( const Track &track )
    return *track.GetTrackView();
 }
 
-std::vector<UIHandlePtr> TrackView::HitTest
+std::vector<UIHandlePtr> CommonTrackView::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
@@ -100,7 +100,7 @@ std::shared_ptr<TrackPanelCell> Track::ContextMenuDelegate()
    return TrackControls::Get( *this ).shared_from_this();
 }
 
-std::shared_ptr<TrackPanelCell> TrackView::ContextMenuDelegate()
+std::shared_ptr<TrackPanelCell> CommonTrackView::ContextMenuDelegate()
 {
    return TrackControls::Get( *FindTrack() ).shared_from_this();
 }

@@ -13,7 +13,7 @@ Paul Licameli split from class LabelTrack
 
 #include "../../ui/TrackView.h"
 
-class LabelTrackView final : public TrackView
+class LabelTrackView final : public CommonTrackView
 {
    LabelTrackView( const LabelTrackView& ) = delete;
    LabelTrackView &operator=( const LabelTrackView& ) = delete;
@@ -21,7 +21,7 @@ class LabelTrackView final : public TrackView
 public:
    explicit
    LabelTrackView( const std::shared_ptr<Track> &pTrack )
-      : TrackView{ pTrack } {}
+      : CommonTrackView{ pTrack } {}
    ~LabelTrackView() override;
 };
 

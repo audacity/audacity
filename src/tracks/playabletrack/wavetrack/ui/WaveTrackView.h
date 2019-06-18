@@ -13,7 +13,7 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/TrackView.h"
 
-class WaveTrackView final : public TrackView
+class WaveTrackView final : public CommonTrackView
 {
    WaveTrackView( const WaveTrackView& ) = delete;
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
@@ -21,7 +21,7 @@ class WaveTrackView final : public TrackView
 public:
    explicit
    WaveTrackView( const std::shared_ptr<Track> &pTrack )
-      : TrackView{ pTrack } {}
+      : CommonTrackView{ pTrack } {}
    ~WaveTrackView() override;
 };
 

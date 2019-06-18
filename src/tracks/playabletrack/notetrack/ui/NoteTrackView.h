@@ -13,7 +13,7 @@ Paul Licameli split from class NoteTrack
 
 #include "../../../ui/TrackView.h"
 
-class NoteTrackView final : public TrackView
+class NoteTrackView final : public CommonTrackView
 {
    NoteTrackView( const NoteTrackView& ) = delete;
    NoteTrackView &operator=( const NoteTrackView& ) = delete;
@@ -21,7 +21,7 @@ class NoteTrackView final : public TrackView
 public:
    explicit
    NoteTrackView( const std::shared_ptr<Track> &pTrack )
-      : TrackView{ pTrack } {}
+      : CommonTrackView{ pTrack } {}
    ~NoteTrackView() override;
 };
 

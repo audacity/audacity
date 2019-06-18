@@ -29,6 +29,12 @@ public:
 
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );
+};
+
+class CommonTrackView /* not final */ : public TrackView
+{
+public:
+   using TrackView::TrackView;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *pProject)

@@ -13,7 +13,7 @@ Paul Licameli split from class TimeTrack
 
 #include "../../ui/TrackView.h"
 
-class TimeTrackView final : public TrackView
+class TimeTrackView final : public CommonTrackView
 {
    TimeTrackView( const TimeTrackView& ) = delete;
    TimeTrackView &operator=( const TimeTrackView& ) = delete;
@@ -21,7 +21,7 @@ class TimeTrackView final : public TrackView
 public:
    explicit
    TimeTrackView( const std::shared_ptr<Track> &pTrack )
-      : TrackView{ pTrack } {}
+      : CommonTrackView{ pTrack } {}
    ~TimeTrackView() override;
 };
 
