@@ -24,6 +24,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
@@ -1310,7 +1311,7 @@ void OnTrackPan(const CommandContext &context)
 
    Track *const track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = trackPanel.PanSlider(wt);
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
       if (slider->ShowDialog())
          SetTrackPan(project, wt, slider);
    });
@@ -1323,7 +1324,7 @@ void OnTrackPanLeft(const CommandContext &context)
 
    Track *const track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = trackPanel.PanSlider(wt);
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
       slider->Decrease(1);
       SetTrackPan(project, wt, slider);
    });
@@ -1336,7 +1337,7 @@ void OnTrackPanRight(const CommandContext &context)
 
    Track *const track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = trackPanel.PanSlider(wt);
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
       slider->Increase(1);
       SetTrackPan(project, wt, slider);
    });
@@ -1350,7 +1351,7 @@ void OnTrackGain(const CommandContext &context)
    /// This will pop up the track gain dialog for specified track
    Track *const track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = trackPanel.GainSlider(wt);
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
       if (slider->ShowDialog())
          SetTrackGain(project, wt, slider);
    });
@@ -1363,7 +1364,7 @@ void OnTrackGainInc(const CommandContext &context)
 
    Track *const track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = trackPanel.GainSlider(wt);
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
       slider->Increase(1);
       SetTrackGain(project, wt, slider);
    });
@@ -1376,7 +1377,7 @@ void OnTrackGainDec(const CommandContext &context)
 
    Track *const track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = trackPanel.GainSlider(wt);
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
       slider->Decrease(1);
       SetTrackGain(project, wt, slider);
    });

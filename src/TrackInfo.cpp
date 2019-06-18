@@ -519,72 +519,6 @@ namespace {
 
 wxFont gFont;
 
-std::unique_ptr<LWSlider>
-   gGainCaptured
-   , gPanCaptured
-   , gGain
-   , gPan
-#ifdef EXPERIMENTAL_MIDI_OUT
-   , gVelocityCaptured
-   , gVelocity
-#endif
-;
-
-}
-
-#include "tracks/playabletrack/notetrack/ui/NoteTrackControls.h"
-#include "tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
-void TrackInfo::ReCreateSliders(){
-   const wxPoint point{ 0, 0 };
-   wxRect sliderRect;
-   WaveTrackControls::GetGainRect(point, sliderRect);
-
-   float defPos = 1.0;
-   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   gGain = std::make_unique<LWSlider>(nullptr, _("Gain"),
-                        wxPoint(sliderRect.x, sliderRect.y),
-                        wxSize(sliderRect.width, sliderRect.height),
-                        DB_SLIDER);
-   gGain->SetDefaultValue(defPos);
-
-   gGainCaptured = std::make_unique<LWSlider>(nullptr, _("Gain"),
-                                wxPoint(sliderRect.x, sliderRect.y),
-                                wxSize(sliderRect.width, sliderRect.height),
-                                DB_SLIDER);
-   gGainCaptured->SetDefaultValue(defPos);
-
-   WaveTrackControls::GetPanRect(point, sliderRect);
-
-   defPos = 0.0;
-   /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   gPan = std::make_unique<LWSlider>(nullptr, _("Pan"),
-                       wxPoint(sliderRect.x, sliderRect.y),
-                       wxSize(sliderRect.width, sliderRect.height),
-                       PAN_SLIDER);
-   gPan->SetDefaultValue(defPos);
-
-   gPanCaptured = std::make_unique<LWSlider>(nullptr, _("Pan"),
-                               wxPoint(sliderRect.x, sliderRect.y),
-                               wxSize(sliderRect.width, sliderRect.height),
-                               PAN_SLIDER);
-   gPanCaptured->SetDefaultValue(defPos);
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   NoteTrackControls::GetVelocityRect(point, sliderRect);
-
-   /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
-   gVelocity = std::make_unique<LWSlider>(nullptr, _("Velocity"),
-      wxPoint(sliderRect.x, sliderRect.y),
-      wxSize(sliderRect.width, sliderRect.height),
-      VEL_SLIDER);
-   gVelocity->SetDefaultValue(0.0);
-   gVelocityCaptured = std::make_unique<LWSlider>(nullptr, _("Velocity"),
-      wxPoint(sliderRect.x, sliderRect.y),
-      wxSize(sliderRect.width, sliderRect.height),
-      VEL_SLIDER);
-   gVelocityCaptured->SetDefaultValue(0.0);
-#endif
-
 }
 
 void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
@@ -851,59 +785,6 @@ unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
 }
-
-LWSlider * TrackInfo::GainSlider
-(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
-{
-   wxPoint pos = sliderRect.GetPosition();
-   float gain = t ? t->GetGain() : 1.0;
-
-   gGain->Move(pos);
-   gGain->Set(gain);
-   gGainCaptured->Move(pos);
-   gGainCaptured->Set(gain);
-
-   auto slider = (captured ? gGainCaptured : gGain).get();
-   slider->SetParent( pParent ? pParent :
-      FindProjectFrame( ::GetActiveProject() ) );
-   return slider;
-}
-
-LWSlider * TrackInfo::PanSlider
-(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
-{
-   wxPoint pos = sliderRect.GetPosition();
-   float pan = t ? t->GetPan() : 0.0;
-
-   gPan->Move(pos);
-   gPan->Set(pan);
-   gPanCaptured->Move(pos);
-   gPanCaptured->Set(pan);
-
-   auto slider = (captured ? gPanCaptured : gPan).get();
-   slider->SetParent( pParent ? pParent :
-      FindProjectFrame( ::GetActiveProject() ) );
-   return slider;
-}
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-LWSlider * TrackInfo::VelocitySlider
-(const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
-{
-   wxPoint pos = sliderRect.GetPosition();
-   float velocity = t ? t->GetVelocity() : 0.0;
-
-   gVelocity->Move(pos);
-   gVelocity->Set(velocity);
-   gVelocityCaptured->Move(pos);
-   gVelocityCaptured->Set(velocity);
-
-   auto slider = (captured ? gVelocityCaptured : gVelocity).get();
-   slider->SetParent( pParent ? pParent :
-      FindProjectFrame( ::GetActiveProject() ) );
-   return slider;
-}
-#endif
 
 void TrackInfo::UpdatePrefs( wxWindow *pParent )
 {

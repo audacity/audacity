@@ -12,7 +12,9 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
 #include "../../../ui/CommonTrackControls.h" // to inherit
-
+class wxEvent;
+class LWSlider;
+class NoteTrack;
 class MuteButtonHandle;
 class SoloButtonHandle;
 class NoteTrackButtonHandle;
@@ -46,6 +48,13 @@ public:
    static unsigned DefaultNoteTrackHeight();
    static void GetMidiControlsRect(const wxRect & rect, wxRect & dest);
    static void GetVelocityRect(const wxPoint &topleft, wxRect & dest);
+   
+   static LWSlider * VelocitySlider
+      (const wxRect &sliderRect, const NoteTrack *t, bool captured,
+       wxWindow *pParent);
+
+private:
+   static void ReCreateVelocitySlider( wxEvent& );
 };
 
 #endif

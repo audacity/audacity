@@ -81,7 +81,7 @@ UIHandlePtr GainSliderHandle::HitTest
       WaveTrackControls::GetGainRect(rect.GetTopLeft(), sliderRect2);
       auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
-         return TrackInfo::GainSlider
+         return WaveTrackControls::GainSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));
       };
@@ -158,7 +158,7 @@ UIHandlePtr PanSliderHandle::HitTest
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
-         return TrackInfo::PanSlider
+         return WaveTrackControls::PanSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));
       };

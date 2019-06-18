@@ -30,8 +30,6 @@ class WaveTrack;
 
 namespace TrackInfo
 {
-   void ReCreateSliders();
-
    unsigned MinimumTrackHeight();
 
    struct TCPLine {
@@ -142,19 +140,6 @@ namespace TrackInfo
 
    bool HideTopItem( const wxRect &rect, const wxRect &subRect,
                                int allowance = 0 );
-
-   LWSlider * GainSlider
-      (const wxRect &sliderRect, const WaveTrack *t, bool captured,
-       wxWindow *pParent);
-   LWSlider * PanSlider
-      (const wxRect &sliderRect, const WaveTrack *t, bool captured,
-       wxWindow *pParent);
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   LWSlider * VelocitySlider
-      (const wxRect &sliderRect, const NoteTrack *t, bool captured,
-       wxWindow *pParent);
-#endif
 
    // Non-member, namespace function relying on TrackPanel to invoke it
    // when it handles preference update events

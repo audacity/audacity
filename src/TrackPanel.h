@@ -84,7 +84,6 @@ class AUDACITY_DLL_API TrackPanel final
    virtual ~ TrackPanel();
 
    void UpdatePrefs() override;
-   void ApplyUpdatedTheme();
 
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
@@ -217,12 +216,6 @@ public:
    std::shared_ptr< TrackPanelCell > GetBackgroundCell();
 
 public:
-
-   LWSlider *GainSlider( const WaveTrack *wt );
-   LWSlider *PanSlider( const WaveTrack *wt );
-#ifdef EXPERIMENTAL_MIDI_OUT
-   LWSlider *VelocitySlider( const NoteTrack *nt );
-#endif
 
 protected:
    TrackPanelListener *mListener;

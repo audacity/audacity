@@ -73,10 +73,8 @@ is time to refresh some aspect of the screen.
 #include "TrackInfo.h"
 #include "TrackPanelAx.h"
 #include "WaveTrack.h"
-#include "tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "NoteTrack.h"
-#include "tracks/playabletrack/notetrack/ui/NoteTrackControls.h"
 #endif
 
 #include "ondemand/ODManager.h"
@@ -260,7 +258,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #pragma warning( default: 4355 )
 #endif
 {
-   TrackInfo::ReCreateSliders();
    TrackInfo::UpdatePrefs( this );
 
    SetLayoutDirection(wxLayout_LeftToRight);
@@ -322,35 +319,6 @@ TrackPanel::~TrackPanel()
       ReleaseMouse();
 }
 
-LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
-{
-   auto pControls = &TrackControls::Get( *wt );
-   auto rect = FindRect( *pControls );
-   wxRect sliderRect;
-   WaveTrackControls::GetGainRect( rect.GetTopLeft(), sliderRect );
-   return TrackInfo::GainSlider(sliderRect, wt, false, this);
-}
-
-LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
-{
-   auto pControls = &TrackControls::Get( *wt );
-   auto rect = FindRect( *pControls );
-   wxRect sliderRect;
-   WaveTrackControls::GetPanRect( rect.GetTopLeft(), sliderRect );
-   return TrackInfo::PanSlider(sliderRect, wt, false, this);
-}
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
-{
-   auto pControls = &TrackControls::Get( *nt );
-   auto rect = FindRect( *pControls );
-   wxRect sliderRect;
-   NoteTrackControls::GetVelocityRect( rect.GetTopLeft(), sliderRect );
-   return TrackInfo::VelocitySlider(sliderRect, nt, false, this);
-}
-#endif
-
 void TrackPanel::UpdatePrefs()
 {
    // All vertical rulers must be recalculated since the minimum and maximum
@@ -361,12 +329,6 @@ void TrackPanel::UpdatePrefs()
 
    Refresh();
 }
-
-void TrackPanel::ApplyUpdatedTheme()
-{
-   TrackInfo::ReCreateSliders();
-}
-
 
 wxSize TrackPanel::GetTracksUsableArea() const
 {

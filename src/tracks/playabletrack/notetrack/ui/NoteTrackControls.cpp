@@ -26,6 +26,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Project.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../prefs/ThemePrefs.h"
+
+#include <mutex>
+#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 NoteTrackControls::~NoteTrackControls()
@@ -187,7 +191,7 @@ void VelocitySliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction(
-      &TrackInfo::VelocitySlider, dc, rect, pTrack, captured, hit);
+      &NoteTrackControls::VelocitySlider, dc, rect, pTrack, captured, hit);
 }
 
 void MidiControlsDrawFunction
@@ -256,3 +260,64 @@ const TCPLines &NoteTrackControls::GetTCPLines() const
 };
 
 #endif
+
+namespace {
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   std::unique_ptr<LWSlider>
+     gVelocityCaptured
+   , gVelocity
+   ;
+#endif
+
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+LWSlider * NoteTrackControls::VelocitySlider
+(const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
+{
+   static std::once_flag flag;
+   std::call_once( flag, [] {
+      wxCommandEvent dummy;
+      ReCreateVelocitySlider( dummy );
+      wxTheApp->Bind(EVT_THEME_CHANGE, ReCreateVelocitySlider);
+   } );
+
+   wxPoint pos = sliderRect.GetPosition();
+   float velocity = t ? t->GetVelocity() : 0.0;
+
+   gVelocity->Move(pos);
+   gVelocity->Set(velocity);
+   gVelocityCaptured->Move(pos);
+   gVelocityCaptured->Set(velocity);
+
+   auto slider = (captured ? gVelocityCaptured : gVelocity).get();
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
+   return slider;
+}
+#endif
+
+void NoteTrackControls::ReCreateVelocitySlider( wxEvent &evt )
+{
+   evt.Skip();
+#ifdef EXPERIMENTAL_MIDI_OUT
+   wxPoint point{ 0, 0 };
+   wxRect sliderRect;
+   GetVelocityRect(point, sliderRect);
+
+   /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
+   gVelocity = std::make_unique<LWSlider>(nullptr, _("Velocity"),
+      wxPoint(sliderRect.x, sliderRect.y),
+      wxSize(sliderRect.width, sliderRect.height),
+      VEL_SLIDER);
+   gVelocity->SetDefaultValue(0.0);
+   gVelocityCaptured = std::make_unique<LWSlider>(nullptr, _("Velocity"),
+      wxPoint(sliderRect.x, sliderRect.y),
+      wxSize(sliderRect.width, sliderRect.height),
+      VEL_SLIDER);
+   gVelocityCaptured->SetDefaultValue(0.0);
+#else
+   pParent;
+#endif
+}

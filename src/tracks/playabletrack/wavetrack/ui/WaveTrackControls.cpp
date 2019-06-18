@@ -31,11 +31,14 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ondemand/ODManager.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"
+#include "../../../../prefs/ThemePrefs.h"
 #include "../../../../prefs/TracksBehaviorsPrefs.h"
 #include "../../../../prefs/WaveformPrefs.h"
 #include "../../../../widgets/AudacityMessageBox.h"
 
+#include <mutex>
 #include <wx/combobox.h>
+#include <wx/frame.h>
 #include <wx/sizer.h>
 
 namespace
@@ -1042,7 +1045,7 @@ void PanSliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction
-      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured, hit);
+      ( &WaveTrackControls::PanSlider, dc, rect, pTrack, captured, hit);
 }
 
 void GainSliderDrawFunction
@@ -1056,7 +1059,7 @@ void GainSliderDrawFunction
       hit=hit;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction
-      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
+      ( &WaveTrackControls::GainSlider, dc, rect, pTrack, captured, hit);
 }
 
 void StatusDrawFunction
@@ -1167,4 +1170,127 @@ unsigned WaveTrackControls::DefaultWaveTrackHeight()
 const TCPLines &WaveTrackControls::GetTCPLines() const
 {
    return waveTrackTCPLines;
+}
+
+namespace
+{
+std::unique_ptr<LWSlider>
+   gGainCaptured
+   , gPanCaptured
+   , gGain
+   , gPan;
+}
+
+LWSlider *WaveTrackControls::GainSlider(
+   CellularPanel &panel, const WaveTrack &wt )
+{
+   auto &controls = TrackControls::Get( wt );
+   auto rect = panel.FindRect( controls );
+   wxRect sliderRect;
+   GetGainRect( rect.GetTopLeft(), sliderRect );
+   return GainSlider( sliderRect, &wt, false, &panel );
+}
+
+LWSlider * WaveTrackControls::GainSlider
+(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
+{
+   static std::once_flag flag;
+   std::call_once( flag, [] {
+      wxCommandEvent dummy;
+      ReCreateGainSlider( dummy );
+      wxTheApp->Bind(EVT_THEME_CHANGE, ReCreateGainSlider);
+   } );
+
+   wxPoint pos = sliderRect.GetPosition();
+   float gain = t ? t->GetGain() : 1.0;
+
+   gGain->Move(pos);
+   gGain->Set(gain);
+   gGainCaptured->Move(pos);
+   gGainCaptured->Set(gain);
+
+   auto slider = (captured ? gGainCaptured : gGain).get();
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
+   return slider;
+}
+
+void WaveTrackControls::ReCreateGainSlider( wxEvent &event )
+{
+   event.Skip();
+
+   const wxPoint point{ 0, 0 };
+   wxRect sliderRect;
+   GetGainRect(point, sliderRect);
+
+   float defPos = 1.0;
+   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
+   gGain = std::make_unique<LWSlider>(nullptr, _("Gain"),
+                        wxPoint(sliderRect.x, sliderRect.y),
+                        wxSize(sliderRect.width, sliderRect.height),
+                        DB_SLIDER);
+   gGain->SetDefaultValue(defPos);
+
+   gGainCaptured = std::make_unique<LWSlider>(nullptr, _("Gain"),
+                                wxPoint(sliderRect.x, sliderRect.y),
+                                wxSize(sliderRect.width, sliderRect.height),
+                                DB_SLIDER);
+   gGainCaptured->SetDefaultValue(defPos);
+}
+
+LWSlider *WaveTrackControls::PanSlider(
+   CellularPanel &panel, const WaveTrack &wt )
+{
+   auto &controls = TrackControls::Get( wt );
+   auto rect = panel.FindRect( controls );
+   wxRect sliderRect;
+   GetPanRect( rect.GetTopLeft(), sliderRect );
+   return PanSlider( sliderRect, &wt, false,  &panel );
+}
+
+LWSlider * WaveTrackControls::PanSlider
+(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
+{
+   static std::once_flag flag;
+   std::call_once( flag, [] {
+      wxCommandEvent dummy;
+      ReCreatePanSlider( dummy );
+      wxTheApp->Bind(EVT_THEME_CHANGE, ReCreatePanSlider);
+   } );
+
+   wxPoint pos = sliderRect.GetPosition();
+   float pan = t ? t->GetPan() : 0.0;
+
+   gPan->Move(pos);
+   gPan->Set(pan);
+   gPanCaptured->Move(pos);
+   gPanCaptured->Set(pan);
+
+   auto slider = (captured ? gPanCaptured : gPan).get();
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
+   return slider;
+}
+
+void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
+{
+   event.Skip();
+
+   const wxPoint point{ 0, 0 };
+   wxRect sliderRect;
+   GetPanRect(point, sliderRect);
+
+   float defPos = 0.0;
+   /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
+   gPan = std::make_unique<LWSlider>(nullptr, _("Pan"),
+                       wxPoint(sliderRect.x, sliderRect.y),
+                       wxSize(sliderRect.width, sliderRect.height),
+                       PAN_SLIDER);
+   gPan->SetDefaultValue(defPos);
+
+   gPanCaptured = std::make_unique<LWSlider>(nullptr, _("Pan"),
+                               wxPoint(sliderRect.x, sliderRect.y),
+                               wxSize(sliderRect.width, sliderRect.height),
+                               PAN_SLIDER);
+   gPanCaptured->SetDefaultValue(defPos);
 }
