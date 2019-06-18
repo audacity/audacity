@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_WAVE_TRACK_CONTROLS__
 #define __AUDACITY_WAVE_TRACK_CONTROLS__
 
-#include "../../../ui/TrackControls.h"
+#include "../../../ui/CommonTrackControls.h" // to inherit
 
 class MuteButtonHandle;
 class SoloButtonHandle;
