@@ -694,8 +694,12 @@ src/tracks/ui/BackgroundCell.cpp
 src/tracks/ui/BackgroundCell.h
 src/tracks/ui/ButtonHandle.cpp
 src/tracks/ui/ButtonHandle.h
+src/tracks/ui/CommonTrackControls.cpp
+src/tracks/ui/CommonTrackControls.h
 src/tracks/ui/CommonTrackPanelCell.cpp
 src/tracks/ui/CommonTrackPanelCell.h
+src/tracks/ui/CommonTrackView.cpp
+src/tracks/ui/CommonTrackView.h
 src/tracks/ui/EditCursorOverlay.cpp
 src/tracks/ui/EditCursorOverlay.h
 src/tracks/ui/EnvelopeHandle.cpp

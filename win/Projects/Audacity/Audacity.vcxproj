@@ -298,7 +298,9 @@
     <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackVRulerControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\BackgroundCell.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\ButtonHandle.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackView.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\EditCursorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\EnvelopeHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
@@ -598,7 +600,9 @@
     <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\SelectHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\BackgroundCell.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackView.h" />
     <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackVRulerControls.h" />
     <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackControls.h" />

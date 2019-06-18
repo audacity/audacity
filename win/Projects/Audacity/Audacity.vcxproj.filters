@@ -986,7 +986,13 @@
     <ClCompile Include="..\..\..\src\tracks\ui\TrackVRulerControls.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackControls.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackView.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackButtonHandle.cpp">
@@ -2116,7 +2122,13 @@
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackControls.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackView.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\BackedPanel.h">
