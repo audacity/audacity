@@ -12,13 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../TrackPanelMouseEvent.h"
 #include "TrackControls.h"
-#include "TrackVRulerControls.h"
-
-#include "../../HitTestResult.h"
-
 #include "../ui/SelectHandle.h"
-#include "EnvelopeHandle.h"
-#include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
 #include "TimeShiftHandle.h"
 #include "../../TrackPanelResizerCell.h"
