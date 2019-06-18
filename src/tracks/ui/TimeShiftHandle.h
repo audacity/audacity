@@ -14,8 +14,8 @@ Paul Licameli
 #include "../../UIHandle.h"
 
 #include "../../Snap.h"
-#include "../../Track.h"
 
+class ViewInfo;
 class WaveClip;
 
 struct ClipMoveState {
