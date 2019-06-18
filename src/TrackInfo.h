@@ -92,8 +92,6 @@ namespace TrackInfo
    void SetTrackInfoFont(wxDC *dc);
 
 
-   void DrawBackground(
-      wxDC * dc, const wxRect & rect, bool bSelected, const int vrul );
    // void DrawBordersWithin(
    //   wxDC * dc, const wxRect & rect, const Track &track ) const;
 

@@ -1036,10 +1036,6 @@ void TrackPanel::DrawOutside
       // Now exclude the resizer below
       rect.height -= kSeparatorThickness;
 
-      int vrul = mViewInfo->GetVRulerOffset();
-
-      TrackInfo::DrawBackground( dc, rect, t->GetSelected(), vrul );
-
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
       //if (t->IsSyncLockSelected()) {
