@@ -81,70 +81,7 @@ const TCPLines &CommonTrackControls::StaticTCPLines()
    return commonTrackTCPLines();
 }
 
-#include "tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
-#include "tracks/playabletrack/notetrack/ui/NoteTrackControls.h"
 namespace {
-
-static const struct WaveTrackTCPLines : TCPLines { WaveTrackTCPLines() {
-   (TCPLines&)*this = CommonTrackControls::StaticTCPLines();
-   insert( end(), {
-
-#ifdef EXPERIMENTAL_DA
-      // DA: Has Mute and Solo on separate lines.
-      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
-        &TrackInfo::WideMuteDrawFunction },
-      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
-        &TrackInfo::WideSoloDrawFunction },
-#else
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
-        &TrackInfo::MuteAndSoloDrawFunction },
-#endif
-
-      { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-        &TrackInfo::GainSliderDrawFunction },
-      { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-        &TrackInfo::PanSliderDrawFunction },
-
-#ifdef EXPERIMENTAL_DA
-      // DA: Does not have status information for a track.
-#else
-      { TCPLine::kItemStatusInfo1, 12, 0,
-        &TrackInfo::Status1DrawFunction },
-      { TCPLine::kItemStatusInfo2, 12, 0,
-        &TrackInfo::Status2DrawFunction },
-#endif
-
-   } );
-} } waveTrackTCPLines;
-
-#ifdef USE_MIDI
-enum : int {
-   // PRL:  was it correct to include the margin?
-   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
-   kMidiCellHeight = kTrackInfoBtnSize
-};
-#endif
-
-static const struct NoteTrackTCPLines : TCPLines { NoteTrackTCPLines() {
-   (TCPLines&)*this = CommonTrackControls::StaticTCPLines();
-   insert( end(), {
-#ifdef EXPERIMENTAL_DA
-      // DA: Has Mute and Solo on separate lines.
-      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
-        &TrackInfo::WideMuteDrawFunction },
-      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-        &TrackInfo::WideSoloDrawFunction },
-#else
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-        &TrackInfo::MuteAndSoloDrawFunction },
-#endif
-
-      { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
-        &TrackInfo::MidiControlsDrawFunction },
-      { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-        &TrackInfo::VelocitySliderDrawFunction },
-   } );
-} } noteTrackTCPLines;
 
 int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 {
@@ -210,16 +147,6 @@ std::pair< int, int > CalcBottomItemY
 const TCPLines &CommonTrackControls::GetTCPLines() const
 {
    return commonTrackTCPLines();
-}
-
-const TCPLines &NoteTrackControls::GetTCPLines() const
-{
-   return noteTrackTCPLines;
-};
-
-const TCPLines &WaveTrackControls::GetTCPLines() const
-{
-   return waveTrackTCPLines;
 }
 
 unsigned TrackInfo::MinimumTrackHeight()
@@ -475,78 +402,6 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
-#include "tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h"
-void TrackInfo::MidiControlsDrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-#ifdef EXPERIMENTAL_MIDI_OUT
-   auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
-   bool hit = target && target->GetTrack().get() == pTrack;
-   auto channel = hit ? target->GetChannel() : -1;
-   auto &dc = context.dc;
-   wxRect midiRect = rect;
-   GetMidiControlsHorizontalBounds(rect, midiRect);
-   NoteTrack::DrawLabelControls
-      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
-#endif // EXPERIMENTAL_MIDI_OUT
-}
-
-template<typename TrackClass>
-void TrackInfo::SliderDrawFunction
-( LWSlider *(*Selector)
-    (const wxRect &sliderRect, const TrackClass *t, bool captured, wxWindow*),
-  wxDC *dc, const wxRect &rect, const Track *pTrack,
-  bool captured, bool highlight )
-{
-   wxRect sliderRect = rect;
-   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
-   auto wt = static_cast<const TrackClass*>( pTrack );
-   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
-}
-
-#include "tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h"
-void TrackInfo::PanSliderDrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
-   auto dc = &context.dc;
-   bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
-   SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured, hit);
-}
-
-void TrackInfo::GainSliderDrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
-   auto dc = &context.dc;
-   bool hit = target && target->GetTrack().get() == pTrack;
-   if( hit )
-      hit=hit;
-   bool captured = hit && target->IsClicked();
-   SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
-}
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-#include "tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h"
-void TrackInfo::VelocitySliderDrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
-   bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
-   SliderDrawFunction<NoteTrack>
-      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured, hit);
-}
-#endif
-
 void TrackInfo::MuteOrSoloDrawFunction
 ( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
   bool WXUNUSED(captured),
@@ -660,53 +515,6 @@ void TrackInfo::MuteAndSoloDrawFunction
    }
 }
 
-void TrackInfo::StatusDrawFunction
-   ( const wxString &string, wxDC *dc, const wxRect &rect )
-{
-   static const int offset = 3;
-   dc->DrawText(string, rect.x + offset, rect.y);
-}
-
-void TrackInfo::Status1DrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
-
-   /// Returns the string to be displayed in the track label
-   /// indicating whether the track is mono, left, right, or
-   /// stereo and what sample rate it's using.
-   auto rate = wt ? wt->GetRate() : 44100.0;
-   wxString s;
-   if (!pTrack || TrackList::Channels(pTrack).size() > 1)
-      // TODO: more-than-two-channels-message
-      // more appropriate strings
-      s = _("Stereo, %dHz");
-   else {
-      if (wt->GetChannel() == Track::MonoChannel)
-         s = _("Mono, %dHz");
-      else if (wt->GetChannel() == Track::LeftChannel)
-         s = _("Left, %dHz");
-      else if (wt->GetChannel() == Track::RightChannel)
-         s = _("Right, %dHz");
-   }
-   s = wxString::Format( s, (int) (rate + 0.5) );
-
-   StatusDrawFunction( s, dc, rect );
-}
-
-void TrackInfo::Status2DrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
-   auto format = wt ? wt->GetSampleFormat() : floatSample;
-   auto s = GetSampleFormatStr(format);
-   StatusDrawFunction( s, dc, rect );
-}
-
 namespace {
 
 wxFont gFont;
@@ -724,10 +532,12 @@ std::unique_ptr<LWSlider>
 
 }
 
+#include "tracks/playabletrack/notetrack/ui/NoteTrackControls.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 void TrackInfo::ReCreateSliders(){
    const wxPoint point{ 0, 0 };
    wxRect sliderRect;
-   GetGainRect(point, sliderRect);
+   WaveTrackControls::GetGainRect(point, sliderRect);
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
@@ -743,7 +553,7 @@ void TrackInfo::ReCreateSliders(){
                                 DB_SLIDER);
    gGainCaptured->SetDefaultValue(defPos);
 
-   GetPanRect(point, sliderRect);
+   WaveTrackControls::GetPanRect(point, sliderRect);
 
    defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
@@ -760,7 +570,7 @@ void TrackInfo::ReCreateSliders(){
    gPanCaptured->SetDefaultValue(defPos);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   GetVelocityRect(point, sliderRect);
+   NoteTrackControls::GetVelocityRect(point, sliderRect);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
    gVelocity = std::make_unique<LWSlider>(nullptr, _("Velocity"),
@@ -871,31 +681,6 @@ void TrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest 
    dest.width = kTrackInfoSliderWidth;
 }
 
-void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
-{
-   GetSliderHorizontalBounds( topleft, dest );
-   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
-   dest.y = topleft.y + results.first;
-   dest.height = results.second;
-}
-
-void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest)
-{
-   GetGainRect( topleft, dest );
-   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemPan );
-   dest.y = topleft.y + results.first;
-}
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
-{
-   GetSliderHorizontalBounds( topleft, dest );
-   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
-   dest.y = topleft.y + results.first;
-   dest.height = results.second;
-}
-#endif
-
 void TrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
    const int space = 0;// was 3.
@@ -959,27 +744,6 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
-
-#ifdef USE_MIDI
-void TrackInfo::GetMidiControlsHorizontalBounds
-( const wxRect &rect, wxRect &dest )
-{
-   dest.x = rect.x + 1; // To center slightly
-   // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
-   // kTrackInfoWidth but I am trying to avoid use of that constant.
-   // Can cell width be computed from dest.width instead?
-   dest.width = kMidiCellWidth * 4;
-}
-
-void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
-{
-   GetMidiControlsHorizontalBounds( rect, dest );
-   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemMidiControlsRect );
-   dest.y = rect.y + results.first;
-   dest.height = results.second;
-}
-
-#endif
 
 /// \todo Probably should move to 'Utils.cpp'.
 void TrackInfo::SetTrackInfoFont(wxDC * dc)
@@ -1086,16 +850,6 @@ unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
       totalTCPLines( topLines, true ) +
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
-}
-
-unsigned TrackInfo::DefaultNoteTrackHeight()
-{
-   return DefaultTrackHeight( noteTrackTCPLines );
-}
-
-unsigned TrackInfo::DefaultWaveTrackHeight()
-{
-   return DefaultTrackHeight( waveTrackTCPLines );
 }
 
 LWSlider * TrackInfo::GainSlider

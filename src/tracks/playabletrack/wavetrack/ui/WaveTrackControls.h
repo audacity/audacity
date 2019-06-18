@@ -37,6 +37,10 @@ public:
 
    const TCPLines& GetTCPLines() const override;
 
+   static unsigned DefaultWaveTrackHeight();
+   static void GetGainRect(const wxPoint & topLeft, wxRect &dest);
+   static void GetPanRect(const wxPoint & topLeft, wxRect &dest);
+
 private:
    std::weak_ptr<MuteButtonHandle> mMuteHandle;
    std::weak_ptr<SoloButtonHandle> mSoloHandle;

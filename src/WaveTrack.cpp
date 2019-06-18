@@ -3124,3 +3124,4 @@ void WaveTrack::DoZoom
    if( pProject )
       ProjectHistory::Get( *pProject ).ModifyState(true);
 }
+

@@ -73,8 +73,10 @@ is time to refresh some aspect of the screen.
 #include "TrackInfo.h"
 #include "TrackPanelAx.h"
 #include "WaveTrack.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "NoteTrack.h"
+#include "tracks/playabletrack/notetrack/ui/NoteTrackControls.h"
 #endif
 
 #include "ondemand/ODManager.h"
@@ -325,7 +327,7 @@ LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
    auto pControls = &TrackControls::Get( *wt );
    auto rect = FindRect( *pControls );
    wxRect sliderRect;
-   TrackInfo::GetGainRect( rect.GetTopLeft(), sliderRect );
+   WaveTrackControls::GetGainRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::GainSlider(sliderRect, wt, false, this);
 }
 
@@ -334,7 +336,7 @@ LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
    auto pControls = &TrackControls::Get( *wt );
    auto rect = FindRect( *pControls );
    wxRect sliderRect;
-   TrackInfo::GetPanRect( rect.GetTopLeft(), sliderRect );
+   WaveTrackControls::GetPanRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::PanSlider(sliderRect, wt, false, this);
 }
 
@@ -344,7 +346,7 @@ LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
    auto pControls = &TrackControls::Get( *nt );
    auto rect = FindRect( *pControls );
    wxRect sliderRect;
-   TrackInfo::GetVelocityRect( rect.GetTopLeft(), sliderRect );
+   NoteTrackControls::GetVelocityRect( rect.GetTopLeft(), sliderRect );
    return TrackInfo::VelocitySlider(sliderRect, nt, false, this);
 }
 #endif

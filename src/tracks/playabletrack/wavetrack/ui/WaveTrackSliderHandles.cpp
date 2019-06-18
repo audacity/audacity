@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "WaveTrackSliderHandles.h"
 
+#include "WaveTrackControls.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
@@ -72,12 +73,12 @@ UIHandlePtr GainSliderHandle::HitTest
       return {};
 
    wxRect sliderRect;
-   TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
+   WaveTrackControls::GetGainRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       wxRect sliderRect2;
-      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect2);
+      WaveTrackControls::GetGainRect(rect.GetTopLeft(), sliderRect2);
       auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::GainSlider
@@ -151,7 +152,7 @@ UIHandlePtr PanSliderHandle::HitTest
       return {};
 
    wxRect sliderRect;
-   TrackInfo::GetPanRect(rect.GetTopLeft(), sliderRect);
+   WaveTrackControls::GetPanRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {

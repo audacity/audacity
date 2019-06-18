@@ -15,6 +15,7 @@
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
+#include "NoteTrackControls.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
@@ -79,7 +80,7 @@ UIHandlePtr VelocitySliderHandle::HitTest
       return {};
 
    wxRect sliderRect;
-   TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
+   NoteTrackControls::GetVelocityRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {

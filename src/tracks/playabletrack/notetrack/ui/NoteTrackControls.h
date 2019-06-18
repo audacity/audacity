@@ -42,6 +42,10 @@ public:
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
 
    const TCPLines& GetTCPLines() const override;
+
+   static unsigned DefaultNoteTrackHeight();
+   static void GetMidiControlsRect(const wxRect & rect, wxRect & dest);
+   static void GetVelocityRect(const wxPoint &topleft, wxRect & dest);
 };
 
 #endif

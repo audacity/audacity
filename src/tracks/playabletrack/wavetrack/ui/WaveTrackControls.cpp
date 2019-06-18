@@ -1011,3 +1011,160 @@ PopupMenuTable *WaveTrackControls::GetMenuExtension(Track * pTrack)
    WaveTrackMenuTable & result = WaveTrackMenuTable::Instance( pTrack );
    return &result;
 }
+
+// drawing related
+#include "../../../../widgets/ASlider.h"
+#include "../../../../TrackInfo.h"
+#include "../../../../TrackPanelDrawingContext.h"
+#include "../../../../ViewInfo.h"
+
+namespace {
+
+void SliderDrawFunction
+( LWSlider *(*Selector)
+    (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow*),
+  wxDC *dc, const wxRect &rect, const Track *pTrack,
+  bool captured, bool highlight )
+{
+   wxRect sliderRect = rect;
+   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   auto wt = static_cast<const WaveTrack*>( pTrack );
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
+}
+
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h"
+void PanSliderDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
+   auto dc = &context.dc;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   SliderDrawFunction
+      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured, hit);
+}
+
+void GainSliderDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
+   auto dc = &context.dc;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   if( hit )
+      hit=hit;
+   bool captured = hit && target->IsClicked();
+   SliderDrawFunction
+      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
+}
+
+void StatusDrawFunction
+   ( const wxString &string, wxDC *dc, const wxRect &rect )
+{
+   static const int offset = 3;
+   dc->DrawText(string, rect.x + offset, rect.y);
+}
+
+void Status1DrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto dc = &context.dc;
+   auto wt = static_cast<const WaveTrack*>(pTrack);
+
+   /// Returns the string to be displayed in the track label
+   /// indicating whether the track is mono, left, right, or
+   /// stereo and what sample rate it's using.
+   auto rate = wt ? wt->GetRate() : 44100.0;
+   wxString s;
+   if (!pTrack || TrackList::Channels(pTrack).size() > 1)
+      // TODO: more-than-two-channels-message
+      // more appropriate strings
+      s = _("Stereo, %dHz");
+   else {
+      if (wt->GetChannel() == Track::MonoChannel)
+         s = _("Mono, %dHz");
+      else if (wt->GetChannel() == Track::LeftChannel)
+         s = _("Left, %dHz");
+      else if (wt->GetChannel() == Track::RightChannel)
+         s = _("Right, %dHz");
+   }
+   s = wxString::Format( s, (int) (rate + 0.5) );
+
+   StatusDrawFunction( s, dc, rect );
+}
+
+void Status2DrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto dc = &context.dc;
+   auto wt = static_cast<const WaveTrack*>(pTrack);
+   auto format = wt ? wt->GetSampleFormat() : floatSample;
+   auto s = GetSampleFormatStr(format);
+   StatusDrawFunction( s, dc, rect );
+}
+
+}
+
+using TCPLine = TrackInfo::TCPLine;
+
+static const struct WaveTrackTCPLines
+   : TCPLines { WaveTrackTCPLines() {
+   (TCPLines&)*this =
+      CommonTrackControls::StaticTCPLines();
+   insert( end(), {
+
+#ifdef EXPERIMENTAL_DA
+      // DA: Has Mute and Solo on separate lines.
+      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
+        TrackInfo::WideMuteDrawFunction },
+      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
+        TrackInfo::WideSoloDrawFunction },
+#else
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
+        TrackInfo::MuteAndSoloDrawFunction },
+#endif
+
+      { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        GainSliderDrawFunction },
+      { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        PanSliderDrawFunction },
+
+#ifdef EXPERIMENTAL_DA
+      // DA: Does not have status information for a track.
+#else
+      { TCPLine::kItemStatusInfo1, 12, 0,
+        Status1DrawFunction },
+      { TCPLine::kItemStatusInfo2, 12, 0,
+        Status2DrawFunction },
+#endif
+
+   } );
+} } waveTrackTCPLines;
+
+void WaveTrackControls::GetGainRect(const wxPoint &topleft, wxRect & dest)
+{
+   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
+   dest.y = topleft.y + results.first;
+   dest.height = results.second;
+}
+
+void WaveTrackControls::GetPanRect(const wxPoint &topleft, wxRect & dest)
+{
+   GetGainRect( topleft, dest );
+   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemPan );
+   dest.y = topleft.y + results.first;
+}
+
+unsigned WaveTrackControls::DefaultWaveTrackHeight()
+{
+   return TrackInfo::DefaultTrackHeight( waveTrackTCPLines );
+}
+
+const TCPLines &WaveTrackControls::GetTCPLines() const
+{
+   return waveTrackTCPLines;
+}

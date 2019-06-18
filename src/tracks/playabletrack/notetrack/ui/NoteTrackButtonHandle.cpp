@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackButtonHandle.h"
 
+#include "NoteTrackControls.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ProjectHistory.h"
@@ -53,7 +54,7 @@ UIHandlePtr NoteTrackButtonHandle::HitTest
     const std::shared_ptr<NoteTrack> &pTrack)
 {
    wxRect midiRect;
-   TrackInfo::GetMidiControlsRect(rect, midiRect);
+   NoteTrackControls::GetMidiControlsRect(rect, midiRect);
    if ( TrackInfo::HideTopItem( rect, midiRect ) )
       return {};
    if (midiRect.Contains(state.m_x, state.m_y)) {

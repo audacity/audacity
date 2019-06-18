@@ -89,32 +89,6 @@ namespace TrackInfo
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   void MidiControlsDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-   template<typename TrackClass>
-   void SliderDrawFunction
-      ( LWSlider *(*Selector)
-           (const wxRect &sliderRect, const TrackClass *t, bool captured,
-            wxWindow*),
-        wxDC *dc, const wxRect &rect, const Track *pTrack,
-        bool captured, bool highlight );
-
-   void PanSliderDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-   void GainSliderDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void VelocitySliderDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-#endif
-
    void MuteOrSoloDrawFunction
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, bool down,
         bool captured, bool solo, bool hit );
@@ -128,17 +102,6 @@ namespace TrackInfo
         const wxRect &rect, const Track *pTrack );
 
    void MuteAndSoloDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-   void StatusDrawFunction
-      ( const wxString &string, wxDC *dc, const wxRect &rect );
-
-   void Status1DrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-   void Status2DrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
@@ -168,14 +131,6 @@ namespace TrackInfo
 
    void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
 
-   void GetGainRect(const wxPoint & topLeft, wxRect &dest);
-
-   void GetPanRect(const wxPoint & topLeft, wxRect &dest);
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void GetVelocityRect(const wxPoint & topLeft, wxRect &dest);
-#endif
-
    void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
    void GetMinimizeRect(const wxRect & rect, wxRect &dest);
 
@@ -185,17 +140,8 @@ namespace TrackInfo
    void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
 
-#ifdef USE_MIDI
-   void GetMidiControlsHorizontalBounds
-      ( const wxRect &rect, wxRect &dest );
-   void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
-#endif
-
    bool HideTopItem( const wxRect &rect, const wxRect &subRect,
                                int allowance = 0 );
-
-   unsigned DefaultNoteTrackHeight();
-   unsigned DefaultWaveTrackHeight();
 
    LWSlider * GainSlider
       (const wxRect &sliderRect, const WaveTrack *t, bool captured,

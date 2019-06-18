@@ -137,4 +137,122 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 #endif
 }
 
+// drawing related
+#include "../../../../widgets/ASlider.h"
+#include "../../../../TrackInfo.h"
+#include "../../../../TrackPanelDrawingContext.h"
+#include "../../../../ViewInfo.h"
+
+using TCPLine = TrackInfo::TCPLine;
+
+#ifdef USE_MIDI
+enum : int {
+   // PRL:  was it correct to include the margin?
+   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
+   kMidiCellHeight = kTrackInfoBtnSize
+};
+#endif
+
+#include "tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h"
+#include "tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h"
+
+namespace {
+void GetMidiControlsHorizontalBounds( const wxRect &rect, wxRect &dest )
+{
+   dest.x = rect.x + 1; // To center slightly
+   // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
+   // kTrackInfoWidth but I am trying to avoid use of that constant.
+   // Can cell width be computed from dest.width instead?
+   dest.width = kMidiCellWidth * 4;
+}
+
+void SliderDrawFunction
+( LWSlider *(*Selector)
+    (const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow*),
+  wxDC *dc, const wxRect &rect, const Track *pTrack,
+  bool captured, bool highlight )
+{
+   wxRect sliderRect = rect;
+   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   auto nt = static_cast<const NoteTrack*>( pTrack );
+   Selector( sliderRect, nt, captured, nullptr )->OnPaint(*dc, highlight);
+}
+
+void VelocitySliderDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto dc = &context.dc;
+   auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   SliderDrawFunction(
+      &TrackInfo::VelocitySlider, dc, rect, pTrack, captured, hit);
+}
+
+void MidiControlsDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   auto channel = hit ? target->GetChannel() : -1;
+   auto &dc = context.dc;
+   wxRect midiRect = rect;
+   GetMidiControlsHorizontalBounds(rect, midiRect);
+   NoteTrack::DrawLabelControls
+      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
+}
+}
+
+static const struct NoteTrackTCPLines
+   : TCPLines { NoteTrackTCPLines() {
+   (TCPLines&)*this =
+      CommonTrackControls::StaticTCPLines();
+   insert( end(), {
+#ifdef EXPERIMENTAL_DA
+      // DA: Has Mute and Solo on separate lines.
+      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
+        TrackInfo::WideMuteDrawFunction },
+      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+        TrackInfo::WideSoloDrawFunction },
+#else
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+        TrackInfo::MuteAndSoloDrawFunction },
+#endif
+
+      { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
+        MidiControlsDrawFunction },
+      { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        VelocitySliderDrawFunction },
+   } );
+} } noteTrackTCPLines;
+
+void NoteTrackControls::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
+{
+   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
+   dest.y = topleft.y + results.first;
+   dest.height = results.second;
+}
+
+void NoteTrackControls::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+{
+   GetMidiControlsHorizontalBounds( rect, dest );
+   auto results = TrackInfo::CalcItemY(
+      noteTrackTCPLines, TCPLine::kItemMidiControlsRect );
+   dest.y = rect.y + results.first;
+   dest.height = results.second;
+}
+
+unsigned NoteTrackControls::DefaultNoteTrackHeight()
+{
+   return TrackInfo::DefaultTrackHeight( noteTrackTCPLines );
+}
+
+const TCPLines &NoteTrackControls::GetTCPLines() const
+{
+   return noteTrackTCPLines;
+};
+
 #endif
