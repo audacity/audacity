@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/TrackControls.h"
 
-class TimeTrackControls final : public TrackControls
+class TimeTrackControls final : public CommonTrackControls
 {
    TimeTrackControls(const TimeTrackControls&) = delete;
    TimeTrackControls &operator=(const TimeTrackControls&) = delete;
@@ -21,7 +21,7 @@ class TimeTrackControls final : public TrackControls
 public:
    explicit
    TimeTrackControls( std::shared_ptr<Track> pTrack )
-      : TrackControls( pTrack ) {}
+      : CommonTrackControls( pTrack ) {}
    ~TimeTrackControls();
 
    std::vector<UIHandlePtr> HitTest

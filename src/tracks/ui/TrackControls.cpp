@@ -42,7 +42,7 @@ std::shared_ptr<Track> TrackControls::DoFindTrack()
    return mwTrack.lock();
 }
 
-std::vector<UIHandlePtr> TrackControls::HitTest
+std::vector<UIHandlePtr> CommonTrackControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *WXUNUSED(project))
 {
@@ -112,7 +112,7 @@ private:
       mpData = nullptr;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 };
 
 TrackMenuTable &TrackMenuTable::Instance()
@@ -123,7 +123,7 @@ TrackMenuTable &TrackMenuTable::Instance()
 
 void TrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    Track *const pTrack = mpData->pTrack;
 
    const auto &tracks = TrackList::Get( *GetActiveProject() );
@@ -260,7 +260,7 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
    mpData->result = RefreshCode::RefreshAll;
 }
 
-unsigned TrackControls::DoContextMenu
+unsigned CommonTrackControls::DoContextMenu
    (const wxRect &rect, wxWindow *pParent, wxPoint *)
 {
    wxRect buttonRect;

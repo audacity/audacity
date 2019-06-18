@@ -94,7 +94,7 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
       }
    }
 
-   return TrackControls::HitTest(st, pProject);
+   return CommonTrackControls::HitTest(st, pProject);
 }
 
 enum {
@@ -158,7 +158,7 @@ private:
       mpData = NULL;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    int IdOfWaveColor(int WaveColor);
    void OnWaveColorChange(wxCommandEvent & event);
@@ -172,7 +172,7 @@ WaveColorMenuTable &WaveColorMenuTable::Instance()
 
 void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
    SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
@@ -251,7 +251,7 @@ private:
       mpData = NULL;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    int IdOfFormat(int format);
 
@@ -266,7 +266,7 @@ FormatMenuTable &FormatMenuTable::Instance()
 
 void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
    SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
@@ -368,7 +368,7 @@ private:
       mpData = NULL;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    int IdOfRate(int rate);
    void SetRate(WaveTrack * pTrack, double rate);
@@ -385,7 +385,7 @@ RateMenuTable &RateMenuTable::Instance()
 
 void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto rateId = IdOfRate((int)pTrack->GetRate());
    SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
@@ -558,7 +558,7 @@ protected:
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    void OnSetDisplay(wxCommandEvent & event);
    void OnSpectrogramSettings(wxCommandEvent & event);
@@ -590,7 +590,7 @@ WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
 
 void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    std::vector<int> checkedIds;
@@ -621,7 +621,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    if ( isMono )
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
       WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
 
       auto next = * ++ tracks.Find(pTrack2);

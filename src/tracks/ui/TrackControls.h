@@ -30,6 +30,17 @@ public:
 
    virtual ~TrackControls() = 0;
 
+protected:
+   std::shared_ptr<Track> DoFindTrack() override;
+
+   std::weak_ptr<Track> mwTrack;
+};
+
+class CommonTrackControls /* not final */ : public TrackControls
+{
+public:
+   using TrackControls::TrackControls;
+
    // This is passed to the InitMenu() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:
    struct InitMenuData
@@ -41,8 +52,6 @@ public:
    };
 
 protected:
-   std::shared_ptr<Track> DoFindTrack() override;
-
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
    virtual std::vector<UIHandlePtr> HitTest
@@ -52,10 +61,6 @@ protected:
    unsigned DoContextMenu
       (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition) override;
    virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
-
-   Track *GetTrack() const;
-
-   std::weak_ptr<Track> mwTrack;
 
    std::weak_ptr<CloseButtonHandle> mCloseHandle;
    std::weak_ptr<MenuButtonHandle> mMenuHandle;

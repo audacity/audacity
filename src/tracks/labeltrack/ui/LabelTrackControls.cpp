@@ -31,7 +31,7 @@ std::vector<UIHandlePtr> LabelTrackControls::HitTest
 (const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {
-   return TrackControls::HitTest(state, pProject);
+   return CommonTrackControls::HitTest(state, pProject);
 }
 
 class LabelTrackMenuTable : public PopupMenuTable
@@ -44,7 +44,7 @@ public:
 
    void InitMenu(Menu*, void *pUserData) override
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    }
 
    void DestroyMenu() override
@@ -52,7 +52,7 @@ public:
       mpData = nullptr;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    void OnSetFont(wxCommandEvent &);
 };

@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/TrackControls.h"
 
-class LabelTrackControls final : public TrackControls
+class LabelTrackControls final : public CommonTrackControls
 {
    LabelTrackControls(const LabelTrackControls&) = delete;
    LabelTrackControls &operator=(const LabelTrackControls&) = delete;
@@ -21,7 +21,7 @@ class LabelTrackControls final : public TrackControls
 public:
    explicit
    LabelTrackControls( std::shared_ptr<Track> pTrack )
-      : TrackControls( pTrack ) {}
+      : CommonTrackControls( pTrack ) {}
    ~LabelTrackControls();
 
    std::vector<UIHandlePtr> HitTest

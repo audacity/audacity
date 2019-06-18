@@ -67,7 +67,7 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
       }
    }
 
-   return TrackControls::HitTest(st, pProject);
+   return CommonTrackControls::HitTest(st, pProject);
 }
 
 class NoteTrackMenuTable : public PopupMenuTable
@@ -81,7 +81,7 @@ public:
 private:
    void InitMenu(Menu*, void *pUserData) override
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    }
 
    void DestroyMenu() override
@@ -89,7 +89,7 @@ private:
       mpData = nullptr;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    void OnChangeOctave(wxCommandEvent &);
 };

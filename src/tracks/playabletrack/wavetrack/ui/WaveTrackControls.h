@@ -18,7 +18,7 @@ class SoloButtonHandle;
 class GainSliderHandle;
 class PanSliderHandle;
 
-class WaveTrackControls final : public TrackControls
+class WaveTrackControls final : public CommonTrackControls
 {
    WaveTrackControls(const WaveTrackControls&) = delete;
    WaveTrackControls &operator=(const WaveTrackControls&) = delete;
@@ -26,7 +26,7 @@ class WaveTrackControls final : public TrackControls
 public:
    explicit
    WaveTrackControls( std::shared_ptr<Track> pTrack )
-      : TrackControls( pTrack ) {}
+      : CommonTrackControls( pTrack ) {}
    ~WaveTrackControls();
 
    std::vector<UIHandlePtr> HitTest

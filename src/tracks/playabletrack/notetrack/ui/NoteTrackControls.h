@@ -18,7 +18,7 @@ class NoteTrackButtonHandle;
 class VelocitySliderHandle;
 
 ///////////////////////////////////////////////////////////////////////////////
-class NoteTrackControls : public TrackControls
+class NoteTrackControls : public CommonTrackControls
 {
    NoteTrackControls(const NoteTrackControls&) = delete;
    NoteTrackControls &operator=(const NoteTrackControls&) = delete;
@@ -31,7 +31,7 @@ class NoteTrackControls : public TrackControls
 public:
    explicit
    NoteTrackControls( std::shared_ptr<Track> pTrack )
-      : TrackControls( pTrack ) {}
+      : CommonTrackControls( pTrack ) {}
    ~NoteTrackControls();
 
    std::vector<UIHandlePtr> HitTest
