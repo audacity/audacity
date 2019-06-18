@@ -38,7 +38,6 @@ class LabelTrack;
 class TimeTrack;
 class TrackControls;
 class TrackView;
-class TrackPanelResizerCell;
 class WaveTrack;
 class NoteTrack;
 class AudacityProject;
@@ -296,9 +295,6 @@ class AUDACITY_DLL_API Track /* not final */
    std::shared_ptr<const TrackPanelCell> GetTrackControls() const;
 
    // Return another, associated TrackPanelCell object that implements the
-
-   // click and drag to resize
-   std::shared_ptr<TrackPanelCell> GetResizer();
 
    // This just returns a constant and can be overriden by subclasses
    // to specify a different height for the case that the track is minimized.
@@ -759,7 +755,6 @@ protected:
    // These hold the controls:
    std::shared_ptr<TrackView> mpView;
    std::shared_ptr<TrackControls> mpControls;
-   std::shared_ptr<TrackPanelResizerCell> mpResizer;
 
    std::weak_ptr<SelectHandle> mSelectHandle;
    std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;

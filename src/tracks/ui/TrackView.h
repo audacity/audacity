@@ -16,6 +16,7 @@ Paul Licameli split from class Track
 
 class Track;
 class TrackVRulerControls;
+class TrackPanelResizerCell;
 
 class TrackView /* not final */ : public CommonTrackCell
    , public std::enable_shared_from_this<TrackView>
@@ -37,12 +38,19 @@ public:
    std::shared_ptr<TrackVRulerControls> GetVRulerControls();
    std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
 
+
+   // Return another, associated TrackPanelCell object that implements the
+   // click and drag to resize
+   std::shared_ptr<TrackPanelCell> GetResizer();
+   std::shared_ptr<const TrackPanelCell> GetResizer() const;
+
 protected:
    // Private factory to make appropriate object; class TrackView handles
    // memory management thereafter
    virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    std::shared_ptr<TrackVRulerControls> mpVRulerControls;
+   std::shared_ptr<TrackPanelResizerCell> mpResizer;
 };
 
 #endif

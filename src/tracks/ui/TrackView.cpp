@@ -133,10 +133,15 @@ std::shared_ptr<const TrackVRulerControls> TrackView::GetVRulerControls() const
 }
 
 #include "../../TrackPanelResizeHandle.h"
-std::shared_ptr<TrackPanelCell> Track::GetResizer()
+std::shared_ptr<TrackPanelCell> TrackView::GetResizer()
 {
    if (!mpResizer)
       // create on demand
-      mpResizer = std::make_shared<TrackPanelResizerCell>( SharedPointer() );
+      mpResizer = std::make_shared<TrackPanelResizerCell>( shared_from_this() );
    return mpResizer;
+}
+
+std::shared_ptr<const TrackPanelCell> TrackView::GetResizer() const
+{
+   return const_cast<TrackView*>(this)->GetResizer();
 }

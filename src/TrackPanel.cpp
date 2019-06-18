@@ -101,6 +101,7 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 
 #include "tracks/ui/TrackControls.h"
+#include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackVRulerControls.h"
 
 //This loads the appropriate set of cursors, depending on platform.
@@ -2224,7 +2225,8 @@ struct ChannelGroup final : TrackPanelGroup {
                channel->SubstitutePendingChangedTrack();
             yy += substitute->GetHeight();
             refinement.emplace_back(
-               yy - kSeparatorThickness, channel->GetResizer() );
+               yy - kSeparatorThickness,
+               TrackView::Get( *channel ).GetResizer() );
          }
       }
 
@@ -2262,7 +2264,8 @@ struct ResizingChannelGroup final : TrackPanelGroup {
       { rect.GetTop(),
          std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
       { rect.GetTop() + rect.GetHeight() - kSeparatorThickness,
-         ( *TrackList::Channels( mpTrack.get() ).rbegin() )->GetResizer() }
+         TrackView::Get( **TrackList::Channels( mpTrack.get() ).rbegin() )
+            .GetResizer() }
    } }; }
    std::shared_ptr< Track > mpTrack;
    wxCoord mLeftOffset;

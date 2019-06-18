@@ -14,25 +14,26 @@
 #include "tracks/ui/CommonTrackPanelCell.h"
 
 class TrackPanelResizeHandle;
+class TrackView;
 
-class TrackPanelResizerCell : public CommonTrackCell
+class TrackPanelResizerCell : public CommonTrackPanelCell
 {
    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
    TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
 public:
 
    explicit
-   TrackPanelResizerCell( const std::shared_ptr<Track> &pTrack );
+   TrackPanelResizerCell( const std::shared_ptr<TrackView> &pView );
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *) override;
 
 protected:
-   std::shared_ptr<Track> DoFindTrack() override
-   { return mpTrack.lock(); };
+   std::shared_ptr<Track> DoFindTrack() override;
 
 private:
-   std::weak_ptr<Track> mpTrack;
+   // back-pointer is weak to break a cycle
+   std::weak_ptr<TrackView> mwView;
 
    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
 };
