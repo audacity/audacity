@@ -15,8 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelGlyphHandle.h"
 #include "LabelTextHandle.h"
 
-#include "../../ui/SelectHandle.h"
-
 #include "../../../HitTestResult.h"
 #include "../../../TrackPanelMouseEvent.h"
 
