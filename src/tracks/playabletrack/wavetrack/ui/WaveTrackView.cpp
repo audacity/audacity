@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackVRulerControls.h"
 #include "../../../../HitTestResult.h"
+#include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../TrackPanelMouseEvent.h"
 
 #include "CutlineHandle.h"
@@ -106,6 +107,43 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
    }
 
    return results;
+}
+
+void WaveTrackView::DoSetMinimized( bool minimized )
+{
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+
+#ifdef EXPERIMENTAL_HALF_WAVE
+   bool bHalfWave;
+   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
+   if( bHalfWave )
+   {
+      const bool spectral =
+         (wt->GetDisplay() == WaveTrack::Spectrum);
+      if ( spectral ) {
+         // It is all right to set the top of scale to a huge number,
+         // not knowing the track rate here -- because when retrieving the
+         // value, then we pass in a sample rate and clamp it above to the
+         // Nyquist frequency.
+         constexpr auto max = std::numeric_limits<float>::max();
+         const bool spectrumLinear =
+            (wt->GetSpectrogramSettings().scaleType ==
+               SpectrogramSettings::stLinear);
+         // Zoom out full
+         wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
+      }
+      else {
+         if (minimized)
+            // Zoom to show fractionally more than the top half of the wave.
+            wt->SetDisplayBounds( -0.01f, 1.0f );
+         else
+            // Zoom out full
+            wt->SetDisplayBounds( -1.0f, 1.0f );
+      }
+   }
+#endif
+
+   TrackView::DoSetMinimized( minimized );
 }
 
 std::shared_ptr<TrackView> WaveTrack::DoGetView()

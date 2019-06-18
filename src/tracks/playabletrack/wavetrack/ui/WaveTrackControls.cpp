@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
+#include "../../../ui/TrackView.h"
 #include "../../../../AudioIOBase.h"
 #include "../../../../Menus.h"
 #include "../../../../Project.h"
@@ -857,6 +858,10 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    auto partner = static_cast< WaveTrack * >
       ( *tracks.Find( pTrack ).advance( 1 ) );
 
+   bool bBothMinimizedp =
+      ((TrackView::Get( *pTrack ).GetMinimized()) &&
+       (TrackView::Get( *partner ).GetMinimized()));
+
    tracks.GroupChannels( *pTrack, 2 );
 
    // Set partner's parameters to match target.
@@ -866,14 +871,13 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partner->SetPan( 0.0f );
 
    // Set NEW track heights and minimized state
-   bool bBothMinimizedp = ((pTrack->GetMinimized()) && (partner->GetMinimized()));
-   pTrack->SetMinimized(false);
-   partner->SetMinimized(false);
+   TrackView::Get( *pTrack ).SetMinimized(false);
+   TrackView::Get( *partner ).SetMinimized(false);
    int AverageHeight = (pTrack->GetHeight() + partner->GetHeight()) / 2;
    pTrack->SetHeight(AverageHeight);
    partner->SetHeight(AverageHeight);
-   pTrack->SetMinimized(bBothMinimizedp);
-   partner->SetMinimized(bBothMinimizedp);
+   TrackView::Get( *pTrack ).SetMinimized(bBothMinimizedp);
+   TrackView::Get( *partner ).SetMinimized(bBothMinimizedp);
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())

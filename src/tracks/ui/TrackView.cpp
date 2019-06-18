@@ -18,8 +18,9 @@ TrackView::~TrackView()
 {
 }
 
-void TrackView::Copy( const TrackView & )
+void TrackView::Copy( const TrackView &other )
 {
+   mMinimized = other.mMinimized;
 }
 
 TrackView &TrackView::Get( Track &track )
@@ -30,6 +31,22 @@ TrackView &TrackView::Get( Track &track )
 const TrackView &TrackView::Get( const Track &track )
 {
    return *track.GetTrackView();
+}
+
+void TrackView::SetMinimized(bool isMinimized)
+{
+   // Do special changes appropriate to subclass
+   DoSetMinimized(isMinimized);
+
+   // Update positions and heights starting from the first track in the group
+   auto leader = *TrackList::Channels( FindTrack().get() ).begin();
+   if ( leader )
+      leader->AdjustPositions();
+}
+
+void TrackView::DoSetMinimized(bool isMinimized)
+{
+   mMinimized = isMinimized;
 }
 
 std::shared_ptr<TrackView> Track::GetTrackView()

@@ -206,7 +206,6 @@ class AUDACITY_DLL_API Track /* not final */
 
  protected:
    bool           mLinked;
-   bool           mMinimized;
 
  public:
 
@@ -297,12 +296,6 @@ public:
    void SetHeight(int h);
 protected:
    virtual void DoSetHeight(int h);
-public:
-
-   bool GetMinimized() const;
-   void SetMinimized(bool isMinimized);
-protected:
-   virtual void DoSetMinimized(bool isMinimized);
 
 public:
    static void FinishCopy (const Track *n, Track *dest);

@@ -482,20 +482,6 @@ void WaveTrack::SetOldChannelGain(int channel, float gain)
 
 
 
-void WaveTrack::DoSetMinimized(bool isMinimized){
-
-#ifdef EXPERIMENTAL_HALF_WAVE
-   bool bHalfWave;
-   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
-   if( bHalfWave )
-   {
-      DoZoomPreset( isMinimized ? 1:0);
-   }
-#endif
-
-   PlayableTrack::DoSetMinimized( isMinimized );
-}
-
 void WaveTrack::SetWaveColorIndex(int colorIndex)
 // STRONG-GUARANTEE
 {

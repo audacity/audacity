@@ -148,8 +148,6 @@ private:
    float GetOldChannelGain(int channel) const;
    void SetOldChannelGain(int channel, float gain);
 
-   void DoSetMinimized(bool isMinimized) override;
-
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 

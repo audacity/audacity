@@ -36,6 +36,9 @@ public:
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );
 
+   bool GetMinimized() const { return mMinimized; }
+   void SetMinimized( bool minimized );
+
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
    std::shared_ptr<TrackVRulerControls> GetVRulerControls();
@@ -48,12 +51,17 @@ public:
    std::shared_ptr<const TrackPanelCell> GetResizer() const;
 
 protected:
+   virtual void DoSetMinimized( bool isMinimized );
+
    // Private factory to make appropriate object; class TrackView handles
    // memory management thereafter
    virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    std::shared_ptr<TrackVRulerControls> mpVRulerControls;
    std::shared_ptr<TrackPanelResizerCell> mpResizer;
+
+private:
+   bool           mMinimized{ false };
 };
 
 #endif

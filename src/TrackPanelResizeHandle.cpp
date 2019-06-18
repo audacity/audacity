@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "RefreshCode.h"
 #include "Track.h"
 #include "TrackPanelMouseEvent.h"
+#include "tracks/ui/TrackView.h"
 
 HitTestPreview TrackPanelResizeHandle::HitPreview(bool bLinked)
 {
@@ -68,7 +69,7 @@ TrackPanelResizeHandle::TrackPanelResizeHandle
    auto last = *channels.rbegin();
    mInitialTrackHeight = last->GetHeight();
    mInitialActualHeight = last->GetActualHeight();
-   mInitialMinimized = last->GetMinimized();
+   mInitialMinimized = TrackView::Get( *last ).GetMinimized();
 
    if (channels.size() > 1) {
       auto first = *channels.begin();
@@ -104,11 +105,12 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    //
    // This used to be in HandleResizeClick(), but simply clicking
    // on a resize border would switch the minimized state.
-   if (pTrack->GetMinimized()) {
+   auto &data = TrackView::Get( *pTrack );
+   if (data.GetMinimized()) {
       auto channels = TrackList::Channels( pTrack.get() );
       for (auto channel : channels) {
          channel->SetHeight(channel->GetHeight());
-         channel->SetMinimized(false);
+         TrackView::Get( *channel ).SetMinimized( false );
       }
 
       if (channels.size() > 1) {
@@ -234,25 +236,25 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    case IsResizing:
    {
       pTrack->SetHeight(mInitialActualHeight);
-      pTrack->SetMinimized(mInitialMinimized);
+      TrackView::Get( *pTrack ).SetMinimized( mInitialMinimized );
    }
    break;
    case IsResizingBetweenLinkedTracks:
    {
       Track *const next = * ++ tracks.Find(pTrack.get());
       pTrack->SetHeight(mInitialUpperActualHeight);
-      pTrack->SetMinimized(mInitialMinimized);
+      TrackView::Get( *pTrack ).SetMinimized( mInitialMinimized );
       next->SetHeight(mInitialActualHeight);
-      next->SetMinimized(mInitialMinimized);
+      TrackView::Get( *next ).SetMinimized( mInitialMinimized );
    }
    break;
    case IsResizingBelowLinkedTracks:
    {
       Track *const prev = * -- tracks.Find(pTrack.get());
       pTrack->SetHeight(mInitialActualHeight);
-      pTrack->SetMinimized(mInitialMinimized);
+      TrackView::Get( *pTrack ).SetMinimized( mInitialMinimized );
       prev->SetHeight(mInitialUpperActualHeight);
-      prev->SetMinimized(mInitialMinimized);
+      TrackView::Get( *prev ).SetMinimized( mInitialMinimized );
    }
    break;
    }

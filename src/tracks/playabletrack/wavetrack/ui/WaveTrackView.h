@@ -30,6 +30,7 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
+
 private:
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
@@ -39,6 +40,9 @@ private:
    std::weak_ptr<CutlineHandle> mCutlineHandle;
    std::weak_ptr<SampleHandle> mSampleHandle;
    std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+
+protected:
+   void DoSetMinimized( bool minimized ) override;
 };
 
 #endif
