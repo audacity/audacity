@@ -24,10 +24,6 @@ class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
 
-class CutlineHandle;
-class SampleHandle;
-class EnvelopeHandle;
-
 class Sequence;
 class WaveClip;
 
@@ -105,11 +101,6 @@ private:
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
-
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
 
    double GetOffset() const override;
    void SetOffset(double o) override;
@@ -693,10 +684,6 @@ private:
 
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
-
-   std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<SampleHandle> mSampleHandle;
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 
 protected:
    std::shared_ptr<TrackView> DoGetView() override;

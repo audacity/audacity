@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "EditCursorOverlay.h"
 
+#include "TrackView.h"
 #include "../../AColor.h"
 #include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
@@ -103,11 +104,12 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 
       // Draw cursor in all selected tracks
       tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrack = dynamic_cast<Track*>(&cell);
-         if (!pTrack)
+         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
+         if (!pTrackView)
             return;
+         const auto pTrack = pTrackView->FindTrack();
          if (pTrack->GetSelected() ||
-             trackPanel.GetAx().IsFocused(pTrack))
+             trackPanel.GetAx().IsFocused(pTrack.get()))
          {
             // AColor::Line includes both endpoints so use GetBottom()
             AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());

@@ -13,6 +13,10 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/CommonTrackView.h"
 
+class CutlineHandle;
+class SampleHandle;
+class EnvelopeHandle;
+
 class WaveTrackView final : public CommonTrackView
 {
    WaveTrackView( const WaveTrackView& ) = delete;
@@ -25,6 +29,16 @@ public:
    ~WaveTrackView() override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+
+private:
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
+
+   std::weak_ptr<CutlineHandle> mCutlineHandle;
+   std::weak_ptr<SampleHandle> mSampleHandle;
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 };
 
 #endif

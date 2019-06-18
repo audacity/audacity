@@ -101,9 +101,6 @@ const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
-class LabelGlyphHandle;
-class LabelTextHandle;
-
 class AUDACITY_DLL_API LabelTrack final : public Track
 {
    friend class LabelTrackView;
@@ -123,20 +120,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
-
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
-
-   unsigned CaptureKey
-     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
-
-   unsigned KeyDown
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
-
-   unsigned Char
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
 
    void SetOffset(double dOffset) override;
 
@@ -312,9 +295,6 @@ private:
    void RemoveSelectedText();
 
    static wxFont msFont;
-
-   std::weak_ptr<LabelGlyphHandle> mGlyphHandle;
-   std::weak_ptr<LabelTextHandle> mTextHandle;
 
 protected:
    std::shared_ptr<TrackView> DoGetView() override;

@@ -13,6 +13,8 @@ Paul Licameli split from class LabelTrack
 
 #include "../../ui/CommonTrackView.h"
 
+class LabelGlyphHandle;
+class LabelTextHandle;
 class LabelTrack;
 class SelectedRegion;
 
@@ -37,10 +39,27 @@ public:
    bool DoChar(SelectedRegion &sel, wxKeyEvent & event);
 
 private:
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
+
+   unsigned CaptureKey
+     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+
+   unsigned KeyDown
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+
+   unsigned Char
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
    std::shared_ptr<LabelTrack> FindLabelTrack();
    std::shared_ptr<const LabelTrack> FindLabelTrack() const;
+
+   std::weak_ptr<LabelGlyphHandle> mGlyphHandle;
+   std::weak_ptr<LabelTextHandle> mTextHandle;
 };
 
 #endif

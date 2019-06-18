@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 
+#include "TrackView.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
 #include "../../NoteTrack.h"
@@ -361,7 +362,8 @@ UIHandle::Result TimeShiftHandle::Click
    const wxRect &rect = evt.rect;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
+   const auto pView = std::static_pointer_cast<TrackView>(evt.pCell);
+   const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
    if (!pTrack)
       return RefreshCode::Cancelled;
 
@@ -680,7 +682,8 @@ UIHandle::Result TimeShiftHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   Track *track = dynamic_cast<Track*>(evt.pCell.get());
+   TrackView *trackView = dynamic_cast<TrackView*>(evt.pCell.get());
+   Track *track = trackView ? trackView->FindTrack().get() : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*

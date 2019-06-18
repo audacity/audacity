@@ -44,7 +44,7 @@ std::shared_ptr<const LabelTrack> LabelTrackView::FindLabelTrack() const
    return const_cast<LabelTrackView*>(this)->FindLabelTrack();
 }
 
-std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
+std::vector<UIHandlePtr> LabelTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *WXUNUSED(pProject), int, bool)
 {
@@ -52,13 +52,14 @@ std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
    std::vector<UIHandlePtr> results;
    const wxMouseState &state = st.state;
 
+   const auto pTrack = FindLabelTrack();
    result = LabelGlyphHandle::HitTest(
-      mGlyphHandle, state, SharedPointer<LabelTrack>(), st.rect);
+      mGlyphHandle, state, pTrack, st.rect);
    if (result)
       results.push_back(result);
 
    result = LabelTextHandle::HitTest(
-      mTextHandle, state, SharedPointer<LabelTrack>());
+      mTextHandle, state, pTrack);
    if (result)
       results.push_back(result);
 

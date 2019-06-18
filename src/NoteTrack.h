@@ -71,11 +71,6 @@ public:
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
-
    using Holder = std::shared_ptr<NoteTrack>;
    
 private:

@@ -13,6 +13,8 @@ Paul Licameli split from class TimeTrack
 
 #include "../../ui/CommonTrackView.h"
 
+class EnvelopeHandle;
+
 class TimeTrackView final : public CommonTrackView
 {
    TimeTrackView( const TimeTrackView& ) = delete;
@@ -26,6 +28,13 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
+private:
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
+
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 };
 
 #endif

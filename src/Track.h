@@ -43,9 +43,6 @@ class NoteTrack;
 class AudacityProject;
 class ZoomInfo;
 
-class SelectHandle;
-class TimeShiftHandle;
-
 using TrackArray = std::vector< Track* >;
 using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -186,7 +183,7 @@ private:
 };
 
 class AUDACITY_DLL_API Track /* not final */
-   : public CommonTrackPanelCell, public XMLTagHandler
+   : public XMLTagHandler
    , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
    friend class TrackList;
@@ -264,24 +261,7 @@ class AUDACITY_DLL_API Track /* not final */
    // original; else return this track
    std::shared_ptr<const Track> SubstituteOriginalTrack() const;
 
-   // Cause certain overriding tool modes (Zoom; future ones?) to behave
-   // uniformly in all tracks, disregarding track contents.
-   // Do not further override this...
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *pProject)
-      final override;
-
-   // Delegates the handling to the related TCP cell
-   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
-
  public:
-
-   // Rather override this for subclasses:
-   virtual std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      = 0;
-
    mutable wxSize vrulerSize;
 
    // Return another, associated TrackPanelCell object that implements
@@ -751,7 +731,6 @@ public:
    bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
 
 protected:
-   std::shared_ptr<Track> DoFindTrack() override;
 
    // These are called to create controls on demand:
    virtual std::shared_ptr<TrackView> DoGetView() = 0;
@@ -760,9 +739,6 @@ protected:
    // These hold the controls:
    std::shared_ptr<TrackView> mpView;
    std::shared_ptr<TrackControls> mpControls;
-
-   std::weak_ptr<SelectHandle> mSelectHandle;
-   std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
 };
 
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track

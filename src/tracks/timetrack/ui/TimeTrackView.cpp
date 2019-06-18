@@ -24,13 +24,14 @@ TimeTrackView::~TimeTrackView()
 {
 }
 
-std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
+std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int, bool)
 {
    std::vector<UIHandlePtr> results;
-   auto result = EnvelopeHandle::TimeTrackHitTest(
-      mEnvelopeHandle, st.state, st.rect, pProject, SharedPointer<TimeTrack>() );
+   auto result = EnvelopeHandle::TimeTrackHitTest
+      ( mEnvelopeHandle, st.state, st.rect, pProject,
+        std::static_pointer_cast< TimeTrack >( FindTrack() ) );
    if (result)
       results.push_back(result);
    return results;

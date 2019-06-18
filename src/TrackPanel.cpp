@@ -2023,7 +2023,7 @@ void TrackPanel::ScrollIntoView(int x)
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
-   CellularPanel::DoContextMenu( t );
+   CellularPanel::DoContextMenu( &TrackView::Get( *t ) );
 }
 
 Track * TrackPanel::GetFirstSelectedTrack()
@@ -2198,7 +2198,8 @@ struct VRulerAndChannel final : TrackPanelGroup {
       return { Axis::X, Refinement{
          { rect.GetLeft(),
            TrackVRulerControls::Get( *mpChannel ).shared_from_this() },
-         { mLeftOffset, mpChannel }
+         { mLeftOffset,
+           TrackView::Get( *mpChannel ).shared_from_this() }
       } };
    }
    std::shared_ptr< Track > mpChannel;
@@ -2368,12 +2369,18 @@ void TrackPanel::DisplaySelection()
 
 TrackPanelCell *TrackPanel::GetFocusedCell()
 {
-   return mAx->GetFocus().get();
+   auto pTrack = mAx->GetFocus().get();
+   if (pTrack)
+      return &TrackView::Get( *pTrack );
+   return nullptr;
 }
 
 Track *TrackPanel::GetFocusedTrack()
 {
-   return static_cast<Track*>( GetFocusedCell() );
+   auto pView = dynamic_cast<TrackView *>( GetFocusedCell() );
+   if (pView)
+      return pView->FindTrack().get();
+   return nullptr;
 }
 
 void TrackPanel::SetFocusedCell()
