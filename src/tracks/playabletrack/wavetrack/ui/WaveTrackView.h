@@ -24,8 +24,7 @@ class WaveTrackView final : public CommonTrackView
 
 public:
    explicit
-   WaveTrackView( const std::shared_ptr<Track> &pTrack )
-      : CommonTrackView{ pTrack } {}
+   WaveTrackView( const std::shared_ptr<Track> &pTrack );
    ~WaveTrackView() override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;

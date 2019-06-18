@@ -196,8 +196,6 @@ class AUDACITY_DLL_API Track /* not final */
    std::weak_ptr<TrackList> mList;
    TrackNodePointer mNode{};
    int            mIndex;
-   int            mY;
-   int            mHeight;
    wxString       mName;
    wxString       mDefaultName;
 
@@ -275,27 +273,8 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Return another, associated TrackPanelCell object that implements the
 
-   // This just returns a constant and can be overriden by subclasses
-   // to specify a different height for the case that the track is minimized.
-   virtual int GetMinimizedHeight() const;
-   int GetActualHeight() const { return mHeight; }
-
    int GetIndex() const;
    void SetIndex(int index);
-
-   int GetY() const;
-private:
-   // Always maintain a strictly contiguous layout of tracks.
-   // So client code is not permitted to modify this attribute directly.
-   void SetY(int y);
-   // No need yet to make this virtual
-   void DoSetY(int y);
-public:
-
-   int GetHeight() const;
-   void SetHeight(int h);
-protected:
-   virtual void DoSetHeight(int h);
 
 public:
    static void FinishCopy (const Track *n, Track *dest);
@@ -332,8 +311,6 @@ private:
    mutable std::shared_ptr<DirManager> mDirManager;
 
  public:
-
-   enum : unsigned { DefaultHeight = 150 };
 
    Track(const std::shared_ptr<DirManager> &projDirManager);
    Track(const Track &orig);

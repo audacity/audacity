@@ -31,6 +31,8 @@ public:
       (const TrackPanelMouseState &, const AudacityProject *pProject)
       final override;
 
+   virtual int GetMinimizedHeight() const override;
+
 protected:
    // Rather override this for subclasses:
    virtual std::vector<UIHandlePtr> DetailedHitTest

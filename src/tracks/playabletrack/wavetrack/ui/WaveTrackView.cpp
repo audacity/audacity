@@ -9,6 +9,9 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "WaveTrackView.h"
+
+#include "../../../../Experimental.h"
+
 #include "../../../../WaveTrack.h"
 
 #include "WaveTrackControls.h"
@@ -17,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackVRulerControls.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../prefs/SpectrogramSettings.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelMouseEvent.h"
 
 #include "CutlineHandle.h"
@@ -25,6 +29,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../../ProjectSettings.h"
+
+WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackView{ pTrack }
+{
+   DoSetHeight( TrackInfo::DefaultWaveTrackHeight() );
+}
 
 WaveTrackView::~WaveTrackView()
 {

@@ -23,6 +23,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
+#include "../../../../TrackPanel.h"
+
+NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackView{ pTrack }
+{
+   DoSetHeight( TrackInfo::DefaultNoteTrackHeight() );
+}
 
 NoteTrackView::~NoteTrackView()
 {

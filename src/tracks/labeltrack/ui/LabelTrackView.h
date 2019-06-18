@@ -27,8 +27,7 @@ class LabelTrackView final : public CommonTrackView
 
 public:
    explicit
-   LabelTrackView( const std::shared_ptr<Track> &pTrack )
-      : CommonTrackView{ pTrack } {}
+   LabelTrackView( const std::shared_ptr<Track> &pTrack );
    ~LabelTrackView() override;
 
    static LabelTrackView &Get( LabelTrack& );

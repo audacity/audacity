@@ -871,13 +871,16 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partner->SetPan( 0.0f );
 
    // Set NEW track heights and minimized state
-   TrackView::Get( *pTrack ).SetMinimized(false);
-   TrackView::Get( *partner ).SetMinimized(false);
-   int AverageHeight = (pTrack->GetHeight() + partner->GetHeight()) / 2;
-   pTrack->SetHeight(AverageHeight);
-   partner->SetHeight(AverageHeight);
-   TrackView::Get( *pTrack ).SetMinimized(bBothMinimizedp);
-   TrackView::Get( *partner ).SetMinimized(bBothMinimizedp);
+   auto
+      &view = TrackView::Get( *pTrack ),
+      &partnerView = TrackView::Get( *partner );
+   view.SetMinimized(false);
+   partnerView.SetMinimized(false);
+   int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
+   view.SetHeight(AverageHeight);
+   partnerView.SetHeight(AverageHeight);
+   view.SetMinimized(bBothMinimizedp);
+   partnerView.SetMinimized(bBothMinimizedp);
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())
@@ -913,6 +916,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    for (auto channel : channels) {
       // Keep original stereo track name.
       channel->SetName(pTrack->GetName());
+      auto &view = TrackView::Get( *channel );
       if (stereo)
          channel->SetPanFromChannelType();
 
@@ -920,9 +924,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       if (ODManager::IsInstanceCreated())
          ODManager::Instance()->MakeWaveTrackIndependent(channel);
       //make sure no channel is smaller than its minimum height
-      if (channel->GetHeight() < channel->GetMinimizedHeight())
-         channel->SetHeight(channel->GetMinimizedHeight());
-      totalHeight += channel->GetHeight();
+      if (view.GetHeight() < view.GetMinimizedHeight())
+         view.SetHeight(view.GetMinimizedHeight());
+      totalHeight += view.GetHeight();
       ++nChannels;
    }
 
@@ -931,7 +935,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    for (auto channel : channels)
       // Make tracks the same height
-      channel->SetHeight( averageHeight );
+      TrackView::Get( *channel ).SetHeight( averageHeight );
 }
 
 /// Swap the left and right channels of a stero track...

@@ -20,8 +20,7 @@ class NoteTrackView final : public CommonTrackView
 
 public:
    explicit
-   NoteTrackView( const std::shared_ptr<Track> &pTrack )
-      : CommonTrackView{ pTrack } {}
+   NoteTrackView( const std::shared_ptr<Track> &pTrack );
    ~NoteTrackView() override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;

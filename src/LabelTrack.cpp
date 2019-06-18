@@ -126,11 +126,6 @@ LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
    SetDefaultName(_("Label Track"));
    SetName(GetDefaultName());
 
-   // Label tracks are narrow
-   // Default is to allow two rows so that NEW users get the
-   // idea that labels can 'stack' when they would overlap.
-   SetHeight(73);
-
    ResetFont();
    CreateCustomGlyphs();
 

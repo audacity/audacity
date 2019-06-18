@@ -62,8 +62,6 @@ Track classes.
 
 #include "InconsistencyException.h"
 
-#include "TrackPanel.h" // for TrackInfo
-
 using std::max;
 
 static ProjectFileIORegistry::Entry registerFactory{
@@ -127,8 +125,6 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mLastScaleType = -1;
    mLastdBRange = -1;
    mAutoSaveIdent = 0;
-
-   SetHeight( TrackInfo::DefaultWaveTrackHeight() );
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):

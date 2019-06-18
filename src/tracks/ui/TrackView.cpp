@@ -21,6 +21,10 @@ TrackView::~TrackView()
 void TrackView::Copy( const TrackView &other )
 {
    mMinimized = other.mMinimized;
+
+   // Let mY remain 0 -- TrackList::RecalcPositions corrects it later
+   mY = 0;
+   mHeight = other.mHeight;
 }
 
 TrackView &TrackView::Get( Track &track )
@@ -100,4 +104,28 @@ std::shared_ptr<TrackPanelCell> TrackView::GetResizer()
 std::shared_ptr<const TrackPanelCell> TrackView::GetResizer() const
 {
    return const_cast<TrackView*>(this)->GetResizer();
+}
+
+void TrackView::DoSetY(int y)
+{
+   mY = y;
+}
+
+int TrackView::GetHeight() const
+{
+   if ( GetMinimized() )
+      return GetMinimizedHeight();
+
+   return mHeight;
+}
+
+void TrackView::SetHeight(int h)
+{
+   DoSetHeight(h);
+   FindTrack()->AdjustPositions();
+}
+
+void TrackView::DoSetHeight(int h)
+{
+   mHeight = h;
 }

@@ -20,6 +20,15 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "../../../TrackPanelMouseEvent.h"
 
+LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackView{ pTrack }
+{
+   // Label tracks are narrow
+   // Default is to allow two rows so that NEW users get the
+   // idea that labels can 'stack' when they would overlap.
+   DoSetHeight(73);
+}
+
 LabelTrackView::~LabelTrackView()
 {
 }

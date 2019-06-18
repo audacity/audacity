@@ -13,9 +13,11 @@ Paul Licameli split from class TrackView
 #include "BackgroundCell.h"
 #include "TimeShiftHandle.h"
 #include "TrackControls.h"
+#include "TrackPanel.h" // for TrackInfo
 #include "ZoomHandle.h"
 #include "../ui/SelectHandle.h"
 #include "../../ProjectSettings.h"
+#include "../../Track.h"
 #include "../../TrackPanelMouseEvent.h"
 
 std::vector<UIHandlePtr> CommonTrackView::HitTest
@@ -75,4 +77,16 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
 std::shared_ptr<TrackPanelCell> CommonTrackView::ContextMenuDelegate()
 {
    return TrackControls::Get( *FindTrack() ).shared_from_this();
+}
+
+int CommonTrackView::GetMinimizedHeight() const
+{
+   auto height = TrackInfo::MinimumTrackHeight();
+   const auto pTrack = FindTrack();
+   auto channels = TrackList::Channels(pTrack->SubstituteOriginalTrack().get());
+   auto nChannels = channels.size();
+   auto begin = channels.begin();
+   auto index =
+      std::distance(begin, std::find(begin, channels.end(), pTrack.get()));
+   return (height * (index + 1) / nChannels) - (height * index / nChannels);
 }

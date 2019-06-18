@@ -22,8 +22,7 @@ class TimeTrackView final : public CommonTrackView
 
 public:
    explicit
-   TimeTrackView( const std::shared_ptr<Track> &pTrack )
-      : CommonTrackView{ pTrack } {}
+   TimeTrackView( const std::shared_ptr<Track> &pTrack );
    ~TimeTrackView() override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;

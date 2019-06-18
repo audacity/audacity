@@ -37,7 +37,6 @@
 
 #include "InconsistencyException.h"
 
-#include "TrackPanel.h" // For TrackInfo
 #include "AllThemeResources.h"
 
 #ifdef SONIFY
@@ -122,8 +121,6 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
 {
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
-
-   SetHeight( TrackInfo::DefaultNoteTrackHeight() );
 
    mSeq = NULL;
    mSerializationLength = 0;
