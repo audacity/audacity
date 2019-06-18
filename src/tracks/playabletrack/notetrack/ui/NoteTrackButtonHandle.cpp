@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../TrackInfo.h"
 #include "../../../../TrackPanel.h"
 
 NoteTrackButtonHandle::NoteTrackButtonHandle

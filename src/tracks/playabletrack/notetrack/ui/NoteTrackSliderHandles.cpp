@@ -17,7 +17,8 @@
 
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../TrackPanel.h" // for TrackInfo
+#include "../../../../TrackInfo.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../UndoManager.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ViewInfo.h"
