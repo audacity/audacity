@@ -19,12 +19,16 @@ class wxDC;
 const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
 
 class TrackVRulerControls /* not final */ : public CommonTrackPanelCell
+   , public std::enable_shared_from_this< TrackVRulerControls >
 {
 public:
    explicit
    TrackVRulerControls( std::shared_ptr<Track> pTrack );
 
    virtual ~TrackVRulerControls() = 0;
+
+   static TrackVRulerControls &Get( Track& );
+   static const TrackVRulerControls &Get( const Track& );
 
    // Define a default hit test method, just for message and cursor
    std::vector<UIHandlePtr> HitTest

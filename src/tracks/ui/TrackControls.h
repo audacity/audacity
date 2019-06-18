@@ -16,8 +16,12 @@ Paul Licameli split from TrackPanel.cpp
 class Track;
 
 class TrackControls /* not final */ : public CommonTrackCell
+   , public std::enable_shared_from_this< TrackControls >
 {
 public:
+   static TrackControls &Get( Track &track );
+   static const TrackControls &Get( const Track &track );
+
    explicit
    TrackControls( std::shared_ptr<Track> pTrack );
 

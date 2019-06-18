@@ -27,6 +27,16 @@ TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
+TrackVRulerControls &TrackVRulerControls::Get( Track &track )
+{
+   return *track.GetVRulerControls();
+}
+
+const TrackVRulerControls &TrackVRulerControls::Get( const Track &track )
+{
+   return *track.GetVRulerControls();
+}
+
 std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 {
    return mwTrack.lock();

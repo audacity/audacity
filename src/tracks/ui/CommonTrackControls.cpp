@@ -38,11 +38,7 @@ std::vector<UIHandlePtr> CommonTrackControls::HitTest
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
 
-   auto pTrack = FindTrack();
-   // shared pointer to this:
-   auto sThis =
-      std::static_pointer_cast<TrackControls>( pTrack->GetTrackControl() );
-   wxASSERT( this == sThis.get() );
+   auto sThis = shared_from_this();
 
    if (NULL != (result = CloseButtonHandle::HitTest(
       mCloseHandle, state, rect, this)))
@@ -62,7 +58,7 @@ std::vector<UIHandlePtr> CommonTrackControls::HitTest
 
    if (results.empty()) {
       if (NULL != (result = TrackSelectHandle::HitAnywhere(
-         mSelectHandle, pTrack)))
+         mSelectHandle, FindTrack())))
          results.push_back(result);
    }
 
