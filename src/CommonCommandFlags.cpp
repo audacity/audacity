@@ -335,7 +335,7 @@ const ReservedCommandFlag
             !tracks.Selected<const NoteTrack>().empty()
             // even if not EXPERIMENTAL_MIDI_OUT
          ||
-            tracks.Selected<const WaveTrack>().empty()
+            !tracks.Selected<const WaveTrack>().empty()
          ;
       }
    },
