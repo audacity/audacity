@@ -33,6 +33,8 @@ for drawing different aspects of the label and its text box.
 
 #include "Experimental.h"
 
+#include "tracks/labeltrack/ui/LabelTrackView.h"
+
 #include <stdio.h>
 #include <algorithm>
 #include <limits.h>
@@ -123,11 +125,6 @@ LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
 {
    SetDefaultName(_("Label Track"));
    SetName(GetDefaultName());
-
-   // Label tracks are narrow
-   // Default is to allow two rows so that NEW users get the
-   // idea that labels can 'stack' when they would overlap.
-   SetHeight(73);
 
    ResetFont();
    CreateCustomGlyphs();
@@ -1171,7 +1168,7 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
-Track::Holder LabelTrack::Duplicate() const
+Track::Holder LabelTrack::Clone() const
 {
    return std::make_shared<LabelTrack>( *this );
 }
@@ -1736,8 +1733,11 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
    }
 }
 
+static bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
+static bool IsGoodLabelEditKey(const wxKeyEvent & evt);
+
 // Check for keys that we will process
-bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
+bool LabelTrackView::DoCaptureKey(wxKeyEvent & event)
 {
    // Check for modifiers and only allow shift
    int mods = event.GetModifiers();
@@ -1747,11 +1747,13 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
 
    // Always capture the navigation keys, if we have any labels
    auto code = event.GetKeyCode();
+   const auto pTrack = FindLabelTrack();
+   const auto &mLabels = pTrack->GetLabels();
    if ((code == WXK_TAB || code == WXK_NUMPAD_TAB) &&
        !mLabels.empty())
       return true;
 
-   if (mSelIndex >= 0) {
+   if ( pTrack->mSelIndex >= 0 ) {
       if (IsGoodLabelEditKey(event)) {
          return true;
       }
@@ -1785,7 +1787,7 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
 
          // If there's a label there already don't capture
          auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
-         if( GetLabelIndex(selectedRegion.t0(),
+         if( pTrack->GetLabelIndex(selectedRegion.t0(),
                            selectedRegion.t1()) != wxNOT_FOUND ) {
             return false;
          }
@@ -1797,13 +1799,14 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
    return false;
 }
 
-unsigned LabelTrack::CaptureKey(wxKeyEvent & event, ViewInfo &, wxWindow *)
+unsigned LabelTrackView::CaptureKey(wxKeyEvent & event, ViewInfo &, wxWindow *)
 {
    event.Skip(!DoCaptureKey(event));
    return RefreshCode::RefreshNone;
 }
 
-unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent))
+unsigned LabelTrackView::KeyDown(
+   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent))
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
@@ -1812,7 +1815,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
 
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
-   if (OnKeyDown(viewInfo.selectedRegion, event)) {
+   if (DoKeyDown(viewInfo.selectedRegion, event)) {
       ProjectHistory::Get( *pProj ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
@@ -1820,7 +1823,8 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
 
    // Make sure caret is in view
    int x;
-   if (CalcCursorX(&x)) {
+   const auto pTrack = FindLabelTrack();
+   if (pTrack->CalcCursorX(&x)) {
       TrackPanel::Get( *pProj ).ScrollIntoView(x);
    }
 
@@ -1835,7 +1839,8 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
    return RefreshCode::RefreshNone;
 }
 
-unsigned LabelTrack::Char(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
+unsigned LabelTrackView::Char(
+   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
@@ -1844,7 +1849,7 @@ unsigned LabelTrack::Char(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
 
    AudacityProject *const pProj = GetActiveProject();
 
-   if (OnChar(viewInfo.selectedRegion, event))
+   if (DoChar(viewInfo.selectedRegion, event))
       ProjectHistory::Get( *pProj ).PushState(_("Modified Label"),
       _("Label Edit"),
       UndoPush::CONSOLIDATE);
@@ -1861,7 +1866,7 @@ unsigned LabelTrack::Char(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
 }
 
 /// KeyEvent is called for every keypress when over the label track.
-bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
+bool LabelTrackView::DoKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
@@ -1877,7 +1882,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
    }
 
    // All editing keys are only active if we're currently editing a label
-   if (mSelIndex >= 0) {
+   const auto pTrack = FindLabelTrack();
+   auto &mLabels = pTrack->mLabels;
+   auto &mSelIndex = pTrack->mSelIndex;
+   auto &mInitialCursorPos = pTrack->mInitialCursorPos;
+   auto &mCurrentCursorPos = pTrack->mCurrentCursorPos;
+   auto &mRestoreFocus = pTrack->mRestoreFocus;
+   if ( pTrack->mSelIndex >= 0 ) {
       auto &labelStruct = mLabels[mSelIndex];
       auto &title = labelStruct.title;
       switch (keyCode) {
@@ -1891,7 +1902,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             {
                // IF there are some highlighted letters, THEN DELETE them
                if (mInitialCursorPos != mCurrentCursorPos)
-                  RemoveSelectedText();
+                  pTrack->RemoveSelectedText();
                else
                {
                   // DELETE one letter
@@ -1904,7 +1915,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             else
             {
                // ELSE no text in text box, so DELETE whole label.
-               DeleteLabel( mSelIndex );
+               pTrack->DeleteLabel( mSelIndex );
             }
             mInitialCursorPos = mCurrentCursorPos;
             updated = true;
@@ -1921,7 +1932,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             {
                // if there are some highlighted letters, DELETE them
                if (mInitialCursorPos != mCurrentCursorPos)
-                  RemoveSelectedText();
+                  pTrack->RemoveSelectedText();
                else
                {
                   // DELETE one letter
@@ -1933,7 +1944,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             else
             {
                // DELETE whole label if no text in text box
-               DeleteLabel( mSelIndex );
+               pTrack->DeleteLabel( mSelIndex );
             }
             mInitialCursorPos = mCurrentCursorPos;
             updated = true;
@@ -2021,7 +2032,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
       case '\x10':   // OSX
       case WXK_MENU:
       case WXK_WINDOWS_MENU:
-         ShowContextMenu();
+         pTrack->ShowContextMenu();
          break;
 
       default:
@@ -2079,14 +2090,14 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
    }
 
    // Make sure the caret is visible
-   mDrawCursor = true;
+   pTrack->mDrawCursor = true;
 
    return updated;
 }
 
 /// OnChar is called for incoming characters -- that's any keypress not handled
 /// by OnKeyDown.
-bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
+bool LabelTrackView::DoChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
 {
    // Check for modifiers and only allow shift.
    //
@@ -2111,7 +2122,8 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    }
    
    // If we've reached this point and aren't currently editing, add NEW label
-   if (mSelIndex < 0) {
+   const auto pTrack = FindLabelTrack();
+   if ( pTrack->mSelIndex < 0 ) {
       // Don't create a NEW label for a space
       if (wxIsspace(charCode)) {
          event.Skip();
@@ -2123,19 +2135,19 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
       if (useDialog) {
          wxString title;
-         if (DialogForLabelName(
+         if (pTrack->DialogForLabelName(
             *p, selectedRegion, charCode, title) ==
              wxID_CANCEL) {
             return false;
          }
-         SetSelected(true);
-         AddLabel(selectedRegion, title, -2);
+         pTrack->SetSelected(true);
+         pTrack->AddLabel(selectedRegion, title, -2);
          ProjectHistory::Get( *p ).PushState(_("Added label"), _("Label"));
          return false;
       }
       else {
-         SetSelected(true);
-         AddLabel(selectedRegion);
+         pTrack->SetSelected(true);
+         pTrack->AddLabel(selectedRegion);
          ProjectHistory::Get( *p ).PushState(_("Added label"), _("Label"));
       }
    }
@@ -2144,12 +2156,16 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    // Now we are definitely in a label; append the incoming character
    //
 
+   auto &mLabels = pTrack->mLabels;
+   auto &mSelIndex = pTrack->mSelIndex;
+   auto &mInitialCursorPos = pTrack->mInitialCursorPos;
+   auto &mCurrentCursorPos = pTrack->mCurrentCursorPos;
    auto &labelStruct = mLabels[mSelIndex];
    auto &title = labelStruct.title;
 
    // Test if cursor is in the end of string or not
    if (mInitialCursorPos != mCurrentCursorPos)
-      RemoveSelectedText();
+      pTrack->RemoveSelectedText();
 
    if (mCurrentCursorPos < (int)title.length()) {
       // Get substring on the righthand side of cursor
@@ -2170,7 +2186,7 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
    updated = true;
 
    // Make sure the caret is visible
-   mDrawCursor = true;
+   pTrack->mDrawCursor = true;
 
    return updated;
 }
@@ -2917,7 +2933,7 @@ void LabelTrack::CreateCustomGlyphs()
 }
 
 /// Returns true for keys we capture to start a label.
-bool LabelTrack::IsGoodLabelFirstKey(const wxKeyEvent & evt)
+static bool IsGoodLabelFirstKey(const wxKeyEvent & evt)
 {
    int keyCode = evt.GetKeyCode();
    return (keyCode < WXK_START
@@ -2931,7 +2947,7 @@ bool LabelTrack::IsGoodLabelFirstKey(const wxKeyEvent & evt)
 }
 
 /// This returns true for keys we capture for label editing.
-bool LabelTrack::IsGoodLabelEditKey(const wxKeyEvent & evt)
+static bool IsGoodLabelEditKey(const wxKeyEvent & evt)
 {
    int keyCode = evt.GetKeyCode();
 

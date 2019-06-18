@@ -27,7 +27,7 @@ std::vector<UIHandlePtr> TimeTrackControls::HitTest
 (const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {
-   return TrackControls::HitTest(state, pProject);
+   return CommonTrackControls::HitTest(state, pProject);
 }
 
 enum
@@ -49,7 +49,7 @@ public:
 private:
    void InitMenu(Menu *pMenu, void *pUserData) override
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
       pMenu->Check(OnTimeTrackLogIntID, pTrack->GetInterpolateLog());
@@ -64,7 +64,7 @@ private:
       mpData = nullptr;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
    void OnTimeTrackLin(wxCommandEvent & /*event*/);

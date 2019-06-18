@@ -18,6 +18,7 @@
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
+#include "../tracks/ui/TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
 #include "../effects/EffectManager.h"
@@ -189,7 +190,9 @@ void DoZoomFitV(AudacityProject &project)
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
-   auto range = tracks.Any<AudioTrack>() - &Track::GetMinimized;
+   auto range = tracks.Any<AudioTrack>()
+      - [](const Track *pTrack){
+         return TrackView::Get( *pTrack ).GetMinimized(); };
    auto count = range.size();
    if (count == 0)
       return;
@@ -200,15 +203,17 @@ void DoZoomFitV(AudacityProject &project)
    height -= 28;
    
    // The height of minimized and non-audio tracks cannot be apportioned
+   const auto GetHeight = []( const Track *track )
+      { return TrackView::Get( *track ).GetHeight(); };
    height -=
-      tracks.Any().sum( &Track::GetHeight ) - range.sum( &Track::GetHeight );
+      tracks.Any().sum( GetHeight ) - range.sum( GetHeight );
    
    // Give each resized track the average of the remaining height
    height = height / count;
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      t->SetHeight(height);
+      TrackView::Get( *t ).SetHeight(height);
 }
 }
 
@@ -315,7 +320,7 @@ void OnCollapseAllTracks(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks.Any())
-      t->SetMinimized(true);
+      TrackView::Get( *t ).SetMinimized(true);
 
    ProjectHistory::Get( project ).ModifyState(true);
    window.RedrawProject();
@@ -328,7 +333,7 @@ void OnExpandAllTracks(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks.Any())
-      t->SetMinimized(false);
+      TrackView::Get( *t ).SetMinimized(false);
 
    ProjectHistory::Get( project ).ModifyState(true);
    window.RedrawProject();

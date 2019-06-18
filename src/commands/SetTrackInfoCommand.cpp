@@ -43,6 +43,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../prefs/SpectrogramSettings.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "../tracks/ui/TrackView.h"
 #include "CommandContext.h"
 
 SetTrackBase::SetTrackBase(){
@@ -348,7 +349,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       wt->SetWaveColorIndex( mColour );
 
    if( t && bHasHeight )
-      t->SetHeight( mHeight );
+      TrackView::Get( *t ).SetHeight( mHeight );
 
    if( wt && bHasDisplayType  )
       wt->SetDisplay(

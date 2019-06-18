@@ -770,8 +770,8 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       // Omit the outermost ring of gray pixels
 
       // (Note that TrackPanel paints its focus over the "top margin" of the
-      // rectangle allotted to the track, according to Track::GetY() and
-      // Track::GetHeight(), but also over the margin of the next track.)
+      // rectangle allotted to the track, according to TrackView::GetY() and
+      // TrackView::GetHeight(), but also over the margin of the next track.)
 
       rect.height += kBottomMargin;
       int dy = kTopMargin - 1;

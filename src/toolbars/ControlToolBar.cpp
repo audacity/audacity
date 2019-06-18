@@ -80,6 +80,7 @@
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
 #include "../TrackPanel.h"
+#include "../tracks/ui/TrackView.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -1239,7 +1240,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
             if ((recordingChannels > 2) &&
                 !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
-               newTrack->SetMinimized(true);
+               TrackView::Get( *newTrack ).SetMinimized(true);
             }
 
             TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );

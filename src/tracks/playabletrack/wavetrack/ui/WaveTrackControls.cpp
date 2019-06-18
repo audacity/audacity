@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
+#include "../../../ui/TrackView.h"
 #include "../../../../AudioIOBase.h"
 #include "../../../../Menus.h"
 #include "../../../../Project.h"
@@ -94,7 +95,7 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
       }
    }
 
-   return TrackControls::HitTest(st, pProject);
+   return CommonTrackControls::HitTest(st, pProject);
 }
 
 enum {
@@ -158,7 +159,7 @@ private:
       mpData = NULL;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    int IdOfWaveColor(int WaveColor);
    void OnWaveColorChange(wxCommandEvent & event);
@@ -172,7 +173,7 @@ WaveColorMenuTable &WaveColorMenuTable::Instance()
 
 void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
    SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
@@ -251,7 +252,7 @@ private:
       mpData = NULL;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    int IdOfFormat(int format);
 
@@ -266,7 +267,7 @@ FormatMenuTable &FormatMenuTable::Instance()
 
 void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
    SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
@@ -368,7 +369,7 @@ private:
       mpData = NULL;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    int IdOfRate(int rate);
    void SetRate(WaveTrack * pTrack, double rate);
@@ -385,7 +386,7 @@ RateMenuTable &RateMenuTable::Instance()
 
 void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto rateId = IdOfRate((int)pTrack->GetRate());
    SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
@@ -558,7 +559,7 @@ protected:
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    void OnSetDisplay(wxCommandEvent & event);
    void OnSpectrogramSettings(wxCommandEvent & event);
@@ -590,7 +591,7 @@ WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
 
 void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    std::vector<int> checkedIds;
@@ -621,7 +622,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    if ( isMono )
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
       WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
 
       auto next = * ++ tracks.Find(pTrack2);
@@ -857,6 +858,10 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    auto partner = static_cast< WaveTrack * >
       ( *tracks.Find( pTrack ).advance( 1 ) );
 
+   bool bBothMinimizedp =
+      ((TrackView::Get( *pTrack ).GetMinimized()) &&
+       (TrackView::Get( *partner ).GetMinimized()));
+
    tracks.GroupChannels( *pTrack, 2 );
 
    // Set partner's parameters to match target.
@@ -866,14 +871,16 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partner->SetPan( 0.0f );
 
    // Set NEW track heights and minimized state
-   bool bBothMinimizedp = ((pTrack->GetMinimized()) && (partner->GetMinimized()));
-   pTrack->SetMinimized(false);
-   partner->SetMinimized(false);
-   int AverageHeight = (pTrack->GetHeight() + partner->GetHeight()) / 2;
-   pTrack->SetHeight(AverageHeight);
-   partner->SetHeight(AverageHeight);
-   pTrack->SetMinimized(bBothMinimizedp);
-   partner->SetMinimized(bBothMinimizedp);
+   auto
+      &view = TrackView::Get( *pTrack ),
+      &partnerView = TrackView::Get( *partner );
+   view.SetMinimized(false);
+   partnerView.SetMinimized(false);
+   int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
+   view.SetHeight(AverageHeight);
+   partnerView.SetHeight(AverageHeight);
+   view.SetMinimized(bBothMinimizedp);
+   partnerView.SetMinimized(bBothMinimizedp);
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())
@@ -909,6 +916,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    for (auto channel : channels) {
       // Keep original stereo track name.
       channel->SetName(pTrack->GetName());
+      auto &view = TrackView::Get( *channel );
       if (stereo)
          channel->SetPanFromChannelType();
 
@@ -916,9 +924,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       if (ODManager::IsInstanceCreated())
          ODManager::Instance()->MakeWaveTrackIndependent(channel);
       //make sure no channel is smaller than its minimum height
-      if (channel->GetHeight() < channel->GetMinimizedHeight())
-         channel->SetHeight(channel->GetMinimizedHeight());
-      totalHeight += channel->GetHeight();
+      if (view.GetHeight() < view.GetMinimizedHeight())
+         view.SetHeight(view.GetMinimizedHeight());
+      totalHeight += view.GetHeight();
       ++nChannels;
    }
 
@@ -927,7 +935,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    for (auto channel : channels)
       // Make tracks the same height
-      channel->SetHeight( averageHeight );
+      TrackView::Get( *channel ).SetHeight( averageHeight );
 }
 
 /// Swap the left and right channels of a stero track...

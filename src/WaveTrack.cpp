@@ -62,8 +62,6 @@ Track classes.
 
 #include "InconsistencyException.h"
 
-#include "TrackPanel.h" // for TrackInfo
-
 using std::max;
 
 static ProjectFileIORegistry::Entry registerFactory{
@@ -127,8 +125,6 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mLastScaleType = -1;
    mLastdBRange = -1;
    mAutoSaveIdent = 0;
-
-   SetHeight( TrackInfo::DefaultWaveTrackHeight() );
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):
@@ -401,7 +397,7 @@ int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
       (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }
 
-Track::Holder WaveTrack::Duplicate() const
+Track::Holder WaveTrack::Clone() const
 {
    return std::make_shared<WaveTrack>( *this );
 }
@@ -481,20 +477,6 @@ void WaveTrack::SetOldChannelGain(int channel, float gain)
 }
 
 
-
-void WaveTrack::DoSetMinimized(bool isMinimized){
-
-#ifdef EXPERIMENTAL_HALF_WAVE
-   bool bHalfWave;
-   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
-   if( bHalfWave )
-   {
-      DoZoomPreset( isMinimized ? 1:0);
-   }
-#endif
-
-   PlayableTrack::DoSetMinimized( isMinimized );
-}
 
 void WaveTrack::SetWaveColorIndex(int colorIndex)
 // STRONG-GUARANTEE

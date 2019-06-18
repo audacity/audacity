@@ -37,15 +37,11 @@ class PlayableTrack;
 class LabelTrack;
 class TimeTrack;
 class TrackControls;
-class TrackVRulerControls;
-class TrackPanelResizerCell;
+class TrackView;
 class WaveTrack;
 class NoteTrack;
 class AudacityProject;
 class ZoomInfo;
-
-class SelectHandle;
-class TimeShiftHandle;
 
 using TrackArray = std::vector< Track* >;
 using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
@@ -187,7 +183,7 @@ private:
 };
 
 class AUDACITY_DLL_API Track /* not final */
-   : public CommonTrackPanelCell, public XMLTagHandler
+   : public XMLTagHandler
    , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
    friend class TrackList;
@@ -200,8 +196,6 @@ class AUDACITY_DLL_API Track /* not final */
    std::weak_ptr<TrackList> mList;
    TrackNodePointer mNode{};
    int            mIndex;
-   int            mY;
-   int            mHeight;
    wxString       mName;
    wxString       mDefaultName;
 
@@ -210,7 +204,6 @@ class AUDACITY_DLL_API Track /* not final */
 
  protected:
    bool           mLinked;
-   bool           mMinimized;
 
  public:
 
@@ -265,67 +258,23 @@ class AUDACITY_DLL_API Track /* not final */
    // original; else return this track
    std::shared_ptr<const Track> SubstituteOriginalTrack() const;
 
-   // Cause certain overriding tool modes (Zoom; future ones?) to behave
-   // uniformly in all tracks, disregarding track contents.
-   // Do not further override this...
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *pProject)
-      final override;
-
-   // Delegates the handling to the related TCP cell
-   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
-
  public:
-
-   // Rather override this for subclasses:
-   virtual std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      = 0;
-
    mutable wxSize vrulerSize;
+
+   // Return another, associated TrackPanelCell object that implements
+   // click and drag and keystrokes in the track contents.
+   std::shared_ptr<TrackView> GetTrackView();
+   std::shared_ptr<const TrackView> GetTrackView() const;
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
-   std::shared_ptr<TrackPanelCell> GetTrackControl();
-   std::shared_ptr<const TrackPanelCell> GetTrackControl() const;
+   std::shared_ptr<TrackPanelCell> GetTrackControls();
+   std::shared_ptr<const TrackPanelCell> GetTrackControls() const;
 
    // Return another, associated TrackPanelCell object that implements the
-   // mouse actions for the vertical ruler
-   std::shared_ptr<TrackVRulerControls> GetVRulerControl();
-   std::shared_ptr<const TrackVRulerControls> GetVRulerControl() const;
-
-   // Return another, associated TrackPanelCell object that implements the
-   // click and drag to resize
-   std::shared_ptr<TrackPanelCell> GetResizer();
-
-   // This just returns a constant and can be overriden by subclasses
-   // to specify a different height for the case that the track is minimized.
-   virtual int GetMinimizedHeight() const;
-   int GetActualHeight() const { return mHeight; }
 
    int GetIndex() const;
    void SetIndex(int index);
-
-   int GetY() const;
-private:
-   // Always maintain a strictly contiguous layout of tracks.
-   // So client code is not permitted to modify this attribute directly.
-   void SetY(int y);
-   // No need yet to make this virtual
-   void DoSetY(int y);
-public:
-
-   int GetHeight() const;
-   void SetHeight(int h);
-protected:
-   virtual void DoSetHeight(int h);
-public:
-
-   bool GetMinimized() const;
-   void SetMinimized(bool isMinimized);
-protected:
-   virtual void DoSetMinimized(bool isMinimized);
 
 public:
    static void FinishCopy (const Track *n, Track *dest);
@@ -363,8 +312,6 @@ private:
 
  public:
 
-   enum : unsigned { DefaultHeight = 150 };
-
    Track(const std::shared_ptr<DirManager> &projDirManager);
    Track(const Track &orig);
 
@@ -373,7 +320,8 @@ private:
    void Init(const Track &orig);
 
    using Holder = std::shared_ptr<Track>;
-   virtual Holder Duplicate() const = 0;
+   // public nonvirtual duplication function that invokes Clone():
+   virtual Holder Duplicate() const;
 
    // Called when this track is merged to stereo with another, and should
    // take on some paramaters of its partner.
@@ -434,6 +382,10 @@ public:
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
 private:
+   // Subclass responsibility implements only a part of Duplicate(), copying
+   // the track data proper (not associated data such as for groups and views):
+   virtual Holder Clone() const = 0;
+
    virtual TrackKind GetKind() const { return TrackKind::None; }
 
    template<typename T>
@@ -741,6 +693,9 @@ public:
    bool IsLeader() const;
    bool IsSelectedLeader() const;
 
+   // Cause this track and following ones in its TrackList to adjust
+   void AdjustPositions();
+
    // Serialize, not with tags of its own, but as attributes within a tag.
    void WriteCommonXMLAttributes(
       XMLWriter &xmlFile, bool includeNameAndSelected = true) const;
@@ -749,19 +704,14 @@ public:
    bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
 
 protected:
-   std::shared_ptr<Track> DoFindTrack() override;
 
    // These are called to create controls on demand:
+   virtual std::shared_ptr<TrackView> DoGetView() = 0;
    virtual std::shared_ptr<TrackControls> DoGetControls() = 0;
-   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    // These hold the controls:
-   std::shared_ptr<TrackControls> mpControls;
-   std::shared_ptr<TrackVRulerControls> mpVRulerContols;
-   std::shared_ptr<TrackPanelResizerCell> mpResizer;
-
-   std::weak_ptr<SelectHandle> mSelectHandle;
-   std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
+   std::shared_ptr<TrackView> mpView;
+   std::shared_ptr<CommonTrackCell> mpControls;
 };
 
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track

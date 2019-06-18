@@ -101,11 +101,9 @@ const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
-class LabelGlyphHandle;
-class LabelTextHandle;
-
 class AUDACITY_DLL_API LabelTrack final : public Track
 {
+   friend class LabelTrackView;
    friend class LabelStruct;
 
  public:
@@ -115,8 +113,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
       AudacityProject &project, const SelectedRegion& region,
       const wxString& initialValue, wxString& value);
 
-   bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
-   bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected() const;
 
    void CreateCustomGlyphs();
@@ -124,21 +120,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
-
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
-
-   bool DoCaptureKey(wxKeyEvent &event);
-   unsigned CaptureKey
-     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
-
-   unsigned KeyDown
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
-
-   unsigned Char
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
 
    void SetOffset(double dOffset) override;
 
@@ -156,8 +137,11 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    double GetEndTime() const override;
 
    using Holder = std::shared_ptr<LabelTrack>;
-   Track::Holder Duplicate() const override;
+   
+private:
+   Track::Holder Clone() const override;
 
+public:
    void SetSelected(bool s) override;
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -214,9 +198,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
        const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
    void HandleTextDragRelease(const wxMouseEvent & evt);
-
-   bool OnKeyDown(SelectedRegion &sel, wxKeyEvent & event);
-   bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
    void Import(wxTextFile & f);
    void Export(wxTextFile & f) const;
@@ -315,12 +296,10 @@ private:
 
    static wxFont msFont;
 
-   std::weak_ptr<LabelGlyphHandle> mGlyphHandle;
-   std::weak_ptr<LabelTextHandle> mTextHandle;
-
 protected:
+   std::shared_ptr<TrackView> DoGetView() override;
    std::shared_ptr<TrackControls> DoGetControls() override;
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+
    friend class GetInfoCommand; // to get labels.
    friend class SetLabelCommand; // to set labels.
 };

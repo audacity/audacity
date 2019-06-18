@@ -43,6 +43,7 @@ This class now lists
 #include "../prefs/PrefsDialog.h"
 #include "../Shuttle.h"
 #include "../PluginManager.h"
+#include "../tracks/ui/TrackView.h"
 #include "../ShuttleGui.h"
 
 #include <wx/frame.h>
@@ -496,7 +497,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
       //JKC: Possibly add later...
-      //context.AddItem( trk->GetHeight(), "height" );
+      //context.AddItem( GetTrackView::Get( *trk ).GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
          float vzmin, vzmax;
          t->GetDisplayBounds(&vzmin, &vzmax);
@@ -722,8 +723,9 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    wxRect trackRect = pWin->GetRect();
 
    for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
-      trackRect.y = t->GetY() - viewInfo.vpos;
-      trackRect.height = t->GetHeight();
+      auto &view = TrackView::Get( *t );
+      trackRect.y = view.GetY() - viewInfo.vpos;
+      trackRect.height = view.GetHeight();
 
 #if 0
       // Work in progress on getting the TCP button positions and sizes.

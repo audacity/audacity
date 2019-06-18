@@ -50,3 +50,19 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    auto hook = GetHook();
    return hook ? hook( evt, pProject ) : RefreshCode::Cancelled;
 }
+
+CommonTrackCell::CommonTrackCell( const std::shared_ptr< Track > &parent )
+   : mwTrack { parent }
+{}
+
+CommonTrackCell::~CommonTrackCell() = default;
+
+void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
+{
+   mwTrack = parent;
+}
+
+std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
+{
+   return mwTrack.lock();
+}

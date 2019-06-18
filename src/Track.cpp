@@ -41,7 +41,7 @@ and TimeTrack.
 
 #include "InconsistencyException.h"
 
-#include "TrackPanel.h" // for TrackInfo
+#include "tracks/ui/TrackView.h"
 
 #ifdef _MSC_VER
 //Disable truncation warnings
@@ -55,11 +55,7 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
    mSelected  = false;
    mLinked    = false;
 
-   mY = 0;
-   mHeight = DefaultHeight;
    mIndex = 0;
-
-   mMinimized = false;
 
    mOffset = 0.0;
 
@@ -69,7 +65,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 Track::Track(const Track &orig)
 : vrulerSize( orig.vrulerSize )
 {
-   mY = 0;
    mIndex = 0;
    Init(orig);
    mOffset = orig.mOffset;
@@ -87,8 +82,6 @@ void Track::Init(const Track &orig)
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;
-   mHeight = orig.mHeight;
-   mMinimized = orig.mMinimized;
    mChannel = orig.mChannel;
 }
 
@@ -115,6 +108,18 @@ void Track::Merge(const Track &orig)
    mSelected = orig.mSelected;
 }
 
+Track::Holder Track::Duplicate() const
+{
+   // invoke "virtual constructor" to copy track object proper:
+   auto result = Clone();
+
+   if (mpView)
+      // Copy view state that might be important to undo/redo
+      TrackView::Get( *result ).Copy( *mpView );
+
+   return result;
+}
+
 Track::~Track()
 {
 }
@@ -135,16 +140,6 @@ void Track::SetOwner
    mNode = node;
 }
 
-int Track::GetMinimizedHeight() const
-{
-   auto height = TrackInfo::MinimumTrackHeight();
-   auto channels = TrackList::Channels(this->SubstituteOriginalTrack().get());
-   auto nChannels = channels.size();
-   auto begin = channels.begin();
-   auto index = std::distance(begin, std::find(begin, channels.end(), this));
-   return (height * (index + 1) / nChannels) - (height * index / nChannels);
-}
-
 int Track::GetIndex() const
 {
    return mIndex;
@@ -153,96 +148,6 @@ int Track::GetIndex() const
 void Track::SetIndex(int index)
 {
    mIndex = index;
-}
-
-int Track::GetY() const
-{
-   return mY;
-}
-
-void Track::SetY(int y)
-{
-   auto pList = mList.lock();
-   if (pList && !pList->mPendingUpdates.empty()) {
-      auto orig = pList->FindById( GetId() );
-      if (orig && orig != this) {
-         // delegate, and rely on the update to copy back
-         orig->SetY(y);
-         pList->UpdatePendingTracks();
-         return;
-      }
-   }
-
-   DoSetY(y);
-}
-
-void Track::DoSetY(int y)
-{
-   mY = y;
-}
-
-int Track::GetHeight() const
-{
-   if (mMinimized) {
-      return GetMinimizedHeight();
-   }
-
-   return mHeight;
-}
-
-void Track::SetHeight(int h)
-{
-   auto pList = mList.lock();
-   if (pList && !pList->mPendingUpdates.empty()) {
-      auto orig = pList->FindById( GetId() );
-      if (orig && orig != this) {
-         // delegate, and rely on RecalcPositions to copy back
-         orig->SetHeight(h);
-         return;
-      }
-   }
-
-   DoSetHeight(h);
-
-   if (pList) {
-      pList->RecalcPositions(mNode);
-      pList->ResizingEvent(mNode);
-   }
-}
-
-void Track::DoSetHeight(int h)
-{
-   mHeight = h;
-}
-
-bool Track::GetMinimized() const
-{
-   return mMinimized;
-}
-
-void Track::SetMinimized(bool isMinimized)
-{
-   auto pList = mList.lock();
-   if (pList && !pList->mPendingUpdates.empty()) {
-      auto orig = pList->FindById( GetId() );
-      if (orig && orig != this) {
-         // delegate, and rely on RecalcPositions to copy back
-         orig->SetMinimized(isMinimized);
-         return;
-      }
-   }
-
-   DoSetMinimized(isMinimized);
-
-   if (pList) {
-      pList->RecalcPositions(mNode);
-      pList->ResizingEvent(mNode);
-   }
-}
-
-void Track::DoSetMinimized(bool isMinimized)
-{
-   mMinimized = isMinimized;
 }
 
 void Track::SetLinked(bool l)
@@ -371,11 +276,6 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
       // Remove from the track
       Clear(newT1, oldT1);
    }
-}
-
-std::shared_ptr<Track> Track::DoFindTrack()
-{
-   return SharedPointer();
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
@@ -638,15 +538,17 @@ void TrackList::RecalcPositions(TrackNodePointer node)
    if ( !isNull( prev ) ) {
       t = prev.first->get();
       i = t->GetIndex() + 1;
-      y = t->GetY() + t->GetHeight();
+      auto &view = TrackView::Get( *t );
+      y = view.GetY() + view.GetHeight();
    }
 
    const auto theEnd = end();
    for (auto n = Find( node.first->get() ); n != theEnd; ++n) {
       t = *n;
+      auto &view = TrackView::Get( *t );
       t->SetIndex(i++);
-      t->DoSetY(y);
-      y += t->GetHeight();
+      view.SetY(y);
+      y += view.GetHeight();
    }
 
    UpdatePendingTracks();
@@ -944,7 +846,9 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
 /// For stereo track combined height of both channels.
 int TrackList::GetGroupHeight(const Track * t) const
 {
-   return Channels(t).sum( &Track::GetHeight );
+   const auto GetHeight = []( const Track *track )
+      { return TrackView::Get( *track ).GetHeight(); };
+   return Channels(t).sum( GetHeight );
 }
 
 bool TrackList::CanMoveUp(Track * t) const
@@ -1072,7 +976,8 @@ int TrackList::GetHeight() const
 
    if (!empty()) {
       auto track = getPrev( getEnd() ).first->get();
-      height = track->GetY() + track->GetHeight();
+      auto &view = TrackView::Get( *track );
+      height = view.GetY() + view.GetHeight();
    }
 
    return height;
@@ -1115,8 +1020,13 @@ std::shared_ptr<Track>
 TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
 {
    std::shared_ptr<Track> pTrack;
-   if (src)
-      pTrack = src->Duplicate();
+   if (src) {
+      pTrack = src->Clone(); // not duplicate
+      // Share the satellites with the original, though they do not point back
+      // to the pending track
+      pTrack->mpView = src->mpView;
+      pTrack->mpControls = src->mpControls;
+   }
 
    if (pTrack) {
       mUpdaters.push_back( updater );
@@ -1146,9 +1056,6 @@ void TrackList::UpdatePendingTracks()
       if (pendingTrack && src) {
          if (updater)
             updater( *pendingTrack, *src );
-         pendingTrack->DoSetY(src->GetY());
-         pendingTrack->DoSetHeight(src->GetActualHeight());
-         pendingTrack->DoSetMinimized(src->GetMinimized());
          pendingTrack->DoSetLinked(src->GetLinked());
       }
       ++pUpdater;
@@ -1202,6 +1109,10 @@ bool TrackList::ApplyPendingTracks()
 
    for (auto &pendingTrack : updates) {
       if (pendingTrack) {
+         if (pendingTrack->mpView)
+            pendingTrack->mpView->Reparent( pendingTrack );
+         if (pendingTrack->mpControls)
+            pendingTrack->mpControls->Reparent( pendingTrack );
          auto src = FindById( pendingTrack->GetId() );
          if (src)
             this->Replace(src, pendingTrack), result = true;
@@ -1287,8 +1198,9 @@ void Track::WriteCommonXMLAttributes(
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
-   xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
-   xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
+   auto &view = TrackView::Get( *this );
+   xmlFile.WriteAttr(wxT("height"), view.GetActualHeight());
+   xmlFile.WriteAttr(wxT("minimized"), view.GetMinimized());
 }
 
 // Return true iff the attribute is recognized.
@@ -1303,12 +1215,12 @@ bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
    }
    else if (!wxStrcmp(attr, wxT("height")) &&
          XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      SetHeight(nValue);
+      TrackView::Get( *this ).SetHeight(nValue);
       return true;
    }
    else if (!wxStrcmp(attr, wxT("minimized")) &&
          XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      SetMinimized(nValue != 0);
+      TrackView::Get( *this ).SetMinimized(nValue != 0);
       return true;
    }
    else if (!wxStrcmp(attr, wxT("isSelected")) &&
@@ -1317,6 +1229,15 @@ bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
       return true;
    }
    return false;
+}
+
+void Track::AdjustPositions()
+{
+   auto pList = mList.lock();
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
+   }
 }
 
 bool TrackList::HasPendingTracks() const

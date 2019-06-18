@@ -37,7 +37,6 @@
 
 #include "InconsistencyException.h"
 
-#include "TrackPanel.h" // For TrackInfo
 #include "AllThemeResources.h"
 
 #ifdef SONIFY
@@ -123,8 +122,6 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
 
-   SetHeight( TrackInfo::DefaultNoteTrackHeight() );
-
    mSeq = NULL;
    mSerializationLength = 0;
 
@@ -163,7 +160,7 @@ Alg_seq &NoteTrack::GetSeq() const
    return *mSeq;
 }
 
-Track::Holder NoteTrack::Duplicate() const
+Track::Holder NoteTrack::Clone() const
 {
    auto duplicate = std::make_shared<NoteTrack>(mDirManager);
    duplicate->Init(*this);
@@ -925,7 +922,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = Duplicate();
+      holder = Clone();
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);

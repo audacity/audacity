@@ -22,8 +22,8 @@ class WaveTrackVRulerControls final : public TrackVRulerControls
 
 public:
    explicit
-   WaveTrackVRulerControls( std::shared_ptr<Track> pTrack )
-      : TrackVRulerControls( pTrack ) {}
+   WaveTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
+      : TrackVRulerControls( pTrackView ) {}
    ~WaveTrackVRulerControls();
 
    std::vector<UIHandlePtr> HitTest

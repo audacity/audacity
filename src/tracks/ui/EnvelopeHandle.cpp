@@ -13,6 +13,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 
+#include "TrackView.h"
+
 #include "../../Envelope.h"
 #include "../../EnvelopeEditor.h"
 #include "../../HitTestResult.h"
@@ -177,7 +179,8 @@ UIHandle::Result EnvelopeHandle::Click
 
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   const auto pTrack = static_cast<Track*>(evt.pCell.get());
+   const auto pView = std::static_pointer_cast<TrackView>(evt.pCell);
+   const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
 
    mEnvelopeEditors.clear();
 

@@ -21,8 +21,6 @@ class Ruler;
 class ZoomInfo;
 struct TrackPanelDrawingContext;
 
-class EnvelopeHandle;
-
 class TimeTrack final : public Track {
 
  public:
@@ -48,11 +46,6 @@ class TimeTrack final : public Track {
    void Paste(double t, const Track * src) override;
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
-
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
 
    // TimeTrack parameters
 
@@ -108,8 +101,6 @@ class TimeTrack final : public Track {
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
 
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
-
    /** @brief Copy the metadata from another track but not the points
     *
     * Copies the Name, DefaultName, Range and Display data from the source track
@@ -118,13 +109,15 @@ class TimeTrack final : public Track {
    void Init(const TimeTrack &orig);
 
    using Holder = std::unique_ptr<TimeTrack>;
-   Track::Holder Duplicate() const override;
+
+private:
+   Track::Holder Clone() const override;
 
    friend class TrackFactory;
 
 protected:
+   std::shared_ptr<TrackView> DoGetView() override;
    std::shared_ptr<TrackControls> DoGetControls() override;
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 

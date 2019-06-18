@@ -24,10 +24,6 @@ class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
 
-class CutlineHandle;
-class SampleHandle;
-class EnvelopeHandle;
-
 class Sequence;
 class WaveClip;
 
@@ -95,7 +91,7 @@ public:
 private:
    void Init(const WaveTrack &orig);
 
-   Track::Holder Duplicate() const override;
+   Track::Holder Clone() const override;
 
    friend class TrackFactory;
 
@@ -105,11 +101,6 @@ private:
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
-
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
 
    double GetOffset() const override;
    void SetOffset(double o) override;
@@ -156,8 +147,6 @@ private:
    // the gain.
    float GetOldChannelGain(int channel) const;
    void SetOldChannelGain(int channel, float gain);
-
-   void DoSetMinimized(bool isMinimized) override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
@@ -694,13 +683,9 @@ private:
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 
-   std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<SampleHandle> mSampleHandle;
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
-
 protected:
+   std::shared_ptr<TrackView> DoGetView() override;
    std::shared_ptr<TrackControls> DoGetControls() override;
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,

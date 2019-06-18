@@ -11,14 +11,14 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_WAVE_TRACK_CONTROLS__
 #define __AUDACITY_WAVE_TRACK_CONTROLS__
 
-#include "../../../ui/TrackControls.h"
+#include "../../../ui/CommonTrackControls.h" // to inherit
 
 class MuteButtonHandle;
 class SoloButtonHandle;
 class GainSliderHandle;
 class PanSliderHandle;
 
-class WaveTrackControls final : public TrackControls
+class WaveTrackControls final : public CommonTrackControls
 {
    WaveTrackControls(const WaveTrackControls&) = delete;
    WaveTrackControls &operator=(const WaveTrackControls&) = delete;
@@ -26,7 +26,7 @@ class WaveTrackControls final : public TrackControls
 public:
    explicit
    WaveTrackControls( std::shared_ptr<Track> pTrack )
-      : TrackControls( pTrack ) {}
+      : CommonTrackControls( pTrack ) {}
    ~WaveTrackControls();
 
    std::vector<UIHandlePtr> HitTest

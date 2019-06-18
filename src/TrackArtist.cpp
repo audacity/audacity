@@ -88,6 +88,7 @@ audio tracks.
 #include "widgets/Ruler.h"
 #include "AllThemeResources.h"
 #include "TrackPanelDrawingContext.h"
+#include "tracks/ui/TrackView.h"
 
 
 #undef PROFILE_WAVEFORM
@@ -222,12 +223,12 @@ void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
 
    for(auto leader : tracks->Leaders()) {
       auto group = TrackList::Channels( leader );
-      leader = leader->SubstitutePendingChangedTrack().get();
+      auto &view1 = TrackView::Get( *leader );
 
-      teamRect.y = leader->GetY() - zoomInfo.vpos;
+      teamRect.y = view1.GetY() - zoomInfo.vpos;
       teamRect.height = group.sum( [&] (const Track *channel) {
-         channel = channel->SubstitutePendingChangedTrack().get();
-         return channel->GetHeight();
+         auto &view = TrackView::Get( *channel );
+         return view.GetHeight();
       });
 
       if (teamRect.GetBottom() < clip.GetTop())
@@ -245,13 +246,17 @@ void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
          // If so, we draw both.  Otherwise, we can safely draw neither.
 
          if (teamRect.Intersects(clip) && reg.Contains(teamRect)) {
-            t = t->SubstitutePendingChangedTrack().get();
+            auto &view = TrackView::Get( *t );
             wxRect trackRect {
                teamRect.x,
-               t->GetY() - zoomInfo.vpos + kTopMargin,
+               view.GetY() - zoomInfo.vpos + kTopMargin,
                teamRect.width,
-               t->GetHeight() - (kTopMargin + kBottomMargin)
+               view.GetHeight() - (kTopMargin + kBottomMargin)
             };
+            // Find any pending changed track contents (such as during a
+            // recording that is not yet committed to the undo history), and
+            // draw those instead
+            t = t->SubstitutePendingChangedTrack().get();
             DrawTrack( context, t, trackRect );
          }
       }
@@ -276,12 +281,12 @@ void TrackArt::DrawTrackNames(TrackPanelDrawingContext &context,
 
    for(auto leader : tracks->Leaders()) {
       auto group = TrackList::Channels( leader );
-      leader = leader->SubstitutePendingChangedTrack().get();
+      auto &view = TrackView::Get( *leader );
 
-      teamRect.y = leader->GetY() - zoomInfo.vpos;
+      teamRect.y = view.GetY() - zoomInfo.vpos;
       teamRect.height = group.sum( [&] (const Track *channel) {
-         channel = channel->SubstitutePendingChangedTrack().get();
-         return channel->GetHeight();
+         auto &channelView = TrackView::Get( *channel );
+         return view.GetHeight();
       });
 
       if (teamRect.GetBottom() < clip.GetTop())
@@ -294,7 +299,7 @@ void TrackArt::DrawTrackNames(TrackPanelDrawingContext &context,
             t = t->SubstitutePendingChangedTrack().get();
             wxRect trackRect {
                teamRect.x,
-               t->GetY() - zoomInfo.vpos + kTopMargin,
+               TrackView::Get( *t ).GetY() - zoomInfo.vpos + kTopMargin,
                teamRect.width,
                teamRect.height
             };

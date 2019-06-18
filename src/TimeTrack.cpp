@@ -56,8 +56,6 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    Track(projDirManager)
    , mZoomInfo(zoomInfo)
 {
-   mHeight = 100;
-
    mEnvelope = std::make_unique<BoundedEnvelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
 
    SetRangeLower( 0.9 );
@@ -177,7 +175,7 @@ void TimeTrack::InsertSilence(double t, double len)
    mEnvelope->InsertSpace(t, len);
 }
 
-Track::Holder TimeTrack::Duplicate() const
+Track::Holder TimeTrack::Clone() const
 {
    return std::make_shared<TimeTrack>(*this);
 }
@@ -312,7 +310,8 @@ void TimeTrack::Draw
                             //
                             // LL:  It's because the ruler only Invalidate()s when the NEW value is different
                             //      than the current value.
-   mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   mRuler->SetFlip( true );
+   //mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
    mRuler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
    mRuler->Draw(dc, GetEnvelope());
 

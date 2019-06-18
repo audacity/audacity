@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ViewInfo.h"
 #include "Scrubbing.h"
 #include "../../toolbars/ControlToolBar.h"
+#include "TrackView.h"
 
 #include <wx/dc.h>
 
@@ -92,8 +93,8 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 
       // Draw indicator in all visible tracks
       tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrack = dynamic_cast<Track*>(&cell);
-         if (pTrack) pTrack->TypeSwitch(
+         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
+         if (pTrackView) pTrackView->FindTrack()->TypeSwitch(
             [](LabelTrack *) {
                // Don't draw the indicator in label tracks
             },

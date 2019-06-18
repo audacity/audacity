@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "LabelDefaultClickHandle.h"
 
+#include "../../ui/TrackView.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../RefreshCode.h"
@@ -62,7 +63,7 @@ UIHandle::Result LabelDefaultClickHandle::Click
 
       const auto pLT = evt.pCell.get();
       for (auto lt : TrackList::Get( *pProject ).Any<LabelTrack>()) {
-         if (pLT != lt) {
+         if (pLT != &TrackView::Get( *lt )) {
             lt->ResetFlags();
             lt->Unselect();
          }

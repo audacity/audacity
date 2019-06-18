@@ -42,6 +42,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "ProjectWindow.h"
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
+#include "tracks/ui/TrackView.h"
 
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -719,15 +720,17 @@ void ScreenFrame::SizeTracks(int h)
       auto nChannels = channels.size();
       auto height = nChannels == 1 ? 2 * h : h;
       for (auto channel : channels)
-         channel->SetHeight(height);
+         TrackView::Get( *channel ).SetHeight(height);
    }
    ProjectWindow::Get( mContext.project ).RedrawProject();
 }
 
 void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>())
-      t->SetHeight(t->GetMinimizedHeight());
+   for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>()) {
+      auto &view = TrackView::Get( *t );
+      view.SetHeight( view.GetMinimizedHeight() );
+   }
 
    ProjectWindow::Get( mContext.project ).RedrawProject();
 }

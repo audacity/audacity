@@ -2,24 +2,25 @@
 
 Audacity: A Digital Audio Editor
 
-TrackUI.cpp
+CommonTrackView.cpp
 
-Paul Licameli split from TrackPanel.cpp
+Paul Licameli split from class TrackView
 
 **********************************************************************/
 
-#include "../../Track.h"
+#include "CommonTrackView.h"
 
-#include "../../TrackPanelMouseEvent.h"
-#include "TrackControls.h"
-#include "../ui/SelectHandle.h"
-#include "ZoomHandle.h"
-#include "TimeShiftHandle.h"
-#include "../../TrackPanelResizerCell.h"
 #include "BackgroundCell.h"
+#include "TimeShiftHandle.h"
+#include "TrackControls.h"
+#include "TrackPanel.h" // for TrackInfo
+#include "ZoomHandle.h"
+#include "../ui/SelectHandle.h"
 #include "../../ProjectSettings.h"
+#include "../../Track.h"
+#include "../../TrackPanelMouseEvent.h"
 
-std::vector<UIHandlePtr> Track::HitTest
+std::vector<UIHandlePtr> CommonTrackView::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
@@ -48,7 +49,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // Sliding applies in more than one track type.
    if ( !isMultiTool && currentTool == slideTool ) {
       result = TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, SharedPointer(), false);
+         mTimeShiftHandle, FindTrack(), false);
       if (result)
          results.push_back(result);
    }
@@ -65,7 +66,7 @@ std::vector<UIHandlePtr> Track::HitTest
    // Finally, default of all is adjustment of the selection box.
    if ( isMultiTool || currentTool == selectTool ) {
       result = SelectHandle::HitTest(
-         mSelectHandle, st, pProject, SharedPointer());
+         mSelectHandle, st, pProject, FindTrack() );
       if (result)
          results.push_back(result);
    }
@@ -73,42 +74,19 @@ std::vector<UIHandlePtr> Track::HitTest
    return results;
 }
 
-std::shared_ptr<TrackPanelCell> Track::ContextMenuDelegate()
+std::shared_ptr<TrackPanelCell> CommonTrackView::ContextMenuDelegate()
 {
-   return FindTrack()->GetTrackControl();
+   return TrackControls::Get( *FindTrack() ).shared_from_this();
 }
 
-std::shared_ptr<TrackPanelCell> Track::GetTrackControl()
+int CommonTrackView::GetMinimizedHeight() const
 {
-   if (!mpControls)
-      // create on demand
-      mpControls = DoGetControls();
-   return mpControls;
-}
-
-std::shared_ptr<const TrackPanelCell> Track::GetTrackControl() const
-{
-   return const_cast< Track* >( this )->GetTrackControl();
-}
-
-std::shared_ptr<TrackVRulerControls> Track::GetVRulerControl()
-{
-   if (!mpVRulerContols)
-      // create on demand
-      mpVRulerContols = DoGetVRulerControls();
-   return mpVRulerContols;
-}
-
-std::shared_ptr<const TrackVRulerControls> Track::GetVRulerControl() const
-{
-   return const_cast< Track* >( this )->GetVRulerControl();
-}
-
-#include "../../TrackPanelResizeHandle.h"
-std::shared_ptr<TrackPanelCell> Track::GetResizer()
-{
-   if (!mpResizer)
-      // create on demand
-      mpResizer = std::make_shared<TrackPanelResizerCell>( SharedPointer() );
-   return mpResizer;
+   auto height = TrackInfo::MinimumTrackHeight();
+   const auto pTrack = FindTrack();
+   auto channels = TrackList::Channels(pTrack->SubstituteOriginalTrack().get());
+   auto nChannels = channels.size();
+   auto begin = channels.begin();
+   auto index =
+      std::distance(begin, std::find(begin, channels.end(), pTrack.get()));
+   return (height * (index + 1) / nChannels) - (height * index / nChannels);
 }
