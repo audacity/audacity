@@ -741,7 +741,7 @@ protected:
 
    // These hold the controls:
    std::shared_ptr<TrackView> mpView;
-   std::shared_ptr<TrackControls> mpControls;
+   std::shared_ptr<CommonTrackCell> mpControls;
 };
 
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track
