@@ -11,7 +11,7 @@ Paul Licameli split from class WaveTrack
 #ifndef __AUDACITY_WAVE_TRACK_VIEW__
 #define __AUDACITY_WAVE_TRACK_VIEW__
 
-#include "../../../ui/TrackView.h"
+#include "../../../ui/CommonTrackView.h"
 
 class WaveTrackView final : public CommonTrackView
 {

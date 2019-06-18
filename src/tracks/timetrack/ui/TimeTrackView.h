@@ -11,7 +11,7 @@ Paul Licameli split from class TimeTrack
 #ifndef __AUDACITY_TIME_TRACK_VIEW__
 #define __AUDACITY_TIME_TRACK_VIEW__
 
-#include "../../ui/TrackView.h"
+#include "../../ui/CommonTrackView.h"
 
 class TimeTrackView final : public CommonTrackView
 {

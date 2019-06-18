@@ -31,20 +31,4 @@ public:
    static const TrackView &Get( const Track & );
 };
 
-class CommonTrackView /* not final */ : public TrackView
-{
-public:
-   using TrackView::TrackView;
-
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *pProject)
-      final override;
-
-   // Delegates the handling to the related TCP cell
-   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
-
-protected:
-   Track *GetTrack() const;
-};
-
 #endif
