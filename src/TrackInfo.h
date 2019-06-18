@@ -64,6 +64,13 @@ namespace TrackInfo
       DrawFunction drawFunction;
    };
 
+   using TCPLines = std::vector< TCPLine >;
+
+   // return y value and height
+   std::pair< int, int > CalcItemY( const TCPLines &lines, unsigned iItem );
+
+   unsigned DefaultTrackHeight( const TCPLines &topLines );
+
    void DrawItems
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track &track );

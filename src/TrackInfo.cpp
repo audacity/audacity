@@ -53,7 +53,7 @@ inline bool HasSoloButton()
 
 #define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
 using TCPLine = TrackInfo::TCPLine;
-using TCPLines = std::vector< TCPLine >;
+using TCPLines = TrackInfo::TCPLines;
 
 }
 
@@ -162,9 +162,11 @@ const TCPLines &getTCPLines( const Track &track )
 
    return commonTrackTCPLines;
 }
+}
 
 // return y value and height
-std::pair< int, int > CalcItemY( const TCPLines &lines, unsigned iItem )
+std::pair< int, int >
+TrackInfo::CalcItemY( const TCPLines &lines, unsigned iItem )
 {
    int y = 0;
    auto pLines = lines.begin();
@@ -178,6 +180,8 @@ std::pair< int, int > CalcItemY( const TCPLines &lines, unsigned iItem )
       height = pLines->height;
    return { y, height };
 }
+
+namespace {
 
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
@@ -1060,15 +1064,13 @@ void TrackInfo::DrawBackground(
 #endif
 }
 
-namespace {
-unsigned DefaultTrackHeight( const TCPLines &topLines )
+unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
 {
    int needed =
       kTopMargin + kBottomMargin +
       totalTCPLines( topLines, true ) +
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
-}
 }
 
 unsigned TrackInfo::DefaultNoteTrackHeight()
