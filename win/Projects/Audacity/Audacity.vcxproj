@@ -321,6 +321,7 @@
     <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
     <ClCompile Include="..\..\..\src\WaveClip.cpp" />
     <ClCompile Include="..\..\..\src\WaveTrack.cpp" />
+    <ClCompile Include="..\..\..\src\ZoomInfo.cpp" />
     <ClCompile Include="..\..\..\src\widgets\BackedPanel.cpp" />
     <ClCompile Include="..\..\..\src\widgets\HelpSystem.cpp" />
     <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp" />
@@ -714,6 +715,7 @@
     <ClInclude Include="..\..\..\src\WaveClip.h" />
     <ClInclude Include="..\..\..\src\WaveTrack.h" />
     <ClInclude Include="..\..\..\src\WrappedType.h" />
+    <ClInclude Include="..\..\..\src\ZoomInfo.h" />
     <ClInclude Include="..\..\..\src\effects\Amplify.h" />
     <ClInclude Include="..\..\..\src\effects\AutoDuck.h" />
     <ClInclude Include="..\..\..\src\effects\BassTreble.h" />

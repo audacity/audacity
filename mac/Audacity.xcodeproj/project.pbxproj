@@ -1290,6 +1290,7 @@
 		5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD35851F78D37A0084D13F /* pt_PT.po */; };
 		5EC4257222B92383005E8AB5 /* CommonTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4256E22B92383005E8AB5 /* CommonTrackControls.cpp */; };
 		5EC4257322B92383005E8AB5 /* CommonTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4257022B92383005E8AB5 /* CommonTrackView.cpp */; };
+		5EC4257922BA7CF2005E8AB5 /* ZoomInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4257722BA7CF2005E8AB5 /* ZoomInfo.cpp */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
 		5ECF728722871A4F007F2A35 /* ShuttleGetDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728522871A4F007F2A35 /* ShuttleGetDefinition.cpp */; };
 		5ECF728A22887B3B007F2A35 /* MissingAliasFileDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728822887B3B007F2A35 /* MissingAliasFileDialog.cpp */; };
@@ -3339,6 +3340,8 @@
 		5EC4256F22B92383005E8AB5 /* CommonTrackControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonTrackControls.h; sourceTree = "<group>"; };
 		5EC4257022B92383005E8AB5 /* CommonTrackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonTrackView.cpp; sourceTree = "<group>"; };
 		5EC4257122B92383005E8AB5 /* CommonTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonTrackView.h; sourceTree = "<group>"; };
+		5EC4257722BA7CF2005E8AB5 /* ZoomInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZoomInfo.cpp; sourceTree = "<group>"; };
+		5EC4257822BA7CF2005E8AB5 /* ZoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomInfo.h; sourceTree = "<group>"; };
 		5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NotYetAvailableException.cpp; sourceTree = "<group>"; };
 		5EC7ED051E101C5C0052CAE2 /* NotYetAvailableException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotYetAvailableException.h; sourceTree = "<group>"; };
 		5ECCE7651DE49834009900E9 /* AudacityException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityException.h; sourceTree = "<group>"; };
@@ -4455,6 +4458,7 @@
 				1790B0F909883BFD008A330A /* WaveClip.cpp */,
 				1790B0FB09883BFD008A330A /* WaveTrack.cpp */,
 				28FC1AF90A47762C00A188AE /* WrappedType.cpp */,
+				5EC4257722BA7CF2005E8AB5 /* ZoomInfo.cpp */,
 				1790AFC809883BFD008A330A /* AboutDialog.h */,
 				1790AFCA09883BFD008A330A /* AColor.h */,
 				5E08C7382180D460004079AE /* AdornedRulerPanel.h */,
@@ -4594,6 +4598,7 @@
 				2844163A1B82D6BC0000574D /* WaveTrackLocation.h */,
 				28FC1AFA0A47762C00A188AE /* WrappedType.h */,
 				5ED18DB71CC290AB00FAFE95 /* wxFileNameWrapper.h */,
+				5EC4257822BA7CF2005E8AB5 /* ZoomInfo.h */,
 				5EFEAD9F2273382D0077DFF6 /* AudacityApp.mm */,
 				1790AFDC09883BFD008A330A /* blockfile */,
 				174D9025098C78AF00D5909F /* commands */,
@@ -8399,6 +8404,7 @@
 				1790B15F09883BFD008A330A /* ExportOGG.cpp in Sources */,
 				1790B16009883BFD008A330A /* ExportPCM.cpp in Sources */,
 				5E7396691DAFDB5600BA0A4D /* LabelDefaultClickHandle.cpp in Sources */,
+				5EC4257922BA7CF2005E8AB5 /* ZoomInfo.cpp in Sources */,
 				1790B16109883BFD008A330A /* FFT.cpp in Sources */,
 				1790B16209883BFD008A330A /* FileFormats.cpp in Sources */,
 				1790B16309883BFD008A330A /* FreqWindow.cpp in Sources */,

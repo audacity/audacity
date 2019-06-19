@@ -383,6 +383,9 @@
     <ClCompile Include="..\..\..\src\WrappedType.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ZoomInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\effects\Amplify.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
@@ -1493,6 +1496,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\WrappedType.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ZoomInfo.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Amplify.h">
