@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_WAVE_TRACK_CONTROLS__
 #define __AUDACITY_WAVE_TRACK_CONTROLS__
 
-#include "../../../ui/CommonTrackControls.h" // to inherit
+#include "../../ui/PlayableTrackControls.h" // to inherit
 
 class CellularPanel;
 class LWSlider;
@@ -23,7 +23,7 @@ class WaveTrack;
 class wxEvent;
 class wxWindow;
 
-class WaveTrackControls final : public CommonTrackControls
+class WaveTrackControls final : public PlayableTrackControls
 {
    WaveTrackControls(const WaveTrackControls&) = delete;
    WaveTrackControls &operator=(const WaveTrackControls&) = delete;
@@ -31,7 +31,7 @@ class WaveTrackControls final : public CommonTrackControls
 public:
    explicit
    WaveTrackControls( std::shared_ptr<Track> pTrack )
-      : CommonTrackControls( pTrack ) {}
+      : PlayableTrackControls( pTrack ) {}
    ~WaveTrackControls();
 
    std::vector<UIHandlePtr> HitTest

@@ -71,7 +71,7 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
       }
    }
 
-   return CommonTrackControls::HitTest(st, pProject);
+   return NoteTrackControlsBase::HitTest(st, pProject);
 }
 
 class NoteTrackMenuTable : public PopupMenuTable
@@ -85,7 +85,7 @@ public:
 private:
    void InitMenu(Menu*, void *pUserData) override
    {
-      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<NoteTrackControlsBase::InitMenuData*>(pUserData);
    }
 
    void DestroyMenu() override
@@ -93,7 +93,7 @@ private:
       mpData = nullptr;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   NoteTrackControlsBase::InitMenuData *mpData;
 
    void OnChangeOctave(wxCommandEvent &);
 };
@@ -212,19 +212,8 @@ void MidiControlsDrawFunction
 static const struct NoteTrackTCPLines
    : TCPLines { NoteTrackTCPLines() {
    (TCPLines&)*this =
-      CommonTrackControls::StaticTCPLines();
+      NoteTrackControlsBase::StaticTCPLines();
    insert( end(), {
-#ifdef EXPERIMENTAL_DA
-      // DA: Has Mute and Solo on separate lines.
-      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
-        TrackInfo::WideMuteDrawFunction },
-      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-        TrackInfo::WideSoloDrawFunction },
-#else
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-        TrackInfo::MuteAndSoloDrawFunction },
-#endif
-
       { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
         MidiControlsDrawFunction },
       { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,

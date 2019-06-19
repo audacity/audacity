@@ -28,6 +28,8 @@ class Track;
 struct TrackPanelDrawingContext;
 class WaveTrack;
 
+static const int TitleSoloBorderOverlap = 1;
+
 namespace TrackInfo
 {
    unsigned MinimumTrackHeight();
@@ -87,22 +89,6 @@ namespace TrackInfo
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   void MuteOrSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, bool down,
-        bool captured, bool solo, bool hit );
-
-   void WideMuteDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-   void WideSoloDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
-   void MuteAndSoloDrawFunction
-      ( TrackPanelDrawingContext &context,
-        const wxRect &rect, const Track *pTrack );
-
    void SetTrackInfoFont(wxDC *dc);
 
 
@@ -116,16 +102,6 @@ namespace TrackInfo
 
    void GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest );
    void GetTitleBarRect(const wxRect & rect, wxRect &dest);
-
-   void GetNarrowMuteHorizontalBounds
-      ( const wxRect & rect, wxRect &dest );
-   void GetNarrowSoloHorizontalBounds
-      ( const wxRect & rect, wxRect &dest );
-   void GetWideMuteSoloHorizontalBounds
-      ( const wxRect & rect, wxRect &dest );
-   void GetMuteSoloRect
-      (const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
-       const Track *pTrack);
 
    void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
 
@@ -144,6 +120,8 @@ namespace TrackInfo
    // Non-member, namespace function relying on TrackPanel to invoke it
    // when it handles preference update events
    void UpdatePrefs( wxWindow *pParent );
+
+   bool HasSoloButton();
 };
 
 #endif

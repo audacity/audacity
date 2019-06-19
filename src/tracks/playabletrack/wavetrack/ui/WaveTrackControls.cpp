@@ -98,7 +98,7 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
       }
    }
 
-   return CommonTrackControls::HitTest(st, pProject);
+   return PlayableTrackControls::HitTest(st, pProject);
 }
 
 enum {
@@ -162,7 +162,7 @@ private:
       mpData = NULL;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData;
 
    int IdOfWaveColor(int WaveColor);
    void OnWaveColorChange(wxCommandEvent & event);
@@ -176,7 +176,7 @@ WaveColorMenuTable &WaveColorMenuTable::Instance()
 
 void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
    SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
@@ -255,7 +255,7 @@ private:
       mpData = NULL;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData;
 
    int IdOfFormat(int format);
 
@@ -270,7 +270,7 @@ FormatMenuTable &FormatMenuTable::Instance()
 
 void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
    SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
@@ -372,7 +372,7 @@ private:
       mpData = NULL;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData;
 
    int IdOfRate(int rate);
    void SetRate(WaveTrack * pTrack, double rate);
@@ -389,7 +389,7 @@ RateMenuTable &RateMenuTable::Instance()
 
 void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto rateId = IdOfRate((int)pTrack->GetRate());
    SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
@@ -562,7 +562,7 @@ protected:
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
-   CommonTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData;
 
    void OnSetDisplay(wxCommandEvent & event);
    void OnSpectrogramSettings(wxCommandEvent & event);
@@ -594,7 +594,7 @@ WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
 
 void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 {
-   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+   mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    std::vector<int> checkedIds;
@@ -625,7 +625,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    if ( isMono )
    {
-      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
       WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
 
       auto next = * ++ tracks.Find(pTrack2);
@@ -1116,19 +1116,8 @@ using TCPLine = TrackInfo::TCPLine;
 static const struct WaveTrackTCPLines
    : TCPLines { WaveTrackTCPLines() {
    (TCPLines&)*this =
-      CommonTrackControls::StaticTCPLines();
+      PlayableTrackControls::StaticTCPLines();
    insert( end(), {
-
-#ifdef EXPERIMENTAL_DA
-      // DA: Has Mute and Solo on separate lines.
-      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
-        TrackInfo::WideMuteDrawFunction },
-      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
-        TrackInfo::WideSoloDrawFunction },
-#else
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
-        TrackInfo::MuteAndSoloDrawFunction },
-#endif
 
       { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         GainSliderDrawFunction },

@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_CONTROLS__
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
-#include "../../../ui/CommonTrackControls.h" // to inherit
+#include "../../ui/PlayableTrackControls.h" // to inherit
 class wxEvent;
 class LWSlider;
 class NoteTrack;
@@ -20,8 +20,19 @@ class SoloButtonHandle;
 class NoteTrackButtonHandle;
 class VelocitySliderHandle;
 
-///////////////////////////////////////////////////////////////////////////////
-class NoteTrackControls : public CommonTrackControls
+#include "Audacity.h"
+#include "Experimental.h"
+
+using NoteTrackControlsBase =
+#ifdef EXPERIMENTAL_MIDI_OUT
+   PlayableTrackControls
+#else
+   CommonTrackControls
+#endif
+   ;
+
+///////////////////////////////f////////////////////////////////////////////////
+class NoteTrackControls : public NoteTrackControlsBase
 {
    NoteTrackControls(const NoteTrackControls&) = delete;
    NoteTrackControls &operator=(const NoteTrackControls&) = delete;
@@ -34,7 +45,7 @@ class NoteTrackControls : public CommonTrackControls
 public:
    explicit
    NoteTrackControls( std::shared_ptr<Track> pTrack )
-      : CommonTrackControls( pTrack ) {}
+      : NoteTrackControlsBase( pTrack ) {}
    ~NoteTrackControls();
 
    std::vector<UIHandlePtr> HitTest
