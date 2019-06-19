@@ -365,6 +365,9 @@
     <ClCompile Include="..\..\..\src\TrackArtist.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1037,6 +1040,9 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackButtonHandles.cpp">
       <Filter>src\tracks\playabletrack\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.cpp">
+      <Filter>src\tracks\playabletrack\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
@@ -1472,6 +1478,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackArtist.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackInfo.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanel.h">
@@ -2222,6 +2231,9 @@
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackButtonHandles.h">
+      <Filter>src\tracks\playabletrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.h">
       <Filter>src\tracks\playabletrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.h">

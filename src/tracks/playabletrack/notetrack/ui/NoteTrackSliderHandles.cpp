@@ -15,9 +15,11 @@
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
+#include "NoteTrackControls.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../TrackPanel.h" // for TrackInfo
+#include "../../../../TrackInfo.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../UndoManager.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ViewInfo.h"
@@ -78,13 +80,13 @@ UIHandlePtr VelocitySliderHandle::HitTest
       return {};
 
    wxRect sliderRect;
-   TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
+   NoteTrackControls::GetVelocityRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
-         return TrackInfo::VelocitySlider
+         return NoteTrackControls::VelocitySlider
             (sliderRect, static_cast<NoteTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));
       };

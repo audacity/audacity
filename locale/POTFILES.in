@@ -242,6 +242,8 @@ src/Track.cpp
 src/Track.h
 src/TrackArtist.cpp
 src/TrackArtist.h
+src/TrackInfo.cpp
+src/TrackInfo.h
 src/TrackPanel.cpp
 src/TrackPanel.h
 src/TrackPanelAx.cpp
@@ -672,6 +674,8 @@ src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 src/tracks/playabletrack/notetrack/ui/StretchHandle.h
 src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 src/tracks/playabletrack/ui/PlayableTrackButtonHandles.h
+src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+src/tracks/playabletrack/ui/PlayableTrackControls.h
 src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 src/tracks/playabletrack/wavetrack/ui/CutlineHandle.h
 src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp

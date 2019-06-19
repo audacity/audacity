@@ -16,7 +16,7 @@ Paul Licameli split from TrackControls.cpp
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectHistory.h"
-#include "../../TrackPanel.h" // for TrackInfo
+#include "../../TrackInfo.h"
 #include "../../TrackPanelMouseEvent.h"
 #include <wx/textdlg.h>
 #include "../../commands/CommandType.h"

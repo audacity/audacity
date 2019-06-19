@@ -13,11 +13,11 @@ Paul Licameli split from class TrackView
 #include "BackgroundCell.h"
 #include "TimeShiftHandle.h"
 #include "TrackControls.h"
-#include "../../TrackPanel.h" // for TrackInfo
 #include "ZoomHandle.h"
 #include "../ui/SelectHandle.h"
 #include "../../ProjectSettings.h"
 #include "../../Track.h"
+#include "../../TrackInfo.h"
 #include "../../TrackPanelMouseEvent.h"
 
 std::vector<UIHandlePtr> CommonTrackView::HitTest

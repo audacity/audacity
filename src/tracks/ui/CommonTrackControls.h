@@ -20,6 +20,9 @@ class MinimizeButtonHandle;
 class SelectButtonHandle;
 class TrackSelectHandle;
 
+namespace TrackInfo{ struct TCPLine; }
+using TCPLines = std::vector< TrackInfo::TCPLine >;
+
 class CommonTrackControls /* not final */ : public TrackControls
 {
 public:
@@ -34,6 +37,13 @@ public:
       wxWindow *pParent;
       unsigned result;
    };
+
+   // This decides what details to draw in the track control panel, besides
+   // those at the bottom
+   virtual const TCPLines& GetTCPLines() const;
+
+   // To help subclasses define GetTCPLines
+   static const TCPLines& StaticTCPLines();
 
 protected:
    // An override is supplied for derived classes to call through but it is

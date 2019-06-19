@@ -859,10 +859,8 @@ END_EVENT_TABLE()
 void ProjectWindow::ApplyUpdatedTheme()
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    ClearBackground();// For wxGTK.
-   trackPanel.ApplyUpdatedTheme();
 }
 
 void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
