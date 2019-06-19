@@ -676,8 +676,12 @@ audacity_SOURCES = \
 	tracks/ui/BackgroundCell.h \
 	tracks/ui/ButtonHandle.h \
 	tracks/ui/ButtonHandle.cpp \
+	tracks/ui/CommonTrackControls.cpp \
+	tracks/ui/CommonTrackControls.h \
 	tracks/ui/CommonTrackPanelCell.cpp \
 	tracks/ui/CommonTrackPanelCell.h \
+	tracks/ui/CommonTrackView.cpp \
+	tracks/ui/CommonTrackView.h \
 	tracks/ui/EditCursorOverlay.cpp \
 	tracks/ui/EditCursorOverlay.h \
 	tracks/ui/EnvelopeHandle.cpp \
