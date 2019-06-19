@@ -57,56 +57,65 @@ using TCPLines = TrackInfo::TCPLines;
 
 }
 
-namespace {
-
+static const TCPLines &commonTrackTCPLines()
+{
+   static const TCPLines theLines{
 #ifdef EXPERIMENTAL_DA
 
-   #define TITLE_ITEMS \
-      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 4, \
+      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 4,
         &TrackInfo::CloseTitleDrawFunction },
-   // DA: Has Mute and Solo on separate lines.
-   #define MUTE_SOLO_ITEMS(extra) \
-      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1, \
-        &TrackInfo::WideMuteDrawFunction }, \
-      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, extra, \
-        &TrackInfo::WideSoloDrawFunction },
-   // DA: Does not have status information for a track.
-   #define STATUS_ITEMS
 
 #else
 
-   #define TITLE_ITEMS \
-      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 0, \
+      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 0,
         &TrackInfo::CloseTitleDrawFunction },
-   #define MUTE_SOLO_ITEMS(extra) \
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, extra, \
-        &TrackInfo::MuteAndSoloDrawFunction },
-   #define STATUS_ITEMS \
-      { TCPLine::kItemStatusInfo1, 12, 0, \
-        &TrackInfo::Status1DrawFunction }, \
-      { TCPLine::kItemStatusInfo2, 12, 0, \
-        &TrackInfo::Status2DrawFunction },
 
 #endif
+   };
+   return theLines;
+}
 
-#define COMMON_ITEMS \
-   TITLE_ITEMS
+#include "tracks/ui/CommonTrackControls.h"
+const TCPLines &CommonTrackControls::StaticTCPLines()
+{
+   return commonTrackTCPLines();
+}
 
-const TrackInfo::TCPLine defaultCommonTrackTCPLines[] = {
-   COMMON_ITEMS
-};
-TCPLines commonTrackTCPLines{ RANGE(defaultCommonTrackTCPLines) };
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
+#include "tracks/playabletrack/notetrack/ui/NoteTrackControls.h"
+namespace {
 
-const TrackInfo::TCPLine defaultWaveTrackTCPLines[] = {
-   COMMON_ITEMS
-   MUTE_SOLO_ITEMS(2)
-   { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-     &TrackInfo::GainSliderDrawFunction },
-   { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-     &TrackInfo::PanSliderDrawFunction },
-   STATUS_ITEMS
-};
-TCPLines waveTrackTCPLines{ RANGE(defaultWaveTrackTCPLines) };
+static const struct WaveTrackTCPLines : TCPLines { WaveTrackTCPLines() {
+   (TCPLines&)*this = CommonTrackControls::StaticTCPLines();
+   insert( end(), {
+
+#ifdef EXPERIMENTAL_DA
+      // DA: Has Mute and Solo on separate lines.
+      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
+        &TrackInfo::WideMuteDrawFunction },
+      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
+        &TrackInfo::WideSoloDrawFunction },
+#else
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 2,
+        &TrackInfo::MuteAndSoloDrawFunction },
+#endif
+
+      { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        &TrackInfo::GainSliderDrawFunction },
+      { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        &TrackInfo::PanSliderDrawFunction },
+
+#ifdef EXPERIMENTAL_DA
+      // DA: Does not have status information for a track.
+#else
+      { TCPLine::kItemStatusInfo1, 12, 0,
+        &TrackInfo::Status1DrawFunction },
+      { TCPLine::kItemStatusInfo2, 12, 0,
+        &TrackInfo::Status2DrawFunction },
+#endif
+
+   } );
+} } waveTrackTCPLines;
 
 #ifdef USE_MIDI
 enum : int {
@@ -116,17 +125,26 @@ enum : int {
 };
 #endif
 
-const TrackInfo::TCPLine defaultNoteTrackTCPLines[] = {
-   COMMON_ITEMS
-#ifdef EXPERIMENTAL_MIDI_OUT
-   MUTE_SOLO_ITEMS(0)
-   { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
-     &TrackInfo::MidiControlsDrawFunction },
-   { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-     &TrackInfo::VelocitySliderDrawFunction },
+static const struct NoteTrackTCPLines : TCPLines { NoteTrackTCPLines() {
+   (TCPLines&)*this = CommonTrackControls::StaticTCPLines();
+   insert( end(), {
+#ifdef EXPERIMENTAL_DA
+      // DA: Has Mute and Solo on separate lines.
+      { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
+        &TrackInfo::WideMuteDrawFunction },
+      { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+        &TrackInfo::WideSoloDrawFunction },
+#else
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+        &TrackInfo::MuteAndSoloDrawFunction },
 #endif
-};
-TCPLines noteTrackTCPLines{ RANGE(defaultNoteTrackTCPLines) };
+
+      { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
+        &TrackInfo::MidiControlsDrawFunction },
+      { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        &TrackInfo::VelocitySliderDrawFunction },
+   } );
+} } noteTrackTCPLines;
 
 int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 {
@@ -139,28 +157,6 @@ int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
    if (omitLastExtra)
       total -= lastExtra;
    return total;
-}
-
-const TCPLines &getTCPLines( const Track &track )
-{
-   auto lines = track.TypeSwitch< TCPLines * >(
-#ifdef USE_MIDI
-      [](const NoteTrack*){
-         return &noteTrackTCPLines;
-      },
-#endif
-      [](const WaveTrack*){
-         return &waveTrackTCPLines;
-      },
-      [](const Track*){
-         return &commonTrackTCPLines;
-      }
-   );
-
-   if (lines)
-      return *lines;
-
-   return commonTrackTCPLines;
 }
 }
 
@@ -211,11 +207,26 @@ std::pair< int, int > CalcBottomItemY
 
 }
 
+const TCPLines &CommonTrackControls::GetTCPLines() const
+{
+   return commonTrackTCPLines();
+}
+
+const TCPLines &NoteTrackControls::GetTCPLines() const
+{
+   return noteTrackTCPLines;
+};
+
+const TCPLines &WaveTrackControls::GetTCPLines() const
+{
+   return waveTrackTCPLines;
+}
+
 unsigned TrackInfo::MinimumTrackHeight()
 {
    unsigned height = 0;
-   if (!commonTrackTCPLines.empty())
-      height += commonTrackTCPLines.front().height;
+   if (!commonTrackTCPLines().empty())
+      height += commonTrackTCPLines().front().height;
    if (!commonTrackTCPBottomLines.empty())
       height += commonTrackTCPBottomLines.front().height;
    // + 1 prevents the top item from disappearing for want of enough space,
@@ -236,8 +247,10 @@ void TrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track &track  )
 {
-   const auto topLines = getTCPLines( track );
-   const auto bottomLines = commonTrackTCPBottomLines;
+   auto &trackControl = static_cast<const CommonTrackControls&>(
+      TrackControls::Get( track ) );
+   const auto &topLines = trackControl.GetTCPLines();
+   const auto &bottomLines = commonTrackTCPBottomLines;
    DrawItems
       ( context, rect, &track, topLines, bottomLines );
 }
@@ -773,7 +786,7 @@ void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
 {
    GetCloseBoxHorizontalBounds( rect, dest );
-   auto results = CalcItemY( commonTrackTCPLines, TCPLine::kItemBarButtons );
+   auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -792,7 +805,7 @@ void TrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
 {
    GetTitleBarHorizontalBounds( rect, dest );
-   auto results = CalcItemY( commonTrackTCPLines, TCPLine::kItemBarButtons );
+   auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -823,9 +836,10 @@ void TrackInfo::GetMuteSoloRect
 (const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
  const Track *pTrack)
 {
-
-   auto resultsM = CalcItemY( getTCPLines( *pTrack ), TCPLine::kItemMute );
-   auto resultsS = CalcItemY( getTCPLines( *pTrack ), TCPLine::kItemSolo );
+   auto &trackControl = static_cast<const CommonTrackControls&>(
+      TrackControls::Get( *pTrack ) );
+   auto resultsM = CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemMute );
+   auto resultsS = CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemSolo );
    dest.height = resultsS.second;
 
    int yMute = resultsM.first;
@@ -964,6 +978,7 @@ void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
+
 #endif
 
 /// \todo Probably should move to 'Utils.cpp'.

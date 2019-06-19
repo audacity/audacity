@@ -35,6 +35,8 @@ public:
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
 
+   const TCPLines& GetTCPLines() const override;
+
 private:
    std::weak_ptr<MuteButtonHandle> mMuteHandle;
    std::weak_ptr<SoloButtonHandle> mSoloHandle;

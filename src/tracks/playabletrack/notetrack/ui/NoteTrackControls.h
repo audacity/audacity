@@ -40,6 +40,8 @@ public:
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
+
+   const TCPLines& GetTCPLines() const override;
 };
 
 #endif
