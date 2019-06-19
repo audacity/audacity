@@ -1291,6 +1291,7 @@
 		5EC4257222B92383005E8AB5 /* CommonTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4256E22B92383005E8AB5 /* CommonTrackControls.cpp */; };
 		5EC4257322B92383005E8AB5 /* CommonTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4257022B92383005E8AB5 /* CommonTrackView.cpp */; };
 		5EC4257922BA7CF2005E8AB5 /* ZoomInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4257722BA7CF2005E8AB5 /* ZoomInfo.cpp */; };
+		5EC4257C22BAC86E005E8AB5 /* PlayableTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC4257A22BAC86E005E8AB5 /* PlayableTrackControls.cpp */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
 		5ECF728722871A4F007F2A35 /* ShuttleGetDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728522871A4F007F2A35 /* ShuttleGetDefinition.cpp */; };
 		5ECF728A22887B3B007F2A35 /* MissingAliasFileDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ECF728822887B3B007F2A35 /* MissingAliasFileDialog.cpp */; };
@@ -3343,6 +3344,8 @@
 		5EC4257122B92383005E8AB5 /* CommonTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonTrackView.h; sourceTree = "<group>"; };
 		5EC4257722BA7CF2005E8AB5 /* ZoomInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZoomInfo.cpp; sourceTree = "<group>"; };
 		5EC4257822BA7CF2005E8AB5 /* ZoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomInfo.h; sourceTree = "<group>"; };
+		5EC4257A22BAC86E005E8AB5 /* PlayableTrackControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackControls.cpp; sourceTree = "<group>"; };
+		5EC4257B22BAC86E005E8AB5 /* PlayableTrackControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayableTrackControls.h; sourceTree = "<group>"; };
 		5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NotYetAvailableException.cpp; sourceTree = "<group>"; };
 		5EC7ED051E101C5C0052CAE2 /* NotYetAvailableException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotYetAvailableException.h; sourceTree = "<group>"; };
 		5ECCE7651DE49834009900E9 /* AudacityException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityException.h; sourceTree = "<group>"; };
@@ -6182,7 +6185,9 @@
 			isa = PBXGroup;
 			children = (
 				5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */,
+				5EC4257A22BAC86E005E8AB5 /* PlayableTrackControls.cpp */,
 				5E10D9051EC8F81300B3AC57 /* PlayableTrackButtonHandles.h */,
+				5EC4257B22BAC86E005E8AB5 /* PlayableTrackControls.h */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -8622,6 +8627,7 @@
 				28D540080FD1912A00FA7C75 /* ScriptCommandRelay.cpp in Sources */,
 				5E73963E1DAFD86000BA0A4D /* ZoomHandle.cpp in Sources */,
 				28DB34790FDC2C5D0011F589 /* ResponseQueue.cpp in Sources */,
+				5EC4257C22BAC86E005E8AB5 /* PlayableTrackControls.cpp in Sources */,
 				28DABFBE0FF19DB100AC7848 /* RealFFTf.cpp in Sources */,
 				2800FE370FF32566005CA9E5 /* MidiIOPrefs.cpp in Sources */,
 				5EA0182B1EC7B226001F2996 /* WaveTrackControls.cpp in Sources */,
