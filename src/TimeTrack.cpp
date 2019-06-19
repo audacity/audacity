@@ -22,17 +22,13 @@
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
 #include <wx/intl.h>
-#include "AColor.h"
 #include "widgets/Ruler.h"
 #include "Envelope.h"
-#include "EnvelopeEditor.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
-#include "TrackArtist.h"
 #include "ViewInfo.h"
-#include "AllThemeResources.h"
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
@@ -270,70 +266,6 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
    mEnvelope->WriteXML(xmlFile);
 
    xmlFile.EndTag(wxT("timetrack"));
-}
-
-#include "TrackPanelDrawingContext.h"
-#include "tracks/ui/EnvelopeHandle.h"
-
-void TimeTrack::Draw
-( TrackPanelDrawingContext &context, const wxRect & r ) const
-{
-   auto &dc = context.dc;
-   const auto artist = TrackArtist::Get( context );
-   const auto &zoomInfo = *artist->pZoomInfo;
-
-   bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlight = target && target->GetEnvelope() == this->GetEnvelope();
-#endif
-
-   double min = zoomInfo.PositionToTime(0);
-   double max = zoomInfo.PositionToTime(r.width);
-   if (min > max)
-   {
-      wxASSERT(false);
-      min = max;
-   }
-
-   AColor::UseThemeColour( &dc, clrUnselected );
-   dc.DrawRectangle(r);
-
-   //copy this rectangle away for future use.
-   wxRect mid = r;
-
-   // Draw the Ruler
-   mRuler->SetBounds(r.x, r.y, r.x + r.width - 1, r.y + r.height - 1);
-   mRuler->SetRange(min, max);
-   mRuler->SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
-                            // I have no idea why!
-                            //
-                            // LL:  It's because the ruler only Invalidate()s when the NEW value is different
-                            //      than the current value.
-   mRuler->SetFlip( true );
-   //mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
-   mRuler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
-   mRuler->Draw(dc, GetEnvelope());
-
-   Doubles envValues{ size_t(mid.width) };
-   EnvelopeEditor::GetValues( *GetEnvelope(),
-      0, 0, envValues.get(), mid.width, 0, zoomInfo );
-
-   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
-   dc.SetPen( pen );
-
-   double logLower = log(std::max(1.0e-7, GetRangeLower())),
-      logUpper = log(std::max(1.0e-7, GetRangeUpper()));
-   for (int x = 0; x < mid.width; x++)
-      {
-         double y;
-         if(mDisplayLog)
-            y = (double)mid.height * (logUpper - log(envValues[x])) / (logUpper - logLower);
-         else
-            y = (double)mid.height * (GetRangeUpper() - envValues[x]) / (GetRangeUpper() - GetRangeLower());
-         int thisy = r.y + (int)y;
-         AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
-      }
 }
 
 void TimeTrack::testMe()

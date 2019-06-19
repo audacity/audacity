@@ -61,7 +61,7 @@ std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
    }
    else {
       mCursorTime = selection.t0();
-      mNewCursorX = ZoomInfo::Get( *mProject ).TimeToPosition(
+      mNewCursorX = ViewInfo::Get( *mProject ).TimeToPosition(
          mCursorTime, TrackPanel::Get( *mProject ).GetLeftOffset());
    }
 
@@ -87,7 +87,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (mLastCursorX == -1)
       return;
 
-   const auto &viewInfo = ZoomInfo::Get( *mProject );
+   const auto &viewInfo = ViewInfo::Get( *mProject );
 
    auto &trackPanel = TrackPanel::Get( *mProject );
    const bool

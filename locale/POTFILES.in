@@ -272,6 +272,8 @@ src/WaveTrack.h
 src/WaveTrackLocation.h
 src/WrappedType.cpp
 src/WrappedType.h
+src/ZoomInfo.cpp
+src/ZoomInfo.h
 src/blockfile/LegacyAliasBlockFile.cpp
 src/blockfile/LegacyAliasBlockFile.h
 src/blockfile/LegacyBlockFile.cpp

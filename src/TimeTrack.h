@@ -55,9 +55,6 @@ class TimeTrack final : public Track {
    double GetStartTime() const override { return 0.0; }
    double GetEndTime() const override { return 0.0; }
 
-   void Draw
-      ( TrackPanelDrawingContext &context, const wxRect & r ) const;
-
    // XMLTagHandler callback methods for loading and saving
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -90,6 +87,8 @@ class TimeTrack final : public Track {
    void SetInterpolateLog(bool interpolateLog);
 
    void testMe();
+
+   Ruler &GetRuler() const { return *mRuler; } // hide this later
 
  private:
    // Identifying the type of track

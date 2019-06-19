@@ -29,15 +29,6 @@ public:
       bool dB, double dBRange,
       float zoomMin, float zoomMax, bool mirrored);
 
-   /** \brief Get many envelope points for pixel columns at once,
-    * but don't assume uniform time per pixel.
-   */
-   static void GetValues
-      ( const Envelope &env,
-        double aligned_time, double sampleDur,
-        double *buffer, int bufferLen, int leftOffset,
-        const ZoomInfo &zoomInfo);
-
    EnvelopeEditor(Envelope &envelope, bool mirrored);
    ~EnvelopeEditor();
 

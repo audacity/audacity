@@ -350,8 +350,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
-	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
-	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
+	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
+	ZoomInfo.h wxFileNameWrapper.h commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h commands/AudacityCommand.cpp \
 	commands/AudacityCommand.h commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h commands/Command.cpp \
@@ -708,6 +708,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-UserException.$(OBJEXT) audacity-ViewInfo.$(OBJEXT) \
 	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
 	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
+	audacity-ZoomInfo.$(OBJEXT) \
 	commands/audacity-AppCommandEvent.$(OBJEXT) \
 	commands/audacity-AudacityCommand.$(OBJEXT) \
 	commands/audacity-BatchEvalCommand.$(OBJEXT) \
@@ -1439,8 +1440,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
-	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
-	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
+	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
+	ZoomInfo.h wxFileNameWrapper.h commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h commands/AudacityCommand.cpp \
 	commands/AudacityCommand.h commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h commands/Command.cpp \
@@ -2653,6 +2654,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveClip.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveTrack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WrappedType.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ZoomInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudacity_la-BlockFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudacity_la-DirManager.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudacity_la-Dither.Plo@am__quote@
@@ -4719,6 +4721,20 @@ audacity-WrappedType.obj: WrappedType.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='WrappedType.cpp' object='audacity-WrappedType.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-WrappedType.obj `if test -f 'WrappedType.cpp'; then $(CYGPATH_W) 'WrappedType.cpp'; else $(CYGPATH_W) '$(srcdir)/WrappedType.cpp'; fi`
+
+audacity-ZoomInfo.o: ZoomInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ZoomInfo.o -MD -MP -MF $(DEPDIR)/audacity-ZoomInfo.Tpo -c -o audacity-ZoomInfo.o `test -f 'ZoomInfo.cpp' || echo '$(srcdir)/'`ZoomInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ZoomInfo.Tpo $(DEPDIR)/audacity-ZoomInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ZoomInfo.cpp' object='audacity-ZoomInfo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ZoomInfo.o `test -f 'ZoomInfo.cpp' || echo '$(srcdir)/'`ZoomInfo.cpp
+
+audacity-ZoomInfo.obj: ZoomInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ZoomInfo.obj -MD -MP -MF $(DEPDIR)/audacity-ZoomInfo.Tpo -c -o audacity-ZoomInfo.obj `if test -f 'ZoomInfo.cpp'; then $(CYGPATH_W) 'ZoomInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/ZoomInfo.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ZoomInfo.Tpo $(DEPDIR)/audacity-ZoomInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ZoomInfo.cpp' object='audacity-ZoomInfo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ZoomInfo.obj `if test -f 'ZoomInfo.cpp'; then $(CYGPATH_W) 'ZoomInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/ZoomInfo.cpp'; fi`
 
 commands/audacity-AppCommandEvent.o: commands/AppCommandEvent.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-AppCommandEvent.o -MD -MP -MF commands/$(DEPDIR)/audacity-AppCommandEvent.Tpo -c -o commands/audacity-AppCommandEvent.o `test -f 'commands/AppCommandEvent.cpp' || echo '$(srcdir)/'`commands/AppCommandEvent.cpp

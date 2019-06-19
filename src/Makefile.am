@@ -318,6 +318,8 @@ audacity_SOURCES = \
 	WaveTrackLocation.h \
 	WrappedType.cpp \
 	WrappedType.h \
+	ZoomInfo.cpp \
+	ZoomInfo.h \
 	wxFileNameWrapper.h \
 	commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h \
