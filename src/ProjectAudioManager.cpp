@@ -175,6 +175,12 @@ void ProjectAudioManager::OnAudioIONewBlockFiles(
    }
 }
 
+void ProjectAudioManager::OnCommitRecording()
+{
+   const auto project = &mProject;
+   TrackList::Get( *project ).ApplyPendingTracks();
+}
+
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
 {

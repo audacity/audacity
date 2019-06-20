@@ -2363,8 +2363,8 @@ void AudioIO::StopStream()
             }
          }
 
-         ControlToolBar &bar = ControlToolBar::Get( *mOwningProject );
-         bar.CommitRecording();
+         if (mListener)
+            mListener->OnCommitRecording();
       }
    }
 
