@@ -333,9 +333,10 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
          MayAdjustLabel( hit, hit.mMouseOverLabelRight, +1, bAllowSwapping, fNewX );
       }
 
-      if( pTrack->HasSelection() )
+      const auto &view = LabelTrackView::Get( *pTrack );
+      if( view.HasSelection() )
       {
-         auto selIndex = LabelTrackView::Get( *pTrack ).GetSelectedIndex();
+         auto selIndex = view.GetSelectedIndex();
          //Set the selection region to be equal to
          //the NEW size of the label.
          *newSel = mLabels[ selIndex ].selectedRegion;

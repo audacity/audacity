@@ -33,8 +33,6 @@ for drawing different aspects of the label and its text box.
 
 #include "Experimental.h"
 
-#include "tracks/labeltrack/ui/LabelTrackView.h"
-
 #include <stdio.h>
 #include <algorithm>
 #include <limits.h>
@@ -473,12 +471,6 @@ auto LabelStruct::RegionRelation(
          return ENDS_IN_LABEL;
 
    }
-}
-
-bool LabelTrack::HasSelection() const
-{
-   const auto selIndex = LabelTrackView::Get( *this ).GetSelectedIndex();
-   return (selIndex >= 0 && selIndex < (int)mLabels.size());
 }
 
 /// Export labels including label start and end-times.
