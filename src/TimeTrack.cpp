@@ -24,11 +24,9 @@
 #include <wx/intl.h>
 #include "widgets/Ruler.h"
 #include "Envelope.h"
-#include "Prefs.h"
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
-#include "ViewInfo.h"
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
