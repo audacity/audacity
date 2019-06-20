@@ -32,6 +32,9 @@ capture the more lengthy output from some commands.
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/wxPanelWrapper.h"
 
+#include <locale>
+#include <sstream>
+
 void CommandMessageTarget::StartArray()
 {
    wxString Padding;
@@ -78,11 +81,18 @@ void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
       Update( wxString::Format( "%s\"%s\":\"%s\"", (mCounts.back()>0)?", ":"", name,value?"true":"false"));
    mCounts.back() += 1;
 }
+
 void CommandMessageTarget::AddItem(const double value,    const wxString &name){
+   std::stringstream str;
+   std::locale nolocale("");
+   str.imbue(nolocale);
+
    if( name.empty() )
-      Update( wxString::Format( "%s%g", (mCounts.back()>0)?", ":"", value));
+      str << ((mCounts.back()>0)? ", " : "") << value;
    else
-      Update( wxString::Format( "%s\"%s\":%g", (mCounts.back()>0)?", ":"", name,value));
+      str << ((mCounts.back()>0)? ", " : "") << "\"" << name << "\"" << ":" << value;
+
+   Update( str.str() );
    mCounts.back() += 1;
 }
 
