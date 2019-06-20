@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "LabelTrackControls.h"
 
+#include "LabelTrackView.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../widgets/PopupMenuTable.h"
@@ -103,10 +104,10 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
    // Correct for empty facename, or bad preference file:
    // get the name of a really existing font, to highlight by default
    // in the list box
-   facename = LabelTrack::GetFont(facename).GetFaceName();
+   facename = LabelTrackView::GetFont(facename).GetFaceName();
 
    long fontsize = gPrefs->Read(wxT("/GUI/LabelFontSize"),
-                                LabelTrack::DefaultFontSize);
+                                LabelTrackView::DefaultFontSize);
 
    /* i18n-hint: (noun) This is the font for the label track.*/
    wxDialogWrapper dlg(mpData->pParent, wxID_ANY, wxString(_("Label Track Font")));
@@ -160,7 +161,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
    gPrefs->Write(wxT("/GUI/LabelFontSize"), sc->GetValue());
    gPrefs->Flush();
 
-   LabelTrack::ResetFont();
+   LabelTrackView::ResetFont();
 
    mpData->result = RefreshCode::RefreshAll;
 }

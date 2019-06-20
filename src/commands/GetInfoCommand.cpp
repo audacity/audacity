@@ -610,8 +610,7 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
          context.StartArray();
          context.AddItem( (double)i ); // Track number.
          context.StartArray();
-         for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
-            const auto &label = labelTrack->mLabels[nn];
+         for ( const auto &label : labelTrack->GetLabels() ) {
             context.StartArray();
             context.AddItem( label.getT0() ); // start
             context.AddItem( label.getT1() ); // end

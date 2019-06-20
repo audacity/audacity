@@ -15,6 +15,9 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class LabelTrack;
+class LabelTrackEvent;
+class SelectedRegion;
+class ZoomInfo;
 
 /// mEdge:
 /// 0 if not over a glyph,
@@ -26,12 +29,20 @@ class LabelTrack;
 ///   mMouseLabelLeft - index of any left label hit
 ///   mMouseLabelRight - index of any right label hit
 ///
-struct LabelTrackHit {
+struct LabelTrackHit
+{
+   LabelTrackHit( const std::shared_ptr<LabelTrack> &pLT );
+   ~LabelTrackHit();
+
    int mEdge{};
    int mMouseOverLabelLeft{ -1 };    /// Keeps track of which left label the mouse is currently over.
    int mMouseOverLabelRight{ -1 };   /// Keeps track of which right label the mouse is currently over.
    bool mbIsMoving {};
    bool mIsAdjustingLabel {};
+
+   std::shared_ptr<LabelTrack> mpLT {};
+
+   void OnLabelPermuted( LabelTrackEvent &e );
 };
 
 class LabelGlyphHandle final : public LabelDefaultClickHandle
@@ -41,7 +52,7 @@ class LabelGlyphHandle final : public LabelDefaultClickHandle
 public:
    explicit LabelGlyphHandle
       (const std::shared_ptr<LabelTrack> &pLT,
-       const wxRect &rect, const LabelTrackHit &hit);
+       const wxRect &rect, const std::shared_ptr<LabelTrackHit> &pHit);
 
    LabelGlyphHandle &operator=(const LabelGlyphHandle&) = default;
    
@@ -72,14 +83,31 @@ public:
 
    bool StopsOnKeystroke() override { return true; }
 
-   LabelTrackHit mHit{};
+   std::shared_ptr<LabelTrackHit> mpHit{};
 
    static UIHandle::Result NeedChangeHighlight
       (const LabelGlyphHandle &oldState, const LabelGlyphHandle &newState);
 
 private:
+   void HandleGlyphClick
+      (LabelTrackHit &hit,
+       const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
+   bool HandleGlyphDragRelease
+      (LabelTrackHit &hit,
+       const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
+
+   void MayAdjustLabel
+      ( LabelTrackHit &hit,
+        int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
+   void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
+
    std::shared_ptr<LabelTrack> mpLT {};
    wxRect mRect {};
+
+   /// Displacement of mouse cursor from the centre being dragged.
+   int mxMouseDisplacement;
 };
 
 #endif

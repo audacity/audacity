@@ -36,6 +36,7 @@
 #include "Project.h"
 #include "ProjectWindow.h"
 #include "ViewInfo.h"
+#include "tracks/labeltrack/ui/LabelTrackView.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Grid.h"
@@ -420,8 +421,8 @@ bool LabelDialog::TransferDataFromWindow()
          return false;
 
       // Add the label to it
-      lt->AddLabel(rd.selectedRegion, rd.title, -2);
-      lt->Unselect();
+      lt->AddLabel(rd.selectedRegion, rd.title);
+      LabelTrackView::Get( *lt ).SetSelectedIndex( -1 );
    }
 
    return true;
@@ -723,7 +724,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    for (i = 0; i < cnt; i++) {
       RowData &rd = mData[i];
 
-      lt->AddLabel(rd.selectedRegion, rd.title,-2);
+      lt->AddLabel(rd.selectedRegion, rd.title);
    }
 
    // Export them and clean
