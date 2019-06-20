@@ -63,7 +63,7 @@ public:
 
    std::shared_ptr<Track> DoFindTrack() override;
 
-   void Reparent( const std::shared_ptr<Track> &parent );
+   virtual void Reparent( const std::shared_ptr<Track> &parent );
 
 private:
    std::weak_ptr< Track > mwTrack;

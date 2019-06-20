@@ -27,10 +27,59 @@ LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
    // Default is to allow two rows so that NEW users get the
    // idea that labels can 'stack' when they would overlap.
    DoSetHeight(73);
+
+   ResetFont();
+   CreateCustomGlyphs();
+   ResetFlags();
+
+   // Events will be emitted by the track
+   const auto pLabelTrack = FindLabelTrack();
+   BindTo( pLabelTrack.get() );
 }
 
 LabelTrackView::~LabelTrackView()
 {
+}
+
+void LabelTrackView::Reparent( const std::shared_ptr<Track> &parent )
+{
+   auto oldParent = FindLabelTrack();
+   auto newParent = track_cast<LabelTrack*>(parent.get());
+   if (oldParent.get() != newParent) {
+      UnbindFrom( oldParent.get() );
+      BindTo( newParent );
+   }
+   CommonTrackView::Reparent( parent );
+}
+
+void LabelTrackView::BindTo( LabelTrack *pParent )
+{
+   pParent->Bind(
+      EVT_LABELTRACK_ADDITION, &LabelTrackView::OnLabelAdded, this );
+   pParent->Bind(
+      EVT_LABELTRACK_DELETION, &LabelTrackView::OnLabelDeleted, this );
+   pParent->Bind(
+      EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
+}
+
+void LabelTrackView::UnbindFrom( LabelTrack *pParent )
+{
+   pParent->Unbind(
+      EVT_LABELTRACK_ADDITION, &LabelTrackView::OnLabelAdded, this );
+   pParent->Unbind(
+      EVT_LABELTRACK_DELETION, &LabelTrackView::OnLabelDeleted, this );
+   pParent->Unbind(
+      EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
+}
+
+void LabelTrackView::Copy( const TrackView &other )
+{
+   TrackView::Copy( other );
+
+   if ( const auto pOther = dynamic_cast< const LabelTrackView* >( &other ) ) {
+      // only one field is important to preserve in undo/redo history
+      mSelIndex = pOther->mSelIndex;
+   }
 }
 
 LabelTrackView &LabelTrackView::Get( LabelTrack &track )

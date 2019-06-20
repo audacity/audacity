@@ -22,6 +22,7 @@
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
 
 // private helper classes and functions
@@ -49,7 +50,8 @@ bool DoPasteText(AudacityProject &project)
       if (pLabelTrack->HasSelection()) {
 
          // Yes, so try pasting into it
-         if (pLabelTrack->PasteSelectedText(selectedRegion.t0(),
+         auto &view = LabelTrackView::Get( *pLabelTrack );
+         if (view.PasteSelectedText(selectedRegion.t0(),
                                             selectedRegion.t1()))
          {
             ProjectHistory::Get( project )
@@ -57,7 +59,7 @@ bool DoPasteText(AudacityProject &project)
 
             // Make sure caret is in view
             int x;
-            if (pLabelTrack->CalcCursorX(&x)) {
+            if (view.CalcCursorX(&x)) {
                trackPanel.ScrollIntoView(x);
             }
 
@@ -301,7 +303,8 @@ void OnCut(const CommandContext &context)
    // in the middle of editing the label text and select "Cut".
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
-      if (lt->CutSelectedText()) {
+      auto &view = LabelTrackView::Get( *lt );
+      if (view.CutSelectedText()) {
          trackPanel.Refresh(false);
          return;
       }
@@ -408,7 +411,8 @@ void OnCopy(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
-      if (lt->CopySelectedText()) {
+      auto &view = LabelTrackView::Get( *lt );
+      if (view.CopySelectedText()) {
          //trackPanel.Refresh(false);
          return;
       }
@@ -1095,7 +1099,9 @@ const ReservedCommandFlag
    CutCopyAvailableFlag{
       [](const AudacityProject &project){
          auto range = TrackList::Get( project ).Any<const LabelTrack>()
-            + &LabelTrack::IsTextSelected;
+            + [](const LabelTrack *pTrack){
+               return LabelTrackView::Get( *pTrack ).IsTextSelected();
+            };
          if ( !range.empty() )
             return true;
 

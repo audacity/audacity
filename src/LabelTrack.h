@@ -17,21 +17,11 @@
 #include "Track.h"
 
 
-class wxFont;
-class wxKeyEvent;
-class wxMouseEvent;
 class wxTextFile;
-class wxWindow;
-class wxIcon;
-class wxBitmap;
-class TrackList;
 
 class AudacityProject;
 class DirManager;
 class TimeWarper;
-class ZoomInfo;
-
-class LabelTrackEvent;
 
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
@@ -45,13 +35,6 @@ public:
    // Copies region but then overwrites other times
    LabelStruct(const SelectedRegion& region, double t0, double t1,
                const wxString &aTitle);
-   void DrawLines( wxDC & dc, const wxRect & r) const;
-   void DrawGlyphs
-      ( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight) const;
-   void DrawText( wxDC & dc, const wxRect & r) const;
-   void DrawTextBox( wxDC & dc, const wxRect & r) const;
-   void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight) const;
-   void getXPos( wxDC & dc, int * xPos1, int cursorPos) const;
    const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
    double getDuration() const { return selectedRegion.duration(); }
    double getT0() const { return selectedRegion.t0(); }
@@ -99,27 +82,11 @@ public:
 
 using LabelArray = std::vector<LabelStruct>;
 
-const int NUM_GLYPH_CONFIGS = 3;
-const int NUM_GLYPH_HIGHLIGHTS = 4;
-const int MAX_NUM_ROWS =80;
-
 class AUDACITY_DLL_API LabelTrack final
    : public Track
    , public wxEvtHandler
 {
-   friend class LabelTrackView;
-   friend class LabelStruct;
-
  public:
-   static void DoEditLabels(
-      AudacityProject &project, LabelTrack *lt = nullptr, int index = -1);
-   static int DialogForLabelName(
-      AudacityProject &project, const SelectedRegion& region,
-      const wxString& initialValue, wxString& value);
-
-   bool IsTextSelected() const;
-
-   void CreateCustomGlyphs();
    LabelTrack(const std::shared_ptr<DirManager> &projDirManager);
    LabelTrack(const LabelTrack &orig);
 
@@ -128,16 +95,6 @@ class AUDACITY_DLL_API LabelTrack final
    void SetLabel( size_t iLabel, const LabelStruct &newLabel );
 
    void SetOffset(double dOffset) override;
-
-   static const int DefaultFontSize = 12;
-
-   static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
-   static void ResetFont();
-
-   void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
-
-   int GetSelectedIndex() const;
-   void SetSelectedIndex( int index );
 
    double GetOffset() const override;
    double GetStartTime() const override;
@@ -166,48 +123,9 @@ public:
 
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
-   void OverGlyph(LabelTrackHit &hit, int x, int y) const;
-   static wxBitmap & GetGlyph( int i);
-
-
-   struct Flags {
-      int mInitialCursorPos, mCurrentCursorPos, mSelIndex;
-      bool mRightDragging, mDrawCursor;
-   };
-   void ResetFlags();
-   Flags SaveFlags() const
-   {
-      return {
-         mInitialCursorPos, mCurrentCursorPos, mSelIndex,
-         mRightDragging, mDrawCursor
-      };
-   }
-   void RestoreFlags( const Flags& flags );
-
-   int OverATextBox(int xx, int yy) const;
-   bool OverTextBox(const LabelStruct *pLabel, int x, int y) const;
-   bool CutSelectedText();
-   bool CopySelectedText();
-   bool PasteSelectedText(double sel0, double sel1);
-   static bool IsTextClipSupported();
-
-   void HandleGlyphClick
-      (LabelTrackHit &hit,
-       const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
-   void HandleTextClick
-      (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
-   bool HandleGlyphDragRelease
-      (LabelTrackHit &hit,
-       const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
-   void HandleTextDragRelease(const wxMouseEvent & evt);
 
    void Import(wxTextFile & f);
    void Export(wxTextFile & f) const;
-
-   void Unselect();
 
    // Whether any label box is selected -- not, whether the track is selected.
    bool HasSelection() const;
@@ -219,22 +137,9 @@ public:
    void OnLabelAdded( const wxString &title, int pos );
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region, const wxString &title);
-   //And this tells us the index, if there is a label already there.
-   int GetLabelIndex(double t, double t1);
 
    //This deletes the label at given index.
    void DeleteLabel(int index);
-
-   //get current cursor position,
-   // relative to the left edge of the track panel
-   bool CalcCursorX(int * x) const;
-
-   void CalcHighlightXs(int *x1, int *x2) const;
-
-   void MayAdjustLabel
-      ( LabelTrackHit &hit,
-        int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
-   void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
    // This pastes labels without shifting existing ones
    bool PasteOver(double t, const Track *src);
@@ -261,52 +166,14 @@ public:
  private:
    TrackKind GetKind() const override { return TrackKind::Label; }
 
-   void ShowContextMenu();
-   void OnContextMenu(wxCommandEvent & evt);
-
-   mutable int mSelIndex;      /// Keeps track of the currently selected label
-   int mxMouseDisplacement;    /// Displacement of mouse cursor from the centre being dragged.
    LabelArray mLabels;
-
-   static int mIconHeight;
-   static int mIconWidth;
-   static int mTextHeight;
-   static bool mbGlyphsReady;
-   static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
-
-   static int mFontHeight;
-   int mCurrentCursorPos;                      /// current cursor position
-   int mInitialCursorPos;                      /// initial cursor position
-
-   bool mRightDragging;                        /// flag to tell if it's a valid dragging
-   bool mDrawCursor;                           /// flag to tell if drawing the
-                                                  /// cursor or not
-   int mRestoreFocus;                          /// Restore focus to this track
-                                                  /// when done editing
 
    // Set in copied label tracks
    double mClipLen;
 
    int miLastLabel;                 // used by FindNextLabel and FindPrevLabel
 
-   void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
-   void ComputeTextPosition(const wxRect & r, int index) const;
-
-public:
-   int FindCurrentCursorPosition(int xPos);
-   void SetCurrentCursorPosition(int xPos);
-
 private:
-   void calculateFontHeight(wxDC & dc) const;
-   void RemoveSelectedText();
-
-   void OnLabelAdded( LabelTrackEvent& );
-   void OnLabelDeleted( LabelTrackEvent& );
-   void OnLabelPermuted( LabelTrackEvent& );
-
-   static wxFont msFont;
-
-protected:
    std::shared_ptr<TrackView> DoGetView() override;
    std::shared_ptr<TrackControls> DoGetControls() override;
 };

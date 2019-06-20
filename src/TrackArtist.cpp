@@ -88,7 +88,7 @@ audio tracks.
 #include "widgets/Ruler.h"
 #include "AllThemeResources.h"
 #include "TrackPanelDrawingContext.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/labeltrack/ui/LabelTrackView.h"
 
 
 #undef PROFILE_WAVEFORM
@@ -414,7 +414,7 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
       },
    #endif // USE_MIDI
       [&](const LabelTrack *lt) {
-         lt->Draw( context, rect );
+         LabelTrackView::Get( *lt ).Draw( context, rect );
       },
       [&](const TimeTrack *tt) {
          DrawTimeTrack( context, tt, rect );

@@ -25,6 +25,7 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
 
 SetLabelCommand::SetLabelCommand()
 {
@@ -103,15 +104,16 @@ bool SetLabelCommand::Apply(const CommandContext & context)
 
    // Only one label can be selected.
    if( bHasSelected ) {
+      auto &view = LabelTrackView::Get( *labelTrack );
       if( mbSelected )
       {
-         labelTrack->SetSelectedIndex( ii );
+         view.SetSelectedIndex( ii );
          double t0 = pLabel->selectedRegion.t0();
          double t1 = pLabel->selectedRegion.t1();
          selectedRegion.setTimes( t0, t1);
       }
-      else if( labelTrack->GetSelectedIndex() == ii )
-         labelTrack->SetSelectedIndex( -1 );
+      else if( view.GetSelectedIndex() == ii )
+         view.SetSelectedIndex( -1 );
    }
 
    labelTrack->SortLabels();

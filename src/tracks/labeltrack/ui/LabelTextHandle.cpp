@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "LabelTextHandle.h"
 
+#include "LabelTrackView.h"
 #include "../../../Experimental.h"
 
 #include "../../../HitTestResult.h"
@@ -54,7 +55,8 @@ UIHandlePtr LabelTextHandle::HitTest
    // If Control is down, let the select handle be hit instead
    int labelNum;
    if (!state.ControlDown() &&
-       (labelNum = pLT->OverATextBox(state.m_x, state.m_y) ) >= 0) {
+       (labelNum = LabelTrackView::Get( *pLT ).
+          OverATextBox(state.m_x, state.m_y) ) >= 0) {
       auto result = std::make_shared<LabelTextHandle>( pLT, labelNum );
       result = AssignUIHandlePtr(holder, result);
       return result;
@@ -85,7 +87,8 @@ UIHandle::Result LabelTextHandle::Click
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    mSelectedRegion = viewInfo.selectedRegion;
-   pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
+   LabelTrackView::Get( *pLT )
+      .HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label
@@ -122,8 +125,9 @@ UIHandle::Result LabelTextHandle::Drag
 
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
+   auto pView = pLT ? &LabelTrackView::Get( *pLT ) : nullptr;
    if(pLT)
-      pLT->HandleTextDragRelease(event);
+      pView->HandleTextDragRelease(event);
 
    // locate the initial mouse position
    if (event.LeftIsDown()) {
@@ -132,9 +136,9 @@ UIHandle::Result LabelTextHandle::Drag
          mLabelTrackStartYPos = event.m_y;
 
          if (pLT &&
-            (pLT->GetSelectedIndex() != -1) &&
-             pLT->OverTextBox(
-               pLT->GetLabel(pLT->GetSelectedIndex()),
+            (pView->GetSelectedIndex() != -1) &&
+             pView->OverTextBox(
+               pLT->GetLabel(pView->GetSelectedIndex()),
                mLabelTrackStartXPos,
                mLabelTrackStartYPos))
             mLabelTrackStartYPos = -1;
@@ -171,7 +175,7 @@ UIHandle::Result LabelTextHandle::Release
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if (pLT)
-      pLT->HandleTextDragRelease(event);
+      LabelTrackView::Get( *pLT ).HandleTextDragRelease(event);
 
    // handle mouse left button up
    if (event.LeftUp())

@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "LabelGlyphHandle.h"
 
+#include "LabelTrackView.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../ProjectHistory.h"
@@ -102,7 +103,7 @@ UIHandlePtr LabelGlyphHandle::HitTest
    // LabelGlyphHandle can be copyable:
    auto pHit = std::make_shared<LabelTrackHit>( pLT );
 
-   pLT->OverGlyph(*pHit, state.m_x, state.m_y);
+   LabelTrackView::Get( *pLT ).OverGlyph(*pHit, state.m_x, state.m_y);
 
    // IF edge!=0 THEN we've set the cursor and we're done.
    // signal this by setting the tip.
@@ -128,8 +129,8 @@ UIHandle::Result LabelGlyphHandle::Click
    const wxMouseEvent &event = evt.event;
 
    auto &viewInfo = ViewInfo::Get( *pProject );
-   mpLT->HandleGlyphClick
-      (*mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+   LabelTrackView::Get( *mpLT ).HandleGlyphClick(
+      *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    if (! mpHit->mIsAdjustingLabel )
    {
@@ -158,8 +159,8 @@ UIHandle::Result LabelGlyphHandle::Drag
 
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
-   mpLT->HandleGlyphDragRelease
-      (*mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+   LabelTrackView::Get( *mpLT ).HandleGlyphDragRelease(
+      *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    // Refresh all so that the change of selection is redrawn in all tracks
    return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
@@ -179,8 +180,8 @@ UIHandle::Result LabelGlyphHandle::Release
 
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
-   if (mpLT->HandleGlyphDragRelease
-          (*mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
+   if (LabelTrackView::Get( *mpLT ).HandleGlyphDragRelease(
+         *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
       ProjectHistory::Get( *pProject ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);

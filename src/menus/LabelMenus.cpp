@@ -32,7 +32,7 @@ int DoAddLabel(
    bool useDialog;
    gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
    if (useDialog) {
-      if (LabelTrack::DialogForLabelName(
+      if (LabelTrackView::DialogForLabelName(
          project, region, wxEmptyString, title) == wxID_CANCEL)
          return -1;     // index
    }
@@ -257,7 +257,7 @@ struct Handler : CommandHandlerObject {
 void OnEditLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   LabelTrack::DoEditLabels(project);
+   LabelTrackView::DoEditLabels(project);
 }
 
 void OnAddLabel(const CommandContext &context)
@@ -319,12 +319,13 @@ void OnPasteNewLabel(const CommandContext &context)
       // Unselect the last label, so we'll have just one active label when
       // we're done
       if (plt)
-         plt->Unselect();
+         LabelTrackView::Get( *plt ).SetSelectedIndex( -1 );
 
       // Add a NEW label, paste into it
       // Paul L:  copy whatever defines the selected region, not just times
-      LabelTrackView::Get( *lt ).AddLabel(selectedRegion);
-      if (lt->PasteSelectedText(selectedRegion.t0(),
+      auto &view = LabelTrackView::Get( *lt );
+      view.AddLabel(selectedRegion);
+      if (view.PasteSelectedText(selectedRegion.t0(),
                                 selectedRegion.t1()))
          bPastedSomething = true;
 
