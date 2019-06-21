@@ -134,7 +134,6 @@ public:
    SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
 
-   int leftOffset{ 0 };
    bool drawEnvelope{ false };
    bool bigPoints{ false };
    bool drawSliders{ false };

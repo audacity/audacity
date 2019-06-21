@@ -904,7 +904,6 @@ void TrackPanel::DrawTracks(wxDC * dc)
          return (pt && pt->GetSolo());
       } );
 
-   mTrackArtist->leftOffset = mViewInfo->GetLeftOffset();
    mTrackArtist->drawEnvelope = envelopeFlag;
    mTrackArtist->bigPoints = bigPointsFlag;
    mTrackArtist->drawSliders = sliderFlag;
