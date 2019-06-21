@@ -70,7 +70,6 @@ is time to refresh some aspect of the screen.
 #include "Prefs.h"
 #include "RefreshCode.h"
 #include "TrackArtist.h"
-#include "TrackInfo.h"
 #include "TrackPanelAx.h"
 #include "WaveTrack.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -259,8 +258,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #pragma warning( default: 4355 )
 #endif
 {
-   TrackInfo::UpdatePrefs( this );
-
    SetLayoutDirection(wxLayout_LeftToRight);
    SetLabel(_("Track Panel"));
    SetName(_("Track Panel"));
@@ -339,8 +336,6 @@ void TrackPanel::UpdatePrefs()
    // All vertical rulers must be recalculated since the minimum and maximum
    // frequences may have been changed.
    UpdateVRulers();
-
-   TrackInfo::UpdatePrefs( this );
 
    Refresh();
 }

@@ -32,9 +32,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/dc.h>
 #include <wx/frame.h>
+#include <wx/graphics.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
+#include "Prefs.h"
 #include "Project.h"
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
@@ -520,30 +522,35 @@ unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
 }
 
-void TrackInfo::UpdatePrefs( wxWindow *pParent )
-{
-   gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
+// Subscribe to preference changes to update static variables
+static struct MyPrefsListener : PrefsListener {
+   void UpdatePrefs() override
+   {
+      gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
 
-   // Calculation of best font size depends on language, so it should be redone in case
-   // the language preference changed.
+      // Calculation of best font size depends on language, so it should be redone in case
+      // the language preference changed.
 
-   int fontSize = 10;
-   gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      int fontSize = 10;
+      gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-   int allowableWidth =
-      // PRL:  was it correct to include the margin?
-      ( kTrackInfoWidth + kLeftMargin )
-         - 2; // 2 to allow for left/right borders
-   int textWidth, textHeight;
-   do {
-      gFont.SetPointSize(fontSize);
-      pParent->GetTextExtent(_("Stereo, 999999Hz"),
-                             &textWidth,
-                             &textHeight,
-                             NULL,
-                             NULL,
-                             &gFont);
-      fontSize--;
-   } while (textWidth >= allowableWidth);
-}
+      int allowableWidth =
+         // PRL:  was it correct to include the margin?
+         ( kTrackInfoWidth + kLeftMargin )
+            - 2; // 2 to allow for left/right borders
+      int textWidth;
+      std::unique_ptr<wxGraphicsContext> pContext(
+         wxGraphicsContext::Create()
+      );
+      pContext->SetFont( gFont, *wxBLACK );
+      do {
+         gFont.SetPointSize(fontSize);
+         double dWidth;
+         pContext->GetTextExtent(
+            _("Stereo, 999999Hz"), &dWidth, nullptr );
+         textWidth = (wxCoord)( dWidth + 0.5 );
+         fontSize--;
+      } while (textWidth >= allowableWidth);
+   }
+} sPrefsListener;
 
