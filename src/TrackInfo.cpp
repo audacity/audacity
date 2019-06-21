@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-TrackInfo.h
+TrackInfo.cpp
 
 Paul Licameli split from TrackPanel.cpp
 
@@ -35,13 +35,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "NoteTrack.h"
 #include "Project.h"
+#include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
 #include "tracks/ui/TrackView.h"
-#include "widgets/ASlider.h"
 
 static wxString gSoloPref;
 bool TrackInfo::HasSoloButton()
@@ -638,3 +636,4 @@ void TrackInfo::UpdatePrefs( wxWindow *pParent )
       fontSize--;
    } while (textWidth >= allowableWidth);
 }
+
