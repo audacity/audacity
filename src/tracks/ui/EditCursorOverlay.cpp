@@ -54,15 +54,16 @@ unsigned EditCursorOverlay::SequenceNumber() const
 
 std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 {
-   const auto &selection = ViewInfo::Get( *mProject ).selectedRegion;
+   const auto &viewInfo = ViewInfo::Get( *mProject );
+   const auto &selection = viewInfo.selectedRegion;
    if (!selection.isPoint()) {
       mCursorTime = -1.0;
       mNewCursorX = -1;
    }
    else {
       mCursorTime = selection.t0();
-      mNewCursorX = ViewInfo::Get( *mProject ).TimeToPosition(
-         mCursorTime, TrackPanel::Get( *mProject ).GetLeftOffset());
+      mNewCursorX = viewInfo.TimeToPosition(
+         mCursorTime, viewInfo.GetLeftOffset());
    }
 
    // Excessive height in case of the ruler, but it matters little.

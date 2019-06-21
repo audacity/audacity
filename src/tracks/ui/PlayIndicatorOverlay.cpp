@@ -149,6 +149,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    }
 
    auto &trackPanel = TrackPanel::Get( *mProject );
+   const auto &viewInfo = ViewInfo::Get( *mProject );
    int width;
    trackPanel.GetTracksUsableArea(&width, nullptr);
 
@@ -158,15 +159,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       const auto &scrubber = Scrubber::Get( *mProject );
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
-         const auto offset = trackPanel.GetLeftOffset();
-         if(position >= trackPanel.GetLeftOffset() &&
+         const auto offset = viewInfo.GetLeftOffset();
+         if(position >= viewInfo.GetLeftOffset() &&
             position < offset + width)
             mNewIndicatorX = position;
       }
    }
    else {
-      const auto &viewInfo = ViewInfo::Get( *mProject );
-
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;
 
@@ -225,7 +224,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       window.TP_RedrawScrollbars();
 
       if (onScreen)
-         mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel.GetLeftOffset());
+         mNewIndicatorX =
+            viewInfo.TimeToPosition(playPos, viewInfo.GetLeftOffset());
       else
          mNewIndicatorX = -1;
 

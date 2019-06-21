@@ -414,7 +414,7 @@ unsigned operator()
       // We're converting pixel positions to times,
       // counting pixels from the left edge of the track.
       auto &trackPanel = TrackPanel::Get( *pProject );
-      int trackLeftEdge = trackPanel.GetLeftOffset();
+      int trackLeftEdge = viewInfo.GetLeftOffset();
 
       // Time corresponding to mouse position
       wxCoord xx;
@@ -769,7 +769,7 @@ void ProjectWindow::Init()
       auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       // Bottom scrollbar
-      hs->Add(trackPanel.GetLeftOffset() - 1, 0);
+      hs->Add(viewInfo.GetLeftOffset() - 1, 0);
       hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
       hs->Add(mVsbar->GetSize().GetWidth(), 0);
       bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
@@ -791,7 +791,7 @@ void ProjectWindow::Init()
    trackPanel.SetFocus();
 
    FixScrollbars();
-   ruler.SetLeftOffset(trackPanel.GetLeftOffset());  // bevel on AdornedRuler
+   ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //
    // Set the Icon

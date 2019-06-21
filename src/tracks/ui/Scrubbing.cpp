@@ -353,10 +353,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          auto &viewInfo = ViewInfo::Get( *mProject );
-         auto &trackPanel = TrackPanel::Get( *mProject );
          auto &ctb = ControlToolBar::Get( *mProject );
          double maxTime = TrackList::Get( *mProject ).GetEndTime();
-         const int leftOffset = trackPanel.GetLeftOffset();
+         const int leftOffset = viewInfo.GetLeftOffset();
          double time0 = std::min(maxTime,
             viewInfo.PositionToTime(mScrubStartPosition, leftOffset)
          );
@@ -605,7 +604,7 @@ void Scrubber::ContinueScrubbingPoll()
       else
 #endif
       {
-         const auto origin = trackPanel.GetLeftOffset();
+         const auto origin = viewInfo.GetLeftOffset();
          auto xx = position.x;
          if (!seek && !mSmoothScrollingScrub) {
             // If mouse is out-of-bounds, so that we scrub at maximum speed
@@ -1007,6 +1006,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    }
    else {
       TrackPanel &trackPanel = TrackPanel::Get( *mProject );
+      auto &viewInfo = ViewInfo::Get( *mProject );
       int panelWidth, panelHeight;
       trackPanel.GetSize(&panelWidth, &panelHeight);
 
@@ -1021,7 +1021,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
          scrubber.IsScrollScrubbing()
          ? scrubber.FindScrubSpeed( seeking,
              ViewInfo::Get( *mProject )
-                .PositionToTime(position.x, trackPanel.GetLeftOffset()))
+                .PositionToTime(position.x, viewInfo.GetLeftOffset()))
          : maxScrubSpeed;
 
       const wxChar *format =
@@ -1073,12 +1073,13 @@ void Scrubber::DoScrub(bool seek)
    const bool scroll = ShouldScrubPinned();
    if (!wasScrubbing) {
       auto &tp = TrackPanel::Get( *mProject );
+      const auto &viewInfo = ViewInfo::Get( *mProject );
       wxCoord xx = tp.ScreenToClient(::wxGetMouseState().GetPosition()).x;
 
       // Limit x
       int width;
       tp.GetTracksUsableArea(&width, nullptr);
-      const auto offset = tp.GetLeftOffset();
+      const auto offset = viewInfo.GetLeftOffset();
       xx = (std::max(offset, std::min(offset + width - 1, xx)));
 
       MarkScrubStart(xx, scroll, seek);

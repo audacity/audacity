@@ -349,7 +349,8 @@ wxSize TrackPanel::GetTracksUsableArea() const
 {
    auto size = GetSize();
    return {
-      std::max( 0, size.GetWidth() - ( GetLeftOffset() + kRightMargin ) ),
+      std::max( 0,
+         size.GetWidth() - ( mViewInfo->GetLeftOffset() + kRightMargin ) ),
       size.GetHeight()
    };
 }
@@ -839,7 +840,8 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
 double TrackPanel::GetMostRecentXPos()
 {
-   return mViewInfo->PositionToTime(MostRecentXCoord(), GetLabelWidth());
+   return mViewInfo->PositionToTime(
+      MostRecentXCoord(), mViewInfo->GetLabelWidth());
 }
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
@@ -934,7 +936,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
          return (pt && pt->GetSolo());
       } );
 
-   mTrackArtist->leftOffset = GetLeftOffset();
+   mTrackArtist->leftOffset = mViewInfo->GetLeftOffset();
    mTrackArtist->drawEnvelope = envelopeFlag;
    mTrackArtist->bigPoints = bigPointsFlag;
    mTrackArtist->drawSliders = sliderFlag;
@@ -1008,11 +1010,11 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          trackRect.y = view.GetY() - mViewInfo->vpos + kTopMargin;
          trackRect.height = view.GetHeight();
          if (region.Contains(
-            0, trackRect.y, GetLeftOffset(), trackRect.height)) {
+            0, trackRect.y, mViewInfo->GetLeftOffset(), trackRect.height)) {
             wxRect rect{
                mViewInfo->GetVRulerOffset(),
                trackRect.y,
-               GetVRulerWidth() + 1,
+               mViewInfo->GetVRulerWidth() + 1,
                trackRect.height - kSeparatorThickness
             };
             TrackArt::DrawVRuler(context, channel, rect, bSelected);
@@ -1067,7 +1069,7 @@ void TrackPanel::DrawOutside
       // Now exclude the resizer below
       rect.height -= kSeparatorThickness;
 
-      int labelw = GetLabelWidth();
+      int labelw = mViewInfo->GetLabelWidth();
       int vrul = mViewInfo->GetVRulerOffset();
 
       TrackInfo::DrawBackground( dc, rect, t->GetSelected(), vrul );
@@ -1077,7 +1079,7 @@ void TrackPanel::DrawOutside
       //if (t->IsSyncLockSelected()) {
       //   wxRect tileFill = rect;
       //   tileFill.x = mViewInfo->GetVRulerOffset();
-      //   tileFill.width = GetVRulerWidth();
+      //   tileFill.width = mViewInfo->GetVRulerWidth();
       //   TrackArt::DrawSyncLockTiles(dc, tileFill);
       //}
 
@@ -1268,7 +1270,7 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
             kTopMargin,
-            GetVRulerWidth(),
+            mViewInfo->GetVRulerWidth(),
             0);
 
 
@@ -1289,7 +1291,8 @@ void TrackPanel::UpdateVRulerSize()
 
       if (mViewInfo->GetVRulerWidth() != s.GetWidth()) {
          mViewInfo->SetVRulerWidth( s.GetWidth() );
-         mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
+         mRuler->SetLeftOffset(
+            mViewInfo->GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();
       }
    }
@@ -1313,7 +1316,7 @@ void TrackPanel::ScrollIntoView(double pos)
 
 void TrackPanel::ScrollIntoView(int x)
 {
-   ScrollIntoView(mViewInfo->PositionToTime(x, GetLeftOffset()));
+   ScrollIntoView(mViewInfo->PositionToTime(x, mViewInfo->GetLeftOffset()));
 }
 
 void TrackPanel::OnTrackMenu(Track *t)
@@ -1569,7 +1572,8 @@ struct Subgroup final : TrackPanelGroup {
    explicit Subgroup( TrackPanel &panel ) : mPanel{ panel } {}
    Subdivision Children( const wxRect &rect ) override
    {
-      wxCoord yy = -mPanel.GetViewInfo()->vpos;
+      const auto &viewInfo = *mPanel.GetViewInfo();
+      wxCoord yy = -viewInfo.vpos;
       Refinement refinement;
 
       auto &tracks = *mPanel.GetTracks();
@@ -1585,7 +1589,7 @@ struct Subgroup final : TrackPanelGroup {
          }
          refinement.emplace_back( yy,
             std::make_shared< ResizingChannelGroup >(
-               leader->SharedPointer(), mPanel.GetLeftOffset() )
+               leader->SharedPointer(), viewInfo.GetLeftOffset() )
          );
          yy += height;
       }
@@ -1635,16 +1639,6 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
          return pGroup->mpTrack.get() == leader;
       return false;
    } );
-}
-
-int TrackPanel::GetVRulerWidth() const
-{
-   return mViewInfo->GetVRulerWidth();
-}
-
-int TrackPanel::GetLabelWidth() const
-{
-   return mViewInfo->GetVRulerOffset() + GetVRulerWidth();
 }
 
 /// Displays the bounds of the selection in the status bar.

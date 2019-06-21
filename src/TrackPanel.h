@@ -103,8 +103,6 @@ class AUDACITY_DLL_API TrackPanel final
    void OnProjectSettingsChange(wxCommandEvent &event);
    void OnTrackFocusChange( wxCommandEvent &event );
 
-   int GetLeftOffset() const { return GetLabelWidth() + 1;}
-
    wxSize GetTracksUsableArea() const;
 
    // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
@@ -173,11 +171,7 @@ protected:
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
 
-   int GetVRulerWidth() const;
-
 public:
-   int GetLabelWidth() const;
-
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
    const TrackList * GetTracks() const { return mTracks.get(); }

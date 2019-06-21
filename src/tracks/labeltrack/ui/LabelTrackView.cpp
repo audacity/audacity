@@ -2045,7 +2045,7 @@ int LabelTrackView::DialogForLabelName(
    wxPoint position = trackPanel.FindTrackRect(trackPanel.GetFocusedTrack()).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
-   position.x += trackPanel.GetLabelWidth()
+   position.x += viewInfo.GetLabelWidth()
       + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
       -40;
    position.y += 2;  // just below the bottom of the track

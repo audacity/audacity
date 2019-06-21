@@ -22,6 +22,20 @@
 
 class AudacityProject;
 
+// See big pictorial comment in TrackPanel.cpp for explanation of these numbers
+enum : int {
+   // Constants related to x coordinates in the track panel
+   kBorderThickness = 1,
+   kShadowThickness = 1,
+
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+
+   kTrackInfoWidth = 100 - kLeftMargin,
+};
+
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
 // and for computing conversions between track times and pixel positions.
@@ -83,6 +97,9 @@ public:
 
    int GetVRulerWidth() const { return mVRulerWidth; }
    void SetVRulerWidth( int width ) { mVRulerWidth = width; }
+   int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
+   int GetLabelWidth() const { return GetVRulerOffset() + GetVRulerWidth(); }
+   int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
    bool ZoomInAvailable() const;
    bool ZoomOutAvailable() const;
