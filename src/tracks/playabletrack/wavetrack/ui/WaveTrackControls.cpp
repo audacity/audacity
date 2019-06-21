@@ -1035,7 +1035,7 @@ void SliderDrawFunction
    Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
 }
 
-#include "tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h"
+#include "WaveTrackSliderHandles.h"
 void PanSliderDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
