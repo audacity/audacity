@@ -240,7 +240,7 @@ void MoveWhenAudioInactive
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max( 
       tracks.GetEndTime(),
-      trackPanel.GetScreenEndTime());
+      viewInfo.GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
@@ -299,7 +299,7 @@ SelectionOperation operation)
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max( 
       tracks.GetEndTime(),
-      trackPanel.GetScreenEndTime());
+      viewInfo.GetScreenEndTime());
 
    // Is it t0 or t1 moving?
    bool bMoveT0 = (operation == SELECTION_CONTRACT && seekStep > 0) ||
@@ -421,7 +421,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max( 
       tracks.GetEndTime(),
-      trackPanel.GetScreenEndTime());
+      viewInfo.GetScreenEndTime());
 
    double newT = viewInfo.OffsetTimeByPixels( bMoveT0 ? t0 : t1, pixels);
    // constrain to be in the track/screen limits.

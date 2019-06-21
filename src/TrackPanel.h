@@ -134,10 +134,6 @@ class AUDACITY_DLL_API TrackPanel final
    void UpdateTrackVRuler(const Track *t);
    void UpdateVRulerSize();
 
-   // Returns the time corresponding to the pixel column one past the track area
-   // (ignoring any fisheye)
-   double GetScreenEndTime() const;
-
  protected:
    bool IsAudioActive();
 

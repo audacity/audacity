@@ -148,7 +148,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       ruler.AddOverlay( mPartner );
    }
 
-   auto &trackPanel = TrackPanel::Get( *mProject );
    const auto &viewInfo = ViewInfo::Get( *mProject );
    auto width = viewInfo.GetTracksUsableWidth();
 
@@ -176,12 +175,11 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right
-      auto &trackPanel = TrackPanel::Get( *mProject );
       const auto tolerance = pinned ? 1.5 * kTimerInterval / 1000.0 : 0;
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
-         trackPanel.GetScreenEndTime() + tolerance);
+         viewInfo.GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
       window.TP_DisplaySelection();
@@ -213,7 +211,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
                            playPos,
-                           trackPanel.GetScreenEndTime());
+                           viewInfo.GetScreenEndTime());
          }
       }
 

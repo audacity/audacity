@@ -107,6 +107,14 @@ public:
          std::max( 0, GetWidth() - ( GetLeftOffset() + kRightMargin ) );
    }
 
+   // Returns the time corresponding to the pixel column one past the track area
+   // (ignoring any fisheye)
+   double GetScreenEndTime() const
+   {
+      auto width = GetTracksUsableWidth();
+      return PositionToTime(width, 0, true);
+   }
+
    bool ZoomInAvailable() const;
    bool ZoomOutAvailable() const;
 

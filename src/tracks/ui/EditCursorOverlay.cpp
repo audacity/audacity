@@ -90,15 +90,15 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 
    const auto &viewInfo = ViewInfo::Get( *mProject );
 
-   auto &trackPanel = TrackPanel::Get( *mProject );
    const bool
    onScreen = between_incexc(viewInfo.h,
                              mCursorTime,
-                             trackPanel.GetScreenEndTime());
+                             viewInfo.GetScreenEndTime());
 
    if (!onScreen)
       return;
 
+   auto &trackPanel = TrackPanel::Get( *mProject );
    if (auto tp = dynamic_cast<TrackPanel*>(&panel)) {
       wxASSERT(mIsMaster);
       AColor::CursorColor(&dc);

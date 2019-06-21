@@ -227,7 +227,7 @@ void OnZoomToggle(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
 //   const double origLeft = viewInfo.h;
-//   const double origWidth = GetScreenEndTime() - origLeft;
+//   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
    // Choose the zoom that is most different to the current zoom.
    double Zoom1 = GetZoomOfPreset( project, TracksPrefs::Zoom1Choice() );
@@ -305,14 +305,13 @@ void OnGoSelStart(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
    window.TP_ScrollWindow(
-      selectedRegion.t0() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnGoSelEnd(const CommandContext &context)
@@ -320,14 +319,13 @@ void OnGoSelEnd(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
    window.TP_ScrollWindow(
-      selectedRegion.t1() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnHistory(const CommandContext &context)

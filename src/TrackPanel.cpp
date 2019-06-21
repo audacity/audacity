@@ -498,12 +498,6 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
    }
 }
 
-double TrackPanel::GetScreenEndTime() const
-{
-   auto width = mViewInfo->GetTracksUsableWidth();
-   return mViewInfo->PositionToTime(width, 0, true);
-}
-
 void TrackPanel::OnUndoReset( wxCommandEvent &event )
 {
    event.Skip();
@@ -665,12 +659,12 @@ void TrackPanel::ProcessUIHandleResult
 
 void TrackPanel::HandlePageUpKey()
 {
-   mListener->TP_ScrollWindow(2 * mViewInfo->h - GetScreenEndTime());
+   mListener->TP_ScrollWindow(2 * mViewInfo->h - mViewInfo->GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
 {
-   mListener->TP_ScrollWindow(GetScreenEndTime());
+   mListener->TP_ScrollWindow(mViewInfo->GetScreenEndTime());
 }
 
 bool TrackPanel::IsAudioActive()

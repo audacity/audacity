@@ -374,7 +374,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                auto delta = time0 - time1;
                time0 = std::max(0.0, std::min(maxTime,
                   viewInfo.h +
-                     (mProject->GetScreenEndTime() - viewInfo.h)
+                     (viewInfo.GetScreenEndTime() - viewInfo.h)
                         * TracksPrefs::GetPinnedHeadPositionPreference()
                ));
                time1 = time0 + delta;
@@ -820,7 +820,7 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
    auto &viewInfo = ViewInfo::Get( *mProject );
    const double screen =
-      TrackPanel::Get( *mProject ).GetScreenEndTime() - viewInfo.h;
+      viewInfo.GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
       (viewInfo, mMaxSpeed, screen, time);
 }
