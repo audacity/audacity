@@ -157,8 +157,8 @@ enum : int {
 };
 #endif
 
-#include "tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h"
-#include "tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h"
+#include "NoteTrackButtonHandle.h"
+#include "NoteTrackSliderHandles.h"
 
 namespace {
 void GetMidiControlsHorizontalBounds( const wxRect &rect, wxRect &dest )

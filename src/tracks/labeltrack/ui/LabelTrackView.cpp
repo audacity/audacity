@@ -677,7 +677,7 @@ void LabelTrackView::CalcHighlightXs(int *x1, int *x2) const
    getXPos(labelStruct, dc, x2, pos2);
 }
 
-#include "tracks/labeltrack/ui/LabelGlyphHandle.h"
+#include "LabelGlyphHandle.h"
 // TODO:  don't rely on the global ::GetActiveProject() to find this.
 // Rather, give TrackPanelCell a drawing function and pass context into it.
 namespace {
@@ -694,8 +694,8 @@ namespace {
    }
 }
 
-#include "TrackPanelDrawingContext.h"
-#include "tracks/labeltrack/ui/LabelTextHandle.h"
+#include "../../../TrackPanelDrawingContext.h"
+#include "LabelTextHandle.h"
 
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
@@ -2005,7 +2005,7 @@ void LabelTrackView::CreateCustomGlyphs()
    mbGlyphsReady=true;
 }
 
-#include "LabelDialog.h"
+#include "../../../LabelDialog.h"
 
 void LabelTrackView::DoEditLabels
 (AudacityProject &project, LabelTrack *lt, int index)
