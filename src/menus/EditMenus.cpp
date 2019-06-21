@@ -10,6 +10,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
@@ -1263,7 +1264,7 @@ auto canSelectAll = [](const AudacityProject &project){
 auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
    if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
       (flagsRqd & NoAutoSelect).none() )
-      SelectActions::DoSelectAllAudio(project);
+      SelectUtilities::DoSelectAllAudio(project);
 };
 
 RegisteredMenuItemEnabler selectTracks{{

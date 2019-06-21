@@ -14,6 +14,7 @@
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../ShuttleGui.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
@@ -822,7 +823,7 @@ void OnNewWaveTrack(const CommandContext &context)
    auto rate = settings.GetRate();
 
    auto t = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -845,7 +846,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto defaultFormat = settings.GetDefaultFormat();
    auto rate = settings.GetRate();
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    auto left = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    left->SetSelected(true);
@@ -872,7 +873,7 @@ void OnNewLabelTrack(const CommandContext &context)
 
    auto t = tracks.Add( trackFactory.NewLabelTrack() );
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -898,7 +899,7 @@ void OnNewTimeTrack(const CommandContext &context)
 
    auto t = tracks.AddToHead( trackFactory.NewTimeTrack() );
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    t->SetSelected(true);
 

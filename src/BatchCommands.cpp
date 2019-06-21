@@ -33,6 +33,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "Menus.h"
 #include "PluginManager.h"
 #include "Prefs.h"
+#include "SelectUtilities.h"
 #include "Shuttle.h"
 #include "Track.h"
 #include "export/ExportFLAC.h"
@@ -722,7 +723,7 @@ bool MacroCommands::ApplyEffectCommand(
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
    if( plug->GetPluginType() != PluginTypeAudacityCommand )
-      SelectActions::SelectAllIfNone( *project );
+      SelectUtilities::SelectAllIfNone( *project );
 
    bool res = false;
 

@@ -34,6 +34,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "SelectionState.h"
 #include "Sequence.h"
 #include "Tags.h"
@@ -1546,7 +1547,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
    std::vector< std::shared_ptr< Track > > results;
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    bool initiallyEmpty = tracks.empty();
    double newRate = 0;
@@ -1708,8 +1709,8 @@ bool ProjectFileManager::Import(
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {
       //TODO: All we want is a SelectAll()
-      SelectActions::SelectNone( project );
-      SelectActions::SelectAllIfNone( project );
+      SelectUtilities::SelectNone( project );
+      SelectUtilities::SelectAllIfNone( project );
       const CommandContext context( project );
       PluginActions::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),

@@ -42,6 +42,7 @@
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
 #include "WaveTrack.h"
@@ -672,7 +673,7 @@ wxColour MixerTrackCluster::GetTrackColor()
 
 void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
-   SelectActions::DoListSelection(*mProject,
+   SelectUtilities::DoListSelection(*mProject,
       mTrack.get(), bShiftDown, bControlDown, true);
 }
 
@@ -834,7 +835,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
       //v Even when I implement MixerBoard::OnMouseEvent and call event.Skip()
       // here, MixerBoard::OnMouseEvent never gets called.
       // So, added mProject to MixerBoardScrolledWindow and just directly do what's needed here.
-      SelectActions::SelectNone( *mProject );
+      SelectUtilities::SelectNone( *mProject );
    }
    else
       event.Skip();

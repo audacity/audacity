@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectHistory.h"
+#include "../../SelectUtilities.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackInfo.h"
@@ -97,7 +98,7 @@ UIHandle::Result SelectButtonHandle::CommitChanges
    if (pTrack)
    {
       const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-      SelectActions::DoListSelection(*pProject,
+      SelectUtilities::DoListSelection(*pProject,
          pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 //    return RefreshAll ;
    }

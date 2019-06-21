@@ -15,6 +15,7 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../Screenshot.h"
+#include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -449,7 +450,7 @@ bool DoEffect(
    if (flags & kConfigured)
    {
       TransportActions::DoStop(project);
-      SelectActions::SelectAllIfNone( project );
+      SelectUtilities::SelectAllIfNone( project );
    }
 
    MissingAliasFilesDialog::SetShouldShow(true);

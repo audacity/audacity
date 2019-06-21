@@ -119,18 +119,6 @@ void DoReloadPreferences( AudacityProject & );
 void DoUndo( AudacityProject &project );
 }
 
-/// Namespace for functions for Select menu
-namespace SelectActions {
-void SelectAllIfNone( AudacityProject &project );
-void SelectNone( AudacityProject &project );
-void DoListSelection(
-   AudacityProject &project, Track *t,
-   bool shift, bool ctrl, bool modifyState );
-void DoSelectAll( AudacityProject &project );
-void DoSelectAllAudio( AudacityProject &project );
-void DoSelectSomething( AudacityProject &project );
-}
-
 /// Namespace for functions for View menu
 namespace ViewActions {
 double GetZoomOfToFit( const AudacityProject &project );
