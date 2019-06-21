@@ -33,6 +33,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "TrackPanel.h"
+#include "TrackUtilities.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
@@ -736,7 +737,7 @@ void ProjectManager::ResetProjectToEmpty() {
    auto &viewInfo = ViewInfo::Get( project );
 
    SelectUtilities::DoSelectAll( project );
-   TrackActions::DoRemoveTracks( project );
+   TrackUtilities::DoRemoveTracks( project );
 
    // A new DirManager.
    DirManager::Reset( project );

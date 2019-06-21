@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanel.h"
+#include "../../TrackUtilities.h"
 #include "../../commands/CommandManager.h"
 #include "../../tracks/ui/TrackView.h"
 
@@ -156,7 +157,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
       TransportActions::StopIfPaused( *pProject );
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
-         TrackActions::DoRemoveTrack(*pProject, pTrack.get());
+         TrackUtilities::DoRemoveTrack(*pProject, pTrack.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

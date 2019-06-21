@@ -13,11 +13,11 @@ Paul Licameli split from TrackControls.cpp
 #include "TrackButtonHandles.h"
 #include "TrackSelectHandle.h"
 #include "../../RefreshCode.h"
-#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectHistory.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanelMouseEvent.h"
+#include "../../TrackUtilities.h"
 #include <wx/textdlg.h>
 #include "../../commands/CommandType.h"
 #include "../../commands/CommandManager.h"
@@ -220,21 +220,21 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
 void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 {
    AudacityProject *const project = GetActiveProject();
-   TrackActions::MoveChoice choice;
+   TrackUtilities::MoveChoice choice;
    switch (event.GetId()) {
    default:
       wxASSERT(false);
    case OnMoveUpID:
-      choice = TrackActions::OnMoveUpID; break;
+      choice = TrackUtilities::OnMoveUpID; break;
    case OnMoveDownID:
-      choice = TrackActions::OnMoveDownID; break;
+      choice = TrackUtilities::OnMoveDownID; break;
    case OnMoveTopID:
-      choice = TrackActions::OnMoveTopID; break;
+      choice = TrackUtilities::OnMoveTopID; break;
    case OnMoveBottomID:
-      choice = TrackActions::OnMoveBottomID; break;
+      choice = TrackUtilities::OnMoveBottomID; break;
    }
 
-   TrackActions::DoMoveTrack(*project, mpData->pTrack, choice);
+   TrackUtilities::DoMoveTrack(*project, mpData->pTrack, choice);
 
    // MoveTrack already refreshed TrackPanel, which means repaint will happen.
    // This is a harmless redundancy:
