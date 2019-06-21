@@ -21,44 +21,24 @@
 #include "Audacity.h" // for USE_* macros
 #include "Experimental.h"
 
-#include "MemoryX.h"
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variables
-#include "audacity/Types.h"
+
 #include "Prefs.h"
 
 class wxRect;
 
-class Track;
-class WaveDisplay;
-class WaveTrack;
-class WaveTrackCache;
-class WaveClip;
 class NoteTrack;
-class LabelTrack;
-class TimeTrack;
 class TrackList;
 class TrackPanel;
 class Ruler;
 class SelectedRegion;
+class Track;
+class TrackPanel;
+struct TrackPanelDrawingContext;
 class ZoomInfo;
 
-struct TrackPanelDrawingContext;
-
-#ifndef uchar
-typedef unsigned char uchar;
-#endif
-
 namespace TrackArt {
-   void DrawTracks(TrackPanelDrawingContext &context,
-                   const TrackList *tracks,
-                   const wxRegion & reg,
-                   const wxRect &clip);
-
-   void DrawTrack(TrackPanelDrawingContext &context,
-                  const Track *t,
-                  const wxRect & rect);
-
    void DrawVRuler(TrackPanelDrawingContext &context,
                    const Track *t, const wxRect & rect, bool bSelected );
    
@@ -80,82 +60,8 @@ namespace TrackArt {
          const wxBrush &selBrush, const wxBrush &unselBrush,
          bool useSelection = true);
 
-   //
-   // Lower-level drawing functions
-   //
-
-   void DrawWaveform(TrackPanelDrawingContext &context,
-                     const WaveTrack *track,
-                     const wxRect & rect,
-                     bool muted);
-
-   void DrawSpectrum(TrackPanelDrawingContext &context,
-                     const WaveTrack *track,
-                     const wxRect & rect);
-#ifdef USE_MIDI
-   void DrawNoteBackground(TrackPanelDrawingContext &context,
-                           const NoteTrack *track,
-                           const wxRect &rect, const wxRect &sel,
-                           const wxBrush &wb, const wxPen &wp,
-                           const wxBrush &bb, const wxPen &bp,
-                           const wxPen &mp);
-   void DrawNoteTrack(TrackPanelDrawingContext &context,
-                      const NoteTrack *track,
-                      const wxRect & rect,
-                      bool muted);
-#endif // USE_MIDI
-
-   void DrawTimeTrack(TrackPanelDrawingContext &context,
-                      const TimeTrack *track,
-                      const wxRect & rect);
-
-   void DrawTimeSlider(TrackPanelDrawingContext &context,
-                       const wxRect & rect,
-                       bool rightwards, bool highlight);
-
-   void DrawClipWaveform(TrackPanelDrawingContext &context,
-                         const WaveTrack *track, const WaveClip *clip,
-                         const wxRect & rect,
-                         bool dB, bool muted);
-
-   void DrawClipSpectrum(TrackPanelDrawingContext &context,
-                         WaveTrackCache &cache, const WaveClip *clip,
-                         const wxRect & rect);
-
-   // Waveform utility functions
-
-   void DrawWaveformBackground(TrackPanelDrawingContext &context,
-                               int leftOffset, const wxRect &rect,
-                               const double env[],
-                               float zoomMin, float zoomMax,
-                               int zeroLevelYCoordinate,
-                               bool dB, float dBRange,
-                               double t0, double t1,
-                               bool bIsSyncLockSelected,
-                               bool highlightEnvelope);
-   void DrawMinMaxRMS(TrackPanelDrawingContext &context,
-                      const wxRect & rect, const double env[],
-                      float zoomMin, float zoomMax,
-                      bool dB, float dBRange,
-                      const float *min, const float *max, const float *rms, const int *bl,
-                      bool /* showProgress */, bool muted);
-   void DrawIndividualSamples(TrackPanelDrawingContext &context,
-                              int leftOffset, const wxRect & rect,
-                              float zoomMin, float zoomMax,
-                              bool dB, float dBRange,
-                              const WaveClip *clip,
-                              bool showPoints, bool muted,
-                              bool highlight);
-
    void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,
                                        const wxRect & rect );
-
-   void DrawEnvelope(TrackPanelDrawingContext &context,
-                     const wxRect & rect, const double env[],
-                     float zoomMin, float zoomMax,
-                     bool dB, float dBRange, bool highlight);
-   void DrawEnvLine(TrackPanelDrawingContext &context,
-                    const wxRect & rect, int x0, int y0, int cy, bool top);
 }
 
 class AUDACITY_DLL_API TrackArtist final : private PrefsListener {
@@ -163,6 +69,7 @@ class AUDACITY_DLL_API TrackArtist final : private PrefsListener {
 public:
 
    enum : unsigned {
+      PassTracks,
       
       NPasses
    };

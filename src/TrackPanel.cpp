@@ -915,7 +915,6 @@ void TrackPanel::DrawTracks(wxDC * dc)
    mTrackArtist->bigPoints = bigPointsFlag;
    mTrackArtist->drawSliders = sliderFlag;
    mTrackArtist->hasSolo = hasSolo;
-   TrackArt::DrawTracks( context, GetTracks(), region, clip );
 
    this->CellularPanel::Draw( context, TrackArtist::NPasses );
 
