@@ -1284,3 +1284,13 @@ void TrackFactory::Destroy( AudacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
 }
+
+template<> auto DoGetControls::Implementation() -> Function {
+   return nullptr;
+}
+static DoGetControls registerDoGetControls;
+
+template<> auto DoGetView::Implementation() -> Function {
+   return nullptr;
+}
+static DoGetView registerDoGetView;

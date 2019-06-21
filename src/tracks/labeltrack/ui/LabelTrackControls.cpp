@@ -170,3 +170,11 @@ PopupMenuTable *LabelTrackControls::GetMenuExtension(Track *)
 {
    return &LabelTrackMenuTable::Instance();
 }
+
+using DoGetLabelTrackControls = DoGetControls::Override< LabelTrack >;
+template<> template<> auto DoGetLabelTrackControls::Implementation() -> Function {
+   return [](LabelTrack &track) {
+      return std::make_shared<LabelTrackControls>( track.SharedPointer() );
+   };
+}
+static DoGetLabelTrackControls registerDoGetLabelTrackControls;

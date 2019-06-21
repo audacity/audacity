@@ -704,12 +704,6 @@ public:
    bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
 
 protected:
-
-   // These are called to create controls on demand:
-   virtual std::shared_ptr<TrackView> DoGetView() = 0;
-   virtual std::shared_ptr<TrackControls> DoGetControls() = 0;
-
-   // These hold the controls:
    std::shared_ptr<TrackView> mpView;
    std::shared_ptr<CommonTrackCell> mpControls;
 };
@@ -1594,5 +1588,25 @@ class AUDACITY_DLL_API TrackFactory final
    std::shared_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
+
+#include "AttachedVirtualFunction.h"
+
+struct DoGetControlsTag;
+
+using DoGetControls =
+AttachedVirtualFunction<
+   DoGetControlsTag,
+   std::shared_ptr< TrackControls >,
+   Track
+>;
+
+struct DoGetViewTag;
+
+using DoGetView =
+AttachedVirtualFunction<
+   DoGetViewTag,
+   std::shared_ptr< TrackView >,
+   Track
+>;
 
 #endif

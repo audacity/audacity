@@ -2080,15 +2080,13 @@ int LabelTrackView::DialogForLabelName(
    return status;
 }
 
-std::shared_ptr<TrackView> LabelTrack::DoGetView()
-{
-   return std::make_shared<LabelTrackView>( SharedPointer() );
+using DoGetLabelTrackView = DoGetView::Override< LabelTrack >;
+template<> template<> auto DoGetLabelTrackView::Implementation() -> Function {
+   return [](LabelTrack &track) {
+      return std::make_shared<LabelTrackView>( track.SharedPointer() );
+   };
 }
-
-std::shared_ptr<TrackControls> LabelTrack::DoGetControls()
-{
-   return std::make_shared<LabelTrackControls>( SharedPointer() );
-}
+static DoGetLabelTrackView registerDoGetLabelTrackView;
 
 std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
 {

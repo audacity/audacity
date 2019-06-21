@@ -682,10 +682,6 @@ private:
 
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
-
-protected:
-   std::shared_ptr<TrackView> DoGetView() override;
-   std::shared_ptr<TrackControls> DoGetControls() override;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,

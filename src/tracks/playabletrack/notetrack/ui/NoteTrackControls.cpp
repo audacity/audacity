@@ -310,3 +310,11 @@ void NoteTrackControls::ReCreateVelocitySlider( wxEvent &evt )
    pParent;
 #endif
 }
+
+using DoGetNoteTrackControls = DoGetControls::Override< NoteTrack >;
+template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function {
+   return [](NoteTrack &track) {
+      return std::make_shared<NoteTrackControls>( track.SharedPointer() );
+   };
+}
+static DoGetNoteTrackControls registerDoGetNoteTrackControls;

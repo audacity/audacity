@@ -53,15 +53,13 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackView> NoteTrack::DoGetView()
-{
-   return std::make_shared<NoteTrackView>( SharedPointer() );
+using DoGetNoteTrackView = DoGetView::Override< NoteTrack >;
+template<> template<> auto DoGetNoteTrackView::Implementation() -> Function {
+   return [](NoteTrack &track) {
+      return std::make_shared<NoteTrackView>( track.SharedPointer() );
+   };
 }
-
-std::shared_ptr<TrackControls> NoteTrack::DoGetControls()
-{
-   return std::make_shared<NoteTrackControls>( SharedPointer() );
-}
+static DoGetNoteTrackView registerDoGetNoteTrackView;
 
 std::shared_ptr<TrackVRulerControls> NoteTrackView::DoGetVRulerControls()
 {

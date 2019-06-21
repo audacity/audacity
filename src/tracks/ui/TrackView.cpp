@@ -57,7 +57,7 @@ std::shared_ptr<TrackView> Track::GetTrackView()
 {
    if (!mpView)
       // create on demand
-      mpView = DoGetView();
+      mpView = DoGetView::Call( *this );
    return mpView;
 }
 
@@ -70,7 +70,7 @@ std::shared_ptr<TrackPanelCell> Track::GetTrackControls()
 {
    if (!mpControls)
       // create on demand
-      mpControls = DoGetControls();
+      mpControls = DoGetControls::Call( *this );
    return mpControls;
 }
 

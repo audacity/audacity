@@ -156,15 +156,13 @@ void WaveTrackView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
-std::shared_ptr<TrackView> WaveTrack::DoGetView()
-{
-   return std::make_shared<WaveTrackView>( SharedPointer() );
+using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
+template<> template<> auto DoGetWaveTrackView::Implementation() -> Function {
+   return [](WaveTrack &track) {
+      return std::make_shared<WaveTrackView>( track.SharedPointer() );
+   };
 }
-
-std::shared_ptr<TrackControls> WaveTrack::DoGetControls()
-{
-   return std::make_shared<WaveTrackControls>( SharedPointer() );
-}
+static DoGetWaveTrackView registerDoGetWaveTrackView;
 
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 {
