@@ -726,5 +726,6 @@ void NoteTrackView::Draw(
 #endif
       DrawNoteTrack( context, nt.get(), rect, muted );
    }
+   CommonTrackView::Draw( context, rect, iPass );
 }
 #endif

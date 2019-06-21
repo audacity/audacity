@@ -911,7 +911,6 @@ void TrackPanel::DrawTracks(wxDC * dc)
    mTrackArtist->hasSolo = hasSolo;
 
    this->CellularPanel::Draw( context, TrackArtist::NPasses );
-   TrackArt::DrawTrackNames( context, GetTracks(), region, clip );
 }
 
 void TrackPanel::SetBackgroundCell

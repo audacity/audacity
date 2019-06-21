@@ -840,6 +840,7 @@ void LabelTrackView::Draw(
 {
    if ( iPass == TrackArtist::PassTracks )
       Draw( context, rect );
+   CommonTrackView::Draw( context, rect, iPass );
 }
 
 void LabelTrackView::SetSelectedIndex( int index )

@@ -53,7 +53,6 @@ audio tracks.
 
 #include "prefs/GUISettings.h"
 #include "prefs/TracksPrefs.h"
-#include "tracks/ui/TrackView.h"
 
 #include <wx/dc.h>
 
@@ -123,111 +122,6 @@ void TrackArtist::SetColours( int iColorIndex)
          break;
 
    }
-}
-
-void TrackArt::DrawTrackNames(TrackPanelDrawingContext &context,
-                              const TrackList * tracks,
-                              const wxRegion & reg,
-                              const wxRect & clip)
-{
-   // Fix the horizontal extent; will later change only the vertical extent.
-   const auto artist = TrackArtist::Get( context );
-   const auto leftOffset = artist->leftOffset;
-   wxRect teamRect{
-      clip.x + leftOffset, 0, clip.width - (leftOffset + kRightMargin), 0
-   };
-
-   const auto &zoomInfo = *artist->pZoomInfo;
-   if( !artist->mbShowTrackNameInTrack )
-      return;
-
-   for(auto leader : tracks->Leaders()) {
-      auto group = TrackList::Channels( leader );
-      auto &view = TrackView::Get( *leader );
-
-      teamRect.y = view.GetY() - zoomInfo.vpos;
-      teamRect.height = group.sum( [&] (const Track *channel) {
-         auto &channelView = TrackView::Get( *channel );
-         return view.GetHeight();
-      });
-
-      if (teamRect.GetBottom() < clip.GetTop())
-         continue;
-      else if (teamRect.GetTop() > clip.GetBottom())
-         break;
-
-      for (auto t : group) {
-         if (teamRect.Intersects(clip) && reg.Contains(teamRect)) {
-            t = t->SubstitutePendingChangedTrack().get();
-            wxRect trackRect {
-               teamRect.x,
-               TrackView::Get( *t ).GetY() - zoomInfo.vpos + kTopMargin,
-               teamRect.width,
-               teamRect.height
-            };
-            DrawTrackName( context, t, trackRect );
-         }
-      }
-   }
-}
-
-// Draws the track name on the track, if it is needed.
-void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
-{
-   auto name = t->GetName();
-   if( name.IsEmpty())
-      return;
-   if( !t->IsLeader())
-      return;
-   auto &dc = context.dc;
-   wxBrush Brush;
-   wxCoord x,y;
-   wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   dc.SetFont(labelFont);
-   dc.GetTextExtent( t->GetName(), &x, &y );
-
-   // Logic for name background translucency (aka 'shields')
-   // Tracks less than kOpaqueHeight high will have opaque shields.
-   // Tracks more than kTranslucentHeight will have maximum translucency for shields.
-   const int kOpaqueHeight = 44;
-   const int kTranslucentHeight = 124;
-   int h = rect.GetHeight();
-   // f codes the opacity as a number between 0.0 and 1.0
-   float f= wxClip((h -kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
-   // kOpaque is the shield's alpha for tracks that are not tall
-   // kTranslucent is the shield's alpha for tracks that are tall.
-   const int kOpaque = 255;
-   const int kTranslucent = 140;
-   // 0.0 maps to full opacity, 1.0 maps to full translucency.
-   int opacity = 255 - (255-140)*f;
-
-#ifdef __WXMAC__
-   // Mac dc is a graphics dc already.
-   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   dc.DrawRoundedRectangle( rect.x+7, rect.y+1,  x+16, y+4, 8.0 );
-#else
-   // This little dance with wxImage in order to draw to a graphic dc
-   // which we can then paste as a translucent bitmap onto the real dc.
-   wxImage image( x+18, y+6 );
-   image.InitAlpha();
-   unsigned char *alpha=image.GetAlpha();
-   memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
-   
-   {
-      std::unique_ptr< wxGraphicsContext >
-         pGc{ wxGraphicsContext::Create(image) };
-      auto &gc = *pGc;
-      // This is to a gc, not a dc.
-      AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-      // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-      gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
-      // destructor of gc updates the wxImage.
-   }
-   wxBitmap bitmap( image );
-   dc.DrawBitmap( bitmap, rect.x+6, rect.y);
-#endif
-   dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-   dc.DrawText (t->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
 }
 
 /// Takes a value between min and max and returns a value between

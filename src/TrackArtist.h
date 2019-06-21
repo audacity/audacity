@@ -38,11 +38,6 @@ class ZoomInfo;
 
 namespace TrackArt {
    
-   void DrawTrackNames(TrackPanelDrawingContext &context,
-                       const TrackList *tracks,
-                       const wxRegion & reg,
-                       const wxRect &clip);
-
    void DrawTrackName(TrackPanelDrawingContext &context, 
                       const Track *t, const wxRect & rect );
 

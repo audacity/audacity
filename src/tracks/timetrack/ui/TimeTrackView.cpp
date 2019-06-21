@@ -165,4 +165,5 @@ void TimeTrackView::Draw(
          FindTrack()->SubstitutePendingChangedTrack());
       DrawTimeTrack( context, *tt, tt->GetRuler(), rect );
    }
+   CommonTrackView::Draw( context, rect, iPass );
 }

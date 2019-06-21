@@ -1881,4 +1881,5 @@ void WaveTrackView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
+   CommonTrackView::Draw( context, rect, iPass );
 }
