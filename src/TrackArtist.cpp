@@ -350,14 +350,17 @@ void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t
    image.InitAlpha();
    unsigned char *alpha=image.GetAlpha();
    memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
-    
-   wxGraphicsContext &gc=*wxGraphicsContext::Create(image);
-   // This is to a gc, not a dc.
-   AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-   gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
-   // delete the gc so as to free and so update the wxImage.
-   delete &gc;
+   
+   {
+      std::unique_ptr< wxGraphicsContext >
+         pGc{ wxGraphicsContext::Create(image) };
+      auto &gc = *pGc;
+      // This is to a gc, not a dc.
+      AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
+      // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
+      gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
+      // destructor of gc updates the wxImage.
+   }
    wxBitmap bitmap( image );
    dc.DrawBitmap( bitmap, rect.x+6, rect.y);
 #endif
