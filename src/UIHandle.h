@@ -41,11 +41,6 @@ public:
    // Future: may generalize away from current Track class
    using Cell = TrackPanelCell;
 
-   // Argument for the drawing function
-   enum DrawingPass {
-      Panel,
-   };
-
    virtual ~UIHandle() = 0;
 
    // Before clicking, the handle is notified that it has been "hit"
@@ -104,17 +99,6 @@ public:
    // Assume previously Clicked and not yet Released or Cancelled.
    // Cancelled in return flags has no effect.
    virtual Result Cancel(AudacityProject *pProject) = 0;
-
-   // Draw extras over cells.  Default does nothing.
-   // Supplies only the whole panel rectangle for now.
-   // If pass is Cells, then any drawing that extends outside the cells
-   // is later overlaid with the cell bevels and the empty background color.
-   // Otherwise (Panel), it is a later drawing pass that will not be overlaid.
-   // This is invoked on the hit test target even before it is clicked,
-   // and also during drag.
-   virtual void DrawExtras
-      (DrawingPass pass,
-       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);
 
    // Whether to force Release (not Cancel!) of the drag when a
    // keystroke command is about to be dispatched.  Default is always false.

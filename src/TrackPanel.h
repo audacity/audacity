@@ -173,10 +173,6 @@ public:
 protected:
    void DrawTracks(wxDC * dc);
 
-   void DrawEverythingElse(TrackPanelDrawingContext &context,
-                           const wxRegion & region,
-                           const wxRect & clip);
-
 public:
    // Set the object that performs catch-all event handling when the pointer
    // is not in any track or ruler or control panel.

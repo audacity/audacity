@@ -911,70 +911,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    mTrackArtist->hasSolo = hasSolo;
 
    this->CellularPanel::Draw( context, TrackArtist::NPasses );
-
-   // Draw the rest, including the click-to-deselect blank area below all
-   // tracks
-   DrawEverythingElse(context, region, clip);
    TrackArt::DrawTrackNames( context, GetTracks(), region, clip );
-}
-
-/// Draws 'Everything else'.  In particular it draws:
-///  - Drop shadow for tracks and vertical rulers.
-///  - Zooming Indicators.
-///  - Fills in space below the tracks.
-void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
-                                    const wxRegion &region,
-                                    const wxRect & clip)
-{
-   // We draw everything else
-   auto dc = &context.dc;
-
-   // Fix the horizontal extent, will vary the vertical:
-   wxRect trackRect{
-      kLeftMargin, 0, clip.width - (kLeftMargin + kRightMargin), 0
-   };
-   wxRect focusRect{};
-
-   // The loop below now groups each track with the margin BELOW it, to
-   // correspond better with the subdivision of panel area used in hit testing.
-
-   for ( auto leaderTrack : GetTracks()->Leaders< const Track >()
-         // Predicate is true iff any channel in the group is wholly or partly
-         // visible:
-         + IsVisibleTrack{ GetProject() } ) {
-      const auto channels = TrackList::Channels(leaderTrack);
-      bool focused = false;
-      trackRect.height = 0;
-      bool first = true;
-      for (auto channel : channels) {
-         focused = focused || mAx->IsFocused(channel);
-         auto &view = TrackView::Get( *channel );
-         if (first)
-            first = false,
-            trackRect.y = view.GetY() - mViewInfo->vpos + kTopMargin;
-         trackRect.height += view.GetHeight();
-      }
-
-      if (focused) {
-         focusRect = trackRect;
-         focusRect.height -= kSeparatorThickness;
-      }
-
-      // Believe it or not, we can speed up redrawing if we don't
-      // redraw the vertical ruler when only the waveform data has
-      // changed.  An example is during recording.
-
-#if DEBUG_DRAW_TIMING
-//      wxRect rbox = region.GetBox();
-//      wxPrintf(wxT("Update Region: %d %d %d %d\n"),
-//             rbox.x, rbox.y, rbox.width, rbox.height);
-#endif
-   }
-
-   auto target = Target();
-
-   if (target)
-      target->DrawExtras(UIHandle::Panel, dc, region, clip);
 }
 
 void TrackPanel::SetBackgroundCell
