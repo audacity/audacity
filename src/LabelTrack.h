@@ -169,10 +169,6 @@ public:
    double mClipLen;
 
    int miLastLabel;                 // used by FindNextLabel and FindPrevLabel
-
-private:
-   std::shared_ptr<TrackView> DoGetView() override;
-   std::shared_ptr<TrackControls> DoGetControls() override;
 };
 
 struct LabelTrackEvent : TrackListEvent

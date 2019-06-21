@@ -170,3 +170,11 @@ PopupMenuTable *TimeTrackControls::GetMenuExtension(Track *)
 {
    return &TimeTrackMenuTable::Instance();
 }
+
+using DoGetTimeTrackControls = DoGetControls::Override< TimeTrack >;
+template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function {
+   return [](TimeTrack &track) {
+      return std::make_shared<TimeTrackControls>( track.SharedPointer() );
+   };
+}
+static DoGetTimeTrackControls registerDoGetTimeTrackControls;

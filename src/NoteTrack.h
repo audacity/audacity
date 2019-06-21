@@ -222,10 +222,6 @@ public:
    int mVisibleChannels; // bit set of visible channels
 
    std::weak_ptr<StretchHandle> mStretchHandle;
-
-protected:
-   std::shared_ptr<TrackView> DoGetView() override;
-   std::shared_ptr<TrackControls> DoGetControls() override;
 };
 
 /// Data used to display a note track

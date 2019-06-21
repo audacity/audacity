@@ -508,6 +508,7 @@
     <ClInclude Include="..\..\..\src\AColor.h" />
     <ClInclude Include="..\..\..\src\AdornedRulerPanel.h" />
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
+    <ClInclude Include="..\..\..\src\AttachedVirtualFunction.h" />
     <ClInclude Include="..\..\..\src\Audacity.h" />
     <ClInclude Include="..\..\..\src\AudacityApp.h" />
     <ClInclude Include="..\..\..\src\AudacityException.h" />

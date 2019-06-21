@@ -103,6 +103,7 @@ audacity_SOURCES = \
 	AdornedRulerPanel.cpp \
 	AdornedRulerPanel.h \
 	AllThemeResources.h \
+	AttachedVirtualFunction.h \
 	Audacity.h \
 	AudacityApp.cpp \
 	AudacityApp.h \

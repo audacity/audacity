@@ -1283,3 +1283,11 @@ void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
                                PAN_SLIDER);
    gPanCaptured->SetDefaultValue(defPos);
 }
+
+using DoGetWaveTrackControls = DoGetControls::Override< WaveTrack >;
+template<> template<> auto DoGetWaveTrackControls::Implementation() -> Function {
+   return [](WaveTrack &track) {
+      return std::make_shared<WaveTrackControls>( track.SharedPointer() );
+   };
+}
+static DoGetWaveTrackControls registerDoGetWaveTrackControls;

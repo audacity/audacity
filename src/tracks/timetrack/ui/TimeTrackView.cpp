@@ -43,15 +43,13 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackView> TimeTrack::DoGetView()
-{
-   return std::make_shared<TimeTrackView>( SharedPointer() );
+using DoGetTimeTrackView = DoGetView::Override< TimeTrack >;
+template<> template<> auto DoGetTimeTrackView::Implementation() -> Function {
+   return [](TimeTrack &track) {
+      return std::make_shared<TimeTrackView>( track.SharedPointer() );
+   };
 }
-
-std::shared_ptr<TrackControls> TimeTrack::DoGetControls()
-{
-   return std::make_shared<TimeTrackControls>( SharedPointer() );
-}
+static DoGetTimeTrackView registerDoGetTimeTrackView;
 
 std::shared_ptr<TrackVRulerControls> TimeTrackView::DoGetVRulerControls()
 {
