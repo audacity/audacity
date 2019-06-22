@@ -263,8 +263,8 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Return another, associated TrackPanelCell object that implements
    // click and drag and keystrokes in the track contents.
-   std::shared_ptr<TrackView> GetTrackView();
-   std::shared_ptr<const TrackView> GetTrackView() const;
+   std::shared_ptr<CommonTrackCell> GetTrackView();
+   std::shared_ptr<const CommonTrackCell> GetTrackView() const;
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
@@ -704,7 +704,7 @@ public:
    bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
 
 protected:
-   std::shared_ptr<TrackView> mpView;
+   std::shared_ptr<CommonTrackCell> mpView;
    std::shared_ptr<CommonTrackCell> mpControls;
 };
 

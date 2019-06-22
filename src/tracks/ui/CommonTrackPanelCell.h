@@ -62,6 +62,9 @@ public:
 
   ~CommonTrackCell();
 
+   // Copy state, for undo/redo purposes
+   virtual void Copy( const CommonTrackCell &other );
+
    std::shared_ptr<Track> DoFindTrack() override;
 
    virtual void Reparent( const std::shared_ptr<Track> &parent );

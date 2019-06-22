@@ -46,8 +46,13 @@ int TrackView::GetTotalHeight( const TrackList &list )
    return GetCumulativeHeight( *list.Any().rbegin() );
 }
 
-void TrackView::Copy( const TrackView &other )
+void TrackView::Copy( const CommonTrackCell &otherCell )
 {
+   auto pOther = dynamic_cast< const TrackView* >( &otherCell );
+   if ( !pOther )
+      return;
+   auto &other = *pOther;
+
    mMinimized = other.mMinimized;
 
    // Let mY remain 0 -- TrackPositioner corrects it later
@@ -57,12 +62,12 @@ void TrackView::Copy( const TrackView &other )
 
 TrackView &TrackView::Get( Track &track )
 {
-   return *track.GetTrackView();
+   return static_cast<TrackView&>( *track.GetTrackView() );
 }
 
 const TrackView &TrackView::Get( const Track &track )
 {
-   return *track.GetTrackView();
+   return static_cast<const TrackView&>( *track.GetTrackView() );
 }
 
 void TrackView::SetMinimized(bool isMinimized)
@@ -105,7 +110,7 @@ void TrackView::DoSetMinimized(bool isMinimized)
    mMinimized = isMinimized;
 }
 
-std::shared_ptr<TrackView> Track::GetTrackView()
+std::shared_ptr<CommonTrackCell> Track::GetTrackView()
 {
    if (!mpView)
       // create on demand
@@ -113,7 +118,7 @@ std::shared_ptr<TrackView> Track::GetTrackView()
    return mpView;
 }
 
-std::shared_ptr<const TrackView> Track::GetTrackView() const
+std::shared_ptr<const CommonTrackCell> Track::GetTrackView() const
 {
    return const_cast<Track*>(this)->GetTrackView();
 }

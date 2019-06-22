@@ -97,7 +97,7 @@ void LabelTrackView::UnbindFrom( LabelTrack *pParent )
       EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
 }
 
-void LabelTrackView::Copy( const TrackView &other )
+void LabelTrackView::Copy( const CommonTrackCell &other )
 {
    TrackView::Copy( other );
 
