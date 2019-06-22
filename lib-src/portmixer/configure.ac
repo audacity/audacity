@@ -95,7 +95,7 @@ if [[ $have_windows = "yes" ]] ; then
    AC_CHECK_HEADER(pa_win_ds.h, have_ds=yes, [],
       [[#include <windows.h>]])
    if [[ $have_ds = "yes" ]] ; then
-      AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_ds=no])
+      AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_support=no])
       if [[ $have_support = "no" ]] ; then
          AC_MSG_WARN([Missing PaWinDS_GetStreamInputGUID support in pa_win_ds.h]);
       fi
