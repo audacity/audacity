@@ -15,10 +15,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelMouseEvent.h"
 #include "HitTestResult.h"
 
+#include "tracks/ui/TrackView.h"
+
 #include <wx/mousestate.h>
 
-TrackPanelResizerCell::TrackPanelResizerCell( std::shared_ptr<Track> pTrack )
-: mpTrack{ pTrack }
+TrackPanelResizerCell::TrackPanelResizerCell(
+   const std::shared_ptr<TrackView> &pView )
+   : mwView{ pView }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
@@ -26,7 +29,7 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
 {
    (void)pProject;// Compiler food
    std::vector<UIHandlePtr> results;
-   auto pTrack = mpTrack.lock();
+   auto pTrack = FindTrack();
    if (pTrack) {
       auto result = std::make_shared<TrackPanelResizeHandle>(
          pTrack, st.state.m_y );
@@ -34,4 +37,12 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
       results.push_back(result);
    }
    return results;
+}
+
+std::shared_ptr<Track> TrackPanelResizerCell::DoFindTrack()
+{
+   const auto pView = mwView.lock();
+   if ( pView )
+      return pView->FindTrack();
+   return {};
 }

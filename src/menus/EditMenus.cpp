@@ -1,12 +1,13 @@
 #include "../Audacity.h" // for USE_* macros
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../Tags.h"
@@ -21,6 +22,7 @@
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
 
 // private helper classes and functions
@@ -45,18 +47,19 @@ bool DoPasteText(AudacityProject &project)
    for (auto pLabelTrack : tracks.Any<LabelTrack>())
    {
       // Does this track have an active label?
-      if (pLabelTrack->HasSelection()) {
+      if (LabelTrackView::Get( *pLabelTrack ).HasSelection()) {
 
          // Yes, so try pasting into it
-         if (pLabelTrack->PasteSelectedText(selectedRegion.t0(),
+         auto &view = LabelTrackView::Get( *pLabelTrack );
+         if (view.PasteSelectedText(selectedRegion.t0(),
                                             selectedRegion.t1()))
          {
-            ProjectManager::Get( project )
+            ProjectHistory::Get( project )
                .PushState(_("Pasted text from the clipboard"), _("Paste"));
 
             // Make sure caret is in view
             int x;
-            if (pLabelTrack->CalcCursorX(&x)) {
+            if (view.CalcCursorX(&x)) {
                trackPanel.ScrollIntoView(x);
             }
 
@@ -118,7 +121,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
             },
             [&](const TimeTrack *) {
                // Maintain uniqueness of the time track!
-               pNewTrack = tracks.GetTimeTrack();
+               pNewTrack = *tracks.Any<TimeTrack>().begin();
                if (!pNewTrack)
                   uNewTrack = trackFactory.NewTimeTrack(),
                   pNewTrack = uNewTrack.get();
@@ -151,7 +154,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
                 // half a sample earlier
          quantT1 - quantT0);
 
-      ProjectManager::Get( project )
+      ProjectHistory::Get( project )
          .PushState(_("Pasted from the clipboard"), _("Paste"));
 
       window.RedrawProject();
@@ -220,7 +223,7 @@ bool DoEditMetadata
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );
-         ProjectManager::Get( project ).PushState(title, shortUndoDescription);
+         ProjectHistory::Get( project ).PushState(title, shortUndoDescription);
       }
       bool bShowInFuture;
       gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
@@ -237,7 +240,7 @@ void DoUndo(AudacityProject &project)
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   if (!ProjectManager::Get( project ).UndoAvailable()) {
+   if (!ProjectHistory::Get( project ).UndoAvailable()) {
       AudacityMessageBox(_("Nothing to undo"));
       return;
    }
@@ -249,13 +252,9 @@ void DoUndo(AudacityProject &project)
 
    undoManager.Undo(
       [&]( const UndoState &state ){
-         ProjectManager::Get( project ).PopState( state ); } );
+         ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   window.RedrawProject();
-
-   MenuManager::ModifyUndoMenuItems(project);
 }
 
 // Menu handler functions
@@ -274,7 +273,7 @@ void OnRedo(const CommandContext &context)
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   if (!ProjectManager::Get( project ).RedoAvailable()) {
+   if (!ProjectHistory::Get( project ).RedoAvailable()) {
       AudacityMessageBox(_("Nothing to redo"));
       return;
    }
@@ -285,13 +284,9 @@ void OnRedo(const CommandContext &context)
 
    undoManager.Redo(
       [&]( const UndoState &state ){
-         ProjectManager::Get( project ).PopState( state ); } );
+         ProjectHistory::Get( project ).PopState( state ); } );
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-
-   window.RedrawProject();
-
-   MenuManager::ModifyUndoMenuItems(project);
 }
 
 void OnCut(const CommandContext &context)
@@ -308,7 +303,8 @@ void OnCut(const CommandContext &context)
    // in the middle of editing the label text and select "Cut".
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
-      if (lt->CutSelectedText()) {
+      auto &view = LabelTrackView::Get( *lt );
+      if (view.CutSelectedText()) {
          trackPanel.Refresh(false);
          return;
       }
@@ -372,7 +368,7 @@ void OnCut(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectManager::Get( project ).PushState(_("Cut to the clipboard"), _("Cut"));
+   ProjectHistory::Get( project ).PushState(_("Cut to the clipboard"), _("Cut"));
 
    // Bug 1663
    //mRuler->ClearPlayRegion();
@@ -398,7 +394,7 @@ void OnDelete(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectManager::Get( project ).PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
+   ProjectHistory::Get( project ).PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
                               seconds,
                               selectedRegion.t0()),
              _("Delete"));
@@ -415,7 +411,8 @@ void OnCopy(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
-      if (lt->CopySelectedText()) {
+      auto &view = LabelTrackView::Get( *lt );
+      if (view.CopySelectedText()) {
          //trackPanel.Refresh(false);
          return;
       }
@@ -698,7 +695,7 @@ void OnPaste(const CommandContext &context)
    {
       selectedRegion.setT1( t0 + clipboard.Duration() );
 
-      ProjectManager::Get( project )
+      ProjectHistory::Get( project )
          .PushState(_("Pasted from the clipboard"), _("Paste"));
 
       window.RedrawProject();
@@ -731,7 +728,7 @@ void OnDuplicate(const CommandContext &context)
          break;
    }
 
-   ProjectManager::Get( project ).PushState(_("Duplicated"), _("Duplicate"));
+   ProjectHistory::Get( project ).PushState(_("Duplicated"), _("Duplicate"));
 
    window.RedrawProject();
 }
@@ -773,7 +770,7 @@ void OnSplitCut(const CommandContext &context)
    clipboard.Assign( std::move( newClipboard ),
       selectedRegion.t0(), selectedRegion.t1(), &project );
 
-   ProjectManager::Get( project ).PushState(_("Split-cut to the clipboard"), _("Split Cut"));
+   ProjectHistory::Get( project ).PushState(_("Split-cut to the clipboard"), _("Split Cut"));
 
    window.RedrawProject();
 }
@@ -796,7 +793,7 @@ void OnSplitDelete(const CommandContext &context)
       }
    );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       wxString::Format(_("Split-deleted %.2f seconds at t=%.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -815,7 +812,7 @@ void OnSilence(const CommandContext &context)
    for ( auto n : tracks.Selected< AudioTrack >() )
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       wxString::Format(_("Silenced selected tracks for %.2f seconds at %.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -848,7 +845,7 @@ void OnTrim(const CommandContext &context)
       }
    );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       wxString::Format(
          _("Trim selected audio tracks from %.2f seconds to %.2f seconds"),
          selectedRegion.t0(), selectedRegion.t1()),
@@ -870,7 +867,7 @@ void OnSplit(const CommandContext &context)
    for (auto wt : tracks.Selected< WaveTrack >())
       wt->Split( sel0, sel1 );
 
-   ProjectManager::Get( project ).PushState(_("Split"), _("Split"));
+   ProjectHistory::Get( project ).PushState(_("Split"), _("Split"));
    trackPanel.Refresh(false);
 #if 0
 //ANSWER-ME: Do we need to keep this commented out OnSplit() code?
@@ -970,7 +967,7 @@ void OnSplitNew(const CommandContext &context)
          break;
    }
 
-   ProjectManager::Get( project )
+   ProjectHistory::Get( project )
       .PushState(_("Split to new track"), _("Split New"));
 
    window.RedrawProject();
@@ -987,7 +984,7 @@ void OnJoin(const CommandContext &context)
       wt->Join(selectedRegion.t0(),
                selectedRegion.t1());
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       wxString::Format(_("Joined %.2f seconds at t=%.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -1007,7 +1004,7 @@ void OnDisjoin(const CommandContext &context)
       wt->Disjoin(selectedRegion.t0(),
                   selectedRegion.t1());
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       wxString::Format(_("Detached %.2f seconds at t=%.2f"),
          selectedRegion.duration(),
          selectedRegion.t0()),
@@ -1098,12 +1095,36 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
 
+const ReservedCommandFlag
+   CutCopyAvailableFlag{
+      [](const AudacityProject &project){
+         auto range = TrackList::Get( project ).Any<const LabelTrack>()
+            + [](const LabelTrack *pTrack){
+               return LabelTrackView::Get( *pTrack ).IsTextSelected();
+            };
+         if ( !range.empty() )
+            return true;
+
+         if (
+            !AudioIOBusyPred( project )
+         &&
+            TimeSelectedPred( project )
+         &&
+            TracksSelectedPred( project )
+         )
+            return true;
+
+         return false;
+      },
+      cutCopyOptions
+   };
+
 MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   constexpr auto NotBusyTimeAndTracksFlags =
+   static const auto NotBusyTimeAndTracksFlags =
       AudioIONotBusyFlag | TimeSelectedFlag | TracksSelectedFlag;
 
    // The default shortcut key for Redo is different on different platforms.
@@ -1143,12 +1164,10 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       /* i18n-hint: (verb)*/
       Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
          AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
-         Options{ wxT("Ctrl+X") }
-            .Mask( AudioIONotBusyFlag | CutCopyAvailableFlag ) ),
+         wxT("Ctrl+X") ),
       Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
          AudioIONotBusyFlag | NoAutoSelect,
-         Options{ wxT("Ctrl+K") }
-            .Mask( AudioIONotBusyFlag ) ),
+         wxT("Ctrl+K") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
          AudioIONotBusyFlag | CutCopyAvailableFlag, wxT("Ctrl+C") ),
@@ -1164,10 +1183,12 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       Menu( _("R&emove Special"),
          /* i18n-hint: (verb) Do a special kind of cut*/
          Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+X") ),
+            NotBusyTimeAndTracksFlags,
+            Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
          /* i18n-hint: (verb) Do a special kind of DELETE*/
          Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+K") ),
+            NotBusyTimeAndTracksFlags,
+            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() ),
 
          Separator(),
 
@@ -1178,7 +1199,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
          /* i18n-hint: (verb)*/
          Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
             AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
-            wxT("Ctrl+T") )
+            Options{ wxT("Ctrl+T") }.UseStrictFlags() )
       ),
 
       Separator(),
@@ -1188,10 +1209,11 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
       Menu( _("Clip B&oundaries"),
          /* i18n-hint: (verb) It's an item on a menu. */
          Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
-            AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+I") ),
+            AudioIONotBusyFlag | WaveTracksSelectedFlag,
+            Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
          Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
             AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-            wxT("Ctrl+Alt+I") ),
+            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() ),
 
          Separator(),
 
@@ -1224,17 +1246,39 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   constexpr auto flags =
+   static const auto flags =
       AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
    return Menu( _("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect),
-         Options{ wxT("Backspace") }.Mask( flags ) ),
+         wxT("Backspace") ),
       Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
          (flags | NoAutoSelect),
-         Options{ wxT("Delete") }.Mask( flags ) )
+         wxT("Delete") )
    );
 }
+
+auto canSelectAll = [](const AudacityProject &project){
+   return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
+auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
+   if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
+      (flagsRqd & NoAutoSelect).none() )
+      SelectActions::DoSelectAllAudio(project);
+};
+
+RegisteredMenuItemEnabler selectTracks{{
+   TracksExistFlag,
+   TracksSelectedFlag,
+   canSelectAll,
+   selectAll
+}};
+
+RegisteredMenuItemEnabler selectWaveTracks{{
+   WaveTracksExistFlag,
+   TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag,
+   canSelectAll,
+   selectAll
+}};
 
 #undef XXO
 #undef FN

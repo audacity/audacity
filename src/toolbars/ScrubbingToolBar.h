@@ -40,7 +40,7 @@ class ScrubbingToolBar final : public ToolBar {
 
 public:
 
-   ScrubbingToolBar();
+   ScrubbingToolBar( AudacityProject &project );
    virtual ~ScrubbingToolBar();
 
    static ScrubbingToolBar &Get( AudacityProject &project );

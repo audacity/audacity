@@ -69,7 +69,7 @@ private:
 typedef std::vector<EnvPoint> EnvArray;
 struct TrackPanelDrawingContext;
 
-class Envelope final : public XMLTagHandler {
+class Envelope /* not final */ : public XMLTagHandler {
 public:
    // Envelope can define a piecewise linear function, or piecewise exponential.
    Envelope(bool exponential, double minValue, double maxValue, double defaultValue);
@@ -82,6 +82,15 @@ public:
    void Initialize(int numPoints);
 
    virtual ~Envelope();
+
+   /** \brief Get many envelope points for pixel columns at once,
+    * but don't assume uniform time per pixel.
+   */
+   static void GetValues
+      ( const Envelope &env,
+        double aligned_time, double sampleDur,
+        double *buffer, int bufferLen, int leftOffset,
+        const ZoomInfo &zoomInfo);
 
    // Return true if violations of point ordering invariants were detected
    // and repaired
@@ -112,12 +121,6 @@ public:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   void DrawPoints(
-      TrackPanelDrawingContext &context,
-      const wxRect & r,
-      bool dB, double dBRange,
-      float zoomMin, float zoomMax, bool mirrored) const;
-
    // Handling Cut/Copy/Paste events
    // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
@@ -147,14 +150,6 @@ public:
     * This is much faster than calling GetValue() multiple times if you need
     * more than one value in a row. */
    void GetValues(double *buffer, int len, double t0, double tstep) const;
-
-   /** \brief Get many envelope points for pixel columns at once,
-    * but don't assume uniform time per pixel.
-   */
-   void GetValues
-      ( double aligned_time, double sampleDur,
-        double *buffer, int bufferLen, int leftOffset,
-        const ZoomInfo &zoomInfo) const;
 
    // Guarantee an envelope point at the end of the domain.
    void Cap( double sampleDur );
@@ -187,6 +182,8 @@ public:
 
    bool IsDirty() const;
 
+   void Clear() { mEnv.clear(); }
+
    /** \brief Add a point at a particular absolute time coordinate */
    int InsertOrReplace(double when, double value)
    { return InsertOrReplaceRelative( when - mOffset, value ); }
@@ -205,15 +202,14 @@ public:
    /** \brief Return number of points */
    size_t GetNumberOfPoints() const;
 
-private:
-   int InsertOrReplaceRelative(double when, double value);
-
-   friend class EnvelopeEditor;
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
    {
       return mEnv[index];
    }
+
+private:
+   int InsertOrReplaceRelative(double when, double value);
 
    std::pair<int, int> EqualRange( double when, double sampleDur ) const;
 
@@ -233,11 +229,11 @@ public:
    bool GetDragPointValid() const { return mDragPointValid; }
    // Modify the dragged point and change its value.
    // But consistency constraints may move it less then you ask for.
-
-private:
    void MoveDragPoint(double newWhen, double value);
    // May delete the drag point.  Restores envelope consistency.
    void ClearDragPoint();
+
+private:
    void AddPointAtEnd( double t, double val );
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
    // relative time
@@ -268,8 +264,6 @@ private:
    int mDragPoint { -1 };
 
    mutable int mSearchGuess { -2 };
-   friend class GetInfoCommand;
-   friend class SetEnvelopeCommand;
 };
 
 inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
@@ -279,49 +273,29 @@ inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
    mVal = val;
 }
 
-// A class that holds state for the duration of dragging
-// of an envelope point.
-class EnvelopeEditor
+/*
+PRL: This class gives access to all the important numerical data in a TimeTrack,
+without need for the entire TimeTrack.
+
+Confusingly, Envelope already carried its own limiting values, but those
+in the TimeTrack were not guaranteed to be the same.
+
+I'm just preserving behavior as I break file dependencies and won't try to fix
+that confusion now.
+*/
+class BoundedEnvelope final : public Envelope
 {
 public:
-   EnvelopeEditor(Envelope &envelope, bool mirrored);
-   ~EnvelopeEditor();
+   using Envelope::Envelope;
 
-   // Event Handlers
-   // Each of these returns true if the envelope needs to be redrawn
-   bool MouseEvent(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin = -1.0, float zoomMax = 1.0);
+   double GetRangeLower() const { return mRangeLower; }
+   double GetRangeUpper() const { return mRangeUpper; }
 
-private:
-   bool HandleMouseButtonDown(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin = -1.0, float zoomMax = 1.0);
-   bool HandleDragging(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin = -1.0, float zoomMax = 1.0, float eMin = 0., float eMax = 2.);
-   bool HandleMouseButtonUp();
+   void SetRangeLower(double lower) { mRangeLower = lower; }
+   void SetRangeUpper(double upper) { mRangeUpper = upper; }
 
 private:
-   float ValueOfPixel(int y, int height, bool upper,
-      bool dB, double dBRange,
-      float zoomMin, float zoomMax);
-   void MoveDragPoint(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin, float zoomMax);
-
-   Envelope &mEnvelope;
-   const bool mMirrored;
-
-   /** \brief Number of pixels contour is from the true envelope. */
-   int mContourOffset;
-
-   // double mInitialVal;
-
-   // int mInitialY;
-   bool mUpper;
-   int mButton;
-   bool mDirty;
+   double mRangeLower{}, mRangeUpper{};
 };
 
 #endif

@@ -19,6 +19,7 @@
 #include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
+wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 size_t AllProjects::size() const
 {
@@ -155,7 +156,7 @@ void AudacityProject::SetStatus(const wxString &msg)
    }
 }
 
-wxFrame &GetProjectFrame( AudacityProject &project )
+AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
 {
    auto ptr = project.GetFrame();
    if ( !ptr )
@@ -163,7 +164,7 @@ wxFrame &GetProjectFrame( AudacityProject &project )
    return *ptr;
 }
 
-const wxFrame &GetProjectFrame( const AudacityProject &project )
+AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project )
 {
    auto ptr = project.GetFrame();
    if ( !ptr )

@@ -28,7 +28,6 @@ class wxStatusBar;
 class AButton;
 class AudacityProject;
 class TrackList;
-class TimeTrack;
 
 struct AudioIOStartStreamOptions;
 class SelectedRegion;
@@ -44,16 +43,18 @@ class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 struct TransportTracks;
+TransportTracks GetAllPlaybackTracks(
+   TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar final : public ToolBar {
 
  public:
 
-   ControlToolBar();
+   ControlToolBar( AudacityProject &project );
    virtual ~ControlToolBar();
 
-   static bool IsTransportingPinned();
+   bool IsTransportingPinned() const;
 
    static ControlToolBar *Find( AudacityProject &project );
    static ControlToolBar &Get( AudacityProject &project );
@@ -98,7 +99,7 @@ class ControlToolBar final : public ToolBar {
    bool IsRecordDown() const;
 
    // A project is only allowed to stop an audio stream that it owns.
-   bool CanStopAudioStream ();
+   bool CanStopAudioStream () const;
 
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
@@ -208,6 +209,11 @@ class ControlToolBar final : public ToolBar {
    DECLARE_CLASS(ControlToolBar)
    DECLARE_EVENT_TABLE()
 };
+
+#include "../commands/CommandFlag.h"
+
+extern const ReservedCommandFlag
+   CanStopAudioStreamFlag;
 
 #endif
 

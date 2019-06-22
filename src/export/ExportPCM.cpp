@@ -532,12 +532,9 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
       size_t maxBlockLen = 44100 * 5;
 
-      const WaveTrackConstArray waveTracks =
-      tracks.GetWaveTrackConstArray(selectionOnly, false);
       {
          wxASSERT(info.channels >= 0);
-         auto mixer = CreateMixer(waveTracks,
-                                  tracks.GetTimeTrack(),
+         auto mixer = CreateMixer(tracks, selectionOnly,
                                   t0, t1,
                                   info.channels, maxBlockLen, true,
                                   rate, format, true, mixerSpec);

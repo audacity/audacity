@@ -11,11 +11,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackSelectHandle.h"
 
-#include "TrackControls.h"
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectManager.h"
+#include "../../ProjectHistory.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -181,7 +180,7 @@ UIHandle::Result TrackSelectHandle::Release
    wxASSERT( mpTrack );
    if (mRearrangeCount != 0) {
       AudacityProject *const project = ::GetActiveProject();
-      ProjectManager::Get( *project ).PushState(
+      ProjectHistory::Get( *project ).PushState(
          wxString::Format(
             /* i18n-hint: will substitute name of track for %s */
             ( mRearrangeCount < 0 ? _("Moved '%s' up") : _("Moved '%s' down") ),
@@ -200,7 +199,7 @@ UIHandle::Result TrackSelectHandle::Release
 
 UIHandle::Result TrackSelectHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    // Bug 1677
    mpTrack.reset();
    return RefreshCode::RefreshAll;

@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 #include "../../../Project.h"
-#include "../../../ProjectManager.h"
+#include "../../../ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TimeTrack.h"
 #include "../../../widgets/PopupMenuTable.h"
@@ -27,7 +27,7 @@ std::vector<UIHandlePtr> TimeTrackControls::HitTest
 (const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {
-   return TrackControls::HitTest(state, pProject);
+   return CommonTrackControls::HitTest(state, pProject);
 }
 
 enum
@@ -49,7 +49,7 @@ public:
 private:
    void InitMenu(Menu *pMenu, void *pUserData) override
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
       pMenu->Check(OnTimeTrackLogIntID, pTrack->GetInterpolateLog());
@@ -64,7 +64,7 @@ private:
       mpData = nullptr;
    }
 
-   TrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData;
 
    void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
    void OnTimeTrackLin(wxCommandEvent & /*event*/);
@@ -105,7 +105,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          AudacityProject *const project = ::GetActiveProject();
          pTrack->SetRangeLower((double)lower / 100.0);
          pTrack->SetRangeUpper((double)upper / 100.0);
-         ProjectManager::Get( *project )
+         ProjectHistory::Get( *project )
             .PushState(wxString::Format(_("Set range to '%ld' - '%ld'"),
             lower,
             upper),
@@ -121,7 +121,7 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(false);
    AudacityProject *const project = ::GetActiveProject();
-   ProjectManager::Get( *project )
+   ProjectHistory::Get( *project )
       .PushState(_("Set time track display to linear"), _("Set Display"));
 
    using namespace RefreshCode;
@@ -133,7 +133,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(true);
    AudacityProject *const project = ::GetActiveProject();
-   ProjectManager::Get( *project )
+   ProjectHistory::Get( *project )
       .PushState(_("Set time track display to logarithmic"), _("Set Display"));
 
    using namespace RefreshCode;
@@ -146,12 +146,12 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
    AudacityProject *const project = ::GetActiveProject();
    if (pTrack->GetInterpolateLog()) {
       pTrack->SetInterpolateLog(false);
-      ProjectManager::Get( *project )
+      ProjectHistory::Get( *project )
          .PushState(_("Set time track interpolation to linear"), _("Set Interpolation"));
    }
    else {
       pTrack->SetInterpolateLog(true);
-      ProjectManager::Get( *project ).
+      ProjectHistory::Get( *project ).
          PushState(_("Set time track interpolation to logarithmic"), _("Set Interpolation"));
    }
    mpData->result = RefreshCode::RefreshAll;
@@ -170,3 +170,11 @@ PopupMenuTable *TimeTrackControls::GetMenuExtension(Track *)
 {
    return &TimeTrackMenuTable::Instance();
 }
+
+using DoGetTimeTrackControls = DoGetControls::Override< TimeTrack >;
+template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function {
+   return [](TimeTrack &track) {
+      return std::make_shared<TimeTrackControls>( track.SharedPointer() );
+   };
+}
+static DoGetTimeTrackControls registerDoGetTimeTrackControls;

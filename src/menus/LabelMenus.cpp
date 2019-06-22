@@ -1,16 +1,18 @@
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../Clipboard.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../ProjectAudioIO.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
 
 // private helper classes and functions
 namespace {
@@ -30,7 +32,7 @@ int DoAddLabel(
    bool useDialog;
    gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
    if (useDialog) {
-      if (LabelTrack::DialogForLabelName(
+      if (LabelTrackView::DialogForLabelName(
          project, region, wxEmptyString, title) == wxID_CANCEL)
          return -1;     // index
    }
@@ -56,23 +58,23 @@ int DoAddLabel(
 //   SelectNone();
    lt->SetSelected(true);
 
-   int focusTrackNumber;
+   int index;
    if (useDialog) {
-      focusTrackNumber = -2;
+      index = lt->AddLabel(region, title);
    }
    else {
-      focusTrackNumber = -1;
+      int focusTrackNumber = -1;
       if (pFocusedTrack && preserveFocus) {
          // Must remember the track to re-focus after finishing a label edit.
          // do NOT identify it by a pointer, which might dangle!  Identify
          // by position.
          focusTrackNumber = pFocusedTrack->GetIndex();
       }
+      index =
+         LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);
    }
 
-   int index = lt->AddLabel(region, title, focusTrackNumber);
-
-   ProjectManager::Get( project ).PushState(_("Added label"), _("Label"));
+   ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
 
    window.RedrawProject();
    if (!useDialog) {
@@ -255,7 +257,7 @@ struct Handler : CommandHandlerObject {
 void OnEditLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   LabelTrack::DoEditLabels(project);
+   LabelTrackView::DoEditLabels(project);
 }
 
 void OnAddLabel(const CommandContext &context)
@@ -271,6 +273,7 @@ void OnAddLabelPlaying(const CommandContext &context)
    auto &project = context.project;
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
+   auto gAudioIO = AudioIOBase::Get();
    if (token > 0 &&
        gAudioIO->IsStreamActive(token)) {
       double indicator = gAudioIO->GetStreamTime();
@@ -316,12 +319,13 @@ void OnPasteNewLabel(const CommandContext &context)
       // Unselect the last label, so we'll have just one active label when
       // we're done
       if (plt)
-         plt->Unselect();
+         LabelTrackView::Get( *plt ).SetSelectedIndex( -1 );
 
       // Add a NEW label, paste into it
       // Paul L:  copy whatever defines the selected region, not just times
-      lt->AddLabel(selectedRegion);
-      if (lt->PasteSelectedText(selectedRegion.t0(),
+      auto &view = LabelTrackView::Get( *lt );
+      view.AddLabel(selectedRegion);
+      if (view.PasteSelectedText(selectedRegion.t0(),
                                 selectedRegion.t1()))
          bPastedSomething = true;
 
@@ -337,7 +341,7 @@ void OnPasteNewLabel(const CommandContext &context)
    }
 
    if (bPastedSomething) {
-      ProjectManager::Get( project ).PushState(
+      ProjectHistory::Get( project ).PushState(
          _("Pasted from the clipboard"), _("Paste Text to New Label"));
 
       // Is this necessary? (carried over from former logic in OnPaste())
@@ -377,7 +381,7 @@ void OnCutLabels(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
    /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
       regions.*/
       _( "Cut labeled audio regions to clipboard" ),
@@ -401,7 +405,7 @@ void OnDeleteLabels(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just deleted the labeled audio regions*/
       _( "Deleted labeled audio regions" ),
       /* i18n-hint: (verb)*/
@@ -423,7 +427,7 @@ void OnSplitCutLabels(const CommandContext &context)
    EditClipboardByLabel( project,
       tracks, selectedRegion, &WaveTrack::SplitCut );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just split cut the labeled audio
          regions*/
       _( "Split Cut labeled audio regions to clipboard" ),
@@ -445,7 +449,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::SplitDelete, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on
          the labeled audio regions */
       _( "Split Deleted labeled audio regions" ),
@@ -468,7 +472,7 @@ void OnSilenceLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Silence, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb)*/
       _( "Silenced labeled audio regions" ),
       /* i18n-hint: (verb)*/
@@ -490,7 +494,7 @@ void OnCopyLabels(const CommandContext &context)
    EditClipboardByLabel( project,
       tracks, selectedRegion, &WaveTrack::CopyNonconst );
 
-   ProjectManager::Get( project ).PushState( _( "Copied labeled audio regions to clipboard" ),
+   ProjectHistory::Get( project ).PushState( _( "Copied labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/
       _( "Copy Labeled Audio" ) );
 
@@ -506,7 +510,7 @@ void OnSplitLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Split, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) past tense.  Audacity has just split the labeled
          audio (a point or a region)*/
       _( "Split labeled audio (points or regions)" ),
@@ -528,7 +532,7 @@ void OnJoinLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Join, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or
          regions) */
       _( "Joined labeled audio (points or regions)" ),
@@ -550,7 +554,7 @@ void OnDisjoinLabels(const CommandContext &context)
 
    EditByLabel( tracks, selectedRegion, &WaveTrack::Disjoin, false );
 
-   ProjectManager::Get( project ).PushState(
+   ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just detached the labeled audio regions.
       This message appears in history and tells you about something
       Audacity has done.*/
@@ -585,7 +589,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   constexpr auto NotBusyLabelsAndWaveFlags =
+   static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag |
       LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag;
 

@@ -10,21 +10,22 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectWindow.h"
 
+#include "Experimental.h"
+
 #include "AdornedRulerPanel.h"
 #include "AllThemeResources.h"
-#include "AudioIO.h"
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "RefreshCode.h"
 #include "TrackPanel.h"
+#include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
-#include "WaveTrack.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/SelectionBar.h"
-#include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/wxPanelWrapper.h"
@@ -351,6 +352,151 @@ BEGIN_EVENT_TABLE(ScrollBar, wxScrollBar)
    EVT_SET_FOCUS(ScrollBar::OnSetFocus)
 END_EVENT_TABLE()
 
+// Common mouse wheel handling in track panel cells, moved here to avoid
+// compilation dependencies on Track, TrackPanel, and Scrubbing at low levels
+// which made cycles
+static struct MouseWheelHandler {
+
+MouseWheelHandler()
+{
+   CommonTrackPanelCell::InstallMouseWheelHook( *this );
+}
+
+// Need a bit of memory from one call to the next
+mutable double mVertScrollRemainder = 0.0;
+
+unsigned operator()
+   ( const TrackPanelMouseEvent &evt, AudacityProject *pProject ) const
+{
+   using namespace RefreshCode;
+
+   if ( TrackList::Get( *pProject ).empty() )
+      // Scrolling and Zoom in and out commands are disabled when there are no tracks.
+      // This should be disabled too for consistency.  Otherwise
+      // you do see changes in the time ruler.
+      return Cancelled;
+
+   unsigned result = RefreshAll;
+   const wxMouseEvent &event = evt.event;
+   auto &viewInfo = ViewInfo::Get( *pProject );
+   Scrubber &scrubber = Scrubber::Get( *pProject );
+   auto &window = ProjectWindow::Get( *pProject );
+   const auto steps = evt.steps;
+
+   if (event.ShiftDown()
+       // Don't pan during smooth scrolling.  That would conflict with keeping
+       // the play indicator centered.
+       && !scrubber.IsScrollScrubbing()
+      )
+   {
+      // MM: Scroll left/right when used with Shift key down
+      window.TP_ScrollWindow(
+         viewInfo.OffsetTimeByPixels(
+            viewInfo.PositionToTime(0), 50.0 * -steps));
+   }
+   else if (event.CmdDown())
+   {
+#if 0
+         // JKC: Alternative scroll wheel zooming code
+         // using AudacityProject zooming, which is smarter,
+         // it keeps selections on screen and centred if it can,
+         // also this ensures mousewheel and zoom buttons give same result.
+         double ZoomFactor = pow(2.0, steps);
+         AudacityProject *p = GetProject();
+         if( steps > 0 )
+            p->ZoomInByFactor( ZoomFactor );
+         else
+            p->ZoomOutByFactor( ZoomFactor );
+#endif
+      // MM: Zoom in/out when used with Control key down
+      // We're converting pixel positions to times,
+      // counting pixels from the left edge of the track.
+      auto &trackPanel = TrackPanel::Get( *pProject );
+      int trackLeftEdge = trackPanel.GetLeftOffset();
+
+      // Time corresponding to mouse position
+      wxCoord xx;
+      double center_h;
+      double mouse_h = viewInfo.PositionToTime(event.m_x, trackLeftEdge);
+
+      // Scrubbing? Expand or contract about the center, ignoring mouse position
+      if (scrubber.IsScrollScrubbing())
+         center_h = viewInfo.h +
+            (trackPanel.GetScreenEndTime() - viewInfo.h) / 2.0;
+      // Zooming out? Focus on mouse.
+      else if( steps <= 0 )
+         center_h = mouse_h;
+      // No Selection? Focus on mouse.
+      else if((viewInfo.selectedRegion.t1() - viewInfo.selectedRegion.t0() ) < 0.00001  )
+         center_h = mouse_h;
+      // Before Selection? Focus on left
+      else if( mouse_h < viewInfo.selectedRegion.t0() )
+         center_h = viewInfo.selectedRegion.t0();
+      // After Selection? Focus on right
+      else if( mouse_h > viewInfo.selectedRegion.t1() )
+         center_h = viewInfo.selectedRegion.t1();
+      // Inside Selection? Focus on mouse
+      else
+         center_h = mouse_h;
+
+      xx = viewInfo.TimeToPosition(center_h, trackLeftEdge);
+
+      // Time corresponding to last (most far right) audio.
+      double audioEndTime = TrackList::Get( *pProject ).GetEndTime();
+
+// Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
+#if 0
+      // When zooming in in empty space, it's easy to 'lose' the waveform.
+      // This prevents it.
+      // IF zooming in
+      if (steps > 0)
+      {
+         // IF mouse is to right of audio
+         if (center_h > audioEndTime)
+            // Zooming brings far right of audio to mouse.
+            center_h = audioEndTime;
+      }
+#endif
+
+      wxCoord xTrackEnd = viewInfo.TimeToPosition( audioEndTime );
+      viewInfo.ZoomBy(pow(2.0, steps));
+
+      double new_center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
+      viewInfo.h += (center_h - new_center_h);
+
+      // If wave has gone off screen, bring it back.
+      // This means that the end of the track stays where it was.
+      if( viewInfo.h > audioEndTime )
+         viewInfo.h += audioEndTime - viewInfo.PositionToTime( xTrackEnd );
+
+
+      result |= FixScrollbars;
+   }
+   else
+   {
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
+      if (scrubber.IsScrubbing()) {
+         scrubber.HandleScrollWheel(steps);
+         evt.event.Skip(false);
+      }
+      else
+#endif
+      {
+         // MM: Scroll up/down when used without modifier keys
+         double lines = steps * 4 + mVertScrollRemainder;
+         mVertScrollRemainder = lines - floor(lines);
+         lines = floor(lines);
+         auto didSomething = window.TP_ScrollUpDown((int)-lines);
+         if (!didSomething)
+            result |= Cancelled;
+      }
+   }
+
+   return result;
+}
+
+} sMouseWheelHandler;
+
 AudacityProject::AttachedWindows::RegisteredFactory sProjectWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       wxRect wndRect;
@@ -493,6 +639,9 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mMainPage = pPage;
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
+
+   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
+   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
 }
 
 void ProjectWindow::Init()
@@ -549,6 +698,10 @@ void ProjectWindow::Init()
       ubs->Add(&ruler, 0, wxEXPAND);
       mTopPanel->SetSizer(ubs.release());
    }
+
+   // Ensure that the topdock comes before the ruler in the tab order,
+   // irrespective of the order in which they were created.
+   ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
 
    const auto pPage = GetMainPage();
 
@@ -706,10 +859,8 @@ END_EVENT_TABLE()
 void ProjectWindow::ApplyUpdatedTheme()
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    ClearBackground();// For wxGTK.
-   trackPanel.ApplyUpdatedTheme();
 }
 
 void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
@@ -725,13 +876,6 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
             clip->MarkChanged();
    }
    trackPanel.Refresh(false);
-}
-
-void ProjectWindow::RefreshCursor()
-{
-   auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
-   trackPanel.HandleCursorForPresentMouseState();
 }
 
 void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
@@ -1131,17 +1275,11 @@ void ProjectWindow::FixScrollbars()
       trackPanel.Refresh(false);
    }
 
-   MenuManager::Get( project ).UpdateMenus( project );
+   MenuManager::Get( project ).UpdateMenus();
 
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
    }
-
-   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
-   CallAfter( [pPanel]{
-      if ( pPanel )
-         pPanel->HandleCursorForPresentMouseState();
-   } );
 }
 
 void ProjectWindow::UpdateLayout()
@@ -1296,6 +1434,20 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
+void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
+{
+   evt.Skip();
+   HandleResize();
+   CallAfter( [this]{ RedrawProject(); } );
+}
+
+void ProjectWindow::OnUndoReset( wxCommandEvent &evt )
+{
+   evt.Skip();
+   HandleResize();
+   // CallAfter( [this]{ RedrawProject(); } );  // Should we do this here too?
+}
+
 void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
    auto &project = mProject;
@@ -1338,12 +1490,6 @@ void ProjectWindow::DoScroll()
    if (!mAutoScrolling) {
       trackPanel.Refresh(false);
    }
-
-   wxWeakRef< TrackPanel > pPanel = &TrackPanel::Get( project );
-   CallAfter( [pPanel]{
-      if ( pPanel )
-         pPanel->HandleCursorForPresentMouseState();
-   } );
 }
 
 void ProjectWindow::OnMenu(wxCommandEvent & event)
@@ -1364,8 +1510,8 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
    auto &project = mProject;
    auto &commandManager = CommandManager::Get( project );
    bool handled = commandManager.HandleMenuID(
-      event.GetId(), MenuManager::Get( project ).GetUpdateFlags( project ),
-      NoFlagsSpecified);
+      event.GetId(), MenuManager::Get( project ).GetUpdateFlags(),
+      false);
 
    if (handled)
       event.Skip(false);
@@ -1378,7 +1524,7 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
 void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 {
    auto &project = mProject;
-   MenuManager::Get( project ).UpdateMenus( project );
+   MenuManager::Get( project ).UpdateMenus();
 }
 
 void ProjectWindow::MacShowUndockedToolbars(bool show)
@@ -1546,26 +1692,14 @@ void ProjectWindow::TP_DisplaySelection()
    auto &ruler = AdornedRulerPanel::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
-   double audioTime;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
-   if (!gAudioIO->IsBusy() && playRegion.Locked())
+   auto gAudioIO = AudioIOBase::Get();
+   if (!gAudioIO->IsBusy() && !playRegion.Locked())
       ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else
       // Cause ruler redraw anyway, because we may be zooming or scrolling
       ruler.Refresh();
-
-   if (gAudioIO->IsBusy())
-      audioTime = gAudioIO->GetStreamTime();
-   else
-      audioTime = playRegion.GetStart();
-
-   SelectionBar::Get( project ).SetTimes(selectedRegion.t0(),
-                               selectedRegion.t1(), audioTime);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetFrequencies(
-      selectedRegion.f0(), selectedRegion.f1());
-#endif
 }
 
 
@@ -1658,6 +1792,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
+   auto gAudioIO = AudioIOBase::Get();
    // LLL: Handling positioning differently when audio is
    // actively playing.  Don't do this if paused.
    if (gAudioIO->IsStreamActive(
@@ -1750,3 +1885,12 @@ void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
 }
+
+static struct InstallTopPanelHook{ InstallTopPanelHook() {
+   ToolManager::SetGetTopPanelHook(
+      []( wxWindow &window ){
+         auto pProjectWindow = dynamic_cast< ProjectWindow* >( &window );
+         return pProjectWindow ? pProjectWindow->GetTopPanel() : nullptr;
+      }
+   );
+}} installTopPanelHook;

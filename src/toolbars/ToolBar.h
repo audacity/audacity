@@ -15,12 +15,14 @@
 
 #include "../Experimental.h"
 
+#include <functional>
 #include <vector>
 #include <wx/defs.h>
 
 #include "../Prefs.h"
 #include "../Theme.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include <wx/windowptr.h>
 
 class wxBoxSizer;
 class wxDC;
@@ -85,6 +87,8 @@ enum
 // How may pixels padding each side of a floating toolbar
 enum { ToolBarFloatMargin = 1 };
 
+class AudacityProject;
+
 class ToolBar /* not final */
 : public wxPanelWrapper
 , protected PrefsListener
@@ -92,9 +96,11 @@ class ToolBar /* not final */
 
  public:
 
-   using Holder = Destroy_ptr<ToolBar>;
+   using Holder = wxWindowPtr<ToolBar>;
 
-   ToolBar(int type, const wxString & label, const wxString & section, bool resizable = false);
+   ToolBar( AudacityProject &project,
+      int type, const wxString & label, const wxString & section,
+      bool resizable = false);
    virtual ~ToolBar();
 
    bool AcceptsFocus() const override { return false; };
@@ -160,7 +166,7 @@ class ToolBar /* not final */
 
    static
    void SetButtonToolTip
-      (AButton &button,
+      (AudacityProject &project, AButton &button,
        // If a shortcut key is defined for the command, then it is appended,
        // parenthesized, after the translated name.
        const TranslatedInternalString commands[], size_t nCommands);
@@ -214,6 +220,7 @@ class ToolBar /* not final */
    void OnMouseEvents(wxMouseEvent &event);
 
  protected:
+   AudacityProject &mProject;
    wxString mLabel;
    wxString mSection;
    int mType;
@@ -237,6 +244,15 @@ class ToolBar /* not final */
    DECLARE_EVENT_TABLE()
 
    friend class ToolBarResizer;
+};
+
+struct RegisteredToolbarFactory {
+   using Function = std::function< ToolBar::Holder( AudacityProject & ) >;
+   using Functions = std::vector< Function >;
+
+   RegisteredToolbarFactory( int id, const Function &function );
+
+   static const Functions &GetFactories();
 };
 
 #endif

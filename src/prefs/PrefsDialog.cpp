@@ -34,7 +34,7 @@
 
 #include <wx/treebook.h>
 
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -814,6 +814,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    SavePreferredPage();
 
 #if USE_PORTMIXER
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO) {
       // We cannot have opened this dialog if gAudioIO->IsAudioTokenActive(),
       // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in

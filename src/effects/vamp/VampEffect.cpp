@@ -759,7 +759,7 @@ void VampEffect::AddFeatures(LabelTrack *ltrack,
          }
       }
 
-      ltrack->AddLabel(SelectedRegion(ltime0, ltime1), label, -2);
+      ltrack->AddLabel(SelectedRegion(ltime0, ltime1), label);
    }
 }
 

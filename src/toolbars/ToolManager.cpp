@@ -52,26 +52,14 @@
 #include <wx/minifram.h>
 #include <wx/popupwin.h>
 
-#include "ControlToolBar.h"
-#include "DeviceToolBar.h"
-#include "EditToolBar.h"
-#include "MeterToolBar.h"
-#include "MixerToolBar.h"
-#include "ScrubbingToolBar.h"
-#include "SelectionBar.h"
-#include "SpectralSelectionBar.h"
-#include "ToolsToolBar.h"
-#include "TranscriptionToolBar.h"
-
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectWindow.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/Meter.h"
+#include "../widgets/MeterPanelBase.h"
 #include "../widgets/Grabber.h"
 
 ////////////////////////////////////////////////////////////
@@ -84,7 +72,7 @@
 //
 ToolFrame::ToolFrame
    ( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
-   : wxFrame( ProjectWindow::Find( parent ),
+   : wxFrame( FindProjectFrame( parent ),
           bar->GetId(),
           wxEmptyString,
           pos,
@@ -323,10 +311,26 @@ BEGIN_EVENT_TABLE( ToolManager, wxEvtHandler )
    EVT_TIMER( wxID_ANY, ToolManager::OnTimer )
 END_EVENT_TABLE()
 
+static ToolManager::GetTopPanelHook &getTopPanelHook()
+{
+   static ToolManager::GetTopPanelHook theHook;
+   return theHook;
+}
+
+auto ToolManager::SetGetTopPanelHook( const GetTopPanelHook &hook )
+   -> GetTopPanelHook
+{
+   auto &theHook = getTopPanelHook();
+   auto result = theHook;
+   theHook = hook;
+   return result;
+}
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   []( AudacityProject &parent ){
-     auto &window = ProjectWindow::Get( parent );
-     return std::make_shared< ToolManager >( &parent, window.GetTopPanel() ); }
+     auto &window = GetProjectFrame( parent );
+     return std::make_shared< ToolManager >(
+        &parent, getTopPanelHook()( window ) ); }
 };
 
 ToolManager &ToolManager::Get( AudacityProject &project )
@@ -345,7 +349,10 @@ const ToolManager &ToolManager::Get( const AudacityProject &project )
 ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 : wxEvtHandler()
 {
-   auto &window = ProjectWindow::Get( *parent );
+   if ( !topDockParent )
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   auto &window = GetProjectFrame( *parent );
    wxPoint pt[ 3 ];
 
 #if defined(__WXMAC__)
@@ -429,20 +436,16 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    // Create all of the toolbars
    // All have the project as parent window
    wxASSERT(parent);
-   mBars[ ToolsBarID ]         =  ToolBar::Holder{ safenew ToolsToolBar() };
-   mBars[ TransportBarID ]     =  ToolBar::Holder{ safenew ControlToolBar() };
-   mBars[ RecordMeterBarID ]   =  ToolBar::Holder{ safenew MeterToolBar( parent, RecordMeterBarID ) };
-   mBars[ PlayMeterBarID ]     =  ToolBar::Holder{ safenew MeterToolBar( parent, PlayMeterBarID ) };
-   mBars[ MeterBarID ]         =  ToolBar::Holder{ safenew MeterToolBar( parent, MeterBarID ) };
-   mBars[ EditBarID ]          =  ToolBar::Holder{ safenew EditToolBar() };
-   mBars[ MixerBarID ]         =  ToolBar::Holder{ safenew MixerToolBar() };
-   mBars[ TranscriptionBarID ] =  ToolBar::Holder{ safenew TranscriptionToolBar() };
-   mBars[ SelectionBarID ]     =  ToolBar::Holder{ safenew SelectionBar() };
-   mBars[ DeviceBarID ]        =  ToolBar::Holder{ safenew DeviceToolBar() };
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mBars[SpectralSelectionBarID] =  ToolBar::Holder{ safenew SpectralSelectionBar() };
-#endif
-   mBars[ ScrubbingBarID ]     =  ToolBar::Holder{ safenew ScrubbingToolBar() };
+
+   size_t ii = 0;
+   for (const auto &factory : RegisteredToolbarFactory::GetFactories()) {
+      if (factory) {
+         mBars[ii] = factory( *parent );
+      }
+      else
+         wxASSERT( false );
+      ++ii;
+   }
 
    // We own the timer
    mTimer.SetOwner( this );
@@ -668,7 +671,7 @@ int ToolManager::FilterEvent(wxEvent &event)
       if ( window &&
            !dynamic_cast<Grabber*>( window ) &&
            !dynamic_cast<ToolFrame*>( window ) &&
-           top == ProjectWindow::Find( mParent ) )
+           top == FindProjectFrame( mParent ) )
          // Note this is a dangle-proof wxWindowRef:
          mLastFocus = window;
    }
@@ -1037,10 +1040,20 @@ ToolDock *ToolManager::GetTopDock()
    return mTopDock;
 }
 
+const ToolDock *ToolManager::GetTopDock() const
+{
+   return mTopDock;
+}
+
 //
 // Return a pointer to the bottom dock
 //
 ToolDock *ToolManager::GetBotDock()
+{
+   return mBotDock;
+}
+
+const ToolDock *ToolManager::GetBotDock() const
 {
    return mBotDock;
 }
@@ -1532,7 +1545,7 @@ bool ToolManager::RestoreFocus()
    if (mLastFocus) {
       auto temp1 = AButton::TemporarilyAllowFocus();
       auto temp2 = ASlider::TemporarilyAllowFocus();
-      auto temp3 = MeterPanel::TemporarilyAllowFocus();
+      auto temp3 = MeterPanelBase::TemporarilyAllowFocus();
       mLastFocus->SetFocus();
       return true;
    }

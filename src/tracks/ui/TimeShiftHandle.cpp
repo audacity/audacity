@@ -13,16 +13,15 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 
-#include "TrackControls.h"
+#include "TrackView.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
 #include "../../NoteTrack.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectManager.h"
+#include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../UndoManager.h"
 #include "../../WaveClip.h"
 #include "../../ViewInfo.h"
@@ -363,7 +362,8 @@ UIHandle::Result TimeShiftHandle::Click
    const wxRect &rect = evt.rect;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
+   const auto pView = std::static_pointer_cast<TrackView>(evt.pCell);
+   const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
    if (!pTrack)
       return RefreshCode::Cancelled;
 
@@ -372,8 +372,8 @@ UIHandle::Result TimeShiftHandle::Click
    mClipMoveState.clear();
    mDidSlideVertically = false;
 
-   const auto ttb = &ToolsToolBar::Get( *pProject );
-   const bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
+   const bool multiToolModeActive =
+      (ToolCodes::multiTool == ProjectSettings::Get( *pProject ).GetTool());
 
    const double clickTime =
       viewInfo.PositionToTime(event.m_x, rect.x);
@@ -682,7 +682,8 @@ UIHandle::Result TimeShiftHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   Track *track = dynamic_cast<Track*>(evt.pCell.get());
+   TrackView *trackView = dynamic_cast<TrackView*>(evt.pCell.get());
+   Track *track = trackView ? trackView->FindTrack().get() : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
@@ -835,7 +836,7 @@ UIHandle::Result TimeShiftHandle::Release
          fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   ProjectManager::Get( *pProject ).PushState(msg, _("Time-Shift"),
+   ProjectHistory::Get( *pProject ).PushState(msg, _("Time-Shift"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
 
    return result | FixScrollbars;
@@ -843,7 +844,7 @@ UIHandle::Result TimeShiftHandle::Release
 
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectManager::Get( *pProject ).RollbackState();
+   ProjectHistory::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshAll;
 }
 

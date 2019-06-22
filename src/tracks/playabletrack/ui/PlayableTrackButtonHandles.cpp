@@ -11,12 +11,14 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "PlayableTrackButtonHandles.h"
 
+#include "PlayableTrackControls.h"
 #include "../../../commands/CommandManager.h"
 #include "../../../Menus.h"
 #include "../../../Project.h"
 #include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
 #include "../../../Track.h"
+#include "../../../TrackInfo.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 
@@ -60,7 +62,7 @@ UIHandlePtr MuteButtonHandle::HitTest
 {
    wxRect buttonRect;
    if ( pTrack )
-      TrackInfo::GetMuteSoloRect(rect, buttonRect, false,
+      PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, false,
          !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
@@ -116,7 +118,7 @@ UIHandlePtr SoloButtonHandle::HitTest
 {
    wxRect buttonRect;
    if ( pTrack )
-      TrackInfo::GetMuteSoloRect(rect, buttonRect, true,
+      PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, true,
          !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
 
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )

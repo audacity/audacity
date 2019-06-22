@@ -24,10 +24,6 @@ class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
 
-class CutlineHandle;
-class SampleHandle;
-class EnvelopeHandle;
-
 class Sequence;
 class WaveClip;
 
@@ -65,6 +61,17 @@ using Regions = std::vector < Region >;
 
 class Envelope;
 
+// Note that these can be with or without spectrum view which
+// adds a constant.
+const int kZoom1to1 = 1;
+const int kZoomTimes2 = 2;
+const int kZoomDiv2 = 3;
+const int kZoomHalfWave = 4;
+const int kZoomInByDrag = 5;
+const int kZoomIn = 6;
+const int kZoomOut = 7;
+const int kZoomReset = 8;
+
 class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 public:
 
@@ -84,7 +91,7 @@ public:
 private:
    void Init(const WaveTrack &orig);
 
-   Track::Holder Duplicate() const override;
+   Track::Holder Clone() const override;
 
    friend class TrackFactory;
 
@@ -94,11 +101,6 @@ private:
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
-
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
 
    double GetOffset() const override;
    void SetOffset(double o) override;
@@ -145,8 +147,6 @@ private:
    // the gain.
    float GetOldChannelGain(int channel) const;
    void SetOldChannelGain(int channel, float gain);
-
-   void DoSetMinimized(bool isMinimized) override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
@@ -542,7 +542,7 @@ private:
    // AutoSave related
    //
    // Retrieve the unique autosave ID
-   int GetAutoSaveIdent();
+   int GetAutoSaveIdent() const;
    // Set the unique autosave ID
    void SetAutoSaveIdent(int id);
 
@@ -551,6 +551,13 @@ private:
    // and will be taken out of the WaveTrack class:
    //
 
+
+   static void DoZoom
+   (AudacityProject *pProject,
+    WaveTrack *pTrack, bool allChannels, int ZoomKind,
+    const wxRect &rect, int zoomStart, int zoomEnd,
+    bool fixedMousePoint);
+   void DoZoomPreset( int i);
 
    typedef int WaveTrackDisplay;
    enum WaveTrackDisplayValues : int {
@@ -675,14 +682,6 @@ private:
 
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
-
-   std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<SampleHandle> mSampleHandle;
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
-
-protected:
-   std::shared_ptr<TrackControls> DoGetControls() override;
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,

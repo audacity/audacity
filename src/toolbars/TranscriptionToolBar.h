@@ -29,7 +29,7 @@ class wxKeyEvent;
 class AButton;
 class ASlider;
 class AudacityProject;
-class TimeTrack;
+class BoundedEnvelope;
 class WaveTrack;
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -65,7 +65,7 @@ class TranscriptionToolBar final : public ToolBar {
 
  public:
 
-   TranscriptionToolBar();
+   TranscriptionToolBar( AudacityProject &project );
    virtual ~TranscriptionToolBar();
 
    static TranscriptionToolBar &Get( AudacityProject &project );
@@ -121,7 +121,7 @@ class TranscriptionToolBar final : public ToolBar {
 
  private:
 
-   void InitializeTranscriptionToolBar();
+   void SetPlaySpeed( double value );
    static AButton *AddButton(
       TranscriptionToolBar *pBar,
       teBmps eFore, teBmps eDisabled,
@@ -152,7 +152,7 @@ class TranscriptionToolBar final : public ToolBar {
    int mBackgroundWidth;
    int mBackgroundHeight;
 
-   std::shared_ptr<TimeTrack> mTimeTrack;
+   std::shared_ptr<BoundedEnvelope> mEnvelope;
 
  public:
 

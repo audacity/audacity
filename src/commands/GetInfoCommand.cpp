@@ -43,6 +43,7 @@ This class now lists
 #include "../prefs/PrefsDialog.h"
 #include "../Shuttle.h"
 #include "../PluginManager.h"
+#include "../tracks/ui/TrackView.h"
 #include "../ShuttleGui.h"
 
 #include <wx/frame.h>
@@ -496,7 +497,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
       //JKC: Possibly add later...
-      //context.AddItem( trk->GetHeight(), "height" );
+      //context.AddItem( GetTrackView::Get( *trk ).GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
          float vzmin, vzmax;
          t->GetDisplayBounds(&vzmin, &vzmax);
@@ -567,12 +568,12 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
          Envelope * pEnv = pClip->GetEnvelope();
          context.StartField( "points" );
          context.StartArray();
-         double offset = pEnv->mOffset;
-         for( size_t k=0;k<pEnv->mEnv.size(); k++)
+         double offset = pEnv->GetOffset();
+         for( size_t k = 0; k < pEnv->GetNumberOfPoints(); k++)
          {
             context.StartStruct( );
-            context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
-            context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
+            context.AddItem( (*pEnv)[k].GetT()+offset, "t" );
+            context.AddItem( (*pEnv)[k].GetVal(), "y" );
             context.EndStruct();
          }
          context.EndArray();
@@ -609,8 +610,7 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
          context.StartArray();
          context.AddItem( (double)i ); // Track number.
          context.StartArray();
-         for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
-            const auto &label = labelTrack->mLabels[nn];
+         for ( const auto &label : labelTrack->GetLabels() ) {
             context.StartArray();
             context.AddItem( label.getT0() ); // start
             context.AddItem( label.getT1() ); // end
@@ -717,12 +717,14 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 {
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
+   auto &viewInfo = *tp.mViewInfo;
 
    wxRect trackRect = pWin->GetRect();
 
    for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
-      trackRect.y = t->GetY() - tp.mViewInfo->vpos;
-      trackRect.height = t->GetHeight();
+      auto &view = TrackView::Get( *t );
+      trackRect.y = view.GetY() - viewInfo.vpos;
+      trackRect.height = view.GetHeight();
 
 #if 0
       // Work in progress on getting the TCP button positions and sizes.
@@ -760,7 +762,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          R.height -= kTopInset;
 
          int labelw = pTP->GetLabelWidth();
-         int vrul = pTP->GetVRulerOffset();
+         //int vrul = viewInfo.GetVRulerOffset();
          bool bIsWave = true;
          //mTrackInfo.DrawBackground(dc, R, t->GetSelected(), bIsWave, labelw, vrul);
 
@@ -776,7 +778,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
       // The VRuler.
       {  
          wxRect R = trackRect;
-         R.x += tp.GetVRulerOffset();
+         R.x += viewInfo.GetVRulerOffset();
          R.y += kTopMargin;
          R.width = tp.GetVRulerWidth();
          R.height -= (kTopMargin + kBottomMargin);

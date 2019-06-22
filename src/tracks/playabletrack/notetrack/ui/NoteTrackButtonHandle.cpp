@@ -13,10 +13,12 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackButtonHandle.h"
 
+#include "NoteTrackControls.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../TrackInfo.h"
 #include "../../../../TrackPanel.h"
 
 NoteTrackButtonHandle::NoteTrackButtonHandle
@@ -52,7 +54,7 @@ UIHandlePtr NoteTrackButtonHandle::HitTest
     const std::shared_ptr<NoteTrack> &pTrack)
 {
    wxRect midiRect;
-   TrackInfo::GetMidiControlsRect(rect, midiRect);
+   NoteTrackControls::GetMidiControlsRect(rect, midiRect);
    if ( TrackInfo::HideTopItem( rect, midiRect ) )
       return {};
    if (midiRect.Contains(state.m_x, state.m_y)) {
@@ -102,7 +104,7 @@ UIHandle::Result NoteTrackButtonHandle::Release
    if (pTrack->LabelClick(mRect, event.m_x, event.m_y,
       event.Button(wxMOUSE_BTN_RIGHT))) {
       // No undo items needed??
-      ProjectManager::Get( *pProject ).ModifyState(false);
+      ProjectHistory::Get( *pProject ).ModifyState(false);
       return RefreshAll;
    }
    return RefreshNone;

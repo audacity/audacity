@@ -49,21 +49,20 @@ greater use in future.
 
 #include "EffectManager.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Mix.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
-#include "../PluginManager.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/Command.h"
-#include "../commands/CommandFlag.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
@@ -2494,6 +2493,7 @@ void Effect::Preview(bool dryOnly)
       return;
    }
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy()) {
       return;
    }
@@ -2994,6 +2994,7 @@ bool EffectUIHost::Initialize()
          w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
             mParent->GetSize().GetHeight() / 2));
 
+         auto gAudioIO = AudioIO::Get();
          mDisableTransport = !gAudioIO->IsAvailable(mProject);
          mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
          mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
@@ -3275,10 +3276,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       auto flags = AlwaysEnabledFlag;
       bool allowed =
          MenuManager::Get(*mProject).ReportIfActionNotAllowed(
-         *mProject,
          mEffect->GetTranslatedName(),
          flags,
-         WaveTracksSelectedFlag | TimeSelectedFlag,
          WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
          return;
@@ -3504,6 +3503,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
    if (mPlaying)
    {
+      auto gAudioIO = AudioIO::Get();
       mPlayPos = gAudioIO->GetStreamTime();
       auto &bar = ControlToolBar::Get( *mProject );
       bar.StopPlaying();
@@ -3542,6 +3542,7 @@ void EffectUIHost::OnRewind(wxCommandEvent & WXUNUSED(evt))
 {
    if (mPlaying)
    {
+      auto gAudioIO = AudioIO::Get();
       double seek;
       gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &seek, 1.0);
 
@@ -3566,6 +3567,7 @@ void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
       double seek;
       gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &seek, 1.0);
 
+      auto gAudioIO = AudioIO::Get();
       double pos = gAudioIO->GetStreamTime();
       if (mRegion.t0() < mRegion.t1() && pos + seek > mRegion.t1())
       {

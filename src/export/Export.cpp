@@ -68,6 +68,7 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
+#include "../TimeTrack.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Warning.h"
@@ -240,18 +241,27 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 }
 
 //Create a mixer by computing the time warp factor
-std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
-         const TimeTrack *timeTrack,
+std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
+         bool selectionOnly,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
+   WaveTrackConstArray inputTracks;
+   auto range = tracks.Any< const WaveTrack >()
+      + (selectionOnly ? &Track::IsSelected : &Track::Any )
+      - &WaveTrack::GetMute;
+   for (auto pTrack: range)
+      inputTracks.push_back(
+         pTrack->SharedPointer< const WaveTrack >() );
+   const auto timeTrack = *tracks.Any<const TimeTrack>().begin();
+   auto envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
                   // Throw, to stop exporting, if read fails:
                   true,
-                  Mixer::WarpOptions(timeTrack),
+                  Mixer::WarpOptions(envelope),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,

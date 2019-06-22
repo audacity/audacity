@@ -103,6 +103,7 @@ BEGIN_EVENT_TABLE(CellularPanel, OverlayPanel)
     EVT_SET_FOCUS(CellularPanel::OnSetFocus)
     EVT_KILL_FOCUS(CellularPanel::OnKillFocus)
     EVT_CONTEXT_MENU(CellularPanel::OnContextMenu)
+    EVT_IDLE(CellularPanel::OnIdle)
 END_EVENT_TABLE()
 
 CellularPanel::CellularPanel(
@@ -470,6 +471,12 @@ bool CellularPanel::IsMouseCaptured()
 void CellularPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
    DoContextMenu();
+}
+
+void CellularPanel::OnIdle(wxIdleEvent &event)
+{
+   event.Skip();
+   HandleCursorForPresentMouseState();
 }
 
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)

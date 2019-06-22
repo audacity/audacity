@@ -67,18 +67,16 @@ class StretchHandle;
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
- public:
+public:
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
-   std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      override;
-
    using Holder = std::shared_ptr<NoteTrack>;
-   Track::Holder Duplicate() const override;
+   
+private:
+   Track::Holder Clone() const override;
 
+public:
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
@@ -224,10 +222,6 @@ class AUDACITY_DLL_API NoteTrack final
    int mVisibleChannels; // bit set of visible channels
 
    std::weak_ptr<StretchHandle> mStretchHandle;
-
-protected:
-   std::shared_ptr<TrackControls> DoGetControls() override;
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 };
 
 /// Data used to display a note track

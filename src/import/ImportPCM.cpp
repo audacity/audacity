@@ -20,8 +20,8 @@
 *//*******************************************************************/
 
 #include "../Audacity.h" // for USE_* macros
-#include "ImportPCM.h"
 
+#include "Import.h"
 #include "../Tags.h"
 
 #include <wx/wx.h>
@@ -84,6 +84,8 @@ public:
    wxString GetPluginStringID() override { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+
+   unsigned SequenceNumber() const override;
 };
 
 
@@ -114,12 +116,6 @@ private:
    const SF_INFO         mInfo;
    sampleFormat          mFormat;
 };
-
-void GetPCMImportPlugin(ImportPluginList & importPluginList,
-                        UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
-{
-   importPluginList.push_back( std::make_unique<PCMImportPlugin>() );
-}
 
 wxString PCMImportPlugin::GetPluginFormatDescription()
 {
@@ -189,6 +185,15 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const FilePath &filename
    // Success, so now transfer the duty to close the file from "file".
    return std::make_unique<PCMImportFileHandle>(filename, std::move(file), info);
 }
+
+unsigned PCMImportPlugin::SequenceNumber() const
+{
+   return 10;
+}
+
+static Importer::RegisteredImportPlugin registered{
+   std::make_unique< PCMImportPlugin >()
+};
 
 PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
                                          SFFile &&file, SF_INFO info)

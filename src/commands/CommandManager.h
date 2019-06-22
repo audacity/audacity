@@ -81,7 +81,7 @@ struct CommandListEntry
    bool isEffect;
    bool hasDialog;
    CommandFlag flags;
-   CommandMask mask;
+   bool useStrictFlags{ false };
 };
 
 using MenuBarList = std::vector < MenuBarListEntry >;
@@ -107,6 +107,13 @@ class AUDACITY_DLL_API CommandManager final
  public:
    static CommandManager &Get( AudacityProject &project );
    static const CommandManager &Get( const AudacityProject &project );
+
+   // Type of a function that can intercept menu item handling.
+   // If it returns true, bypass the usual dipatch of commands.
+   using MenuHook = std::function< bool(const CommandID&) >;
+
+   // install a menu hook, returning the previously installed one
+   static MenuHook SetMenuHook( const MenuHook &hook );
 
    //
    // Constructor / Destructor
@@ -151,20 +158,20 @@ class AUDACITY_DLL_API CommandManager final
          { bIsEffect = true; return std::move(*this); }
       Options &&Parameter (const CommandParameter &value) &&
          { parameter = value; return std::move(*this); }
-      Options &&Mask (CommandMask value) &&
-         { mask = value; return std::move(*this); }
       Options &&LongName (const wxString &value) &&
          { longName = value; return std::move(*this); }
       Options &&IsGlobal () &&
          { global = true; return std::move(*this); }
+      Options &&UseStrictFlags () &&
+         { useStrictFlags = true; return std::move(*this); }
 
       const wxChar *accel{ wxT("") };
       int check{ -1 }; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
-      CommandMask mask{ NoFlagsSpecified };
       wxString longName{}; // translated
       bool global{ false };
+      bool useStrictFlags{ false };
    };
 
    void AddItemList(const CommandID & name,
@@ -205,13 +212,14 @@ class AUDACITY_DLL_API CommandManager final
    void EndOccultCommands();
 
 
-   void SetCommandFlags(const CommandID &name, CommandFlag flags, CommandMask mask);
+   void SetCommandFlags(const CommandID &name, CommandFlag flags);
 
    //
    // Modifying menus
    //
 
-   void EnableUsingFlags(CommandFlag flags, CommandMask mask);
+   void EnableUsingFlags(
+      CommandFlag flags, CommandFlag strictFlags);
    void Enable(const wxString &name, bool enabled);
    void Check(const CommandID &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);
@@ -235,8 +243,17 @@ class AUDACITY_DLL_API CommandManager final
    // "permit" allows filtering even if the active window isn't a child of the project.
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
-   bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
-   bool HandleTextualCommand(const CommandID & Str, const CommandContext & context, CommandFlag flags, CommandMask mask);
+   bool HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled);
+
+   enum TextualCommandResult {
+      CommandFailure,
+      CommandSuccess,
+      CommandNotFound
+   };
+
+   TextualCommandResult
+   HandleTextualCommand(const CommandID & Str,
+      const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
 
    //
    // Accessing
@@ -278,7 +295,6 @@ class AUDACITY_DLL_API CommandManager final
    //
 
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
-   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired);
 
    ///
    /// Formatting summaries that include shortcut keys
@@ -335,7 +351,8 @@ private:
    // Executing commands
    //
 
-   bool HandleCommandEntry(const CommandListEntry * entry, CommandFlag flags, CommandMask mask, const wxEvent * evt = NULL);
+   bool HandleCommandEntry(const CommandListEntry * entry, CommandFlag flags,
+      bool alwaysEnabled, const wxEvent * evt = NULL);
 
    //
    // Modifying

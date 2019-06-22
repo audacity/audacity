@@ -4,13 +4,14 @@
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
+#include "../CommonCommandFlags.h"
 #include "../FreqWindow.h"
 #include "../Menus.h"
 #include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../Screenshot.h"
@@ -466,7 +467,7 @@ bool DoEffect(
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         MenuManager::Get(project).UpdateMenus(project, false);
+         MenuManager::Get(project).UpdateMenus( false );
       }
 
    } );
@@ -495,7 +496,7 @@ bool DoEffect(
    {
       wxString shortDesc = em.GetCommandName(ID);
       wxString longDesc = em.GetCommandDescription(ID);
-      ProjectManager::Get( project ).PushState(longDesc, shortDesc);
+      ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
    }
 
    if (!(flags & kDontRepeatLast))
@@ -695,6 +696,7 @@ void OnSimulateRecordingErrors(const CommandContext &context)
    auto &project = context.project;
    auto &commandManager = CommandManager::Get( project );
 
+   auto gAudioIO = AudioIO::Get();
    bool &setting = gAudioIO->mSimulateRecordingErrors;
    commandManager.Check(wxT("SimulateRecordingErrors"), !setting);
    setting = !setting;
@@ -705,6 +707,7 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
    auto &project = context.project;
    auto &commandManager = CommandManager::Get( project );
 
+   auto gAudioIO = AudioIO::Get();
    bool &setting = gAudioIO->mDetectUpstreamDropouts;
    commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
    setting = !setting;
@@ -921,6 +924,13 @@ MenuTable::BaseItemPtr GenerateMenu( AudacityProject & )
    );
 }
 
+const ReservedCommandFlag
+   IsRealtimeNotActiveFlag{
+      [](const AudacityProject &){
+         return !EffectManager::Get().RealtimeIsActive();
+      }
+   };  //lll
+
 MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
 {
    using namespace MenuTable;
@@ -991,6 +1001,7 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
+   auto gAudioIO = AudioIO::Get();
 
    return Menu( _("T&ools"),
 

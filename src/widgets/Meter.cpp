@@ -68,7 +68,7 @@
 #include "../ImageManipulation.h"
 #include "../prefs/GUISettings.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectAudioManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -268,7 +268,7 @@ enum {
    OnPreferencesID
 };
 
-BEGIN_EVENT_TABLE(MeterPanel, wxPanelWrapper)
+BEGIN_EVENT_TABLE(MeterPanel, MeterPanelBase)
    EVT_TIMER(OnMeterUpdateID, MeterPanel::OnMeterUpdate)
    EVT_MOUSE_EVENTS(MeterPanel::OnMouse)
    EVT_CONTEXT_MENU(MeterPanel::OnContext)
@@ -292,7 +292,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanelWrapper(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
+: MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mQueue(1024),
    mWidth(size.x),
@@ -1065,6 +1065,8 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       mQueue.Clear();
       return;
    }
+
+   auto gAudioIO = AudioIO::Get();
 
    // There may have been several update messages since the last
    // time we got to this function.  Catch up to real-time by
@@ -1866,6 +1868,7 @@ void MeterPanel::StartMonitoring()
 {
    bool start = !mMonitoring;
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
    } 
@@ -1884,6 +1887,7 @@ void MeterPanel::StartMonitoring()
 
 void MeterPanel::StopMonitoring(){
    mMonitoring = false;
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
    } 
@@ -2117,13 +2121,6 @@ wxString MeterPanel::Key(const wxString & key) const
    }
 
    return wxT("/Meter/Output/") + key;
-}
-
-bool MeterPanel::s_AcceptsFocus{ false };
-
-auto MeterPanel::TemporarilyAllowFocus() -> TempAllowFocus {
-   s_AcceptsFocus = true;
-   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 // This compensates for a but in wxWidgets 3.0.2 for mac:

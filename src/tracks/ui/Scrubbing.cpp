@@ -17,10 +17,12 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
+#include "../../CommonCommandFlags.h"
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectManager.h"
+#include "../../ProjectAudioManager.h"
+#include "../../ProjectSettings.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
 #include "../../prefs/PlaybackPrefs.h"
@@ -28,12 +30,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
 #include "../../toolbars/ToolManager.h"
-#include "../../toolbars/TranscriptionToolBar.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
-#ifdef USE_TRANSCRIPTION_TOOLBAR
-#include "../../toolbars/TranscriptionToolBar.h"
-#endif
 
 
 #include <algorithm>
@@ -344,6 +342,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       const auto state = ::wxGetMouseState();
       mDragging = state.LeftIsDown();
 
+      auto gAudioIO = AudioIO::Get();
       const bool busy = gAudioIO->IsBusy();
       if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
          // Do not stop recording, and don't try to start scrubbing after
@@ -387,7 +386,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             auto options =
                DefaultPlayOptions( *mProject );
             options.pScrubbingOptions = &mOptions;
-            options.timeTrack = NULL;
+            options.envelope = nullptr;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
             mOptions.isPlayingAtSpeed = false;
             mOptions.minSpeed = 0.0;
@@ -396,7 +395,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                // Take the starting speed limit from the transcription toolbar,
                // but it may be varied during the scrub.
                mMaxSpeed = mOptions.maxSpeed =
-                  TranscriptionToolBar::Get( *mProject ).GetPlaySpeed();
+                  ProjectSettings::Get( *mProject ).GetPlaySpeed();
             }
 #else
             // That idea seems unpopular... just make it one for move-scrub,
@@ -468,6 +467,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    if (IsScrubbing())
       return false;
 
+   auto gAudioIO = AudioIO::Get();
    const bool busy = gAudioIO->IsBusy();
    if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
       // Do not stop recording, and don't try to start scrubbing after
@@ -487,7 +487,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
 
    auto options = DefaultSpeedPlayOptions( *mProject );
    options.pScrubbingOptions = &mOptions;
-   options.timeTrack = NULL;
+   options.envelope = nullptr;
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
    mOptions.minSpeed = speed -0.01;
    mOptions.maxSpeed = speed +0.01;
@@ -545,6 +545,7 @@ void Scrubber::ContinueScrubbingPoll()
    // timer callback, to a left click event detected elsewhere.)
    const bool seek = TemporarilySeeks() || Seeks();
 
+   auto gAudioIO = AudioIO::Get();
    if (mPaused) {
       // When paused, make silent scrubs.
       mOptions.minSpeed = 0.0;
@@ -557,10 +558,8 @@ void Scrubber::ContinueScrubbingPoll()
       // default speed of 1.3 set, so that we can hear there is a problem
       // when playAtSpeedTB not found.
       double speed = 1.3;
-      const auto playAtSpeedTB = &TranscriptionToolBar::Get( *mProject );
-      if (playAtSpeedTB) {
-         speed = playAtSpeedTB->GetPlaySpeed();
-      }
+      const auto &settings = ProjectSettings::Get( *mProject );
+      speed = settings.GetPlaySpeed();
       mOptions.minSpeed = speed -0.01;
       mOptions.maxSpeed = speed +0.01;
       mOptions.adjustStart = false;
@@ -691,6 +690,7 @@ void Scrubber::StopPolling()
 
 void Scrubber::StopScrubbing()
 {
+   auto gAudioIO = AudioIO::Get();
    gAudioIO->StopScrub();
    StopPolling();
 

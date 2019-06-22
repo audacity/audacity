@@ -3,14 +3,16 @@
 
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
+#include "../CommonCommandFlags.h"
 #include "../DeviceManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SoundActivatedRecord.h"
@@ -46,6 +48,7 @@ bool MakeReadyToPlay(AudacityProject &project,
    wxCommandEvent evt;
 
    // If this project is playing, stop playing
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(
       ProjectAudioIO::Get( project ).GetAudioIOToken()
    )) {
@@ -91,6 +94,7 @@ void DoPlayStop(const CommandContext &context)
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(token)) {
       toolbar.SetPlay(false);        //Pops
       toolbar.SetStop(true);         //Pushes stop down
@@ -103,7 +107,7 @@ void DoPlayStop(const CommandContext &context)
       //find out which project we need;
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
          iter = std::find_if( start, finish,
-            []( const AllProjects::value_type &ptr ){
+            [&]( const AllProjects::value_type &ptr ){
                return gAudioIO->IsStreamActive(
                   ProjectAudioIO::Get( *ptr ).GetAudioIOToken()); } );
 
@@ -205,8 +209,7 @@ namespace TransportActions {
 // Stop playing or recording, if paused.
 void StopIfPaused( AudacityProject &project )
 {
-   auto flags = MenuManager::Get( project ).GetUpdateFlags( project );
-   if( flags & PausedFlag )
+   if( AudioIOBase::Get()->IsPaused() )
       DoStop( project );
 }
 
@@ -218,6 +221,7 @@ bool DoPlayStopSelect
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
+   auto gAudioIO = AudioIOBase::Get();
 
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
@@ -261,7 +265,7 @@ bool DoPlayStopSelect
          // -- change t0, collapsing to point only if t1 was greater
          selection.setT0(time, false);
 
-      ProjectManager::Get( project ).ModifyState(false);           // without bWantsAutoSave
+      ProjectHistory::Get( project ).ModifyState(false);           // without bWantsAutoSave
       return true;
    }
    return false;
@@ -273,6 +277,7 @@ void DoPlayStopSelect(AudacityProject &project)
 {
    auto &toolbar = ControlToolBar::Get( project );
    wxCommandEvent evt;
+   auto gAudioIO = AudioIO::Get();
    if (DoPlayStopSelect(project, false, false))
       toolbar.OnStop(evt);
    else if (!gAudioIO->IsBusy()) {
@@ -463,7 +468,7 @@ void OnTimerRecord(const CommandContext &context)
       switch (iTimerRecordingOutcome) {
       case POST_TIMER_RECORD_CANCEL_WAIT:
          // Canceled on the wait dialog
-         ProjectManager::Get( project ).RollbackState();
+         ProjectHistory::Get( project ).RollbackState();
          break;
       case POST_TIMER_RECORD_CANCEL:
          // RunWaitDialog() shows the "wait for start" as well as "recording"
@@ -472,7 +477,7 @@ void OnTimerRecord(const CommandContext &context)
          // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
          // which is blocked by this function.
          // so instead we mark a flag to undo it there.
-         ProjectManager::Get( project ).SetTimerRecordCancelled();
+         ProjectAudioManager::Get( project ).SetTimerRecordCancelled();
          break;
       case POST_TIMER_RECORD_NOTHING:
          // No action required
@@ -510,6 +515,7 @@ void OnPunchAndRoll(const CommandContext &context)
    static const auto url =
       wxT("Punch_and_Roll_Record#Using_Punch_and_Roll_Record");
 
+   auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
       return;
 
@@ -628,7 +634,7 @@ void OnPunchAndRoll(const CommandContext &context)
       ;
    else
       // Roll back the deletions
-      ProjectManager::Get( project ).RollbackState();
+      ProjectHistory::Get( project ).RollbackState();
 }
 #endif
 
@@ -1028,15 +1034,17 @@ void OnMoveToNextLabel(const CommandContext &context)
 void OnStopSelect(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &history = ProjectHistory::Get( project );
    auto &viewInfo = project.GetViewInfo();
    auto &selectedRegion = viewInfo.selectedRegion;
    wxCommandEvent evt;
 
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive()) {
       auto &controlToolbar = ControlToolBar::Get( project );
       selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
       controlToolBar.OnStop(evt);
-      project.ModifyState(false);           // without bWantsAutoSave
+      history.ModifyState(false);           // without bWantsAutoSave
    }
 }
 #endif
@@ -1068,7 +1076,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
    static const auto checkOff = Options{}.CheckState( false );
    static const auto checkOn = Options{}.CheckState( true );
 
-   constexpr auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
+   static const auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
 
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */

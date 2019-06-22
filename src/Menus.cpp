@@ -30,30 +30,17 @@
 
 #include "Experimental.h"
 
-#include "AdornedRulerPanel.h"
-#include "AudioIO.h"
-#include "Clipboard.h"
-#include "LabelTrack.h"
+#include <wx/frame.h>
+
 #include "ModuleManager.h"
-#ifdef USE_MIDI
-#include "NoteTrack.h"
-#endif // USE_MIDI
-#include "Prefs.h"
 #include "Project.h"
-#include "ProjectAudioIO.h"
-#include "ProjectFileIO.h"
-#include "ProjectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
-#include "TrackPanel.h"
 #include "UndoManager.h"
-#include "ViewInfo.h"
 #include "commands/CommandManager.h"
-#include "effects/EffectManager.h"
 #include "prefs/TracksPrefs.h"
-#include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/FileHistory.h"
+#include "widgets/ErrorDialog.h"
 
 #include <wx/menu.h>
 #include <wx/windowptr.h>
@@ -67,8 +54,8 @@ MenuCreator::~MenuCreator()
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  []( AudacityProject&){
-     return std::make_shared< MenuManager >(); }
+  []( AudacityProject &project ){
+     return std::make_shared< MenuManager >( project ); }
 };
 
 MenuManager &MenuManager::Get( AudacityProject &project )
@@ -81,9 +68,20 @@ const MenuManager &MenuManager::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-MenuManager::MenuManager()
+MenuManager::MenuManager( AudacityProject &project )
+   : mProject{ project }
 {
    UpdatePrefs();
+   mProject.Bind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
+}
+
+MenuManager::~MenuManager()
+{
+   mProject.Unbind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
+   mProject.Unbind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
+   mProject.Unbind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
 }
 
 void MenuManager::UpdatePrefs()
@@ -331,7 +329,7 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
                              wxString::Format(_("&Undo %s"),
                                               desc));
       commandManager.Enable(wxT("Undo"),
-         ProjectManager::Get( project ).UndoAvailable());
+         ProjectHistory::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
@@ -344,7 +342,7 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
                              wxString::Format(_("&Redo %s"),
                                               desc));
       commandManager.Enable(wxT("Redo"),
-         ProjectManager::Get( project ).RedoAvailable());
+         ProjectHistory::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
@@ -352,6 +350,13 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
       commandManager.Enable(wxT("Redo"), false);
    }
 }
+
+// Get hackcess to a protected method
+class wxFrameEx : public wxFrame
+{
+public:
+   using wxFrame::DetachMenuBar;
+};
 
 void MenuCreator::RebuildMenuBar(AudacityProject &project)
 {
@@ -369,7 +374,7 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    // Delete the menus, since we will soon recreate them.
    // Rather oddly, the menus don't vanish as a result of doing this.
    {
-      auto &window = ProjectWindow::Get( project );
+      auto &window = static_cast<wxFrameEx&>( GetProjectFrame( project ) );
       wxWindowPtr<wxMenuBar> menuBar{ window.GetMenuBar() };
       window.DetachMenuBar();
       // menuBar gets deleted here
@@ -382,202 +387,72 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    ModuleManager::Get().Dispatch(MenusRebuilt);
 }
 
-CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
+void MenuManager::OnUndoRedo( wxCommandEvent &evt )
 {
-   wxWindow *w = wxWindow::FindFocus();
-
-   while (w) {
-      if (w == ToolManager::Get( project ).GetTopDock()) {
-         return TopDockHasFocus;
-      }
-
-      if (w == &AdornedRulerPanel::Get( project ))
-         return RulerHasFocus;
-
-      if (dynamic_cast<NonKeystrokeInterceptingWindow*>(w)) {
-         return TrackPanelHasFocus;
-      }
-      if (w == ToolManager::Get( project ).GetBotDock()) {
-         return BotDockHasFocus;
-      }
-
-      w = w->GetParent();
-   }
-
-   return AlwaysEnabledFlag;
+   evt.Skip();
+   ModifyUndoMenuItems( mProject );
+   UpdateMenus();
 }
 
+namespace{
+   using Predicates = std::vector< ReservedCommandFlag::Predicate >;
+   Predicates &RegisteredPredicates()
+   {
+      static Predicates thePredicates;
+      return thePredicates;
+   }
+   std::vector< CommandFlagOptions > &Options()
+   {
+      static std::vector< CommandFlagOptions > options;
+      return options;
+   }
+}
 
-CommandFlag MenuManager::GetUpdateFlags
-(AudacityProject &project, bool checkActive)
+ReservedCommandFlag::ReservedCommandFlag(
+   const Predicate &predicate, const CommandFlagOptions &options )
+{
+   static size_t sNextReservedFlag = 0;
+   // This will throw std::out_of_range if the constant NCommandFlags is too
+   // small
+   set( sNextReservedFlag++ );
+   RegisteredPredicates().emplace_back( predicate );
+   Options().emplace_back( options );
+}
+
+CommandFlag MenuManager::GetUpdateFlags( bool checkActive )
 {
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,
    // and returns them in a bitfield.  Note that if none of the flags
    // have changed, it's not necessary to even check for updates.
-   auto flags = AlwaysEnabledFlag;
+
    // static variable, used to remember flags for next time.
-   static auto lastFlags = flags;
+   static CommandFlag lastFlags;
 
-   // if (auto focus = wxWindow::FindFocus()) {
-   auto &window = GetProjectFrame( project );
-   if (wxWindow * focus = &window) {
-      while (focus && focus->GetParent())
-         focus = focus->GetParent();
-      if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
-         flags |= NotMinimizedFlag;
+   CommandFlag flags, quickFlags;
+
+   const auto &options = Options();
+   size_t ii = 0;
+   for ( const auto &predicate : RegisteredPredicates() ) {
+      if ( options[ii].quickTest ) {
+         quickFlags[ii] = true;
+         if( predicate( mProject ) )
+            flags[ii] = true;
+      }
+      ++ii;
    }
 
-   // These flags are cheap to calculate.
-   if (!gAudioIO->IsAudioTokenActive(ProjectAudioIO::Get( project )
-      .GetAudioIOToken()))
-      flags |= AudioIONotBusyFlag;
-   else
-      flags |= AudioIOBusyFlag;
-
-   if( gAudioIO->IsPaused() )
-      flags |= PausedFlag;
-   else
-      flags |= NotPausedFlag;
-
-   // quick 'short-circuit' return.
-   if ( checkActive && !window.IsActive() ){
-      const auto checkedFlags = 
-         NotMinimizedFlag | AudioIONotBusyFlag | AudioIOBusyFlag |
-         PausedFlag | NotPausedFlag;
-      // short cirucit return should preserve flags that have not been calculated.
-      flags = (lastFlags & ~checkedFlags) | flags;
-      lastFlags = flags;
-      return flags;
-   }
-
-   auto &viewInfo = ViewInfo::Get( project );
-   const auto &selectedRegion = viewInfo.selectedRegion;
-
-   if (!selectedRegion.isPoint())
-      flags |= TimeSelectedFlag;
-
-   auto &tracks = TrackList::Get( project );
-   auto trackRange = tracks.Any();
-   if ( trackRange )
-      flags |= TracksExistFlag;
-   trackRange.Visit(
-      [&](LabelTrack *lt) {
-         flags |= LabelTracksExistFlag;
-
-         if (lt->GetSelected()) {
-            flags |= TracksSelectedFlag;
-            for (int i = 0; i < lt->GetNumLabels(); i++) {
-               const LabelStruct *ls = lt->GetLabel(i);
-               if (ls->getT0() >= selectedRegion.t0() &&
-                   ls->getT1() <= selectedRegion.t1()) {
-                  flags |= LabelsSelectedFlag;
-                  break;
-               }
-            }
-         }
-
-         if (lt->IsTextSelected()) {
-            flags |= CutCopyAvailableFlag;
-         }
-      },
-      [&](WaveTrack *t) {
-         flags |= WaveTracksExistFlag;
-         flags |= PlayableTracksExistFlag;
-         if (t->GetSelected()) {
-            flags |= TracksSelectedFlag;
-            // TODO: more-than-two-channels
-            if (TrackList::Channels(t).size() > 1) {
-               flags |= StereoRequiredFlag;
-            }
-            flags |= WaveTracksSelectedFlag;
-            flags |= AudioTracksSelectedFlag;
-         }
-         if( t->GetEndTime() > t->GetStartTime() )
-            flags |= HasWaveDataFlag;
-      }
-#if defined(USE_MIDI)
-      ,
-      [&](NoteTrack *nt) {
-         flags |= NoteTracksExistFlag;
-#ifdef EXPERIMENTAL_MIDI_OUT
-         flags |= PlayableTracksExistFlag;
-#endif
-
-         if (nt->GetSelected()) {
-            flags |= TracksSelectedFlag;
-            flags |= NoteTracksSelectedFlag;
-            flags |= AudioTracksSelectedFlag; // even if not EXPERIMENTAL_MIDI_OUT
-         }
-      }
-#endif
-   );
-
-   if( Clipboard::Get().Duration() > 0 )
-      flags |= ClipboardFlag;
-
-   auto &undoManager = UndoManager::Get( project );
-
-   if (undoManager.UnsavedChanges() ||
-      !ProjectFileIO::Get( project ).IsProjectSaved())
-      flags |= UnsavedChangesFlag;
-
-   if (!mLastEffect.empty())
-      flags |= HasLastEffectFlag;
-
-   auto &projectManager = ProjectManager::Get( project );
-   if (projectManager.UndoAvailable())
-      flags |= UndoAvailableFlag;
-
-   if (projectManager.RedoAvailable())
-      flags |= RedoAvailableFlag;
-
-   if (ViewInfo::Get( project ).ZoomInAvailable() && (flags & TracksExistFlag))
-      flags |= ZoomInAvailableFlag;
-
-   if (ViewInfo::Get( project ).ZoomOutAvailable() && (flags & TracksExistFlag))
-      flags |= ZoomOutAvailableFlag;
-
-   // TextClipFlag is currently unused (Jan 2017, 2.1.3 alpha)
-   // and LabelTrack::IsTextClipSupported() is quite slow on Linux,
-   // so disable for now (See bug 1575).
-   // if ((flags & LabelTracksExistFlag) && LabelTrack::IsTextClipSupported())
-   //    flags |= TextClipFlag;
-
-   flags |= GetFocusedFrame(project);
-
-   const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.Locked())
-      flags |= PlayRegionLockedFlag;
-   else if (!playRegion.Empty())
-      flags |= PlayRegionNotLockedFlag;
-
-   if (flags & AudioIONotBusyFlag) {
-      if (flags & TimeSelectedFlag) {
-         if (flags & TracksSelectedFlag) {
-            flags |= CutCopyAvailableFlag;
-         }
+   if ( checkActive && !GetProjectFrame( mProject ).IsActive() )
+      // quick 'short-circuit' return.
+      flags = (lastFlags & ~quickFlags) | flags;
+   else {
+      ii = 0;
+      for ( const auto &predicate : RegisteredPredicates() ) {
+         if ( !options[ii].quickTest && predicate( mProject ) )
+            flags[ii] = true;
+         ++ii;
       }
    }
-
-   if (FileHistory::Global().GetCount() > 0)
-      flags |= HaveRecentFiles;
-
-   const auto &settings = ProjectSettings::Get( project );
-   if (settings.IsSyncLocked())
-      flags |= IsSyncLockedFlag;
-   else
-      flags |= IsNotSyncLockedFlag;
-
-   if (!EffectManager::Get().RealtimeIsActive())
-      flags |= IsRealtimeNotActiveFlag;
-
-   if ( !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) )
-      flags |= CaptureNotBusyFlag;
-
-   auto &bar = ControlToolBar::Get( project );
-   if (bar.ControlToolBar::CanStopAudioStream())
-      flags |= CanStopAudioStreamFlag;
 
    lastFlags = flags;
    return flags;
@@ -665,17 +540,41 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    commandManager.Check(wxT("TypeToCreateLabel"), active);
 }
 
+namespace
+{
+   using MenuItemEnablers = std::vector<MenuItemEnabler>;
+   MenuItemEnablers &Enablers()
+   {
+      static MenuItemEnablers enablers;
+      return enablers;
+   }
+}
+
+RegisteredMenuItemEnabler::RegisteredMenuItemEnabler(
+   const MenuItemEnabler &enabler )
+{
+   Enablers().emplace_back( enabler );
+}
+
 // checkActive is a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
+void MenuManager::UpdateMenus( bool checkActive )
 {
+   auto &project = mProject;
+
    //ANSWER-ME: Why UpdateMenus only does active project?
    //JKC: Is this test fixing a bug when multiple projects are open?
    //so that menu states work even when different in different projects?
    if (&project != GetActiveProject())
       return;
 
-   auto flags = MenuManager::Get(project).GetUpdateFlags(project, checkActive);
+   auto flags = GetUpdateFlags(checkActive);
+   // Return from this function if nothing's changed since
+   // the last time we were here.
+   if (flags == mLastFlags)
+      return;
+   mLastFlags = flags;
+
    auto flags2 = flags;
 
    // We can enable some extra items if we have select-all-on-none.
@@ -683,68 +582,24 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
    //ANSWER: Because flags2 is used in the menu enable/disable.
    //The effect still needs flags to determine whether it will need
    //to actually do the 'select all' to make the command valid.
-   if (mWhatIfNoSelection != 0)
-   {
-      if ((flags & TracksExistFlag))
-      {
-         flags2 |= TracksSelectedFlag;
-         if ((flags & WaveTracksExistFlag))
-         {
-            flags2 |= TimeSelectedFlag
-                   |  WaveTracksSelectedFlag
-                   |  CutCopyAvailableFlag;
-         }
-      }
-   }
 
-   if( mStopIfWasPaused )
-   {
-      if( flags & PausedFlag ){
-         flags2 |= AudioIONotBusyFlag;
-      }
+   for ( const auto &enabler : Enablers() ) {
+      if (
+         enabler.applicable( project ) &&
+         (flags & enabler.actualFlags) == enabler.actualFlags
+      )
+         flags2 |= enabler.possibleFlags;
    }
-
-   // Return from this function if nothing's changed since
-   // the last time we were here.
-   if (flags == mLastFlags)
-      return;
-   mLastFlags = flags;
 
    auto &commandManager = CommandManager::Get( project );
-
-   commandManager.EnableUsingFlags(flags2 , NoFlagsSpecified);
 
    // With select-all-on-none, some items that we don't want enabled may have
    // been enabled, since we changed the flags.  Here we manually disable them.
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   if (mWhatIfNoSelection != 0)
-   {
-      if (!(flags & TimeSelectedFlag) | !(flags & TracksSelectedFlag))
-      {
-         commandManager.Enable(wxT("SplitCut"), false);
-         commandManager.Enable(wxT("SplitDelete"), false);
-      }
-      if (!(flags & WaveTracksSelectedFlag))
-      {
-         commandManager.Enable(wxT("Split"), false);
-      }
-      if (!(flags & TimeSelectedFlag) | !(flags & WaveTracksSelectedFlag))
-      {
-         commandManager.Enable(wxT("ExportSel"), false);
-         commandManager.Enable(wxT("SplitNew"), false);
-      }
-      if (!(flags & TimeSelectedFlag) | !(flags & AudioTracksSelectedFlag))
-      {
-         commandManager.Enable(wxT("Trim"), false);
-      }
-   }
-
-#if 0
-   if (flags & CutCopyAvailableFlag) {
-      GetCommandManager()->Enable(wxT("Copy"), true);
-      GetCommandManager()->Enable(wxT("Cut"), true);
-   }
-#endif
+   commandManager.EnableUsingFlags(
+      flags2, // the "lax" flags
+      (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
+   );
 
    MenuManager::ModifyToolbarMenus(project);
 }
@@ -771,75 +626,124 @@ void MenuCreator::RebuildAllMenuBars()
    }
 }
 
-bool MenuManager::ReportIfActionNotAllowed
-( AudacityProject &project,
-  const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+bool MenuManager::ReportIfActionNotAllowed(
+   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd )
 {
-   bool bAllowed = TryToMakeActionAllowed( project, flags, flagsRqd, mask );
+   auto &project = mProject;
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
    if( bAllowed )
       return true;
    auto &cm = CommandManager::Get( project );
-   cm.TellUserWhyDisallowed( Name, flags & mask, flagsRqd & mask);
+   TellUserWhyDisallowed( Name, flags & flagsRqd, flagsRqd);
    return false;
 }
-
 
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool MenuManager::TryToMakeActionAllowed
-( AudacityProject &project,
-  CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+bool MenuManager::TryToMakeActionAllowed(
+   CommandFlag & flags, CommandFlag flagsRqd )
 {
+   auto &project = mProject;
    bool bAllowed;
 
-   if( !flags )
-      flags = MenuManager::Get(project).GetUpdateFlags(project);
+   if( flags.none() )
+      flags = GetUpdateFlags();
 
-   bAllowed = ((flags & mask) == (flagsRqd & mask));
-   if( bAllowed )
-      return true;
-
-   // Why is action not allowed?
-   // 1's wherever a required flag is missing.
-   auto MissingFlags = (~flags & flagsRqd) & mask;
-
-   if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
-      TransportActions::StopIfPaused( project );
-      // Hope this will now reflect stopped audio.
-      flags = MenuManager::Get(project).GetUpdateFlags(project);
-      bAllowed = ((flags & mask) == (flagsRqd & mask));
-      if( bAllowed )
-         return true;
+   // Visit the table of recovery actions
+   auto &enablers = Enablers();
+   auto iter = enablers.begin(), end = enablers.end();
+   while ((flags & flagsRqd) != flagsRqd && iter != end) {
+      const auto &enabler = *iter;
+      auto MissingFlags = (~flags & flagsRqd);
+      if (
+         // Do we have the right precondition?
+         (flags & enabler.actualFlags) == enabler.actualFlags
+      &&
+         // Can we get the condition we need?
+         (MissingFlags & enabler.possibleFlags) == MissingFlags
+      ) {
+         // Then try the function
+         enabler.tryEnable( project, flagsRqd );
+         flags = GetUpdateFlags();
+      }
+      ++iter;
    }
+   return (flags & flagsRqd) == flagsRqd;
+}
 
-   //We can only make the action allowed if we select audio when no selection.
-   // IF not set up to select all audio when none, THEN return with failure.
-   if( mWhatIfNoSelection != 1 )
-      return false;
+void MenuManager::TellUserWhyDisallowed(
+   const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
+{
+   // The default string for 'reason' is a catch all.  I hope it won't ever be seen
+   // and that we will get something more specific.
+   auto reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
+   // The default title string is 'Disallowed'.
+   auto untranslatedTitle = XO("Disallowed");
+   wxString helpPage;
 
-   // Some effects disallow autoselection.
-   if( flagsRqd & NoAutoSelect )
-      return false;
+   bool enableDefaultMessage = true;
+   bool defaultMessage = true;
 
-   // Why is action still not allowed?
-   // 0's wherever a required flag is missing (or is don't care)
-   MissingFlags = (flags & ~flagsRqd) & mask;
+   auto doOption = [&](const CommandFlagOptions &options) {
+      if ( options.message ) {
+         reason = options.message( Name );
+         defaultMessage = false;
+         if ( !options.title.empty() )
+            untranslatedTitle = options.title;
+         helpPage = options.helpPage;
+         return true;
+      }
+      else {
+         enableDefaultMessage =
+            enableDefaultMessage && options.enableDefaultMessage;
+         return false;
+      }
+   };
 
-   // IF selecting all audio won't do any good, THEN return with failure.
-   if( !(flags & WaveTracksExistFlag) )
-      return false;
-   // returns if mask wants a zero in some flag and that's not present.
-   // logic seems a bit peculiar and worth revisiting.
-   if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
-      return false;
+   const auto &alloptions = Options();
+   auto missingFlags = flagsRequired & ~flagsGot;
 
-   // This was 'DoSelectSomething()'.  
-   // This made autoselect more confusing.
-   // When autoselect triggers, it might not select all audio in all tracks.
-   // So changed to DoSelectAllAudio.
-   SelectActions::DoSelectAllAudio(project);
-   flags = MenuManager::Get(project).GetUpdateFlags(project);
-   bAllowed = ((flags & mask) == (flagsRqd & mask));
-   return bAllowed;
+   // Find greatest priority
+   unsigned priority = 0;
+   for ( const auto &options : alloptions )
+      priority = std::max( priority, options.priority );
+
+   // Visit all unsatisfied conditions' options, by descending priority,
+   // stopping when we find a message
+   ++priority;
+   while( priority-- ) {
+      size_t ii = 0;
+      for ( const auto &options : alloptions ) {
+         if (
+            priority == options.priority
+         &&
+            missingFlags[ii]
+         &&
+            doOption( options ) )
+            goto done;
+
+         ++ii;
+      }
+   }
+   done:
+
+   if (
+      // didn't find a message
+      defaultMessage
+   &&
+      // did find a condition that suppresses the default message
+      !enableDefaultMessage
+   )
+      return;
+
+   // Message is already translated but title is not yet
+   auto title = ::GetCustomTranslation( untranslatedTitle );
+
+   // Does not have the warning icon...
+   ShowErrorDialog(
+      NULL,
+      title,
+      reason,
+      helpPage);
 }

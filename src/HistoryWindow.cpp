@@ -24,6 +24,7 @@ undo memory so as to free up space.
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/event.h>
+#include <wx/frame.h>
 #include <wx/imaglist.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
@@ -37,7 +38,8 @@ undo memory so as to free up space.
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
-#include "ProjectManager.h"
+#include "Project.h"
+#include "ProjectHistory.h"
 #include "ShuttleGui.h"
 
 enum {
@@ -57,7 +59,7 @@ BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
 END_EVENT_TABLE()
 
 HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
-   wxDialogWrapper((wxWindow*)parent, wxID_ANY, wxString(_("History")),
+   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, wxString(_("History")),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
@@ -157,9 +159,10 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
 
    Clipboard::Get().Bind(
       EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
-   manager->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
-   manager->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
-   manager->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_OR_REDO, &HistoryWindow::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
 }
 
 void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
@@ -254,7 +257,7 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
 
    mSelected -= i;
    mManager->RemoveStates(i);
-   ProjectManager::Get( *mProject ).SetStateTo(mSelected + 1);
+   ProjectHistory::Get( *mProject ).SetStateTo(mSelected + 1);
 
    while(--i >= 0)
       mList->DeleteItem(i);
@@ -292,7 +295,7 @@ void HistoryWindow::OnItemSelected(wxListEvent &event)
    // entry.  Doing so can cause unnecessary delays upon initial load or while
    // clicking the same entry over and over.
    if (selected != mSelected) {
-      ProjectManager::Get( *mProject ).SetStateTo(selected + 1);
+      ProjectHistory::Get( *mProject ).SetStateTo(selected + 1);
    }
    mSelected = selected;
 

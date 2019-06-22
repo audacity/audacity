@@ -49,6 +49,7 @@
 #endif
 
 #include "../AllThemeResources.h"
+#include "../BatchCommands.h"
 #include "../ImageManipulation.h"
 #include "../Menus.h"
 #include "../Prefs.h"
@@ -76,8 +77,8 @@ BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
 END_EVENT_TABLE()
 
 //Standard contructor
-EditToolBar::EditToolBar()
-: ToolBar(EditBarID, _("Edit"), wxT("Edit"))
+EditToolBar::EditToolBar( AudacityProject &project )
+: ToolBar(project, EditBarID, _("Edit"), wxT("Edit"))
 {
 }
 
@@ -259,8 +260,7 @@ void EditToolBar::ForAllButtons(int Action)
    CommandManager* cm = nullptr;
 
    if( Action & ETBActEnableDisable ){
-      p = GetActiveProject();
-      if (!p) return;
+      p = &mProject;
       cm = &CommandManager::Get( *p );
 #ifdef OPTION_SYNC_LOCK_BUTTON
       bool bSyncLockTracks;
@@ -279,7 +279,8 @@ void EditToolBar::ForAllButtons(int Action)
       if( Action & ETBActTooltips ){
          TranslatedInternalString command{
             entry.commandName, wxGetTranslation(entry.untranslatedLabel) };
-         ToolBar::SetButtonToolTip( *mButtons[entry.tool], &command, 1u );
+         ToolBar::SetButtonToolTip( mProject,
+            *mButtons[entry.tool], &command, 1u );
       }
 #endif
       if (cm) {
@@ -294,13 +295,16 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    // Be sure the pop-up happens even if there are exceptions, except for buttons which toggle.
    auto cleanup = finally( [&] { mButtons[id]->InteractionOver();});
 
-   AudacityProject *p = GetActiveProject();
-   if (!p) return;
+   AudacityProject *p = &mProject;
    auto &cm = CommandManager::Get( *p );
 
-   auto flags = MenuManager::Get(*p).GetUpdateFlags(*p);
-   const CommandContext context( *GetActiveProject() );
-   cm.HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecified);
+   auto flags = MenuManager::Get(*p).GetUpdateFlags();
+   const CommandContext context( *p );
+   MacroCommands::HandleTextualCommand( cm,
+      EditToolbarButtonList[id].commandName, context, flags, false);
 }
 
-
+static RegisteredToolbarFactory factory{ EditBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew EditToolBar{ project } }; }
+};

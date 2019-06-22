@@ -100,6 +100,9 @@ using AttachedWindows = ClientData::Site<
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACK_PANEL_TIMER, wxCommandEvent);
+
 ///\brief The top-level handle to an Audacity project.  It serves as a source
 /// of events that other objects can bind to, and a container of associated
 /// sub-objects that it treats opaquely.  It stores a filename and a status
@@ -152,10 +155,10 @@ class AUDACITY_DLL_API AudacityProject final
 
 ///\brief Get the top-level window associated with the project (as a wxFrame
 /// only, when you do not need to use the subclass ProjectWindow)
-wxFrame &GetProjectFrame( AudacityProject &project );
-const wxFrame &GetProjectFrame( const AudacityProject &project );
+AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project );
+AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project );
 
-///\brief Get a pointer to the window associaged with a project, or null if
+///\brief Get a pointer to the window associated with a project, or null if
 /// the given pointer is null.
 inline wxFrame *FindProjectFrame( AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;

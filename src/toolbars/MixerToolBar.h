@@ -23,7 +23,7 @@ class MixerToolBar final : public ToolBar {
 
  public:
 
-   MixerToolBar();
+   MixerToolBar( AudacityProject &project );
    virtual ~MixerToolBar();
 
    static MixerToolBar &Get( AudacityProject &project );

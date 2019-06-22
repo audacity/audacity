@@ -15,8 +15,10 @@
 #include <wx/string.h> // member variable
 #include "Prefs.h"
 #include "ClientData.h"
+#include "commands/CommandFlag.h"
 
 class wxArrayString;
+class wxCommandEvent;
 class AudacityProject;
 class CommandContext;
 class CommandManager;
@@ -28,7 +30,6 @@ class ViewInfo;
 class WaveClip;
 class WaveTrack;
 
-enum CommandFlag : unsigned long long;
 enum EffectType : int;
 
 typedef wxString PluginID;
@@ -61,7 +62,8 @@ public:
    static MenuManager &Get( AudacityProject &project );
    static const MenuManager &Get( const AudacityProject &project );
 
-   MenuManager();
+   MenuManager( AudacityProject &project );
+   ~MenuManager();
 
    static void ModifyUndoMenuItems(AudacityProject &project);
    static void ModifyToolbarMenus(AudacityProject &project);
@@ -70,27 +72,29 @@ public:
 
    // checkActive is a temporary hack that should be removed as soon as we
    // get multiple effect preview working
-   void UpdateMenus(AudacityProject &project, bool checkActive = true);
+   void UpdateMenus( bool checkActive = true );
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags(
-      AudacityProject &project, bool checkActive = false);
+   CommandFlag GetUpdateFlags( bool checkActive = false );
    void UpdatePrefs() override;
 
    // Command Handling
    bool ReportIfActionNotAllowed(
-      AudacityProject &project,
-      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd,
-      CommandFlag mask );
+      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd );
    bool TryToMakeActionAllowed(
-      AudacityProject &project,
-      CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+      CommandFlag & flags, CommandFlag flagsRqd );
 
 
 private:
-   CommandFlag GetFocusedFrame(AudacityProject &project);
+   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot,
+      CommandFlag flagsRequired);
 
+   void OnUndoRedo( wxCommandEvent &evt );
+
+   AudacityProject &mProject;
+
+public:
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
    int  mWhatIfNoSelection;
    bool mStopIfWasPaused;
@@ -131,7 +135,6 @@ void DoSelectSomething( AudacityProject &project );
 namespace ViewActions {
 double GetZoomOfToFit( const AudacityProject &project );
 void DoZoomFit( AudacityProject &project );
-void DoZoomFitV( AudacityProject &project );
 }
 
 /// Namespace for functions for Transport menu

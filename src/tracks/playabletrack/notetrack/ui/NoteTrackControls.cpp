@@ -24,8 +24,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../Project.h"
-#include "../../../../ProjectManager.h"
+#include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../prefs/ThemePrefs.h"
+
+#include <mutex>
+#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 NoteTrackControls::~NoteTrackControls()
@@ -67,7 +71,7 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
       }
    }
 
-   return TrackControls::HitTest(st, pProject);
+   return NoteTrackControlsBase::HitTest(st, pProject);
 }
 
 class NoteTrackMenuTable : public PopupMenuTable
@@ -81,7 +85,7 @@ public:
 private:
    void InitMenu(Menu*, void *pUserData) override
    {
-      mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+      mpData = static_cast<NoteTrackControlsBase::InitMenuData*>(pUserData);
    }
 
    void DestroyMenu() override
@@ -89,7 +93,7 @@ private:
       mpData = nullptr;
    }
 
-   TrackControls::InitMenuData *mpData;
+   NoteTrackControlsBase::InitMenuData *mpData;
 
    void OnChangeOctave(wxCommandEvent &);
 };
@@ -117,7 +121,7 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
    pTrack->ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = ::GetActiveProject();
-   ProjectManager::Get( *project )
+   ProjectHistory::Get( *project )
       .ModifyState(false);
    mpData->result = RefreshCode::RefreshAll;
 }
@@ -137,4 +141,180 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 #endif
 }
 
+// drawing related
+#include "../../../../widgets/ASlider.h"
+#include "../../../../TrackInfo.h"
+#include "../../../../TrackPanelDrawingContext.h"
+#include "../../../../ViewInfo.h"
+
+using TCPLine = TrackInfo::TCPLine;
+
+#ifdef USE_MIDI
+enum : int {
+   // PRL:  was it correct to include the margin?
+   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
+   kMidiCellHeight = kTrackInfoBtnSize
+};
 #endif
+
+#include "NoteTrackButtonHandle.h"
+#include "NoteTrackSliderHandles.h"
+
+namespace {
+void GetMidiControlsHorizontalBounds( const wxRect &rect, wxRect &dest )
+{
+   dest.x = rect.x + 1; // To center slightly
+   // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
+   // kTrackInfoWidth but I am trying to avoid use of that constant.
+   // Can cell width be computed from dest.width instead?
+   dest.width = kMidiCellWidth * 4;
+}
+
+void SliderDrawFunction
+( LWSlider *(*Selector)
+    (const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow*),
+  wxDC *dc, const wxRect &rect, const Track *pTrack,
+  bool captured, bool highlight )
+{
+   wxRect sliderRect = rect;
+   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   auto nt = static_cast<const NoteTrack*>( pTrack );
+   Selector( sliderRect, nt, captured, nullptr )->OnPaint(*dc, highlight);
+}
+
+void VelocitySliderDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto dc = &context.dc;
+   auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   SliderDrawFunction(
+      &NoteTrackControls::VelocitySlider, dc, rect, pTrack, captured, hit);
+}
+
+void MidiControlsDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   auto channel = hit ? target->GetChannel() : -1;
+   auto &dc = context.dc;
+   wxRect midiRect = rect;
+   GetMidiControlsHorizontalBounds(rect, midiRect);
+   NoteTrack::DrawLabelControls
+      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
+}
+}
+
+static const struct NoteTrackTCPLines
+   : TCPLines { NoteTrackTCPLines() {
+   (TCPLines&)*this =
+      NoteTrackControlsBase::StaticTCPLines();
+   insert( end(), {
+      { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
+        MidiControlsDrawFunction },
+      { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        VelocitySliderDrawFunction },
+   } );
+} } noteTrackTCPLines;
+
+void NoteTrackControls::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
+{
+   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
+   dest.y = topleft.y + results.first;
+   dest.height = results.second;
+}
+
+void NoteTrackControls::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+{
+   GetMidiControlsHorizontalBounds( rect, dest );
+   auto results = TrackInfo::CalcItemY(
+      noteTrackTCPLines, TCPLine::kItemMidiControlsRect );
+   dest.y = rect.y + results.first;
+   dest.height = results.second;
+}
+
+unsigned NoteTrackControls::DefaultNoteTrackHeight()
+{
+   return TrackInfo::DefaultTrackHeight( noteTrackTCPLines );
+}
+
+const TCPLines &NoteTrackControls::GetTCPLines() const
+{
+   return noteTrackTCPLines;
+};
+
+#endif
+
+namespace {
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   std::unique_ptr<LWSlider>
+     gVelocityCaptured
+   , gVelocity
+   ;
+#endif
+
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+LWSlider * NoteTrackControls::VelocitySlider
+(const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
+{
+   static std::once_flag flag;
+   std::call_once( flag, [] {
+      wxCommandEvent dummy;
+      ReCreateVelocitySlider( dummy );
+      wxTheApp->Bind(EVT_THEME_CHANGE, ReCreateVelocitySlider);
+   } );
+
+   wxPoint pos = sliderRect.GetPosition();
+   float velocity = t ? t->GetVelocity() : 0.0;
+
+   gVelocity->Move(pos);
+   gVelocity->Set(velocity);
+   gVelocityCaptured->Move(pos);
+   gVelocityCaptured->Set(velocity);
+
+   auto slider = (captured ? gVelocityCaptured : gVelocity).get();
+   slider->SetParent( pParent ? pParent :
+      FindProjectFrame( ::GetActiveProject() ) );
+   return slider;
+}
+#endif
+
+void NoteTrackControls::ReCreateVelocitySlider( wxEvent &evt )
+{
+   evt.Skip();
+#ifdef EXPERIMENTAL_MIDI_OUT
+   wxPoint point{ 0, 0 };
+   wxRect sliderRect;
+   GetVelocityRect(point, sliderRect);
+
+   /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
+   gVelocity = std::make_unique<LWSlider>(nullptr, _("Velocity"),
+      wxPoint(sliderRect.x, sliderRect.y),
+      wxSize(sliderRect.width, sliderRect.height),
+      VEL_SLIDER);
+   gVelocity->SetDefaultValue(0.0);
+   gVelocityCaptured = std::make_unique<LWSlider>(nullptr, _("Velocity"),
+      wxPoint(sliderRect.x, sliderRect.y),
+      wxSize(sliderRect.width, sliderRect.height),
+      VEL_SLIDER);
+   gVelocityCaptured->SetDefaultValue(0.0);
+#else
+   pParent;
+#endif
+}
+
+using DoGetNoteTrackControls = DoGetControls::Override< NoteTrack >;
+template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function {
+   return [](NoteTrack &track) {
+      return std::make_shared<NoteTrackControls>( track.SharedPointer() );
+   };
+}
+static DoGetNoteTrackControls registerDoGetNoteTrackControls;

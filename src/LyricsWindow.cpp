@@ -11,11 +11,10 @@
 
 #include "LyricsWindow.h"
 #include "Lyrics.h"
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "ViewInfo.h"
 
 #include <wx/radiobut.h>
@@ -155,6 +154,7 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
 {
    if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
+      auto gAudioIO = AudioIOBase::Get();
       GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
    }
    else

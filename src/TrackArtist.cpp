@@ -72,6 +72,7 @@ audio tracks.
 #include "AColor.h"
 #include "BlockFile.h"
 #include "Envelope.h"
+#include "EnvelopeEditor.h"
 #include "NumberScale.h"
 #include "WaveClip.h"
 #include "LabelTrack.h"
@@ -83,11 +84,11 @@ audio tracks.
 #include "prefs/TracksPrefs.h"
 #include "prefs/WaveformSettings.h"
 #include "Spectrum.h"
-#include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
 #include "AllThemeResources.h"
 #include "TrackPanelDrawingContext.h"
+#include "tracks/labeltrack/ui/LabelTrackView.h"
 
 
 #undef PROFILE_WAVEFORM
@@ -222,12 +223,12 @@ void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
 
    for(auto leader : tracks->Leaders()) {
       auto group = TrackList::Channels( leader );
-      leader = leader->SubstitutePendingChangedTrack().get();
+      auto &view1 = TrackView::Get( *leader );
 
-      teamRect.y = leader->GetY() - zoomInfo.vpos;
+      teamRect.y = view1.GetY() - zoomInfo.vpos;
       teamRect.height = group.sum( [&] (const Track *channel) {
-         channel = channel->SubstitutePendingChangedTrack().get();
-         return channel->GetHeight();
+         auto &view = TrackView::Get( *channel );
+         return view.GetHeight();
       });
 
       if (teamRect.GetBottom() < clip.GetTop())
@@ -245,13 +246,17 @@ void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
          // If so, we draw both.  Otherwise, we can safely draw neither.
 
          if (teamRect.Intersects(clip) && reg.Contains(teamRect)) {
-            t = t->SubstitutePendingChangedTrack().get();
+            auto &view = TrackView::Get( *t );
             wxRect trackRect {
                teamRect.x,
-               t->GetY() - zoomInfo.vpos + kTopMargin,
+               view.GetY() - zoomInfo.vpos + kTopMargin,
                teamRect.width,
-               t->GetHeight() - (kTopMargin + kBottomMargin)
+               view.GetHeight() - (kTopMargin + kBottomMargin)
             };
+            // Find any pending changed track contents (such as during a
+            // recording that is not yet committed to the undo history), and
+            // draw those instead
+            t = t->SubstitutePendingChangedTrack().get();
             DrawTrack( context, t, trackRect );
          }
       }
@@ -276,12 +281,12 @@ void TrackArt::DrawTrackNames(TrackPanelDrawingContext &context,
 
    for(auto leader : tracks->Leaders()) {
       auto group = TrackList::Channels( leader );
-      leader = leader->SubstitutePendingChangedTrack().get();
+      auto &view = TrackView::Get( *leader );
 
-      teamRect.y = leader->GetY() - zoomInfo.vpos;
+      teamRect.y = view.GetY() - zoomInfo.vpos;
       teamRect.height = group.sum( [&] (const Track *channel) {
-         channel = channel->SubstitutePendingChangedTrack().get();
-         return channel->GetHeight();
+         auto &channelView = TrackView::Get( *channel );
+         return view.GetHeight();
       });
 
       if (teamRect.GetBottom() < clip.GetTop())
@@ -294,7 +299,7 @@ void TrackArt::DrawTrackNames(TrackPanelDrawingContext &context,
             t = t->SubstitutePendingChangedTrack().get();
             wxRect trackRect {
                teamRect.x,
-               t->GetY() - zoomInfo.vpos + kTopMargin,
+               TrackView::Get( *t ).GetY() - zoomInfo.vpos + kTopMargin,
                teamRect.width,
                teamRect.height
             };
@@ -345,14 +350,17 @@ void TrackArt::DrawTrackName( TrackPanelDrawingContext &context, const Track * t
    image.InitAlpha();
    unsigned char *alpha=image.GetAlpha();
    memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
-    
-   wxGraphicsContext &gc=*wxGraphicsContext::Create(image);
-   // This is to a gc, not a dc.
-   AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-   gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
-   // delete the gc so as to free and so update the wxImage.
-   delete &gc;
+   
+   {
+      std::unique_ptr< wxGraphicsContext >
+         pGc{ wxGraphicsContext::Create(image) };
+      auto &gc = *pGc;
+      // This is to a gc, not a dc.
+      AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
+      // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
+      gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
+      // destructor of gc updates the wxImage.
+   }
    wxBitmap bitmap( image );
    dc.DrawBitmap( bitmap, rect.x+6, rect.y);
 #endif
@@ -409,7 +417,7 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
       },
    #endif // USE_MIDI
       [&](const LabelTrack *lt) {
-         lt->Draw( context, rect );
+         LabelTrackView::Get( *lt ).Draw( context, rect );
       },
       [&](const TimeTrack *tt) {
          DrawTimeTrack( context, tt, rect );
@@ -1461,8 +1469,9 @@ void TrackArt::DrawEnvLine(
    }
 }
 
-#include "tracks/ui/TimeShiftHandle.h"
-#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
+// Headers needed only for experimental drawing below
+//#include "tracks/ui/TimeShiftHandle.h"
+//#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
 void TrackArt::DrawWaveform(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
@@ -1748,8 +1757,9 @@ void FindWavePortions
 }
 }
 
-#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
-#include "tracks/ui/EnvelopeHandle.h"
+// Headers needed only for experimental drawing below
+//#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
+//#include "tracks/ui/EnvelopeHandle.h"
 void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
@@ -1809,14 +1819,14 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   clip->GetEnvelope()->GetValues
-      ( tOffset,
+   Envelope::GetValues( *clip->GetEnvelope(),
+      tOffset,
 
-        // PRL: change back to make envelope evaluate only at sample times
-        // and then interpolate the display
-        0, // 1.0 / rate,
+      // PRL: change back to make envelope evaluate only at sample times
+      // and then interpolate the display
+      0, // 1.0 / rate,
 
-        env, mid.width, leftOffset, zoomInfo );
+      env, mid.width, leftOffset, zoomInfo );
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -1949,14 +1959,14 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            clip->GetEnvelope()->GetValues
-               ( tOffset,
+            Envelope::GetValues( *clip->GetEnvelope(),
+               tOffset,
 
-                 // PRL: change back to make envelope evaluate only at sample times
-                 // and then interpolate the display
-                 0, // 1.0 / rate,
+               // PRL: change back to make envelope evaluate only at sample times
+               // and then interpolate the display
+               0, // 1.0 / rate,
 
-                 env2, rectPortion.width, leftOffset, zoomInfo );
+               env2, rectPortion.width, leftOffset, zoomInfo );
             DrawMinMaxRMS( context, rectPortion, env2,
                zoomMin, zoomMax,
                dB, dBRange,
@@ -1984,8 +1994,8 @@ void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
    if (drawEnvelope) {
       DrawEnvelope(
          context, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope );
-      clip->GetEnvelope()->DrawPoints
-         ( context, rect, dB, dBRange, zoomMin, zoomMax, true );
+      EnvelopeEditor::DrawPoints( *clip->GetEnvelope(),
+         context, rect, dB, dBRange, zoomMin, zoomMax, true );
    }
 
    // Draw arrows on the left side if the track extends to the left of the
@@ -3247,11 +3257,79 @@ void TrackArt::DrawNoteTrack(TrackPanelDrawingContext &context,
 #endif // USE_MIDI
 
 
+// Header needed only for experimental drawing below
+//#include "tracks/ui/EnvelopeHandle.h"
+namespace {
+void DrawHorzRulerAndCurve
+( TrackPanelDrawingContext &context, const wxRect & r,
+  const TimeTrack &track, Ruler &ruler )
+{
+   auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+   
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
+   highlight = target && target->GetEnvelope() == this->GetEnvelope();
+#endif
+   
+   double min = zoomInfo.PositionToTime(0);
+   double max = zoomInfo.PositionToTime(r.width);
+   if (min > max)
+   {
+      wxASSERT(false);
+      min = max;
+   }
+   
+   AColor::UseThemeColour( &dc, clrUnselected );
+   dc.DrawRectangle(r);
+   
+   //copy this rectangle away for future use.
+   wxRect mid = r;
+   
+   // Draw the Ruler
+   ruler.SetBounds(r.x, r.y, r.x + r.width - 1, r.y + r.height - 1);
+   ruler.SetRange(min, max);
+   ruler.SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
+   // I have no idea why!
+   //
+   // LL:  It's because the ruler only Invalidate()s when the NEW value is different
+   //      than the current value.
+   ruler.SetFlip( true );
+   // ruler.SetFlip(track.GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
+   ruler.Draw(dc, track.GetEnvelope());
+   
+   Doubles envValues{ size_t(mid.width) };
+   Envelope::GetValues( *track.GetEnvelope(),
+      0, 0, envValues.get(), mid.width, 0, zoomInfo );
+   
+   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
+   dc.SetPen( pen );
+   
+   auto rangeLower = track.GetRangeLower(), rangeUpper = track.GetRangeUpper();
+   double logLower = log(std::max(1.0e-7, rangeLower)),
+      logUpper = log(std::max(1.0e-7, rangeUpper));
+
+   for (int x = 0; x < mid.width; x++)
+   {
+      double y;
+      if ( track.GetDisplayLog() )
+         y = (double)mid.height * (logUpper - log(envValues[x])) / (logUpper - logLower);
+      else
+         y = (double)mid.height * (rangeUpper - envValues[x]) / (rangeUpper - rangeLower);
+      int thisy = r.y + (int)y;
+      AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
+   }
+}
+}
+
 void TrackArt::DrawTimeTrack(TrackPanelDrawingContext &context,
                                 const TimeTrack *track,
                                 const wxRect & rect)
 {
-   track->Draw( context, rect );
+   DrawHorzRulerAndCurve( context, rect, *track, track->GetRuler() );
    wxRect envRect = rect;
    envRect.height -= 2;
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
@@ -3262,9 +3340,9 @@ void TrackArt::DrawTimeTrack(TrackPanelDrawingContext &context,
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dbRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dbRange + 1.0;
    }
-   track->GetEnvelope()->DrawPoints
-      ( context, envRect,
-        track->GetDisplayLog(), dbRange, lower, upper, false );
+   EnvelopeEditor::DrawPoints( *track->GetEnvelope(),
+      context, envRect,
+      track->GetDisplayLog(), dbRange, lower, upper, false );
 }
 
 void TrackArtist::UpdateSelectedPrefs( int id )

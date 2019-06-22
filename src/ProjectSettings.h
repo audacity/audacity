@@ -11,6 +11,7 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_SETTINGS__
 #define __AUDACITY_PROJECT_SETTINGS__
 
+#include <atomic>
 #include <wx/event.h> // to declare custom event type
 
 #include "ClientData.h" // to inherit
@@ -21,6 +22,28 @@ class AudacityProject;
 // Sent to the project when certain settings change
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
+
+enum
+{
+   SNAP_OFF,
+   SNAP_NEAREST,
+   SNAP_PRIOR
+};
+
+namespace ToolCodes {
+enum {
+   selectTool,
+   envelopeTool,
+   drawTool,
+   zoomTool,
+   slideTool,
+   multiTool,
+   numTools,
+   
+   firstTool = selectTool,
+   lastTool = multiTool,
+};
+}
 
 ///\brief Holds various per-project settings values, including the sample rate,
 /// and sends events to the project when certain values change
@@ -61,6 +84,17 @@ public:
    void SetSnapTo(int snap);
    int GetSnapTo() const;
 
+   // Current tool
+
+   void SetTool(int tool) { mCurrentTool = tool; }
+   int GetTool() const { return mCurrentTool; }
+
+   // Speed play
+   double GetPlaySpeed() const {
+      return mPlaySpeed.load( std::memory_order_relaxed ); }
+   void SetPlaySpeed( double value ) {
+      mPlaySpeed.store( value, std::memory_order_relaxed ); }
+
    // Selection Format
 
    void SetSelectionFormat(const NumericFormatSymbol & format);
@@ -94,8 +128,14 @@ private:
 
    double mRate;
 
+   // This is atomic because scrubber may read it in a separate thread from
+   // the main
+   std::atomic<double> mPlaySpeed{};
+
    sampleFormat mDefaultFormat;
    int mSnapTo;
+
+   int mCurrentTool;
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mShowId3Dialog{ true }; //lda

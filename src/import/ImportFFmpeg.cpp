@@ -21,7 +21,6 @@ Licensed under the GNU General Public License v2 or later
 *//*******************************************************************/
 
 #include "../Audacity.h"    // needed before FFmpeg.h // for USE_* macros
-#include "ImportFFmpeg.h"
 
 #include "../Experimental.h"
 
@@ -152,6 +151,7 @@ static const auto exts = {
 };
 
 // all the includes live here by default
+#include "Import.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
@@ -182,6 +182,8 @@ public:
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+   
+   unsigned SequenceNumber() const override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -282,13 +284,6 @@ private:
 };
 
 
-void GetFFmpegImportPlugin(ImportPluginList &importPluginList,
-                           UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
-{
-   importPluginList.push_back( std::make_unique<FFmpegImportPlugin>() );
-}
-
-
 wxString FFmpegImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
@@ -335,6 +330,15 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const FilePath &filen
    // This std::move is needed to "upcast" the pointer type
    return std::move(handle);
 }
+
+unsigned FFmpegImportPlugin::SequenceNumber() const
+{
+   return 60;
+}
+
+static Importer::RegisteredImportPlugin registered{
+   std::make_unique< FFmpegImportPlugin >()
+};
 
 
 FFmpegImportFileHandle::FFmpegImportFileHandle(const FilePath & name)

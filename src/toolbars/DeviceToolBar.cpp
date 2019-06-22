@@ -39,7 +39,7 @@
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
@@ -72,9 +72,11 @@ static int DeviceToolbarPrefsID()
 }
 
 //Standard contructor
-DeviceToolBar::DeviceToolBar()
-: ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
+DeviceToolBar::DeviceToolBar( AudacityProject &project )
+: ToolBar( project, DeviceBarID, _("Device"), wxT("Device"), true )
 {
+   wxTheApp->Bind( EVT_RESCANNED_DEVICES,
+      &DeviceToolBar::OnRescannedDevices, this );
 }
 
 DeviceToolBar::~DeviceToolBar()
@@ -341,6 +343,7 @@ void DeviceToolBar::UpdateSelectedPrefs( int id )
 
 void DeviceToolBar::EnableDisableButtons()
 {
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO) {
       // we allow changes when monitoring, but not when recording
       bool audioStreamActive = gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
@@ -348,12 +351,8 @@ void DeviceToolBar::EnableDisableButtons()
       // Here we should relinquish focus
       if (audioStreamActive) {
          wxWindow *focus = wxWindow::FindFocus();
-         if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels) {
-            AudacityProject *activeProject = GetActiveProject();
-            if (activeProject) {
-               TrackPanel::Get( *activeProject ).SetFocus();
-            }
-         }
+         if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels)
+            TrackPanel::Get( mProject ).SetFocus();
       }
 
       mHost->Enable(!audioStreamActive);
@@ -627,6 +626,13 @@ void DeviceToolBar::FillHostDevices()
    // The setting of the Device is left up to OnChoice
 }
 
+void DeviceToolBar::OnRescannedDevices( wxCommandEvent &event )
+{
+   event.Skip();
+   // Hosts may have disappeared or appeared so a complete repopulate is needed.
+   RefillCombos();
+}
+
 //return 1 if host changed, 0 otherwise.
 int DeviceToolBar::ChangeHost()
 {
@@ -775,6 +781,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       ChangeDevice(false);
    }
 
+   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO) {
       // We cannot have gotten here if gAudioIO->IsAudioTokenActive(),
       // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in
@@ -860,3 +867,8 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    }
 #endif
 }
+
+static RegisteredToolbarFactory factory{ DeviceBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew DeviceToolBar{ project } }; }
+};

@@ -2,13 +2,15 @@
 
 Audacity: A Digital Audio Editor
 
-NoteTrackUI.cpp
+NoteTrackView.cpp
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
 #include "../../../../Audacity.h" // for USE_* macros
+#include "NoteTrackView.h"
+
 #ifdef USE_MIDI
 #include "../../../../NoteTrack.h"
 
@@ -22,7 +24,17 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
 
-std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
+NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackView{ pTrack }
+{
+   DoSetHeight( NoteTrackControls::DefaultNoteTrackHeight() );
+}
+
+NoteTrackView::~NoteTrackView()
+{
+}
+
+std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
 (const TrackPanelMouseState &WXUNUSED(state),
  const AudacityProject *WXUNUSED(pProject), int, bool )
 {
@@ -41,13 +53,18 @@ std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
    return results;
 }
 
-std::shared_ptr<TrackControls> NoteTrack::DoGetControls()
+using DoGetNoteTrackView = DoGetView::Override< NoteTrack >;
+template<> template<> auto DoGetNoteTrackView::Implementation() -> Function {
+   return [](NoteTrack &track) {
+      return std::make_shared<NoteTrackView>( track.SharedPointer() );
+   };
+}
+static DoGetNoteTrackView registerDoGetNoteTrackView;
+
+std::shared_ptr<TrackVRulerControls> NoteTrackView::DoGetVRulerControls()
 {
-   return std::make_shared<NoteTrackControls>( SharedPointer() );
+   return
+      std::make_shared<NoteTrackVRulerControls>( shared_from_this() );
 }
 
-std::shared_ptr<TrackVRulerControls> NoteTrack::DoGetVRulerControls()
-{
-   return std::make_shared<NoteTrackVRulerControls>( SharedPointer() );
-}
 #endif

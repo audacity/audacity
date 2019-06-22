@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 
 #include "Scrubbing.h"
-#include "TrackControls.h"
+#include "TrackView.h"
 
 #include "../../AColor.h"
 #include "../../FreqWindow.h"
@@ -22,7 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../NumberScale.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectManager.h"
+#include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
@@ -34,7 +34,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../ondemand/ODManager.h"
 #include "../../prefs/SpectrogramSettings.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../../images/Cursors.h"
 
 #include <wx/event.h>
@@ -581,7 +580,7 @@ UIHandle::Result SelectHandle::Click
          }
       } );
 
-      ProjectManager::Get( *pProject ).ModifyState(false);
+      ProjectHistory::Get( *pProject ).ModifyState(false);
 
       // Do not start a drag
       return RefreshAll | UpdateSelection | Cancelled;
@@ -666,7 +665,7 @@ UIHandle::Result SelectHandle::Click
       };
 
       // For persistence of the selection change:
-      ProjectManager::Get( *pProject ).ModifyState(false);
+      ProjectHistory::Get( *pProject ).ModifyState(false);
 
       // Get timer events so we can auto-scroll
       Connect(pProject);
@@ -704,7 +703,7 @@ UIHandle::Result SelectHandle::Click
                static_cast<WaveTrack*>(pTrack),
                viewInfo, event.m_y, mRect.y, mRect.height);
             // For persistence of the selection change:
-            ProjectManager::Get( *pProject ).ModifyState(false);
+            ProjectHistory::Get( *pProject ).ModifyState(false);
             mSelectionBoundary = SBWidth;
             return UpdateSelection;
          }
@@ -905,7 +904,7 @@ HitTestPreview SelectHandle::Preview
       auto xx = viewInfo.TimeToPosition(time, mRect.x);
 
       const bool bMultiToolMode =
-         ToolsToolBar::Get( *pProject ).IsDown(multiTool);
+         (ToolCodes::multiTool == ProjectSettings::Get( *pProject ).GetTool());
 
       //In Multi-tool mode, give multitool prompt if no-special-hit.
       if (bMultiToolMode) {
@@ -988,7 +987,7 @@ UIHandle::Result SelectHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   ProjectManager::Get( *pProject ).ModifyState(false);
+   ProjectHistory::Get( *pProject ).ModifyState(false);
    mFrequencySnapper.reset();
    mSnapManager.reset();
    if (mSelectionStateChanger) {
@@ -1111,7 +1110,12 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
       // AS: For some reason, GCC won't let us pass this directly.
       wxMouseEvent evt(wxEVT_MOTION);
       const auto size = trackPanel.GetSize();
-      mParent->Drag(TrackPanelMouseEvent{ evt, mParent->mRect, size, pTrack }, project);
+      mParent->Drag(
+         TrackPanelMouseEvent{
+            evt, mParent->mRect, size,
+            TrackView::Get( *pTrack ).shared_from_this() },
+         project
+      );
       mParent->mAutoScrolling = false;
       TrackPanel::Get( *mConnectedProject ).Refresh(false);
    }
@@ -1128,7 +1132,7 @@ void SelectHandle::StartSelection( AudacityProject *pProject )
    // PRL:  commented out the Sonify stuff with the TrackPanel refactor.
    // It was no-op anyway.
    //SonifyBeginModifyState();
-   ProjectManager::Get( *pProject ).ModifyState(false);
+   ProjectHistory::Get( *pProject ).ModifyState(false);
    //SonifyEndModifyState();
 }
 

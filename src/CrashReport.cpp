@@ -14,7 +14,7 @@
 
 #include "wxFileNameWrapper.h"
 #include "AudacityLogger.h"
-#include "AudioIO.h"
+#include "AudioIOBase.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "prefs/GUIPrefs.h"
@@ -38,6 +38,7 @@ void Generate(wxDebugReport::Context ctx)
       GUIPrefs::InitLang( wxT("en") );
       auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
       
+      auto gAudioIO = AudioIOBase::Get();
       rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
 #ifdef EXPERIMENTAL_MIDI_OUT
       rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));

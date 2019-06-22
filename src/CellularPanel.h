@@ -2,7 +2,7 @@
 
  Audacity: A Digital Audio Editor
 
- TrackPanel.h
+ CellularPanel.h
 
  Paul Licameli
 
@@ -133,6 +133,8 @@ private:
    void OnKillFocus(wxFocusEvent & event);
    
    void OnContextMenu(wxContextMenuEvent & event);
+   
+   void OnIdle(wxIdleEvent & event);
    
    void HandleInterruptedDrag();
    void Uncapture( bool escaping, wxMouseState *pState = nullptr );

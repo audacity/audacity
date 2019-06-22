@@ -11,8 +11,12 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_COMMON_TRACK_PANEL_CELL__
 #define __AUDACITY_COMMON_TRACK_PANEL_CELL__
 
+#include "../../Audacity.h"
 #include "../../TrackPanelCell.h"
+
 #include <stdlib.h>
+#include <memory>
+#include <functional>
 
 class Track;
 
@@ -20,8 +24,14 @@ class AUDACITY_DLL_API CommonTrackPanelCell /* not final */
    : public TrackPanelCell
 {
 public:
+   // Type of function to dispatch mouse wheel events
+   using Hook = std::function<
+      unsigned(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+   >;
+   // Install a dispatcher function, returning the previous function
+   static Hook InstallMouseWheelHook( const Hook &hook );
+
    CommonTrackPanelCell()
-      : mVertScrollRemainder(0.0)
    {}
 
    virtual ~CommonTrackPanelCell() = 0;
@@ -41,8 +51,22 @@ protected:
       (const TrackPanelMouseEvent &event,
       AudacityProject *pProject) override;
 
+};
+
+class AUDACITY_DLL_API CommonTrackCell /* not final */
+   : public CommonTrackPanelCell
+{
+public:
+   explicit CommonTrackCell( const std::shared_ptr<Track> &pTrack );
+
+  ~CommonTrackCell();
+
+   std::shared_ptr<Track> DoFindTrack() override;
+
+   virtual void Reparent( const std::shared_ptr<Track> &parent );
+
 private:
-   double mVertScrollRemainder;
+   std::weak_ptr< Track > mwTrack;
 };
 
 #endif

@@ -11,14 +11,18 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackVRulerControls.h"
 
-#include "../../TrackPanel.h"
+#include "TrackView.h"
+
 #include "../../Track.h"
+#include "../../ViewInfo.h"
 
 #include <wx/cursor.h>
+#include <wx/dc.h>
 #include <wx/translation.h>
 
-TrackVRulerControls::TrackVRulerControls( std::shared_ptr<Track> pTrack )
-  : mwTrack{ pTrack }
+TrackVRulerControls::TrackVRulerControls(
+   const std::shared_ptr<TrackView> &pTrackView )
+  : mwTrackView{ pTrackView }
 {
 }
 
@@ -26,9 +30,32 @@ TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
+TrackVRulerControls &TrackVRulerControls::Get( Track &track )
+{
+   return *TrackView::Get( track ).GetVRulerControls();
+}
+
+const TrackVRulerControls &TrackVRulerControls::Get( const Track &track )
+{
+   return *TrackView::Get( track ).GetVRulerControls();
+}
+
+TrackVRulerControls &TrackVRulerControls::Get( TrackView &trackView )
+{
+   return *trackView.GetVRulerControls();
+}
+
+const TrackVRulerControls &TrackVRulerControls::Get( const TrackView &trackView )
+{
+   return *trackView.GetVRulerControls();
+}
+
 std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 {
-   return mwTrack.lock();
+   const auto pView = mwTrackView.lock();
+   if ( pView )
+      return pView->FindTrack();
+   return {};
 }
 
 std::vector<UIHandlePtr> TrackVRulerControls::HitTest

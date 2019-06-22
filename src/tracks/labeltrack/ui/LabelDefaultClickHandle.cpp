@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "LabelDefaultClickHandle.h"
 
+#include "LabelTrackView.h"
+#include "../../ui/TrackView.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../RefreshCode.h"
@@ -25,7 +27,9 @@ LabelDefaultClickHandle::~LabelDefaultClickHandle()
 }
 
 struct LabelDefaultClickHandle::LabelState {
-   std::vector< std::pair< std::weak_ptr<LabelTrack>, LabelTrack::Flags > > mPairs;
+   std::vector<
+      std::pair< std::weak_ptr<LabelTrack>, LabelTrackView::Flags >
+   > mPairs;
 };
 
 void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
@@ -34,17 +38,21 @@ void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
    auto &pairs = mLabelState->mPairs;
    auto &tracks = TrackList::Get( *pProject );
 
-   for (auto lt : tracks.Any<LabelTrack>())
+   for (auto lt : tracks.Any<LabelTrack>()) {
+      auto &view = LabelTrackView::Get( *lt );
       pairs.push_back( std::make_pair(
-         lt->SharedPointer<LabelTrack>(), lt->SaveFlags() ) );
+         lt->SharedPointer<LabelTrack>(), view.SaveFlags() ) );
+   }
 }
 
 void LabelDefaultClickHandle::RestoreState( AudacityProject *pProject )
 {
    if ( mLabelState ) {
       for ( const auto &pair : mLabelState->mPairs )
-         if (auto pLt = TrackList::Get( *pProject ).Lock(pair.first))
-            pLt->RestoreFlags( pair.second );
+         if (auto pLt = TrackList::Get( *pProject ).Lock(pair.first)) {
+            auto &view = LabelTrackView::Get( *pLt );
+            view.RestoreFlags( pair.second );
+         }
       mLabelState.reset();
    }
 }
@@ -62,9 +70,10 @@ UIHandle::Result LabelDefaultClickHandle::Click
 
       const auto pLT = evt.pCell.get();
       for (auto lt : TrackList::Get( *pProject ).Any<LabelTrack>()) {
-         if (pLT != lt) {
-            lt->ResetFlags();
-            lt->Unselect();
+         if (pLT != &TrackView::Get( *lt )) {
+            auto &view = LabelTrackView::Get( *lt );
+            view.ResetFlags();
+            view.SetSelectedIndex( -1 );
          }
       }
    }

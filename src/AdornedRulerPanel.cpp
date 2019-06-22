@@ -33,7 +33,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "ProjectManager.h"
+#include "ProjectAudioManager.h"
 #include "ProjectWindow.h"
 #include "RefreshCode.h"
 #include "Snap.h"
@@ -45,6 +45,7 @@
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "tracks/ui/Scrubbing.h"
+#include "tracks/ui/TrackView.h"
 #include "widgets/AButton.h"
 #include "widgets/Grabber.h"
 
@@ -335,8 +336,8 @@ void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
       // Draw indicator in all visible tracks
       static_cast<TrackPanel&>(panel)
          .VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-            const auto pTrack = dynamic_cast<Track*>(&cell);
-            if (!pTrack)
+            const auto pTrackView = dynamic_cast<TrackView*>(&cell);
+            if (!pTrackView)
                return;
 
             // Draw the NEW indicator in its NEW location
@@ -570,7 +571,8 @@ public:
    static std::shared_ptr<PlayheadHandle>
    HitTest( const AudacityProject *pProject, wxCoord xx )
    {
-      if( ControlToolBar::IsTransportingPinned() &&
+      if( ControlToolBar::Get( *pProject )
+         .IsTransportingPinned() &&
           ProjectAudioIO::Get( *pProject ).IsAudioActive() )
       {
          const auto targetX = GetPlayHeadX( pProject );
@@ -984,8 +986,6 @@ void AdornedRulerPanel::UpdatePrefs()
    // Affected by the last
    UpdateRects();
    SetPanelSize();
-
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::ReCreateButtons()
@@ -1121,11 +1121,6 @@ namespace {
    }
 }
 
-void AdornedRulerPanel::RegenerateTooltips()
-{
-   CallAfter( [this]{ HandleCursorForPresentMouseState(); } );
-}
-
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 {
    evt.Skip();
@@ -1142,8 +1137,6 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
       mIsRecording = false;
       UpdateButtonStates();
    }
-   
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -1626,7 +1619,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       if (!cutPreview)
          options.pStartTime = &oldStart;
       else
-         options.timeTrack = NULL;
+         options.envelope = nullptr;
 
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
@@ -1680,7 +1673,7 @@ void AdornedRulerPanel::UpdateButtonStates()
    auto common = [this]
    (AButton &button, const CommandID &commandName, const wxString &label) {
       TranslatedInternalString command{ commandName, label };
-      ToolBar::SetButtonToolTip( button, &command, 1u );
+      ToolBar::SetButtonToolTip( *mProject, button, &command, 1u );
       button.SetLabel(button.GetToolTipText());
 
       button.UpdateStatus();
@@ -1695,6 +1688,7 @@ void AdornedRulerPanel::UpdateButtonStates()
          pinButton->PopUp();
       else
          pinButton->PushDown();
+      auto gAudioIO = AudioIO::Get();
       pinButton->SetAlternateIdx(
          (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
       // Bug 1584: Toltip now shows what clicking will do.
@@ -1795,7 +1789,6 @@ void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
    mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
    gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
    gPrefs->Flush();
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
@@ -1833,7 +1826,6 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
    mTimelineToolTip = (mTimelineToolTip)? false : true;
    gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
    gPrefs->Flush();
-   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
@@ -2078,7 +2070,7 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      bool pinned = ControlToolBar::IsTransportingPinned();
+      bool pinned = ControlToolBar::Get( *mProject ).IsTransportingPinned();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
          (playing ? bmpPlayPointer : bmpRecordPointer) 

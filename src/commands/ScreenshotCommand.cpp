@@ -32,6 +32,7 @@ small calculations of rectangles.
 #include <wx/valgen.h>
 
 #include "../AdornedRulerPanel.h"
+#include "../BatchCommands.h"
 #include "../TrackPanel.h"
 #include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
@@ -138,6 +139,7 @@ ScreenshotCommand * ScreenshotCommand::mpShooter=NULL;
 // fully created.  Usually the dialog will have been created by invoking
 // an effects gui.
 void IdleHandler(wxIdleEvent& event){
+   event.Skip();
    wxWindow * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
    wxASSERT( pWin );
    pWin->Unbind(wxEVT_IDLE, IdleHandler);
@@ -453,7 +455,8 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
-      if( !commandManager.HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !MacroCommands::HandleTextualCommand( commandManager,
+         Command, projectContext, AlwaysEnabledFlag, true ) )
       {
          // using GET in a log message for devs' eyes only
          wxLogDebug("Command %s not found", Command.GET() );
@@ -613,7 +616,7 @@ void ScreenshotCommand::CaptureCommands(
       SetIdleHandler( IdleHandler );
       Str = Commands[i];
       const CommandContext projectContext( *pProject );
-      if( !manager.HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !manager.HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, true ) )
       {
          wxLogDebug("Command %s not found", Str);
       }
@@ -767,8 +770,8 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       // Omit the outermost ring of gray pixels
 
       // (Note that TrackPanel paints its focus over the "top margin" of the
-      // rectangle allotted to the track, according to Track::GetY() and
-      // Track::GetHeight(), but also over the margin of the next track.)
+      // rectangle allotted to the track, according to TrackView::GetY() and
+      // TrackView::GetHeight(), but also over the margin of the next track.)
 
       rect.height += kBottomMargin;
       int dy = kTopMargin - 1;

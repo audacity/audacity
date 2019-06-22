@@ -84,6 +84,8 @@ It handles initialization and termination by subclassing wxApp.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectFileManager.h"
+#include "ProjectHistory.h"
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
@@ -95,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "PlatformCompatibility.h"
 #include "FileNames.h"
 #include "AutoRecovery.h"
+#include "AutoRecoveryDialog.h"
 #include "SplashDialog.h"
 #include "FFT.h"
 #include "BlockFile.h"
@@ -104,6 +107,10 @@ It handles initialization and termination by subclassing wxApp.
 #include "prefs/GUIPrefs.h"
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileHistory.h"
+
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+#include "prefs/KeyConfigPrefs.h"
+#endif
 
 //temporarily commented out till it is added to all projects
 //#include "Profiler.h"
@@ -869,7 +876,7 @@ END_EVENT_TABLE()
 //  - Inform the user if DefaultOpenPath not set.
 //  - Switch focus to correct instance of project window, if already open.
 bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
-   // Most of the checks below are copied from AudacityProject::OpenFiles.
+   // Most of the checks below are copied from ProjectManager::OpenFiles.
    // - some rationalisation might be possible.
 
    AudacityProject *proj = GetActiveProject();
@@ -885,7 +892,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // Test here even though AudacityProject::OpenFile() also now checks, because
          // that method does not return the bad result.
          // That itself may be a FIXME.
-         if (ProjectManager::IsAlreadyOpen(fullPathStr))
+         if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
             return false;
 
          // DMM: If the project is dirty, that means it's been touched at
@@ -899,7 +906,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
          if (proj && (
-            ProjectManager::Get( *proj ).GetDirty() ||
+            ProjectHistory::Get( *proj ).GetDirty() ||
             !TrackList::Get( *proj ).empty()
          ) )
             proj = nullptr;
@@ -944,7 +951,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    // PRL: Don't call SafeMRUOpen
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
-   if (!ProjectManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
+   if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       history.RemoveFileFromHistory(n);
 }
 
@@ -1081,7 +1088,7 @@ bool AudacityApp::OnExceptionInMainLoop()
          // Restore the state of the project to what it was before the
          // failed operation
          if (pProject) {
-            ProjectManager::Get( *pProject ).RollbackState();
+            ProjectHistory::Get( *pProject ).RollbackState();
 
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();
@@ -1475,7 +1482,7 @@ bool AudacityApp::OnInit()
       // More initialization
 
       InitDitherers();
-      InitAudioIO();
+      AudioIO::Init();
 
 #ifdef __WXMAC__
 
@@ -1590,6 +1597,23 @@ bool AudacityApp::OnInit()
    mTimer.SetOwner(this, kAudacityAppTimerID);
    mTimer.Start(200);
 
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+   CommandManager::SetMenuHook( [](const CommandID &id){
+      if (::wxGetMouseState().ShiftDown()) {
+         // Only want one page of the preferences
+         PrefsDialog::Factories factories;
+         factories.push_back(KeyConfigPrefsFactory( id ));
+         auto pWindow = FindProjectFrame( GetActiveProject() );
+         GlobalPrefsDialog dialog( pWindow, factories );
+         dialog.ShowModal();
+         MenuCreator::RebuildAllMenuBars();
+         return true;
+      }
+      else
+         return false;
+   } );
+#endif
+
    return TRUE;
 }
 
@@ -1616,6 +1640,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
+      auto gAudioIO = AudioIO::Get();
       if((token > 0 &&
                gAudioIO->IsAudioTokenActive(token) &&
                gAudioIO->GetNumCaptureChannels() == 0) ||
@@ -2037,7 +2062,7 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
-   DeinitAudioIO();
+   AudioIO::Deinit();
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();

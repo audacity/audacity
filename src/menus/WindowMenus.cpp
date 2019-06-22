@@ -7,6 +7,7 @@
 
 #ifdef __WXMAC__
 
+#include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../Project.h"
 #include "../commands/CommandContext.h"
@@ -46,7 +47,7 @@ void DoMacMinimize(AudacityProject *project)
 #endif
 
       // So that the Minimize menu command disables
-      MenuManager::Get(*project).UpdateMenus(*project);
+      MenuManager::Get(*project).UpdateMenus();
    }
 }
 

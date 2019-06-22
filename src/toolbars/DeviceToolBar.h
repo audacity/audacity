@@ -25,7 +25,7 @@ class DeviceToolBar final : public ToolBar {
 
  public:
 
-   DeviceToolBar();
+   DeviceToolBar( AudacityProject &project );
    virtual ~DeviceToolBar();
 
    static DeviceToolBar &Get( AudacityProject &project );
@@ -59,6 +59,8 @@ class DeviceToolBar final : public ToolBar {
    void RefillCombos();
 
  private:
+   void OnRescannedDevices( wxCommandEvent& );
+
    int  ChangeHost();
    void ChangeDevice(bool isInput);
    void FillHosts();

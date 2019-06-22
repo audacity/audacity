@@ -8,7 +8,8 @@
 #include "../AboutDialog.h"
 #include "../AllThemeResources.h"
 #include "../AudacityLogger.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
+#include "../CommonCommandFlags.h"
 #include "../CrashReport.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
@@ -16,7 +17,7 @@
 #include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectSelectionManager.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "../Theme.h"
@@ -253,7 +254,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
       // preference dialogs.
       if( Str == "/SnapTo" )
       {
-         ProjectManager::Get( *pProject ).AS_SetSnapTo( 0 );
+         ProjectSelectionManager::Get( *pProject ).AS_SetSnapTo( 0 );
       }
       else
       {
@@ -316,6 +317,7 @@ void OnManual(const CommandContext &context)
 void OnAudioDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto gAudioIO = AudioIOBase::Get();
    wxString info = gAudioIO->GetDeviceInfo();
    ShowDiagnostics( project, info,
       _("Audio Device Info"), wxT("deviceinfo.txt") );
@@ -325,6 +327,7 @@ void OnAudioDeviceInfo(const CommandContext &context)
 void OnMidiDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto gAudioIO = AudioIOBase::Get();
    wxString info = gAudioIO->GetMidiDeviceInfo();
    ShowDiagnostics( project, info,
       _("MIDI Device Info"), wxT("midideviceinfo.txt") );

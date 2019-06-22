@@ -128,7 +128,13 @@
     <ClCompile Include="..\..\..\src\AudioIO.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\AudioIOBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\AutoRecovery.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AutoRecoveryDialog.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\BatchCommandDialog.cpp">
@@ -159,6 +165,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Envelope.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EnvelopeEditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\FFmpeg.cpp">
@@ -263,16 +272,28 @@
     <ClCompile Include="..\..\..\src\ProjectAudioIO.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectAudioManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectFileIO.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectFileIORegistry.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectFileManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectFSCK.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectHistory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectSelectionManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp">
@@ -344,6 +365,9 @@
     <ClCompile Include="..\..\..\src\TrackArtist.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -360,6 +384,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\WrappedType.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ZoomInfo.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\effects\Amplify.cpp">
@@ -653,6 +680,9 @@
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\MeterPanelBase.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
@@ -929,15 +959,6 @@
     <ClCompile Include="..\..\..\src\SelectionState.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackUI.cpp">
-      <Filter>src\tracks\labeltrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackUI.cpp">
-      <Filter>src\tracks\timetrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\ui\TrackUI.cpp">
-      <Filter>src\tracks\ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\UIHandle.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -971,16 +992,19 @@
     <ClCompile Include="..\..\..\src\tracks\ui\TrackVRulerControls.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackControls.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\CommonTrackView.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackButtonHandle.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.cpp">
-      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackUI.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackVRulerControls.cpp">
@@ -990,9 +1014,6 @@
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.cpp">
-      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackUI.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackVRulerControls.cpp">
@@ -1017,6 +1038,9 @@
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackButtonHandles.cpp">
+      <Filter>src\tracks\playabletrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.cpp">
       <Filter>src\tracks\playabletrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.cpp">
@@ -1124,6 +1148,9 @@
     <ClCompile Include="..\..\..\src\Clipboard.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\CommonCommandFlags.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\CrashReport.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1172,6 +1199,21 @@
     <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackView.cpp">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackView.cpp">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.cpp">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\TrackView.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1181,6 +1223,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\AllThemeResources.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AttachedVirtualFunction.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Audacity.h">
@@ -1195,7 +1240,13 @@
     <ClInclude Include="..\..\..\src\AudioIO.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\AudioIOBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\AutoRecovery.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AutoRecoveryDialog.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\BatchCommandDialog.h">
@@ -1229,6 +1280,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Envelope.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EnvelopeEditor.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Experimental.h">
@@ -1336,16 +1390,28 @@
     <ClInclude Include="..\..\..\src\ProjectAudioIO.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectAudioManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFileIO.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFileIORegistry.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectFileManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectFSCK.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectHistory.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectSelectionManager.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectSettings.h">
@@ -1417,6 +1483,9 @@
     <ClInclude Include="..\..\..\src\TrackArtist.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackInfo.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanel.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1439,6 +1508,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\WrappedType.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ZoomInfo.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Amplify.h">
@@ -1600,25 +1672,7 @@
     <ClInclude Include="..\..\..\src\import\Import.h">
       <Filter>src\import</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportFFmpeg.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportFLAC.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportLOF.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportMIDI.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportMP3.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportOGG.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportPCM.h">
       <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportPlugin.h">
@@ -1736,6 +1790,9 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\Meter.h">
+      <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\MeterPanelBase.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\MultiDialog.h">
@@ -1918,9 +1975,6 @@
     <ClInclude Include="..\..\..\src\SseMathFuncs.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\import\ImportGStreamer.h">
-      <Filter>src\import</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
@@ -2086,7 +2140,13 @@
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackControls.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackPanelCell.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\CommonTrackView.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\BackedPanel.h">
@@ -2174,6 +2234,9 @@
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackButtonHandles.h">
+      <Filter>src\tracks\playabletrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.h">
       <Filter>src\tracks\playabletrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.h">
@@ -2287,6 +2350,9 @@
     <ClInclude Include="..\..\..\src\ClientDataHelpers.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\CommonCommandFlags.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\CrashReport.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -2298,6 +2364,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\KeyboardCapture.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackView.h">
+      <Filter>src\tracks\labeltrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackView.h">
+      <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.h">
+      <Filter>src\tracks\timetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h">
+      <Filter>src\tracks\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

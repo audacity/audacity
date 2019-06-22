@@ -3,6 +3,7 @@
 
 #include "../Menus.h"
 #include "../TrackPanel.h"
+#include "../ProjectSettings.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ToolManager.h"
@@ -171,35 +172,35 @@ void OnShowSpectralSelectionToolBar(const CommandContext &context)
 /// Handler to set the select tool active
 void OnSelectTool(const CommandContext &context)
 {
-   SetTool(context.project, selectTool);
+   SetTool(context.project, ToolCodes::selectTool);
 }
 
 /// Handler to set the Envelope tool active
 void OnEnvelopeTool(const CommandContext &context)
 {
-   SetTool(context.project, envelopeTool);
+   SetTool(context.project, ToolCodes::envelopeTool);
 }
 
 void OnDrawTool(const CommandContext &context)
 {
-   SetTool(context.project, drawTool);
+   SetTool(context.project, ToolCodes::drawTool);
 }
 
 /// Handler to set the Zoom tool active
 void OnZoomTool(const CommandContext &context)
 {
-   SetTool(context.project, zoomTool);
+   SetTool(context.project, ToolCodes::zoomTool);
 }
 
 /// Handler to set the Time shift tool active
 void OnTimeShiftTool(const CommandContext &context)
 {
-   SetTool(context.project, slideTool);
+   SetTool(context.project, ToolCodes::slideTool);
 }
 
 void OnMultiTool(const CommandContext &context)
 {
-   SetTool(context.project, multiTool);
+   SetTool(context.project, ToolCodes::multiTool);
 }
 
 void OnPrevTool(const CommandContext &context)
@@ -208,6 +209,7 @@ void OnPrevTool(const CommandContext &context)
    auto &toolbar = ToolsToolBar::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
+   using namespace ToolCodes;
    // Use GetDownTool() here since GetCurrentTool() can return a value that
    // doesn't represent the real tool if the Multi-tool is being used.
    toolbar.SetCurrentTool((toolbar.GetDownTool()+(numTools-1))%numTools);
@@ -220,6 +222,7 @@ void OnNextTool(const CommandContext &context)
    auto &toolbar = ToolsToolBar::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
+   using namespace ToolCodes;
    // Use GetDownTool() here since GetCurrentTool() can return a value that
    // doesn't represent the real tool if the Multi-tool is being used.
    toolbar.SetCurrentTool((toolbar.GetDownTool()+1)%numTools);

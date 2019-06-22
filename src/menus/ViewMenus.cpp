@@ -1,14 +1,17 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
+#include "../CommonCommandFlags.h"
 #include "../HistoryWindow.h"
 #include "../LyricsWindow.h"
 #include "../Menus.h"
 #include "../MixerBoard.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectManager.h"
+#include "../ProjectHistory.h"
+#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../TrackInfo.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../ViewInfo.h"
@@ -16,6 +19,7 @@
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
+#include "../tracks/ui/TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
 #include "../effects/EffectManager.h"
@@ -178,13 +182,18 @@ void DoZoomFit(AudacityProject &project)
    window.TP_ScrollWindow(start);
 }
 
+}
+
+namespace {
 void DoZoomFitV(AudacityProject &project)
 {
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
-   auto range = tracks.Any<AudioTrack>() - &Track::GetMinimized;
+   auto range = tracks.Any<AudioTrack>()
+      - [](const Track *pTrack){
+         return TrackView::Get( *pTrack ).GetMinimized(); };
    auto count = range.size();
    if (count == 0)
       return;
@@ -195,20 +204,28 @@ void DoZoomFitV(AudacityProject &project)
    height -= 28;
    
    // The height of minimized and non-audio tracks cannot be apportioned
+   const auto GetHeight = []( const Track *track )
+      { return TrackView::Get( *track ).GetHeight(); };
    height -=
-      tracks.Any().sum( &Track::GetHeight ) - range.sum( &Track::GetHeight );
+      tracks.Any().sum( GetHeight ) - range.sum( GetHeight );
    
    // Give each resized track the average of the remaining height
    height = height / count;
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      t->SetHeight(height);
+      TrackView::Get( *t ).SetHeight(height);
 }
+}
+
+namespace ViewActions {
 
 // Menu handler functions
 
-struct Handler : CommandHandlerObject {
+struct Handler final
+   : CommandHandlerObject // MUST be the first base class!
+   , ClientData::Base
+{
 
 void OnZoomIn(const CommandContext &context)
 {
@@ -282,7 +299,7 @@ void OnZoomFitV(const CommandContext &context)
 
    window.GetVerticalScrollBar().SetThumbPosition(0);
    window.RedrawProject();
-   ProjectManager::Get( project ).ModifyState(true);
+   ProjectHistory::Get( project ).ModifyState(true);
 }
 
 void OnAdvancedVZoom(const CommandContext &context)
@@ -304,9 +321,9 @@ void OnCollapseAllTracks(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks.Any())
-      t->SetMinimized(true);
+      TrackView::Get( *t ).SetMinimized(true);
 
-   ProjectManager::Get( project ).ModifyState(true);
+   ProjectHistory::Get( project ).ModifyState(true);
    window.RedrawProject();
 }
 
@@ -317,9 +334,9 @@ void OnExpandAllTracks(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks.Any())
-      t->SetMinimized(false);
+      TrackView::Get( *t ).SetMinimized(false);
 
-   ProjectManager::Get( project ).ModifyState(true);
+   ProjectHistory::Get( project ).ModifyState(true);
    window.RedrawProject();
 }
 
@@ -417,15 +434,40 @@ void OnShowEffectsRack(const CommandContext &WXUNUSED(context) )
 }
 #endif
 
+// Not a menu item, but a listener for events
+void OnUndoPushed( wxCommandEvent &evt )
+{
+   evt.Skip();
+   const auto &settings = ProjectSettings::Get( mProject );
+   if (settings.GetTracksFitVerticallyZoomed())
+      DoZoomFitV( mProject );
+}
+
+Handler( AudacityProject &project )
+   : mProject{ project }
+{
+   mProject.Bind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
+}
+
+~Handler()
+{
+   mProject.Unbind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
+}
+
+AudacityProject &mProject;
+
 }; // struct Handler
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static ViewActions::Handler instance;
-   return instance;
+// Handler needs a back-reference to the project, so needs a factory registered
+// with AudacityProject.
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   []( AudacityProject &project ) {
+      return std::make_unique< ViewActions::Handler >( project ); } };
+
+static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
+   return project.AttachedObjects::Get< ViewActions::Handler >( key );
 };
 
 // Menu definitions

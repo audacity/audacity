@@ -11,14 +11,28 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_CONTROLS__
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
-#include "../../../ui/TrackControls.h"
+#include "../../ui/PlayableTrackControls.h" // to inherit
+class wxEvent;
+class LWSlider;
+class NoteTrack;
 class MuteButtonHandle;
 class SoloButtonHandle;
 class NoteTrackButtonHandle;
 class VelocitySliderHandle;
 
-///////////////////////////////////////////////////////////////////////////////
-class NoteTrackControls : public TrackControls
+#include "../../../../Audacity.h"
+#include "../../../../Experimental.h"
+
+using NoteTrackControlsBase =
+#ifdef EXPERIMENTAL_MIDI_OUT
+   PlayableTrackControls
+#else
+   CommonTrackControls
+#endif
+   ;
+
+///////////////////////////////f////////////////////////////////////////////////
+class NoteTrackControls : public NoteTrackControlsBase
 {
    NoteTrackControls(const NoteTrackControls&) = delete;
    NoteTrackControls &operator=(const NoteTrackControls&) = delete;
@@ -31,7 +45,7 @@ class NoteTrackControls : public TrackControls
 public:
    explicit
    NoteTrackControls( std::shared_ptr<Track> pTrack )
-      : TrackControls( pTrack ) {}
+      : NoteTrackControlsBase( pTrack ) {}
    ~NoteTrackControls();
 
    std::vector<UIHandlePtr> HitTest
@@ -39,6 +53,19 @@ public:
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
+
+   const TCPLines& GetTCPLines() const override;
+
+   static unsigned DefaultNoteTrackHeight();
+   static void GetMidiControlsRect(const wxRect & rect, wxRect & dest);
+   static void GetVelocityRect(const wxPoint &topleft, wxRect & dest);
+   
+   static LWSlider * VelocitySlider
+      (const wxRect &sliderRect, const NoteTrack *t, bool captured,
+       wxWindow *pParent);
+
+private:
+   static void ReCreateVelocitySlider( wxEvent& );
 };
 
 #endif

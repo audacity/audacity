@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ViewInfo.h"
 #include "Scrubbing.h"
 #include "../../toolbars/ControlToolBar.h"
+#include "TrackView.h"
 
 #include <wx/dc.h>
 
@@ -69,6 +70,7 @@ std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 {
    // Set play/record color
+   auto gAudioIO = AudioIO::Get();
    bool rec = gAudioIO->IsCapturing();
    AColor::IndicatorColor(&dc, !rec);
 
@@ -91,8 +93,8 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 
       // Draw indicator in all visible tracks
       tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrack = dynamic_cast<Track*>(&cell);
-         if (pTrack) pTrack->TypeSwitch(
+         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
+         if (pTrackView) pTrackView->FindTrack()->TypeSwitch(
             [](LabelTrack *) {
                // Don't draw the indicator in label tracks
             },
@@ -185,6 +187,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // This displays the audio time, too...
       window.TP_DisplaySelection();
+
+      auto gAudioIO = AudioIO::Get();
 
       // BG: Scroll screen if option is set
       if( viewInfo.bUpdateTrackIndicator &&

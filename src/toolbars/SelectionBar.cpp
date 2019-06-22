@@ -52,11 +52,15 @@ with changes in the SelectionBar.
 
 
 #include "../widgets/AButton.h"
-#include "../AudioIO.h"
+#include "../AudioIOBase.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
+#include "../Project.h"
+#include "../ProjectAudioIO.h"
+#include "../ProjectSettings.h"
 #include "../Snap.h"
+#include "../ViewInfo.h"
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -95,6 +99,7 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
    EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
    EVT_CHOICE(ChoiceID, SelectionBar::OnChoice )
+   EVT_IDLE( SelectionBar::OnIdle )
    EVT_COMBOBOX(RateID, SelectionBar::OnRate)
    EVT_TEXT(RateID, SelectionBar::OnRate)
 
@@ -102,8 +107,8 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, SelectionBar::OnCaptureKey)
 END_EVENT_TABLE()
 
-SelectionBar::SelectionBar()
-: ToolBar(SelectionBarID, _("Selection"), wxT("Selection")),
+SelectionBar::SelectionBar( AudacityProject &project )
+: ToolBar(project, SelectionBarID, _("Selection"), wxT("Selection")),
   mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
@@ -120,7 +125,7 @@ SelectionBar::SelectionBar()
    // Audacity to fail.
    // We expect mRate to be set from the project later.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-      AudioIO::GetOptimalSupportedSampleRate());
+      AudioIOBase::GetOptimalSupportedSampleRate());
 
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
@@ -577,6 +582,27 @@ void SelectionBar::OnChoice(wxCommandEvent & WXUNUSED(event))
    SelectionModeUpdated();
 }
 
+void SelectionBar::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   auto &project = mProject;
+   const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+
+   double audioTime;
+
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   if ( projectAudioIO.IsAudioActive() ){
+      auto gAudioIO = AudioIOBase::Get();
+      audioTime = gAudioIO->GetStreamTime();
+   }
+   else {
+      const auto &playRegion = ViewInfo::Get( project ).playRegion;
+      audioTime = playRegion.GetStart();
+   }
+
+   SetTimes(selectedRegion.t0(), selectedRegion.t1(), audioTime);
+}
+
 void SelectionBar::SelectionModeUpdated()
 {
    // We just changed the mode.  Remember it.
@@ -711,8 +737,9 @@ void SelectionBar::UpdateRates()
 {
    wxString oldValue = mRateBox->GetValue();
    mRateBox->Clear();
-   for (int i = 0; i < AudioIO::NumStandardRates; i++) {
-      mRateBox->Append(wxString::Format(wxT("%d"), AudioIO::StandardRates[i]));
+   for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
+      mRateBox->Append(
+         wxString::Format(wxT("%d"), AudioIOBase::StandardRates[i]));
    }
    mRateBox->SetValue(oldValue);
 }
@@ -758,3 +785,8 @@ void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
 {
    mListener->AS_SetSnapTo(mSnapTo->GetSelection());
 }
+
+static RegisteredToolbarFactory factory{ SelectionBarID,
+   []( AudacityProject &project ){
+      return ToolBar::Holder{ safenew SelectionBar{ project } }; }
+};
