@@ -28,6 +28,8 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/wxprec.h>
 
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
+#include "../WaveClip.h"
+#include "../blockfile/ODDecodeBlockFile.h"
 #include "../ondemand/ODManager.h"
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
@@ -596,7 +598,14 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
                const auto blockLen =
                   limitSampleBufferSize( maxBlockSize, sampleDuration - i );
 
-               t->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFFMPEG);
+               t->RightmostOrNewClip()->AppendBlockFile(
+                  [&]( wxFileNameWrapper filePath, size_t len ) {
+                     return make_blockfile<ODDecodeBlockFile>(
+                        std::move(filePath), wxFileNameWrapper{ mFilename },
+                        i, len, c, ODTask::eODFFMPEG);
+                  },
+                  blockLen
+               );
 
                // This only works well for single streams since we assume
                // each stream is of the same duration and channels

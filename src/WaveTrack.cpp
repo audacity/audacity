@@ -1506,20 +1506,6 @@ void WaveTrack::Append(samplePtr buffer, sampleFormat format,
                                         blockFileLog);
 }
 
-void WaveTrack::AppendAlias(const FilePath &fName, sampleCount start,
-                            size_t len, int channel,bool useOD)
-// STRONG-GUARANTEE
-{
-   RightmostOrNewClip()->AppendAlias(fName, start, len, channel, useOD);
-}
-
-void WaveTrack::AppendCoded(const FilePath &fName, sampleCount start,
-                            size_t len, int channel, int decodeType)
-// STRONG-GUARANTEE
-{
-   RightmostOrNewClip()->AppendCoded(fName, start, len, channel, decodeType);
-}
-
 ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
 #include "blockfile/ODDecodeBlockFile.h"
 unsigned int WaveTrack::GetODFlags() const

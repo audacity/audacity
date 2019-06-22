@@ -36,8 +36,10 @@
 
 #include "sndfile.h"
 
+#include "../WaveClip.h"
 #include "../ondemand/ODManager.h"
 #include "../ondemand/ODComputeSummaryTask.h"
+#include "../blockfile/ODPCMAliasBlockFile.h"
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -407,7 +409,18 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
          auto iter = channels.begin();
          for (int c = 0; c < mInfo.channels; ++iter, ++c)
-            iter->get()->AppendAlias(mFilename, i, blockLen, c,useOD);
+            iter->get()->RightmostOrNewClip()->AppendBlockFile(
+               [&]( wxFileNameWrapper filePath, size_t len ) {
+                  return useOD
+                     ? make_blockfile<ODPCMAliasBlockFile>(
+                        std::move(filePath), wxFileNameWrapper{ mFilename },
+                        i, len, c)
+                     : make_blockfile<PCMAliasBlockFile>(
+                        std::move(filePath), wxFileNameWrapper{ mFilename },
+                        i, len, c);
+               },
+               blockLen
+            );
 
          if (++updateCounter == 50) {
             updateResult = mProgress->Update(
