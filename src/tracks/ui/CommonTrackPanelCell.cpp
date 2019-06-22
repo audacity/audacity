@@ -66,3 +66,12 @@ std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
 {
    return mwTrack.lock();
 }
+
+void CommonTrackCell::WriteXMLAttributes( XMLWriter & ) const
+{
+}
+
+bool CommonTrackCell::HandleXMLAttribute( const wxChar *, const wxChar * )
+{
+   return false;
+}

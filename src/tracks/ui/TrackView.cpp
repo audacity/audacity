@@ -16,6 +16,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ClientData.h"
 #include "../../Project.h"
+#include "../../xml/XMLTagHandler.h"
+#include "../../xml/XMLWriter.h"
 
 TrackView::~TrackView()
 {
@@ -72,6 +74,30 @@ void TrackView::SetMinimized(bool isMinimized)
    auto leader = *TrackList::Channels( FindTrack().get() ).begin();
    if ( leader )
       leader->AdjustPositions();
+}
+
+void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
+{
+   xmlFile.WriteAttr(wxT("height"), GetActualHeight());
+   xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
+}
+
+bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
+{
+   wxString strValue;
+   long nValue;
+   if (!wxStrcmp(attr, wxT("height")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      SetHeight(nValue);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("minimized")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      SetMinimized(nValue != 0);
+      return true;
+   }
+   else
+      return false;
 }
 
 void TrackView::DoSetMinimized(bool isMinimized)

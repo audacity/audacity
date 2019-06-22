@@ -69,6 +69,9 @@ public:
    std::shared_ptr<TrackPanelCell> GetResizer();
    std::shared_ptr<const TrackPanelCell> GetResizer() const;
 
+   void WriteXMLAttributes( XMLWriter & ) const override;
+   bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;
+
 protected:
    virtual void DoSetMinimized( bool isMinimized );
 

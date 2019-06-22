@@ -1191,9 +1191,10 @@ void Track::WriteCommonXMLAttributes(
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
-   auto &view = TrackView::Get( *this );
-   xmlFile.WriteAttr(wxT("height"), view.GetActualHeight());
-   xmlFile.WriteAttr(wxT("minimized"), view.GetMinimized());
+   if ( mpView )
+      mpView->WriteXMLAttributes( xmlFile );
+   if ( mpControls )
+      mpControls->WriteXMLAttributes( xmlFile );
 }
 
 // Return true iff the attribute is recognized.
@@ -1201,19 +1202,13 @@ bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
 {
    long nValue = -1;
    wxString strValue( value );
-   if (!wxStrcmp(attr, wxT("name")) &&
+   if ( mpView && mpView->HandleXMLAttribute( attr, value ) )
+      ;
+   else if ( mpControls && mpControls->HandleXMLAttribute( attr, value ) )
+      ;
+   else if (!wxStrcmp(attr, wxT("name")) &&
       XMLValueChecker::IsGoodString(strValue)) {
       SetName( strValue );
-      return true;
-   }
-   else if (!wxStrcmp(attr, wxT("height")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      TrackView::Get( *this ).SetHeight(nValue);
-      return true;
-   }
-   else if (!wxStrcmp(attr, wxT("minimized")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      TrackView::Get( *this ).SetMinimized(nValue != 0);
       return true;
    }
    else if (!wxStrcmp(attr, wxT("isSelected")) &&
