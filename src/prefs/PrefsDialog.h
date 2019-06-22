@@ -98,4 +98,7 @@ public:
    void SavePreferredPage() override;
 };
 
+class AudacityProject;
+void DoReloadPreferences( AudacityProject &project );
+
 #endif

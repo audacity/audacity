@@ -104,11 +104,6 @@ public:
 // Exported helper functions from various menu handling source files
 
 
-/// Namespace for functions for Edit menu
-namespace EditActions {
-void DoReloadPreferences( AudacityProject & );
-}
-
 /// Namespace for functions for View menu
 namespace ViewActions {
 double GetZoomOfToFit( const AudacityProject &project );
