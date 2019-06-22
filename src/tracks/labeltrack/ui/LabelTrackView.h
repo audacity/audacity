@@ -82,7 +82,7 @@ private:
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
    // Preserve some view state too for undo/redo purposes
-   void Copy( const CommonTrackCell &other ) override;
+   void CopyTo( Track &track ) const override;
 
 public:
    static void DoEditLabels(

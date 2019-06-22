@@ -63,7 +63,8 @@ public:
   ~CommonTrackCell();
 
    // Copy state, for undo/redo purposes
-   virtual void Copy( const CommonTrackCell &other );
+   // The default does nothing
+   virtual void CopyTo( Track &track ) const;
 
    std::shared_ptr<Track> DoFindTrack() override;
 

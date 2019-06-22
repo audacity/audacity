@@ -57,7 +57,7 @@ CommonTrackCell::CommonTrackCell( const std::shared_ptr< Track > &parent )
 
 CommonTrackCell::~CommonTrackCell() = default;
 
-void CommonTrackCell::Copy( const CommonTrackCell & )
+void CommonTrackCell::CopyTo( Track& ) const
 {
 }
 

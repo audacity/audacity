@@ -42,7 +42,7 @@ public:
    static int GetTotalHeight( const TrackList &list );
 
    // Copy view state, for undo/redo purposes
-   void Copy( const CommonTrackCell &other ) override;
+   void CopyTo( Track &track ) const override;
 
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );

@@ -41,8 +41,6 @@ and TimeTrack.
 
 #include "InconsistencyException.h"
 
-#include "tracks/ui/TrackView.h"
-
 #ifdef _MSC_VER
 //Disable truncation warnings
 #pragma warning( disable : 4786 )
@@ -115,7 +113,7 @@ Track::Holder Track::Duplicate() const
 
    if (mpView)
       // Copy view state that might be important to undo/redo
-      TrackView::Get( *result ).Copy( *mpView );
+      mpView->CopyTo( *result );
 
    return result;
 }

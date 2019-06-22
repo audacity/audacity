@@ -46,18 +46,15 @@ int TrackView::GetTotalHeight( const TrackList &list )
    return GetCumulativeHeight( *list.Any().rbegin() );
 }
 
-void TrackView::Copy( const CommonTrackCell &otherCell )
+void TrackView::CopyTo( Track &track ) const
 {
-   auto pOther = dynamic_cast< const TrackView* >( &otherCell );
-   if ( !pOther )
-      return;
-   auto &other = *pOther;
+   auto &other = Get( track );
 
-   mMinimized = other.mMinimized;
+   other.mMinimized = mMinimized;
 
    // Let mY remain 0 -- TrackPositioner corrects it later
-   mY = 0;
-   mHeight = other.mHeight;
+   other.mY = 0;
+   other.mHeight = mHeight;
 }
 
 TrackView &TrackView::Get( Track &track )
