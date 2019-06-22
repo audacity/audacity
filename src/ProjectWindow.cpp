@@ -1606,7 +1606,7 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
    auto &project = mProject;
    auto &trackPanel = TrackPanel::Get( project );
 
-   ViewActions::DoZoomFit( project );
+   DoZoomFit();
 
    trackPanel.SetFocus();
    RedrawProject();
@@ -1886,6 +1886,43 @@ void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
+}
+
+double ProjectWindow::GetZoomOfToFit() const
+{
+   auto &project = mProject;
+   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+
+   const double end = tracks.GetEndTime();
+   const double start = viewInfo.bScrollBeyondZero
+      ? std::min( tracks.GetStartTime(), 0.0)
+      : 0;
+   const double len = end - start;
+
+   if (len <= 0.0)
+      return viewInfo.GetZoom();
+
+   int w;
+   trackPanel.GetTracksUsableArea(&w, NULL);
+   w -= 10;
+   return w/len;
+}
+
+void ProjectWindow::DoZoomFit()
+{
+   auto &project = mProject;
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &tracks = TrackList::Get( project );
+   auto &window = *this;
+
+   const double start = viewInfo.bScrollBeyondZero
+      ? std::min(tracks.GetStartTime(), 0.0)
+      : 0;
+
+   window.Zoom( window.GetZoomOfToFit() );
+   window.TP_ScrollWindow(start);
 }
 
 static struct InstallTopPanelHook{ InstallTopPanelHook() {

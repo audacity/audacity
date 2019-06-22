@@ -722,9 +722,10 @@ AudacityProject *ProjectManager::OpenProject(
    ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
    pNewProject = nullptr;
    auto &projectFileIO = ProjectFileIO::Get( *pProject );
-   if( projectFileIO.IsRecovered() )
-      ProjectWindow::Get( *pProject ).Zoom(
-         ViewActions::GetZoomOfToFit( *pProject ) );
+   if( projectFileIO.IsRecovered() ) {
+      auto &window = ProjectWindow::Get( *pProject );
+      window.Zoom( window.GetZoomOfToFit() );
+   }
 
    return pProject;
 }

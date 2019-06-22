@@ -203,7 +203,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    if (type == EffectTypeGenerate)
    {
       if (count == 0 || (clean && selectedRegion.t0() == 0.0))
-         ViewActions::DoZoomFit(project);
+         window.DoZoomFit();
          //  trackPanel->Refresh(false);
    }
    window.RedrawProject();

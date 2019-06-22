@@ -89,6 +89,8 @@ public:
    void ZoomOutByFactor( double ZoomFactor );
    void ZoomBy(double multiplier);
    void ZoomAfterImport(Track *pTrack);
+   double GetZoomOfToFit() const;
+   void DoZoomFit();
 
    void ApplyUpdatedTheme();
 

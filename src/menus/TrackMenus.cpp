@@ -285,9 +285,8 @@ void DoAlign
          if (index == kAlignEndToEnd)
             newPos += (trackEnd - trackStart);
       }
-      if (index == kAlignEndToEnd) {
-         ViewActions::DoZoomFit(project);
-      }
+      if (index == kAlignEndToEnd)
+         window.DoZoomFit();
    }
 
    if (delta != 0.0) {

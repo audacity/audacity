@@ -104,12 +104,6 @@ public:
 // Exported helper functions from various menu handling source files
 
 
-/// Namespace for functions for View menu
-namespace ViewActions {
-double GetZoomOfToFit( const AudacityProject &project );
-void DoZoomFit( AudacityProject &project );
-}
-
 /// Namespace for functions for Transport menu
 namespace TransportActions {
 void StopIfPaused( AudacityProject &project );
