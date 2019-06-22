@@ -1360,8 +1360,6 @@ public:
    /// Make the list empty
    void Clear(bool sendEvent = true);
 
-   int GetGroupHeight(const Track * t) const;
-
    bool CanMoveUp(Track * t) const;
    bool CanMoveDown(Track * t) const;
 
@@ -1393,7 +1391,6 @@ public:
    double GetEndTime() const;
 
    double GetMinOffset() const;
-   int GetHeight() const;
 
 #if LEGACY_PROJECT_FILE_SUPPORT
    // File I/O

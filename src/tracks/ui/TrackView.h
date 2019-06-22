@@ -15,6 +15,7 @@ Paul Licameli split from class Track
 #include "CommonTrackPanelCell.h" // to inherit
 
 class Track;
+class TrackList;
 class TrackVRulerControls;
 class TrackPanelResizerCell;
 
@@ -31,6 +32,14 @@ public:
    TrackView( const std::shared_ptr<Track> &pTrack )
       : CommonTrackCell{ pTrack } {}
    virtual ~TrackView() = 0;
+
+   // some static conveniences, useful for summation over track iterator
+   // ranges
+   static int GetTrackHeight( const Track *pTrack );
+   static int GetChannelGroupHeight( const Track *pTrack );
+   // Total height of the given track and all previous ones (constant time!)
+   static int GetCumulativeHeight( const Track *pTrack );
+   static int GetTotalHeight( const TrackList &list );
 
    // Copy view state, for undo/redo purposes
    virtual void Copy( const TrackView &other );

@@ -18,6 +18,29 @@ TrackView::~TrackView()
 {
 }
 
+int TrackView::GetTrackHeight( const Track *pTrack )
+{
+   return pTrack ? Get( *pTrack ).GetHeight() : 0;
+}
+
+int TrackView::GetChannelGroupHeight( const Track *pTrack )
+{
+   return pTrack ? TrackList::Channels( pTrack ).sum( GetTrackHeight ) : 0;
+}
+
+int TrackView::GetCumulativeHeight( const Track *pTrack )
+{
+   if ( !pTrack )
+      return 0;
+   auto &view = Get( *pTrack );
+   return view.GetY() + view.GetHeight();
+}
+
+int TrackView::GetTotalHeight( const TrackList &list )
+{
+   return GetCumulativeHeight( *list.Any().rbegin() );
+}
+
 void TrackView::Copy( const TrackView &other )
 {
    mMinimized = other.mMinimized;

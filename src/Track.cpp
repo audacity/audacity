@@ -842,15 +842,6 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
    return nullptr;
 }
 
-/// For mono track height of track
-/// For stereo track combined height of both channels.
-int TrackList::GetGroupHeight(const Track * t) const
-{
-   const auto GetHeight = []( const Track *track )
-      { return TrackView::Get( *track ).GetHeight(); };
-   return Channels(t).sum( GetHeight );
-}
-
 bool TrackList::CanMoveUp(Track * t) const
 {
    return GetPrev(t, true) != NULL;
@@ -968,19 +959,6 @@ size_t TrackList::size() const
       cnt = getPrev( getEnd() ).first->get()->GetIndex() + 1;
 
    return cnt;
-}
-
-int TrackList::GetHeight() const
-{
-   int height = 0;
-
-   if (!empty()) {
-      auto track = getPrev( getEnd() ).first->get();
-      auto &view = TrackView::Get( *track );
-      height = view.GetY() + view.GetHeight();
-   }
-
-   return height;
 }
 
 namespace {
