@@ -59,12 +59,16 @@ void TrackView::CopyTo( Track &track ) const
 
 TrackView &TrackView::Get( Track &track )
 {
-   return static_cast<TrackView&>( *track.GetTrackView() );
+   auto pView = std::static_pointer_cast<TrackView>( track.GetTrackView() );
+   if (!pView)
+      // create on demand
+      track.SetTrackView( pView = DoGetView::Call( track ) );
+   return *pView;
 }
 
 const TrackView &TrackView::Get( const Track &track )
 {
-   return static_cast<const TrackView&>( *track.GetTrackView() );
+   return Get( const_cast< Track& >( track ) );
 }
 
 void TrackView::SetMinimized(bool isMinimized)
@@ -105,32 +109,6 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
 void TrackView::DoSetMinimized(bool isMinimized)
 {
    mMinimized = isMinimized;
-}
-
-std::shared_ptr<CommonTrackCell> Track::GetTrackView()
-{
-   if (!mpView)
-      // create on demand
-      mpView = DoGetView::Call( *this );
-   return mpView;
-}
-
-std::shared_ptr<const CommonTrackCell> Track::GetTrackView() const
-{
-   return const_cast<Track*>(this)->GetTrackView();
-}
-
-std::shared_ptr<TrackPanelCell> Track::GetTrackControls()
-{
-   if (!mpControls)
-      // create on demand
-      mpControls = DoGetControls::Call( *this );
-   return mpControls;
-}
-
-std::shared_ptr<const TrackPanelCell> Track::GetTrackControls() const
-{
-   return const_cast< Track* >( this )->GetTrackControls();
 }
 
 std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
@@ -233,3 +211,8 @@ static const AudacityProject::AttachedObjects::RegisteredFactory key{
 };
 
 }
+
+template<> auto DoGetView::Implementation() -> Function {
+   return nullptr;
+}
+static DoGetView registerDoGetView;

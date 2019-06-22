@@ -93,4 +93,15 @@ private:
    int            mHeight{ DefaultHeight };
 };
 
+#include "AttachedVirtualFunction.h"
+
+struct DoGetViewTag;
+
+using DoGetView =
+AttachedVirtualFunction<
+   DoGetViewTag,
+   std::shared_ptr< TrackView >,
+   Track
+>;
+
 #endif

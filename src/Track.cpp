@@ -138,6 +138,26 @@ void Track::SetOwner
    mNode = node;
 }
 
+const std::shared_ptr<CommonTrackCell> &Track::GetTrackView()
+{
+   return mpView;
+}
+
+void Track::SetTrackView( const std::shared_ptr<CommonTrackCell> &pView )
+{
+   mpView = pView;
+}
+
+const std::shared_ptr<CommonTrackCell> &Track::GetTrackControls()
+{
+   return mpControls;
+}
+
+void Track::SetTrackControls( const std::shared_ptr<CommonTrackCell> &pControls )
+{
+   mpControls = pControls;
+}
+
 int Track::GetIndex() const
 {
    return mIndex;
@@ -1270,13 +1290,3 @@ void TrackFactory::Destroy( AudacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
 }
-
-template<> auto DoGetControls::Implementation() -> Function {
-   return nullptr;
-}
-static DoGetControls registerDoGetControls;
-
-template<> auto DoGetView::Implementation() -> Function {
-   return nullptr;
-}
-static DoGetView registerDoGetView;

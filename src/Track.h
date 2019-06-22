@@ -261,15 +261,15 @@ class AUDACITY_DLL_API Track /* not final */
  public:
    mutable wxSize vrulerSize;
 
-   // Return another, associated TrackPanelCell object that implements
-   // click and drag and keystrokes in the track contents.
-   std::shared_ptr<CommonTrackCell> GetTrackView();
-   std::shared_ptr<const CommonTrackCell> GetTrackView() const;
+   // These are exposed only for the purposes of the TrackView class, to
+   // initialize the pointer on demand
+   const std::shared_ptr<CommonTrackCell> &GetTrackView();
+   void SetTrackView( const std::shared_ptr<CommonTrackCell> &pView );
 
-   // Return another, associated TrackPanelCell object that implements the
-   // drop-down, close and minimize buttons, etc.
-   std::shared_ptr<TrackPanelCell> GetTrackControls();
-   std::shared_ptr<const TrackPanelCell> GetTrackControls() const;
+   // These are exposed only for the purposes of the TrackControls class, to
+   // initialize the pointer on demand
+   const std::shared_ptr<CommonTrackCell> &GetTrackControls();
+   void SetTrackControls( const std::shared_ptr<CommonTrackCell> &pControls );
 
    // Return another, associated TrackPanelCell object that implements the
 
@@ -1587,25 +1587,5 @@ class AUDACITY_DLL_API TrackFactory final
    std::shared_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
-
-#include "AttachedVirtualFunction.h"
-
-struct DoGetControlsTag;
-
-using DoGetControls =
-AttachedVirtualFunction<
-   DoGetControlsTag,
-   std::shared_ptr< TrackControls >,
-   Track
->;
-
-struct DoGetViewTag;
-
-using DoGetView =
-AttachedVirtualFunction<
-   DoGetViewTag,
-   std::shared_ptr< TrackView >,
-   Track
->;
 
 #endif
