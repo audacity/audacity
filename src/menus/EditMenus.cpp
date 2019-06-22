@@ -235,8 +235,13 @@ bool DoEditMetadata
    return false;
 }
 
-void DoUndo(AudacityProject &project)
+// Menu handler functions
+
+struct Handler : CommandHandlerObject {
+
+void OnUndo(const CommandContext &context)
 {
+   auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -257,16 +262,6 @@ void DoUndo(AudacityProject &project)
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
 }
-
-// Menu handler functions
-
-struct Handler : CommandHandlerObject {
-
-void OnUndo(const CommandContext &context)
-{
-   DoUndo(context.project);
-}
-
 void OnRedo(const CommandContext &context)
 {
    auto &project = context.project;

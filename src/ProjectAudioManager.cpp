@@ -17,7 +17,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "AutoRecovery.h"
 #include "DirManager.h"
 #include "LabelTrack.h"
-#include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -25,6 +24,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "TimeTrack.h"
+#include "UndoManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
@@ -135,16 +135,17 @@ You are saving directly to a slow external storage device\n\
          _("Turn off dropout detection"));
       }
 
-      // Add to history
       auto &history = ProjectHistory::Get( project );
-      history.PushState(_("Recorded Audio"), _("Record"));
 
-      // Reset timer record 
-      if (IsTimerRecordCancelled())
-      {
-         EditActions::DoUndo( project );
+      if (IsTimerRecordCancelled()) {
+         // discard recording
+         history.RollbackState();
+         // Reset timer record
          ResetTimerRecordCancelled();
       }
+      else
+         // Add to history
+         history.PushState(_("Recorded Audio"), _("Record"));
 
       // Refresh the project window
       window.FixScrollbars();

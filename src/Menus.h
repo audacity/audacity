@@ -110,7 +110,6 @@ bool DoEditMetadata(
    AudacityProject &project,
    const wxString &title, const wxString &shortUndoDescription, bool force );
 void DoReloadPreferences( AudacityProject & );
-void DoUndo( AudacityProject &project );
 }
 
 /// Namespace for functions for View menu
