@@ -38,8 +38,10 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTAUDIO], [
    if test "$PORTAUDIO_LOCAL_AVAILABLE" = "yes"; then
       dnl We need to override the pkg-config check for portmixer by passing
       dnl PORTAUDIO_CFLAGS and PORTAUDIO_LIBS to the configure script of portmixer.
-      pa_dir="$(pwd)/${srcdir}/lib-src/portaudio-v19"      
-      PORTAUDIO_LOCAL_CONFIGURE_ARGS="PORTAUDIO_CFLAGS=-I${pa_dir}/include PORTAUDIO_LIBS=${pa_dir}/lib/libportaudio.la"
+      pa_dir="/lib-src/portaudio-v19"
+      pa_inc="$(pwd)/${srcdir}${pa_dir}/include"
+      pa_lib="$(pwd)${pa_dir}/lib"
+      PORTAUDIO_LOCAL_CONFIGURE_ARGS="PORTAUDIO_CFLAGS=-I${pa_inc} PORTAUDIO_LIBS=${pa_lib}/libportaudio.la"
       AC_MSG_NOTICE([portaudio19 library is available in the local tree])
    else
       AC_MSG_NOTICE([portaudio19 library is NOT available in the local tree])
