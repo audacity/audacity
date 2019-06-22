@@ -1092,6 +1092,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
 
 // Posted when tracks are reordered but otherwise unchanged.
+// mpTrack points to the moved track that is earliest in the New ordering.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_PERMUTED, TrackListEvent);
 
@@ -1105,7 +1106,8 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_ADDITION, TrackListEvent);
 
 // Posted when a track has been deleted from a tracklist.
-// Also posted when one track replaces another
+// Also posted when one track replaces another.
+// mpTrack points to the first track after the deletion, if there is one.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_DELETION, TrackListEvent);
 
@@ -1487,9 +1489,9 @@ private:
 
    void RecalcPositions(TrackNodePointer node);
    void SelectionEvent( const std::shared_ptr<Track> &pTrack );
-   void PermutationEvent();
+   void PermutationEvent(TrackNodePointer node);
    void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
-   void DeletionEvent();
+   void DeletionEvent(TrackNodePointer node = {});
    void AdditionEvent(TrackNodePointer node);
    void ResizingEvent(TrackNodePointer node);
 

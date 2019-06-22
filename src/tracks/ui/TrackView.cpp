@@ -14,6 +14,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../TrackPanelResizerCell.h"
 
+#include "../../ClientData.h"
+#include "../../Project.h"
+
 TrackView::~TrackView()
 {
 }
@@ -45,7 +48,7 @@ void TrackView::Copy( const TrackView &other )
 {
    mMinimized = other.mMinimized;
 
-   // Let mY remain 0 -- TrackList::RecalcPositions corrects it later
+   // Let mY remain 0 -- TrackPositioner corrects it later
    mY = 0;
    mHeight = other.mHeight;
 }
@@ -151,4 +154,54 @@ void TrackView::SetHeight(int h)
 void TrackView::DoSetHeight(int h)
 {
    mHeight = h;
+}
+
+namespace {
+
+// Attach an object to each project.  It receives track list events and updates
+// track Y coordinates
+struct TrackPositioner : ClientData::Base, wxEvtHandler
+{
+   AudacityProject &mProject;
+
+   explicit TrackPositioner( AudacityProject &project )
+      : mProject{ project }
+   {
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_ADDITION, &TrackPositioner::OnUpdate, this );
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_DELETION, &TrackPositioner::OnUpdate, this );
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_PERMUTED, &TrackPositioner::OnUpdate, this );
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_RESIZING, &TrackPositioner::OnUpdate, this );
+   }
+
+   void OnUpdate( TrackListEvent & e )
+   {
+      e.Skip();
+
+      auto iter =
+         TrackList::Get( mProject ).Find( e.mpTrack.lock().get() );
+      if ( !*iter )
+         return;
+
+      auto prev = iter;
+      auto yy = TrackView::GetCumulativeHeight( *--prev );
+
+      while( auto pTrack = *iter ) {
+         auto &view = TrackView::Get( *pTrack );
+         view.SetY( yy );
+         yy += view.GetHeight();
+         ++iter;
+      }
+   }
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+  []( AudacityProject &project ){
+     return std::make_shared< TrackPositioner >( project );
+   }
+};
+
 }

@@ -156,7 +156,6 @@ void Track::SetLinked(bool l)
    if (pList && !pList->mPendingUpdates.empty()) {
       auto orig = pList->FindById( GetId() );
       if (orig && orig != this) {
-         // delegate, and rely on RecalcPositions to copy back
          orig->SetLinked(l);
          return;
       }
@@ -532,23 +531,17 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
    Track *t;
    int i = 0;
-   int y = 0;
 
    auto prev = getPrev( node );
    if ( !isNull( prev ) ) {
       t = prev.first->get();
       i = t->GetIndex() + 1;
-      auto &view = TrackView::Get( *t );
-      y = view.GetY() + view.GetHeight();
    }
 
    const auto theEnd = end();
    for (auto n = Find( node.first->get() ); n != theEnd; ++n) {
       t = *n;
-      auto &view = TrackView::Get( *t );
       t->SetIndex(i++);
-      view.SetY(y);
-      y += view.GetHeight();
    }
 
    UpdatePendingTracks();
@@ -568,16 +561,21 @@ void TrackList::DataEvent( const std::shared_ptr<Track> &pTrack, int code )
       safenew TrackListEvent{ EVT_TRACKLIST_TRACK_DATA_CHANGE, pTrack, code } );
 }
 
-void TrackList::PermutationEvent()
+void TrackList::PermutationEvent(TrackNodePointer node)
 {
    // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_PERMUTED } );
+   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_PERMUTED, *node.first } );
 }
 
-void TrackList::DeletionEvent()
+void TrackList::DeletionEvent(TrackNodePointer node)
 {
    // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_DELETION } );
+   QueueEvent( safenew TrackListEvent{
+      EVT_TRACKLIST_DELETION,
+      node.second && node.first != node.second->end()
+         ? *node.first
+         : nullptr
+   } );
 }
 
 void TrackList::AdditionEvent(TrackNodePointer node)
@@ -631,7 +629,7 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
    }
    auto n = getBegin();
    RecalcPositions(n);
-   PermutationEvent();
+   PermutationEvent(n);
 }
 
 Track *TrackList::FindById( TrackId id )
@@ -738,7 +736,7 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
-      DeletionEvent();
+      DeletionEvent(node);
       AdditionEvent(node);
    }
    return holder;
@@ -759,7 +757,7 @@ TrackNodePointer TrackList::Remove(Track *t)
          if ( !isNull( result ) )
             RecalcPositions(result);
 
-         DeletionEvent();
+         DeletionEvent(result);
       }
    }
    return result;
@@ -912,7 +910,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
-   PermutationEvent();
+   PermutationEvent(s1);
 }
 
 bool TrackList::MoveUp(Track * t)
@@ -1051,6 +1049,11 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
    if (pAdded)
       pAdded->clear();
 
+   // To find the first node that remains after the first deleted one
+   TrackNodePointer node;
+   bool findingNode = false;
+   bool foundNode = false;
+
    for (auto it = ListOfTracks::begin(), stop = ListOfTracks::end();
         it != stop;) {
       if (it->get()->GetId() == TrackId{}) {
@@ -1058,13 +1061,23 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
             pAdded->push_back( *it );
          (*it)->SetOwner( {}, {} );
          it = erase( it );
+
+         if (!findingNode)
+            findingNode = true;
+         if (!foundNode && it != stop)
+            node = (*it)->GetNode();
       }
-      else
+      else {
+         if ( findingNode )
+            foundNode = true;
          ++it;
+      }
    }
 
-   if (!empty())
+   if (!empty()) {
       RecalcPositions(getBegin());
+      DeletionEvent( node );
+   }
 }
 
 bool TrackList::ApplyPendingTracks()
@@ -1125,7 +1138,9 @@ bool TrackList::ApplyPendingTracks()
       }
    }
    if (inserted) {
-      RecalcPositions({first, this});
+      TrackNodePointer node{first, this};
+      RecalcPositions(node);
+      AdditionEvent(node);
       result = true;
    }
 
