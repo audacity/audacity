@@ -92,7 +92,8 @@ if [[ $have_windows = "yes" ]] ; then
       fi
    fi
 
-   AC_CHECK_HEADER(pa_win_ds.h, have_ds=yes)
+   AC_CHECK_HEADER(pa_win_ds.h, have_ds=yes, [],
+      [[#include <windows.h>]])
    if [[ $have_ds = "yes" ]] ; then
       AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_ds=no])
       if [[ $have_support = "no" ]] ; then
