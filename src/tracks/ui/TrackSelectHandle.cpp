@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackSelectHandle.h"
 
+#include "TrackView.h"
 #include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
@@ -219,7 +220,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
    if (tracks.CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
          event.m_y -
-            tracks.GetGroupHeight(
+            TrackView::GetChannelGroupHeight(
                * -- tracks.FindLeader( mpTrack.get() ) );
    else
       mMoveUpThreshold = INT_MIN;
@@ -227,7 +228,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
    if (tracks.CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
          event.m_y +
-            tracks.GetGroupHeight(
+            TrackView::GetChannelGroupHeight(
                * ++ tracks.FindLeader( mpTrack.get() ) );
    else
       mMoveDownThreshold = INT_MAX;

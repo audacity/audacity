@@ -28,4 +28,15 @@ public:
    virtual ~TrackControls() = 0;
 };
 
+#include "AttachedVirtualFunction.h"
+
+struct DoGetControlsTag;
+
+using DoGetControls =
+AttachedVirtualFunction<
+   DoGetControlsTag,
+   std::shared_ptr< TrackControls >,
+   Track
+>;
+
 #endif

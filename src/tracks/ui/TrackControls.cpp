@@ -24,11 +24,20 @@ TrackControls::~TrackControls()
 
 TrackControls &TrackControls::Get( Track &track )
 {
-   return *static_cast<TrackControls*>( track.GetTrackControls().get() );
+   auto pControls =
+      std::static_pointer_cast<TrackControls>( track.GetTrackControls() );
+   if (!pControls)
+      // create on demand
+      track.SetTrackControls( pControls = DoGetControls::Call( track ) );
+   return *pControls;
 }
 
 const TrackControls &TrackControls::Get( const Track &track )
 {
-   return *static_cast<const TrackControls*>( track.GetTrackControls().get() );
+   return Get( const_cast< Track& >( track ) );
 }
 
+template<> auto DoGetControls::Implementation() -> Function {
+   return nullptr;
+}
+static DoGetControls registerDoGetControls;
