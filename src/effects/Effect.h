@@ -16,7 +16,6 @@
 
 #include "../Experimental.h"
 
-#include <atomic>
 #include <set>
 
 #include <wx/defs.h>
@@ -546,30 +545,6 @@ private:
    friend class EffectUIHost;
    friend class EffectPresetsDialog;
 };
-
-class RealtimeEffectState
-{
-public:
-   explicit RealtimeEffectState( EffectClientInterface &effect );
-
-   EffectClientInterface &GetEffect() const { return mEffect; }
-
-   bool RealtimeSuspend();
-   bool RealtimeResume();
-   bool RealtimeAddProcessor(int group, unsigned chans, float rate);
-   size_t RealtimeProcess(int group,
-      unsigned chans, float **inbuf, float **outbuf, size_t numSamples);
-   bool IsRealtimeActive();
-
-private:
-   EffectClientInterface &mEffect;
-
-   std::vector<int> mGroupProcessor;
-   int mCurrentProcessor;
-
-   std::atomic<int> mRealtimeSuspendCount{ 1 };    // Effects are initially suspended
-};
-
 
 // FIXME:
 // FIXME:  Remove this once all effects are using the NEW dialog
