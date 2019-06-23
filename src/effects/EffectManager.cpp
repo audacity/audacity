@@ -23,6 +23,8 @@ effects.
 
 #include "../Experimental.h"
 
+#include "Effect.h"
+
 #include <algorithm>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>

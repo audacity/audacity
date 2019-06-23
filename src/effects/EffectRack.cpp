@@ -16,6 +16,9 @@
 
 #include "../Experimental.h"
 
+#include "Effect.h"
+#include "EffectManager.h"
+
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include "../UndoManager.h"
@@ -39,6 +42,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
+#include "../widgets/wxPanelWrapper.h"
 
 #include "../../images/EffectRack/EffectRack.h"
 

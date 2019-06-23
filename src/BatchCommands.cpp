@@ -34,6 +34,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Shuttle.h"
+#include "Track.h"
 #include "export/ExportFLAC.h"
 #include "export/ExportMP3.h"
 #include "export/ExportOGG.h"

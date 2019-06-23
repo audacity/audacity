@@ -14,16 +14,23 @@
 
 #include "../Experimental.h"
 
+#include <memory>
 #include <vector>
 
-#include "audacity/EffectInterface.h"
-#include "Effect.h"
-
 #include <unordered_map>
+#include <wx/thread.h>
+#include "audacity/Types.h"
 
 class AudacityCommand;
 class CommandContext;
 class CommandMessageTarget;
+class ComponentInterfaceSymbol;
+class Effect;
+class TrackFactory;
+class TrackList;
+class SelectedRegion;
+class wxString;
+typedef wxString PluginID;
 
 using EffectArray = std::vector <Effect*> ;
 using EffectMap = std::unordered_map<wxString, Effect *>;
