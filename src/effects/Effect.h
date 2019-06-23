@@ -550,9 +550,9 @@ private:
 class RealtimeEffectState
 {
 public:
-   explicit RealtimeEffectState( Effect &effect );
+   explicit RealtimeEffectState( EffectClientInterface &effect );
 
-   Effect &GetEffect() const { return mEffect; }
+   EffectClientInterface &GetEffect() const { return mEffect; }
 
    bool RealtimeSuspend();
    bool RealtimeResume();
@@ -562,7 +562,7 @@ public:
    bool IsRealtimeActive();
 
 private:
-   Effect &mEffect;
+   EffectClientInterface &mEffect;
 
    std::vector<int> mGroupProcessor;
    int mCurrentProcessor;

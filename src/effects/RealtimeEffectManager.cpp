@@ -87,7 +87,7 @@ bool RealtimeEffectManager::RealtimeIsSuspended()
    return mRealtimeSuspended;
 }
 
-void RealtimeEffectManager::RealtimeAddEffect(Effect *effect)
+void RealtimeEffectManager::RealtimeAddEffect(EffectClientInterface *effect)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();
@@ -114,7 +114,7 @@ void RealtimeEffectManager::RealtimeAddEffect(Effect *effect)
    RealtimeResume();
 }
 
-void RealtimeEffectManager::RealtimeRemoveEffect(Effect *effect)
+void RealtimeEffectManager::RealtimeRemoveEffect(EffectClientInterface *effect)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();

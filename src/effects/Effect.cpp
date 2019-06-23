@@ -472,7 +472,7 @@ bool Effect::RealtimeFinalize()
    return false;
 }
 
-RealtimeEffectState::RealtimeEffectState( Effect &effect )
+RealtimeEffectState::RealtimeEffectState( EffectClientInterface &effect )
    : mEffect{ effect }
 {
 }

@@ -564,7 +564,9 @@ void EffectRack::UpdateActive()
       }
    }
 
-   RealtimeEffectManager::Get().RealtimeSetEffects(mActive);
+   RealtimeEffectManager::Get().RealtimeSetEffects(
+      { mActive.begin(), mActive.end() }
+   );
 }
 
 #endif

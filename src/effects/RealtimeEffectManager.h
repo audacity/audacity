@@ -15,13 +15,13 @@
 #include <vector>
 #include <wx/thread.h>
 
-class Effect;
-using EffectArray = std::vector <Effect*> ;
+class EffectClientInterface;
 class RealtimeEffectState;
 
 class AUDACITY_DLL_API RealtimeEffectManager final
 {
 public:
+   using EffectArray = std::vector <EffectClientInterface*> ;
 
    /** Get the singleton instance of the RealtimeEffectManager. **/
    static RealtimeEffectManager & Get();
@@ -29,8 +29,8 @@ public:
    // Realtime effect processing
    bool RealtimeIsActive();
    bool RealtimeIsSuspended();
-   void RealtimeAddEffect(Effect *effect);
-   void RealtimeRemoveEffect(Effect *effect);
+   void RealtimeAddEffect(EffectClientInterface *effect);
+   void RealtimeRemoveEffect(EffectClientInterface *effect);
    void RealtimeSetEffects(const EffectArray & mActive);
    void RealtimeInitialize(double rate);
    void RealtimeAddProcessor(int group, unsigned chans, float rate);
