@@ -51,6 +51,15 @@ class TrackList;
 class TrackFactory;
 class WaveTrack;
 
+/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
+ Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+ In the translations of this and other strings, you may transliterate the
+ name into another alphabet.  */
+#define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
+
+#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
+#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
+
 // TODO:  Apr-06-2015
 // TODO:  Much more cleanup of old methods and variables is needed, but
 // TODO:  can't be done until after all effects are using the NEW API.
