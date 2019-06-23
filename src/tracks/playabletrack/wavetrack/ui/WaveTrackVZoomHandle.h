@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class WaveTrack;
+#include "WaveTrackViewConstants.h"
 #include "../../../../UIHandle.h"
 
 
@@ -26,6 +27,13 @@ public:
       (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
 
    WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
+
+   static void DoZoom
+   (AudacityProject *pProject,
+    WaveTrack *pTrack, bool allChannels,
+    WaveTrackViewConstants::ZoomActions ZoomKind,
+    const wxRect &rect, int zoomStart, int zoomEnd,
+    bool fixedMousePoint);
 
    virtual ~WaveTrackVZoomHandle();
 

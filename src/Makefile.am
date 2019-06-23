@@ -669,6 +669,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \

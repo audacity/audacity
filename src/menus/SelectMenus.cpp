@@ -82,7 +82,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
    const WaveTrack *pTrack {};
    for ( auto wt : tracks.Selected< const WaveTrack >() ) {
       const int display = wt->GetDisplay();
-      if (display == WaveTrack::Spectrum) {
+      if (display == WaveTrackViewConstants::Spectrum) {
          pTrack = wt;
          break;
       }

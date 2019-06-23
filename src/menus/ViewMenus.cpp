@@ -11,6 +11,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../Track.h"
 #include "../TrackInfo.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -88,51 +89,52 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
 
    double result = 1.0;
    double zoomToFit = ViewActions::GetZoomOfToFit( project );
+   using namespace WaveTrackViewConstants;
    switch( preset ){
       default:
-      case WaveTrack::kZoomDefault:
+      case kZoomDefault:
          result = ZoomInfo::GetDefaultZoom();
          break;
-      case WaveTrack::kZoomToFit:
+      case kZoomToFit:
          result = zoomToFit;
          break;
-      case WaveTrack::kZoomToSelection:
+      case kZoomToSelection:
          result = GetZoomOfSelection( project );
          break;
-      case WaveTrack::kZoomMinutes:
+      case kZoomMinutes:
          result = pixelsPerUnit * 1.0/60;
          break;
-      case WaveTrack::kZoomSeconds:
+      case kZoomSeconds:
          result = pixelsPerUnit * 1.0;
          break;
-      case WaveTrack::kZoom5ths:
+      case kZoom5ths:
          result = pixelsPerUnit * 5.0;
          break;
-      case WaveTrack::kZoom10ths:
+      case kZoom10ths:
          result = pixelsPerUnit * 10.0;
          break;
-      case WaveTrack::kZoom20ths:
+      case kZoom20ths:
          result = pixelsPerUnit * 20.0;
          break;
-      case WaveTrack::kZoom50ths:
+      case kZoom50ths:
          result = pixelsPerUnit * 50.0;
          break;
-      case WaveTrack::kZoom100ths:
+      case kZoom100ths:
          result = pixelsPerUnit * 100.0;
          break;
-      case WaveTrack::kZoom500ths:
+      case kZoom500ths:
          result = pixelsPerUnit * 500.0;
          break;
-      case WaveTrack::kZoomMilliSeconds:
+      case kZoomMilliSeconds:
          result = pixelsPerUnit * 1000.0;
          break;
-      case WaveTrack::kZoomSamples:
+      case kZoomSamples:
          result = 44100.0;
          break;
-      case WaveTrack::kZoom4To1:
+      case kZoom4To1:
          result = 44100.0 * 4;
          break;
-      case WaveTrack::kMaxZoom:
+      case kMaxZoom:
          result = ZoomInfo::GetMaxZoom();
          break;
    };
@@ -204,10 +206,9 @@ void DoZoomFitV(AudacityProject &project)
    height -= 28;
    
    // The height of minimized and non-audio tracks cannot be apportioned
-   const auto GetHeight = []( const Track *track )
-      { return TrackView::Get( *track ).GetHeight(); };
    height -=
-      tracks.Any().sum( GetHeight ) - range.sum( GetHeight );
+      tracks.Any().sum( TrackView::GetTrackHeight )
+         - range.sum( TrackView::GetTrackHeight );
    
    // Give each resized track the average of the remaining height
    height = height / count;

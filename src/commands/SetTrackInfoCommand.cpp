@@ -354,8 +354,8 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
    if( wt && bHasDisplayType  )
       wt->SetDisplay(
          (mDisplayType == kWaveform) ?
-            WaveTrack::WaveTrackDisplayValues::Waveform
-            : WaveTrack::WaveTrackDisplayValues::Spectrum
+            WaveTrackViewConstants::Waveform
+            : WaveTrackViewConstants::Spectrum
          );
    if( wt && bHasScaleType )
       wt->GetIndependentWaveformSettings().scaleType = 

@@ -687,6 +687,8 @@ src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h
 src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 src/tracks/playabletrack/wavetrack/ui/WaveTrackView.h
+src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
+src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h
 src/tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
 src/tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h
 src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp

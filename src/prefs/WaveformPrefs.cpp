@@ -184,7 +184,7 @@ bool WaveformPrefs::Commit()
 
    if (mWt && isOpenPage) {
       for (auto channel : TrackList::Channels(mWt))
-         channel->SetDisplay(WaveTrack::Waveform);
+         channel->SetDisplay(WaveTrackViewConstants::Waveform);
    }
 
    if (isOpenPage) {

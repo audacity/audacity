@@ -79,6 +79,8 @@ audio tracks.
 #include "TimeTrack.h"
 #include "Prefs.h"
 #include "prefs/GUIPrefs.h"
+#include "WaveTrack.h"
+
 #include "prefs/GUISettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
@@ -391,10 +393,10 @@ void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
    #endif
 
          switch (wt->GetDisplay()) {
-         case WaveTrack::Waveform:
+         case WaveTrackViewConstants::Waveform:
             DrawWaveform(context, wt, rect, muted);
             break;
-         case WaveTrack::Spectrum:
+         case WaveTrackViewConstants::Spectrum:
             DrawSpectrum( context, wt, rect );
             break;
          default:
@@ -638,7 +640,7 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
 
          const int display = wt->GetDisplay();
 
-         if (display == WaveTrack::Waveform) {
+         if (display == WaveTrackViewConstants::Waveform) {
             WaveformSettings::ScaleType scaleType =
                wt->GetWaveformSettings().scaleType;
 
@@ -790,7 +792,7 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
             }
          }
          else {
-            wxASSERT(display == WaveTrack::Spectrum);
+            wxASSERT(display == WaveTrackViewConstants::Spectrum);
             const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
             float minFreq, maxFreq;
             wt->GetSpectrumBounds(&minFreq, &maxFreq);
@@ -1372,7 +1374,7 @@ void TrackArt::DrawIndividualSamples(TrackPanelDrawingContext &context,
    }
 
    const auto sampleDisplay = artist->mSampleDisplay;
-   if (showPoints && (sampleDisplay == (int) WaveTrack::StemPlot)) {
+   if (showPoints && (sampleDisplay == (int) WaveTrackViewConstants::StemPlot)) {
       // Draw vertical lines
       int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
       yZero = rect.y + std::max(-1, std::min(rect.height, yZero));

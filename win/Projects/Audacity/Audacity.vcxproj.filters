@@ -1208,6 +1208,9 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackViewConstants.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.cpp">
       <Filter>src\tracks\timetrack\ui</Filter>
     </ClCompile>
@@ -2372,6 +2375,9 @@
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackViewConstants.h">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.h">

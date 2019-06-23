@@ -64,7 +64,8 @@ bool ODWaveTrackTaskQueue::CanMergeWith(ODWaveTrackTaskQueue* otherQueue)
 /// sets the NeedODUpdateFlag since we don't want the head task to finish without haven't dealt with the depednent
 ///
 ///@param track the track to bring into the tasks AND tracklist for this queue
-void ODWaveTrackTaskQueue::MergeWaveTrack(WaveTrack* track)
+void ODWaveTrackTaskQueue::MergeWaveTrack(
+   const std::shared_ptr< WaveTrack > &track)
 {
    AddWaveTrack(track);
    mTasksMutex.Lock();
@@ -83,7 +84,7 @@ bool ODWaveTrackTaskQueue::ContainsWaveTrack(const WaveTrack* track)
    mTracksMutex.Lock();
    for(unsigned int i=0;i<mTracks.size();i++)
    {
-      if(mTracks[i]==track)
+      if ( mTracks[i].lock().get() == track )
       {
          mTracksMutex.Unlock();
          return true;
@@ -93,7 +94,8 @@ bool ODWaveTrackTaskQueue::ContainsWaveTrack(const WaveTrack* track)
    return false;
 }
 ///Adds a track to the associated list.
-void ODWaveTrackTaskQueue::AddWaveTrack(WaveTrack* track)
+void ODWaveTrackTaskQueue::AddWaveTrack(
+   const std::shared_ptr< WaveTrack > &track)
 {
 
    mTracksMutex.Lock();
@@ -117,8 +119,7 @@ void ODWaveTrackTaskQueue::AddTask(std::unique_ptr<ODTask> &&mtask)
    {
       //task->GetWaveTrack(i) may return NULL, but we handle it by checking before using.
       //The other worry that the WaveTrack returned and was deleted in the meantime is also
-      //handled since mQueuesMutex is locked one up in the stack from here,
-      //and WaveTrack deletion is bound to that.
+      //handled by keeping standard weak pointers to tracks, which give thread safety.
       mTracks.push_back(task->GetWaveTrack(i));
    }
 
@@ -126,32 +127,15 @@ void ODWaveTrackTaskQueue::AddTask(std::unique_ptr<ODTask> &&mtask)
 
 }
 
-///Removes a track from the list.  Also notifies mTasks to stop using references
-///to the instance in a thread-safe manner (may block)
-void ODWaveTrackTaskQueue::RemoveWaveTrack(WaveTrack* track)
-{
-   if(track)
-   {
-
-      mTasksMutex.Lock();
-      for(unsigned int i=0;i<mTasks.size();i++)
-         mTasks[i]->StopUsingWaveTrack(track);
-      mTasksMutex.Unlock();
-
-      mTracksMutex.Lock();
-      for(unsigned int i=0;i<mTracks.size();i++)
-         if(mTracks[i]==track)
-            mTracks.erase(mTracks.begin()+i--);//decrement i after the removal.
-
-      mTracksMutex.Unlock();
-   }
-}
-
 //if the wavetrack is in this queue, and is not the only wavetrack, clones the tasks and schedules it.
-void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
+void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(
+   const std::shared_ptr< WaveTrack > &track)
 {
-
+   // First remove expired weak pointers
+   Compress();
+   
    mTracksMutex.Lock();
+
    if(mTracks.size()<2)
    {
       //if there is only one track, it is already independent.
@@ -161,17 +145,16 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
 
    for(unsigned int i=0;i<mTracks.size();i++)
    {
-      if(mTracks[i]==track)
+      if ( mTracks[i].lock() == track )
       {
-         mTracksMutex.Unlock();//release the lock, since RemoveWaveTrack is a public threadsafe method.
-         RemoveWaveTrack(mTracks[i]);
+         mTracks[i].reset();
 
          //clone the items in order and add them to the ODManager.
          mTasksMutex.Lock();
          for(unsigned int j=0;j<mTasks.size();j++)
          {
             auto task = mTasks[j]->Clone();
-            task->AddWaveTrack(track);
+            mTasks[j]->StopUsingWaveTrack( track.get() );
             //AddNewTask requires us to relinquish this lock. However, it is safe because ODManager::MakeWaveTrackIndependent
             //has already locked the m_queuesMutex.
             mTasksMutex.Unlock();
@@ -181,7 +164,6 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
             mTasksMutex.Lock();
          }
          mTasksMutex.Unlock();
-         mTracksMutex.Lock();
          break;
       }
    }
@@ -207,7 +189,8 @@ void ODWaveTrackTaskQueue::DemandTrackUpdate(WaveTrack* track, double seconds)
 
 
 //Replaces all instances of a wavetracck with a NEW one (effectively transferes the task.)
-void ODWaveTrackTaskQueue::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
+void ODWaveTrackTaskQueue::ReplaceWaveTrack(Track *oldTrack,
+   const std::shared_ptr<Track> &newTrack)
 {
    if(oldTrack)
    {
@@ -218,26 +201,17 @@ void ODWaveTrackTaskQueue::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
 
       mTracksMutex.Lock();
       for(unsigned int i=0;i<mTracks.size();i++)
-         if(mTracks[i]==oldTrack)
-            mTracks[i] = static_cast<WaveTrack*>( newTrack );
+         if ( mTracks[i].lock().get() == oldTrack )
+            mTracks[i] = std::static_pointer_cast<WaveTrack>( newTrack );
       mTracksMutex.Unlock();
    }
-}
-
-//returns the wavetrack at position x.
-WaveTrack* ODWaveTrackTaskQueue::GetWaveTrack(size_t x)
-{
-   WaveTrack* ret = NULL;
-   mTracksMutex.Lock();
-   if (x < mTracks.size())
-      ret = mTracks[x];
-   mTracksMutex.Unlock();
-   return ret;
 }
 
 ///returns the number of wavetracks in this queue.
 int ODWaveTrackTaskQueue::GetNumWaveTracks()
 {
+   Compress();
+
    int ret = 0;
    mTracksMutex.Lock();
    ret=mTracks.size();
@@ -271,6 +245,8 @@ ODTask* ODWaveTrackTaskQueue::GetTask(size_t x)
 //returns true if either tracks or tasks are empty
 bool ODWaveTrackTaskQueue::IsEmpty()
 {
+   Compress();
+
    bool isEmpty;
    mTracksMutex.Lock();
    isEmpty = mTracks.size()<=0;
@@ -341,4 +317,14 @@ void ODWaveTrackTaskQueue::FillTipForWaveTrack( const WaveTrack * t, wxString &t
       tip = mTipMsg;
 
    }
+}
+
+void ODWaveTrackTaskQueue::Compress()
+{
+   mTracksMutex.Lock();
+   auto begin = mTracks.begin(), end = mTracks.end(),
+   new_end = std::remove_if( begin, end,
+      []( const std::weak_ptr<WaveTrack> &ptr ){ return ptr.expired(); } );
+   mTracks.erase( new_end, end );
+   mTracksMutex.Unlock();
 }

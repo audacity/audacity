@@ -97,13 +97,14 @@ void LabelTrackView::UnbindFrom( LabelTrack *pParent )
       EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
 }
 
-void LabelTrackView::Copy( const TrackView &other )
+void LabelTrackView::CopyTo( Track &track ) const
 {
-   TrackView::Copy( other );
+   TrackView::CopyTo( track );
+   auto &other = TrackView::Get( track );
 
    if ( const auto pOther = dynamic_cast< const LabelTrackView* >( &other ) ) {
       // only one field is important to preserve in undo/redo history
-      mSelIndex = pOther->mSelIndex;
+      pOther->mSelIndex = mSelIndex;
    }
 }
 

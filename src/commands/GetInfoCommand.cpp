@@ -497,7 +497,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
       //JKC: Possibly add later...
-      //context.AddItem( GetTrackView::Get( *trk ).GetHeight(), "height" );
+      //context.AddItem( TrackView::Get( *trk ).GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
          float vzmin, vzmax;
          t->GetDisplayBounds(&vzmin, &vzmax);

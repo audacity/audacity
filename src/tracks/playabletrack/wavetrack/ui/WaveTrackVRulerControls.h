@@ -33,6 +33,7 @@ public:
    unsigned HandleWheelRotation
       (const TrackPanelMouseEvent &event,
        AudacityProject *pProject) override;
+   void DoZoomPreset( int i);
 private:
    std::weak_ptr<WaveTrackVZoomHandle> mVZoomHandle;
 };

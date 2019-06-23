@@ -186,7 +186,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // you're doing!
    //
 
-   BlockArray &GetBlockArray() {return mBlock;}
+   BlockArray &GetBlockArray() { return mBlock; }
+   const BlockArray &GetBlockArray() const { return mBlock; }
 
    ///
    void LockDeleteUpdateMutex(){mDeleteUpdateMutex.Lock();}

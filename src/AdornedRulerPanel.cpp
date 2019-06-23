@@ -37,6 +37,7 @@
 #include "ProjectWindow.h"
 #include "RefreshCode.h"
 #include "Snap.h"
+#include "Track.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UIHandle.h"

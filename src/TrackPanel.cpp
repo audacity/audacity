@@ -832,10 +832,8 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 
    trk = *GetTracks()->FindLeader(trk);
    auto &view = TrackView::Get( *trk );
-   const auto GetHeight = []( const Track *track )
-      { return TrackView::Get( *track ).GetHeight(); };
    auto height =
-      TrackList::Channels(trk).sum( GetHeight )
+      TrackList::Channels(trk).sum( TrackView::GetTrackHeight )
       - kTopInset - kShadowThickness;
 
    // subtract insets and shadows from the rectangle, but not border
@@ -1327,9 +1325,7 @@ void TrackPanel::EnsureVisible(Track * t)
       trackTop += trackHeight;
 
       auto channels = TrackList::Channels(it);
-      const auto GetHeight = []( const Track *track )
-         { return TrackView::Get( *track ).GetHeight(); };
-      trackHeight = channels.sum( GetHeight );
+      trackHeight = channels.sum( TrackView::GetTrackHeight );
 
       //We have found the track we want to ensure is visible.
       if (channels.contains(t)) {
@@ -1363,15 +1359,13 @@ void TrackPanel::VerticalScroll( float fracPosition){
    int trackHeight = 0;
 
    auto tracks = GetTracks();
-   const auto GetHeight =
-      [&]( const Track *t ){ return tracks->GetGroupHeight(t); };
 
    auto range = tracks->Leaders();
    if (!range.empty()) {
-      trackHeight = GetHeight( *range.rbegin() );
+      trackHeight = TrackView::GetChannelGroupHeight( *range.rbegin() );
       --range.second;
    }
-   trackTop = range.sum( GetHeight );
+   trackTop = range.sum( TrackView::GetChannelGroupHeight );
 
    int delta;
    
