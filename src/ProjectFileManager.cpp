@@ -47,6 +47,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/Import.h"
 #include "commands/CommandContext.h"
 #include "ondemand/ODComputeSummaryTask.h"
+#include "ondemand/ODDecodeFlacTask.h"
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
 #include "toolbars/SelectionBar.h"
