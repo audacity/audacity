@@ -728,6 +728,11 @@ size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
    return mBlockSize;
 }
 
+size_t LV2Effect::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
 sampleCount LV2Effect::GetLatency()
 {
    if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)

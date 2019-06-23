@@ -373,6 +373,16 @@ size_t Effect::SetBlockSize(size_t maxBlockSize)
    return mBlockSize;
 }
 
+size_t Effect::GetBlockSize() const
+{
+   if (mClient)
+   {
+      return mClient->GetBlockSize();
+   }
+
+   return mBlockSize;
+}
+
 sampleCount Effect::GetLatency()
 {
    if (mClient)

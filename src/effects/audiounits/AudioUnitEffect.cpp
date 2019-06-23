@@ -1192,6 +1192,11 @@ size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
    return mBlockSize;
 }
 
+size_t AudioUnitEffect::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
 sampleCount AudioUnitEffect::GetLatency()
 {
    // Retrieve the latency (can be updated via an event)
