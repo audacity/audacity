@@ -927,7 +927,7 @@ MenuTable::BaseItemPtr GenerateMenu( AudacityProject & )
 const ReservedCommandFlag
    IsRealtimeNotActiveFlag{
       [](const AudacityProject &){
-         return !EffectManager::Get().RealtimeIsActive();
+         return !RealtimeEffectManager::Get().RealtimeIsActive();
       }
    };  //lll
 

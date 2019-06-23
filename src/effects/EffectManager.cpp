@@ -52,15 +52,28 @@ EffectManager & EffectManager::Get()
    return em;
 }
 
-EffectManager::EffectManager()
+RealtimeEffectManager & RealtimeEffectManager::Get()
+{
+   static RealtimeEffectManager rem;
+   return rem;
+}
+
+RealtimeEffectManager::RealtimeEffectManager()
 {
    mRealtimeLock.Enter();
    mRealtimeActive = false;
    mRealtimeSuspended = true;
    mRealtimeLatency = 0;
    mRealtimeLock.Leave();
-   mSkipStateFlag = false;
+}
 
+RealtimeEffectManager::~RealtimeEffectManager()
+{
+}
+
+EffectManager::EffectManager()
+{
+   mSkipStateFlag = false;
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    mRack = NULL;
 #endif
@@ -514,7 +527,7 @@ void EffectManager::ShowRack()
    GetRack()->Show(!GetRack()->IsShown());
 }
 
-void EffectManager::RealtimeSetEffects(const EffectArray & effects)
+void RealtimeEffectManager::RealtimeSetEffects(const EffectArray & effects)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();
@@ -570,17 +583,17 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 }
 #endif
 
-bool EffectManager::RealtimeIsActive()
+bool RealtimeEffectManager::RealtimeIsActive()
 {
    return mRealtimeEffects.size() != 0;
 }
 
-bool EffectManager::RealtimeIsSuspended()
+bool RealtimeEffectManager::RealtimeIsSuspended()
 {
    return mRealtimeSuspended;
 }
 
-void EffectManager::RealtimeAddEffect(Effect *effect)
+void RealtimeEffectManager::RealtimeAddEffect(Effect *effect)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();
@@ -605,7 +618,7 @@ void EffectManager::RealtimeAddEffect(Effect *effect)
    RealtimeResume();
 }
 
-void EffectManager::RealtimeRemoveEffect(Effect *effect)
+void RealtimeEffectManager::RealtimeRemoveEffect(Effect *effect)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();
@@ -626,7 +639,7 @@ void EffectManager::RealtimeRemoveEffect(Effect *effect)
    RealtimeResume();
 }
 
-void EffectManager::RealtimeInitialize(double rate)
+void RealtimeEffectManager::RealtimeInitialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
    RealtimeSuspend();
@@ -649,7 +662,7 @@ void EffectManager::RealtimeInitialize(double rate)
    RealtimeResume();
 }
 
-void EffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
+void RealtimeEffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
 {
    for (auto e : mRealtimeEffects)
       e->RealtimeAddProcessor(group, chans, rate);
@@ -658,7 +671,7 @@ void EffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
    mRealtimeRates.push_back(rate);
 }
 
-void EffectManager::RealtimeFinalize()
+void RealtimeEffectManager::RealtimeFinalize()
 {
    // Make sure nothing is going on
    RealtimeSuspend();
@@ -678,7 +691,7 @@ void EffectManager::RealtimeFinalize()
    mRealtimeActive = false;
 }
 
-void EffectManager::RealtimeSuspend()
+void RealtimeEffectManager::RealtimeSuspend()
 {
    mRealtimeLock.Enter();
 
@@ -699,7 +712,7 @@ void EffectManager::RealtimeSuspend()
    mRealtimeLock.Leave();
 }
 
-void EffectManager::RealtimeResume()
+void RealtimeEffectManager::RealtimeResume()
 {
    mRealtimeLock.Enter();
 
@@ -723,7 +736,7 @@ void EffectManager::RealtimeResume()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void EffectManager::RealtimeProcessStart()
+void RealtimeEffectManager::RealtimeProcessStart()
 {
    // Protect ourselves from the main thread
    mRealtimeLock.Enter();
@@ -745,7 +758,7 @@ void EffectManager::RealtimeProcessStart()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples)
+size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples)
 {
    // Protect ourselves from the main thread
    mRealtimeLock.Enter();
@@ -820,7 +833,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void EffectManager::RealtimeProcessEnd()
+void RealtimeEffectManager::RealtimeProcessEnd()
 {
    // Protect ourselves from the main thread
    mRealtimeLock.Enter();
@@ -839,7 +852,7 @@ void EffectManager::RealtimeProcessEnd()
    mRealtimeLock.Leave();
 }
 
-int EffectManager::GetRealtimeLatency()
+int RealtimeEffectManager::GetRealtimeLatency()
 {
    return mRealtimeLatency;
 }

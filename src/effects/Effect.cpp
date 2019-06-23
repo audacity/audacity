@@ -3905,7 +3905,7 @@ void EffectUIHost::InitializeRealtime()
 {
    if (mSupportsRealtime && !mInitialized)
    {
-      EffectManager::Get().RealtimeAddEffect(mEffect);
+      RealtimeEffectManager::Get().RealtimeAddEffect(mEffect);
 
       wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                         &EffectUIHost::OnPlayback,
@@ -3923,7 +3923,7 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized)
    {
-      EffectManager::Get().RealtimeRemoveEffect(mEffect);
+      RealtimeEffectManager::Get().RealtimeRemoveEffect(mEffect);
 
       mInitialized = false;
    }

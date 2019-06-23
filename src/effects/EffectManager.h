@@ -129,22 +129,6 @@ public:
    void SetSkipStateFlag(bool flag);
    bool GetSkipStateFlag();
 
-   // Realtime effect processing
-   bool RealtimeIsActive();
-   bool RealtimeIsSuspended();
-   void RealtimeAddEffect(Effect *effect);
-   void RealtimeRemoveEffect(Effect *effect);
-   void RealtimeSetEffects(const EffectArray & mActive);
-   void RealtimeInitialize(double rate);
-   void RealtimeAddProcessor(int group, unsigned chans, float rate);
-   void RealtimeFinalize();
-   void RealtimeSuspend();
-   void RealtimeResume();
-   void RealtimeProcessStart();
-   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
-   void RealtimeProcessEnd();
-   int GetRealtimeLatency();
-
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    void ShowRack();
 #endif
@@ -167,14 +151,6 @@ private:
 
    int mNumEffects;
 
-   wxCriticalSection mRealtimeLock;
-   EffectArray mRealtimeEffects;
-   int mRealtimeLatency;
-   bool mRealtimeSuspended;
-   bool mRealtimeActive;
-   std::vector<unsigned> mRealtimeChans;
-   std::vector<double> mRealtimeRates;
-
    // Set true if we want to skip pushing state 
    // after processing at effect run time.
    bool mSkipStateFlag;
@@ -187,5 +163,40 @@ private:
 
 };
 
+class AUDACITY_DLL_API RealtimeEffectManager final
+{
+public:
+
+   /** Get the singleton instance of the RealtimeEffectManager. **/
+   static RealtimeEffectManager & Get();
+
+   // Realtime effect processing
+   bool RealtimeIsActive();
+   bool RealtimeIsSuspended();
+   void RealtimeAddEffect(Effect *effect);
+   void RealtimeRemoveEffect(Effect *effect);
+   void RealtimeSetEffects(const EffectArray & mActive);
+   void RealtimeInitialize(double rate);
+   void RealtimeAddProcessor(int group, unsigned chans, float rate);
+   void RealtimeFinalize();
+   void RealtimeSuspend();
+   void RealtimeResume();
+   void RealtimeProcessStart();
+   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
+   void RealtimeProcessEnd();
+   int GetRealtimeLatency();
+
+private:
+   RealtimeEffectManager();
+   ~RealtimeEffectManager();
+
+   wxCriticalSection mRealtimeLock;
+   EffectArray mRealtimeEffects;
+   int mRealtimeLatency;
+   bool mRealtimeSuspended;
+   bool mRealtimeActive;
+   std::vector<unsigned> mRealtimeChans;
+   std::vector<double> mRealtimeRates;
+};
 
 #endif

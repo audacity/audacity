@@ -616,7 +616,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    AudacityProject *const project = ::GetActiveProject();
    auto &tracks = TrackList::Get( *project );
-   bool unsafe = EffectManager::Get().RealtimeIsActive() &&
+   bool unsafe = RealtimeEffectManager::Get().RealtimeIsActive() &&
       ProjectAudioIO::Get( *project ).IsAudioActive();
 
    auto nChannels = TrackList::Channels(pTrack).size();
