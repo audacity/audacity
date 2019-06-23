@@ -42,51 +42,35 @@ void RealtimeEffectManager::RealtimeSetEffects(const EffectArray & effects)
    // Block RealtimeProcess()
    RealtimeSuspend();
 
-   // Tell any effects no longer in the chain to clean up
-   for (auto e: mRealtimeEffects)
-   {
-      // Scan the NEW chain for the effect
-      for (auto e1: effects)
-      {
-         // Found it so we're done
-         if (e == e1)
-         {
-            e = NULL;
-            break;
+   decltype( mStates ) newStates;
+   auto begin = mStates.begin(), end = mStates.end();
+   for ( auto pEffect : effects ) {
+      auto found = std::find_if( begin, end,
+         [=]( const decltype( mStates )::value_type &state ){
+            return state && &state->GetEffect() == pEffect;
          }
+      );
+      if ( found == end ) {
+         // Tell New effect to get ready
+         pEffect->RealtimeInitialize();
+         newStates.emplace_back(
+            std::make_unique< RealtimeEffectState >( *pEffect ) );
       }
-
-      // Must not have been in the NEW chain, so tell it to cleanup
-      if (e && mRealtimeActive)
-      {
-         e->RealtimeFinalize();
+      else {
+         // Preserve state for effect that remains in the chain
+         newStates.emplace_back( std::move( *found ) );
       }
    }
-      
-   // Tell any NEW effects to get ready
-   for (auto e : effects)
-   {
-      // Scan the old chain for the effect
-      for (auto e1 : mRealtimeEffects)
-      {
-         // Found it so tell effect to get ready
-         if (e == e1)
-         {
-            e = NULL;
-            break;
-         }
-      }
 
-      // Must not have been in the old chain, so tell it to initialize
-      if (e && mRealtimeActive)
-      {
-         e->RealtimeInitialize();
-      }
+   // Remaining states that were not moved need to clean up
+   for ( auto &state : mStates ) {
+      if ( state )
+         state->GetEffect().RealtimeFinalize();
    }
 
    // Get rid of the old chain
    // And install the NEW one
-   mRealtimeEffects = effects;
+   mStates.swap( newStates );
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
@@ -95,7 +79,7 @@ void RealtimeEffectManager::RealtimeSetEffects(const EffectArray & effects)
 
 bool RealtimeEffectManager::RealtimeIsActive()
 {
-   return mRealtimeEffects.size() != 0;
+   return mStates.size() != 0;
 }
 
 bool RealtimeEffectManager::RealtimeIsSuspended()
@@ -108,6 +92,10 @@ void RealtimeEffectManager::RealtimeAddEffect(Effect *effect)
    // Block RealtimeProcess()
    RealtimeSuspend();
 
+   // Add to list of active effects
+   mStates.emplace_back( std::make_unique< RealtimeEffectState >( *effect ) );
+   auto &state = mStates.back();
+
    // Initialize effect if realtime is already active
    if (mRealtimeActive)
    {
@@ -117,12 +105,10 @@ void RealtimeEffectManager::RealtimeAddEffect(Effect *effect)
       // Add the required processors
       for (size_t i = 0, cnt = mRealtimeChans.size(); i < cnt; i++)
       {
-         effect->RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
+         state->RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
       }
    }
    
-   // Add to list of active effects
-   mRealtimeEffects.push_back(effect);
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
@@ -140,10 +126,14 @@ void RealtimeEffectManager::RealtimeRemoveEffect(Effect *effect)
    }
       
    // Remove from list of active effects
-   auto end = mRealtimeEffects.end();
-   auto found = std::find(mRealtimeEffects.begin(), end, effect);
+   auto end = mStates.end();
+   auto found = std::find_if( mStates.begin(), end,
+      [&](const decltype(mStates)::value_type &state){
+         return &state->GetEffect() == effect;
+      }
+   );
    if (found != end)
-      mRealtimeEffects.erase(found);
+      mStates.erase(found);
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
@@ -163,9 +153,9 @@ void RealtimeEffectManager::RealtimeInitialize(double rate)
    mRealtimeActive = true;
 
    // Tell each effect to get ready for action
-   for (auto e : mRealtimeEffects) {
-      e->SetSampleRate(rate);
-      e->RealtimeInitialize();
+   for (auto &state : mStates) {
+      state->GetEffect().SetSampleRate(rate);
+      state->GetEffect().RealtimeInitialize();
    }
 
    // Get things moving
@@ -174,8 +164,8 @@ void RealtimeEffectManager::RealtimeInitialize(double rate)
 
 void RealtimeEffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
 {
-   for (auto e : mRealtimeEffects)
-      e->RealtimeAddProcessor(group, chans, rate);
+   for (auto &state : mStates)
+      state->RealtimeAddProcessor(group, chans, rate);
 
    mRealtimeChans.push_back(chans);
    mRealtimeRates.push_back(rate);
@@ -190,8 +180,8 @@ void RealtimeEffectManager::RealtimeFinalize()
    mRealtimeLatency = 0;
 
    // Tell each effect to clean up as well
-   for (auto e : mRealtimeEffects)
-      e->RealtimeFinalize();
+   for (auto &state : mStates)
+      state->GetEffect().RealtimeFinalize();
 
    // Reset processor parameters
    mRealtimeChans.clear();
@@ -216,8 +206,8 @@ void RealtimeEffectManager::RealtimeSuspend()
    mRealtimeSuspended = true;
 
    // And make sure the effects don't either
-   for (auto e : mRealtimeEffects)
-      e->RealtimeSuspend();
+   for (auto &state : mStates)
+      state->RealtimeSuspend();
 
    mRealtimeLock.Leave();
 }
@@ -234,8 +224,8 @@ void RealtimeEffectManager::RealtimeResume()
    }
 
    // Tell the effects to get ready for more action
-   for (auto e : mRealtimeEffects)
-      e->RealtimeResume();
+   for (auto &state : mStates)
+      state->RealtimeResume();
 
    // And we should too
    mRealtimeSuspended = false;
@@ -255,10 +245,10 @@ void RealtimeEffectManager::RealtimeProcessStart()
    // have been suspended.
    if (!mRealtimeSuspended)
    {
-      for (auto e : mRealtimeEffects)
+      for (auto &state : mStates)
       {
-         if (e->IsRealtimeActive())
-            e->RealtimeProcessStart();
+         if (state->IsRealtimeActive())
+            state->GetEffect().RealtimeProcessStart();
       }
    }
 
@@ -275,7 +265,7 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mRealtimeSuspended || mRealtimeEffects.empty())
+   if (mRealtimeSuspended || mStates.empty())
    {
       mRealtimeLock.Leave();
       return numSamples;
@@ -300,11 +290,11 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
    // Now call each effect in the chain while swapping buffer pointers to feed the
    // output of one effect as the input to the next effect
    size_t called = 0;
-   for (auto e : mRealtimeEffects)
+   for (auto &state : mStates)
    {
-      if (e->IsRealtimeActive())
+      if (state->IsRealtimeActive())
       {
-         e->RealtimeProcess(group, chans, ibuf, obuf, numSamples);
+         state->RealtimeProcess(group, chans, ibuf, obuf, numSamples);
          called++;
       }
 
@@ -352,10 +342,10 @@ void RealtimeEffectManager::RealtimeProcessEnd()
    // have been suspended.
    if (!mRealtimeSuspended)
    {
-      for (auto e : mRealtimeEffects)
+      for (auto &state : mStates)
       {
-         if (e->IsRealtimeActive())
-            e->RealtimeProcessEnd();
+         if (state->IsRealtimeActive())
+            state->GetEffect().RealtimeProcessEnd();
       }
    }
 

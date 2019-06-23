@@ -146,10 +146,6 @@ Effect::Effect()
    mNumGroups = 0;
    mProgress = NULL;
 
-   mRealtimeSuspendLock.Enter();
-   mRealtimeSuspendCount = 1;    // Effects are initially suspended
-   mRealtimeSuspendLock.Leave();
-
    mUIParent = NULL;
    mUIDialog = NULL;
 
@@ -476,46 +472,41 @@ bool Effect::RealtimeFinalize()
    return false;
 }
 
+RealtimeEffectState::RealtimeEffectState( Effect &effect )
+   : mEffect{ effect }
+{
+}
+
+bool RealtimeEffectState::RealtimeSuspend()
+{
+   auto result = mEffect.RealtimeSuspend();
+   if ( result ) {
+      mRealtimeSuspendCount++;
+   }
+   return result;
+}
+
 bool Effect::RealtimeSuspend()
 {
    if (mClient)
-   {
-      if (mClient->RealtimeSuspend())
-      {
-         mRealtimeSuspendLock.Enter();
-         mRealtimeSuspendCount++;
-         mRealtimeSuspendLock.Leave();
-         return true;
-      }
-
-      return false;
-   }
-
-   mRealtimeSuspendLock.Enter();
-   mRealtimeSuspendCount++;
-   mRealtimeSuspendLock.Leave();
+      return mClient->RealtimeSuspend();
 
    return true;
+}
+
+bool RealtimeEffectState::RealtimeResume()
+{
+   auto result = mEffect.RealtimeResume();
+   if ( result ) {
+      mRealtimeSuspendCount--;
+   }
+   return result;
 }
 
 bool Effect::RealtimeResume()
 {
    if (mClient)
-   {
-      if (mClient->RealtimeResume())
-      {
-         mRealtimeSuspendLock.Enter();
-         mRealtimeSuspendCount--;
-         mRealtimeSuspendLock.Leave();
-         return true;
-      }
-
-      return false;
-   }
-
-   mRealtimeSuspendLock.Enter();
-   mRealtimeSuspendCount--;
-   mRealtimeSuspendLock.Leave();
+      return mClient->RealtimeResume();
 
    return true;
 }
@@ -2306,7 +2297,7 @@ double Effect::CalcPreviewInputLength(double previewLength)
 // RealtimeAddProcessor and RealtimeProcess use the same method of
 // determining the current processor index, so updates to one should
 // be reflected in the other.
-bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
+bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float rate)
 {
    auto ichans = chans;
    auto ochans = chans;
@@ -2322,13 +2313,16 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
    // Remember the processor starting index
    mGroupProcessor.push_back(mCurrentProcessor);
 
+   const auto numAudioIn = mEffect.GetAudioInCount();
+   const auto numAudioOut = mEffect.GetAudioOutCount();
+
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
    {
       // If we don't have enough input channels to accomodate the client's
       // requirements, then we replicate the input channels until the
       // client's needs are met.
-      if (ichans < mNumAudioIn)
+      if (ichans < numAudioIn)
       {
          // All input channels have been consumed
          ichans = 0;
@@ -2336,16 +2330,16 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
       // Otherwise fullfil the client's needs with as many input channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
-      else if (ichans >= mNumAudioIn)
+      else if (ichans >= numAudioIn)
       {
-         gchans = mNumAudioIn;
+         gchans = numAudioIn;
          ichans -= gchans;
       }
 
       // If we don't have enough output channels to accomodate the client's
       // requirements, then we provide all of the output channels and fulfill
       // the client's needs with dummy buffers.  These will just get tossed.
-      if (ochans < mNumAudioOut)
+      if (ochans < numAudioOut)
       {
          // All output channels have been consumed
          ochans = 0;
@@ -2353,13 +2347,13 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
       // Otherwise fullfil the client's needs with as many output channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
-      else if (ochans >= mNumAudioOut)
+      else if (ochans >= numAudioOut)
       {
-         ochans -= mNumAudioOut;
+         ochans -= numAudioOut;
       }
 
       // Add a NEW processor
-      RealtimeAddProcessor(gchans, rate);
+      mEffect.RealtimeAddProcessor(gchans, rate);
 
       // Bump to next processor
       mCurrentProcessor++;
@@ -2371,7 +2365,7 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
 // RealtimeAddProcessor and RealtimeProcess use the same method of
 // determining the current processor group, so updates to one should
 // be reflected in the other.
-size_t Effect::RealtimeProcess(int group,
+size_t RealtimeEffectState::RealtimeProcess(int group,
                                     unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
@@ -2386,8 +2380,11 @@ size_t Effect::RealtimeProcess(int group,
    // so if the number of channels we're curently processing are different
    // than what the effect expects, then we use a few methods of satisfying
    // the effects requirements.
-   float **clientIn = (float **) alloca(mNumAudioIn * sizeof(float *));
-   float **clientOut = (float **) alloca(mNumAudioOut * sizeof(float *));
+   const auto numAudioIn = mEffect.GetAudioInCount();
+   const auto numAudioOut = mEffect.GetAudioOutCount();
+
+   float **clientIn = (float **) alloca(numAudioIn * sizeof(float *));
+   float **clientOut = (float **) alloca(numAudioOut * sizeof(float *));
    float *dummybuf = (float *) alloca(numSamples * sizeof(float));
    decltype(numSamples) len = 0;
    auto ichans = chans;
@@ -2404,9 +2401,9 @@ size_t Effect::RealtimeProcess(int group,
       // If we don't have enough input channels to accomodate the client's
       // requirements, then we replicate the input channels until the
       // client's needs are met.
-      if (ichans < mNumAudioIn)
+      if (ichans < numAudioIn)
       {
-         for (size_t i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < numAudioIn; i++)
          {
             if (indx == ichans)
             {
@@ -2421,10 +2418,10 @@ size_t Effect::RealtimeProcess(int group,
       // Otherwise fullfil the client's needs with as many input channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
-      else if (ichans >= mNumAudioIn)
+      else if (ichans >= numAudioIn)
       {
          gchans = 0;
-         for (size_t i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
+         for (size_t i = 0; i < numAudioIn; i++, ichans--, gchans++)
          {
             clientIn[i] = inbuf[indx++];
          }
@@ -2433,9 +2430,9 @@ size_t Effect::RealtimeProcess(int group,
       // If we don't have enough output channels to accomodate the client's
       // requirements, then we provide all of the output channels and fulfill
       // the client's needs with dummy buffers.  These will just get tossed.
-      if (ochans < mNumAudioOut)
+      if (ochans < numAudioOut)
       {
-         for (size_t i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < numAudioOut; i++)
          {
             if (i < ochans)
             {
@@ -2453,9 +2450,9 @@ size_t Effect::RealtimeProcess(int group,
       // Otherwise fullfil the client's needs with as many output channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
-      else if (ochans >= mNumAudioOut)
+      else if (ochans >= numAudioOut)
       {
-         for (size_t i = 0; i < mNumAudioOut; i++, ochans--)
+         for (size_t i = 0; i < numAudioOut; i++, ochans--)
          {
             clientOut[i] = outbuf[ondx++];
          }
@@ -2463,17 +2460,18 @@ size_t Effect::RealtimeProcess(int group,
 
       // Finally call the plugin to process the block
       len = 0;
-      for (decltype(numSamples) block = 0; block < numSamples; block += mBlockSize)
+      const auto blockSize = mEffect.GetBlockSize();
+      for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
       {
-         auto cnt = std::min(numSamples - block, mBlockSize);
-         len += RealtimeProcess(processor, clientIn, clientOut, cnt);
+         auto cnt = std::min(numSamples - block, blockSize);
+         len += mEffect.RealtimeProcess(processor, clientIn, clientOut, cnt);
 
-         for (size_t i = 0 ; i < mNumAudioIn; i++)
+         for (size_t i = 0 ; i < numAudioIn; i++)
          {
             clientIn[i] += cnt;
          }
 
-         for (size_t i = 0 ; i < mNumAudioOut; i++)
+         for (size_t i = 0 ; i < numAudioOut; i++)
          {
             clientOut[i] += cnt;
          }
@@ -2486,7 +2484,7 @@ size_t Effect::RealtimeProcess(int group,
    return len;
 }
 
-bool Effect::IsRealtimeActive()
+bool RealtimeEffectState::IsRealtimeActive()
 {
    return mRealtimeSuspendCount == 0;
 }

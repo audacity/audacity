@@ -16,6 +16,7 @@
 
 #include "../Experimental.h"
 
+#include <atomic>
 #include <set>
 
 #include <wx/defs.h>
@@ -261,15 +262,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                  bool shouldPrompt = true);
 
    bool Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt);
-
-   // Realtime Effect Processing
-   /* not virtual */ bool RealtimeAddProcessor(int group, unsigned chans, float rate);
-   /* not virtual */ size_t RealtimeProcess(int group,
-                               unsigned chans,
-                               float **inbuf,
-                               float **outbuf,
-                               size_t numSamples);
-   /* not virtual */ bool IsRealtimeActive();
 
    virtual bool IsHidden();
 
@@ -544,12 +536,6 @@ private:
    size_t mBlockSize;
    unsigned mNumChannels;
 
-   std::vector<int> mGroupProcessor;
-   int mCurrentProcessor;
-
-   wxCriticalSection mRealtimeSuspendLock;
-   int mRealtimeSuspendCount;
-
    const static wxString kUserPresetIdent;
    const static wxString kFactoryPresetIdent;
    const static wxString kCurrentSettingsIdent;
@@ -559,6 +545,29 @@ private:
    friend class EffectRack;
    friend class EffectUIHost;
    friend class EffectPresetsDialog;
+};
+
+class RealtimeEffectState
+{
+public:
+   explicit RealtimeEffectState( Effect &effect );
+
+   Effect &GetEffect() const { return mEffect; }
+
+   bool RealtimeSuspend();
+   bool RealtimeResume();
+   bool RealtimeAddProcessor(int group, unsigned chans, float rate);
+   size_t RealtimeProcess(int group,
+      unsigned chans, float **inbuf, float **outbuf, size_t numSamples);
+   bool IsRealtimeActive();
+
+private:
+   Effect &mEffect;
+
+   std::vector<int> mGroupProcessor;
+   int mCurrentProcessor;
+
+   std::atomic<int> mRealtimeSuspendCount{ 1 };    // Effects are initially suspended
 };
 
 

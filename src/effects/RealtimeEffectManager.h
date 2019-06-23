@@ -17,6 +17,7 @@
 
 class Effect;
 using EffectArray = std::vector <Effect*> ;
+class RealtimeEffectState;
 
 class AUDACITY_DLL_API RealtimeEffectManager final
 {
@@ -46,7 +47,7 @@ private:
    ~RealtimeEffectManager();
 
    wxCriticalSection mRealtimeLock;
-   EffectArray mRealtimeEffects;
+   std::vector< std::unique_ptr<RealtimeEffectState> > mStates;
    int mRealtimeLatency;
    bool mRealtimeSuspended;
    bool mRealtimeActive;
