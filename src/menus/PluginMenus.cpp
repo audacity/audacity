@@ -23,6 +23,7 @@
 #include "../commands/ScreenshotCommand.h"
 #include "../effects/Contrast.h"
 #include "../effects/EffectManager.h"
+#include "../effects/RealtimeEffectManager.h"
 
 // private helper classes and functions
 namespace {
@@ -927,7 +928,7 @@ MenuTable::BaseItemPtr GenerateMenu( AudacityProject & )
 const ReservedCommandFlag
    IsRealtimeNotActiveFlag{
       [](const AudacityProject &){
-         return !EffectManager::Get().RealtimeIsActive();
+         return !RealtimeEffectManager::Get().RealtimeIsActive();
       }
    };  //lll
 

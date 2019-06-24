@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "../../../../effects/EffectManager.h"
+#include "../../../../effects/RealtimeEffectManager.h"
 #include "../../../../ondemand/ODManager.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"
@@ -616,7 +616,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    AudacityProject *const project = ::GetActiveProject();
    auto &tracks = TrackList::Get( *project );
-   bool unsafe = EffectManager::Get().RealtimeIsActive() &&
+   bool unsafe = RealtimeEffectManager::Get().RealtimeIsActive() &&
       ProjectAudioIO::Get( *project ).IsAudioActive();
 
    auto nChannels = TrackList::Channels(pTrack).size();

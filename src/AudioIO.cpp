@@ -459,7 +459,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 
-#include "effects/EffectManager.h"
+#include "effects/RealtimeEffectManager.h"
 #include "prefs/QualityPrefs.h"
 #include "prefs/RecordingPrefs.h"
 #include "toolbars/ControlToolBar.h"
@@ -1634,7 +1634,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager & em = EffectManager::Get();
+      auto & em = RealtimeEffectManager::Get();
       // Setup for realtime playback at the rate of the realtime
       // stream, not the rate of the track.
       em.RealtimeInitialize(mRate);
@@ -1987,7 +1987,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager::Get().RealtimeFinalize();
+      RealtimeEffectManager::Get().RealtimeFinalize();
    }
 
    mPlaybackBuffers.reset();
@@ -2164,7 +2164,7 @@ void AudioIO::StopStream()
    // No longer need effects processing
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager::Get().RealtimeFinalize();
+      RealtimeEffectManager::Get().RealtimeFinalize();
    }
 
    //
@@ -2414,11 +2414,11 @@ void AudioIO::SetPaused(bool state)
    {
       if (state)
       {
-         EffectManager::Get().RealtimeSuspend();
+         RealtimeEffectManager::Get().RealtimeSuspend();
       }
       else
       {
-         EffectManager::Get().RealtimeResume();
+         RealtimeEffectManager::Get().RealtimeResume();
       }
    }
 
@@ -3794,7 +3794,7 @@ bool AudioIoCallback::FillOutputBuffers(
       tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
    // ------ End of MEMORY ALLOCATION ---------------
 
-   EffectManager & em = EffectManager::Get();
+   auto & em = RealtimeEffectManager::Get();
    em.RealtimeProcessStart();
 
    bool selected = false;

@@ -21,14 +21,6 @@ class wxCheckBox;
 class wxTextCtrl;
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
-/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
- Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
- In the translations of this and other strings, you may transliterate the
- name into another alphabet.  */
-#define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
-
-#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
-#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 enum NyqControlType
 {

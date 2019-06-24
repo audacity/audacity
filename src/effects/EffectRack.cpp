@@ -16,6 +16,10 @@
 
 #include "../Experimental.h"
 
+#include "Effect.h"
+#include "EffectManager.h"
+#include "RealtimeEffectManager.h"
+
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include "../UndoManager.h"
@@ -39,6 +43,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
+#include "../widgets/wxPanelWrapper.h"
 
 #include "../../images/EffectRack/EffectRack.h"
 
@@ -281,7 +286,7 @@ void EffectRack::OnClose(wxCloseEvent & evt)
 
 void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 {
-   int latency = EffectManager::Get().GetRealtimeLatency();
+   int latency = RealtimeEffectManager::Get().GetRealtimeLatency();
    if (latency != mLastLatency)
    {
       mLatency->SetLabel(wxString::Format(_("Latency: %4d"), latency));
@@ -559,7 +564,9 @@ void EffectRack::UpdateActive()
       }
    }
 
-   EffectManager::Get().RealtimeSetEffects(mActive);
+   RealtimeEffectManager::Get().RealtimeSetEffects(
+      { mActive.begin(), mActive.end() }
+   );
 }
 
 #endif
