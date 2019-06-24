@@ -3,13 +3,6 @@
 # https://lists.sourceforge.net/lists/listinfo/audacity-devel
 #build time is circa 7 mins.
 version: 2.3.3-alpha-{build}
-branches:
-  only:
-  - prefs
-  - stdint
-  - msc_ver
-  - post-vs2013
-  - master
 image: Visual Studio 2017
 shallow_clone: true # reduce traffic
 install:
