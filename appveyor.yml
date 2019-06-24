@@ -12,7 +12,7 @@ install:
     # the moment due to long duration
     - nuget install Gettext.Tools -Version 0.19.8.1 -OutputDirectory %AUDACITY_ROOT%\win\packages
     # download wxWidgets
-    - git clone --recurse-submodules --branch v3.1.1 --depth 1 https://github.com/audacity/wxWidgets.git %WXWIN%
+    - git clone --recurse-submodules --branch v3.1.1 --depth 1 --jobs 4 https://github.com/audacity/wxWidgets.git %WXWIN%
     # build wxWidgets
     - msbuild /m %WXWIN%\build\msw\wx_vc15.sln "/p:Configuration=DLL Release;Platform=Win32;PlatformToolset=v141" /target:adv,base,core,html,net,qa,wxexpat,wxjpeg,wxpng,wxtiff,wxzlib,xml /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 environment:
