@@ -56,8 +56,6 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   ScrubPollInterval_ms = 50,
-
    kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
 };
 
@@ -386,6 +384,16 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mSpeedPlaying = false;
             auto options =
                DefaultPlayOptions( *mProject );
+
+#ifndef USE_SCRUB_THREAD
+            // Yuck, we either have to poll "by hand" when scrub polling doesn't
+            // work with a thread, or else yield to timer messages, but that would
+            // execute too much else
+            options.playbackStreamPrimer = [this](){
+               ContinueScrubbingPoll();
+               return ScrubPollInterval_ms;
+            };
+#endif
             options.pScrubbingOptions = &mOptions;
             options.envelope = nullptr;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
@@ -487,6 +495,17 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mDragging = false;
 
    auto options = DefaultSpeedPlayOptions( *mProject );
+
+#ifndef USE_SCRUB_THREAD
+            // Yuck, we either have to poll "by hand" when scrub polling doesn't
+            // work with a thread, or else yield to timer messages, but that would
+            // execute too much else
+            options.playbackStreamPrimer = [this](){
+               ContinueScrubbingPoll();
+               return ScrubPollInterval_ms;
+            };
+#endif
+
    options.pScrubbingOptions = &mOptions;
    options.envelope = nullptr;
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);

@@ -1521,12 +1521,6 @@ void ControlToolBar::StopScrolling()
          (ProjectWindow::PlaybackScroller::Mode::Off);
 }
 
-void ControlToolBar::CommitRecording()
-{
-   const auto project = &mProject;
-   TrackList::Get( *project ).ApplyPendingTracks();
-}
-
 void ControlToolBar::CancelRecording()
 {
    const auto project = &mProject;

@@ -40,6 +40,8 @@ private:
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
    void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
+   void OnCommitRecording() override;
+   void OnSoundActivationThreshold() override;
 
    AudacityProject &mProject;
 

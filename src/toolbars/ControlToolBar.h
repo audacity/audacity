@@ -135,9 +135,6 @@ class ControlToolBar final : public ToolBar {
    void StartScrolling();
    void StopScrolling();
 
-   // Commit the addition of temporary recording tracks into the project
-   void CommitRecording();
-
    // Cancel the addition of temporary recording tracks into the project
    void CancelRecording();
 
