@@ -462,7 +462,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "effects/RealtimeEffectManager.h"
 #include "prefs/QualityPrefs.h"
 #include "prefs/RecordingPrefs.h"
-#include "toolbars/ControlToolBar.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
@@ -3692,8 +3691,8 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer
    bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
    if( bShouldBePaused != IsPaused())
    {
-      auto &bar = ControlToolBar::Get( *mOwningProject );
-      bar.CallAfter(&ControlToolBar::Pause);
+      if ( mListener )
+         mListener->OnSoundActivationThreshold();
    }
 }
 
