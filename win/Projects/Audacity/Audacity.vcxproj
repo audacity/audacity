@@ -358,6 +358,7 @@
     <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp" />
     <ClCompile Include="..\..\..\src\effects\Normalize.cpp" />
     <ClCompile Include="..\..\..\src\effects\Paulstretch.cpp" />
+    <ClCompile Include="..\..\..\src\effects\RealtimeEffectManager.cpp" />
     <ClCompile Include="..\..\..\src\effects\Repair.cpp" />
     <ClCompile Include="..\..\..\src\effects\Repeat.cpp" />
     <ClCompile Include="..\..\..\src\effects\Reverb.cpp" />
@@ -747,6 +748,7 @@
     <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h" />
     <ClInclude Include="..\..\..\src\effects\Normalize.h" />
     <ClInclude Include="..\..\..\src\effects\Paulstretch.h" />
+    <ClInclude Include="..\..\..\src\effects\RealtimeEffectManager.h" />
     <ClInclude Include="..\..\..\src\effects\Repair.h" />
     <ClInclude Include="..\..\..\src\effects\Repeat.h" />
     <ClInclude Include="..\..\..\src\effects\Reverb.h" />

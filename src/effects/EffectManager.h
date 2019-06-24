@@ -18,7 +18,6 @@
 #include <vector>
 
 #include <unordered_map>
-#include <wx/thread.h>
 #include "audacity/Types.h"
 
 class AudacityCommand;
@@ -32,7 +31,6 @@ class SelectedRegion;
 class wxString;
 typedef wxString PluginID;
 
-using EffectArray = std::vector <Effect*> ;
 using EffectMap = std::unordered_map<wxString, Effect *>;
 using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
 using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<Effect> >;
@@ -161,42 +159,6 @@ private:
    friend class EffectRack;
 #endif
 
-};
-
-class AUDACITY_DLL_API RealtimeEffectManager final
-{
-public:
-
-   /** Get the singleton instance of the RealtimeEffectManager. **/
-   static RealtimeEffectManager & Get();
-
-   // Realtime effect processing
-   bool RealtimeIsActive();
-   bool RealtimeIsSuspended();
-   void RealtimeAddEffect(Effect *effect);
-   void RealtimeRemoveEffect(Effect *effect);
-   void RealtimeSetEffects(const EffectArray & mActive);
-   void RealtimeInitialize(double rate);
-   void RealtimeAddProcessor(int group, unsigned chans, float rate);
-   void RealtimeFinalize();
-   void RealtimeSuspend();
-   void RealtimeResume();
-   void RealtimeProcessStart();
-   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
-   void RealtimeProcessEnd();
-   int GetRealtimeLatency();
-
-private:
-   RealtimeEffectManager();
-   ~RealtimeEffectManager();
-
-   wxCriticalSection mRealtimeLock;
-   EffectArray mRealtimeEffects;
-   int mRealtimeLatency;
-   bool mRealtimeSuspended;
-   bool mRealtimeActive;
-   std::vector<unsigned> mRealtimeChans;
-   std::vector<double> mRealtimeRates;
 };
 
 #endif

@@ -412,23 +412,25 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/NoiseRemoval.h effects/Normalize.cpp \
 	effects/Normalize.h effects/Paulstretch.cpp \
 	effects/Paulstretch.h effects/Phaser.cpp effects/Phaser.h \
-	effects/Repair.cpp effects/Repair.h effects/Repeat.cpp \
-	effects/Repeat.h effects/Reverb.cpp effects/Reverb.h \
-	effects/Reverb_libSoX.h effects/Reverse.cpp effects/Reverse.h \
-	effects/SBSMSEffect.cpp effects/SBSMSEffect.h \
-	effects/ScienFilter.cpp effects/ScienFilter.h \
-	effects/Silence.cpp effects/Silence.h effects/SimpleMono.cpp \
-	effects/SimpleMono.h effects/SoundTouchEffect.cpp \
-	effects/SoundTouchEffect.h effects/StereoToMono.cpp \
-	effects/StereoToMono.h effects/TimeScale.cpp \
-	effects/TimeScale.h effects/TimeWarper.cpp \
-	effects/TimeWarper.h effects/ToneGen.cpp effects/ToneGen.h \
-	effects/TruncSilence.cpp effects/TruncSilence.h \
-	effects/TwoPassSimpleMono.cpp effects/TwoPassSimpleMono.h \
-	effects/Wahwah.cpp effects/Wahwah.h export/Export.cpp \
-	export/Export.h export/ExportCL.cpp export/ExportCL.h \
-	export/ExportFLAC.cpp export/ExportFLAC.h export/ExportMP2.cpp \
-	export/ExportMP2.h export/ExportMP3.cpp export/ExportMP3.h \
+	effects/RealtimeEffectManager.cpp \
+	effects/RealtimeEffectManager.h effects/Repair.cpp \
+	effects/Repair.h effects/Repeat.cpp effects/Repeat.h \
+	effects/Reverb.cpp effects/Reverb.h effects/Reverb_libSoX.h \
+	effects/Reverse.cpp effects/Reverse.h effects/SBSMSEffect.cpp \
+	effects/SBSMSEffect.h effects/ScienFilter.cpp \
+	effects/ScienFilter.h effects/Silence.cpp effects/Silence.h \
+	effects/SimpleMono.cpp effects/SimpleMono.h \
+	effects/SoundTouchEffect.cpp effects/SoundTouchEffect.h \
+	effects/StereoToMono.cpp effects/StereoToMono.h \
+	effects/TimeScale.cpp effects/TimeScale.h \
+	effects/TimeWarper.cpp effects/TimeWarper.h \
+	effects/ToneGen.cpp effects/ToneGen.h effects/TruncSilence.cpp \
+	effects/TruncSilence.h effects/TwoPassSimpleMono.cpp \
+	effects/TwoPassSimpleMono.h effects/Wahwah.cpp \
+	effects/Wahwah.h export/Export.cpp export/Export.h \
+	export/ExportCL.cpp export/ExportCL.h export/ExportFLAC.cpp \
+	export/ExportFLAC.h export/ExportMP2.cpp export/ExportMP2.h \
+	export/ExportMP3.cpp export/ExportMP3.h \
 	export/ExportMultiple.cpp export/ExportMultiple.h \
 	export/ExportOGG.cpp export/ExportOGG.h export/ExportPCM.cpp \
 	export/ExportPCM.h import/Import.cpp import/Import.h \
@@ -776,6 +778,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-Normalize.$(OBJEXT) \
 	effects/audacity-Paulstretch.$(OBJEXT) \
 	effects/audacity-Phaser.$(OBJEXT) \
+	effects/audacity-RealtimeEffectManager.$(OBJEXT) \
 	effects/audacity-Repair.$(OBJEXT) \
 	effects/audacity-Repeat.$(OBJEXT) \
 	effects/audacity-Reverb.$(OBJEXT) \
@@ -1510,23 +1513,25 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/NoiseRemoval.h effects/Normalize.cpp \
 	effects/Normalize.h effects/Paulstretch.cpp \
 	effects/Paulstretch.h effects/Phaser.cpp effects/Phaser.h \
-	effects/Repair.cpp effects/Repair.h effects/Repeat.cpp \
-	effects/Repeat.h effects/Reverb.cpp effects/Reverb.h \
-	effects/Reverb_libSoX.h effects/Reverse.cpp effects/Reverse.h \
-	effects/SBSMSEffect.cpp effects/SBSMSEffect.h \
-	effects/ScienFilter.cpp effects/ScienFilter.h \
-	effects/Silence.cpp effects/Silence.h effects/SimpleMono.cpp \
-	effects/SimpleMono.h effects/SoundTouchEffect.cpp \
-	effects/SoundTouchEffect.h effects/StereoToMono.cpp \
-	effects/StereoToMono.h effects/TimeScale.cpp \
-	effects/TimeScale.h effects/TimeWarper.cpp \
-	effects/TimeWarper.h effects/ToneGen.cpp effects/ToneGen.h \
-	effects/TruncSilence.cpp effects/TruncSilence.h \
-	effects/TwoPassSimpleMono.cpp effects/TwoPassSimpleMono.h \
-	effects/Wahwah.cpp effects/Wahwah.h export/Export.cpp \
-	export/Export.h export/ExportCL.cpp export/ExportCL.h \
-	export/ExportFLAC.cpp export/ExportFLAC.h export/ExportMP2.cpp \
-	export/ExportMP2.h export/ExportMP3.cpp export/ExportMP3.h \
+	effects/RealtimeEffectManager.cpp \
+	effects/RealtimeEffectManager.h effects/Repair.cpp \
+	effects/Repair.h effects/Repeat.cpp effects/Repeat.h \
+	effects/Reverb.cpp effects/Reverb.h effects/Reverb_libSoX.h \
+	effects/Reverse.cpp effects/Reverse.h effects/SBSMSEffect.cpp \
+	effects/SBSMSEffect.h effects/ScienFilter.cpp \
+	effects/ScienFilter.h effects/Silence.cpp effects/Silence.h \
+	effects/SimpleMono.cpp effects/SimpleMono.h \
+	effects/SoundTouchEffect.cpp effects/SoundTouchEffect.h \
+	effects/StereoToMono.cpp effects/StereoToMono.h \
+	effects/TimeScale.cpp effects/TimeScale.h \
+	effects/TimeWarper.cpp effects/TimeWarper.h \
+	effects/ToneGen.cpp effects/ToneGen.h effects/TruncSilence.cpp \
+	effects/TruncSilence.h effects/TwoPassSimpleMono.cpp \
+	effects/TwoPassSimpleMono.h effects/Wahwah.cpp \
+	effects/Wahwah.h export/Export.cpp export/Export.h \
+	export/ExportCL.cpp export/ExportCL.h export/ExportFLAC.cpp \
+	export/ExportFLAC.h export/ExportMP2.cpp export/ExportMP2.h \
+	export/ExportMP3.cpp export/ExportMP3.h \
 	export/ExportMultiple.cpp export/ExportMultiple.h \
 	export/ExportOGG.cpp export/ExportOGG.h export/ExportPCM.cpp \
 	export/ExportPCM.h import/Import.cpp import/Import.h \
@@ -2009,6 +2014,8 @@ effects/audacity-Paulstretch.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Phaser.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
+effects/audacity-RealtimeEffectManager.$(OBJEXT):  \
+	effects/$(am__dirstamp) effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Repair.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Repeat.$(OBJEXT): effects/$(am__dirstamp) \
@@ -2760,6 +2767,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Normalize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Paulstretch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Phaser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-RealtimeEffectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Repair.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Repeat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Reverb.Po@am__quote@
@@ -5638,6 +5646,20 @@ effects/audacity-Phaser.obj: effects/Phaser.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/Phaser.cpp' object='effects/audacity-Phaser.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Phaser.obj `if test -f 'effects/Phaser.cpp'; then $(CYGPATH_W) 'effects/Phaser.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Phaser.cpp'; fi`
+
+effects/audacity-RealtimeEffectManager.o: effects/RealtimeEffectManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-RealtimeEffectManager.o -MD -MP -MF effects/$(DEPDIR)/audacity-RealtimeEffectManager.Tpo -c -o effects/audacity-RealtimeEffectManager.o `test -f 'effects/RealtimeEffectManager.cpp' || echo '$(srcdir)/'`effects/RealtimeEffectManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-RealtimeEffectManager.Tpo effects/$(DEPDIR)/audacity-RealtimeEffectManager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/RealtimeEffectManager.cpp' object='effects/audacity-RealtimeEffectManager.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-RealtimeEffectManager.o `test -f 'effects/RealtimeEffectManager.cpp' || echo '$(srcdir)/'`effects/RealtimeEffectManager.cpp
+
+effects/audacity-RealtimeEffectManager.obj: effects/RealtimeEffectManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-RealtimeEffectManager.obj -MD -MP -MF effects/$(DEPDIR)/audacity-RealtimeEffectManager.Tpo -c -o effects/audacity-RealtimeEffectManager.obj `if test -f 'effects/RealtimeEffectManager.cpp'; then $(CYGPATH_W) 'effects/RealtimeEffectManager.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/RealtimeEffectManager.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-RealtimeEffectManager.Tpo effects/$(DEPDIR)/audacity-RealtimeEffectManager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/RealtimeEffectManager.cpp' object='effects/audacity-RealtimeEffectManager.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-RealtimeEffectManager.obj `if test -f 'effects/RealtimeEffectManager.cpp'; then $(CYGPATH_W) 'effects/RealtimeEffectManager.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/RealtimeEffectManager.cpp'; fi`
 
 effects/audacity-Repair.o: effects/Repair.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-Repair.o -MD -MP -MF effects/$(DEPDIR)/audacity-Repair.Tpo -c -o effects/audacity-Repair.o `test -f 'effects/Repair.cpp' || echo '$(srcdir)/'`effects/Repair.cpp

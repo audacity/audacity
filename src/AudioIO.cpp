@@ -459,7 +459,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 
-#include "effects/EffectManager.h"
+#include "effects/RealtimeEffectManager.h"
 #include "prefs/QualityPrefs.h"
 #include "prefs/RecordingPrefs.h"
 #include "toolbars/ControlToolBar.h"

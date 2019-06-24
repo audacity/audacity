@@ -23,6 +23,7 @@
 #include "../commands/ScreenshotCommand.h"
 #include "../effects/Contrast.h"
 #include "../effects/EffectManager.h"
+#include "../effects/RealtimeEffectManager.h"
 
 // private helper classes and functions
 namespace {

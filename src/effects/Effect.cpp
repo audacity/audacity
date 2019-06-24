@@ -47,7 +47,7 @@ greater use in future.
 
 #include "audacity/ConfigInterface.h"
 
-#include "EffectManager.h"
+#include "RealtimeEffectManager.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"

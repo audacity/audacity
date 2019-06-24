@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "../../../../effects/EffectManager.h"
+#include "../../../../effects/RealtimeEffectManager.h"
 #include "../../../../ondemand/ODManager.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"

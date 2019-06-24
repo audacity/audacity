@@ -454,6 +454,8 @@ audacity_SOURCES = \
 	effects/Paulstretch.h \
 	effects/Phaser.cpp \
 	effects/Phaser.h \
+	effects/RealtimeEffectManager.cpp \
+	effects/RealtimeEffectManager.h \
 	effects/Repair.cpp \
 	effects/Repair.h \
 	effects/Repeat.cpp \

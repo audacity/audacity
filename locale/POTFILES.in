@@ -427,6 +427,8 @@ src/effects/Paulstretch.cpp
 src/effects/Paulstretch.h
 src/effects/Phaser.cpp
 src/effects/Phaser.h
+src/effects/RealtimeEffectManager.cpp
+src/effects/RealtimeEffectManager.h
 src/effects/Repair.cpp
 src/effects/Repair.h
 src/effects/Repeat.cpp

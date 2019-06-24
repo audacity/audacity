@@ -18,6 +18,7 @@
 
 #include "Effect.h"
 #include "EffectManager.h"
+#include "RealtimeEffectManager.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
