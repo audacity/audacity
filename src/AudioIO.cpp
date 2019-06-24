@@ -518,8 +518,6 @@ constexpr size_t TimeQueueGrainSize = 2000;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
-#include "tracks/ui/Scrubbing.h"
-
 #ifdef __WXGTK__
    // Might #define this for a useful thing on Linux
    #undef REALTIME_ALSA_THREAD
@@ -1704,17 +1702,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mAudioThreadShouldCallFillBuffersOnce = true;
 
    while( mAudioThreadShouldCallFillBuffersOnce ) {
-#ifndef USE_SCRUB_THREAD
-      // Yuck, we either have to poll "by hand" when scrub polling doesn't
-      // work with a thread, or else yield to timer messages, but that would
-      // execute too much else
-      if (mScrubState) {
-         Scrubber::Get( *mOwningProject ).ContinueScrubbingPoll();
-         wxMilliSleep( Scrubber::ScrubPollInterval_ms * 0.9 );
+      auto interval = 50ull;
+      if (options.playbackStreamPrimer) {
+         interval = options.playbackStreamPrimer();
       }
-      else
-#endif
-        wxMilliSleep( 50 );
+      wxMilliSleep( interval );
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -2544,7 +2536,7 @@ AudioThread::ExitCode AudioThread::Entry()
    {
       using Clock = std::chrono::steady_clock;
       auto loopPassStart = Clock::now();
-      const auto interval = Scrubber::ScrubPollInterval_ms;
+      const auto interval = ScrubPollInterval_ms;
 
       // Set LoopActive outside the tests to avoid race condition
       gAudioIO->mAudioThreadFillBuffersLoopActive = true;

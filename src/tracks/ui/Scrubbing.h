@@ -40,9 +40,7 @@ class Scrubber final
    : public wxEvtHandler
    , public ClientData::Base
 {
-public:
-   static constexpr unsigned ScrubPollInterval_ms = 50;
-   
+public:   
    static Scrubber &Get( AudacityProject &project );
    static const Scrubber &Get( const AudacityProject &project );
 
