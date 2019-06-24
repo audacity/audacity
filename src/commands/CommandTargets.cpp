@@ -84,7 +84,7 @@ void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
 
 void CommandMessageTarget::AddItem(const double value,    const wxString &name){
    std::stringstream str;
-   std::locale nolocale("");
+   std::locale nolocale("C");
    str.imbue(nolocale);
 
    if( name.empty() )
