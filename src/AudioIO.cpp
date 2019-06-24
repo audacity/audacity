@@ -441,6 +441,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #endif
 
 #include <wx/app.h>
+#include <wx/frame.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
@@ -455,7 +456,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindow.h"
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 
@@ -1431,7 +1431,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 
    if (!success) {
       wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), Get()->LastPaErrorString());
-      ShowErrorDialog( ProjectWindow::Find( mOwningProject ),
+      ShowErrorDialog( FindProjectFrame( mOwningProject ),
          _("Error"), msg, wxT("Error_opening_sound_device"));
       return;
    }
