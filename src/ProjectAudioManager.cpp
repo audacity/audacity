@@ -53,7 +53,15 @@ ProjectAudioManager::~ProjectAudioManager() = default;
 void ProjectAudioManager::OnAudioIORate(int rate)
 {
    auto &project = mProject;
-   auto &window = GetProjectFrame( project );
+
+   // Be careful to null-check the window.  We might get to this function
+   // during shut-down, but a timer hasn't been told to stop sending its
+   // messages yet.
+   auto pWindow = ProjectWindow::Find( &project );
+   if ( !pWindow )
+      return;
+   auto &window = *pWindow;
+
    wxString display;
    if (rate > 0) {
       display = wxString::Format(_("Actual Rate: %d"), rate);
