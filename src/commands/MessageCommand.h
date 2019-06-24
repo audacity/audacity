@@ -24,13 +24,13 @@
 #include "CommandType.h"
 #include "Command.h"
 
-#define MESSAGE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Message") }
-
 class MessageCommand : public AudacityCommand
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return MESSAGE_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Echos a message.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

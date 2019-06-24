@@ -25,6 +25,9 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 
+const ComponentInterfaceSymbol SetEnvelopeCommand::Symbol
+{ XO("Set Envelope") };
+
 SetEnvelopeCommand::SetEnvelopeCommand()
 {
 }

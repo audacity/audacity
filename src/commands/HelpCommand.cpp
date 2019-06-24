@@ -22,6 +22,9 @@
 #include "CommandContext.h"
 #include "../effects/EffectManager.h"
 
+const ComponentInterfaceSymbol HelpCommand::Symbol
+{ XO("Help") };
+
 bool HelpCommand::DefineParams( ShuttleParams & S ){
    S.Define( mCommandName, wxT("Command"),  "Help" );
    return true;

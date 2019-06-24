@@ -24,6 +24,9 @@ SetPreferenceCommand classes
 #include "../commands/CommandContext.h"
 #include "../prefs/PrefsDialog.h"
 
+const ComponentInterfaceSymbol GetPreferenceCommand::Symbol
+{ XO("Get Preference") };
+
 bool GetPreferenceCommand::DefineParams( ShuttleParams & S ){
    S.Define( mName, wxT("Name"),   wxT("") );
    return true;
@@ -50,6 +53,9 @@ bool GetPreferenceCommand::Apply(const CommandContext & context)
    context.Status(prefValue);
    return true;
 }
+
+const ComponentInterfaceSymbol SetPreferenceCommand::Symbol
+{ XO("Set Preference") };
 
 bool SetPreferenceCommand::DefineParams( ShuttleParams & S ){
    S.Define(    mName,   wxT("Name"),    wxT("") );

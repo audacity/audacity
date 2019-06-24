@@ -26,6 +26,9 @@
 #include "CommandContext.h"
 
 
+const ComponentInterfaceSymbol OpenProjectCommand::Symbol
+{ XO("Open Project2") };
+
 bool OpenProjectCommand::DefineParams( ShuttleParams & S ){
    S.Define( mFileName, wxT("Filename"),  "test.aup" );
    S.OptionalN(bHasAddToHistory).Define( mbAddToHistory, wxT("AddToHistory"),  false );
@@ -64,6 +67,9 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    // changed and what to...
    return !newFileName.empty() && newFileName != oldFileName;
 }
+
+const ComponentInterfaceSymbol SaveProjectCommand::Symbol
+{ XO("Save Project2") };
 
 bool SaveProjectCommand::DefineParams( ShuttleParams & S ){
    S.Define( mFileName, wxT("Filename"),  "name.aup" );

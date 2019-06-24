@@ -20,6 +20,9 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 
+const ComponentInterfaceSymbol MessageCommand::Symbol
+{ XO("Message") };
+
 bool MessageCommand::DefineParams( ShuttleParams & S ){
    S.Define( mMessage, wxT("Text"),  "Some message" );
    return true;

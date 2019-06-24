@@ -44,6 +44,9 @@ explicitly code all three.
 #include "CommandContext.h"
 
 
+const ComponentInterfaceSymbol SelectTimeCommand::Symbol
+{ XO("Select Time") };
+
 // Relative to project and relative to selection cover MOST options, since you can already
 // set a selection to a clip.
 const int nRelativeTos =6;
@@ -136,6 +139,9 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    return true;
 }
 
+const ComponentInterfaceSymbol SelectFrequenciesCommand::Symbol
+{ XO("Select Frequencies") };
+
 bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
    S.OptionalN( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
@@ -169,6 +175,9 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
       mBottom, mTop, false);// false for not done.
    return true;
 }
+
+const ComponentInterfaceSymbol SelectTracksCommand::Symbol
+{ XO("Select Tracks") };
 
 const int nModes =3;
 static const EnumValueSymbol kModes[nModes] =
@@ -251,3 +260,5 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    return true;
 }
 
+const ComponentInterfaceSymbol SelectCommand::Symbol
+{ XO("Select") };

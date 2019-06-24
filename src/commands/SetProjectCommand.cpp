@@ -29,6 +29,9 @@
 
 #include <wx/frame.h>
 
+const ComponentInterfaceSymbol SetProjectCommand::Symbol
+{ XO("Set Project") };
+
 SetProjectCommand::SetProjectCommand()
 {
 }

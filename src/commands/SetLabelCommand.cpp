@@ -27,6 +27,9 @@
 #include "CommandContext.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 
+const ComponentInterfaceSymbol SetLabelCommand::Symbol
+{ XO("Set Label") };
+
 SetLabelCommand::SetLabelCommand()
 {
 }

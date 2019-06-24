@@ -18,14 +18,14 @@
 
 #include "SetTrackInfoCommand.h"
 
-#define SET_CLIP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Clip") }
-
 class SetClipCommand : public SetTrackBase
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    SetClipCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return SET_CLIP_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Sets various values for a clip.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

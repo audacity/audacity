@@ -27,6 +27,9 @@
 
 #include <wx/frame.h>
 
+const ComponentInterfaceSymbol DragCommand::Symbol
+{ XO("Drag") };
+
 DragCommand::DragCommand()
 {
 }

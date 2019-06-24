@@ -28,8 +28,6 @@ class AdornedRulerPanel;
 class AudacityProject;
 class CommandContext;
 
-#define SCREENSHOT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Screenshot") }
-
 class ScreenshotCommand : public AudacityCommand
 {
 public:
@@ -78,9 +76,11 @@ public:
       nCaptureWhats
    };
 
+   static const ComponentInterfaceSymbol Symbol;
+
    ScreenshotCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Takes screenshots.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

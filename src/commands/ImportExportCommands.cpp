@@ -24,6 +24,9 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
+const ComponentInterfaceSymbol ImportCommand::Symbol
+{ XO("Import2") };
+
 bool ImportCommand::DefineParams( ShuttleParams & S ){
    S.Define( mFileName, wxT("Filename"),  "" );
    return true;
@@ -51,6 +54,9 @@ bool ExportCommand::DefineParams( ShuttleParams & S ){
    S.Define( mnChannels, wxT("NumChannels"),  1 );
    return true;
 }
+
+const ComponentInterfaceSymbol ExportCommand::Symbol
+{ XO("Export2") };
 
 void ExportCommand::PopulateOrExchange(ShuttleGui & S)
 {

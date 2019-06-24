@@ -44,6 +44,9 @@ small calculations of rectangles.
 #include "CommandContext.h"
 #include "CommandManager.h"
 
+const ComponentInterfaceSymbol ScreenshotCommand::Symbol
+{ XO("Screenshot") };
+
 
 static const EnumValueSymbol
 kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =

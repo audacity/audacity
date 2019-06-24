@@ -96,7 +96,7 @@ enum
 // Redefine COMMAND() to add the COMMAND's name to an array
 //
 #undef COMMAND
-#define COMMAND(n, i, args) results.push_back( (n ## _PLUGIN_SYMBOL).Internal() );
+#define COMMAND(n, i, args) results.push_back( (i :: Symbol).Internal() );
 
 //
 // Create the COMMAND name array

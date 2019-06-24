@@ -50,6 +50,9 @@ This class now lists
 #include <wx/frame.h>
 #include <wx/menu.h>
 
+const ComponentInterfaceSymbol GetInfoCommand::Symbol
+{ XO("Get Info") };
+
 enum {
    kCommands,
    //kCommandsPlus,

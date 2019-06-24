@@ -25,6 +25,9 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
+const ComponentInterfaceSymbol GetTrackInfoCommand::Symbol
+{ XO("Get Track Info") };
+
 const int nTypes =3;
 static const EnumValueSymbol kTypes[nTypes] =
 {
