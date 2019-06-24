@@ -242,6 +242,7 @@
     <ClCompile Include="..\..\..\src\RingBuffer.cpp" />
     <ClCompile Include="..\..\..\src\SampleFormat.cpp" />
     <ClCompile Include="..\..\..\src\Screenshot.cpp" />
+    <ClCompile Include="..\..\..\src\SelectUtilities.cpp" />
     <ClCompile Include="..\..\..\src\SelectedRegion.cpp" />
     <ClCompile Include="..\..\..\src\SelectionState.cpp" />
     <ClCompile Include="..\..\..\src\Sequence.cpp" />
@@ -273,6 +274,7 @@
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelResizeHandle.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelResizerCell.cpp" />
+    <ClCompile Include="..\..\..\src\TrackUtilities.cpp" />
     <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelDefaultClickHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelGlyphHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTextHandle.cpp" />
@@ -572,6 +574,7 @@
     <ClInclude Include="..\..\..\src\RefreshCode.h" />
     <ClInclude Include="..\..\..\src\Registrar.h" />
     <ClInclude Include="..\..\..\src\RevisionIdent.h" />
+    <ClInclude Include="..\..\..\src\SelectUtilities.h" />
     <ClInclude Include="..\..\..\src\SelectedRegion.h" />
     <ClInclude Include="..\..\..\src\SelectionState.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
@@ -582,6 +585,7 @@
     <ClInclude Include="..\..\..\src\TrackPanelDrawingContext.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h" />
+    <ClInclude Include="..\..\..\src\TrackUtilities.h" />
     <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelTrackView.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackButtonHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackControls.h" />

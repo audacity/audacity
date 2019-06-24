@@ -252,6 +252,8 @@ audacity_SOURCES = \
 	RingBuffer.h \
 	Screenshot.cpp \
 	Screenshot.h \
+	SelectUtilities.cpp \
+	SelectUtilities.h \
 	SelectedRegion.cpp \
 	SelectedRegion.h \
 	SelectionState.cpp \
@@ -303,6 +305,8 @@ audacity_SOURCES = \
 	TrackPanelResizeHandle.h \
 	TrackPanelResizerCell.cpp \
 	TrackPanelResizerCell.h \
+	TrackUtilities.cpp \
+	TrackUtilities.h \
 	TranslatableStringArray.h \
 	UIHandle.h \
 	UIHandle.cpp \

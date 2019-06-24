@@ -887,6 +887,9 @@
     <ClCompile Include="..\..\..\src\DeviceChange.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\SelectUtilities.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\SelectedRegion.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1062,6 +1065,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanelResizerCell.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackUtilities.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTextHandle.cpp">
@@ -2047,6 +2053,9 @@
     <ClInclude Include="..\..\..\src\RevisionIdent.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\SelectUtilities.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\SelectedRegion.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -2264,6 +2273,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanelResizerCell.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackUtilities.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelGlyphHandle.h">

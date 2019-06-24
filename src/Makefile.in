@@ -332,10 +332,11 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
 	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
 	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
-	SelectedRegion.cpp SelectedRegion.h SelectionState.cpp \
-	SelectionState.h Shuttle.cpp Shuttle.h \
-	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	SelectUtilities.cpp SelectUtilities.h SelectedRegion.cpp \
+	SelectedRegion.h SelectionState.cpp SelectionState.h \
+	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
+	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -347,8 +348,9 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	TrackPanelDrawingContext.h TrackPanelListener.h \
 	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
 	TrackPanelResizeHandle.h TrackPanelResizerCell.cpp \
-	TrackPanelResizerCell.h TranslatableStringArray.h UIHandle.h \
-	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
+	TrackPanelResizerCell.h TrackUtilities.cpp TrackUtilities.h \
+	TranslatableStringArray.h UIHandle.h UIHandle.cpp \
+	UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
@@ -696,6 +698,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ProjectWindow.$(OBJEXT) audacity-RealFFTf.$(OBJEXT) \
 	audacity-RealFFTf48x.$(OBJEXT) audacity-Resample.$(OBJEXT) \
 	audacity-RingBuffer.$(OBJEXT) audacity-Screenshot.$(OBJEXT) \
+	audacity-SelectUtilities.$(OBJEXT) \
 	audacity-SelectedRegion.$(OBJEXT) \
 	audacity-SelectionState.$(OBJEXT) audacity-Shuttle.$(OBJEXT) \
 	audacity-ShuttleGetDefinition.$(OBJEXT) \
@@ -711,7 +714,8 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-TrackPanel.$(OBJEXT) audacity-TrackPanelAx.$(OBJEXT) \
 	audacity-TrackPanelResizeHandle.$(OBJEXT) \
 	audacity-TrackPanelResizerCell.$(OBJEXT) \
-	audacity-UIHandle.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
+	audacity-TrackUtilities.$(OBJEXT) audacity-UIHandle.$(OBJEXT) \
+	audacity-UndoManager.$(OBJEXT) \
 	audacity-UserException.$(OBJEXT) audacity-ViewInfo.$(OBJEXT) \
 	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
 	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
@@ -1432,10 +1436,11 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
 	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
 	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
-	SelectedRegion.cpp SelectedRegion.h SelectionState.cpp \
-	SelectionState.h Shuttle.cpp Shuttle.h \
-	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	SelectUtilities.cpp SelectUtilities.h SelectedRegion.cpp \
+	SelectedRegion.h SelectionState.cpp SelectionState.h \
+	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
+	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
+	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -1447,8 +1452,9 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	TrackPanelDrawingContext.h TrackPanelListener.h \
 	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
 	TrackPanelResizeHandle.h TrackPanelResizerCell.cpp \
-	TrackPanelResizerCell.h TranslatableStringArray.h UIHandle.h \
-	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
+	TrackPanelResizerCell.h TrackUtilities.cpp TrackUtilities.h \
+	TranslatableStringArray.h UIHandle.h UIHandle.cpp \
+	UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
@@ -2648,6 +2654,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RingBuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SampleFormat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Screenshot.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SelectUtilities.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SelectedRegion.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SelectionState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Sequence.Po@am__quote@
@@ -2672,6 +2679,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelAx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelResizeHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelResizerCell.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackUtilities.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UIHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UndoManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UserException.Po@am__quote@
@@ -4331,6 +4339,20 @@ audacity-Screenshot.obj: Screenshot.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Screenshot.obj `if test -f 'Screenshot.cpp'; then $(CYGPATH_W) 'Screenshot.cpp'; else $(CYGPATH_W) '$(srcdir)/Screenshot.cpp'; fi`
 
+audacity-SelectUtilities.o: SelectUtilities.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SelectUtilities.o -MD -MP -MF $(DEPDIR)/audacity-SelectUtilities.Tpo -c -o audacity-SelectUtilities.o `test -f 'SelectUtilities.cpp' || echo '$(srcdir)/'`SelectUtilities.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SelectUtilities.Tpo $(DEPDIR)/audacity-SelectUtilities.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SelectUtilities.cpp' object='audacity-SelectUtilities.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SelectUtilities.o `test -f 'SelectUtilities.cpp' || echo '$(srcdir)/'`SelectUtilities.cpp
+
+audacity-SelectUtilities.obj: SelectUtilities.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SelectUtilities.obj -MD -MP -MF $(DEPDIR)/audacity-SelectUtilities.Tpo -c -o audacity-SelectUtilities.obj `if test -f 'SelectUtilities.cpp'; then $(CYGPATH_W) 'SelectUtilities.cpp'; else $(CYGPATH_W) '$(srcdir)/SelectUtilities.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SelectUtilities.Tpo $(DEPDIR)/audacity-SelectUtilities.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SelectUtilities.cpp' object='audacity-SelectUtilities.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SelectUtilities.obj `if test -f 'SelectUtilities.cpp'; then $(CYGPATH_W) 'SelectUtilities.cpp'; else $(CYGPATH_W) '$(srcdir)/SelectUtilities.cpp'; fi`
+
 audacity-SelectedRegion.o: SelectedRegion.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SelectedRegion.o -MD -MP -MF $(DEPDIR)/audacity-SelectedRegion.Tpo -c -o audacity-SelectedRegion.o `test -f 'SelectedRegion.cpp' || echo '$(srcdir)/'`SelectedRegion.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SelectedRegion.Tpo $(DEPDIR)/audacity-SelectedRegion.Po
@@ -4652,6 +4674,20 @@ audacity-TrackPanelResizerCell.obj: TrackPanelResizerCell.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackPanelResizerCell.cpp' object='audacity-TrackPanelResizerCell.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackPanelResizerCell.obj `if test -f 'TrackPanelResizerCell.cpp'; then $(CYGPATH_W) 'TrackPanelResizerCell.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackPanelResizerCell.cpp'; fi`
+
+audacity-TrackUtilities.o: TrackUtilities.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackUtilities.o -MD -MP -MF $(DEPDIR)/audacity-TrackUtilities.Tpo -c -o audacity-TrackUtilities.o `test -f 'TrackUtilities.cpp' || echo '$(srcdir)/'`TrackUtilities.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-TrackUtilities.Tpo $(DEPDIR)/audacity-TrackUtilities.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackUtilities.cpp' object='audacity-TrackUtilities.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackUtilities.o `test -f 'TrackUtilities.cpp' || echo '$(srcdir)/'`TrackUtilities.cpp
+
+audacity-TrackUtilities.obj: TrackUtilities.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackUtilities.obj -MD -MP -MF $(DEPDIR)/audacity-TrackUtilities.Tpo -c -o audacity-TrackUtilities.obj `if test -f 'TrackUtilities.cpp'; then $(CYGPATH_W) 'TrackUtilities.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackUtilities.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-TrackUtilities.Tpo $(DEPDIR)/audacity-TrackUtilities.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackUtilities.cpp' object='audacity-TrackUtilities.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackUtilities.obj `if test -f 'TrackUtilities.cpp'; then $(CYGPATH_W) 'TrackUtilities.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackUtilities.cpp'; fi`
 
 audacity-UIHandle.o: UIHandle.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-UIHandle.o -MD -MP -MF $(DEPDIR)/audacity-UIHandle.Tpo -c -o audacity-UIHandle.o `test -f 'UIHandle.cpp' || echo '$(srcdir)/'`UIHandle.cpp
