@@ -14,9 +14,9 @@ install:
     # download wxWidgets
     - git clone --recurse-submodules --branch v3.1.1 --depth 1 https://github.com/audacity/wxWidgets.git %WXWIN%
     # build wxWidgets
-    - msbuild /m %WXWIN%\build\msw\wx_vc15.sln "/p:Configuration=DLL Release;Platform=Win32;PreferredToolArchitecture=x64;WindowsTargetPlatformVersion=10.0.17134.0;PlatformToolset=v141;WholeProgramOptimization=true" /target:adv,base,core,html,net,qa,wxexpat,wxjpeg,wxpng,wxtiff,wxzlib,xml /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    - msbuild /m %WXWIN%\build\msw\wx_vc15.sln "/p:Configuration=DLL Release;Platform=Win32;PlatformToolset=v141" /target:adv,base,core,html,net,qa,wxexpat,wxjpeg,wxpng,wxtiff,wxzlib,xml /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 environment:
-    WXWIN: '%APPVEYOR_BUILD_FOLDER%\..\wxWidgets'
+    WXWIN: '%APPVEYOR_BUILD_FOLDER%\lib-src\wxWidgets'
     AUDACITY_ROOT: '%APPVEYOR_BUILD_FOLDER%'
 # replace `build_script` with `build` and `configuration` when complete build
 # does not exceed a duration of 1 hour
@@ -26,7 +26,7 @@ environment:
     #- Release
 build_script: # build all targets except `help`
 - cmd: >-
-    msbuild /m win/audacity.sln /p:Configuration=Release;Platform=Win32;PreferredToolArchitecture=x64;WindowsTargetPlatformVersion=10.0.17134.0;PlatformToolset=v141;WholeProgramOptimization=true /target:expat,filedialog,libflac++,libflac,libid3tag,libmad,libnyquist,libogg,libscorealign,libsndfile,libsoxr,libvamp,libvorbis,lv2,portaudio-v19,portmidi,portmixer,portsmf,sbsms,soundtouch,twolame,Audacity /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" &&
+    msbuild /m win/audacity.sln /p:Configuration=Release;Platform=Win32;PlatformToolset=v141 /target:expat,filedialog,libflac++,libflac,libid3tag,libmad,libnyquist,libogg,libscorealign,libsndfile,libsoxr,libvamp,libvorbis,lv2,portaudio-v19,portmidi,portmixer,portsmf,sbsms,soundtouch,twolame,Audacity /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" &&
     del /S win\Release\*.ipdb &&
     del /S win\Release\*.iobj &&
     del /S win\Release\*.lib &&
