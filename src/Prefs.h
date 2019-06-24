@@ -165,7 +165,7 @@ private:
 wxDECLARE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
 
 // Invoke UpdatePrefs() when Preference dialog commits changes.
-class PrefsListener
+class AUDACITY_DLL_API PrefsListener
 {
 public:
    PrefsListener();
