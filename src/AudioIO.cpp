@@ -977,7 +977,6 @@ AudioIO::AudioIO()
    mNumCaptureChannels = 0;
    mPaused = false;
 
-   mListener = NULL;
    mUpdateMeters = false;
    mUpdatingMeters = false;
 
@@ -1445,9 +1444,10 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 
    // Update UI display only now, after all possibilities for error are past.
-   if ((mLastPaError == paNoError) && mListener) {
+   auto pListener = GetListener();
+   if ((mLastPaError == paNoError) && pListener) {
       // advertise the chosen I/O sample rate to the UI
-      mListener->OnAudioIORate((int)mRate);
+      pListener->OnAudioIORate((int)mRate);
    }
 }
 
@@ -1570,7 +1570,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
 
-   if (tracks.playbackTracks.size() > 0 
+   auto pListener = GetListener();
+
+   if (tracks.playbackTracks.size() > 0
 #ifdef EXPERIMENTAL_MIDI_OUT
       || tracks.midiTracks.size() > 0
 #endif
@@ -1595,8 +1597,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       captureFormat = mCaptureTracks[0]->GetSampleFormat();
 
       // Tell project that we are about to start recording
-      if (mListener)
-         mListener->OnAudioIOStartRecording();
+      if (pListener)
+         pListener->OnAudioIOStartRecording();
    }
 
    bool successAudio;
@@ -1619,8 +1621,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 #endif
 
    if (!successAudio) {
-      if (mListener && captureChannels > 0)
-         mListener->OnAudioIOStopRecording();
+      if (pListener && captureChannels > 0)
+         pListener->OnAudioIOStopRecording();
       mStreamToken = 0;
 
       return 0;
@@ -1751,8 +1753,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       {
          mStreamToken = 0;
          mAudioThreadFillBuffersLoopRunning = false;
-         if (mListener && mNumCaptureChannels > 0)
-            mListener->OnAudioIOStopRecording();
+         if (pListener && mNumCaptureChannels > 0)
+            pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
          AudacityMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
          return 0;
@@ -1760,9 +1762,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    // Update UI display only now, after all possibilities for error are past.
-   if (mListener) {
+   if (pListener) {
       // advertise the chosen I/O sample rate to the UI
-      mListener->OnAudioIORate((int)mRate);
+      pListener->OnAudioIORate((int)mRate);
    }
 
    if (mNumPlaybackChannels > 0)
@@ -2277,6 +2279,8 @@ void AudioIO::StopStream()
    }
 #endif
 
+   auto pListener = GetListener();
+   
    // If there's no token, we were just monitoring, so we can
    // skip this next part...
    if (mStreamToken > 0) {
@@ -2354,8 +2358,8 @@ void AudioIO::StopStream()
             }
          }
 
-         if (mListener)
-            mListener->OnCommitRecording();
+         if (pListener)
+            pListener->OnCommitRecording();
       }
    }
 
@@ -2369,8 +2373,8 @@ void AudioIO::StopStream()
    mOutputMeter.Release();
    mOwningProject = nullptr;
 
-   if (mListener && mNumCaptureChannels > 0)
-      mListener->OnAudioIOStopRecording();
+   if (pListener && mNumCaptureChannels > 0)
+      pListener->OnAudioIOStopRecording();
 
    //
    // Only set token to 0 after we're totally finished with everything
@@ -2390,9 +2394,9 @@ void AudioIO::StopStream()
    mScrubState.reset();
 #endif
 
-   if (mListener) {
+   if (pListener) {
       // Tell UI to hide sample rate
-      mListener->OnAudioIORate(0);
+      pListener->OnAudioIORate(0);
    }
 
    // Don't cause a busy wait in the audio thread after stopping scrubbing
@@ -2983,8 +2987,9 @@ void AudioIO::FillBuffers()
             mRecordingSchedule.mPosition += avail / mRate;
             mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
-            if (mListener && !blockFileLog.IsEmpty())
-               mListener->OnAudioIONewBlockFiles(blockFileLog);
+            auto pListener = GetListener();
+            if (pListener && !blockFileLog.IsEmpty())
+               pListener->OnAudioIONewBlockFiles(blockFileLog);
          }
          // end of record buffering
       },
@@ -3004,7 +3009,8 @@ void AudioIO::FillBuffers()
    );
 }
 
-void AudioIO::SetListener(AudioIOListener* listener)
+void AudioIoCallback::SetListener(
+   const std::shared_ptr< AudioIOListener > &listener)
 {
    if (IsBusy())
       return;
@@ -3683,8 +3689,9 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer
    bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
    if( bShouldBePaused != IsPaused())
    {
-      if ( mListener )
-         mListener->OnSoundActivationThreshold();
+      auto pListener = GetListener();
+      if ( pListener )
+         pListener->OnSoundActivationThreshold();
    }
 }
 

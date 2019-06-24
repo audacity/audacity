@@ -20,6 +20,7 @@ struct AudioIOStartStreamOptions;
 class ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
+   , public std::enable_shared_from_this< ProjectAudioManager >
 {
 public:
    static ProjectAudioManager &Get( AudacityProject &project );

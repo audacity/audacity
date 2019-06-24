@@ -74,7 +74,6 @@ struct AudioIOStartStreamOptions
    AudioIOStartStreamOptions(AudacityProject *pProject_, double rate_)
       : pProject{ pProject_ }
       , envelope(nullptr)
-      , listener(NULL)
       , rate(rate_)
       , playLooped(false)
       , cutPreviewGapStart(0.0)
@@ -86,7 +85,7 @@ struct AudioIOStartStreamOptions
    AudacityProject *pProject{};
    MeterPanelBase *captureMeter{}, *playbackMeter{};
    BoundedEnvelope *envelope; // for time warping
-   AudioIOListener* listener;
+   std::shared_ptr< AudioIOListener > listener;
    double rate;
    bool playLooped;
    double cutPreviewGapStart;

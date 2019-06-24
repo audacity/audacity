@@ -383,7 +383,8 @@ AudacityProject *ProjectManager::New()
    
    //Initialise the Listeners
    auto gAudioIO = AudioIO::Get();
-   gAudioIO->SetListener( &ProjectAudioManager::Get( project ) );
+   gAudioIO->SetListener(
+      ProjectAudioManager::Get( project ).shared_from_this() );
    auto &projectSelectionManager = ProjectSelectionManager::Get( project );
    SelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -599,10 +600,14 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Since we're going to be destroyed, make sure we're not to
    // receive audio notifications anymore.
-   if ( gAudioIO->GetListener() == &ProjectAudioManager::Get( project ) ) {
+   // PRL:  Maybe all this is unnecessary now that the listener is managed
+   // by a weak pointer.
+   if ( gAudioIO->GetListener().get() == &ProjectAudioManager::Get( project ) ) {
       auto active = GetActiveProject();
       gAudioIO->SetListener(
-         active ? &ProjectAudioManager::Get( *active ) : nullptr
+         active
+            ? ProjectAudioManager::Get( *active ).shared_from_this()
+            : nullptr
       );
    }
 

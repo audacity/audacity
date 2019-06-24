@@ -19,6 +19,7 @@
 
 #include "Experimental.h"
 
+#include <memory>
 #include <utility>
 #include <wx/atomic.h> // member variable
 
@@ -249,6 +250,10 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
+   std::shared_ptr< AudioIOListener > GetListener() const
+      { return mListener.lock(); }
+   void SetListener( const std::shared_ptr< AudioIOListener > &listener);
+   
    // Part of the callback
    PaStreamCallbackResult CallbackDoSeek();
 
@@ -469,7 +474,7 @@ protected:
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;
 
-   AudioIOListener*    mListener;
+   std::weak_ptr< AudioIOListener > mListener;
 
    friend class AudioThread;
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -557,9 +562,6 @@ class AUDACITY_DLL_API AudioIO final
 public:
    // This might return null during application startup or shutdown
    static AudioIO *Get();
-
-   AudioIOListener* GetListener() { return mListener; }
-   void SetListener(AudioIOListener* listener);
 
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only

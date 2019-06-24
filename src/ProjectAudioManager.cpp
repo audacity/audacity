@@ -201,7 +201,7 @@ DefaultPlayOptions( AudacityProject &project )
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
-   options.listener = &ProjectAudioManager::Get( project );
+   options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    return options;
 }
 
@@ -220,6 +220,6 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
-   options.listener = &ProjectAudioManager::Get( project );
+   options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    return options;
 }
