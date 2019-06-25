@@ -21,6 +21,7 @@ Paul Licameli split from Menus.cpp
 #include "NoteTrack.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"

@@ -100,21 +100,4 @@ public:
    bool mStopIfWasPaused;
 };
 
-
-// Exported helper functions from various menu handling source files
-
-
-/// Namespace for functions for Transport menu
-namespace TransportActions {
-void StopIfPaused( AudacityProject &project );
-bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
-void DoPlayStopSelect( AudacityProject &project );
-void DoStop( AudacityProject & );
-void DoPause( AudacityProject & );
-void DoLockPlayRegion( AudacityProject & );
-void DoUnlockPlayRegion( AudacityProject & );
-void DoTogglePinnedHead( AudacityProject & );
-void DoRecord( AudacityProject & );
-}
-
 #endif

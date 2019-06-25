@@ -43,6 +43,7 @@ effects.
 #include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
 #include "../ProjectHistory.h"
+#include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"

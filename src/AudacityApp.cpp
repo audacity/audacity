@@ -84,6 +84,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
