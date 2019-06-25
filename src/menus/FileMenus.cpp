@@ -112,36 +112,46 @@ namespace FileActions {
 // exported helper functions
 
 #ifdef USE_MIDI
+// Given an existing project, try to import into it, return true on success
+bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
+{
+   auto &tracks = TrackList::Get( project );
+   auto newTrack = TrackFactory::Get( project ).NewNoteTrack();
+
+   if (::ImportMIDI(fileName, newTrack.get())) {
+
+      SelectUtilities::SelectNone( project );
+      auto pTrack = tracks.Add( newTrack );
+      pTrack->SetSelected(true);
+
+      ProjectHistory::Get( project )
+         .PushState(
+            wxString::Format(_("Imported MIDI from '%s'"),
+               fileName),
+            _("Import MIDI")
+         );
+
+      ProjectWindow::Get( project ).ZoomAfterImport(pTrack);
+      FileHistory::Global().AddFileToHistory(fileName);
+      return true;
+   }
+   else
+      return false;
+}
+
 // return null on failure; if success, return the given project, or a NEW
 // one, if the given was null; create no NEW project if failure
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const FilePath &fileName)
 {
-   auto &tracks = TrackList::Get( *pProject );
-
    AudacityProject *pNewProject {};
    if ( !pProject )
       pProject = pNewProject = ProjectManager::New();
    auto cleanup = finally( [&]
       { if ( pNewProject ) GetProjectFrame( *pNewProject ).Close(true); } );
-
-   auto newTrack = TrackFactory::Get( *pProject ).NewNoteTrack();
-
-   if (::ImportMIDI(fileName, newTrack.get())) {
-
-      SelectUtilities::SelectNone( *pProject );
-      auto pTrack = tracks.Add( newTrack );
-      pTrack->SetSelected(true);
-
-      ProjectHistory::Get( *pProject )
-         .PushState(wxString::Format(_("Imported MIDI from '%s'"),
-         fileName), _("Import MIDI"));
-
-      ProjectWindow::Get( *pProject ).ZoomAfterImport(pTrack);
+   
+   if ( DoImportMIDI( *pProject, fileName ) ) {
       pNewProject = nullptr;
-
-      FileHistory::Global().AddFileToHistory(fileName);
-
       return pProject;
    }
    else
@@ -512,7 +522,7 @@ void OnImportMIDI(const CommandContext &context)
       &window);    // Parent
 
    if (!fileName.empty())
-      DoImportMIDI(&project, fileName);
+      DoImportMIDI(project, fileName);
 }
 #endif
 

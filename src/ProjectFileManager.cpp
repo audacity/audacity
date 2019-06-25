@@ -1303,7 +1303,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       {
 #ifdef USE_MIDI
          if (FileNames::IsMidi(fileName))
-            FileActions::DoImportMIDI( &project, fileName );
+            FileActions::DoImportMIDI( project, fileName );
          else
 #endif
             Import( fileName );

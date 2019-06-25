@@ -326,7 +326,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (FileNames::IsMidi(name))
-               FileActions::DoImportMIDI(mProject, name);
+               FileActions::DoImportMIDI( *mProject, name);
             else
 #endif
                ProjectFileManager::Get( *mProject ).Import(name);
