@@ -24,7 +24,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "DirManager.h"
 #include "FileNames.h"
 #include "Legacy.h"
-#include "Menus.h"
 #include "PlatformCompatibility.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
@@ -34,6 +33,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "SelectionState.h"
 #include "Sequence.h"
 #include "Tags.h"
@@ -46,6 +46,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "blockfile/ODDecodeBlockFile.h"
 #include "export/Export.h"
 #include "import/Import.h"
+#include "import/ImportMIDI.h"
 #include "commands/CommandContext.h"
 #include "ondemand/ODComputeSummaryTask.h"
 #include "ondemand/ODDecodeFlacTask.h"
@@ -1302,7 +1303,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       {
 #ifdef USE_MIDI
          if (FileNames::IsMidi(fileName))
-            FileActions::DoImportMIDI( &project, fileName );
+            DoImportMIDI( project, fileName );
          else
 #endif
             Import( fileName );
@@ -1546,7 +1547,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
    std::vector< std::shared_ptr< Track > > results;
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    bool initiallyEmpty = tracks.empty();
    double newRate = 0;
@@ -1708,13 +1709,13 @@ bool ProjectFileManager::Import(
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {
       //TODO: All we want is a SelectAll()
-      SelectActions::SelectNone( project );
-      SelectActions::SelectAllIfNone( project );
+      SelectUtilities::SelectNone( project );
+      SelectUtilities::SelectAllIfNone( project );
       const CommandContext context( project );
-      PluginActions::DoEffect(
+      EffectManager::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
-         PluginActions::kConfigured);
+         EffectManager::kConfigured);
    }
 
    // This is a no-fail:

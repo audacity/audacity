@@ -14,7 +14,6 @@
 #include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../HelpText.h"
-#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
@@ -23,6 +22,7 @@
 #include "../Theme.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../prefs/PrefsDialog.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
@@ -261,7 +261,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
          // This is overkill (aka slow), as all preferences are reloaded and all 
          // toolbars recreated.
          // Overkill probably doesn't matter, as this command is infrequently used.
-         EditActions::DoReloadPreferences( *pProject );
+         DoReloadPreferences( *pProject );
       }
    }
    
@@ -281,11 +281,6 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
 namespace HelpActions {
 
 // exported helper functions
-
-void DoHelpWelcome( AudacityProject &project )
-{
-   SplashDialog::Show2( &GetProjectFrame( project ) );
-}
 
 // Menu handler functions
 
@@ -396,7 +391,7 @@ void MayCheckForUpdates(AudacityProject &project)
 
 void OnHelpWelcome(const CommandContext &context)
 {
-   DoHelpWelcome( context.project );
+   SplashDialog::DoHelpWelcome( context.project );
 }
 
 #endif

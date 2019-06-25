@@ -204,6 +204,8 @@ src/SampleFormat.cpp
 src/SampleFormat.h
 src/Screenshot.cpp
 src/Screenshot.h
+src/SelectUtilities.cpp
+src/SelectUtilities.h
 src/SelectedRegion.cpp
 src/SelectedRegion.h
 src/SelectionState.cpp
@@ -257,6 +259,8 @@ src/TrackPanelResizeHandle.cpp
 src/TrackPanelResizeHandle.h
 src/TrackPanelResizerCell.cpp
 src/TrackPanelResizerCell.h
+src/TrackUtilities.cpp
+src/TrackUtilities.h
 src/TranslatableStringArray.h
 src/UIHandle.cpp
 src/UIHandle.h

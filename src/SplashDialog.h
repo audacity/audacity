@@ -21,6 +21,9 @@ class HtmlWindow;
 class SplashDialog final : public wxDialogWrapper {
    DECLARE_DYNAMIC_CLASS(SplashDialog)
 public:
+
+   static void DoHelpWelcome( AudacityProject &project );
+
    SplashDialog(wxWindow * parent);
    virtual ~ SplashDialog();
    void OnOK(wxCommandEvent & event);

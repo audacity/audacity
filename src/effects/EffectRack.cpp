@@ -39,7 +39,6 @@
 #include <wx/tglbtn.h>
 
 #include "../commands/CommandContext.h"
-#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
@@ -310,9 +309,9 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!PluginActions::DoEffect(mEffects[i]->GetID(),
+         if (!EffectManager::DoEffect(mEffects[i]->GetID(),
                            *project,
-                           PluginActions::kConfigured))
+                           EffectManager::kConfigured))
             // If any effect fails (or throws), then stop.
             return;
       }

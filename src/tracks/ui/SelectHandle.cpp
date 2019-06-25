@@ -18,7 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../AColor.h"
 #include "../../FreqWindow.h"
-#include "../../Menus.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
@@ -26,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectSettings.h"
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
+#include "../../SelectUtilities.h"
 #include "../../SelectionState.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -547,7 +547,7 @@ UIHandle::Result SelectHandle::Click
          // text boxes.
          bool bShift = event.ShiftDown();
          bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-         SelectActions::DoListSelection(
+         SelectUtilities::DoListSelection(
             *pProject, pTrack, bShift, true, !unsafe);
          return true;
        } )

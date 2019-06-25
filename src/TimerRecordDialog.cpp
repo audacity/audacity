@@ -44,9 +44,9 @@
 
 #include "DirManager.h"
 #include "ShuttleGui.h"
-#include "Menus.h"
 #include "MissingAliasFileDialog.h"
 #include "Project.h"
+#include "ProjectAudioManager.h"
 #include "ProjectFileManager.h"
 #include "ProjectManager.h"
 #include "Prefs.h"

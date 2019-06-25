@@ -10,7 +10,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
-#include "../Tags.h"
+#include "../SelectUtilities.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -19,6 +19,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
+#include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
@@ -170,72 +171,13 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
 namespace EditActions {
 
-// exported helper functions
+// Menu handler functions
 
-void DoReloadPreferences( AudacityProject &project )
+struct Handler : CommandHandlerObject {
+
+void OnUndo(const CommandContext &context)
 {
-   {
-      SpectrogramSettings::defaults().LoadPrefs();
-      WaveformSettings::defaults().LoadPrefs();
-
-      GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */ );
-      wxCommandEvent Evt;
-      //dialog.Show();
-      dialog.OnOK(Evt);
-   }
-
-   // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
-   //      rebuilding the menus while the PrefsDialog is still in the modal
-   //      state.
-   for (auto p : AllProjects{}) {
-      MenuManager::Get(*p).RebuildMenuBar(*p);
-// TODO: The comment below suggests this workaround is obsolete.
-#if defined(__WXGTK__)
-      // Workaround for:
-      //
-      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
-      //
-      // This workaround should be removed when Audacity updates to wxWidgets
-      // 3.x which has a fix.
-      auto &window = GetProjectFrame( *p );
-      wxRect r = window.GetRect();
-      window.SetSize(wxSize(1,1));
-      window.SetSize(r.GetSize());
-#endif
-   }
-}
-
-bool DoEditMetadata
-(AudacityProject &project,
- const wxString &title, const wxString &shortUndoDescription, bool force)
-{
-   auto &settings = ProjectSettings::Get( project );
-   auto &tags = Tags::Get( project );
-
-   // Back up my tags
-   // Tags (artist name, song properties, MP3 ID3 info, etc.)
-   // The structure may be shared with undo history entries
-   // To keep undo working correctly, always replace this with a NEW duplicate
-   // BEFORE doing any editing of it!
-   auto newTags = tags.Duplicate();
-
-   if (newTags->ShowEditDialog(&GetProjectFrame( project ), title, force)) {
-      if (tags != *newTags) {
-         // Commit the change to project state only now.
-         Tags::Set( project, newTags );
-         ProjectHistory::Get( project ).PushState(title, shortUndoDescription);
-      }
-      bool bShowInFuture;
-      gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
-      settings.SetShowId3Dialog( bShowInFuture );
-      return true;
-   }
-
-   return false;
-}
-
-void DoUndo(AudacityProject &project)
-{
+   auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -256,16 +198,6 @@ void DoUndo(AudacityProject &project)
 
    trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
 }
-
-// Menu handler functions
-
-struct Handler : CommandHandlerObject {
-
-void OnUndo(const CommandContext &context)
-{
-   DoUndo(context.project);
-}
-
 void OnRedo(const CommandContext &context)
 {
    auto &project = context.project;
@@ -1016,7 +948,7 @@ void OnDisjoin(const CommandContext &context)
 void OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
-   (void)DoEditMetadata( project,
+   (void)Exporter::DoEditMetadata( project,
       _("Edit Metadata Tags"), _("Metadata Tags"), true);
 }
 
@@ -1263,7 +1195,7 @@ auto canSelectAll = [](const AudacityProject &project){
 auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
    if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
       (flagsRqd & NoAutoSelect).none() )
-      SelectActions::DoSelectAllAudio(project);
+      SelectUtilities::DoSelectAllAudio(project);
 };
 
 RegisteredMenuItemEnabler selectTracks{{

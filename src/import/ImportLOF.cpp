@@ -84,7 +84,6 @@
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 #include "Import.h"
-#include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
@@ -277,6 +276,25 @@ static Importer::RegisteredImportPlugin registered{
    std::make_unique< LOFImportPlugin >()
 };
 
+// return null on failure; if success, return the given project, or a NEW
+// one, if the given was null; create no NEW project if failure
+static AudacityProject *DoImportMIDIProject(
+   AudacityProject *pProject, const FilePath &fileName)
+{
+   AudacityProject *pNewProject {};
+   if ( !pProject )
+      pProject = pNewProject = ProjectManager::New();
+   auto cleanup = finally( [&]
+      { if ( pNewProject ) GetProjectFrame( *pNewProject ).Close(true); } );
+   
+   if ( DoImportMIDI( *pProject, fileName ) ) {
+      pNewProject = nullptr;
+      return pProject;
+   }
+   else
+      return nullptr;
+}
+
 /** @brief Processes a single line from a LOF text file, doing whatever is
  * indicated on the line.
  *
@@ -382,7 +400,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // If file is a midi
       if (FileNames::IsMidi(targetfile))
       {
-         mProject = FileActions::DoImportMIDI(mProject, targetfile);
+         mProject = DoImportMIDIProject(mProject, targetfile);
       }
 
       // If not a midi, open audio file

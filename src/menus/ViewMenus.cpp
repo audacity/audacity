@@ -88,7 +88,8 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    const double pixelsPerUnit = 5.0;
 
    double result = 1.0;
-   double zoomToFit = ViewActions::GetZoomOfToFit( project );
+   auto &window = ProjectWindow::Get( project );
+   double zoomToFit = window.GetZoomOfToFit();
    using namespace WaveTrackViewConstants;
    switch( preset ){
       default:
@@ -141,47 +142,6 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    if( result < (zoomToFit/maxZoomOutFactor) )
       result = zoomToFit / maxZoomOutFactor;
    return result;
-}
-
-}
-
-namespace ViewActions {
-
-// exported helper functions
-
-double GetZoomOfToFit( const AudacityProject &project )
-{
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-
-   const double end = tracks.GetEndTime();
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min( tracks.GetStartTime(), 0.0)
-      : 0;
-   const double len = end - start;
-
-   if (len <= 0.0)
-      return viewInfo.GetZoom();
-
-   int w;
-   trackPanel.GetTracksUsableArea(&w, NULL);
-   w -= 10;
-   return w/len;
-}
-
-void DoZoomFit(AudacityProject &project)
-{
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks.GetStartTime(), 0.0)
-      : 0;
-
-   window.Zoom( GetZoomOfToFit( project ) );
-   window.TP_ScrollWindow(start);
 }
 
 }
@@ -288,7 +248,9 @@ void OnZoomToggle(const CommandContext &context)
 
 void OnZoomFit(const CommandContext &context)
 {
-   DoZoomFit( context.project );
+   auto &project = context.project;
+   auto &window = ProjectWindow::Get( project );
+   window.DoZoomFit();
 }
 
 void OnZoomFitV(const CommandContext &context)

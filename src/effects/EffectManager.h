@@ -45,6 +45,17 @@ class AUDACITY_DLL_API EffectManager
 {
 public:
 
+   enum : unsigned {
+      // No flags specified
+      kNone = 0x00,
+      // Flag used to disable prompting for configuration parameteres.
+      kConfigured = 0x01,
+      // Flag used to disable saving the state after processing.
+      kSkipState  = 0x02,
+      // Flag used to disable "Repeat Last Effect"
+      kDontRepeatLast = 0x04,
+   };
+
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */
    static EffectManager & Get();
@@ -56,6 +67,9 @@ public:
 // them by index number, usually when the user selects one from a menu.
 //
 public:
+   static bool DoEffect(
+      const PluginID & ID, const CommandContext &context, unsigned flags );
+
    EffectManager();
    virtual ~EffectManager();
 

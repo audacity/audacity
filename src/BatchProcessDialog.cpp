@@ -46,6 +46,7 @@
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "commands/CommandManager.h"
 #include "effects/Effect.h"
 #include "../images/Arrow.xpm"
@@ -467,7 +468,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       auto success = GuardedCall< bool >( [&] {
          ProjectFileManager::Get( *project ).Import(files[i]);
          ProjectWindow::Get( *project ).ZoomAfterImport(nullptr);
-         SelectActions::DoSelectAll(*project);
+         SelectUtilities::DoSelectAll(*project);
          if (!mMacroCommands.ApplyMacro(mCatalog))
             return false;
 

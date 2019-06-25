@@ -5,7 +5,6 @@
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../FreqWindow.h"
-#include "../Menus.h" // for PrefsListener
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
@@ -13,12 +12,10 @@
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
-#include "../SelectionState.h"
+#include "../SelectUtilities.h"
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"
-#include "../ViewInfo.h"
 #include "../WaveTrack.h"
-#include "../NoteTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
@@ -26,51 +23,6 @@
 
 // private helper classes and functions
 namespace {
-
-void DoSelectTimeAndTracks
-(AudacityProject &project, bool bAllTime, bool bAllTracks)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-
-   if( bAllTime )
-      selectedRegion.setTimes(
-         tracks.GetMinOffset(), tracks.GetEndTime());
-
-   if( bAllTracks ) {
-      for (auto t : tracks.Any())
-         t->SetSelected(true);
-
-      ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
-   }
-}
-
-// Temporal selection (not TimeTrack selection)
-// potentially for all wave tracks.
-void DoSelectTimeAndAudioTracks
-(AudacityProject &project, bool bAllTime, bool bAllTracks)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-
-   if( bAllTime )
-      selectedRegion.setTimes(
-         tracks.GetMinOffset(), tracks.GetEndTime());
-
-   if( bAllTracks ) {
-      // Unselect all tracks before selecting audio.
-      for (auto t : tracks.Any())
-         t->SetSelected(false);
-      for (auto t : tracks.Any<WaveTrack>())
-         t->SetSelected(true);
-
-      ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
-   }
-}
 
 void DoNextPeakFrequency(AudacityProject &project, bool up)
 {
@@ -496,78 +448,6 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 
 namespace SelectActions {
 
-// exported helper functions
-
-void SelectNone( AudacityProject &project )
-{
-   auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Any())
-      t->SetSelected(false);
-
-   auto &trackPanel = TrackPanel::Get( project );
-   trackPanel.Refresh(false);
-}
-
-// Select the full time range, if no
-// time range is selected.
-void SelectAllIfNone( AudacityProject &project )
-{
-   auto &viewInfo = ViewInfo::Get( project );
-   auto flags = MenuManager::Get( project ).GetUpdateFlags();
-   if((flags & TracksSelectedFlag).none() ||
-      viewInfo.selectedRegion.isPoint())
-      DoSelectAllAudio( project );
-}
-
-void DoListSelection
-(AudacityProject &project, Track *t, bool shift, bool ctrl, bool modifyState)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &selectionState = SelectionState::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &window = GetProjectFrame( project );
-
-   auto isSyncLocked = settings.IsSyncLocked();
-
-   selectionState.HandleListSelection(
-      tracks, viewInfo, *t,
-      shift, ctrl, isSyncLocked );
-
-   if (! ctrl )
-      trackPanel.SetFocusedTrack(t);
-   window.Refresh(false);
-   if (modifyState)
-      ProjectHistory::Get( project ).ModifyState(true);
-}
-
-void DoSelectAll(AudacityProject &project)
-{
-   DoSelectTimeAndTracks( project, true, true );
-}
-
-void DoSelectAllAudio(AudacityProject &project)
-{
-   DoSelectTimeAndAudioTracks( project, true, true );
-}
-
-// This function selects all tracks if no tracks selected,
-// and all time if no time selected.
-// There is an argument for making it just count wave tracks,
-// However you could then not select a label and cut it,
-// without this function selecting all tracks.
-void DoSelectSomething(AudacityProject &project)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-
-   bool bTime = selectedRegion.isPoint();
-   bool bTracks = tracks.Selected().empty();
-
-   if( bTime || bTracks )
-      DoSelectTimeAndTracks( project, bTime, bTracks );
-}
 
 // Menu handler functions
 
@@ -579,7 +459,7 @@ struct Handler
 
 void OnSelectAll(const CommandContext &context)
 {
-   DoSelectAll( context.project );
+   SelectUtilities::DoSelectAll( context.project );
 }
 
 void OnSelectNone(const CommandContext &context)
@@ -588,14 +468,14 @@ void OnSelectNone(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    selectedRegion.collapseToT0();
-   SelectNone( project );
+   SelectUtilities::SelectNone( project );
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnSelectAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   DoSelectTimeAndTracks( project, false, true );
+   SelectUtilities::DoSelectTimeAndTracks( project, false, true );
 }
 
 void OnSelectSyncLockSel(const CommandContext &context)
@@ -1145,7 +1025,7 @@ void OnSeekRightLong(const CommandContext &context)
 void OnSelectAllTime(const CommandContext &context)
 {
    auto &project = context.project;
-   DoSelectTimeAndTracks( project, true, false );
+   SelectUtilities::DoSelectTimeAndTracks( project, true, false );
 }
 #endif
 

@@ -157,6 +157,9 @@ class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
 public:
 
+   static bool DoEditMetadata(AudacityProject &project,
+      const wxString &title, const wxString &shortUndoDescription, bool force);
+
    Exporter();
    virtual ~Exporter();
 

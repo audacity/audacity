@@ -11,14 +11,16 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackButtonHandles.h"
 
-#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
+#include "../../ProjectAudioManager.h"
 #include "../../ProjectHistory.h"
+#include "../../SelectUtilities.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanel.h"
+#include "../../TrackUtilities.h"
 #include "../../commands/CommandManager.h"
 #include "../../tracks/ui/TrackView.h"
 
@@ -97,7 +99,7 @@ UIHandle::Result SelectButtonHandle::CommitChanges
    if (pTrack)
    {
       const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-      SelectActions::DoListSelection(*pProject,
+      SelectUtilities::DoListSelection(*pProject,
          pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 //    return RefreshAll ;
    }
@@ -155,7 +157,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
       TransportActions::StopIfPaused( *pProject );
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
-         TrackActions::DoRemoveTrack(*pProject, pTrack.get());
+         TrackUtilities::DoRemoveTrack(*pProject, pTrack.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

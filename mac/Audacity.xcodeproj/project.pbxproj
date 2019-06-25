@@ -1236,6 +1236,8 @@
 		5E19F59922A9665500E3F88E /* AutoRecoveryDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E2B3E6222BF9621005042E1 /* RealtimeEffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */; };
+		5E2B3E5C22BD9798005042E1 /* SelectUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E5A22BD9798005042E1 /* SelectUtilities.cpp */; };
+		5E2B3E5F22BD97A7005042E1 /* TrackUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */; };
 		5E2BF3852193A2A500995694 /* TrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2BF3832193A2A500995694 /* TrackView.cpp */; };
 		5E2BF3882193A2BD00995694 /* TimeTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2BF3862193A2BD00995694 /* TimeTrackView.cpp */; };
 		5E2BF38B2193A2E400995694 /* WaveTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2BF3892193A2E400995694 /* WaveTrackView.cpp */; };
@@ -3240,6 +3242,10 @@
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RealtimeEffectManager.cpp; sourceTree = "<group>"; };
 		5E2B3E6122BF9621005042E1 /* RealtimeEffectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealtimeEffectManager.h; sourceTree = "<group>"; };
+		5E2B3E5A22BD9798005042E1 /* SelectUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectUtilities.cpp; sourceTree = "<group>"; };
+		5E2B3E5B22BD9798005042E1 /* SelectUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectUtilities.h; sourceTree = "<group>"; };
+		5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackUtilities.cpp; sourceTree = "<group>"; };
+		5E2B3E5E22BD97A7005042E1 /* TrackUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackUtilities.h; sourceTree = "<group>"; };
 		5E2BF3832193A2A500995694 /* TrackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackView.cpp; sourceTree = "<group>"; };
 		5E2BF3842193A2A500995694 /* TrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackView.h; sourceTree = "<group>"; };
 		5E2BF3862193A2BD00995694 /* TimeTrackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeTrackView.cpp; sourceTree = "<group>"; };
@@ -4442,6 +4448,7 @@
 				285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */,
 				28D8425B1AD8D69D00551353 /* SelectedRegion.cpp */,
 				5E2A19921EED688500217B58 /* SelectionState.cpp */,
+				5E2B3E5A22BD9798005042E1 /* SelectUtilities.cpp */,
 				1790B0DA09883BFD008A330A /* Sequence.cpp */,
 				1790B0DC09883BFD008A330A /* Shuttle.cpp */,
 				5ECF728522871A4F007F2A35 /* ShuttleGetDefinition.cpp */,
@@ -4464,6 +4471,7 @@
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
 				5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */,
 				5E667A671F0D723A00C942A5 /* TrackPanelResizerCell.cpp */,
+				5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */,
 				5E15123B1DB000C000702E29 /* UIHandle.cpp */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				5E07842F1DF1E4F400CA76EA /* UserException.cpp */,
@@ -4576,6 +4584,7 @@
 				285DE1F90BF03C7800A20DF0 /* Screenshot.h */,
 				2813897919E6163C004111ED /* SelectedRegion.h */,
 				5E2A19931EED688500217B58 /* SelectionState.h */,
+				5E2B3E5B22BD9798005042E1 /* SelectUtilities.h */,
 				1790B0DB09883BFD008A330A /* Sequence.h */,
 				1790B0DD09883BFD008A330A /* Shuttle.h */,
 				5ECF728622871A4F007F2A35 /* ShuttleGetDefinition.h */,
@@ -4603,6 +4612,7 @@
 				5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */,
 				5E7396611DAFDB1E00BA0A4D /* TrackPanelResizeHandle.h */,
 				5E667A681F0D723A00C942A5 /* TrackPanelResizerCell.h */,
+				5E2B3E5E22BD97A7005042E1 /* TrackUtilities.h */,
 				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				5E15123C1DB000C000702E29 /* UIHandle.h */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
@@ -8357,6 +8367,7 @@
 				2872DFEA1B5EEC15004385B1 /* hy.po in Sources */,
 				28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */,
 				1790B11A09883BFD008A330A /* AudacityApp.cpp in Sources */,
+				5E2B3E5C22BD9798005042E1 /* SelectUtilities.cpp in Sources */,
 				1790B11C09883BFD008A330A /* AudioIO.cpp in Sources */,
 				1790B11D09883BFD008A330A /* BatchCommandDialog.cpp in Sources */,
 				1790B11E09883BFD008A330A /* BatchCommands.cpp in Sources */,
@@ -8500,6 +8511,7 @@
 				1790B1A009883BFD008A330A /* WaveTrack.cpp in Sources */,
 				1790B1A109883BFD008A330A /* AButton.cpp in Sources */,
 				1790B1A209883BFD008A330A /* ASlider.cpp in Sources */,
+				5E2B3E5F22BD97A7005042E1 /* TrackUtilities.cpp in Sources */,
 				5E73964A1DAFD91D00BA0A4D /* CutlineHandle.cpp in Sources */,
 				1790B1A309883BFD008A330A /* Meter.cpp in Sources */,
 				1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */,
