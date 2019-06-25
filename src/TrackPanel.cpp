@@ -266,7 +266,16 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
    {
-      auto pAx = std::make_unique <TrackPanelAx>( this );
+      auto pAx = std::make_unique <TrackPanelAx>( *project );
+      pAx->SetWindow( this );
+      wxWeakRef< TrackPanel > weakThis{ this };
+      pAx->SetFinder(
+         [weakThis]( const Track &track ) -> wxRect {
+            if (weakThis)
+               return weakThis->FindTrackRect( &track );
+            return {};
+         }
+      );
 #if wxUSE_ACCESSIBILITY
       // wxWidgets owns the accessible object
       SetAccessible(mAx = pAx.release());
@@ -296,12 +305,17 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTracks->Bind(EVT_TRACKLIST_DELETION,
                     &TrackPanel::OnTrackListDeletion,
                     this);
+   mTracks->Bind(EVT_TRACKLIST_TRACK_REQUEST_VISIBLE,
+                    &TrackPanel::OnEnsureVisible,
+                    this);
 
    auto theProject = GetProject();
    theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
    theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
+   theProject->Bind(
+      EVT_TRACK_FOCUS_CHANGE, &TrackPanel::OnTrackFocusChange, this );
 
    theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
 
@@ -656,7 +670,7 @@ void TrackPanel::ProcessUIHandleResult
    }
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack)
-      panel->EnsureVisible(pClickedTrack);
+      pClickedTrack->EnsureVisible();
 }
 
 void TrackPanel::HandlePageUpKey()
@@ -701,12 +715,6 @@ void TrackPanel::UpdateAccessibility()
 {
    if (mAx)
       mAx->Updated();
-}
-
-// Counts tracks, counting stereo tracks as one track.
-size_t TrackPanel::GetTrackCount() const
-{
-  return GetTracks()->Leaders().size();
 }
 
 // Counts selected tracks, counting stereo tracks as one track.
@@ -812,7 +820,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
          if ( t )
-            EnsureVisible(t.get());
+            t->EnsureVisible();
       } );
    }
 
@@ -1304,18 +1312,15 @@ void TrackPanel::OnTrackMenu(Track *t)
    CellularPanel::DoContextMenu( &TrackView::Get( *t ) );
 }
 
-Track * TrackPanel::GetFirstSelectedTrack()
+// Tracks have been removed from the list.
+void TrackPanel::OnEnsureVisible(TrackListEvent & e)
 {
-   auto t = *GetTracks()->Selected().begin();
-   if (t)
-      return t;
-   else
-      //if nothing is selected, return the first track
-      return *GetTracks()->Any().begin();
-}
+   e.Skip();
+   bool modifyState = e.GetInt();
 
-void TrackPanel::EnsureVisible(Track * t)
-{
+   auto pTrack = e.mpTrack.lock();
+   auto t = pTrack.get();
+
    SetFocusedTrack(t);
 
    int trackTop = 0;
@@ -1349,6 +1354,9 @@ void TrackPanel::EnsureVisible(Track * t)
       }
    }
    Refresh(false);
+
+   if ( modifyState )
+      ProjectHistory::Get( *GetProject() ).ModifyState( false );
 }
 
 // 0.0 scrolls to top
@@ -1667,7 +1675,14 @@ void TrackPanel::SetFocusedTrack( Track *t )
    // Make sure we always have the first linked track of a stereo track
    t = *GetTracks()->FindLeader(t);
 
-   auto cell = mAx->SetFocus( Track::SharedPointer( t ) ).get();
+   // This will cause callback to the handler function, defined next
+   mAx->SetFocus( Track::SharedPointer( t ) );
+}
+
+void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
+{
+   event.Skip();
+   auto cell = mAx->GetFocus().get();
 
    if (cell) {
       KeyboardCapture::Capture(this);

@@ -50,7 +50,7 @@ void DoRemoveTracks( AudacityProject &project )
 
    // If we actually have something left, then make sure it's seen
    if (f)
-      trackPanel.EnsureVisible(f);
+      f->EnsureVisible();
 
    ProjectHistory::Get( project )
       .PushState(_("Removed audio track(s)"), _("Remove Track"));

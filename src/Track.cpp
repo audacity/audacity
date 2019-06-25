@@ -101,6 +101,13 @@ void Track::SetSelected(bool s)
    }
 }
 
+void Track::EnsureVisible( bool modifyState )
+{
+   auto pList = mList.lock();
+   if (pList)
+      pList->EnsureVisibleEvent( SharedPointer(), modifyState );
+}
+
 void Track::Merge(const Track &orig)
 {
    mSelected = orig.mSelected;
@@ -475,6 +482,7 @@ std::pair<Track *, Track *> TrackList::FindSyncLockGroup(Track *pMember) const
 //
 wxDEFINE_EVENT(EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_SELECTION_CHANGE, TrackListEvent);
+wxDEFINE_EVENT(EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_PERMUTED, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_RESIZING, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_ADDITION, TrackListEvent);
@@ -577,6 +585,16 @@ void TrackList::DataEvent( const std::shared_ptr<Track> &pTrack, int code )
    // wxWidgets will own the event object
    QueueEvent(
       safenew TrackListEvent{ EVT_TRACKLIST_TRACK_DATA_CHANGE, pTrack, code } );
+}
+
+void TrackList::EnsureVisibleEvent(
+   const std::shared_ptr<Track> &pTrack, bool modifyState )
+{
+   auto pEvent = std::make_unique<TrackListEvent>(
+      EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, pTrack, 0 );
+   pEvent->SetInt( modifyState ? 1 : 0 );
+   // wxWidgets will own the event object
+   QueueEvent( pEvent.release() );
 }
 
 void TrackList::PermutationEvent(TrackNodePointer node)

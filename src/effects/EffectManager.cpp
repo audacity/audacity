@@ -219,9 +219,13 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    if( tracks.size() > nTracksOriginally ){
       // 0.0 is min scroll position, 1.0 is max scroll position.
       trackPanel.VerticalScroll( 1.0 );
-   }  else {
-      trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-      trackPanel.Refresh(false);
+   }
+   else {
+      auto pTrack = *tracks.Selected().begin();
+      if (!pTrack)
+         pTrack = *tracks.Any().begin();
+      if (pTrack)
+         pTrack->EnsureVisible();
    }
 
    return true;

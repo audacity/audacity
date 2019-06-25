@@ -91,6 +91,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void OnTrackListResizing(TrackListEvent & event);
    void OnTrackListDeletion(wxEvent & event);
+   void OnEnsureVisible(TrackListEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
    double GetMostRecentXPos();
@@ -99,6 +100,7 @@ class AUDACITY_DLL_API TrackPanel final
    void OnTimer(wxTimerEvent& event);
    void OnODTask(wxCommandEvent &event);
    void OnProjectSettingsChange(wxCommandEvent &event);
+   void OnTrackFocusChange( wxCommandEvent &event );
 
    int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
@@ -126,9 +128,7 @@ class AUDACITY_DLL_API TrackPanel final
    void ScrollIntoView(int x);
 
    void OnTrackMenu(Track *t = NULL);
-   Track * GetFirstSelectedTrack();
 
-   void EnsureVisible(Track * t);
    void VerticalScroll( float fracPosition);
 
    TrackPanelCell *GetFocusedCell() override;
@@ -149,7 +149,6 @@ class AUDACITY_DLL_API TrackPanel final
    bool IsAudioActive();
 
 public:
-   size_t GetTrackCount() const;
    size_t GetSelectedTrackCount() const;
 
 protected:

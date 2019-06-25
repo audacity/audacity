@@ -336,6 +336,10 @@ private:
 
    void SetSelected(bool s);
 
+   // The argument tells whether the last undo history state should be
+   // updated for the appearance change
+   void EnsureVisible( bool modifyState = false );
+
 public:
 
    virtual ChannelType GetChannel() const { return mChannel;}
@@ -1091,6 +1095,10 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
 
+// Posted when a track needs to be scrolled into view.
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
+
 // Posted when tracks are reordered but otherwise unchanged.
 // mpTrack points to the moved track that is earliest in the New ordering.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
@@ -1491,6 +1499,8 @@ private:
    void SelectionEvent( const std::shared_ptr<Track> &pTrack );
    void PermutationEvent(TrackNodePointer node);
    void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
+   void EnsureVisibleEvent(
+      const std::shared_ptr<Track> &pTrack, bool modifyState );
    void DeletionEvent(TrackNodePointer node = {});
    void AdditionEvent(TrackNodePointer node);
    void ResizingEvent(TrackNodePointer node);

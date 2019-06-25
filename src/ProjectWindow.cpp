@@ -1604,6 +1604,7 @@ void ProjectWindow::OnMouseEvent(wxMouseEvent & event)
 void ProjectWindow::ZoomAfterImport(Track *pTrack)
 {
    auto &project = mProject;
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
    DoZoomFit();
@@ -1611,8 +1612,11 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
    trackPanel.SetFocus();
    RedrawProject();
    if (!pTrack)
-      pTrack = trackPanel.GetFirstSelectedTrack();
-   trackPanel.EnsureVisible(pTrack);
+      pTrack = *tracks.Selected().begin();
+   if (!pTrack)
+      pTrack = *tracks.Any().begin();
+   if (pTrack)
+      pTrack->EnsureVisible();
 }
 
 // Utility function called by other zoom methods
