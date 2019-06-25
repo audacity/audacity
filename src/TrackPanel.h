@@ -100,6 +100,7 @@ class AUDACITY_DLL_API TrackPanel final
    void OnTimer(wxTimerEvent& event);
    void OnODTask(wxCommandEvent &event);
    void OnProjectSettingsChange(wxCommandEvent &event);
+   void OnTrackFocusChange( wxCommandEvent &event );
 
    int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
@@ -148,7 +149,6 @@ class AUDACITY_DLL_API TrackPanel final
    bool IsAudioActive();
 
 public:
-   size_t GetTrackCount() const;
    size_t GetSelectedTrackCount() const;
 
 protected:

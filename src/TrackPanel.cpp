@@ -266,7 +266,16 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
    {
-      auto pAx = std::make_unique <TrackPanelAx>( this );
+      auto pAx = std::make_unique <TrackPanelAx>( *project );
+      pAx->SetWindow( this );
+      wxWeakRef< TrackPanel > weakThis{ this };
+      pAx->SetFinder(
+         [weakThis]( const Track &track ) -> wxRect {
+            if (weakThis)
+               return weakThis->FindTrackRect( &track );
+            return {};
+         }
+      );
 #if wxUSE_ACCESSIBILITY
       // wxWidgets owns the accessible object
       SetAccessible(mAx = pAx.release());
@@ -305,6 +314,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
+   theProject->Bind(
+      EVT_TRACK_FOCUS_CHANGE, &TrackPanel::OnTrackFocusChange, this );
 
    theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
 
@@ -704,12 +715,6 @@ void TrackPanel::UpdateAccessibility()
 {
    if (mAx)
       mAx->Updated();
-}
-
-// Counts tracks, counting stereo tracks as one track.
-size_t TrackPanel::GetTrackCount() const
-{
-  return GetTracks()->Leaders().size();
 }
 
 // Counts selected tracks, counting stereo tracks as one track.
@@ -1670,7 +1675,14 @@ void TrackPanel::SetFocusedTrack( Track *t )
    // Make sure we always have the first linked track of a stereo track
    t = *GetTracks()->FindLeader(t);
 
-   auto cell = mAx->SetFocus( Track::SharedPointer( t ) ).get();
+   // This will cause callback to the handler function, defined next
+   mAx->SetFocus( Track::SharedPointer( t ) );
+}
+
+void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
+{
+   event.Skip();
+   auto cell = mAx->GetFocus().get();
 
    if (cell) {
       KeyboardCapture::Capture(this);
