@@ -21,7 +21,6 @@ Paul Licameli split from Menus.cpp
 #include "NoteTrack.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
@@ -343,14 +342,3 @@ const ReservedCommandFlag
      [](const AudacityProject &){ return true; }
    } // jkc
 ;
-
-RegisteredMenuItemEnabler stopIfPaused{{
-   PausedFlag,
-   AudioIONotBusyFlag,
-   []( const AudacityProject &project ){
-      return MenuManager::Get( project ).mStopIfWasPaused; },
-   []( AudacityProject &project, CommandFlag ){
-      if ( MenuManager::Get( project ).mStopIfWasPaused )
-         TransportActions::StopIfPaused( project );
-   }
-}};

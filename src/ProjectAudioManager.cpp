@@ -392,3 +392,16 @@ void DoStop( AudacityProject &project )
 }
 
 }
+
+#include "CommonCommandFlags.h"
+
+static RegisteredMenuItemEnabler stopIfPaused{{
+   PausedFlag,
+   AudioIONotBusyFlag,
+   []( const AudacityProject &project ){
+      return MenuManager::Get( project ).mStopIfWasPaused; },
+   []( AudacityProject &project, CommandFlag ){
+      if ( MenuManager::Get( project ).mStopIfWasPaused )
+         TransportActions::StopIfPaused( project );
+   }
+}};
