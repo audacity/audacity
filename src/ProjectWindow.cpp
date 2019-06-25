@@ -867,6 +867,8 @@ void ProjectWindow::ApplyUpdatedTheme()
 
 void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
 {
+   CallAfter( [this, bForceWaveTracks]{
+
    auto &project = mProject ;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
@@ -878,6 +880,8 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
             clip->MarkChanged();
    }
    trackPanel.Refresh(false);
+
+   });
 }
 
 void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
@@ -1322,9 +1326,7 @@ void ProjectWindow::HandleResize()
       return;
    }
 
-   FixScrollbars();
-
-   UpdateLayout();
+   CallAfter( [this]{ FixScrollbars(), UpdateLayout(); } );
 }
 
 

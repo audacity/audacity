@@ -197,7 +197,6 @@ void DoRemoveTrack(AudacityProject &project, Track * toRemove)
       name),
       _("Track Remove"));
 
-   window.FixScrollbars();
    window.HandleResize();
    trackPanel.Refresh(false);
 }
