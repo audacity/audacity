@@ -24,7 +24,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "DirManager.h"
 #include "FileNames.h"
 #include "Legacy.h"
-#include "Menus.h"
 #include "PlatformCompatibility.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
@@ -47,6 +46,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "blockfile/ODDecodeBlockFile.h"
 #include "export/Export.h"
 #include "import/Import.h"
+#include "import/ImportMIDI.h"
 #include "commands/CommandContext.h"
 #include "ondemand/ODComputeSummaryTask.h"
 #include "ondemand/ODDecodeFlacTask.h"
@@ -1303,7 +1303,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       {
 #ifdef USE_MIDI
          if (FileNames::IsMidi(fileName))
-            FileActions::DoImportMIDI( project, fileName );
+            DoImportMIDI( project, fileName );
          else
 #endif
             Import( fileName );

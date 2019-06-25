@@ -13,6 +13,7 @@
 
 #include <wx/defs.h>
 #include <wx/ffile.h>
+#include <wx/frame.h>
 #include <wx/intl.h>
 
 #if defined(USE_MIDI)
@@ -22,7 +23,39 @@
 //#include "mfmidi.h"
 
 #include "../NoteTrack.h"
+#include "../Project.h"
+#include "../ProjectHistory.h"
+#include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/FileHistory.h"
+
+// Given an existing project, try to import into it, return true on success
+bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
+{
+   auto &tracks = TrackList::Get( project );
+   auto newTrack = TrackFactory::Get( project ).NewNoteTrack();
+   
+   if (::ImportMIDI(fileName, newTrack.get())) {
+      
+      SelectUtilities::SelectNone( project );
+      auto pTrack = tracks.Add( newTrack );
+      pTrack->SetSelected(true);
+      
+      ProjectHistory::Get( project )
+         .PushState(
+            wxString::Format(_("Imported MIDI from '%s'"),
+                         fileName),
+            _("Import MIDI")
+         );
+      
+      ProjectWindow::Get( project ).ZoomAfterImport(pTrack);
+      FileHistory::Global().AddFileToHistory(fileName);
+      return true;
+   }
+   else
+      return false;
+}
 
 bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
 {

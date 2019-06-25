@@ -104,15 +104,6 @@ public:
 // Exported helper functions from various menu handling source files
 
 
-/// Namespace for functions for File menu
-namespace FileActions {
-// Import into existing project
-bool DoImportMIDI( AudacityProject &project, const FilePath &fileName );
-// Import file, creating a project if the first argument is null
-AudacityProject *DoImportMIDI(
-   AudacityProject *pProject, const FilePath &fileName );
-}
-
 /// Namespace for functions for Edit menu
 namespace EditActions {
 bool DoEditMetadata(

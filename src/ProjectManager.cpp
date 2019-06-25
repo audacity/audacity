@@ -37,6 +37,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "UndoManager.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
+#include "import/ImportMIDI.h"
 #include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
 #include "toolbars/ControlToolBar.h"
@@ -326,7 +327,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (FileNames::IsMidi(name))
-               FileActions::DoImportMIDI( *mProject, name);
+               DoImportMIDI( *mProject, name );
             else
 #endif
                ProjectFileManager::Get( *mProject ).Import(name);
