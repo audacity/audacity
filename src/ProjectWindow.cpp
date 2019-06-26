@@ -865,12 +865,16 @@ void ProjectWindow::ApplyUpdatedTheme()
 
 void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
 {
-   CallAfter( [this, bForceWaveTracks]{
+   auto pThis = wxWeakRef<ProjectWindow>(this);
+   CallAfter( [pThis, bForceWaveTracks]{
 
-   auto &project = mProject ;
+   if (!pThis)
+      return;
+
+   auto &project = pThis->mProject ;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
-   FixScrollbars();
+   pThis->FixScrollbars();
    if (bForceWaveTracks)
    {
       for ( auto pWaveTrack : tracks.Any< WaveTrack >() )
@@ -1439,14 +1443,14 @@ void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
 {
    evt.Skip();
    HandleResize();
-   CallAfter( [this]{ RedrawProject(); } );
+   RedrawProject();
 }
 
 void ProjectWindow::OnUndoReset( wxCommandEvent &evt )
 {
    evt.Skip();
    HandleResize();
-   // CallAfter( [this]{ RedrawProject(); } );  // Should we do this here too?
+   // RedrawProject();  // Should we do this here too?
 }
 
 void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
