@@ -49,6 +49,7 @@
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/AButton.h"
+#include "widgets/AudacityMessageBox.h"
 #include "widgets/Grabber.h"
 
 #include <wx/dcclient.h>
@@ -1288,7 +1289,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Temporarily unlock locked play region
    if (mOldPlayRegion.Locked() && evt.LeftDown()) {
       //mPlayRegionLock = true;
-      TransportActions::DoUnlockPlayRegion(*mProject);
+      UnlockPlayRegion();
    }
 
    mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
@@ -1541,7 +1542,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       if (mOldPlayRegion.Locked()) {
          // Restore Locked Play region
          SetPlayRegion(mOldPlayRegion.GetStart(), mOldPlayRegion.GetEnd());
-         TransportActions::DoLockPlayRegion(*mProject);
+         LockPlayRegion();
          // and release local lock
          mOldPlayRegion.SetLocked( false );
       }
@@ -1563,7 +1564,7 @@ auto AdornedRulerPanel::QPHandle::Cancel
             mParent->mOldPlayRegion.GetStart(), mParent->mOldPlayRegion.GetEnd());
          if (mParent->mOldPlayRegion.Locked()) {
             // Restore Locked Play region
-            TransportActions::DoLockPlayRegion(*pProject);
+            mParent->LockPlayRegion();
             // and release local lock
             mParent->mOldPlayRegion.SetLocked( false );
          }
@@ -1701,7 +1702,7 @@ void AdornedRulerPanel::UpdateButtonStates()
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 {
-   TransportActions::DoTogglePinnedHead(*mProject);
+   TogglePinnedHead();
    UpdateButtonStates();
 }
 
@@ -1846,9 +1847,9 @@ void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
    const auto &viewInfo = ViewInfo::Get( *GetProject() );
    const auto &playRegion = viewInfo.playRegion;
    if (playRegion.Locked())
-      TransportActions::DoUnlockPlayRegion(*mProject);
+      UnlockPlayRegion();
    else
-      TransportActions::DoLockPlayRegion(*mProject);
+      LockPlayRegion();
 }
 
 
@@ -2219,4 +2220,45 @@ void AdornedRulerPanel::CreateOverlays()
       TrackPanel::Get( *mProject ).AddOverlay( mOverlay );
       this->AddOverlay( mOverlay->mPartner );
    }
+}
+
+void AdornedRulerPanel::LockPlayRegion()
+{
+   auto &project = *mProject;
+   auto &tracks = TrackList::Get( project );
+
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   if (playRegion.GetStart() >= tracks.GetEndTime()) {
+       AudacityMessageBox(_("Cannot lock region beyond\nend of project."),
+                    _("Error"));
+   }
+   else {
+      playRegion.SetLocked( true );
+      Refresh(false);
+   }
+}
+
+void AdornedRulerPanel::UnlockPlayRegion()
+{
+   auto &project = *mProject;
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   playRegion.SetLocked( false );
+   Refresh(false);
+}
+
+void AdornedRulerPanel::TogglePinnedHead()
+{
+   bool value = !TracksPrefs::GetPinnedHeadPreference();
+   TracksPrefs::SetPinnedHeadPreference(value, true);
+   MenuManager::ModifyAllProjectToolbarMenus();
+
+   auto &project = *mProject;
+   // Update button image
+   UpdateButtonStates();
+
+   auto &scrubber = Scrubber::Get( project );
+   if (scrubber.HasMark())
+      scrubber.SetScrollScrubbing(value);
 }

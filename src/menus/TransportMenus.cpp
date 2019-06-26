@@ -1,6 +1,7 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
+#include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../DeviceManager.h"
@@ -468,12 +469,12 @@ void OnPunchAndRoll(const CommandContext &context)
 
 void OnLockPlayRegion(const CommandContext &context)
 {
-   DoLockPlayRegion( context.project );
+   AdornedRulerPanel::Get( context.project ).LockPlayRegion();
 }
 
 void OnUnlockPlayRegion(const CommandContext &context)
 {
-   DoUnlockPlayRegion( context.project );
+   AdornedRulerPanel::Get( context.project ).UnlockPlayRegion();
 }
 
 void OnRescanDevices(const CommandContext &WXUNUSED(context) )
@@ -500,7 +501,7 @@ void OnToggleSoundActivated(const CommandContext &WXUNUSED(context) )
 
 void OnTogglePinnedHead(const CommandContext &context)
 {
-   DoTogglePinnedHead( context.project );
+   AdornedRulerPanel::Get( context.project ).TogglePinnedHead();
 }
 
 void OnTogglePlayRecording(const CommandContext &WXUNUSED(context) )

@@ -26,7 +26,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "TimeTrack.h"
 #include "UndoManager.h"
 #include "toolbars/ControlToolBar.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/Warning.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
@@ -252,7 +251,6 @@ DefaultSpeedPlayOptions( AudacityProject &project )
    return options;
 }
 
-#include "AdornedRulerPanel.h"
 #include "Menus.h"
 #include "ViewInfo.h"
 #include "prefs/TracksPrefs.h"
@@ -356,47 +354,6 @@ void DoRecord( AudacityProject &project )
 {
    auto &controlToolBar = ControlToolBar::Get( project );
    controlToolBar.OnRecord(false);
-}
-
-void DoLockPlayRegion( AudacityProject &project )
-{
-   auto &tracks = TrackList::Get( project );
-   auto &ruler = AdornedRulerPanel::Get( project );
-
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &playRegion = viewInfo.playRegion;
-   if (playRegion.GetStart() >= tracks.GetEndTime()) {
-       AudacityMessageBox(_("Cannot lock region beyond\nend of project."),
-                    _("Error"));
-   }
-   else {
-      playRegion.SetLocked( true );
-      ruler.Refresh(false);
-   }
-}
-
-void DoUnlockPlayRegion( AudacityProject &project )
-{
-   auto &ruler = AdornedRulerPanel::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &playRegion = viewInfo.playRegion;
-   playRegion.SetLocked( false );
-   ruler.Refresh(false);
-}
-
-void DoTogglePinnedHead( AudacityProject &project )
-{
-   bool value = !TracksPrefs::GetPinnedHeadPreference();
-   TracksPrefs::SetPinnedHeadPreference(value, true);
-   MenuManager::ModifyAllProjectToolbarMenus();
-
-   auto &ruler = AdornedRulerPanel::Get( project );
-   // Update button image
-   ruler.UpdateButtonStates();
-
-   auto &scrubber = Scrubber::Get( project );
-   if (scrubber.HasMark())
-      scrubber.SetScrollScrubbing(value);
 }
 
 void DoStop( AudacityProject &project )
