@@ -893,6 +893,7 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
 void CellularPanel::OnSetFocus(wxFocusEvent &event)
 {
    SetFocusedCell();
+   Refresh( false);
 }
 
 void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
