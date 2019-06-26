@@ -155,6 +155,7 @@ public:
    void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
+   void OnUndoPushedModified( wxCommandEvent & );
    void OnUndoRedo( wxCommandEvent & );
    void OnUndoReset( wxCommandEvent & );
 

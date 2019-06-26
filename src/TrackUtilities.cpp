@@ -56,7 +56,6 @@ void DoRemoveTracks( AudacityProject &project )
       .PushState(_("Removed audio track(s)"), _("Remove Track"));
 
    trackPanel.UpdateViewIfNoTracks();
-   trackPanel.Refresh(false);
 }
 
 void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
@@ -106,7 +105,6 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
    ProjectHistory::Get( project ).ModifyState(true);
 
    trackPanel.UpdateAccessibility();
-   trackPanel.Refresh(false);
 }
 
 void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
@@ -159,7 +157,6 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
    ProjectHistory::Get( project ).ModifyState(true);
 
    trackPanel.UpdateAccessibility();
-   trackPanel.Refresh(false);
 }
 
 void DoRemoveTrack(AudacityProject &project, Track * toRemove)
@@ -196,9 +193,6 @@ void DoRemoveTrack(AudacityProject &project, Track * toRemove)
       wxString::Format(_("Removed track '%s.'"),
       name),
       _("Track Remove"));
-
-   window.HandleResize();
-   trackPanel.Refresh(false);
 }
 
 void DoMoveTrack
@@ -251,7 +245,6 @@ void DoMoveTrack
    longDesc = longDesc.Format(target->GetName());
 
    ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
-   trackPanel.Refresh(false);
 }
 
 }

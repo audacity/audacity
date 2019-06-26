@@ -641,6 +641,8 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
 
+   project.Bind( EVT_UNDO_MODIFIED, &ProjectWindow::OnUndoPushedModified, this );
+   project.Bind( EVT_UNDO_PUSHED, &ProjectWindow::OnUndoPushedModified, this );
    project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
    project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
 }
@@ -1439,6 +1441,12 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
+void ProjectWindow::OnUndoPushedModified( wxCommandEvent &evt )
+{
+   evt.Skip();
+   RedrawProject();
+}
+
 void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
 {
    evt.Skip();
@@ -1612,7 +1620,6 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
    DoZoomFit();
 
    trackPanel.SetFocus();
-   RedrawProject();
    if (!pTrack)
       pTrack = *tracks.Selected().begin();
    if (!pTrack)

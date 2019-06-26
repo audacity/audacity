@@ -207,7 +207,10 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
          window.DoZoomFit();
          //  trackPanel->Refresh(false);
    }
+
+   // PRL:  RedrawProject explicitly because sometimes history push is skipped
    window.RedrawProject();
+
    if (focus != nullptr && focus->GetParent()==parent) {
       focus->SetFocus();
    }

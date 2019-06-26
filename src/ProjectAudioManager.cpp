@@ -146,9 +146,6 @@ You are saving directly to a slow external storage device\n\
       else
          // Add to history
          history.PushState(_("Recorded Audio"), _("Record"));
-
-      // Refresh the project window
-      window.RedrawProject();
    }
 
    // Write all cached files to disk, if any

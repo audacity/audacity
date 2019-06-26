@@ -30,7 +30,6 @@ void DoSelectTimeAndAudioTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
@@ -45,7 +44,6 @@ void DoSelectTimeAndAudioTracks
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
    }
 }
 
@@ -56,7 +54,6 @@ void DoSelectTimeAndTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
@@ -68,7 +65,6 @@ void DoSelectTimeAndTracks
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
    }
 }
 
