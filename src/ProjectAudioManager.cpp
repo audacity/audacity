@@ -148,7 +148,6 @@ You are saving directly to a slow external storage device\n\
          history.PushState(_("Recorded Audio"), _("Record"));
 
       // Refresh the project window
-      window.FixScrollbars();
       window.RedrawProject();
    }
 
