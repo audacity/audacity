@@ -641,15 +641,37 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
 
+   // PRL: Old comments below.  No longer observing the ordering that it
+   //      recommends.  ProjectWindow::OnActivate puts the focus directly into
+   //      the TrackPanel, which avoids the problems.
+   // LLL: When Audacity starts or becomes active after returning from
+   //      another application, the first window that can accept focus
+   //      will be given the focus even if we try to SetFocus().  By
+   //      creating the scrollbars after the TrackPanel, we resolve
+   //      several focus problems.
+
+   mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
+   mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mHsbar->SetAccessible(safenew WindowAccessible(mHsbar));
+   mVsbar->SetAccessible(safenew WindowAccessible(mVsbar));
+#endif
+   mHsbar->SetLayoutDirection(wxLayout_LeftToRight);
+   mHsbar->SetName(_("Horizontal Scrollbar"));
+   mVsbar->SetName(_("Vertical Scrollbar"));
+
    project.Bind( EVT_UNDO_MODIFIED, &ProjectWindow::OnUndoPushedModified, this );
    project.Bind( EVT_UNDO_PUSHED, &ProjectWindow::OnUndoPushedModified, this );
    project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
    project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
+
+   wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
 }
 
-void ProjectWindow::Init()
+void InitProjectWindow( ProjectWindow &window )
 {
-   auto &project = mProject;
+   auto &project = window.GetProject();
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -661,7 +683,7 @@ void ProjectWindow::Init()
    // In addition, the help strings of menu items are by default sent to the first
    // field. Currently there are no such help strings, but it they were introduced, then
    // there would need to be an event handler to send them to the appropriate field.
-   auto statusBar = CreateStatusBar(4);
+   auto statusBar = window.CreateStatusBar(4);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    statusBar->SetAccessible(safenew WindowAccessible(statusBar));
@@ -695,28 +717,30 @@ void ProjectWindow::Init()
    // Create the TrackPanel and the scrollbars
    //
 
+   auto topPanel = window.GetTopPanel();
+
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
       ubs->Add(&ruler, 0, wxEXPAND);
-      mTopPanel->SetSizer(ubs.release());
+      topPanel->SetSizer(ubs.release());
    }
 
    // Ensure that the topdock comes before the ruler in the tab order,
    // irrespective of the order in which they were created.
    ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
 
-   const auto pPage = GetMainPage();
+   const auto pPage = window.GetMainPage();
 
    wxBoxSizer *bs;
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       bs = ubs.get();
-      bs->Add(mTopPanel, 0, wxEXPAND | wxALIGN_TOP);
+      bs->Add(topPanel, 0, wxEXPAND | wxALIGN_TOP);
       bs->Add(pPage, 1, wxEXPAND);
       bs->Add( ToolManager::Get( project ).GetBotDock(), 0, wxEXPAND );
-      SetAutoLayout(true);
-      SetSizer(ubs.release());
+      window.SetAutoLayout(true);
+      window.SetSizer(ubs.release());
    }
    bs->Layout();
 
@@ -725,26 +749,14 @@ void ProjectWindow::Init()
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
-   //      creating the scrollbars after the TrackPanel, we resolve
-   //      several focus problems.
-   mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
-   mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   mHsbar->SetAccessible(safenew WindowAccessible(mHsbar));
-   mVsbar->SetAccessible(safenew WindowAccessible(mVsbar));
-#endif
-   mHsbar->SetLayoutDirection(wxLayout_LeftToRight);
-   mHsbar->SetName(_("Horizontal Scrollbar"));
-   mVsbar->SetName(_("Vertical Scrollbar"));
-   // LLL: When Audacity starts or becomes active after returning from
-   //      another application, the first window that can accept focus
-   //      will be given the focus even if we try to SetFocus().  By
    //      making the TrackPanel that first window, we resolve several
    //      keyboard focus problems.
-   pPage->MoveBeforeInTabOrder(mTopPanel);
+   pPage->MoveBeforeInTabOrder(topPanel);
 
    bs = (wxBoxSizer *)pPage->GetSizer();
+
+   auto vsBar = &window.GetVerticalScrollBar();
+   auto hsBar = &window.GetHorizontalScrollBar();
 
    {
       // Top horizontal grouping
@@ -758,7 +770,7 @@ void ProjectWindow::Init()
          auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
          // Vertical scroll bar
-         vs->Add(mVsbar, 1, wxEXPAND | wxALIGN_TOP);
+         vs->Add(vsBar, 1, wxEXPAND | wxALIGN_TOP);
          hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
       }
 
@@ -771,8 +783,8 @@ void ProjectWindow::Init()
 
       // Bottom scrollbar
       hs->Add(viewInfo.GetLeftOffset() - 1, 0);
-      hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
-      hs->Add(mVsbar->GetSize().GetWidth(), 0);
+      hs->Add(hsBar, 1, wxALIGN_BOTTOM);
+      hs->Add(vsBar->GetSize().GetWidth(), 0);
       bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
    }
 
@@ -784,14 +796,16 @@ void ProjectWindow::Init()
    AddPages(this, Factory, pNotebook);
 #endif
 
-   mMainPanel->Layout();
+   auto mainPanel = window.GetMainPanel();
+
+   mainPanel->Layout();
 
    wxASSERT( trackPanel.GetProject() == &project );
 
    // MM: Give track panel the focus to ensure keyboard commands work
    trackPanel.SetFocus();
 
-   FixScrollbars();
+   window.FixScrollbars();
    ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //
@@ -809,17 +823,14 @@ void ProjectWindow::Init()
       wxIcon ic{};
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
 #endif
-      SetIcon(ic);
+      window.SetIcon(ic);
    }
 #endif
-   mIconized = false;
 
-   UpdateStatusWidths();
+   window.UpdateStatusWidths();
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    statusBar->SetStatusText(msg, mainStatusBarField);
-
-   wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
 
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.

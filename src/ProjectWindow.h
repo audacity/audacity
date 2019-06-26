@@ -22,6 +22,9 @@ class Track;
 class wxScrollBar;
 class wxPanel;
 
+class ProjectWindow;
+void InitProjectWindow( ProjectWindow &window );
+
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class ProjectWindow final : public wxFrame
@@ -34,6 +37,7 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
    AudacityProject &GetProject() { return mProject; }
+   const AudacityProject &GetProject() const { return mProject; }
 
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
@@ -44,8 +48,6 @@ public:
    // Next available ID for sub-windows
    int NextWindowID();
 
-   void Init();
-
    bool IsActive() override;
    bool IsIconized() const override;
 
@@ -53,6 +55,7 @@ public:
    void SetIsBeingDeleted() { mIsDeleting = true; }
 
    wxWindow *GetMainPage() { return mMainPage; }
+   wxPanel *GetMainPanel() { return mMainPanel; }
    wxPanel *GetTopPanel() { return mTopPanel; }
 
    void UpdateStatusWidths();
@@ -101,6 +104,7 @@ public:
    // Scrollbars
 
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
+   wxScrollBar &GetHorizontalScrollBar() { return *mHsbar; }
 
    void ScrollIntoView(double pos);
    void ScrollIntoView(int x);
@@ -185,7 +189,7 @@ private:
 
    bool mAutoScrolling{ false };
    bool mActive{ true };
-   bool mIconized;
+   bool mIconized{ false };
    bool mShownOnce{ false };
 
 
