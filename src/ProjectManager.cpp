@@ -49,9 +49,16 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/WindowAccessible.h"
 
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
+#include <wx/scrolbar.h>
+#include <wx/sizer.h>
+
+#ifdef __WXGTK__
+#include "../images/AudacityLogoAlpha.xpm"
+#endif
 
 const int AudacityProjectTimerID = 5200;
 
@@ -346,6 +353,174 @@ private:
 };
 
 #endif
+
+void InitProjectWindow( ProjectWindow &window )
+{
+   auto &project = window.GetProject();
+
+#ifdef EXPERIMENTAL_DA2
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
+   // Note that the first field of the status bar is a dummy, and its width is set
+   // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
+   // if you move to the menu bar, the first field of the menu bar is cleared, which
+   // is undesirable behaviour.
+   // In addition, the help strings of menu items are by default sent to the first
+   // field. Currently there are no such help strings, but it they were introduced, then
+   // there would need to be an event handler to send them to the appropriate field.
+   auto statusBar = window.CreateStatusBar(4);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
+#endif
+   statusBar->SetName(wxT("status_line"));     // not localized
+
+   auto &viewInfo = ViewInfo::Get( project );
+
+   // LLL:  Read this!!!
+   //
+   // Until the time (and cpu) required to refresh the track panel is
+   // reduced, leave the following window creations in the order specified.
+   // This will place the refresh of the track panel last, allowing all
+   // the others to get done quickly.
+   //
+   // Near as I can tell, this is only a problem under Windows.
+   //
+
+
+   //
+   // Create the ToolDock
+   //
+   ToolManager::Get( project ).LayoutToolBars();
+
+   //
+   // Create the horizontal ruler
+   //
+   auto &ruler = AdornedRulerPanel::Get( project );
+
+   //
+   // Create the TrackPanel and the scrollbars
+   //
+
+   auto topPanel = window.GetTopPanel();
+
+   {
+      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
+      ubs->Add(&ruler, 0, wxEXPAND);
+      topPanel->SetSizer(ubs.release());
+   }
+
+   // Ensure that the topdock comes before the ruler in the tab order,
+   // irrespective of the order in which they were created.
+   ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
+
+   const auto pPage = window.GetMainPage();
+
+   wxBoxSizer *bs;
+   {
+      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      bs = ubs.get();
+      bs->Add(topPanel, 0, wxEXPAND | wxALIGN_TOP);
+      bs->Add(pPage, 1, wxEXPAND);
+      bs->Add( ToolManager::Get( project ).GetBotDock(), 0, wxEXPAND );
+      window.SetAutoLayout(true);
+      window.SetSizer(ubs.release());
+   }
+   bs->Layout();
+
+   auto &trackPanel = TrackPanel::Get( project );
+
+   // LLL: When Audacity starts or becomes active after returning from
+   //      another application, the first window that can accept focus
+   //      will be given the focus even if we try to SetFocus().  By
+   //      making the TrackPanel that first window, we resolve several
+   //      keyboard focus problems.
+   pPage->MoveBeforeInTabOrder(topPanel);
+
+   bs = (wxBoxSizer *)pPage->GetSizer();
+
+   auto vsBar = &window.GetVerticalScrollBar();
+   auto hsBar = &window.GetHorizontalScrollBar();
+
+   {
+      // Top horizontal grouping
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+      // Track panel
+      hs->Add(&trackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+
+      {
+         // Vertical grouping
+         auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+
+         // Vertical scroll bar
+         vs->Add(vsBar, 1, wxEXPAND | wxALIGN_TOP);
+         hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
+      }
+
+      bs->Add(hs.release(), 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+   }
+
+   {
+      // Bottom horizontal grouping
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+      // Bottom scrollbar
+      hs->Add(viewInfo.GetLeftOffset() - 1, 0);
+      hs->Add(hsBar, 1, wxALIGN_BOTTOM);
+      hs->Add(vsBar->GetSize().GetWidth(), 0);
+      bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
+   }
+
+   // Lay it out
+   pPage->SetAutoLayout(true);
+   pPage->Layout();
+
+#ifdef EXPERIMENTAL_NOTEBOOK
+   AddPages(this, Factory, pNotebook);
+#endif
+
+   auto mainPanel = window.GetMainPanel();
+
+   mainPanel->Layout();
+
+   wxASSERT( trackPanel.GetProject() == &project );
+
+   // MM: Give track panel the focus to ensure keyboard commands work
+   trackPanel.SetFocus();
+
+   window.FixScrollbars();
+   ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
+
+   //
+   // Set the Icon
+   //
+
+   // loads either the XPM or the windows resource, depending on the platform
+#if !defined(__WXMAC__) && !defined(__WXX11__)
+   {
+#if defined(__WXMSW__)
+      wxIcon ic{ wxICON(AudacityLogo) };
+#elif defined(__WXGTK__)
+      wxIcon ic{wxICON(AudacityLogoAlpha)};
+#else
+      wxIcon ic{};
+      ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
+#endif
+      window.SetIcon(ic);
+   }
+#endif
+
+   window.UpdateStatusWidths();
+   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
+                                   AUDACITY_VERSION_STRING);
+   statusBar->SetStatusText(msg, mainStatusBarField);
+
+#ifdef EXPERIMENTAL_DA2
+   ClearBackground();// For wxGTK.
+#endif
+}
 
 AudacityProject *ProjectManager::New()
 {
