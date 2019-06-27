@@ -170,6 +170,8 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 
+    EVT_SIZE(TrackPanel::OnSize)
+
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
@@ -252,8 +254,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mTracks(tracks),
      mRuler(ruler),
      mTrackArtist(nullptr),
-     mRefreshBacking(false),
-     vrulerSize(36,0)
+     mRefreshBacking(false)
 #ifndef __WXGTK__   //Get rid if this pragma for gtk
 #pragma warning( default: 4355 )
 #endif
@@ -344,24 +345,6 @@ void TrackPanel::UpdatePrefs()
    Refresh();
 }
 
-wxSize TrackPanel::GetTracksUsableArea() const
-{
-   auto size = GetSize();
-   return {
-      std::max( 0, size.GetWidth() - ( GetLeftOffset() + kRightMargin ) ),
-      size.GetHeight()
-   };
-}
-
-void TrackPanel::GetTracksUsableArea(int *width, int *height) const
-{
-   auto size = GetTracksUsableArea();
-   if (width)
-      *width = size.GetWidth();
-   if (height)
-      *height = size.GetHeight();
-}
-
 /// Gets the pointer to the AudacityProject that
 /// goes with this track panel.
 AudacityProject * TrackPanel::GetProject() const
@@ -382,6 +365,14 @@ AudacityProject * TrackPanel::GetProject() const
    pWind = pWind->GetParent(); //ProjectWindow
    wxASSERT( pWind );
    return &static_cast<ProjectWindow*>( pWind )->GetProject();
+}
+
+void TrackPanel::OnSize( wxSizeEvent &evt )
+{
+   evt.Skip();
+   const auto &size = evt.GetSize();
+   mViewInfo->SetWidth( size.GetWidth() );
+   mViewInfo->SetHeight( size.GetHeight() );
 }
 
 void TrackPanel::OnIdle(wxIdleEvent& event)
@@ -505,13 +496,6 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
    default:
       break;
    }
-}
-
-double TrackPanel::GetScreenEndTime() const
-{
-   int width;
-   GetTracksUsableArea(&width, NULL);
-   return mViewInfo->PositionToTime(width, 0, true);
 }
 
 void TrackPanel::OnUndoReset( wxCommandEvent &event )
@@ -675,12 +659,12 @@ void TrackPanel::ProcessUIHandleResult
 
 void TrackPanel::HandlePageUpKey()
 {
-   mListener->TP_ScrollWindow(2 * mViewInfo->h - GetScreenEndTime());
+   mListener->TP_ScrollWindow(2 * mViewInfo->h - mViewInfo->GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
 {
-   mListener->TP_ScrollWindow(GetScreenEndTime());
+   mListener->TP_ScrollWindow(mViewInfo->GetScreenEndTime());
 }
 
 bool TrackPanel::IsAudioActive()
@@ -830,7 +814,8 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
 double TrackPanel::GetMostRecentXPos()
 {
-   return mViewInfo->PositionToTime(MostRecentXCoord(), GetLabelWidth());
+   return mViewInfo->PositionToTime(
+      MostRecentXCoord(), mViewInfo->GetLabelWidth());
 }
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
@@ -925,7 +910,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
          return (pt && pt->GetSolo());
       } );
 
-   mTrackArtist->leftOffset = GetLeftOffset();
+   mTrackArtist->leftOffset = mViewInfo->GetLeftOffset();
    mTrackArtist->drawEnvelope = envelopeFlag;
    mTrackArtist->bigPoints = bigPointsFlag;
    mTrackArtist->drawSliders = sliderFlag;
@@ -999,11 +984,11 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          trackRect.y = view.GetY() - mViewInfo->vpos + kTopMargin;
          trackRect.height = view.GetHeight();
          if (region.Contains(
-            0, trackRect.y, GetLeftOffset(), trackRect.height)) {
+            0, trackRect.y, mViewInfo->GetLeftOffset(), trackRect.height)) {
             wxRect rect{
                mViewInfo->GetVRulerOffset(),
                trackRect.y,
-               GetVRulerWidth() + 1,
+               mViewInfo->GetVRulerWidth() + 1,
                trackRect.height - kSeparatorThickness
             };
             TrackArt::DrawVRuler(context, channel, rect, bSelected);
@@ -1058,7 +1043,7 @@ void TrackPanel::DrawOutside
       // Now exclude the resizer below
       rect.height -= kSeparatorThickness;
 
-      int labelw = GetLabelWidth();
+      int labelw = mViewInfo->GetLabelWidth();
       int vrul = mViewInfo->GetVRulerOffset();
 
       TrackInfo::DrawBackground( dc, rect, t->GetSelected(), vrul );
@@ -1068,7 +1053,7 @@ void TrackPanel::DrawOutside
       //if (t->IsSyncLockSelected()) {
       //   wxRect tileFill = rect;
       //   tileFill.x = mViewInfo->GetVRulerOffset();
-      //   tileFill.width = GetVRulerWidth();
+      //   tileFill.width = mViewInfo->GetVRulerWidth();
       //   TrackArt::DrawSyncLockTiles(dc, tileFill);
       //}
 
@@ -1259,7 +1244,7 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
             kTopMargin,
-            GetVRulerWidth(),
+            mViewInfo->GetVRulerWidth(),
             0);
 
 
@@ -1278,9 +1263,10 @@ void TrackPanel::UpdateVRulerSize()
       for (auto t : trackRange)
          s.IncTo(t->vrulerSize);
 
-      if (vrulerSize != s) {
-         vrulerSize = s;
-         mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
+      if (mViewInfo->GetVRulerWidth() != s.GetWidth()) {
+         mViewInfo->SetVRulerWidth( s.GetWidth() );
+         mRuler->SetLeftOffset(
+            mViewInfo->GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();
       }
    }
@@ -1290,8 +1276,7 @@ void TrackPanel::UpdateVRulerSize()
 // Make sure selection edge is in view
 void TrackPanel::ScrollIntoView(double pos)
 {
-   int w;
-   GetTracksUsableArea( &w, NULL );
+   auto w = mViewInfo->GetTracksUsableWidth();
 
    int pixel = mViewInfo->TimeToPosition(pos);
    if (pixel < 0 || pixel >= w)
@@ -1304,7 +1289,7 @@ void TrackPanel::ScrollIntoView(double pos)
 
 void TrackPanel::ScrollIntoView(int x)
 {
-   ScrollIntoView(mViewInfo->PositionToTime(x, GetLeftOffset()));
+   ScrollIntoView(mViewInfo->PositionToTime(x, mViewInfo->GetLeftOffset()));
 }
 
 void TrackPanel::OnTrackMenu(Track *t)
@@ -1560,7 +1545,8 @@ struct Subgroup final : TrackPanelGroup {
    explicit Subgroup( TrackPanel &panel ) : mPanel{ panel } {}
    Subdivision Children( const wxRect &rect ) override
    {
-      wxCoord yy = -mPanel.GetViewInfo()->vpos;
+      const auto &viewInfo = *mPanel.GetViewInfo();
+      wxCoord yy = -viewInfo.vpos;
       Refinement refinement;
 
       auto &tracks = *mPanel.GetTracks();
@@ -1576,7 +1562,7 @@ struct Subgroup final : TrackPanelGroup {
          }
          refinement.emplace_back( yy,
             std::make_shared< ResizingChannelGroup >(
-               leader->SharedPointer(), mPanel.GetLeftOffset() )
+               leader->SharedPointer(), viewInfo.GetLeftOffset() )
          );
          yy += height;
       }
@@ -1626,16 +1612,6 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
          return pGroup->mpTrack.get() == leader;
       return false;
    } );
-}
-
-int TrackPanel::GetVRulerWidth() const
-{
-   return vrulerSize.x;
-}
-
-int TrackPanel::GetLabelWidth() const
-{
-   return mViewInfo->GetVRulerOffset() + GetVRulerWidth();
 }
 
 /// Displays the bounds of the selection in the status bar.
@@ -1755,7 +1731,10 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
    : mPanelRect {
         wxPoint{ 0, ViewInfo::Get( *project ).vpos },
-        TrackPanel::Get( *project ).GetTracksUsableArea()
+        wxSize{
+           ViewInfo::Get( *project ).GetTracksUsableWidth(),
+           ViewInfo::Get( *project ).GetHeight()
+        }
      }
 {}
 

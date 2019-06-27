@@ -761,7 +761,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          R.width -= kLeftInset * 2;
          R.height -= kTopInset;
 
-         int labelw = pTP->GetLabelWidth();
+         int labelw = viewInfo.GetLabelWidth();
          //int vrul = viewInfo.GetVRulerOffset();
          bool bIsWave = true;
          //mTrackInfo.DrawBackground(dc, R, t->GetSelected(), bIsWave, labelw, vrul);
@@ -780,7 +780,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          wxRect R = trackRect;
          R.x += viewInfo.GetVRulerOffset();
          R.y += kTopMargin;
-         R.width = tp.GetVRulerWidth();
+         R.width = viewInfo.GetVRulerWidth();
          R.height -= (kTopMargin + kBottomMargin);
          R.SetPosition( R.GetPosition() + P );
 

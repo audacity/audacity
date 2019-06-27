@@ -53,7 +53,6 @@ AudacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
 double GetZoomOfSelection( const AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    const double lowerBound =
@@ -74,8 +73,7 @@ double GetZoomOfSelection( const AudacityProject &project )
    //      Fixes might have resulted from commits
    //      1b8f44d0537d987c59653b11ed75a842b48896ea and
    //      e7c7bb84a966c3b3cc4b3a9717d5f247f25e7296
-   int width;
-   trackPanel.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    return (width - 1) / denom;
 }
 
@@ -149,7 +147,7 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
 namespace {
 void DoZoomFitV(AudacityProject &project)
 {
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
@@ -161,8 +159,7 @@ void DoZoomFitV(AudacityProject &project)
       return;
 
    // Find total height to apportion
-   int height;
-   trackPanel.GetTracksUsableArea(NULL, &height);
+   auto height = viewInfo.GetHeight();
    height -= 28;
    
    // The height of minimized and non-audio tracks cannot be apportioned
@@ -230,7 +227,7 @@ void OnZoomToggle(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
 //   const double origLeft = viewInfo.h;
-//   const double origWidth = GetScreenEndTime() - origLeft;
+//   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
    // Choose the zoom that is most different to the current zoom.
    double Zoom1 = GetZoomOfPreset( project, TracksPrefs::Zoom1Choice() );
@@ -308,14 +305,13 @@ void OnGoSelStart(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
    window.TP_ScrollWindow(
-      selectedRegion.t0() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnGoSelEnd(const CommandContext &context)
@@ -323,14 +319,13 @@ void OnGoSelEnd(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
    window.TP_ScrollWindow(
-      selectedRegion.t1() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnHistory(const CommandContext &context)

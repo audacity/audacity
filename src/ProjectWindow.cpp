@@ -413,8 +413,7 @@ unsigned operator()
       // MM: Zoom in/out when used with Control key down
       // We're converting pixel positions to times,
       // counting pixels from the left edge of the track.
-      auto &trackPanel = TrackPanel::Get( *pProject );
-      int trackLeftEdge = trackPanel.GetLeftOffset();
+      int trackLeftEdge = viewInfo.GetLeftOffset();
 
       // Time corresponding to mouse position
       wxCoord xx;
@@ -424,7 +423,7 @@ unsigned operator()
       // Scrubbing? Expand or contract about the center, ignoring mouse position
       if (scrubber.IsScrollScrubbing())
          center_h = viewInfo.h +
-            (trackPanel.GetScreenEndTime() - viewInfo.h) / 2.0;
+            (viewInfo.GetScreenEndTime() - viewInfo.h) / 2.0;
       // Zooming out? Focus on mouse.
       else if( steps <= 0 )
          center_h = mouse_h;
@@ -769,7 +768,7 @@ void ProjectWindow::Init()
       auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       // Bottom scrollbar
-      hs->Add(trackPanel.GetLeftOffset() - 1, 0);
+      hs->Add(viewInfo.GetLeftOffset() - 1, 0);
       hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
       hs->Add(mVsbar->GetSize().GetWidth(), 0);
       bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
@@ -791,7 +790,7 @@ void ProjectWindow::Init()
    trackPanel.SetFocus();
 
    FixScrollbars();
-   ruler.SetLeftOffset(trackPanel.GetLeftOffset());  // bevel on AdornedRuler
+   ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //
    // Set the Icon
@@ -1049,11 +1048,10 @@ double ProjectWindow::ScrollingLowerBoundTime() const
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    if (!MayScrollBeyondZero())
       return 0;
-   const double screen = trackPanel.GetScreenEndTime() - viewInfo.h;
+   const double screen = viewInfo.GetScreenEndTime() - viewInfo.h;
    return std::min(tracks.GetStartTime(), -screen);
 }
 
@@ -1144,8 +1142,8 @@ void ProjectWindow::FixScrollbars()
 
    int totalHeight = TrackView::GetTotalHeight( tracks ) + 32;
 
-   int panelWidth, panelHeight;
-   trackPanel.GetTracksUsableArea(&panelWidth, &panelHeight);
+   auto panelWidth = viewInfo.GetTracksUsableWidth();
+   auto panelHeight = viewInfo.GetHeight();
 
    // (From Debian...at least I think this is the change cooresponding
    // to this comment)
@@ -1171,7 +1169,7 @@ void ProjectWindow::FixScrollbars()
       std::max(LastTime, viewInfo.selectedRegion.t1());
 
    const double screen =
-      trackPanel.GetScreenEndTime() - viewInfo.h;
+      viewInfo.GetScreenEndTime() - viewInfo.h;
    const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
@@ -1218,7 +1216,7 @@ void ProjectWindow::FixScrollbars()
    bool oldhstate;
    bool oldvstate;
    bool newhstate =
-      (trackPanel.GetScreenEndTime() - viewInfo.h) < viewInfo.total;
+      (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
 #ifdef __WXGTK__
@@ -1277,7 +1275,7 @@ void ProjectWindow::FixScrollbars()
                         panelHeight / viewInfo.scrollStep, TRUE);
 
    if (refresh || (rescroll &&
-       (trackPanel.GetScreenEndTime() - viewInfo.h) < viewInfo.total)) {
+       (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total)) {
       trackPanel.Refresh(false);
    }
 
@@ -1469,8 +1467,7 @@ void ProjectWindow::DoScroll()
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
 
-   int width;
-   trackPanel.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    viewInfo.SetBeforeScreenWidth(viewInfo.sbarH, width, lowerBound);
 
 
@@ -1632,7 +1629,7 @@ void ProjectWindow::Zoom(double level)
    // tOnLeft is the amount of time we would need before the selection left edge to center it.
    float t0 = viewInfo.selectedRegion.t0();
    float t1 = viewInfo.selectedRegion.t1();
-   float tAvailable = TrackPanel::Get( project ).GetScreenEndTime() - viewInfo.h;
+   float tAvailable = viewInfo.GetScreenEndTime() - viewInfo.h;
    float tOnLeft = (tAvailable - t0 + t1)/2.0;
    // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
    // If tOnLeft is positive, then we have room for the selection, so scroll to it.
@@ -1770,8 +1767,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
       auto &viewInfo = ViewInfo::Get( *mProject );
       auto &trackPanel = TrackPanel::Get( *mProject );
       const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
-      int width;
-      trackPanel.GetTracksUsableArea(&width, NULL);
+      auto width = viewInfo.GetTracksUsableWidth();
       int deltaX;
       switch (mMode)
       {
@@ -1816,7 +1812,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    // when there's a selection that's currently at least
    // partially on-screen
 
-   const double endTime = trackPanel.GetScreenEndTime();
+   const double endTime = viewInfo.GetScreenEndTime();
    const double duration = endTime - viewInfo.h;
 
    bool selectionIsOnscreen =
@@ -1844,7 +1840,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
       // Zoom in
       ZoomBy(ZoomFactor);
       const double newDuration =
-         trackPanel.GetScreenEndTime() - viewInfo.h;
+         viewInfo.GetScreenEndTime() - viewInfo.h;
 
       // Recenter on selCenter
       TP_ScrollWindow(selCenter - newDuration / 2);
@@ -1857,7 +1853,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    ZoomBy(ZoomFactor);
 
    const double newDuration =
-      trackPanel.GetScreenEndTime() - viewInfo.h;
+      viewInfo.GetScreenEndTime() - viewInfo.h;
    double newh = origLeft + (origWidth - newDuration) / 2;
 
    // MM: Commented this out because it was confusing users
@@ -1879,15 +1875,14 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
 void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    //Zoom() may change these, so record original values:
    const double origLeft = viewInfo.h;
-   const double origWidth = trackPanel.GetScreenEndTime() - origLeft;
+   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
    ZoomBy(ZoomFactor);
-   const double newWidth = trackPanel.GetScreenEndTime() - viewInfo.h;
+   const double newWidth = viewInfo.GetScreenEndTime() - viewInfo.h;
 
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
@@ -1899,7 +1894,6 @@ double ProjectWindow::GetZoomOfToFit() const
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
 
    const double end = tracks.GetEndTime();
    const double start = viewInfo.bScrollBeyondZero
@@ -1910,8 +1904,7 @@ double ProjectWindow::GetZoomOfToFit() const
    if (len <= 0.0)
       return viewInfo.GetZoom();
 
-   int w;
-   trackPanel.GetTracksUsableArea(&w, NULL);
+   auto w = viewInfo.GetTracksUsableWidth();
    w -= 10;
    return w/len;
 }
