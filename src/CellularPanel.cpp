@@ -976,14 +976,17 @@ namespace {
       const TrackPanelGroup::Refinement &children,
       const TrackPanelGroup::Refinement::const_iterator iter)
    {
-      const auto lowerBound = (divideX ? rect.GetLeft() : rect.GetTop());
-      const auto upperBound = (divideX ? rect.GetRight() : rect.GetBottom());
       const auto next = iter + 1;
       const auto end = children.end();
-      const auto nextCoord = ((next == end) ? upperBound : next->first - 1);
+      wxCoord nextCoord;
+      if (next == end)
+         nextCoord = std::max( iter->first,
+            divideX ? rect.GetRight() : rect.GetBottom() );
+      else
+         nextCoord = next->first - 1;
 
-      auto lesser = std::max(lowerBound, std::min(upperBound, iter->first));
-      auto greater = std::max(lesser, std::min(upperBound, nextCoord));
+      auto lesser = iter->first;
+      auto greater = nextCoord;
 
       auto result = rect;
       if (divideX)
