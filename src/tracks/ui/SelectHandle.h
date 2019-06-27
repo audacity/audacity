@@ -73,11 +73,6 @@ public:
 
    Result Cancel(AudacityProject*) override;
 
-   void DrawExtras
-      (DrawingPass pass,
-      wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
-      override;
-
    static UIHandle::Result NeedChangeHighlight
       (const SelectHandle &oldState,
        const SelectHandle &newState);
@@ -116,6 +111,15 @@ public:
       (SpectrumAnalyst &analyst,
        ViewInfo &viewInfo, const WaveTrack *pTrack, bool up);
 private:
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
    //void ResetFreqSelectionPin
    //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
 

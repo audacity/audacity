@@ -21,6 +21,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
+#include "../../TrackArtist.h"
+#include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UndoManager.h"
 #include "../../WaveClip.h"
@@ -848,14 +850,25 @@ UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
    return RefreshCode::RefreshAll;
 }
 
-void TimeShiftHandle::DrawExtras
-(DrawingPass pass,
- wxDC * dc, const wxRegion &, const wxRect &)
+void TimeShiftHandle::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
 {
-   if (pass == Panel) {
+   if ( iPass == TrackArtist::PassSnapping ) {
+      auto &dc = context.dc;
       // Draw snap guidelines if we have any
-      if ( mSnapManager )
-         mSnapManager->Draw
-            ( dc, mClipMoveState.snapLeft, mClipMoveState.snapRight );
+      if ( mSnapManager ) {
+         mSnapManager->Draw(
+            &dc, mClipMoveState.snapLeft, mClipMoveState.snapRight );
+      }
    }
+}
+
+wxRect TimeShiftHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassSnapping )
+      return MaximizeHeight( rect, panelRect );
+   else
+      return rect;
 }

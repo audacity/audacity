@@ -35,6 +35,11 @@ private:
    // back-pointer is weak to break a cycle
    std::weak_ptr<TrackView> mwView;
 
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
 };
 

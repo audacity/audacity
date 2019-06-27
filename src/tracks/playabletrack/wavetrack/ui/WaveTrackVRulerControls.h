@@ -35,6 +35,14 @@ public:
        AudacityProject *pProject) override;
    void DoZoomPreset( int i);
 private:
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   // TrackVRulerControls implementation
+   void UpdateRuler( const wxRect &rect ) override;
+
    std::weak_ptr<WaveTrackVZoomHandle> mVZoomHandle;
 };
 

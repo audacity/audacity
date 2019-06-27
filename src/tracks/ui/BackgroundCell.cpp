@@ -11,14 +11,18 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "BackgroundCell.h"
 
+#include "../../AColor.h"
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"
 #include "../../Track.h"
+#include "../../TrackArtist.h"
 #include "../../TrackPanel.h"
+#include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UIHandle.h"
+#include "../../ViewInfo.h"
 
 #include <wx/cursor.h>
 #include <wx/event.h>
@@ -117,3 +121,30 @@ std::shared_ptr<Track> BackgroundCell::DoFindTrack()
    return {};
 }
 
+void BackgroundCell::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassBackground ) {
+      auto &dc = context.dc;
+      // Paint over the part below the tracks
+      AColor::TrackPanelBackground( &dc, false );
+      dc.DrawRectangle( rect );
+   }
+}
+
+wxRect BackgroundCell::DrawingArea(
+   const wxRect &rect, const wxRect &, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassBackground )
+      // If there are any tracks, extend the drawing area up, to cover the
+      // bottom ends of any zooming guide lines.
+      return {
+         rect.x,
+         rect.y - kTopMargin,
+         rect.width,
+         rect.height + kTopMargin
+      };
+   else
+      return rect;
+}

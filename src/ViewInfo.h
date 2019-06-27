@@ -21,20 +21,14 @@
 
 // See big pictorial comment in TrackPanel.cpp for explanation of these numbers
 enum : int {
-   kLeftInset = 4,
-   kRightInset = kLeftInset,
+   // constants related to y coordinates in the track panel
    kTopInset = 4,
-   kShadowThickness = 1,
-   kBorderThickness = 1,
    kTopMargin = kTopInset + kBorderThickness,
    kBottomMargin = kShadowThickness + kBorderThickness,
-   kLeftMargin = kLeftInset + kBorderThickness,
-   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
    kSeparatorThickness = kBottomMargin + kTopMargin,
 };
 
 enum : int {
-   kTrackInfoWidth = 100 - kLeftMargin,
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
    kTrackInfoSliderHeight = 25,
    kTrackInfoSliderWidth = 84,
@@ -103,7 +97,8 @@ public:
 
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
-   int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
+   int GetHeight() const { return mHeight; }
+   void SetHeight( int height ) { mHeight = height; }
 
    static int UpdateScrollPrefsID();
    void UpdatePrefs() override;
@@ -157,6 +152,9 @@ public:
 
    // Receive track panel timer notifications
    void OnTimer(wxCommandEvent &event);
+
+private:
+   int mHeight{ 0 };
 };
 
 #endif

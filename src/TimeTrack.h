@@ -88,7 +88,7 @@ class TimeTrack final : public Track {
 
    void testMe();
 
-   Ruler &GetRuler() const { return *mRuler; } // hide this later
+   Ruler &GetRuler() const { return *mRuler; }
 
  private:
    // Identifying the type of track

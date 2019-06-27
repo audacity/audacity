@@ -96,19 +96,12 @@ class AUDACITY_DLL_API TrackPanel final
 
    double GetMostRecentXPos();
 
+   void OnSize( wxSizeEvent & );
    void OnIdle(wxIdleEvent & event);
    void OnTimer(wxTimerEvent& event);
    void OnODTask(wxCommandEvent &event);
    void OnProjectSettingsChange(wxCommandEvent &event);
    void OnTrackFocusChange( wxCommandEvent &event );
-
-   int GetLeftOffset() const { return GetLabelWidth() + 1;}
-
-   wxSize GetTracksUsableArea() const;
-
-   // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
-   // Either argument may be NULL
-   void GetTracksUsableArea(int *width, int *height) const;
 
    void OnUndoReset( wxCommandEvent &event );
 
@@ -138,12 +131,8 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
-   void UpdateTrackVRuler(const Track *t);
+   void UpdateTrackVRuler(Track *t);
    void UpdateVRulerSize();
-
-   // Returns the time corresponding to the pixel column one past the track area
-   // (ignoring any fisheye)
-   double GetScreenEndTime() const;
 
  protected:
    bool IsAudioActive();
@@ -172,11 +161,7 @@ protected:
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
 
-   int GetVRulerWidth() const;
-
 public:
-   int GetLabelWidth() const;
-
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
    const TrackList * GetTracks() const { return mTracks.get(); }
@@ -187,25 +172,6 @@ public:
 
 protected:
    void DrawTracks(wxDC * dc);
-
-   void DrawEverythingElse(TrackPanelDrawingContext &context,
-                           const wxRegion & region,
-                           const wxRect & clip);
-   void DrawOutside(
-      TrackPanelDrawingContext &context,
-      const Track *leaderTrack, const wxRect & teamRect);
-
-   void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
-   void DrawShadow            ( wxDC* dc, const wxRect & rect );
-   void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect );
-   void ClearTopMargin        (
-      TrackPanelDrawingContext &context, const wxRect &clip);
-   void ClearLeftAndRightMargins    (
-      TrackPanelDrawingContext &context, const wxRect & clip);
-   void ClearSeparator    (
-      TrackPanelDrawingContext &context, const wxRect & rect);
-   void DrawSash              (
-      wxDC* dc, const wxRect & rect, int labelw, bool bSelected );
 
 public:
    // Set the object that performs catch-all event handling when the pointer
@@ -270,9 +236,6 @@ protected:
    friend class ScreenshotCommand;
 
    SelectedRegion mLastDrawnSelectedRegion {};
-
- public:
-   wxSize vrulerSize;
 
  protected:
 

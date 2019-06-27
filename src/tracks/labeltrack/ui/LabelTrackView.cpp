@@ -716,7 +716,8 @@ void LabelTrackView::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   const auto pTrack = FindLabelTrack();
+   const auto pTrack = std::static_pointer_cast< const LabelTrack >(
+      FindTrack()->SubstitutePendingChangedTrack());
    const auto &mLabels = pTrack->GetLabels();
 
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
@@ -831,6 +832,15 @@ void LabelTrackView::Draw
                    xPos-1, labelStruct.y + mFontHeight/2 - 1);
       currentPen.SetWidth(1);
    }
+}
+
+void LabelTrackView::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassTracks )
+      Draw( context, rect );
+   CommonTrackView::Draw( context, rect, iPass );
 }
 
 void LabelTrackView::SetSelectedIndex( int index )
@@ -1058,7 +1068,6 @@ bool LabelTrackView::PasteSelectedText(double sel0, double sel1)
    mInitialCursorPos =  mCurrentCursorPos = left.length() + text.length();
    return true;
 }
-
 
 /// @return true if the text data is available in the clipboard, false otherwise
 bool LabelTrackView::IsTextClipSupported()
@@ -2045,7 +2054,7 @@ int LabelTrackView::DialogForLabelName(
    wxPoint position = trackPanel.FindTrackRect(trackPanel.GetFocusedTrack()).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
-   position.x += trackPanel.GetLabelWidth()
+   position.x += viewInfo.GetLabelWidth()
       + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
       -40;
    position.y += 2;  // just below the bottom of the track

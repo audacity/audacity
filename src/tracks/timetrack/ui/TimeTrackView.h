@@ -34,6 +34,11 @@ private:
       override;
 
    std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
 };
 
 #endif

@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Project.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
@@ -706,15 +707,25 @@ UIHandle::Result WaveTrackVZoomHandle::Cancel(AudacityProject*)
    return RefreshCode::RefreshAll;
 }
 
-void WaveTrackVZoomHandle::DrawExtras
-(DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
+void WaveTrackVZoomHandle::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
 {
-   if (!mpTrack.lock()) // TrackList::Lock()?
-      return;
-
-   if ( pass == UIHandle::Cells &&
-        IsDragZooming( mZoomStart, mZoomEnd ) )
-      TrackVRulerControls::DrawZooming
-         ( dc, mRect, panelRect, mZoomStart, mZoomEnd );
+   if ( iPass == TrackArtist::PassZooming ) {
+      if (!mpTrack.lock()) //? TrackList::Lock()
+         return;
+      
+      if ( IsDragZooming( mZoomStart, mZoomEnd ) )
+         TrackVRulerControls::DrawZooming
+            ( context, rect, mZoomStart, mZoomEnd );
+   }
 }
 
+wxRect WaveTrackVZoomHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassZooming )
+      return TrackVRulerControls::ZoomingArea( rect, panelRect );
+   else
+      return rect;
+}
