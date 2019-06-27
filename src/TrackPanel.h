@@ -131,7 +131,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
-   void UpdateTrackVRuler(const Track *t);
+   void UpdateTrackVRuler(Track *t);
    void UpdateVRulerSize();
 
  protected:
@@ -172,25 +172,6 @@ public:
 
 protected:
    void DrawTracks(wxDC * dc);
-
-   void DrawEverythingElse(TrackPanelDrawingContext &context,
-                           const wxRegion & region,
-                           const wxRect & clip);
-   void DrawOutside(
-      TrackPanelDrawingContext &context,
-      const Track *leaderTrack, const wxRect & teamRect);
-
-   void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
-   void DrawShadow            ( wxDC* dc, const wxRect & rect );
-   void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect );
-   void ClearTopMargin        (
-      TrackPanelDrawingContext &context, const wxRect &clip);
-   void ClearLeftAndRightMargins    (
-      TrackPanelDrawingContext &context, const wxRect & clip);
-   void ClearSeparator    (
-      TrackPanelDrawingContext &context, const wxRect & rect);
-   void DrawSash              (
-      wxDC* dc, const wxRect & rect, int labelw, bool bSelected );
 
 public:
    // Set the object that performs catch-all event handling when the pointer

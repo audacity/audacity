@@ -31,6 +31,11 @@ public:
       (const TrackPanelMouseState &, const AudacityProject *pProject)
       final override;
 
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
    virtual int GetMinimizedHeight() const override;
 
 protected:

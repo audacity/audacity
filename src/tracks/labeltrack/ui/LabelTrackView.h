@@ -197,8 +197,19 @@ public:
    int GetInitialCursorPosition() const { return mInitialCursorPos; }
    void SetTextHighlight( int initialPosition, int currentPosition );
 
+private:
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
    static void calculateFontHeight(wxDC & dc);
+
+public:
    bool HasSelection() const;
+
+private:
    void RemoveSelectedText();
 
    void OnLabelAdded( LabelTrackEvent& );

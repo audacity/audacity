@@ -3238,6 +3238,7 @@
 		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
 		5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutoRecoveryDialog.cpp; sourceTree = "<group>"; };
 		5E19F59822A9665500E3F88E /* AutoRecoveryDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoRecoveryDialog.h; sourceTree = "<group>"; };
+		5E1C3F4D218F7604002CD087 /* TrackPanelDrawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelDrawable.h; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RealtimeEffectManager.cpp; sourceTree = "<group>"; };
@@ -4607,6 +4608,7 @@
 				1790B0ED09883BFD008A330A /* TrackPanel.h */,
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */,
+				5E1C3F4D218F7604002CD087 /* TrackPanelDrawable.h */,
 				5E52335F1EFDD57D001E4BB8 /* TrackPanelDrawingContext.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */,
