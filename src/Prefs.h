@@ -33,6 +33,7 @@
 
 #include "../include/audacity/ComponentInterface.h"
 
+#include <memory>
 #include <wx/fileconf.h>  // to inherit wxFileConfig
 #include <wx/event.h> // to declare custom event types
 
@@ -182,7 +183,8 @@ protected:
    virtual void UpdateSelectedPrefs( int id );
 
 private:
-   void OnEvent(wxCommandEvent&);
+   struct Impl;
+   std::unique_ptr<Impl> mpImpl;
 };
 
 #endif

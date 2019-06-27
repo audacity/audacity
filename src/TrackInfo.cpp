@@ -43,10 +43,56 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "tracks/ui/TrackView.h"
 
-static wxString gSoloPref;
+
+// Subscribe to preference changes to update static variables
+struct Settings : PrefsListener {
+   wxString gSoloPref;
+   wxFont gFont;
+
+   Settings()
+   {
+      UpdatePrefs();
+   }
+
+   void UpdatePrefs() override
+   {
+      gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
+
+      // Calculation of best font size depends on language, so it should be redone in case
+      // the language preference changed.
+
+      int fontSize = 10;
+      gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+      int allowableWidth =
+         // PRL:  was it correct to include the margin?
+         ( kTrackInfoWidth + kLeftMargin )
+            - 2; // 2 to allow for left/right borders
+      int textWidth;
+      std::unique_ptr<wxGraphicsContext> pContext(
+         wxGraphicsContext::Create()
+      );
+      pContext->SetFont( gFont, *wxBLACK );
+      do {
+         gFont.SetPointSize(fontSize);
+         double dWidth;
+         pContext->GetTextExtent(
+            _("Stereo, 999999Hz"), &dWidth, nullptr );
+         textWidth = (wxCoord)( dWidth + 0.5 );
+         fontSize--;
+      } while (textWidth >= allowableWidth);
+   }
+};
+
+static Settings &settings()
+{
+   static Settings theSettings;
+   return theSettings;
+}
+
 bool TrackInfo::HasSoloButton()
 {
-   return gSoloPref!=wxT("None");
+   return settings().gSoloPref != wxT("None");
 }
 
 #define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
@@ -398,12 +444,6 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
-namespace {
-
-wxFont gFont;
-
-}
-
 void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    dest.x = rect.x;
@@ -508,7 +548,7 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 /// \todo Probably should move to 'Utils.cpp'.
 void TrackInfo::SetTrackInfoFont(wxDC * dc)
 {
-   dc->SetFont(gFont);
+   dc->SetFont(settings().gFont);
 }
 
 //#define USE_BEVELS
@@ -521,36 +561,3 @@ unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
 }
-
-// Subscribe to preference changes to update static variables
-static struct MyPrefsListener : PrefsListener {
-   void UpdatePrefs() override
-   {
-      gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
-
-      // Calculation of best font size depends on language, so it should be redone in case
-      // the language preference changed.
-
-      int fontSize = 10;
-      gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-      int allowableWidth =
-         // PRL:  was it correct to include the margin?
-         ( kTrackInfoWidth + kLeftMargin )
-            - 2; // 2 to allow for left/right borders
-      int textWidth;
-      std::unique_ptr<wxGraphicsContext> pContext(
-         wxGraphicsContext::Create()
-      );
-      pContext->SetFont( gFont, *wxBLACK );
-      do {
-         gFont.SetPointSize(fontSize);
-         double dWidth;
-         pContext->GetTextExtent(
-            _("Stereo, 999999Hz"), &dWidth, nullptr );
-         textWidth = (wxCoord)( dWidth + 0.5 );
-         fontSize--;
-      } while (textWidth >= allowableWidth);
-   }
-} sPrefsListener;
-
