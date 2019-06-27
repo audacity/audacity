@@ -89,6 +89,8 @@ is time to refresh some aspect of the screen.
 #include "tracks/ui/ChannelView.h"
 #include "tracks/ui/ChannelVRulerControls.h"
 
+#include "Goniometer.h"
+
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
 
@@ -1496,7 +1498,19 @@ struct LabeledChannelGroup final : TrackPanelGroup {
             std::make_shared<WaveTrackMeterCell>(pWaveTrack));
       refinement.emplace_back(trackLeft,
          std::make_shared<ChannelStack>(mpTrack, mLeftOffset));
-      return { Axis::X, move(refinement) };
+      const auto channels = TrackList::Channels( mpTrack.get() );
+      if (channels.size() == 2) {
+         // make a square at the right if it fits
+         auto height = rect.GetHeight();
+         auto goniometerLeft = left + rect.GetWidth() - height;
+         if ( goniometerLeft > trackLeft ) {
+            refinement.emplace_back(
+               goniometerLeft,
+               Goniometer::Get( **channels.begin() ).shared_from_this()
+            );
+         }
+      }
+      return { Axis::X, std::move( refinement ) };
    }
 
    // TrackPanelDrawable implementation
