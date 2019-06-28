@@ -84,6 +84,7 @@ class ControlToolBar final : public ToolBar {
       const AudioIOStartStreamOptions &options);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
+   void OnIdle(wxIdleEvent & event);
 
    // Choice among the appearances of the play button:
    enum class PlayAppearance {
@@ -128,7 +129,6 @@ class ControlToolBar final : public ToolBar {
    void RegenerateTooltips() override;
 
    int WidthForStatusBar(wxStatusBar* const);
-   void UpdateStatusBar(AudacityProject *pProject);
 
    // Starting and stopping of scrolling display
    void StartScrollingIfPreferred();
@@ -141,6 +141,7 @@ class ControlToolBar final : public ToolBar {
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
  private:
+   void UpdateStatusBar();
 
    static AButton *MakeButton(
       ControlToolBar *pBar,

@@ -337,7 +337,6 @@ void Scrubber::MarkScrubStart(
    //   : ControlToolBar::PlayAppearance::Scrub);
 
    mScrubStartPosition = xx;
-   ctb.UpdateStatusBar(mProject);
    mCancelled = false;
 }
 
@@ -674,8 +673,6 @@ void Scrubber::ContinueScrubbingUI()
       // Show the correct status for seeking.
       bool backup = mSeeking;
       mSeeking = seek;
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.UpdateStatusBar(mProject);
       mSeeking = backup;
    }
 
@@ -1106,12 +1103,6 @@ void Scrubber::DoScrub(bool seek)
 void Scrubber::OnScrubOrSeek(bool seek)
 {
    DoScrub(seek);
-
-   if (HasMark()) {
-      // Show the correct status.
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.UpdateStatusBar(mProject);
-   }
 
    mSeeking = seek;
    CheckMenuItems();

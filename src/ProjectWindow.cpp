@@ -822,7 +822,6 @@ void ProjectWindow::Init()
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    statusBar->SetStatusText(msg, mainStatusBarField);
-   ControlToolBar::Get( project ).UpdateStatusBar( &project );
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
 

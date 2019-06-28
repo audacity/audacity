@@ -99,6 +99,7 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_BUTTON(ID_REW_BUTTON,    ControlToolBar::OnRewind)
    EVT_BUTTON(ID_FF_BUTTON,     ControlToolBar::OnFF)
    EVT_BUTTON(ID_PAUSE_BUTTON,  ControlToolBar::OnPause)
+   EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
 //Standard constructor
@@ -514,7 +515,6 @@ void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
       mPlay->SetAlternateIdx(0);
    }
    EnableDisableButtons();
-   UpdateStatusBar( &mProject );
 }
 
 void ControlToolBar::SetStop(bool down)
@@ -810,7 +810,6 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
    if (p)
       ProjectWindow::Get( *p ).TP_DisplaySelection();
 
-   auto cleanup = finally( [&]{ UpdateStatusBar(p); } );
    PlayDefault();
 }
 
@@ -818,7 +817,6 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
    if (CanStopAudioStream()) {
       StopPlaying();
-      UpdateStatusBar( &mProject );
    }
 }
 
@@ -1104,9 +1102,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
          SetStop(false);
          SetRecord(false);
       }
-
-      // Success or not:
-      UpdateStatusBar( &mProject );
    });
 
    auto transportTracks = tracks;
@@ -1319,8 +1314,12 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    {
       gAudioIO->SetPaused(mPaused);
    }
+}
 
-   UpdateStatusBar( &mProject );
+void ControlToolBar::OnIdle(wxIdleEvent & event)
+{
+   event.Skip();
+   UpdateStatusBar();
 }
 
 void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
@@ -1434,9 +1433,9 @@ wxString ControlToolBar::StateForStatusBar()
    return state;
 }
 
-void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
+void ControlToolBar::UpdateStatusBar()
 {
-   GetProjectFrame( *pProject )
+   GetProjectFrame( mProject )
       .GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
 
