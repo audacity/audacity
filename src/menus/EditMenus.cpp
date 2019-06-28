@@ -48,19 +48,19 @@ bool DoPasteText(AudacityProject &project)
    for (auto pLabelTrack : tracks.Any<LabelTrack>())
    {
       // Does this track have an active label?
-      if (LabelTrackView::Get( *pLabelTrack ).HasSelection()) {
+      if (LabelTrackView::Get( *pLabelTrack ).HasSelection( project )) {
 
          // Yes, so try pasting into it
          auto &view = LabelTrackView::Get( *pLabelTrack );
-         if (view.PasteSelectedText(selectedRegion.t0(),
-                                            selectedRegion.t1()))
+         if (view.PasteSelectedText( project, selectedRegion.t0(),
+                                            selectedRegion.t1() ))
          {
             ProjectHistory::Get( project )
                .PushState(_("Pasted text from the clipboard"), _("Paste"));
 
             // Make sure caret is in view
             int x;
-            if (view.CalcCursorX(&x)) {
+            if (view.CalcCursorX( project, &x )) {
                trackPanel.ScrollIntoView(x);
             }
 
@@ -246,7 +246,7 @@ void OnCut(const CommandContext &context)
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
       auto &view = LabelTrackView::Get( *lt );
-      if (view.CutSelectedText()) {
+      if (view.CutSelectedText( context.project )) {
          trackPanel.Refresh(false);
          return;
       }
@@ -354,7 +354,7 @@ void OnCopy(const CommandContext &context)
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
       auto &view = LabelTrackView::Get( *lt );
-      if (view.CopySelectedText()) {
+      if (view.CopySelectedText( context.project )) {
          //trackPanel.Refresh(false);
          return;
       }
@@ -1034,8 +1034,11 @@ const ReservedCommandFlag
    CutCopyAvailableFlag{
       [](const AudacityProject &project){
          auto range = TrackList::Get( project ).Any<const LabelTrack>()
-            + [](const LabelTrack *pTrack){
-               return LabelTrackView::Get( *pTrack ).IsTextSelected();
+            + [&](const LabelTrack *pTrack){
+               return LabelTrackView::Get( *pTrack ).IsTextSelected(
+                  // unhappy const_cast because track focus might be set
+                  const_cast<AudacityProject&>(project)
+               );
             };
          if ( !range.empty() )
             return true;

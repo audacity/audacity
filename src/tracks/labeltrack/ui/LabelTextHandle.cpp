@@ -71,7 +71,12 @@ LabelTextHandle::~LabelTextHandle()
 {
 }
 
-void LabelTextHandle::HandleTextClick(const wxMouseEvent & evt,
+void LabelTextHandle::HandleTextClick(AudacityProject &
+#if defined(__WXGTK__) && (HAVE_GTK)
+                                                       project
+#endif
+                                                              ,
+   const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
@@ -138,7 +143,7 @@ void LabelTextHandle::HandleTextClick(const wxMouseEvent & evt,
       if (evt.MiddleDown()) {
          // Paste text, making a NEW label if none is selected.
          wxTheClipboard->UsePrimarySelection(true);
-         view.PasteSelectedText(newSel->t0(), newSel->t1());
+         view.PasteSelectedText(project, newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
       }
 #endif
@@ -163,7 +168,8 @@ UIHandle::Result LabelTextHandle::Click
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    mSelectedRegion = viewInfo.selectedRegion;
-   HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
+   HandleTextClick( *pProject,
+      event, evt.rect, viewInfo, &viewInfo.selectedRegion );
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label
@@ -192,7 +198,8 @@ UIHandle::Result LabelTextHandle::Click
    return result | RefreshCode::RefreshCell | RefreshCode::UpdateSelection;
 }
 
-void LabelTextHandle::HandleTextDragRelease(const wxMouseEvent & evt)
+void LabelTextHandle::HandleTextDragRelease(
+   AudacityProject &project, const wxMouseEvent & evt)
 {
    auto pTrack = mpLT.lock();
    if (!pTrack)
@@ -231,13 +238,13 @@ void LabelTextHandle::HandleTextDragRelease(const wxMouseEvent & evt)
    }
 
    if (evt.RightUp()) {
-      const auto selIndex = view.GetSelectedIndex();
+      const auto selIndex = view.GetSelectedIndex( project );
       if ( selIndex != -1 &&
          LabelTrackView::OverTextBox(
             pTrack->GetLabel( selIndex ), evt.m_x, evt.m_y ) ) {
          // popup menu for editing
          // TODO: handle context menus via CellularPanel?
-         view.ShowContextMenu();
+         view.ShowContextMenu( project );
       }
    }
 
@@ -247,13 +254,14 @@ void LabelTextHandle::HandleTextDragRelease(const wxMouseEvent & evt)
 UIHandle::Result LabelTextHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   auto &project = *pProject;
    using namespace RefreshCode;
    auto result = LabelDefaultClickHandle::Drag( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if(pLT)
-      HandleTextDragRelease(event);
+      HandleTextDragRelease( project, event );
 
    // locate the initial mouse position
    if (event.LeftIsDown()) {
@@ -263,9 +271,9 @@ UIHandle::Result LabelTextHandle::Drag
 
          auto pView = pLT ? &LabelTrackView::Get( *pLT ) : nullptr;
          if (pLT &&
-            (pView->GetSelectedIndex() != -1) &&
+            (pView->GetSelectedIndex( project ) != -1) &&
              LabelTrackView::OverTextBox(
-               pLT->GetLabel(pView->GetSelectedIndex()),
+               pLT->GetLabel(pView->GetSelectedIndex( project )),
                mLabelTrackStartXPos,
                mLabelTrackStartYPos))
             mLabelTrackStartYPos = -1;
@@ -302,7 +310,7 @@ UIHandle::Result LabelTextHandle::Release
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if (pLT)
-      HandleTextDragRelease(event);
+      HandleTextDragRelease( *pProject, event );
 
    // handle mouse left button up
    if (event.LeftUp())

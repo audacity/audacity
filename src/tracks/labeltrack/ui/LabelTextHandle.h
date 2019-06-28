@@ -57,9 +57,11 @@ public:
 
 private:
    void HandleTextClick
-      (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
+      (AudacityProject &project,
+       const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
-   void HandleTextDragRelease(const wxMouseEvent & evt);
+   void HandleTextDragRelease(
+      AudacityProject &project, const wxMouseEvent & evt);
 
    std::weak_ptr<LabelTrack> mpLT {};
    int mLabelNum{ -1 };

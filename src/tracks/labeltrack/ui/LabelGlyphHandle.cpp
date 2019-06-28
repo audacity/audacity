@@ -275,7 +275,8 @@ static int Constrain( int value, int min, int max )
 }
 
 bool LabelGlyphHandle::HandleGlyphDragRelease
-(LabelTrackHit &hit, const wxMouseEvent & evt,
+(AudacityProject &project,
+ LabelTrackHit &hit, const wxMouseEvent & evt,
  wxRect & r, const ZoomInfo &zoomInfo,
  SelectedRegion *newSel)
 {
@@ -334,9 +335,9 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       }
 
       const auto &view = LabelTrackView::Get( *pTrack );
-      if( view.HasSelection() )
+      if( view.HasSelection( project ) )
       {
-         auto selIndex = view.GetSelectedIndex();
+         auto selIndex = view.GetSelectedIndex( project );
          //Set the selection region to be equal to
          //the NEW size of the label.
          *newSel = mLabels[ selIndex ].selectedRegion;
@@ -355,7 +356,7 @@ UIHandle::Result LabelGlyphHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    HandleGlyphDragRelease(
-      *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+      *pProject, *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    // Refresh all so that the change of selection is redrawn in all tracks
    return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
@@ -376,7 +377,7 @@ UIHandle::Result LabelGlyphHandle::Release
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (HandleGlyphDragRelease(
-         *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
+         *pProject, *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
       ProjectHistory::Get( *pProject ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);

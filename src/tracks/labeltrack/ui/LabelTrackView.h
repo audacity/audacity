@@ -52,7 +52,7 @@ public:
    static LabelTrackView &Get( LabelTrack& );
    static const LabelTrackView &Get( const LabelTrack& );
 
-   bool DoCaptureKey(const AudacityProject &project, wxKeyEvent &event);
+   bool DoCaptureKey( AudacityProject &project, wxKeyEvent &event );
    bool DoKeyDown(
       AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
    bool DoChar(
@@ -97,7 +97,7 @@ public:
       AudacityProject &project, const SelectedRegion& region,
       const wxString& initialValue, wxString& value);
 
-   bool IsTextSelected() const;
+   bool IsTextSelected( AudacityProject &project ) const;
 
 private:
    void CreateCustomGlyphs();
@@ -108,12 +108,13 @@ public:
 
    void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
-   int GetSelectedIndex() const;
+   int GetSelectedIndex( AudacityProject &project ) const;
    void SetSelectedIndex( int index );
 
-   bool CutSelectedText();
-   bool CopySelectedText();
-   bool PasteSelectedText(double sel0, double sel1);
+   bool CutSelectedText( AudacityProject &project );
+   bool CopySelectedText( AudacityProject &project );
+   bool PasteSelectedText(
+      AudacityProject &project, double sel0, double sel1 );
 
    static void OverGlyph(
       const LabelTrack &track, LabelTrackHit &hit, int x, int y );
@@ -155,16 +156,16 @@ private:
 public:
    //get current cursor position,
    // relative to the left edge of the track panel
-   bool CalcCursorX(int * x) const;
+   bool CalcCursorX( AudacityProject &project, int * x ) const;
 
 private:
    void CalcHighlightXs(int *x1, int *x2) const;
 
 public:
-   void ShowContextMenu();
+   void ShowContextMenu( AudacityProject &project );
 
 private:
-   void OnContextMenu(wxCommandEvent & evt);
+   void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
 
    mutable int mSelIndex{-1};  /// Keeps track of the currently selected label
    
@@ -212,7 +213,7 @@ private:
    static void calculateFontHeight(wxDC & dc);
 
 public:
-   bool HasSelection() const;
+   bool HasSelection( AudacityProject &project ) const;
 
 private:
    void RemoveSelectedText();
