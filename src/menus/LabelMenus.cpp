@@ -325,8 +325,8 @@ void OnPasteNewLabel(const CommandContext &context)
       // Paul L:  copy whatever defines the selected region, not just times
       auto &view = LabelTrackView::Get( *lt );
       view.AddLabel(selectedRegion);
-      if (view.PasteSelectedText(selectedRegion.t0(),
-                                selectedRegion.t1()))
+      if (view.PasteSelectedText( context.project, selectedRegion.t0(),
+                                selectedRegion.t1() ))
          bPastedSomething = true;
 
       // Set previous track

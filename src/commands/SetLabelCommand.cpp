@@ -112,7 +112,7 @@ bool SetLabelCommand::Apply(const CommandContext & context)
          double t1 = pLabel->selectedRegion.t1();
          selectedRegion.setTimes( t0, t1);
       }
-      else if( view.GetSelectedIndex() == ii )
+      else if( view.GetSelectedIndex( context.project ) == ii )
          view.SetSelectedIndex( -1 );
    }
 
