@@ -1079,11 +1079,15 @@ bool LabelTrackView::IsTextClipSupported()
 }
 
 
-int LabelTrackView::GetSelectedIndex( AudacityProject & ) const
+int LabelTrackView::GetSelectedIndex( AudacityProject &project ) const
 {
    // may make delayed update of mutable mSelIndex after track selection change
    auto track = FindLabelTrack();
-   if ( track->GetSelected() )
+   if ( track->GetSelected() ||
+      TrackPanel::Get(
+         // unhappy const_cast because because focus may be set if undefined
+         const_cast<AudacityProject&>( project )
+      ).GetFocusedTrack() == track.get() )
       return mSelIndex = std::max( -1,
          std::min<int>( track->GetLabels().size() - 1, mSelIndex ) );
    else
@@ -2110,3 +2114,4 @@ std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
    return
       std::make_shared<LabelTrackVRulerControls>( shared_from_this() );
 }
+
