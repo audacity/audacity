@@ -1208,7 +1208,8 @@ static bool IsGoodLabelEditKey(const wxKeyEvent & evt)
 }
 
 // Check for keys that we will process
-bool LabelTrackView::DoCaptureKey(wxKeyEvent & event)
+bool LabelTrackView::DoCaptureKey(
+   const AudacityProject &project, wxKeyEvent & event )
 {
    // Check for modifiers and only allow shift
    int mods = event.GetModifiers();
@@ -1233,7 +1234,6 @@ bool LabelTrackView::DoCaptureKey(wxKeyEvent & event)
       bool typeToCreateLabel;
       gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, false);
       if (IsGoodLabelFirstKey(event) && typeToCreateLabel) {
-         AudacityProject * pProj = GetActiveProject();
 
 
 // The commented out code can prevent label creation, causing bug 1551
@@ -1257,7 +1257,7 @@ bool LabelTrackView::DoCaptureKey(wxKeyEvent & event)
 #endif
 
          // If there's a label there already don't capture
-         auto &selectedRegion = ViewInfo::Get( *pProj ).selectedRegion;
+         auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
          if( GetLabelIndex(selectedRegion.t0(),
                            selectedRegion.t1()) != wxNOT_FOUND ) {
             return false;
@@ -1270,24 +1270,24 @@ bool LabelTrackView::DoCaptureKey(wxKeyEvent & event)
    return false;
 }
 
-unsigned LabelTrackView::CaptureKey(wxKeyEvent & event, ViewInfo &, wxWindow *)
+unsigned LabelTrackView::CaptureKey(
+   wxKeyEvent & event, ViewInfo &, wxWindow *, AudacityProject *project )
 {
-   event.Skip(!DoCaptureKey(event));
+   event.Skip(!DoCaptureKey( *project, event ));
    return RefreshCode::RefreshNone;
 }
 
 unsigned LabelTrackView::KeyDown(
-   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent))
+   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent),
+   AudacityProject *project)
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
 
-   AudacityProject *const pProj = GetActiveProject();
-
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
-   if (DoKeyDown(viewInfo.selectedRegion, event)) {
-      ProjectHistory::Get( *pProj ).PushState(_("Modified Label"),
+   if (DoKeyDown( *project, viewInfo.selectedRegion, event )) {
+      ProjectHistory::Get( *project ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
@@ -1295,7 +1295,7 @@ unsigned LabelTrackView::KeyDown(
    // Make sure caret is in view
    int x;
    if (CalcCursorX(&x))
-      TrackPanel::Get( *pProj ).ScrollIntoView(x);
+      TrackPanel::Get( *project ).ScrollIntoView(x);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
@@ -1309,17 +1309,15 @@ unsigned LabelTrackView::KeyDown(
 }
 
 unsigned LabelTrackView::Char(
-   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
+   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *, AudacityProject *project)
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
 
-   AudacityProject *const pProj = GetActiveProject();
-
-   if (DoChar(viewInfo.selectedRegion, event))
-      ProjectHistory::Get( *pProj ).PushState(_("Modified Label"),
+   if (DoChar( *project, viewInfo.selectedRegion, event ))
+      ProjectHistory::Get( *project ).PushState(_("Modified Label"),
       _("Label Edit"),
       UndoPush::CONSOLIDATE);
 
@@ -1335,7 +1333,8 @@ unsigned LabelTrackView::Char(
 }
 
 /// KeyEvent is called for every keypress when over the label track.
-bool LabelTrackView::DoKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
+bool LabelTrackView::DoKeyDown(
+   AudacityProject &project, SelectedRegion &newSel, wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
@@ -1467,10 +1466,10 @@ bool LabelTrackView::DoKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_ESCAPE:
          if (mRestoreFocus >= 0) {
-            auto track = *TrackList::Get( *GetActiveProject() ).Any()
+            auto track = *TrackList::Get( project ).Any()
                .begin().advance(mRestoreFocus);
             if (track)
-               TrackPanel::Get( *GetActiveProject() ).SetFocusedTrack(track);
+               TrackPanel::Get( project ).SetFocusedTrack(track);
             mRestoreFocus = -2;
          }
          mSelIndex = -1;
@@ -1562,7 +1561,8 @@ bool LabelTrackView::DoKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
 /// OnChar is called for incoming characters -- that's any keypress not handled
 /// by OnKeyDown.
-bool LabelTrackView::DoChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
+bool LabelTrackView::DoChar(
+   AudacityProject &project, SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
 {
    // Check for modifiers and only allow shift.
    //
@@ -1595,25 +1595,24 @@ bool LabelTrackView::DoChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event
          return false;
       }
       bool useDialog;
-      AudacityProject *p = GetActiveProject();
       gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
-      auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+      auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
       if (useDialog) {
          wxString title;
          if (DialogForLabelName(
-            *p, selectedRegion, charCode, title) ==
+            project, selectedRegion, charCode, title) ==
              wxID_CANCEL) {
             return false;
          }
          pTrack->SetSelected(true);
          pTrack->AddLabel(selectedRegion, title);
-         ProjectHistory::Get( *p ).PushState(_("Added label"), _("Label"));
+         ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
          return false;
       }
       else {
          pTrack->SetSelected(true);
          AddLabel( selectedRegion );
-         ProjectHistory::Get( *p ).PushState(_("Added label"), _("Label"));
+         ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
       }
    }
 

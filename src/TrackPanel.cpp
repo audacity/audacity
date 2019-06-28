@@ -1476,25 +1476,29 @@ unsigned TrackPanelCell::DoContextMenu
    return RefreshCode::RefreshNone;
 }
 
-unsigned TrackPanelCell::CaptureKey(wxKeyEvent &event, ViewInfo &, wxWindow *)
+unsigned TrackPanelCell::CaptureKey(
+   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
 {
    event.Skip();
    return RefreshCode::RefreshNone;
 }
 
-unsigned TrackPanelCell::KeyDown(wxKeyEvent &event, ViewInfo &, wxWindow *)
+unsigned TrackPanelCell::KeyDown(
+   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
 {
    event.Skip();
    return RefreshCode::RefreshNone;
 }
 
-unsigned TrackPanelCell::KeyUp(wxKeyEvent &event, ViewInfo &, wxWindow *)
+unsigned TrackPanelCell::KeyUp(
+   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
 {
    event.Skip();
    return RefreshCode::RefreshNone;
 }
 
-unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
+unsigned TrackPanelCell::Char(
+   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
 {
    event.Skip();
    return RefreshCode::RefreshNone;

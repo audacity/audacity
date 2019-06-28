@@ -110,22 +110,26 @@ public:
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned CaptureKey
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned KeyDown
-      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned KeyUp
-      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned Char
-      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 };
 
 #endif

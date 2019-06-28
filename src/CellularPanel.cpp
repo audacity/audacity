@@ -539,7 +539,7 @@ void CellularPanel::OnCaptureKey(wxCommandEvent & event)
    const auto t = GetFocusedCell();
    if (t) {
       const unsigned refreshResult =
-         t->CaptureKey(*kevent, *mViewInfo, this);
+         t->CaptureKey(*kevent, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
       event.Skip(kevent->GetSkipped());
    }
@@ -597,7 +597,7 @@ void CellularPanel::OnKeyDown(wxKeyEvent & event)
 
    if (t) {
       const unsigned refreshResult =
-         t->KeyDown(event, *mViewInfo, this);
+         t->KeyDown(event, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
    }
    else
@@ -620,7 +620,7 @@ void CellularPanel::OnChar(wxKeyEvent & event)
    const auto t = GetFocusedCell();
    if (t) {
       const unsigned refreshResult =
-         t->Char(event, *mViewInfo, this);
+         t->Char(event, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
    }
    else
@@ -652,7 +652,7 @@ void CellularPanel::OnKeyUp(wxKeyEvent & event)
    const auto t = GetFocusedCell();
    if (t) {
       const unsigned refreshResult =
-         t->KeyUp(event, *mViewInfo, this);
+         t->KeyUp(event, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
       return;
    }

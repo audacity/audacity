@@ -52,9 +52,11 @@ public:
    static LabelTrackView &Get( LabelTrack& );
    static const LabelTrackView &Get( const LabelTrack& );
 
-   bool DoCaptureKey(wxKeyEvent &event);
-   bool DoKeyDown(SelectedRegion &sel, wxKeyEvent & event);
-   bool DoChar(SelectedRegion &sel, wxKeyEvent & event);
+   bool DoCaptureKey(const AudacityProject &project, wxKeyEvent &event);
+   bool DoKeyDown(
+      AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
+   bool DoChar(
+      AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region,
@@ -71,13 +73,16 @@ private:
       override;
 
    unsigned CaptureKey
-     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+      AudacityProject *project) override;
 
    unsigned KeyDown
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+      AudacityProject *project) override;
 
    unsigned Char
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+      AudacityProject *project) override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
