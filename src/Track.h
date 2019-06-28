@@ -252,6 +252,7 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Find anything registered with TrackList::RegisterPendingChangedTrack and
    // not yet cleared or applied; if no such exists, return this track
+   std::shared_ptr<Track> SubstitutePendingChangedTrack();
    std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
 
    // If this track is a pending changed track, return the corresponding

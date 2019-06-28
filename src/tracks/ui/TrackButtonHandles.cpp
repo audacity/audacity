@@ -154,10 +154,11 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
+      auto toRemove = pTrack->SubstitutePendingChangedTrack();
       TransportActions::StopIfPaused( *pProject );
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
-         TrackUtilities::DoRemoveTrack(*pProject, pTrack.get());
+         TrackUtilities::DoRemoveTrack(*pProject, toRemove.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

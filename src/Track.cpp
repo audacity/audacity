@@ -1183,7 +1183,7 @@ bool TrackList::ApplyPendingTracks()
    return result;
 }
 
-std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
+std::shared_ptr<Track> Track::SubstitutePendingChangedTrack()
 {
    // Linear search.  Tracks in a project are usually very few.
    auto pList = mList.lock();
@@ -1197,6 +1197,11 @@ std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
          return *it;
    }
    return SharedPointer();
+}
+
+std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
+{
+   return const_cast<Track*>(this)->SubstitutePendingChangedTrack();
 }
 
 std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
