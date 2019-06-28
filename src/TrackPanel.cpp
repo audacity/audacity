@@ -992,7 +992,7 @@ void TrackPanel::ScrollIntoView(int x)
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
-   CellularPanel::DoContextMenu( &TrackView::Get( *t ) );
+   CellularPanel::DoContextMenu( t ? &TrackView::Get( *t ) : nullptr );
 }
 
 // Tracks have been removed from the list.
