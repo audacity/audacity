@@ -32,7 +32,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/dc.h>
 #include <wx/frame.h>
-#include <wx/graphics.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -49,10 +48,7 @@ struct Settings : PrefsListener {
    wxString gSoloPref;
    wxFont gFont;
 
-   Settings()
-   {
-      UpdatePrefs();
-   }
+   bool mInitialized{ false };
 
    void UpdatePrefs() override
    {
@@ -60,6 +56,13 @@ struct Settings : PrefsListener {
 
       // Calculation of best font size depends on language, so it should be redone in case
       // the language preference changed.
+
+      // wxWidgets seems to need a window to do this portably.
+      if ( !wxTheApp )
+         return;
+      auto window = wxTheApp->GetTopWindow();
+      if ( !window )
+         return;
 
       int fontSize = 10;
       gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -69,24 +72,22 @@ struct Settings : PrefsListener {
          ( kTrackInfoWidth + kLeftMargin )
             - 2; // 2 to allow for left/right borders
       int textWidth;
-      std::unique_ptr<wxGraphicsContext> pContext(
-         wxGraphicsContext::Create()
-      );
-      pContext->SetFont( gFont, *wxBLACK );
       do {
          gFont.SetPointSize(fontSize);
-         double dWidth;
-         pContext->GetTextExtent(
-            _("Stereo, 999999Hz"), &dWidth, nullptr );
-         textWidth = (wxCoord)( dWidth + 0.5 );
+         window->GetTextExtent(_("Stereo, 999999Hz"),
+            &textWidth, nullptr, nullptr, nullptr, &gFont);
          fontSize--;
       } while (textWidth >= allowableWidth);
+
+      mInitialized = true;
    }
 };
 
 static Settings &settings()
 {
    static Settings theSettings;
+   if ( !theSettings.mInitialized )
+      theSettings.UpdatePrefs();
    return theSettings;
 }
 
