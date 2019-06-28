@@ -1145,8 +1145,9 @@ void OnTrackMenu(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
-
-   trackPanel.OnTrackMenu();
+   auto track = trackPanel.GetFocusedTrack();
+   if (track)
+      trackPanel.OnTrackMenu(track);
 }
 
 void OnTrackMute(const CommandContext &context)
