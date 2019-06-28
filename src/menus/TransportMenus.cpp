@@ -247,11 +247,8 @@ void OnRecord(const CommandContext &context)
 void OnRecord2ndChoice(const CommandContext &context)
 {
    auto &project = context.project;
-   wxCommandEvent evt;
-   evt.SetInt(1); // 0 is default, use 1 to set shift on, 2 to clear it
-
    auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnRecord(evt);
+   controlToolBar.OnRecord(true);
 }
 
 void OnTimerRecord(const CommandContext &context)

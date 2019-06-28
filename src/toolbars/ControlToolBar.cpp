@@ -985,18 +985,19 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    // Here instead we reduplicate some logic (from CommandHandler) because it isn't
    // normally used for buttons.
 
-   // Code from CommandHandler start...
-   AudacityProject *p = &mProject;
-
    bool altAppearance = mRecord->WasShiftDown();
-   if (evt.GetInt() == 1) // used when called by keyboard shortcut. Default (0) ignored.
-      altAppearance = true;
-   if (evt.GetInt() == 2)
-      altAppearance = false;
+   OnRecord( altAppearance );
+}
 
+void ControlToolBar::OnRecord(bool altAppearance)
+// STRONG-GUARANTEE (for state of current project's tracks)
+{
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
    const bool appendRecord = (altAppearance == bPreferNewTrack);
+
+   // Code from CommandHandler start...
+   AudacityProject *p = &mProject;
 
    if (p) {
       const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;

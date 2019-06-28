@@ -330,11 +330,8 @@ void DoPause( AudacityProject &project )
 
 void DoRecord( AudacityProject &project )
 {
-   wxCommandEvent evt;
-   evt.SetInt(2); // 0 is default, use 1 to set shift on, 2 to clear it
-
    auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnRecord(evt);
+   controlToolBar.OnRecord(false);
 }
 
 void DoLockPlayRegion( AudacityProject &project )
