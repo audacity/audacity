@@ -750,7 +750,7 @@ void OnSilence(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   for ( auto n : tracks.Selected< AudioTrack >() )
+   for ( auto n : tracks.Selected< WaveTrack >() )
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
    ProjectHistory::Get( project ).PushState(
@@ -773,12 +773,6 @@ void OnTrim(const CommandContext &context)
       return;
 
    tracks.Selected().Visit(
-#ifdef USE_MIDI
-      [&](NoteTrack *nt) {
-         nt->Trim(selectedRegion.t0(),
-            selectedRegion.t1());
-      },
-#endif
       [&](WaveTrack *wt) {
          //Delete the section before the left selector
          wt->Trim(selectedRegion.t0(),
@@ -1135,11 +1129,11 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
          /* i18n-hint: (verb)*/
          Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
-            AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
+            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
             wxT("Ctrl+L") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
-            AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
+            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
             Options{ wxT("Ctrl+T") }.UseStrictFlags() )
       ),
 
