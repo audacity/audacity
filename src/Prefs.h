@@ -38,6 +38,8 @@
 #include <wx/event.h> // to declare custom event types
 
 void InitPreferences();
+bool CheckWritablePreferences();
+wxString UnwritablePreferencesErrorMessage();
 void FinishPreferences();
 
 class AudacityPrefs;

@@ -61,6 +61,7 @@
 #include <wx/stdpaths.h>
 
 #include "FileNames.h"
+#include "Internat.h"
 #include "MemoryX.h"
 #include "Languages.h"
 
@@ -218,6 +219,20 @@ void InitPreferences()
    gPrefs = ugPrefs.get();
 
    wxConfigBase::Set(gPrefs);
+}
+
+bool CheckWritablePreferences()
+{
+   return gPrefs->Write("/TEST", true) && gPrefs->Flush();
+}
+
+wxString UnwritablePreferencesErrorMessage()
+{
+   wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
+   return wxString::Format(
+     _("Audacity cannot start because the settings file at %s is not writable."),
+     configFileName.GetFullPath()
+   );
 }
 
 void FinishPreferences()

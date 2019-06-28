@@ -1360,6 +1360,13 @@ bool AudacityApp::OnInit()
    // Initialize preferences and language
    InitPreferences();
    PopulatePreferences();
+   // This test must follow PopulatePreferences, because if an error message
+   // must be shown, we need internationalization to have been initialized
+   // first, which was done in PopulatePreferences
+   if ( !CheckWritablePreferences() ) {
+      ::AudacityMessageBox( UnwritablePreferencesErrorMessage() );
+      return false;
+   }
 
 #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
    this->AssociateFileTypes();
