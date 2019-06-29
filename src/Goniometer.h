@@ -38,6 +38,11 @@ public:
    // TrackAttachment implementation
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
+      override;
+
 private:
    std::vector<float> mRecentSamples;
    size_t mLastSample{ 0 };
