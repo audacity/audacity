@@ -107,6 +107,8 @@ list( APPEND SOURCES
       FrameStatisticsDialog.h
       FreqWindow.cpp
       FreqWindow.h
+      Goniometer.cpp
+      Goniometer.h
       HelpUtilities.cpp
       HelpUtilities.h
       HistoryWindow.cpp
