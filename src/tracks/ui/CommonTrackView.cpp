@@ -106,7 +106,7 @@ static void DrawTrackName(
    const int kTranslucentHeight = 124;
    int h = rect.GetHeight();
    // f codes the opacity as a number between 0.0 and 1.0
-   float f= wxClip((h -kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
+   float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
    // kOpaque is the shield's alpha for tracks that are not tall
    // kTranslucent is the shield's alpha for tracks that are tall.
    const int kOpaque = 255;
