@@ -1025,20 +1025,15 @@ DefaultPlayOptions( AudacityProject &project )
 AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
-   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   auto result = DefaultPlayOptions( project );
    auto gAudioIO = AudioIO::Get();
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
       ProjectRate::Get( project ).GetRate()  //suggested rate
    );
-   AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
-   options.captureMeter = projectAudioIO.GetCaptureMeter();
-   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
-   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
-   options.listener = ProjectAudioManager::Get( project ).shared_from_this();
-   return options;
+   result.rate = PlayAtSpeedRate;
+   return result;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
