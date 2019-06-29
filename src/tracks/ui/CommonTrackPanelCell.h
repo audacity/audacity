@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <functional>
 
 class Track;
+class XMLWriter;
 
 class AUDACITY_DLL_API CommonTrackPanelCell /* not final */
    : public TrackPanelCell
@@ -61,9 +62,19 @@ public:
 
   ~CommonTrackCell();
 
+   // Copy state, for undo/redo purposes
+   // The default does nothing
+   virtual void CopyTo( Track &track ) const;
+
    std::shared_ptr<Track> DoFindTrack() override;
 
    virtual void Reparent( const std::shared_ptr<Track> &parent );
+
+   // default does nothing
+   virtual void WriteXMLAttributes( XMLWriter & ) const;
+
+   // default recognizes no attributes, and returns false
+   virtual bool HandleXMLAttribute( const wxChar *attr, const wxChar *value );
 
 private:
    std::weak_ptr< Track > mwTrack;

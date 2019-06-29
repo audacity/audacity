@@ -497,7 +497,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
       //JKC: Possibly add later...
-      //context.AddItem( GetTrackView::Get( *trk ).GetHeight(), "height" );
+      //context.AddItem( TrackView::Get( *trk ).GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
          float vzmin, vzmax;
          t->GetDisplayBounds(&vzmin, &vzmax);
@@ -761,7 +761,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          R.width -= kLeftInset * 2;
          R.height -= kTopInset;
 
-         int labelw = pTP->GetLabelWidth();
+         int labelw = viewInfo.GetLabelWidth();
          //int vrul = viewInfo.GetVRulerOffset();
          bool bIsWave = true;
          //mTrackInfo.DrawBackground(dc, R, t->GetSelected(), bIsWave, labelw, vrul);
@@ -780,7 +780,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          wxRect R = trackRect;
          R.x += viewInfo.GetVRulerOffset();
          R.y += kTopMargin;
-         R.width = tp.GetVRulerWidth();
+         R.width = viewInfo.GetVRulerWidth();
          R.height -= (kTopMargin + kBottomMargin);
          R.SetPosition( R.GetPosition() + P );
 

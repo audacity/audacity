@@ -461,6 +461,9 @@
     <ClCompile Include="..\..\..\src\effects\Paulstretch.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\RealtimeEffectManager.cpp">
+      <Filter>src\effects</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\effects\Repair.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
@@ -884,6 +887,9 @@
     <ClCompile Include="..\..\..\src\DeviceChange.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\SelectUtilities.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\SelectedRegion.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1061,6 +1067,9 @@
     <ClCompile Include="..\..\..\src\TrackPanelResizerCell.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackUtilities.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\labeltrack\ui\LabelTextHandle.cpp">
       <Filter>src\tracks\labeltrack\ui</Filter>
     </ClCompile>
@@ -1206,6 +1215,9 @@
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackViewConstants.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.cpp">
@@ -1583,6 +1595,9 @@
       <Filter>src\effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Paulstretch.h">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\RealtimeEffectManager.h">
       <Filter>src\effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Repair.h">
@@ -2038,6 +2053,9 @@
     <ClInclude Include="..\..\..\src\RevisionIdent.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\SelectUtilities.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\SelectedRegion.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -2257,6 +2275,9 @@
     <ClInclude Include="..\..\..\src\TrackPanelResizerCell.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackUtilities.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\labeltrack\ui\LabelGlyphHandle.h">
       <Filter>src\tracks\labeltrack\ui</Filter>
     </ClInclude>
@@ -2374,11 +2395,17 @@
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.h">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackViewConstants.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\timetrack\ui\TimeTrackView.h">
       <Filter>src\tracks\timetrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h">
       <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelDrawable.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "DirManager.h"
 #include "FileNames.h"
 #include "Legacy.h"
-#include "Menus.h"
 #include "PlatformCompatibility.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
@@ -34,6 +33,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "SelectionState.h"
 #include "Sequence.h"
 #include "Tags.h"
@@ -43,10 +43,13 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "effects/EffectManager.h"
+#include "blockfile/ODDecodeBlockFile.h"
 #include "export/Export.h"
 #include "import/Import.h"
+#include "import/ImportMIDI.h"
 #include "commands/CommandContext.h"
 #include "ondemand/ODComputeSummaryTask.h"
+#include "ondemand/ODDecodeFlacTask.h"
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
 #include "toolbars/SelectionBar.h"
@@ -168,6 +171,25 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
    return { false, bParseSuccess, err, xmlFile.GetErrorStr() };
 }
 
+///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
+unsigned int ProjectFileManager::GetODFlags( const WaveTrack &track )
+{
+   unsigned int ret = 0;
+   for ( const auto &clip : track.GetClips() )
+   {
+      auto sequence = clip->GetSequence();
+      const auto &blocks = sequence->GetBlockArray();
+      for ( const auto &block : blocks ) {
+         const auto &file = block.f;
+         if(!file->IsDataAvailable())
+            ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
+         else if(!file->IsSummaryAvailable())
+            ret |= ODTask::eODPCMSummary;
+      }
+   }
+   return ret;
+}
+
 void ProjectFileManager::EnqueueODTasks()
 {
    //check the ODManager to see if we should add the tracks to the ODManager.
@@ -184,12 +206,12 @@ void ProjectFileManager::EnqueueODTasks()
       for (auto wt : tracks.Any<WaveTrack>()) {
          //check the track for blocks that need decoding.
          //There may be more than one type e.g. FLAC/FFMPEG/lame
-         unsigned int odFlags = wt->GetODFlags();
+         unsigned int odFlags = GetODFlags( *wt );
 
          //add the track to the already created tasks that correspond to the od flags in the wavetrack.
          for(unsigned int i=0;i<newTasks.size();i++) {
             if(newTasks[i]->GetODType() & odFlags)
-               newTasks[i]->AddWaveTrack(wt);
+               newTasks[i]->AddWaveTrack(wt->SharedPointer< WaveTrack >());
          }
 
          //create whatever NEW tasks we need to.
@@ -215,7 +237,7 @@ void ProjectFileManager::EnqueueODTasks()
             }
             if(newTask)
             {
-               newTask->AddWaveTrack(wt);
+               newTask->AddWaveTrack(wt->SharedPointer< WaveTrack >());
                newTasks.push_back(std::move(newTask));
             }
          }
@@ -1281,7 +1303,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       {
 #ifdef USE_MIDI
          if (FileNames::IsMidi(fileName))
-            FileActions::DoImportMIDI( &project, fileName );
+            DoImportMIDI( project, fileName );
          else
 #endif
             Import( fileName );
@@ -1525,7 +1547,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
    std::vector< std::shared_ptr< Track > > results;
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    bool initiallyEmpty = tracks.empty();
    double newRate = 0;
@@ -1687,13 +1709,13 @@ bool ProjectFileManager::Import(
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {
       //TODO: All we want is a SelectAll()
-      SelectActions::SelectNone( project );
-      SelectActions::SelectAllIfNone( project );
+      SelectUtilities::SelectNone( project );
+      SelectUtilities::SelectAllIfNone( project );
       const CommandContext context( project );
-      PluginActions::DoEffect(
+      EffectManager::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
-         PluginActions::kConfigured);
+         EffectManager::kConfigured);
    }
 
    // This is a no-fail:

@@ -26,7 +26,6 @@
 #include "AudioIOBase.h"
 #include "CommonCommandFlags.h"
 #include "LabelTrack.h"
-#include "Menus.h"
 #include "ModuleManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -1405,7 +1404,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      PluginActions::DoEffect(ID, CommandContext(*p), 0);
+      EffectManager::DoEffect(ID, CommandContext(*p), 0);
 
       mRunning = false;
       UpdateWindowUI();

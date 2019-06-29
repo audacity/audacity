@@ -16,6 +16,10 @@
 
 #include "../Experimental.h"
 
+#include "Effect.h"
+#include "EffectManager.h"
+#include "RealtimeEffectManager.h"
+
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include "../UndoManager.h"
@@ -35,10 +39,10 @@
 #include <wx/tglbtn.h>
 
 #include "../commands/CommandContext.h"
-#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
+#include "../widgets/wxPanelWrapper.h"
 
 #include "../../images/EffectRack/EffectRack.h"
 
@@ -281,7 +285,7 @@ void EffectRack::OnClose(wxCloseEvent & evt)
 
 void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 {
-   int latency = EffectManager::Get().GetRealtimeLatency();
+   int latency = RealtimeEffectManager::Get().GetRealtimeLatency();
    if (latency != mLastLatency)
    {
       mLatency->SetLabel(wxString::Format(_("Latency: %4d"), latency));
@@ -305,9 +309,9 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!PluginActions::DoEffect(mEffects[i]->GetID(),
+         if (!EffectManager::DoEffect(mEffects[i]->GetID(),
                            *project,
-                           PluginActions::kConfigured))
+                           EffectManager::kConfigured))
             // If any effect fails (or throws), then stop.
             return;
       }
@@ -559,7 +563,9 @@ void EffectRack::UpdateActive()
       }
    }
 
-   EffectManager::Get().RealtimeSetEffects(mActive);
+   RealtimeEffectManager::Get().RealtimeSetEffects(
+      { mActive.begin(), mActive.end() }
+   );
 }
 
 #endif

@@ -182,7 +182,7 @@ bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
       mWaveTrackMutex.Lock();
       for(int i=0;i<(int)mWaveTracks.size();i++)
       {
-         if(mWaveTracks[i]==tr)
+         if ( mWaveTracks[i].lock().get() == tr )
          {
             //if we find one, then the project is associated with us;return true
             mWaveTrackMutex.Unlock();
@@ -252,19 +252,19 @@ bool ODTask::IsComplete()
 }
 
 
-WaveTrack* ODTask::GetWaveTrack(int i)
+std::shared_ptr< WaveTrack > ODTask::GetWaveTrack(int i)
 {
-   WaveTrack* track = NULL;
+   std::shared_ptr< WaveTrack > track;
    mWaveTrackMutex.Lock();
    if(i<(int)mWaveTracks.size())
-      track = mWaveTracks[i];
+      track = mWaveTracks[i].lock();
    mWaveTrackMutex.Unlock();
    return track;
 }
 
 ///Sets the wavetrack that will be analyzed for ODPCMAliasBlockFiles that will
 ///have their summaries computed and written to disk.
-void ODTask::AddWaveTrack(WaveTrack* track)
+void ODTask::AddWaveTrack( const std::shared_ptr< WaveTrack > &track)
 {
    mWaveTracks.push_back(track);
 }
@@ -321,7 +321,7 @@ void ODTask::DemandTrackUpdate(WaveTrack* track, double seconds)
    mWaveTrackMutex.Lock();
    for(size_t i=0;i<mWaveTracks.size();i++)
    {
-      if(track == mWaveTracks[i])
+      if ( track == mWaveTracks[i].lock().get() )
       {
          auto newDemandSample = (sampleCount)(seconds * track->GetRate());
          demandSampleChanged = newDemandSample != GetDemandSample();
@@ -342,21 +342,22 @@ void ODTask::StopUsingWaveTrack(WaveTrack* track)
    mWaveTrackMutex.Lock();
    for(size_t i=0;i<mWaveTracks.size();i++)
    {
-      if(mWaveTracks[i] == track)
-         mWaveTracks[i]=NULL;
+      if(mWaveTracks[i].lock().get() == track)
+         mWaveTracks[i].reset();
    }
    mWaveTrackMutex.Unlock();
 }
 
 ///Replaces all instances to a wavetrack with a NEW one, effectively transferring the task.
-void ODTask::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
+void ODTask::ReplaceWaveTrack(Track *oldTrack,
+   const std::shared_ptr< Track > &newTrack)
 {
    mWaveTrackMutex.Lock();
    for(size_t i=0;i<mWaveTracks.size();i++)
    {
-      if(oldTrack == mWaveTracks[i])
+      if(oldTrack == mWaveTracks[i].lock().get())
       {
-         mWaveTracks[i] = static_cast<WaveTrack*>( newTrack );
+         mWaveTracks[i] = std::static_pointer_cast<WaveTrack>( newTrack );
       }
    }
    mWaveTrackMutex.Unlock();

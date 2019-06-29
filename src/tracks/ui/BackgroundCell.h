@@ -44,6 +44,14 @@ protected:
    std::shared_ptr<Track> DoFindTrack() override;
 
 private:
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+   
    AudacityProject *mpProject;
 
    std::weak_ptr<BackgroundHandle> mHandle;

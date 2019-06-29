@@ -17,6 +17,7 @@
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 class ProgressDialog;
 
@@ -60,17 +61,6 @@ struct Region
 using Regions = std::vector < Region >;
 
 class Envelope;
-
-// Note that these can be with or without spectrum view which
-// adds a constant.
-const int kZoom1to1 = 1;
-const int kZoomTimes2 = 2;
-const int kZoomDiv2 = 3;
-const int kZoomHalfWave = 4;
-const int kZoomInByDrag = 5;
-const int kZoomIn = 6;
-const int kZoomOut = 7;
-const int kZoomReset = 8;
 
 class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 public:
@@ -229,19 +219,6 @@ private:
                XMLWriter* blockFileLog=NULL);
    /// Flush must be called after last Append
    void Flush();
-
-   void AppendAlias(const FilePath &fName, sampleCount start,
-                    size_t len, int channel,bool useOD);
-
-   ///for use with On-Demand decoding of compressed files.
-   ///decodeType should be an enum from ODDecodeTask that specifies what
-   ///Type of encoded file this is, such as eODFLAC
-   //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
-   void AppendCoded(const FilePath &fName, sampleCount start,
-                            size_t len, int channel, int decodeType);
-
-   ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags() const;
 
    ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
    void ClearWaveCaches();
@@ -546,74 +523,7 @@ private:
    // Set the unique autosave ID
    void SetAutoSaveIdent(int id);
 
-   //
-   // The following code will eventually become part of a GUIWaveTrack
-   // and will be taken out of the WaveTrack class:
-   //
-
-
-   static void DoZoom
-   (AudacityProject *pProject,
-    WaveTrack *pTrack, bool allChannels, int ZoomKind,
-    const wxRect &rect, int zoomStart, int zoomEnd,
-    bool fixedMousePoint);
-   void DoZoomPreset( int i);
-
-   typedef int WaveTrackDisplay;
-   enum WaveTrackDisplayValues : int {
-
-      // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
-
-      Waveform = 0,
-      MinDisplay = Waveform,
-
-      obsoleteWaveformDBDisplay,
-
-      Spectrum,
-
-      obsolete1, // was SpectrumLogDisplay
-      obsolete2, // was SpectralSelectionDisplay
-      obsolete3, // was SpectralSelectionLogDisplay
-      obsolete4, // was PitchDisplay
-
-      // Add values here, and update MaxDisplay.
-
-      MaxDisplay = Spectrum,
-
-      NoDisplay,            // Preview track has no display
-   };
-
-   // Only two types of sample display for now, but
-   // others (eg sinc interpolation) may be added later.
-   enum SampleDisplay {
-      LinearInterpolate = 0,
-      StemPlot
-   };
-
-   // Various preset zooming levels.
-   enum ZoomPresets {
-      kZoomToFit = 0,
-      kZoomToSelection,
-      kZoomDefault,
-      kZoomMinutes,
-      kZoomSeconds,
-      kZoom5ths,
-      kZoom10ths,
-      kZoom20ths,
-      kZoom50ths,
-      kZoom100ths,
-      kZoom500ths,
-      kZoomMilliSeconds,
-      kZoomSamples,
-      kZoom4To1,
-      kMaxZoom,
-   };
-
-   // Handle remapping of enum values from 2.1.0 and earlier
-   static WaveTrackDisplay ConvertLegacyDisplayValue(int oldValue);
-
-   // Handle restriction of range of values of the enum from future versions
-   static WaveTrackDisplay ValidateWaveTrackDisplay(WaveTrackDisplay display);
+   using WaveTrackDisplay = WaveTrackViewConstants::Display;
 
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;

@@ -22,6 +22,20 @@
 
 class AudacityProject;
 
+// See big pictorial comment in TrackPanel.cpp for explanation of these numbers
+enum : int {
+   // Constants related to x coordinates in the track panel
+   kBorderThickness = 1,
+   kShadowThickness = 1,
+
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+
+   kTrackInfoWidth = 100 - kLeftMargin,
+};
+
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
 // and for computing conversions between track times and pixel positions.
@@ -76,6 +90,29 @@ public:
    double OffsetTimeByPixels(double time, wxInt64 offset, bool ignoreFisheye = false) const
    {
       return PositionToTime(offset + TimeToPosition(time, ignoreFisheye), ignoreFisheye);
+   }
+
+   int GetWidth() const { return mWidth; }
+   void SetWidth( int width ) { mWidth = width; }
+
+   int GetVRulerWidth() const { return mVRulerWidth; }
+   void SetVRulerWidth( int width ) { mVRulerWidth = width; }
+   int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
+   int GetLabelWidth() const { return GetVRulerOffset() + GetVRulerWidth(); }
+   int GetLeftOffset() const { return GetLabelWidth() + 1;}
+
+   int GetTracksUsableWidth() const
+   {
+      return
+         std::max( 0, GetWidth() - ( GetLeftOffset() + kRightMargin ) );
+   }
+
+   // Returns the time corresponding to the pixel column one past the track area
+   // (ignoring any fisheye)
+   double GetScreenEndTime() const
+   {
+      auto width = GetTracksUsableWidth();
+      return PositionToTime(width, 0, true);
    }
 
    bool ZoomInAvailable() const;
@@ -137,6 +174,9 @@ public:
    // Exclusive:
    wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0)) const
    {return 0;} // stub
+
+   int mWidth{ 0 };
+   int mVRulerWidth{ 36 };
 };
 
 #endif

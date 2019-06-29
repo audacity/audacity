@@ -18,15 +18,18 @@
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
+#include <vector>
+
 #include <wx/defs.h>
 #include <wx/frame.h> // to inherit
 #include <wx/timer.h> // member variable
 
-#include "EffectManager.h"
-
 class wxFlexGridSizer;
 class wxPanel;
 class wxStaticText;
+
+class Effect;
+using EffectArray = std::vector<Effect*>;
 
 class EffectRack final : public wxFrame
 {

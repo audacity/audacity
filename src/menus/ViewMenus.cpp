@@ -11,6 +11,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../Track.h"
 #include "../TrackInfo.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -52,7 +53,6 @@ AudacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
 double GetZoomOfSelection( const AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    const double lowerBound =
@@ -73,8 +73,7 @@ double GetZoomOfSelection( const AudacityProject &project )
    //      Fixes might have resulted from commits
    //      1b8f44d0537d987c59653b11ed75a842b48896ea and
    //      e7c7bb84a966c3b3cc4b3a9717d5f247f25e7296
-   int width;
-   trackPanel.GetTracksUsableArea(&width, NULL);
+   auto width = viewInfo.GetTracksUsableWidth();
    return (width - 1) / denom;
 }
 
@@ -87,52 +86,54 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    const double pixelsPerUnit = 5.0;
 
    double result = 1.0;
-   double zoomToFit = ViewActions::GetZoomOfToFit( project );
+   auto &window = ProjectWindow::Get( project );
+   double zoomToFit = window.GetZoomOfToFit();
+   using namespace WaveTrackViewConstants;
    switch( preset ){
       default:
-      case WaveTrack::kZoomDefault:
+      case kZoomDefault:
          result = ZoomInfo::GetDefaultZoom();
          break;
-      case WaveTrack::kZoomToFit:
+      case kZoomToFit:
          result = zoomToFit;
          break;
-      case WaveTrack::kZoomToSelection:
+      case kZoomToSelection:
          result = GetZoomOfSelection( project );
          break;
-      case WaveTrack::kZoomMinutes:
+      case kZoomMinutes:
          result = pixelsPerUnit * 1.0/60;
          break;
-      case WaveTrack::kZoomSeconds:
+      case kZoomSeconds:
          result = pixelsPerUnit * 1.0;
          break;
-      case WaveTrack::kZoom5ths:
+      case kZoom5ths:
          result = pixelsPerUnit * 5.0;
          break;
-      case WaveTrack::kZoom10ths:
+      case kZoom10ths:
          result = pixelsPerUnit * 10.0;
          break;
-      case WaveTrack::kZoom20ths:
+      case kZoom20ths:
          result = pixelsPerUnit * 20.0;
          break;
-      case WaveTrack::kZoom50ths:
+      case kZoom50ths:
          result = pixelsPerUnit * 50.0;
          break;
-      case WaveTrack::kZoom100ths:
+      case kZoom100ths:
          result = pixelsPerUnit * 100.0;
          break;
-      case WaveTrack::kZoom500ths:
+      case kZoom500ths:
          result = pixelsPerUnit * 500.0;
          break;
-      case WaveTrack::kZoomMilliSeconds:
+      case kZoomMilliSeconds:
          result = pixelsPerUnit * 1000.0;
          break;
-      case WaveTrack::kZoomSamples:
+      case kZoomSamples:
          result = 44100.0;
          break;
-      case WaveTrack::kZoom4To1:
+      case kZoom4To1:
          result = 44100.0 * 4;
          break;
-      case WaveTrack::kMaxZoom:
+      case kMaxZoom:
          result = ZoomInfo::GetMaxZoom();
          break;
    };
@@ -143,51 +144,10 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
 
 }
 
-namespace ViewActions {
-
-// exported helper functions
-
-double GetZoomOfToFit( const AudacityProject &project )
-{
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-
-   const double end = tracks.GetEndTime();
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min( tracks.GetStartTime(), 0.0)
-      : 0;
-   const double len = end - start;
-
-   if (len <= 0.0)
-      return viewInfo.GetZoom();
-
-   int w;
-   trackPanel.GetTracksUsableArea(&w, NULL);
-   w -= 10;
-   return w/len;
-}
-
-void DoZoomFit(AudacityProject &project)
-{
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks.GetStartTime(), 0.0)
-      : 0;
-
-   window.Zoom( GetZoomOfToFit( project ) );
-   window.TP_ScrollWindow(start);
-}
-
-}
-
 namespace {
 void DoZoomFitV(AudacityProject &project)
 {
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
@@ -199,15 +159,13 @@ void DoZoomFitV(AudacityProject &project)
       return;
 
    // Find total height to apportion
-   int height;
-   trackPanel.GetTracksUsableArea(NULL, &height);
+   auto height = viewInfo.GetHeight();
    height -= 28;
    
    // The height of minimized and non-audio tracks cannot be apportioned
-   const auto GetHeight = []( const Track *track )
-      { return TrackView::Get( *track ).GetHeight(); };
    height -=
-      tracks.Any().sum( GetHeight ) - range.sum( GetHeight );
+      tracks.Any().sum( TrackView::GetTrackHeight )
+         - range.sum( TrackView::GetTrackHeight );
    
    // Give each resized track the average of the remaining height
    height = height / count;
@@ -269,7 +227,7 @@ void OnZoomToggle(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
 //   const double origLeft = viewInfo.h;
-//   const double origWidth = GetScreenEndTime() - origLeft;
+//   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
    // Choose the zoom that is most different to the current zoom.
    double Zoom1 = GetZoomOfPreset( project, TracksPrefs::Zoom1Choice() );
@@ -287,7 +245,9 @@ void OnZoomToggle(const CommandContext &context)
 
 void OnZoomFit(const CommandContext &context)
 {
-   DoZoomFit( context.project );
+   auto &project = context.project;
+   auto &window = ProjectWindow::Get( project );
+   window.DoZoomFit();
 }
 
 void OnZoomFitV(const CommandContext &context)
@@ -345,14 +305,13 @@ void OnGoSelStart(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
    window.TP_ScrollWindow(
-      selectedRegion.t0() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnGoSelEnd(const CommandContext &context)
@@ -360,14 +319,13 @@ void OnGoSelEnd(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
 
    window.TP_ScrollWindow(
-      selectedRegion.t1() - ((trackPanel.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
 void OnHistory(const CommandContext &context)

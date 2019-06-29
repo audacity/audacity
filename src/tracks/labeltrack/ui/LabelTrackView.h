@@ -52,9 +52,11 @@ public:
    static LabelTrackView &Get( LabelTrack& );
    static const LabelTrackView &Get( const LabelTrack& );
 
-   bool DoCaptureKey(wxKeyEvent &event);
-   bool DoKeyDown(SelectedRegion &sel, wxKeyEvent & event);
-   bool DoChar(SelectedRegion &sel, wxKeyEvent & event);
+   bool DoCaptureKey( AudacityProject &project, wxKeyEvent &event );
+   bool DoKeyDown(
+      AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
+   bool DoChar(
+      AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region,
@@ -71,18 +73,21 @@ private:
       override;
 
    unsigned CaptureKey
-     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+     (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+      AudacityProject *project) override;
 
    unsigned KeyDown
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+      AudacityProject *project) override;
 
    unsigned Char
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent) override;
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+      AudacityProject *project) override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
    // Preserve some view state too for undo/redo purposes
-   void Copy( const TrackView &other ) override;
+   void CopyTo( Track &track ) const override;
 
 public:
    static void DoEditLabels(
@@ -92,7 +97,7 @@ public:
       AudacityProject &project, const SelectedRegion& region,
       const wxString& initialValue, wxString& value);
 
-   bool IsTextSelected() const;
+   bool IsTextSelected( AudacityProject &project ) const;
 
 private:
    void CreateCustomGlyphs();
@@ -103,12 +108,13 @@ public:
 
    void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
-   int GetSelectedIndex() const;
+   int GetSelectedIndex( AudacityProject &project ) const;
    void SetSelectedIndex( int index );
 
-   bool CutSelectedText();
-   bool CopySelectedText();
-   bool PasteSelectedText(double sel0, double sel1);
+   bool CutSelectedText( AudacityProject &project );
+   bool CopySelectedText( AudacityProject &project );
+   bool PasteSelectedText(
+      AudacityProject &project, double sel0, double sel1 );
 
    static void OverGlyph(
       const LabelTrack &track, LabelTrackHit &hit, int x, int y );
@@ -150,16 +156,16 @@ private:
 public:
    //get current cursor position,
    // relative to the left edge of the track panel
-   bool CalcCursorX(int * x) const;
+   bool CalcCursorX( AudacityProject &project, int * x ) const;
 
 private:
    void CalcHighlightXs(int *x1, int *x2) const;
 
 public:
-   void ShowContextMenu();
+   void ShowContextMenu( AudacityProject &project );
 
 private:
-   void OnContextMenu(wxCommandEvent & evt);
+   void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
 
    mutable int mSelIndex{-1};  /// Keeps track of the currently selected label
    
@@ -197,8 +203,19 @@ public:
    int GetInitialCursorPosition() const { return mInitialCursorPos; }
    void SetTextHighlight( int initialPosition, int currentPosition );
 
+private:
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
    static void calculateFontHeight(wxDC & dc);
-   bool HasSelection() const;
+
+public:
+   bool HasSelection( AudacityProject &project ) const;
+
+private:
    void RemoveSelectedText();
 
    void OnLabelAdded( LabelTrackEvent& );

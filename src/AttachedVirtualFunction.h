@@ -135,15 +135,10 @@ class AttachedVirtualFunction
 {
 public:
 
-   // The type of an overriding function, taking a more specific first
-   // argument
-   template< typename Subclass >
-   using ImplementationFor = std::function< Return( Subclass&, Arguments... ) >;
-
    // These member names are declared in this class template and redeclared
    // in each override
    using Object = This;
-   using Function = ImplementationFor< This >;
+   using Function = std::function< Return( Object&, Arguments... ) >;
    // A function returning a std::function, which you define elsewhere;
    // it may return nullptr in case this must act somewhat as a "pure virtual",
    // throwing InconsistencyException if the function is invoked on a subclass
@@ -167,6 +162,7 @@ public:
    struct Override : Overridden
    {
       using Object = Subclass;
+      using Function = std::function< Return( Object&, Arguments... ) >;
 
       // Check that inheritance is correct
       static_assert(
@@ -174,7 +170,6 @@ public:
          "overridden class must be a base of the overriding class"
       );
 
-      using Function = ImplementationFor< Subclass >;
       // A function returning a std::function that must be defined out-of-line
       static Function Implementation();
       // May be used in the body of the overriding function, defining it in
@@ -230,7 +225,7 @@ public:
 
 private:
    template< typename Subclass >
-   static void Register( const ImplementationFor< This > &function )
+   static void Register( const Function &function )
    {
       // Push back a dynamic type test and corresponding function body
       GetRegistry().push_back({
@@ -244,7 +239,7 @@ private:
    struct Entry
    {
       Predicate predicate;
-      ImplementationFor< This > function;
+      Function function;
    };
 
    using Registry = std::vector< Entry >;

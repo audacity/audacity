@@ -30,6 +30,7 @@
 #include "../ShuttleGui.h"
 
 #include "../TrackPanel.h"
+#include "../WaveTrack.h"
 
 #include <algorithm>
 
@@ -469,7 +470,7 @@ void SpectrumPrefs::Preview()
 
    if (mWt && isOpenPage) {
       for (auto channel : TrackList::Channels(mWt))
-         channel->SetDisplay(WaveTrack::Spectrum);
+         channel->SetDisplay(WaveTrackViewConstants::Spectrum);
    }
 
    if (isOpenPage) {

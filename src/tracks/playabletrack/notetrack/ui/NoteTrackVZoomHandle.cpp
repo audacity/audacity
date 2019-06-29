@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Project.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../../images/Cursors.h"
@@ -356,16 +357,27 @@ UIHandle::Result NoteTrackVZoomHandle::Cancel(AudacityProject *WXUNUSED(pProject
    return RefreshCode::RefreshAll;
 }
 
-void NoteTrackVZoomHandle::DrawExtras
-(DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
+void NoteTrackVZoomHandle::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
 {
-   if (!mpTrack.lock()) //? TrackList::Lock()
-      return;
+   if ( iPass == TrackArtist::PassZooming ) {
+      if (!mpTrack.lock()) //? TrackList::Lock()
+         return;
+      
+      if ( IsDragZooming( mZoomStart, mZoomEnd ) )
+         TrackVRulerControls::DrawZooming
+            ( context, rect, mZoomStart, mZoomEnd );
+   }
+}
 
-   if ( pass == UIHandle::Cells &&
-        IsDragZooming( mZoomStart, mZoomEnd ) )
-      TrackVRulerControls::DrawZooming
-         ( dc, mRect, panelRect, mZoomStart, mZoomEnd );
+wxRect NoteTrackVZoomHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassZooming )
+      return TrackVRulerControls::ZoomingArea( rect, panelRect );
+   else
+      return rect;
 }
 
 #endif

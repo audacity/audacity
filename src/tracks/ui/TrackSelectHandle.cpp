@@ -11,11 +11,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h"
 #include "TrackSelectHandle.h"
 
-#include "../../Menus.h"
+#include "TrackView.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectHistory.h"
 #include "../../RefreshCode.h"
+#include "../../SelectUtilities.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../WaveTrack.h"
@@ -99,7 +100,7 @@ UIHandle::Result TrackSelectHandle::Click
       CalculateRearrangingThresholds(event);
    }
 
-   SelectActions::DoListSelection(*pProject,
+   SelectUtilities::DoListSelection(*pProject,
       pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 
    mClicked = true;
@@ -144,7 +145,7 @@ UIHandle::Result TrackSelectHandle::Drag
 HitTestPreview TrackSelectHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *project)
 {
-   const auto trackCount = TrackPanel::Get( *project ).GetTrackCount();
+   const auto trackCount = TrackList::Get( *project ).Leaders().size();
    auto message = Message(trackCount);
    if (mClicked) {
       static auto disabledCursor =
@@ -219,7 +220,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
    if (tracks.CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
          event.m_y -
-            tracks.GetGroupHeight(
+            TrackView::GetChannelGroupHeight(
                * -- tracks.FindLeader( mpTrack.get() ) );
    else
       mMoveUpThreshold = INT_MIN;
@@ -227,7 +228,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
    if (tracks.CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
          event.m_y +
-            tracks.GetGroupHeight(
+            TrackView::GetChannelGroupHeight(
                * ++ tracks.FindLeader( mpTrack.get() ) );
    else
       mMoveDownThreshold = INT_MAX;

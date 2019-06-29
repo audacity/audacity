@@ -14,6 +14,7 @@
 
 #include "../Experimental.h"
 
+#include <wx/crt.h>
 #include <wx/wxprec.h>
 // For compilers that support precompilation, includes "wx/wx.h".
 #ifndef WX_PRECOMP
@@ -28,7 +29,6 @@
 #include <functional>
 
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
-#include "../import/ImportFFmpeg.h"
 
 
 extern FFmpegLibs *FFmpegLibsInst();

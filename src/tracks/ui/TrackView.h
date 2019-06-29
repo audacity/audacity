@@ -15,6 +15,7 @@ Paul Licameli split from class Track
 #include "CommonTrackPanelCell.h" // to inherit
 
 class Track;
+class TrackList;
 class TrackVRulerControls;
 class TrackPanelResizerCell;
 
@@ -32,8 +33,16 @@ public:
       : CommonTrackCell{ pTrack } {}
    virtual ~TrackView() = 0;
 
+   // some static conveniences, useful for summation over track iterator
+   // ranges
+   static int GetTrackHeight( const Track *pTrack );
+   static int GetChannelGroupHeight( const Track *pTrack );
+   // Total height of the given track and all previous ones (constant time!)
+   static int GetCumulativeHeight( const Track *pTrack );
+   static int GetTotalHeight( const TrackList &list );
+
    // Copy view state, for undo/redo purposes
-   virtual void Copy( const TrackView &other );
+   void CopyTo( Track &track ) const override;
 
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );
@@ -60,6 +69,9 @@ public:
    std::shared_ptr<TrackPanelCell> GetResizer();
    std::shared_ptr<const TrackPanelCell> GetResizer() const;
 
+   void WriteXMLAttributes( XMLWriter & ) const override;
+   bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;
+
 protected:
    virtual void DoSetMinimized( bool isMinimized );
 
@@ -80,5 +92,16 @@ private:
    int            mY{ 0 };
    int            mHeight{ DefaultHeight };
 };
+
+#include "../../AttachedVirtualFunction.h"
+
+struct DoGetViewTag;
+
+using DoGetView =
+AttachedVirtualFunction<
+   DoGetViewTag,
+   std::shared_ptr< TrackView >,
+   Track
+>;
 
 #endif

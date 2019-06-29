@@ -17,6 +17,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "Track.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "WaveTrack.h"
 #include "ondemand/ODComputeSummaryTask.h"
 #include "ondemand/ODManager.h"
 
@@ -167,7 +168,7 @@ void ProjectHistory::PopState(const UndoState &state)
             // PRL:  Is it correct to add all tracks to one task, even if they
             // are not partnered channels?  Rather than
             // make one task for each?
-            computeTask->AddWaveTrack(wt);
+            computeTask->AddWaveTrack(wt->SharedPointer< WaveTrack >());
          }
       });
    }

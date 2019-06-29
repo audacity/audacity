@@ -10,7 +10,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
-#include "../Tags.h"
+#include "../SelectUtilities.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -19,6 +19,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
+#include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
@@ -47,19 +48,19 @@ bool DoPasteText(AudacityProject &project)
    for (auto pLabelTrack : tracks.Any<LabelTrack>())
    {
       // Does this track have an active label?
-      if (LabelTrackView::Get( *pLabelTrack ).HasSelection()) {
+      if (LabelTrackView::Get( *pLabelTrack ).HasSelection( project )) {
 
          // Yes, so try pasting into it
          auto &view = LabelTrackView::Get( *pLabelTrack );
-         if (view.PasteSelectedText(selectedRegion.t0(),
-                                            selectedRegion.t1()))
+         if (view.PasteSelectedText( project, selectedRegion.t0(),
+                                            selectedRegion.t1() ))
          {
             ProjectHistory::Get( project )
                .PushState(_("Pasted text from the clipboard"), _("Paste"));
 
             // Make sure caret is in view
             int x;
-            if (view.CalcCursorX(&x)) {
+            if (view.CalcCursorX( project, &x )) {
                trackPanel.ScrollIntoView(x);
             }
 
@@ -79,7 +80,6 @@ bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
@@ -160,7 +160,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
       window.RedrawProject();
 
       if (pFirstNewTrack)
-         trackPanel.EnsureVisible(pFirstNewTrack);
+         pFirstNewTrack->EnsureVisible();
 
       return true;
    }
@@ -170,72 +170,14 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
 namespace EditActions {
 
-// exported helper functions
+// Menu handler functions
 
-void DoReloadPreferences( AudacityProject &project )
+struct Handler : CommandHandlerObject {
+
+void OnUndo(const CommandContext &context)
 {
-   {
-      SpectrogramSettings::defaults().LoadPrefs();
-      WaveformSettings::defaults().LoadPrefs();
-
-      GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */ );
-      wxCommandEvent Evt;
-      //dialog.Show();
-      dialog.OnOK(Evt);
-   }
-
-   // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
-   //      rebuilding the menus while the PrefsDialog is still in the modal
-   //      state.
-   for (auto p : AllProjects{}) {
-      MenuManager::Get(*p).RebuildMenuBar(*p);
-// TODO: The comment below suggests this workaround is obsolete.
-#if defined(__WXGTK__)
-      // Workaround for:
-      //
-      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
-      //
-      // This workaround should be removed when Audacity updates to wxWidgets
-      // 3.x which has a fix.
-      auto &window = GetProjectFrame( *p );
-      wxRect r = window.GetRect();
-      window.SetSize(wxSize(1,1));
-      window.SetSize(r.GetSize());
-#endif
-   }
-}
-
-bool DoEditMetadata
-(AudacityProject &project,
- const wxString &title, const wxString &shortUndoDescription, bool force)
-{
-   auto &settings = ProjectSettings::Get( project );
-   auto &tags = Tags::Get( project );
-
-   // Back up my tags
-   // Tags (artist name, song properties, MP3 ID3 info, etc.)
-   // The structure may be shared with undo history entries
-   // To keep undo working correctly, always replace this with a NEW duplicate
-   // BEFORE doing any editing of it!
-   auto newTags = tags.Duplicate();
-
-   if (newTags->ShowEditDialog(&GetProjectFrame( project ), title, force)) {
-      if (tags != *newTags) {
-         // Commit the change to project state only now.
-         Tags::Set( project, newTags );
-         ProjectHistory::Get( project ).PushState(title, shortUndoDescription);
-      }
-      bool bShowInFuture;
-      gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
-      settings.SetShowId3Dialog( bShowInFuture );
-      return true;
-   }
-
-   return false;
-}
-
-void DoUndo(AudacityProject &project)
-{
+   auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -254,21 +196,17 @@ void DoUndo(AudacityProject &project)
       [&]( const UndoState &state ){
          ProjectHistory::Get( project ).PopState( state ); } );
 
-   trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
-}
-
-// Menu handler functions
-
-struct Handler : CommandHandlerObject {
-
-void OnUndo(const CommandContext &context)
-{
-   DoUndo(context.project);
+   auto t = *tracks.Selected().begin();
+   if (!t)
+      t = *tracks.Any().begin();
+   if (t)
+      t->EnsureVisible();
 }
 
 void OnRedo(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -286,7 +224,11 @@ void OnRedo(const CommandContext &context)
       [&]( const UndoState &state ){
          ProjectHistory::Get( project ).PopState( state ); } );
 
-   trackPanel.EnsureVisible(trackPanel.GetFirstSelectedTrack());
+   auto t = *tracks.Selected().begin();
+   if (!t)
+      t = *tracks.Any().begin();
+   if (t)
+      t->EnsureVisible();
 }
 
 void OnCut(const CommandContext &context)
@@ -304,7 +246,7 @@ void OnCut(const CommandContext &context)
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
       auto &view = LabelTrackView::Get( *lt );
-      if (view.CutSelectedText()) {
+      if (view.CutSelectedText( context.project )) {
          trackPanel.Refresh(false);
          return;
       }
@@ -412,7 +354,7 @@ void OnCopy(const CommandContext &context)
 
    for (auto lt : tracks.Selected< LabelTrack >()) {
       auto &view = LabelTrackView::Get( *lt );
-      if (view.CopySelectedText()) {
+      if (view.CopySelectedText( context.project )) {
          //trackPanel.Refresh(false);
          return;
       }
@@ -442,7 +384,6 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
@@ -701,7 +642,7 @@ void OnPaste(const CommandContext &context)
       window.RedrawProject();
 
       if (ff)
-         trackPanel.EnsureVisible(ff);
+         ff->EnsureVisible();
    }
 }
 
@@ -809,7 +750,7 @@ void OnSilence(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   for ( auto n : tracks.Selected< AudioTrack >() )
+   for ( auto n : tracks.Selected< WaveTrack >() )
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
    ProjectHistory::Get( project ).PushState(
@@ -832,12 +773,6 @@ void OnTrim(const CommandContext &context)
       return;
 
    tracks.Selected().Visit(
-#ifdef USE_MIDI
-      [&](NoteTrack *nt) {
-         nt->Trim(selectedRegion.t0(),
-            selectedRegion.t1());
-      },
-#endif
       [&](WaveTrack *wt) {
          //Delete the section before the left selector
          wt->Trim(selectedRegion.t0(),
@@ -1016,7 +951,7 @@ void OnDisjoin(const CommandContext &context)
 void OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
-   (void)DoEditMetadata( project,
+   (void)Exporter::DoEditMetadata( project,
       _("Edit Metadata Tags"), _("Metadata Tags"), true);
 }
 
@@ -1099,8 +1034,11 @@ const ReservedCommandFlag
    CutCopyAvailableFlag{
       [](const AudacityProject &project){
          auto range = TrackList::Get( project ).Any<const LabelTrack>()
-            + [](const LabelTrack *pTrack){
-               return LabelTrackView::Get( *pTrack ).IsTextSelected();
+            + [&](const LabelTrack *pTrack){
+               return LabelTrackView::Get( *pTrack ).IsTextSelected(
+                  // unhappy const_cast because track focus might be set
+                  const_cast<AudacityProject&>(project)
+               );
             };
          if ( !range.empty() )
             return true;
@@ -1194,11 +1132,11 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
          /* i18n-hint: (verb)*/
          Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
-            AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
+            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
             wxT("Ctrl+L") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
-            AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
+            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
             Options{ wxT("Ctrl+T") }.UseStrictFlags() )
       ),
 
@@ -1263,7 +1201,7 @@ auto canSelectAll = [](const AudacityProject &project){
 auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
    if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
       (flagsRqd & NoAutoSelect).none() )
-      SelectActions::DoSelectAllAudio(project);
+      SelectUtilities::DoSelectAllAudio(project);
 };
 
 RegisteredMenuItemEnabler selectTracks{{

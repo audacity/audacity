@@ -889,6 +889,11 @@ size_t LadspaEffect::SetBlockSize(size_t maxBlockSize)
    return mBlockSize;
 }
 
+size_t LadspaEffect::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
 sampleCount LadspaEffect::GetLatency()
 {
    if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)

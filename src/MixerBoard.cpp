@@ -29,8 +29,6 @@
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 
-#include "Menus.h"
-
 #ifdef USE_MIDI
 #include "NoteTrack.h"
 #endif
@@ -42,7 +40,9 @@
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "TrackUtilities.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
 
@@ -672,7 +672,7 @@ wxColour MixerTrackCluster::GetTrackColor()
 
 void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
-   SelectActions::DoListSelection(*mProject,
+   SelectUtilities::DoListSelection(*mProject,
       mTrack.get(), bShiftDown, bControlDown, true);
 }
 
@@ -751,7 +751,7 @@ void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& WXUNUSED(event))
 
 void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 {
-   TrackActions::DoTrackMute(
+   TrackUtilities::DoTrackMute(
       *mProject, mTrack.get(), mToggleButton_Mute->WasShiftDown());
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
@@ -765,7 +765,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 
 void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 {
-   TrackActions::DoTrackSolo(
+   TrackUtilities::DoTrackSolo(
       *mProject, mTrack.get(), mToggleButton_Solo->WasShiftDown());
    bool bIsSolo = mTrack->GetSolo();
    mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
@@ -834,7 +834,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
       //v Even when I implement MixerBoard::OnMouseEvent and call event.Skip()
       // here, MixerBoard::OnMouseEvent never gets called.
       // So, added mProject to MixerBoardScrolledWindow and just directly do what's needed here.
-      SelectActions::SelectNone( *mProject );
+      SelectUtilities::SelectNone( *mProject );
    }
    else
       event.Skip();

@@ -72,7 +72,8 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    dc->GetSize(&width, &height);
 
    int rulerScreenHeight = 40;
-   int screenTotalHeight = mTracks->GetHeight() + rulerScreenHeight;
+   int screenTotalHeight =
+      TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
 
    double scale = height / (double)screenTotalHeight;
 
@@ -105,7 +106,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       TrackPanelDrawingContext context{
          *dc, {}, {}, &artist
       };
-      TrackArt::DrawTrack( context, n, r );
+      TrackView::Get( *n ).Draw( context, r, TrackArtist::PassTracks );
 
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);

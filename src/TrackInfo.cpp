@@ -35,16 +35,65 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "AllThemeResources.h"
+#include "Prefs.h"
 #include "Project.h"
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 #include "tracks/ui/TrackView.h"
 
-static wxString gSoloPref;
+
+// Subscribe to preference changes to update static variables
+struct Settings : PrefsListener {
+   wxString gSoloPref;
+   wxFont gFont;
+
+   bool mInitialized{ false };
+
+   void UpdatePrefs() override
+   {
+      gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
+
+      // Calculation of best font size depends on language, so it should be redone in case
+      // the language preference changed.
+
+      // wxWidgets seems to need a window to do this portably.
+      if ( !wxTheApp )
+         return;
+      auto window = wxTheApp->GetTopWindow();
+      if ( !window )
+         return;
+
+      int fontSize = 10;
+      gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+      int allowableWidth =
+         // PRL:  was it correct to include the margin?
+         ( kTrackInfoWidth + kLeftMargin )
+            - 2; // 2 to allow for left/right borders
+      int textWidth;
+      do {
+         gFont.SetPointSize(fontSize);
+         window->GetTextExtent(_("Stereo, 999999Hz"),
+            &textWidth, nullptr, nullptr, nullptr, &gFont);
+         fontSize--;
+      } while (textWidth >= allowableWidth);
+
+      mInitialized = true;
+   }
+};
+
+static Settings &settings()
+{
+   static Settings theSettings;
+   if ( !theSettings.mInitialized )
+      theSettings.UpdatePrefs();
+   return theSettings;
+}
+
 bool TrackInfo::HasSoloButton()
 {
-   return gSoloPref!=wxT("None");
+   return settings().gSoloPref != wxT("None");
 }
 
 #define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
@@ -396,12 +445,6 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
-namespace {
-
-wxFont gFont;
-
-}
-
 void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    dest.x = rect.x;
@@ -506,100 +549,10 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 /// \todo Probably should move to 'Utils.cpp'.
 void TrackInfo::SetTrackInfoFont(wxDC * dc)
 {
-   dc->SetFont(gFont);
+   dc->SetFont(settings().gFont);
 }
-
-#if 0
-void TrackInfo::DrawBordersWithin
-   ( wxDC* dc, const wxRect & rect, const Track &track ) const
-{
-   AColor::Dark(dc, false); // same color as border of toolbars (ToolBar::OnPaint())
-
-   // below close box and title bar
-   wxRect buttonRect;
-   GetTitleBarRect( rect, buttonRect );
-   AColor::Line
-      (*dc, rect.x,              buttonRect.y + buttonRect.height,
-            rect.width - 1,      buttonRect.y + buttonRect.height);
-
-   // between close box and title bar
-   AColor::Line
-      (*dc, buttonRect.x, buttonRect.y,
-            buttonRect.x, buttonRect.y + buttonRect.height - 1);
-
-   GetMuteSoloRect( rect, buttonRect, false, true, &track );
-
-   bool bHasMuteSolo = dynamic_cast<const PlayableTrack*>( &track ) != NULL;
-   if( bHasMuteSolo && !TrackInfo::HideTopItem( rect, buttonRect ) )
-   {
-      // above mute/solo
-      AColor::Line
-         (*dc, rect.x,          buttonRect.y,
-               rect.width - 1,  buttonRect.y);
-
-      // between mute/solo
-      // Draw this little line; if there is no solo, wide mute button will
-      // overpaint it later:
-      AColor::Line
-         (*dc, buttonRect.x + buttonRect.width, buttonRect.y,
-               buttonRect.x + buttonRect.width, buttonRect.y + buttonRect.height - 1);
-
-      // below mute/solo
-      AColor::Line
-         (*dc, rect.x,          buttonRect.y + buttonRect.height,
-               rect.width - 1,  buttonRect.y + buttonRect.height);
-   }
-
-   // left of and above minimize button
-   wxRect minimizeRect;
-   this->GetMinimizeRect(rect, minimizeRect);
-   AColor::Line
-      (*dc, minimizeRect.x - 1, minimizeRect.y,
-            minimizeRect.x - 1, minimizeRect.y + minimizeRect.height - 1);
-   AColor::Line
-      (*dc, minimizeRect.x,                          minimizeRect.y - 1,
-            minimizeRect.x + minimizeRect.width - 1, minimizeRect.y - 1);
-}
-#endif
 
 //#define USE_BEVELS
-
-// Paint the whole given rectangle some fill color
-void TrackInfo::DrawBackground(
-   wxDC * dc, const wxRect & rect, bool bSelected, const int vrul)
-{
-   // fill in label
-   wxRect fill = rect;
-   fill.width = vrul - kLeftMargin;
-   AColor::MediumTrackInfo(dc, bSelected);
-   dc->DrawRectangle(fill);
-
-#ifdef USE_BEVELS
-   // This branch is not now used
-   // PRL:  todo:  banish magic numbers.
-   // PRL: vrul was the x coordinate of left edge of the vertical ruler.
-   // PRL: bHasMuteSolo was true iff the track was WaveTrack.
-   if( bHasMuteSolo )
-   {
-      int ylast = rect.height-20;
-      int ybutton = wxMin(32,ylast-17);
-      int ybuttonEnd = 67;
-
-      fill=wxRect( rect.x+1, rect.y+17, vrul-6, ybutton);
-      AColor::BevelTrackInfo( *dc, true, fill );
-   
-      if( ybuttonEnd < ylast ){
-         fill=wxRect( rect.x+1, rect.y+ybuttonEnd, fill.width, ylast - ybuttonEnd);
-         AColor::BevelTrackInfo( *dc, true, fill );
-      }
-   }
-   else
-   {
-      fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
-      AColor::BevelTrackInfo( *dc, true, fill );
-   }
-#endif
-}
 
 unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
 {
@@ -609,31 +562,3 @@ unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
 }
-
-void TrackInfo::UpdatePrefs( wxWindow *pParent )
-{
-   gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
-
-   // Calculation of best font size depends on language, so it should be redone in case
-   // the language preference changed.
-
-   int fontSize = 10;
-   gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-   int allowableWidth =
-      // PRL:  was it correct to include the margin?
-      ( kTrackInfoWidth + kLeftMargin )
-         - 2; // 2 to allow for left/right borders
-   int textWidth, textHeight;
-   do {
-      gFont.SetPointSize(fontSize);
-      pParent->GetTextExtent(_("Stereo, 999999Hz"),
-                             &textWidth,
-                             &textHeight,
-                             NULL,
-                             NULL,
-                             &gFont);
-      fontSize--;
-   } while (textWidth >= allowableWidth);
-}
-

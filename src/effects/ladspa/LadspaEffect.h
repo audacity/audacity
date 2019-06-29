@@ -77,6 +77,7 @@ public:
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
+   size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
    size_t GetTailSize() override;

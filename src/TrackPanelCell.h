@@ -14,9 +14,11 @@ Paul Licameli
 #include "Audacity.h"
 
 #include "MemoryX.h"
+#include "TrackPanelDrawable.h" // to inherit
 
 class AudacityProject;
 struct HitTestPreview;
+struct TrackPanelDrawingContext;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
 class ViewInfo;
@@ -31,9 +33,9 @@ using UIHandlePtr = std::shared_ptr<UIHandle>;
 #include <vector>
 
 /// \brief The TrackPanel is built up of nodes, subtrees of the CellularPanel's area
-/// This class itself has almost nothing in it.  Other classes derived from it
-/// build up the capabilities.
+/// Common base class for TrackPanelCell (leaf) and TrackPanelGroup (nonleaf)
 class AUDACITY_DLL_API /* not final */ TrackPanelNode
+   : public TrackPanelDrawable
 {
 public:
    TrackPanelNode();
@@ -108,22 +110,26 @@ public:
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned CaptureKey
-      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned KeyDown
-      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned KeyUp
-      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing
    virtual unsigned Char
-      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent);
+      (wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent,
+       AudacityProject *project);
 };
 
 #endif

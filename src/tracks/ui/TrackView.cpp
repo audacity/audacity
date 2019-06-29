@@ -14,27 +14,61 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../TrackPanelResizerCell.h"
 
+#include "../../ClientData.h"
+#include "../../Project.h"
+#include "../../xml/XMLTagHandler.h"
+#include "../../xml/XMLWriter.h"
+
 TrackView::~TrackView()
 {
 }
 
-void TrackView::Copy( const TrackView &other )
+int TrackView::GetTrackHeight( const Track *pTrack )
 {
-   mMinimized = other.mMinimized;
+   return pTrack ? Get( *pTrack ).GetHeight() : 0;
+}
 
-   // Let mY remain 0 -- TrackList::RecalcPositions corrects it later
-   mY = 0;
-   mHeight = other.mHeight;
+int TrackView::GetChannelGroupHeight( const Track *pTrack )
+{
+   return pTrack ? TrackList::Channels( pTrack ).sum( GetTrackHeight ) : 0;
+}
+
+int TrackView::GetCumulativeHeight( const Track *pTrack )
+{
+   if ( !pTrack )
+      return 0;
+   auto &view = Get( *pTrack );
+   return view.GetY() + view.GetHeight();
+}
+
+int TrackView::GetTotalHeight( const TrackList &list )
+{
+   return GetCumulativeHeight( *list.Any().rbegin() );
+}
+
+void TrackView::CopyTo( Track &track ) const
+{
+   auto &other = Get( track );
+
+   other.mMinimized = mMinimized;
+
+   // Let mY remain 0 -- TrackPositioner corrects it later
+   other.mY = 0;
+   other.mHeight = mHeight;
 }
 
 TrackView &TrackView::Get( Track &track )
 {
-   return *track.GetTrackView();
+   auto pView = std::static_pointer_cast<TrackView>( track.GetTrackView() );
+   if (!pView)
+      // create on demand
+      track.SetTrackView( pView = DoGetView::Call( track ) );
+   return *pView;
 }
 
 const TrackView &TrackView::Get( const Track &track )
 {
-   return *track.GetTrackView();
+   return Get( const_cast< Track& >( track ) );
 }
 
 void TrackView::SetMinimized(bool isMinimized)
@@ -48,35 +82,33 @@ void TrackView::SetMinimized(bool isMinimized)
       leader->AdjustPositions();
 }
 
+void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
+{
+   xmlFile.WriteAttr(wxT("height"), GetActualHeight());
+   xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
+}
+
+bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
+{
+   wxString strValue;
+   long nValue;
+   if (!wxStrcmp(attr, wxT("height")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      SetHeight(nValue);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("minimized")) &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      SetMinimized(nValue != 0);
+      return true;
+   }
+   else
+      return false;
+}
+
 void TrackView::DoSetMinimized(bool isMinimized)
 {
    mMinimized = isMinimized;
-}
-
-std::shared_ptr<TrackView> Track::GetTrackView()
-{
-   if (!mpView)
-      // create on demand
-      mpView = DoGetView::Call( *this );
-   return mpView;
-}
-
-std::shared_ptr<const TrackView> Track::GetTrackView() const
-{
-   return const_cast<Track*>(this)->GetTrackView();
-}
-
-std::shared_ptr<TrackPanelCell> Track::GetTrackControls()
-{
-   if (!mpControls)
-      // create on demand
-      mpControls = DoGetControls::Call( *this );
-   return mpControls;
-}
-
-std::shared_ptr<const TrackPanelCell> Track::GetTrackControls() const
-{
-   return const_cast< Track* >( this )->GetTrackControls();
 }
 
 std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
@@ -129,3 +161,58 @@ void TrackView::DoSetHeight(int h)
 {
    mHeight = h;
 }
+
+namespace {
+
+// Attach an object to each project.  It receives track list events and updates
+// track Y coordinates
+struct TrackPositioner : ClientData::Base, wxEvtHandler
+{
+   AudacityProject &mProject;
+
+   explicit TrackPositioner( AudacityProject &project )
+      : mProject{ project }
+   {
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_ADDITION, &TrackPositioner::OnUpdate, this );
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_DELETION, &TrackPositioner::OnUpdate, this );
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_PERMUTED, &TrackPositioner::OnUpdate, this );
+      TrackList::Get( project ).Bind(
+         EVT_TRACKLIST_RESIZING, &TrackPositioner::OnUpdate, this );
+   }
+
+   void OnUpdate( TrackListEvent & e )
+   {
+      e.Skip();
+
+      auto iter =
+         TrackList::Get( mProject ).Find( e.mpTrack.lock().get() );
+      if ( !*iter )
+         return;
+
+      auto prev = iter;
+      auto yy = TrackView::GetCumulativeHeight( *--prev );
+
+      while( auto pTrack = *iter ) {
+         auto &view = TrackView::Get( *pTrack );
+         view.SetY( yy );
+         yy += view.GetHeight();
+         ++iter;
+      }
+   }
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+  []( AudacityProject &project ){
+     return std::make_shared< TrackPositioner >( project );
+   }
+};
+
+}
+
+template<> auto DoGetView::Implementation() -> Function {
+   return nullptr;
+}
+static DoGetView registerDoGetView;

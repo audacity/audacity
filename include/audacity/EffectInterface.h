@@ -156,7 +156,9 @@ public:
    virtual int GetMidiOutCount() = 0;
 
    virtual void SetSampleRate(double rate) = 0;
+   // Suggest a block size, but the return is the size that was really set:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
+   virtual size_t GetBlockSize() const = 0;
 
    virtual sampleCount GetLatency() = 0;
    virtual size_t GetTailSize() = 0;

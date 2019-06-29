@@ -18,7 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../AColor.h"
 #include "../../FreqWindow.h"
-#include "../../Menus.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
@@ -26,8 +25,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectSettings.h"
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
+#include "../../SelectUtilities.h"
 #include "../../SelectionState.h"
+#include "../../TrackArtist.h"
 #include "../../TrackPanel.h"
+#include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../ViewInfo.h"
 #include "../../WaveClip.h"
@@ -129,7 +131,7 @@ namespace
       return pTrack && pTrack->TypeSwitch< bool >( [&](const WaveTrack *wt) {
          const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
          const int display = wt->GetDisplay();
-         return (display == WaveTrack::Spectrum) &&
+         return (display == WaveTrackViewConstants::Spectrum) &&
             settings.SpectralSelectionEnabled();
       });
    }
@@ -547,7 +549,7 @@ UIHandle::Result SelectHandle::Click
          // text boxes.
          bool bShift = event.ShiftDown();
          bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-         SelectActions::DoListSelection(
+         SelectUtilities::DoListSelection(
             *pProject, pTrack, bShift, true, !unsafe);
          return true;
        } )
@@ -1009,17 +1011,28 @@ UIHandle::Result SelectHandle::Cancel(AudacityProject *pProject)
    return RefreshCode::RefreshAll;
 }
 
-void SelectHandle::DrawExtras
-(DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &)
+void SelectHandle::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
 {
-   if (pass == Panel) {
+   if ( iPass == TrackArtist::PassSnapping ) {
+      auto &dc = context.dc;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
          auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
          auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
-         mSnapManager->Draw( dc, coord1, coord2 );
+         mSnapManager->Draw( &dc, coord1, coord2 );
       }
    }
+}
+
+wxRect SelectHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassSnapping )
+      return MaximizeHeight( rect, panelRect );
+   else
+      return rect;
 }
 
 void SelectHandle::Connect(AudacityProject *pProject)

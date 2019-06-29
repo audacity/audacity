@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "PlayableTrackControls.h"
 #include "../../../commands/CommandManager.h"
-#include "../../../Menus.h"
 #include "../../../Project.h"
 #include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
@@ -21,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
+#include "../../../TrackUtilities.h"
 
 MuteButtonHandle::MuteButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
@@ -36,7 +36,7 @@ UIHandle::Result MuteButtonHandle::CommitChanges
 {
    auto pTrack = mpTrack.lock();
    if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
-      TrackActions::DoTrackMute(*pProject, pTrack.get(), event.ShiftDown());
+      TrackUtilities::DoTrackMute(*pProject, pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }
@@ -92,7 +92,7 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 {
    auto pTrack = mpTrack.lock();
    if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
-      TrackActions::DoTrackSolo(*pProject, pTrack.get(), event.ShiftDown());
+      TrackUtilities::DoTrackSolo(*pProject, pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }

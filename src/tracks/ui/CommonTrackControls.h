@@ -56,6 +56,14 @@ protected:
       (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition) override;
    virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
 
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
    std::weak_ptr<CloseButtonHandle> mCloseHandle;
    std::weak_ptr<MenuButtonHandle> mMenuHandle;
    std::weak_ptr<MinimizeButtonHandle> mMinimizeHandle;

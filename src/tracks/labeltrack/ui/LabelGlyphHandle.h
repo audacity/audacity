@@ -94,7 +94,8 @@ private:
        const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
    bool HandleGlyphDragRelease
-      (LabelTrackHit &hit,
+      (AudacityProject &project,
+       LabelTrackHit &hit,
        const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
 

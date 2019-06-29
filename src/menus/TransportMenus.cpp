@@ -1,7 +1,6 @@
 #include "../Audacity.h"
 #include "../Experimental.h"
 
-#include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../DeviceManager.h"
@@ -21,8 +20,10 @@
 #include "../UndoManager.h"
 #include "../WaveClip.h"
 #include "../prefs/RecordingPrefs.h"
+#include "../WaveTrack.h"
 #include "../ViewInfo.h"
-#include "../prefs/TracksPrefs.h"
+#include "../commands/CommandContext.h"
+#include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../tracks/ui/Scrubbing.h"
@@ -202,166 +203,9 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
 }
 
-namespace TransportActions {
-
-// exported helper functions
-
-// Stop playing or recording, if paused.
-void StopIfPaused( AudacityProject &project )
-{
-   if( AudioIOBase::Get()->IsPaused() )
-      DoStop( project );
-}
-
-bool DoPlayStopSelect
-(AudacityProject &project, bool click, bool shift)
-{
-   auto &toolbar = ControlToolBar::Get( project );
-   auto &scrubber = Scrubber::Get( project );
-   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &selection = viewInfo.selectedRegion;
-   auto gAudioIO = AudioIOBase::Get();
-
-   //If busy, stop playing, make sure everything is unpaused.
-   if (scrubber.HasMark() ||
-       gAudioIO->IsStreamActive(token)) {
-      toolbar.SetPlay(false);        //Pops
-      toolbar.SetStop(true);         //Pushes stop down
-
-      // change the selection
-      auto time = gAudioIO->GetStreamTime();
-      // Test WasSpeedPlaying(), not IsSpeedPlaying()
-      // as we could be stopped now.
-      if (click && scrubber.WasSpeedPlaying())
-      {
-         ;// don't change the selection.
-      }
-      else if (shift && click) {
-         // Change the region selection, as if by shift-click at the play head
-         auto t0 = selection.t0(), t1 = selection.t1();
-         if (time < t0)
-            // Grow selection
-            t0 = time;
-         else if (time > t1)
-            // Grow selection
-            t1 = time;
-         else {
-            // Shrink selection, changing the nearer boundary
-            if (fabs(t0 - time) < fabs(t1 - time))
-               t0 = time;
-            else
-               t1 = time;
-         }
-         selection.setTimes(t0, t1);
-      }
-      else if (click){
-         // avoid a point at negative time.
-         time = wxMax( time, 0 );
-         // Set a point selection, as if by a click at the play head
-         selection.setTimes(time, time);
-      } else
-         // How stop and set cursor always worked
-         // -- change t0, collapsing to point only if t1 was greater
-         selection.setT0(time, false);
-
-      ProjectHistory::Get( project ).ModifyState(false);           // without bWantsAutoSave
-      return true;
-   }
-   return false;
-}
-
-// The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and
-// "OnStopSelect" merged.
-void DoPlayStopSelect(AudacityProject &project)
-{
-   auto &toolbar = ControlToolBar::Get( project );
-   wxCommandEvent evt;
-   auto gAudioIO = AudioIO::Get();
-   if (DoPlayStopSelect(project, false, false))
-      toolbar.OnStop(evt);
-   else if (!gAudioIO->IsBusy()) {
-      //Otherwise, start playing (assuming audio I/O isn't busy)
-      //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
-      toolbar.SetStop(false);
-
-      // Will automatically set mLastPlayMode
-      toolbar.PlayCurrentRegion(false);
-   }
-}
-
-void DoPause( AudacityProject &project )
-{
-   wxCommandEvent evt;
-
-   auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnPause(evt);
-}
-
-void DoRecord( AudacityProject &project )
-{
-   wxCommandEvent evt;
-   evt.SetInt(2); // 0 is default, use 1 to set shift on, 2 to clear it
-
-   auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnRecord(evt);
-}
-
-void DoLockPlayRegion( AudacityProject &project )
-{
-   auto &tracks = TrackList::Get( project );
-   auto &ruler = AdornedRulerPanel::Get( project );
-
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &playRegion = viewInfo.playRegion;
-   if (playRegion.GetStart() >= tracks.GetEndTime()) {
-       AudacityMessageBox(_("Cannot lock region beyond\nend of project."),
-                    _("Error"));
-   }
-   else {
-      playRegion.SetLocked( true );
-      ruler.Refresh(false);
-   }
-}
-
-void DoUnlockPlayRegion( AudacityProject &project )
-{
-   auto &ruler = AdornedRulerPanel::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &playRegion = viewInfo.playRegion;
-   playRegion.SetLocked( false );
-   ruler.Refresh(false);
-}
-
-void DoTogglePinnedHead( AudacityProject &project )
-{
-   bool value = !TracksPrefs::GetPinnedHeadPreference();
-   TracksPrefs::SetPinnedHeadPreference(value, true);
-   MenuManager::ModifyAllProjectToolbarMenus();
-
-   // Change what happens in case transport is in progress right now
-   auto ctb = ControlToolBar::Find( *GetActiveProject() );
-   if (ctb)
-      ctb->StartScrollingIfPreferred();
-
-   auto &ruler = AdornedRulerPanel::Get( project );
-   // Update button image
-   ruler.UpdateButtonStates();
-
-   auto &scrubber = Scrubber::Get( project );
-   if (scrubber.HasMark())
-      scrubber.SetScrollScrubbing(value);
-}
-
-void DoStop( AudacityProject &project )
-{
-   wxCommandEvent evt;
-
-   auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnStop(evt);
-}
-
 // Menu handler functions
+
+namespace TransportActions {
 
 struct Handler : CommandHandlerObject {
 

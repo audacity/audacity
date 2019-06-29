@@ -61,6 +61,7 @@
 #include <wx/stdpaths.h>
 
 #include "FileNames.h"
+#include "Internat.h"
 #include "MemoryX.h"
 #include "Languages.h"
 
@@ -71,29 +72,45 @@ int gMenusDirty = 0;
 
 wxDEFINE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
 
-PrefsListener::PrefsListener()
+struct PrefsListener::Impl : wxEvtHandler
 {
-   wxTheApp->Bind(EVT_PREFS_UPDATE, &PrefsListener::OnEvent, this);
+   Impl( PrefsListener &owner );
+   ~Impl();
+   void OnEvent(wxCommandEvent&);
+   PrefsListener &mOwner;
+};
+
+PrefsListener::Impl::Impl( PrefsListener &owner )
+   : mOwner{ owner }
+{
+   wxTheApp->Bind(EVT_PREFS_UPDATE, &PrefsListener::Impl::OnEvent, this);
+}
+
+PrefsListener::Impl::~Impl()
+{
+}
+
+PrefsListener::PrefsListener()
+   : mpImpl{ std::make_unique<Impl>( *this ) }
+{
 }
 
 PrefsListener::~PrefsListener()
 {
-   // Explicit unbinding is needed because this is not a wxEvtHandler
-   wxTheApp->Unbind(EVT_PREFS_UPDATE, &PrefsListener::OnEvent, this);
 }
 
 void PrefsListener::UpdateSelectedPrefs( int )
 {
 }
 
-void PrefsListener::OnEvent( wxCommandEvent &evt )
+void PrefsListener::Impl::OnEvent( wxCommandEvent &evt )
 {
    evt.Skip();
    auto id = evt.GetId();
    if (id <= 0)
-      UpdatePrefs();
+      mOwner.UpdatePrefs();
    else
-      UpdateSelectedPrefs( id );
+      mOwner.UpdateSelectedPrefs( id );
 }
 
 #if 0
@@ -202,6 +219,20 @@ void InitPreferences()
    gPrefs = ugPrefs.get();
 
    wxConfigBase::Set(gPrefs);
+}
+
+bool CheckWritablePreferences()
+{
+   return gPrefs->Write("/TEST", true) && gPrefs->Flush();
+}
+
+wxString UnwritablePreferencesErrorMessage()
+{
+   wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
+   return wxString::Format(
+     _("Audacity cannot start because the settings file at %s is not writable."),
+     configFileName.GetFullPath()
+   );
 }
 
 void FinishPreferences()

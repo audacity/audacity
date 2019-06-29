@@ -22,7 +22,7 @@ Paul Licameli
 namespace ClientData {
 
 // A convenient default parameter for class template Site below
-struct Base
+struct AUDACITY_DLL_API Base
 {
    virtual ~Base() {}
 };

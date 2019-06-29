@@ -252,6 +252,8 @@ audacity_SOURCES = \
 	RingBuffer.h \
 	Screenshot.cpp \
 	Screenshot.h \
+	SelectUtilities.cpp \
+	SelectUtilities.h \
 	SelectedRegion.cpp \
 	SelectedRegion.h \
 	SelectionState.cpp \
@@ -296,6 +298,7 @@ audacity_SOURCES = \
 	TrackPanelAx.cpp \
 	TrackPanelAx.h \
 	TrackPanelCell.h \
+	TrackPanelDrawable.h \
 	TrackPanelDrawingContext.h \
 	TrackPanelListener.h \
 	TrackPanelMouseEvent.h \
@@ -303,6 +306,8 @@ audacity_SOURCES = \
 	TrackPanelResizeHandle.h \
 	TrackPanelResizerCell.cpp \
 	TrackPanelResizerCell.h \
+	TrackUtilities.cpp \
+	TrackUtilities.h \
 	TranslatableStringArray.h \
 	UIHandle.h \
 	UIHandle.cpp \
@@ -454,6 +459,8 @@ audacity_SOURCES = \
 	effects/Paulstretch.h \
 	effects/Phaser.cpp \
 	effects/Phaser.h \
+	effects/RealtimeEffectManager.cpp \
+	effects/RealtimeEffectManager.h \
 	effects/Repair.cpp \
 	effects/Repair.h \
 	effects/Repeat.cpp \
@@ -669,6 +676,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackView.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \

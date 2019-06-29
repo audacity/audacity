@@ -441,6 +441,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #endif
 
 #include <wx/app.h>
+#include <wx/frame.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
@@ -455,14 +456,12 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindow.h"
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 
-#include "effects/EffectManager.h"
+#include "effects/RealtimeEffectManager.h"
 #include "prefs/QualityPrefs.h"
 #include "prefs/RecordingPrefs.h"
-#include "toolbars/ControlToolBar.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
@@ -518,8 +517,6 @@ enum {
 constexpr size_t TimeQueueGrainSize = 2000;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-
-#include "tracks/ui/Scrubbing.h"
 
 #ifdef __WXGTK__
    // Might #define this for a useful thing on Linux
@@ -980,7 +977,6 @@ AudioIO::AudioIO()
    mNumCaptureChannels = 0;
    mPaused = false;
 
-   mListener = NULL;
    mUpdateMeters = false;
    mUpdatingMeters = false;
 
@@ -1431,7 +1427,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 
    if (!success) {
       wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), Get()->LastPaErrorString());
-      ShowErrorDialog( ProjectWindow::Find( mOwningProject ),
+      ShowErrorDialog( FindProjectFrame( mOwningProject ),
          _("Error"), msg, wxT("Error_opening_sound_device"));
       return;
    }
@@ -1448,9 +1444,10 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 
    // Update UI display only now, after all possibilities for error are past.
-   if ((mLastPaError == paNoError) && mListener) {
+   auto pListener = GetListener();
+   if ((mLastPaError == paNoError) && pListener) {
       // advertise the chosen I/O sample rate to the UI
-      mListener->OnAudioIORate((int)mRate);
+      pListener->OnAudioIORate((int)mRate);
    }
 }
 
@@ -1573,7 +1570,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
 
-   if (tracks.playbackTracks.size() > 0 
+   auto pListener = GetListener();
+
+   if (tracks.playbackTracks.size() > 0
 #ifdef EXPERIMENTAL_MIDI_OUT
       || tracks.midiTracks.size() > 0
 #endif
@@ -1598,8 +1597,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       captureFormat = mCaptureTracks[0]->GetSampleFormat();
 
       // Tell project that we are about to start recording
-      if (mListener)
-         mListener->OnAudioIOStartRecording();
+      if (pListener)
+         pListener->OnAudioIOStartRecording();
    }
 
    bool successAudio;
@@ -1622,8 +1621,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 #endif
 
    if (!successAudio) {
-      if (mListener && captureChannels > 0)
-         mListener->OnAudioIOStopRecording();
+      if (pListener && captureChannels > 0)
+         pListener->OnAudioIOStopRecording();
       mStreamToken = 0;
 
       return 0;
@@ -1634,7 +1633,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager & em = EffectManager::Get();
+      auto & em = RealtimeEffectManager::Get();
       // Setup for realtime playback at the rate of the realtime
       // stream, not the rate of the track.
       em.RealtimeInitialize(mRate);
@@ -1705,17 +1704,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mAudioThreadShouldCallFillBuffersOnce = true;
 
    while( mAudioThreadShouldCallFillBuffersOnce ) {
-#ifndef USE_SCRUB_THREAD
-      // Yuck, we either have to poll "by hand" when scrub polling doesn't
-      // work with a thread, or else yield to timer messages, but that would
-      // execute too much else
-      if (mScrubState) {
-         Scrubber::Get( *mOwningProject ).ContinueScrubbingPoll();
-         wxMilliSleep( Scrubber::ScrubPollInterval_ms * 0.9 );
+      auto interval = 50ull;
+      if (options.playbackStreamPrimer) {
+         interval = options.playbackStreamPrimer();
       }
-      else
-#endif
-        wxMilliSleep( 50 );
+      wxMilliSleep( interval );
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -1760,8 +1753,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       {
          mStreamToken = 0;
          mAudioThreadFillBuffersLoopRunning = false;
-         if (mListener && mNumCaptureChannels > 0)
-            mListener->OnAudioIOStopRecording();
+         if (pListener && mNumCaptureChannels > 0)
+            pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
          AudacityMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
          return 0;
@@ -1769,9 +1762,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    // Update UI display only now, after all possibilities for error are past.
-   if (mListener) {
+   if (pListener) {
       // advertise the chosen I/O sample rate to the UI
-      mListener->OnAudioIORate((int)mRate);
+      pListener->OnAudioIORate((int)mRate);
    }
 
    if (mNumPlaybackChannels > 0)
@@ -1987,7 +1980,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager::Get().RealtimeFinalize();
+      RealtimeEffectManager::Get().RealtimeFinalize();
    }
 
    mPlaybackBuffers.reset();
@@ -2164,7 +2157,7 @@ void AudioIO::StopStream()
    // No longer need effects processing
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager::Get().RealtimeFinalize();
+      RealtimeEffectManager::Get().RealtimeFinalize();
    }
 
    //
@@ -2286,6 +2279,8 @@ void AudioIO::StopStream()
    }
 #endif
 
+   auto pListener = GetListener();
+   
    // If there's no token, we were just monitoring, so we can
    // skip this next part...
    if (mStreamToken > 0) {
@@ -2363,8 +2358,8 @@ void AudioIO::StopStream()
             }
          }
 
-         ControlToolBar &bar = ControlToolBar::Get( *mOwningProject );
-         bar.CommitRecording();
+         if (pListener)
+            pListener->OnCommitRecording();
       }
    }
 
@@ -2378,8 +2373,8 @@ void AudioIO::StopStream()
    mOutputMeter.Release();
    mOwningProject = nullptr;
 
-   if (mListener && mNumCaptureChannels > 0)
-      mListener->OnAudioIOStopRecording();
+   if (pListener && mNumCaptureChannels > 0)
+      pListener->OnAudioIOStopRecording();
 
    //
    // Only set token to 0 after we're totally finished with everything
@@ -2399,9 +2394,9 @@ void AudioIO::StopStream()
    mScrubState.reset();
 #endif
 
-   if (mListener) {
+   if (pListener) {
       // Tell UI to hide sample rate
-      mListener->OnAudioIORate(0);
+      pListener->OnAudioIORate(0);
    }
 
    // Don't cause a busy wait in the audio thread after stopping scrubbing
@@ -2414,11 +2409,11 @@ void AudioIO::SetPaused(bool state)
    {
       if (state)
       {
-         EffectManager::Get().RealtimeSuspend();
+         RealtimeEffectManager::Get().RealtimeSuspend();
       }
       else
       {
-         EffectManager::Get().RealtimeResume();
+         RealtimeEffectManager::Get().RealtimeResume();
       }
    }
 
@@ -2545,7 +2540,7 @@ AudioThread::ExitCode AudioThread::Entry()
    {
       using Clock = std::chrono::steady_clock;
       auto loopPassStart = Clock::now();
-      const auto interval = Scrubber::ScrubPollInterval_ms;
+      const auto interval = ScrubPollInterval_ms;
 
       // Set LoopActive outside the tests to avoid race condition
       gAudioIO->mAudioThreadFillBuffersLoopActive = true;
@@ -2992,8 +2987,9 @@ void AudioIO::FillBuffers()
             mRecordingSchedule.mPosition += avail / mRate;
             mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
-            if (mListener && !blockFileLog.IsEmpty())
-               mListener->OnAudioIONewBlockFiles(blockFileLog);
+            auto pListener = GetListener();
+            if (pListener && !blockFileLog.IsEmpty())
+               pListener->OnAudioIONewBlockFiles(blockFileLog);
          }
          // end of record buffering
       },
@@ -3013,7 +3009,8 @@ void AudioIO::FillBuffers()
    );
 }
 
-void AudioIO::SetListener(AudioIOListener* listener)
+void AudioIoCallback::SetListener(
+   const std::shared_ptr< AudioIOListener > &listener)
 {
    if (IsBusy())
       return;
@@ -3692,8 +3689,9 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer
    bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
    if( bShouldBePaused != IsPaused())
    {
-      auto &bar = ControlToolBar::Get( *mOwningProject );
-      bar.CallAfter(&ControlToolBar::Pause);
+      auto pListener = GetListener();
+      if ( pListener )
+         pListener->OnSoundActivationThreshold();
    }
 }
 
@@ -3794,7 +3792,7 @@ bool AudioIoCallback::FillOutputBuffers(
       tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
    // ------ End of MEMORY ALLOCATION ---------------
 
-   EffectManager & em = EffectManager::Get();
+   auto & em = RealtimeEffectManager::Get();
    em.RealtimeProcessStart();
 
    bool selected = false;

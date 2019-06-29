@@ -48,6 +48,7 @@ greater use in future.
 #include "audacity/ConfigInterface.h"
 
 #include "EffectManager.h"
+#include "RealtimeEffectManager.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -68,7 +69,6 @@ greater use in future.
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
-#include "nyquist/Nyquist.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -146,10 +146,6 @@ Effect::Effect()
    mNumTracks = 0;
    mNumGroups = 0;
    mProgress = NULL;
-
-   mRealtimeSuspendLock.Enter();
-   mRealtimeSuspendCount = 1;    // Effects are initially suspended
-   mRealtimeSuspendLock.Leave();
 
    mUIParent = NULL;
    mUIDialog = NULL;
@@ -374,6 +370,16 @@ size_t Effect::SetBlockSize(size_t maxBlockSize)
    return mBlockSize;
 }
 
+size_t Effect::GetBlockSize() const
+{
+   if (mClient)
+   {
+      return mClient->GetBlockSize();
+   }
+
+   return mBlockSize;
+}
+
 sampleCount Effect::GetLatency()
 {
    if (mClient)
@@ -470,21 +476,7 @@ bool Effect::RealtimeFinalize()
 bool Effect::RealtimeSuspend()
 {
    if (mClient)
-   {
-      if (mClient->RealtimeSuspend())
-      {
-         mRealtimeSuspendLock.Enter();
-         mRealtimeSuspendCount++;
-         mRealtimeSuspendLock.Leave();
-         return true;
-      }
-
-      return false;
-   }
-
-   mRealtimeSuspendLock.Enter();
-   mRealtimeSuspendCount++;
-   mRealtimeSuspendLock.Leave();
+      return mClient->RealtimeSuspend();
 
    return true;
 }
@@ -492,21 +484,7 @@ bool Effect::RealtimeSuspend()
 bool Effect::RealtimeResume()
 {
    if (mClient)
-   {
-      if (mClient->RealtimeResume())
-      {
-         mRealtimeSuspendLock.Enter();
-         mRealtimeSuspendCount--;
-         mRealtimeSuspendLock.Leave();
-         return true;
-      }
-
-      return false;
-   }
-
-   mRealtimeSuspendLock.Enter();
-   mRealtimeSuspendCount--;
-   mRealtimeSuspendLock.Leave();
+      return mClient->RealtimeResume();
 
    return true;
 }
@@ -799,8 +777,8 @@ bool Effect::Apply()
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   return PluginActions::DoEffect(GetID(), context,
-      PluginActions::kConfigured);
+   return EffectManager::DoEffect(GetID(), context,
+      EffectManager::kConfigured);
 }
 
 void Effect::Preview()
@@ -2256,7 +2234,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
          // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
-            ODManager::Instance()->ReplaceWaveTrack( t, o.get() );
+            ODManager::Instance()->ReplaceWaveTrack( t, o );
          }
       }
    }
@@ -2292,194 +2270,6 @@ void Effect::CountWaveTracks()
 double Effect::CalcPreviewInputLength(double previewLength)
 {
    return previewLength;
-}
-
-// RealtimeAddProcessor and RealtimeProcess use the same method of
-// determining the current processor index, so updates to one should
-// be reflected in the other.
-bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
-{
-   auto ichans = chans;
-   auto ochans = chans;
-   auto gchans = chans;
-
-   // Reset processor index
-   if (group == 0)
-   {
-      mCurrentProcessor = 0;
-      mGroupProcessor.clear();
-   }
-
-   // Remember the processor starting index
-   mGroupProcessor.push_back(mCurrentProcessor);
-
-   // Call the client until we run out of input or output channels
-   while (ichans > 0 && ochans > 0)
-   {
-      // If we don't have enough input channels to accomodate the client's
-      // requirements, then we replicate the input channels until the
-      // client's needs are met.
-      if (ichans < mNumAudioIn)
-      {
-         // All input channels have been consumed
-         ichans = 0;
-      }
-      // Otherwise fullfil the client's needs with as many input channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ichans >= mNumAudioIn)
-      {
-         gchans = mNumAudioIn;
-         ichans -= gchans;
-      }
-
-      // If we don't have enough output channels to accomodate the client's
-      // requirements, then we provide all of the output channels and fulfill
-      // the client's needs with dummy buffers.  These will just get tossed.
-      if (ochans < mNumAudioOut)
-      {
-         // All output channels have been consumed
-         ochans = 0;
-      }
-      // Otherwise fullfil the client's needs with as many output channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ochans >= mNumAudioOut)
-      {
-         ochans -= mNumAudioOut;
-      }
-
-      // Add a NEW processor
-      RealtimeAddProcessor(gchans, rate);
-
-      // Bump to next processor
-      mCurrentProcessor++;
-   }
-
-   return true;
-}
-
-// RealtimeAddProcessor and RealtimeProcess use the same method of
-// determining the current processor group, so updates to one should
-// be reflected in the other.
-size_t Effect::RealtimeProcess(int group,
-                                    unsigned chans,
-                                    float **inbuf,
-                                    float **outbuf,
-                                    size_t numSamples)
-{
-   //
-   // The caller passes the number of channels to process and specifies
-   // the number of input and output buffers.  There will always be the
-   // same number of output buffers as there are input buffers.
-   //
-   // Effects always require a certain number of input and output buffers,
-   // so if the number of channels we're curently processing are different
-   // than what the effect expects, then we use a few methods of satisfying
-   // the effects requirements.
-   float **clientIn = (float **) alloca(mNumAudioIn * sizeof(float *));
-   float **clientOut = (float **) alloca(mNumAudioOut * sizeof(float *));
-   float *dummybuf = (float *) alloca(numSamples * sizeof(float));
-   decltype(numSamples) len = 0;
-   auto ichans = chans;
-   auto ochans = chans;
-   auto gchans = chans;
-   unsigned indx = 0;
-   unsigned ondx = 0;
-
-   int processor = mGroupProcessor[group];
-
-   // Call the client until we run out of input or output channels
-   while (ichans > 0 && ochans > 0)
-   {
-      // If we don't have enough input channels to accomodate the client's
-      // requirements, then we replicate the input channels until the
-      // client's needs are met.
-      if (ichans < mNumAudioIn)
-      {
-         for (size_t i = 0; i < mNumAudioIn; i++)
-         {
-            if (indx == ichans)
-            {
-               indx = 0;
-            }
-            clientIn[i] = inbuf[indx++];
-         }
-
-         // All input channels have been consumed
-         ichans = 0;
-      }
-      // Otherwise fullfil the client's needs with as many input channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ichans >= mNumAudioIn)
-      {
-         gchans = 0;
-         for (size_t i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
-         {
-            clientIn[i] = inbuf[indx++];
-         }
-      }
-
-      // If we don't have enough output channels to accomodate the client's
-      // requirements, then we provide all of the output channels and fulfill
-      // the client's needs with dummy buffers.  These will just get tossed.
-      if (ochans < mNumAudioOut)
-      {
-         for (size_t i = 0; i < mNumAudioOut; i++)
-         {
-            if (i < ochans)
-            {
-               clientOut[i] = outbuf[i];
-            }
-            else
-            {
-               clientOut[i] = dummybuf;
-            }
-         }
-
-         // All output channels have been consumed
-         ochans = 0;
-      }
-      // Otherwise fullfil the client's needs with as many output channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ochans >= mNumAudioOut)
-      {
-         for (size_t i = 0; i < mNumAudioOut; i++, ochans--)
-         {
-            clientOut[i] = outbuf[ondx++];
-         }
-      }
-
-      // Finally call the plugin to process the block
-      len = 0;
-      for (decltype(numSamples) block = 0; block < numSamples; block += mBlockSize)
-      {
-         auto cnt = std::min(numSamples - block, mBlockSize);
-         len += RealtimeProcess(processor, clientIn, clientOut, cnt);
-
-         for (size_t i = 0 ; i < mNumAudioIn; i++)
-         {
-            clientIn[i] += cnt;
-         }
-
-         for (size_t i = 0 ; i < mNumAudioOut; i++)
-         {
-            clientOut[i] += cnt;
-         }
-      }
-
-      // Bump to next processor
-      processor++;
-   }
-
-   return len;
-}
-
-bool Effect::IsRealtimeActive()
-{
-   return mRealtimeSuspendCount == 0;
 }
 
 bool Effect::IsHidden()
@@ -2572,7 +2362,7 @@ void Effect::Preview(bool dryOnly)
 
       mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->SetSelected(true);
-      mixLeft->SetDisplay(WaveTrack::NoDisplay);
+      mixLeft->SetDisplay(WaveTrackViewConstants::NoDisplay);
       auto pLeft = mTracks->Add( mixLeft );
       Track *pRight{};
       if (mixRight) {
@@ -2587,7 +2377,8 @@ void Effect::Preview(bool dryOnly)
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
-            static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
+            static_cast<WaveTrack*>(dest.get())
+               ->SetDisplay(WaveTrackViewConstants::NoDisplay);
             mTracks->Add( dest );
          }
       }
@@ -2625,7 +2416,7 @@ void Effect::Preview(bool dryOnly)
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      AudioIOStartStreamOptions options { nullptr, rate };
+      AudioIOStartStreamOptions options { ::GetActiveProject(), rate };
       int token =
          gAudioIO->StartStream(tracks, mT0, t1, options);
 
@@ -3905,7 +3696,7 @@ void EffectUIHost::InitializeRealtime()
 {
    if (mSupportsRealtime && !mInitialized)
    {
-      EffectManager::Get().RealtimeAddEffect(mEffect);
+      RealtimeEffectManager::Get().RealtimeAddEffect(mEffect);
 
       wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                         &EffectUIHost::OnPlayback,
@@ -3923,7 +3714,7 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized)
    {
-      EffectManager::Get().RealtimeRemoveEffect(mEffect);
+      RealtimeEffectManager::Get().RealtimeRemoveEffect(mEffect);
 
       mInitialized = false;
    }

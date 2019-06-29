@@ -28,7 +28,6 @@ Paul Licameli split from Menus.cpp
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "commands/CommandManagerWindowClasses.h"
-#include "toolbars/ControlToolBar.h"
 
 /*
 
@@ -343,14 +342,3 @@ const ReservedCommandFlag
      [](const AudacityProject &){ return true; }
    } // jkc
 ;
-
-RegisteredMenuItemEnabler stopIfPaused{{
-   PausedFlag,
-   AudioIONotBusyFlag,
-   []( const AudacityProject &project ){
-      return MenuManager::Get( project ).mStopIfWasPaused; },
-   []( AudacityProject &project, CommandFlag ){
-      if ( MenuManager::Get( project ).mStopIfWasPaused )
-         TransportActions::StopIfPaused( project );
-   }
-}};

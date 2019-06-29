@@ -121,7 +121,7 @@ UIHandlePtr SampleHandle::HitTest
    const auto wavetrack = pTrack.get();
 
    const int displayType = wavetrack->GetDisplay();
-   if (WaveTrack::Waveform != displayType)
+   if (WaveTrackViewConstants::Waveform != displayType)
       return {};  // Not a wave, so return.
 
    const double tt =
@@ -181,7 +181,7 @@ namespace {
       //Get out of here if we shouldn't be drawing right now:
       //If we aren't displaying the waveform, Display a message dialog
       const int display = wt->GetDisplay();
-      if (WaveTrack::Waveform != display)
+      if (WaveTrackViewConstants::Waveform != display)
       {
          AudacityMessageBox(_(
 "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."),

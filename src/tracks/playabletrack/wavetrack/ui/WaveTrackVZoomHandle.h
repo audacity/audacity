@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class WaveTrack;
+#include "WaveTrackViewConstants.h"
 #include "../../../../UIHandle.h"
 
 
@@ -26,6 +27,13 @@ public:
       (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
 
    WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
+
+   static void DoZoom
+   (AudacityProject *pProject,
+    WaveTrack *pTrack, bool allChannels,
+    WaveTrackViewConstants::ZoomActions ZoomKind,
+    const wxRect &rect, int zoomStart, int zoomEnd,
+    bool fixedMousePoint);
 
    virtual ~WaveTrackVZoomHandle();
 
@@ -49,12 +57,16 @@ public:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   void DrawExtras
-      (DrawingPass pass,
-       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
-      override;
-
 private:
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
    std::weak_ptr<WaveTrack> mpTrack;
 
    int mZoomStart{}, mZoomEnd{};

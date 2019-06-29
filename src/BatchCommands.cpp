@@ -25,15 +25,19 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include <wx/textfile.h>
 
 #include "Project.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "FileNames.h"
 #include "Menus.h"
 #include "PluginManager.h"
 #include "Prefs.h"
+#include "SelectUtilities.h"
 #include "Shuttle.h"
+#include "Track.h"
 #include "export/ExportFLAC.h"
 #include "export/ExportMP3.h"
 #include "export/ExportOGG.h"
@@ -700,6 +704,49 @@ bool MacroCommands::ApplySpecialCommand(
 }
 // end CLEANSPEECH remnant
 
+/// DoAudacityCommand() takes a PluginID and executes the assocated command.
+///
+/// At the moment flags are used only to indicate whether to prompt for
+/// parameters
+bool MacroCommands::DoAudacityCommand(
+   const PluginID & ID, const CommandContext & context, unsigned flags )
+{
+   auto &project = context.project;
+   auto &window = ProjectWindow::Get( project );
+   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+   if (!plug)
+      return false;
+
+   if (flags & EffectManager::kConfigured)
+   {
+      TransportActions::DoStop(project);
+//    SelectAllIfNone();
+   }
+
+   EffectManager & em = EffectManager::Get();
+   bool success = em.DoAudacityCommand(ID, 
+      context,
+      &window,
+      (flags & EffectManager::kConfigured) == 0);
+
+   if (!success)
+      return false;
+
+/*
+   if (em.GetSkipStateFlag())
+      flags = flags | OnEffectFlags::kSkipState;
+
+   if (!(flags & OnEffectFlags::kSkipState))
+   {
+      wxString shortDesc = em.GetCommandName(ID);
+      wxString longDesc = em.GetCommandDescription(ID);
+      PushState(longDesc, shortDesc);
+   }
+*/
+   window.RedrawProject();
+   return true;
+}
+
 bool MacroCommands::ApplyEffectCommand(
    const PluginID & ID, const wxString &friendlyCommand,
    const CommandID & command, const wxString & params,
@@ -721,7 +768,7 @@ bool MacroCommands::ApplyEffectCommand(
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
    if( plug->GetPluginType() != PluginTypeAudacityCommand )
-      SelectActions::SelectAllIfNone( *project );
+      SelectUtilities::SelectAllIfNone( *project );
 
    bool res = false;
 
@@ -732,18 +779,18 @@ bool MacroCommands::ApplyEffectCommand(
    {
       if( plug->GetPluginType() == PluginTypeAudacityCommand )
          // and apply the effect...
-         res = PluginActions::DoAudacityCommand(ID,
+         res = DoAudacityCommand(ID,
             Context,
-            PluginActions::kConfigured |
-            PluginActions::kSkipState |
-            PluginActions::kDontRepeatLast);
+            EffectManager::kConfigured |
+            EffectManager::kSkipState |
+            EffectManager::kDontRepeatLast);
       else
          // and apply the effect...
-         res = PluginActions::DoEffect(ID,
+         res = EffectManager::DoEffect(ID,
             Context,
-            PluginActions::kConfigured |
-            PluginActions::kSkipState |
-            PluginActions::kDontRepeatLast);
+            EffectManager::kConfigured |
+            EffectManager::kSkipState |
+            EffectManager::kDontRepeatLast);
    }
 
    return res;
@@ -774,9 +821,9 @@ bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
    {
       if (em.GetCommandIdentifier(plug->GetID()) == Str)
       {
-         return PluginActions::DoEffect(
+         return EffectManager::DoEffect(
             plug->GetID(), context,
-            PluginActions::kConfigured);
+            EffectManager::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }

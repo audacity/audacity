@@ -16,6 +16,7 @@ Paul Licameli split from AudioIO.h
 
 #include <atomic>
 #include <cfloat>
+#include <functional>
 #include <memory>
 #include <vector>
 #include <wx/string.h>
@@ -73,7 +74,6 @@ struct AudioIOStartStreamOptions
    AudioIOStartStreamOptions(AudacityProject *pProject_, double rate_)
       : pProject{ pProject_ }
       , envelope(nullptr)
-      , listener(NULL)
       , rate(rate_)
       , playLooped(false)
       , cutPreviewGapStart(0.0)
@@ -85,7 +85,7 @@ struct AudioIOStartStreamOptions
    AudacityProject *pProject{};
    MeterPanelBase *captureMeter{}, *playbackMeter{};
    BoundedEnvelope *envelope; // for time warping
-   AudioIOListener* listener;
+   std::shared_ptr< AudioIOListener > listener;
    double rate;
    bool playLooped;
    double cutPreviewGapStart;
@@ -102,6 +102,11 @@ struct AudioIOStartStreamOptions
 
    // contents may get swapped with empty vector
    PRCrossfadeData      *pCrossfadeData{};
+
+   // An unfortunate thing needed just to make scrubbing work on Linux when
+   // we can't use a separate polling thread.
+   // The return value is a number of milliseconds to sleep before calling again
+   std::function< unsigned long() > playbackStreamPrimer;
 };
 
 ///\brief A singleton object supporting queries of the state of any active

@@ -38,6 +38,8 @@ $control direction (_ "Fade direction") choice (
       (0 (equal (guessdirection) 'OUT))   ; auto
       (1 (oddp (get '*track* 'index)))    ; fade out odd
       (T (evenp (get '*track* 'index))))) ; fade out even
+  ; Set control rate to sound rate to ensure length is exact.
+  (setf *control-srate* *sound-srate*)
   (mult *track*
     (cond
       (fade-out
@@ -47,9 +49,6 @@ $control direction (_ "Fade direction") choice (
           (2 (s-sqrt (pwlv 1 1 0)))
           (T (custom curve 0))))
       (T  ; else fade in.
-        ; Control envelope sample rate must match sound so that lengths
-        ; match exactly, otherwise we get a click at the end of the fade.
-        (setf *control-srate* *sound-srate*)
         (case type
           (0 (pwlv 0 1 1))
           (1 (osc (hz-to-step (/ (get-duration 4))) 1))

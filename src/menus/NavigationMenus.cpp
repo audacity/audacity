@@ -1,7 +1,6 @@
 #include "../Audacity.h"
 
 #include "../CommonCommandFlags.h"
-#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
@@ -97,8 +96,8 @@ void DoPrevTrack(
    {
       t = *tracks.Any().rbegin();
       trackPanel.SetFocusedTrack( t );
-      trackPanel.EnsureVisible( t );
-      projectHistory.ModifyState(false);
+      if (t)
+         t->EnsureVisible( true );
       return;
    }
 
@@ -117,7 +116,7 @@ void DoPrevTrack(
             p = *tracks.Any().rbegin();
          else
          {
-            trackPanel.EnsureVisible( t );
+            t->EnsureVisible();
             return;
          }
       }
@@ -129,8 +128,8 @@ void DoPrevTrack(
          selectionState.SelectTrack
             ( *t, false, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
-         trackPanel.EnsureVisible( p );
-         projectHistory.ModifyState(false);
+         if (p)
+            p->EnsureVisible( true );
          return;
       }
       if( tSelected && !pSelected )
@@ -138,8 +137,8 @@ void DoPrevTrack(
          selectionState.SelectTrack
             ( *p, true, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
-         trackPanel.EnsureVisible( p );
-         projectHistory.ModifyState(false);
+         if (p)
+            p->EnsureVisible( true );
          return;
       }
       if( !tSelected && pSelected )
@@ -147,8 +146,8 @@ void DoPrevTrack(
          selectionState.SelectTrack
             ( *p, false, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
-         trackPanel.EnsureVisible( p );
-         projectHistory.ModifyState(false);
+         if (p)
+            p->EnsureVisible( true );
          return;
       }
       if( !tSelected && !pSelected )
@@ -156,8 +155,8 @@ void DoPrevTrack(
          selectionState.SelectTrack
             ( *t, true, false );
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
-         trackPanel.EnsureVisible( p );
-          projectHistory.ModifyState(false);
+         if (p)
+            p->EnsureVisible( true );
          return;
       }
    }
@@ -172,21 +171,20 @@ void DoPrevTrack(
             auto range = tracks.Leaders();
             p = * range.rbegin(); // null if range is empty
             trackPanel.SetFocusedTrack( p );   // Wrap to the last track
-            trackPanel.EnsureVisible( p );
-             projectHistory.ModifyState(false);
+            if (p)
+               p->EnsureVisible( true );
             return;
          }
          else
          {
-            trackPanel.EnsureVisible( t );
+            t->EnsureVisible();
             return;
          }
       }
       else
       {
          trackPanel.SetFocusedTrack( p );   // move focus to next track up
-         trackPanel.EnsureVisible( p );
-         projectHistory.ModifyState(false);
+         p->EnsureVisible( true );
          return;
       }
    }
@@ -208,8 +206,8 @@ void DoNextTrack(
    {
       t = *tracks.Any().begin();
       trackPanel.SetFocusedTrack( t );
-      trackPanel.EnsureVisible( t );
-      projectHistory.ModifyState(false);
+      if (t)
+         t->EnsureVisible( true );
       return;
    }
 
@@ -223,7 +221,7 @@ void DoNextTrack(
             n = *tracks.Any().begin();
          else
          {
-            trackPanel.EnsureVisible( t );
+            t->EnsureVisible();
             return;
          }
       }
@@ -234,8 +232,8 @@ void DoNextTrack(
          selectionState.SelectTrack
             ( *t, false, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
-         trackPanel.EnsureVisible( n );
-         projectHistory.ModifyState(false);
+         if (n)
+            n->EnsureVisible( true );
          return;
       }
       if( tSelected && !nSelected )
@@ -243,8 +241,8 @@ void DoNextTrack(
          selectionState.SelectTrack
             ( *n, true, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
-         trackPanel.EnsureVisible( n );
-         projectHistory.ModifyState(false);
+         if (n)
+            n->EnsureVisible( true );
          return;
       }
       if( !tSelected && nSelected )
@@ -252,8 +250,8 @@ void DoNextTrack(
          selectionState.SelectTrack
             ( *n, false, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
-         trackPanel.EnsureVisible( n );
-         projectHistory.ModifyState(false);
+         if (n)
+            n->EnsureVisible( true );
          return;
       }
       if( !tSelected && !nSelected )
@@ -261,8 +259,8 @@ void DoNextTrack(
          selectionState.SelectTrack
             ( *t, true, false );
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
-         trackPanel.EnsureVisible( n );
-         projectHistory.ModifyState(false);
+         if (n)
+            n->EnsureVisible( true );
          return;
       }
    }
@@ -276,21 +274,20 @@ void DoNextTrack(
          {
             n = *tracks.Any().begin();
             trackPanel.SetFocusedTrack( n );   // Wrap to the first track
-            trackPanel.EnsureVisible( n );
-            projectHistory.ModifyState(false);
+            if (n)
+               n->EnsureVisible( true );
             return;
          }
          else
          {
-            trackPanel.EnsureVisible( t );
+            t->EnsureVisible();
             return;
          }
       }
       else
       {
          trackPanel.SetFocusedTrack( n );   // move focus to next track down
-         trackPanel.EnsureVisible( n );
-         projectHistory.ModifyState(false);
+         n->EnsureVisible( true );
          return;
       }
    }
@@ -473,11 +470,9 @@ void OnFirstTrack(const CommandContext &context)
 
    auto f = *tracks.Any().begin();
    if (t != f)
-   {
       trackPanel.SetFocusedTrack(f);
-      ProjectHistory::Get( project ).ModifyState(false);
-   }
-   trackPanel.EnsureVisible(f);
+   if (f)
+      f->EnsureVisible( t != f );
 }
 
 void OnLastTrack(const CommandContext &context)
@@ -492,11 +487,9 @@ void OnLastTrack(const CommandContext &context)
 
    auto l = *tracks.Any().rbegin();
    if (t != l)
-   {
       trackPanel.SetFocusedTrack(l);
-      ProjectHistory::Get( project ).ModifyState(false);
-   }
-   trackPanel.EnsureVisible(l);
+   if (l)
+      l->EnsureVisible( t != l );
 }
 
 void OnShiftUp(const CommandContext &context)
@@ -525,8 +518,7 @@ void OnToggle(const CommandContext &context)
 
    selectionState.SelectTrack
       ( *t, !t->GetSelected(), true );
-   trackPanel.EnsureVisible( t );
-   ProjectHistory::Get( project ).ModifyState(false);
+   t->EnsureVisible( true );
 
    trackPanel.GetAx().Updated();
 

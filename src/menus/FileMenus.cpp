@@ -6,7 +6,6 @@
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../MissingAliasFileDialog.h"
-#include "../Menus.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Printing.h"
@@ -15,12 +14,14 @@
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../export/ExportMultiple.h"
+#include "../import/ImportMIDI.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 
@@ -107,51 +108,9 @@ void DoExport
 }
 }
 
-namespace FileActions {
-
-// exported helper functions
-
-#ifdef USE_MIDI
-// return null on failure; if success, return the given project, or a NEW
-// one, if the given was null; create no NEW project if failure
-AudacityProject *DoImportMIDI(
-   AudacityProject *pProject, const FilePath &fileName)
-{
-   auto &tracks = TrackList::Get( *pProject );
-
-   AudacityProject *pNewProject {};
-   if ( !pProject )
-      pProject = pNewProject = ProjectManager::New();
-   auto cleanup = finally( [&]
-      { if ( pNewProject ) GetProjectFrame( *pNewProject ).Close(true); } );
-
-   auto newTrack = TrackFactory::Get( *pProject ).NewNoteTrack();
-
-   if (::ImportMIDI(fileName, newTrack.get())) {
-
-      SelectActions::SelectNone( *pProject );
-      auto pTrack = tracks.Add( newTrack );
-      pTrack->SetSelected(true);
-
-      ProjectHistory::Get( *pProject )
-         .PushState(wxString::Format(_("Imported MIDI from '%s'"),
-         fileName), _("Import MIDI"));
-
-      ProjectWindow::Get( *pProject ).ZoomAfterImport(pTrack);
-      pNewProject = nullptr;
-
-      FileHistory::Global().AddFileToHistory(fileName);
-
-      return pProject;
-   }
-   else
-      return nullptr;
-}
-#endif
-
-#ifdef USE_MIDI
-
 // Menu handler functions
+
+namespace FileActions {
 
 struct Handler : CommandHandlerObject {
 
@@ -485,7 +444,7 @@ void OnImportLabels(const CommandContext &context)
 
       newTrack->Import(f);
 
-      SelectActions::SelectNone( project );
+      SelectUtilities::SelectNone( project );
       newTrack->SetSelected(true);
       tracks.Add( newTrack );
 
@@ -497,6 +456,7 @@ void OnImportLabels(const CommandContext &context)
    }
 }
 
+#ifdef USE_MIDI
 void OnImportMIDI(const CommandContext &context)
 {
    auto &project = context.project;
@@ -512,7 +472,7 @@ void OnImportMIDI(const CommandContext &context)
       &window);    // Parent
 
    if (!fileName.empty())
-      DoImportMIDI(&project, fileName);
+      DoImportMIDI(project, fileName);
 }
 #endif
 

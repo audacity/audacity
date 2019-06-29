@@ -84,6 +84,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
@@ -1359,6 +1360,13 @@ bool AudacityApp::OnInit()
    // Initialize preferences and language
    InitPreferences();
    PopulatePreferences();
+   // This test must follow PopulatePreferences, because if an error message
+   // must be shown, we need internationalization to have been initialized
+   // first, which was done in PopulatePreferences
+   if ( !CheckWritablePreferences() ) {
+      ::AudacityMessageBox( UnwritablePreferencesErrorMessage() );
+      return false;
+   }
 
 #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
    this->AssociateFileTypes();
@@ -1544,7 +1552,7 @@ bool AudacityApp::OnInit()
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
       // project->MayCheckForUpdates();
-      HelpActions::DoHelpWelcome(*project);
+      SplashDialog::DoHelpWelcome(*project);
    }
 
    #ifdef USE_FFMPEG

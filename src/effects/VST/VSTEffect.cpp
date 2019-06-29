@@ -1359,6 +1359,11 @@ size_t VSTEffect::SetBlockSize(size_t maxBlockSize)
    return mBlockSize;
 }
 
+size_t VSTEffect::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
 void VSTEffect::SetSampleRate(double rate)
 {
    mSampleRate = (float) rate;

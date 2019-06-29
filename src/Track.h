@@ -252,6 +252,7 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Find anything registered with TrackList::RegisterPendingChangedTrack and
    // not yet cleared or applied; if no such exists, return this track
+   std::shared_ptr<Track> SubstitutePendingChangedTrack();
    std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
 
    // If this track is a pending changed track, return the corresponding
@@ -261,15 +262,15 @@ class AUDACITY_DLL_API Track /* not final */
  public:
    mutable wxSize vrulerSize;
 
-   // Return another, associated TrackPanelCell object that implements
-   // click and drag and keystrokes in the track contents.
-   std::shared_ptr<TrackView> GetTrackView();
-   std::shared_ptr<const TrackView> GetTrackView() const;
+   // These are exposed only for the purposes of the TrackView class, to
+   // initialize the pointer on demand
+   const std::shared_ptr<CommonTrackCell> &GetTrackView();
+   void SetTrackView( const std::shared_ptr<CommonTrackCell> &pView );
 
-   // Return another, associated TrackPanelCell object that implements the
-   // drop-down, close and minimize buttons, etc.
-   std::shared_ptr<TrackPanelCell> GetTrackControls();
-   std::shared_ptr<const TrackPanelCell> GetTrackControls() const;
+   // These are exposed only for the purposes of the TrackControls class, to
+   // initialize the pointer on demand
+   const std::shared_ptr<CommonTrackCell> &GetTrackControls();
+   void SetTrackControls( const std::shared_ptr<CommonTrackCell> &pControls );
 
    // Return another, associated TrackPanelCell object that implements the
 
@@ -335,6 +336,10 @@ private:
    bool GetSelected() const { return mSelected; }
 
    void SetSelected(bool s);
+
+   // The argument tells whether the last undo history state should be
+   // updated for the appearance change
+   void EnsureVisible( bool modifyState = false );
 
 public:
 
@@ -704,7 +709,7 @@ public:
    bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
 
 protected:
-   std::shared_ptr<TrackView> mpView;
+   std::shared_ptr<CommonTrackCell> mpView;
    std::shared_ptr<CommonTrackCell> mpControls;
 };
 
@@ -1091,7 +1096,12 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
 
+// Posted when a track needs to be scrolled into view.
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
+
 // Posted when tracks are reordered but otherwise unchanged.
+// mpTrack points to the moved track that is earliest in the New ordering.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_PERMUTED, TrackListEvent);
 
@@ -1105,7 +1115,8 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_ADDITION, TrackListEvent);
 
 // Posted when a track has been deleted from a tracklist.
-// Also posted when one track replaces another
+// Also posted when one track replaces another.
+// mpTrack points to the first track after the deletion, if there is one.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACKLIST_DELETION, TrackListEvent);
 
@@ -1360,8 +1371,6 @@ public:
    /// Make the list empty
    void Clear(bool sendEvent = true);
 
-   int GetGroupHeight(const Track * t) const;
-
    bool CanMoveUp(Track * t) const;
    bool CanMoveDown(Track * t) const;
 
@@ -1393,7 +1402,6 @@ public:
    double GetEndTime() const;
 
    double GetMinOffset() const;
-   int GetHeight() const;
 
 #if LEGACY_PROJECT_FILE_SUPPORT
    // File I/O
@@ -1490,9 +1498,11 @@ private:
 
    void RecalcPositions(TrackNodePointer node);
    void SelectionEvent( const std::shared_ptr<Track> &pTrack );
-   void PermutationEvent();
+   void PermutationEvent(TrackNodePointer node);
    void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
-   void DeletionEvent();
+   void EnsureVisibleEvent(
+      const std::shared_ptr<Track> &pTrack, bool modifyState );
+   void DeletionEvent(TrackNodePointer node = {});
    void AdditionEvent(TrackNodePointer node);
    void ResizingEvent(TrackNodePointer node);
 
@@ -1588,25 +1598,5 @@ class AUDACITY_DLL_API TrackFactory final
    std::shared_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
-
-#include "AttachedVirtualFunction.h"
-
-struct DoGetControlsTag;
-
-using DoGetControls =
-AttachedVirtualFunction<
-   DoGetControlsTag,
-   std::shared_ptr< TrackControls >,
-   Track
->;
-
-struct DoGetViewTag;
-
-using DoGetView =
-AttachedVirtualFunction<
-   DoGetViewTag,
-   std::shared_ptr< TrackView >,
-   Track
->;
 
 #endif

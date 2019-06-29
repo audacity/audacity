@@ -78,7 +78,7 @@ int DoAddLabel(
 
    window.RedrawProject();
    if (!useDialog) {
-      trackPanel.EnsureVisible(lt);
+      lt->EnsureVisible();
    }
    trackPanel.SetFocus();
 
@@ -325,8 +325,8 @@ void OnPasteNewLabel(const CommandContext &context)
       // Paul L:  copy whatever defines the selected region, not just times
       auto &view = LabelTrackView::Get( *lt );
       view.AddLabel(selectedRegion);
-      if (view.PasteSelectedText(selectedRegion.t0(),
-                                selectedRegion.t1()))
+      if (view.PasteSelectedText( context.project, selectedRegion.t0(),
+                                selectedRegion.t1() ))
          bPastedSomething = true;
 
       // Set previous track
@@ -336,7 +336,7 @@ void OnPasteNewLabel(const CommandContext &context)
    // plt should point to the last label track pasted to -- ensure it's visible
    // and set focus
    if (plt) {
-      trackPanel.EnsureVisible(plt);
+      plt->EnsureVisible();
       trackPanel.SetFocus();
    }
 

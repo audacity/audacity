@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
 #include "../../ProjectSettings.h"
+#include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
 #include "../../prefs/PlaybackPrefs.h"
@@ -54,8 +55,6 @@ enum {
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    ScrubSpeedStepsPerOctave = 4,
 #endif
-
-   ScrubPollInterval_ms = 50,
 
    kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
 };
@@ -354,10 +353,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          auto &viewInfo = ViewInfo::Get( *mProject );
-         auto &trackPanel = TrackPanel::Get( *mProject );
          auto &ctb = ControlToolBar::Get( *mProject );
          double maxTime = TrackList::Get( *mProject ).GetEndTime();
-         const int leftOffset = trackPanel.GetLeftOffset();
+         const int leftOffset = viewInfo.GetLeftOffset();
          double time0 = std::min(maxTime,
             viewInfo.PositionToTime(mScrubStartPosition, leftOffset)
          );
@@ -376,7 +374,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                auto delta = time0 - time1;
                time0 = std::max(0.0, std::min(maxTime,
                   viewInfo.h +
-                     (mProject->GetScreenEndTime() - viewInfo.h)
+                     (viewInfo.GetScreenEndTime() - viewInfo.h)
                         * TracksPrefs::GetPinnedHeadPositionPreference()
                ));
                time1 = time0 + delta;
@@ -385,6 +383,16 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mSpeedPlaying = false;
             auto options =
                DefaultPlayOptions( *mProject );
+
+#ifndef USE_SCRUB_THREAD
+            // Yuck, we either have to poll "by hand" when scrub polling doesn't
+            // work with a thread, or else yield to timer messages, but that would
+            // execute too much else
+            options.playbackStreamPrimer = [this](){
+               ContinueScrubbingPoll();
+               return ScrubPollInterval_ms;
+            };
+#endif
             options.pScrubbingOptions = &mOptions;
             options.envelope = nullptr;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
@@ -486,6 +494,17 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mDragging = false;
 
    auto options = DefaultSpeedPlayOptions( *mProject );
+
+#ifndef USE_SCRUB_THREAD
+            // Yuck, we either have to poll "by hand" when scrub polling doesn't
+            // work with a thread, or else yield to timer messages, but that would
+            // execute too much else
+            options.playbackStreamPrimer = [this](){
+               ContinueScrubbingPoll();
+               return ScrubPollInterval_ms;
+            };
+#endif
+
    options.pScrubbingOptions = &mOptions;
    options.envelope = nullptr;
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
@@ -585,15 +604,14 @@ void Scrubber::ContinueScrubbingPoll()
       else
 #endif
       {
-         const auto origin = trackPanel.GetLeftOffset();
+         const auto origin = viewInfo.GetLeftOffset();
          auto xx = position.x;
          if (!seek && !mSmoothScrollingScrub) {
             // If mouse is out-of-bounds, so that we scrub at maximum speed
             // toward the mouse position, then move the target time to a more
             // extreme position to avoid catching-up and halting before the
             // screen scrolls.
-            int width;
-            trackPanel.GetTracksUsableArea(&width, NULL);
+            auto width = viewInfo.GetTracksUsableWidth();
             auto delta = xx - origin;
             if (delta < 0)
                delta -= width;
@@ -802,7 +820,7 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
    auto &viewInfo = ViewInfo::Get( *mProject );
    const double screen =
-      TrackPanel::Get( *mProject ).GetScreenEndTime() - viewInfo.h;
+      viewInfo.GetScreenEndTime() - viewInfo.h;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
       (viewInfo, mMaxSpeed, screen, time);
 }
@@ -987,6 +1005,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    }
    else {
       TrackPanel &trackPanel = TrackPanel::Get( *mProject );
+      auto &viewInfo = ViewInfo::Get( *mProject );
       int panelWidth, panelHeight;
       trackPanel.GetSize(&panelWidth, &panelHeight);
 
@@ -1001,7 +1020,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
          scrubber.IsScrollScrubbing()
          ? scrubber.FindScrubSpeed( seeking,
              ViewInfo::Get( *mProject )
-                .PositionToTime(position.x, trackPanel.GetLeftOffset()))
+                .PositionToTime(position.x, viewInfo.GetLeftOffset()))
          : maxScrubSpeed;
 
       const wxChar *format =
@@ -1053,12 +1072,12 @@ void Scrubber::DoScrub(bool seek)
    const bool scroll = ShouldScrubPinned();
    if (!wasScrubbing) {
       auto &tp = TrackPanel::Get( *mProject );
+      const auto &viewInfo = ViewInfo::Get( *mProject );
       wxCoord xx = tp.ScreenToClient(::wxGetMouseState().GetPosition()).x;
 
       // Limit x
-      int width;
-      tp.GetTracksUsableArea(&width, nullptr);
-      const auto offset = tp.GetLeftOffset();
+      auto width = viewInfo.GetTracksUsableWidth();
+      const auto offset = viewInfo.GetLeftOffset();
       xx = (std::max(offset, std::min(offset + width - 1, xx)));
 
       MarkScrubStart(xx, scroll, seek);

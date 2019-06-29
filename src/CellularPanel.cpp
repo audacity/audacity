@@ -539,7 +539,7 @@ void CellularPanel::OnCaptureKey(wxCommandEvent & event)
    const auto t = GetFocusedCell();
    if (t) {
       const unsigned refreshResult =
-         t->CaptureKey(*kevent, *mViewInfo, this);
+         t->CaptureKey(*kevent, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
       event.Skip(kevent->GetSkipped());
    }
@@ -597,7 +597,7 @@ void CellularPanel::OnKeyDown(wxKeyEvent & event)
 
    if (t) {
       const unsigned refreshResult =
-         t->KeyDown(event, *mViewInfo, this);
+         t->KeyDown(event, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
    }
    else
@@ -620,7 +620,7 @@ void CellularPanel::OnChar(wxKeyEvent & event)
    const auto t = GetFocusedCell();
    if (t) {
       const unsigned refreshResult =
-         t->Char(event, *mViewInfo, this);
+         t->Char(event, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
    }
    else
@@ -652,7 +652,7 @@ void CellularPanel::OnKeyUp(wxKeyEvent & event)
    const auto t = GetFocusedCell();
    if (t) {
       const unsigned refreshResult =
-         t->KeyUp(event, *mViewInfo, this);
+         t->KeyUp(event, *mViewInfo, this, GetProject());
       ProcessUIHandleResult(t, t, refreshResult);
       return;
    }
@@ -893,6 +893,7 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
 void CellularPanel::OnSetFocus(wxFocusEvent &event)
 {
    SetFocusedCell();
+   Refresh( false);
 }
 
 void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
@@ -975,14 +976,17 @@ namespace {
       const TrackPanelGroup::Refinement &children,
       const TrackPanelGroup::Refinement::const_iterator iter)
    {
-      const auto lowerBound = (divideX ? rect.GetLeft() : rect.GetTop());
-      const auto upperBound = (divideX ? rect.GetRight() : rect.GetBottom());
       const auto next = iter + 1;
       const auto end = children.end();
-      const auto nextCoord = ((next == end) ? upperBound : next->first - 1);
+      wxCoord nextCoord;
+      if (next == end)
+         nextCoord = std::max( iter->first,
+            divideX ? rect.GetRight() : rect.GetBottom() );
+      else
+         nextCoord = next->first - 1;
 
-      auto lesser = std::max(lowerBound, std::min(upperBound, iter->first));
-      auto greater = std::max(lesser, std::min(upperBound, nextCoord));
+      auto lesser = iter->first;
+      auto greater = nextCoord;
 
       auto result = rect;
       if (divideX)
@@ -1117,4 +1121,33 @@ std::shared_ptr<TrackPanelCell> CellularPanel::LastCell() const
 {
    auto &state = *mState;
    return state.mLastCell.lock();
+}
+
+void CellularPanel::Draw( TrackPanelDrawingContext &context, unsigned nPasses )
+{
+   const auto panelRect = GetClientRect();
+   auto lastCell = LastCell();
+   for ( unsigned iPass = 0; iPass < nPasses; ++iPass ) {
+
+      VisitPostorder( [&]( const wxRect &rect, TrackPanelNode &node ) {
+
+         // Draw the node
+         const auto newRect = node.DrawingArea( rect, panelRect, iPass );
+         if ( newRect.Intersects( panelRect ) )
+            node.Draw( context, newRect, iPass );
+
+         // Draw the current handle if it is associated with the node
+         if ( &node == lastCell.get() ) {
+            auto target = Target();
+            if ( target ) {
+               const auto targetRect =
+                  target->DrawingArea( rect, panelRect, iPass );
+               if ( targetRect.Intersects( panelRect ) )
+                  target->Draw( context, targetRect, iPass );
+            }
+         }
+
+      } ); // nodes
+
+   } // passes
 }

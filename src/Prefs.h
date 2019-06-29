@@ -33,10 +33,13 @@
 
 #include "../include/audacity/ComponentInterface.h"
 
+#include <memory>
 #include <wx/fileconf.h>  // to inherit wxFileConfig
 #include <wx/event.h> // to declare custom event types
 
 void InitPreferences();
+bool CheckWritablePreferences();
+wxString UnwritablePreferencesErrorMessage();
 void FinishPreferences();
 
 class AudacityPrefs;
@@ -165,7 +168,7 @@ private:
 wxDECLARE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
 
 // Invoke UpdatePrefs() when Preference dialog commits changes.
-class PrefsListener
+class AUDACITY_DLL_API PrefsListener
 {
 public:
    PrefsListener();
@@ -182,7 +185,8 @@ protected:
    virtual void UpdateSelectedPrefs( int id );
 
 private:
-   void OnEvent(wxCommandEvent&);
+   struct Impl;
+   std::unique_ptr<Impl> mpImpl;
 };
 
 #endif

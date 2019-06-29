@@ -41,8 +41,6 @@ and TimeTrack.
 
 #include "InconsistencyException.h"
 
-#include "tracks/ui/TrackView.h"
-
 #ifdef _MSC_VER
 //Disable truncation warnings
 #pragma warning( disable : 4786 )
@@ -103,6 +101,13 @@ void Track::SetSelected(bool s)
    }
 }
 
+void Track::EnsureVisible( bool modifyState )
+{
+   auto pList = mList.lock();
+   if (pList)
+      pList->EnsureVisibleEvent( SharedPointer(), modifyState );
+}
+
 void Track::Merge(const Track &orig)
 {
    mSelected = orig.mSelected;
@@ -115,7 +120,7 @@ Track::Holder Track::Duplicate() const
 
    if (mpView)
       // Copy view state that might be important to undo/redo
-      TrackView::Get( *result ).Copy( *mpView );
+      mpView->CopyTo( *result );
 
    return result;
 }
@@ -140,6 +145,26 @@ void Track::SetOwner
    mNode = node;
 }
 
+const std::shared_ptr<CommonTrackCell> &Track::GetTrackView()
+{
+   return mpView;
+}
+
+void Track::SetTrackView( const std::shared_ptr<CommonTrackCell> &pView )
+{
+   mpView = pView;
+}
+
+const std::shared_ptr<CommonTrackCell> &Track::GetTrackControls()
+{
+   return mpControls;
+}
+
+void Track::SetTrackControls( const std::shared_ptr<CommonTrackCell> &pControls )
+{
+   mpControls = pControls;
+}
+
 int Track::GetIndex() const
 {
    return mIndex;
@@ -156,7 +181,6 @@ void Track::SetLinked(bool l)
    if (pList && !pList->mPendingUpdates.empty()) {
       auto orig = pList->FindById( GetId() );
       if (orig && orig != this) {
-         // delegate, and rely on RecalcPositions to copy back
          orig->SetLinked(l);
          return;
       }
@@ -458,6 +482,7 @@ std::pair<Track *, Track *> TrackList::FindSyncLockGroup(Track *pMember) const
 //
 wxDEFINE_EVENT(EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_SELECTION_CHANGE, TrackListEvent);
+wxDEFINE_EVENT(EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_PERMUTED, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_RESIZING, TrackListEvent);
 wxDEFINE_EVENT(EVT_TRACKLIST_ADDITION, TrackListEvent);
@@ -532,23 +557,17 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
    Track *t;
    int i = 0;
-   int y = 0;
 
    auto prev = getPrev( node );
    if ( !isNull( prev ) ) {
       t = prev.first->get();
       i = t->GetIndex() + 1;
-      auto &view = TrackView::Get( *t );
-      y = view.GetY() + view.GetHeight();
    }
 
    const auto theEnd = end();
    for (auto n = Find( node.first->get() ); n != theEnd; ++n) {
       t = *n;
-      auto &view = TrackView::Get( *t );
       t->SetIndex(i++);
-      view.SetY(y);
-      y += view.GetHeight();
    }
 
    UpdatePendingTracks();
@@ -568,16 +587,31 @@ void TrackList::DataEvent( const std::shared_ptr<Track> &pTrack, int code )
       safenew TrackListEvent{ EVT_TRACKLIST_TRACK_DATA_CHANGE, pTrack, code } );
 }
 
-void TrackList::PermutationEvent()
+void TrackList::EnsureVisibleEvent(
+   const std::shared_ptr<Track> &pTrack, bool modifyState )
 {
+   auto pEvent = std::make_unique<TrackListEvent>(
+      EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, pTrack, 0 );
+   pEvent->SetInt( modifyState ? 1 : 0 );
    // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_PERMUTED } );
+   QueueEvent( pEvent.release() );
 }
 
-void TrackList::DeletionEvent()
+void TrackList::PermutationEvent(TrackNodePointer node)
 {
    // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_DELETION } );
+   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_PERMUTED, *node.first } );
+}
+
+void TrackList::DeletionEvent(TrackNodePointer node)
+{
+   // wxWidgets will own the event object
+   QueueEvent( safenew TrackListEvent{
+      EVT_TRACKLIST_DELETION,
+      node.second && node.first != node.second->end()
+         ? *node.first
+         : nullptr
+   } );
 }
 
 void TrackList::AdditionEvent(TrackNodePointer node)
@@ -631,7 +665,7 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
    }
    auto n = getBegin();
    RecalcPositions(n);
-   PermutationEvent();
+   PermutationEvent(n);
 }
 
 Track *TrackList::FindById( TrackId id )
@@ -738,7 +772,7 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
-      DeletionEvent();
+      DeletionEvent(node);
       AdditionEvent(node);
    }
    return holder;
@@ -759,7 +793,7 @@ TrackNodePointer TrackList::Remove(Track *t)
          if ( !isNull( result ) )
             RecalcPositions(result);
 
-         DeletionEvent();
+         DeletionEvent(result);
       }
    }
    return result;
@@ -842,15 +876,6 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
    return nullptr;
 }
 
-/// For mono track height of track
-/// For stereo track combined height of both channels.
-int TrackList::GetGroupHeight(const Track * t) const
-{
-   const auto GetHeight = []( const Track *track )
-      { return TrackView::Get( *track ).GetHeight(); };
-   return Channels(t).sum( GetHeight );
-}
-
 bool TrackList::CanMoveUp(Track * t) const
 {
    return GetPrev(t, true) != NULL;
@@ -921,7 +946,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
-   PermutationEvent();
+   PermutationEvent(s1);
 }
 
 bool TrackList::MoveUp(Track * t)
@@ -968,19 +993,6 @@ size_t TrackList::size() const
       cnt = getPrev( getEnd() ).first->get()->GetIndex() + 1;
 
    return cnt;
-}
-
-int TrackList::GetHeight() const
-{
-   int height = 0;
-
-   if (!empty()) {
-      auto track = getPrev( getEnd() ).first->get();
-      auto &view = TrackView::Get( *track );
-      height = view.GetY() + view.GetHeight();
-   }
-
-   return height;
 }
 
 namespace {
@@ -1073,6 +1085,11 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
    if (pAdded)
       pAdded->clear();
 
+   // To find the first node that remains after the first deleted one
+   TrackNodePointer node;
+   bool findingNode = false;
+   bool foundNode = false;
+
    for (auto it = ListOfTracks::begin(), stop = ListOfTracks::end();
         it != stop;) {
       if (it->get()->GetId() == TrackId{}) {
@@ -1080,13 +1097,23 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
             pAdded->push_back( *it );
          (*it)->SetOwner( {}, {} );
          it = erase( it );
+
+         if (!findingNode)
+            findingNode = true;
+         if (!foundNode && it != stop)
+            node = (*it)->GetNode();
       }
-      else
+      else {
+         if ( findingNode )
+            foundNode = true;
          ++it;
+      }
    }
 
-   if (!empty())
+   if (!empty()) {
       RecalcPositions(getBegin());
+      DeletionEvent( node );
+   }
 }
 
 bool TrackList::ApplyPendingTracks()
@@ -1147,14 +1174,16 @@ bool TrackList::ApplyPendingTracks()
       }
    }
    if (inserted) {
-      RecalcPositions({first, this});
+      TrackNodePointer node{first, this};
+      RecalcPositions(node);
+      AdditionEvent(node);
       result = true;
    }
 
    return result;
 }
 
-std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
+std::shared_ptr<Track> Track::SubstitutePendingChangedTrack()
 {
    // Linear search.  Tracks in a project are usually very few.
    auto pList = mList.lock();
@@ -1168,6 +1197,11 @@ std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
          return *it;
    }
    return SharedPointer();
+}
+
+std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
+{
+   return const_cast<Track*>(this)->SubstitutePendingChangedTrack();
 }
 
 std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
@@ -1198,9 +1232,10 @@ void Track::WriteCommonXMLAttributes(
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
-   auto &view = TrackView::Get( *this );
-   xmlFile.WriteAttr(wxT("height"), view.GetActualHeight());
-   xmlFile.WriteAttr(wxT("minimized"), view.GetMinimized());
+   if ( mpView )
+      mpView->WriteXMLAttributes( xmlFile );
+   if ( mpControls )
+      mpControls->WriteXMLAttributes( xmlFile );
 }
 
 // Return true iff the attribute is recognized.
@@ -1208,19 +1243,13 @@ bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
 {
    long nValue = -1;
    wxString strValue( value );
-   if (!wxStrcmp(attr, wxT("name")) &&
+   if ( mpView && mpView->HandleXMLAttribute( attr, value ) )
+      ;
+   else if ( mpControls && mpControls->HandleXMLAttribute( attr, value ) )
+      ;
+   else if (!wxStrcmp(attr, wxT("name")) &&
       XMLValueChecker::IsGoodString(strValue)) {
       SetName( strValue );
-      return true;
-   }
-   else if (!wxStrcmp(attr, wxT("height")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      TrackView::Get( *this ).SetHeight(nValue);
-      return true;
-   }
-   else if (!wxStrcmp(attr, wxT("minimized")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      TrackView::Get( *this ).SetMinimized(nValue != 0);
       return true;
    }
    else if (!wxStrcmp(attr, wxT("isSelected")) &&
@@ -1284,13 +1313,3 @@ void TrackFactory::Destroy( AudacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
 }
-
-template<> auto DoGetControls::Implementation() -> Function {
-   return nullptr;
-}
-static DoGetControls registerDoGetControls;
-
-template<> auto DoGetView::Implementation() -> Function {
-   return nullptr;
-}
-static DoGetView registerDoGetView;

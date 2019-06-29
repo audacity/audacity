@@ -24,7 +24,10 @@ into a NoteTrack.
 #if defined(USE_MIDI)
 
 class wxString;
+class AudacityProject;
 class NoteTrack;
+
+bool DoImportMIDI( AudacityProject &project, const FilePath &fileName );
 
 bool ImportMIDI(const FilePath &fName, NoteTrack * dest);
 

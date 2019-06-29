@@ -80,6 +80,7 @@
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
 #include "../TrackPanel.h"
+#include "../WaveTrack.h"
 #include "../tracks/ui/TrackView.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
@@ -1518,12 +1519,6 @@ void ControlToolBar::StopScrolling()
    if(project)
       ProjectWindow::Get( *project ).GetPlaybackScroller().Activate
          (ProjectWindow::PlaybackScroller::Mode::Off);
-}
-
-void ControlToolBar::CommitRecording()
-{
-   const auto project = &mProject;
-   TrackList::Get( *project ).ApplyPendingTracks();
 }
 
 void ControlToolBar::CancelRecording()

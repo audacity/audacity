@@ -84,12 +84,13 @@ class ODTask /* not final */
 
    ///Replaces all instances to a wavetrack with a NEW one, effectively transferring the task.
    ///ODTask has no wavetrack, so it does nothing.  But subclasses that do should override this.
-   virtual void ReplaceWaveTrack(Track *oldTrack, Track *newTrack);
+   virtual void ReplaceWaveTrack(Track *oldTrack,
+      const std::shared_ptr< Track > &newTrack);
 
     ///Adds a WaveTrack to do the task for
-   void AddWaveTrack(WaveTrack* track);
+   void AddWaveTrack( const std::shared_ptr< WaveTrack > &track);
    virtual int GetNumWaveTracks();
-   virtual WaveTrack* GetWaveTrack(int i);
+   virtual std::shared_ptr< WaveTrack > GetWaveTrack(int i);
 
    ///changes the tasks associated with this Waveform to process the task from a different point in the track
    virtual void DemandTrackUpdate(WaveTrack* track, double seconds);
@@ -156,7 +157,7 @@ class ODTask /* not final */
    //for a function not a member var.
    ODLock mBlockUntilTerminateMutex;
 
-   std::vector<WaveTrack*> mWaveTracks;
+   std::vector< std::weak_ptr< WaveTrack > > mWaveTracks;
    ODLock     mWaveTrackMutex;
 
    sampleCount mDemandSample;

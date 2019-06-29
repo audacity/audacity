@@ -14,7 +14,7 @@ Paul Licameli split from ProjectManager.h
 #include "ClientData.h"
 
 class AudacityProject;
-class UndoState;
+struct UndoState;
 enum class UndoPush : unsigned char;
 
 class ProjectHistory final

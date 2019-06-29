@@ -14,9 +14,11 @@
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
 #include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../ShuttleGui.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
+#include "../TrackUtilities.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
 #include "../ViewInfo.h"
@@ -112,7 +114,7 @@ void DoMixAndRender
 
       trackPanel.SetFocus();
       trackPanel.SetFocusedTrack(pNewLeft);
-      trackPanel.EnsureVisible(pNewLeft);
+      pNewLeft->EnsureVisible();
       window.RedrawProject();
    }
 }
@@ -283,9 +285,8 @@ void DoAlign
          if (index == kAlignEndToEnd)
             newPos += (trackEnd - trackStart);
       }
-      if (index == kAlignEndToEnd) {
-         ViewActions::DoZoomFit(project);
-      }
+      if (index == kAlignEndToEnd)
+         window.DoZoomFit();
    }
 
    if (delta != 0.0) {
@@ -566,245 +567,6 @@ void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
 
 namespace TrackActions {
 
-// exported helper functions
-
-void DoRemoveTracks( AudacityProject &project )
-{
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-
-   std::vector<Track*> toRemove;
-   for (auto track : tracks.Selected())
-      toRemove.push_back(track);
-
-   // Capture the track preceding the first removed track
-   Track *f{};
-   if (!toRemove.empty()) {
-      auto found = tracks.Find(toRemove[0]);
-      f = *--found;
-   }
-
-   for (auto track : toRemove)
-      tracks.Remove(track);
-
-   if (!f)
-      // try to use the last track
-      f = *tracks.Any().rbegin();
-   if (f) {
-      // Try to use the first track after the removal
-      auto found = tracks.FindLeader(f);
-      auto t = *++found;
-      if (t)
-         f = t;
-   }
-
-   // If we actually have something left, then make sure it's seen
-   if (f)
-      trackPanel.EnsureVisible(f);
-
-   ProjectHistory::Get( project )
-      .PushState(_("Removed audio track(s)"), _("Remove Track"));
-
-   trackPanel.UpdateViewIfNoTracks();
-   trackPanel.Refresh(false);
-}
-
-void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
-{
-   const auto &settings = ProjectSettings::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-
-   // Whatever t is, replace with lead channel
-   t = *tracks.FindLeader(t);
-
-   // "exclusive" mute means mute the chosen track and unmute all others.
-   if (exclusive) {
-      for (auto leader : tracks.Leaders<PlayableTrack>()) {
-         const auto group = TrackList::Channels(leader);
-         bool chosen = (t == leader);
-         for (auto channel : group)
-            channel->SetMute( chosen ),
-            channel->SetSolo( false );
-      }
-   }
-   else {
-      // Normal click toggles this track.
-      auto pt = dynamic_cast<PlayableTrack *>( t );
-      if (!pt)
-         return;
-
-      bool wasMute = pt->GetMute();
-      for (auto channel : TrackList::Channels(pt))
-         channel->SetMute( !wasMute );
-
-      if (settings.IsSoloSimple() || settings.IsSoloNone())
-      {
-         // We also set a solo indicator if we have just one track / stereo pair playing.
-         // in a group of more than one playable tracks.
-         // otherwise clear solo on everything.
-
-         auto range = tracks.Leaders<PlayableTrack>();
-         auto nPlayableTracks = range.size();
-         auto nPlaying = (range - &PlayableTrack::GetMute).size();
-
-         for (auto track : tracks.Any<PlayableTrack>())
-            // will set both of a stereo pair
-            track->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !track->GetMute() );
-      }
-   }
-   ProjectHistory::Get( project ).ModifyState(true);
-
-   trackPanel.UpdateAccessibility();
-   trackPanel.Refresh(false);
-}
-
-void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
-{
-   const auto &settings = ProjectSettings::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   
-   // Whatever t is, replace with lead channel
-   t = *tracks.FindLeader(t);
-
-   const auto pt = dynamic_cast<PlayableTrack *>( t );
-   if (!pt)
-      return;
-   bool bWasSolo = pt->GetSolo();
-
-   bool bSoloMultiple = !settings.IsSoloSimple() ^ exclusive;
-
-   // Standard and Simple solo have opposite defaults:
-   //   Standard - Behaves as individual buttons, shift=radio buttons
-   //   Simple   - Behaves as radio buttons, shift=individual
-   // In addition, Simple solo will mute/unmute tracks
-   // when in standard radio button mode.
-   if ( bSoloMultiple )
-   {
-      for (auto channel : TrackList::Channels(pt))
-         channel->SetSolo( !bWasSolo );
-   }
-   else
-   {
-      // Normal click solo this track only, mute everything else.
-      // OR unmute and unsolo everything.
-      for (auto leader : tracks.Leaders<PlayableTrack>()) {
-         const auto group = TrackList::Channels(leader);
-         bool chosen = (t == leader);
-         for (auto channel : group) {
-            if (chosen) {
-               channel->SetSolo( !bWasSolo );
-               if( settings.IsSoloSimple() )
-                  channel->SetMute( false );
-            }
-            else {
-               channel->SetSolo( false );
-               if( settings.IsSoloSimple() )
-                  channel->SetMute( !bWasSolo );
-            }
-         }
-      }
-   }
-   ProjectHistory::Get( project ).ModifyState(true);
-
-   trackPanel.UpdateAccessibility();
-   trackPanel.Refresh(false);
-}
-
-void DoRemoveTrack(AudacityProject &project, Track * toRemove)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   // If it was focused, then NEW focus is the next or, if
-   // unavailable, the previous track. (The NEW focus is set
-   // after the track has been removed.)
-   bool toRemoveWasFocused = trackPanel.GetFocusedTrack() == toRemove;
-   Track* newFocus{};
-   if (toRemoveWasFocused) {
-      auto iterNext = tracks.FindLeader(toRemove), iterPrev = iterNext;
-      newFocus = *++iterNext;
-      if (!newFocus) {
-         newFocus = *--iterPrev;
-      }
-   }
-
-   wxString name = toRemove->GetName();
-
-   auto channels = TrackList::Channels(toRemove);
-   // Be careful to post-increment over positions that get erased!
-   auto &iter = channels.first;
-   while (iter != channels.end())
-      tracks.Remove( * iter++ );
-
-   if (toRemoveWasFocused)
-      trackPanel.SetFocusedTrack(newFocus);
-
-   ProjectHistory::Get( project ).PushState(
-      wxString::Format(_("Removed track '%s.'"),
-      name),
-      _("Track Remove"));
-
-   window.FixScrollbars();
-   window.HandleResize();
-   trackPanel.Refresh(false);
-}
-
-void DoMoveTrack
-(AudacityProject &project, Track* target, MoveChoice choice)
-{
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &tracks = TrackList::Get( project );
-
-   wxString longDesc, shortDesc;
-
-   switch (choice)
-   {
-   case OnMoveTopID:
-      /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-      longDesc = _("Moved '%s' to Top");
-      shortDesc = _("Move Track to Top");
-
-      // TODO: write TrackList::Rotate to do this in one step and avoid emitting
-      // an event for each swap
-      while (tracks.CanMoveUp(target))
-         tracks.Move(target, true);
-
-      break;
-   case OnMoveBottomID:
-      /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-      longDesc = _("Moved '%s' to Bottom");
-      shortDesc = _("Move Track to Bottom");
-
-      // TODO: write TrackList::Rotate to do this in one step and avoid emitting
-      // an event for each swap
-      while (tracks.CanMoveDown(target))
-         tracks.Move(target, false);
-
-      break;
-   default:
-      bool bUp = (OnMoveUpID == choice);
-
-      tracks.Move(target, bUp);
-      longDesc =
-         /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-         bUp? _("Moved '%s' Up")
-         : _("Moved '%s' Down");
-      shortDesc =
-         /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-         bUp? _("Move Track Up")
-         : _("Move Track Down");
-
-   }
-
-   longDesc = longDesc.Format(target->GetName());
-
-   ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
-   trackPanel.Refresh(false);
-}
-
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
@@ -815,14 +577,13 @@ void OnNewWaveTrack(const CommandContext &context)
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = settings.GetDefaultFormat();
    auto rate = settings.GetRate();
 
    auto t = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -830,7 +591,7 @@ void OnNewWaveTrack(const CommandContext &context)
       .PushState(_("Created new audio track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(t);
+   t->EnsureVisible();
 }
 
 void OnNewStereoTrack(const CommandContext &context)
@@ -839,13 +600,12 @@ void OnNewStereoTrack(const CommandContext &context)
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = settings.GetDefaultFormat();
    auto rate = settings.GetRate();
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    auto left = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    left->SetSelected(true);
@@ -859,7 +619,7 @@ void OnNewStereoTrack(const CommandContext &context)
       .PushState(_("Created new stereo audio track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(left);
+   left->EnsureVisible();
 }
 
 void OnNewLabelTrack(const CommandContext &context)
@@ -867,12 +627,11 @@ void OnNewLabelTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto t = tracks.Add( trackFactory.NewLabelTrack() );
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -880,7 +639,7 @@ void OnNewLabelTrack(const CommandContext &context)
       .PushState(_("Created new label track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(t);
+   t->EnsureVisible();
 }
 
 void OnNewTimeTrack(const CommandContext &context)
@@ -888,7 +647,6 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if ( *tracks.Any<TimeTrack>().begin() ) {
@@ -898,7 +656,7 @@ void OnNewTimeTrack(const CommandContext &context)
 
    auto t = tracks.AddToHead( trackFactory.NewTimeTrack() );
 
-   SelectActions::SelectNone( project );
+   SelectUtilities::SelectNone( project );
 
    t->SetSelected(true);
 
@@ -906,15 +664,15 @@ void OnNewTimeTrack(const CommandContext &context)
       .PushState(_("Created new time track"), _("New Track"));
 
    window.RedrawProject();
-   trackPanel.EnsureVisible(t);
+   t->EnsureVisible();
 }
 
 void OnStereoToMono(const CommandContext &context)
 {
-   PluginActions::DoEffect(
+   EffectManager::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
       context,
-      PluginActions::kConfigured);
+      EffectManager::kConfigured);
 }
 
 void OnMixAndRender(const CommandContext &context)
@@ -1039,7 +797,7 @@ void OnResample(const CommandContext &context)
 
 void OnRemoveTracks(const CommandContext &context)
 {
-   DoRemoveTracks( context.project );
+   TrackUtilities::DoRemoveTracks( context.project );
 }
 
 void OnMuteAllTracks(const CommandContext &context)
@@ -1398,7 +1156,7 @@ void OnTrackMute(const CommandContext &context)
 
    const auto track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      DoTrackMute(project, t, false);
+      TrackUtilities::DoTrackMute(project, t, false);
    });
 }
 
@@ -1409,7 +1167,7 @@ void OnTrackSolo(const CommandContext &context)
 
    const auto track = trackPanel.GetFocusedTrack();
    if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      DoTrackSolo(project, t, false);
+      TrackUtilities::DoTrackSolo(project, t, false);
    });
 }
 
@@ -1432,7 +1190,7 @@ void OnTrackClose(const CommandContext &context)
       return;
    }
 
-   DoRemoveTrack(project, t);
+   TrackUtilities::DoRemoveTrack(project, t);
 
    trackPanel.UpdateViewIfNoTracks();
    trackPanel.Refresh(false);
@@ -1446,7 +1204,7 @@ void OnTrackMoveUp(const CommandContext &context)
 
    Track *const focusedTrack = trackPanel.GetFocusedTrack();
    if (tracks.CanMoveUp(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, OnMoveUpID);
+      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveUpID);
       trackPanel.Refresh(false);
    }
 }
@@ -1459,7 +1217,7 @@ void OnTrackMoveDown(const CommandContext &context)
 
    Track *const focusedTrack = trackPanel.GetFocusedTrack();
    if (tracks.CanMoveDown(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, OnMoveDownID);
+      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveDownID);
       trackPanel.Refresh(false);
    }
 }
@@ -1472,7 +1230,7 @@ void OnTrackMoveTop(const CommandContext &context)
 
    Track *const focusedTrack = trackPanel.GetFocusedTrack();
    if (tracks.CanMoveUp(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, OnMoveTopID);
+      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveTopID);
       trackPanel.Refresh(false);
    }
 }
@@ -1485,7 +1243,7 @@ void OnTrackMoveBottom(const CommandContext &context)
 
    Track *const focusedTrack = trackPanel.GetFocusedTrack();
    if (tracks.CanMoveDown(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, OnMoveBottomID);
+      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveBottomID);
       trackPanel.Refresh(false);
    }
 }

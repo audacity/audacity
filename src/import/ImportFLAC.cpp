@@ -42,6 +42,8 @@
 #include "ImportPlugin.h"
 
 #include "../Tags.h"
+#include "../WaveClip.h"
+#include "../blockfile/ODDecodeBlockFile.h"
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -483,7 +485,14 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
          auto iter = mChannels.begin();
          for (size_t c = 0; c < mNumChannels; ++c, ++iter)
-            iter->get()->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFLAC);
+            iter->get()->RightmostOrNewClip()->AppendBlockFile(
+               [&]( wxFileNameWrapper filePath, size_t len ) {
+                  return make_blockfile<ODDecodeBlockFile>(
+                  std::move(filePath), wxFileNameWrapper{ mFilename },
+                  i, len, c, ODTask::eODFLAC);
+               },
+               blockLen
+            );
 
          mUpdateResult = mProgress->Update(
             i.as_long_long(),
@@ -496,7 +505,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
       bool moreThanStereo = mNumChannels>2;
       for (const auto &channel : mChannels)
       {
-         mDecoderTask->AddWaveTrack(channel.get());
+         mDecoderTask->AddWaveTrack(channel);
          if(moreThanStereo)
          {
             //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.

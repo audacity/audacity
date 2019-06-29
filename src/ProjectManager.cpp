@@ -31,10 +31,13 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "SelectUtilities.h"
 #include "TrackPanel.h"
+#include "TrackUtilities.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
+#include "import/ImportMIDI.h"
 #include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
 #include "toolbars/ControlToolBar.h"
@@ -324,7 +327,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (FileNames::IsMidi(name))
-               FileActions::DoImportMIDI(mProject, name);
+               DoImportMIDI( *mProject, name );
             else
 #endif
                ProjectFileManager::Get( *mProject ).Import(name);
@@ -383,7 +386,8 @@ AudacityProject *ProjectManager::New()
    
    //Initialise the Listeners
    auto gAudioIO = AudioIO::Get();
-   gAudioIO->SetListener( &ProjectAudioManager::Get( project ) );
+   gAudioIO->SetListener(
+      ProjectAudioManager::Get( project ).shared_from_this() );
    auto &projectSelectionManager = ProjectSelectionManager::Get( project );
    SelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -599,10 +603,14 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Since we're going to be destroyed, make sure we're not to
    // receive audio notifications anymore.
-   if ( gAudioIO->GetListener() == &ProjectAudioManager::Get( project ) ) {
+   // PRL:  Maybe all this is unnecessary now that the listener is managed
+   // by a weak pointer.
+   if ( gAudioIO->GetListener().get() == &ProjectAudioManager::Get( project ) ) {
       auto active = GetActiveProject();
       gAudioIO->SetListener(
-         active ? &ProjectAudioManager::Get( *active ) : nullptr
+         active
+            ? ProjectAudioManager::Get( *active ).shared_from_this()
+            : nullptr
       );
    }
 
@@ -714,9 +722,10 @@ AudacityProject *ProjectManager::OpenProject(
    ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
    pNewProject = nullptr;
    auto &projectFileIO = ProjectFileIO::Get( *pProject );
-   if( projectFileIO.IsRecovered() )
-      ProjectWindow::Get( *pProject ).Zoom(
-         ViewActions::GetZoomOfToFit( *pProject ) );
+   if( projectFileIO.IsRecovered() ) {
+      auto &window = ProjectWindow::Get( *pProject );
+      window.Zoom( window.GetZoomOfToFit() );
+   }
 
    return pProject;
 }
@@ -729,8 +738,8 @@ void ProjectManager::ResetProjectToEmpty() {
    auto &projectHistory = ProjectHistory::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
-   SelectActions::DoSelectAll( project );
-   TrackActions::DoRemoveTracks( project );
+   SelectUtilities::DoSelectAll( project );
+   TrackUtilities::DoRemoveTracks( project );
 
    // A new DirManager.
    DirManager::Reset( project );
