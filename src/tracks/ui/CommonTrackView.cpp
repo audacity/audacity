@@ -85,6 +85,8 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
 static void DrawTrackName(
    TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
 {
+   if( !TrackArtist::Get( context )->mbShowTrackNameInTrack )
+      return;
    auto name = t->GetName();
    if( name.IsEmpty())
       return;
