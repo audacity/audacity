@@ -164,6 +164,8 @@ private:
    int mCommandWidth;
    wxCoord mKeyWidth;
 
+   bool mThereHasBeenALeftDown{};
+
 #if wxUSE_ACCESSIBILITY
    KeyViewAx *mAx;
 #endif

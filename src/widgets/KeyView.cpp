@@ -1346,8 +1346,13 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    {
       if (mLines.size() > 0)
       {
-         // if no selection, select first line, if there is one
-         SelectNode(LineToIndex(0));
+         // If mThereHasBeenALeftDown is true, then there is mouse
+         // selection in progress, so don't select anything here
+         // as this interferes with the mouse selection. (Bug 2146)
+         if (!mThereHasBeenALeftDown) {
+            // if no selection, select first line
+            SelectNode(LineToIndex(0));
+         }
       }
       else
       {
@@ -1373,6 +1378,8 @@ KeyView::OnKillFocus(wxFocusEvent & event)
    {
 	   RefreshRow(GetSelection());
    }
+
+   mThereHasBeenALeftDown = false;
 }
 
 //
@@ -1618,6 +1625,8 @@ KeyView::OnKeyDown(wxKeyEvent & event)
 void
 KeyView::OnLeftDown(wxMouseEvent & event)
 {
+   mThereHasBeenALeftDown = true;
+
    // Only check if for tree view
    if (mViewType != ViewByTree)
    {
