@@ -39,6 +39,11 @@ public:
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
 private:
+   std::vector<float> mRecentSamples;
+   size_t mLastSample{ 0 };
+   size_t mSampleCount{ 0 };
+   size_t mSampleInterval{ 0 };
+
    std::weak_ptr<Track> mpTrack;
 };
 
