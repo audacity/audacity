@@ -267,7 +267,7 @@ void TrackArtist::UpdatePrefs()
 
    mbShowTrackNameInTrack =
       gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
-   
+
    UpdateSelectedPrefs( ShowClippingPrefsID() );
 
    SetColours(0);

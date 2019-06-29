@@ -37,9 +37,6 @@ struct TrackPanelDrawingContext;
 class ZoomInfo;
 
 namespace TrackArt {
-   
-   void DrawTrackName(TrackPanelDrawingContext &context, 
-                      const Track *t, const wxRect & rect );
 
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
    void DrawSyncLockTiles(
@@ -93,7 +90,7 @@ public:
 
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
-   long mShowClipping;        // "/GUI/ShowClipping"
+   bool mShowClipping;        // "/GUI/ShowClipping"
    int  mSampleDisplay;
    bool mbShowTrackNameInTrack;  // "/GUI/ShowTrackNameInWaveform"
 
