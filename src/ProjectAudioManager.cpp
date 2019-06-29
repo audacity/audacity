@@ -566,15 +566,13 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    // also clean the MeterQueues
    if( project ) {
       auto &projectAudioIO = ProjectAudioIO::Get( *project );
-      auto meter = projectAudioIO.GetPlaybackMeter();
-      if( meter ) {
-         meter->Clear();
-      }
+      for ( auto &meter : projectAudioIO.GetPlaybackMeters() )
+         if( meter )
+            meter->Clear();
 
-      meter = projectAudioIO.GetCaptureMeter();
-      if( meter ) {
-         meter->Clear();
-      }
+      for ( auto &meter : projectAudioIO.GetCaptureMeters() )
+         if( meter )
+            meter->Clear();
    }
 }
 
@@ -1267,7 +1265,6 @@ static ProjectAudioIO::DefaultOptions::Scope sScope {
       // Start play from left edge of selection
       options.pStartTime.emplace(ViewInfo::Get(project).selectedRegion.t0());
    }
-
    return options;
 } };
 

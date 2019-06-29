@@ -295,40 +295,28 @@ void AudioIOBase::HandleDeviceChange()
 #endif   // USE_PORTMIXER
 }
 
-void AudioIOBase::SetCaptureMeter(
+void AudioIOBase::SetCaptureMeters(
    const std::shared_ptr<AudacityProject> &project, double rate,
-   const std::weak_ptr<Meter> &wMeter)
+   MeterPtrs meters)
 {
    if (auto pOwningProject = mOwningProject.lock();
        ( pOwningProject ) && ( pOwningProject != project))
       return;
 
-   auto meter = wMeter.lock();
-   if (meter)
-   {
-      mInputMeter = meter;
-      meter->Reset(rate, true);
-   }
-   else
-      mInputMeter.reset();
+   ResetMeters(meters, rate, true);
+   meters.swap(mMasterInputMeters);
 }
 
-void AudioIOBase::SetPlaybackMeter(
-   const std::shared_ptr<AudacityProject> &project, double rate,
-   const std::weak_ptr<Meter> &wMeter)
+void AudioIOBase::SetPlaybackMeters(
+   const std::shared_ptr<AudacityProject> &project,
+   double rate, MeterPtrs meters)
 {
    if (auto pOwningProject = mOwningProject.lock();
        ( pOwningProject ) && ( pOwningProject != project))
       return;
 
-   auto meter = wMeter.lock();
-   if (meter)
-   {
-      mOutputMeter = meter;
-      meter->Reset(rate, true);
-   }
-   else
-      mOutputMeter.reset();
+   ResetMeters(meters, rate, true);
+   meters.swap(mMasterOutputMeters);
 }
 
 bool AudioIOBase::IsPaused() const
@@ -935,6 +923,14 @@ auto AudioIOBase::GetAllDeviceInfo() -> std::vector<AudioIODiagnostics>
       if ( pExt )
          result.emplace_back(pExt->Dump());
    return result;
+}
+
+void AudioIOBase::ResetMeters(MeterPtrs &meters,
+   double rate, bool resetClipping)
+{
+   for (const auto &wMeter : meters)
+      if (const auto pMeter = wMeter.lock())
+         pMeter->Reset(rate, resetClipping);
 }
 
 StringSetting AudioIOHost{

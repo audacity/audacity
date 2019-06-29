@@ -264,8 +264,6 @@ AudioIO::AudioIO()
    mNumCaptureChannels = 0;
    mSilenceLevel = 0.0;
 
-   mOutputMeter.reset();
-
    PaError err = Pa_Initialize();
 
    if (err != paNoError) {
@@ -479,8 +477,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    if (mOwningProject.expired())
       return false;
 
-   mInputMeter.reset();
-   mOutputMeter.reset();
+   mMasterInputMeters.clear();
+   mMasterOutputMeters.clear();
 
    mLastPaError = paNoError;
    // pick a rate to do the audio I/O at, from those available. The project
@@ -582,7 +580,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
-      mOutputMeter = options.playbackMeter;
+      mMasterOutputMeters = move(options.playbackMeters);
    }
 
    if( numCaptureChannels > 0)
@@ -619,7 +617,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter(mOwningProject.lock(), mRate, options.captureMeter);
+      SetCaptureMeters(mOwningProject.lock(), mRate,
+         move(options.captureMeters));
    }
 
    const auto deviceInfo = usePlayback ?
@@ -637,7 +636,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       }
    }
 
-   SetMeters();
+   ResetMasterMeters(true);
 
 #ifdef USE_PORTMIXER
 #ifdef __WXMSW__
@@ -1409,12 +1408,10 @@ bool AudioIO::IsAvailable(AudacityProject &project) const
    return !pOwningProject || pOwningProject.get() == &project;
 }
 
-void AudioIO::SetMeters()
+void AudioIO::ResetMasterMeters(bool resetClipping)
 {
-   if (auto pInputMeter = mInputMeter.lock())
-      pInputMeter->Reset(mRate, true);
-   if (auto pOutputMeter = mOutputMeter.lock())
-      pOutputMeter->Reset(mRate, true);
+   ResetMeters(mMasterInputMeters, mRate, resetClipping);
+   ResetMeters(mMasterOutputMeters, mRate, resetClipping);
 }
 
 void AudioIO::StopStream()
@@ -1616,16 +1613,10 @@ void AudioIO::StopStream()
       }
    }
 
+   ResetMasterMeters(false);
 
-
-   if (auto pInputMeter = mInputMeter.lock())
-      pInputMeter->Reset(mRate, false);
-
-   if (auto pOutputMeter = mOutputMeter.lock())
-      pOutputMeter->Reset(mRate, false);
-
-   mInputMeter.reset();
-   mOutputMeter.reset();
+   mMasterInputMeters.clear();
+   mMasterOutputMeters.clear();
 
    BasicUI::CallAfter([this]{
       if (mPortStreamV19 && mNumCaptureChannels > 0)
@@ -2947,13 +2938,12 @@ void AudioIoCallback::SendVuInputMeterData(
    unsigned long framesPerBuffer
    )
 {
+   if (!inputSamples)
+      return;
    const auto numCaptureChannels = mNumCaptureChannels;
-   auto pInputMeter = mInputMeter.lock();
-   if ( !pInputMeter )
-      return;
-   if (pInputMeter->IsDisabled())
-      return;
-   pInputMeter->Update(numCaptureChannels, framesPerBuffer, inputSamples);
+   for (const auto &wMeter : mMasterInputMeters)
+      if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+         pMeter->Update(numCaptureChannels, framesPerBuffer, inputSamples);
 }
 
 /* Send data to playback VU meter if applicable */
@@ -2961,28 +2951,13 @@ void AudioIoCallback::SendVuOutputMeterData(
    const float *outputMeterFloats,
    unsigned long framesPerBuffer)
 {
+   if (!outputMeterFloats)
+      return;
    const auto numPlaybackChannels = GetNumPlaybackChannels();
-
-   auto pOutputMeter = mOutputMeter.lock();
-   if (!pOutputMeter)
-      return;
-   if (pOutputMeter->IsDisabled())
-      return;
-   if( !outputMeterFloats)
-      return;
-   pOutputMeter->Update(
-      numPlaybackChannels, framesPerBuffer, outputMeterFloats);
-
-      //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer()
-      //    as it helps with playback issues reported by Bill and noted on Bug 258.
-      //    The problem there occurs if Software Playthrough is on.
-      //    Could conditionally do the update here if Software Playthrough is off,
-      //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
-      // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of track panel timer events
-      //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
-      //if (pMixerBoard)
-      //   pMixerBoard->UpdateMeters(GetStreamTime(),
-      //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
+   for (const auto &wMeter : mMasterOutputMeters)
+      if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+         pMeter->Update(numPlaybackChannels,
+            framesPerBuffer, outputMeterFloats);
 }
 
 unsigned AudioIoCallback::CountSoloingSequences(){

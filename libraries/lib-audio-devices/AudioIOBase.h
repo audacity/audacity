@@ -32,6 +32,8 @@ class AudioIOBase;
 class AudacityProject;
 class BoundedEnvelope;
 class Meter;
+using MeterPtr = std::weak_ptr<Meter>;
+using MeterPtrs = std::vector<MeterPtr>;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
 #define BAD_STREAM_TIME (-DBL_MAX)
@@ -50,7 +52,7 @@ struct AudioIOStartStreamOptions
    {}
 
    std::shared_ptr<AudacityProject> pProject;
-   std::weak_ptr<Meter> captureMeter, playbackMeter;
+   MeterPtrs captureMeters, playbackMeters;
    const BoundedEnvelope *envelope{}; // for time warping
    double rate;
    mutable std::optional<double> pStartTime;
@@ -107,12 +109,12 @@ public:
    AudioIOBase(const AudioIOBase &) = delete;
    AudioIOBase &operator=(const AudioIOBase &) = delete;
 
-   void SetCaptureMeter(
+   void SetCaptureMeters(
       const std::shared_ptr<AudacityProject> &project, double rate,
-      const std::weak_ptr<Meter> &meter);
-   void SetPlaybackMeter(
+      MeterPtrs meters);
+   void SetPlaybackMeters(
       const std::shared_ptr<AudacityProject> &project, double rate,
-      const std::weak_ptr<Meter> &meter);
+      MeterPtrs meters);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -252,8 +254,7 @@ protected:
 
    PaStream           *mPortStreamV19;
 
-   std::weak_ptr<Meter> mInputMeter{};
-   std::weak_ptr<Meter> mOutputMeter{};
+   MeterPtrs mMasterInputMeters, mMasterOutputMeters;
 
    #if USE_PORTMIXER
    PxMixer            *mPortMixer;
@@ -303,6 +304,8 @@ protected:
     * default device index.
     */
    static int getPlayDevIndex(const wxString &devName = {});
+
+   static void ResetMeters(MeterPtrs &meters, double rate, bool resetClipping);
 
    /** \brief Array of audio sample rates to try to use
     *
