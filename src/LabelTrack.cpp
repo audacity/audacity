@@ -911,9 +911,10 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
    mLabels.insert(mLabels.begin() + pos, l);
 
    // wxWidgets will own the event object
-   QueueEvent( safenew LabelTrackEvent{
+   LabelTrackEvent evt{
       EVT_LABELTRACK_ADDITION, SharedPointer<LabelTrack>(), title, -1, pos
-   } );
+   };
+   ProcessEvent( evt );
 
    return pos;
 }
@@ -926,9 +927,10 @@ void LabelTrack::DeleteLabel(int index)
    mLabels.erase(iter);
 
    // wxWidgets will own the event object
-   QueueEvent( safenew LabelTrackEvent{
+   LabelTrackEvent evt{
       EVT_LABELTRACK_DELETION, SharedPointer<LabelTrack>(), title, index, -1
-   } );
+   };
+   ProcessEvent( evt );
 }
 
 /// Sorts the labels in order of their starting times.
@@ -963,10 +965,11 @@ void LabelTrack::SortLabels()
 
       // Let listeners update their stored indices
       // wxWidgets will own the event object
-      QueueEvent( safenew LabelTrackEvent{
+      LabelTrackEvent evt{
          EVT_LABELTRACK_PERMUTED, SharedPointer<LabelTrack>(),
          mLabels[j].title, i, j
-      } );
+      };
+      ProcessEvent( evt );
    }
 }
 
