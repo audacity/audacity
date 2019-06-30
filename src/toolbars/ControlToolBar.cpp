@@ -482,6 +482,8 @@ void ControlToolBar::Repaint( wxDC *dc )
 void ControlToolBar::EnableDisableButtons()
 {
    AudacityProject *p = &mProject;
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
 
    bool paused = mPause->IsDown();
    bool playing = mPlay->IsDown();
@@ -492,17 +494,17 @@ void ControlToolBar::EnableDisableButtons()
    // Only interested in audio type tracks
    bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
 
-   mPlay->SetEnabled(CanStopAudioStream() && tracks && !recording);
+   mPlay->SetEnabled( canStop && tracks && !recording );
    mRecord->SetEnabled(
-      CanStopAudioStream() &&
+      canStop &&
       !(busy && !recording && !paused) &&
       !(playing && !paused)
    );
-   mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
+   mStop->SetEnabled(canStop && (playing || recording));
    mRewind->SetEnabled(paused || (!playing && !recording));
    mFF->SetEnabled(tracks && (paused || (!playing && !recording)));
 
-   mPause->SetEnabled(CanStopAudioStream());
+   mPause->SetEnabled(canStop);
 }
 
 void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
@@ -534,8 +536,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 // STRONG-GUARANTEE (for state of mCutPreviewTracks)
 {
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
 
-   if (!CanStopAudioStream())
+   if ( !canStop )
       return -1;
 
    bool useMidi = true;
@@ -701,7 +704,10 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
                                        bool cutpreview /* = false */)
 {
-   if (!CanStopAudioStream())
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
+
+   if ( !canStop )
       return;
 
    AudacityProject *p = &mProject;
@@ -758,8 +764,10 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    auto p = &mProject;
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
 
-   if (!CanStopAudioStream())
+   if ( !canStop )
       return;
 
    StopPlaying();
@@ -772,17 +780,12 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
-   if (CanStopAudioStream()) {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
+
+   if ( canStop ) {
       StopPlaying();
    }
-}
-
-bool ControlToolBar::CanStopAudioStream() const
-{
-   auto gAudioIO = AudioIO::Get();
-   return (!gAudioIO->IsStreamActive() ||
-           gAudioIO->IsMonitoring() ||
-           gAudioIO->GetOwningProject() == &mProject );
 }
 
 void ControlToolBar::PlayDefault()
@@ -798,6 +801,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
    AudacityProject *project = &mProject;
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
 
    if(project) {
       // Let scrubbing code do some appearance change
@@ -805,7 +809,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
       scrubber.StopScrubbing();
    }
 
-   if (!CanStopAudioStream())
+   if ( !canStop )
       return;
 
    auto gAudioIO = AudioIO::Get();
@@ -860,7 +864,10 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
 void ControlToolBar::Pause()
 {
-   if (!CanStopAudioStream()) {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
+
+   if ( !canStop ) {
       auto gAudioIO = AudioIO::Get();
       gAudioIO->SetPaused(!gAudioIO->IsPaused());
    }
@@ -1227,8 +1234,9 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 {
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   bool canStop = projectAudioManager.CanStopAudioStream();
 
-   if (!CanStopAudioStream()) {
+   if ( !canStop ) {
       return;
    }
 
@@ -1551,10 +1559,3 @@ static RegisteredToolbarFactory factory{ TransportBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ControlToolBar{ project } }; }
 };
-
-const ReservedCommandFlag
-   CanStopAudioStreamFlag{
-      [](const AudacityProject &project){
-         return ControlToolBar::Get( project ).CanStopAudioStream();
-      }
-   };

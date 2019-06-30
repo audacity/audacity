@@ -58,6 +58,9 @@ public:
    void SetCutting( bool value ) { mCutting = value; }
    void SetStopping( bool value ) { mStopping = value; }
 
+   // A project is only allowed to stop an audio stream that it owns.
+   bool CanStopAudioStream () const;
+
 private:
    // Audio IO callback methods
    void OnAudioIORate(int rate) override;
@@ -86,6 +89,11 @@ private:
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
+
+#include "commands/CommandFlag.h"
+
+extern const ReservedCommandFlag
+   CanStopAudioStreamFlag;
 
 /// Namespace for functions for Transport menu
 namespace TransportActions {

@@ -202,7 +202,7 @@ bool ProjectAudioManager::Playing() const
    auto gAudioIO = AudioIO::Get();
    return
       gAudioIO->IsBusy() &&
-      ControlToolBar::Get( mProject ).CanStopAudioStream() &&
+      CanStopAudioStream() &&
       // ... and not merely monitoring
       !gAudioIO->IsMonitoring() &&
       // ... and not punch-and-roll recording
@@ -214,9 +214,26 @@ bool ProjectAudioManager::Recording() const
    auto gAudioIO = AudioIO::Get();
    return
       gAudioIO->IsBusy() &&
-      ControlToolBar::Get( mProject).CanStopAudioStream() &&
+      CanStopAudioStream() &&
       gAudioIO->GetNumCaptureChannels() > 0;
 }
+
+bool ProjectAudioManager::CanStopAudioStream() const
+{
+   auto gAudioIO = AudioIO::Get();
+   return (!gAudioIO->IsStreamActive() ||
+           gAudioIO->IsMonitoring() ||
+           gAudioIO->GetOwningProject() == &mProject );
+}
+
+const ReservedCommandFlag
+   CanStopAudioStreamFlag{
+      [](const AudacityProject &project){
+         auto &projectAudioManager = ProjectAudioManager::Get( project );
+         bool canStop = projectAudioManager.CanStopAudioStream();
+         return canStop;
+      }
+   };
 
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
