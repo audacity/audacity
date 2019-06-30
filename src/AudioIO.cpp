@@ -3741,7 +3741,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
 // Limit values to -1.0..+1.0
 void ClampBuffer(float * pBuffer, unsigned long len){
    for(unsigned i = 0; i < len; i++)
-      pBuffer[i] = wxClip( -1.0f, pBuffer[i], 1.0f);
+      pBuffer[i] = wxClip( pBuffer[i], -1.0f, 1.0f);
 };
 
 
