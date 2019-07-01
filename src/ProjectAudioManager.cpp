@@ -192,8 +192,7 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    auto &project = mProject;
    auto gAudioIO = AudioIO::Get();
    if ( gAudioIO && &project == gAudioIO->GetOwningProject() ) {
-      auto &bar = ControlToolBar::Get( project );
-      bar.CallAfter(&ControlToolBar::Pause);
+      wxTheApp->CallAfter( [this]{ Pause(); } );
    }
 }
 
@@ -346,39 +345,31 @@ bool DoPlayStopSelect
 // "OnStopSelect" merged.
 void DoPlayStopSelect(AudacityProject &project)
 {
-   auto &toolbar = ControlToolBar::Get( project );
-   wxCommandEvent evt;
+   auto &projectAudioManager = ProjectAudioManager::Get( project );
    auto gAudioIO = AudioIO::Get();
    if (DoPlayStopSelect(project, false, false))
-      toolbar.OnStop(evt);
+      projectAudioManager.Stop();
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      toolbar.PlayCurrentRegion(false);
+      projectAudioManager.PlayCurrentRegion(false);
    }
 }
 
 void DoPause( AudacityProject &project )
 {
-   wxCommandEvent evt;
-
-   auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnPause(evt);
+   ProjectAudioManager::Get( project ).OnPause();
 }
 
 void DoRecord( AudacityProject &project )
 {
-   auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnRecord(false);
+   ProjectAudioManager::Get( project ).OnRecord(false);
 }
 
 void DoStop( AudacityProject &project )
 {
-   wxCommandEvent evt;
-
-   auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnStop(evt);
+   ProjectAudioManager::Get( project ).Stop();
 }
 
 }

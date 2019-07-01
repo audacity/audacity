@@ -54,6 +54,7 @@ is time to refresh some aspect of the screen.
 #include "KeyboardCapture.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
@@ -79,8 +80,6 @@ is time to refresh some aspect of the screen.
 
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
-
-#include "toolbars/ControlToolBar.h"
 
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/TrackView.h"
@@ -422,8 +421,8 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
-      auto &bar = ControlToolBar::Get( *p );
-      bar.StopPlaying(!gAudioIO->IsStreamActive());
+      auto &projectAudioManager = ProjectAudioManager::Get( *p );
+      projectAudioManager.Stop(!gAudioIO->IsStreamActive());
    }
 
    // Next, check to see if we were playing or recording

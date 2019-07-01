@@ -785,9 +785,7 @@ private:
          auto &scrubber = Scrubber::Get( *pProject );
          scrubber.Cancel();
          
-         auto &ctb = ControlToolBar::Get( *pProject );
-         wxCommandEvent evt;
-         ctb.OnStop(evt);
+         ProjectAudioManager::Get( *pProject ).Stop();
       }
 
       return result;
@@ -1588,8 +1586,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
    bool startPlaying = (playRegion.GetStart() >= 0);
 
    if (startPlaying) {
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.StopPlaying();
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.Stop();
 
       bool loopEnabled = true;
       double start, end;
@@ -1630,7 +1628,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       playRegion.SetTimes( start, end );
       Refresh();
 
-      ctb.PlayPlayRegion((SelectedRegion(start, end)),
+      projectAudioManager.PlayPlayRegion((SelectedRegion(start, end)),
                           options, mode,
                           false,
                           true);
@@ -2111,8 +2109,7 @@ void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
 
 void AdornedRulerPanel::ClearPlayRegion()
 {
-   auto &ctb = ControlToolBar::Get( *mProject );
-   ctb.StopPlaying();
+   ProjectAudioManager::Get( *mProject ).Stop();
 
    auto &viewInfo = ViewInfo::Get( *GetProject() );
    auto &playRegion = viewInfo.playRegion;
