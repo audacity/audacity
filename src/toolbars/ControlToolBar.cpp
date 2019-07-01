@@ -741,10 +741,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    StartScrollingIfPreferred();
 
-   // Let other UI update appearance
-   if (p)
-      AdornedRulerPanel::Get( *p ).DrawBothOverlays();
-
    return token;
 }
 
