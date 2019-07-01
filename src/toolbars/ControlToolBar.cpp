@@ -57,7 +57,6 @@
 #include <wx/datetime.h>
 
 #include "../AColor.h"
-#include "../AdornedRulerPanel.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
