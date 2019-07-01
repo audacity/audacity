@@ -43,6 +43,8 @@ public:
    // active
    bool Recording() const;
 
+   bool Stopping() const { return mStopping; }
+
    // Whether the last attempt to start recording requested appending to tracks
    bool Appending() const { return mAppending; }
    bool Looping() const { return mLooping; }
@@ -52,6 +54,7 @@ public:
    void SetAppending( bool value ) { mAppending = value; }
    void SetLooping( bool value ) { mLooping = value; }
    void SetCutting( bool value ) { mCutting = value; }
+   void SetStopping( bool value ) { mStopping = value; }
 
 private:
    // Audio IO callback methods
@@ -71,6 +74,7 @@ private:
    bool mAppending{ false };
    bool mLooping{ false };
    bool mCutting{ false };
+   bool mStopping{ false };
 };
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );

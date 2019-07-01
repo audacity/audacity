@@ -808,9 +808,19 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    if (!CanStopAudioStream())
       return;
 
-   mStop->PushDown();
-
    auto gAudioIO = AudioIO::Get();
+
+   auto cleanup = finally( [&]{
+      projectAudioManager.SetStopping( false );
+   } );
+
+   if (stopStream && gAudioIO->IsBusy()) {
+      // flag that we are stopping
+      projectAudioManager.SetStopping( true );
+      // Allow UI to update for that
+      while( wxTheApp->ProcessIdle() )
+         ;
+   }
 
    if(stopStream)
       gAudioIO->StopStream();
@@ -1296,8 +1306,11 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
       );
    }
 
-   // push-downs of the stop button are only momentary and always pop up now
-   mStop->PopUp();
+   if ( projectAudioManager.Stopping() )
+      mStop->PushDown();
+   else
+      // push-downs of the stop button are only momentary and always pop up now
+      mStop->PopUp();
    
    UpdateStatusBar();
    EnableDisableButtons();
