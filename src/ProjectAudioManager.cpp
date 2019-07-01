@@ -277,7 +277,7 @@ bool DoPlayStopSelect
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
        gAudioIO->IsStreamActive(token)) {
-      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.SetStop();         //Pushes stop down
 
       // change the selection
       auto time = gAudioIO->GetStreamTime();
@@ -332,7 +332,6 @@ void DoPlayStopSelect(AudacityProject &project)
       toolbar.OnStop(evt);
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode
       toolbar.PlayCurrentRegion(false);

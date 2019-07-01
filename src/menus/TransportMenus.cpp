@@ -54,7 +54,7 @@ bool MakeReadyToPlay(AudacityProject &project)
    )) {
       // Make momentary changes of button appearances
       toolbar.SetPlay(false);        //Pops
-      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.SetStop();         //Pushes stop down
       toolbar.OnStop(evt);
 
       ::wxMilliSleep(100);
@@ -64,8 +64,6 @@ bool MakeReadyToPlay(AudacityProject &project)
    // project is playing, return
    if (gAudioIO->IsBusy())
       return false;
-
-   toolbar.SetStop(false);
 
    return true;
 }
@@ -92,7 +90,7 @@ void DoPlayStop(const CommandContext &context)
    //If this project is playing, stop playing, make sure everything is unpaused.
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(token)) {
-      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.SetStop();         //Pushes stop down
       toolbar.StopPlaying();
    }
    else if (gAudioIO->IsStreamActive()) {
@@ -110,7 +108,7 @@ void DoPlayStop(const CommandContext &context)
       if(iter != finish) {
          auto otherProject = *iter;
          auto &otherToolbar = ControlToolBar::Get( *otherProject );
-         otherToolbar.SetStop(true);         //Pushes stop down
+         otherToolbar.SetStop();         //Pushes stop down
          otherToolbar.StopPlaying();
       }
 
@@ -119,7 +117,6 @@ void DoPlayStop(const CommandContext &context)
          //update the playing area
          window.TP_DisplaySelection();
          //Otherwise, start playing (assuming audio I/O isn't busy)
-         toolbar.SetStop(false);
 
          // Will automatically set mLastPlayMode
          toolbar.PlayCurrentRegion(false);
@@ -127,7 +124,6 @@ void DoPlayStop(const CommandContext &context)
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode
       toolbar.PlayCurrentRegion(false);

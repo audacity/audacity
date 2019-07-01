@@ -516,15 +516,9 @@ void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
    EnableDisableButtons();
 }
 
-void ControlToolBar::SetStop(bool down)
+void ControlToolBar::SetStop()
 {
-   if (down)
-      mStop->PushDown();
-   else {
-      if(FindFocus() == mStop)
-         mPlay->SetFocus();
-      mStop->PopUp();
-   }
+   mStop->PushDown();
    EnableDisableButtons();
 }
 
@@ -562,11 +556,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    projectAudioManager.SetCutting( mode == PlayMode::cutPreviewPlay );
 
    bool success = false;
-   auto cleanup = finally( [&] {
-      if (!success) {
-         SetStop(false);
-      }
-   } );
 
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
@@ -753,11 +742,10 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
    // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
       if ( projectAudioManager.Playing() || projectAudioManager.Recording() ) {
-         SetStop(true);
+         SetStop();
          StopPlaying();
       }
       else if (!gAudioIO->IsBusy()) {
-         SetStop(false);
          PlayCurrentRegion();
       }
       return;
@@ -824,7 +812,6 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 
    auto gAudioIO = AudioIO::Get();
 
-   SetStop(false);
    if(stopStream)
       gAudioIO->StopStream();
 
@@ -1062,11 +1049,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    projectAudioManager.SetAppending( !altAppearance );
 
    bool success = false;
-   auto cleanup = finally([&] {
-      if (!success) {
-         SetStop(false);
-      }
-   });
 
    auto transportTracks = tracks;
 
@@ -1313,6 +1295,9 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
             : 0
       );
    }
+
+   // push-downs of the stop button are only momentary and always pop up now
+   mStop->PopUp();
    
    UpdateStatusBar();
    EnableDisableButtons();
