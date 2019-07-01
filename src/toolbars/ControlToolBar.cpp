@@ -110,8 +110,6 @@ END_EVENT_TABLE()
 ControlToolBar::ControlToolBar( AudacityProject &project )
 : ToolBar(project, TransportBarID, _("Transport"), wxT("Control"))
 {
-   mPaused = false;
-
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
@@ -496,8 +494,8 @@ void ControlToolBar::EnableDisableButtons()
       !(playing && !paused)
    );
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
-   mRewind->SetEnabled(IsPauseDown() || (!playing && !recording));
-   mFF->SetEnabled(tracks && (IsPauseDown() || (!playing && !recording)));
+   mRewind->SetEnabled(paused || (!playing && !recording));
+   mFF->SetEnabled(tracks && (paused || (!playing && !recording)));
 
    mPause->SetEnabled(CanStopAudioStream());
 }
@@ -542,11 +540,6 @@ void ControlToolBar::SetRecord(bool down, bool altAppearance)
       mRecord->PopUp();
    }
    EnableDisableButtons();
-}
-
-bool ControlToolBar::IsPauseDown() const
-{
-   return mPause->IsDown();
 }
 
 bool ControlToolBar::IsRecordDown() const
@@ -842,6 +835,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    StopScrolling();
 
    AudacityProject *project = &mProject;
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    if(project) {
       // Let scrubbing code do some appearance change
@@ -866,10 +860,9 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
       gAudioIO->AILADisable();
    #endif
 
-   mPause->PopUp();
-   mPaused=false;
+   projectAudioManager.SetPaused( false );
    //Make sure you tell gAudioIO to unpause
-   gAudioIO->SetPaused(mPaused);
+   gAudioIO->SetPaused( false );
 
    ClearCutPreviewTracks();
 
@@ -1273,21 +1266,14 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
 void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    if (!CanStopAudioStream()) {
       return;
    }
 
-
-   if(mPaused)
-   {
-      mPause->PopUp();
-      mPaused=false;
-   }
-   else
-   {
-      mPause->PushDown();
-      mPaused=true;
-   }
+   bool paused = !projectAudioManager.Paused();
+   projectAudioManager.SetPaused( paused );
 
    auto gAudioIO = AudioIO::Get();
 
@@ -1298,7 +1284,7 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 
    // Bug 1494 - Pausing a seek or scrub should just STOP as
    // it is confusing to be in a paused scrub state.
-   bool bStopInstead = mPaused && 
+   bool bStopInstead = paused &&
       gAudioIO->IsScrubbing() && 
       !scrubber.IsSpeedPlaying();
 
@@ -1309,18 +1295,26 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    }
    
    if (gAudioIO->IsScrubbing())
-      scrubber.Pause(mPaused);
+      scrubber.Pause(paused);
    else
 #endif
    {
-      gAudioIO->SetPaused(mPaused);
+      gAudioIO->SetPaused(paused);
    }
 }
 
 void ControlToolBar::OnIdle(wxIdleEvent & event)
 {
    event.Skip();
+
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   if ( projectAudioManager.Paused() )
+      mPause->PushDown();
+   else
+      mPause->PopUp();
+
    UpdateStatusBar();
+   EnableDisableButtons();
 }
 
 void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))

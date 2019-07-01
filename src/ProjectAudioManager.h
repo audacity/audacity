@@ -35,6 +35,10 @@ public:
    void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
    void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
 
+   bool Paused() const { return mPaused; }
+
+   void SetPaused( bool value ) { mPaused = value; }
+
 private:
    // Audio IO callback methods
    void OnAudioIORate(int rate) override;
@@ -48,6 +52,8 @@ private:
 
    //flag for cancellation of timer record.
    bool mTimerRecordCanceled{ false };
+
+   bool mPaused{ false };
 };
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );

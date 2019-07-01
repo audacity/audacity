@@ -869,9 +869,7 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
    // Pause if Pause down, or not scrubbing.
    if (!mProject)
       Pause(true);
-   else if ( !ControlToolBar::Find( *mProject ) )
-      Pause( true );
-   else if (ControlToolBar::Get( *mProject ).IsPauseDown())
+   else if (ProjectAudioManager::Get( *mProject ).Paused())
       Pause( true );
    else if (!IsScrubbing())
       Pause( true );

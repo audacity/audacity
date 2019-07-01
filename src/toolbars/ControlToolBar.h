@@ -97,7 +97,6 @@ class ControlToolBar final : public ToolBar {
    void SetStop(bool down);
    void SetRecord(bool down, bool altAppearance = false);
 
-   bool IsPauseDown() const;
    bool IsRecordDown() const;
 
    // A project is only allowed to stop an audio stream that it owns.
@@ -182,9 +181,6 @@ class ControlToolBar final : public ToolBar {
    AButton *mFF;
 
    static AudacityProject *mBusyProject;
-
-   // Maybe button state values shouldn't be duplicated in this toolbar?
-   bool mPaused;         //Play or record is paused or not paused?
 
    // Activate ergonomic order for transport buttons
    bool mErgonomicTransportButtons;
