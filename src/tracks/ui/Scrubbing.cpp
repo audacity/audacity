@@ -330,14 +330,12 @@ void Scrubber::MarkScrubStart(
    mSeeking = seek;
    CheckMenuItems();
 
-   ctb.SetPlay(true, ControlToolBar::PlayAppearance::Straight );
    // Commented out for Bug 1421
    //   mSeeking
    //   ? ControlToolBar::PlayAppearance::Seek
    //   : ControlToolBar::PlayAppearance::Scrub);
 
    mScrubStartPosition = xx;
-   ctb.UpdateStatusBar(mProject);
    mCancelled = false;
 }
 
@@ -674,8 +672,6 @@ void Scrubber::ContinueScrubbingUI()
       // Show the correct status for seeking.
       bool backup = mSeeking;
       mSeeking = seek;
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.UpdateStatusBar(mProject);
       mSeeking = backup;
    }
 
@@ -734,14 +730,6 @@ void Scrubber::StopScrubbing()
    mScrubStartPosition = -1;
    mDragging = false;
    mSeeking = false;
-
-   if (!IsScrubbing())
-   {
-      // Marked scrub start, but
-      // didn't really play, but did change button apperance
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.SetPlay(false, ControlToolBar::PlayAppearance::Straight);
-   }
 
    AdornedRulerPanel::Get( *mProject ).DrawBothOverlays();
    CheckMenuItems();
@@ -872,9 +860,7 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
    // Pause if Pause down, or not scrubbing.
    if (!mProject)
       Pause(true);
-   else if ( !ControlToolBar::Find( *mProject ) )
-      Pause( true );
-   else if (ControlToolBar::Get( *mProject ).IsPauseDown())
+   else if (ProjectAudioManager::Get( *mProject ).Paused())
       Pause( true );
    else if (!IsScrubbing())
       Pause( true );
@@ -1106,12 +1092,6 @@ void Scrubber::DoScrub(bool seek)
 void Scrubber::OnScrubOrSeek(bool seek)
 {
    DoScrub(seek);
-
-   if (HasMark()) {
-      // Show the correct status.
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.UpdateStatusBar(mProject);
-   }
 
    mSeeking = seek;
    CheckMenuItems();

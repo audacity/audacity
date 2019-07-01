@@ -42,8 +42,7 @@ namespace {
 /// and pops the play button up.  Then, if nothing is now
 /// playing, it pushes the play button down and enables
 /// the stop button.
-bool MakeReadyToPlay(AudacityProject &project,
-   bool loop = false, bool cutpreview = false)
+bool MakeReadyToPlay(AudacityProject &project)
 {
    auto &toolbar = ControlToolBar::Get( project );
    wxCommandEvent evt;
@@ -53,8 +52,9 @@ bool MakeReadyToPlay(AudacityProject &project,
    if (gAudioIO->IsStreamActive(
       ProjectAudioIO::Get( project ).GetAudioIOToken()
    )) {
+      // Make momentary changes of button appearances
       toolbar.SetPlay(false);        //Pops
-      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.SetStop();         //Pushes stop down
       toolbar.OnStop(evt);
 
       ::wxMilliSleep(100);
@@ -64,13 +64,6 @@ bool MakeReadyToPlay(AudacityProject &project,
    // project is playing, return
    if (gAudioIO->IsBusy())
       return false;
-
-   ControlToolBar::PlayAppearance appearance =
-      cutpreview ? ControlToolBar::PlayAppearance::CutPreview
-      : loop ? ControlToolBar::PlayAppearance::Looped
-      : ControlToolBar::PlayAppearance::Straight;
-   toolbar.SetPlay(true, appearance);
-   toolbar.SetStop(false);
 
    return true;
 }
@@ -97,8 +90,7 @@ void DoPlayStop(const CommandContext &context)
    //If this project is playing, stop playing, make sure everything is unpaused.
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(token)) {
-      toolbar.SetPlay(false);        //Pops
-      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.SetStop();         //Pushes stop down
       toolbar.StopPlaying();
    }
    else if (gAudioIO->IsStreamActive()) {
@@ -116,8 +108,7 @@ void DoPlayStop(const CommandContext &context)
       if(iter != finish) {
          auto otherProject = *iter;
          auto &otherToolbar = ControlToolBar::Get( *otherProject );
-         otherToolbar.SetPlay(false);        //Pops
-         otherToolbar.SetStop(true);         //Pushes stop down
+         otherToolbar.SetStop();         //Pushes stop down
          otherToolbar.StopPlaying();
       }
 
@@ -126,8 +117,6 @@ void DoPlayStop(const CommandContext &context)
          //update the playing area
          window.TP_DisplaySelection();
          //Otherwise, start playing (assuming audio I/O isn't busy)
-         //toolbar->SetPlay(true); // Not needed as done in PlayPlayRegion.
-         toolbar.SetStop(false);
 
          // Will automatically set mLastPlayMode
          toolbar.PlayCurrentRegion(false);
@@ -135,8 +124,6 @@ void DoPlayStop(const CommandContext &context)
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      //toolbar->SetPlay(true); // Not needed as done in PlayPlayRegion.
-      toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode
       toolbar.PlayCurrentRegion(false);
@@ -223,7 +210,7 @@ void OnPlayLooped(const CommandContext &context)
 {
    auto &project = context.project;
 
-   if( !MakeReadyToPlay(project, true) )
+   if( !MakeReadyToPlay(project) )
       return;
 
    // Now play in a loop
@@ -247,11 +234,8 @@ void OnRecord(const CommandContext &context)
 void OnRecord2ndChoice(const CommandContext &context)
 {
    auto &project = context.project;
-   wxCommandEvent evt;
-   evt.SetInt(1); // 0 is default, use 1 to set shift on, 2 to clear it
-
    auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnRecord(evt);
+   controlToolBar.OnRecord(true);
 }
 
 void OnTimerRecord(const CommandContext &context)
@@ -793,7 +777,7 @@ void OnPlayCutPreview(const CommandContext &context)
 {
    auto &project = context.project;
 
-   if ( !MakeReadyToPlay(project, false, true) )
+   if ( !MakeReadyToPlay(project) )
       return;
 
    // Play with cut preview

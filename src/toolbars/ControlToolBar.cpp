@@ -99,6 +99,7 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_BUTTON(ID_REW_BUTTON,    ControlToolBar::OnRewind)
    EVT_BUTTON(ID_FF_BUTTON,     ControlToolBar::OnFF)
    EVT_BUTTON(ID_PAUSE_BUTTON,  ControlToolBar::OnPause)
+   EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
 //Standard constructor
@@ -109,8 +110,6 @@ END_EVENT_TABLE()
 ControlToolBar::ControlToolBar( AudacityProject &project )
 : ToolBar(project, TransportBarID, _("Transport"), wxT("Control"))
 {
-   mPaused = false;
-
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
@@ -456,7 +455,8 @@ void ControlToolBar::ReCreateButtons()
 
    if (recordDown)
    {
-      SetRecord(recordDown, recordShift);
+      mRecord->SetAlternateIdx(recordShift ? 1 : 0);
+      mRecord->PushDown();
    }
 
    EnableDisableButtons();
@@ -495,8 +495,8 @@ void ControlToolBar::EnableDisableButtons()
       !(playing && !paused)
    );
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
-   mRewind->SetEnabled(IsPauseDown() || (!playing && !recording));
-   mFF->SetEnabled(tracks && (IsPauseDown() || (!playing && !recording)));
+   mRewind->SetEnabled(paused || (!playing && !recording));
+   mFF->SetEnabled(tracks && (paused || (!playing && !recording)));
 
    mPause->SetEnabled(CanStopAudioStream());
 }
@@ -514,44 +514,12 @@ void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
       mPlay->SetAlternateIdx(0);
    }
    EnableDisableButtons();
-   UpdateStatusBar( &mProject );
 }
 
-void ControlToolBar::SetStop(bool down)
+void ControlToolBar::SetStop()
 {
-   if (down)
-      mStop->PushDown();
-   else {
-      if(FindFocus() == mStop)
-         mPlay->SetFocus();
-      mStop->PopUp();
-   }
+   mStop->PushDown();
    EnableDisableButtons();
-}
-
-void ControlToolBar::SetRecord(bool down, bool altAppearance)
-{
-   if (down)
-   {
-      mRecord->SetAlternateIdx(altAppearance ? 1 : 0);
-      mRecord->PushDown();
-   }
-   else
-   {
-      mRecord->SetAlternateIdx(0);
-      mRecord->PopUp();
-   }
-   EnableDisableButtons();
-}
-
-bool ControlToolBar::IsPauseDown() const
-{
-   return mPause->IsDown();
-}
-
-bool ControlToolBar::IsRecordDown() const
-{
-   return mRecord->IsDown();
 }
 
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
@@ -561,6 +529,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    bool playWhiteSpace /* = false */)
 // STRONG-GUARANTEE (for state of mCutPreviewTracks)
 {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    if (!CanStopAudioStream())
       return -1;
 
@@ -582,27 +552,10 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (backwards)
       std::swap(t0, t1);
 
-   {
-      PlayAppearance appearance;
-      switch( mode ) {
-         case PlayMode::cutPreviewPlay:
-            appearance = PlayAppearance::CutPreview; break;
-         case PlayMode::loopedPlay:
-            appearance = PlayAppearance::Looped; break;
-         default:
-            appearance = PlayAppearance::Straight; break;
-      }
-      SetPlay(true, appearance);
-   }
+   projectAudioManager.SetLooping( mode == PlayMode::loopedPlay );
+   projectAudioManager.SetCutting( mode == PlayMode::cutPreviewPlay );
 
    bool success = false;
-   auto cleanup = finally( [&] {
-      if (!success) {
-         SetPlay(false);
-         SetStop(false);
-         SetRecord(false);
-      }
-   } );
 
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
@@ -738,8 +691,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (!success)
       return -1;
 
-   StartScrollingIfPreferred();
-
    return token;
 }
 
@@ -771,26 +722,28 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
 
 void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 {
+   // PRL: is this handler really ever reached?  Is the ControlToolBar ever
+   // focused?  Isn't there a global event filter that interprets the spacebar
+   // key (or other key chosen in preferences) and dispatches to DoPlayStop,
+   // according to CommandManager's table, before we come to this redundant
+   // function?
+
    if (event.ControlDown() || event.AltDown()) {
       event.Skip();
       return;
    }
 
    auto gAudioIO = AudioIOBase::Get();
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    // Does not appear to be needed on Linux. Perhaps on some other platform?
    // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
-      if (gAudioIO->IsStreamActive(
-         ProjectAudioIO::Get( mProject ).GetAudioIOToken()
-      )) {
-         SetPlay(false);
-         SetStop(true);
+      if ( projectAudioManager.Playing() || projectAudioManager.Recording() ) {
+         SetStop();
          StopPlaying();
       }
       else if (!gAudioIO->IsBusy()) {
-         //SetPlay(true);// Not needed as done in PlayPlayRegion
-         SetStop(false);
          PlayCurrentRegion();
       }
       return;
@@ -810,7 +763,6 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
    if (p)
       ProjectWindow::Get( *p ).TP_DisplaySelection();
 
-   auto cleanup = finally( [&]{ UpdateStatusBar(p); } );
    PlayDefault();
 }
 
@@ -818,7 +770,6 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
    if (CanStopAudioStream()) {
       StopPlaying();
-      UpdateStatusBar( &mProject );
    }
 }
 
@@ -841,9 +792,8 @@ void ControlToolBar::PlayDefault()
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
-   StopScrolling();
-
    AudacityProject *project = &mProject;
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    if(project) {
       // Let scrubbing code do some appearance change
@@ -854,24 +804,33 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    if (!CanStopAudioStream())
       return;
 
-   mStop->PushDown();
-
    auto gAudioIO = AudioIO::Get();
 
-   SetStop(false);
+   auto cleanup = finally( [&]{
+      projectAudioManager.SetStopping( false );
+   } );
+
+   if (stopStream && gAudioIO->IsBusy()) {
+      // flag that we are stopping
+      projectAudioManager.SetStopping( true );
+      // Allow UI to update for that
+      while( wxTheApp->ProcessIdle() )
+         ;
+   }
+
    if(stopStream)
       gAudioIO->StopStream();
-   SetPlay(false);
-   SetRecord(false);
+
+   projectAudioManager.SetLooping( false );
+   projectAudioManager.SetCutting( false );
 
    #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       gAudioIO->AILADisable();
    #endif
 
-   mPause->PopUp();
-   mPaused=false;
+   projectAudioManager.SetPaused( false );
    //Make sure you tell gAudioIO to unpause
-   gAudioIO->SetPaused(mPaused);
+   gAudioIO->SetPaused( false );
 
    ClearCutPreviewTracks();
 
@@ -987,18 +946,19 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    // Here instead we reduplicate some logic (from CommandHandler) because it isn't
    // normally used for buttons.
 
-   // Code from CommandHandler start...
-   AudacityProject *p = &mProject;
-
    bool altAppearance = mRecord->WasShiftDown();
-   if (evt.GetInt() == 1) // used when called by keyboard shortcut. Default (0) ignored.
-      altAppearance = true;
-   if (evt.GetInt() == 2)
-      altAppearance = false;
+   OnRecord( altAppearance );
+}
 
+void ControlToolBar::OnRecord(bool altAppearance)
+// STRONG-GUARANTEE (for state of current project's tracks)
+{
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
    const bool appendRecord = (altAppearance == bPreferNewTrack);
+
+   // Code from CommandHandler start...
+   AudacityProject *p = &mProject;
 
    if (p) {
       const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
@@ -1075,6 +1035,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    bool altAppearance,
    const AudioIOStartStreamOptions &options)
 {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
 
    // NB: The call may have the side effect of changing flags.
@@ -1087,27 +1049,12 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    // ...end of code from CommandHandler.
 
    auto gAudioIO = AudioIO::Get();
-   if (gAudioIO->IsBusy()) {
-      if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
-         mRecord->PopUp();
-      else
-         mRecord->PushDown();
+   if (gAudioIO->IsBusy())
       return false;
-   }
 
-   SetRecord(true, altAppearance);
+   projectAudioManager.SetAppending( !altAppearance );
 
    bool success = false;
-   auto cleanup = finally([&] {
-      if (!success) {
-         SetPlay(false);
-         SetStop(false);
-         SetRecord(false);
-      }
-
-      // Success or not:
-      UpdateStatusBar( &mProject );
-   });
 
    auto transportTracks = tracks;
 
@@ -1259,8 +1206,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
       if (success) {
          ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
          mBusyProject = p;
-
-         StartScrollingIfPreferred();
       }
       else {
          CancelRecording();
@@ -1277,21 +1222,14 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
 void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    if (!CanStopAudioStream()) {
       return;
    }
 
-
-   if(mPaused)
-   {
-      mPause->PopUp();
-      mPaused=false;
-   }
-   else
-   {
-      mPause->PushDown();
-      mPaused=true;
-   }
+   bool paused = !projectAudioManager.Paused();
+   projectAudioManager.SetPaused( paused );
 
    auto gAudioIO = AudioIO::Get();
 
@@ -1302,7 +1240,7 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 
    // Bug 1494 - Pausing a seek or scrub should just STOP as
    // it is confusing to be in a paused scrub state.
-   bool bStopInstead = mPaused && 
+   bool bStopInstead = paused &&
       gAudioIO->IsScrubbing() && 
       !scrubber.IsSpeedPlaying();
 
@@ -1313,14 +1251,69 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    }
    
    if (gAudioIO->IsScrubbing())
-      scrubber.Pause(mPaused);
+      scrubber.Pause(paused);
    else
 #endif
    {
-      gAudioIO->SetPaused(mPaused);
+      gAudioIO->SetPaused(paused);
+   }
+}
+
+void ControlToolBar::OnIdle(wxIdleEvent & event)
+{
+   event.Skip();
+
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+   if ( projectAudioManager.Paused() )
+      mPause->PushDown();
+   else
+      mPause->PopUp();
+
+   bool recording = projectAudioManager.Recording();
+   if (!recording) {
+      mRecord->PopUp();
+      mRecord->SetAlternateIdx( wxGetKeyState(WXK_SHIFT) ? 1 : 0 );
+   }
+   else {
+      mRecord->PushDown();
+      mRecord->SetAlternateIdx( projectAudioManager.Appending() ? 0 : 1 );
    }
 
-   UpdateStatusBar( &mProject );
+   bool playing = projectAudioManager.Playing();
+   if ( !(playing || Scrubber::Get(mProject).HasMark()) ) {
+      mPlay->PopUp();
+      mPlay->SetAlternateIdx(
+         wxGetKeyState(WXK_CONTROL)
+         ? 2
+         : wxGetKeyState(WXK_SHIFT)
+            ? 1
+            : 0
+      );
+   }
+   else {
+      mPlay->PushDown();
+      mPlay->SetAlternateIdx(
+         projectAudioManager.Cutting()
+         ? 2
+         : projectAudioManager.Looping()
+            ? 1
+            : 0
+      );
+   }
+
+   if ( recording || playing )
+      StartScrollingIfPreferred();
+   else
+      StopScrolling();
+
+   if ( projectAudioManager.Stopping() )
+      mStop->PushDown();
+   else
+      // push-downs of the stop button are only momentary and always pop up now
+      mStop->PopUp();
+   
+   UpdateStatusBar();
+   EnableDisableButtons();
 }
 
 void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
@@ -1409,6 +1402,7 @@ int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
 wxString ControlToolBar::StateForStatusBar()
 {
    wxString state;
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    auto pProject = &mProject;
    auto scrubState = pProject
@@ -1418,7 +1412,7 @@ wxString ControlToolBar::StateForStatusBar()
       state = wxGetTranslation(scrubState);
    else if (mPlay->IsDown())
       state = wxGetTranslation(mStatePlay);
-   else if (mRecord->IsDown())
+   else if (projectAudioManager.Recording())
       state = wxGetTranslation(mStateRecord);
    else
       state = wxGetTranslation(mStateStop);
@@ -1434,9 +1428,9 @@ wxString ControlToolBar::StateForStatusBar()
    return state;
 }
 
-void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
+void ControlToolBar::UpdateStatusBar()
 {
-   GetProjectFrame( *pProject )
+   GetProjectFrame( mProject )
       .GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
 
@@ -1474,12 +1468,12 @@ void ControlToolBar::StartScrolling()
    using Mode = ProjectWindow::PlaybackScroller::Mode;
    const auto project = &mProject;
    if (project) {
-      auto gAudioIO = AudioIO::Get();
       auto mode = Mode::Pinned;
 
 #if 0
       // Enable these lines to pin the playhead right instead of center,
       // when recording but not overdubbing.
+      auto gAudioIO = AudioIO::Get();
       if (gAudioIO->GetNumCaptureChannels() > 0) {
          // recording
 

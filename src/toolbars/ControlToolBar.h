@@ -77,6 +77,7 @@ class ControlToolBar final : public ToolBar {
    void OnPlay(wxCommandEvent & evt);
    void OnStop(wxCommandEvent & evt);
    void OnRecord(wxCommandEvent & evt);
+   void OnRecord(bool altAppearance);
    bool DoRecord(AudacityProject &project,
       const TransportTracks &transportTracks, // If captureTracks is empty, then tracks are created
       double t0, double t1,
@@ -84,6 +85,7 @@ class ControlToolBar final : public ToolBar {
       const AudioIOStartStreamOptions &options);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
+   void OnIdle(wxIdleEvent & event);
 
    // Choice among the appearances of the play button:
    enum class PlayAppearance {
@@ -92,11 +94,7 @@ class ControlToolBar final : public ToolBar {
 
    //These allow buttons to be controlled externally:
    void SetPlay(bool down, PlayAppearance appearance = PlayAppearance::Straight);
-   void SetStop(bool down);
-   void SetRecord(bool down, bool altAppearance = false);
-
-   bool IsPauseDown() const;
-   bool IsRecordDown() const;
+   void SetStop();
 
    // A project is only allowed to stop an audio stream that it owns.
    bool CanStopAudioStream () const;
@@ -128,7 +126,6 @@ class ControlToolBar final : public ToolBar {
    void RegenerateTooltips() override;
 
    int WidthForStatusBar(wxStatusBar* const);
-   void UpdateStatusBar(AudacityProject *pProject);
 
    // Starting and stopping of scrolling display
    void StartScrollingIfPreferred();
@@ -141,6 +138,7 @@ class ControlToolBar final : public ToolBar {
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
  private:
+   void UpdateStatusBar();
 
    static AButton *MakeButton(
       ControlToolBar *pBar,
@@ -180,9 +178,6 @@ class ControlToolBar final : public ToolBar {
    AButton *mFF;
 
    static AudacityProject *mBusyProject;
-
-   // Maybe button state values shouldn't be duplicated in this toolbar?
-   bool mPaused;         //Play or record is paused or not paused?
 
    // Activate ergonomic order for transport buttons
    bool mErgonomicTransportButtons;

@@ -192,6 +192,27 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    }
 }
 
+bool ProjectAudioManager::Playing() const
+{
+   auto gAudioIO = AudioIO::Get();
+   return
+      gAudioIO->IsBusy() &&
+      ControlToolBar::Get( mProject ).CanStopAudioStream() &&
+      // ... and not merely monitoring
+      !gAudioIO->IsMonitoring() &&
+      // ... and not punch-and-roll recording
+      gAudioIO->GetNumCaptureChannels() == 0;
+}
+
+bool ProjectAudioManager::Recording() const
+{
+   auto gAudioIO = AudioIO::Get();
+   return
+      gAudioIO->IsBusy() &&
+      ControlToolBar::Get( mProject).CanStopAudioStream() &&
+      gAudioIO->GetNumCaptureChannels() > 0;
+}
+
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
 {
@@ -256,8 +277,7 @@ bool DoPlayStopSelect
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
        gAudioIO->IsStreamActive(token)) {
-      toolbar.SetPlay(false);        //Pops
-      toolbar.SetStop(true);         //Pushes stop down
+      toolbar.SetStop();         //Pushes stop down
 
       // change the selection
       auto time = gAudioIO->GetStreamTime();
@@ -312,8 +332,6 @@ void DoPlayStopSelect(AudacityProject &project)
       toolbar.OnStop(evt);
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
-      toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode
       toolbar.PlayCurrentRegion(false);
@@ -330,11 +348,8 @@ void DoPause( AudacityProject &project )
 
 void DoRecord( AudacityProject &project )
 {
-   wxCommandEvent evt;
-   evt.SetInt(2); // 0 is default, use 1 to set shift on, 2 to clear it
-
    auto &controlToolBar = ControlToolBar::Get( project );
-   controlToolBar.OnRecord(evt);
+   controlToolBar.OnRecord(false);
 }
 
 void DoLockPlayRegion( AudacityProject &project )
@@ -368,11 +383,6 @@ void DoTogglePinnedHead( AudacityProject &project )
    bool value = !TracksPrefs::GetPinnedHeadPreference();
    TracksPrefs::SetPinnedHeadPreference(value, true);
    MenuManager::ModifyAllProjectToolbarMenus();
-
-   // Change what happens in case transport is in progress right now
-   auto ctb = ControlToolBar::Find( *GetActiveProject() );
-   if (ctb)
-      ctb->StartScrollingIfPreferred();
 
    auto &ruler = AdornedRulerPanel::Get( project );
    // Update button image
