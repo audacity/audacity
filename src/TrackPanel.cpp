@@ -276,13 +276,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
             return {};
          }
       );
-#if wxUSE_ACCESSIBILITY
-      // wxWidgets owns the accessible object
-      SetAccessible(mAx = pAx.release());
-#else
-      // wxWidgets does not own the object, but we need to retain it
-      mAx = std::move(pAx);
-#endif
+      TrackFocus::Get( *GetProject() ).SetAccessible(
+         *this, std::move( pAx ) );
    }
 
    mRedrawAfterStop = false;
@@ -497,7 +492,7 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
 void TrackPanel::OnUndoReset( wxCommandEvent &event )
 {
    event.Skip();
-   SetFocusedTrack( nullptr );
+   TrackFocus::Get( *GetProject() ).Set( nullptr );
    Refresh( false );
 }
 
@@ -691,22 +686,10 @@ void TrackPanel::UpdateSelectionDisplay()
    DisplaySelection();
 }
 
-void TrackPanel::UpdateAccessibility()
-{
-   if (mAx)
-      mAx->Updated();
-}
-
 // Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount() const
 {
    return GetTracks()->SelectedLeaders().size();
-}
-
-void TrackPanel::MessageForScreenReader(const wxString& message)
-{
-   if (mAx)
-      mAx->MessageForScreenReader(message);
 }
 
 void TrackPanel::UpdateViewIfNoTracks()
@@ -754,7 +737,7 @@ void TrackPanel::OnTrackListDeletion(wxEvent & e)
 
    // If the focused track disappeared but there are still other tracks,
    // this reassigns focus.
-   GetFocusedTrack();
+   TrackFocus( *GetProject() ).Get();
 
    UpdateVRulerSize();
 
@@ -986,7 +969,7 @@ void TrackPanel::OnEnsureVisible(TrackListEvent & e)
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
 
-   SetFocusedTrack(t);
+   TrackFocus::Get( *GetProject() ).Set( t );
 
    int trackTop = 0;
    int trackHeight =0;
@@ -1213,7 +1196,8 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          // was the focus and no highlight should be drawn. -RBD
          const auto artist = TrackArtist::Get( context );
          auto &trackPanel = *artist->parent;
-         if (trackPanel.GetFocusedTrack() == mpTrack.get() &&
+         auto &trackFocus = TrackFocus::Get( *trackPanel.GetProject() );
+         if (trackFocus.Get() == mpTrack.get() &&
              wxWindow::FindFocus() == &trackPanel ) {
             /// Draw a three-level highlight gradient around the focused track.
             wxRect theRect = rect;
@@ -1366,38 +1350,20 @@ void TrackPanel::DisplaySelection()
 
 TrackPanelCell *TrackPanel::GetFocusedCell()
 {
-   auto pTrack = mAx->GetFocus().get();
-   if (pTrack)
-      return &TrackView::Get( *pTrack );
-   return nullptr;
-}
-
-Track *TrackPanel::GetFocusedTrack()
-{
-   auto pView = dynamic_cast<TrackView *>( GetFocusedCell() );
-   if (pView)
-      return pView->FindTrack().get();
-   return nullptr;
+   auto pTrack = TrackFocus::Get( *GetProject() ).Get();
+   return pTrack ? &TrackView::Get( *pTrack ) : nullptr;
 }
 
 void TrackPanel::SetFocusedCell()
 {
-   SetFocusedTrack( GetFocusedTrack() );
-}
-
-void TrackPanel::SetFocusedTrack( Track *t )
-{
-   // Make sure we always have the first linked track of a stereo track
-   t = *GetTracks()->FindLeader(t);
-
-   // This will cause callback to the handler function, defined next
-   mAx->SetFocus( Track::SharedPointer( t ) );
+   // This may have a side-effet of assigning a focus if there was none
+   TrackFocus::Get( *GetProject() ).Get();
 }
 
 void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
 {
    event.Skip();
-   auto cell = mAx->GetFocus().get();
+   auto cell = GetFocusedCell();
 
    if (cell) {
       KeyboardCapture::Capture(this);

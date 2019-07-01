@@ -29,7 +29,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "TimeTrack.h"
-#include "TrackPanel.h"
+#include "TrackPanelAx.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "toolbars/ToolManager.h"
@@ -685,7 +685,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
-            TrackPanel::Get( *p ).SetFocusedTrack( newTrack.get() );
+            TrackFocus::Get( *p ).Set( newTrack.get() );
          }
          TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
       }

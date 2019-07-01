@@ -37,6 +37,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SetTrackInfoCommand.h"
 
 #include "../Project.h"
+#include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
 #include "../prefs/WaveformSettings.h"
@@ -164,11 +165,11 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
    if( !bIsSecondChannel ){
       if( bHasFocused )
       {
-         auto &panel = TrackPanel::Get( context.project );
+         auto &trackFocus = TrackFocus::Get( context.project );
          if( bFocused)
-            panel.SetFocusedTrack( t );
-         else if( t== panel.GetFocusedTrack() )
-            panel.SetFocusedTrack( nullptr );
+            trackFocus.Set( t );
+         else if( t == trackFocus.Get() )
+            trackFocus.Set( nullptr );
       }
    }
    return true;

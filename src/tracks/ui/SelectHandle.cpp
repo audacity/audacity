@@ -28,6 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "../../SelectionState.h"
 #include "../../TrackArtist.h"
+#include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -534,12 +535,11 @@ UIHandle::Result SelectHandle::Click
    wxMouseEvent &event = evt.event;
    const auto sTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    const auto pTrack = sTrack.get();
+   auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
-
-   auto &trackPanel = TrackPanel::Get( *pProject );
 
    bool selectChange = (
       event.LeftDown() &&
@@ -771,7 +771,7 @@ UIHandle::Result SelectHandle::Click
 #endif
       StartSelection(pProject);
       selectionState.SelectTrack( *pTrack, true, true );
-      trackPanel.SetFocusedTrack(pTrack);
+      TrackFocus::Get( *pProject ).Set(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
       pTrack->TypeSwitch( [&](WaveTrack *wt) {
          if(ODManager::IsInstanceCreated())
@@ -1429,7 +1429,7 @@ void SelectHandle::MoveSnappingFreqSelection
 
       // SelectNone();
       // SelectTrack(pTrack, true);
-      TrackPanel::Get( *pProject ).SetFocusedTrack(pTrack);
+      TrackFocus::Get( *pProject ).Set(pTrack);
    }
 }
 

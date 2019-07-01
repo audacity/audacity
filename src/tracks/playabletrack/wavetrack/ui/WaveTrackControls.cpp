@@ -18,13 +18,14 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TrackView.h"
 #include "../../../../AudioIOBase.h"
+#include "../../../../CellularPanel.h"
 #include "../../../../Menus.h"
 #include "../../../../Project.h"
 #include "../../../../ProjectAudioIO.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"
-#include "../../../../TrackPanel.h"
+#include "../../../../TrackPanelAx.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
@@ -955,8 +956,8 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    if (channels.size() != 2)
       return;
 
-   auto &trackPanel = TrackPanel::Get( *project );
-   Track *const focused = trackPanel.GetFocusedTrack();
+   auto &trackFocus = TrackFocus::Get( *project );
+   Track *const focused = trackFocus.Get();
    const bool hasFocus = channels.contains( focused );
 
    auto partner = *channels.rbegin();
@@ -968,7 +969,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    tracks.GroupChannels( *partner, 2 );
 
    if (hasFocus)
-      trackPanel.SetFocusedTrack(partner);
+      trackFocus.Set(partner);
 
    /* i18n-hint: The string names a track  */
    ProjectHistory::Get( *project )

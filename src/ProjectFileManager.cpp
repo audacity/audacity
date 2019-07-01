@@ -38,6 +38,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "SelectionState.h"
 #include "Sequence.h"
 #include "Tags.h"
+#include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
@@ -1347,7 +1348,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       SelectionBar::Get( project ).SetRate( settings.GetRate() );
 
       ProjectHistory::Get( project ).InitialState();
-      trackPanel.SetFocusedTrack( *tracks.Any().begin() );
+      TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();
       trackPanel.Refresh(false);
       trackPanel.Update(); // force any repaint to happen now,

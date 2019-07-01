@@ -17,6 +17,7 @@
 #include "../ProjectWindow.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
+#include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
@@ -137,7 +138,7 @@ void DoPlayStop(const CommandContext &context)
 void DoMoveToLabel(AudacityProject &project, bool next)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // Find the number of label tracks, and ptr to last track found
@@ -146,14 +147,14 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto nLabelTrack = trackRange.size();
 
    if (nLabelTrack == 0 ) {
-      trackPanel.MessageForScreenReader(_("no label track"));
+      trackFocus.MessageForScreenReader(_("no label track"));
    }
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
       lt =
-         *tracks.Find(trackPanel.GetFocusedTrack()).Filter<LabelTrack>();
+         *tracks.Find(trackFocus.Get()).Filter<LabelTrack>();
       if (!lt)
-         trackPanel.MessageForScreenReader(
+         trackFocus.MessageForScreenReader(
             _("no label track at or below focused track"));
    }
 
@@ -184,10 +185,10 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          wxString message;
          message.Printf(
             wxT("%s %d of %d"), label->title, i + 1, lt->GetNumLabels() );
-         trackPanel.MessageForScreenReader(message);
+         trackFocus.MessageForScreenReader(message);
       }
       else {
-         trackPanel.MessageForScreenReader(_("no labels in label track"));
+         trackFocus.MessageForScreenReader(_("no labels in label track"));
       }
    }
 }

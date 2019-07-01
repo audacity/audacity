@@ -1,7 +1,7 @@
 #include "../CommonCommandFlags.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
-#include "../TrackPanel.h"
+#include "../TrackPanelAx.h"
 #include "../ProjectWindow.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
@@ -377,7 +377,7 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
 void DoSelectClipBoundary(AudacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
 
    std::vector<FoundClipBoundary> results;
    FindClipBoundaries(project, next ? selectedRegion.t1() :
@@ -394,7 +394,7 @@ void DoSelectClipBoundary(AudacityProject &project, bool next)
       ProjectHistory::Get( project ).ModifyState(false);
 
       wxString message = ClipBoundaryMessage(results);
-      trackPanel.MessageForScreenReader(message);
+      trackFocus.MessageForScreenReader(message);
    }
 }
 
@@ -561,7 +561,7 @@ int FindClips
 void DoSelectClip(AudacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    std::vector<FoundClip> results;
@@ -600,7 +600,7 @@ void DoSelectClip(AudacityProject &project, bool next)
          else
             message = wxString::Format(_("%s, %s"), message, str);
       }
-      trackPanel.MessageForScreenReader(message);
+      trackFocus.MessageForScreenReader(message);
    }
 }
 
@@ -608,7 +608,7 @@ void DoCursorClipBoundary
 (AudacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    std::vector<FoundClipBoundary> results;
@@ -624,7 +624,7 @@ void DoCursorClipBoundary
       window.ScrollIntoView(selectedRegion.t0());
 
       wxString message = ClipBoundaryMessage(results);
-      trackPanel.MessageForScreenReader(message);
+      trackFocus.MessageForScreenReader(message);
    }
 }
 
@@ -701,14 +701,14 @@ void DoClipLeftOrRight
       return;
    }
 
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto isSyncLocked = settings.IsSyncLocked();
 
-   auto amount = DoClipMove( viewInfo, trackPanel.GetFocusedTrack(),
+   auto amount = DoClipMove( viewInfo, trackFocus.Get(),
         tracks, isSyncLocked, right );
 
    window.ScrollIntoView(selectedRegion.t0());
@@ -726,7 +726,7 @@ void DoClipLeftOrRight
    }
 
    if ( amount == 0.0 )
-      trackPanel.MessageForScreenReader( _("clip not moved"));
+      trackFocus.MessageForScreenReader( _("clip not moved"));
 }
 
 }
