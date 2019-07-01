@@ -26,6 +26,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
+#include "../../WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
@@ -246,6 +247,18 @@ Scrubber::~Scrubber()
    if ( mWindow )
       mWindow->PopEventHandler();
 }
+
+static const auto HasWaveDataPred =
+   [](const AudacityProject &project){
+      auto range = TrackList::Get( project ).Any<const WaveTrack>()
+         + [](const WaveTrack *pTrack){
+            return pTrack->GetEndTime() > pTrack->GetStartTime();
+         };
+      return !range.empty();
+   };
+
+static const ReservedCommandFlag
+   HasWaveDataFlag{ HasWaveDataPred }; // jkc
 
 namespace {
    const struct MenuItem {
@@ -1194,9 +1207,10 @@ std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
 
 bool Scrubber::CanScrub() const
 {
-   // Return the enabled state for the menu item that really launches the scrub or seek.
-   auto &cm = CommandManager::Get( *mProject );
-   return cm.GetEnabled(menuItems[ 0 ].name);
+   // Recheck the same condition as enables the Scrub/Seek menu item.
+   auto gAudioIO = AudioIO::Get();
+   return !( gAudioIO->IsBusy() && gAudioIO->GetNumCaptureChannels() > 0 ) &&
+      HasWaveDataPred( *mProject );
 }
 
 // To supply the "finder" argument

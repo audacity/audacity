@@ -178,16 +178,7 @@ const ReservedCommandFlag
             gAudioIO->GetNumCaptureChannels() > 0
          );
       }
-   },
-   HasWaveDataFlag{
-      [](const AudacityProject &project){
-         auto range = TrackList::Get( project ).Any<const WaveTrack>()
-            + [](const WaveTrack *pTrack){
-               return pTrack->GetEndTime() > pTrack->GetStartTime();
-            };
-         return !range.empty();
-      }
-   }; // jkc
+   };
 
 const ReservedCommandFlag
    LabelTracksExistFlag{

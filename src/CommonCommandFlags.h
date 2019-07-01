@@ -31,8 +31,7 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    AudioIOBusyFlag, // lll
-   CaptureNotBusyFlag,
-   HasWaveDataFlag; // jkc
+   CaptureNotBusyFlag;
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    LabelTracksExistFlag,
