@@ -192,6 +192,18 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    }
 }
 
+bool ProjectAudioManager::Playing() const
+{
+   auto gAudioIO = AudioIO::Get();
+   return
+      gAudioIO->IsBusy() &&
+      ControlToolBar::Get( mProject ).CanStopAudioStream() &&
+      // ... and not merely monitoring
+      !gAudioIO->IsMonitoring() &&
+      // ... and not punch-and-roll recording
+      gAudioIO->GetNumCaptureChannels() == 0;
+}
+
 bool ProjectAudioManager::Recording() const
 {
    auto gAudioIO = AudioIO::Get();
@@ -265,7 +277,6 @@ bool DoPlayStopSelect
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
        gAudioIO->IsStreamActive(token)) {
-      toolbar.SetPlay(false);        //Pops
       toolbar.SetStop(true);         //Pushes stop down
 
       // change the selection
@@ -321,7 +332,6 @@ void DoPlayStopSelect(AudacityProject &project)
       toolbar.OnStop(evt);
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
       toolbar.SetStop(false);
 
       // Will automatically set mLastPlayMode

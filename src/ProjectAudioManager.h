@@ -36,16 +36,22 @@ public:
    void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
 
    bool Paused() const { return mPaused; }
-   
+
+   bool Playing() const;
+
    // Whether recording into this project (not just into some project) is
    // active
    bool Recording() const;
 
    // Whether the last attempt to start recording requested appending to tracks
    bool Appending() const { return mAppending; }
+   bool Looping() const { return mLooping; }
+   bool Cutting() const { return mCutting; }
 
    void SetPaused( bool value ) { mPaused = value; }
    void SetAppending( bool value ) { mAppending = value; }
+   void SetLooping( bool value ) { mLooping = value; }
+   void SetCutting( bool value ) { mCutting = value; }
 
 private:
    // Audio IO callback methods
@@ -63,6 +69,8 @@ private:
 
    bool mPaused{ false };
    bool mAppending{ false };
+   bool mLooping{ false };
+   bool mCutting{ false };
 };
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );

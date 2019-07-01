@@ -535,6 +535,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    bool playWhiteSpace /* = false */)
 // STRONG-GUARANTEE (for state of mCutPreviewTracks)
 {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    if (!CanStopAudioStream())
       return -1;
 
@@ -556,23 +558,12 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (backwards)
       std::swap(t0, t1);
 
-   {
-      PlayAppearance appearance;
-      switch( mode ) {
-         case PlayMode::cutPreviewPlay:
-            appearance = PlayAppearance::CutPreview; break;
-         case PlayMode::loopedPlay:
-            appearance = PlayAppearance::Looped; break;
-         default:
-            appearance = PlayAppearance::Straight; break;
-      }
-      SetPlay(true, appearance);
-   }
+   projectAudioManager.SetLooping( mode == PlayMode::loopedPlay );
+   projectAudioManager.SetCutting( mode == PlayMode::cutPreviewPlay );
 
    bool success = false;
    auto cleanup = finally( [&] {
       if (!success) {
-         SetPlay(false);
          SetStop(false);
       }
    } );
@@ -744,25 +735,28 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
 
 void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 {
+   // PRL: is this handler really ever reached?  Is the ControlToolBar ever
+   // focused?  Isn't there a global event filter that interprets the spacebar
+   // key (or other key chosen in preferences) and dispatches to DoPlayStop,
+   // according to CommandManager's table, before we come to this redundant
+   // function?
+
    if (event.ControlDown() || event.AltDown()) {
       event.Skip();
       return;
    }
 
    auto gAudioIO = AudioIOBase::Get();
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    // Does not appear to be needed on Linux. Perhaps on some other platform?
    // If so, "!CanStopAudioStream()" should probably apply.
    if (event.GetKeyCode() == WXK_SPACE) {
-      if (gAudioIO->IsStreamActive(
-         ProjectAudioIO::Get( mProject ).GetAudioIOToken()
-      )) {
-         SetPlay(false);
+      if ( projectAudioManager.Playing() || projectAudioManager.Recording() ) {
          SetStop(true);
          StopPlaying();
       }
       else if (!gAudioIO->IsBusy()) {
-         //SetPlay(true);// Not needed as done in PlayPlayRegion
          SetStop(false);
          PlayCurrentRegion();
       }
@@ -833,7 +827,9 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    SetStop(false);
    if(stopStream)
       gAudioIO->StopStream();
-   SetPlay(false);
+
+   projectAudioManager.SetLooping( false );
+   projectAudioManager.SetCutting( false );
 
    #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       gAudioIO->AILADisable();
@@ -1068,7 +1064,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    bool success = false;
    auto cleanup = finally([&] {
       if (!success) {
-         SetPlay(false);
          SetStop(false);
       }
    });
@@ -1295,6 +1290,28 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
    else {
       mRecord->PushDown();
       mRecord->SetAlternateIdx( projectAudioManager.Appending() ? 0 : 1 );
+   }
+
+   if ( !(projectAudioManager.Playing() || Scrubber::Get(mProject).HasMark())
+   ) {
+      mPlay->PopUp();
+      mPlay->SetAlternateIdx(
+         wxGetKeyState(WXK_CONTROL)
+         ? 2
+         : wxGetKeyState(WXK_SHIFT)
+            ? 1
+            : 0
+      );
+   }
+   else {
+      mPlay->PushDown();
+      mPlay->SetAlternateIdx(
+         projectAudioManager.Cutting()
+         ? 2
+         : projectAudioManager.Looping()
+            ? 1
+            : 0
+      );
    }
    
    UpdateStatusBar();

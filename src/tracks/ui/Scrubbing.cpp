@@ -330,7 +330,6 @@ void Scrubber::MarkScrubStart(
    mSeeking = seek;
    CheckMenuItems();
 
-   ctb.SetPlay(true, ControlToolBar::PlayAppearance::Straight );
    // Commented out for Bug 1421
    //   mSeeking
    //   ? ControlToolBar::PlayAppearance::Seek
@@ -731,14 +730,6 @@ void Scrubber::StopScrubbing()
    mScrubStartPosition = -1;
    mDragging = false;
    mSeeking = false;
-
-   if (!IsScrubbing())
-   {
-      // Marked scrub start, but
-      // didn't really play, but did change button apperance
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.SetPlay(false, ControlToolBar::PlayAppearance::Straight);
-   }
 
    AdornedRulerPanel::Get( *mProject ).DrawBothOverlays();
    CheckMenuItems();
