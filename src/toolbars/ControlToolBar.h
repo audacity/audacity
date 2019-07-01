@@ -95,9 +95,6 @@ class ControlToolBar final : public ToolBar {
    //These allow buttons to be controlled externally:
    void SetPlay(bool down, PlayAppearance appearance = PlayAppearance::Straight);
    void SetStop(bool down);
-   void SetRecord(bool down, bool altAppearance = false);
-
-   bool IsRecordDown() const;
 
    // A project is only allowed to stop an audio stream that it owns.
    bool CanStopAudioStream () const;

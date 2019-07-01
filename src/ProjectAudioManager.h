@@ -36,8 +36,16 @@ public:
    void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
 
    bool Paused() const { return mPaused; }
+   
+   // Whether recording into this project (not just into some project) is
+   // active
+   bool Recording() const;
+
+   // Whether the last attempt to start recording requested appending to tracks
+   bool Appending() const { return mAppending; }
 
    void SetPaused( bool value ) { mPaused = value; }
+   void SetAppending( bool value ) { mAppending = value; }
 
 private:
    // Audio IO callback methods
@@ -54,6 +62,7 @@ private:
    bool mTimerRecordCanceled{ false };
 
    bool mPaused{ false };
+   bool mAppending{ false };
 };
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );

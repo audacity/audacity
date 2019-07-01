@@ -192,6 +192,15 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    }
 }
 
+bool ProjectAudioManager::Recording() const
+{
+   auto gAudioIO = AudioIO::Get();
+   return
+      gAudioIO->IsBusy() &&
+      ControlToolBar::Get( mProject).CanStopAudioStream() &&
+      gAudioIO->GetNumCaptureChannels() > 0;
+}
+
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
 {

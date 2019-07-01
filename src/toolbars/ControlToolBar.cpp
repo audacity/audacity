@@ -455,7 +455,8 @@ void ControlToolBar::ReCreateButtons()
 
    if (recordDown)
    {
-      SetRecord(recordDown, recordShift);
+      mRecord->SetAlternateIdx(recordShift ? 1 : 0);
+      mRecord->PushDown();
    }
 
    EnableDisableButtons();
@@ -527,26 +528,6 @@ void ControlToolBar::SetStop(bool down)
    EnableDisableButtons();
 }
 
-void ControlToolBar::SetRecord(bool down, bool altAppearance)
-{
-   if (down)
-   {
-      mRecord->SetAlternateIdx(altAppearance ? 1 : 0);
-      mRecord->PushDown();
-   }
-   else
-   {
-      mRecord->SetAlternateIdx(0);
-      mRecord->PopUp();
-   }
-   EnableDisableButtons();
-}
-
-bool ControlToolBar::IsRecordDown() const
-{
-   return mRecord->IsDown();
-}
-
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    PlayMode mode,
@@ -593,7 +574,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       if (!success) {
          SetPlay(false);
          SetStop(false);
-         SetRecord(false);
       }
    } );
 
@@ -854,7 +834,6 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    if(stopStream)
       gAudioIO->StopStream();
    SetPlay(false);
-   SetRecord(false);
 
    #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       gAudioIO->AILADisable();
@@ -1067,6 +1046,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    bool altAppearance,
    const AudioIOStartStreamOptions &options)
 {
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
 
    // NB: The call may have the side effect of changing flags.
@@ -1079,22 +1060,16 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    // ...end of code from CommandHandler.
 
    auto gAudioIO = AudioIO::Get();
-   if (gAudioIO->IsBusy()) {
-      if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
-         mRecord->PopUp();
-      else
-         mRecord->PushDown();
+   if (gAudioIO->IsBusy())
       return false;
-   }
 
-   SetRecord(true, altAppearance);
+   projectAudioManager.SetAppending( !altAppearance );
 
    bool success = false;
    auto cleanup = finally([&] {
       if (!success) {
          SetPlay(false);
          SetStop(false);
-         SetRecord(false);
       }
    });
 
@@ -1313,6 +1288,15 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
    else
       mPause->PopUp();
 
+   if (!projectAudioManager.Recording()) {
+      mRecord->PopUp();
+      mRecord->SetAlternateIdx( wxGetKeyState(WXK_SHIFT) ? 1 : 0 );
+   }
+   else {
+      mRecord->PushDown();
+      mRecord->SetAlternateIdx( projectAudioManager.Appending() ? 0 : 1 );
+   }
+   
    UpdateStatusBar();
    EnableDisableButtons();
 }
@@ -1403,6 +1387,7 @@ int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
 wxString ControlToolBar::StateForStatusBar()
 {
    wxString state;
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    auto pProject = &mProject;
    auto scrubState = pProject
@@ -1412,7 +1397,7 @@ wxString ControlToolBar::StateForStatusBar()
       state = wxGetTranslation(scrubState);
    else if (mPlay->IsDown())
       state = wxGetTranslation(mStatePlay);
-   else if (mRecord->IsDown())
+   else if (projectAudioManager.Recording())
       state = wxGetTranslation(mStateRecord);
    else
       state = wxGetTranslation(mStateStop);
