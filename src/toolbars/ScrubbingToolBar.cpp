@@ -52,6 +52,7 @@ EVT_COMMAND_RANGE( STBFirstButton,
                   STBFirstButton + STBNumButtons - 1,
                   wxEVT_COMMAND_BUTTON_CLICKED,
                   ScrubbingToolBar::OnButton )
+EVT_IDLE( ScrubbingToolBar::OnIdle )
 END_EVENT_TABLE()
 
 //Standard contructor
@@ -223,7 +224,6 @@ void ScrubbingToolBar::EnableDisableButtons()
    seekButton->SetEnabled(true);
 
    AudacityProject *p = &mProject;
-   if (!p) return;
 
    auto &scrubber = Scrubber::Get( *p );
    const auto canScrub = scrubber.CanScrub();
@@ -260,6 +260,12 @@ void ScrubbingToolBar::EnableDisableButtons()
       barButton->PopUp();
    RegenerateTooltips();
    scrubber.CheckMenuItems();
+}
+
+void ScrubbingToolBar::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   EnableDisableButtons();
 }
 
 static RegisteredToolbarFactory factory{ ScrubbingBarID,

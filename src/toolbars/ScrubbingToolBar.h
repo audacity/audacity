@@ -72,6 +72,8 @@ private:
    wxImage *downImage;
    wxImage *hiliteImage;
 
+   void OnIdle( wxIdleEvent &evt );
+
 public:
 
    DECLARE_CLASS(ScrubbingToolBar)

@@ -30,7 +30,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
-#include "../../toolbars/ScrubbingToolBar.h"
 #include "../../toolbars/ToolManager.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
@@ -1120,10 +1119,6 @@ void Scrubber::OnScrubOrSeek(bool seek)
    auto &ruler = AdornedRulerPanel::Get( *mProject );
    // Update button images
    ruler.UpdateButtonStates();
-
-   auto scrubbingToolBar = &ScrubbingToolBar::Get( *mProject );
-   scrubbingToolBar->EnableDisableButtons();
-   scrubbingToolBar->RegenerateTooltips();
 }
 
 void Scrubber::OnScrub(const CommandContext&)
