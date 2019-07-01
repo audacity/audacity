@@ -384,11 +384,6 @@ void DoTogglePinnedHead( AudacityProject &project )
    TracksPrefs::SetPinnedHeadPreference(value, true);
    MenuManager::ModifyAllProjectToolbarMenus();
 
-   // Change what happens in case transport is in progress right now
-   auto ctb = ControlToolBar::Find( *GetActiveProject() );
-   if (ctb)
-      ctb->StartScrollingIfPreferred();
-
    auto &ruler = AdornedRulerPanel::Get( project );
    // Update button image
    ruler.UpdateButtonStates();

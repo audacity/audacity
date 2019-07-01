@@ -691,8 +691,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (!success)
       return -1;
 
-   StartScrollingIfPreferred();
-
    return token;
 }
 
@@ -794,8 +792,6 @@ void ControlToolBar::PlayDefault()
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
 {
-   StopScrolling();
-
    AudacityProject *project = &mProject;
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
@@ -1210,8 +1206,6 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
       if (success) {
          ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
          mBusyProject = p;
-
-         StartScrollingIfPreferred();
       }
       else {
          CancelRecording();
@@ -1275,7 +1269,8 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
    else
       mPause->PopUp();
 
-   if (!projectAudioManager.Recording()) {
+   bool recording = projectAudioManager.Recording();
+   if (!recording) {
       mRecord->PopUp();
       mRecord->SetAlternateIdx( wxGetKeyState(WXK_SHIFT) ? 1 : 0 );
    }
@@ -1284,8 +1279,8 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
       mRecord->SetAlternateIdx( projectAudioManager.Appending() ? 0 : 1 );
    }
 
-   if ( !(projectAudioManager.Playing() || Scrubber::Get(mProject).HasMark())
-   ) {
+   bool playing = projectAudioManager.Playing();
+   if ( !(playing || Scrubber::Get(mProject).HasMark()) ) {
       mPlay->PopUp();
       mPlay->SetAlternateIdx(
          wxGetKeyState(WXK_CONTROL)
@@ -1305,6 +1300,11 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
             : 0
       );
    }
+
+   if ( recording || playing )
+      StartScrollingIfPreferred();
+   else
+      StopScrolling();
 
    if ( projectAudioManager.Stopping() )
       mStop->PushDown();
@@ -1468,12 +1468,12 @@ void ControlToolBar::StartScrolling()
    using Mode = ProjectWindow::PlaybackScroller::Mode;
    const auto project = &mProject;
    if (project) {
-      auto gAudioIO = AudioIO::Get();
       auto mode = Mode::Pinned;
 
 #if 0
       // Enable these lines to pin the playhead right instead of center,
       // when recording but not overdubbing.
+      auto gAudioIO = AudioIO::Get();
       if (gAudioIO->GetNumCaptureChannels() > 0) {
          // recording
 
