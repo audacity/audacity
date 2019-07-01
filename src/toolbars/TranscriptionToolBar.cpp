@@ -496,6 +496,9 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          mEnvelope =
             std::make_unique<BoundedEnvelope>(
                true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
+         // values as in the constructor for TimeTrack
+         mEnvelope->SetRangeLower( 0.9 );
+         mEnvelope->SetRangeUpper( 1.1 );
       }
       // Set the speed range
       //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
