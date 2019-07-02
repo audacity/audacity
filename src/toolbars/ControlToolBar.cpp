@@ -1431,8 +1431,9 @@ wxString ControlToolBar::StateForStatusBar()
 
 void ControlToolBar::UpdateStatusBar()
 {
-   GetProjectFrame( mProject )
-      .GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
+   ProjectStatus::Get( mProject ).Set(
+      StateForStatusBar(), stateStatusBarField
+   );
 }
 
 bool ControlToolBar::IsTransportingPinned() const

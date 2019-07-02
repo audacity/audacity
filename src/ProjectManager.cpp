@@ -824,17 +824,29 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    RestartTimer();
 }
 
-void ProjectManager::OnStatusChange( wxCommandEvent & )
+void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 {
+   evt.Skip();
+
    auto &project = mProject;
-   auto &window = GetProjectFrame( project );
-   const auto &msg = ProjectStatus::Get( project ).Get();
-   window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
+
+   // Be careful to null-check the window.  We might get to this function
+   // during shut-down, but a timer hasn't been told to stop sending its
+   // messages yet.
+   auto pWindow = ProjectWindow::Find( &project );
+   if ( !pWindow )
+      return;
+   auto &window = *pWindow;
+
+   auto field = static_cast<StatusBarField>( evt.GetInt() );
+   const auto &msg = ProjectStatus::Get( project ).Get( field );
+   window.GetStatusBar()->SetStatusText(msg, field);
    
-   // When recording, let the NEW status message stay at least as long as
-   // the timer interval (if it is not replaced again by this function),
-   // before replacing it with the message about remaining disk capacity.
-   RestartTimer();
+   if ( field == mainStatusBarField )
+      // When recording, let the NEW status message stay at least as long as
+      // the timer interval (if it is not replaced again by this function),
+      // before replacing it with the message about remaining disk capacity.
+      RestartTimer();
 }
 
 wxString ProjectManager::GetHoursMinsString(int iMinutes)

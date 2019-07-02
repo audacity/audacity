@@ -544,8 +544,8 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       // cancel the cleanup:
       safetyFileName = wxT("");
 
-   window.GetStatusBar()->SetStatusText(
-      wxString::Format(_("Saved %s"), fileName), mainStatusBarField);
+   ProjectStatus::Get( proj ).Set(
+      wxString::Format(_("Saved %s"), fileName) );
 
    return true;
 }

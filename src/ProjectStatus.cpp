@@ -37,12 +37,19 @@ ProjectStatus::ProjectStatus( AudacityProject &project )
 
 ProjectStatus::~ProjectStatus() = default;
 
-void ProjectStatus::Set(const wxString &msg)
+const wxString &ProjectStatus::Get( StatusBarField field ) const
+{
+   return mLastStatusMessages[ field - 1 ];
+}
+
+void ProjectStatus::Set(const wxString &msg, StatusBarField field )
 {
    auto &project = mProject;
-   if ( msg != mLastMainStatusMessage ) {
-      mLastMainStatusMessage = msg;
+   wxString &lastMessage = mLastStatusMessages[ field - 1 ];
+   if ( msg != lastMessage ) {
+      lastMessage = msg;
       wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
+      evt.SetInt( field );
       project.ProcessEvent( evt );
    }
 }

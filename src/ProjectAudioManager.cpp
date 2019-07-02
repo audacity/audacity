@@ -81,7 +81,8 @@ void ProjectAudioManager::OnAudioIORate(int rate)
       x+50
    };
    statusBar->SetStatusWidths(4, widths);
-   statusBar->SetStatusText(display, rateStatusBarField);
+   
+   ProjectStatus::Get( project ).Set( display, rateStatusBarField );
 }
 
 void ProjectAudioManager::OnAudioIOStartRecording()

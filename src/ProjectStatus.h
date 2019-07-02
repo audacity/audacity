@@ -21,10 +21,13 @@ class wxWindow;
 enum StatusBarField : int {
    stateStatusBarField = 1,
    mainStatusBarField = 2,
-   rateStatusBarField = 3
+   rateStatusBarField = 3,
+   
+   nStatusBarFields = 3
 };
 
 // Type of event emitted by the project when its status message is set
+// GetInt() identifies the intended field of the status bar
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
@@ -40,10 +43,11 @@ public:
    ProjectStatus &operator= ( const ProjectStatus & ) = delete;
    ~ProjectStatus() override;
 
-   const wxString &Get() const { return mLastMainStatusMessage; }
-   void Set(const wxString &msg);
+   const wxString &Get( StatusBarField field = mainStatusBarField ) const;
+   void Set(const wxString &msg,
+      StatusBarField field = mainStatusBarField);
 
 private:
    AudacityProject &mProject;
-   wxString mLastMainStatusMessage;
+   wxString mLastStatusMessages[ nStatusBarFields ];
 };
