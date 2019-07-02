@@ -115,7 +115,6 @@ void DoMixAndRender
       trackPanel.SetFocus();
       trackPanel.SetFocusedTrack(pNewLeft);
       pNewLeft->EnsureVisible();
-      window.RedrawProject();
    }
 }
 
@@ -132,8 +131,6 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    // iter through them, all if none selected.
    for (auto left : count == 0 ? range : selectedRange )
       left->SetPan( PanValue );
-
-   window.RedrawProject();
 
    auto flags = UndoPush::AUTOSAVE;
    /*i18n-hint: One or more audio tracks have been panned*/
@@ -299,8 +296,6 @@ void DoAlign
       selectedRegion.move(delta);
 
    ProjectHistory::Get( project ).PushState(action, shortAction);
-
-   window.RedrawProject();
 }
 
 #ifdef EXPERIMENTAL_SCOREALIGN
@@ -590,7 +585,6 @@ void OnNewWaveTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new audio track"), _("New Track"));
 
-   window.RedrawProject();
    t->EnsureVisible();
 }
 
@@ -618,7 +612,6 @@ void OnNewStereoTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new stereo audio track"), _("New Track"));
 
-   window.RedrawProject();
    left->EnsureVisible();
 }
 
@@ -638,7 +631,6 @@ void OnNewLabelTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new label track"), _("New Track"));
 
-   window.RedrawProject();
    t->EnsureVisible();
 }
 
@@ -663,7 +655,6 @@ void OnNewTimeTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new time track"), _("New Track"));
 
-   window.RedrawProject();
    t->EnsureVisible();
 }
 
@@ -789,8 +780,7 @@ void OnResample(const CommandContext &context)
    }
 
    undoManager.StopConsolidating();
-   window.RedrawProject();
-
+ 
    // Need to reset
    window.FinishAutoScroll();
 }
@@ -818,7 +808,6 @@ void OnMuteAllTracks(const CommandContext &context)
    }
 
    ProjectHistory::Get( project ).ModifyState(true);
-   window.RedrawProject();
 }
 
 void OnUnmuteAllTracks(const CommandContext &context)
@@ -839,7 +828,6 @@ void OnUnmuteAllTracks(const CommandContext &context)
    }
 
    ProjectHistory::Get( project ).ModifyState(true);
-   window.RedrawProject();
 }
 
 void OnPanLeft(const CommandContext &context)
@@ -997,7 +985,6 @@ void OnScoreAlign(const CommandContext &context)
 
    if (result == SA_SUCCESS) {
       tracks->Replace(nt, holder);
-      project.RedrawProject();
       AudacityMessageBox(wxString::Format(
          _("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."),
          params.mMidiStart, params.mMidiEnd,
@@ -1027,9 +1014,6 @@ void OnSortTime(const CommandContext &context)
 
    ProjectHistory::Get( project )
       .PushState(_("Tracks sorted by time"), _("Sort by Time"));
-
-   auto &trackPanel = TrackPanel::Get( project );
-   trackPanel.Refresh(false);
 }
 
 void OnSortName(const CommandContext &context)
@@ -1039,9 +1023,6 @@ void OnSortName(const CommandContext &context)
 
    ProjectHistory::Get( project )
       .PushState(_("Tracks sorted by name"), _("Sort by Name"));
-
-   auto &trackPanel = TrackPanel::Get( project );
-   trackPanel.Refresh(false);
 }
 
 void OnSyncLock(const CommandContext &context)

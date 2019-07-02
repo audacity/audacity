@@ -428,7 +428,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    if (projectAudioIO.GetAudioIOToken()>0 &&
          !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
    {
-      window.FixScrollbars();
       projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
 
@@ -724,7 +723,6 @@ void TrackPanel::UpdateViewIfNoTracks()
       // Bug 972
       mViewInfo->h = 0;
 
-      mListener->TP_RedrawScrollbars();
       mListener->TP_HandleResize();
       GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
    }

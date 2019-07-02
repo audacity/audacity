@@ -391,7 +391,6 @@ void DoSelectClipBoundary(AudacityProject &project, bool next)
          selectedRegion.setT0(results[0].time);
 
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
 
       wxString message = ClipBoundaryMessage(results);
       trackPanel.MessageForScreenReader(message);
@@ -575,7 +574,6 @@ void DoSelectClip(AudacityProject &project, bool next)
       selectedRegion.setTimes(t0, t1);
       ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.ScrollIntoView(selectedRegion.t0());
-      trackPanel.Refresh(false);
 
       // create and send message to screen reader
       wxString message;
@@ -621,7 +619,6 @@ void DoCursorClipBoundary
       selectedRegion.setTimes(time, time);
       ProjectHistory::Get( project ).ModifyState(false);
       trackPanel.ScrollIntoView(selectedRegion.t0());
-      trackPanel.Refresh(false);
 
       wxString message = ClipBoundaryMessage(results);
       trackPanel.MessageForScreenReader(message);
@@ -711,7 +708,6 @@ void DoClipLeftOrRight
         tracks, isSyncLocked, right );
 
    trackPanel.ScrollIntoView(selectedRegion.t0());
-   trackPanel.Refresh(false);
 
    if (amount != 0.0) {
       wxString message = right? _("Time shifted clips to the right") :

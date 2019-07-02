@@ -2051,7 +2051,6 @@ void LabelTrackView::DoEditLabels
    if (dlg.ShowModal() == wxID_OK) {
       ProjectHistory::Get( project )
          .PushState(_("Edited labels"), _("Label"));
-      window.RedrawProject();
    }
 }
 

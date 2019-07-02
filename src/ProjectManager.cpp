@@ -463,7 +463,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       wxCommandEvent dummyEvent;
       ControlToolBar::Get( project ).OnStop(dummyEvent);
 
-      window.FixScrollbars();
       projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
    }
