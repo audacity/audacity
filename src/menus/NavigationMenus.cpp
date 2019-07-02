@@ -534,6 +534,8 @@ Handler()
 {
    UpdatePrefs();
 }
+Handler( const Handler & ) PROHIBITED;
+Handler &operator=( const Handler & ) PROHIBITED;
 
 }; // struct Handler
 

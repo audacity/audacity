@@ -50,6 +50,7 @@ protected:
 class PlayIndicatorOverlay final : public PlayIndicatorOverlayBase
 {
 public:
+   explicit
    PlayIndicatorOverlay(AudacityProject *project);
 
 private:

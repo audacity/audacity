@@ -29,6 +29,8 @@ public:
    static const ProjectFileIO &Get( const AudacityProject &project );
 
    explicit ProjectFileIO( AudacityProject &project );
+   ProjectFileIO( const ProjectFileIO & ) PROHIBITED;
+   ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
    ~ProjectFileIO();
 
    bool WarnOfLegacyFile( );

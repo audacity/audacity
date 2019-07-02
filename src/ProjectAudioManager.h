@@ -29,6 +29,8 @@ public:
    explicit ProjectAudioManager( AudacityProject &project )
       : mProject{ project }
    {}
+   ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
+   ProjectAudioManager &operator=( const ProjectAudioManager & ) PROHIBITED;
    ~ProjectAudioManager() override;
 
    bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }

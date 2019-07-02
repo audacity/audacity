@@ -62,7 +62,10 @@ public:
    static MenuManager &Get( AudacityProject &project );
    static const MenuManager &Get( const AudacityProject &project );
 
+   explicit
    MenuManager( AudacityProject &project );
+   MenuManager( const MenuManager & ) PROHIBITED;
+   MenuManager &operator=( const MenuManager & ) PROHIBITED;
    ~MenuManager();
 
    static void ModifyUndoMenuItems(AudacityProject &project);

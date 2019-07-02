@@ -27,6 +27,8 @@ public:
    explicit ProjectHistory( AudacityProject &project )
       : mProject{ project }
    {}
+   ProjectHistory( const ProjectHistory & ) PROHIBITED;
+   ProjectHistory &operator=( const ProjectHistory & ) PROHIBITED;
    ~ProjectHistory() override;
 
    void InitialState();

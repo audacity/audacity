@@ -44,7 +44,10 @@ public:
    static Scrubber &Get( AudacityProject &project );
    static const Scrubber &Get( const AudacityProject &project );
 
+   explicit
    Scrubber(AudacityProject *project);
+   Scrubber( const Scrubber & ) PROHIBITED;
+   Scrubber &operator=( const Scrubber & ) PROHIBITED;
    ~Scrubber();
 
    static bool ShouldScrubPinned();
@@ -192,6 +195,7 @@ class ScrubbingOverlay final
    , public ClientData::Base
 {
 public:
+   explicit
    ScrubbingOverlay(AudacityProject *project);
 
 private:

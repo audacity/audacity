@@ -22,6 +22,7 @@ class EditCursorOverlay final
    , public ClientData::Base
 {
 public:
+   explicit
    EditCursorOverlay(AudacityProject *project, bool isMaster = true);
 
 private:

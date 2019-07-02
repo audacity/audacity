@@ -166,7 +166,7 @@ namespace {
 
 // Attach an object to each project.  It receives track list events and updates
 // track Y coordinates
-struct TrackPositioner : ClientData::Base, wxEvtHandler
+struct TrackPositioner final : ClientData::Base, wxEvtHandler
 {
    AudacityProject &mProject;
 
@@ -182,6 +182,8 @@ struct TrackPositioner : ClientData::Base, wxEvtHandler
       TrackList::Get( project ).Bind(
          EVT_TRACKLIST_RESIZING, &TrackPositioner::OnUpdate, this );
    }
+   TrackPositioner( const TrackPositioner & ) PROHIBITED;
+   TrackPositioner &operator=( const TrackPositioner & ) PROHIBITED;
 
    void OnUpdate( TrackListEvent & e )
    {

@@ -26,6 +26,8 @@ public:
    static const ProjectAudioIO &Get( const AudacityProject &project );
 
    explicit ProjectAudioIO( AudacityProject &project );
+   ProjectAudioIO( const ProjectAudioIO & ) PROHIBITED;
+   ProjectAudioIO &operator=( const ProjectAudioIO & ) PROHIBITED;
    ~ProjectAudioIO();
 
    int GetAudioIOToken() const;

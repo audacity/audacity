@@ -744,7 +744,7 @@ bool Scrubber::IsScrubbing() const
 {
    if (mScrubToken <= 0)
       return false;
-   auto projectAudioIO = ProjectAudioIO::Get( *mProject );
+   auto &projectAudioIO = ProjectAudioIO::Get( *mProject );
    if (mScrubToken == projectAudioIO.GetAudioIOToken() &&
             projectAudioIO.IsAudioActive())
       return true;

@@ -60,7 +60,9 @@ public:
       ChangedSyncLock,
    };
 
-   ProjectSettings( AudacityProject &project );
+   explicit ProjectSettings( AudacityProject &project );
+   ProjectSettings( const ProjectSettings & ) PROHIBITED;
+   ProjectSettings &operator=( const ProjectSettings & ) PROHIBITED;
 
    sampleFormat GetDefaultFormat() const { return mDefaultFormat; }
 

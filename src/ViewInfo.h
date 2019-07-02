@@ -96,6 +96,8 @@ public:
    static const ViewInfo &Get( const AudacityProject &project );
 
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
+   ViewInfo( const ViewInfo & ) PROHIBITED;
+   ViewInfo &operator=( const ViewInfo & ) PROHIBITED;
 
    int GetHeight() const { return mHeight; }
    void SetHeight( int height ) { mHeight = height; }

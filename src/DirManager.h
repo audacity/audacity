@@ -100,6 +100,8 @@ class PROFILE_DLL_API DirManager final
 
    static std::shared_ptr< DirManager > Create();
 
+   DirManager( const DirManager & ) PROHIBITED;
+   DirManager &operator=( const DirManager & ) PROHIBITED;
    virtual ~DirManager();
 
    size_t NumBlockFiles() const { return mBlockFileHash.size(); }

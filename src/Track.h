@@ -1579,6 +1579,8 @@ class AUDACITY_DLL_API TrackFactory final
       , mZoomInfo(zoomInfo)
    {
    }
+   TrackFactory( const TrackFactory & ) PROHIBITED;
+   TrackFactory &operator=( const TrackFactory & ) PROHIBITED;
 
  private:
    const std::shared_ptr<DirManager> mDirManager;

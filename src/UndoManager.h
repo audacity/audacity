@@ -108,13 +108,14 @@ inline UndoPush operator | (UndoPush a, UndoPush b)
 inline UndoPush operator & (UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
-class AUDACITY_DLL_API UndoManager
+class AUDACITY_DLL_API UndoManager final
    : public ClientData::Base
 {
  public:
    static UndoManager &Get( AudacityProject &project );
    static const UndoManager &Get( const AudacityProject &project );
  
+   explicit
    UndoManager( AudacityProject &project );
    ~UndoManager();
 

@@ -34,6 +34,8 @@ public:
    static const ProjectManager &Get( const AudacityProject &project );
 
    explicit ProjectManager( AudacityProject &project );
+   ProjectManager( const ProjectManager & ) PROHIBITED;
+   ProjectManager &operator=( const ProjectManager & ) PROHIBITED;
    ~ProjectManager() override;
 
    // This is the factory for projects:

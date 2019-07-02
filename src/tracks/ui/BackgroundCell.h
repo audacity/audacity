@@ -30,6 +30,7 @@ public:
    static BackgroundCell &Get( AudacityProject &project );
    static const BackgroundCell &Get( const AudacityProject &project );
 
+   explicit
    BackgroundCell(AudacityProject *pProject)
       : mpProject(pProject)
    {}
