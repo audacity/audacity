@@ -17,6 +17,8 @@ Paul Licameli split from ProjectManager.h
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 
+enum StatusBarField : int;
+
 class ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
@@ -26,9 +28,7 @@ public:
    static ProjectAudioManager &Get( AudacityProject &project );
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
-   explicit ProjectAudioManager( AudacityProject &project )
-      : mProject{ project }
-   {}
+   explicit ProjectAudioManager( AudacityProject &project );
    ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
    ProjectAudioManager &operator=( const ProjectAudioManager & ) PROHIBITED;
    ~ProjectAudioManager() override;
@@ -77,6 +77,11 @@ private:
    bool mLooping{ false };
    bool mCutting{ false };
    bool mStopping{ false };
+
+   int mDisplayedRate{ 0 };
+   static std::pair< std::vector< wxString >, unsigned >
+      StatusWidthFunction(
+         const AudacityProject &project, StatusBarField field);
 };
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );

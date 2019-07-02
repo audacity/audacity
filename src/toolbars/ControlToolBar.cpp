@@ -103,6 +103,13 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
+static const wxString
+     sStatePlay = XO("Playing")
+   , sStateStop = XO("Stopped")
+   , sStateRecord = XO("Recording")
+   , sStatePause = XO("Paused")
+;
+
 //Standard constructor
 // This was called "Control" toolbar in the GUI before - now it is "Transport".
 // Note that we use the legacy "Control" string as the section because this
@@ -118,10 +125,6 @@ ControlToolBar::ControlToolBar( AudacityProject &project )
 
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
    is playing or recording or stopped, and whether it is paused. */
-   mStatePlay = XO("Playing");
-   mStateStop = XO("Stopped");
-   mStateRecord = XO("Recording");
-   mStatePause = XO("Paused");
 }
 
 ControlToolBar::~ControlToolBar()
@@ -1375,30 +1378,28 @@ void ControlToolBar::ClearCutPreviewTracks()
 }
 
 // works out the width of the field in the status bar needed for the state (eg play, record pause)
-int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
-{
-   int xMax = 0;
-   const auto pauseString = wxT(" ") + wxGetTranslation(mStatePause);
+static ProjectStatus::RegisteredStatusWidthFunction
+registeredStatusWidthFunction{
+   []( const AudacityProject &, StatusBarField field )
+      -> ProjectStatus::StatusWidthResult
+   {
+      if ( field == stateStatusBarField ) {
+         const auto pauseString = wxT(" ") + GetCustomTranslation(sStatePause);
 
-   auto update = [&] (const wxString &state) {
-      int x, y;
-      sb->GetTextExtent(
-         wxGetTranslation(state) + pauseString + wxT("."),
-         &x, &y
-      );
-      xMax = std::max(x, xMax);
-   };
+         std::vector<wxString> strings;
+         for ( auto pString :
+            { &sStatePlay, &sStateStop, &sStateRecord } )
+         {
+            strings.push_back(
+               GetCustomTranslation(*pString) + pauseString + wxT(".") );
+         }
 
-   update(mStatePlay);
-   update(mStateStop);
-   update(mStateRecord);
-
-   // Note that Scrubbing + Paused is not allowed.
-   for(const auto &state : Scrubber::GetAllUntranslatedStatusStrings())
-      update(state);
-
-   return xMax + 30;    // added constant needed because xMax isn't large enough for some reason, plus some space.
-}
+         // added constant needed because xMax isn't large enough for some reason, plus some space.
+         return { std::move( strings ), 30 };
+      }
+      return {};
+   }
+};
 
 wxString ControlToolBar::StateForStatusBar()
 {
@@ -1412,16 +1413,16 @@ wxString ControlToolBar::StateForStatusBar()
    if (!scrubState.empty())
       state = wxGetTranslation(scrubState);
    else if (mPlay->IsDown())
-      state = wxGetTranslation(mStatePlay);
+      state = wxGetTranslation(sStatePlay);
    else if (projectAudioManager.Recording())
-      state = wxGetTranslation(mStateRecord);
+      state = wxGetTranslation(sStateRecord);
    else
-      state = wxGetTranslation(mStateStop);
+      state = wxGetTranslation(sStateStop);
 
    if (mPause->IsDown())
    {
       state.Append(wxT(" "));
-      state.Append(wxGetTranslation(mStatePause));
+      state.Append(wxGetTranslation(sStatePause));
    }
 
    state.Append(wxT("."));

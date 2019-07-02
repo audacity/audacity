@@ -838,6 +838,8 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
       return;
    auto &window = *pWindow;
 
+   window.UpdateStatusWidths();
+
    auto field = static_cast<StatusBarField>( evt.GetInt() );
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    window.GetStatusBar()->SetStatusText(msg, field);

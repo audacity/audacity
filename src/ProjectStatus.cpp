@@ -37,6 +37,26 @@ ProjectStatus::ProjectStatus( AudacityProject &project )
 
 ProjectStatus::~ProjectStatus() = default;
 
+namespace
+{
+   ProjectStatus::StatusWidthFunctions &statusWidthFunctions()
+   {
+      static ProjectStatus::StatusWidthFunctions theFunctions;
+      return theFunctions;
+   }
+}
+
+ProjectStatus::RegisteredStatusWidthFunction::RegisteredStatusWidthFunction(
+   const StatusWidthFunction &function )
+{
+   statusWidthFunctions().emplace_back( function );
+}
+
+auto ProjectStatus::GetStatusWidthFunctions() -> const StatusWidthFunctions &
+{
+   return statusWidthFunctions();
+}
+
 const wxString &ProjectStatus::Get( StatusBarField field ) const
 {
    return mLastStatusMessages[ field - 1 ];
