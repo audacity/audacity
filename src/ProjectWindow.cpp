@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectStatus.h"
 #include "RefreshCode.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"

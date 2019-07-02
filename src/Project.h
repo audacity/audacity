@@ -29,12 +29,6 @@ AUDACITY_DLL_API AudacityProject *GetActiveProject();
 // For use by ProjectManager only:
 extern void SetActiveProject(AudacityProject * project);
 
-enum StatusBarField {
-   stateStatusBarField = 1,
-   mainStatusBarField = 2,
-   rateStatusBarField = 3
-};
-
 /// \brief an object of class AllProjects acts like a standard library
 /// container, but refers to a global array of open projects.  So you can
 /// iterate easily over shared pointers to them with range-for :
@@ -96,10 +90,6 @@ using AttachedWindows = ClientData::Site<
    AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
 >;
 
-// Type of event emitted by the project when its status message is set
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
-
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
@@ -132,9 +122,6 @@ class AUDACITY_DLL_API AudacityProject final
 
    int GetProjectNumber(){ return mProjectNo;}
    
-   const wxString &GetStatus() const { return mLastMainStatusMessage; }
-   void SetStatus(const wxString &msg);
-
  private:
 
    // The project's name and file info
@@ -148,8 +135,6 @@ class AUDACITY_DLL_API AudacityProject final
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
  private:
-   wxString mLastMainStatusMessage;
-
    wxWeakRef< wxFrame > mFrame{};
 };
 

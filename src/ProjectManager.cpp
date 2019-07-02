@@ -30,6 +30,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
+#include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "TrackPanel.h"
@@ -827,7 +828,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent & )
 {
    auto &project = mProject;
    auto &window = GetProjectFrame( project );
-   const auto &msg = project.GetStatus();
+   const auto &msg = ProjectStatus::Get( project ).Get();
    window.GetStatusBar()->SetStatusText(msg, mainStatusBarField);
    
    // When recording, let the NEW status message stay at least as long as
