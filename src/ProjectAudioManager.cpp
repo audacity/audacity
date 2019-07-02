@@ -98,7 +98,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    auto &dirManager = DirManager::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame( project );
 
    // Only push state if we were capturing and not monitoring
    if (projectAudioIO.GetAudioIOToken() > 0)
