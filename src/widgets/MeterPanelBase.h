@@ -27,6 +27,9 @@ public:
    virtual bool IsMeterDisabled() const = 0;
    virtual float GetMaxPeak() const = 0;
 
+   virtual bool IsClipping() const = 0;
+   virtual int GetDBRange() const = 0;
+
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }
 
