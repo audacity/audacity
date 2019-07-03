@@ -872,6 +872,8 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
 
    if (!pThis)
       return;
+   if (pThis->IsBeingDeleted())
+      return;
 
    auto &project = pThis->mProject ;
    auto &tracks = TrackList::Get( project );

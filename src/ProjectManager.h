@@ -74,9 +74,6 @@ private:
 
    std::unique_ptr<wxTimer> mTimer;
 
-   // See explanation in OnCloseWindow
-   bool mIsBeingDeleted{ false };
-
    DECLARE_EVENT_TABLE()
 
    static bool sbWindowRectAlreadySaved;
