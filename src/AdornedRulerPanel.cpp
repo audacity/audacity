@@ -34,6 +34,7 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
+#include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "RefreshCode.h"
 #include "Snap.h"
@@ -2207,7 +2208,7 @@ void AdornedRulerPanel::ProcessUIHandleResult
 
 void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
 {
-   GetProject()->SetStatus(message);
+   ProjectStatus::Get( *GetProject() ).Set(message);
 }
 
 void AdornedRulerPanel::CreateOverlays()

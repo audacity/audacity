@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectStatus.h"
 #include "RefreshCode.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
@@ -26,7 +27,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveTrack.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
-#include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
@@ -814,13 +814,7 @@ void ProjectWindow::Init()
 #endif
    mIconized = false;
 
-   int widths[] = {
-      0,
-      ControlToolBar::Get( project ).WidthForStatusBar(statusBar),
-      -1,
-      150
-   };
-   statusBar->SetStatusWidths(4, widths);
+   UpdateStatusWidths();
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    statusBar->SetStatusText(msg, mainStatusBarField);
@@ -903,6 +897,12 @@ void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
          pToolBar->ReCreateButtons();
    }
    AdornedRulerPanel::Get( project ).ReCreateButtons();
+}
+
+void ProjectWindow::UpdatePrefs()
+{
+   // Update status bar widths in case of language change
+   UpdateStatusWidths();
 }
 
 void ProjectWindow::FinishAutoScroll()
@@ -1338,6 +1338,33 @@ void ProjectWindow::HandleResize()
 bool ProjectWindow::IsIconized() const
 {
    return mIconized;
+}
+
+void ProjectWindow::UpdateStatusWidths()
+{
+   enum { nWidths = nStatusBarFields + 1 };
+   int widths[ nWidths ]{ 0 };
+   widths[ rateStatusBarField ] = 150;
+   const auto statusBar = GetStatusBar();
+   const auto &functions = ProjectStatus::GetStatusWidthFunctions();
+   // Start from 1 not 0
+   // Specifying a first column always of width 0 was needed for reasons
+   // I forget now
+   for ( int ii = 1; ii <= nStatusBarFields; ++ii ) {
+      int &width = widths[ ii ];
+      for ( const auto &function : functions ) {
+         auto results =
+            function( mProject, static_cast< StatusBarField >( ii ) );
+         for ( const auto &string : results.first ) {
+            int w;
+            statusBar->GetTextExtent(string, &w, nullptr);
+            width = std::max<int>( width, w + results.second );
+         }
+      }
+   }
+   // The main status field is not fixed width
+   widths[ mainStatusBarField ] = -1;
+   statusBar->SetStatusWidths( nWidths, widths );
 }
 
 void ProjectWindow::OnIconize(wxIconizeEvent &event)

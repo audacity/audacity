@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include <memory>
 #include <wx/frame.h> // to inherit
 #include "TrackPanelListener.h" // to inherit
+#include "Prefs.h"
 
 class AudacityProject;
 class Track;
@@ -25,6 +26,7 @@ class wxPanel;
 /// and zooming
 class ProjectWindow final : public wxFrame
    , public TrackPanelListener
+   , public PrefsListener
 {
 public:
    static ProjectWindow &Get( AudacityProject &project );
@@ -52,6 +54,8 @@ public:
 
    wxWindow *GetMainPage() { return mMainPage; }
    wxPanel *GetTopPanel() { return mTopPanel; }
+
+   void UpdateStatusWidths();
 
    class PlaybackScroller final : public wxEvtHandler
    {
@@ -135,6 +139,9 @@ public:
  private:
 
    void OnThemeChange(wxCommandEvent & evt);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
  public:
    // Message Handlers

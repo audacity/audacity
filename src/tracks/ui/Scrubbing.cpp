@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
 #include "../../ProjectSettings.h"
+#include "../../ProjectStatus.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
@@ -1139,13 +1140,14 @@ END_EVENT_TABLE()
 
 static_assert(nMenuItems == 3, "wrong number of items");
 
+static wxString sPlayAtSpeedStatus = XO("Playing at Speed");
+
 const wxString &Scrubber::GetUntranslatedStateString() const
 {
    static wxString empty;
 
    if (IsSpeedPlaying()) {
-      static wxString result = XO("Playing at Speed");
-      return result;
+      return sPlayAtSpeedStatus;
    }
    else if (HasMark()) {
       auto &item = FindMenuItem(Seeks() || TemporarilySeeks());
@@ -1168,17 +1170,28 @@ wxString Scrubber::StatusMessageForWave() const
 
 
 
-std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
-{
-   using namespace std;
-   vector<wxString> results;
-   for (const auto &item : menuItems) {
-      const auto &status = item.GetStatus();
-      if (!status.empty())
-         results.push_back(status);
+static ProjectStatus::RegisteredStatusWidthFunction
+registeredStatusWidthFunction{
+   []( const AudacityProject &, StatusBarField field )
+      -> ProjectStatus::StatusWidthResult
+   {
+      if ( field == stateStatusBarField ) {
+         std::vector< wxString > strings;
+         // Note that Scrubbing + Paused is not allowed.
+         for (const auto &item : menuItems)
+            strings.push_back( GetCustomTranslation( item.GetStatus() ) );
+         strings.push_back(
+            GetCustomTranslation( sPlayAtSpeedStatus ) +
+            wxT(" ") +
+            GetCustomTranslation( XO("Paused") ) +
+            wxT(".")
+         );
+         // added constant needed because xMax isn't large enough for some reason, plus some space.
+         return { std::move( strings ), 30 };
+      }
+      return {};
    }
-   return results;
-}
+};
 
 bool Scrubber::CanScrub() const
 {

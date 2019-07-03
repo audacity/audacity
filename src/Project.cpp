@@ -18,7 +18,6 @@
 #include <wx/display.h>
 #include <wx/frame.h>
 
-wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 size_t AllProjects::size() const
@@ -143,17 +142,6 @@ wxString AudacityProject::GetProjectName() const
       name = name.Mid(0, len - 4);
 
    return name;
-}
-
-// TrackPanel callback method
-void AudacityProject::SetStatus(const wxString &msg)
-{
-   auto &project = *this;
-   if ( msg != mLastMainStatusMessage ) {
-      mLastMainStatusMessage = msg;
-      wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
-      project.ProcessEvent( evt );
-   }
 }
 
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )

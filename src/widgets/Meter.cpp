@@ -69,6 +69,7 @@
 #include "../prefs/GUISettings.h"
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
+#include "../ProjectStatus.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -757,14 +758,14 @@ void MeterPanel::OnMouse(wxMouseEvent &evt)
 
   #if wxUSE_TOOLTIPS // Not available in wxX11
    if (evt.Leaving()){
-      GetActiveProject()->SetStatus(wxT(""));
+      ProjectStatus::Get( *GetActiveProject() ).Set(wxT(""));
    }
    else if (evt.Entering()) {
       // Display the tooltip in the status bar
       wxToolTip * pTip = this->GetToolTip();
       if( pTip ) {
          wxString tipText = pTip->GetTip();
-         GetActiveProject()->SetStatus(tipText);
+         ProjectStatus::Get( *GetActiveProject() ).Set(tipText);
       }
    }
   #endif

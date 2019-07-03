@@ -1234,10 +1234,11 @@
 		5E18CFF322931D3D00E75250 /* AudacityMessageBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E18CFF222931D3D00E75250 /* AudacityMessageBox.cpp */; };
 		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
 		5E19F59922A9665500E3F88E /* AutoRecoveryDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */; };
+		5E1B0BCC22CBA4F3008AA220 /* ProjectStatus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1B0BCA22CBA4F3008AA220 /* ProjectStatus.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
-		5E2B3E6222BF9621005042E1 /* RealtimeEffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */; };
 		5E2B3E5C22BD9798005042E1 /* SelectUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E5A22BD9798005042E1 /* SelectUtilities.cpp */; };
 		5E2B3E5F22BD97A7005042E1 /* TrackUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */; };
+		5E2B3E6222BF9621005042E1 /* RealtimeEffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */; };
 		5E2BF3852193A2A500995694 /* TrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2BF3832193A2A500995694 /* TrackView.cpp */; };
 		5E2BF3882193A2BD00995694 /* TimeTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2BF3862193A2BD00995694 /* TimeTrackView.cpp */; };
 		5E2BF38B2193A2E400995694 /* WaveTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2BF3892193A2E400995694 /* WaveTrackView.cpp */; };
@@ -3238,15 +3239,17 @@
 		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
 		5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutoRecoveryDialog.cpp; sourceTree = "<group>"; };
 		5E19F59822A9665500E3F88E /* AutoRecoveryDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoRecoveryDialog.h; sourceTree = "<group>"; };
+		5E1B0BCA22CBA4F3008AA220 /* ProjectStatus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectStatus.cpp; sourceTree = "<group>"; };
+		5E1B0BCB22CBA4F3008AA220 /* ProjectStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectStatus.h; sourceTree = "<group>"; };
 		5E1C3F4D218F7604002CD087 /* TrackPanelDrawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelDrawable.h; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
-		5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RealtimeEffectManager.cpp; sourceTree = "<group>"; };
-		5E2B3E6122BF9621005042E1 /* RealtimeEffectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealtimeEffectManager.h; sourceTree = "<group>"; };
 		5E2B3E5A22BD9798005042E1 /* SelectUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectUtilities.cpp; sourceTree = "<group>"; };
 		5E2B3E5B22BD9798005042E1 /* SelectUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectUtilities.h; sourceTree = "<group>"; };
 		5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackUtilities.cpp; sourceTree = "<group>"; };
 		5E2B3E5E22BD97A7005042E1 /* TrackUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackUtilities.h; sourceTree = "<group>"; };
+		5E2B3E6022BF9621005042E1 /* RealtimeEffectManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RealtimeEffectManager.cpp; sourceTree = "<group>"; };
+		5E2B3E6122BF9621005042E1 /* RealtimeEffectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealtimeEffectManager.h; sourceTree = "<group>"; };
 		5E2BF3832193A2A500995694 /* TrackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackView.cpp; sourceTree = "<group>"; };
 		5E2BF3842193A2A500995694 /* TrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackView.h; sourceTree = "<group>"; };
 		5E2BF3862193A2BD00995694 /* TimeTrackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeTrackView.cpp; sourceTree = "<group>"; };
@@ -4440,6 +4443,7 @@
 				5E135A3A229EDF2E0076E983 /* ProjectManager.cpp */,
 				5E3A530622AD277A00C4ADB8 /* ProjectSelectionManager.cpp */,
 				5E135A34229EDBE80076E983 /* ProjectSettings.cpp */,
+				5E1B0BCA22CBA4F3008AA220 /* ProjectStatus.cpp */,
 				5E135A46229EE5530076E983 /* ProjectWindow.cpp */,
 				28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */,
 				EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */,
@@ -4573,6 +4577,7 @@
 				5E135A3B229EDF2E0076E983 /* ProjectManager.h */,
 				5E3A530722AD277A00C4ADB8 /* ProjectSelectionManager.h */,
 				5E135A35229EDBE80076E983 /* ProjectSettings.h */,
+				5E1B0BCB22CBA4F3008AA220 /* ProjectStatus.h */,
 				5E135A47229EE5530076E983 /* ProjectWindow.h */,
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
@@ -8671,6 +8676,7 @@
 				287E207F102561F300BF47A2 /* PluginManager.cpp in Sources */,
 				5E7396501DAFD98400BA0A4D /* SliderHandle.cpp in Sources */,
 				28851FAB1027F16500152EE1 /* Command.cpp in Sources */,
+				5E1B0BCC22CBA4F3008AA220 /* ProjectStatus.cpp in Sources */,
 				282B70341B682342009A1618 /* WaveformSettings.cpp in Sources */,
 				28851FAC1027F16500152EE1 /* CommandSignature.cpp in Sources */,
 				5E1512621DB000DC00702E29 /* TimeTrackVRulerControls.cpp in Sources */,

@@ -125,8 +125,6 @@ class ControlToolBar final : public ToolBar {
    void ReCreateButtons() override;
    void RegenerateTooltips() override;
 
-   int WidthForStatusBar(wxStatusBar* const);
-
    // Starting and stopping of scrolling display
    void StartScrollingIfPreferred();
    void StartScrolling();
@@ -187,12 +185,6 @@ class ControlToolBar final : public ToolBar {
    wxBoxSizer *mSizer;
 
    std::shared_ptr<TrackList> mCutPreviewTracks;
-
-   // strings for status bar
-   wxString mStatePlay;
-   wxString mStateStop;
-   wxString mStateRecord;
-   wxString mStatePause;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
 

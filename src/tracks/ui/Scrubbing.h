@@ -123,9 +123,6 @@ public:
    const wxString &GetUntranslatedStateString() const;
    wxString StatusMessageForWave() const;
 
-   // All possible status strings.
-   static std::vector<wxString> GetAllUntranslatedStatusStrings();
-
    void Pause(bool paused);
    bool IsPaused() const;
    void CheckMenuItems();

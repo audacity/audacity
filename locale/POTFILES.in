@@ -187,6 +187,8 @@ src/ProjectSelectionManager.cpp
 src/ProjectSelectionManager.h
 src/ProjectSettings.cpp
 src/ProjectSettings.h
+src/ProjectStatus.cpp
+src/ProjectStatus.h
 src/ProjectWindow.cpp
 src/ProjectWindow.h
 src/RealFFTf.cpp

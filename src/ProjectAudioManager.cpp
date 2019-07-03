@@ -22,7 +22,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
+#include "ProjectStatus.h"
 #include "TimeTrack.h"
 #include "UndoManager.h"
 #include "toolbars/ControlToolBar.h"
@@ -48,39 +48,49 @@ const ProjectAudioManager &ProjectAudioManager::Get(
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
+ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
+   : mProject{ project }
+{
+   static ProjectStatus::RegisteredStatusWidthFunction
+      registerStatusWidthFunction{ StatusWidthFunction };
+}
+
 ProjectAudioManager::~ProjectAudioManager() = default;
+
+static wxString FormatRate( int rate )
+{
+   if (rate > 0) {
+      return wxString::Format(_("Actual Rate: %d"), rate);
+   }
+   else
+      // clear the status field
+      return {};
+}
+
+auto ProjectAudioManager::StatusWidthFunction(
+   const AudacityProject &project, StatusBarField field )
+   -> ProjectStatus::StatusWidthResult
+{
+   if ( field == rateStatusBarField ) {
+      auto &audioManager = ProjectAudioManager::Get( project );
+      int rate = audioManager.mDisplayedRate;
+      return {
+         { { FormatRate( rate ) } },
+         50
+      };
+   }
+   return {};
+}
 
 void ProjectAudioManager::OnAudioIORate(int rate)
 {
    auto &project = mProject;
 
-   // Be careful to null-check the window.  We might get to this function
-   // during shut-down, but a timer hasn't been told to stop sending its
-   // messages yet.
-   auto pWindow = ProjectWindow::Find( &project );
-   if ( !pWindow )
-      return;
-   auto &window = *pWindow;
+   mDisplayedRate = rate;
 
-   wxString display;
-   if (rate > 0) {
-      display = wxString::Format(_("Actual Rate: %d"), rate);
-   }
-   else
-      // clear the status field
-      ;
+   wxString display = FormatRate( rate );
 
-   int x, y;
-   auto statusBar = window.GetStatusBar();
-   statusBar->GetTextExtent(display, &x, &y);
-   int widths[] = {
-      0,
-      ControlToolBar::Get( project ).WidthForStatusBar(statusBar),
-      -1,
-      x+50
-   };
-   statusBar->SetStatusWidths(4, widths);
-   statusBar->SetStatusText(display, rateStatusBarField);
+   ProjectStatus::Get( project ).Set( display, rateStatusBarField );
 }
 
 void ProjectAudioManager::OnAudioIOStartRecording()

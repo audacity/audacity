@@ -56,6 +56,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
+#include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
@@ -673,7 +674,7 @@ void TrackPanel::UpdateStatusMessage( const wxString &st )
    if (HasEscape())
    /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
-   GetProject()->SetStatus(status);
+   ProjectStatus::Get( *GetProject() ).Set( status );
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -724,7 +725,8 @@ void TrackPanel::UpdateViewIfNoTracks()
       mViewInfo->h = 0;
 
       mListener->TP_HandleResize();
-      GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
+      //STM: Clear message if all tracks are removed
+      ProjectStatus::Get( *GetProject() ).Set(wxT(""));
    }
 }
 

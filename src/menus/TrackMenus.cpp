@@ -13,6 +13,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
+#include "../ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../ShuttleGui.h"
@@ -1165,7 +1166,7 @@ void OnTrackClose(const CommandContext &context)
 
    if (isAudioActive)
    {
-      project.SetStatus(
+      ProjectStatus::Get( project ).Set(
          _("Can't delete track with active audio"));
       wxBell();
       return;
