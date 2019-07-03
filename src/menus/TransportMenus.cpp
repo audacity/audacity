@@ -207,7 +207,7 @@ void OnPlayStop(const CommandContext &context)
 
 void OnPlayStopSelect(const CommandContext &context)
 {
-   DoPlayStopSelect( context.project );
+   ProjectAudioManager::Get( context.project ).DoPlayStopSelect();
 }
 
 void OnPlayLooped(const CommandContext &context)

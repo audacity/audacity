@@ -110,6 +110,9 @@ public:
 
    void StopIfPaused();
 
+   bool DoPlayStopSelect( bool click, bool shift );
+   void DoPlayStopSelect( );
+
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
 private:
@@ -162,11 +165,5 @@ AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 extern const ReservedCommandFlag
    CanStopAudioStreamFlag;
-
-/// Namespace for functions for Transport menu
-namespace TransportActions {
-bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
-void DoPlayStopSelect( AudacityProject &project );
-}
 
 #endif

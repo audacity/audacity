@@ -661,8 +661,9 @@ void Scrubber::ContinueScrubbingUI()
       // Dragging scrub can stop with mouse up
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      TransportActions::DoPlayStopSelect(*mProject, true, bShift);
-      ProjectAudioManager::Get( *mProject ).Stop();
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.DoPlayStopSelect( true, bShift );
+      projectAudioManager.Stop();
       return;
    }
 
@@ -724,7 +725,8 @@ void Scrubber::StopScrubbing()
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      TransportActions::DoPlayStopSelect(*mProject, true, bShift);
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.DoPlayStopSelect(true, bShift);
    }
 
    mScrubStartPosition = -1;

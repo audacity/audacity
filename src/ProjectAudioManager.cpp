@@ -30,10 +30,8 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectStatus.h"
 #include "TimeTrack.h"
 #include "TrackPanel.h"
-#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "prefs/TracksPrefs.h"
 #include "tracks/ui/Scrubbing.h"
@@ -1018,14 +1016,9 @@ void ProjectAudioManager::StopIfPaused()
 
 #include "widgets/AudacityMessageBox.h"
 
-namespace TransportActions {
-
-// exported helper functions
-
-bool DoPlayStopSelect
-(AudacityProject &project, bool click, bool shift)
+bool ProjectAudioManager::DoPlayStopSelect( bool click, bool shift )
 {
-   auto &toolbar = ControlToolBar::Get( project );
+   auto &project = mProject;
    auto &scrubber = Scrubber::Get( project );
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
@@ -1035,8 +1028,6 @@ bool DoPlayStopSelect
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
        gAudioIO->IsStreamActive(token)) {
-      toolbar.SetStop();         //Pushes stop down
-
       // change the selection
       auto time = gAudioIO->GetStreamTime();
       // Test WasSpeedPlaying(), not IsSpeedPlaying()
@@ -1081,20 +1072,17 @@ bool DoPlayStopSelect
 
 // The code for "OnPlayStopSelect" is simply the code of "OnPlayStop" and
 // "OnStopSelect" merged.
-void DoPlayStopSelect(AudacityProject &project)
+void ProjectAudioManager::DoPlayStopSelect()
 {
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
    auto gAudioIO = AudioIO::Get();
-   if (DoPlayStopSelect(project, false, false))
-      projectAudioManager.Stop();
+   if (DoPlayStopSelect(false, false))
+      Stop();
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      projectAudioManager.PlayCurrentRegion(false);
+      PlayCurrentRegion(false);
    }
-}
-
 }
 
 #include "CommonCommandFlags.h"
