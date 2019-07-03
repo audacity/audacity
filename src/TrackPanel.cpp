@@ -205,7 +205,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
       wxASSERT( mainPage ); // to justify safenew
 
       auto &tracks = TrackList::Get( project );
-      return safenew TrackPanel(mainPage,
+      auto result = safenew TrackPanel(mainPage,
          window.NextWindowID(),
          wxDefaultPosition,
          wxDefaultSize,
@@ -213,6 +213,8 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
          &viewInfo,
          &project,
          &ruler);
+      project.SetPanel( result );
+      return result;
    }
 };
 

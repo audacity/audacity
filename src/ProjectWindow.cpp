@@ -19,7 +19,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectAudioIO.h"
 #include "ProjectStatus.h"
 #include "RefreshCode.h"
-#include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -710,7 +709,7 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
 
    auto &project = pThis->mProject ;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    pThis->FixScrollbars();
    if (bForceWaveTracks)
    {
@@ -777,7 +776,7 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 // Make sure selection edge is in view
 void ProjectWindow::ScrollIntoView(double pos)
 {
-   auto &trackPanel = TrackPanel::Get( mProject );
+   auto &trackPanel = GetProjectPanel( mProject );
    auto &viewInfo = ViewInfo::Get( mProject );
    auto w = viewInfo.GetTracksUsableWidth();
 
@@ -1002,7 +1001,7 @@ void ProjectWindow::FixScrollbars()
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    bool refresh = false;
@@ -1157,7 +1156,7 @@ void ProjectWindow::FixScrollbars()
 void ProjectWindow::UpdateLayout()
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    auto &toolManager = ToolManager::Get( project );
 
    // 1. Layout panel, to get widths of the docks.
@@ -1364,7 +1363,7 @@ void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
 void ProjectWindow::DoScroll()
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
 
@@ -1480,7 +1479,7 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
       auto &toolManager = ToolManager::Get( project );
       SetActiveProject( &project );
       if ( ! toolManager.RestoreFocus() )
-         TrackPanel::Get( project ).SetFocus();
+         GetProjectPanel( project ).SetFocus();
 
 #ifdef __WXMAC__
       MacShowUndockedToolbars(true);
@@ -1505,7 +1504,7 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
 
    DoZoomFit();
 
@@ -1655,7 +1654,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
       // to the application, so scrub speed control is smoother.
       // (So I see at least with OS 10.10 and wxWidgets 3.0.2.)
       // Is there another way to ensure that than by refreshing?
-      auto &trackPanel = TrackPanel::Get( *mProject );
+      auto &trackPanel = GetProjectPanel( *mProject );
       trackPanel.Refresh(false);
    }
    else if (mMode != Mode::Off) {
@@ -1663,7 +1662,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
       // fraction of the window width.
 
       auto &viewInfo = ViewInfo::Get( *mProject );
-      auto &trackPanel = TrackPanel::Get( *mProject );
+      auto &trackPanel = GetProjectPanel( *mProject );
       const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
       auto width = viewInfo.GetTracksUsableWidth();
       int deltaX;

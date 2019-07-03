@@ -25,7 +25,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectSettings.h"
 #include "../../ProjectStatus.h"
 #include "../../Track.h"
-#include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
@@ -597,7 +596,7 @@ void Scrubber::ContinueScrubbingPoll()
       gAudioIO->UpdateScrub(speed, mOptions);
    } else {
       const wxMouseState state(::wxGetMouseState());
-      auto &trackPanel = TrackPanel::Get( *mProject );
+      auto &trackPanel = GetProjectPanel( *mProject );
       const wxPoint position = trackPanel.ScreenToClient(state.GetPosition());
       auto &viewInfo = ViewInfo::Get( *mProject );
 #ifdef DRAG_SCRUB
@@ -904,14 +903,6 @@ void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
 ///////////////////////////////////////////////////////////////////////////////
 // class ScrubbingOverlay is responsible for drawing the speed numbers
 
-static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
-  []( AudacityProject &parent ){
-     auto result = std::make_shared< ScrubbingOverlay >( &parent );
-     TrackPanel::Get( parent ).AddOverlay( result );
-     return result;
-   }
-};
-
 ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
    : mProject(project)
    , mLastScrubRect()
@@ -1003,7 +994,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       mNextScrubRect = wxRect();
    }
    else {
-      TrackPanel &trackPanel = TrackPanel::Get( *mProject );
+      auto &trackPanel = GetProjectPanel( *mProject );
       auto &viewInfo = ViewInfo::Get( *mProject );
       int panelWidth, panelHeight;
       trackPanel.GetSize(&panelWidth, &panelHeight);
@@ -1070,7 +1061,7 @@ void Scrubber::DoScrub(bool seek)
    const bool wasScrubbing = HasMark() || IsScrubbing();
    const bool scroll = ShouldScrubPinned();
    if (!wasScrubbing) {
-      auto &tp = TrackPanel::Get( *mProject );
+      auto &tp = GetProjectPanel( *mProject );
       const auto &viewInfo = ViewInfo::Get( *mProject );
       wxCoord xx = tp.ScreenToClient(::wxGetMouseState().GetPosition()).x;
 

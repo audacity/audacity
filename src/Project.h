@@ -115,6 +115,10 @@ class AUDACITY_DLL_API AudacityProject final
    const wxFrame *GetFrame() const { return mFrame; }
    void SetFrame( wxFrame *pFrame );
  
+   wxWindow *GetPanel() { return mPanel; }
+   const wxWindow *GetPanel() const { return mPanel; }
+   void SetPanel( wxWindow *pPanel );
+ 
    wxString GetProjectName() const;
 
    const FilePath &GetFileName() { return mFileName; }
@@ -136,6 +140,7 @@ class AUDACITY_DLL_API AudacityProject final
 
  private:
    wxWeakRef< wxFrame > mFrame{};
+   wxWeakRef< wxWindow > mPanel{};
 };
 
 ///\brief Get the top-level window associated with the project (as a wxFrame
@@ -151,5 +156,11 @@ inline wxFrame *FindProjectFrame( AudacityProject *project ) {
 inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
 }
+
+///\brief Get the main sub-window of the project frame that displays track data
+// (as a wxWindow only, when you do not need to use the subclass TrackPanel)
+AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project );
+AUDACITY_DLL_API const wxWindow &GetProjectPanel(
+   const AudacityProject &project );
 
 #endif
