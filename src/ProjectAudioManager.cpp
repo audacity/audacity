@@ -1019,7 +1019,7 @@ namespace TransportActions {
 void StopIfPaused( AudacityProject &project )
 {
    if( AudioIOBase::Get()->IsPaused() )
-      DoStop( project );
+      ProjectAudioManager::Get( project ).Stop();
 }
 
 bool DoPlayStopSelect
@@ -1093,21 +1093,6 @@ void DoPlayStopSelect(AudacityProject &project)
       // Will automatically set mLastPlayMode
       projectAudioManager.PlayCurrentRegion(false);
    }
-}
-
-void DoPause( AudacityProject &project )
-{
-   ProjectAudioManager::Get( project ).OnPause();
-}
-
-void DoRecord( AudacityProject &project )
-{
-   ProjectAudioManager::Get( project ).OnRecord(false);
-}
-
-void DoStop( AudacityProject &project )
-{
-   ProjectAudioManager::Get( project ).Stop();
 }
 
 }

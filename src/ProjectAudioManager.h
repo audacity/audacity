@@ -166,9 +166,6 @@ namespace TransportActions {
 void StopIfPaused( AudacityProject &project );
 bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
 void DoPlayStopSelect( AudacityProject &project );
-void DoStop( AudacityProject & );
-void DoPause( AudacityProject & );
-void DoRecord( AudacityProject & );
 }
 
 #endif

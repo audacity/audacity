@@ -1263,7 +1263,7 @@ auto AdornedRulerPanel::QPHandle::Click
          if(scrubber.HasMark()) {
             // We can't stop scrubbing yet (see comments in Bug 1391),
             // but we can pause it.
-            TransportActions::DoPause(*pProject);
+            ProjectAudioManager::Get( *pProject ).OnPause();
          }
 
          // Store the initial play region state

@@ -224,12 +224,12 @@ void OnPlayLooped(const CommandContext &context)
 
 void OnPause(const CommandContext &context)
 {
-   DoPause( context.project );
+   ProjectAudioManager::Get( context.project ).OnPause();
 }
 
 void OnRecord(const CommandContext &context)
 {
-   DoRecord( context.project );
+   ProjectAudioManager::Get( context.project ).OnRecord(false);
 }
 
 // If first choice is record same track 2nd choice is record NEW track
@@ -543,7 +543,7 @@ void OnToggleAutomatedInputLevelAdjustment(
 
 void OnStop(const CommandContext &context)
 {
-   DoStop( context.project );
+   ProjectAudioManager::Get( context.project ).Stop();
 }
 
 void OnPlayOneSecond(const CommandContext &context)

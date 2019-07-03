@@ -130,7 +130,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    // for batch commands
    if (flags & EffectManager::kConfigured)
    {
-      TransportActions::DoStop(project);
+      ProjectAudioManager::Get( project ).Stop();
       SelectUtilities::SelectAllIfNone( project );
    }
 
