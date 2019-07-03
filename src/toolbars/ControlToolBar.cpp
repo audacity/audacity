@@ -667,7 +667,7 @@ void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
 
    AudacityProject *p = &mProject;
    {
-      TransportActions::StopIfPaused( *p );
+      ProjectAudioManager::Get( *p ).StopIfPaused();
       ProjectWindow::Get( *p ).Rewind(mRewind->WasShiftDown());
    }
 }
@@ -680,7 +680,7 @@ void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
    AudacityProject *p = &mProject;
 
    {
-      TransportActions::StopIfPaused( *p );
+      ProjectAudioManager::Get( *p ).StopIfPaused();
       ProjectWindow::Get( *p ).SkipEnd(mFF->WasShiftDown());
    }
 }

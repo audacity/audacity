@@ -108,6 +108,8 @@ public:
    // Stop playing or recording
    void Stop(bool stopStream = true);
 
+   void StopIfPaused();
+
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
 private:
@@ -163,7 +165,6 @@ extern const ReservedCommandFlag
 
 /// Namespace for functions for Transport menu
 namespace TransportActions {
-void StopIfPaused( AudacityProject &project );
 bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
 void DoPlayStopSelect( AudacityProject &project );
 }

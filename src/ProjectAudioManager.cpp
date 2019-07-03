@@ -1009,18 +1009,18 @@ TransportTracks ProjectAudioManager::GetAllPlaybackTracks(
    return result;
 }
 
+// Stop playing or recording, if paused.
+void ProjectAudioManager::StopIfPaused()
+{
+   if( AudioIOBase::Get()->IsPaused() )
+      Stop();
+}
+
 #include "widgets/AudacityMessageBox.h"
 
 namespace TransportActions {
 
 // exported helper functions
-
-// Stop playing or recording, if paused.
-void StopIfPaused( AudacityProject &project )
-{
-   if( AudioIOBase::Get()->IsPaused() )
-      ProjectAudioManager::Get( project ).Stop();
-}
 
 bool DoPlayStopSelect
 (AudacityProject &project, bool click, bool shift)
@@ -1106,6 +1106,6 @@ static RegisteredMenuItemEnabler stopIfPaused{{
       return MenuManager::Get( project ).mStopIfWasPaused; },
    []( AudacityProject &project, CommandFlag ){
       if ( MenuManager::Get( project ).mStopIfWasPaused )
-         TransportActions::StopIfPaused( project );
+         ProjectAudioManager::Get( project ).StopIfPaused();
    }
 }};
