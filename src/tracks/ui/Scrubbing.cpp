@@ -29,7 +29,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
-#include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ToolManager.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
@@ -314,12 +313,12 @@ void Scrubber::MarkScrubStart(
    // drag events.
    mSmoothScrollingScrub  = smoothScrolling;
 
-   auto &ctb = ControlToolBar::Get( *mProject );
+   auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
 
    // Stop any play in progress
    // Bug 1492: mCancelled to stop us collapsing the selected region.
    mCancelled = true;
-   ctb.StopPlaying();
+   projectAudioManager.Stop();
    mCancelled = false;
 
    // Usually the timer handler of TrackPanel does this, but we do this now,
@@ -363,7 +362,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          auto &viewInfo = ViewInfo::Get( *mProject );
-         auto &ctb = ControlToolBar::Get( *mProject );
+         auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
          double maxTime = TrackList::Get( *mProject ).GetEndTime();
          const int leftOffset = viewInfo.GetLeftOffset();
          double time0 = std::min(maxTime,
@@ -375,7 +374,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          if (time1 != time0) {
             if (busy) {
                position = mScrubStartPosition;
-               ctb.StopPlaying();
+               projectAudioManager.Stop();
                mScrubStartPosition = position;
             }
 
@@ -453,8 +452,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             });
 
             mScrubToken =
-               ctb.PlayPlayRegion(SelectedRegion(time0, time1), options,
-                                   PlayMode::normalPlay, backwards);
+               projectAudioManager.PlayPlayRegion(
+                  SelectedRegion(time0, time1), options,
+                  PlayMode::normalPlay, backwards);
             if (mScrubToken <= 0) {
                // Bug1627 (part of it):
                // infinite error spew when trying to start scrub:
@@ -494,9 +494,9 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
       return false;
    }
 
-   auto &ctb = ControlToolBar::Get( *mProject );
+   auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
    if (busy) {
-      ctb.StopPlaying();
+      projectAudioManager.Stop();
    }
    mScrubStartPosition = 0;
    mSpeedPlaying = true;
@@ -552,7 +552,8 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    double stopTolerance = 20.0 / options.rate;
    mScrubToken =
       // Reduce time by 'stopTolerance' fudge factor, so that the Play will stop.
-      ctb.PlayPlayRegion(SelectedRegion(time0, time1-stopTolerance), options,
+      projectAudioManager.PlayPlayRegion(
+         SelectedRegion(time0, time1-stopTolerance), options,
          PlayMode::normalPlay, backwards);
 
    if (mScrubToken >= 0) {
@@ -660,9 +661,9 @@ void Scrubber::ContinueScrubbingUI()
       // Dragging scrub can stop with mouse up
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      TransportActions::DoPlayStopSelect(*mProject, true, bShift);
-      wxCommandEvent evt;
-      ControlToolBar::Get( *mProject ).OnStop(evt);
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.DoPlayStopSelect( true, bShift );
+      projectAudioManager.Stop();
       return;
    }
 
@@ -724,7 +725,8 @@ void Scrubber::StopScrubbing()
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      TransportActions::DoPlayStopSelect(*mProject, true, bShift);
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.DoPlayStopSelect(true, bShift);
    }
 
    mScrubStartPosition = -1;
@@ -1076,8 +1078,8 @@ void Scrubber::DoScrub(bool seek)
       // just switching mode
    }
    else {
-      auto &ctb = ControlToolBar::Get( *mProject );
-      ctb.StopPlaying();
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.Stop();
    }
 }
 

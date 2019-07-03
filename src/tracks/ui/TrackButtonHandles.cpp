@@ -155,7 +155,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    if (pTrack)
    {
       auto toRemove = pTrack->SubstitutePendingChangedTrack();
-      TransportActions::StopIfPaused( *pProject );
+      ProjectAudioManager::Get( *pProject ).StopIfPaused();
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
          TrackUtilities::DoRemoveTrack(*pProject, toRemove.get());

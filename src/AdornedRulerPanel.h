@@ -54,6 +54,9 @@ public:
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
+   void LockPlayRegion();
+   void UnlockPlayRegion();
+   void TogglePinnedHead();
 
    void GetMaxSize(wxCoord *width, wxCoord *height);
 

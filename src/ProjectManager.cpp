@@ -41,7 +41,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/ImportMIDI.h"
 #include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
-#include "toolbars/ControlToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
@@ -636,8 +635,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
        gAudioIO->IsStreamActive(projectAudioIO.GetAudioIOToken())) {
 
       // We were playing or recording audio, but we've stopped the stream.
-      wxCommandEvent dummyEvent;
-      ControlToolBar::Get( project ).OnStop(dummyEvent);
+      ProjectAudioManager::Get( project ).Stop();
 
       projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();

@@ -63,7 +63,7 @@ public:
    void ContinueScrubbingUI();
    void ContinueScrubbingPoll();
 
-   // This is meant to be called only from ControlToolBar
+   // This is meant to be called only from ProjectAudioManager
    void StopScrubbing();
 
    wxCoord GetScrubStartPosition() const

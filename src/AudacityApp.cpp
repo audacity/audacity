@@ -1654,7 +1654,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
                gAudioIO->GetNumCaptureChannels() == 0) ||
          scrubbing)
          // ESC out of other play (but not record)
-         TransportActions::DoStop(*project);
+         ProjectAudioManager::Get( *project ).Stop();
       else
          event.Skip();
    }
