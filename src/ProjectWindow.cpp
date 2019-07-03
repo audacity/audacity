@@ -899,6 +899,12 @@ void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
    AdornedRulerPanel::Get( project ).ReCreateButtons();
 }
 
+void ProjectWindow::UpdatePrefs()
+{
+   // Update status bar widths in case of language change
+   UpdateStatusWidths();
+}
+
 void ProjectWindow::FinishAutoScroll()
 {
    // Set a flag so we don't have to generate two update events
