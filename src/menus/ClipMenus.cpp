@@ -2,6 +2,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../TrackPanel.h"
+#include "../ProjectWindow.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
 #include "../ViewInfo.h"
@@ -561,6 +562,7 @@ void DoSelectClip(AudacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    std::vector<FoundClip> results;
    FindClips(project, selectedRegion.t0(),
@@ -573,7 +575,7 @@ void DoSelectClip(AudacityProject &project, bool next)
       double t1 = results[0].endTime;
       selectedRegion.setTimes(t0, t1);
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.ScrollIntoView(selectedRegion.t0());
+      window.ScrollIntoView(selectedRegion.t0());
 
       // create and send message to screen reader
       wxString message;
@@ -607,6 +609,7 @@ void DoCursorClipBoundary
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackPanel = TrackPanel::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    std::vector<FoundClipBoundary> results;
    FindClipBoundaries(project, next ? selectedRegion.t1() :
@@ -618,7 +621,7 @@ void DoCursorClipBoundary
       double time = results[0].time;
       selectedRegion.setTimes(time, time);
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.ScrollIntoView(selectedRegion.t0());
+      window.ScrollIntoView(selectedRegion.t0());
 
       wxString message = ClipBoundaryMessage(results);
       trackPanel.MessageForScreenReader(message);
@@ -691,6 +694,7 @@ void DoClipLeftOrRight
 (AudacityProject &project, bool right, bool keyUp )
 {
    auto &undoManager = UndoManager::Get( project );
+   auto &window = ProjectWindow::Get( project );
 
    if (keyUp) {
       undoManager.StopConsolidating();
@@ -707,7 +711,7 @@ void DoClipLeftOrRight
    auto amount = DoClipMove( viewInfo, trackPanel.GetFocusedTrack(),
         tracks, isSyncLocked, right );
 
-   trackPanel.ScrollIntoView(selectedRegion.t0());
+   window.ScrollIntoView(selectedRegion.t0());
 
    if (amount != 0.0) {
       wxString message = right? _("Time shifted clips to the right") :

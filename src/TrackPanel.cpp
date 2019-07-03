@@ -205,7 +205,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
       wxASSERT( mainPage ); // to justify safenew
 
       auto &tracks = TrackList::Get( project );
-      return safenew TrackPanel(mainPage,
+      auto result = safenew TrackPanel(mainPage,
          window.NextWindowID(),
          wxDefaultPosition,
          wxDefaultSize,
@@ -213,6 +213,8 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
          &viewInfo,
          &project,
          &ruler);
+      project.SetPanel( result );
+      return result;
    }
 };
 
@@ -969,25 +971,6 @@ void TrackPanel::UpdateVRulerSize()
       }
    }
    Refresh(false);
-}
-
-// Make sure selection edge is in view
-void TrackPanel::ScrollIntoView(double pos)
-{
-   auto w = mViewInfo->GetTracksUsableWidth();
-
-   int pixel = mViewInfo->TimeToPosition(pos);
-   if (pixel < 0 || pixel >= w)
-   {
-      mListener->TP_ScrollWindow
-         (mViewInfo->OffsetTimeByPixels(pos, -(w / 2)));
-      Refresh(false);
-   }
-}
-
-void TrackPanel::ScrollIntoView(int x)
-{
-   ScrollIntoView(mViewInfo->PositionToTime(x, mViewInfo->GetLeftOffset()));
 }
 
 void TrackPanel::OnTrackMenu(Track *t)

@@ -19,7 +19,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectAudioIO.h"
 #include "ProjectStatus.h"
 #include "RefreshCode.h"
-#include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -36,10 +35,6 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/display.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
-
-#ifdef __WXGTK__
-#include "../images/AudacityLogoAlpha.xpm"
-#endif
 
 // Returns the screen containing a rectangle, or -1 if none does.
 int ScreenContaining( wxRect & r ){
@@ -641,92 +636,15 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
 
-   project.Bind( EVT_UNDO_MODIFIED, &ProjectWindow::OnUndoPushedModified, this );
-   project.Bind( EVT_UNDO_PUSHED, &ProjectWindow::OnUndoPushedModified, this );
-   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
-   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
-}
-
-void ProjectWindow::Init()
-{
-   auto &project = mProject;
-
-#ifdef EXPERIMENTAL_DA2
-   SetBackgroundColour(theTheme.Colour( clrMedium ));
-#endif
-   // Note that the first field of the status bar is a dummy, and its width is set
-   // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
-   // if you move to the menu bar, the first field of the menu bar is cleared, which
-   // is undesirable behaviour.
-   // In addition, the help strings of menu items are by default sent to the first
-   // field. Currently there are no such help strings, but it they were introduced, then
-   // there would need to be an event handler to send them to the appropriate field.
-   auto statusBar = CreateStatusBar(4);
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
-#endif
-   statusBar->SetName(wxT("status_line"));     // not localized
-
-   auto &viewInfo = ViewInfo::Get( project );
-
-   // LLL:  Read this!!!
-   //
-   // Until the time (and cpu) required to refresh the track panel is
-   // reduced, leave the following window creations in the order specified.
-   // This will place the refresh of the track panel last, allowing all
-   // the others to get done quickly.
-   //
-   // Near as I can tell, this is only a problem under Windows.
-   //
-
-
-   //
-   // Create the ToolDock
-   //
-   ToolManager::Get( project ).LayoutToolBars();
-
-   //
-   // Create the horizontal ruler
-   //
-   auto &ruler = AdornedRulerPanel::Get( project );
-
-   //
-   // Create the TrackPanel and the scrollbars
-   //
-
-   {
-      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
-      ubs->Add(&ruler, 0, wxEXPAND);
-      mTopPanel->SetSizer(ubs.release());
-   }
-
-   // Ensure that the topdock comes before the ruler in the tab order,
-   // irrespective of the order in which they were created.
-   ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
-
-   const auto pPage = GetMainPage();
-
-   wxBoxSizer *bs;
-   {
-      auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      bs = ubs.get();
-      bs->Add(mTopPanel, 0, wxEXPAND | wxALIGN_TOP);
-      bs->Add(pPage, 1, wxEXPAND);
-      bs->Add( ToolManager::Get( project ).GetBotDock(), 0, wxEXPAND );
-      SetAutoLayout(true);
-      SetSizer(ubs.release());
-   }
-   bs->Layout();
-
-   auto &trackPanel = TrackPanel::Get( project );
-
+   // PRL: Old comments below.  No longer observing the ordering that it
+   //      recommends.  ProjectWindow::OnActivate puts the focus directly into
+   //      the TrackPanel, which avoids the problems.
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
    //      creating the scrollbars after the TrackPanel, we resolve
    //      several focus problems.
+
    mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
    mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
 #if wxUSE_ACCESSIBILITY
@@ -737,93 +655,13 @@ void ProjectWindow::Init()
    mHsbar->SetLayoutDirection(wxLayout_LeftToRight);
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
-   // LLL: When Audacity starts or becomes active after returning from
-   //      another application, the first window that can accept focus
-   //      will be given the focus even if we try to SetFocus().  By
-   //      making the TrackPanel that first window, we resolve several
-   //      keyboard focus problems.
-   pPage->MoveBeforeInTabOrder(mTopPanel);
 
-   bs = (wxBoxSizer *)pPage->GetSizer();
-
-   {
-      // Top horizontal grouping
-      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-      // Track panel
-      hs->Add(&trackPanel, 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
-
-      {
-         // Vertical grouping
-         auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
-         // Vertical scroll bar
-         vs->Add(mVsbar, 1, wxEXPAND | wxALIGN_TOP);
-         hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
-      }
-
-      bs->Add(hs.release(), 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
-   }
-
-   {
-      // Bottom horizontal grouping
-      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-      // Bottom scrollbar
-      hs->Add(viewInfo.GetLeftOffset() - 1, 0);
-      hs->Add(mHsbar, 1, wxALIGN_BOTTOM);
-      hs->Add(mVsbar->GetSize().GetWidth(), 0);
-      bs->Add(hs.release(), 0, wxEXPAND | wxALIGN_LEFT);
-   }
-
-   // Lay it out
-   pPage->SetAutoLayout(true);
-   pPage->Layout();
-
-#ifdef EXPERIMENTAL_NOTEBOOK
-   AddPages(this, Factory, pNotebook);
-#endif
-
-   mMainPanel->Layout();
-
-   wxASSERT( trackPanel.GetProject() == &project );
-
-   // MM: Give track panel the focus to ensure keyboard commands work
-   trackPanel.SetFocus();
-
-   FixScrollbars();
-   ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
-
-   //
-   // Set the Icon
-   //
-
-   // loads either the XPM or the windows resource, depending on the platform
-#if !defined(__WXMAC__) && !defined(__WXX11__)
-   {
-#if defined(__WXMSW__)
-      wxIcon ic{ wxICON(AudacityLogo) };
-#elif defined(__WXGTK__)
-      wxIcon ic{wxICON(AudacityLogoAlpha)};
-#else
-      wxIcon ic{};
-      ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
-#endif
-      SetIcon(ic);
-   }
-#endif
-   mIconized = false;
-
-   UpdateStatusWidths();
-   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
-                                   AUDACITY_VERSION_STRING);
-   statusBar->SetStatusText(msg, mainStatusBarField);
+   project.Bind( EVT_UNDO_MODIFIED, &ProjectWindow::OnUndoPushedModified, this );
+   project.Bind( EVT_UNDO_PUSHED, &ProjectWindow::OnUndoPushedModified, this );
+   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
+   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
-
-#ifdef EXPERIMENTAL_DA2
-   ClearBackground();// For wxGTK.
-#endif
 }
 
 ProjectWindow::~ProjectWindow()
@@ -871,7 +709,7 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
 
    auto &project = pThis->mProject ;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    pThis->FixScrollbars();
    if (bForceWaveTracks)
    {
@@ -934,6 +772,28 @@ const int sbarExtraLen = 0;
 const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #include "AllThemeResources.h"
 #endif
+
+// Make sure selection edge is in view
+void ProjectWindow::ScrollIntoView(double pos)
+{
+   auto &trackPanel = GetProjectPanel( mProject );
+   auto &viewInfo = ViewInfo::Get( mProject );
+   auto w = viewInfo.GetTracksUsableWidth();
+
+   int pixel = viewInfo.TimeToPosition(pos);
+   if (pixel < 0 || pixel >= w)
+   {
+      TP_ScrollWindow
+         (viewInfo.OffsetTimeByPixels(pos, -(w / 2)));
+      trackPanel.Refresh(false);
+   }
+}
+
+void ProjectWindow::ScrollIntoView(int x)
+{
+   auto &viewInfo = ViewInfo::Get( mProject );
+   ScrollIntoView(viewInfo.PositionToTime(x, viewInfo.GetLeftOffset()));
+}
 
 ///
 /// This method handles general left-scrolling, either for drag-scrolling
@@ -1141,7 +1001,7 @@ void ProjectWindow::FixScrollbars()
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    bool refresh = false;
@@ -1296,7 +1156,7 @@ void ProjectWindow::FixScrollbars()
 void ProjectWindow::UpdateLayout()
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    auto &toolManager = ToolManager::Get( project );
 
    // 1. Layout panel, to get widths of the docks.
@@ -1503,7 +1363,7 @@ void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
 void ProjectWindow::DoScroll()
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
 
@@ -1619,7 +1479,7 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
       auto &toolManager = ToolManager::Get( project );
       SetActiveProject( &project );
       if ( ! toolManager.RestoreFocus() )
-         TrackPanel::Get( project ).SetFocus();
+         GetProjectPanel( project ).SetFocus();
 
 #ifdef __WXMAC__
       MacShowUndockedToolbars(true);
@@ -1644,7 +1504,7 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackPanel = GetProjectPanel( project );
 
    DoZoomFit();
 
@@ -1717,7 +1577,6 @@ void ProjectWindow::SkipEnd(bool shift)
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    double len = tracks.GetEndTime();
 
@@ -1726,8 +1585,7 @@ void ProjectWindow::SkipEnd(bool shift)
       viewInfo.selectedRegion.setT0(len);
 
    // Make sure the end of the track is visible
-   trackPanel.ScrollIntoView(len);
-   trackPanel.Refresh(false);
+   ScrollIntoView(len);
 }
 
 void ProjectWindow::TP_DisplaySelection()
@@ -1796,7 +1654,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
       // to the application, so scrub speed control is smoother.
       // (So I see at least with OS 10.10 and wxWidgets 3.0.2.)
       // Is there another way to ensure that than by refreshing?
-      auto &trackPanel = TrackPanel::Get( *mProject );
+      auto &trackPanel = GetProjectPanel( *mProject );
       trackPanel.Refresh(false);
    }
    else if (mMode != Mode::Off) {
@@ -1804,7 +1662,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
       // fraction of the window width.
 
       auto &viewInfo = ViewInfo::Get( *mProject );
-      auto &trackPanel = TrackPanel::Get( *mProject );
+      auto &trackPanel = GetProjectPanel( *mProject );
       const int posX = viewInfo.TimeToPosition(viewInfo.mRecentStreamTime);
       auto width = viewInfo.GetTracksUsableWidth();
       int deltaX;
@@ -1832,7 +1690,6 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
 void ProjectWindow::ZoomInByFactor( double ZoomFactor )
 {
    auto &project = mProject;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    auto gAudioIO = AudioIOBase::Get();
@@ -1842,8 +1699,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
          ProjectAudioIO::Get( project ).GetAudioIOToken()) &&
        !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
-      trackPanel.ScrollIntoView(gAudioIO->GetStreamTime());
-      trackPanel.Refresh(false);
+      ScrollIntoView(gAudioIO->GetStreamTime());
       return;
    }
 

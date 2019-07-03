@@ -117,9 +117,6 @@ class AUDACITY_DLL_API TrackPanel final
    void HandlePageDownKey();
    AudacityProject * GetProject() const override;
 
-   void ScrollIntoView(double pos);
-   void ScrollIntoView(int x);
-
    void OnTrackMenu(Track *t = NULL);
 
    void VerticalScroll( float fracPosition);
