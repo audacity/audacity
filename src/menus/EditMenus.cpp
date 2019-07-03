@@ -730,7 +730,6 @@ void OnSilence(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    for ( auto n : tracks.Selected< WaveTrack >() )
@@ -772,7 +771,6 @@ void OnSplit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    double sel0 = selectedRegion.t0();

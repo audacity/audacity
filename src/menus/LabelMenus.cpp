@@ -451,7 +451,6 @@ void OnSplitDeleteLabels(const CommandContext &context)
 void OnSilenceLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -470,7 +469,6 @@ void OnSilenceLabels(const CommandContext &context)
 void OnCopyLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
