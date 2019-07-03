@@ -1099,10 +1099,6 @@ void Scrubber::OnScrubOrSeek(bool seek)
 
    mSeeking = seek;
    CheckMenuItems();
-
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   // Update button images
-   ruler.UpdateButtonStates();
 }
 
 void Scrubber::OnScrub(const CommandContext&)
