@@ -46,6 +46,7 @@
 #include "ViewInfo.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/TracksPrefs.h"
+#include "prefs/ThemePrefs.h"
 #include "toolbars/ToolBar.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
@@ -379,6 +380,7 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
+   EVT_IDLE( AdornedRulerPanel::OnIdle )
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
 
@@ -742,7 +744,7 @@ private:
             bool canScrub =
                scrubber.CanScrub() &&
                mParent &&
-               mParent->mShowScrubbing;
+               mParent->ShowingScrubRuler();
 
             if (!canScrub)
                return RefreshCode::Cancelled;
@@ -938,30 +940,13 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    // Delay until after CommandManager has been populated:
    this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
+
+   wxTheApp->Bind(EVT_THEME_CHANGE, &AdornedRulerPanel::OnThemeChange, this);
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
 }
-
-#if 1
-namespace {
-   static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
-
-   bool ReadScrubEnabledPref()
-   {
-      bool result {};
-      gPrefs->Read(scrubEnabledPrefName, &result, false);
-
-      return result;
-   }
-
-   void WriteScrubEnabledPref(bool value)
-   {
-      gPrefs->Write(scrubEnabledPrefName, value);
-   }
-}
-#endif
 
 void AdornedRulerPanel::UpdatePrefs()
 {
@@ -986,11 +971,6 @@ void AdornedRulerPanel::UpdatePrefs()
    }
 #endif
 #endif
-
-   mShowScrubbing = ReadScrubEnabledPref();
-   // Affected by the last
-   UpdateRects();
-   SetPanelSize();
 }
 
 void AdornedRulerPanel::ReCreateButtons()
@@ -1126,6 +1106,26 @@ namespace {
    }
 }
 
+void AdornedRulerPanel::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+
+   UpdateRects();
+   SetPanelSize();
+
+   auto &project = *mProject;
+   auto &viewInfo = ViewInfo::Get( project );
+   const auto &selectedRegion = viewInfo.selectedRegion;
+   auto &playRegion = ViewInfo::Get( project ).playRegion;
+
+   auto gAudioIO = AudioIOBase::Get();
+   if (!gAudioIO->IsBusy() && !playRegion.Locked())
+      SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
+   else
+      // Cause ruler redraw anyway, because we may be zooming or scrolling
+      Refresh();
+}
+
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 {
    evt.Skip();
@@ -1185,6 +1185,11 @@ void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
    OverlayPanel::OnSize(evt);
 }
 
+void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
+{
+   ReCreateButtons();
+}
+
 void AdornedRulerPanel::UpdateRects()
 {
    mInner = mOuter;
@@ -1194,7 +1199,7 @@ void AdornedRulerPanel::UpdateRects()
    auto top = &mInner;
    auto bottom = &mInner;
 
-   if (mShowScrubbing) {
+   if (ShowingScrubRuler()) {
       mScrubZone = mInner;
       auto scrubHeight = std::min(mScrubZone.height, (int)(ScrubHeight));
 
@@ -1219,7 +1224,7 @@ void AdornedRulerPanel::UpdateRects()
 
    bottom->height -= BottomMargin;
 
-   if (!mShowScrubbing)
+   if (!ShowingScrubRuler())
       mScrubZone = mInner;
 
    mRuler.SetBounds(mInner.GetLeft(),
@@ -1651,20 +1656,15 @@ void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
    scrubber.OnToggleScrubRuler(*mProject);
 }
 
-void AdornedRulerPanel::OnToggleScrubRuler(/*wxCommandEvent&*/)
-{
-   mShowScrubbing = !mShowScrubbing;
-   WriteScrubEnabledPref(mShowScrubbing);
-   gPrefs->Flush();
-   SetPanelSize();
-}
-
 void AdornedRulerPanel::SetPanelSize()
 {
-   wxSize size { GetSize().GetWidth(), GetRulerHeight(mShowScrubbing) };
-   SetSize(size);
-   SetMinSize(size);
-   GetParent()->PostSizeEventToParent();
+   const auto oldSize = GetSize();
+   wxSize size { oldSize.GetWidth(), GetRulerHeight(ShowingScrubRuler()) };
+   if ( size != oldSize ) {
+      SetSize(size);
+      SetMinSize(size);
+      GetParent()->PostSizeEventToParent();
+   }
 }
 
 void AdornedRulerPanel::DrawBothOverlays()
@@ -1775,7 +1775,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    prlitem->Enable( playRegion.Locked() || !playRegion.Empty() );
 
    wxMenuItem *ruleritem;
-   if (mShowScrubbing)
+   if (ShowingScrubRuler())
       ruleritem = rulerMenu.Append(OnScrubRulerID, _("Disable Scrub Ruler"));
    else
       ruleritem = rulerMenu.Append(OnScrubRulerID, _("Enable Scrub Ruler"));
@@ -1949,7 +1949,7 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
    AColor::UseThemeColour( dc, clrTrackInfo );
    dc->DrawRectangle( mInner );
 
-   if (mShowScrubbing) {
+   if (ShowingScrubRuler()) {
       // Let's distinguish the scrubbing area by using a themable
       // colour and a line to set it off.  
       AColor::UseThemeColour(dc, clrScrubRuler, clrTrackPanelText );
@@ -2034,7 +2034,7 @@ void AdornedRulerPanel::DoDrawIndicator
       const int TriangleWidth = width * 3 / 8;
 
       // Double-double headed, left-right
-      auto yy = mShowScrubbing
+      auto yy = ShowingScrubRuler()
       ? mScrubZone.y
       : (mInner.GetBottom() + 1) - 1 /* bevel */ - height;
       tri[ 0 ].x = xx - IndicatorOffset;
@@ -2065,7 +2065,7 @@ void AdornedRulerPanel::DoDrawIndicator
       const int IndicatorHalfWidth = width / 2;
 
       // Double headed, left-right
-      auto yy = mShowScrubbing
+      auto yy = ShowingScrubRuler()
          ? mScrubZone.y
          : (mInner.GetBottom() + 1) - 1 /* bevel */ - height;
       tri[ 0 ].x = xx - IndicatorOffset;
@@ -2154,7 +2154,7 @@ struct AdornedRulerPanel::Subgroup final : TrackPanelGroup {
    explicit Subgroup( const AdornedRulerPanel &ruler ) : mRuler{ ruler } {}
    Subdivision Children( const wxRect & ) override
    {
-      return { Axis::Y, ( mRuler.mShowScrubbing )
+      return { Axis::Y, ( mRuler.ShowingScrubRuler() )
          ? Refinement{
             { mRuler.mInner.GetTop(), mRuler.mQPCell },
             { mRuler.mScrubZone.GetTop(), mRuler.mScrubbingCell },
@@ -2180,6 +2180,12 @@ struct AdornedRulerPanel::MainGroup final : TrackPanelGroup {
    } }; }
    const AdornedRulerPanel &mRuler;
 };
+
+bool AdornedRulerPanel::ShowingScrubRuler() const
+{
+   auto &scrubber = Scrubber::Get( *GetProject() );
+   return scrubber.ShowsBar();
+}
 
 // CellularPanel implementation
 std::shared_ptr<TrackPanelNode> AdornedRulerPanel::Root()

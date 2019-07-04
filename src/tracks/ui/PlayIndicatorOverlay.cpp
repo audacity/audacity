@@ -181,9 +181,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          playPos,
          viewInfo.GetScreenEndTime() + tolerance);
 
-      // This displays the audio time, too...
-      window.TP_DisplaySelection();
-
       auto gAudioIO = AudioIO::Get();
 
       // BG: Scroll screen if option is set

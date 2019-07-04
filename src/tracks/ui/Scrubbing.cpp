@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <functional>
 
-#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../CommonCommandFlags.h"
 #include "../../Menus.h"
@@ -231,8 +230,8 @@ Scrubber::Scrubber(AudacityProject *project)
       wxTheApp->Bind
       (wxEVT_ACTIVATE_APP,
        &Scrubber::OnActivateOrDeactivateApp, this);
-   if (mWindow)
-      mWindow->PushEventHandler(&mForwarder);
+
+   UpdatePrefs();
 }
 
 Scrubber::~Scrubber()
@@ -743,13 +742,12 @@ void Scrubber::StopScrubbing()
    mDragging = false;
    mSeeking = false;
 
-   AdornedRulerPanel::Get( *mProject ).DrawBothOverlays();
    CheckMenuItems();
 }
 
 bool Scrubber::ShowsBar() const
 {
-   return AdornedRulerPanel::Get( *mProject ).ShowingScrubRuler();
+   return mShowScrubbing;
 }
 
 bool Scrubber::IsScrubbing() const
@@ -776,27 +774,6 @@ bool Scrubber::ChoseSeeking() const
       mDragging ||
 #endif
       mSeeking;
-}
-
-bool Scrubber::MayDragToSeek() const
-{
-   // Return true only if the pointer is in the
-   // ruler or the track panel
-   const auto &state = ::wxGetMouseState();
-   const auto &position = state.GetPosition();
-
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   if (ruler.GetScreenRect().Contains(position))
-      return true;
-
-   /*
-   auto trackPanel = mProject->GetTrackPanel();
-   if (trackPanel &&
-       trackPanel->GetScreenRect().Contains(position))
-      return true;
-    */
-
-   return false;
 }
 
 bool Scrubber::TemporarilySeeks() const
@@ -890,182 +867,6 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
    event.Skip();
 }
 
-void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
-{
-   //auto ruler = scrubber.mProject->GetRulerPanel();
-   auto isScrubbing = scrubber.IsScrubbing();
-   if (isScrubbing && !event.HasAnyModifiers()) {
-      if(event.LeftDown() && scrubber.MayDragToSeek()) {
-         // This event handler may catch mouse transitions that are missed
-         // by the polling of mouse state by the timer.
-         scrubber.mScrubSeekPress = true;
-      }
-      else if (event.m_wheelRotation) {
-         double steps = event.m_wheelRotation /
-         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
-         scrubber.HandleScrollWheel(steps);
-      }
-      else
-         event.Skip();
-   }
-   else
-      event.Skip();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// class ScrubbingOverlay is responsible for drawing the speed numbers
-
-ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
-   : mProject(project)
-   , mLastScrubRect()
-   , mNextScrubRect()
-   , mLastScrubSpeedText()
-   , mNextScrubSpeedText()
-{
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-      &ScrubbingOverlay::OnTimer,
-      this);
-}
-
-unsigned ScrubbingOverlay::SequenceNumber() const
-{
-   return 40;
-}
-
-std::pair<wxRect, bool> ScrubbingOverlay::DoGetRectangle(wxSize)
-{
-   wxRect rect(mLastScrubRect);
-   const bool outdated =
-      (mLastScrubRect != mNextScrubRect) ||
-      (!mLastScrubRect.IsEmpty() && !GetScrubber().ShouldDrawScrubSpeed()) ||
-      (mLastScrubSpeedText != mNextScrubSpeedText);
-   return std::make_pair(
-      rect,
-      outdated
-   );
-}
-
-void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
-{
-   mLastScrubRect = mNextScrubRect;
-   mLastScrubSpeedText = mNextScrubSpeedText;
-
-   Scrubber &scrubber = GetScrubber();
-   if (!scrubber.ShouldDrawScrubSpeed())
-      return;
-
-   static const wxFont labelFont(24, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   dc.SetFont(labelFont);
-
-   // These two colors were previously saturated red and green.  However
-   // we have a rule to try to only use red for reserved purposes of
-   //  (a) Recording
-   //  (b) Error alerts
-   // So they were changed to 'orange' and 'lime'.
-   static const wxColour clrNoScroll(215, 162, 0), clrScroll(0, 204, 153);
-   if (scrubber.IsScrollScrubbing())
-      dc.SetTextForeground(clrScroll);
-   else
-      dc.SetTextForeground(clrNoScroll);
-
-   dc.DrawText(mLastScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
-}
-
-void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
-{
-   // Let other listeners get the notification
-   event.Skip();
-
-   Scrubber &scrubber = GetScrubber();
-   const auto isScrubbing = scrubber.IsScrubbing();
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   auto position = ::wxGetMousePosition();
-
-   if (scrubber.IsSpeedPlaying())
-      return;
-
-   {
-      if(scrubber.HasMark()) {
-         auto xx = ruler.ScreenToClient(position).x;
-         ruler.UpdateQuickPlayPos( xx, false );
-
-         if (!isScrubbing)
-            // Really start scrub if motion is far enough
-            scrubber.MaybeStartScrubbing(xx);
-      }
-
-      if (!isScrubbing) {
-         mNextScrubRect = wxRect();
-         return;
-      }
-      else
-         ruler.DrawBothOverlays();
-   }
-
-   if (!scrubber.ShouldDrawScrubSpeed()) {
-      mNextScrubRect = wxRect();
-   }
-   else {
-      auto &trackPanel = GetProjectPanel( *mProject );
-      auto &viewInfo = ViewInfo::Get( *mProject );
-      int panelWidth, panelHeight;
-      trackPanel.GetSize(&panelWidth, &panelHeight);
-
-      // Where's the mouse?
-      position = trackPanel.ScreenToClient(position);
-
-      const bool seeking = scrubber.Seeks() || scrubber.TemporarilySeeks();
-
-      // Find the text
-      const double maxScrubSpeed = GetScrubber().GetMaxScrubSpeed();
-      const double speed =
-         scrubber.IsScrollScrubbing()
-         ? scrubber.FindScrubSpeed( seeking,
-             ViewInfo::Get( *mProject )
-                .PositionToTime(position.x, viewInfo.GetLeftOffset()))
-         : maxScrubSpeed;
-
-      const wxChar *format =
-         scrubber.IsScrollScrubbing()
-         ? seeking
-            ? wxT("%+.2fX")
-            : wxT("%+.2f")
-         : wxT("%.2f");
-
-      mNextScrubSpeedText = wxString::Format(format, speed);
-
-      // Find the origin for drawing text
-      wxCoord width, height;
-      {
-         wxClientDC dc( &trackPanel );
-         static const wxFont labelFont(24, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-         dc.SetFont(labelFont);
-         dc.GetTextExtent(mNextScrubSpeedText, &width, &height);
-      }
-      const auto xx =
-         std::max(0, std::min(panelWidth - width, position.x - width / 2));
-
-      // Put the text above the cursor, if it fits.
-      enum { offset = 20 };
-      auto yy = position.y - height + offset;
-      if (yy < 0)
-         yy += height + 2 * offset;
-      yy = std::max(0, std::min(panelHeight - height, yy));
-
-      mNextScrubRect = wxRect(xx, yy, width, height);
-   }
-}
-
-const Scrubber &ScrubbingOverlay::GetScrubber() const
-{
-   return Scrubber::Get( *mProject );
-}
-
-Scrubber &ScrubbingOverlay::GetScrubber()
-{
-   return Scrubber::Get( *mProject );
-}
-
 void Scrubber::DoScrub(bool seek)
 {
    if( !CanScrub() )
@@ -1099,10 +900,6 @@ void Scrubber::OnScrubOrSeek(bool seek)
 
    mSeeking = seek;
    CheckMenuItems();
-
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   // Update button images
-   ruler.UpdateButtonStates();
 }
 
 void Scrubber::OnScrub(const CommandContext&)
@@ -1117,10 +914,35 @@ void Scrubber::OnSeek(const CommandContext&)
    CheckMenuItems();
 }
 
+#if 1
+namespace {
+   static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
+
+   bool ReadScrubEnabledPref()
+   {
+      bool result {};
+      gPrefs->Read(scrubEnabledPrefName, &result, false);
+
+      return result;
+   }
+
+   void WriteScrubEnabledPref(bool value)
+   {
+      gPrefs->Write(scrubEnabledPrefName, value);
+   }
+}
+#endif
+
+void Scrubber::UpdatePrefs()
+{
+   mShowScrubbing = ReadScrubEnabledPref();
+}
+
 void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   ruler.OnToggleScrubRuler();
+   mShowScrubbing = !mShowScrubbing;
+   WriteScrubEnabledPref(mShowScrubbing);
+   gPrefs->Flush();
    const auto toolbar =
       ToolManager::Get( *mProject ).GetToolBar( ScrubbingBarID );
    toolbar->EnableDisableButtons();
@@ -1135,10 +957,6 @@ BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     THUNK(OnScrub))
    EVT_MENU(CMD_ID + 1, THUNK(OnSeek))
    EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
-END_EVENT_TABLE()
-
-BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
-   EVT_MOUSE_EVENTS(Scrubber::Forwarder::OnMouse)
 END_EVENT_TABLE()
 
 static_assert(nMenuItems == 3, "wrong number of items");

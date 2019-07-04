@@ -119,8 +119,6 @@ void DoPlayStop(const CommandContext &context)
 
       //play the front project
       if (!gAudioIO->IsBusy()) {
-         //update the playing area
-         window.TP_DisplaySelection();
          //Otherwise, start playing (assuming audio I/O isn't busy)
 
          // Will automatically set mLastPlayMode

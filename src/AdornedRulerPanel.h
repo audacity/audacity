@@ -44,7 +44,7 @@ public:
    void SetFocusFromKbd() override;
 
 public:
-   int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }
+   int GetRulerHeight() { return GetRulerHeight( ShowingScrubRuler() ); }
    static int GetRulerHeight(bool showScrubBar);
    wxRect GetInnerRect() const { return mInner; }
 
@@ -67,8 +67,7 @@ public:
 
    void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
 
-   bool ShowingScrubRuler() const { return mShowScrubbing; }
-   void OnToggleScrubRuler(/*wxCommandEvent& */);
+   bool ShowingScrubRuler() const;
    void OnToggleScrubRulerFromMenu(wxCommandEvent& );
    void SetPanelSize();
    
@@ -76,9 +75,11 @@ public:
 
 
 private:
+   void OnIdle( wxIdleEvent &evt );
    void OnRecordStartStop(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
+   void OnThemeChange(wxCommandEvent& evt);
    void UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
@@ -167,8 +168,6 @@ private:
    double mLeftDownClickUnsnapped;  // click position in seconds, before snap
    double mLeftDownClick;  // click position in seconds
    bool mIsDragging;
-
-   bool mShowScrubbing { false };
 
    DECLARE_EVENT_TABLE()
 

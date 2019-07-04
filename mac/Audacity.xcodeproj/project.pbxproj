@@ -1235,6 +1235,7 @@
 		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
 		5E19F59922A9665500E3F88E /* AutoRecoveryDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19F59722A9665500E3F88E /* AutoRecoveryDialog.cpp */; };
 		5E1B0BCC22CBA4F3008AA220 /* ProjectStatus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1B0BCA22CBA4F3008AA220 /* ProjectStatus.cpp */; };
+		5E1B0BCF22CE3240008AA220 /* ScrubUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1B0BCD22CE3240008AA220 /* ScrubUI.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E2B3E5C22BD9798005042E1 /* SelectUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E5A22BD9798005042E1 /* SelectUtilities.cpp */; };
 		5E2B3E5F22BD97A7005042E1 /* TrackUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */; };
@@ -3241,6 +3242,8 @@
 		5E19F59822A9665500E3F88E /* AutoRecoveryDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoRecoveryDialog.h; sourceTree = "<group>"; };
 		5E1B0BCA22CBA4F3008AA220 /* ProjectStatus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectStatus.cpp; sourceTree = "<group>"; };
 		5E1B0BCB22CBA4F3008AA220 /* ProjectStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectStatus.h; sourceTree = "<group>"; };
+		5E1B0BCD22CE3240008AA220 /* ScrubUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubUI.cpp; sourceTree = "<group>"; };
+		5E1B0BCE22CE3240008AA220 /* ScrubUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubUI.h; sourceTree = "<group>"; };
 		5E1C3F4D218F7604002CD087 /* TrackPanelDrawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelDrawable.h; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
@@ -6311,6 +6314,7 @@
 				5E7396451DAFD8F200BA0A4D /* EnvelopeHandle.cpp */,
 				5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */,
 				5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */,
+				5E1B0BCD22CE3240008AA220 /* ScrubUI.cpp */,
 				5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */,
 				5E73964E1DAFD98400BA0A4D /* SliderHandle.cpp */,
 				5E7396421DAFD8C600BA0A4D /* TimeShiftHandle.cpp */,
@@ -6329,6 +6333,7 @@
 				5E7396461DAFD8F200BA0A4D /* EnvelopeHandle.h */,
 				5E74D2E01CC4429700D88B0B /* PlayIndicatorOverlay.h */,
 				5E74D2E21CC4429700D88B0B /* Scrubbing.h */,
+				5E1B0BCE22CE3240008AA220 /* ScrubUI.h */,
 				5E7396701DAFDB9D00BA0A4D /* SelectHandle.h */,
 				5E73964F1DAFD98400BA0A4D /* SliderHandle.h */,
 				5E7396431DAFD8C600BA0A4D /* TimeShiftHandle.h */,
@@ -8610,6 +8615,7 @@
 				1841B50B0E00AD6E00F386E9 /* ODManager.cpp in Sources */,
 				5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */,
 				1841B50C0E00AD6E00F386E9 /* ODTask.cpp in Sources */,
+				5E1B0BCF22CE3240008AA220 /* ScrubUI.cpp in Sources */,
 				1841B50D0E00AD6E00F386E9 /* ODTaskThread.cpp in Sources */,
 				5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */,
 				1841B50E0E00AD6E00F386E9 /* ODWaveTrackTaskQueue.cpp in Sources */,

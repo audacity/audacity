@@ -1079,14 +1079,3 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    int iRecMins = (int)round(dRecTime / 60.0);
    return iRecMins;
 }
-
-/// This was moved here to eliminate dependency of Scrubbing.cpp on
-/// TrackPanel, but perhaps a better home should be found for it in future
-#include "tracks/ui/Scrubbing.h"
-static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
-  []( AudacityProject &parent ){
-     auto result = std::make_shared< ScrubbingOverlay >( &parent );
-     TrackPanel::Get( parent ).AddOverlay( result );
-     return result;
-   }
-};

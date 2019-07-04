@@ -162,7 +162,6 @@ UIHandle::Result CutlineHandle::Click
          }
 
          viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
-         result |= UpdateSelection;
       }
       else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
          const double pos = mLocation.pos;
@@ -230,7 +229,6 @@ UIHandle::Result CutlineHandle::Release
    case Expand:
       ProjectHistory::Get( *pProject )
          .PushState(_("Expanded Cut Line"), _("Expand"));
-      result |= RefreshCode::UpdateSelection;
       break;
    case Remove:
       ProjectHistory::Get( *pProject )
@@ -251,7 +249,6 @@ UIHandle::Result CutlineHandle::Cancel(AudacityProject *pProject)
       AudacityProject &project = *pProject;
       auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
       selectedRegion.setTimes( mStartTime, mEndTime );
-      result |= UpdateSelection;
    }
    return result;
 }

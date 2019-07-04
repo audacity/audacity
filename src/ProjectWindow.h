@@ -133,9 +133,6 @@ public:
    wxSize GetTPTracksUsableArea() /* not override */;
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
-   // TrackPanel callback methods, overrides of TrackPanelListener
-   void TP_DisplaySelection() override;
-
    void TP_RedrawScrollbars() override;
    void TP_ScrollLeft() override;
    void TP_ScrollRight() override;
