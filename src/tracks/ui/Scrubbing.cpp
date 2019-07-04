@@ -745,7 +745,6 @@ void Scrubber::StopScrubbing()
    mDragging = false;
    mSeeking = false;
 
-   AdornedRulerPanel::Get( *mProject ).DrawBothOverlays();
    CheckMenuItems();
 }
 
