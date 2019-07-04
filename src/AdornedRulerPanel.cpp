@@ -45,7 +45,7 @@
 #include "ViewInfo.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/TracksPrefs.h"
-#include "toolbars/ControlToolBar.h"
+#include "toolbars/ToolBar.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/AButton.h"
@@ -572,7 +572,7 @@ public:
    static std::shared_ptr<PlayheadHandle>
    HitTest( const AudacityProject *pProject, wxCoord xx )
    {
-      if( ControlToolBar::Get( *pProject )
+      if( Scrubber::Get( *pProject )
          .IsTransportingPinned() &&
           ProjectAudioIO::Get( *pProject ).IsAudioActive() )
       {
@@ -2068,7 +2068,7 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      bool pinned = ControlToolBar::Get( *mProject ).IsTransportingPinned();
+      bool pinned = Scrubber::Get( *mProject ).IsTransportingPinned();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
          (playing ? bmpPlayPointer : bmpRecordPointer) 

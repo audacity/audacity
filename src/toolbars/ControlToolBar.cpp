@@ -74,7 +74,6 @@
 #include "../FileNames.h"
 
 #include "../tracks/ui/Scrubbing.h"
-#include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
@@ -745,20 +744,9 @@ void ControlToolBar::UpdateStatusBar()
    );
 }
 
-bool ControlToolBar::IsTransportingPinned() const
-{
-   if (!TracksPrefs::GetPinnedHeadPreference())
-      return false;
-   const auto &scrubber = Scrubber::Get( mProject );
-   return
-     !(scrubber.HasMark() &&
-       !scrubber.WasSpeedPlaying() &&
-       !Scrubber::ShouldScrubPinned());
-}
-
 void ControlToolBar::StartScrollingIfPreferred()
 {
-   if ( IsTransportingPinned() )
+   if ( Scrubber::Get( mProject ).IsTransportingPinned() )
       StartScrolling();
 #ifdef __WXMAC__
    else if (Scrubber::Get( mProject ).HasMark()) {

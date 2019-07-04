@@ -127,6 +127,8 @@ public:
    bool IsPaused() const;
    void CheckMenuItems();
 
+   bool IsTransportingPinned() const;
+
 private:
    void StartPolling();
    void StopPolling();

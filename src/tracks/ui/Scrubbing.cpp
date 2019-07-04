@@ -687,6 +687,16 @@ void Scrubber::ContinueScrubbingUI()
    }
 }
 
+bool Scrubber::IsTransportingPinned() const
+{
+   if (!TracksPrefs::GetPinnedHeadPreference())
+      return false;
+   return
+     !(HasMark() &&
+       !WasSpeedPlaying() &&
+       !ShouldScrubPinned());
+}
+
 void Scrubber::StartPolling()
 {
    mPaused = false;
