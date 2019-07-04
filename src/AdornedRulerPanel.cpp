@@ -29,6 +29,8 @@
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "CellularPanel.h"
+#include "HitTestResult.h"
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -39,7 +41,6 @@
 #include "RefreshCode.h"
 #include "Snap.h"
 #include "Track.h"
-#include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UIHandle.h"
 #include "ViewInfo.h"
@@ -337,8 +338,13 @@ void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
       ;
 
       // Draw indicator in all visible tracks
-      static_cast<TrackPanel&>(panel)
-         .VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+      auto pCellularPanel = dynamic_cast<CellularPanel*>( &panel );
+      if ( !pCellularPanel ) {
+         wxASSERT( false );
+         return;
+      }
+      pCellularPanel
+         ->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
             const auto pTrackView = dynamic_cast<TrackView*>(&cell);
             if (!pTrackView)
                return;
@@ -1663,7 +1669,13 @@ void AdornedRulerPanel::SetPanelSize()
 
 void AdornedRulerPanel::DrawBothOverlays()
 {
-   TrackPanel::Get( *mProject ).DrawOverlays( false );
+   auto pCellularPanel =
+      dynamic_cast<CellularPanel*>( &GetProjectPanel( *GetProject() ) );
+   if ( !pCellularPanel ) {
+      wxASSERT( false );
+   }
+   else
+      pCellularPanel->DrawOverlays( false );
    DrawOverlays( false );
 }
 
@@ -2214,7 +2226,13 @@ void AdornedRulerPanel::CreateOverlays()
    if (!mOverlay) {
       mOverlay =
          std::make_shared<QuickPlayIndicatorOverlay>( mProject );
-      TrackPanel::Get( *mProject ).AddOverlay( mOverlay );
+      auto pCellularPanel =
+         dynamic_cast<CellularPanel*>( &GetProjectPanel( *GetProject() ) );
+      if ( !pCellularPanel ) {
+         wxASSERT( false );
+      }
+      else
+         pCellularPanel->AddOverlay( mOverlay );
       this->AddOverlay( mOverlay->mPartner );
    }
 }
