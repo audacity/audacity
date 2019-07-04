@@ -76,7 +76,6 @@ bool ProjectSelectionManager::SnapSelection()
 
       if (t0 != oldt0 || t1 != oldt1) {
          selectedRegion.setTimes(t0, t1);
-         window.TP_DisplaySelection();
          return true;
       }
    }

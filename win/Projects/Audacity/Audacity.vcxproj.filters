@@ -299,6 +299,9 @@
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectStatus.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectWindow.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -926,6 +929,9 @@
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\ScrubUI.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1427,6 +1433,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectSettings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectStatus.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectWindow.h">
@@ -2117,6 +2126,9 @@
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\ScrubUI.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">

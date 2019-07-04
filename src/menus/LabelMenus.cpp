@@ -7,6 +7,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
+#include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -23,6 +24,7 @@ int DoAddLabel(
    bool preserveFocus = false)
 {
    auto &tracks = TrackList::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -38,7 +40,7 @@ int DoAddLabel(
    }
 
    // If the focused track is a label track, use that
-   Track *const pFocusedTrack = trackPanel.GetFocusedTrack();
+   const auto pFocusedTrack = trackFocus.Get();
 
    // Look for a label track at or after the focused track
    auto iter = pFocusedTrack
@@ -451,7 +453,6 @@ void OnSplitDeleteLabels(const CommandContext &context)
 void OnSilenceLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -470,7 +471,6 @@ void OnSilenceLabels(const CommandContext &context)
 void OnCopyLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 

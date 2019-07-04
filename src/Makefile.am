@@ -238,6 +238,8 @@ audacity_SOURCES = \
 	ProjectSelectionManager.h \
 	ProjectSettings.cpp \
 	ProjectSettings.h \
+	ProjectStatus.cpp \
+	ProjectStatus.h \
 	ProjectWindow.cpp \
 	ProjectWindow.h \
 	RealFFTf.cpp \
@@ -706,6 +708,8 @@ audacity_SOURCES = \
 	tracks/ui/PlayIndicatorOverlay.h \
 	tracks/ui/Scrubbing.cpp \
 	tracks/ui/Scrubbing.h \
+	tracks/ui/ScrubUI.cpp \
+	tracks/ui/ScrubUI.h \
 	tracks/ui/SelectHandle.cpp \
 	tracks/ui/SelectHandle.h \
 	tracks/ui/SliderHandle.cpp \

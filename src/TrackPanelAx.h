@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
+#include "Audacity.h"
+
 #include <functional>
 #include <memory>
 
@@ -22,6 +24,8 @@
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h" // to inherit
 #endif
+
+#include "ClientData.h" // to inherit
 
 class wxRect;
 
@@ -150,6 +154,51 @@ private:
    wxString mMessage;
    bool mTrackName;
    int mMessageCount;
+};
+
+class TrackFocus final
+   : public ClientData::Base
+{
+public:
+   static TrackFocus &Get( AudacityProject &project );
+   static const TrackFocus &Get( const AudacityProject &project );
+
+   explicit TrackFocus( AudacityProject &project );
+   ~TrackFocus() override;
+
+   TrackFocus( const TrackFocus & ) PROHIBITED;
+   TrackFocus& operator=( const TrackFocus & ) PROHIBITED;
+
+   // Report the currently focused track, which may be null, otherwise is
+   // a leader track
+   // This function is not const, because it may have a side effect of setting
+   // a focus if none was already set
+   Track *Get();
+
+   // Set the track focus to a given track or to null
+   void Set( Track *pTrack );
+
+   // Not equivalent to pTrack == this->Get(): may return true also for
+   // other channels than the leader
+   // As with Get(), this is not const
+   bool IsFocused( const Track *pTrack );
+
+   void SetAccessible( wxWindow &owner,
+      std::unique_ptr< TrackPanelAx > pAccessible );
+
+   void MessageForScreenReader(const wxString& message);
+
+   void UpdateAccessibility();
+
+private:
+
+   AudacityProject &mProject;
+
+#if wxUSE_ACCESSIBILITY
+   TrackPanelAx *mAx{};
+#else
+   std::unique_ptr<TrackPanelAx> mAx;
+#endif
 };
 
 #endif // __AUDACITY_TRACK_PANEL_ACCESSIBILITY__

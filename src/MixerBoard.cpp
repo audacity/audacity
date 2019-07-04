@@ -37,6 +37,7 @@
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
@@ -58,7 +59,6 @@
 #endif
 
 #include "commands/CommandManager.h"
-#include "toolbars/ControlToolBar.h"
 
 // class MixerTrackSlider
 
@@ -1353,7 +1353,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
       auto gAudioIO = AudioIOBase::Get();
       UpdateMeters(
          gAudioIO->GetStreamTime(),
-         (ControlToolBar::Get( *mProject ).GetLastPlayMode()
+         (ProjectAudioManager::Get( *mProject ).GetLastPlayMode()
             == PlayMode::loopedPlay)
       );
    }

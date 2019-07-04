@@ -28,6 +28,7 @@ This class now lists
 #include "CommandTargets.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
+#include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
 #include "../ViewInfo.h"
@@ -489,8 +490,8 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
    context.StartArray();
    for (auto trk : tracks.Leaders())
    {
-      auto &panel = TrackPanel::Get( context.project );
-      Track * fTrack = panel.GetFocusedTrack();
+      auto &trackFocus = TrackFocus::Get( context.project );
+      Track * fTrack = trackFocus.Get();
 
       context.StartStruct();
       context.AddItem( trk->GetName(), "name" );

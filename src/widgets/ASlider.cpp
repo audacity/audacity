@@ -63,6 +63,7 @@ or ASlider.
 #include "../AColor.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
+#include "../ProjectStatus.h"
 #include "../ShuttleGui.h"
 
 #include "../AllThemeResources.h"
@@ -1092,7 +1093,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    {
       // Display the tooltip in the status bar
       wxString tip = GetTip(mCurrentValue);
-      GetActiveProject()->SetStatus(tip);
+      ProjectStatus::Get( *GetActiveProject() ).Set(tip);
       Refresh();
    }
    else if (event.Leaving())
@@ -1101,7 +1102,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       {
          ShowTip(false);
       }
-      GetActiveProject()->SetStatus(wxT(""));
+      ProjectStatus::Get( *GetActiveProject() ).Set(wxT(""));
       Refresh();
    }
 

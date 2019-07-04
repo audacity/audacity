@@ -195,7 +195,7 @@ UIHandle::Result LabelTextHandle::Click
    if (!unsafe)
       ProjectHistory::Get( *pProject ).ModifyState(false);
 
-   return result | RefreshCode::RefreshCell | RefreshCode::UpdateSelection;
+   return result | RefreshCode::RefreshCell;
 }
 
 void LabelTextHandle::HandleTextDragRelease(

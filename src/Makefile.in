@@ -328,15 +328,15 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
 	ProjectManager.h ProjectSelectionManager.cpp \
 	ProjectSelectionManager.h ProjectSettings.cpp \
-	ProjectSettings.h ProjectWindow.cpp ProjectWindow.h \
-	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
-	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
-	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
-	SelectUtilities.cpp SelectUtilities.h SelectedRegion.cpp \
-	SelectedRegion.h SelectionState.cpp SelectionState.h \
-	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
-	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
-	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	ProjectSettings.h ProjectStatus.cpp ProjectStatus.h \
+	ProjectWindow.cpp ProjectWindow.h RealFFTf.cpp RealFFTf.h \
+	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
+	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
+	Screenshot.cpp Screenshot.h SelectUtilities.cpp \
+	SelectUtilities.h SelectedRegion.cpp SelectedRegion.h \
+	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
+	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -559,7 +559,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	tracks/ui/EditCursorOverlay.h tracks/ui/EnvelopeHandle.cpp \
 	tracks/ui/EnvelopeHandle.h tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h tracks/ui/Scrubbing.cpp \
-	tracks/ui/Scrubbing.h tracks/ui/SelectHandle.cpp \
+	tracks/ui/Scrubbing.h tracks/ui/ScrubUI.cpp \
+	tracks/ui/ScrubUI.h tracks/ui/SelectHandle.cpp \
 	tracks/ui/SelectHandle.h tracks/ui/SliderHandle.cpp \
 	tracks/ui/SliderHandle.h tracks/ui/TimeShiftHandle.cpp \
 	tracks/ui/TimeShiftHandle.h tracks/ui/TrackButtonHandles.cpp \
@@ -695,6 +696,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ProjectManager.$(OBJEXT) \
 	audacity-ProjectSelectionManager.$(OBJEXT) \
 	audacity-ProjectSettings.$(OBJEXT) \
+	audacity-ProjectStatus.$(OBJEXT) \
 	audacity-ProjectWindow.$(OBJEXT) audacity-RealFFTf.$(OBJEXT) \
 	audacity-RealFFTf48x.$(OBJEXT) audacity-Resample.$(OBJEXT) \
 	audacity-RingBuffer.$(OBJEXT) audacity-Screenshot.$(OBJEXT) \
@@ -912,6 +914,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	tracks/ui/audacity-EnvelopeHandle.$(OBJEXT) \
 	tracks/ui/audacity-PlayIndicatorOverlay.$(OBJEXT) \
 	tracks/ui/audacity-Scrubbing.$(OBJEXT) \
+	tracks/ui/audacity-ScrubUI.$(OBJEXT) \
 	tracks/ui/audacity-SelectHandle.$(OBJEXT) \
 	tracks/ui/audacity-SliderHandle.$(OBJEXT) \
 	tracks/ui/audacity-TimeShiftHandle.$(OBJEXT) \
@@ -1432,15 +1435,15 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	ProjectHistory.cpp ProjectHistory.h ProjectManager.cpp \
 	ProjectManager.h ProjectSelectionManager.cpp \
 	ProjectSelectionManager.h ProjectSettings.cpp \
-	ProjectSettings.h ProjectWindow.cpp ProjectWindow.h \
-	RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h \
-	RefreshCode.h Resample.cpp Resample.h RevisionIdent.h \
-	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
-	SelectUtilities.cpp SelectUtilities.h SelectedRegion.cpp \
-	SelectedRegion.h SelectionState.cpp SelectionState.h \
-	Shuttle.cpp Shuttle.h ShuttleGetDefinition.cpp \
-	ShuttleGetDefinition.h ShuttleGui.cpp ShuttleGui.h \
-	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	ProjectSettings.h ProjectStatus.cpp ProjectStatus.h \
+	ProjectWindow.cpp ProjectWindow.h RealFFTf.cpp RealFFTf.h \
+	RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h Resample.cpp \
+	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
+	Screenshot.cpp Screenshot.h SelectUtilities.cpp \
+	SelectUtilities.h SelectedRegion.cpp SelectedRegion.h \
+	SelectionState.cpp SelectionState.h Shuttle.cpp Shuttle.h \
+	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
+	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -1664,7 +1667,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	tracks/ui/EditCursorOverlay.h tracks/ui/EnvelopeHandle.cpp \
 	tracks/ui/EnvelopeHandle.h tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h tracks/ui/Scrubbing.cpp \
-	tracks/ui/Scrubbing.h tracks/ui/SelectHandle.cpp \
+	tracks/ui/Scrubbing.h tracks/ui/ScrubUI.cpp \
+	tracks/ui/ScrubUI.h tracks/ui/SelectHandle.cpp \
 	tracks/ui/SelectHandle.h tracks/ui/SliderHandle.cpp \
 	tracks/ui/SliderHandle.h tracks/ui/TimeShiftHandle.cpp \
 	tracks/ui/TimeShiftHandle.h tracks/ui/TrackButtonHandles.cpp \
@@ -2378,6 +2382,8 @@ tracks/ui/audacity-PlayIndicatorOverlay.$(OBJEXT):  \
 	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-Scrubbing.$(OBJEXT): tracks/ui/$(am__dirstamp) \
 	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-ScrubUI.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-SelectHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
 	tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-SliderHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
@@ -2647,6 +2653,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectSelectionManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectSettings.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectStatus.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ProjectWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RealFFTf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-RealFFTf48x.Po@am__quote@
@@ -2921,6 +2928,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-EditCursorOverlay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-PlayIndicatorOverlay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-ScrubUI.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-Scrubbing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-SelectHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-SliderHandle.Po@am__quote@
@@ -4254,6 +4262,20 @@ audacity-ProjectSettings.obj: ProjectSettings.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectSettings.cpp' object='audacity-ProjectSettings.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectSettings.obj `if test -f 'ProjectSettings.cpp'; then $(CYGPATH_W) 'ProjectSettings.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectSettings.cpp'; fi`
+
+audacity-ProjectStatus.o: ProjectStatus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectStatus.o -MD -MP -MF $(DEPDIR)/audacity-ProjectStatus.Tpo -c -o audacity-ProjectStatus.o `test -f 'ProjectStatus.cpp' || echo '$(srcdir)/'`ProjectStatus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectStatus.Tpo $(DEPDIR)/audacity-ProjectStatus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectStatus.cpp' object='audacity-ProjectStatus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectStatus.o `test -f 'ProjectStatus.cpp' || echo '$(srcdir)/'`ProjectStatus.cpp
+
+audacity-ProjectStatus.obj: ProjectStatus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectStatus.obj -MD -MP -MF $(DEPDIR)/audacity-ProjectStatus.Tpo -c -o audacity-ProjectStatus.obj `if test -f 'ProjectStatus.cpp'; then $(CYGPATH_W) 'ProjectStatus.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectStatus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ProjectStatus.Tpo $(DEPDIR)/audacity-ProjectStatus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ProjectStatus.cpp' object='audacity-ProjectStatus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ProjectStatus.obj `if test -f 'ProjectStatus.cpp'; then $(CYGPATH_W) 'ProjectStatus.cpp'; else $(CYGPATH_W) '$(srcdir)/ProjectStatus.cpp'; fi`
 
 audacity-ProjectWindow.o: ProjectWindow.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ProjectWindow.o -MD -MP -MF $(DEPDIR)/audacity-ProjectWindow.Tpo -c -o audacity-ProjectWindow.o `test -f 'ProjectWindow.cpp' || echo '$(srcdir)/'`ProjectWindow.cpp
@@ -7502,6 +7524,20 @@ tracks/ui/audacity-Scrubbing.obj: tracks/ui/Scrubbing.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/Scrubbing.cpp' object='tracks/ui/audacity-Scrubbing.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-Scrubbing.obj `if test -f 'tracks/ui/Scrubbing.cpp'; then $(CYGPATH_W) 'tracks/ui/Scrubbing.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/Scrubbing.cpp'; fi`
+
+tracks/ui/audacity-ScrubUI.o: tracks/ui/ScrubUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ScrubUI.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo -c -o tracks/ui/audacity-ScrubUI.o `test -f 'tracks/ui/ScrubUI.cpp' || echo '$(srcdir)/'`tracks/ui/ScrubUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo tracks/ui/$(DEPDIR)/audacity-ScrubUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ScrubUI.cpp' object='tracks/ui/audacity-ScrubUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ScrubUI.o `test -f 'tracks/ui/ScrubUI.cpp' || echo '$(srcdir)/'`tracks/ui/ScrubUI.cpp
+
+tracks/ui/audacity-ScrubUI.obj: tracks/ui/ScrubUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ScrubUI.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo -c -o tracks/ui/audacity-ScrubUI.obj `if test -f 'tracks/ui/ScrubUI.cpp'; then $(CYGPATH_W) 'tracks/ui/ScrubUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ScrubUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo tracks/ui/$(DEPDIR)/audacity-ScrubUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ScrubUI.cpp' object='tracks/ui/audacity-ScrubUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ScrubUI.obj `if test -f 'tracks/ui/ScrubUI.cpp'; then $(CYGPATH_W) 'tracks/ui/ScrubUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ScrubUI.cpp'; fi`
 
 tracks/ui/audacity-SelectHandle.o: tracks/ui/SelectHandle.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-SelectHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-SelectHandle.Tpo -c -o tracks/ui/audacity-SelectHandle.o `test -f 'tracks/ui/SelectHandle.cpp' || echo '$(srcdir)/'`tracks/ui/SelectHandle.cpp

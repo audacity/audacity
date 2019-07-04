@@ -29,12 +29,6 @@ AUDACITY_DLL_API AudacityProject *GetActiveProject();
 // For use by ProjectManager only:
 extern void SetActiveProject(AudacityProject * project);
 
-enum StatusBarField {
-   stateStatusBarField = 1,
-   mainStatusBarField = 2,
-   rateStatusBarField = 3
-};
-
 /// \brief an object of class AllProjects acts like a standard library
 /// container, but refers to a global array of open projects.  So you can
 /// iterate easily over shared pointers to them with range-for :
@@ -96,10 +90,6 @@ using AttachedWindows = ClientData::Site<
    AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
 >;
 
-// Type of event emitted by the project when its status message is set
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
-
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
@@ -125,6 +115,10 @@ class AUDACITY_DLL_API AudacityProject final
    const wxFrame *GetFrame() const { return mFrame; }
    void SetFrame( wxFrame *pFrame );
  
+   wxWindow *GetPanel() { return mPanel; }
+   const wxWindow *GetPanel() const { return mPanel; }
+   void SetPanel( wxWindow *pPanel );
+ 
    wxString GetProjectName() const;
 
    const FilePath &GetFileName() { return mFileName; }
@@ -132,9 +126,6 @@ class AUDACITY_DLL_API AudacityProject final
 
    int GetProjectNumber(){ return mProjectNo;}
    
-   const wxString &GetStatus() const { return mLastMainStatusMessage; }
-   void SetStatus(const wxString &msg);
-
  private:
 
    // The project's name and file info
@@ -148,9 +139,8 @@ class AUDACITY_DLL_API AudacityProject final
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
  private:
-   wxString mLastMainStatusMessage;
-
    wxWeakRef< wxFrame > mFrame{};
+   wxWeakRef< wxWindow > mPanel{};
 };
 
 ///\brief Get the top-level window associated with the project (as a wxFrame
@@ -166,5 +156,11 @@ inline wxFrame *FindProjectFrame( AudacityProject *project ) {
 inline const wxFrame *FindProjectFrame( const AudacityProject *project ) {
    return project ? &GetProjectFrame( *project ) : nullptr;
 }
+
+///\brief Get the main sub-window of the project frame that displays track data
+// (as a wxWindow only, when you do not need to use the subclass TrackPanel)
+AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project );
+AUDACITY_DLL_API const wxWindow &GetProjectPanel(
+   const AudacityProject &project );
 
 #endif

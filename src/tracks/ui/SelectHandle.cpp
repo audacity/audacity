@@ -28,6 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "../../SelectionState.h"
 #include "../../TrackArtist.h"
+#include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -499,7 +500,6 @@ void SelectHandle::SetUseSnap(bool use)
          ViewInfo::Get( *::GetActiveProject() ),
          mUseSnap ? mSnapEnd.outTime : mSnapEnd.timeSnappedTime,
          nullptr);
-      mChangeHighlight |= RefreshCode::UpdateSelection;
    }
 }
 
@@ -534,12 +534,11 @@ UIHandle::Result SelectHandle::Click
    wxMouseEvent &event = evt.event;
    const auto sTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    const auto pTrack = sTrack.get();
+   auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
-
-   auto &trackPanel = TrackPanel::Get( *pProject );
 
    bool selectChange = (
       event.LeftDown() &&
@@ -585,7 +584,7 @@ UIHandle::Result SelectHandle::Click
       ProjectHistory::Get( *pProject ).ModifyState(false);
 
       // Do not start a drag
-      return RefreshAll | UpdateSelection | Cancelled;
+      return RefreshAll | Cancelled;
    }
    else if (!event.LeftDown())
       return Cancelled;
@@ -674,7 +673,7 @@ UIHandle::Result SelectHandle::Click
 
       // Full refresh since the label area may need to indicate
       // newly selected tracks.
-      return RefreshAll | UpdateSelection;
+      return RefreshAll;
    }
 
    // II. Unmodified click starts a NEW selection
@@ -707,7 +706,7 @@ UIHandle::Result SelectHandle::Click
             // For persistence of the selection change:
             ProjectHistory::Get( *pProject ).ModifyState(false);
             mSelectionBoundary = SBWidth;
-            return UpdateSelection;
+            return RefreshNone;
          }
          else
 #endif
@@ -771,7 +770,7 @@ UIHandle::Result SelectHandle::Click
 #endif
       StartSelection(pProject);
       selectionState.SelectTrack( *pTrack, true, true );
-      trackPanel.SetFocusedTrack(pTrack);
+      TrackFocus::Get( *pProject ).Set(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
       pTrack->TypeSwitch( [&](WaveTrack *wt) {
          if(ODManager::IsInstanceCreated())
@@ -779,7 +778,7 @@ UIHandle::Result SelectHandle::Click
       });
 
       Connect(pProject);
-      return RefreshAll | UpdateSelection;
+      return RefreshAll;
    }
    else {
       Connect(pProject);
@@ -1429,7 +1428,7 @@ void SelectHandle::MoveSnappingFreqSelection
 
       // SelectNone();
       // SelectTrack(pTrack, true);
-      TrackPanel::Get( *pProject ).SetFocusedTrack(pTrack);
+      TrackFocus::Get( *pProject ).Set(pTrack);
    }
 }
 

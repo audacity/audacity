@@ -111,14 +111,9 @@ class AUDACITY_DLL_API TrackPanel final
 
    void RefreshTrack(Track *trk, bool refreshbacking = true);
 
-   void DisplaySelection();
-
    void HandlePageUpKey();
    void HandlePageDownKey();
    AudacityProject * GetProject() const override;
-
-   void ScrollIntoView(double pos);
-   void ScrollIntoView(int x);
 
    void OnTrackMenu(Track *t = NULL);
 
@@ -126,8 +121,6 @@ class AUDACITY_DLL_API TrackPanel final
 
    TrackPanelCell *GetFocusedCell() override;
    void SetFocusedCell() override;
-   Track *GetFocusedTrack();
-   void SetFocusedTrack(Track *t);
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -144,9 +137,6 @@ protected:
    void UpdateSelectionDisplay();
 
 public:
-   void UpdateAccessibility();
-   void MessageForScreenReader(const wxString& message);
-
    void MakeParentRedrawScrollbars();
 
    // Rectangle includes track control panel, and the vertical ruler, and
@@ -220,15 +210,6 @@ protected:
    bool mRedrawAfterStop;
 
    friend class TrackPanelAx;
-
-#if wxUSE_ACCESSIBILITY
-   TrackPanelAx *mAx{};
-#else
-   std::unique_ptr<TrackPanelAx> mAx;
-#endif
-
-public:
-   TrackPanelAx &GetAx() { return *mAx; }
 
 protected:
 

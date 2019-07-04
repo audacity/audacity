@@ -32,11 +32,13 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
+#include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "SelectionState.h"
 #include "Sequence.h"
 #include "Tags.h"
+#include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
@@ -543,8 +545,8 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       // cancel the cleanup:
       safetyFileName = wxT("");
 
-   window.GetStatusBar()->SetStatusText(
-      wxString::Format(_("Saved %s"), fileName), mainStatusBarField);
+   ProjectStatus::Get( proj ).Set(
+      wxString::Format(_("Saved %s"), fileName) );
 
    return true;
 }
@@ -1346,7 +1348,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       SelectionBar::Get( project ).SetRate( settings.GetRate() );
 
       ProjectHistory::Get( project ).InitialState();
-      trackPanel.SetFocusedTrack( *tracks.Any().begin() );
+      TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();
       trackPanel.Refresh(false);
       trackPanel.Update(); // force any repaint to happen now,

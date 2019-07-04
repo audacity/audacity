@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
+#include "../../TrackPanelAx.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanel.h"
 #include "../../TrackUtilities.h"
@@ -155,7 +156,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    if (pTrack)
    {
       auto toRemove = pTrack->SubstitutePendingChangedTrack();
-      TransportActions::StopIfPaused( *pProject );
+      ProjectAudioManager::Get( *pProject ).StopIfPaused();
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
          TrackUtilities::DoRemoveTrack(*pProject, toRemove.get());
@@ -174,7 +175,7 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Close");
    auto project = ::GetActiveProject();
    auto focused =
-      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
+      TrackFocus::Get( *project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 
@@ -234,7 +235,7 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Open menu...");
    auto project = ::GetActiveProject();
    auto focused =
-      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
+      TrackFocus::Get( *project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 

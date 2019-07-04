@@ -64,7 +64,6 @@ greater use in future.
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/Command.h"
-#include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
@@ -2409,7 +2408,7 @@ void Effect::Preview(bool dryOnly)
 
    if (success)
    {
-      auto tracks = GetAllPlaybackTracks(*mTracks, true);
+      auto tracks = ProjectAudioManager::GetAllPlaybackTracks(*mTracks, true);
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.
@@ -3296,8 +3295,8 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    {
       auto gAudioIO = AudioIO::Get();
       mPlayPos = gAudioIO->GetStreamTime();
-      auto &bar = ControlToolBar::Get( *mProject );
-      bar.StopPlaying();
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.Stop();
    }
    else
    {
@@ -3321,8 +3320,8 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          mPlayPos = mRegion.t1();
       }
 
-      auto &bar = ControlToolBar::Get( *mProject );
-      bar.PlayPlayRegion(
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.PlayPlayRegion(
          SelectedRegion(mPlayPos, mRegion.t1()),
          DefaultPlayOptions( *mProject ),
          PlayMode::normalPlay );

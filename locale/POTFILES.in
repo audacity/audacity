@@ -187,6 +187,8 @@ src/ProjectSelectionManager.cpp
 src/ProjectSelectionManager.h
 src/ProjectSettings.cpp
 src/ProjectSettings.h
+src/ProjectStatus.cpp
+src/ProjectStatus.h
 src/ProjectWindow.cpp
 src/ProjectWindow.h
 src/RealFFTf.cpp
@@ -724,6 +726,8 @@ src/tracks/ui/PlayIndicatorOverlay.cpp
 src/tracks/ui/PlayIndicatorOverlay.h
 src/tracks/ui/Scrubbing.cpp
 src/tracks/ui/Scrubbing.h
+src/tracks/ui/ScrubUI.cpp
+src/tracks/ui/ScrubUI.h
 src/tracks/ui/SelectHandle.cpp
 src/tracks/ui/SelectHandle.h
 src/tracks/ui/SliderHandle.cpp

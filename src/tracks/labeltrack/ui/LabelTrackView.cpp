@@ -32,6 +32,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../Theme.h"
 #include "../../../TrackArtist.h"
+#include "../../../TrackPanelAx.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UndoManager.h"
@@ -1084,10 +1085,11 @@ int LabelTrackView::GetSelectedIndex( AudacityProject &project ) const
    // may make delayed update of mutable mSelIndex after track selection change
    auto track = FindLabelTrack();
    if ( track->GetSelected() ||
-      TrackPanel::Get(
+      TrackFocus::Get(
          // unhappy const_cast because because focus may be set if undefined
          const_cast<AudacityProject&>( project )
-      ).GetFocusedTrack() == track.get() )
+      ).Get() == track.get()
+   )
       return mSelIndex = std::max( -1,
          std::min<int>( track->GetLabels().size() - 1, mSelIndex ) );
    else
@@ -1302,7 +1304,7 @@ unsigned LabelTrackView::KeyDown(
    // Make sure caret is in view
    int x;
    if (CalcCursorX( *project, &x ))
-      TrackPanel::Get( *project ).ScrollIntoView(x);
+      ProjectWindow::Get( *project ).ScrollIntoView(x);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
@@ -1476,7 +1478,7 @@ bool LabelTrackView::DoKeyDown(
             auto track = *TrackList::Get( project ).Any()
                .begin().advance(mRestoreFocus);
             if (track)
-               TrackPanel::Get( project ).SetFocusedTrack(track);
+               TrackFocus::Get( project ).Set(track);
             mRestoreFocus = -2;
          }
          mSelIndex = -1;
@@ -2058,10 +2060,12 @@ int LabelTrackView::DialogForLabelName(
    AudacityProject &project,
    const SelectedRegion& region, const wxString& initialValue, wxString& value)
 {
+   auto &trackFocus = TrackFocus::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
-   wxPoint position = trackPanel.FindTrackRect(trackPanel.GetFocusedTrack()).GetBottomLeft();
+   wxPoint position =
+      trackPanel.FindTrackRect( trackFocus.Get() ).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
    position.x += viewInfo.GetLabelWidth()

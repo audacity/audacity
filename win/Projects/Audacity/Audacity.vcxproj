@@ -235,6 +235,7 @@
     <ClCompile Include="..\..\..\src\ProjectManager.cpp" />
     <ClCompile Include="..\..\..\src\ProjectSelectionManager.cpp" />
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectStatus.cpp" />
     <ClCompile Include="..\..\..\src\ProjectWindow.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
@@ -310,6 +311,7 @@
     <ClCompile Include="..\..\..\src\tracks\ui\EnvelopeHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\ScrubUI.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\SelectHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\SliderHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\TimeShiftHandle.cpp" />
@@ -624,6 +626,7 @@
     <ClInclude Include="..\..\..\src\tracks\ui\EnvelopeHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\ScrubUI.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\UserException.h" />
@@ -697,6 +700,7 @@
     <ClInclude Include="..\..\..\src\ProjectManager.h" />
     <ClInclude Include="..\..\..\src\ProjectSelectionManager.h" />
     <ClInclude Include="..\..\..\src\ProjectSettings.h" />
+    <ClInclude Include="..\..\..\src\ProjectStatus.h" />
     <ClInclude Include="..\..\..\src\ProjectWindow.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />

@@ -26,7 +26,7 @@ namespace RefreshCode
       RefreshAll = 0x8,
       FixScrollbars = 0x10,
       Resize = 0x20,
-      UpdateSelection = 0x40,
+      /* 0x40 not used */
       UpdateVRuler = 0x80,      // of the clicked track
       EnsureVisible = 0x100,    // for the clicked track
       DrawOverlays = 0x200,

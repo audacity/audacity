@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include <memory>
 #include <wx/frame.h> // to inherit
 #include "TrackPanelListener.h" // to inherit
+#include "Prefs.h"
 
 class AudacityProject;
 class Track;
@@ -21,10 +22,14 @@ class Track;
 class wxScrollBar;
 class wxPanel;
 
+class ProjectWindow;
+void InitProjectWindow( ProjectWindow &window );
+
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class ProjectWindow final : public wxFrame
    , public TrackPanelListener
+   , public PrefsListener
 {
 public:
    static ProjectWindow &Get( AudacityProject &project );
@@ -32,6 +37,7 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
    AudacityProject &GetProject() { return mProject; }
+   const AudacityProject &GetProject() const { return mProject; }
 
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
@@ -42,8 +48,6 @@ public:
    // Next available ID for sub-windows
    int NextWindowID();
 
-   void Init();
-
    bool IsActive() override;
    bool IsIconized() const override;
 
@@ -51,7 +55,10 @@ public:
    void SetIsBeingDeleted() { mIsDeleting = true; }
 
    wxWindow *GetMainPage() { return mMainPage; }
+   wxPanel *GetMainPanel() { return mMainPanel; }
    wxPanel *GetTopPanel() { return mTopPanel; }
+
+   void UpdateStatusWidths();
 
    class PlaybackScroller final : public wxEvtHandler
    {
@@ -97,6 +104,10 @@ public:
    // Scrollbars
 
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
+   wxScrollBar &GetHorizontalScrollBar() { return *mHsbar; }
+
+   void ScrollIntoView(double pos);
+   void ScrollIntoView(int x);
 
    void OnScrollLeft();
    void OnScrollRight();
@@ -122,9 +133,6 @@ public:
    wxSize GetTPTracksUsableArea() /* not override */;
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
-   // TrackPanel callback methods, overrides of TrackPanelListener
-   void TP_DisplaySelection() override;
-
    void TP_RedrawScrollbars() override;
    void TP_ScrollLeft() override;
    void TP_ScrollRight() override;
@@ -135,6 +143,9 @@ public:
  private:
 
    void OnThemeChange(wxCommandEvent & evt);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
  public:
    // Message Handlers
@@ -175,7 +186,7 @@ private:
 
    bool mAutoScrolling{ false };
    bool mActive{ true };
-   bool mIconized;
+   bool mIconized{ false };
    bool mShownOnce{ false };
 
 
