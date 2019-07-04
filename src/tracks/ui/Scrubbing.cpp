@@ -233,6 +233,8 @@ Scrubber::Scrubber(AudacityProject *project)
        &Scrubber::OnActivateOrDeactivateApp, this);
    if (mWindow)
       mWindow->PushEventHandler(&mForwarder);
+
+   UpdatePrefs();
 }
 
 Scrubber::~Scrubber()
@@ -749,7 +751,7 @@ void Scrubber::StopScrubbing()
 
 bool Scrubber::ShowsBar() const
 {
-   return AdornedRulerPanel::Get( *mProject ).ShowingScrubRuler();
+   return mShowScrubbing;
 }
 
 bool Scrubber::IsScrubbing() const
@@ -1113,10 +1115,35 @@ void Scrubber::OnSeek(const CommandContext&)
    CheckMenuItems();
 }
 
+#if 1
+namespace {
+   static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
+
+   bool ReadScrubEnabledPref()
+   {
+      bool result {};
+      gPrefs->Read(scrubEnabledPrefName, &result, false);
+
+      return result;
+   }
+
+   void WriteScrubEnabledPref(bool value)
+   {
+      gPrefs->Write(scrubEnabledPrefName, value);
+   }
+}
+#endif
+
+void Scrubber::UpdatePrefs()
+{
+   mShowScrubbing = ReadScrubEnabledPref();
+}
+
 void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   ruler.OnToggleScrubRuler();
+   mShowScrubbing = !mShowScrubbing;
+   WriteScrubEnabledPref(mShowScrubbing);
+   gPrefs->Flush();
    const auto toolbar =
       ToolManager::Get( *mProject ).GetToolBar( ScrubbingBarID );
    toolbar->EnableDisableButtons();

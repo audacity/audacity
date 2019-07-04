@@ -17,7 +17,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/longlong.h>
 
 #include "../../AudioIOBase.h" // for ScrubbingOptions
-#include "../../ClientData.h"
+#include "../../ClientData.h" // to inherit
+#include "../../Prefs.h" // to inherit
 #include "../../widgets/Overlay.h" // to inherit
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h" // for MenuTable
@@ -39,6 +40,7 @@ extern AudacityProject *GetActiveProject();
 class Scrubber final
    : public wxEvtHandler
    , public ClientData::Base
+   , private PrefsListener
 {
 public:   
    static Scrubber &Get( AudacityProject &project );
@@ -130,6 +132,8 @@ public:
    bool IsTransportingPinned() const;
 
 private:
+   void UpdatePrefs() override;
+
    void StartPolling();
    void StopPolling();
    void DoScrub(bool seek);
@@ -185,6 +189,8 @@ private:
 
    ScrubbingOptions mOptions;
    double mMaxSpeed { 1.0 };
+
+   bool mShowScrubbing { false };
 };
 
 // Specialist in drawing the scrub speed, and listening for certain events
