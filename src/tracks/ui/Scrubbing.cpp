@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <functional>
 
-#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../CommonCommandFlags.h"
 #include "../../Menus.h"
@@ -231,8 +230,6 @@ Scrubber::Scrubber(AudacityProject *project)
       wxTheApp->Bind
       (wxEVT_ACTIVATE_APP,
        &Scrubber::OnActivateOrDeactivateApp, this);
-   if (mWindow)
-      mWindow->PushEventHandler(&mForwarder);
 
    UpdatePrefs();
 }
@@ -779,27 +776,6 @@ bool Scrubber::ChoseSeeking() const
       mSeeking;
 }
 
-bool Scrubber::MayDragToSeek() const
-{
-   // Return true only if the pointer is in the
-   // ruler or the track panel
-   const auto &state = ::wxGetMouseState();
-   const auto &position = state.GetPosition();
-
-   auto &ruler = AdornedRulerPanel::Get( *mProject );
-   if (ruler.GetScreenRect().Contains(position))
-      return true;
-
-   /*
-   auto trackPanel = mProject->GetTrackPanel();
-   if (trackPanel &&
-       trackPanel->GetScreenRect().Contains(position))
-      return true;
-    */
-
-   return false;
-}
-
 bool Scrubber::TemporarilySeeks() const
 {
    return mScrubSeekPress ||
@@ -889,28 +865,6 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
       Pause(false);
 
    event.Skip();
-}
-
-void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
-{
-   //auto ruler = scrubber.mProject->GetRulerPanel();
-   auto isScrubbing = scrubber.IsScrubbing();
-   if (isScrubbing && !event.HasAnyModifiers()) {
-      if(event.LeftDown() && scrubber.MayDragToSeek()) {
-         // This event handler may catch mouse transitions that are missed
-         // by the polling of mouse state by the timer.
-         scrubber.mScrubSeekPress = true;
-      }
-      else if (event.m_wheelRotation) {
-         double steps = event.m_wheelRotation /
-         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
-         scrubber.HandleScrollWheel(steps);
-      }
-      else
-         event.Skip();
-   }
-   else
-      event.Skip();
 }
 
 void Scrubber::DoScrub(bool seek)
@@ -1003,10 +957,6 @@ BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID,     THUNK(OnScrub))
    EVT_MENU(CMD_ID + 1, THUNK(OnSeek))
    EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
-END_EVENT_TABLE()
-
-BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
-   EVT_MOUSE_EVENTS(Scrubber::Forwarder::OnMouse)
 END_EVENT_TABLE()
 
 static_assert(nMenuItems == 3, "wrong number of items");

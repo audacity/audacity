@@ -88,7 +88,8 @@ public:
    { mSmoothScrollingScrub = value; }
 
    bool ChoseSeeking() const;
-   bool MayDragToSeek() const;
+   void SetMayDragToSeek( bool value ) { mMayDragToSeek = value; }
+   bool MayDragToSeek() const { return mMayDragToSeek; }
    bool TemporarilySeeks() const;
    bool Seeks() const;
    bool Scrubs() const;
@@ -132,6 +133,8 @@ public:
 
    bool IsTransportingPinned() const;
 
+   void SetSeekPress( bool value ) { mScrubSeekPress = value; }
+
 private:
    void UpdatePrefs() override;
 
@@ -139,18 +142,6 @@ private:
    void StopPolling();
    void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
-
-   // I need this because I can't push the scrubber as an event handler
-   // in two places at once.
-   struct Forwarder : public wxEvtHandler {
-      Forwarder(Scrubber &scrubber_) : scrubber( scrubber_ ) {}
-
-      Scrubber &scrubber;
-
-      void OnMouse(wxMouseEvent &event);
-      DECLARE_EVENT_TABLE()
-   };
-   Forwarder mForwarder{ *this };
 
 private:
    int mScrubToken;
@@ -192,6 +183,7 @@ private:
    double mMaxSpeed { 1.0 };
 
    bool mShowScrubbing { false };
+   bool mMayDragToSeek{ false };
 };
 
 #endif

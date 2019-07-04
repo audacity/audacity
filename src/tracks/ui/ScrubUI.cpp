@@ -15,6 +15,7 @@
 #include "../../ClientData.h"
 #include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
+#include "../../ProjectWindow.h"
 #include "../../TrackPanel.h"
 
 #include <wx/dcclient.h>
@@ -205,5 +206,72 @@ static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
      auto result = std::make_shared< ScrubbingOverlay >( &parent );
      TrackPanel::Get( parent ).AddOverlay( result );
      return result;
+   }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// class ScrubForwarder intercepts some mouse events of the main window
+
+// I need this because I can't push the scrubber as an event handler
+// in two places at once.
+struct ScrubForwarder
+    : public wxEvtHandler
+    , public ClientData::Base
+{
+   ScrubForwarder( AudacityProject &project ) : mProject{ project } {}
+
+   AudacityProject &mProject;
+
+   void OnMouse(wxMouseEvent &event);
+   DECLARE_EVENT_TABLE()
+};
+
+void ScrubForwarder::OnMouse(wxMouseEvent &event)
+{
+   auto &scrubber = Scrubber::Get( mProject );
+
+   auto &ruler = AdornedRulerPanel::Get( mProject );
+   const auto &state = ::wxGetMouseState();
+   const auto &position = state.GetPosition();
+   scrubber.SetMayDragToSeek(
+      ruler.GetScreenRect().Contains(position) );
+
+   /*
+   auto trackPanel = mProject->GetTrackPanel();
+   if (trackPanel &&
+       trackPanel->GetScreenRect().Contains(position))
+      return true;
+    */
+
+   //auto ruler = scrubber.mProject->GetRulerPanel();
+   auto isScrubbing = scrubber.IsScrubbing();
+   if (isScrubbing && !event.HasAnyModifiers()) {
+      if(event.LeftDown() && scrubber.MayDragToSeek()) {
+         // This event handler may catch mouse transitions that are missed
+         // by the polling of mouse state by the timer.
+         scrubber.SetSeekPress( true );
+      }
+      else if (event.m_wheelRotation) {
+         double steps = event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
+         scrubber.HandleScrollWheel(steps);
+      }
+      else
+         event.Skip();
+   }
+   else
+      event.Skip();
+}
+
+BEGIN_EVENT_TABLE(ScrubForwarder, wxEvtHandler)
+   EVT_MOUSE_EVENTS(ScrubForwarder::OnMouse)
+END_EVENT_TABLE()
+
+static const AudacityProject::AttachedObjects::RegisteredFactory sForwarderKey{
+   []( AudacityProject &parent ){
+      auto result = std::make_shared< ScrubForwarder >( parent );
+      auto &window = ProjectWindow::Get( parent );
+      window.PushEventHandler( result.get() );
+      return result;
    }
 };
