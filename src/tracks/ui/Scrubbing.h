@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
+#include "../../Audacity.h"
 #include "../../Experimental.h"
 
 #include <vector>
@@ -191,32 +192,6 @@ private:
    double mMaxSpeed { 1.0 };
 
    bool mShowScrubbing { false };
-};
-
-// Specialist in drawing the scrub speed, and listening for certain events
-class ScrubbingOverlay final
-   : public wxEvtHandler
-   , public Overlay
-   , public ClientData::Base
-{
-public:
-   explicit
-   ScrubbingOverlay(AudacityProject *project);
-
-private:
-   unsigned SequenceNumber() const override;
-   std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw(OverlayPanel &panel, wxDC &dc) override;
-
-   void OnTimer(wxCommandEvent &event);
-
-   const Scrubber &GetScrubber() const;
-   Scrubber &GetScrubber();
-
-   AudacityProject *mProject;
-
-   wxRect mLastScrubRect, mNextScrubRect;
-   wxString mLastScrubSpeedText, mNextScrubSpeedText;
 };
 
 #endif
