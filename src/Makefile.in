@@ -559,7 +559,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	tracks/ui/EditCursorOverlay.h tracks/ui/EnvelopeHandle.cpp \
 	tracks/ui/EnvelopeHandle.h tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h tracks/ui/Scrubbing.cpp \
-	tracks/ui/Scrubbing.h tracks/ui/SelectHandle.cpp \
+	tracks/ui/Scrubbing.h tracks/ui/ScrubUI.cpp \
+	tracks/ui/ScrubUI.h tracks/ui/SelectHandle.cpp \
 	tracks/ui/SelectHandle.h tracks/ui/SliderHandle.cpp \
 	tracks/ui/SliderHandle.h tracks/ui/TimeShiftHandle.cpp \
 	tracks/ui/TimeShiftHandle.h tracks/ui/TrackButtonHandles.cpp \
@@ -913,6 +914,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	tracks/ui/audacity-EnvelopeHandle.$(OBJEXT) \
 	tracks/ui/audacity-PlayIndicatorOverlay.$(OBJEXT) \
 	tracks/ui/audacity-Scrubbing.$(OBJEXT) \
+	tracks/ui/audacity-ScrubUI.$(OBJEXT) \
 	tracks/ui/audacity-SelectHandle.$(OBJEXT) \
 	tracks/ui/audacity-SliderHandle.$(OBJEXT) \
 	tracks/ui/audacity-TimeShiftHandle.$(OBJEXT) \
@@ -1665,7 +1667,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	tracks/ui/EditCursorOverlay.h tracks/ui/EnvelopeHandle.cpp \
 	tracks/ui/EnvelopeHandle.h tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h tracks/ui/Scrubbing.cpp \
-	tracks/ui/Scrubbing.h tracks/ui/SelectHandle.cpp \
+	tracks/ui/Scrubbing.h tracks/ui/ScrubUI.cpp \
+	tracks/ui/ScrubUI.h tracks/ui/SelectHandle.cpp \
 	tracks/ui/SelectHandle.h tracks/ui/SliderHandle.cpp \
 	tracks/ui/SliderHandle.h tracks/ui/TimeShiftHandle.cpp \
 	tracks/ui/TimeShiftHandle.h tracks/ui/TrackButtonHandles.cpp \
@@ -2379,6 +2382,8 @@ tracks/ui/audacity-PlayIndicatorOverlay.$(OBJEXT):  \
 	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-Scrubbing.$(OBJEXT): tracks/ui/$(am__dirstamp) \
 	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-ScrubUI.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-SelectHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
 	tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-SliderHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
@@ -2923,6 +2928,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-EditCursorOverlay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-PlayIndicatorOverlay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-ScrubUI.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-Scrubbing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-SelectHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-SliderHandle.Po@am__quote@
@@ -7518,6 +7524,20 @@ tracks/ui/audacity-Scrubbing.obj: tracks/ui/Scrubbing.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/Scrubbing.cpp' object='tracks/ui/audacity-Scrubbing.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-Scrubbing.obj `if test -f 'tracks/ui/Scrubbing.cpp'; then $(CYGPATH_W) 'tracks/ui/Scrubbing.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/Scrubbing.cpp'; fi`
+
+tracks/ui/audacity-ScrubUI.o: tracks/ui/ScrubUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ScrubUI.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo -c -o tracks/ui/audacity-ScrubUI.o `test -f 'tracks/ui/ScrubUI.cpp' || echo '$(srcdir)/'`tracks/ui/ScrubUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo tracks/ui/$(DEPDIR)/audacity-ScrubUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ScrubUI.cpp' object='tracks/ui/audacity-ScrubUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ScrubUI.o `test -f 'tracks/ui/ScrubUI.cpp' || echo '$(srcdir)/'`tracks/ui/ScrubUI.cpp
+
+tracks/ui/audacity-ScrubUI.obj: tracks/ui/ScrubUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ScrubUI.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo -c -o tracks/ui/audacity-ScrubUI.obj `if test -f 'tracks/ui/ScrubUI.cpp'; then $(CYGPATH_W) 'tracks/ui/ScrubUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ScrubUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ScrubUI.Tpo tracks/ui/$(DEPDIR)/audacity-ScrubUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ScrubUI.cpp' object='tracks/ui/audacity-ScrubUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ScrubUI.obj `if test -f 'tracks/ui/ScrubUI.cpp'; then $(CYGPATH_W) 'tracks/ui/ScrubUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ScrubUI.cpp'; fi`
 
 tracks/ui/audacity-SelectHandle.o: tracks/ui/SelectHandle.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-SelectHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-SelectHandle.Tpo -c -o tracks/ui/audacity-SelectHandle.o `test -f 'tracks/ui/SelectHandle.cpp' || echo '$(srcdir)/'`tracks/ui/SelectHandle.cpp
