@@ -111,8 +111,6 @@ class AUDACITY_DLL_API TrackPanel final
 
    void RefreshTrack(Track *trk, bool refreshbacking = true);
 
-   void DisplaySelection();
-
    void HandlePageUpKey();
    void HandlePageDownKey();
    AudacityProject * GetProject() const override;

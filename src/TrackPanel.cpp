@@ -429,9 +429,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
       window.RedrawProject();
 
       mRedrawAfterStop = false;
-
-      //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
-      DisplaySelection();
    }
    if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
       UpdateSelectionDisplay();
@@ -627,23 +624,6 @@ void TrackPanel::ProcessUIHandleResult
    if (refreshResult & Resize)
       panel->GetListener()->TP_HandleResize();
 
-   // This flag is superfluous if you do full refresh,
-   // because TrackPanel::Refresh() does this too
-   if (refreshResult & UpdateSelection) {
-      panel->DisplaySelection();
-
-      {
-         // Formerly in TrackPanel::UpdateSelectionDisplay():
-
-         // Make sure the ruler follows suit.
-         // mRuler->DrawSelection();
-
-         // ... but that too is superfluous it does nothing but refresh
-         // the ruler, while DisplaySelection calls TP_DisplaySelection which
-         // also always refreshes the ruler.
-      }
-   }
-
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack)
       pClickedTrack->EnsureVisible();
 }
@@ -681,9 +661,6 @@ void TrackPanel::UpdateSelectionDisplay()
 
    // Make sure the ruler follows suit.
    mRuler->DrawSelection();
-
-   // As well as the SelectionBar.
-   DisplaySelection();
 }
 
 // Counts selected tracks, counting stereo tracks as one track.
@@ -845,7 +822,6 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
       mRefreshBacking = true;
    }
    wxWindow::Refresh(eraseBackground, rect);
-   DisplaySelection();
 }
 
 #include "TrackPanelDrawingContext.h"
@@ -1335,17 +1311,6 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
          return pGroup->mpTrack.get() == leader;
       return false;
    } );
-}
-
-/// Displays the bounds of the selection in the status bar.
-void TrackPanel::DisplaySelection()
-{
-   if (!mListener)
-      return;
-
-   // DM: Note that the Selection Bar can actually MODIFY the selection
-   // if snap-to mode is on!!!
-   mListener->TP_DisplaySelection();
 }
 
 TrackPanelCell *TrackPanel::GetFocusedCell()

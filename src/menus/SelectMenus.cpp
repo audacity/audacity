@@ -259,11 +259,8 @@ void MoveWhenAudioInactive
       // Move the visual cursor, avoiding an unnecessary complete redraw
       trackPanel.DrawOverlays(false);
       ruler.DrawOverlays(false);
-
-      // This updates the selection shown on the selection bar, and the play
-      // region
-      window.TP_DisplaySelection();
-   } else
+   }
+   else
    {
       // Transition to cursor mode.
       if( seekStep < 0 )

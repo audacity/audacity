@@ -178,7 +178,7 @@ UIHandle::Result StretchHandle::Click
    // newly selected tracks. (I'm really not sure if the label area
    // needs to be refreshed or how to just refresh non-label areas.-RBD)
 
-   return RefreshAll | UpdateSelection;
+   return RefreshAll;
 }
 
 UIHandle::Result StretchHandle::Drag

@@ -500,7 +500,6 @@ void SelectHandle::SetUseSnap(bool use)
          ViewInfo::Get( *::GetActiveProject() ),
          mUseSnap ? mSnapEnd.outTime : mSnapEnd.timeSnappedTime,
          nullptr);
-      mChangeHighlight |= RefreshCode::UpdateSelection;
    }
 }
 
@@ -585,7 +584,7 @@ UIHandle::Result SelectHandle::Click
       ProjectHistory::Get( *pProject ).ModifyState(false);
 
       // Do not start a drag
-      return RefreshAll | UpdateSelection | Cancelled;
+      return RefreshAll | Cancelled;
    }
    else if (!event.LeftDown())
       return Cancelled;
@@ -674,7 +673,7 @@ UIHandle::Result SelectHandle::Click
 
       // Full refresh since the label area may need to indicate
       // newly selected tracks.
-      return RefreshAll | UpdateSelection;
+      return RefreshAll;
    }
 
    // II. Unmodified click starts a NEW selection
@@ -707,7 +706,7 @@ UIHandle::Result SelectHandle::Click
             // For persistence of the selection change:
             ProjectHistory::Get( *pProject ).ModifyState(false);
             mSelectionBoundary = SBWidth;
-            return UpdateSelection;
+            return RefreshNone;
          }
          else
 #endif
@@ -779,7 +778,7 @@ UIHandle::Result SelectHandle::Click
       });
 
       Connect(pProject);
-      return RefreshAll | UpdateSelection;
+      return RefreshAll;
    }
    else {
       Connect(pProject);

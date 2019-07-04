@@ -380,6 +380,7 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
+   EVT_IDLE( AdornedRulerPanel::OnIdle )
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
 
@@ -1127,6 +1128,23 @@ namespace {
       else
          return StartScrubbingMessage(scrubber);
    }
+}
+
+void AdornedRulerPanel::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+
+   auto &project = *mProject;
+   auto &viewInfo = ViewInfo::Get( project );
+   const auto &selectedRegion = viewInfo.selectedRegion;
+   auto &playRegion = ViewInfo::Get( project ).playRegion;
+
+   auto gAudioIO = AudioIOBase::Get();
+   if (!gAudioIO->IsBusy() && !playRegion.Locked())
+      SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
+   else
+      // Cause ruler redraw anyway, because we may be zooming or scrolling
+      Refresh();
 }
 
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)

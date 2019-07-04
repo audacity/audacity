@@ -76,6 +76,7 @@ public:
 
 
 private:
+   void OnIdle( wxIdleEvent &evt );
    void OnRecordStartStop(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);

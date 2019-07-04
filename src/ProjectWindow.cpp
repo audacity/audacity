@@ -12,7 +12,6 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "Experimental.h"
 
-#include "AdornedRulerPanel.h"
 #include "AllThemeResources.h"
 #include "Menus.h"
 #include "Project.h"
@@ -1586,23 +1585,6 @@ void ProjectWindow::SkipEnd(bool shift)
    // Make sure the end of the track is visible
    ScrollIntoView(len);
 }
-
-void ProjectWindow::TP_DisplaySelection()
-{
-   auto &project = mProject;
-   auto &ruler = AdornedRulerPanel::Get(project);
-   auto &viewInfo = ViewInfo::Get( project );
-   const auto &selectedRegion = viewInfo.selectedRegion;
-   auto &playRegion = ViewInfo::Get( project ).playRegion;
-
-   auto gAudioIO = AudioIOBase::Get();
-   if (!gAudioIO->IsBusy() && !playRegion.Locked())
-      ruler.SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
-   else
-      // Cause ruler redraw anyway, because we may be zooming or scrolling
-      ruler.Refresh();
-}
-
 
 // TrackPanel callback method
 void ProjectWindow::TP_ScrollLeft()

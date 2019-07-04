@@ -560,9 +560,6 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
    projectAudioManager.Stop();
 
-   if (p)
-      ProjectWindow::Get( *p ).TP_DisplaySelection();
-
    PlayDefault();
 }
 
