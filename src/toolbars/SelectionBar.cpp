@@ -676,13 +676,15 @@ void SelectionBar::ValuesToControls()
 // A time has been set.  Update the control values.
 void SelectionBar::SetTimes(double start, double end, double audio)
 {
-   mStart = start;
-   mEnd = end;
-   mLength = end-start;
-   mCenter = (end+start)/2.0;
-   mAudio = audio;
+   if ( start != mStart || end != mEnd || audio != mAudio) {
+      mStart = start;
+      mEnd = end;
+      mLength = end-start;
+      mCenter = (end+start)/2.0;
+      mAudio = audio;
 
-   ValuesToControls();
+      ValuesToControls();
+   }
 }
 
 void SelectionBar::SetSnapTo(int snap)

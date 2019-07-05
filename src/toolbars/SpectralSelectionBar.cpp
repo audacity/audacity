@@ -465,15 +465,17 @@ void SpectralSelectionBar::SetBounds()
 
 void SpectralSelectionBar::SetFrequencies(double bottom, double top)
 {
-   mLow = bottom;
-   mHigh = top;
+   if ( mLow != bottom || mHigh != top ) {
+      mLow = bottom;
+      mHigh = top;
 
-   if (bottom > 0 && top >= bottom)
-      mWidth = log(top / bottom), mCenter = sqrt(top * bottom);
-   else
-      mWidth = mCenter = -1.0;
+      if (bottom > 0 && top >= bottom)
+         mWidth = log(top / bottom), mCenter = sqrt(top * bottom);
+      else
+         mWidth = mCenter = -1.0;
 
-   ValuesToControls();
+      ValuesToControls();
+   }
 }
 
 void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
