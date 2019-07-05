@@ -219,9 +219,7 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
 void ScrubbingToolBar::EnableDisableButtons()
 {
    const auto scrubButton = mButtons[STBScrubID];
-   scrubButton->SetEnabled(true);
    const auto seekButton = mButtons[STBSeekID];
-   seekButton->SetEnabled(true);
 
    AudacityProject *p = &mProject;
 

@@ -575,9 +575,11 @@ bool AButton::WasControlDown()
 
 void AButton::Enable()
 {
-   wxWindow::Enable(true);
-   mEnabled = true;
-   Refresh(false);
+   bool changed = wxWindow::Enable(true);
+   if ( !mEnabled ) {
+      mEnabled = true;
+      Refresh(false);
+   }
 }
 
 void AButton::Disable()
@@ -589,10 +591,12 @@ void AButton::Disable()
 #ifndef __WXMSW__
    wxWindow::Enable(false);
 #endif
-   mEnabled = false;
    if (GetCapture()==this)
       ReleaseMouse();
-   Refresh(false);
+   if ( mEnabled ) {
+      mEnabled = false;
+      Refresh(false);
+   }
 }
 
 void AButton::PushDown()
