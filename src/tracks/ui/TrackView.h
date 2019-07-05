@@ -73,6 +73,9 @@ public:
    > >;
    virtual Refinement GetSubViews( const wxRect &rect );
 
+   // default is false
+   virtual bool IsSpectral() const;
+
    virtual void DoSetMinimized( bool isMinimized );
 
 protected:

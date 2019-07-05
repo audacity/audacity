@@ -28,6 +28,7 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
+   bool IsSpectral() const override;
 
 private:
    // TrackPanelDrawable implementation

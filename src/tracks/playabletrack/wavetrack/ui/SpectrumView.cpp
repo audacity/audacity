@@ -31,6 +31,11 @@ Paul Licameli split from WaveTrackView.cpp
 
 SpectrumView::~SpectrumView() = default;
 
+bool SpectrumView::IsSpectral() const
+{
+   return true;
+}
+
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
