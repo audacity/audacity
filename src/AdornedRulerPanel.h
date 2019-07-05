@@ -69,7 +69,7 @@ public:
 
    bool ShowingScrubRuler() const;
    void OnToggleScrubRulerFromMenu(wxCommandEvent& );
-   void SetPanelSize();
+   bool SetPanelSize();
    
    void DrawBothOverlays();
 
@@ -80,7 +80,7 @@ private:
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnThemeChange(wxCommandEvent& evt);
-   void UpdateRects();
+   bool UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
@@ -216,6 +216,10 @@ private:
    // classes implementing subdivision for CellularPanel
    struct Subgroup;
    struct MainGroup;
+
+   SelectedRegion mLastDrawnSelectedRegion;
+   double mLastDrawnH{};
+   double mLastDrawnZoom{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

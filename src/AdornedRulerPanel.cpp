@@ -1110,20 +1110,28 @@ void AdornedRulerPanel::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
 
-   UpdateRects();
-   SetPanelSize();
+   bool changed = UpdateRects();
+   changed = SetPanelSize() || changed;
 
    auto &project = *mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
+   bool changedSelectedRegion = mLastDrawnSelectedRegion != selectedRegion;
+
    auto gAudioIO = AudioIOBase::Get();
-   if (!gAudioIO->IsBusy() && !playRegion.Locked())
+   if (!gAudioIO->IsBusy() && !playRegion.Locked() && changedSelectedRegion)
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
-   else
-      // Cause ruler redraw anyway, because we may be zooming or scrolling
-      Refresh();
+   else {
+      changed = changed || changedSelectedRegion;
+      changed = changed || mLastDrawnH != viewInfo.h;
+      changed = changed || mLastDrawnZoom != viewInfo.GetZoom();
+      if (changed)
+         // Cause ruler redraw anyway, because we may be zooming or scrolling,
+         // showing or hiding the scrub bar, etc.
+         Refresh();
+   }
 }
 
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
@@ -1146,6 +1154,12 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
+   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   mLastDrawnH = viewInfo.h;
+   mLastDrawnZoom = viewInfo.GetZoom();
+   mLastDrawnSelectedRegion = viewInfo.selectedRegion;
+   // To do, note other fisheye state when we have that
+
    wxPaintDC dc(this);
 
    auto &backDC = GetBackingDCForRepaint();
@@ -1190,28 +1204,29 @@ void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
    ReCreateButtons();
 }
 
-void AdornedRulerPanel::UpdateRects()
+bool AdornedRulerPanel::UpdateRects()
 {
-   mInner = mOuter;
-   mInner.x += LeftMargin;
-   mInner.width -= (LeftMargin + RightMargin);
+   auto inner = mOuter;
+   wxRect scrubZone;
+   inner.x += LeftMargin;
+   inner.width -= (LeftMargin + RightMargin);
 
-   auto top = &mInner;
-   auto bottom = &mInner;
+   auto top = &inner;
+   auto bottom = &inner;
 
    if (ShowingScrubRuler()) {
-      mScrubZone = mInner;
-      auto scrubHeight = std::min(mScrubZone.height, (int)(ScrubHeight));
+      scrubZone = inner;
+      auto scrubHeight = std::min(scrubZone.height, (int)(ScrubHeight));
 
       int topHeight;
 #ifdef SCRUB_ABOVE
-      top = &mScrubZone, topHeight = scrubHeight;
+      top = &scrubZone, topHeight = scrubHeight;
 #else
-      auto qpHeight = mScrubZone.height - scrubHeight;
-      bottom = &mScrubZone, topHeight = qpHeight;
+      auto qpHeight = scrubZone.height - scrubHeight;
+      bottom = &scrubZone, topHeight = qpHeight;
       // Increase scrub zone height so that hit testing finds it and
       // not QP region, when on bottom 'edge'.
-      mScrubZone.height+=BottomMargin;
+      scrubZone.height+=BottomMargin;
 #endif
 
       top->height = topHeight;
@@ -1225,13 +1240,21 @@ void AdornedRulerPanel::UpdateRects()
    bottom->height -= BottomMargin;
 
    if (!ShowingScrubRuler())
-      mScrubZone = mInner;
+      scrubZone = inner;
+
+   if ( inner == mInner && scrubZone == mScrubZone )
+      // no changes
+      return false;
+
+   mInner = inner;
+   mScrubZone = scrubZone;
 
    mRuler.SetBounds(mInner.GetLeft(),
                     mInner.GetTop(),
                     mInner.GetRight(),
                     mInner.GetBottom());
 
+   return true;
 }
 
 double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye)
@@ -1656,7 +1679,7 @@ void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
    scrubber.OnToggleScrubRuler(*mProject);
 }
 
-void AdornedRulerPanel::SetPanelSize()
+bool AdornedRulerPanel::SetPanelSize()
 {
    const auto oldSize = GetSize();
    wxSize size { oldSize.GetWidth(), GetRulerHeight(ShowingScrubRuler()) };
@@ -1664,7 +1687,10 @@ void AdornedRulerPanel::SetPanelSize()
       SetSize(size);
       SetMinSize(size);
       GetParent()->PostSizeEventToParent();
+      return true;
    }
+   else
+      return false;
 }
 
 void AdornedRulerPanel::DrawBothOverlays()
