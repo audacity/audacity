@@ -455,6 +455,13 @@ KeyView::SetView(ViewByType type)
       SelectNode(index);
    }
 
+   // ensure that a node is selected so that when the keyview is the focus,
+   // this is indicated visually, and the Narrator screen reader reads it.
+   if ((GetSelection() == wxNOT_FOUND))
+   {
+      SelectNode(LineToIndex(0));
+   }
+
    return;
 }
 
@@ -479,6 +486,13 @@ KeyView::SetFilter(const wxString & filter)
    if (index != wxNOT_FOUND)
    {
       SelectNode(index);
+   }
+
+   // ensure that a node is selected so that when the keyview is the focus,
+   // this is indicated visually, and the Narrator screen reader reads it.
+   if ((GetSelection() == wxNOT_FOUND))
+   {
+      SelectNode(LineToIndex(0));
    }
 }
 
@@ -1331,37 +1345,18 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    // Allow further processing
    event.Skip();
 
+   // Refresh the selected line to pull in any changes while
+   // focus was away...like when setting a NEW key value.  This
+   // will also refresh the visual (highlighted) state.
    if (GetSelection() != wxNOT_FOUND)
    {
-      // Refresh the selected line to pull in any changes while
-      // focus was away...like when setting a NEW key value.  This
-      // will also refresh the visual (highlighted) state.
 	   RefreshRow(GetSelection());
-#if wxUSE_ACCESSIBILITY
-      // Tell accessibility of the change
-      mAx->SetCurrentLine(GetSelection());
-#endif
    }
-   else
-   {
-      if (mLines.size() > 0)
-      {
-         // If mThereHasBeenALeftDown is true, then there is mouse
-         // selection in progress, so don't select anything here
-         // as this interferes with the mouse selection. (Bug 2146)
-         if (!mThereHasBeenALeftDown) {
-            // if no selection, select first line
-            SelectNode(LineToIndex(0));
-         }
-      }
-      else
-      {
+
 #if wxUSE_ACCESSIBILITY
-         // Tell accessibility, since there may have been a change
-         mAx->SetCurrentLine(wxNOT_FOUND);
+   // Tell accessibility of the change
+   mAx->SetCurrentLine(GetSelection());
 #endif
-      }
-   }
 }
 
 //
@@ -1378,8 +1373,6 @@ KeyView::OnKillFocus(wxFocusEvent & event)
    {
 	   RefreshRow(GetSelection());
    }
-
-   mThereHasBeenALeftDown = false;
 }
 
 //
@@ -1625,8 +1618,6 @@ KeyView::OnKeyDown(wxKeyEvent & event)
 void
 KeyView::OnLeftDown(wxMouseEvent & event)
 {
-   mThereHasBeenALeftDown = true;
-
    // Only check if for tree view
    if (mViewType != ViewByTree)
    {
