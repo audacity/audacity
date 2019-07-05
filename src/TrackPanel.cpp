@@ -1323,6 +1323,7 @@ void TrackPanel::SetFocusedCell()
 {
    // This may have a side-effet of assigning a focus if there was none
    TrackFocus::Get( *GetProject() ).Get();
+   KeyboardCapture::Capture(this);
 }
 
 void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
@@ -1331,7 +1332,6 @@ void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
    auto cell = GetFocusedCell();
 
    if (cell) {
-      KeyboardCapture::Capture(this);
       Refresh( false );
    }
 }
