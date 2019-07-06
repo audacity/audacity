@@ -672,6 +672,18 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/CutlineHandle.h \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.cpp \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h \
+	tracks/playabletrack/wavetrack/ui/WaveformView.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformView.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
