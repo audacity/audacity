@@ -11,6 +11,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "WaveTrackVZoomHandle.h"
 
+#include "SpectrumVZoomHandle.h"
+#include "WaveformVZoomHandle.h"
+
 #include "../../../../Experimental.h"
 
 #include "../../../ui/TrackVRulerControls.h"
@@ -42,7 +45,9 @@ public:
    WaveTrackVZoomHandle::DoZoomFunction doZoom;
 };
 
-bool IsDragZooming(int zoomStart, int zoomEnd)
+}
+
+bool WaveTrackVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)
 {
    const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
    bool bVZoom;
@@ -50,12 +55,24 @@ bool IsDragZooming(int zoomStart, int zoomEnd)
    return bVZoom && (abs(zoomEnd - zoomStart) > DragThreshold);
 }
 
-}
-
 WaveTrackVZoomHandle::WaveTrackVZoomHandle
 (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)
    : mpTrack{ pTrack } , mZoomStart(y), mZoomEnd(y), mRect(rect)
 {
+}
+
+void SpectrumVZoomHandle::Enter(bool)
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
+
+void WaveformVZoomHandle::Enter(bool)
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
 }
 
 void WaveTrackVZoomHandle::Enter(bool)
@@ -68,7 +85,7 @@ void WaveTrackVZoomHandle::Enter(bool)
 // ZoomKind says how to zoom.
 // If ZoomStart and ZoomEnd are not equal, this may override
 // the zoomKind and cause a drag-zoom-in.
-void WaveTrackVZoomHandle::DoSpectrumZoom(
+void SpectrumVZoomHandle::DoZoom(
    AudacityProject *pProject,
    WaveTrack *pTrack,
    WaveTrackViewConstants::ZoomActions ZoomKind,
@@ -95,7 +112,7 @@ void WaveTrackVZoomHandle::DoSpectrumZoom(
       (pTrack->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
 
 
-   bool bDragZoom = IsDragZooming(zoomStart, zoomEnd);
+   bool bDragZoom = WaveTrackVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
    // Add 100 if spectral to separate the kinds of zoom.
    const int kSpectral = 100;
 
@@ -228,7 +245,7 @@ void WaveTrackVZoomHandle::DoSpectrumZoom(
 // ZoomKind says how to zoom.
 // If ZoomStart and ZoomEnd are not equal, this may override
 // the zoomKind and cause a drag-zoom-in.
-void WaveTrackVZoomHandle::DoWaveformZoom(
+void WaveformVZoomHandle::DoZoom(
    AudacityProject *pProject,
    WaveTrack *pTrack,
    WaveTrackViewConstants::ZoomActions ZoomKind,
@@ -252,7 +269,7 @@ void WaveTrackVZoomHandle::DoWaveformZoom(
    const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
    NumberScale scale;
 
-   bool bDragZoom = IsDragZooming(zoomStart, zoomEnd);
+   bool bDragZoom = WaveTrackVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
    // Add 100 if spectral to separate the kinds of zoom.
 
    // Possibly override the zoom kind.
@@ -469,7 +486,7 @@ class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);
 
 public:
-   static WaveformVRulerMenuTable &Instance();
+   static PopupMenuTable &Instance();
 
 private:
    virtual void InitMenu(Menu *pMenu, void *pUserData) override;
@@ -477,7 +494,7 @@ private:
    void OnWaveformScaleType(wxCommandEvent &evt);
 };
 
-WaveformVRulerMenuTable &WaveformVRulerMenuTable::Instance()
+PopupMenuTable &WaveformVRulerMenuTable::Instance()
 {
    static WaveformVRulerMenuTable instance;
    return instance;
@@ -556,7 +573,7 @@ class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
    DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);
 
 public:
-   static SpectrumVRulerMenuTable &Instance();
+   static PopupMenuTable &Instance();
 
 private:
    void InitMenu(Menu *pMenu, void *pUserData) override;
@@ -564,7 +581,7 @@ private:
    void OnSpectrumScaleType(wxCommandEvent &evt);
 };
 
-SpectrumVRulerMenuTable &SpectrumVRulerMenuTable::Instance()
+PopupMenuTable &SpectrumVRulerMenuTable::Instance()
 {
    static SpectrumVRulerMenuTable instance;
    return instance;
@@ -645,10 +662,42 @@ WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
 {
 }
 
+UIHandle::Result SpectrumVZoomHandle::Click
+(const TrackPanelMouseEvent &, AudacityProject *)
+{
+   return RefreshCode::RefreshNone;
+}
+
+UIHandle::Result WaveformVZoomHandle::Click
+(const TrackPanelMouseEvent &, AudacityProject *)
+{
+   return RefreshCode::RefreshNone;
+}
+
 UIHandle::Result WaveTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &, AudacityProject *)
 {
    return RefreshCode::RefreshNone;
+}
+
+UIHandle::Result SpectrumVZoomHandle::Drag
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   using namespace RefreshCode;
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
+   if (!pTrack)
+      return Cancelled;
+   return WaveTrackVZoomHandle::DoDrag( evt, pProject, mZoomStart, mZoomEnd );
+}
+
+UIHandle::Result WaveformVZoomHandle::Drag
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   using namespace RefreshCode;
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
+   if (!pTrack)
+      return Cancelled;
+   return WaveTrackVZoomHandle::DoDrag( evt, pProject, mZoomStart, mZoomEnd );
 }
 
 UIHandle::Result WaveTrackVZoomHandle::Drag
@@ -658,14 +707,34 @@ UIHandle::Result WaveTrackVZoomHandle::Drag
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
+   return DoDrag( evt, pProject, mZoomStart, mZoomEnd );
+}
+
+UIHandle::Result WaveTrackVZoomHandle::DoDrag(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+   const int zoomStart, int &zoomEnd)
+{
+   using namespace RefreshCode;
 
    const wxMouseEvent &event = evt.event;
    if ( event.RightIsDown() )
       return RefreshNone;
-   mZoomEnd = event.m_y;
-   if (IsDragZooming(mZoomStart, mZoomEnd))
+   zoomEnd = event.m_y;
+   if (IsDragZooming( zoomStart, zoomEnd ))
       return RefreshAll;
    return RefreshNone;
+}
+
+HitTestPreview SpectrumVZoomHandle::Preview
+(const TrackPanelMouseState &st, const AudacityProject *)
+{
+   return WaveTrackVZoomHandle::HitPreview(st.state);
+}
+
+HitTestPreview WaveformVZoomHandle::Preview
+(const TrackPanelMouseState &st, const AudacityProject *)
+{
+   return WaveTrackVZoomHandle::HitPreview(st.state);
 }
 
 HitTestPreview WaveTrackVZoomHandle::Preview
@@ -674,12 +743,52 @@ HitTestPreview WaveTrackVZoomHandle::Preview
    return HitPreview(st.state);
 }
 
+UIHandle::Result SpectrumVZoomHandle::Release
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+ wxWindow *pParent)
+{
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
+   return WaveTrackVZoomHandle::DoRelease(
+      evt, pProject, pParent, pTrack.get(), mRect,
+      DoZoom, SpectrumVRulerMenuTable::Instance(),
+      mZoomStart, mZoomEnd );
+}
+
+UIHandle::Result WaveformVZoomHandle::Release
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+ wxWindow *pParent)
+{
+   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
+   return WaveTrackVZoomHandle::DoRelease(
+      evt, pProject, pParent, pTrack.get(), mRect,
+      DoZoom, WaveformVRulerMenuTable::Instance(),
+      mZoomStart, mZoomEnd );
+}
+
 UIHandle::Result WaveTrackVZoomHandle::Release
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject,
  wxWindow *pParent)
 {
-   using namespace RefreshCode;
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
+   auto doZoom = (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum)
+      ? SpectrumVZoomHandle::DoZoom
+      : WaveformVZoomHandle::DoZoom;
+   return DoRelease(
+      evt, pProject, pParent, pTrack.get(), mRect,
+      doZoom,
+      (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum)
+         ? SpectrumVRulerMenuTable::Instance()
+         : WaveformVRulerMenuTable::Instance(),
+      mZoomStart, mZoomEnd );
+}
+
+UIHandle::Result WaveTrackVZoomHandle::DoRelease(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+   wxWindow *pParent, WaveTrack *pTrack, const wxRect &rect,
+   DoZoomFunction doZoom, PopupMenuTable &table,
+   int zoomStart, int zoomEnd )
+{
+   using namespace RefreshCode;
    if (!pTrack)
       return RefreshNone;
 
@@ -698,18 +807,10 @@ UIHandle::Result WaveTrackVZoomHandle::Release
        !(event.ShiftDown() || event.CmdDown()))
    {
       InitMenuData data {
-         pTrack.get(), mRect, RefreshCode::RefreshNone, event.m_y,
-         (pTrack->GetDisplay() == Spectrum)
-            ? WaveTrackVZoomHandle::DoSpectrumZoom
-            : WaveTrackVZoomHandle::DoWaveformZoom
-      };
+         pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
-      PopupMenuTable *const pTable =
-         (pTrack->GetDisplay() == Spectrum)
-         ? (PopupMenuTable *) &SpectrumVRulerMenuTable::Instance()
-         : (PopupMenuTable *) &WaveformVRulerMenuTable::Instance();
       std::unique_ptr<PopupMenuTable::Menu>
-         pMenu(PopupMenuTable::BuildMenu(pParent, pTable, &data));
+         pMenu(PopupMenuTable::BuildMenu(pParent, &table, &data));
 
       // Accelerators only if zooming enabled.
       if( !bVZoom )
@@ -739,19 +840,30 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       //    F      |    -    | In
       if( bVZoom ) {
          if( shiftDown )
-            mZoomStart = mZoomEnd;
-         auto doZoom = (pTrack->GetDisplay() == Spectrum)
-            ? WaveTrackVZoomHandle::DoSpectrumZoom
-            : WaveTrackVZoomHandle::DoWaveformZoom;
-         doZoom(pProject, pTrack.get(),
+            zoomStart = zoomEnd;
+         doZoom(pProject, pTrack,
             shiftDown
                ? (rightUp ? kZoom1to1 : kZoomOut)
                : kZoomIn,
-            mRect, mZoomStart, mZoomEnd, !shiftDown);
+            rect, zoomStart, zoomEnd, !shiftDown);
       }
    }
 
    return UpdateVRuler | RefreshAll;
+}
+
+UIHandle::Result SpectrumVZoomHandle::Cancel(AudacityProject*)
+{
+   // Cancel is implemented!  And there is no initial state to restore,
+   // so just return a code.
+   return RefreshCode::RefreshAll;
+}
+
+UIHandle::Result WaveformVZoomHandle::Cancel(AudacityProject*)
+{
+   // Cancel is implemented!  And there is no initial state to restore,
+   // so just return a code.
+   return RefreshCode::RefreshAll;
 }
 
 UIHandle::Result WaveTrackVZoomHandle::Cancel(AudacityProject*)
@@ -761,21 +873,65 @@ UIHandle::Result WaveTrackVZoomHandle::Cancel(AudacityProject*)
    return RefreshCode::RefreshAll;
 }
 
+void SpectrumVZoomHandle::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
+{
+   if (!mpTrack.lock()) //? TrackList::Lock()
+      return;
+   return WaveTrackVZoomHandle::DoDraw(
+      context, rect, iPass, mZoomStart, mZoomEnd );
+}
+
+void WaveformVZoomHandle::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass )
+{
+   if (!mpTrack.lock()) //? TrackList::Lock()
+      return;
+   return WaveTrackVZoomHandle::DoDraw(
+      context, rect, iPass, mZoomStart, mZoomEnd );
+}
+
 void WaveTrackVZoomHandle::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
+   if (!mpTrack.lock()) //? TrackList::Lock()
+      return;
+   return DoDraw( context, rect, iPass, mZoomStart, mZoomEnd );
+}
+
+void WaveTrackVZoomHandle::DoDraw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, unsigned iPass, const int zoomStart, const int zoomEnd )
+{
    if ( iPass == TrackArtist::PassZooming ) {
-      if (!mpTrack.lock()) //? TrackList::Lock()
-         return;
-      
-      if ( IsDragZooming( mZoomStart, mZoomEnd ) )
+      if ( IsDragZooming( zoomStart, zoomEnd ) )
          TrackVRulerControls::DrawZooming
-            ( context, rect, mZoomStart, mZoomEnd );
+            ( context, rect, zoomStart, zoomEnd );
    }
 }
 
+wxRect SpectrumVZoomHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   return WaveTrackVZoomHandle::DoDrawingArea( rect, panelRect, iPass );
+}
+
+wxRect WaveformVZoomHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   return WaveTrackVZoomHandle::DoDrawingArea( rect, panelRect, iPass );
+}
+
 wxRect WaveTrackVZoomHandle::DrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   return DoDrawingArea( rect, panelRect, iPass );
+}
+
+wxRect WaveTrackVZoomHandle::DoDrawingArea(
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassZooming )

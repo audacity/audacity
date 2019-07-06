@@ -13,6 +13,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackVZoomHandle.h"
 
+#include "SpectrumVZoomHandle.h"
+#include "WaveformVZoomHandle.h"
+
 #include "../../../../Experimental.h"
 
 #include "../../../../HitTestResult.h"
@@ -126,8 +129,8 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
       auto doZoom = (wt->GetDisplay() == Spectrum)
-         ? WaveTrackVZoomHandle::DoSpectrumZoom
-         : WaveTrackVZoomHandle::DoWaveformZoom;
+         ? SpectrumVZoomHandle::DoZoom
+         : WaveformVZoomHandle::DoZoom;
       doZoom(
          pProject, wt,
          (steps < 0)
