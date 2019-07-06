@@ -21,6 +21,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackControls.h"
 #include "WaveTrackVRulerControls.h"
 
+#include "SpectrumView.h"
+#include "WaveformView.h"
+
 #include "../../../../AColor.h"
 #include "../../../../Envelope.h"
 #include "../../../../EnvelopeEditor.h"
@@ -43,12 +46,21 @@ Paul Licameli split from TrackPanel.cpp
 
 WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
+   , mWaveformView{ std::make_shared< WaveformView >( pTrack ) }
+   , mSpectrumView{ std::make_shared< SpectrumView >( pTrack ) }
 {
    DoSetHeight( WaveTrackControls::DefaultWaveTrackHeight() );
 }
 
 WaveTrackView::~WaveTrackView()
 {
+}
+
+std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
+   const TrackPanelMouseState &state,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool )
+{
+   return {};
 }
 
 std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
@@ -130,6 +142,21 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
    return results;
 }
 
+std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
+   const TrackPanelMouseState &state,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool )
+{
+   return {};
+}
+
+void SpectrumView::DoSetMinimized( bool minimized )
+{
+}
+
+void WaveformView::DoSetMinimized( bool minimized )
+{
+}
+
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
    auto wt = static_cast<WaveTrack*>( FindTrack().get() );
@@ -174,6 +201,16 @@ template<> template<> auto DoGetWaveTrackView::Implementation() -> Function {
    };
 }
 static DoGetWaveTrackView registerDoGetWaveTrackView;
+
+std::shared_ptr<TrackVRulerControls> WaveformView::DoGetVRulerControls()
+{
+   return {};
+}
+
+std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
+{
+   return {};
+}
 
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 {
@@ -1841,6 +1878,25 @@ void DrawSpectrum( TrackPanelDrawingContext &context,
       DrawClipSpectrum( context, cache, clip.get(), rect );
 }
 
+}
+
+void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
+{
+   CommonTrackView::Reparent( parent );
+   if ( mWaveformView )
+      mWaveformView->Reparent( parent );
+   if ( mSpectrumView )
+      mSpectrumView->Reparent( parent );
+}
+
+void WaveformView::Draw(
+   TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
+{
+}
+
+void SpectrumView::Draw(
+   TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
+{
 }
 
 void WaveTrackView::Draw(

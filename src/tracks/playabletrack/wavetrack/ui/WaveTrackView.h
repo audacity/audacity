@@ -30,6 +30,9 @@ public:
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
 
+   // CommonTrackView implementation
+   void Reparent( const std::shared_ptr<Track> &parent ) override;
+
 private:
    // TrackPanelDrawable implementation
    void Draw(
@@ -47,6 +50,8 @@ private:
 
 protected:
    void DoSetMinimized( bool minimized ) override;
+
+   std::shared_ptr< CommonTrackView > mWaveformView, mSpectrumView;
 };
 
 #endif
