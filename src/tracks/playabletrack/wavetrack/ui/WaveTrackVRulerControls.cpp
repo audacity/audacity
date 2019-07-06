@@ -125,7 +125,10 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
-      WaveTrackVZoomHandle::DoZoom(
+      auto doZoom = (wt->GetDisplay() == Spectrum)
+         ? WaveTrackVZoomHandle::DoSpectrumZoom
+         : WaveTrackVZoomHandle::DoWaveformZoom;
+      doZoom(
          pProject, wt,
          (steps < 0)
             ? kZoomOut

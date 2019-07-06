@@ -39,6 +39,7 @@ public:
    wxRect rect;
    unsigned result;
    int yy;
+   WaveTrackVZoomHandle::DoZoomFunction doZoom;
 };
 
 bool IsDragZooming(int zoomStart, int zoomEnd)
@@ -67,12 +68,12 @@ void WaveTrackVZoomHandle::Enter(bool)
 // ZoomKind says how to zoom.
 // If ZoomStart and ZoomEnd are not equal, this may override
 // the zoomKind and cause a drag-zoom-in.
-void WaveTrackVZoomHandle::DoZoom
-   (AudacityProject *pProject,
-    WaveTrack *pTrack,
-    WaveTrackViewConstants::ZoomActions inZoomKind,
-    const wxRect &rect, int zoomStart, int zoomEnd,
-    bool fixedMousePoint)
+void WaveTrackVZoomHandle::DoSpectrumZoom(
+   AudacityProject *pProject,
+   WaveTrack *pTrack,
+   WaveTrackViewConstants::ZoomActions ZoomKind,
+   const wxRect &rect, int zoomStart, int zoomEnd,
+   bool fixedMousePoint)
 {
    using namespace WaveTrackViewConstants;
    static const float ZOOMLIMIT = 0.001f;
@@ -90,9 +91,7 @@ void WaveTrackVZoomHandle::DoZoom
    float maxFreq = 8000.0;
    const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
    NumberScale scale;
-   const bool spectral =
-      (pTrack->GetDisplay() == Spectrum);
-   const bool spectrumLinear = spectral &&
+   const bool spectrumLinear =
       (pTrack->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
 
 
@@ -102,15 +101,12 @@ void WaveTrackVZoomHandle::DoZoom
 
    // Possibly override the zoom kind.
    if( bDragZoom )
-      inZoomKind = kZoomInByDrag;
-
-   // If we are actually zooming a spectrum rather than a wave.
-   int ZoomKind = (int)inZoomKind + (spectral ? kSpectral : 0);
+      ZoomKind = kZoomInByDrag;
 
    float top=2.0;
    float half=0.5;
 
-   if (spectral) {
+   {
       pTrack->GetSpectrumBounds(&min, &max);
       scale = (specSettings.GetScale(min, max));
       const auto fftLength = specSettings.GetFFTLength();
@@ -123,7 +119,150 @@ void WaveTrackVZoomHandle::DoZoom
       const int minBins = 1;
       minBand = minBins * binSize;
    }
-   else{
+
+   // Compute min and max.
+   switch(ZoomKind)
+   {
+   default:
+      // If we have covered all the cases, this won't happen.
+      // In release builds Audacity will ignore the zoom.
+      wxFAIL_MSG("Zooming Case not implemented by Audacity");
+      break;
+
+   // VZooming on spectral we don't implement the other zoom presets.
+   // They are also not in the menu.
+   case kZoomReset:
+      {
+         // Zoom out to normal level.
+         min = spectrumLinear ? 0.0f : 1.0f;
+         max = maxFreq;
+      }
+      break;
+   case kZoom1to1:
+   case kZoomDiv2:
+   case kZoomTimes2:
+   case kZoomHalfWave:
+      {
+         // Zoom out full
+         min = spectrumLinear ? 0.0f : 1.0f;
+         max = halfrate;
+      }
+      break;
+   case kZoomInByDrag:
+      {
+         double xmin = 1 - (zoomEnd - ypos) / (float)height;
+         double xmax = 1 - (zoomStart - ypos) / (float)height;
+         const float middle = (xmin + xmax) / 2;
+         const float middleValue = scale.PositionToValue(middle);
+
+         min = std::max(spectrumLinear ? 0.0f : 1.0f,
+            std::min(middleValue - minBand / 2,
+            scale.PositionToValue(xmin)
+            ));
+         max = std::min(halfrate,
+            std::max(middleValue + minBand / 2,
+            scale.PositionToValue(xmax)
+            ));
+      }
+      break;
+   case kZoomIn:
+      {
+         // Center the zoom-in at the click
+         const float p1 = (zoomStart - ypos) / (float)height;
+         const float middle = 1.0f - p1;
+         const float middleValue = scale.PositionToValue(middle);
+
+         if (fixedMousePoint) {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f,
+               std::min(middleValue - minBand * middle,
+               scale.PositionToValue(0.5f * middle)
+            ));
+            max = std::min(halfrate,
+               std::max(middleValue + minBand * p1,
+               scale.PositionToValue(middle + 0.5f * p1)
+            ));
+         }
+         else {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f,
+               std::min(middleValue - minBand / 2,
+               scale.PositionToValue(middle - 0.25f)
+            ));
+            max = std::min(halfrate,
+               std::max(middleValue + minBand / 2,
+               scale.PositionToValue(middle + 0.25f)
+            ));
+         }
+      }
+      break;
+   case kZoomOut:
+      {
+         // Zoom out
+         const float p1 = (zoomStart - ypos) / (float)height;
+         // (Used to zoom out centered at midline, ignoring the click, if linear view.
+         //  I think it is better to be consistent.  PRL)
+         // Center zoom-out at the midline
+         const float middle = // spectrumLinear ? 0.5f :
+            1.0f - p1;
+
+         if (fixedMousePoint) {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(-middle));
+            max = std::min(halfrate, scale.PositionToValue(1.0f + p1));
+         }
+         else {
+            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
+            max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
+         }
+      }
+      break;
+   }
+
+   // Now actually apply the zoom.
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->SetSpectrumBounds(min, max);
+
+   zoomEnd = zoomStart = 0;
+   if( pProject )
+      ProjectHistory::Get( *pProject ).ModifyState(true);
+}
+
+// ZoomKind says how to zoom.
+// If ZoomStart and ZoomEnd are not equal, this may override
+// the zoomKind and cause a drag-zoom-in.
+void WaveTrackVZoomHandle::DoWaveformZoom(
+   AudacityProject *pProject,
+   WaveTrack *pTrack,
+   WaveTrackViewConstants::ZoomActions ZoomKind,
+   const wxRect &rect, int zoomStart, int zoomEnd,
+   bool fixedMousePoint)
+{
+   using namespace WaveTrackViewConstants;
+   static const float ZOOMLIMIT = 0.001f;
+
+   int height = rect.height;
+   int ypos = rect.y;
+
+   // Ensure start and end are in order (swap if not).
+   if (zoomEnd < zoomStart)
+      std::swap( zoomStart, zoomEnd );
+
+   float min, max, minBand = 0;
+   const double rate = pTrack->GetRate();
+   const float halfrate = rate / 2;
+   float maxFreq = 8000.0;
+   const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
+   NumberScale scale;
+
+   bool bDragZoom = IsDragZooming(zoomStart, zoomEnd);
+   // Add 100 if spectral to separate the kinds of zoom.
+
+   // Possibly override the zoom kind.
+   if( bDragZoom )
+      ZoomKind = kZoomInByDrag;
+
+   float top=2.0;
+   float half=0.5;
+
+   {
       pTrack->GetDisplayBounds(&min, &max);
       const WaveformSettings &waveSettings = pTrack->GetWaveformSettings();
       const bool linear = waveSettings.isLinear();
@@ -237,101 +376,11 @@ void WaveTrackVZoomHandle::DoZoom
          }
       }
       break;
-
-   // VZooming on spectral we don't implement the other zoom presets.
-   // They are also not in the menu.
-   case kZoomReset + kSpectral:
-      {
-         // Zoom out to normal level.
-         min = spectrumLinear ? 0.0f : 1.0f;
-         max = maxFreq;
-      }
-      break;
-   case kZoom1to1 + kSpectral:
-   case kZoomDiv2 + kSpectral:
-   case kZoomTimes2 + kSpectral:
-   case kZoomHalfWave + kSpectral:
-      {
-         // Zoom out full
-         min = spectrumLinear ? 0.0f : 1.0f;
-         max = halfrate;
-      }
-      break;
-   case kZoomInByDrag + kSpectral:
-      {
-         double xmin = 1 - (zoomEnd - ypos) / (float)height;
-         double xmax = 1 - (zoomStart - ypos) / (float)height;
-         const float middle = (xmin + xmax) / 2;
-         const float middleValue = scale.PositionToValue(middle);
-
-         min = std::max(spectrumLinear ? 0.0f : 1.0f,
-            std::min(middleValue - minBand / 2,
-            scale.PositionToValue(xmin)
-            ));
-         max = std::min(halfrate,
-            std::max(middleValue + minBand / 2,
-            scale.PositionToValue(xmax)
-            ));
-      }
-      break;
-   case kZoomIn + kSpectral:
-      {
-         // Center the zoom-in at the click
-         const float p1 = (zoomStart - ypos) / (float)height;
-         const float middle = 1.0f - p1;
-         const float middleValue = scale.PositionToValue(middle);
-
-         if (fixedMousePoint) {
-            min = std::max(spectrumLinear ? 0.0f : 1.0f,
-               std::min(middleValue - minBand * middle,
-               scale.PositionToValue(0.5f * middle)
-            ));
-            max = std::min(halfrate,
-               std::max(middleValue + minBand * p1,
-               scale.PositionToValue(middle + 0.5f * p1)
-            ));
-         }
-         else {
-            min = std::max(spectrumLinear ? 0.0f : 1.0f,
-               std::min(middleValue - minBand / 2,
-               scale.PositionToValue(middle - 0.25f)
-            ));
-            max = std::min(halfrate,
-               std::max(middleValue + minBand / 2,
-               scale.PositionToValue(middle + 0.25f)
-            ));
-         }
-      }
-      break;
-   case kZoomOut + kSpectral:
-      {
-         // Zoom out
-         const float p1 = (zoomStart - ypos) / (float)height;
-         // (Used to zoom out centered at midline, ignoring the click, if linear view.
-         //  I think it is better to be consistent.  PRL)
-         // Center zoom-out at the midline
-         const float middle = // spectrumLinear ? 0.5f :
-            1.0f - p1;
-
-         if (fixedMousePoint) {
-            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(-middle));
-            max = std::min(halfrate, scale.PositionToValue(1.0f + p1));
-         }
-         else {
-            min = std::max(spectrumLinear ? 0.0f : 1.0f, scale.PositionToValue(middle - 1.0f));
-            max = std::min(halfrate, scale.PositionToValue(middle + 1.0f));
-         }
-      }
-      break;
    }
 
    // Now actually apply the zoom.
-   for (auto channel : TrackList::Channels(pTrack)) {
-      if (spectral)
-         channel->SetSpectrumBounds(min, max);
-      else
-         channel->SetDisplayBounds(min, max);
-   }
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->SetDisplayBounds(min, max);
 
    zoomEnd = zoomStart = 0;
    if( pProject )
@@ -401,9 +450,10 @@ void WaveTrackVRulerMenuTable::InitMenu(Menu *, void *pUserData)
 void WaveTrackVRulerMenuTable::OnZoom(
    WaveTrackViewConstants::ZoomActions iZoomCode )
 {
-   WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack,
-       iZoomCode, mpData->rect, mpData->yy, mpData->yy, false);
+   mpData->doZoom(
+      ::GetActiveProject(), mpData->pTrack,
+      iZoomCode, mpData->rect, mpData->yy, mpData->yy, false
+   );
 
    using namespace RefreshCode;
    mpData->result = UpdateVRuler | RefreshAll;
@@ -648,7 +698,10 @@ UIHandle::Result WaveTrackVZoomHandle::Release
        !(event.ShiftDown() || event.CmdDown()))
    {
       InitMenuData data {
-         pTrack.get(), mRect, RefreshCode::RefreshNone, event.m_y
+         pTrack.get(), mRect, RefreshCode::RefreshNone, event.m_y,
+         (pTrack->GetDisplay() == Spectrum)
+            ? WaveTrackVZoomHandle::DoSpectrumZoom
+            : WaveTrackVZoomHandle::DoWaveformZoom
       };
 
       PopupMenuTable *const pTable =
@@ -687,7 +740,10 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       if( bVZoom ) {
          if( shiftDown )
             mZoomStart = mZoomEnd;
-         DoZoom(pProject, pTrack.get(),
+         auto doZoom = (pTrack->GetDisplay() == Spectrum)
+            ? WaveTrackVZoomHandle::DoSpectrumZoom
+            : WaveTrackVZoomHandle::DoWaveformZoom;
+         doZoom(pProject, pTrack.get(),
             shiftDown
                ? (rightUp ? kZoom1to1 : kZoomOut)
                : kZoomIn,

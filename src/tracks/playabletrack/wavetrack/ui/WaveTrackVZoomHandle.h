@@ -28,12 +28,21 @@ public:
 
    WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
 
-   static void DoZoom
-   (AudacityProject *pProject,
-    WaveTrack *pTrack,
-    WaveTrackViewConstants::ZoomActions ZoomKind,
-    const wxRect &rect, int zoomStart, int zoomEnd,
-    bool fixedMousePoint);
+   using DoZoomFunction = void (*)( AudacityProject *pProject,
+       WaveTrack *pTrack,
+       WaveTrackViewConstants::ZoomActions ZoomKind,
+       const wxRect &rect, int zoomStart, int zoomEnd,
+       bool fixedMousePoint);
+   static void DoSpectrumZoom( AudacityProject *pProject,
+       WaveTrack *pTrack,
+       WaveTrackViewConstants::ZoomActions ZoomKind,
+       const wxRect &rect, int zoomStart, int zoomEnd,
+       bool fixedMousePoint);
+   static void DoWaveformZoom( AudacityProject *pProject,
+       WaveTrack *pTrack,
+       WaveTrackViewConstants::ZoomActions ZoomKind,
+       const wxRect &rect, int zoomStart, int zoomEnd,
+       bool fixedMousePoint);
 
    virtual ~WaveTrackVZoomHandle();
 
