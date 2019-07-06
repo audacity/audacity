@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Experimental.h"
 
-#include "WaveTrackVRulerControls.h"
+#include "../../../ui/TrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NumberScale.h"
