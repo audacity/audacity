@@ -16,6 +16,10 @@ Paul Licameli split from class TrackView
 class SelectHandle;
 class TimeShiftHandle;
 
+class CutlineHandle;
+class SampleHandle;
+class EnvelopeHandle;
+
 class CommonTrackView /* not final */ : public TrackView
 {
 public:
@@ -49,6 +53,13 @@ protected:
 
    std::weak_ptr<SelectHandle> mSelectHandle;
    std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
+
+   // Temporarily demoting these fields here from WaveTrackView
+   std::weak_ptr<CutlineHandle> mCutlineHandle;
+   std::weak_ptr<SampleHandle> mSampleHandle;
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+   friend class WaveformView;
+   friend class WaveTrackView;
 };
 
 #endif

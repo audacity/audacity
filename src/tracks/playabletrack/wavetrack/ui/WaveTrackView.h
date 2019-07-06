@@ -13,9 +13,7 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/CommonTrackView.h"
 
-class CutlineHandle;
-class SampleHandle;
-class EnvelopeHandle;
+class WaveTrack;
 
 class WaveTrackView final : public CommonTrackView
 {
@@ -43,15 +41,22 @@ private:
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
-
-   std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<SampleHandle> mSampleHandle;
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+   static std::pair<
+      bool, // if true, hit-testing is finished
+      std::vector<UIHandlePtr>
+   > DoDetailedHitTest(
+      const TrackPanelMouseState &state,
+      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const std::shared_ptr<WaveTrack> &wt,
+      CommonTrackView &view);
 
 protected:
    void DoSetMinimized( bool minimized ) override;
 
    std::shared_ptr< CommonTrackView > mWaveformView, mSpectrumView;
+
+   friend class SpectrumView;
+   friend class WaveformView;
 };
 
 #endif

@@ -19,6 +19,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../WaveTrack.h"
 
 #include "WaveTrackControls.h"
+#include "SpectrumVRulerControls.h"
+#include "WaveformVRulerControls.h"
 #include "WaveTrackVRulerControls.h"
 
 #include "SpectrumView.h"
@@ -60,12 +62,42 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
-   return {};
+   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   return DoDetailedHitTest( state, pProject, currentTool, bMultiTool, wt,
+      *this );
+}
+
+std::vector<UIHandlePtr> SpectrumView::DoDetailedHitTest(
+   const TrackPanelMouseState &state,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool,
+   const std::shared_ptr<WaveTrack> &wt,
+   CommonTrackView &view)
+{
+   return WaveTrackView::DoDetailedHitTest(
+      state, pProject, currentTool, bMultiTool,wt, view
+   ).second;
 }
 
 std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int currentTool, bool bMultiTool)
+{
+   const auto pTrack = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   bool isWaveform = (pTrack->GetDisplay() == WaveTrackViewConstants::Waveform);
+   if ( isWaveform )
+      return WaveformView::DoDetailedHitTest(
+         st, pProject, currentTool, bMultiTool, pTrack, *this);
+   else
+      return SpectrumView::DoDetailedHitTest(
+         st, pProject, currentTool, bMultiTool, pTrack, *this);
+}
+
+std::pair< bool, std::vector<UIHandlePtr> >
+WaveTrackView::DoDetailedHitTest
+(const TrackPanelMouseState &st,
+ const AudacityProject *pProject, int currentTool, bool bMultiTool,
+ const std::shared_ptr<WaveTrack> &pTrack,
+ CommonTrackView &view)
 {
    // This is the only override of Track::DetailedHitTest that still
    // depends on the state of the Tools toolbar.
@@ -74,26 +106,46 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
 
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
-   const auto pTrack = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   bool isWaveform = (pTrack->GetDisplay() == WaveTrackViewConstants::Waveform);
 
    if (bMultiTool && st.state.CmdDown()) {
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
       result = TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, pTrack, false);
+         view.mTimeShiftHandle, pTrack, false);
       if (result)
          results.push_back(result);
-      return results;
+      return { true, results };
    }
+   return { false, results };
+}
 
-   // Some special targets are not drawn in spectrogram,
-   // so don't hit them in such views.
-   else if (isWaveform) {
+std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
+   const TrackPanelMouseState &state,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool )
+{
+   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   return DoDetailedHitTest( state, pProject, currentTool, bMultiTool, wt,
+      *this );
+}
+
+std::vector<UIHandlePtr> WaveformView::DoDetailedHitTest(
+   const TrackPanelMouseState &st,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool,
+   const std::shared_ptr<WaveTrack> &wt,
+   CommonTrackView &view )
+{
+   auto pair = WaveTrackView::DoDetailedHitTest(
+      st, pProject, currentTool, bMultiTool, wt, view);
+   auto &results = pair.second;
+
+   if (!pair.first) {
+      const auto pTrack =
+         std::static_pointer_cast< WaveTrack >( view.FindTrack() );
+      UIHandlePtr result;
 
       if (NULL != (result = CutlineHandle::HitTest(
-         mCutlineHandle, st.state, st.rect,
+         view.mCutlineHandle, st.state, st.rect,
          pProject, pTrack )))
          // This overriding test applies in all tools
          results.push_back(result);
@@ -103,16 +155,16 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
          // The priority of these, in case more than one might apply at one
          // point, seems arbitrary
          if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
-            mEnvelopeHandle, st.state, st.rect,
+            view.mEnvelopeHandle, st.state, st.rect,
             pProject, pTrack )))
             results.push_back(result);
          if (NULL != (result = TimeShiftHandle::HitTest(
-            mTimeShiftHandle, st.state, st.rect, pTrack )))
+            view.mTimeShiftHandle, st.state, st.rect, pTrack )))
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
             results.push_back(result);
          if (NULL != (result = SampleHandle::HitTest(
-            mSampleHandle, st.state, st.rect,
+            view.mSampleHandle, st.state, st.rect,
             pProject, pTrack )))
             results.push_back(result);
       }
@@ -123,12 +175,12 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
             case ToolCodes::envelopeTool: {
                auto envelope = pTrack->GetEnvelopeAtX( st.state.m_x );
                result = EnvelopeHandle::HitAnywhere(
-                  mEnvelopeHandle, envelope, false);
+                  view.mEnvelopeHandle, envelope, false);
                break;
             }
             case ToolCodes::drawTool:
                result = SampleHandle::HitAnywhere(
-                  mSampleHandle, st.state, pTrack );
+                  view.mSampleHandle, st.state, pTrack );
                break;
             default:
                result = {};
@@ -139,22 +191,53 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
       }
    }
 
-   return results;
-}
-
-std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
-   const TrackPanelMouseState &state,
-   const AudacityProject *pProject, int currentTool, bool bMultiTool )
-{
-   return {};
+   return std::move( results );
 }
 
 void SpectrumView::DoSetMinimized( bool minimized )
 {
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+
+#ifdef EXPERIMENTAL_HALF_WAVE
+   bool bHalfWave;
+   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
+   if( bHalfWave )
+   {
+      // It is all right to set the top of scale to a huge number,
+      // not knowing the track rate here -- because when retrieving the
+      // value, then we pass in a sample rate and clamp it above to the
+      // Nyquist frequency.
+      constexpr auto max = std::numeric_limits<float>::max();
+      const bool spectrumLinear =
+         (wt->GetSpectrogramSettings().scaleType ==
+            SpectrogramSettings::stLinear);
+      // Zoom out full
+      wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
+   }
+#endif
+
+   TrackView::DoSetMinimized( minimized );
 }
 
 void WaveformView::DoSetMinimized( bool minimized )
 {
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+
+#ifdef EXPERIMENTAL_HALF_WAVE
+   bool bHalfWave;
+   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
+   if( bHalfWave )
+   {
+      if (minimized)
+         // Zoom to show fractionally more than the top half of the wave.
+         wt->SetDisplayBounds( -0.01f, 1.0f );
+      else
+         // Zoom out full
+         wt->SetDisplayBounds( -1.0f, 1.0f );
+   }
+#endif
+
+   TrackView::DoSetMinimized( minimized );
 }
 
 void WaveTrackView::DoSetMinimized( bool minimized )
@@ -204,12 +287,12 @@ static DoGetWaveTrackView registerDoGetWaveTrackView;
 
 std::shared_ptr<TrackVRulerControls> WaveformView::DoGetVRulerControls()
 {
-   return {};
+   return std::make_shared<WaveformVRulerControls>( shared_from_this() );
 }
 
 std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
 {
-   return {};
+   return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
 }
 
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
@@ -1892,11 +1975,60 @@ void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
 void WaveformView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
+   if ( iPass == TrackArtist::PassTracks ) {
+      auto &dc = context.dc;
+      const auto wt = std::static_pointer_cast<const WaveTrack>(
+         FindTrack()->SubstitutePendingChangedTrack());
+
+      for (const auto &clip : wt->GetClips()) {
+         clip->ClearDisplayRect();
+      }
+
+      const auto artist = TrackArtist::Get( context );
+      const auto hasSolo = artist->hasSolo;
+      bool muted = (hasSolo || wt->GetMute()) &&
+      !wt->GetSolo();
+      
+#if defined(__WXMAC__)
+      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
+      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+      
+      DrawWaveform(context, wt.get(), rect, muted);
+
+#if defined(__WXMAC__)
+      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
+#endif
+   }
+   CommonTrackView::Draw( context, rect, iPass );
 }
 
 void SpectrumView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
+   if ( iPass == TrackArtist::PassTracks ) {
+      auto &dc = context.dc;
+      const auto wt = std::static_pointer_cast<const WaveTrack>(
+         FindTrack()->SubstitutePendingChangedTrack());
+
+      for (const auto &clip : wt->GetClips()) {
+         clip->ClearDisplayRect();
+      }
+
+      const auto artist = TrackArtist::Get( context );
+      
+#if defined(__WXMAC__)
+      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
+      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
+#endif
+      
+      DrawSpectrum( context, wt.get(), rect );
+      
+#if defined(__WXMAC__)
+      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
+#endif
+   }
+   CommonTrackView::Draw( context, rect, iPass );
 }
 
 void WaveTrackView::Draw(
