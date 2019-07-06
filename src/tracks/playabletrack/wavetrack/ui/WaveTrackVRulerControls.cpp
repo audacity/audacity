@@ -126,7 +126,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
       WaveTrackVZoomHandle::DoZoom(
-         pProject, wt, true,
+         pProject, wt,
          (steps < 0)
             ? kZoomOut
             : kZoomIn,

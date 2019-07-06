@@ -69,7 +69,7 @@ void WaveTrackVZoomHandle::Enter(bool)
 // the zoomKind and cause a drag-zoom-in.
 void WaveTrackVZoomHandle::DoZoom
    (AudacityProject *pProject,
-    WaveTrack *pTrack, bool allChannels,
+    WaveTrack *pTrack,
     WaveTrackViewConstants::ZoomActions inZoomKind,
     const wxRect &rect, int zoomStart, int zoomEnd,
     bool fixedMousePoint)
@@ -327,8 +327,6 @@ void WaveTrackVZoomHandle::DoZoom
 
    // Now actually apply the zoom.
    for (auto channel : TrackList::Channels(pTrack)) {
-      if (!allChannels && channel != pTrack)
-         continue;
       if (spectral)
          channel->SetSpectrumBounds(min, max);
       else
@@ -404,7 +402,7 @@ void WaveTrackVRulerMenuTable::OnZoom(
    WaveTrackViewConstants::ZoomActions iZoomCode )
 {
    WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, true,
+      (::GetActiveProject(), mpData->pTrack,
        iZoomCode, mpData->rect, mpData->yy, mpData->yy, false);
 
    using namespace RefreshCode;
@@ -689,7 +687,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       if( bVZoom ) {
          if( shiftDown )
             mZoomStart = mZoomEnd;
-         DoZoom(pProject, pTrack.get(), true,
+         DoZoom(pProject, pTrack.get(),
             shiftDown
                ? (rightUp ? kZoom1to1 : kZoomOut)
                : kZoomIn,
