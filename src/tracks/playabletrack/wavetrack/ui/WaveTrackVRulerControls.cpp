@@ -16,6 +16,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "SpectrumVZoomHandle.h"
 #include "WaveformVZoomHandle.h"
 
+#include "SpectrumVRulerControls.h"
+#include "WaveformVRulerControls.h"
+
 #include "../../../../Experimental.h"
 
 #include "../../../../HitTestResult.h"
@@ -38,6 +41,20 @@ WaveTrackVRulerControls::~WaveTrackVRulerControls()
 {
 }
 
+std::vector<UIHandlePtr> SpectrumVRulerControls::HitTest(
+   const TrackPanelMouseState &st,
+   const AudacityProject *pProject)
+{
+   return {};
+}
+
+std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
+   const TrackPanelMouseState &st,
+   const AudacityProject *pProject)
+{
+   return {};
+}
+
 std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
@@ -58,6 +75,18 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
    std::copy(more.begin(), more.end(), std::back_inserter(results));
 
    return results;
+}
+
+unsigned WaveformVRulerControls::HandleWheelRotation(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   return 0;
+}
+
+unsigned SpectrumVRulerControls::HandleWheelRotation(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   return 0;
 }
 
 unsigned WaveTrackVRulerControls::HandleWheelRotation
@@ -198,6 +227,18 @@ namespace {
    }
 }
 
+void WaveformVRulerControls::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect_, unsigned iPass )
+{
+}
+
+void SpectrumVRulerControls::Draw(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect_, unsigned iPass )
+{
+}
+
 void WaveTrackVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
@@ -248,6 +289,14 @@ void WaveTrackVRulerControls::Draw(
       vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
       vruler->Draw(*dc);
    }
+}
+
+void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
+{
+}
+
+void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
+{
 }
 
 void WaveTrackVRulerControls::UpdateRuler( const wxRect &rect )
