@@ -18,6 +18,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "SpectrumVRulerControls.h"
 #include "WaveformVRulerControls.h"
+#include "SpectrumVZoomHandle.h"
+#include "WaveformVZoomHandle.h"
 
 #include "../../../../Experimental.h"
 
@@ -45,14 +47,44 @@ std::vector<UIHandlePtr> SpectrumVRulerControls::HitTest(
    const TrackPanelMouseState &st,
    const AudacityProject *pProject)
 {
-   return {};
+   std::vector<UIHandlePtr> results;
+
+   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
+      auto pTrack = FindTrack()->SharedPointer<WaveTrack>(  );
+      if (pTrack) {
+         auto result = std::make_shared<SpectrumVZoomHandle>(
+            pTrack, st.rect, st.state.m_y );
+         result = AssignUIHandlePtr(mVZoomHandle, result);
+         results.push_back(result);
+      }
+   }
+
+   auto more = TrackVRulerControls::HitTest(st, pProject);
+   std::copy(more.begin(), more.end(), std::back_inserter(results));
+
+   return results;
 }
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
    const AudacityProject *pProject)
 {
-   return {};
+   std::vector<UIHandlePtr> results;
+
+   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
+      auto pTrack = FindTrack()->SharedPointer<WaveTrack>(  );
+      if (pTrack) {
+         auto result = std::make_shared<WaveformVZoomHandle>(
+            pTrack, st.rect, st.state.m_y );
+         result = AssignUIHandlePtr(mVZoomHandle, result);
+         results.push_back(result);
+      }
+   }
+
+   auto more = TrackVRulerControls::HitTest(st, pProject);
+   std::copy(more.begin(), more.end(), std::back_inserter(results));
+
+   return results;
 }
 
 std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
@@ -80,17 +112,16 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
 unsigned WaveformVRulerControls::HandleWheelRotation(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   return 0;
+   using namespace RefreshCode;
+   const auto pTrack = FindTrack();
+   if (!pTrack)
+      return RefreshNone;
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+   return DoHandleWheelRotation( evt, pProject, wt );
 }
 
-unsigned SpectrumVRulerControls::HandleWheelRotation(
-   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
-{
-   return 0;
-}
-
-unsigned WaveTrackVRulerControls::HandleWheelRotation
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+unsigned WaveformVRulerControls::DoHandleWheelRotation(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack *wt)
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
@@ -102,15 +133,10 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    // is a narrow enough target.
    evt.event.Skip(false);
 
-   const auto pTrack = FindTrack();
-   if (!pTrack)
-      return RefreshNone;
-   const auto wt = static_cast<WaveTrack*>(pTrack.get());
    auto steps = evt.steps;
 
    using namespace WaveTrackViewConstants;
    const bool isDB =
-      wt->GetDisplay() == Waveform &&
       wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
    // Special cases for Waveform dB only.
    // Set the bottom of the dB scale but only if it's visible
@@ -157,10 +183,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
-      auto doZoom = (wt->GetDisplay() == Spectrum)
-         ? SpectrumVZoomHandle::DoZoom
-         : WaveformVZoomHandle::DoZoom;
-      doZoom(
+      WaveformVZoomHandle::DoZoom(
          pProject, wt,
          (steps < 0)
             ? kZoomOut
@@ -171,29 +194,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
       // Scroll some fixed number of pixels, independent of zoom level or track height:
       static const float movement = 10.0f;
       const int height = evt.rect.GetHeight();
-      const bool spectral = (wt->GetDisplay() == Spectrum);
-      if (spectral) {
-         const float delta = steps * movement / height;
-         SpectrogramSettings &settings = wt->GetIndependentSpectrogramSettings();
-         const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
-         float bottom, top;
-         wt->GetSpectrumBounds(&bottom, &top);
-         const double rate = wt->GetRate();
-         const float bound = rate / 2;
-         const NumberScale numberScale(settings.GetScale(bottom, top));
-         float newTop =
-            std::min(bound, numberScale.PositionToValue(1.0f + delta));
-         const float newBottom =
-            std::max((isLinear ? 0.0f : 1.0f),
-                     numberScale.PositionToValue(numberScale.ValueToPosition(newTop) - 1.0f));
-         newTop =
-            std::min(bound,
-                     numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
-
-         for (auto channel : TrackList::Channels(wt))
-            channel->SetSpectrumBounds(newBottom, newTop);
-      }
-      else {
+      {
          float topLimit = 2.0;
          if (isDB) {
             const float dBRange = wt->GetWaveformSettings().dBRange;
@@ -219,6 +220,90 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    return RefreshCell | UpdateVRuler;
 }
 
+unsigned SpectrumVRulerControls::HandleWheelRotation(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   using namespace RefreshCode;
+   const auto pTrack = FindTrack();
+   if (!pTrack)
+      return RefreshNone;
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+   return DoHandleWheelRotation( evt, pProject, wt );
+}
+
+unsigned SpectrumVRulerControls::DoHandleWheelRotation(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack *wt)
+{
+   using namespace RefreshCode;
+   const wxMouseEvent &event = evt.event;
+   
+   if (!(event.ShiftDown() || event.CmdDown()))
+      return RefreshNone;
+   
+   // Always stop propagation even if the ruler didn't change.  The ruler
+   // is a narrow enough target.
+   evt.event.Skip(false);
+   
+   auto steps = evt.steps;
+   
+   using namespace WaveTrackViewConstants;
+   if (event.CmdDown() && !event.ShiftDown()) {
+      const int yy = event.m_y;
+      SpectrumVZoomHandle::DoZoom(
+         pProject, wt,
+         (steps < 0)
+            ? kZoomOut
+            : kZoomIn,
+         evt.rect, yy, yy, true);
+   }
+   else if (!event.CmdDown() && event.ShiftDown()) {
+      // Scroll some fixed number of pixels, independent of zoom level or track height:
+      static const float movement = 10.0f;
+      const int height = evt.rect.GetHeight();
+      {
+         const float delta = steps * movement / height;
+         SpectrogramSettings &settings = wt->GetIndependentSpectrogramSettings();
+         const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
+         float bottom, top;
+         wt->GetSpectrumBounds(&bottom, &top);
+         const double rate = wt->GetRate();
+         const float bound = rate / 2;
+         const NumberScale numberScale(settings.GetScale(bottom, top));
+         float newTop =
+         std::min(bound, numberScale.PositionToValue(1.0f + delta));
+         const float newBottom =
+         std::max((isLinear ? 0.0f : 1.0f),
+                  numberScale.PositionToValue(numberScale.ValueToPosition(newTop) - 1.0f));
+         newTop =
+         std::min(bound,
+                  numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
+         
+         for (auto channel : TrackList::Channels(wt))
+            channel->SetSpectrumBounds(newBottom, newTop);
+      }
+   }
+   else
+      return RefreshNone;
+   
+   ProjectHistory::Get( *pProject ).ModifyState(true);
+   
+   return RefreshCell | UpdateVRuler;
+}
+
+unsigned WaveTrackVRulerControls::HandleWheelRotation
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+{
+   using namespace RefreshCode;
+   const auto pTrack = FindTrack();
+   if (!pTrack)
+      return RefreshNone;
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+   if (wt->GetDisplay() == WaveTrackViewConstants::Spectrum)
+      return SpectrumVRulerControls::DoHandleWheelRotation( evt, pProject, wt );
+   else
+      return WaveformVRulerControls::DoHandleWheelRotation( evt, pProject, wt );
+}
+
 namespace {
    Ruler &ruler()
    {
@@ -231,12 +316,16 @@ void WaveformVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
 {
+   TrackVRulerControls::Draw( context, rect_, iPass );
+   WaveTrackVRulerControls::DoDraw( *this, context, rect_, iPass );
 }
 
 void SpectrumVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
 {
+   TrackVRulerControls::Draw( context, rect_, iPass );
+   WaveTrackVRulerControls::DoDraw( *this, context, rect_, iPass );
 }
 
 void WaveTrackVRulerControls::Draw(
@@ -244,7 +333,14 @@ void WaveTrackVRulerControls::Draw(
    const wxRect &rect_, unsigned iPass )
 {
    TrackVRulerControls::Draw( context, rect_, iPass );
+   DoDraw( *this, context, rect_, iPass );
+}
 
+void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
+   TrackPanelDrawingContext &context,
+   const wxRect &rect_, unsigned iPass )
+{
+   auto &vruler = ruler();
    // Draw on a later pass because the bevel overpaints one pixel
    // out of bounds on the bottom
 
@@ -272,7 +368,7 @@ void WaveTrackVRulerControls::Draw(
       wxRect rr = rect;
       rr.width--;
       
-      auto t = FindTrack();
+      auto t = controls.FindTrack();
       if ( !t )
          return;
 
@@ -282,21 +378,263 @@ void WaveTrackVRulerControls::Draw(
          rr.width -= adj;
       }
       
-      UpdateRuler(rr);
+      controls.UpdateRuler(rr);
       
-      auto vruler = &ruler();
-
-      vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
-      vruler->Draw(*dc);
+      vruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
+      vruler.Draw(*dc);
    }
 }
 
 void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
 {
+   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   if (!wt)
+      return;
+   DoUpdateVRuler( rect, wt.get() );
+}
+
+void WaveformVRulerControls::DoUpdateVRuler(
+   const wxRect &rect, const WaveTrack *wt )
+{
+   auto vruler = &ruler();
+
+   // All waves have a ruler in the info panel
+   // The ruler needs a bevelled surround.
+   const float dBRange =
+      wt->GetWaveformSettings().dBRange;
+
+   WaveformSettings::ScaleType scaleType =
+   wt->GetWaveformSettings().scaleType;
+   
+   if (scaleType == WaveformSettings::stLinear) {
+      // Waveform
+      
+      float min, max;
+      wt->GetDisplayBounds(&min, &max);
+      if (wt->GetLastScaleType() != scaleType &&
+          wt->GetLastScaleType() != -1)
+      {
+         // do a translation into the linear space
+         wt->SetLastScaleType();
+         wt->SetLastdBRange();
+         float sign = (min >= 0 ? 1 : -1);
+         if (min != 0.) {
+            min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
+            if (min < 0.0)
+               min = 0.0;
+            min *= sign;
+         }
+         sign = (max >= 0 ? 1 : -1);
+         
+         if (max != 0.) {
+            max = DB_TO_LINEAR(fabs(max) * dBRange - dBRange);
+            if (max < 0.0)
+               max = 0.0;
+            max *= sign;
+         }
+         wt->SetDisplayBounds(min, max);
+      }
+      
+      vruler->SetDbMirrorValue( 0.0 );
+      vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+      vruler->SetOrientation(wxVERTICAL);
+      vruler->SetRange(max, min);
+      vruler->SetFormat(Ruler::RealFormat);
+      vruler->SetUnits(wxT(""));
+      vruler->SetLabelEdges(false);
+      vruler->SetLog(false);
+   }
+   else {
+      wxASSERT(scaleType == WaveformSettings::stLogarithmic);
+      scaleType = WaveformSettings::stLogarithmic;
+      
+      vruler->SetUnits(wxT(""));
+      
+      float min, max;
+      wt->GetDisplayBounds(&min, &max);
+      float lastdBRange;
+      
+      if (wt->GetLastScaleType() != scaleType &&
+          wt->GetLastScaleType() != -1)
+      {
+         // do a translation into the dB space
+         wt->SetLastScaleType();
+         wt->SetLastdBRange();
+         float sign = (min >= 0 ? 1 : -1);
+         if (min != 0.) {
+            min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
+            if (min < 0.0)
+               min = 0.0;
+            min *= sign;
+         }
+         sign = (max >= 0 ? 1 : -1);
+         
+         if (max != 0.) {
+            max = (LINEAR_TO_DB(fabs(max)) + dBRange) / dBRange;
+            if (max < 0.0)
+               max = 0.0;
+            max *= sign;
+         }
+         wt->SetDisplayBounds(min, max);
+      }
+      else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
+         wt->SetLastdBRange();
+         // Remap the max of the scale
+         float newMax = max;
+         
+         // This commented out code is problematic.
+         // min and max may be correct, and this code cause them to change.
+#ifdef ONLY_LABEL_POSITIVE
+         const float sign = (max >= 0 ? 1 : -1);
+         if (max != 0.) {
+            
+            // Ugh, duplicating from TrackPanel.cpp
+#define ZOOMLIMIT 0.001f
+            
+            const float extreme = LINEAR_TO_DB(2);
+            // recover dB value of max
+            const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
+            // find NEW scale position, but old max may get trimmed if the db limit rises
+            // Don't trim it to zero though, but leave max and limit distinct
+            newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
+            // Adjust the min of the scale if we can,
+            // so the db Limit remains where it was on screen, but don't violate extremes
+            if (min != 0.)
+               min = std::max(-extreme, newMax * min / max);
+         }
+#endif
+         wt->SetDisplayBounds(min, newMax);
+      }
+      
+      // Old code was if ONLY_LABEL_POSITIVE were defined.
+      // it uses the +1 to 0 range only.
+      // the enabled code uses +1 to -1, and relies on set ticks labelling knowing about
+      // the dB scale.
+#ifdef ONLY_LABEL_POSITIVE
+      if (max > 0) {
+#endif
+         int top = 0;
+         float topval = 0;
+         int bot = rect.height;
+         float botval = -dBRange;
+         
+#ifdef ONLY_LABEL_POSITIVE
+         if (min < 0) {
+            bot = top + (int)((max / (max - min))*(bot - top));
+            min = 0;
+         }
+         
+         if (max > 1) {
+            top += (int)((max - 1) / (max - min) * (bot - top));
+            max = 1;
+         }
+         
+         if (max < 1 && max > 0)
+            topval = -((1 - max) * dBRange);
+         
+         if (min > 0) {
+            botval = -((1 - min) * dBRange);
+         }
+#else
+         topval = -((1 - max) * dBRange);
+         botval = -((1 - min) * dBRange);
+         vruler->SetDbMirrorValue( dBRange );
+#endif
+         vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
+         vruler->SetOrientation(wxVERTICAL);
+         vruler->SetRange(topval, botval);
+#ifdef ONLY_LABEL_POSITIVE
+      }
+      else
+         vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
+#endif
+      vruler->SetFormat(Ruler::RealLogFormat);
+      vruler->SetLabelEdges(true);
+      vruler->SetLog(false);
+   }
+   vruler->GetMaxSize( &wt->vrulerSize.x, &wt->vrulerSize.y );
 }
 
 void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
 {
+   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   if (!wt)
+      return;
+   DoUpdateVRuler( rect, wt.get() );
+}
+
+void SpectrumVRulerControls::DoUpdateVRuler(
+   const wxRect &rect, const WaveTrack *wt )
+{
+   auto vruler = &ruler();
+   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   float minFreq, maxFreq;
+   wt->GetSpectrumBounds(&minFreq, &maxFreq);
+   vruler->SetDbMirrorValue( 0.0 );
+   
+   switch (settings.scaleType) {
+      default:
+         wxASSERT(false);
+      case SpectrogramSettings::stLinear:
+      {
+         // Spectrum
+         
+         if (rect.height < 60)
+            return;
+         
+         /*
+          draw the ruler
+          we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
+          and append to the numbers a "k"
+          */
+         vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+         vruler->SetOrientation(wxVERTICAL);
+         vruler->SetFormat(Ruler::RealFormat);
+         vruler->SetLabelEdges(true);
+         // use kHz in scale, if appropriate
+         if (maxFreq >= 2000) {
+            vruler->SetRange((maxFreq / 1000.), (minFreq / 1000.));
+            vruler->SetUnits(wxT("k"));
+         }
+         else {
+            // use Hz
+            vruler->SetRange((int)(maxFreq), (int)(minFreq));
+            vruler->SetUnits(wxT(""));
+         }
+         vruler->SetLog(false);
+      }
+         break;
+      case SpectrogramSettings::stLogarithmic:
+      case SpectrogramSettings::stMel:
+      case SpectrogramSettings::stBark:
+      case SpectrogramSettings::stErb:
+      case SpectrogramSettings::stPeriod:
+      {
+         // SpectrumLog
+         
+         if (rect.height < 10)
+            return;
+         
+         /*
+          draw the ruler
+          we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
+          and append to the numbers a "k"
+          */
+         vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+         vruler->SetOrientation(wxVERTICAL);
+         vruler->SetFormat(Ruler::IntFormat);
+         vruler->SetLabelEdges(true);
+         vruler->SetRange(maxFreq, minFreq);
+         vruler->SetUnits(wxT(""));
+         vruler->SetLog(true);
+         NumberScale scale(
+            wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
+               .Reversal() );
+         vruler->SetNumberScale(&scale);
+      }
+         break;
+   }
+   vruler->GetMaxSize( &wt->vrulerSize.x, &wt->vrulerSize.y );
 }
 
 void WaveTrackVRulerControls::UpdateRuler( const wxRect &rect )
@@ -304,236 +642,11 @@ void WaveTrackVRulerControls::UpdateRuler( const wxRect &rect )
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
    if (!wt)
       return;
-   auto vruler = &ruler();
 
-   // All waves have a ruler in the info panel
-   // The ruler needs a bevelled surround.
-   const float dBRange =
-      wt->GetWaveformSettings().dBRange;
-   
    const int display = wt->GetDisplay();
    
-   if (display == WaveTrackViewConstants::Waveform) {
-      WaveformSettings::ScaleType scaleType =
-      wt->GetWaveformSettings().scaleType;
-      
-      if (scaleType == WaveformSettings::stLinear) {
-         // Waveform
-         
-         float min, max;
-         wt->GetDisplayBounds(&min, &max);
-         if (wt->GetLastScaleType() != scaleType &&
-             wt->GetLastScaleType() != -1)
-         {
-            // do a translation into the linear space
-            wt->SetLastScaleType();
-            wt->SetLastdBRange();
-            float sign = (min >= 0 ? 1 : -1);
-            if (min != 0.) {
-               min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
-               if (min < 0.0)
-                  min = 0.0;
-               min *= sign;
-            }
-            sign = (max >= 0 ? 1 : -1);
-            
-            if (max != 0.) {
-               max = DB_TO_LINEAR(fabs(max) * dBRange - dBRange);
-               if (max < 0.0)
-                  max = 0.0;
-               max *= sign;
-            }
-            wt->SetDisplayBounds(min, max);
-         }
-         
-         vruler->SetDbMirrorValue( 0.0 );
-         vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
-         vruler->SetOrientation(wxVERTICAL);
-         vruler->SetRange(max, min);
-         vruler->SetFormat(Ruler::RealFormat);
-         vruler->SetUnits(wxT(""));
-         vruler->SetLabelEdges(false);
-         vruler->SetLog(false);
-      }
-      else {
-         wxASSERT(scaleType == WaveformSettings::stLogarithmic);
-         scaleType = WaveformSettings::stLogarithmic;
-         
-         vruler->SetUnits(wxT(""));
-         
-         float min, max;
-         wt->GetDisplayBounds(&min, &max);
-         float lastdBRange;
-         
-         if (wt->GetLastScaleType() != scaleType &&
-             wt->GetLastScaleType() != -1)
-         {
-            // do a translation into the dB space
-            wt->SetLastScaleType();
-            wt->SetLastdBRange();
-            float sign = (min >= 0 ? 1 : -1);
-            if (min != 0.) {
-               min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
-               if (min < 0.0)
-                  min = 0.0;
-               min *= sign;
-            }
-            sign = (max >= 0 ? 1 : -1);
-            
-            if (max != 0.) {
-               max = (LINEAR_TO_DB(fabs(max)) + dBRange) / dBRange;
-               if (max < 0.0)
-                  max = 0.0;
-               max *= sign;
-            }
-            wt->SetDisplayBounds(min, max);
-         }
-         else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
-            wt->SetLastdBRange();
-            // Remap the max of the scale
-            float newMax = max;
-            
-            // This commented out code is problematic.
-            // min and max may be correct, and this code cause them to change.
-#ifdef ONLY_LABEL_POSITIVE
-            const float sign = (max >= 0 ? 1 : -1);
-            if (max != 0.) {
-               
-               // Ugh, duplicating from TrackPanel.cpp
-#define ZOOMLIMIT 0.001f
-               
-               const float extreme = LINEAR_TO_DB(2);
-               // recover dB value of max
-               const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
-               // find NEW scale position, but old max may get trimmed if the db limit rises
-               // Don't trim it to zero though, but leave max and limit distinct
-               newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
-               // Adjust the min of the scale if we can,
-               // so the db Limit remains where it was on screen, but don't violate extremes
-               if (min != 0.)
-                  min = std::max(-extreme, newMax * min / max);
-            }
-#endif
-            wt->SetDisplayBounds(min, newMax);
-         }
-         
-         // Old code was if ONLY_LABEL_POSITIVE were defined.
-         // it uses the +1 to 0 range only.
-         // the enabled code uses +1 to -1, and relies on set ticks labelling knowing about
-         // the dB scale.
-#ifdef ONLY_LABEL_POSITIVE
-         if (max > 0) {
-#endif
-            int top = 0;
-            float topval = 0;
-            int bot = rect.height;
-            float botval = -dBRange;
-            
-#ifdef ONLY_LABEL_POSITIVE
-            if (min < 0) {
-               bot = top + (int)((max / (max - min))*(bot - top));
-               min = 0;
-            }
-            
-            if (max > 1) {
-               top += (int)((max - 1) / (max - min) * (bot - top));
-               max = 1;
-            }
-            
-            if (max < 1 && max > 0)
-               topval = -((1 - max) * dBRange);
-            
-            if (min > 0) {
-               botval = -((1 - min) * dBRange);
-            }
-#else
-            topval = -((1 - max) * dBRange);
-            botval = -((1 - min) * dBRange);
-            vruler->SetDbMirrorValue( dBRange );
-#endif
-            vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
-            vruler->SetOrientation(wxVERTICAL);
-            vruler->SetRange(topval, botval);
-#ifdef ONLY_LABEL_POSITIVE
-         }
-         else
-            vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
-#endif
-         vruler->SetFormat(Ruler::RealLogFormat);
-         vruler->SetLabelEdges(true);
-         vruler->SetLog(false);
-      }
-   }
-   else {
-      wxASSERT(display == WaveTrackViewConstants::Spectrum);
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
-      vruler->SetDbMirrorValue( 0.0 );
-      
-      switch (settings.scaleType) {
-         default:
-            wxASSERT(false);
-         case SpectrogramSettings::stLinear:
-         {
-            // Spectrum
-            
-            if (rect.height < 60)
-               return;
-            
-            /*
-             draw the ruler
-             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
-             and append to the numbers a "k"
-             */
-            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
-            vruler->SetOrientation(wxVERTICAL);
-            vruler->SetFormat(Ruler::RealFormat);
-            vruler->SetLabelEdges(true);
-            // use kHz in scale, if appropriate
-            if (maxFreq >= 2000) {
-               vruler->SetRange((maxFreq / 1000.), (minFreq / 1000.));
-               vruler->SetUnits(wxT("k"));
-            }
-            else {
-               // use Hz
-               vruler->SetRange((int)(maxFreq), (int)(minFreq));
-               vruler->SetUnits(wxT(""));
-            }
-            vruler->SetLog(false);
-         }
-            break;
-         case SpectrogramSettings::stLogarithmic:
-         case SpectrogramSettings::stMel:
-         case SpectrogramSettings::stBark:
-         case SpectrogramSettings::stErb:
-         case SpectrogramSettings::stPeriod:
-         {
-            // SpectrumLog
-            
-            if (rect.height < 10)
-               return;
-            
-            /*
-             draw the ruler
-             we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
-             and append to the numbers a "k"
-             */
-            vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
-            vruler->SetOrientation(wxVERTICAL);
-            vruler->SetFormat(Ruler::IntFormat);
-            vruler->SetLabelEdges(true);
-            vruler->SetRange(maxFreq, minFreq);
-            vruler->SetUnits(wxT(""));
-            vruler->SetLog(true);
-            NumberScale scale(
-               wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
-                  .Reversal() );
-            vruler->SetNumberScale(&scale);
-         }
-            break;
-      }
-   }
-
-   vruler->GetMaxSize( &wt->vrulerSize.x, &wt->vrulerSize.y );
+   if (display == WaveTrackViewConstants::Waveform)
+      WaveformVRulerControls::DoUpdateVRuler( rect, wt.get() );
+   else
+      SpectrumVRulerControls::DoUpdateVRuler( rect, wt.get() );
 }

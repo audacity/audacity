@@ -13,6 +13,9 @@ Paul Licameli split from WaveTrackVRulerControls.h
 
 #include "../../../ui/TrackVRulerControls.h" // to inherit
 
+class WaveTrack;
+class WaveformVZoomHandle;
+
 class WaveformVRulerControls final : public TrackVRulerControls
 {
    WaveformVRulerControls(const WaveformVRulerControls&) = delete;
@@ -31,6 +34,9 @@ public:
    unsigned HandleWheelRotation(
       const TrackPanelMouseEvent &event,
       AudacityProject *pProject) override;
+   static unsigned DoHandleWheelRotation(
+      const TrackPanelMouseEvent &event,
+      AudacityProject *pProject, WaveTrack *wt);
 
 private:
    // TrackPanelDrawable implementation
@@ -40,6 +46,12 @@ private:
 
    // TrackVRulerControls implementation
    void UpdateRuler( const wxRect &rect ) override;
+
+   static void DoUpdateVRuler( const wxRect &rect, const WaveTrack *wt );
+
+   friend class WaveTrackVRulerControls;
+
+   std::weak_ptr<WaveformVZoomHandle> mVZoomHandle;
 };
 
 #endif

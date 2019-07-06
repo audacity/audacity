@@ -13,6 +13,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TrackVRulerControls.h"
 
+class Ruler;
+class WaveTrack;
 class WaveTrackVZoomHandle;
 
 class WaveTrackVRulerControls final : public TrackVRulerControls
@@ -38,11 +40,17 @@ private:
    void Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
+   static void DoDraw( TrackVRulerControls &controls,
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass );
 
    // TrackVRulerControls implementation
    void UpdateRuler( const wxRect &rect ) override;
 
    std::weak_ptr<WaveTrackVZoomHandle> mVZoomHandle;
+
+   friend class SpectrumVRulerControls;
+   friend class WaveformVRulerControls;
 };
 
 #endif
