@@ -70,4 +70,21 @@ private:
    wxRect mRect{};
 };
 
+#include "WaveTrackVZoomHandle.h" // to inherit
+
+class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
+{
+   SpectrumVRulerMenuTable() : WaveTrackVRulerMenuTable() {}
+   virtual ~SpectrumVRulerMenuTable() {}
+   DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);
+
+public:
+   static PopupMenuTable &Instance();
+
+private:
+   void InitMenu(Menu *pMenu, void *pUserData) override;
+
+   void OnSpectrumScaleType(wxCommandEvent &evt);
+};
+
 #endif

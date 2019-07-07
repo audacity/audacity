@@ -70,4 +70,21 @@ private:
    wxRect mRect{};
 };
 
+#include "WaveTrackVZoomHandle.h" // to inherit
+
+class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
+{
+   WaveformVRulerMenuTable() : WaveTrackVRulerMenuTable() {}
+   virtual ~WaveformVRulerMenuTable() {}
+   DECLARE_POPUP_MENU(WaveformVRulerMenuTable);
+
+public:
+   static PopupMenuTable &Instance();
+
+private:
+   virtual void InitMenu(Menu *pMenu, void *pUserData) override;
+
+   void OnWaveformScaleType(wxCommandEvent &evt);
+};
+
 #endif

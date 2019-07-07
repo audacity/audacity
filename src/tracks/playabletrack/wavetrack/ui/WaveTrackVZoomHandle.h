@@ -91,4 +91,73 @@ private:
    friend class WaveformVZoomHandle;
 };
 
+#include "../../../../widgets/PopupMenuTable.h" // to inherit
+
+class WaveTrackVRulerMenuTable : public PopupMenuTable
+{
+public:
+   struct InitMenuData
+   {
+   public:
+      WaveTrack *pTrack;
+      wxRect rect;
+      unsigned result;
+      int yy;
+      WaveTrackVZoomHandle::DoZoomFunction doZoom;
+   };
+
+protected:
+   WaveTrackVRulerMenuTable() {}
+
+   void InitMenu(Menu *pMenu, void *pUserData) override;
+
+private:
+   void DestroyMenu() override
+   {
+      mpData = nullptr;
+   }
+
+protected:
+   InitMenuData *mpData {};
+
+   void OnZoom( WaveTrackViewConstants::ZoomActions iZoomCode );
+   void OnZoomFitVertical(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoom1to1 );};
+   void OnZoomReset(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoomReset );};
+   void OnZoomDiv2Vertical(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoomDiv2 );};
+   void OnZoomTimes2Vertical(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoomTimes2 );};
+   void OnZoomHalfWave(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoomHalfWave );};
+   void OnZoomInVertical(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoomIn );};
+   void OnZoomOutVertical(wxCommandEvent&)
+      { OnZoom( WaveTrackViewConstants::kZoomOut );};
+};
+
+enum {
+   OnZoomFitVerticalID = 20000,
+   OnZoomResetID,
+   OnZoomDiv2ID,
+   OnZoomTimes2ID,
+   OnZoomHalfWaveID,
+   OnZoomInVerticalID,
+   OnZoomOutVerticalID,
+
+   // Reserve an ample block of ids for waveform scale types
+   OnFirstWaveformScaleID,
+   OnLastWaveformScaleID = OnFirstWaveformScaleID + 9,
+
+   // Reserve an ample block of ids for spectrum scale types
+   OnFirstSpectrumScaleID,
+   OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
+
+   OnZoomMaxID,
+
+   OnUpOctaveID,
+   OnDownOctaveID,
+};
+
 #endif
