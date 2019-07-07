@@ -19,6 +19,8 @@ class WaveTrackVZoomHandle;
 
 class WaveTrackVRulerControls final : public TrackVRulerControls
 {
+   static Ruler &ScratchRuler();
+
    WaveTrackVRulerControls(const WaveTrackVRulerControls&) = delete;
    WaveTrackVRulerControls &operator=(const WaveTrackVRulerControls&) = delete;
 
