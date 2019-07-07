@@ -72,6 +72,13 @@ public:
    void WriteXMLAttributes( XMLWriter & ) const override;
    bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;
 
+   // New virtual function.  The default just returns a one-element array
+   // containing this.  Overrides might refine the Y axis.
+   using Refinement = std::vector< std::pair<
+      wxCoord, std::shared_ptr< TrackView >
+   > >;
+   virtual Refinement GetSubViews( const wxRect &rect );
+
 protected:
    virtual void DoSetMinimized( bool isMinimized );
 

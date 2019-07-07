@@ -50,6 +50,9 @@ private:
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
 
+   // TrackView implementation
+   Refinement GetSubViews( const wxRect &rect ) override;
+
 protected:
    void DoSetMinimized( bool minimized ) override;
 

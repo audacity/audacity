@@ -85,6 +85,19 @@ WaveTrackView::DoDetailedHitTest
    return { false, results };
 }
 
+auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
+{
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   return {
+      {
+         rect.GetTop(),
+         wt->GetDisplay() == WaveTrackViewConstants::Waveform
+            ? mWaveformView
+            : mSpectrumView
+      }
+   };
+}
+
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
    auto wt = static_cast<WaveTrack*>( FindTrack().get() );
