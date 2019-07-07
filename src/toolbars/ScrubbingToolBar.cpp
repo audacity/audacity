@@ -143,6 +143,11 @@ void ScrubbingToolBar::UpdatePrefs()
 
 void ScrubbingToolBar::RegenerateTooltips()
 {
+   DoRegenerateTooltips( true );
+}
+
+void ScrubbingToolBar::DoRegenerateTooltips( bool force )
+{
 #if wxUSE_TOOLTIPS
    auto fn = [&]
    (AButton &button, const wxString &label, const CommandID &cmd)
@@ -159,34 +164,46 @@ void ScrubbingToolBar::RegenerateTooltips()
       const auto seekButton = mButtons[STBSeekID];
 
       wxString label;
-      label = (
-               scrubber.Scrubs()
-               /* i18n-hint: These commands assist the user in finding a sound by ear. ...
-                "Scrubbing" is variable-speed playback, ...
-                "Seeking" is normal speed playback but with skips
-                */
-               ? _("Stop Scrubbing")
-               : _("Start Scrubbing")
-               );
-      fn(*scrubButton, label, wxT("Scrub"));
+      bool scrubs = scrubber.Scrubs();
+      if (force || mLastScrub != scrubs) {
+         label = (
+                  scrubs
+                  /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+                   "Scrubbing" is variable-speed playback, ...
+                   "Seeking" is normal speed playback but with skips
+                   */
+                  ? _("Stop Scrubbing")
+                  : _("Start Scrubbing")
+                  );
+         fn(*scrubButton, label, wxT("Scrub"));
+      }
+      mLastScrub = scrubs;
 
-      label = (
-               scrubber.Seeks()
-               /* i18n-hint: These commands assist the user in finding a sound by ear. ...
-                "Scrubbing" is variable-speed playback, ...
-                "Seeking" is normal speed playback but with skips
-                */
-               ? _("Stop Seeking")
-               : _("Start Seeking")
-               );
-      fn(*seekButton, label, wxT("Seek"));
+      bool seeks = scrubber.Seeks();
+      if (force || mLastSeek != seeks) {
+         label = (
+                  seeks
+                  /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+                   "Scrubbing" is variable-speed playback, ...
+                   "Seeking" is normal speed playback but with skips
+                   */
+                  ? _("Stop Seeking")
+                  : _("Start Seeking")
+                  );
+         fn(*seekButton, label, wxT("Seek"));
+      }
+      mLastSeek = seeks;
 
-      label = (
-               AdornedRulerPanel::Get( *project ).ShowingScrubRuler()
-               ? _("Hide Scrub Ruler")
-               : _("Show Scrub Ruler")
-               );
-      fn(*mButtons[STBRulerID], label, wxT("ToggleScrubRuler"));
+      bool showingRuler = AdornedRulerPanel::Get( *project ).ShowingScrubRuler();
+      if (force || mLastRuler != showingRuler) {
+         label = (
+                  showingRuler
+                  ? _("Hide Scrub Ruler")
+                  : _("Show Scrub Ruler")
+                  );
+         fn(*mButtons[STBRulerID], label, wxT("ToggleScrubRuler"));
+      }
+      mLastRuler = showingRuler;
    }
 #endif
 }
@@ -256,7 +273,7 @@ void ScrubbingToolBar::EnableDisableButtons()
       barButton->PushDown();
    else
       barButton->PopUp();
-   RegenerateTooltips();
+   DoRegenerateTooltips( false );
    scrubber.CheckMenuItems();
 }
 
