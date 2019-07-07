@@ -33,6 +33,10 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
+   static void DoDraw( TrackPanelDrawingContext &context,
+      const WaveTrack *track,
+      const wxRect & rect );
+
    std::vector<UIHandlePtr> DetailedHitTest(
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool )

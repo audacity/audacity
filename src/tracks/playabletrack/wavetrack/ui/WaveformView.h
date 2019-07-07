@@ -32,6 +32,10 @@ private:
    void Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
+   static void DoDraw(TrackPanelDrawingContext &context,
+                               const WaveTrack *track,
+                               const wxRect & rect,
+                               bool muted);
 
    std::vector<UIHandlePtr> DetailedHitTest(
       const TrackPanelMouseState &state,
