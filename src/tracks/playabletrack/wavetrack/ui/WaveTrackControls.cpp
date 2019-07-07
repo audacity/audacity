@@ -34,11 +34,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"
 #include "../../../../prefs/ThemePrefs.h"
-#include "../../../../prefs/TracksBehaviorsPrefs.h"
 #include "../../../../prefs/WaveformPrefs.h"
 #include "../../../../widgets/AudacityMessageBox.h"
 
-#include <mutex>
 #include <wx/combobox.h>
 #include <wx/frame.h>
 #include <wx/sizer.h>
@@ -1040,7 +1038,6 @@ void SliderDrawFunction
    Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
 }
 
-#include "WaveTrackSliderHandles.h"
 void PanSliderDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
