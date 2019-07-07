@@ -11,10 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "WaveTrackVRulerControls.h"
 
-#include "SpectrumVRulerControls.h"
-#include "WaveformVRulerControls.h"
-#include "WaveformVZoomHandle.h"
-
 #include "../../../../Experimental.h"
 
 #include "../../../../RefreshCode.h"
@@ -28,58 +24,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../widgets/Ruler.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-WaveTrackVRulerControls::~WaveTrackVRulerControls()
-{
-}
-
-std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
-(const TrackPanelMouseState &st,
- const AudacityProject *pProject)
-{
-   std::vector<UIHandlePtr> results;
-
-   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
-      auto pTrack = FindTrack()->SharedPointer<WaveTrack>(  );
-      if (pTrack) {
-         auto result = std::make_shared<WaveTrackVZoomHandle>(
-            pTrack, st.rect, st.state.m_y );
-         result = AssignUIHandlePtr(mVZoomHandle, result);
-         results.push_back(result);
-      }
-   }
-
-   auto more = TrackVRulerControls::HitTest(st, pProject);
-   std::copy(more.begin(), more.end(), std::back_inserter(results));
-
-   return results;
-}
-
-unsigned WaveTrackVRulerControls::HandleWheelRotation
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
-{
-   using namespace RefreshCode;
-   const auto pTrack = FindTrack();
-   if (!pTrack)
-      return RefreshNone;
-   const auto wt = static_cast<WaveTrack*>(pTrack.get());
-   if (wt->GetDisplay() == WaveTrackViewConstants::Spectrum)
-      return SpectrumVRulerControls::DoHandleWheelRotation( evt, pProject, wt );
-   else
-      return WaveformVRulerControls::DoHandleWheelRotation( evt, pProject, wt );
-}
-
 Ruler &WaveTrackVRulerControls::ScratchRuler()
 {
    static Ruler theRuler;
    return theRuler;
-}
-
-void WaveTrackVRulerControls::Draw(
-   TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass )
-{
-   TrackVRulerControls::Draw( context, rect_, iPass );
-   DoDraw( *this, context, rect_, iPass );
 }
 
 void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
@@ -130,18 +78,4 @@ void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
       vruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
       vruler.Draw(*dc);
    }
-}
-
-void WaveTrackVRulerControls::UpdateRuler( const wxRect &rect )
-{
-   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   if (!wt)
-      return;
-
-   const int display = wt->GetDisplay();
-   
-   if (display == WaveTrackViewConstants::Waveform)
-      WaveformVRulerControls::DoUpdateVRuler( rect, wt.get() );
-   else
-      SpectrumVRulerControls::DoUpdateVRuler( rect, wt.get() );
 }

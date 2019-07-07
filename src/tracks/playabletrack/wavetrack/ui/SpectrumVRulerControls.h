@@ -49,8 +49,6 @@ private:
 
    static void DoUpdateVRuler( const wxRect &rect, const WaveTrack *wt );
 
-   friend class WaveTrackVRulerControls;
-
    std::weak_ptr<SpectrumVZoomHandle> mVZoomHandle;
 };
 

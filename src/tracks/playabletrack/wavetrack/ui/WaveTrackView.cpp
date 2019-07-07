@@ -145,8 +145,10 @@ static DoGetWaveTrackView registerDoGetWaveTrackView;
 
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 {
-   return
-      std::make_shared<WaveTrackVRulerControls>( shared_from_this() );
+   // This should never be called because of delegation to the spectrum or
+   // waveform sub-view
+   wxASSERT( false );
+   return {};
 }
 
 #undef PROFILE_WAVEFORM
