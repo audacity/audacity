@@ -39,6 +39,10 @@ public:
 
    ~AdornedRulerPanel();
 
+   void Refresh
+      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
+      override;
+
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }
    void SetFocusFromKbd() override;

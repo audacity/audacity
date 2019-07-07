@@ -948,6 +948,12 @@ AdornedRulerPanel::~AdornedRulerPanel()
 {
 }
 
+void AdornedRulerPanel::Refresh( bool eraseBackground, const wxRect *rect )
+{
+   CellularPanel::Refresh( eraseBackground, rect );
+   CellularPanel::HandleCursorForPresentMouseState();
+}
+
 void AdornedRulerPanel::UpdatePrefs()
 {
    if (mNeedButtonUpdate) {
