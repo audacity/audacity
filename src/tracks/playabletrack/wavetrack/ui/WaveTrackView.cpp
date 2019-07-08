@@ -47,14 +47,9 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int currentTool, bool bMultiTool)
 {
-   const auto pTrack = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   bool isWaveform = (pTrack->GetDisplay() == WaveTrackViewConstants::Waveform);
-   if ( isWaveform )
-      return WaveformView::DoDetailedHitTest(
-         st, pProject, currentTool, bMultiTool, pTrack, *this);
-   else
-      return SpectrumView::DoDetailedHitTest(
-         st, pProject, currentTool, bMultiTool, pTrack, *this);
+   // should not come here any more, delegation to sub-view instead
+   wxASSERT( false );
+   return {};
 }
 
 std::pair< bool, std::vector<UIHandlePtr> >
@@ -64,6 +59,9 @@ WaveTrackView::DoDetailedHitTest
  const std::shared_ptr<WaveTrack> &pTrack,
  CommonTrackView &view)
 {
+   // common hit-testing for different sub-view types, to help implement their
+   // DetailedHitTest()
+
    // This is the only override of Track::DetailedHitTest that still
    // depends on the state of the Tools toolbar.
    // If that toolbar were eliminated, this could simplify to a sequence of
@@ -100,38 +98,11 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
-
-#ifdef EXPERIMENTAL_HALF_WAVE
-   bool bHalfWave;
-   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
-   if( bHalfWave )
-   {
-      const bool spectral =
-         (wt->GetDisplay() == WaveTrackViewConstants::Spectrum);
-      if ( spectral ) {
-         // It is all right to set the top of scale to a huge number,
-         // not knowing the track rate here -- because when retrieving the
-         // value, then we pass in a sample rate and clamp it above to the
-         // Nyquist frequency.
-         constexpr auto max = std::numeric_limits<float>::max();
-         const bool spectrumLinear =
-            (wt->GetSpectrogramSettings().scaleType ==
-               SpectrogramSettings::stLinear);
-         // Zoom out full
-         wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
-      }
-      else {
-         if (minimized)
-            // Zoom to show fractionally more than the top half of the wave.
-            wt->SetDisplayBounds( -0.01f, 1.0f );
-         else
-            // Zoom out full
-            wt->SetDisplayBounds( -1.0f, 1.0f );
-      }
-   }
-#endif
-
+   // May come here.  Invoke also on sub-views.
+   if ( mWaveformView )
+      mWaveformView->DoSetMinimized( minimized );
+   if ( mSpectrumView )
+      mSpectrumView->DoSetMinimized( minimized );
    TrackView::DoSetMinimized( minimized );
 }
 
@@ -348,39 +319,8 @@ void WaveTrackView::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   if ( iPass == TrackArtist::PassTracks ) {
-      auto &dc = context.dc;
-      const auto wt = std::static_pointer_cast<const WaveTrack>(
-         FindTrack()->SubstitutePendingChangedTrack());
+   // Should not come here, drawing is now delegated to sub-views
+   wxASSERT( false );
 
-      for (const auto &clip : wt->GetClips()) {
-         clip->ClearDisplayRect();
-      }
-
-      const auto artist = TrackArtist::Get( context );
-      const auto hasSolo = artist->hasSolo;
-      bool muted = (hasSolo || wt->GetMute()) &&
-      !wt->GetSolo();
-      
-#if defined(__WXMAC__)
-      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
-      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
-      
-      switch (wt->GetDisplay()) {
-         case WaveTrackViewConstants::Waveform:
-            WaveformView::DoDraw(context, wt.get(), rect, muted);
-            break;
-         case WaveTrackViewConstants::Spectrum:
-            SpectrumView::DoDraw( context, wt.get(), rect );
-            break;
-         default:
-            wxASSERT(false);
-      }
-      
-#if defined(__WXMAC__)
-      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
-#endif
-   }
    CommonTrackView::Draw( context, rect, iPass );
 }

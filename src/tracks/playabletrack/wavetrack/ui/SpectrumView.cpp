@@ -36,18 +36,9 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   return DoDetailedHitTest( state, pProject, currentTool, bMultiTool, wt,
-      *this );
-}
 
-std::vector<UIHandlePtr> SpectrumView::DoDetailedHitTest(
-   const TrackPanelMouseState &state,
-   const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &wt,
-   CommonTrackView &view)
-{
    return WaveTrackView::DoDetailedHitTest(
-      state, pProject, currentTool, bMultiTool,wt, view
+      state, pProject, currentTool, bMultiTool, wt, *this
    ).second;
 }
 

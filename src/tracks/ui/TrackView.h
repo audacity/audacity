@@ -79,8 +79,9 @@ public:
    > >;
    virtual Refinement GetSubViews( const wxRect &rect );
 
-protected:
    virtual void DoSetMinimized( bool isMinimized );
+
+protected:
 
    // No need yet to make this virtual
    void DoSetY(int y);

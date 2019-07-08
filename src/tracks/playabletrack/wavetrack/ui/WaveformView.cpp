@@ -38,20 +38,13 @@ Paul Licameli split from WaveTrackView.cpp
 WaveformView::~WaveformView() = default;
 
 std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
-   const TrackPanelMouseState &state,
+   const TrackPanelMouseState &st,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   return DoDetailedHitTest( state, pProject, currentTool, bMultiTool, wt,
-      *this );
-}
 
-std::vector<UIHandlePtr> WaveformView::DoDetailedHitTest(
-   const TrackPanelMouseState &st,
-   const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &wt,
-   CommonTrackView &view )
-{
+   auto &view = *this;
+
    auto pair = WaveTrackView::DoDetailedHitTest(
       st, pProject, currentTool, bMultiTool, wt, view);
    auto &results = pair.second;

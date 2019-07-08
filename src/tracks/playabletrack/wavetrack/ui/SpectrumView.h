@@ -41,16 +41,9 @@ private:
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool )
       override;
-   static std::vector<UIHandlePtr> DoDetailedHitTest(
-      const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt,
-      CommonTrackView &view);
 
 protected:
    void DoSetMinimized( bool minimized ) override;
-
-   friend class WaveTrackView;
 };
 
 #endif
