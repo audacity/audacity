@@ -37,6 +37,9 @@ class WaveTrackView final
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
 
 public:
+   static WaveTrackView &Get( WaveTrack &track );
+   static const WaveTrackView &Get( const WaveTrack &track );
+
    explicit
    WaveTrackView( const std::shared_ptr<Track> &pTrack );
    ~WaveTrackView() override;

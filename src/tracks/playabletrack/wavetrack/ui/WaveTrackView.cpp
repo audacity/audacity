@@ -25,6 +25,16 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TimeShiftHandle.h"
 
+WaveTrackView &WaveTrackView::Get( WaveTrack &track )
+{
+   return static_cast< WaveTrackView& >( TrackView::Get( track ) );
+}
+
+const WaveTrackView &WaveTrackView::Get( const WaveTrack &track )
+{
+   return Get( const_cast<WaveTrack&>( track ) );
+}
+
 WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
