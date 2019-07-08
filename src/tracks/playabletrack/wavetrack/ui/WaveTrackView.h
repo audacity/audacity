@@ -13,9 +13,7 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/CommonTrackView.h"
 
-class CutlineHandle;
-class SampleHandle;
-class EnvelopeHandle;
+class WaveTrack;
 
 class WaveTrackView final : public CommonTrackView
 {
@@ -30,6 +28,9 @@ public:
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
 
+   // CommonTrackView implementation
+   void Reparent( const std::shared_ptr<Track> &parent ) override;
+
 private:
    // TrackPanelDrawable implementation
    void Draw(
@@ -40,13 +41,62 @@ private:
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
+   static std::pair<
+      bool, // if true, hit-testing is finished
+      std::vector<UIHandlePtr>
+   > DoDetailedHitTest(
+      const TrackPanelMouseState &state,
+      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const std::shared_ptr<WaveTrack> &wt,
+      CommonTrackView &view);
 
-   std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<SampleHandle> mSampleHandle;
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+   // TrackView implementation
+   Refinement GetSubViews( const wxRect &rect ) override;
 
 protected:
    void DoSetMinimized( bool minimized ) override;
+
+   std::shared_ptr< CommonTrackView > mWaveformView, mSpectrumView;
+
+   friend class SpectrumView;
+   friend class WaveformView;
+};
+
+// Helper for drawing routines
+class SelectedRegion;
+class WaveClip;
+class ZoomInfo;
+
+struct ClipParameters
+{
+   // Do a bunch of calculations common to waveform and spectrum drawing.
+   ClipParameters
+      (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
+      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
+
+   double tOffset;
+   double rate;
+   double h; // absolute time of left edge of display
+   double tpre; // offset corrected time of left edge of display
+   double h1;
+   double tpost; // offset corrected time of right edge of display
+
+   // Calculate actual selection bounds so that t0 > 0 and t1 < the
+   // end of the track
+   double t0;
+   double t1;
+
+   double averagePixelsPerSample;
+   bool showIndividualSamples;
+
+   sampleCount ssel0;
+   sampleCount ssel1;
+
+   wxRect hiddenMid;
+   int hiddenLeftOffset;
+
+   wxRect mid;
+   int leftOffset;
 };
 
 #endif

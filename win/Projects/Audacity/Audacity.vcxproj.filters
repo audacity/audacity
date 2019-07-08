@@ -1040,6 +1040,24 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\CutlineHandle.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
@@ -2246,6 +2264,24 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.h">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\TimeShiftHandle.h">

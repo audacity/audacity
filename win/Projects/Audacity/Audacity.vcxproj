@@ -293,6 +293,12 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\CutlineHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.cpp" />
@@ -601,6 +607,12 @@
     <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\CutlineHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.h" />

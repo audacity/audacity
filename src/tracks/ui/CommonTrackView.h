@@ -31,6 +31,8 @@ public:
       (const TrackPanelMouseState &, const AudacityProject *pProject)
       final override;
 
+   void TimeShiftHitTest();
+
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,
@@ -48,6 +50,8 @@ protected:
    Track *GetTrack() const;
 
    std::weak_ptr<SelectHandle> mSelectHandle;
+
+public:
    std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
 };
 

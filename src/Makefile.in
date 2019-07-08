@@ -531,6 +531,18 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	tracks/playabletrack/wavetrack/ui/CutlineHandle.h \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.cpp \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h \
+	tracks/playabletrack/wavetrack/ui/WaveformView.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformView.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
@@ -896,6 +908,12 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	tracks/playabletrack/ui/audacity-PlayableTrackControls.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveformView.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.$(OBJEXT) \
 	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackView.$(OBJEXT) \
@@ -1639,6 +1657,18 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	tracks/playabletrack/wavetrack/ui/CutlineHandle.h \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.cpp \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h \
+	tracks/playabletrack/wavetrack/ui/WaveformView.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformView.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
@@ -2325,6 +2355,24 @@ tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.$(OBJEXT):  \
 tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.$(OBJEXT):  \
 	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
 	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveformView.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.$(OBJEXT):  \
 	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
 	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
@@ -2911,12 +2959,18 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVZoomHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackView.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackViewConstants.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackView.Po@am__quote@
@@ -7272,6 +7326,90 @@ tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj: tracks/playabletrac
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SampleHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.o: tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.o `test -f 'tracks/playabletrack/wavetrack/ui/SpectrumView.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SpectrumView.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.o `test -f 'tracks/playabletrack/wavetrack/ui/SpectrumView.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.obj: tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SpectrumView.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SpectrumView.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumView.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SpectrumView.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumView.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SpectrumView.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SpectrumView.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.o: tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.obj: tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVRulerControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.o: tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.obj: tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SpectrumVZoomHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SpectrumVZoomHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveformView.o: tracks/playabletrack/wavetrack/ui/WaveformView.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveformView.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformView.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveformView.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveformView.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveformView.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveformView.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformView.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveformView.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveformView.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveformView.obj: tracks/playabletrack/wavetrack/ui/WaveformView.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveformView.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformView.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveformView.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveformView.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveformView.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformView.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveformView.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveformView.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformView.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveformView.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveformView.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveformView.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.o: tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.obj: tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVRulerControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.o: tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.obj: tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveformVZoomHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveformVZoomHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp'; fi`
 
 tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o: tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp

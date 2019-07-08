@@ -106,6 +106,11 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
       return false;
 }
 
+auto TrackView::GetSubViews( const wxRect &rect ) -> Refinement
+{
+   return { { rect.GetTop(), shared_from_this() } };
+}
+
 void TrackView::DoSetMinimized(bool isMinimized)
 {
    mMinimized = isMinimized;

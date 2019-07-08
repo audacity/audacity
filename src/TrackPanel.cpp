@@ -916,15 +916,29 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
       return;
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
-            kTopMargin,
+            0,
             mViewInfo->GetVRulerWidth(),
             0);
 
 
    for (auto channel : TrackList::Channels(t)) {
       auto &view = TrackView::Get( *channel );
-      rect.height = view.GetHeight() - (kTopMargin + kBottomMargin);
-      TrackVRulerControls::Get( *channel ).UpdateRuler( rect );
+      const auto height = view.GetHeight() - (kTopMargin + kBottomMargin);
+      const auto subViews = view.GetSubViews( rect );
+      if (subViews.empty())
+         continue;
+   
+      auto iter = subViews.begin(), end = subViews.end(), next = iter;
+      auto yy = iter->first;
+      for ( ; iter != end; iter = next ) {
+         ++next;
+         auto nextY = ( next == end )
+            ? height
+            : next->first;
+         rect.SetHeight( nextY - yy );
+         TrackVRulerControls::Get( *iter->second ).UpdateRuler( rect );
+         yy = nextY;
+      }
    }
 }
 
@@ -1093,39 +1107,48 @@ struct EmptyCell final : CommonTrackPanelCell {
 // A vertical ruler left of a channel
 struct VRulerAndChannel final : TrackPanelGroup {
    VRulerAndChannel(
-      const std::shared_ptr< Track > &pChannel, wxCoord leftOffset )
-         : mpChannel{ pChannel }, mLeftOffset{ leftOffset } {}
+      const std::shared_ptr< TrackView > &pView, wxCoord leftOffset )
+         : mpView{ pView }, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    {
       return { Axis::X, Refinement{
          { rect.GetLeft(),
-           TrackVRulerControls::Get( *mpChannel ).shared_from_this() },
-         { mLeftOffset,
-           TrackView::Get( *mpChannel ).shared_from_this() }
+           TrackVRulerControls::Get( *mpView ).shared_from_this() },
+         { mLeftOffset, mpView }
       } };
    }
-   std::shared_ptr< Track > mpChannel;
+   std::shared_ptr< TrackView > mpView;
    wxCoord mLeftOffset;
 };
 
-// n channels with vertical rulers, alternating with n - 1 resizers
+// n channels with vertical rulers, alternating with n - 1 resizers;
+// each channel-ruler pair might be divided into multiple views
 struct ChannelGroup final : TrackPanelGroup {
    ChannelGroup( const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
       : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
-   Subdivision Children( const wxRect &rect ) override
+   Subdivision Children( const wxRect &rect_ ) override
    {
+      auto rect = rect_;
       Refinement refinement;
 
       const auto channels = TrackList::Channels( mpTrack.get() );
       const auto pLast = *channels.rbegin();
       wxCoord yy = rect.GetTop();
       for ( auto channel : channels ) {
-         refinement.emplace_back( yy,
-            std::make_shared< VRulerAndChannel >(
-               channel->SharedPointer(), mLeftOffset ) );
+         auto &view = TrackView::Get( *channel );
+         auto height = view.GetHeight();
+         rect.SetTop( yy );
+         rect.SetHeight( height );
+         const auto subViews = TrackView::Get( *channel ).GetSubViews( rect );
+         auto y1 = yy;
+         for ( const auto &subView : subViews ) {
+            y1 = std::max( y1, subView.first );
+            refinement.emplace_back( y1,
+               std::make_shared< VRulerAndChannel >(
+                  subView.second, mLeftOffset ) );
+         }
          if ( channel != pLast ) {
-            auto &view = TrackView::Get( *channel );
-            yy += view.GetHeight();
+            yy += height;
             refinement.emplace_back(
                yy - kSeparatorThickness,
                TrackView::Get( *channel ).GetResizer() );
