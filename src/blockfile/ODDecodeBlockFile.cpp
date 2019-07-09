@@ -533,3 +533,32 @@ static DirManager::RegisteredBlockFileDeserializer sRegistration {
       return result;
    }
 };
+
+///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
+ODFileDecoder::ODFileDecoder(const wxString & fName)
+   : mFName{ fName }
+{
+   mInited = false;
+}
+
+ODFileDecoder::~ODFileDecoder()
+{
+}
+
+bool ODFileDecoder::IsInitialized()
+{
+   bool ret;
+   mInitedLock.Lock();
+   ret = mInited;
+   mInitedLock.Unlock();
+   return ret;
+}
+
+///Derived classes should call this after they have parsed the header.
+void ODFileDecoder::MarkInitialized()
+{
+   mInitedLock.Lock();
+   mInited=true;
+   mInitedLock.Unlock();
+}
+
