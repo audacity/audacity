@@ -73,6 +73,8 @@ effects from this one class.
 #include "../../wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
 #include "../../prefs/WaveformSettings.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/ProgressDialog.h"
 
@@ -542,7 +544,8 @@ bool NyquistEffect::Init()
 
       for ( auto t :
                TrackList::Get( *project ).Selected< const WaveTrack >() ) {
-         if (t->GetDisplay() != WaveTrackViewConstants::Spectrum ||
+         if (WaveTrackView::Get(*t).GetDisplay()
+               != WaveTrackViewConstants::Spectrum ||
              !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = false;
             break;
@@ -1066,7 +1069,7 @@ bool NyquistEffect::ProcessOne()
          [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            switch (wt->GetDisplay())
+            switch ( WaveTrackView::Get( *wt ).GetDisplay() )
             {
             case Waveform:
                view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");

@@ -15,6 +15,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 
 #include "../../../../AColor.h"
 #include "../../../../Prefs.h"

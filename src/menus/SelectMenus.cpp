@@ -21,6 +21,8 @@
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../tracks/ui/SelectHandle.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 // private helper classes and functions
 namespace {
@@ -33,7 +35,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
    // Find the first selected wave track that is in a spectrogram view.
    const WaveTrack *pTrack {};
    for ( auto wt : tracks.Selected< const WaveTrack >() ) {
-      const int display = wt->GetDisplay();
+      const auto display = WaveTrackView::Get( *wt ).GetDisplay();
       if (display == WaveTrackViewConstants::Spectrum) {
          pTrack = wt;
          break;

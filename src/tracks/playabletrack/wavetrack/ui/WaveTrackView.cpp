@@ -22,6 +22,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../ViewInfo.h"
 #include "../../../../prefs/SpectrogramSettings.h"
+#include "../../../../prefs/WaveformSettings.h"
+#include "../../../../prefs/TracksPrefs.h"
 
 #include "../../../ui/TimeShiftHandle.h"
 
@@ -39,10 +41,32 @@ WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
    WaveTrackSubViews::BuildAll();
+
+   mDisplay = TracksPrefs::ViewModeChoice();
+
+   // Force creation always:
+   WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
+      ->GetIndependentWaveformSettings();
+
+   if (mDisplay == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
+      mDisplay = WaveTrackViewConstants::Waveform;
+      settings.scaleType = WaveformSettings::stLogarithmic;
+   }
 }
 
 WaveTrackView::~WaveTrackView()
 {
+}
+
+void WaveTrackView::CopyTo( Track &track ) const
+{
+   TrackView::CopyTo( track );
+   auto &other = TrackView::Get( track );
+
+   if ( const auto pOther = dynamic_cast< WaveTrackView* >( &other ) ) {
+      // only one field is important to preserve in undo/redo history
+      pOther->mDisplay = mDisplay;
+   }
 }
 
 std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
@@ -87,8 +111,7 @@ WaveTrackView::DoDetailedHitTest
 
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
-   auto display = wt->GetDisplay();
+   auto display = mDisplay;
    std::shared_ptr<TrackView> pSubView;
    WaveTrackSubViews::ForEach( [&,display]( WaveTrackSubView &subView ){
       if ( subView.SubViewType() == display )

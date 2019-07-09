@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "../../../ui/TrackView.h"
+#include "WaveTrackView.h"
 #include "../../../../AudioIOBase.h"
 #include "../../../../CellularPanel.h"
 #include "../../../../Menus.h"
@@ -599,7 +599,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    std::vector<int> checkedIds;
 
-   const int display = pTrack->GetDisplay();
+   const auto display = WaveTrackView::Get( *pTrack ).GetDisplay();
    checkedIds.push_back(
       display == WaveTrackViewConstants::Waveform
          ? (pTrack->GetWaveformSettings().isLinear()
@@ -702,7 +702,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 #endif
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
-   if( pTrack && pTrack->GetDisplay() != WaveTrackViewConstants::Spectrum  ){
+   if( pTrack &&
+      WaveTrackView::Get( *pTrack ).GetDisplay()
+         != WaveTrackViewConstants::Spectrum ){
       POPUP_MENU_SEPARATOR()
       POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
    }
@@ -723,7 +725,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    bool linear = false;
-   WaveTrack::WaveTrackDisplay id;
+   WaveTrackView::WaveTrackDisplay id;
    switch (idInt) {
    default:
    case OnWaveformID:
@@ -734,14 +736,15 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       id = Spectrum; break;
    }
 
-   const bool wrongType = pTrack->GetDisplay() != id;
+   const bool wrongType = WaveTrackView::Get( *pTrack ).GetDisplay() != id;
    const bool wrongScale =
       (id == Waveform &&
       pTrack->GetWaveformSettings().isLinear() != linear);
    if (wrongType || wrongScale) {
       for (auto channel : TrackList::Channels(pTrack)) {
          channel->SetLastScaleType();
-         channel->SetDisplay(WaveTrack::WaveTrackDisplay(id));
+         WaveTrackView::Get( *channel )
+            .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
          if (wrongScale)
             channel->GetIndependentWaveformSettings().scaleType = linear
                ? WaveformSettings::stLinear
@@ -876,8 +879,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
    // Set NEW track heights and minimized state
    auto
-      &view = TrackView::Get( *pTrack ),
-      &partnerView = TrackView::Get( *partner );
+      &view = WaveTrackView::Get( *pTrack ),
+      &partnerView = WaveTrackView::Get( *partner );
    view.SetMinimized(false);
    partnerView.SetMinimized(false);
    int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
@@ -885,6 +888,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partnerView.SetHeight(AverageHeight);
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
+
+   partnerView.SetDisplay( view.GetDisplay() );
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())

@@ -15,6 +15,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "WaveformVRulerControls.h"
 #include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 
 #include "CutlineHandle.h"
 #include "SampleHandle.h"

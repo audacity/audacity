@@ -17,7 +17,6 @@
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"
-#include "tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 class ProgressDialog;
 
@@ -523,16 +522,11 @@ private:
    // Set the unique autosave ID
    void SetAutoSaveIdent(int id);
 
-   using WaveTrackDisplay = WaveTrackViewConstants::Display;
-
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;
 
    int GetLastdBRange() const { return mLastdBRange; }
    void SetLastdBRange() const;
-
-   WaveTrackDisplay GetDisplay() const { return mDisplay; }
-   void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
 
    void GetDisplayBounds(float *min, float *max) const;
    void SetDisplayBounds(float min, float max) const;
@@ -568,7 +562,6 @@ private:
    mutable float         mSpectrumMin;
    mutable float         mSpectrumMax;
 
-   WaveTrackDisplay mDisplay;
    mutable int   mLastScaleType; // last scale type choice
    mutable int           mLastdBRange;
    mutable std::vector <Location> mDisplayLocationsCache;

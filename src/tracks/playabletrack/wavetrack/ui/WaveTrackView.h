@@ -44,6 +44,9 @@ public:
    WaveTrackView( const std::shared_ptr<Track> &pTrack );
    ~WaveTrackView() override;
 
+   // Preserve some view state too for undo/redo purposes
+   void CopyTo( Track &track ) const override;
+
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
    // CommonTrackView implementation
@@ -57,6 +60,11 @@ public:
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
+
+   using WaveTrackDisplay = WaveTrackViewConstants::Display;
+
+   WaveTrackDisplay GetDisplay() const { return mDisplay; }
+   void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
 
 private:
    // TrackPanelDrawable implementation
@@ -74,6 +82,8 @@ private:
 
 protected:
    void DoSetMinimized( bool minimized ) override;
+
+   WaveTrackDisplay mDisplay;
 };
 
 // Helper for drawing routines
