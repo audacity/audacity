@@ -18,7 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../WaveTrack.h"
 
 #include "WaveTrackControls.h"
-#include "WaveTrackVRulerControls.h"
 
 #include "SpectrumView.h"
 #include "WaveformView.h"
