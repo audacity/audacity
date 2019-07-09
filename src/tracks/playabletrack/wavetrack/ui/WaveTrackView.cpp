@@ -17,12 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 
-#include "WaveTrackControls.h"
-#include "WaveTrackVRulerControls.h"
-
-#include "SpectrumView.h"
-#include "WaveformView.h"
-
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -33,10 +27,8 @@ Paul Licameli split from TrackPanel.cpp
 
 WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
-   , mWaveformView{ std::make_shared< WaveformView >( pTrack ) }
-   , mSpectrumView{ std::make_shared< SpectrumView >( pTrack ) }
 {
-   DoSetHeight( WaveTrackControls::DefaultWaveTrackHeight() );
+   WaveTrackSubViews::BuildAll();
 }
 
 WaveTrackView::~WaveTrackView()
@@ -86,12 +78,18 @@ WaveTrackView::DoDetailedHitTest
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
    auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   auto display = wt->GetDisplay();
+   std::shared_ptr<TrackView> pSubView;
+   WaveTrackSubViews::ForEach( [&,display]( WaveTrackSubView &subView ){
+      if ( subView.SubViewType() == display )
+         pSubView = subView.shared_from_this();
+   } );
+   if ( !pSubView )
+      return {};
    return {
       {
          rect.GetTop(),
-         wt->GetDisplay() == WaveTrackViewConstants::Waveform
-            ? mWaveformView
-            : mSpectrumView
+         pSubView
       }
    };
 }
@@ -99,11 +97,10 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
    // May come here.  Invoke also on sub-views.
-   if ( mWaveformView )
-      mWaveformView->DoSetMinimized( minimized );
-   if ( mSpectrumView )
-      mSpectrumView->DoSetMinimized( minimized );
    TrackView::DoSetMinimized( minimized );
+   WaveTrackSubViews::ForEach( [minimized](WaveTrackSubView &subView){
+      subView.DoSetMinimized( minimized );
+   } );
 }
 
 using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
@@ -309,10 +306,9 @@ ClipParameters::ClipParameters
 void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
 {
    CommonTrackView::Reparent( parent );
-   if ( mWaveformView )
-      mWaveformView->Reparent( parent );
-   if ( mSpectrumView )
-      mSpectrumView->Reparent( parent );
+   WaveTrackSubViews::ForEach( [&parent](WaveTrackSubView &subView){
+      subView.Reparent( parent );
+   } );
 }
 
 void WaveTrackView::Draw(

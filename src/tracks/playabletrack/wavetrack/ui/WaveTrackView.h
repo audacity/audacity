@@ -12,10 +12,26 @@ Paul Licameli split from class WaveTrack
 #define __AUDACITY_WAVE_TRACK_VIEW__
 
 #include "../../../ui/CommonTrackView.h"
+#include "../../../../ClientData.h"
+namespace WaveTrackViewConstants{ enum Display : int; }
 
 class WaveTrack;
+class WaveTrackSubView : public CommonTrackView
+{
+public:
+   using CommonTrackView::CommonTrackView;
+   
+   virtual WaveTrackViewConstants::Display SubViewType() const = 0;
+};
 
-class WaveTrackView final : public CommonTrackView
+class WaveTrackView;
+using WaveTrackSubViews = ClientData::Site<
+   WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
+>;
+
+class WaveTrackView final
+   : public CommonTrackView
+   , public WaveTrackSubViews
 {
    WaveTrackView( const WaveTrackView& ) = delete;
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
@@ -27,9 +43,17 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
-
    // CommonTrackView implementation
    void Reparent( const std::shared_ptr<Track> &parent ) override;
+
+   static std::pair<
+      bool, // if true, hit-testing is finished
+      std::vector<UIHandlePtr>
+   > DoDetailedHitTest(
+      const TrackPanelMouseState &state,
+      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const std::shared_ptr<WaveTrack> &wt,
+      CommonTrackView &view);
 
 private:
    // TrackPanelDrawable implementation
@@ -41,25 +65,12 @@ private:
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
-   static std::pair<
-      bool, // if true, hit-testing is finished
-      std::vector<UIHandlePtr>
-   > DoDetailedHitTest(
-      const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt,
-      CommonTrackView &view);
 
    // TrackView implementation
    Refinement GetSubViews( const wxRect &rect ) override;
 
 protected:
    void DoSetMinimized( bool minimized ) override;
-
-   std::shared_ptr< CommonTrackView > mWaveformView, mSpectrumView;
-
-   friend class SpectrumView;
-   friend class WaveformView;
 };
 
 // Helper for drawing routines

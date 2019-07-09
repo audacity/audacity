@@ -69,7 +69,6 @@
 #include "../ProjectWindow.h"
 #include "../Track.h"
 #include "../widgets/AButton.h"
-#include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
 

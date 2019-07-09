@@ -11,18 +11,20 @@ Paul Licameli split from WaveTrackView.h
 #ifndef __AUDACITY_SPECTRUM_VIEW__
 #define __AUDACITY_SPECTRUM_VIEW__
 
-#include "../../../ui/CommonTrackView.h" // to inherit
+#include "WaveTrackView.h" // to inherit
 
 class WaveTrack;
 
-class SpectrumView final : public CommonTrackView
+class SpectrumView final : public WaveTrackSubView
 {
    SpectrumView( const SpectrumView& ) = delete;
    SpectrumView &operator=( const SpectrumView& ) = delete;
 
 public:
-   using CommonTrackView::CommonTrackView;
+   using WaveTrackSubView::WaveTrackSubView;
    ~SpectrumView() override;
+
+   virtual WaveTrackViewConstants::Display SubViewType() const override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 

@@ -67,6 +67,11 @@ void SpectrumView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
+WaveTrackViewConstants::Display SpectrumView::SubViewType() const
+{
+   return WaveTrackViewConstants::Spectrum;
+}
+
 std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
 {
    return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
@@ -635,3 +640,9 @@ void SpectrumView::Draw(
    }
    CommonTrackView::Draw( context, rect, iPass );
 }
+
+static const WaveTrackSubViews::RegisteredFactory key{
+   []( WaveTrackView &view ){
+      return std::make_shared< SpectrumView >( view.FindTrack() );
+   }
+};

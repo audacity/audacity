@@ -37,9 +37,11 @@
 #include <wx/fileconf.h>  // to inherit wxFileConfig
 #include <wx/event.h> // to declare custom event types
 
-void InitPreferences();
+class wxFileName;
+
+void InitPreferences( const wxFileName &configFileName );
 bool CheckWritablePreferences();
-wxString UnwritablePreferencesErrorMessage();
+wxString UnwritablePreferencesErrorMessage( const wxFileName &configFileName );
 void FinishPreferences();
 
 class AudacityPrefs;

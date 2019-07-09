@@ -26,8 +26,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/mousestate.h>
 
 TrackPanelResizerCell::TrackPanelResizerCell(
-   const std::shared_ptr<TrackView> &pView )
-   : mwView{ pView }
+   const std::shared_ptr<Track> &pTrack )
+   : mwTrack{ pTrack }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
@@ -47,10 +47,7 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
 
 std::shared_ptr<Track> TrackPanelResizerCell::DoFindTrack()
 {
-   const auto pView = mwView.lock();
-   if ( pView )
-      return pView->FindTrack();
-   return {};
+   return mwTrack.lock();
 }
 
 void TrackPanelResizerCell::Draw(
@@ -111,4 +108,21 @@ void TrackPanelResizerCell::Draw(
          }
       }
    }
+}
+
+static const AttachedTrackObjects::RegisteredFactory key{
+   []( Track &track ){
+      return std::make_shared<TrackPanelResizerCell>(
+         track.shared_from_this() );
+   }
+};
+
+TrackPanelResizerCell &TrackPanelResizerCell::Get( Track &track )
+{
+   return track.AttachedObjects::Get< TrackPanelResizerCell >( key );
+}
+
+const TrackPanelResizerCell &TrackPanelResizerCell::Get( const Track &track )
+{
+   return Get( const_cast< Track & >( track ) );
 }

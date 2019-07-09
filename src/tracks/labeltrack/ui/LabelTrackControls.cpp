@@ -178,3 +178,15 @@ template<> template<> auto DoGetLabelTrackControls::Implementation() -> Function
    };
 }
 static DoGetLabelTrackControls registerDoGetLabelTrackControls;
+
+using GetDefaultLabelTrackHeight = GetDefaultTrackHeight::Override< LabelTrack >;
+template<> template<>
+auto GetDefaultLabelTrackHeight::Implementation() -> Function {
+   return [](LabelTrack &) {
+      // Label tracks are narrow
+      // Default is to allow two rows so that NEW users get the
+      // idea that labels can 'stack' when they would overlap.
+      return 73;
+   };
+}
+static GetDefaultLabelTrackHeight registerGetDefaultLabelTrackHeight;

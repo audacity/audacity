@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "../../../../Experimental.h"
 
-#include "NoteTrackControls.h"
 #include "NoteTrackVRulerControls.h"
 #include "../../../../NoteTrack.h"
 
@@ -33,7 +32,6 @@ Paul Licameli split from TrackPanel.cpp
 NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
-   DoSetHeight( NoteTrackControls::DefaultNoteTrackHeight() );
 }
 
 NoteTrackView::~NoteTrackView()

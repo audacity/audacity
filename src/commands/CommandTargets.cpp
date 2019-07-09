@@ -458,3 +458,9 @@ void StatusBarTarget::Update(const wxString &message)
 {
    mStatus.SetStatusText(message, 0);
 }
+
+ResponseQueue &ResponseQueueTarget::sResponseQueue()
+{
+   static ResponseQueue queue;
+   return queue;
+}

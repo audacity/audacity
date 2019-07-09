@@ -11,13 +11,16 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../Track.h"
 
-#include "TrackControls.h"
-#include "../../TrackPanelResizerCell.h"
-
 #include "../../ClientData.h"
 #include "../../Project.h"
 #include "../../xml/XMLTagHandler.h"
 #include "../../xml/XMLWriter.h"
+
+TrackView::TrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackCell{ pTrack }
+{
+   DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
+}
 
 TrackView::~TrackView()
 {
@@ -129,20 +132,6 @@ std::shared_ptr<const TrackVRulerControls> TrackView::GetVRulerControls() const
    return const_cast< TrackView* >( this )->GetVRulerControls();
 }
 
-#include "../../TrackPanelResizeHandle.h"
-std::shared_ptr<TrackPanelCell> TrackView::GetResizer()
-{
-   if (!mpResizer)
-      // create on demand
-      mpResizer = std::make_shared<TrackPanelResizerCell>( shared_from_this() );
-   return mpResizer;
-}
-
-std::shared_ptr<const TrackPanelCell> TrackView::GetResizer() const
-{
-   return const_cast<TrackView*>(this)->GetResizer();
-}
-
 void TrackView::DoSetY(int y)
 {
    mY = y;
@@ -223,3 +212,8 @@ template<> auto DoGetView::Implementation() -> Function {
    return nullptr;
 }
 static DoGetView registerDoGetView;
+
+template<> auto GetDefaultTrackHeight::Implementation() -> Function {
+   return nullptr;
+}
+static GetDefaultTrackHeight registerGetDefaultTrackHeight;

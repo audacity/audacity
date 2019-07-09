@@ -22,9 +22,7 @@
 
 class wxWindow;
 class CommandHandler;
-class ResponseQueue;
 class Response;
-class ResponseQueueTarget;
 class OldStyleCommand;
 using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
 class wxString;
@@ -42,7 +40,6 @@ class ScriptCommandRelay
       // N.B. Static class members also have to be declared in the .cpp file
       static CommandHandler *sCmdHandler;
       static tpRegScriptServerFunc sScriptFn;
-      static ResponseQueue sResponseQueue;
 
    public:
 
@@ -52,9 +49,7 @@ class ScriptCommandRelay
       static void Run();
       static void PostCommand(
          wxWindow *pWindow, const OldStyleCommandPointer &cmd);
-      static void SendResponse(const wxString &response);
       static Response ReceiveResponse();
-      static std::shared_ptr<ResponseQueueTarget> GetResponseTarget();
 };
 
 #endif /* End of include guard: __SCRIPT_COMMAND_RELAY__ */

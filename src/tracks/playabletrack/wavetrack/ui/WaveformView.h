@@ -11,21 +11,23 @@ Paul Licameli split from WaveTrackView.h
 #ifndef __AUDACITY_WAVEFORM_VIEW__
 #define __AUDACITY_WAVEFORM_VIEW__
 
-#include "../../../ui/CommonTrackView.h" // to inherit
+#include "WaveTrackView.h" // to inherit
 
 class WaveTrack;
 class CutlineHandle;
 class SampleHandle;
 class EnvelopeHandle;
 
-class WaveformView final : public CommonTrackView
+class WaveformView final : public WaveTrackSubView
 {
    WaveformView( const WaveformView& ) = delete;
    WaveformView &operator=( const WaveformView& ) = delete;
 
 public:
-   using CommonTrackView::CommonTrackView;
+   using WaveTrackSubView::WaveTrackSubView;
    ~WaveformView() override;
+
+   virtual WaveTrackViewConstants::Display SubViewType() const override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 

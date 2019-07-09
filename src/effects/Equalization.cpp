@@ -94,7 +94,6 @@
 #include "../FileNames.h"
 #include "../Envelope.h"
 #include "../EnvelopeEditor.h"
-#include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FFT.h"
 #include "../Prefs.h"

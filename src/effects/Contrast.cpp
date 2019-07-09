@@ -19,7 +19,6 @@
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../ViewInfo.h"
-#include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
