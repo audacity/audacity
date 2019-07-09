@@ -49,7 +49,7 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
       wt->GetSpectrumBounds(&mOrigMin, &mOrigMax);
       mTempSettings.maxFreq = mOrigMax;
       mTempSettings.minFreq = mOrigMin;
-      mOrigDisplay = WaveTrackView::Get( *mWt ).GetDisplay();
+      mOrigPlacements = WaveTrackView::Get( *mWt ).SavePlacements();
    }
    else  {
       mTempSettings = mOrigSettings = SpectrogramSettings::defaults();
@@ -424,7 +424,7 @@ void SpectrumPrefs::Rollback()
    if (mWt && isOpenPage) {
       auto channels = TrackList::Channels(mWt);
       for (auto channel : channels)
-         WaveTrackView::Get( *channel ).SetDisplay( mOrigDisplay );
+         WaveTrackView::Get( *channel ).RestorePlacements( mOrigPlacements );
    }
 
    if (isOpenPage) {

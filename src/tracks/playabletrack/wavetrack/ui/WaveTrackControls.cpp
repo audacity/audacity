@@ -889,7 +889,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
 
-   partnerView.SetDisplay( view.GetDisplay() );
+   partnerView.RestorePlacements( view.SavePlacements() );
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())

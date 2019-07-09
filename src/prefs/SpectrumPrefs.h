@@ -23,6 +23,7 @@
 
 #include "../Experimental.h"
 
+#include <vector>
 #include <wx/defs.h>
 
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
@@ -38,6 +39,7 @@ struct FFTParam;
 class ShuttleGui;
 class SpectrogramSettings;
 class WaveTrack;
+struct WaveTrackSubViewPlacement;
 
 #define SPECTRUM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Spectrum") }
 
@@ -98,7 +100,7 @@ class SpectrumPrefs final : public PrefsPanel
 
    SpectrogramSettings mTempSettings, mOrigSettings;
 
-   WaveTrackViewConstants::Display mOrigDisplay;
+   std::vector<WaveTrackSubViewPlacement> mOrigPlacements;
    float mOrigMin, mOrigMax;
 
    bool mPopulating;

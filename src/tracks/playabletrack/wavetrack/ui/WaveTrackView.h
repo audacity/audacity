@@ -24,6 +24,12 @@ public:
    virtual WaveTrackViewConstants::Display SubViewType() const = 0;
 };
 
+struct WaveTrackSubViewPlacement {
+   int index;
+   float fraction;
+};
+using WaveTrackSubViewPlacements = std::vector< WaveTrackSubViewPlacement >;
+
 class WaveTrackView;
 using WaveTrackSubViews = ClientData::Site<
    WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
@@ -63,8 +69,13 @@ public:
 
    using WaveTrackDisplay = WaveTrackViewConstants::Display;
 
-   WaveTrackDisplay GetDisplay() const { return mDisplay; }
-   void SetDisplay(WaveTrackDisplay display) { mDisplay = display; }
+   WaveTrackDisplay GetDisplay() const;
+   void SetDisplay(WaveTrackDisplay display);
+
+   const WaveTrackSubViewPlacements &SavePlacements() const
+      { return mPlacements; }
+   void RestorePlacements( const WaveTrackSubViewPlacements &placements )
+      { mPlacements = placements; }
 
 private:
    // TrackPanelDrawable implementation
@@ -83,7 +94,7 @@ private:
 protected:
    void DoSetMinimized( bool minimized ) override;
 
-   WaveTrackDisplay mDisplay;
+   WaveTrackSubViewPlacements mPlacements;
 };
 
 // Helper for drawing routines

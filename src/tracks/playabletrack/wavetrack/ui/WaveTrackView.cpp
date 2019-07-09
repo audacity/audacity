@@ -42,16 +42,20 @@ WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
 {
    WaveTrackSubViews::BuildAll();
 
-   mDisplay = TracksPrefs::ViewModeChoice();
+   auto display = TracksPrefs::ViewModeChoice();
 
    // Force creation always:
    WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
       ->GetIndependentWaveformSettings();
 
-   if (mDisplay == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
-      mDisplay = WaveTrackViewConstants::Waveform;
+   if (display == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
+      display = WaveTrackViewConstants::Waveform;
       settings.scaleType = WaveformSettings::stLogarithmic;
    }
+
+   mPlacements.resize( WaveTrackSubViews::size() );
+
+   SetDisplay( display );
 }
 
 WaveTrackView::~WaveTrackView()
@@ -65,7 +69,7 @@ void WaveTrackView::CopyTo( Track &track ) const
 
    if ( const auto pOther = dynamic_cast< WaveTrackView* >( &other ) ) {
       // only one field is important to preserve in undo/redo history
-      pOther->mDisplay = mDisplay;
+      pOther->RestorePlacements( SavePlacements() );
    }
 }
 
@@ -109,22 +113,67 @@ WaveTrackView::DoDetailedHitTest
    return { false, results };
 }
 
-auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
+auto WaveTrackView::GetDisplay() const -> WaveTrackDisplay
 {
-   auto display = mDisplay;
-   std::shared_ptr<TrackView> pSubView;
+   // To do:  make the return a vector of values.  For now, just report the
+   // last sub-view that is visible.
+   WaveTrackDisplay display{ WaveTrackViewConstants::NoDisplay };
+   size_t ii = 0;
+   WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
+      if ( mPlacements[ii].fraction > 0 )
+         display = subView.SubViewType();
+      ++ii;
+   } );
+   return display;
+}
+
+void WaveTrackView::SetDisplay(WaveTrackDisplay display)
+{
+   size_t ii = 0;
    WaveTrackSubViews::ForEach( [&,display]( WaveTrackSubView &subView ){
       if ( subView.SubViewType() == display )
-         pSubView = subView.shared_from_this();
+         mPlacements[ii] = {  0, 1.0 };
+      else
+         mPlacements[ii] = { -1, 0.0 };
+      ++ii;
    } );
-   if ( !pSubView )
-      return {};
-   return {
-      {
-         rect.GetTop(),
-         pSubView
-      }
-   };
+}
+
+auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
+{
+   // Collect the visible views
+   using Pair = std::pair< float, std::shared_ptr< TrackView > >;
+   std::vector< Pair > pairs( mPlacements.size() );
+   size_t ii = 0;
+   float total = 0;
+   WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
+      const auto &placement = mPlacements[ii];
+      auto index = placement.index;
+      auto fraction = placement.fraction;
+      if ( index >= 0 && fraction > 0.0 )
+         total += fraction,
+         pairs[ index ] = { fraction, subView.shared_from_this() };
+      ++ii;
+   } );
+
+   // Remove views we don't need
+   auto begin = pairs.begin(), end = pairs.end(),
+     newEnd = std::remove_if( begin, end,
+        []( const Pair &item ){ return !item.second; } );
+   pairs.erase( newEnd, end );
+
+   // Assign coordinates
+   Refinement results;
+   results.reserve( pairs.size() );
+   float partial = 0;
+   const auto top = rect.GetTop();
+   const auto height = rect.GetHeight();
+   for ( const auto &pair : pairs ) {
+      results.emplace_back( top + (partial / total) * height, pair.second );
+      partial += pair.first;
+   }
+
+   return results;
 }
 
 void WaveTrackView::DoSetMinimized( bool minimized )
