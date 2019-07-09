@@ -113,18 +113,23 @@ WaveTrackView::DoDetailedHitTest
    return { false, results };
 }
 
-auto WaveTrackView::GetDisplay() const -> WaveTrackDisplay
+auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
 {
-   // To do:  make the return a vector of values.  For now, just report the
-   // last sub-view that is visible.
-   WaveTrackDisplay display{ WaveTrackViewConstants::NoDisplay };
+   // Collect the display types of visible views and sort them by position
+   using Pair = std::pair< int, WaveTrackDisplay >;
+   std::vector< Pair > pairs;
    size_t ii = 0;
    WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
-      if ( mPlacements[ii].fraction > 0 )
-         display = subView.SubViewType();
+      auto &placement = mPlacements[ii];
+      if ( placement.fraction > 0 )
+         pairs.emplace_back( placement.index, subView.SubViewType() );
       ++ii;
    } );
-   return display;
+   std::sort( pairs.begin(), pairs.end() );
+   std::vector<WaveTrackDisplay> results;
+   for ( const auto &pair : pairs )
+      results.push_back( pair.second );
+   return results;
 }
 
 void WaveTrackView::SetDisplay(WaveTrackDisplay display)

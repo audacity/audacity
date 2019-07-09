@@ -599,19 +599,23 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    std::vector<int> checkedIds;
 
-   const auto display = WaveTrackView::Get( *pTrack ).GetDisplay();
-   checkedIds.push_back(
-      display == WaveTrackViewConstants::Waveform
-         ? (pTrack->GetWaveformSettings().isLinear()
-            ? OnWaveformID : OnWaveformDBID)
-         : OnSpectrumID);
+   const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
+   for ( auto display : displays ) {
+      checkedIds.push_back(
+         display == WaveTrackViewConstants::Waveform
+            ? (pTrack->GetWaveformSettings().isLinear()
+               ? OnWaveformID : OnWaveformDBID)
+            : OnSpectrumID);
+   }
 
    // Bug 1253.  Shouldn't open preferences if audio is busy.
    // We can't change them on the fly yet anyway.
    auto gAudioIO = AudioIOBase::Get();
    const bool bAudioBusy = gAudioIO->IsBusy();
-   pMenu->Enable(OnSpectrogramSettingsID,
-      (display == WaveTrackViewConstants::Spectrum) && !bAudioBusy);
+   bool hasSpectrum =
+      make_iterator_range( displays.begin(), displays.end() )
+         .contains( WaveTrackViewConstants::Spectrum );
+   pMenu->Enable(OnSpectrogramSettingsID, hasSpectrum && !bAudioBusy);
 
    AudacityProject *const project = ::GetActiveProject();
    auto &tracks = TrackList::Get( *project );
@@ -683,9 +687,9 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 BEGIN_POPUP_MENU(WaveTrackMenuTable)
    POPUP_MENU_SEPARATOR()
 
-   POPUP_MENU_RADIO_ITEM(OnWaveformID, _("Wa&veform"), OnSetDisplay)
-   POPUP_MENU_RADIO_ITEM(OnWaveformDBID, _("&Waveform (dB)"), OnSetDisplay)
-   POPUP_MENU_RADIO_ITEM(OnSpectrumID, _("&Spectrogram"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnWaveformID, _("Wa&veform"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, _("&Waveform (dB)"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnSpectrumID, _("&Spectrogram"), OnSetDisplay)
    POPUP_MENU_ITEM(OnSpectrogramSettingsID, _("S&pectrogram Settings..."), OnSpectrogramSettings)
    POPUP_MENU_SEPARATOR()
 
@@ -702,11 +706,15 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 #endif
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
-   if( pTrack &&
-      WaveTrackView::Get( *pTrack ).GetDisplay()
-         != WaveTrackViewConstants::Spectrum ){
-      POPUP_MENU_SEPARATOR()
-      POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
+   if ( pTrack ) {
+      const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
+      bool hasWaveform =
+         make_iterator_range( displays.begin(), displays.end() )
+            .contains( WaveTrackViewConstants::Waveform );
+      if( hasWaveform ){
+         POPUP_MENU_SEPARATOR()
+         POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
+      }
    }
 
    POPUP_MENU_SEPARATOR()
@@ -736,7 +744,8 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       id = Spectrum; break;
    }
 
-   const bool wrongType = WaveTrackView::Get( *pTrack ).GetDisplay() != id;
+   const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
+   const bool wrongType = !(displays.size() == 1 && displays[0] == id);
    const bool wrongScale =
       (id == Waveform &&
       pTrack->GetWaveformSettings().isLinear() != linear);

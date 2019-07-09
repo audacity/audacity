@@ -69,7 +69,7 @@ public:
 
    using WaveTrackDisplay = WaveTrackViewConstants::Display;
 
-   WaveTrackDisplay GetDisplay() const;
+   std::vector<WaveTrackDisplay> GetDisplays() const;
    void SetDisplay(WaveTrackDisplay display);
 
    const WaveTrackSubViewPlacements &SavePlacements() const

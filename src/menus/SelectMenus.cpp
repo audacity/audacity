@@ -35,8 +35,9 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
    // Find the first selected wave track that is in a spectrogram view.
    const WaveTrack *pTrack {};
    for ( auto wt : tracks.Selected< const WaveTrack >() ) {
-      const auto display = WaveTrackView::Get( *wt ).GetDisplay();
-      if (display == WaveTrackViewConstants::Spectrum) {
+      const auto displays = WaveTrackView::Get( *wt ).GetDisplays();
+      if ( make_iterator_range( displays.begin(), displays.end() )
+         .contains( WaveTrackViewConstants::Spectrum) ) {
          pTrack = wt;
          break;
       }
