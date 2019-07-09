@@ -73,6 +73,7 @@ is time to refresh some aspect of the screen.
 #include "RefreshCode.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
+#include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "NoteTrack.h"
@@ -1151,7 +1152,7 @@ struct ChannelGroup final : TrackPanelGroup {
             yy += height;
             refinement.emplace_back(
                yy - kSeparatorThickness,
-               TrackView::Get( *channel ).GetResizer() );
+               TrackPanelResizerCell::Get( *channel ).shared_from_this() );
          }
       }
 
@@ -1270,8 +1271,9 @@ struct ResizingChannelGroup final : TrackPanelGroup {
       { rect.GetTop(),
          std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
       { rect.GetTop() + rect.GetHeight() - kSeparatorThickness,
-         TrackView::Get( **TrackList::Channels( mpTrack.get() ).rbegin() )
-            .GetResizer() }
+         TrackPanelResizerCell::Get(
+            **TrackList::Channels( mpTrack.get() ).rbegin() ).shared_from_this()
+      }
    } }; }
    std::shared_ptr< Track > mpTrack;
    wxCoord mLeftOffset;

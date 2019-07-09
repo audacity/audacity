@@ -63,11 +63,6 @@ public:
    std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
 
 
-   // Return another, associated TrackPanelCell object that implements the
-   // click and drag to resize
-   std::shared_ptr<TrackPanelCell> GetResizer();
-   std::shared_ptr<const TrackPanelCell> GetResizer() const;
-
    void WriteXMLAttributes( XMLWriter & ) const override;
    bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;
 
@@ -92,7 +87,6 @@ protected:
    virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    std::shared_ptr<TrackVRulerControls> mpVRulerControls;
-   std::shared_ptr<TrackPanelResizerCell> mpResizer;
 
 private:
    bool           mMinimized{ false };
