@@ -27,9 +27,17 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
-
    // CommonTrackView implementation
    void Reparent( const std::shared_ptr<Track> &parent ) override;
+
+   static std::pair<
+      bool, // if true, hit-testing is finished
+      std::vector<UIHandlePtr>
+   > DoDetailedHitTest(
+      const TrackPanelMouseState &state,
+      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const std::shared_ptr<WaveTrack> &wt,
+      CommonTrackView &view);
 
 private:
    // TrackPanelDrawable implementation
@@ -41,14 +49,6 @@ private:
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
-   static std::pair<
-      bool, // if true, hit-testing is finished
-      std::vector<UIHandlePtr>
-   > DoDetailedHitTest(
-      const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt,
-      CommonTrackView &view);
 
    // TrackView implementation
    Refinement GetSubViews( const wxRect &rect ) override;
@@ -57,9 +57,6 @@ protected:
    void DoSetMinimized( bool minimized ) override;
 
    std::shared_ptr< CommonTrackView > mWaveformView, mSpectrumView;
-
-   friend class SpectrumView;
-   friend class WaveformView;
 };
 
 // Helper for drawing routines
