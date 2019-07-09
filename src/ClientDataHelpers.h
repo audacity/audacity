@@ -57,19 +57,19 @@ template< typename Object > struct Lockable< Object, NoLocking >
 : Object {
    // implement trivial non-locking policy
    struct Lock{};
-   Lock lock() { return {}; }
+   Lock lock() const { return {}; }
 };
 template< typename Object > struct Lockable< Object, NonrecursiveLocking >
 : Object, std::mutex {
    // implement real locking
    using Lock = std::unique_lock< std::mutex >;
-   Lock lock() { return Lock{ *this }; }
+   Lock lock() const { return Lock{ *this }; }
 };
 template< typename Object > struct Lockable< Object, RecursiveLocking >
 : Object, std::recursive_mutex {
    // implement real locking
    using Lock = std::unique_lock< std::recursive_mutex >;
-   Lock lock() { return Lock{ *this }; }
+   Lock lock() const { return Lock{ *this }; }
 };
 
 // Pairing of a reference to a Lockable and a lock on it

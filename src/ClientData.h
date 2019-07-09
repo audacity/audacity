@@ -416,7 +416,12 @@ private:
    {
       return Locked< DataContainer >{ mData };
    }
-
+   
+   Locked<const DataContainer> GetData() const
+   {
+      return Locked< const DataContainer >{ mData };
+   }
+   
    static void EnsureIndex( Locked<DataContainer> &data, size_t index )
    {
       if (data.mObject.size() <= index)
