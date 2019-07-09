@@ -11,8 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../Track.h"
 
-#include "TrackControls.h"
-
 #include "../../ClientData.h"
 #include "../../Project.h"
 #include "../../xml/XMLTagHandler.h"
