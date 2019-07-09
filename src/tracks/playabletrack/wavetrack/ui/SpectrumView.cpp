@@ -649,6 +649,6 @@ void SpectrumView::Draw(
 
 static const WaveTrackSubViews::RegisteredFactory key{
    []( WaveTrackView &view ){
-      return std::make_shared< SpectrumView >( view.FindTrack() );
+      return std::make_shared< SpectrumView >( view );
    }
 };

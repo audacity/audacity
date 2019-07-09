@@ -53,22 +53,13 @@ const WaveTrackView &WaveTrackView::Get( const WaveTrack &track )
 WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
-   WaveTrackSubViews::BuildAll();
+}
 
-   auto display = TracksPrefs::ViewModeChoice();
-
-   // Force creation always:
-   WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
-      ->GetIndependentWaveformSettings();
-
-   if (display == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
-      display = WaveTrackViewConstants::Waveform;
-      settings.scaleType = WaveformSettings::stLogarithmic;
-   }
-
-   mPlacements.resize( WaveTrackSubViews::size() );
-
-   SetDisplay( display );
+WaveTrackSubView::WaveTrackSubView( WaveTrackView &waveTrackView )
+   : CommonTrackView( waveTrackView.FindTrack() )
+{
+   mwWaveTrackView = std::static_pointer_cast<WaveTrackView>(
+      waveTrackView.shared_from_this() );
 }
 
 WaveTrackView::~WaveTrackView()
@@ -128,6 +119,8 @@ WaveTrackView::DoDetailedHitTest
 
 auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
 {
+   BuildSubViews();
+
    // Collect the display types of visible views and sort them by position
    using Pair = std::pair< int, WaveTrackDisplay >;
    std::vector< Pair > pairs;
@@ -147,6 +140,12 @@ auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
 
 void WaveTrackView::SetDisplay(WaveTrackDisplay display)
 {
+   BuildSubViews();
+   DoSetDisplay( display );
+}
+
+void WaveTrackView::DoSetDisplay(WaveTrackDisplay display)
+{
    size_t ii = 0;
    WaveTrackSubViews::ForEach( [&,display]( WaveTrackSubView &subView ){
       if ( subView.SubViewType() == display )
@@ -159,6 +158,8 @@ void WaveTrackView::SetDisplay(WaveTrackDisplay display)
 
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
+   BuildSubViews();
+
    Refinement results;
 
    // Collect the visible views in the right sequence
@@ -209,6 +210,8 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 std::vector< std::shared_ptr< WaveTrackSubView > >
 WaveTrackView::GetAllSubViews()
 {
+   BuildSubViews();
+
    std::vector< std::shared_ptr< WaveTrackSubView > > results;
    WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
       results.push_back( std::static_pointer_cast<WaveTrackSubView>(
@@ -219,6 +222,8 @@ WaveTrackView::GetAllSubViews()
 
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
+   BuildSubViews();
+
    // May come here.  Invoke also on sub-views.
    TrackView::DoSetMinimized( minimized );
    WaveTrackSubViews::ForEach( [minimized](WaveTrackSubView &subView){
@@ -428,10 +433,39 @@ ClipParameters::ClipParameters
 
 void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
 {
+   // BuildSubViews(); // not really needed
    CommonTrackView::Reparent( parent );
    WaveTrackSubViews::ForEach( [&parent](WaveTrackSubView &subView){
       subView.Reparent( parent );
    } );
+}
+
+void WaveTrackView::BuildSubViews() const
+{
+   if ( WaveTrackSubViews::size() == 0) {
+      // On-demand steps that can't happen in the constructor
+      auto pThis = const_cast<WaveTrackView*>( this );
+      pThis->BuildAll();
+      pThis->mPlacements.resize( WaveTrackSubViews::size() );
+      bool minimized = GetMinimized();
+      pThis->WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
+         subView.DoSetMinimized( minimized );
+      } );
+
+      auto pTrack = pThis->FindTrack();
+      auto display = TracksPrefs::ViewModeChoice();
+
+      // Force creation always:
+      WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
+         ->GetIndependentWaveformSettings();
+
+      if (display == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
+         display = WaveTrackViewConstants::Waveform;
+         settings.scaleType = WaveformSettings::stLogarithmic;
+      }
+
+      pThis->DoSetDisplay( display );
+   }
 }
 
 void WaveTrackView::Draw(

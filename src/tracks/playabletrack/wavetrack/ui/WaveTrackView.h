@@ -16,10 +16,13 @@ Paul Licameli split from class WaveTrack
 namespace WaveTrackViewConstants{ enum Display : int; }
 
 class WaveTrack;
+class WaveTrackView;
+
 class WaveTrackSubView : public CommonTrackView
 {
 public:
-   using CommonTrackView::CommonTrackView;
+   explicit
+   WaveTrackSubView( WaveTrackView &waveTrackView );
    
    virtual WaveTrackViewConstants::Display SubViewType() const = 0;
 
@@ -31,7 +34,9 @@ public:
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
-};
+private:
+   std::weak_ptr<WaveTrackView> mwWaveTrackView;
+   };
 
 struct WaveTrackSubViewPlacement {
    int index;
@@ -91,6 +96,9 @@ public:
    std::vector< std::shared_ptr< WaveTrackSubView > > GetAllSubViews();
 
 private:
+   void BuildSubViews() const;
+   void DoSetDisplay(WaveTrackDisplay display);
+
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,
