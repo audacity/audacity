@@ -17,8 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 
-#include "WaveTrackControls.h"
-
 #include "SpectrumView.h"
 #include "WaveformView.h"
 
@@ -35,7 +33,6 @@ WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    , mWaveformView{ std::make_shared< WaveformView >( pTrack ) }
    , mSpectrumView{ std::make_shared< SpectrumView >( pTrack ) }
 {
-   DoSetHeight( WaveTrackControls::DefaultWaveTrackHeight() );
 }
 
 WaveTrackView::~WaveTrackView()

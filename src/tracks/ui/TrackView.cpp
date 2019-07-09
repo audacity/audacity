@@ -19,6 +19,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../xml/XMLTagHandler.h"
 #include "../../xml/XMLWriter.h"
 
+TrackView::TrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackCell{ pTrack }
+{
+   DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
+}
+
 TrackView::~TrackView()
 {
 }
@@ -223,3 +229,8 @@ template<> auto DoGetView::Implementation() -> Function {
    return nullptr;
 }
 static DoGetView registerDoGetView;
+
+template<> auto GetDefaultTrackHeight::Implementation() -> Function {
+   return nullptr;
+}
+static GetDefaultTrackHeight registerGetDefaultTrackHeight;

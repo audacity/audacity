@@ -29,8 +29,7 @@ public:
    enum : unsigned { DefaultHeight = 150 };
 
    explicit
-   TrackView( const std::shared_ptr<Track> &pTrack )
-      : CommonTrackCell{ pTrack } {}
+   TrackView( const std::shared_ptr<Track> &pTrack );
    virtual ~TrackView() = 0;
 
    // some static conveniences, useful for summation over track iterator
@@ -86,7 +85,7 @@ protected:
    // No need yet to make this virtual
    void DoSetY(int y);
 
-   virtual void DoSetHeight(int h);
+   void DoSetHeight(int h);
 
    // Private factory to make appropriate object; class TrackView handles
    // memory management thereafter
@@ -109,6 +108,15 @@ using DoGetView =
 AttachedVirtualFunction<
    DoGetViewTag,
    std::shared_ptr< TrackView >,
+   Track
+>;
+
+struct GetDefaultTrackHeightTag;
+
+using GetDefaultTrackHeight =
+AttachedVirtualFunction<
+   GetDefaultTrackHeightTag,
+   int,
    Track
 >;
 

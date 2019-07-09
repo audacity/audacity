@@ -34,7 +34,6 @@ Paul Licameli split from TrackPanel.cpp
 TimeTrackView::TimeTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
-   DoSetHeight( 100 );
 }
 
 TimeTrackView::~TimeTrackView()

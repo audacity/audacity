@@ -1293,3 +1293,12 @@ template<> template<> auto DoGetWaveTrackControls::Implementation() -> Function 
    };
 }
 static DoGetWaveTrackControls registerDoGetWaveTrackControls;
+
+using GetDefaultWaveTrackHeight = GetDefaultTrackHeight::Override< WaveTrack >;
+template<> template<>
+auto GetDefaultWaveTrackHeight::Implementation() -> Function {
+   return [](WaveTrack &) {
+      return WaveTrackControls::DefaultWaveTrackHeight();
+   };
+}
+static GetDefaultWaveTrackHeight registerGetDefaultWaveTrackHeight;
