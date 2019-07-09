@@ -356,8 +356,6 @@ void CommonTrackControls::Draw(
          // Draw things within the track control panel
          TrackInfo::DrawItems( context, rect, *pTrack );
 
-      TrackInfo::DrawItems( context, rect, *FindTrack() );
-
       //mTrackInfo.DrawBordersWithin( dc, rect, *t );
    }
 
