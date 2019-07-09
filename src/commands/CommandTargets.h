@@ -221,23 +221,23 @@ public:
    void Update(const wxString &message) override;
 };
 
-/// Adds messages to a response queue (to be sent back to a script)
+/// Adds messages to the global response queue (to be sent back to a script)
 class ResponseQueueTarget final : public CommandMessageTarget
 {
 private:
-   ResponseQueue &mResponseQueue;
    wxString mBuffer;
 public:
-   ResponseQueueTarget(ResponseQueue &responseQueue)
-      : mResponseQueue(responseQueue),
-       mBuffer( wxEmptyString )
+   static ResponseQueue &sResponseQueue();
+
+   ResponseQueueTarget()
+      : mBuffer( wxEmptyString )
    { }
    virtual ~ResponseQueueTarget()
    {
       if( mBuffer.StartsWith("\n" ) )
          mBuffer = mBuffer.Mid( 1 );
-      mResponseQueue.AddResponse( mBuffer  );
-      mResponseQueue.AddResponse(wxString(wxT("\n")));
+      sResponseQueue().AddResponse( mBuffer  );
+      sResponseQueue().AddResponse(wxString(wxT("\n")));
    }
    void Update(const wxString &message) override
    {
