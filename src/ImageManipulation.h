@@ -10,7 +10,6 @@
 
 #include "MemoryX.h"
 #include <wx/defs.h>
-#include "Theme.h"
 
 class wxColour;
 class wxImage;
@@ -40,6 +39,9 @@ std::unique_ptr<wxImage> ChangeImageColour(wxImage * srcImage,
 std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground,
                       wxImage * mask, int xoff, int yoff);
 
+
+// JKC: will probably change name from 'teBmps' to 'tIndexBmp';
+typedef int teBmps; /// The index of a bitmap resource in Theme Resources.
 
 // Same idea, but this time the mask is an alpha channel in
 // the foreground bitmap, and it's all retrieved from Themes.
