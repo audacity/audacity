@@ -12,10 +12,26 @@ Paul Licameli split from class WaveTrack
 #define __AUDACITY_WAVE_TRACK_VIEW__
 
 #include "../../../ui/CommonTrackView.h"
+#include "../../../../ClientData.h"
+namespace WaveTrackViewConstants{ enum Display : int; }
 
 class WaveTrack;
+class WaveTrackSubView : public CommonTrackView
+{
+public:
+   using CommonTrackView::CommonTrackView;
+   
+   virtual WaveTrackViewConstants::Display SubViewType() const = 0;
+};
 
-class WaveTrackView final : public CommonTrackView
+class WaveTrackView;
+using WaveTrackSubViews = ClientData::Site<
+   WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
+>;
+
+class WaveTrackView final
+   : public CommonTrackView
+   , public WaveTrackSubViews
 {
    WaveTrackView( const WaveTrackView& ) = delete;
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
@@ -55,8 +71,6 @@ private:
 
 protected:
    void DoSetMinimized( bool minimized ) override;
-
-   std::shared_ptr< CommonTrackView > mWaveformView, mSpectrumView;
 };
 
 // Helper for drawing routines

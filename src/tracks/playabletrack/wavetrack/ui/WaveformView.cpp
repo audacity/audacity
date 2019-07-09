@@ -125,6 +125,11 @@ void WaveformView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
+WaveTrackViewConstants::Display WaveformView::SubViewType() const
+{
+   return WaveTrackViewConstants::Waveform;
+}
+
 std::shared_ptr<TrackVRulerControls> WaveformView::DoGetVRulerControls()
 {
    return std::make_shared<WaveformVRulerControls>( shared_from_this() );
@@ -1074,3 +1079,9 @@ void WaveformView::Draw(
    }
    CommonTrackView::Draw( context, rect, iPass );
 }
+
+static const WaveTrackSubViews::RegisteredFactory key{
+   []( WaveTrackView &view ){
+      return std::make_shared< WaveformView >( view.FindTrack() );
+   }
+};
