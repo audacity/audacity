@@ -97,15 +97,6 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
       }
    }
 
-   // Force creation always:
-   WaveformSettings &settings = GetIndependentWaveformSettings();
-
-   mDisplay = TracksPrefs::ViewModeChoice();
-   if (mDisplay == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
-      mDisplay = WaveTrackViewConstants::Waveform;
-      settings.scaleType = WaveformSettings::stLogarithmic;
-   }
-
    mLegacyProjectFileOffset = 0;
 
    mFormat = format;
@@ -161,7 +152,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    mOldGain[1] = 0.0;
    SetDefaultName(orig.GetDefaultName());
    SetName(orig.GetName());
-   mDisplay = orig.mDisplay;
    mDisplayMin = orig.mDisplayMin;
    mDisplayMax = orig.mDisplayMax;
    mSpectrumMin = orig.mSpectrumMin;
@@ -196,7 +186,6 @@ void WaveTrack::Merge(const Track &orig)
 {
    orig.TypeSwitch( [&](const WaveTrack *pwt) {
       const WaveTrack &wt = *pwt;
-      mDisplay = wt.mDisplay;
       mGain    = wt.mGain;
       mPan     = wt.mPan;
       mDisplayMin = wt.mDisplayMin;

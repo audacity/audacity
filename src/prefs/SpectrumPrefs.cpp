@@ -31,6 +31,7 @@
 
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 
 #include <algorithm>
 
@@ -48,7 +49,7 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
       wt->GetSpectrumBounds(&mOrigMin, &mOrigMax);
       mTempSettings.maxFreq = mOrigMax;
       mTempSettings.minFreq = mOrigMin;
-      mOrigDisplay = mWt->GetDisplay();
+      mOrigPlacements = WaveTrackView::Get( *mWt ).SavePlacements();
    }
    else  {
       mTempSettings = mOrigSettings = SpectrogramSettings::defaults();
@@ -423,7 +424,7 @@ void SpectrumPrefs::Rollback()
    if (mWt && isOpenPage) {
       auto channels = TrackList::Channels(mWt);
       for (auto channel : channels)
-         channel->SetDisplay(mOrigDisplay);
+         WaveTrackView::Get( *channel ).RestorePlacements( mOrigPlacements );
    }
 
    if (isOpenPage) {
@@ -470,7 +471,8 @@ void SpectrumPrefs::Preview()
 
    if (mWt && isOpenPage) {
       for (auto channel : TrackList::Channels(mWt))
-         channel->SetDisplay(WaveTrackViewConstants::Spectrum);
+         WaveTrackView::Get( *channel )
+            .SetDisplay( WaveTrackViewConstants::Spectrum );
    }
 
    if (isOpenPage) {

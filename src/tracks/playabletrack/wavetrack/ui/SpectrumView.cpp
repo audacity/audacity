@@ -15,6 +15,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 
 #include "../../../../AColor.h"
 #include "../../../../Prefs.h"
@@ -30,6 +31,11 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 
 SpectrumView::~SpectrumView() = default;
+
+bool SpectrumView::IsSpectral() const
+{
+   return true;
+}
 
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,

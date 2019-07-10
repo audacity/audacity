@@ -120,10 +120,6 @@ UIHandlePtr SampleHandle::HitTest
    /// editable sample
    const auto wavetrack = pTrack.get();
 
-   const int displayType = wavetrack->GetDisplay();
-   if (WaveTrackViewConstants::Waveform != displayType)
-      return {};  // Not a wave, so return.
-
    const double tt =
       adjustTime(wavetrack, viewInfo.PositionToTime(state.m_x, rect.x));
    if (!SampleResolutionTest(viewInfo, wavetrack, tt, rect.width))
@@ -178,17 +174,6 @@ namespace {
       (const wxMouseEvent &event,
        const wxRect &rect, const ViewInfo &viewInfo, WaveTrack *wt, int width)
    {
-      //Get out of here if we shouldn't be drawing right now:
-      //If we aren't displaying the waveform, Display a message dialog
-      const int display = wt->GetDisplay();
-      if (WaveTrackViewConstants::Waveform != display)
-      {
-         AudacityMessageBox(_(
-"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."),
-                      _("Draw Tool"));
-         return false;
-      }
-
       //If we aren't zoomed in far enough, show a message dialog.
       const double time = adjustTime(wt, viewInfo.PositionToTime(event.m_x, rect.x));
       if (!SampleResolutionTest(viewInfo, wt, time, width))

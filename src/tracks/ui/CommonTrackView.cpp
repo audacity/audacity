@@ -73,7 +73,7 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
    // Finally, default of all is adjustment of the selection box.
    if ( isMultiTool || currentTool == selectTool ) {
       result = SelectHandle::HitTest(
-         mSelectHandle, st, pProject, FindTrack() );
+         mSelectHandle, st, pProject, shared_from_this() );
       if (result)
          results.push_back(result);
    }
