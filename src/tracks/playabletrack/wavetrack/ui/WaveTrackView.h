@@ -77,6 +77,10 @@ public:
    void RestorePlacements( const WaveTrackSubViewPlacements &placements )
       { mPlacements = placements; }
 
+   // Get all the sub-views, in a sequence that is unspecified but in
+   // correspondence with the result of SavePlacements
+   std::vector< std::shared_ptr< WaveTrackSubView > > GetAllSubViews();
+
 private:
    // TrackPanelDrawable implementation
    void Draw(
@@ -89,6 +93,7 @@ private:
       override;
 
    // TrackView implementation
+   // Get the visible sub-views with top y coordinates
    Refinement GetSubViews( const wxRect &rect ) override;
 
 protected:

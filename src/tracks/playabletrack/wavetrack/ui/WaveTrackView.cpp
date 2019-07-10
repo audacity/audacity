@@ -181,6 +181,17 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
    return results;
 }
 
+std::vector< std::shared_ptr< WaveTrackSubView > >
+WaveTrackView::GetAllSubViews()
+{
+   std::vector< std::shared_ptr< WaveTrackSubView > > results;
+   WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
+      results.push_back( std::static_pointer_cast<WaveTrackSubView>(
+         subView.shared_from_this() ) );
+   } );
+   return results;
+}
+
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
    // May come here.  Invoke also on sub-views.
