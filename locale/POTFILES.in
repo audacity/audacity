@@ -786,8 +786,6 @@ src/widgets/ImageRoll.cpp
 src/widgets/ImageRoll.h
 src/widgets/KeyView.cpp
 src/widgets/KeyView.h
-src/widgets/LinkingHtmlWindow.cpp
-src/widgets/LinkingHtmlWindow.h
 src/widgets/Meter.cpp
 src/widgets/Meter.h
 src/widgets/MeterPanelBase.cpp

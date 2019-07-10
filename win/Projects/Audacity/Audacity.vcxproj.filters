@@ -680,9 +680,6 @@
     <ClCompile Include="..\..\..\src\widgets\KeyView.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp">
-      <Filter>src\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
@@ -1826,9 +1823,6 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\KeyView.h">
-      <Filter>src\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\Meter.h">

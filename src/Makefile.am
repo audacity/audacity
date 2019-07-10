@@ -768,8 +768,6 @@ audacity_SOURCES = \
 	widgets/ImageRoll.h \
 	widgets/KeyView.cpp \
 	widgets/KeyView.h \
-	widgets/LinkingHtmlWindow.cpp \
-	widgets/LinkingHtmlWindow.h \
 	widgets/Meter.cpp \
 	widgets/Meter.h \
 	widgets/MeterPanelBase.cpp \
