@@ -43,7 +43,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
 
-   return WaveTrackView::DoDetailedHitTest(
+   return WaveTrackSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt, *this
    ).second;
 }

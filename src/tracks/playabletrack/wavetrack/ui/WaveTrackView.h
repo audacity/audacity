@@ -22,6 +22,15 @@ public:
    using CommonTrackView::CommonTrackView;
    
    virtual WaveTrackViewConstants::Display SubViewType() const = 0;
+
+   std::pair<
+      bool, // if true, hit-testing is finished
+      std::vector<UIHandlePtr>
+   > DoDetailedHitTest(
+      const TrackPanelMouseState &state,
+      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const std::shared_ptr<WaveTrack> &wt,
+      CommonTrackView &view);
 };
 
 struct WaveTrackSubViewPlacement {

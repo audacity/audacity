@@ -27,6 +27,19 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TimeShiftHandle.h"
 
+std::pair<
+   bool, // if true, hit-testing is finished
+   std::vector<UIHandlePtr>
+> WaveTrackSubView::DoDetailedHitTest(
+   const TrackPanelMouseState &state,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool,
+   const std::shared_ptr<WaveTrack> &wt,
+   CommonTrackView &view)
+{
+   return WaveTrackView::DoDetailedHitTest(
+      state, pProject, currentTool, bMultiTool, wt, view);
+}
+
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
 {
    return static_cast< WaveTrackView& >( TrackView::Get( track ) );

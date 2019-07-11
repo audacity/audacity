@@ -46,7 +46,7 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
 
    auto &view = *this;
 
-   auto pair = WaveTrackView::DoDetailedHitTest(
+   auto pair = WaveTrackSubView::DoDetailedHitTest(
       st, pProject, currentTool, bMultiTool, wt, view);
    auto &results = pair.second;
 
