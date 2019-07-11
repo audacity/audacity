@@ -159,18 +159,20 @@ void WaveTrackView::SetDisplay(WaveTrackDisplay display)
 
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
-   // Collect the visible views
-   using Pair = std::pair< float, std::shared_ptr< TrackView > >;
+   Refinement results;
+
+   // Collect the visible views in the right sequence
+   using Pair = std::pair< float*, std::shared_ptr< TrackView > >;
    std::vector< Pair > pairs( mPlacements.size() );
    size_t ii = 0;
    float total = 0;
    WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
-      const auto &placement = mPlacements[ii];
+      auto &placement = mPlacements[ii];
       auto index = placement.index;
-      auto fraction = placement.fraction;
+      auto &fraction = placement.fraction;
       if ( index >= 0 && fraction > 0.0 )
          total += fraction,
-         pairs[ index ] = { fraction, subView.shared_from_this() };
+         pairs[ index ] = { &fraction, subView.shared_from_this() };
       ++ii;
    } );
 
@@ -179,17 +181,27 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
      newEnd = std::remove_if( begin, end,
         []( const Pair &item ){ return !item.second; } );
    pairs.erase( newEnd, end );
+   results.reserve( pairs.size() );
 
    // Assign coordinates
-   Refinement results;
-   results.reserve( pairs.size() );
-   float partial = 0;
+   // Also update the stored placements, redenominating to the total height,
+   // storing integer values
    const auto top = rect.GetTop();
    const auto height = rect.GetHeight();
+   float partial = 0;
+   wxCoord lastCoord = 0;
+   float *lastFraction = nullptr;
    for ( const auto &pair : pairs ) {
-      results.emplace_back( top + (partial / total) * height, pair.second );
-      partial += pair.first;
+      wxCoord newCoord = top + (partial / total) * height;
+      results.emplace_back( newCoord, pair.second );
+      partial += *pair.first;
+      if (lastFraction)
+        *lastFraction = newCoord - lastCoord;
+      lastFraction = pair.first;
+      lastCoord = newCoord;
    }
+   if ( lastFraction )
+      *lastFraction = top + height - lastCoord;
 
    return results;
 }
