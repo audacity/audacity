@@ -687,9 +687,11 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 BEGIN_POPUP_MENU(WaveTrackMenuTable)
    POPUP_MENU_SEPARATOR()
 
-   POPUP_MENU_CHECK_ITEM(OnWaveformID, _("Wa&veform"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, _("&Waveform (dB)"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnSpectrumID, _("&Spectrogram"), OnSetDisplay)
+   // These radio items may become non-exclusive check items
+   POPUP_MENU_RADIO_ITEM(OnWaveformID, _("Wa&veform"), OnSetDisplay)
+   POPUP_MENU_RADIO_ITEM(OnWaveformDBID, _("&Waveform (dB)"), OnSetDisplay)
+   POPUP_MENU_RADIO_ITEM(OnSpectrumID, _("&Spectrogram"), OnSetDisplay)
+
    POPUP_MENU_ITEM(OnSpectrogramSettingsID, _("S&pectrogram Settings..."), OnSpectrogramSettings)
    POPUP_MENU_SEPARATOR()
 
