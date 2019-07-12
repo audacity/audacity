@@ -1505,15 +1505,15 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxString strValue = value;
          if (!wxStrcmp(attr, wxT("offset")))
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-                  !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!(XMLValueChecker::IsGoodString(strValue) &&
+                  Internat::CompatibleToDouble(strValue, &dblValue)))
                return false;
             SetOffset(dblValue);
          }
          if (!wxStrcmp(attr, wxT("colorindex")))
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-                  !strValue.ToLong( &longValue))
+            if (!(XMLValueChecker::IsGoodString(strValue) &&
+                  strValue.ToLong( &longValue)))
                return false;
             SetColourIndex(longValue);
          }
