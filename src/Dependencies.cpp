@@ -47,13 +47,14 @@ AliasedFile s.
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/frame.h>
 #include <wx/stattext.h>
 
 #include "blockfile/SimpleBlockFile.h"
 #include "DirManager.h"
 #include "Prefs.h"
+#include "Project.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "Sequence.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
@@ -600,7 +601,7 @@ void DependencyDialog::SaveFutureActionChoice()
 bool ShowDependencyDialogIfNeeded(AudacityProject *project,
                                   bool isSaving)
 {
-   auto pWindow = ProjectWindow::Find( project );
+   auto pWindow = FindProjectFrame( project );
    AliasedFileArray aliasedFiles;
    FindDependencies(project, aliasedFiles);
 
