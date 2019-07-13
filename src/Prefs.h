@@ -191,4 +191,9 @@ private:
    std::unique_ptr<Impl> mpImpl;
 };
 
+/// Return the config file key associated with a warning dialog identified
+/// by internalDialogName.  When the box is checked, the value at the key
+/// becomes false.
+wxString WarningDialogKey(const wxString &internalDialogName);
+
 #endif

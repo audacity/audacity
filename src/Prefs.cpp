@@ -326,3 +326,8 @@ bool EnumSetting::WriteInt( int code ) // you flush gPrefs afterward
       return false;
    return Write( mSymbols[index].Internal() );
 }
+
+wxString WarningDialogKey(const wxString &internalDialogName)
+{
+   return wxT("/Warnings/") + internalDialogName;
+}
