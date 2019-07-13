@@ -19,19 +19,23 @@ my $links = 1;
 my $dir = "../src";
 
 my %names; # string to string
-foreach my $file (`find $dir -name '*.cpp'`) {
-   my $short = $file;
-   chop $short;
-   $short =~ s|.cpp$||;
-   my $shorter = ($short =~ s|^.*/||r);
-   $names{$shorter} = $short;
+{
+   foreach my $file (`find $dir -name '*.cpp' -o -name '*.h' -o -name '*.mm'`) {
+      my $short = $file;
+      chop $short;
+      $short =~ s|\.cpp$||;
+      $short =~ s|\.h$||;
+      $short =~ s|\.mm$||;
+      my $shorter = ($short =~ s|^.*/||r);
+      $names{$shorter} = $short;
+   }
 }
 
 #my $linkroot = "https://github.com/audacity/audacity/tree/master/src";
 my $linkroot = "file://" . File::Spec->rel2abs( $dir );
 
 
-print STDERR "Found ", scalar( keys %names ), " .cpp file(s)\n" if $traceLevel >= 1;
+print STDERR "Found ", scalar( keys %names ), " filename(s)\n" if $traceLevel >= 1;
 
 # Step 2: collect inclusions in each .cpp/.h pair, and folder information,
 # and build a graph
@@ -79,7 +83,7 @@ while( my ($shorter, $short) = each(%names) ) {
       chop;
       my @components = split '/';
       my $include = $components[-1];
-      # omit self-arcs and arcs to .h files without corresponding .cpp
+      # omit self-arcs and arcs to .h files external to the project
       if (($shorter ne $include) && (exists $names{$include})) {
          $graph{$shorter}{$include} = (), ++$arcs;
       }
