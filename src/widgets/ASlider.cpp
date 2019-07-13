@@ -58,8 +58,6 @@ or ASlider.
 #include <wx/popupwin.h>
 #include <wx/window.h>
 
-#include "Ruler.h"
-
 #include "../AColor.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
