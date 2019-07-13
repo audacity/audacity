@@ -85,22 +85,4 @@ private:
    bool mSetInsertionPointEnd{};
 };
 
-/**************************************************************************//**
-
-\brief Wrap wxMessageDialog so that caption IS translatable.
-********************************************************************************/
-class AudacityMessageDialog : public wxTabTraversalWrapper< wxMessageDialog >
-{
-public:
-    AudacityMessageDialog(
-         wxWindow *parent,
-         const wxString& message,
-         const wxString& caption, // don't use = wxMessageBoxCaptionStr,
-         long style = wxOK|wxCENTRE,
-         const wxPoint& pos = wxDefaultPosition)
-   : wxTabTraversalWrapper< wxMessageDialog>
-      ( parent, message, caption, style, pos )
-   {}
-};
-
 #endif // __AUDACITY_ERRORDIALOG__
