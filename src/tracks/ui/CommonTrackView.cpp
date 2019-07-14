@@ -146,9 +146,9 @@ static void DrawTrackName(
 void CommonTrackView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
-   // This overpaints only the track area, so any pass after tracks is late
-   // enough.
-   if ( iPass == TrackArtist::PassMargins )
+   // This overpaints the track area, but sometimes too the stereo channel
+   // separator, so draw at least later than that
+   if ( iPass == TrackArtist::PassBorders )
       DrawTrackName(
          context, FindTrack()->SubstitutePendingChangedTrack().get(), rect );
 }
