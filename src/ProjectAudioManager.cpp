@@ -677,12 +677,13 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
 
+            TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
+
             if ((recordingChannels > 2) &&
                 !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
                TrackView::Get( *newTrack ).SetMinimized(true);
             }
 
-            TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
             TrackFocus::Get( *p ).Set( newTrack.get() );
