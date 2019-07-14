@@ -1286,7 +1286,10 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
-      mOutputMeter = options.playbackMeter;
+      if ( options.playbackMeter )
+         mOutputMeter = options.playbackMeter;
+      else
+         mOutputMeter.Release();
    }
 
    if( numCaptureChannels > 0)
