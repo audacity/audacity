@@ -77,7 +77,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/AppCommandEvent.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
-#include "LangChoice.h"
+//#include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
 #include "MissingAliasFileDialog.h"

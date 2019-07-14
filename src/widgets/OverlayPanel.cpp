@@ -10,7 +10,6 @@
 #include "OverlayPanel.h"
 
 #include "Overlay.h"
-#include "../AColor.h"
 #include <algorithm>
 #include <wx/dcclient.h>
 
@@ -134,3 +133,18 @@ void OverlayPanel::Compress()
 
 BEGIN_EVENT_TABLE(OverlayPanel, BackedPanel)
 END_EVENT_TABLE()
+
+// Maybe this class needs a better home
+void DCUnchanger::operator () (wxDC *pDC) const
+{
+   if (pDC) {
+      pDC->SetPen(pen);
+      pDC->SetBrush(brush);
+      pDC->SetLogicalFunction(wxRasterOperationMode(logicalOperation));
+   }
+}
+
+ADCChanger::ADCChanger(wxDC *pDC)
+   : Base{ pDC, ::DCUnchanger{ pDC->GetBrush(), pDC->GetPen(),
+      long(pDC->GetLogicalFunction()) } }
+{}

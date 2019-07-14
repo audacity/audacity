@@ -109,8 +109,3 @@ int ShowWarningDialog(wxWindow *parent,
    gPrefs->Flush();
    return wxID_OK;
 }
-
-wxString WarningDialogKey(const wxString &internalDialogName)
-{
-   return wxT("/Warnings/") + internalDialogName;
-}

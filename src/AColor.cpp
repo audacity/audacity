@@ -32,20 +32,6 @@ It is also a place to document colour usage policy in Audacity
 
 #include "AllThemeResources.h"
 
-void DCUnchanger::operator () (wxDC *pDC) const
-{
-   if (pDC) {
-      pDC->SetPen(pen);
-      pDC->SetBrush(brush);
-      pDC->SetLogicalFunction(wxRasterOperationMode(logicalOperation));
-   }
-}
-
-ADCChanger::ADCChanger(wxDC *pDC)
-   : Base{ pDC, ::DCUnchanger{ pDC->GetBrush(), pDC->GetPen(),
-      long(pDC->GetLogicalFunction()) } }
-{}
-
 bool AColor::inited = false;
 wxBrush AColor::lightBrush[2];
 wxBrush AColor::mediumBrush[2];
