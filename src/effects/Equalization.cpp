@@ -620,7 +620,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    LoadCurves();
 
-   const auto t = *inputTracks()->Any< const WaveTrack >().first;
+   auto trackList = inputTracks();
+   const auto t = trackList
+      ? *trackList->Any< const WaveTrack >().first
+      : nullptr
+   ;
    mHiFreq =
       (t
          ? t->GetRate()
