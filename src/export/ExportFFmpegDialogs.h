@@ -195,6 +195,7 @@ public:
    ~ExportFFmpegOptions();
    void PopulateOrExchange(ShuttleGui & S);
    void OnOK(wxCommandEvent& event);
+   void OnGetURL(wxCommandEvent& event);
    void OnFormatList(wxCommandEvent& event);
    void DoOnFormatList();
    void OnCodecList(wxCommandEvent& event);
@@ -206,6 +207,8 @@ public:
    void OnDeletePreset(wxCommandEvent& event);
    void OnImportPresets(wxCommandEvent& event);
    void OnExportPresets(wxCommandEvent& event);
+   bool SavePreset( bool bCheckForOverwrite);
+
 
    // Static tables
    static CompatibilityEntry CompatibilityList[];
@@ -335,8 +338,9 @@ public:
 
    void GetPresetList(wxArrayString &list);
    void LoadPreset(ExportFFmpegOptions *parent, wxString &name);
-   void SavePreset(ExportFFmpegOptions *parent, wxString &name);
+   bool SavePreset(ExportFFmpegOptions *parent, wxString &name);
    void DeletePreset(wxString &name);
+   bool OverwriteIsOk( wxString &name );
    FFmpegPreset *FindPreset(wxString &name);
 
    void ImportPresets(wxString &filename);
