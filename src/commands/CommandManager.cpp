@@ -220,7 +220,7 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
          "Alt+J",
          "Shift+Alt+J",
          "Ctrl+Shift+A",
-         "Q",
+         //"Q",
          //"Shift+J",
          //"Shift+K",
          //"Shift+Home",
