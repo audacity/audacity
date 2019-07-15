@@ -399,11 +399,15 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    switch (mSubFormat)
    {
    case FMT_M4A:
-      mEncAudioCodecCtx->bit_rate = 98000;
+   {
+      int q = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
+      mEncAudioCodecCtx->global_quality = q;
+      q = wxClip( q, 98, 160 );
+      // Set bit rate to between 98 bps and 320 bps (if two channels)
+      mEncAudioCodecCtx->bit_rate = q * 1000;
       mEncAudioCodecCtx->bit_rate *= mChannels;
       mEncAudioCodecCtx->profile = FF_PROFILE_AAC_LOW;
       mEncAudioCodecCtx->cutoff = 0;
-      mEncAudioCodecCtx->global_quality = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
       if (!CheckSampleRate(mSampleRate,
                ExportFFmpegOptions::iAACSampleRates[0],
                ExportFFmpegOptions::iAACSampleRates[11],
@@ -415,6 +419,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
                &ExportFFmpegOptions::iAACSampleRates[0]);
       }
       break;
+   }
    case FMT_AC3:
       mEncAudioCodecCtx->bit_rate = gPrefs->Read(wxT("/FileFormats/AC3BitRate"), 192000);
       if (!CheckSampleRate(mSampleRate,ExportFFmpegAC3Options::iAC3SampleRates[0], ExportFFmpegAC3Options::iAC3SampleRates[2], &ExportFFmpegAC3Options::iAC3SampleRates[0]))
