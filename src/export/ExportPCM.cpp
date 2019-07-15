@@ -396,22 +396,12 @@ ExportPCM::ExportPCM()
    SetMaxChannels(255, format);
 }
 
-// Bug 2057
-// This function is not yet called anywhere.
-// It is provided to get the translation strings.
-// We can hook it in properly whilst translation happens.
 void ExportPCM::ReportTooBigError(wxWindow * pParent)
 {
    //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
    wxString message = 
-      _("You have attempted to Export a WAV file which would be greater than 4GB.\n"
+      _("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
       "Audacity cannot do this, the Export was abandoned.");
-   if( message == 
-      "You have attempted to Export a WAV file which would be greater than 4GB.\n"
-      "Audacity cannot do this, the Export was abandoned.")
-   {
-      message.Replace( "WAV", "WAV or AIFF");
-   }
 
    ShowErrorDialog(pParent, _("Error Exporting"), message,
                   wxT("Size_limits_for_WAV_and_AIFF_files"));
@@ -521,8 +511,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          format = int16Sample;
 
       float sampleCount = (float)(t1-t0)*rate*info.channels;
-      // floatSamples are always 4 byte, even if processor uses more.
-      float byteCount = sampleCount * ((format==int16Sample)?2:4);
+      float byteCount = sampleCount * sf_subtype_bytes_per_sample( info.format);
       // Test for 4 Gibibytes, rather than 4 Gigabytes
       if( byteCount > 4.295e9)
       {
