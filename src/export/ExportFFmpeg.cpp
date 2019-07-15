@@ -402,10 +402,9 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    {
       int q = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
       mEncAudioCodecCtx->global_quality = q;
-      q = wxClip( q, 98, 160 );
-      // Set bit rate to between 98 bps and 320 bps (if two channels)
+      q = wxClip( q, 98 * mChannels, 160 * mChannels);
+      // Set bit rate to between 98 kbps and 320 kbps (if two channels)
       mEncAudioCodecCtx->bit_rate = q * 1000;
-      mEncAudioCodecCtx->bit_rate *= mChannels;
       mEncAudioCodecCtx->profile = FF_PROFILE_AAC_LOW;
       mEncAudioCodecCtx->cutoff = 0;
       if (!CheckSampleRate(mSampleRate,
