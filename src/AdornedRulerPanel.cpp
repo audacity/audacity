@@ -1131,12 +1131,15 @@ void AdornedRulerPanel::DoIdle()
    const auto &selectedRegion = viewInfo.selectedRegion;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
+   bool dirtySelectedRegion = mDirtySelectedRegion
+      || ( mLastDrawnSelectedRegion != selectedRegion );
+
    auto gAudioIO = AudioIOBase::Get();
-   if (!gAudioIO->IsBusy() && !playRegion.Locked() && mDirtySelectedRegion)
+   if (!gAudioIO->IsBusy() && !playRegion.Locked() && dirtySelectedRegion)
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else {
       changed = changed
-        || mDirtySelectedRegion
+        || dirtySelectedRegion
         || mLastDrawnH != viewInfo.h
         || mLastDrawnZoom != viewInfo.GetZoom()
       ;
