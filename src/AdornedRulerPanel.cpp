@@ -937,6 +937,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                      &AdornedRulerPanel::OnRecordStartStop,
                      this);
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &AdornedRulerPanel::OnRecordStartStop,
+                     this);
 
    // Delay until after CommandManager has been populated:
    this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
@@ -1115,7 +1118,11 @@ namespace {
 void AdornedRulerPanel::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
+   DoIdle();
+}
 
+void AdornedRulerPanel::DoIdle()
+{
    bool changed = UpdateRects();
    changed = SetPanelSize() || changed;
 
@@ -1144,17 +1151,25 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 {
    evt.Skip();
 
-   if (evt.GetInt() != 0)
-   {
-      mIsRecording = true;
-      this->CellularPanel::CancelDragging( false );
-      this->CellularPanel::ClearTargets();
+   if ( evt.GetEventType() == EVT_AUDIOIO_CAPTURE ) {
+      if (evt.GetInt() != 0)
+      {
+         mIsRecording = true;
+         this->CellularPanel::CancelDragging( false );
+         this->CellularPanel::ClearTargets();
 
-      UpdateButtonStates();
+         UpdateButtonStates();
+      }
+      else {
+         mIsRecording = false;
+         UpdateButtonStates();
+      }
    }
-   else {
-      mIsRecording = false;
-      UpdateButtonStates();
+
+   if ( evt.GetInt() == 0 ) {
+      // So that the play region is updated
+      mLastDrawnSelectedRegion.setTimes( -1, -1 );
+      DoIdle();
    }
 }
 

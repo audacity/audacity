@@ -2220,22 +2220,6 @@ void AudioIO::StopStream()
       mPortStreamV19 = NULL;
    }
 
-   if (mNumPlaybackChannels > 0)
-   {
-      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject(mOwningProject);
-      e.SetInt(false);
-      wxTheApp->ProcessEvent(e);
-   }
-
-   if (mNumCaptureChannels > 0)
-   {
-      wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject(mOwningProject);
-      e.SetInt(false);
-      wxTheApp->ProcessEvent(e);
-   }
-
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* Stop Midi playback */
    if ( mMidiStream ) {
@@ -2383,6 +2367,22 @@ void AudioIO::StopStream()
    // Only set token to 0 after we're totally finished with everything
    //
    mStreamToken = 0;
+
+   if (mNumPlaybackChannels > 0)
+   {
+      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
+      e.SetEventObject(mOwningProject);
+      e.SetInt(false);
+      wxTheApp->ProcessEvent(e);
+   }
+   
+   if (mNumCaptureChannels > 0)
+   {
+      wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
+      e.SetEventObject(mOwningProject);
+      e.SetInt(false);
+      wxTheApp->ProcessEvent(e);
+   }
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
