@@ -58,6 +58,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    bool mAbort;
    bool mbExpanded;
    wxString mActiveMacro;
+   wxString mMacroBeingRenamed;
 
 protected:
    const MacroCommandsCatalog mCatalog;

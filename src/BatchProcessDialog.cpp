@@ -922,26 +922,34 @@ void MacrosWindow::OnMacrosBeginEdit(wxListEvent &event)
 
    wxString macro = mMacros->GetItemText(itemNo);
 
-   if (mMacroCommands.IsFixed(mActiveMacro)) {
+   if (mMacroCommands.IsFixed(macro)) {
       wxBell();
       event.Veto();
    }
+   if( mMacroBeingRenamed.IsEmpty())
+      mMacroBeingRenamed = macro;
 }
 
 ///
 void MacrosWindow::OnMacrosEndEdit(wxListEvent &event)
 {
    if (event.IsEditCancelled()) {
+      mMacroBeingRenamed = "";
       return;
    }
 
+   if( mMacroBeingRenamed.IsEmpty())
+      return;
+
    wxString newname = event.GetLabel();
 
-   mMacroCommands.RenameMacro(mActiveMacro, newname);
-
-   mActiveMacro = newname;
-
+   mMacroCommands.RenameMacro(mMacroBeingRenamed, newname);
+   if( mMacroBeingRenamed == mActiveMacro )
+      mActiveMacro = newname;
+   mMacroBeingRenamed="";
    PopulateMacros();
+   UpdateMenus();   
+   event.Veto();
 }
 
 ///
