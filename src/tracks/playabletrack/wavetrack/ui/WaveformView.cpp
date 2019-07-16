@@ -35,6 +35,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../prefs/WaveformSettings.h"
 
 #include <wx/graphics.h>
+#include <wx/dc.h>
 
 WaveformView::~WaveformView() = default;
 
