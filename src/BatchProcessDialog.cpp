@@ -509,6 +509,7 @@ enum {
    UpButtonID,
    DownButtonID,
    RenameButtonID,
+   RestoreButtonID,
 // MacrosListID             7005
 // CommandsListID,       7002
 // Re-Use IDs from ApplyMacroDialog.
@@ -524,6 +525,7 @@ BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
    EVT_BUTTON(AddButtonID, MacrosWindow::OnAdd)
    EVT_BUTTON(RemoveButtonID, MacrosWindow::OnRemove)
    EVT_BUTTON(RenameButtonID, MacrosWindow::OnRename)
+   EVT_BUTTON(RestoreButtonID, MacrosWindow::OnRestore)
    EVT_BUTTON(ExpandID, MacrosWindow::OnExpand)
    EVT_BUTTON(ShrinkID, MacrosWindow::OnShrink)
 
@@ -535,7 +537,6 @@ BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
    EVT_BUTTON(DeleteButtonID, MacrosWindow::OnDelete)
    EVT_BUTTON(UpButtonID, MacrosWindow::OnUp)
    EVT_BUTTON(DownButtonID, MacrosWindow::OnDown)
-   EVT_BUTTON(DefaultsButtonID, MacrosWindow::OnDefaults)
 
    EVT_BUTTON(wxID_OK, MacrosWindow::OnOK)
    EVT_BUTTON(wxID_CANCEL, MacrosWindow::OnCancel)
@@ -625,6 +626,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                S.Id(AddButtonID).AddButton(_("&New"));
                mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
                mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
+               mRestore = S.Id(RestoreButtonID).AddButton(_("Re&store"));
 // Not yet ready for prime time.
 #if 0
                S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
@@ -662,7 +664,6 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
                S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
                S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
-               mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
             }
             S.EndVerticalLay();
          }
@@ -844,12 +845,12 @@ void MacrosWindow::OnMacroSelected(wxListEvent & event)
    if (mMacroCommands.IsFixed(mActiveMacro)) {
       mRemove->Disable();
       mRename->Disable();
-      mDefaults->Enable();
+      mRestore->Enable();
    }
    else {
       mRemove->Enable();
       mRename->Enable();
-      mDefaults->Disable();
+      mRestore->Disable();
    }
 
    PopulateList();
@@ -1040,6 +1041,16 @@ void MacrosWindow::OnRename(wxCommandEvent & WXUNUSED(event))
    UpdateMenus();
 }
 
+/// Reset a built in macro.
+void MacrosWindow::OnRestore(wxCommandEvent & WXUNUSED(event))
+{
+   mMacroCommands.RestoreMacro(mActiveMacro);
+
+   mChanged = true;
+
+   PopulateList();
+}
+
 /// An item in the list has been selected.
 /// Bring up a dialog to allow its parameters to be edited.
 void MacrosWindow::OnCommandActivated(wxListEvent & WXUNUSED(event))
@@ -1188,16 +1199,6 @@ void MacrosWindow::OnApplyToFiles(wxCommandEvent & event)
    if( !SaveChanges() )
       return;
    ApplyMacroDialog::OnApplyToFiles( event );
-}
-
-/// Select the empty Command macro.
-void MacrosWindow::OnDefaults(wxCommandEvent & WXUNUSED(event))
-{
-   mMacroCommands.RestoreMacro(mActiveMacro);
-
-   mChanged = true;
-
-   PopulateList();
 }
 
 bool MacrosWindow::SaveChanges(){
