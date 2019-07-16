@@ -1131,20 +1131,22 @@ void AdornedRulerPanel::DoIdle()
    const auto &selectedRegion = viewInfo.selectedRegion;
    auto &playRegion = ViewInfo::Get( project ).playRegion;
 
-   bool changedSelectedRegion = mLastDrawnSelectedRegion != selectedRegion;
-
    auto gAudioIO = AudioIOBase::Get();
-   if (!gAudioIO->IsBusy() && !playRegion.Locked() && changedSelectedRegion)
+   if (!gAudioIO->IsBusy() && !playRegion.Locked() && mDirtySelectedRegion)
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    else {
-      changed = changed || changedSelectedRegion;
-      changed = changed || mLastDrawnH != viewInfo.h;
-      changed = changed || mLastDrawnZoom != viewInfo.GetZoom();
+      changed = changed
+        || mDirtySelectedRegion
+        || mLastDrawnH != viewInfo.h
+        || mLastDrawnZoom != viewInfo.GetZoom()
+      ;
       if (changed)
          // Cause ruler redraw anyway, because we may be zooming or scrolling,
          // showing or hiding the scrub bar, etc.
          Refresh();
    }
+
+   mDirtySelectedRegion = false;
 }
 
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
@@ -1168,7 +1170,7 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 
    if ( evt.GetInt() == 0 ) {
       // So that the play region is updated
-      mLastDrawnSelectedRegion.setTimes( -1, -1 );
+      mDirtySelectedRegion = true;
       DoIdle();
    }
 }
@@ -1178,6 +1180,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    auto &viewInfo = ViewInfo::Get( *GetProject() );
    mLastDrawnH = viewInfo.h;
    mLastDrawnZoom = viewInfo.GetZoom();
+   mDirtySelectedRegion = (mLastDrawnSelectedRegion != viewInfo.selectedRegion);
    mLastDrawnSelectedRegion = viewInfo.selectedRegion;
    // To do, note other fisheye state when we have that
 

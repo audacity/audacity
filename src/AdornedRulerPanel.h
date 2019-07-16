@@ -225,6 +225,7 @@ private:
    SelectedRegion mLastDrawnSelectedRegion;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
+   bool mDirtySelectedRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__
