@@ -401,20 +401,23 @@ void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    }
 }
 
+// Because of Bug 1780 we can't use POPUP_MENU_RADIO_ITEM
+// If we did, we'd get no message when clicking on Other...
+// when it is already selected.
 BEGIN_POPUP_MENU(RateMenuTable)
-   POPUP_MENU_RADIO_ITEM(OnRate8ID, _("8000 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate11ID, _("11025 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate16ID, _("16000 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate22ID, _("22050 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate44ID, _("44100 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate48ID, _("48000 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate88ID, _("88200 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate96ID, _("96000 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate176ID, _("176400 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate192ID, _("192000 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate352ID, _("352800 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRate384ID, _("384000 Hz"), OnRateChange)
-   POPUP_MENU_RADIO_ITEM(OnRateOtherID, _("&Other..."), OnRateOther)
+   POPUP_MENU_CHECK_ITEM(OnRate8ID, _("8000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate11ID, _("11025 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate16ID, _("16000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate22ID, _("22050 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate44ID, _("44100 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate48ID, _("48000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate88ID, _("88200 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate96ID, _("96000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate176ID, _("176400 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate192ID, _("192000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate352ID, _("352800 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate384ID, _("384000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRateOtherID, _("&Other..."), OnRateOther)
 END_POPUP_MENU()
 
 const int nRates = 12;
