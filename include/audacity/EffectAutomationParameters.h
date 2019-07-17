@@ -73,6 +73,7 @@ public:
                    wxEmptyString,
                    0)
    {
+      SetExpandEnvVars(false);
       SetParameters(parms);
    }
 
