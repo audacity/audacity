@@ -110,7 +110,7 @@ const ReservedCommandFlag
       CommandFlagOptions{ []( const wxString& ) { return
          // This reason will not be shown, because options that require it will be greyed out.
          _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
-      } }
+      } ,"FAQ:Errors:Audio Must Be Stopped"}
       .QuickTest()
       .Priority( 1 )
    }, //lll
@@ -126,7 +126,7 @@ const ReservedCommandFlag
       { []( const wxString& ) { return
          // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
          _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
-      } }
+      } ,"FAQ:Errors:Select Stereo"}
    },  //lda
    TimeSelectedFlag{
       TimeSelectedPred,
@@ -138,7 +138,7 @@ const ReservedCommandFlag
       },
       { []( const wxString& ) { return
          _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
-      } }
+      } ,"FAQ:Errors:Select Audio"}
    },
    TracksExistFlag{
       [](const AudacityProject &project){
@@ -152,7 +152,7 @@ const ReservedCommandFlag
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          _("\"%s\" requires one or more tracks to be selected."),
          Name
-      ); } }
+      ); },"FAQ:Errors:Select Tracks" }
    },
    TrackPanelHasFocus{
       [](const AudacityProject &project){
