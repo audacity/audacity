@@ -794,6 +794,9 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
          // let the user have a crack at editing it, exit if cancelled
          auto &settings = ProjectSettings::Get( *mProject );
          bool bShowTagsDialog = settings.GetShowId3Dialog();
+
+         bShowTagsDialog = bShowTagsDialog && mPlugins[mPluginIndex]->GetCanMetaData(mSubFormatIndex);
+
          if( bShowTagsDialog ){
             bool bCancelled = !setting.filetags.ShowEditDialog(
                ProjectWindow::Find( mProject ),
@@ -914,6 +917,9 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
          // let the user have a crack at editing it, exit if cancelled
          auto &settings = ProjectSettings::Get( *mProject );
          bool bShowTagsDialog = settings.GetShowId3Dialog();
+
+         bShowTagsDialog = bShowTagsDialog && mPlugins[mPluginIndex]->GetCanMetaData(mSubFormatIndex);
+
          if( bShowTagsDialog ){
             bool bCancelled = !setting.filetags.ShowEditDialog(
                ProjectWindow::Find( mProject ),
