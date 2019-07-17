@@ -114,7 +114,7 @@ class AUDACITY_DLL_API Tags final
    using Iterators = IteratorRange<TagMap::const_iterator>;
    Iterators GetRange() const;
 
-   void SetTag(const wxString & name, const wxString & value);
+   void SetTag(const wxString & name, const wxString & value, const bool bSpecialTag=false);
    void SetTag(const wxString & name, const int & value);
 
    bool IsEmpty();

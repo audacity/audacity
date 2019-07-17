@@ -477,7 +477,7 @@ Tags::Iterators Tags::GetRange() const
    return { mMap.begin(), mMap.end() };
 }
 
-void Tags::SetTag(const wxString & name, const wxString & value)
+void Tags::SetTag(const wxString & name, const wxString & value, const bool bSpecialTag)
 {
    // We don't like empty names
    if (name.empty()) {
@@ -497,7 +497,10 @@ void Tags::SetTag(const wxString & name, const wxString & value)
    // Look it up
    TagMap::iterator iter = mXref.find(key);
 
-   if (value.empty()) {
+   // The special tags, if empty, should not exist.
+   // However it is allowable for a custom tag to be empty.
+   // See Bug 440 and Bug 1382 
+   if (value.empty() && bSpecialTag) {
       // Erase the tag
       if (iter == mXref.end())
          // nothing to do
@@ -507,7 +510,8 @@ void Tags::SetTag(const wxString & name, const wxString & value)
          mXref.erase(iter);
       }
    }
-   else {
+   else 
+   {
       if (iter == mXref.end()) {
          // Didn't find the tag
 
@@ -1002,6 +1006,8 @@ bool TagsEditor::TransferDataFromWindow()
          continue;
       }
 
+      bool bSpecialTag = true;
+
       // Map special tag names back to internal keys
       if (n.CmpNoCase(wxGetTranslation(LABEL_ARTIST)) == 0) {
          n = TAG_ARTIST;
@@ -1024,8 +1030,11 @@ bool TagsEditor::TransferDataFromWindow()
       else if (n.CmpNoCase(wxGetTranslation(LABEL_COMMENTS)) == 0) {
          n = TAG_COMMENTS;
       }
+      else {
+         bSpecialTag = false;
+      }
 
-      mLocal.SetTag(n, v);
+      mLocal.SetTag(n, v, bSpecialTag);
    }
 
    return true;
