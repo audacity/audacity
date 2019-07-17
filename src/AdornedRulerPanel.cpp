@@ -945,6 +945,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &AdornedRulerPanel::OnThemeChange, this);
+
+   mViewInfo->selectedRegion.Bind(EVT_SELECTED_REGION_CHANGE,
+      &AdornedRulerPanel::OnSelectionChange, this);
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
@@ -1129,25 +1132,19 @@ void AdornedRulerPanel::DoIdle()
    auto &project = *mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const auto &selectedRegion = viewInfo.selectedRegion;
-   auto &playRegion = ViewInfo::Get( project ).playRegion;
 
    bool dirtySelectedRegion = mDirtySelectedRegion
       || ( mLastDrawnSelectedRegion != selectedRegion );
 
-   auto gAudioIO = AudioIOBase::Get();
-   if (!gAudioIO->IsBusy() && !playRegion.Locked() && dirtySelectedRegion)
-      SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
-   else {
-      changed = changed
-        || dirtySelectedRegion
-        || mLastDrawnH != viewInfo.h
-        || mLastDrawnZoom != viewInfo.GetZoom()
-      ;
-      if (changed)
-         // Cause ruler redraw anyway, because we may be zooming or scrolling,
-         // showing or hiding the scrub bar, etc.
-         Refresh();
-   }
+   changed = changed
+     || dirtySelectedRegion
+     || mLastDrawnH != viewInfo.h
+     || mLastDrawnZoom != viewInfo.GetZoom()
+   ;
+   if (changed)
+      // Cause ruler redraw anyway, because we may be zooming or scrolling,
+      // showing or hiding the scrub bar, etc.
+      Refresh();
 
    mDirtySelectedRegion = false;
 }
@@ -1229,6 +1226,21 @@ void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
 void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
 {
    ReCreateButtons();
+}
+
+void AdornedRulerPanel::OnSelectionChange(SelectedRegionEvent& evt)
+{
+   evt.Skip();
+
+   auto gAudioIO = AudioIOBase::Get();
+   if ( !gAudioIO->IsBusy() &&
+      !ViewInfo::Get( *mProject ).playRegion.Locked()
+   ) {
+      if (!evt.pRegion)
+         return;
+      auto &selectedRegion = *evt.pRegion;
+      SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
+   }
 }
 
 bool AdornedRulerPanel::UpdateRects()

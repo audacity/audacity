@@ -17,6 +17,7 @@
 #include "ViewInfo.h" // for PlayRegion
 
 class AudacityProject;
+class SelectedRegionEvent;
 class SnapManager;
 class TrackList;
 
@@ -85,6 +86,7 @@ private:
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnThemeChange(wxCommandEvent& evt);
+   void OnSelectionChange(SelectedRegionEvent& evt);
    bool UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
