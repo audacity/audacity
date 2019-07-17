@@ -18263,11 +18263,11 @@ msgstr "Exécution du filtre passe-bas…"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
-msgstr "Filtre à peigne"
+msgstr "Filtre coupe-bande"
 
 #: plug-ins/notch.ny
 msgid "Applying Notch Filter..."
-msgstr "Application du filtre à peigne…"
+msgstr "Application du filtre coupe-bande…"
 
 #: plug-ins/notch.ny
 msgid "Steve Daulton and Bill Wharrie"
