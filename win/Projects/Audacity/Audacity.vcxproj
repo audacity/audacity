@@ -940,7 +940,6 @@
     <copy Include="..\..\..\plug-ins\StudioFadeOut.ny" />
     <copy Include="..\..\..\plug-ins\tremolo.ny" />
     <copy Include="..\..\..\plug-ins\vocalrediso.ny" />
-    <copy Include="..\..\..\plug-ins\vocalremover.ny" />
     <copy Include="..\..\..\plug-ins\vocoder.ny" />
   </ItemGroup>
   <ItemGroup>

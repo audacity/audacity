@@ -2644,9 +2644,6 @@
     <copy Include="..\..\..\plug-ins\tremolo.ny">
       <Filter>plug-ins</Filter>
     </copy>
-    <copy Include="..\..\..\plug-ins\vocalremover.ny">
-      <Filter>plug-ins</Filter>
-    </copy>
     <copy Include="..\..\..\plug-ins\vocoder.ny">
       <Filter>plug-ins</Filter>
     </copy>
