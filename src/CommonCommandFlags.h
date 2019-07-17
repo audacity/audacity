@@ -27,6 +27,7 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
    WaveTracksSelectedFlag,
    TracksExistFlag,
    TracksSelectedFlag,
+   AnyTracksSelectedFlag,
    TrackPanelHasFocus;  //lll
 
 extern AUDACITY_DLL_API const ReservedCommandFlag

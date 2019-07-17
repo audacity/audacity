@@ -51,6 +51,13 @@ bool TracksSelectedPred( const AudacityProject &project )
    return !range.empty();
 };
 
+// This predicate includes time tracks too.
+bool AnyTracksSelectedPred( const AudacityProject &project )
+{
+   auto range = TrackList::Get( project ).Selected();
+   return !range.empty();
+};
+
 bool AudioIOBusyPred( const AudacityProject &project )
 {
    return AudioIOBase::Get()->IsAudioTokenActive(
@@ -147,7 +154,15 @@ const ReservedCommandFlag
       CommandFlagOptions{}.DisableDefaultMessage()
    },
    TracksSelectedFlag{
-      TracksSelectedPred,
+      TracksSelectedPred, // exclude TimeTracks
+      { []( const wxString &Name ){ return wxString::Format(
+         // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+         _("\"%s\" requires one or more tracks to be selected."),
+         Name
+      ); },"FAQ:Errors:Select Tracks" }
+   },
+   AnyTracksSelectedFlag{
+      AnyTracksSelectedPred, // Allow TimeTracks
       { []( const wxString &Name ){ return wxString::Format(
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          _("\"%s\" requires one or more tracks to be selected."),

@@ -1299,7 +1299,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
       Separator(),
 
       Command( wxT("RemoveTracks"), XXO("Remo&ve Tracks"), FN(OnRemoveTracks),
-         AudioIONotBusyFlag | TracksSelectedFlag ),
+         AudioIONotBusyFlag | AnyTracksSelectedFlag ),
 
       Separator(),
 
