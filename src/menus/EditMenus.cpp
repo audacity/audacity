@@ -183,8 +183,8 @@ void OnUndo(const CommandContext &context)
    }
 
    undoManager.Undo(
-      [&]( const UndoState &state ){
-         ProjectHistory::Get( project ).PopState( state ); } );
+      [&]( const UndoStackElem &elem ){
+         ProjectHistory::Get( project ).PopState( elem.state ); } );
 
    auto t = *tracks.Selected().begin();
    if (!t)
@@ -213,8 +213,8 @@ void OnRedo(const CommandContext &context)
    }
 
    undoManager.Redo(
-      [&]( const UndoState &state ){
-         ProjectHistory::Get( project ).PopState( state ); } );
+      [&]( const UndoStackElem &elem ){
+         ProjectHistory::Get( project ).PopState( elem.state ); } );
 
    auto t = *tracks.Selected().begin();
    if (!t)

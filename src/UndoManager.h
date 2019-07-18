@@ -76,7 +76,6 @@ class Tags;
 class Track;
 class TrackList;
 
-struct UndoStackElem;
 struct UndoState {
    UndoState(std::shared_ptr<TrackList> &&tracks_,
       const std::shared_ptr<Tags> &tags_,
@@ -87,6 +86,24 @@ struct UndoState {
    std::shared_ptr<TrackList> tracks;
    std::shared_ptr<Tags> tags;
    SelectedRegion selectedRegion; // by value
+};
+
+struct UndoStackElem {
+
+   UndoStackElem(std::shared_ptr<TrackList> &&tracks_,
+      const TranslatableString &description_,
+      const TranslatableString &shortDescription_,
+      const SelectedRegion &selectedRegion_,
+      const std::shared_ptr<Tags> &tags_)
+      : state(std::move(tracks_), tags_, selectedRegion_)
+      , description(description_)
+      , shortDescription(shortDescription_)
+   {
+   }
+
+   UndoState state;
+   TranslatableString description;
+   TranslatableString shortDescription;
 };
 
 using UndoStack = std::vector <std::unique_ptr<UndoStackElem>>;
@@ -150,10 +167,17 @@ class AUDACITY_DLL_API UndoManager final
    // These functions accept a callback that uses the state,
    // and then they send to the project EVT_UNDO_RESET or EVT_UNDO_OR_REDO when
    // that has finished.
-   using Consumer = std::function< void( const UndoState & ) >;
+   using Consumer = std::function< void( const UndoStackElem & ) >;
    void SetStateTo(unsigned int n, const Consumer &consumer);
    void Undo(const Consumer &consumer);
    void Redo(const Consumer &consumer);
+
+   //! Give read-only access to all states
+   void VisitStates( const Consumer &consumer, bool newestFirst );
+   //! Visit a specified range of states
+   /*! end is exclusive; visit newer states first if end < begin */
+   void VisitStates(
+      const Consumer &consumer, size_t begin, size_t end );
 
    bool UndoAvailable();
    bool RedoAvailable();
