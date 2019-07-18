@@ -935,10 +935,10 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 #endif
 
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &AdornedRulerPanel::OnRecordStartStop,
+                     &AdornedRulerPanel::OnAudioStartStop,
                      this);
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &AdornedRulerPanel::OnRecordStartStop,
+                     &AdornedRulerPanel::OnAudioStartStop,
                      this);
 
    // Delay until after CommandManager has been populated:
@@ -1149,7 +1149,7 @@ void AdornedRulerPanel::DoIdle()
    mDirtySelectedRegion = false;
 }
 
-void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
+void AdornedRulerPanel::OnAudioStartStop(wxCommandEvent & evt)
 {
    evt.Skip();
 
@@ -1168,11 +1168,9 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
       }
    }
 
-   if ( evt.GetInt() == 0 ) {
+   if ( evt.GetInt() == 0 )
       // So that the play region is updated
-      mDirtySelectedRegion = true;
-      DoIdle();
-   }
+      DoSelectionChange( mViewInfo->selectedRegion );
 }
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -1231,14 +1229,19 @@ void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
 void AdornedRulerPanel::OnSelectionChange(SelectedRegionEvent& evt)
 {
    evt.Skip();
+   if (!evt.pRegion)
+      return;
+   auto &selectedRegion = *evt.pRegion;
+   DoSelectionChange( selectedRegion );
+}
+
+void AdornedRulerPanel::DoSelectionChange( const SelectedRegion &selectedRegion )
+{
 
    auto gAudioIO = AudioIOBase::Get();
    if ( !gAudioIO->IsBusy() &&
       !ViewInfo::Get( *mProject ).playRegion.Locked()
    ) {
-      if (!evt.pRegion)
-         return;
-      auto &selectedRegion = *evt.pRegion;
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    }
 }

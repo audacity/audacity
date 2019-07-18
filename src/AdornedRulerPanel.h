@@ -82,11 +82,12 @@ public:
 private:
    void DoIdle();
    void OnIdle( wxIdleEvent &evt );
-   void OnRecordStartStop(wxCommandEvent & evt);
+   void OnAudioStartStop(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnThemeChange(wxCommandEvent& evt);
    void OnSelectionChange(SelectedRegionEvent& evt);
+   void DoSelectionChange( const SelectedRegion &selectedRegion );
    bool UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
