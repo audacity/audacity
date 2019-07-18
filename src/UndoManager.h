@@ -136,8 +136,6 @@ struct UndoStackElem {
 
 using UndoStack = std::vector <std::unique_ptr<UndoStackElem>>;
 
-using SpaceArray = std::vector <unsigned long long> ;
-
 // These flags control what extra to do on a PushState
 // Default is AUTOSAVE
 // Frequent/faster actions use CONSOLIDATE
@@ -192,9 +190,6 @@ class AUDACITY_DLL_API UndoManager final
    void StopConsolidating() { mayConsolidate = false; }
 
    void GetShortDescription(unsigned int n, TranslatableString *desc);
-   // Return value must first be calculated by CalculateSpaceUsage():
-   wxLongLong_t GetLongDescription(
-      unsigned int n, TranslatableString *desc, TranslatableString *size);
    void SetLongDescription(unsigned int n, const TranslatableString &desc);
 
    // These functions accept a callback that uses the state,
@@ -219,14 +214,6 @@ class AUDACITY_DLL_API UndoManager final
    int GetSavedState() const;
    void StateSaved();
 
-   // Return value must first be calculated by CalculateSpaceUsage():
-   // The clipboard is global, not specific to this project, but it is
-   // convenient to combine the space usage calculations in one class:
-   wxLongLong_t GetClipboardSpaceUsage() const
-   { return mClipboardSpaceUsage; }
-
-   void CalculateSpaceUsage();
-
    // void Debug(); // currently unused
 
  private:
@@ -244,9 +231,6 @@ class AUDACITY_DLL_API UndoManager final
 
    TranslatableString lastAction;
    bool mayConsolidate { false };
-
-   SpaceArray space;
-   unsigned long long mClipboardSpaceUsage {};
 };
 
 #endif

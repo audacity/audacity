@@ -26,18 +26,12 @@ UndoManager
 #include <wx/hashset.h>
 
 #include "BasicUI.h"
-#include "Clipboard.h"
-#include "Diags.h"
 #include "Project.h"
 #include "SampleBlock.h"
-#include "Sequence.h"
+#include "TransactionScope.h"
 #include "WaveTrack.h"          // temp
 //#include "NoteTrack.h"  // for Sonify* function declarations
-#include "Diags.h"
-#include "TransactionScope.h"
 
-
-#include <unordered_set>
 
 UndoStateExtension::~UndoStateExtension() = default;
 
@@ -91,71 +85,6 @@ UndoManager::UndoManager( AudacityProject &project )
 UndoManager::~UndoManager()
 {
    wxASSERT( stack.empty() );
-}
-
-namespace {
-   SpaceArray::value_type
-   CalculateUsage(const TrackList &tracks, SampleBlockIDSet &seen)
-   {
-      SpaceArray::value_type result = 0;
-      //TIMER_START( "CalculateSpaceUsage", space_calc );
-      InspectBlocks(
-         tracks,
-         BlockSpaceUsageAccumulator( result ),
-         &seen
-      );
-      return result;
-   }
-}
-
-void UndoManager::CalculateSpaceUsage()
-{
-   space.clear();
-   space.resize(stack.size(), 0);
-
-   SampleBlockIDSet seen;
-
-   // After copies and pastes, a block file may be used in more than
-   // one place in one undo history state, and it may be used in more than
-   // one undo history state.  It might even be used in two states, but not
-   // in another state that is between them -- as when you have state A,
-   // then make a cut to get state B, but then paste it back into state C.
-
-   // So be sure to count each block file once only, in the last undo item that
-   // contains it.
-
-   // Why the last and not the first? Because the user of the History dialog
-   // may DELETE undo states, oldest first.  To reclaim disk space you must
-   // DELETE all states containing the block file.  So the block file's
-   // contribution to space usage should be counted only in that latest state.
-
-   for (size_t nn = stack.size(); nn--;)
-   {
-      // Scan all tracks at current level
-      auto &tracks = *stack[nn]->state.tracks;
-      space[nn] = CalculateUsage(tracks, seen);
-   }
-
-   // Count the usage of the clipboard separately, using another set.  Do not
-   // multiple-count any block occurring multiple times within the clipboard.
-   seen.clear();
-   mClipboardSpaceUsage = CalculateUsage(
-      Clipboard::Get().GetTracks(), seen);
-
-   //TIMER_STOP( space_calc );
-}
-
-wxLongLong_t UndoManager::GetLongDescription(
-   unsigned int n, TranslatableString *desc, TranslatableString *size)
-{
-   wxASSERT(n < stack.size());
-   wxASSERT(space.size() == stack.size());
-
-   *desc = stack[n]->description;
-
-   *size = Internat::FormatSize(space[n]);
-
-   return space[n];
 }
 
 void UndoManager::GetShortDescription(unsigned int n, TranslatableString *desc)
