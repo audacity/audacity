@@ -18,7 +18,6 @@ modelled on BuiltinEffectsModule
 
 #include "../Prefs.h"
 
-#include "../effects/EffectManager.h"
 #include "Demo.h"
 #include "../commands/MessageCommand.h"
 #include "../commands/ScreenshotCommand.h"

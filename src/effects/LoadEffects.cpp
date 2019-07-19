@@ -18,8 +18,6 @@
 
 #include "../Prefs.h"
 
-#include "EffectManager.h"
-
 #include "Amplify.h"
 #include "AutoDuck.h"
 #include "BassTreble.h"
